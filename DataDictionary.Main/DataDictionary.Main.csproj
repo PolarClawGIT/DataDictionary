@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Copyright>© 2023 William Howard, All Rights Reserved</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
