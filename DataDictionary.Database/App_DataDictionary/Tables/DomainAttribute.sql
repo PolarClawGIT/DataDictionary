@@ -3,13 +3,15 @@
 	[AttributeId] Int Not Null,
 	[AttributeParentId] Int Null,
 	[AttributeTitle] NVarChar(100) Not Null,
-	[ObjectTypeId] Int Not Null,
 	[AttributeText] NVarChar(4000) Null,
-	[ModfiedBy] SysName Not Null CONSTRAINT [Df_DomainAttribute_ModfiedBy] DEFAULT (original_login()),
 	-- TODO: Add System Versioning later once the schema is locked down
+	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DomainAttribute_ModfiedBy] DEFAULT (original_login()),
+	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL Constraint [DF_DomainAttribute_SysStart] Default (sysdatetime()),
+	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL Constraint [DF_DomainAttribute_SysEnd] Default ('9999-12-31 23:59:59.9999999'),
+   	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_DomainAttribute] PRIMARY KEY CLUSTERED ([AttributeId] ASC),
 	CONSTRAINT [FK_DomainAttribute_Parent] FOREIGN KEY ([AttributeParentId]) REFERENCES [App_DataDictionary].[DomainAttribute] ([AttributeId]),
-	CONSTRAINT [FK_DomainAttribute_ObjectType] FOREIGN KEY ([ObjectTypeId]) REFERENCES [App_DataDictionary].[ExtendedPropertyType] ([ObjectTypeId])
+
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DomainAttribute]

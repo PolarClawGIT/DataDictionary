@@ -69,7 +69,7 @@
   <ItemGroup>
     <None Include="DataDictionary.Database.publish.xml" />
     <None Include="Schema.scmp" />
-    <None Include="dbo\Sample Extended Property query.sql" />
+    <None Include="dbo\Extended Property query.sql" />
     <None Include="App_DataDictionary\ExtendedProperty Data.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +88,8 @@
     <None Include="App_DataDictionary\ExtendedPropertyObjectType Data.sql" />
     <Build Include="App_DataDictionary\Tables\ExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttributeProperty.sql" />
+    <Build Include="App_DataDictionary\Tables\Domain.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainEntity.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
