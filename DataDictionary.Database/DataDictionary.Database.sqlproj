@@ -13,7 +13,7 @@
     </RootPath>
     <RootNamespace>DataDictionary.Database</RootNamespace>
     <AssemblyName>DataDictionary.Database</AssemblyName>
-    <ModelCollation>1033, CI</ModelCollation>
+    <ModelCollation>1033,CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -22,6 +22,8 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -56,8 +58,24 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="App_DataDictionary\" />
+    <Folder Include="App_DataDictionary\Tables\" />
+    <Folder Include="App_DataDictionary\Stored Procedures\" />
+    <Folder Include="Security\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DataDictionary.Database.publish.xml" />
+    <None Include="Schema.scmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="App_DataDictionary\Stored Procedures\procGetSample.sql" />
+    <Build Include="Security\App_DataDictionary.sql" />
+    <Build Include="Security\App_Help.sql" />
+    <Build Include="Security\Permissions.sql" />
+    <Build Include="Security\History_DataDictionary.sql" />
+    <Build Include="Security\History_Help.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainEntity.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainAttribute.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainAttributeAlias.sql" />
   </ItemGroup>
 </Project>

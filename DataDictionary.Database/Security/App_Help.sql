@@ -1,0 +1,2 @@
+﻿CREATE SCHEMA [App_Help] AUTHORIZATION [dbo];
+
