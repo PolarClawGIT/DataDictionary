@@ -65,6 +65,8 @@
     <Folder Include="dbo" />
     <Folder Include="dbo\Stored Procedures" />
     <Folder Include="dbo\Tables" />
+    <Folder Include="App_Help" />
+    <Folder Include="App_Help\Tables" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DataDictionary.Database.publish.xml" />
@@ -88,8 +90,11 @@
     <None Include="App_DataDictionary\ExtendedPropertyObjectType Data.sql" />
     <Build Include="App_DataDictionary\Tables\ExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttributeProperty.sql" />
-    <Build Include="App_DataDictionary\Tables\Domain.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntity.sql" />
+    <Build Include="App_Help\Tables\HelpDocument.sql" />
+    <Build Include="App_DataDictionary\Tables\SecurityPrinciple.sql" />
+    <Build Include="App_DataDictionary\Tables\SecurityRole.sql" />
+    <Build Include="App_DataDictionary\Tables\SecurityPermission.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
