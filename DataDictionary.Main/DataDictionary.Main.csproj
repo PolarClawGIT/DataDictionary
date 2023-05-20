@@ -7,13 +7,23 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Copyright>© 2023 William Howard, All Rights Reserved</Copyright>
+    <ApplicationIcon>Resources\DataDictionaryApplication.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\DataDictionaryApplication.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DataDictionary.BusinessLayer\DataDictionary.BusinessLayer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
@@ -30,7 +40,13 @@
 
   <ItemGroup>
     <Folder Include="Control\" />
-    <Folder Include="Dialog\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
