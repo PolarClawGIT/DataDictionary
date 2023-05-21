@@ -20,8 +20,7 @@ namespace DataDictionary.Main
             Exception testEx = new InvalidOperationException("Test", innerEx);
             testEx.Data.Add("Key", "Value");
 
-            using (Dialog.ExceptionDialog dialog = new Dialog.ExceptionDialog(testEx))
-            { var result = dialog.ShowDialog(); }
+            throw testEx;
         }
     }
 }

@@ -9,15 +9,12 @@ namespace DataDictionary.BusinessLayer
 {
     public class UnitTest
     {
-        public static Context AppContext { get; set; } = null!;
         public UnitTest() { }
 
         public void TestConnection()
         {
-            using (var connection = AppContext.CreateConnection())
-            {
-                connection.Open();
-            }
+            using (IConnection connection = BusinessContext.Instance.DbContext.CreateConnection())
+            { connection.Open(); }
 
         }
     }
