@@ -5,6 +5,7 @@ namespace DataDictionary.Main
 {
     internal static class Program
     {
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -29,6 +30,9 @@ namespace DataDictionary.Main
         /// <summary>
         /// Business Context information. Singleton access point.
         /// </summary>
-        public static BusinessContext BusinessContext { get; } = new BusinessContext() { DbContext = new Toolbox.DbContext.Context() { ServerName = Settings.Default.AppServer, DatabaseName = Settings.Default.AppDatabase } };
+        public static BusinessContext BusinessContext { get; } = new BusinessContext() {
+            DbContext = new Toolbox.DbContext.Context() { 
+                ServerName = Settings.Default.AppServer, 
+                DatabaseName = Settings.Default.AppDatabase } };
     }
 }
