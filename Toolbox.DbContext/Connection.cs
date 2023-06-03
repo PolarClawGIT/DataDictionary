@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +11,26 @@ namespace Toolbox.DbContext
 {
     public interface IConnection : IDisposable
     {
+        /// <summary>
+        /// Opens a new connection to the database and starts a transaction.
+        /// </summary>
         void Open();
+
+        /// <summary>
+        /// Returns the Schema data for the spcefied Sql Collection.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        IDataReader GetSchema(Schema.Collection collection);
+
+        /// <summary>
+        /// Commits the transaction on the Open Connection. The Connection is then closed.
+        /// </summary>
         void Commit();
+
+        /// <summary>
+        /// Rollback the transaction on an Open Connection. The Connection is then closed.
+        /// </summary>
         void Rollback();
     }
 
@@ -41,7 +60,6 @@ namespace Toolbox.DbContext
             }
         }
 
-
         public void Commit()
         {
             try
@@ -64,6 +82,31 @@ namespace Toolbox.DbContext
             { throw; }
         }
 
+        public IDataReader GetSchema(Schema.Collection collection)
+        {
+            SqlConnection connection = new SqlConnection();
+            IDataReader result;
+            connection.ConnectionString = DbContext.ConnectionBuilder.ConnectionString;
+            connection.Open();
+
+            if (collection == Schema.Collection.Schemas)
+            { // Handling for Db Schema objects.
+                SqlCommand getCommand = connection.CreateCommand();
+                getCommand.CommandText = "Select Db_Name() As [SCHEMA_CATALOG], [name] As [SCHEMA_NAME] From [Sys].[Schemas]";
+                getCommand.CommandType = CommandType.Text;
+                DataTable data = new DataTable();
+                data.Load(getCommand.ExecuteReader());
+                return data.CreateDataReader();
+            }
+            else
+            {// Everything else is handled by GetSchema method.
+                DataTable data = connection.GetSchema(collection.ToString());
+                result = data.CreateDataReader();
+            }
+
+            connection.Close();
+            return result;
+        }
 
         #region IDisposable
         protected virtual void Dispose(bool disposing)
@@ -72,10 +115,9 @@ namespace Toolbox.DbContext
             {
                 if (disposing)
                 {
-                    if (connection.State != System.Data.ConnectionState.Closed) { Rollback(); }
-
-                    transaction.Dispose();
-                    connection.Dispose();
+                    if (connection is SqlConnection && connection.State != ConnectionState.Closed) { Rollback(); }
+                    if (transaction is SqlTransaction) { transaction.Dispose(); }
+                    if (connection is SqlConnection) { connection.Dispose(); }
                 }
 
                 disposedValue = true;

@@ -1,10 +1,13 @@
 using DataDictionary.BusinessLayer;
 using DataDictionary.Main.Properties;
+using Toolbox.DbContext;
 
 namespace DataDictionary.Main
 {
     internal static class Program
     {
+
+        static Program() { }
 
         /// <summary>
         ///  The main entry point for the application.
@@ -30,9 +33,13 @@ namespace DataDictionary.Main
         /// <summary>
         /// Business Context information. Singleton access point.
         /// </summary>
-        public static BusinessContext BusinessContext { get; } = new BusinessContext() {
-            DbContext = new Toolbox.DbContext.Context() { 
-                ServerName = Settings.Default.AppServer, 
-                DatabaseName = Settings.Default.AppDatabase } };
+        public static BusinessContext BusinessContext { get; } = new BusinessContext()
+        {
+            DbContext = new Toolbox.DbContext.Context()
+            {
+                ServerName = Settings.Default.AppServer,
+                DatabaseName = Settings.Default.AppDatabase
+            }
+        };
     }
 }

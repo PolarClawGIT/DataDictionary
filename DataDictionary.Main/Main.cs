@@ -22,5 +22,11 @@ namespace DataDictionary.Main
 
             throw testEx;
         }
+
+        private void getSchemaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var unitTest = new DataDictionary.BusinessLayer.UnitTest();
+            unitTest.TestGetSchema();
+        }
     }
 }

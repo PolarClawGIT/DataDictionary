@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Toolbox.BindingTable\Toolbox.BindingTable.csproj" />
+  </ItemGroup>
+
 </Project>
