@@ -41,7 +41,7 @@ namespace Toolbox.BindingTable
         /// <exception cref="InvalidOperationException"></exception>
         protected internal void ImportRow(DataRow row)
         {
-            if(data is DataRow) { throw new InvalidOperationException("DataRow is already assigned."); }
+            if (data is DataRow) { throw new InvalidOperationException("DataRow is already assigned."); }
             row.Table.RowChanging += Table_RowChanging;
             row.Table.RowChanged += Table_RowChanged;
             row.Table.RowDeleting += Table_RowDeleting;
@@ -63,12 +63,19 @@ namespace Toolbox.BindingTable
         /// <typeparam name="T"></typeparam>
         /// <param name="columnName"></param>
         /// <returns></returns>
+        /// <remarks>Many data types have there onw TryParse functions. These can be handled genericly.</remarks>
         protected virtual Nullable<T> GetValue<T>(String columnName)
             where T : struct, IParsable<T>
         {
-            if (data is DataRow row && row.Table.Columns.Contains(columnName) && T.TryParse(row[columnName].ToString(), null, out T value))
+            if (data is not DataRow row) { throw new InvalidOperationException("Internal DataRow is not defined"); }
+            if (!row.Table.Columns.Contains(columnName)) { throw new IndexOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
+
+            // Generic handling
+            if (T.TryParse(row[columnName].ToString(), null, out T value))
             { return new Nullable<T>(value); }
-            else { return new Nullable<T>(); }
+
+            // Parsing failed, return null
+            return new Nullable<T>();
         }
 
         /// <summary>
@@ -76,11 +83,49 @@ namespace Toolbox.BindingTable
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
+        /// <remarks>Sting are a Microsoft special class and needs diffrent handling</remarks>
         protected virtual String? GetValue(String columnName)
         {
-            if (data is DataRow row && row.Table.Columns.Contains(columnName) && row[columnName].ToString() is String value)
+            if (data is not DataRow row) { throw new InvalidOperationException("Internal DataRow is not defined"); }
+            if (!row.Table.Columns.Contains(columnName)) { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
+
+            if (row[columnName].ToString() is String value)
             { return value; }
             else { return null; }
+        }
+
+        /// <summary>
+        /// Delegate that matches a TryParse function.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <param name="result"></param>
+        /// <returns>Used with GetValue function where the TryParse function is passed</returns>
+        protected delegate Boolean tryParseDelegate<T>(String value, out T result) where T : struct;
+
+        /// <summary>
+        /// Used to Get a Value from the DataRow and return it as a specific type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="columnName"></param>
+        /// <param name="praseFunction"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Some data types do not implment IParsable (like Boolean) or a specialzied version of TryParse is needed.
+        /// This allows a TryParse function to be passed in.
+        /// </remarks>
+        protected virtual Nullable<T> GetValue<T>(String columnName, tryParseDelegate<T> praseFunction)
+            where T : struct
+        {
+            if (String.IsNullOrWhiteSpace(columnName)) { throw new ArgumentNullException(nameof(columnName)); }
+            if (praseFunction is null) { throw new ArgumentNullException(nameof(praseFunction)); }
+            if (data is not DataRow row) { throw new InvalidOperationException("Internal DataRow is not defined"); }
+            if (!row.Table.Columns.Contains(columnName)) { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
+
+            if (row[columnName].ToString() is String stringValue &&
+                praseFunction(stringValue, out T result))
+            { return new Nullable<T>(result); }
+            else { return new Nullable<T>(); }
         }
 
         /// <summary>

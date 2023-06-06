@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,14 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public class DbSchemaItem : BindingTableRow
+    public interface IDbSchemaItem
+    {
+        String? CatalogName { get; }
+        String? SchemaName { get; }
+        Boolean IsSystem { get; }
+    }
+
+    public class DbSchemaItem : BindingTableRow, IDbSchemaItem
     {
         public String? CatalogName { get { return GetValue("SCHEMA_CATALOG"); } }
         public String? SchemaName { get { return GetValue("SCHEMA_NAME"); } }
@@ -29,14 +37,13 @@ namespace DataDictionary.DataLayer.DbMetaData
             }
         }
 
-        public static BindingTable<DbSchemaItem> Create(Func<IDataReader> dataReader)
+        internal static IBindingTable<DbSchemaItem> Create(Func<IDataReader> dataReader)
         {
             if (dataReader is null) { throw new ArgumentNullException(nameof(dataReader)); }
 
-            BindingTable<DbSchemaItem> result = new BindingTable<DbSchemaItem>();
-            result.Load(dataReader());
-
-            return result;
+            BindingTable<DbSchemaItem> data = new BindingTable<DbSchemaItem>();
+            data.Load(dataReader());
+            return data;
         }
     }
 }

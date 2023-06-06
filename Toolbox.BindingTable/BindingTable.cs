@@ -16,7 +16,7 @@ namespace Toolbox.BindingTable
     /// The TBindingItem represents the mapping class between the DataRow and the POCO like object used in code.
     /// </summary>
     /// <typeparam name="TBindingItem"></typeparam>
-    public class BindingTable<TBindingItem> : BindingList<TBindingItem>, IDisposable, ICloneable
+    public class BindingTable<TBindingItem> : BindingList<TBindingItem>, IBindingTable<TBindingItem>
         where TBindingItem : BindingTableRow, INotifyPropertyChanged, new()
     {
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -16,15 +17,13 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? TableType { get { return GetValue("TABLE_TYPE"); } }
         public Boolean IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
 
-        public static BindingTable<DbTableItem> Create(Func<IDataReader> dataReader)
+        internal static IBindingTable<DbTableItem> Create(Func<IDataReader> dataReader)
         {
-            if(dataReader is null) { throw new ArgumentNullException(nameof(dataReader)); }
+            if (dataReader is null) { throw new ArgumentNullException(nameof(dataReader)); }
 
-            BindingTable<DbTableItem> result = new BindingTable<DbTableItem>();
-            result.Load(dataReader());
-
-            return result;
+            BindingTable<DbTableItem> data = new BindingTable<DbTableItem>();
+            data.Load(dataReader());
+            return data;
         }
-
     }
 }
