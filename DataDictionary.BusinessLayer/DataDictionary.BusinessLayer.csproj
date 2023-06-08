@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DataDictionary.DataLayer\DataDictionary.DataLayer.csproj" />
     <ProjectReference Include="..\Toolbox.DbContext\Toolbox.DbContext.csproj" />
+    <ProjectReference Include="..\Toolbox.Threading\Toolbox.Threading.csproj" />
   </ItemGroup>
 
 </Project>
