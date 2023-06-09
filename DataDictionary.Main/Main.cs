@@ -9,7 +9,9 @@ namespace DataDictionary.Main
         { InitializeComponent(); }
 
         private void Main_Load(object sender, EventArgs e)
-        {   Program.WorkerQueue.ProgressChanged += WorkerQueue_ProgressChanged; }
+        {
+            Program.WorkerQueue.ProgressChanged += WorkerQueue_ProgressChanged;
+        }
 
 
         private void Main_FormClosing(object? sender, FormClosingEventArgs e)
