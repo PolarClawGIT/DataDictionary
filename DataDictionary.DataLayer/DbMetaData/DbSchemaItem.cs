@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
+using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
@@ -33,17 +34,17 @@ namespace DataDictionary.DataLayer.DbMetaData
                     "db_datareader" or
                     "db_datawriter" or
                     "db_denydatareader" or
-                    "db_denydatawriter";
+                    "db_denydatawriter" or
+                    "INFORMATION_SCHEMA";
             }
         }
 
-        internal static IBindingTable<DbSchemaItem> Create(Func<IDataReader> dataReader)
+        internal static IBindingTable<DbSchemaItem> Create(IConnection connection)
         {
-            if (dataReader is null) { throw new ArgumentNullException(nameof(dataReader)); }
-
-            BindingTable<DbSchemaItem> data = new BindingTable<DbSchemaItem>();
-            data.Load(dataReader());
-            return data;
+            if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
+            BindingTable<DbSchemaItem> result = new BindingTable<DbSchemaItem>();
+            result.Load(connection.GetSchema(Schema.Collection.Schemas));
+            return result;
         }
     }
 }

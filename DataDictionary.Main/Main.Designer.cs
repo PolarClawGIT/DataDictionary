@@ -30,6 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             statusStrip = new StatusStrip();
+            toolStripInfo = new ToolStripStatusLabel();
+            toolStripWhiteSpace = new ToolStripStatusLabel();
+            toolStripWorkerTask = new ToolStripStatusLabel();
+            toolStripProgressBar = new ToolStripProgressBar();
             menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             newToolStripMenuItem = new ToolStripMenuItem();
@@ -57,23 +61,48 @@
             unitTestToolStripMenuItem = new ToolStripMenuItem();
             testConnectionToolStripMenuItem = new ToolStripMenuItem();
             appExceptionToolStripMenuItem = new ToolStripMenuItem();
+            getSchemaToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             contentsToolStripMenuItem = new ToolStripMenuItem();
             indexToolStripMenuItem = new ToolStripMenuItem();
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
-            getSchemaToolStripMenuItem = new ToolStripMenuItem();
+            statusStrip.SuspendLayout();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // statusStrip
             // 
+            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripInfo, toolStripWhiteSpace, toolStripWorkerTask, toolStripProgressBar });
             statusStrip.Location = new Point(0, 428);
             statusStrip.Name = "statusStrip";
             statusStrip.Size = new Size(800, 22);
             statusStrip.TabIndex = 0;
             statusStrip.Text = "statusStrip1";
+            // 
+            // toolStripInfo
+            // 
+            toolStripInfo.Name = "toolStripInfo";
+            toolStripInfo.Size = new Size(106, 17);
+            toolStripInfo.Text = "(to be determined)";
+            // 
+            // toolStripWhiteSpace
+            // 
+            toolStripWhiteSpace.Name = "toolStripWhiteSpace";
+            toolStripWhiteSpace.Size = new Size(507, 17);
+            toolStripWhiteSpace.Spring = true;
+            // 
+            // toolStripWorkerTask
+            // 
+            toolStripWorkerTask.Name = "toolStripWorkerTask";
+            toolStripWorkerTask.Size = new Size(70, 17);
+            toolStripWorkerTask.Text = "Worker Task";
+            // 
+            // toolStripProgressBar
+            // 
+            toolStripProgressBar.Name = "toolStripProgressBar";
+            toolStripProgressBar.Size = new Size(100, 16);
             // 
             // menuStrip
             // 
@@ -239,36 +268,43 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(180, 22);
+            customizeToolStripMenuItem.Size = new Size(130, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(180, 22);
+            optionsToolStripMenuItem.Size = new Size(130, 22);
             optionsToolStripMenuItem.Text = "&Options";
             // 
             // unitTestToolStripMenuItem
             // 
             unitTestToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { testConnectionToolStripMenuItem, appExceptionToolStripMenuItem, getSchemaToolStripMenuItem });
             unitTestToolStripMenuItem.Name = "unitTestToolStripMenuItem";
-            unitTestToolStripMenuItem.Size = new Size(180, 22);
+            unitTestToolStripMenuItem.Size = new Size(130, 22);
             unitTestToolStripMenuItem.Text = "Unit Test";
             // 
             // testConnectionToolStripMenuItem
             // 
             testConnectionToolStripMenuItem.Name = "testConnectionToolStripMenuItem";
-            testConnectionToolStripMenuItem.Size = new Size(180, 22);
+            testConnectionToolStripMenuItem.Size = new Size(159, 22);
             testConnectionToolStripMenuItem.Text = "Test Connection";
             testConnectionToolStripMenuItem.Click += testConnectionToolStripMenuItem_Click;
             // 
             // appExceptionToolStripMenuItem
             // 
             appExceptionToolStripMenuItem.Name = "appExceptionToolStripMenuItem";
-            appExceptionToolStripMenuItem.Size = new Size(180, 22);
+            appExceptionToolStripMenuItem.Size = new Size(159, 22);
             appExceptionToolStripMenuItem.Text = "App Exception";
             appExceptionToolStripMenuItem.Click += appExceptionToolStripMenuItem_Click;
+            // 
+            // getSchemaToolStripMenuItem
+            // 
+            getSchemaToolStripMenuItem.Name = "getSchemaToolStripMenuItem";
+            getSchemaToolStripMenuItem.Size = new Size(159, 22);
+            getSchemaToolStripMenuItem.Text = "Get Schema";
+            getSchemaToolStripMenuItem.Click += getSchemaToolStripMenuItem_Click;
             // 
             // helpToolStripMenuItem
             // 
@@ -307,13 +343,6 @@
             aboutToolStripMenuItem.Size = new Size(122, 22);
             aboutToolStripMenuItem.Text = "&About...";
             // 
-            // getSchemaToolStripMenuItem
-            // 
-            getSchemaToolStripMenuItem.Name = "getSchemaToolStripMenuItem";
-            getSchemaToolStripMenuItem.Size = new Size(180, 22);
-            getSchemaToolStripMenuItem.Text = "Get Schema";
-            getSchemaToolStripMenuItem.Click += getSchemaToolStripMenuItem_Click;
-            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -325,6 +354,10 @@
             MainMenuStrip = menuStrip;
             Name = "Main";
             Text = "Data Dictionary manager";
+            FormClosed += Main_FormClosed;
+            Load += Main_Load;
+            statusStrip.ResumeLayout(false);
+            statusStrip.PerformLayout();
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             ResumeLayout(false);
@@ -368,5 +401,9 @@
         private ToolStripMenuItem testConnectionToolStripMenuItem;
         private ToolStripMenuItem appExceptionToolStripMenuItem;
         private ToolStripMenuItem getSchemaToolStripMenuItem;
+        private ToolStripStatusLabel toolStripWorkerTask;
+        private ToolStripStatusLabel toolStripInfo;
+        private ToolStripStatusLabel toolStripWhiteSpace;
+        private ToolStripProgressBar toolStripProgressBar;
     }
 }

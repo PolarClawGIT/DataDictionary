@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
+using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
@@ -50,13 +51,12 @@ namespace DataDictionary.DataLayer.DbMetaData
         public Nullable<Boolean> IsFileStream
         { get { return GetValue<Boolean>("IS_FILESTREAM", BindingItemParsers.BooleanTryPrase); } }
 
-        internal static IBindingTable<DbColumnItem> Create(Func<IDataReader> dataReader)
+        internal static IBindingTable<DbColumnItem> Create(IConnection connection)
         {
-            if (dataReader is null) { throw new ArgumentNullException(nameof(dataReader)); }
-
-            BindingTable<DbColumnItem> data = new BindingTable<DbColumnItem>();
-            data.Load(dataReader());
-            return data;
+            if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
+            BindingTable<DbColumnItem> result = new BindingTable<DbColumnItem>();
+            result.Load(connection.GetSchema(Schema.Collection.Columns));
+            return result;
         }
     }
 }

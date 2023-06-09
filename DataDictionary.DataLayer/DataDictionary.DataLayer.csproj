@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Toolbox.BindingTable\Toolbox.BindingTable.csproj" />
+    <ProjectReference Include="..\Toolbox.DbContext\Toolbox.DbContext.csproj" />
   </ItemGroup>
 
 </Project>

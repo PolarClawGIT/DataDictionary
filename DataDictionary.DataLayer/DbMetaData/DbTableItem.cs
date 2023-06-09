@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
+using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
@@ -17,13 +18,12 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? TableType { get { return GetValue("TABLE_TYPE"); } }
         public Boolean IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
 
-        internal static IBindingTable<DbTableItem> Create(Func<IDataReader> dataReader)
+        internal static IBindingTable<DbTableItem> Create(IConnection connection)
         {
-            if (dataReader is null) { throw new ArgumentNullException(nameof(dataReader)); }
-
-            BindingTable<DbTableItem> data = new BindingTable<DbTableItem>();
-            data.Load(dataReader());
-            return data;
+            if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
+            BindingTable<DbTableItem> result = new BindingTable<DbTableItem>();
+            result.Load(connection.GetSchema(Schema.Collection.Tables));
+            return result;
         }
     }
 }

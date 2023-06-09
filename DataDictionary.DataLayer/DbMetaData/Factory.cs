@@ -6,28 +6,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
+using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
     public static class Factory
     {
-        /* Could not get this to work
-        static Dictionary<Type, Func<Func<IDataReader>, IBindingList>> creators = new Dictionary<Type, Func<Func<IDataReader>, IBindingList>>()
+        static Dictionary<Type, Func<IConnection, IBindingList>> creators = new Dictionary<Type, Func<IConnection, IBindingList>>()
         {
             {typeof(DbCatalogItem), DbCatalogItem.Create },
-            {typeof(DbSchemaItem), DbSchemaItem.Create },
             {typeof(DbTableItem), DbTableItem.Create },
             {typeof(DbColumnItem), DbColumnItem.Create },
-        };*/
+            {typeof(DbSchemaItem), DbSchemaItem.Create },
+        };
 
-        public static IBindingTable<T> Create<T>(Func<IDataReader> reader)
+        public static IBindingTable<T> Create<T>(IConnection connection)
             where T : BindingTableRow
         {
-            if (typeof(T) == typeof(DbCatalogItem)) { return (IBindingTable<T>)DbCatalogItem.Create(reader); }
-            else if (typeof(T) == typeof(DbSchemaItem)) { return (IBindingTable<T>)DbSchemaItem.Create(reader); }
-            else if (typeof(T) == typeof(DbTableItem)) { return (IBindingTable<T>)DbTableItem.Create(reader); }
-            else if (typeof(T) == typeof(DbColumnItem)) { return (IBindingTable<T>)DbColumnItem.Create(reader); }
-            else { throw new NotImplementedException(); }
+            if (creators.ContainsKey(typeof(T))) { return (IBindingTable<T>)creators[typeof(T)](connection); }
+            else
+            {
+                Exception ex = new NotImplementedException("Datatype is not defined to the Factory method");
+                ex.Data.Add("DataType", typeof(T).Name);
+                throw ex;
+            }
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Toolbox.Threading
         public Int32 WorkAdded { get; protected set; } = 0;
         public Int32 WorkComplete { get; protected set; } = 0;
         public Int32 WorkQueued { get { return WorkQueue.Count; } }
+        protected WorkItem? CurrentWork { get; private set; } = null;
 
         public WorkerQueue() : base()
         {
@@ -37,7 +38,10 @@ namespace Toolbox.Threading
         void WorkerQueue_WorkStarting(object? sender, EventArgs e)
         {
             if (WorkQueue.TryDequeue(out WorkItem? item) && item is not null)
-            { DoWork((dynamic)item); }
+            {
+                CurrentWork = item;
+                DoWork((dynamic)item);
+            }
 
             OnProgressChanged();
         }
@@ -45,7 +49,7 @@ namespace Toolbox.Threading
         void WorkerQueue_WorkCompleted(object? sender, WorkerEventArgs e)
         {
             WorkComplete++;
-            if (WorkQueue.IsEmpty) { WorkAdded = 0; WorkComplete = 0; }
+            if (WorkQueue.IsEmpty) { WorkAdded = 0; WorkComplete = 0; CurrentWork = null; }
             else { WorkStarting(this, new EventArgs()); }
 
             OnProgressChanged();
@@ -91,18 +95,16 @@ namespace Toolbox.Threading
             WorkCompleted(this, new WorkerEventArgs(item));
         }
 
-        public event EventHandler<ProgressChangedEventArgs>? ProgressChanged;
+        public event EventHandler<WorkerProgressChangedEventArgs>? ProgressChanged;
         protected void OnProgressChanged()
         {
-            if (ProgressChanged is EventHandler<ProgressChangedEventArgs> progress)
+            if (ProgressChanged is EventHandler<WorkerProgressChangedEventArgs> progress)
             {
-                if (WorkAdded == 0) { progress(this, new ProgressChangedEventArgs(100, null)); }
-                else if (WorkComplete == 0) { progress(this, new ProgressChangedEventArgs(0, null)); }
-                else
-                {
-                    Int32 workProgress = ((Int32)Math.Round(((((decimal)WorkComplete / (decimal)WorkAdded) * (decimal)100.0))));
-                    progress(this, new ProgressChangedEventArgs(workProgress, null));
-                }
+                Int32 workProgress = ((Int32)Math.Truncate(((((decimal)WorkComplete / (decimal)WorkAdded) * (decimal)100.0))));
+
+                if (CurrentWork is WorkItem)
+                { progress(this, new WorkerProgressChangedEventArgs(CurrentWork, workProgress)); }
+                else { progress(this, new WorkerProgressChangedEventArgs(workProgress)); }
             }
         }
 
@@ -122,8 +124,7 @@ namespace Toolbox.Threading
             }
         }
 
-
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);

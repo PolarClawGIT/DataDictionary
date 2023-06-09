@@ -24,10 +24,10 @@ namespace DataDictionary.BusinessLayer
         {
             using (IConnection connection = BusinessContext.Instance.DbContext.CreateConnection())
             {
-                var x1 = Factory.Create<DbCatalogItem>(() => connection.GetSchema(Schema.Collection.Databases));
-                var x2 = Factory.Create<DbSchemaItem>(() => connection.GetSchema(Schema.Collection.Schemas));
-                var x3 = Factory.Create<DbTableItem>(() => connection.GetSchema(Schema.Collection.Tables));
-                var x4 = Factory.Create<DbColumnItem>(() => connection.GetSchema(Schema.Collection.Columns));
+                var x1 = Factory.Create<DbCatalogItem>(connection);
+                var x2 = Factory.Create<DbSchemaItem>(connection);
+                var x3 = Factory.Create<DbTableItem>(connection);
+                var x4 = Factory.Create<DbColumnItem>(connection);
 
             }
         }

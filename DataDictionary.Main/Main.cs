@@ -1,10 +1,27 @@
+using System.ComponentModel;
+using Toolbox.Threading;
+
 namespace DataDictionary.Main
 {
     public partial class Main : Form
     {
         public Main()
+        { InitializeComponent(); }
+
+        private void Main_Load(object sender, EventArgs e)
+        {   Program.WorkerQueue.ProgressChanged += WorkerQueue_ProgressChanged; }
+
+
+        private void Main_FormClosing(object? sender, FormClosingEventArgs e)
+        { }
+
+        private void Main_FormClosed(object sender, FormClosedEventArgs e)
+        { Program.WorkerQueue.ProgressChanged -= WorkerQueue_ProgressChanged; }
+
+        private void WorkerQueue_ProgressChanged(object? sender, WorkerProgressChangedEventArgs e)
         {
-            InitializeComponent();
+            toolStripProgressBar.Value = e.ProgressPercent;
+            toolStripWorkerTask.Text = e.ProgressText;
         }
 
         private void testConnectionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -28,5 +45,7 @@ namespace DataDictionary.Main
             var unitTest = new DataDictionary.BusinessLayer.UnitTest();
             unitTest.TestGetSchema();
         }
+
+
     }
 }
