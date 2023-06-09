@@ -39,12 +39,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             }
         }
 
-        internal static IBindingTable<DbSchemaItem> Create(IConnection connection)
-        {
-            if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
-            BindingTable<DbSchemaItem> result = new BindingTable<DbSchemaItem>();
-            result.Load(connection.GetSchema(Schema.Collection.Schemas));
-            return result;
-        }
+        internal static IDataReader GetDataReader(IConnection connection)
+        { return connection.GetSchema(Schema.Collection.Schemas); }
     }
 }

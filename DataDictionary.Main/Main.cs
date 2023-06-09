@@ -1,3 +1,4 @@
+using DataDictionary.BusinessLayer;
 using System.ComponentModel;
 using Toolbox.Threading;
 
@@ -5,12 +6,15 @@ namespace DataDictionary.Main
 {
     public partial class Main : Form
     {
+        DataRepository thisData = new DataRepository();
+
         public Main()
         { InitializeComponent(); }
 
         private void Main_Load(object sender, EventArgs e)
         {
             Program.WorkerQueue.ProgressChanged += WorkerQueue_ProgressChanged;
+
         }
 
 

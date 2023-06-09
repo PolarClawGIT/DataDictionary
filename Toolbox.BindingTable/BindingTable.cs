@@ -117,7 +117,7 @@ namespace Toolbox.BindingTable
         }
 
         /// <inheritdoc cref="DataTable.Load(IDataReader, LoadOption, FillErrorEventHandler?)"/>
-        protected virtual void Load(IDataReader reader, LoadOption loadOption, FillErrorEventHandler? errorHandler)
+        public virtual void Load(IDataReader reader, LoadOption loadOption, FillErrorEventHandler? errorHandler)
         {
             dataItems.Load(reader, loadOption, errorHandler);
 

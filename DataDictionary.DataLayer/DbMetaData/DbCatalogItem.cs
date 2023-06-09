@@ -18,12 +18,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public Nullable<DateTime> CreateDate { get { return GetValue<DateTime>("create_date"); } }
         public Boolean IsSystem { get { return CatalogName is "tempdb" or "master" or "msdb" or "model"; } }
 
-        internal static IBindingTable<DbCatalogItem> Create (IConnection connection)
-        {
-            if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
-            BindingTable<DbCatalogItem> result = new BindingTable<DbCatalogItem>();
-            result.Load(connection.GetSchema(Schema.Collection.Databases));
-            return result;
-        }
+        internal static IDataReader GetDataReader(IConnection connection)
+        { return connection.GetSchema(Schema.Collection.Databases); }
     }
 }

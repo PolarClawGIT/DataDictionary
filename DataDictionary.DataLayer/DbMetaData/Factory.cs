@@ -12,24 +12,34 @@ namespace DataDictionary.DataLayer.DbMetaData
 {
     public static class Factory
     {
-        static Dictionary<Type, Func<IConnection, IBindingList>> creators = new Dictionary<Type, Func<IConnection, IBindingList>>()
+        static Dictionary<Type, Func<IConnection, IDataReader>> dataReaders = new Dictionary<Type, Func<IConnection, IDataReader>>()
         {
-            {typeof(DbCatalogItem), DbCatalogItem.Create },
-            {typeof(DbTableItem), DbTableItem.Create },
-            {typeof(DbColumnItem), DbColumnItem.Create },
-            {typeof(DbSchemaItem), DbSchemaItem.Create },
+            {typeof(DbCatalogItem), DbCatalogItem.GetDataReader },
+            {typeof(DbTableItem), DbTableItem.GetDataReader },
+            {typeof(DbColumnItem), DbColumnItem.GetDataReader },
+            {typeof(DbSchemaItem), DbSchemaItem.GetDataReader },
         };
 
-        public static IBindingTable<T> Create<T>(IConnection connection)
-            where T : BindingTableRow
+        public static IDataReader GetDataReader<TRow>(IConnection connection)
+            where TRow : BindingTableRow
         {
-            if (creators.ContainsKey(typeof(T))) { return (IBindingTable<T>)creators[typeof(T)](connection); }
+            if(connection is null) { throw new ArgumentNullException(nameof(connection)); }
+
+            if (dataReaders.ContainsKey(typeof(TRow))) { return dataReaders[typeof(TRow)](connection); }
             else
             {
                 Exception ex = new NotImplementedException("Datatype is not defined to the Factory method");
-                ex.Data.Add("DataType", typeof(T).Name);
+                ex.Data.Add("DataType", typeof(TRow).Name);
                 throw ex;
             }
         }
+
+        public static void Load<TRow>(this IBindingTable<TRow> data, IConnection connection)
+            where TRow : BindingTableRow
+        {
+            if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
+            data.Load(GetDataReader<TRow>(connection));
+        }
+        
     }
 }

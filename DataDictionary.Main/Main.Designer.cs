@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Label serverNameLayout;
-            Label databaseNameLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             statusStrip = new StatusStrip();
             toolStripInfo = new ToolStripStatusLabel();
@@ -70,42 +68,11 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
-            navTabControl = new TabControl();
-            navDomainTab = new TabPage();
-            navDbSchemaTab = new TabPage();
-            navMainPanel = new TableLayoutPanel();
-            layoutConnectionPanel = new GroupBox();
-            layoutConnectionTable = new TableLayoutPanel();
-            serverNameData = new TextBox();
-            databaseNameData = new TextBox();
+            mainNavigation = new Control.MainNavigation();
             navSplitter = new Splitter();
-            serverNameLayout = new Label();
-            databaseNameLayout = new Label();
             statusStrip.SuspendLayout();
             menuStrip.SuspendLayout();
-            navTabControl.SuspendLayout();
-            navMainPanel.SuspendLayout();
-            layoutConnectionPanel.SuspendLayout();
-            layoutConnectionTable.SuspendLayout();
             SuspendLayout();
-            // 
-            // serverNameLayout
-            // 
-            serverNameLayout.AutoSize = true;
-            serverNameLayout.Location = new Point(3, 0);
-            serverNameLayout.Name = "serverNameLayout";
-            serverNameLayout.Size = new Size(74, 15);
-            serverNameLayout.TabIndex = 0;
-            serverNameLayout.Text = "Server Name";
-            // 
-            // databaseNameLayout
-            // 
-            databaseNameLayout.AutoSize = true;
-            databaseNameLayout.Location = new Point(3, 44);
-            databaseNameLayout.Name = "databaseNameLayout";
-            databaseNameLayout.Size = new Size(90, 15);
-            databaseNameLayout.TabIndex = 1;
-            databaseNameLayout.Text = "Database Name";
             // 
             // statusStrip
             // 
@@ -378,110 +345,20 @@
             aboutToolStripMenuItem.Size = new Size(122, 22);
             aboutToolStripMenuItem.Text = "&About...";
             // 
-            // navTabControl
+            // mainNavigation
             // 
-            navTabControl.Controls.Add(navDomainTab);
-            navTabControl.Controls.Add(navDbSchemaTab);
-            navTabControl.Dock = DockStyle.Fill;
-            navTabControl.Location = new Point(3, 119);
-            navTabControl.Name = "navTabControl";
-            navTabControl.SelectedIndex = 0;
-            navTabControl.Size = new Size(194, 282);
-            navTabControl.TabIndex = 12;
-            // 
-            // navDomainTab
-            // 
-            navDomainTab.Location = new Point(4, 24);
-            navDomainTab.Name = "navDomainTab";
-            navDomainTab.Padding = new Padding(3);
-            navDomainTab.Size = new Size(186, 254);
-            navDomainTab.TabIndex = 1;
-            navDomainTab.Text = "Domain";
-            navDomainTab.UseVisualStyleBackColor = true;
-            // 
-            // navDbSchemaTab
-            // 
-            navDbSchemaTab.Location = new Point(4, 24);
-            navDbSchemaTab.Name = "navDbSchemaTab";
-            navDbSchemaTab.Padding = new Padding(3);
-            navDbSchemaTab.Size = new Size(186, 254);
-            navDbSchemaTab.TabIndex = 0;
-            navDbSchemaTab.Text = "Db Schema";
-            navDbSchemaTab.UseVisualStyleBackColor = true;
-            // 
-            // navMainPanel
-            // 
-            navMainPanel.ColumnCount = 1;
-            navMainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            navMainPanel.Controls.Add(layoutConnectionPanel, 0, 0);
-            navMainPanel.Controls.Add(navTabControl, 0, 1);
-            navMainPanel.Dock = DockStyle.Left;
-            navMainPanel.Location = new Point(0, 24);
-            navMainPanel.Name = "navMainPanel";
-            navMainPanel.RowCount = 2;
-            navMainPanel.RowStyles.Add(new RowStyle());
-            navMainPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            navMainPanel.Size = new Size(200, 404);
-            navMainPanel.TabIndex = 15;
-            // 
-            // layoutConnectionPanel
-            // 
-            layoutConnectionPanel.AutoSize = true;
-            layoutConnectionPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            layoutConnectionPanel.Controls.Add(layoutConnectionTable);
-            layoutConnectionPanel.Dock = DockStyle.Fill;
-            layoutConnectionPanel.Location = new Point(3, 3);
-            layoutConnectionPanel.Name = "layoutConnectionPanel";
-            layoutConnectionPanel.Size = new Size(194, 110);
-            layoutConnectionPanel.TabIndex = 17;
-            layoutConnectionPanel.TabStop = false;
-            layoutConnectionPanel.Text = "Connection";
-            // 
-            // layoutConnectionTable
-            // 
-            layoutConnectionTable.AutoSize = true;
-            layoutConnectionTable.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            layoutConnectionTable.ColumnCount = 1;
-            layoutConnectionTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            layoutConnectionTable.Controls.Add(serverNameLayout, 0, 0);
-            layoutConnectionTable.Controls.Add(databaseNameLayout, 0, 2);
-            layoutConnectionTable.Controls.Add(serverNameData, 0, 1);
-            layoutConnectionTable.Controls.Add(databaseNameData, 0, 3);
-            layoutConnectionTable.Dock = DockStyle.Fill;
-            layoutConnectionTable.Location = new Point(3, 19);
-            layoutConnectionTable.Name = "layoutConnectionTable";
-            layoutConnectionTable.RowCount = 4;
-            layoutConnectionTable.RowStyles.Add(new RowStyle());
-            layoutConnectionTable.RowStyles.Add(new RowStyle());
-            layoutConnectionTable.RowStyles.Add(new RowStyle());
-            layoutConnectionTable.RowStyles.Add(new RowStyle());
-            layoutConnectionTable.Size = new Size(188, 88);
-            layoutConnectionTable.TabIndex = 0;
-            // 
-            // serverNameData
-            // 
-            serverNameData.Dock = DockStyle.Fill;
-            serverNameData.Location = new Point(3, 18);
-            serverNameData.Name = "serverNameData";
-            serverNameData.ReadOnly = true;
-            serverNameData.Size = new Size(182, 23);
-            serverNameData.TabIndex = 2;
-            // 
-            // databaseNameData
-            // 
-            databaseNameData.Dock = DockStyle.Fill;
-            databaseNameData.Location = new Point(3, 62);
-            databaseNameData.Name = "databaseNameData";
-            databaseNameData.ReadOnly = true;
-            databaseNameData.Size = new Size(182, 23);
-            databaseNameData.TabIndex = 3;
+            mainNavigation.Dock = DockStyle.Left;
+            mainNavigation.Location = new Point(0, 24);
+            mainNavigation.Name = "mainNavigation";
+            mainNavigation.Size = new Size(242, 404);
+            mainNavigation.TabIndex = 3;
             // 
             // navSplitter
             // 
-            navSplitter.Location = new Point(200, 24);
+            navSplitter.Location = new Point(242, 24);
             navSplitter.Name = "navSplitter";
             navSplitter.Size = new Size(3, 404);
-            navSplitter.TabIndex = 16;
+            navSplitter.TabIndex = 4;
             navSplitter.TabStop = false;
             // 
             // Main
@@ -490,7 +367,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(navSplitter);
-            Controls.Add(navMainPanel);
+            Controls.Add(mainNavigation);
             Controls.Add(statusStrip);
             Controls.Add(menuStrip);
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -504,13 +381,6 @@
             statusStrip.PerformLayout();
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
-            navTabControl.ResumeLayout(false);
-            navMainPanel.ResumeLayout(false);
-            navMainPanel.PerformLayout();
-            layoutConnectionPanel.ResumeLayout(false);
-            layoutConnectionPanel.PerformLayout();
-            layoutConnectionTable.ResumeLayout(false);
-            layoutConnectionTable.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -556,14 +426,7 @@
         private ToolStripStatusLabel toolStripInfo;
         private ToolStripStatusLabel toolStripWhiteSpace;
         private ToolStripProgressBar toolStripProgressBar;
-        private TabControl navTabControl;
-        private TabPage navDbSchemaTab;
-        private TabPage navDomainTab;
-        private TableLayoutPanel navMainPanel;
+        private Control.MainNavigation mainNavigation;
         private Splitter navSplitter;
-        private GroupBox layoutConnectionPanel;
-        private TableLayoutPanel layoutConnectionTable;
-        private TextBox serverNameData;
-        private TextBox databaseNameData;
     }
 }

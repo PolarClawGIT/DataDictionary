@@ -18,12 +18,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? TableType { get { return GetValue("TABLE_TYPE"); } }
         public Boolean IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
 
-        internal static IBindingTable<DbTableItem> Create(IConnection connection)
-        {
-            if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
-            BindingTable<DbTableItem> result = new BindingTable<DbTableItem>();
-            result.Load(connection.GetSchema(Schema.Collection.Tables));
-            return result;
-        }
+        internal static IDataReader GetDataReader(IConnection connection)
+        { return connection.GetSchema(Schema.Collection.Tables); }
     }
 }

@@ -51,12 +51,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public Nullable<Boolean> IsFileStream
         { get { return GetValue<Boolean>("IS_FILESTREAM", BindingItemParsers.BooleanTryPrase); } }
 
-        internal static IBindingTable<DbColumnItem> Create(IConnection connection)
-        {
-            if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
-            BindingTable<DbColumnItem> result = new BindingTable<DbColumnItem>();
-            result.Load(connection.GetSchema(Schema.Collection.Columns));
-            return result;
-        }
+        internal static IDataReader GetDataReader(IConnection connection)
+        { return connection.GetSchema(Schema.Collection.Columns); }
     }
 }

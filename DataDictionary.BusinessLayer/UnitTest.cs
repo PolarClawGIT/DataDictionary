@@ -22,14 +22,8 @@ namespace DataDictionary.BusinessLayer
 
         public void TestGetSchema()
         {
-            using (IConnection connection = BusinessContext.Instance.DbContext.CreateConnection())
-            {
-                var x1 = Factory.Create<DbCatalogItem>(connection);
-                var x2 = Factory.Create<DbSchemaItem>(connection);
-                var x3 = Factory.Create<DbTableItem>(connection);
-                var x4 = Factory.Create<DbColumnItem>(connection);
-
-            }
+            DataRepository data = new DataRepository();
+            data.Load();
         }
     }
 }
