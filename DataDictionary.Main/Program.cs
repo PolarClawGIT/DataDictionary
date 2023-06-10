@@ -19,11 +19,8 @@ namespace DataDictionary.Main
         /// </summary>
         public static BusinessContext BusinessContext { get; } = new BusinessContext()
         {
-            DbContext = new Toolbox.DbContext.Context()
-            {
-                ServerName = Settings.Default.AppServer,
-                DatabaseName = Settings.Default.AppDatabase
-            }
+            DbContext = new Context() { ServerName = Settings.Default.AppServer, DatabaseName = Settings.Default.AppDatabase },
+            AddWork = WorkerQueue.Enqueue
         };
 
         static Program()
@@ -59,6 +56,6 @@ namespace DataDictionary.Main
 
 
 
-        
+
     }
 }

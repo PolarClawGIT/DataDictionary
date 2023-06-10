@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer
 {
@@ -18,11 +19,31 @@ namespace DataDictionary.BusinessLayer
 
         public void Load()
         {
+
             using (IConnection connection = BusinessContext.Instance.DbContext.CreateConnection())
             {
-                dbSchemas.Load(connection);
-                dbTables.Load(connection);
-                dbColumns.Load(connection);
+
+                BusinessContext.Instance.AddWork(
+                    new WorkBackgroundItem()
+                    {
+                        WorkName = "Load Schemas",
+                        OnDoWork = () => dbSchemas.Load(connection)
+                    });
+
+                BusinessContext.Instance.AddWork(
+                    new WorkBackgroundItem()
+                    {
+                        WorkName = "Load Tables",
+                        OnDoWork = () => dbTables.Load(connection)
+                    });
+
+                BusinessContext.Instance.AddWork(
+                    new WorkBackgroundItem()
+                    {
+                        WorkName = "Load Columns",
+                        OnDoWork = () => dbColumns.Load(connection)
+                    });
+
             }
         }
     }

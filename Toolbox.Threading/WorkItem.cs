@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace Toolbox.Threading
 {
@@ -20,7 +14,9 @@ namespace Toolbox.Threading
         public Action OnStarting { get; init; } = () => { };
         public Action<RunWorkerCompletedEventArgs> OnCompleting { get; init; } = (e) => { };
 
-        public virtual void DoWork() { }
+        public Action OnDoWork { get; init; } = () => { };
+        public virtual void DoWork() { OnDoWork(); }
+
         public WorkBackgroundItem() : base() { }
     }
 
@@ -37,6 +33,8 @@ namespace Toolbox.Threading
     public class WorkForegroundItem : WorkItem
     {
         public WorkForegroundItem() : base() { }
-        public virtual void DoWork() { }
+
+        public Action OnDoWork { get; init; } = () => { };
+        public virtual void DoWork() { OnDoWork(); }
     }
 }

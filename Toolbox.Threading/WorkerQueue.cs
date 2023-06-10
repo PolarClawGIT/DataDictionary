@@ -14,6 +14,15 @@ namespace Toolbox.Threading
         protected BackgroundWorker BackgroundWorker { get; } = new BackgroundWorker();
         public Int32 WorkAdded { get; protected set; } = 0;
         public Int32 WorkComplete { get; protected set; } = 0;
+        public Int32 WorkProgress
+        {
+            get
+            {
+                if (WorkAdded == 0) { return 0; }
+                else { return ((Int32)Math.Truncate(((((decimal)WorkComplete / (decimal)WorkAdded) * (decimal)100.0)))); }
+            }
+        }
+
         public Int32 WorkQueued { get { return WorkQueue.Count; } }
         protected WorkItem? CurrentWork { get; private set; } = null;
 
@@ -25,11 +34,9 @@ namespace Toolbox.Threading
 
         public virtual void Enqueue(WorkItem item)
         {
-            Boolean isWaiting = WorkQueue.IsEmpty;
-
             WorkQueue.Enqueue(item);
             WorkAdded++;
-            if (isWaiting) { WorkStarting(this, new EventArgs()); }
+            if (CurrentWork is null) { WorkStarting(this, new EventArgs()); }
         }
 
         protected event EventHandler WorkStarting;
@@ -49,7 +56,8 @@ namespace Toolbox.Threading
         void WorkerQueue_WorkCompleted(object? sender, WorkerEventArgs e)
         {
             WorkComplete++;
-            if (WorkQueue.IsEmpty) { WorkAdded = 0; WorkComplete = 0; CurrentWork = null; }
+            CurrentWork = null;
+            if (WorkQueue.IsEmpty) { WorkAdded = 0; WorkComplete = 0; }
             else { WorkStarting(this, new EventArgs()); }
 
             OnProgressChanged();
@@ -100,11 +108,9 @@ namespace Toolbox.Threading
         {
             if (ProgressChanged is EventHandler<WorkerProgressChangedEventArgs> progress)
             {
-                Int32 workProgress = ((Int32)Math.Truncate(((((decimal)WorkComplete / (decimal)WorkAdded) * (decimal)100.0))));
-
                 if (CurrentWork is WorkItem)
-                { progress(this, new WorkerProgressChangedEventArgs(CurrentWork, workProgress)); }
-                else { progress(this, new WorkerProgressChangedEventArgs(workProgress)); }
+                { progress(this, new WorkerProgressChangedEventArgs(CurrentWork, WorkProgress)); }
+                else { progress(this, new WorkerProgressChangedEventArgs(WorkProgress)); }
             }
         }
 

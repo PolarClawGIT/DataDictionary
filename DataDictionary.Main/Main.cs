@@ -14,6 +14,7 @@ namespace DataDictionary.Main
         private void Main_Load(object sender, EventArgs e)
         {
             Program.WorkerQueue.ProgressChanged += WorkerQueue_ProgressChanged;
+            thisData.Load();
 
         }
 

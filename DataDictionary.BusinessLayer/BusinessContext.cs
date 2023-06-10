@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.DbContext;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer
 {
@@ -16,7 +17,11 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Accessor to the Business Context. 
         /// </summary>
-        internal static BusinessContext Instance { get; private set; } = new BusinessContext() { DbContext = new Toolbox.DbContext.Context() };
+        internal static BusinessContext Instance { get; private set; } = new BusinessContext()
+        {
+            DbContext = new Toolbox.DbContext.Context(),
+            AddWork = (item) => { }
+        };
 
         /// <summary>
         /// Constructor. Singleton Pattern.
@@ -30,5 +35,8 @@ namespace DataDictionary.BusinessLayer
         /// Database Context used by the Business Layer.
         /// </summary>
         public required Context DbContext { get; init; }
+
+        public required Action<WorkItem> AddWork { get; init; }
+
     }
 }
