@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? TableName { get; }
     }
 
-    public interface IDbTableItem: IDbTableName, IDbIsSystem
+    public interface IDbTableItem : IDbTableName, IDbIsSystem
     {
         public String? TableType { get; }
     }

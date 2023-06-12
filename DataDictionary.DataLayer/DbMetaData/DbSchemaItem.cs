@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -42,6 +43,11 @@ namespace DataDictionary.DataLayer.DbMetaData
         }
 
         internal static IDataReader GetDataReader(IConnection connection)
-        { return connection.GetReader(Schema.Collection.Schemas); }
+        {
+            SqlCommand getCommand = connection.CreateCommand();
+            getCommand.CommandText = "Select Db_Name() As [SCHEMA_CATALOG], [name] As [SCHEMA_NAME] From [Sys].[Schemas]";
+            getCommand.CommandType = CommandType.Text;
+
+            return connection.GetReader(getCommand); }
     }
 }

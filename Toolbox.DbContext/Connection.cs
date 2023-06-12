@@ -23,6 +23,9 @@ namespace Toolbox.DbContext
         /// <returns></returns>
         IDataReader GetReader(Schema.Collection collection);
 
+        SqlCommand CreateCommand();
+        IDataReader GetReader(SqlCommand command);
+
         /// <summary>
         /// Commits the transaction on the Open Connection. The Connection is then closed.
         /// </summary>
@@ -36,8 +39,7 @@ namespace Toolbox.DbContext
 
     class Connection : IConnection
     {
-
-        public Context DbContext { get; init; } = null!;
+        public required Context DbContext { get; init; }
 
         private Boolean disposedValue;
         private SqlConnection connection = new SqlConnection();
@@ -45,6 +47,9 @@ namespace Toolbox.DbContext
 
         public Connection() { }
 
+        /// <summary>
+        /// Wrappers the Open and Begin Transaction of the SQL Connection.
+        /// </summary>
         public void Open()
         {
             try
@@ -60,6 +65,9 @@ namespace Toolbox.DbContext
             }
         }
 
+        /// <summary>
+        /// Wrappers the Commit and Close of the SQL Connection.
+        /// </summary>
         public void Commit()
         {
             try
@@ -71,6 +79,9 @@ namespace Toolbox.DbContext
             { throw; }
         }
 
+        /// <summary>
+        /// Wrappers the Rollback and Close of the SQL Connection.
+        /// </summary>
         public void Rollback()
         {
             try
@@ -82,9 +93,38 @@ namespace Toolbox.DbContext
             { throw; }
         }
 
-        public SqlCommand GetCommand()
-        { return connection.CreateCommand(); }
+        /// <summary>
+        /// Exposes the CreateCommand.
+        /// The Command created is already assocated with the Transaction.
+        /// </summary>
+        /// <returns></returns>
+        public SqlCommand CreateCommand()
+        {
+            SqlCommand result = connection.CreateCommand();
+            result.Transaction = transaction;
+            return result;
+        }
 
+        /// <summary>
+        /// Exposes the ExecuteReader.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        public IDataReader GetReader(SqlCommand command)
+        { return command.ExecuteReader(); }
+
+        /// <summary>
+        /// Specialized GetReader for the GetSchema method.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// This method does not honor transactions.
+        /// This is because the GetSchema method provided by MS does not support
+        /// a command/data reader that uses a transaction. Instead this method
+        /// creates its own connection without a transaction and executes
+        /// the GetSchema method.
+        /// </remarks>
         public IDataReader GetReader(Schema.Collection collection)
         {
             IDataReader result;
@@ -92,25 +132,13 @@ namespace Toolbox.DbContext
             connection.ConnectionString = DbContext.ConnectionBuilder.ConnectionString;
             connection.Open();
 
-            if (collection == Schema.Collection.Schemas)
-            { // Handling for Db Schema objects.
-                SqlCommand getCommand = connection.CreateCommand();
-                getCommand.CommandText = "Select Db_Name() As [SCHEMA_CATALOG], [name] As [SCHEMA_NAME] From [Sys].[Schemas]";
-                getCommand.CommandType = CommandType.Text;
-                return getCommand.ExecuteReader();
-            }
-            else
-            {// Everything else is handled by GetSchema method.
-                DataTable data = connection.GetSchema(collection.ToString());
-                result = data.CreateDataReader();
-            }
+            DataTable data = connection.GetSchema(collection.ToString());
+            result = data.CreateDataReader();
 
             connection.Close();
             return result;
         }
 
-        public IDataReader GetReader(SqlCommand command)
-        { return command.ExecuteReader(); }
 
 
         #region IDisposable

@@ -34,9 +34,7 @@ namespace Toolbox.DbContext
             ForeignKeys,
             IndexColumns,
             Indexes,
-            UserDefinedTypes,
-            // Special Handling
-            Schemas,
+            UserDefinedTypes
         }
     }
 }

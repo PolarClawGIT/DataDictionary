@@ -84,7 +84,7 @@ namespace DataDictionary.DataLayer
                 { ReportError(ex); }
             }
         }
-        
+
         public class DbReader : BackgroundWork
         {
             public required IConnection Connection { get; init; }
@@ -104,5 +104,6 @@ namespace DataDictionary.DataLayer
                 catch (Exception ex)
                 { ReportError(ex); }
             }
+        }
     }
 }
