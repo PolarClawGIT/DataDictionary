@@ -1,4 +1,6 @@
-﻿using DataDictionary.DataLayer.DbMetaData;
+﻿using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.DbMetaData;
+using DataDictionary.DataLayer.WorkDbItem;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,8 +15,8 @@ using Toolbox.Threading.WorkItem;
 
 namespace DataDictionary.BusinessLayer
 {
-    
-    
+
+
     public class DataRepository
     {
         BindingTable<DbSchemaItem> dbSchemas = new BindingTable<DbSchemaItem>();
@@ -30,24 +32,49 @@ namespace DataDictionary.BusinessLayer
 
         public WorkBase Load()
         {
-            BatchWork result = new BatchWork() { WorkName = "Load DataRepository" };
-
-            result.WorkItems.Add(new BackgroundWork()
+            DbConnection result = new DbConnection()
             {
-                WorkName = "Load Schemas",
-                OnDoWork = () => dbSchemas.Load(BusinessContext.Instance.DbContext.CreateConnection())
+                WorkName = "Load DataRepository",
+                Connection = BusinessContext.Instance.DbContext.CreateConnection()
+            };
+
+            result.WorkItems.Add(new DbOpen()
+            {
+                WorkName = "Open Connection",
+                Connection = result.Connection,
+                ReportError = result.AddError,
             });
 
-            result.WorkItems.Add(new BackgroundWork()
+            result.WorkItems.Add(new DbLoad()
+            {
+                WorkName = "Load Schema",
+                Connection = result.Connection,
+                Load = dbSchemas.Load,
+                ReportError = result.AddError
+            });
+
+            result.WorkItems.Add(new DbLoad()
             {
                 WorkName = "Load Tables",
-                OnDoWork = () => dbTables.Load(BusinessContext.Instance.DbContext.CreateConnection())
+                Connection = result.Connection,
+                Load = dbTables.Load,
+                ReportError = result.AddError
             });
 
-            result.WorkItems.Add(new BackgroundWork()
+            result.WorkItems.Add(new DbLoad()
             {
                 WorkName = "Load Columns",
-                OnDoWork = () => dbColumns.Load(BusinessContext.Instance.DbContext.CreateConnection())
+                Connection = result.Connection,
+                Load = dbColumns.Load,
+                ReportError = result.AddError
+            });
+
+            result.WorkItems.Add(new DbClose()
+            {
+                WorkName = "Close Connection",
+                Connection = result.Connection,
+                CommentTransaction = result.CommentTransaction,
+                ReportError = result.AddError
             });
 
             return result;

@@ -19,8 +19,7 @@ namespace DataDictionary.Main.Control
         {
             Schema,
             Table,
-            Column,
-            ColumnKey
+            Column
         }
 
         readonly Dictionary<DbSchmeaTreeNodeType, Image> dbSchmeaTreeImages = new Dictionary<DbSchmeaTreeNodeType, Image>()
@@ -62,7 +61,7 @@ namespace DataDictionary.Main.Control
             foreach (IDbSchemaItem schemaItem in data.DbSchema.OrderBy(o => o.SchemaName))
             {
                 TreeNode schemaNode = new TreeNode(schemaItem.SchemaName);
-                schemaNode.ImageKey = DbSchmeaTreeNodeType.Schema.ToString() ;
+                schemaNode.ImageKey = DbSchmeaTreeNodeType.Schema.ToString();
                 dbSchmeaTreeData.Nodes.Add(schemaNode);
 
                 foreach (IDbTableItem tableItem in data.DbTable.
