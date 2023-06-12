@@ -11,7 +11,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbSchemaName: IDbCatalogName
+    public interface IDbSchemaName : IDbCatalogName
     {
         String? SchemaName { get; }
     }
@@ -42,12 +42,23 @@ namespace DataDictionary.DataLayer.DbMetaData
             }
         }
 
+        public BindingTable<DbExtendedPropertyItem> ExtendedProperties { get; } = new BindingTable<DbExtendedPropertyItem>();
+
         internal static IDataReader GetDataReader(IConnection connection)
         {
             SqlCommand getCommand = connection.CreateCommand();
             getCommand.CommandText = "Select Db_Name() As [SCHEMA_CATALOG], [name] As [SCHEMA_NAME] From [Sys].[Schemas]";
             getCommand.CommandType = CommandType.Text;
 
-            return connection.GetReader(getCommand); }
+            return connection.GetReader(getCommand);
+        }
+
+        internal virtual void GetExtendedProperties(IConnection connection)
+        {
+            DbExtendedPropertyGetCommand command = new DbExtendedPropertyGetCommand(connection)
+            { Level0Name = SchemaName, Level0Type = "SCHEMA" };
+
+            ExtendedProperties.Load(connection.GetReader(command.GetCommand()));
+        }
     }
 }

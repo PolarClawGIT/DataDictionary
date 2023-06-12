@@ -40,6 +40,30 @@ namespace DataDictionary.DataLayer.DbMetaData
             if (connection is null) { throw new ArgumentNullException(nameof(connection)); }
             data.Load(GetDataReader<TRow>(connection));
         }
-        
+
+        public static void Load(this BindingTable<DbSchemaItem> data, IConnection connection)
+        {
+            data.Load(DbSchemaItem.GetDataReader(connection));
+
+            foreach (DbSchemaItem item in data)
+            { item.GetExtendedProperties(connection); }
+        }
+
+        public static void Load(this BindingTable<DbTableItem> data, IConnection connection)
+        {
+            data.Load(DbTableItem.GetDataReader(connection));
+
+            foreach (DbTableItem item in data)
+            { item.GetExtendedProperties(connection); }
+        }
+
+        public static void Load(this BindingTable<DbColumnItem> data, IConnection connection)
+        {
+            data.Load(DbColumnItem.GetDataReader(connection));
+
+            foreach (DbColumnItem item in data)
+            { item.GetExtendedProperties(connection); }
+        }
+
     }
 }

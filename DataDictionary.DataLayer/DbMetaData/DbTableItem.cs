@@ -28,7 +28,17 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? TableType { get { return GetValue("TABLE_TYPE"); } }
         public Boolean IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
 
+        public BindingTable<DbExtendedPropertyItem> ExtendedProperties { get; } = new BindingTable<DbExtendedPropertyItem>();
+
         internal static IDataReader GetDataReader(IConnection connection)
         { return connection.GetReader(Schema.Collection.Tables); }
+
+        internal virtual void GetExtendedProperties(IConnection connection)
+        {
+            DbExtendedPropertyGetCommand command = new DbExtendedPropertyGetCommand(connection)
+            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name=TableName, Level1Type = "TABLE" };
+
+            ExtendedProperties.Load(connection.GetReader(command.GetCommand()));
+        }
     }
 }
