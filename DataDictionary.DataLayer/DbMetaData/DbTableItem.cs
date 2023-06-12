@@ -10,7 +10,17 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public class DbTableItem : BindingTableRow
+    public interface IDbTableName : IDbSchemaName
+    {
+        public String? TableName { get; }
+    }
+
+    public interface IDbTableItem: IDbTableName, IDbIsSystem
+    {
+        public String? TableType { get; }
+    }
+
+    public class DbTableItem : BindingTableRow, IDbTableItem, INotifyPropertyChanged
     {
         public String? CatalogName { get { return GetValue("TABLE_CATALOG"); } }
         public String? SchemaName { get { return GetValue("TABLE_SCHEMA"); } }
@@ -19,6 +29,6 @@ namespace DataDictionary.DataLayer.DbMetaData
         public Boolean IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
 
         internal static IDataReader GetDataReader(IConnection connection)
-        { return connection.GetSchema(Schema.Collection.Tables); }
+        { return connection.GetReader(Schema.Collection.Tables); }
     }
 }

@@ -1,6 +1,7 @@
 using DataDictionary.BusinessLayer;
 using System.ComponentModel;
 using Toolbox.Threading;
+using Toolbox.Threading.WorkItem;
 
 namespace DataDictionary.Main
 {
@@ -13,11 +14,20 @@ namespace DataDictionary.Main
 
         private void Main_Load(object sender, EventArgs e)
         {
+            this.UseWaitCursor = true;
             Program.WorkerQueue.ProgressChanged += WorkerQueue_ProgressChanged;
-            thisData.Load();
 
+            WorkBase work = thisData.Load();
+            work.WorkCompleting += Work_WorkCompleting;
+            Program.WorkerQueue.Enqueue(work);
+
+            void Work_WorkCompleting(object? sender, EventArgs e)
+            {
+                work.WorkCompleting -= Work_WorkCompleting;
+                mainNavigation.Bind(thisData);
+                this.UseWaitCursor = false;
+            }
         }
-
 
         private void Main_FormClosing(object? sender, FormClosingEventArgs e)
         { }

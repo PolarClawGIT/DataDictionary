@@ -10,14 +10,16 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbSchemaItem
+    public interface IDbSchemaName: IDbCatalogName
     {
-        String? CatalogName { get; }
         String? SchemaName { get; }
-        Boolean IsSystem { get; }
     }
 
-    public class DbSchemaItem : BindingTableRow, IDbSchemaItem
+    public interface IDbSchemaItem : IDbSchemaName, IDbIsSystem
+    {
+    }
+
+    public class DbSchemaItem : BindingTableRow, IDbSchemaItem, INotifyPropertyChanged
     {
         public String? CatalogName { get { return GetValue("SCHEMA_CATALOG"); } }
         public String? SchemaName { get { return GetValue("SCHEMA_NAME"); } }
@@ -40,6 +42,6 @@ namespace DataDictionary.DataLayer.DbMetaData
         }
 
         internal static IDataReader GetDataReader(IConnection connection)
-        { return connection.GetSchema(Schema.Collection.Schemas); }
+        { return connection.GetReader(Schema.Collection.Schemas); }
     }
 }

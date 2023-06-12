@@ -2,15 +2,18 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.Tracing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.Threading.WorkItem;
 
 namespace Toolbox.Threading
 {
     public class WorkerQueue : IDisposable
     {
-        protected ConcurrentQueue<WorkItem> WorkQueue { get; } = new ConcurrentQueue<WorkItem>();
+        protected ConcurrentQueue<WorkBase> WorkQueue { get; } = new ConcurrentQueue<WorkBase>();
         protected BackgroundWorker BackgroundWorker { get; } = new BackgroundWorker();
         public Int32 WorkAdded { get; protected set; } = 0;
         public Int32 WorkComplete { get; protected set; } = 0;
@@ -24,7 +27,7 @@ namespace Toolbox.Threading
         }
 
         public Int32 WorkQueued { get { return WorkQueue.Count; } }
-        protected WorkItem? CurrentWork { get; private set; } = null;
+        protected WorkItem.WorkBase? CurrentWork { get; private set; } = null;
 
         public WorkerQueue() : base()
         {
@@ -32,21 +35,23 @@ namespace Toolbox.Threading
             WorkCompleted += WorkerQueue_WorkCompleted;
         }
 
-        public virtual void Enqueue(WorkItem item)
+        public virtual void Enqueue(WorkBase item)
         {
             WorkQueue.Enqueue(item);
             WorkAdded++;
             if (CurrentWork is null) { WorkStarting(this, new EventArgs()); }
         }
 
+
         protected event EventHandler WorkStarting;
         protected event EventHandler<WorkerEventArgs> WorkCompleted;
 
         void WorkerQueue_WorkStarting(object? sender, EventArgs e)
         {
-            if (WorkQueue.TryDequeue(out WorkItem? item) && item is not null)
+            if (WorkQueue.TryDequeue(out WorkBase? item) && item is not null)
             {
                 CurrentWork = item;
+                item.OnStarting();
                 DoWork((dynamic)item);
             }
 
@@ -55,17 +60,22 @@ namespace Toolbox.Threading
 
         void WorkerQueue_WorkCompleted(object? sender, WorkerEventArgs e)
         {
-            WorkComplete++;
-            CurrentWork = null;
+            if (CurrentWork is WorkBase)
+            {
+                CurrentWork = null;
+                WorkComplete++;
+            }
+
             if (WorkQueue.IsEmpty) { WorkAdded = 0; WorkComplete = 0; }
             else { WorkStarting(this, new EventArgs()); }
 
             OnProgressChanged();
         }
 
-        protected virtual void DoWork(WorkItem item) { throw new InvalidOperationException("Specfied DoWork has not been coded"); }
+        protected virtual void DoWork(WorkBase item)
+        { throw new NotImplementedException(); }
 
-        protected virtual void DoWork(WorkBackgroundItem item)
+        protected virtual void DoWork(BackgroundWork item)
         {
             WorkerEventArgs eventArgs = new WorkerEventArgs(item);
 
@@ -82,12 +92,38 @@ namespace Toolbox.Threading
 
             void BackgroundWorker_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
             {
-                item.OnCompleting(e);
+                BackgroundWorker.DoWork -= BackgroundWorker_DoWork;
+                BackgroundWorker.RunWorkerCompleted -= BackgroundWorker_RunWorkerCompleted;
+                if (e.Error is Exception) { item.OnException(e.Error); }
+
+                item.OnCompleting();
+
                 WorkCompleted(this, eventArgs);
             }
         }
 
-        protected virtual void DoWork<T>(WorkParellelItem<T> item)
+        protected virtual void DoWork(BatchWork item)
+        {
+            item.OnStarting();
+
+            WorkBase? lastItem = item.WorkItems.LastOrDefault();
+
+            if (lastItem is WorkBase workItem) { workItem.WorkCompleting += WorkItem_WorkCompleting; }
+
+            foreach (WorkBase work in item.WorkItems)
+            { this.Enqueue(work); }
+
+            WorkCompleted(this, new WorkerEventArgs(item));
+
+            void WorkItem_WorkCompleting(object? sender, EventArgs e)
+            {
+                if (lastItem is WorkItem.WorkBase workItem) { workItem.WorkCompleting -= WorkItem_WorkCompleting; }
+                item.OnCompleting();
+
+            }
+        }
+
+        protected virtual void DoWork<T>(WorkItem.ParellelWork<T> item)
         {
             Parallel.ForEach(
                 item.Tasks,
@@ -96,7 +132,7 @@ namespace Toolbox.Threading
             WorkCompleted(this, new WorkerEventArgs(item));
         }
 
-        protected virtual void DoWork(WorkForegroundItem item)
+        protected virtual void DoWork(WorkItem.ForegroundWork item)
         {
             item.DoWork();
 
@@ -108,7 +144,7 @@ namespace Toolbox.Threading
         {
             if (ProgressChanged is EventHandler<WorkerProgressChangedEventArgs> progress)
             {
-                if (CurrentWork is WorkItem)
+                if (CurrentWork is WorkItem.WorkBase)
                 { progress(this, new WorkerProgressChangedEventArgs(CurrentWork, WorkProgress)); }
                 else { progress(this, new WorkerProgressChangedEventArgs(WorkProgress)); }
             }

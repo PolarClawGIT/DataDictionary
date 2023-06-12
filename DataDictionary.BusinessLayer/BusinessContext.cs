@@ -19,8 +19,7 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         internal static BusinessContext Instance { get; private set; } = new BusinessContext()
         {
-            DbContext = new Toolbox.DbContext.Context(),
-            AddWork = (item) => { }
+            DbContext = new Toolbox.DbContext.Context()
         };
 
         /// <summary>
@@ -36,7 +35,6 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         public required Context DbContext { get; init; }
 
-        public required Action<WorkItem> AddWork { get; init; }
 
     }
 }

@@ -11,7 +11,31 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public class DbColumnItem : BindingTableRow
+    public interface IDbColumnName : IDbTableName
+    {
+        public String? ColumnName { get; }
+    }
+
+    public interface IDbColumnItem : IDbColumnName
+    {
+        public Nullable<Int32> OrdinalPosition { get; }
+        public String? ColumnDefault { get; }
+        public Nullable<Boolean> IsNullable { get; }
+        public String? DataType { get; }
+        public Nullable<Int32> CharacterMaximumLength { get; }
+        public Nullable<Int32> CharacterOctetLength { get; }
+        public Nullable<Byte> NumericPrecision { get; }
+        public Nullable<Int16> NumericPrecisionRadix  { get; }
+        public Nullable<Int32> NumericScale { get ; }
+        public Nullable<Int16> DateTimePrecision { get ; }
+        public String? CharacterSetCatalog { get; }
+        public String? CharacterSetSchema { get; }
+        public String? CharacterSetName { get; }
+        public String? CollationCatalog { get; }
+    }
+
+
+    public class DbColumnItem : BindingTableRow, IDbColumnItem, INotifyPropertyChanged
     {
         public String? CatalogName { get { return GetValue("TABLE_CATALOG"); } }
         public String? SchemaName { get { return GetValue("TABLE_SCHEMA"); } }
@@ -52,6 +76,6 @@ namespace DataDictionary.DataLayer.DbMetaData
         { get { return GetValue<Boolean>("IS_FILESTREAM", BindingItemParsers.BooleanTryPrase); } }
 
         internal static IDataReader GetDataReader(IConnection connection)
-        { return connection.GetSchema(Schema.Collection.Columns); }
+        { return connection.GetReader(Schema.Collection.Columns); }
     }
 }

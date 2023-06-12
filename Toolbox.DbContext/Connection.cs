@@ -21,7 +21,7 @@ namespace Toolbox.DbContext
         /// </summary>
         /// <param name="collection"></param>
         /// <returns></returns>
-        IDataReader GetSchema(Schema.Collection collection);
+        IDataReader GetReader(Schema.Collection collection);
 
         /// <summary>
         /// Commits the transaction on the Open Connection. The Connection is then closed.
@@ -82,10 +82,13 @@ namespace Toolbox.DbContext
             { throw; }
         }
 
-        public IDataReader GetSchema(Schema.Collection collection)
+        public SqlCommand GetCommand()
+        { return connection.CreateCommand(); }
+
+        public IDataReader GetReader(Schema.Collection collection)
         {
-            SqlConnection connection = new SqlConnection();
             IDataReader result;
+            SqlConnection connection = new SqlConnection();
             connection.ConnectionString = DbContext.ConnectionBuilder.ConnectionString;
             connection.Open();
 
@@ -94,9 +97,7 @@ namespace Toolbox.DbContext
                 SqlCommand getCommand = connection.CreateCommand();
                 getCommand.CommandText = "Select Db_Name() As [SCHEMA_CATALOG], [name] As [SCHEMA_NAME] From [Sys].[Schemas]";
                 getCommand.CommandType = CommandType.Text;
-                DataTable data = new DataTable();
-                data.Load(getCommand.ExecuteReader());
-                return data.CreateDataReader();
+                return getCommand.ExecuteReader();
             }
             else
             {// Everything else is handled by GetSchema method.
@@ -107,6 +108,9 @@ namespace Toolbox.DbContext
             connection.Close();
             return result;
         }
+
+        public IDataReader GetReader(SqlCommand command)
+        { return command.ExecuteReader(); }
 
 
         #region IDisposable

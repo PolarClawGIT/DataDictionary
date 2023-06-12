@@ -2,39 +2,57 @@
 
 namespace Toolbox.Threading
 {
-    public class WorkItem
+    namespace WorkItem
     {
-        public required String WorkName { get; init; }
+        public abstract class WorkBase
+        {
+            public required String WorkName { get; init; }
 
-        public WorkItem() : base() { }
+            public event EventHandler? WorkStarting;
+            public event EventHandler? WorkCompleting;
+            public event EventHandler<Exception>? WorkException;
+
+            public virtual void OnStarting()
+            { if (WorkStarting is EventHandler onEvent) { onEvent(this, EventArgs.Empty); } }
+
+            public virtual void OnCompleting()
+            { if (WorkCompleting is EventHandler onEvent) { onEvent(this, EventArgs.Empty); } }
+
+            public virtual void OnException(Exception ex)
+            { if (WorkException is EventHandler<Exception> onEvent) { onEvent(this, ex); } }
+
+            public WorkBase() : base() { }
+        }
+
+        public abstract class SynchronousWork : WorkBase
+        {
+            public Action OnDoWork { get; init; } = () => { };
+            public virtual void DoWork() { OnDoWork(); }
+        }
+
+        public class BackgroundWork : SynchronousWork
+        {
+            public RunWorkerCompletedEventArgs? CompletedResult { get; set; }
+        }
+
+        public class ForegroundWork : SynchronousWork
+        { }
+
+        public class BatchWork : SynchronousWork
+        {
+            public List<SynchronousWork> WorkItems { get; } = new List<SynchronousWork>();
+        }
+
+        public abstract class AsynchronousWork : WorkBase { }
+
+        public class ParellelWork<T> : AsynchronousWork
+        {
+            public required IReadOnlyList<T> Tasks { get; init; }
+            public Int32 MaxDegreeOfParallelism { get; init; } = -1;
+
+            public virtual void DoWork(T task) { }
+        }
+
     }
 
-    public class WorkBackgroundItem : WorkItem
-    {
-        public Action OnStarting { get; init; } = () => { };
-        public Action<RunWorkerCompletedEventArgs> OnCompleting { get; init; } = (e) => { };
-
-        public Action OnDoWork { get; init; } = () => { };
-        public virtual void DoWork() { OnDoWork(); }
-
-        public WorkBackgroundItem() : base() { }
-    }
-
-    public class WorkParellelItem<T> : WorkItem
-    {
-        public required IReadOnlyList<T> Tasks { get; init; }
-        public Int32 MaxDegreeOfParallelism { get; init; } = -1;
-
-        public WorkParellelItem() : base() { }
-
-        public virtual void DoWork(T task) { }
-    }
-
-    public class WorkForegroundItem : WorkItem
-    {
-        public WorkForegroundItem() : base() { }
-
-        public Action OnDoWork { get; init; } = () => { };
-        public virtual void DoWork() { OnDoWork(); }
-    }
 }

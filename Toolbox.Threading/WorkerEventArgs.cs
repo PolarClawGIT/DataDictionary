@@ -9,8 +9,8 @@ namespace Toolbox.Threading
 {
     public class WorkerEventArgs : EventArgs
     {
-        public WorkItem Item { get; private set; }
-        public WorkerEventArgs(WorkItem item) : base()
+        public WorkItem.WorkBase Item { get; private set; }
+        public WorkerEventArgs(WorkItem.WorkBase item) : base()
         { Item = item; }
     }
 
@@ -35,7 +35,7 @@ namespace Toolbox.Threading
             else if (progress >= 100) { ProgressPercent = 100; }
         }
 
-        public WorkerProgressChangedEventArgs(WorkItem item) : this(item.WorkName) { }
-        public WorkerProgressChangedEventArgs(WorkItem item, Int32 progress) : this(item.WorkName, progress) { }
+        public WorkerProgressChangedEventArgs(WorkItem.WorkBase item) : this(item.WorkName) { }
+        public WorkerProgressChangedEventArgs(WorkItem.WorkBase item, Int32 progress) : this(item.WorkName, progress) { }
     }
 }

@@ -38,12 +38,14 @@
             navTabControl = new TabControl();
             navDomainTab = new TabPage();
             navDbSchemaTab = new TabPage();
+            dbSchmeaTreeData = new TreeView();
             serverNameLayout = new Label();
             databaseNameLayout = new Label();
             navMainPanel.SuspendLayout();
             layoutConnectionPanel.SuspendLayout();
             layoutConnectionTable.SuspendLayout();
             navTabControl.SuspendLayout();
+            navDbSchemaTab.SuspendLayout();
             SuspendLayout();
             // 
             // serverNameLayout
@@ -154,6 +156,7 @@
             // 
             // navDbSchemaTab
             // 
+            navDbSchemaTab.Controls.Add(dbSchmeaTreeData);
             navDbSchemaTab.Location = new Point(4, 24);
             navDbSchemaTab.Name = "navDbSchemaTab";
             navDbSchemaTab.Padding = new Padding(3);
@@ -161,6 +164,14 @@
             navDbSchemaTab.TabIndex = 0;
             navDbSchemaTab.Text = "Db Schema";
             navDbSchemaTab.UseVisualStyleBackColor = true;
+            // 
+            // dbSchmeaTreeData
+            // 
+            dbSchmeaTreeData.Dock = DockStyle.Fill;
+            dbSchmeaTreeData.Location = new Point(3, 3);
+            dbSchmeaTreeData.Name = "dbSchmeaTreeData";
+            dbSchmeaTreeData.Size = new Size(222, 245);
+            dbSchmeaTreeData.TabIndex = 0;
             // 
             // MainNavigation
             // 
@@ -177,6 +188,7 @@
             layoutConnectionTable.ResumeLayout(false);
             layoutConnectionTable.PerformLayout();
             navTabControl.ResumeLayout(false);
+            navDbSchemaTab.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -190,5 +202,6 @@
         private TabControl navTabControl;
         private TabPage navDomainTab;
         private TabPage navDbSchemaTab;
+        private TreeView dbSchmeaTreeData;
     }
 }

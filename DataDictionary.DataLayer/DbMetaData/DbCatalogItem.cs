@@ -11,7 +11,19 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public class DbCatalogItem : BindingTableRow
+    public interface IDbCatalogName
+    {
+        String? CatalogName { get; }
+    }
+
+    public interface IDbCatalogItem : IDbCatalogName, IDbIsSystem
+    {
+        Nullable<Int32> DatabaseId { get; }
+        Nullable<DateTime> CreateDate { get; }
+    }
+
+
+    public class DbCatalogItem : BindingTableRow, IDbCatalogItem, INotifyPropertyChanged
     {
         public String? CatalogName { get { return GetValue("database_name"); } }
         public Nullable<Int32> DatabaseId { get { return GetValue<Int32>("DbId"); } }
@@ -19,6 +31,6 @@ namespace DataDictionary.DataLayer.DbMetaData
         public Boolean IsSystem { get { return CatalogName is "tempdb" or "master" or "msdb" or "model"; } }
 
         internal static IDataReader GetDataReader(IConnection connection)
-        { return connection.GetSchema(Schema.Collection.Databases); }
+        { return connection.GetReader(Schema.Collection.Databases); }
     }
 }
