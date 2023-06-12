@@ -62,6 +62,7 @@ namespace DataDictionary.Main.Control
             {
                 TreeNode schemaNode = new TreeNode(schemaItem.SchemaName);
                 schemaNode.ImageKey = DbSchmeaTreeNodeType.Schema.ToString();
+                schemaNode.SelectedImageKey = DbSchmeaTreeNodeType.Schema.ToString();
                 dbSchmeaTreeData.Nodes.Add(schemaNode);
 
                 foreach (IDbTableItem tableItem in data.DbTable.
@@ -72,6 +73,7 @@ namespace DataDictionary.Main.Control
                 {
                     TreeNode tableNode = new TreeNode(tableItem.TableName);
                     tableNode.ImageKey = DbSchmeaTreeNodeType.Table.ToString();
+                    tableNode.SelectedImageKey = DbSchmeaTreeNodeType.Table.ToString();
                     schemaNode.Nodes.Add(tableNode);
 
                     foreach (IDbColumnItem columnItem in data.DbColumn.
@@ -82,6 +84,7 @@ namespace DataDictionary.Main.Control
                     {
                         TreeNode columnNode = new TreeNode(columnItem.ColumnName);
                         columnNode.ImageKey = DbSchmeaTreeNodeType.Column.ToString();
+                        columnNode.SelectedImageKey = DbSchmeaTreeNodeType.Column.ToString();
                         tableNode.Nodes.Add(columnNode);
                     }
                 }
