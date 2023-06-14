@@ -40,17 +40,16 @@ namespace Toolbox.Threading
 
         public class BatchWork : SynchronousWork
         {
-            public List<SynchronousWork> WorkItems { get; } = new List<SynchronousWork>();
+            public List<WorkBase> WorkItems { get; } = new List<WorkBase>();
         }
 
         public abstract class AsynchronousWork : WorkBase { }
 
-        public class ParellelWork<T> : AsynchronousWork
+        public class ParellelWork : AsynchronousWork
         {
-            public required IReadOnlyList<T> Tasks { get; init; }
+            public required IEnumerable<Action> Tasks { get; init; }
             public Int32 MaxDegreeOfParallelism { get; init; } = -1;
-
-            public virtual void DoWork(T task) { }
+            public virtual void DoWork(Action action) { action(); }
         }
 
     }

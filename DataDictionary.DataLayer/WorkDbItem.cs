@@ -85,6 +85,32 @@ namespace DataDictionary.DataLayer
             }
         }
 
+        public class DbParellel : ParellelWork
+        {
+            public required Func<IConnection> Connection { get; init; }
+            public required Action<Exception> ReportError { get; init; }
+
+            public override void DoWork(Action action)
+            {
+                using (IConnection connection = Connection())
+                {
+                    try
+                    {
+                        connection.Open();
+                        base.DoWork(action);
+                        connection.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        connection.Rollback();
+                        { ReportError(ex); }
+                    }
+                    
+                }
+
+            }
+        }
+
         public class DbReader : BackgroundWork
         {
             public required IConnection Connection { get; init; }

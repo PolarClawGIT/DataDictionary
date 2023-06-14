@@ -1,10 +1,12 @@
 ﻿using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.DataLayer.WorkDbItem;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +24,7 @@ namespace DataDictionary.BusinessLayer
         BindingTable<DbSchemaItem> dbSchemas = new BindingTable<DbSchemaItem>();
         BindingTable<DbTableItem> dbTables = new BindingTable<DbTableItem>();
         BindingTable<DbColumnItem> dbColumns = new BindingTable<DbColumnItem>();
+        BindingTable<DbExtendedPropertyItem> dbExtendedProperties = new BindingTable<DbExtendedPropertyItem>();
 
         public String ServerName { get { return BusinessContext.Instance.DbContext.ServerName; } }
         public String DatabaseName { get { return BusinessContext.Instance.DbContext.DatabaseName; } }
@@ -29,6 +32,7 @@ namespace DataDictionary.BusinessLayer
         public IEnumerable<IDbSchemaItem> DbSchema { get { return dbSchemas; } }
         public IEnumerable<IDbTableItem> DbTable { get { return dbTables; } }
         public IEnumerable<IDbColumnItem> DbColumn { get { return dbColumns; } }
+        public IEnumerable<IDbExtendedPropertyItem> DbExtendedProperties { get { return dbExtendedProperties; } }
 
         public WorkBase Load()
         {
@@ -68,7 +72,34 @@ namespace DataDictionary.BusinessLayer
                 Load = dbColumns.Load,
                 ReportError = result.AddError
             });
-
+            
+            result.WorkItems.Add(new DbParellel()
+            {
+                WorkName = "Load Extended Properties, Schema",
+                Connection = BusinessContext.Instance.DbContext.CreateConnection,
+                MaxDegreeOfParallelism = 1,
+                Tasks = dbSchemas.Select<DbSchemaItem, Action>(s => () => dbExtendedProperties.Load(result.Connection.GetReader(s.GetProperties(result.Connection)))),
+                ReportError = result.AddError
+            });
+            
+            result.WorkItems.Add(new DbParellel()
+            {
+                WorkName = "Load Extended Properties, Table",
+                Connection = BusinessContext.Instance.DbContext.CreateConnection,
+                MaxDegreeOfParallelism = 1,
+                Tasks = dbTables.Select<DbTableItem, Action>(s => () => dbExtendedProperties.Load(result.Connection.GetReader(s.GetProperties(result.Connection)))),
+                ReportError = result.AddError
+            });
+            
+            result.WorkItems.Add(new DbParellel()
+            {
+                WorkName = "Load Extended Properties, Column",
+                Connection = BusinessContext.Instance.DbContext.CreateConnection,
+                MaxDegreeOfParallelism = 1,
+                Tasks = dbColumns.Select<DbColumnItem, Action>(s => () => dbExtendedProperties.Load(result.Connection.GetReader(s.GetProperties(result.Connection)))),
+                ReportError = result.AddError
+            });
+            
             result.WorkItems.Add(new DbClose()
             {
                 WorkName = "Close Connection",

@@ -123,16 +123,30 @@ namespace Toolbox.Threading
             }
         }
 
-        protected virtual void DoWork<T>(WorkItem.ParellelWork<T> item)
+        protected virtual void DoWork(ParellelWork item)
         {
-            Parallel.ForEach(
-                item.Tasks,
-                new ParallelOptions() { MaxDegreeOfParallelism = item.MaxDegreeOfParallelism },
-                item.DoWork);
+            item.OnStarting();
+            List<Action> work = item.Tasks.ToList();
+
+            try
+            {
+                Parallel.ForEach(
+                    work,
+                    new ParallelOptions() { MaxDegreeOfParallelism = item.MaxDegreeOfParallelism },
+                    DoWork
+                    );
+            }
+            catch (Exception ex)
+            { item.OnException(ex); }
+
             WorkCompleted(this, new WorkerEventArgs(item));
+
+            void DoWork(object source, ParallelLoopState state, long arg3)
+            { if (source is Action action) { action(); } }
         }
 
-        protected virtual void DoWork(WorkItem.ForegroundWork item)
+
+        protected virtual void DoWork(ForegroundWork item)
         {
             item.DoWork();
 

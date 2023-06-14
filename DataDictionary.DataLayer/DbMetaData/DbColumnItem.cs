@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -86,6 +87,13 @@ namespace DataDictionary.DataLayer.DbMetaData
             { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = TableName, Level1Type = "TABLE", Level2Name = ColumnName, Level2Type ="COLUMN" };
 
             ExtendedProperties.Load(connection.GetReader(command.GetCommand()));
+        }
+
+        public virtual SqlCommand GetProperties(IConnection connection)
+        {
+            return (new DbExtendedPropertyGetCommand(connection)
+            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = TableName, Level1Type = "TABLE", Level2Name = ColumnName, Level2Type = "COLUMN" }).
+            GetCommand();
         }
     }
 }

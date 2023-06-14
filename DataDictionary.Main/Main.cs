@@ -26,6 +26,8 @@ namespace DataDictionary.Main
                 work.WorkCompleting -= Work_WorkCompleting;
                 mainNavigation.Bind(thisData);
                 this.UseWaitCursor = false;
+
+                var x = this.thisData;
             }
         }
 

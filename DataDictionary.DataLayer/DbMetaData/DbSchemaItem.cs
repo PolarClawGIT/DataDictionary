@@ -60,5 +60,12 @@ namespace DataDictionary.DataLayer.DbMetaData
 
             ExtendedProperties.Load(connection.GetReader(command.GetCommand()));
         }
+
+        public virtual SqlCommand GetProperties(IConnection connection)
+        {
+            return (new DbExtendedPropertyGetCommand(connection)
+            { Level0Name = SchemaName, Level0Type = "SCHEMA" }).
+            GetCommand();
+        }
     }
 }
