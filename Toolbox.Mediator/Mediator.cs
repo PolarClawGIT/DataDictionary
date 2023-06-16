@@ -45,8 +45,9 @@ namespace Toolbox.Mediator
             if (sender is IColleague sentBy
                 && colleagues.Contains(sentBy))
             {
+                // TODO: Need to work on this. This is causing cross threading issues.
                 Parallel.ForEach(colleagues.Where(sentTo => sentTo != sentBy),
-                                 item => item.RecieveMessage(sender, message));
+                                 item =>  item.RecieveMessage(sender, message));
 
             }
         }
@@ -63,6 +64,14 @@ namespace Toolbox.Mediator
                 && colleagues.Contains(colleague))
             { RemoveColleague(colleague); }
         }
+
+        #region IDisposable
+        /// <summary>
+        /// Event that is fired at the end of the Depose method.
+        /// </summary>
+        public event EventHandler? Disposed;
+
+        private bool disposedValue;
 
         /// <summary>
         /// Removes a Colleague to the Mediator.
@@ -82,14 +91,6 @@ namespace Toolbox.Mediator
             }
         }
 
-        #region IDisposable
-        private bool disposedValue;
-
-        /// <summary>
-        /// Event that is fired at the end of the Depose method.
-        /// </summary>
-        public event EventHandler Disposed;
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -99,25 +100,23 @@ namespace Toolbox.Mediator
                     while (colleagues.Count > 0)
                     { colleagues.Remove(colleagues.First()); }
 
-                    colleagues = null;
+                    colleagues.Clear();
                 }
 
-                // Send event that this object is being disposed
-                if (Disposed is null) { }
-                else { Disposed(this, new EventArgs()); }
                 disposedValue = true;
+                if(Disposed is EventHandler handler) { handler(this, EventArgs.Empty); }
             }
         }
 
-        /// <summary>
-        /// Dispose of the Mediator.
-        /// </summary>
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+        
+
         #endregion
     }
 }

@@ -81,11 +81,51 @@ namespace DataDictionary.Main.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ColumnGroup {
+            get {
+                object obj = ResourceManager.GetObject("ColumnGroup", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ComputedColumn {
+            get {
+                object obj = ResourceManager.GetObject("ComputedColumn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon DataDictionaryApplication {
             get {
                 object obj = ResourceManager.GetObject("DataDictionaryApplication", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon DbSchema {
+            get {
+                object obj = ResourceManager.GetObject("DbSchema", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon DbTable {
+            get {
+                object obj = ResourceManager.GetObject("DbTable", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -186,6 +226,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap Table {
             get {
                 object obj = ResourceManager.GetObject("Table", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap TableGroup {
+            get {
+                object obj = ResourceManager.GetObject("TableGroup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

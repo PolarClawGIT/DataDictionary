@@ -1,21 +1,29 @@
 using DataDictionary.BusinessLayer;
+using DataDictionary.Main.Messages;
 using System.ComponentModel;
+using Toolbox.Mediator;
 using Toolbox.Threading;
 using Toolbox.Threading.WorkItem;
 
 namespace DataDictionary.Main
 {
-    public partial class Main : Form
+    partial class Main : Form, IColleague
     {
         DataRepository thisData = new DataRepository();
 
         public Main()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+            ChildFormOpening += Main_ChildFormOpening; ;
+        }
+
+
 
         private void Main_Load(object sender, EventArgs e)
         {
             this.UseWaitCursor = true;
             Program.WorkerQueue.ProgressChanged += WorkerQueue_ProgressChanged;
+            Program.Messenger.AddColleague(this);
 
             WorkBase work = thisData.Load();
             work.WorkCompleting += Work_WorkCompleting;
@@ -26,8 +34,6 @@ namespace DataDictionary.Main
                 work.WorkCompleting -= Work_WorkCompleting;
                 mainNavigation.Bind(thisData);
                 this.UseWaitCursor = false;
-
-                var x = this.thisData;
             }
         }
 
@@ -66,5 +72,24 @@ namespace DataDictionary.Main
         }
 
 
+        #region IColleague
+        event EventHandler<FormOpenMessage> ChildFormOpening;
+        private void Main_ChildFormOpening(object? sender, FormOpenMessage e)
+        { e.FormOpened.MdiParent = this; }
+
+        public event EventHandler<MessageEventArgs>? OnSendMessage;
+
+        public void RecieveMessage(object? sender, MessageEventArgs message)
+        {
+            if (message is FormOpenMessage openMessage && ChildFormOpening is EventHandler<FormOpenMessage> handler)
+            { handler(sender, openMessage); }
+
+        }
+        void SendMessage(MessageEventArgs message)
+        {
+            if (OnSendMessage is EventHandler<MessageEventArgs> handler)
+            { handler(this, message); }
+        }
+        #endregion
     }
 }

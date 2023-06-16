@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.DataLayer.DbMetaData;
+using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
@@ -10,24 +11,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Control
 {
-    public partial class MainNavigation : UserControl
+    public partial class MainNavigation : UserControl, IColleague
     {
         enum DbSchmeaTreeNodeType
         {
             Schema,
             Table,
-            Column
+            Tables,
+            Column,
+            Columns
         }
 
         readonly Dictionary<DbSchmeaTreeNodeType, Image> dbSchmeaTreeImages = new Dictionary<DbSchmeaTreeNodeType, Image>()
         {
             { DbSchmeaTreeNodeType.Schema, Resources.Schema },
             { DbSchmeaTreeNodeType.Table, Resources.Table },
+            { DbSchmeaTreeNodeType.Tables, Resources.TableGroup },
             { DbSchmeaTreeNodeType.Column, Resources.Column },
+            { DbSchmeaTreeNodeType.Columns, Resources.ColumnGroup },
         };
+
+        readonly Dictionary<TreeNode, Object> dbSchemaTreeObjects = new Dictionary<TreeNode, Object>();
 
         public MainNavigation()
         {
@@ -36,6 +44,8 @@ namespace DataDictionary.Main.Control
 
         private void MainNavigation_Load(object sender, EventArgs e)
         {
+            Program.Messenger.AddColleague(this);
+
             // Add Image Index to Db Schema Tree
             if (dbSchmeaTreeData.ImageList is ImageList) { dbSchmeaTreeData.ImageList.Images.Clear(); }
             else { dbSchmeaTreeData.ImageList = new ImageList(); }
@@ -50,6 +60,7 @@ namespace DataDictionary.Main.Control
             serverNameData.DataBindings.Clear();
             databaseNameData.DataBindings.Clear();
             dbSchmeaTreeData.Nodes.Clear();
+            dbSchemaTreeObjects.Clear();
 
 
             // Bind the data
@@ -63,7 +74,10 @@ namespace DataDictionary.Main.Control
                 TreeNode schemaNode = new TreeNode(schemaItem.SchemaName);
                 schemaNode.ImageKey = DbSchmeaTreeNodeType.Schema.ToString();
                 schemaNode.SelectedImageKey = DbSchmeaTreeNodeType.Schema.ToString();
+                dbSchemaTreeObjects.Add(schemaNode, schemaItem);
                 dbSchmeaTreeData.Nodes.Add(schemaNode);
+
+                TreeNode? tableGroupNode = null;
 
                 foreach (IDbTableItem tableItem in data.DbTable.
                     Where(w =>
@@ -71,10 +85,19 @@ namespace DataDictionary.Main.Control
                         w.SchemaName == schemaItem.SchemaName).
                     OrderBy(o => o.TableName))
                 {
+                    if (tableGroupNode is null)
+                    {
+                        tableGroupNode = new TreeNode("Tables");
+                        tableGroupNode.ImageKey = DbSchmeaTreeNodeType.Tables.ToString();
+                        tableGroupNode.SelectedImageKey = DbSchmeaTreeNodeType.Tables.ToString();
+                        schemaNode.Nodes.Add(tableGroupNode);
+                    }
+
                     TreeNode tableNode = new TreeNode(tableItem.TableName);
                     tableNode.ImageKey = DbSchmeaTreeNodeType.Table.ToString();
                     tableNode.SelectedImageKey = DbSchmeaTreeNodeType.Table.ToString();
-                    schemaNode.Nodes.Add(tableNode);
+                    dbSchemaTreeObjects.Add(tableNode, tableItem);
+                    tableGroupNode.Nodes.Add(tableNode);
 
                     foreach (IDbColumnItem columnItem in data.DbColumn.
                         Where(w => w.CatalogName == tableItem.CatalogName &&
@@ -85,10 +108,58 @@ namespace DataDictionary.Main.Control
                         TreeNode columnNode = new TreeNode(columnItem.ColumnName);
                         columnNode.ImageKey = DbSchmeaTreeNodeType.Column.ToString();
                         columnNode.SelectedImageKey = DbSchmeaTreeNodeType.Column.ToString();
+                        dbSchemaTreeObjects.Add(columnNode, columnItem);
                         tableNode.Nodes.Add(columnNode);
                     }
                 }
             }
         }
+
+        private void dbSchmeaTreeData_DoubleClick(object sender, EventArgs e)
+        {
+            if (dbSchemaTreeObjects.ContainsKey(dbSchmeaTreeData.SelectedNode))
+            {
+                Object item = dbSchemaTreeObjects[dbSchmeaTreeData.SelectedNode];
+
+                if (item is IDbSchemaItem schemaItem)
+                { ChildFormOpening(new Forms.DbSchema(schemaItem)); }
+
+                if (item is IDbTableItem tableItem)
+                { ChildFormOpening(new Forms.DbTable(tableItem)); }
+
+                if (item is IDbColumnItem columnItem)
+                { ChildFormOpening(new Forms.DbColumn(columnItem)); }
+            }
+        }
+
+        private void ChildFormOpening(Form child)
+        {
+            child.FormClosed += Child_FormClosed;
+            SendMessage(new FormOpenMessage() { FormOpened = child });
+            child.Show();
+
+            void Child_FormClosed(object? sender, FormClosedEventArgs e)
+            {
+                child.FormClosed += Child_FormClosed;
+            }
+        }
+
+        #region IColleague
+        public event EventHandler<MessageEventArgs>? OnSendMessage;
+
+        public void RecieveMessage(object? sender, MessageEventArgs message)
+        {
+            if (message is FormOpenMessage openMessage) { }
+
+        }
+        void SendMessage(MessageEventArgs message)
+        {
+            if (OnSendMessage is EventHandler<MessageEventArgs> handler)
+            { handler(this, message); }
+        }
+        #endregion
+
     }
+
 }
+

@@ -17,3 +17,4 @@ The SVC format files are Web friendly vector grahpics and will scale well.
 The site https://cloudconvert.com/svg-to-ico will be able to convert and scale the SVC files.
 This site takes one SVG and produces a ICO file with one image of the specfied scale.
 As such, the same SVG file will need to be processed muliple times for each disired resolution.
+The site limits the number of conversions to 10 a day for free.

@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataDictionary.BusinessLayer\DataDictionary.BusinessLayer.csproj" />
+    <ProjectReference Include="..\Toolbox.Mediator\Toolbox.Mediator.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,10 +44,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Forms\" />
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@ using DataDictionary.BusinessLayer;
 using DataDictionary.Main.Properties;
 using System.Runtime.CompilerServices;
 using Toolbox.DbContext;
+using Toolbox.Mediator;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main
@@ -13,6 +14,11 @@ namespace DataDictionary.Main
         /// Worker Queue (Background and Forground). Singleton access point.
         /// </summary>
         public static WorkerQueue WorkerQueue { get; } = new WorkerQueue();
+
+        /// <summary>
+        /// Mediator to allow messages to be sent between related forms. Messenger
+        /// </summary>
+        public static Mediator Messenger { get; } = new Mediator();
 
         /// <summary>
         /// Business Context information. Singleton access point.
@@ -48,6 +54,7 @@ namespace DataDictionary.Main
             Application.ThreadException -= Application_ThreadException;
             Application.ApplicationExit -= Application_ApplicationExit;
             WorkerQueue.Dispose();
+            Messenger.Dispose();
         }
 
 

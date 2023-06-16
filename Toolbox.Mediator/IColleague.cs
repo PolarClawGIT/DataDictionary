@@ -12,7 +12,17 @@ namespace Toolbox.Mediator
     public interface IColleague : IDisposable
     {
         void RecieveMessage(object? sender, MessageEventArgs message);
-        event EventHandler<MessageEventArgs> OnSendMessage;
+        event EventHandler<MessageEventArgs>? OnSendMessage;
         event EventHandler Disposed;
     }
+    /* TODO: Cannot figure out how to get this to work.
+    public static class Colleague
+    {
+        public static void SendMessage(this IColleague colleague, MessageEventArgs message)
+        {
+            if(colleague.OnSendMessage is EventHandler<MessageEventArgs> handler)
+            { handler(colleague, message); }
+        }
+    }
+    */
 }

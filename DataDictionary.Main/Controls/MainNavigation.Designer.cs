@@ -172,6 +172,7 @@
             dbSchmeaTreeData.Name = "dbSchmeaTreeData";
             dbSchmeaTreeData.Size = new Size(222, 245);
             dbSchmeaTreeData.TabIndex = 0;
+            dbSchmeaTreeData.DoubleClick += dbSchmeaTreeData_DoubleClick;
             // 
             // MainNavigation
             // 
