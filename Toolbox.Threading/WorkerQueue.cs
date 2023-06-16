@@ -42,11 +42,10 @@ namespace Toolbox.Threading
             if (CurrentWork is null) { WorkStarting(this, new EventArgs()); }
         }
 
-
         protected event EventHandler WorkStarting;
         protected event EventHandler<WorkerEventArgs> WorkCompleted;
 
-        void WorkerQueue_WorkStarting(object? sender, EventArgs e)
+        protected virtual void WorkerQueue_WorkStarting(object? sender, EventArgs e)
         {
             if (WorkQueue.TryDequeue(out WorkBase? item) && item is not null)
             {
@@ -58,7 +57,7 @@ namespace Toolbox.Threading
             OnProgressChanged();
         }
 
-        void WorkerQueue_WorkCompleted(object? sender, WorkerEventArgs e)
+        protected virtual void WorkerQueue_WorkCompleted(object? sender, WorkerEventArgs e)
         {
             if (CurrentWork is WorkBase)
             {
@@ -106,8 +105,7 @@ namespace Toolbox.Threading
         {
             item.OnStarting();
 
-            WorkBase? lastItem = item.WorkItems.LastOrDefault();
-
+            WorkBase? lastItem = item.WorkItems.LastOrDefault(); // So the list of items to be worked with becomes static.
             if (lastItem is WorkBase workItem) { workItem.WorkCompleting += WorkItem_WorkCompleting; }
 
             foreach (WorkBase work in item.WorkItems)
@@ -126,7 +124,8 @@ namespace Toolbox.Threading
         protected virtual void DoWork(ParellelWork item)
         {
             item.OnStarting();
-            List<Action> work = item.Tasks.ToList();
+            List<Action> work = item.Tasks.ToList(); // So the list of items to be worked with becomes static.
+            WorkAdded = WorkAdded + work.Count;
 
             try
             {
@@ -142,13 +141,18 @@ namespace Toolbox.Threading
             WorkCompleted(this, new WorkerEventArgs(item));
 
             void DoWork(object source, ParallelLoopState state, long arg3)
-            { if (source is Action action) { action(); } }
+            {
+                if (source is Action action) { action(); }
+                WorkComplete++;
+            }
         }
-
 
         protected virtual void DoWork(ForegroundWork item)
         {
-            item.DoWork();
+            try
+            { item.DoWork(); }
+            catch (Exception ex)
+            { item.OnException(ex); }
 
             WorkCompleted(this, new WorkerEventArgs(item));
         }
