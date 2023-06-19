@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbColumn));
             SuspendLayout();
             // 
             // DbColumn
@@ -35,6 +36,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(383, 301);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DbColumn";
             Text = "Database Column";
             Load += DbColumn_Load;

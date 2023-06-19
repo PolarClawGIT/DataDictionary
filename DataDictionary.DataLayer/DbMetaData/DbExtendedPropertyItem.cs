@@ -12,6 +12,22 @@ using Microsoft.Data.SqlClient;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
+
+    public interface IDbExtendedPropertyItem
+    {
+        String? Level0Type { get; }
+        String? Level0Name { get; }
+        String? Level1Type { get; }
+        String? Level1Name { get; }
+        String? Level2Type { get; }
+        String? Level2Name { get; }
+
+        String? ObjectType { get; }
+        String? ObjectName { get; }
+        String? PropertyName { get; }
+        String? PropertyValue { get; }
+    }
+
     internal class DbExtendedPropertyGetCommand
     {
         public String? PropertyName { get; set; } // Null will return all extended properties
@@ -53,20 +69,6 @@ namespace DataDictionary.DataLayer.DbMetaData
         }
     }
 
-    public interface IDbExtendedPropertyItem
-    {
-        String? Level0Type { get; }
-        String? Level0Name { get; }
-        String? Level1Type { get; }
-        String? Level1Name { get; }
-        String? Level2Type { get; }
-        String? Level2Name { get; }
-
-        String? ObjectType { get; }
-        String? ObjectName { get; }
-        String? PropertyName { get; }
-        String? PropertyValue { get; }
-    }
 
     public class DbExtendedPropertyItem : BindingTableRow, IDbExtendedPropertyItem, INotifyPropertyChanged
     {

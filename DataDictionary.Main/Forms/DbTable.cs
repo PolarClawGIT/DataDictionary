@@ -15,13 +15,18 @@ namespace DataDictionary.Main.Forms
 {
     public partial class DbTable : Form, IColleague
     {
-        IDbTableItem? thisData;
+        class FormData
+        {
+            public IDbTableItem? DbTable { get; set; }
+            public IEnumerable<IDbExtendedPropertyItem>? DbExtendedProperty { get; set; }
+        }
+        FormData thisData = new FormData();
 
         public DbTable() : base()
         { InitializeComponent(); }
 
         public DbTable(IDbTableItem tableItem)
-        { thisData = tableItem; }
+        { thisData.DbTable = tableItem; }
 
         private void DbTable_Load(object sender, EventArgs e)
         {
@@ -32,10 +37,7 @@ namespace DataDictionary.Main.Forms
         public event EventHandler<MessageEventArgs>? OnSendMessage;
 
         public void RecieveMessage(object? sender, MessageEventArgs message)
-        {
-            if (message is FormOpenMessage openMessage) { }
-
-        }
+        { if (message is FormOpenMessage openMessage) { } }
 
         void SendMessage(MessageEventArgs message)
         {
