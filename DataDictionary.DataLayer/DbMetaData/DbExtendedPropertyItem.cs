@@ -13,7 +13,7 @@ using Microsoft.Data.SqlClient;
 namespace DataDictionary.DataLayer.DbMetaData
 {
 
-    public interface IDbExtendedPropertyItem
+    public interface IDbExtendedPropertyItem : IDbCatalogName
     {
         String? Level0Type { get; }
         String? Level0Name { get; }
@@ -48,7 +48,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             // There appears to be a bug in Microsoft Code that can cause the paramters to be incorrectly setup when building the SQL statement for the parameters.
             // This appears to be avoid when the paramter is setup with a defined type and length.
             // There is also no way to pass the parameter "Default". For this function, passing NULL is apporate but this is not always the case.
-            command.CommandText = "SELECT @Level0Type [Level0Type], @Level0Name [Level0Name], @Level1Type [Level1Type], @Level1Name [Level1Name], @Level2Type [Level2Type], @Level2Name [Level2Name], [objtype], [objname], [name], [value] FROM [fn_listextendedproperty](@PropertyName, @Level0Type, @Level0Name, @Level1Type, @Level1Name, @Level2Type, @Level2Name)";
+            command.CommandText = "SELECT Db_Name() [CatalogName], @Level0Type [Level0Type], @Level0Name [Level0Name], @Level1Type [Level1Type], @Level1Name [Level1Name], @Level2Type [Level2Type], @Level2Name [Level2Name], [objtype], [objname], [name], [value] FROM [fn_listextendedproperty](@PropertyName, @Level0Type, @Level0Name, @Level1Type, @Level1Name, @Level2Type, @Level2Name)";
             command.Parameters.Add(new SqlParameter("@PropertyName", SqlDbType.VarChar, 210)); 
             command.Parameters.Add(new SqlParameter("@Level0Type", SqlDbType.VarChar, 210)); 
             command.Parameters.Add(new SqlParameter("@Level0Name", SqlDbType.VarChar, 210)); 
@@ -72,6 +72,8 @@ namespace DataDictionary.DataLayer.DbMetaData
 
     public class DbExtendedPropertyItem : BindingTableRow, IDbExtendedPropertyItem, INotifyPropertyChanged
     {
+
+        public String? CatalogName { get { return GetValue("CatalogName"); } }
         public String? Level0Type { get { return GetValue("Level0Type"); } }
         public String? Level0Name { get { return GetValue("Level0Name"); } }
         public String? Level1Type { get { return GetValue("Level1Type"); } }
@@ -84,5 +86,6 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? PropertyName { get { return GetValue("name"); } }
         public String? PropertyValue { get { return GetValue("value"); } }
 
+        
     }
 }

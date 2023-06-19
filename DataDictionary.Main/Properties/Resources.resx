@@ -130,11 +130,17 @@
   <data name="ComputedColumn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ComputedColumn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Database" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Database.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="DataDictionaryApplication" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DataDictionaryApplication.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DbColumn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DbColumn.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DbContext" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DbContext.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DbSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DbSchema.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

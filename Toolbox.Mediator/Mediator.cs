@@ -45,10 +45,10 @@ namespace Toolbox.Mediator
             if (sender is IColleague sentBy
                 && colleagues.Contains(sentBy))
             {
-                // TODO: Need to work on this. This is causing cross threading issues.
-                Parallel.ForEach(colleagues.Where(sentTo => sentTo != sentBy),
-                                 item =>  item.RecieveMessage(sender, message));
-
+                /* TODO: Parallel is causing cross threading issues. Could not figure out how to fix.
+                 * Parallel.ForEach(colleagues.Where(sentTo => sentTo != sentBy), item =>  item.RecieveMessage(sender, message));*/
+                foreach (IColleague? item in colleagues.Where(sentTo => sentTo != sentBy))
+                { item.RecieveMessage(sender, message); }
             }
         }
 
@@ -104,7 +104,7 @@ namespace Toolbox.Mediator
                 }
 
                 disposedValue = true;
-                if(Disposed is EventHandler handler) { handler(this, EventArgs.Empty); }
+                if (Disposed is EventHandler handler) { handler(this, EventArgs.Empty); }
             }
         }
 
@@ -115,7 +115,7 @@ namespace Toolbox.Mediator
             GC.SuppressFinalize(this);
         }
 
-        
+
 
         #endregion
     }

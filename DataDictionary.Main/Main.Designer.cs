@@ -28,7 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            Panel navigationPanel;
+            Splitter navigationSpliter;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+            navigationTabs = new TabControl();
+            navigationDbSchemaTab = new TabPage();
+            navigationDomainTab = new TabPage();
             statusStrip = new StatusStrip();
             toolStripInfo = new ToolStripStatusLabel();
             toolStripWhiteSpace = new ToolStripStatusLabel();
@@ -68,11 +73,62 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
-            mainNavigation = new Control.MainNavigation();
-            navSplitter = new Splitter();
+            importFromDatabaseToolStripMenuItem = new ToolStripMenuItem();
+            navigationPanel = new Panel();
+            navigationSpliter = new Splitter();
+            navigationPanel.SuspendLayout();
+            navigationTabs.SuspendLayout();
             statusStrip.SuspendLayout();
             menuStrip.SuspendLayout();
             SuspendLayout();
+            // 
+            // navigationPanel
+            // 
+            navigationPanel.Controls.Add(navigationTabs);
+            navigationPanel.Dock = DockStyle.Left;
+            navigationPanel.Location = new Point(0, 24);
+            navigationPanel.Name = "navigationPanel";
+            navigationPanel.Size = new Size(220, 404);
+            navigationPanel.TabIndex = 6;
+            // 
+            // navigationTabs
+            // 
+            navigationTabs.Controls.Add(navigationDbSchemaTab);
+            navigationTabs.Controls.Add(navigationDomainTab);
+            navigationTabs.Dock = DockStyle.Fill;
+            navigationTabs.Location = new Point(0, 0);
+            navigationTabs.Name = "navigationTabs";
+            navigationTabs.SelectedIndex = 0;
+            navigationTabs.Size = new Size(220, 404);
+            navigationTabs.TabIndex = 0;
+            // 
+            // navigationDbSchemaTab
+            // 
+            navigationDbSchemaTab.Location = new Point(4, 24);
+            navigationDbSchemaTab.Name = "navigationDbSchemaTab";
+            navigationDbSchemaTab.Padding = new Padding(3);
+            navigationDbSchemaTab.Size = new Size(212, 376);
+            navigationDbSchemaTab.TabIndex = 0;
+            navigationDbSchemaTab.Text = "Db Schema";
+            navigationDbSchemaTab.UseVisualStyleBackColor = true;
+            // 
+            // navigationDomainTab
+            // 
+            navigationDomainTab.Location = new Point(4, 24);
+            navigationDomainTab.Name = "navigationDomainTab";
+            navigationDomainTab.Padding = new Padding(3);
+            navigationDomainTab.Size = new Size(212, 376);
+            navigationDomainTab.TabIndex = 1;
+            navigationDomainTab.Text = "Domain Model";
+            navigationDomainTab.UseVisualStyleBackColor = true;
+            // 
+            // navigationSpliter
+            // 
+            navigationSpliter.Location = new Point(220, 24);
+            navigationSpliter.Name = "navigationSpliter";
+            navigationSpliter.Size = new Size(3, 404);
+            navigationSpliter.TabIndex = 8;
+            navigationSpliter.TabStop = false;
             // 
             // statusStrip
             // 
@@ -117,81 +173,86 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem, openToolStripMenuItem, toolStripSeparator, saveToolStripMenuItem, saveAsToolStripMenuItem, toolStripSeparator1, printToolStripMenuItem, printPreviewToolStripMenuItem, toolStripSeparator2, exitToolStripMenuItem });
-            fileToolStripMenuItem.Enabled = false;
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem, openToolStripMenuItem, importFromDatabaseToolStripMenuItem, toolStripSeparator, saveToolStripMenuItem, saveAsToolStripMenuItem, toolStripSeparator1, printToolStripMenuItem, printPreviewToolStripMenuItem, toolStripSeparator2, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(37, 20);
             fileToolStripMenuItem.Text = "&File";
             // 
             // newToolStripMenuItem
             // 
+            newToolStripMenuItem.Enabled = false;
             newToolStripMenuItem.Image = (Image)resources.GetObject("newToolStripMenuItem.Image");
             newToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             newToolStripMenuItem.Name = "newToolStripMenuItem";
             newToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            newToolStripMenuItem.Size = new Size(146, 22);
+            newToolStripMenuItem.Size = new Size(190, 22);
             newToolStripMenuItem.Text = "&New";
             // 
             // openToolStripMenuItem
             // 
+            openToolStripMenuItem.Enabled = false;
             openToolStripMenuItem.Image = (Image)resources.GetObject("openToolStripMenuItem.Image");
             openToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             openToolStripMenuItem.Name = "openToolStripMenuItem";
             openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
-            openToolStripMenuItem.Size = new Size(146, 22);
+            openToolStripMenuItem.Size = new Size(190, 22);
             openToolStripMenuItem.Text = "&Open";
             // 
             // toolStripSeparator
             // 
             toolStripSeparator.Name = "toolStripSeparator";
-            toolStripSeparator.Size = new Size(143, 6);
+            toolStripSeparator.Size = new Size(187, 6);
             // 
             // saveToolStripMenuItem
             // 
+            saveToolStripMenuItem.Enabled = false;
             saveToolStripMenuItem.Image = (Image)resources.GetObject("saveToolStripMenuItem.Image");
             saveToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            saveToolStripMenuItem.Size = new Size(146, 22);
+            saveToolStripMenuItem.Size = new Size(190, 22);
             saveToolStripMenuItem.Text = "&Save";
             // 
             // saveAsToolStripMenuItem
             // 
+            saveAsToolStripMenuItem.Enabled = false;
             saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            saveAsToolStripMenuItem.Size = new Size(146, 22);
+            saveAsToolStripMenuItem.Size = new Size(190, 22);
             saveAsToolStripMenuItem.Text = "Save &As";
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(143, 6);
+            toolStripSeparator1.Size = new Size(187, 6);
             // 
             // printToolStripMenuItem
             // 
+            printToolStripMenuItem.Enabled = false;
             printToolStripMenuItem.Image = (Image)resources.GetObject("printToolStripMenuItem.Image");
             printToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             printToolStripMenuItem.Name = "printToolStripMenuItem";
             printToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.P;
-            printToolStripMenuItem.Size = new Size(146, 22);
+            printToolStripMenuItem.Size = new Size(190, 22);
             printToolStripMenuItem.Text = "&Print";
             // 
             // printPreviewToolStripMenuItem
             // 
+            printPreviewToolStripMenuItem.Enabled = false;
             printPreviewToolStripMenuItem.Image = (Image)resources.GetObject("printPreviewToolStripMenuItem.Image");
             printPreviewToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
-            printPreviewToolStripMenuItem.Size = new Size(146, 22);
+            printPreviewToolStripMenuItem.Size = new Size(190, 22);
             printPreviewToolStripMenuItem.Text = "Print Pre&view";
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(143, 6);
+            toolStripSeparator2.Size = new Size(187, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(146, 22);
+            exitToolStripMenuItem.Size = new Size(190, 22);
             exitToolStripMenuItem.Text = "E&xit";
             // 
             // editToolStripMenuItem
@@ -345,29 +406,21 @@
             aboutToolStripMenuItem.Size = new Size(122, 22);
             aboutToolStripMenuItem.Text = "&About...";
             // 
-            // mainNavigation
+            // importFromDatabaseToolStripMenuItem
             // 
-            mainNavigation.Dock = DockStyle.Left;
-            mainNavigation.Location = new Point(0, 24);
-            mainNavigation.Name = "mainNavigation";
-            mainNavigation.Size = new Size(242, 404);
-            mainNavigation.TabIndex = 3;
-            // 
-            // navSplitter
-            // 
-            navSplitter.Location = new Point(242, 24);
-            navSplitter.Name = "navSplitter";
-            navSplitter.Size = new Size(3, 404);
-            navSplitter.TabIndex = 4;
-            navSplitter.TabStop = false;
+            importFromDatabaseToolStripMenuItem.Image = Properties.Resources.Database;
+            importFromDatabaseToolStripMenuItem.Name = "importFromDatabaseToolStripMenuItem";
+            importFromDatabaseToolStripMenuItem.Size = new Size(190, 22);
+            importFromDatabaseToolStripMenuItem.Text = "Import from Database";
+            importFromDatabaseToolStripMenuItem.Click += importFromDatabaseToolStripMenuItem_Click;
             // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(navSplitter);
-            Controls.Add(mainNavigation);
+            Controls.Add(navigationSpliter);
+            Controls.Add(navigationPanel);
             Controls.Add(statusStrip);
             Controls.Add(menuStrip);
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -377,6 +430,8 @@
             Text = "Data Dictionary manager";
             FormClosed += Main_FormClosed;
             Load += Main_Load;
+            navigationPanel.ResumeLayout(false);
+            navigationTabs.ResumeLayout(false);
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
             menuStrip.ResumeLayout(false);
@@ -426,7 +481,10 @@
         private ToolStripStatusLabel toolStripInfo;
         private ToolStripStatusLabel toolStripWhiteSpace;
         private ToolStripProgressBar toolStripProgressBar;
-        private Control.MainNavigation mainNavigation;
-        private Splitter navSplitter;
+        private Panel navigationPanel;
+        private TabControl navigationTabs;
+        private TabPage navigationDbSchemaTab;
+        private TabPage navigationDomainTab;
+        private ToolStripMenuItem importFromDatabaseToolStripMenuItem;
     }
 }

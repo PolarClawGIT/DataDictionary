@@ -21,6 +21,11 @@ namespace DataDictionary.Main
         public static Mediator Messenger { get; } = new Mediator();
 
         /// <summary>
+        /// Application Data, Db MetaData
+        /// </summary>
+        public static DatabaseMetaData DbData { get; } = new DatabaseMetaData();
+
+        /// <summary>
         /// Business Context information. Singleton access point.
         /// </summary>
         public static BusinessContext BusinessContext { get; } = new BusinessContext()

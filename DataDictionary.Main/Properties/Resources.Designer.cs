@@ -101,6 +101,16 @@ namespace DataDictionary.Main.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Database {
+            get {
+                object obj = ResourceManager.GetObject("Database", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon DataDictionaryApplication {
@@ -116,6 +126,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Icon DbColumn {
             get {
                 object obj = ResourceManager.GetObject("DbColumn", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon DbContext {
+            get {
+                object obj = ResourceManager.GetObject("DbContext", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

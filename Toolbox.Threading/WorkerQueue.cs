@@ -13,7 +13,7 @@ namespace Toolbox.Threading
 {
     public class WorkerQueue : IDisposable
     {
-        protected ConcurrentQueue<WorkBase> WorkQueue { get; } = new ConcurrentQueue<WorkBase>();
+        protected ConcurrentQueue<IWorkItem> WorkQueue { get; } = new ConcurrentQueue<IWorkItem>();
         protected BackgroundWorker BackgroundWorker { get; } = new BackgroundWorker();
         public Int32 WorkAdded { get; protected set; } = 0;
         public Int32 WorkComplete { get; protected set; } = 0;
@@ -27,7 +27,7 @@ namespace Toolbox.Threading
         }
 
         public Int32 WorkQueued { get { return WorkQueue.Count; } }
-        protected WorkItem.WorkBase? CurrentWork { get; private set; } = null;
+        protected IWorkItem? CurrentWork { get; private set; } = null;
 
         public WorkerQueue() : base()
         {
@@ -35,19 +35,22 @@ namespace Toolbox.Threading
             WorkCompleted += WorkerQueue_WorkCompleted;
         }
 
-        public virtual void Enqueue(WorkBase item)
+        public virtual void Enqueue(IWorkItem work)
         {
-            WorkQueue.Enqueue(item);
+            WorkQueue.Enqueue(work);
             WorkAdded++;
             if (CurrentWork is null) { WorkStarting(this, new EventArgs()); }
         }
+
+        public virtual void Enqueue(IEnumerable<IWorkItem> work)
+        { foreach (var item in work) { Enqueue(item); } }
 
         protected event EventHandler WorkStarting;
         protected event EventHandler<WorkerEventArgs> WorkCompleted;
 
         protected virtual void WorkerQueue_WorkStarting(object? sender, EventArgs e)
         {
-            if (WorkQueue.TryDequeue(out WorkBase? item) && item is not null)
+            if (WorkQueue.TryDequeue(out IWorkItem? item) && item is not null)
             {
                 CurrentWork = item;
                 item.OnStarting();

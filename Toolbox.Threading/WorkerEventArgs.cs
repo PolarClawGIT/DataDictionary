@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.Threading.WorkItem;
 
 namespace Toolbox.Threading
 {
@@ -35,7 +36,7 @@ namespace Toolbox.Threading
             else if (progress >= 100) { ProgressPercent = 100; }
         }
 
-        public WorkerProgressChangedEventArgs(WorkItem.WorkBase item) : this(item.WorkName) { }
-        public WorkerProgressChangedEventArgs(WorkItem.WorkBase item, Int32 progress) : this(item.WorkName, progress) { }
+        public WorkerProgressChangedEventArgs(IWorkItem item) : this(item.WorkName) { }
+        public WorkerProgressChangedEventArgs(IWorkItem item, Int32 progress) : this(item.WorkName, progress) { }
     }
 }

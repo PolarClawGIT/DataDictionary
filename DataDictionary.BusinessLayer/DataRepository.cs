@@ -18,7 +18,7 @@ using Toolbox.Threading.WorkItem;
 namespace DataDictionary.BusinessLayer
 {
 
-
+    [Obsolete()]
     public class DataRepository
     {
         BindingTable<DbSchemaItem> dbSchemas = new BindingTable<DbSchemaItem>();

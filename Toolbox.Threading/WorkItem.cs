@@ -4,7 +4,22 @@ namespace Toolbox.Threading
 {
     namespace WorkItem
     {
-        public abstract class WorkBase
+
+        public interface IWorkItem 
+        {
+            String WorkName { get; init; }
+
+            event EventHandler? WorkStarting;
+            event EventHandler? WorkCompleting;
+            event EventHandler<Exception>? WorkException;
+
+            void OnStarting();
+            void OnCompleting();
+            void OnException(Exception ex);
+        }
+
+
+        public abstract class WorkBase :IWorkItem
         {
             public required String WorkName { get; init; }
 

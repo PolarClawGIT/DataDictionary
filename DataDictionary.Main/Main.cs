@@ -1,5 +1,6 @@
 using DataDictionary.BusinessLayer;
 using DataDictionary.Main.Messages;
+using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using Toolbox.Mediator;
 using Toolbox.Threading;
@@ -9,39 +10,55 @@ namespace DataDictionary.Main
 {
     partial class Main : Form, IColleague
     {
-        DataRepository thisData = new DataRepository();
+        #region Static Data
+        enum navigationTabImageIndex
+        {
+            Database,
+            Domain
+        }
+        Dictionary<navigationTabImageIndex, Image> navigationTabImages = new Dictionary<navigationTabImageIndex, Image>()
+        {
+            {navigationTabImageIndex.Database, Resources.Database },
+            {navigationTabImageIndex.Domain, Resources.Dictionary }
+        };
+        #endregion
 
         public Main()
         {
             InitializeComponent();
-            ChildFormOpening += Main_ChildFormOpening; ;
+            ChildFormOpening += Main_ChildFormOpening;
+
+            navigationTabs.ImageList = new ImageList();
+            foreach (navigationTabImageIndex item in Enum.GetValues(typeof(navigationTabImageIndex)))
+            { navigationTabs.ImageList.Images.Add(item.ToString(), navigationTabImages[item]); }
+            navigationDbSchemaTab.ImageKey = navigationTabImageIndex.Database.ToString();
+            navigationDomainTab.ImageKey = navigationTabImageIndex.Domain.ToString();
+
         }
 
 
 
         private void Main_Load(object sender, EventArgs e)
         {
-            this.UseWaitCursor = true;
             Program.WorkerQueue.ProgressChanged += WorkerQueue_ProgressChanged;
             Program.Messenger.AddColleague(this);
+            Program.DbData.ListChanged += DbData_ListChanged;
 
-            WorkBase work = thisData.Load();
-            work.WorkCompleting += Work_WorkCompleting;
-            Program.WorkerQueue.Enqueue(work);
+        }
 
-            void Work_WorkCompleting(object? sender, EventArgs e)
-            {
-                work.WorkCompleting -= Work_WorkCompleting;
-                mainNavigation.Bind(thisData);
-                this.UseWaitCursor = false;
-            }
+        private void DbData_ListChanged(object? sender, ListChangedEventArgs e)
+        {
+            //throw new NotImplementedException();
         }
 
         private void Main_FormClosing(object? sender, FormClosingEventArgs e)
         { }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
-        { Program.WorkerQueue.ProgressChanged -= WorkerQueue_ProgressChanged; }
+        {
+            Program.WorkerQueue.ProgressChanged -= WorkerQueue_ProgressChanged;
+            Program.DbData.ListChanged -= DbData_ListChanged;
+        }
 
         private void WorkerQueue_ProgressChanged(object? sender, WorkerProgressChangedEventArgs e)
         {
@@ -72,6 +89,19 @@ namespace DataDictionary.Main
         }
 
 
+        private void importFromDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbConnection)) is Forms.DbConnection existingForm)
+            { existingForm.Activate(); }
+            else
+            {
+                Form newForm = new Forms.DbConnection();
+                newForm.MdiParent = this;
+                newForm.Show();
+            }
+        }
+
+
         #region IColleague
         event EventHandler<FormOpenMessage> ChildFormOpening;
         private void Main_ChildFormOpening(object? sender, FormOpenMessage e)
@@ -91,5 +121,6 @@ namespace DataDictionary.Main
             { handler(this, message); }
         }
         #endregion
+
     }
 }
