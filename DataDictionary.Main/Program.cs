@@ -25,12 +25,6 @@ namespace DataDictionary.Main
         /// </summary>
         public static DatabaseMetaData DbData { get; } = new DatabaseMetaData();
 
-        /// <summary>
-        /// Business Context information. Singleton access point.
-        /// </summary>
-        public static BusinessContext BusinessContext { get; } = new BusinessContext()
-        { DbContext = new Context() { ServerName = Settings.Default.AppServer, DatabaseName = Settings.Default.AppDatabase } };
-
         static Program()
         { }
 

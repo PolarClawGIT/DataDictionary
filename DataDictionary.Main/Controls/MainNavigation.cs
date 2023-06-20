@@ -15,6 +15,7 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Control
 {
+    [Obsolete()]
     public partial class MainNavigation : UserControl, IColleague
     {
         enum DbSchmeaTreeNodeType
@@ -54,7 +55,7 @@ namespace DataDictionary.Main.Control
             { dbSchmeaTreeData.ImageList.Images.Add(item.ToString(), dbSchmeaTreeImages[item]); }
         }
 
-        public void Bind(DataRepository data)
+/*        public void Bind(DataRepository data)
         {
             // Unbind data as needed
             serverNameData.DataBindings.Clear();
@@ -113,7 +114,7 @@ namespace DataDictionary.Main.Control
                     }
                 }
             }
-        }
+        }*/
 
         private void dbSchmeaTreeData_DoubleClick(object sender, EventArgs e)
         {

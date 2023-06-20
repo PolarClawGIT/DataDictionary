@@ -64,10 +64,6 @@
             toolsToolStripMenuItem = new ToolStripMenuItem();
             customizeToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
-            unitTestToolStripMenuItem = new ToolStripMenuItem();
-            testConnectionToolStripMenuItem = new ToolStripMenuItem();
-            appExceptionToolStripMenuItem = new ToolStripMenuItem();
-            getSchemaToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             contentsToolStripMenuItem = new ToolStripMenuItem();
             indexToolStripMenuItem = new ToolStripMenuItem();
@@ -117,7 +113,7 @@
             navigationDomainTab.Location = new Point(4, 24);
             navigationDomainTab.Name = "navigationDomainTab";
             navigationDomainTab.Padding = new Padding(3);
-            navigationDomainTab.Size = new Size(212, 376);
+            navigationDomainTab.Size = new Size(212, 658);
             navigationDomainTab.TabIndex = 1;
             navigationDomainTab.Text = "Domain Model";
             navigationDomainTab.UseVisualStyleBackColor = true;
@@ -330,7 +326,7 @@
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem, unitTestToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(46, 20);
             toolsToolStripMenuItem.Text = "&Tools";
@@ -339,43 +335,15 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(130, 22);
+            customizeToolStripMenuItem.Size = new Size(180, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(130, 22);
+            optionsToolStripMenuItem.Size = new Size(180, 22);
             optionsToolStripMenuItem.Text = "&Options";
-            // 
-            // unitTestToolStripMenuItem
-            // 
-            unitTestToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { testConnectionToolStripMenuItem, appExceptionToolStripMenuItem, getSchemaToolStripMenuItem });
-            unitTestToolStripMenuItem.Name = "unitTestToolStripMenuItem";
-            unitTestToolStripMenuItem.Size = new Size(130, 22);
-            unitTestToolStripMenuItem.Text = "Unit Test";
-            // 
-            // testConnectionToolStripMenuItem
-            // 
-            testConnectionToolStripMenuItem.Name = "testConnectionToolStripMenuItem";
-            testConnectionToolStripMenuItem.Size = new Size(159, 22);
-            testConnectionToolStripMenuItem.Text = "Test Connection";
-            testConnectionToolStripMenuItem.Click += testConnectionToolStripMenuItem_Click;
-            // 
-            // appExceptionToolStripMenuItem
-            // 
-            appExceptionToolStripMenuItem.Name = "appExceptionToolStripMenuItem";
-            appExceptionToolStripMenuItem.Size = new Size(159, 22);
-            appExceptionToolStripMenuItem.Text = "App Exception";
-            appExceptionToolStripMenuItem.Click += appExceptionToolStripMenuItem_Click;
-            // 
-            // getSchemaToolStripMenuItem
-            // 
-            getSchemaToolStripMenuItem.Name = "getSchemaToolStripMenuItem";
-            getSchemaToolStripMenuItem.Size = new Size(159, 22);
-            getSchemaToolStripMenuItem.Text = "Get Schema";
-            getSchemaToolStripMenuItem.Click += getSchemaToolStripMenuItem_Click;
             // 
             // helpToolStripMenuItem
             // 
@@ -473,10 +441,6 @@
         private ToolStripMenuItem searchToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem aboutToolStripMenuItem;
-        private ToolStripMenuItem unitTestToolStripMenuItem;
-        private ToolStripMenuItem testConnectionToolStripMenuItem;
-        private ToolStripMenuItem appExceptionToolStripMenuItem;
-        private ToolStripMenuItem getSchemaToolStripMenuItem;
         private ToolStripStatusLabel toolStripWorkerTask;
         private ToolStripStatusLabel toolStripInfo;
         private ToolStripStatusLabel toolStripWhiteSpace;

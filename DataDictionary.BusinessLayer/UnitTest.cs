@@ -13,17 +13,5 @@ namespace DataDictionary.BusinessLayer
     {
         public UnitTest() { }
 
-        public void TestConnection()
-        {
-            using (IConnection connection = BusinessContext.Instance.DbContext.CreateConnection())
-            { connection.Open(); }
-
-        }
-
-        public void TestGetSchema()
-        {
-            DataRepository data = new DataRepository();
-            data.Load();
-        }
     }
 }

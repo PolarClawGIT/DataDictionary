@@ -66,28 +66,6 @@ namespace DataDictionary.Main
             toolStripWorkerTask.Text = e.ProgressText;
         }
 
-        private void testConnectionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var unitTest = new DataDictionary.BusinessLayer.UnitTest();
-            unitTest.TestConnection();
-
-        }
-
-        private void appExceptionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Exception innerEx = new InvalidOperationException("Inner Test");
-            Exception testEx = new InvalidOperationException("Test", innerEx);
-            testEx.Data.Add("Key", "Value");
-
-            throw testEx;
-        }
-
-        private void getSchemaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var unitTest = new DataDictionary.BusinessLayer.UnitTest();
-            unitTest.TestGetSchema();
-        }
-
 
         private void importFromDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
