@@ -320,6 +320,7 @@
             // authenticateWindows
             // 
             authenticateWindows.AutoSize = true;
+            authenticateWindows.Checked = true;
             authenticateWindows.Location = new Point(3, 3);
             authenticateWindows.Name = "authenticateWindows";
             authenticateWindows.Size = new Size(74, 19);
@@ -336,7 +337,6 @@
             authenticateDbServer.Name = "authenticateDbServer";
             authenticateDbServer.Size = new Size(75, 19);
             authenticateDbServer.TabIndex = 1;
-            authenticateDbServer.TabStop = true;
             authenticateDbServer.Text = "Db Server";
             authenticateDbServer.UseVisualStyleBackColor = true;
             // 

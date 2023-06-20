@@ -1,4 +1,7 @@
-﻿using DataDictionary.Main.Properties;
+﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.DbMetaData;
+using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,8 +29,7 @@ namespace DataDictionary.Main.Forms
             if (authenticateWindows.Checked)
             {
                 userNameData.Enabled = false;
-                userNameData.Text = SystemInformation.UserDomainName;
-
+                userNameData.Text = String.Format("{0}\\{1}", SystemInformation.UserDomainName, SystemInformation.UserName);
                 userPasswordData.Enabled = false;
                 userPasswordData.Text = String.Empty;
             }
@@ -56,7 +58,7 @@ namespace DataDictionary.Main.Forms
                 }
             }
 
-            // Sets ups Server list. 
+            // Setup Server list. 
             IEnumerable<String> serverNames = ServerDatabasePairs.OrderBy(o => o.ServerName).Select(s => s.ServerName).Distinct();
             serverNameData.Items.AddRange(serverNames.ToArray());
             if (serverNameData.Items.Count > 0) { serverNameData.SelectedIndex = 0; }
@@ -67,13 +69,16 @@ namespace DataDictionary.Main.Forms
             databaseNameData.Text = String.Empty;
             databaseNameData.Items.AddRange(databaseNames.ToArray());
             if (databaseNameData.Items.Count > 0) { databaseNameData.SelectedIndex = 0; }
-            else { databaseNameData.SelectedIndex = -1;}
+            else { databaseNameData.SelectedIndex = -1; }
+
+            // Setup Connection type
+            authenticateWindows_CheckedChanged(this, EventArgs.Empty);
         }
 
 
         private void serverNameData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+
         }
 
         private void serverNameData_Validated(object sender, EventArgs e)
@@ -88,9 +93,37 @@ namespace DataDictionary.Main.Forms
 
         private void connectCommand_Click(object sender, EventArgs e)
         {
+            DbContext context = new DbContext() { ServerName = serverNameData.Text };
+            this.UseWaitCursor = true;
+            Program.WorkerQueue.Enqueue(Program.DbData.GetDatabases(context, onComplete));
+
             // TODO: Allow connection without specifying a Db, Db list needs to refresh from server.
             // TODO: On succesful Connection, add item to list of settings
+
+            void onComplete(IEnumerable<IDbCatalogItem> catalogs)
+            {
+                IEnumerable<String?> databaseNames = catalogs.Where(w => w.IsSystem == false).OrderBy(o => o.CatalogName).Select(s => s.CatalogName).Distinct();
+
+                if (databaseNames.FirstOrDefault(w => w == databaseNameData.Text) is String currentDb)
+                {
+                    databaseNameData.Items.Clear();
+                    databaseNameData.Text = String.Empty;
+                    databaseNameData.Items.AddRange(databaseNames.ToArray());
+                    databaseNameData.SelectedIndex = databaseNameData.Items.IndexOf(currentDb);
+                }
+                else
+                {
+                    databaseNameData.Items.Clear();
+                    databaseNameData.Text = String.Empty;
+                    databaseNameData.Items.AddRange(databaseNames.ToArray());
+                    if (databaseNameData.Items.Count > 0) { databaseNameData.SelectedIndex = 0; }
+                    else { databaseNameData.SelectedIndex = -1; }
+                }
+
+                this.UseWaitCursor = false;
+            }
         }
+
 
         private void importCommand_Click(object sender, EventArgs e)
         {

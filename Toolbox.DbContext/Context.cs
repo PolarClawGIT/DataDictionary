@@ -15,11 +15,17 @@ namespace Toolbox.DbContext
     /// <remarks>This wrappers a Connection String.</remarks>
     public class Context
     {
-        internal SqlConnectionStringBuilder ConnectionBuilder { get; set; } = new SqlConnectionStringBuilder();
+        internal SqlConnectionStringBuilder ConnectionBuilder { get; set; } = new SqlConnectionStringBuilder()
+        { 
+            ApplicationName = "Data Dictionary Manager (C) William Howard",
+            Authentication = SqlAuthenticationMethod.ActiveDirectoryDefault,
+        };
 
         public String ServerName { get { return ConnectionBuilder.DataSource; } init { ConnectionBuilder.DataSource = value; } }
         public String DatabaseName { get { return ConnectionBuilder.InitialCatalog; } init { ConnectionBuilder.InitialCatalog = value; } }
-
+        public SqlAuthenticationMethod Authentication { get { return ConnectionBuilder.Authentication; } }
+        public String ServerUserName { get { return ConnectionBuilder.UserID; } init { ConnectionBuilder.UserID =  value; } }
+        public String ServerUserPassword { get { return ConnectionBuilder.Password; } init { ConnectionBuilder.Password = value; } }    
 
         /// <summary>
         /// Constructor.

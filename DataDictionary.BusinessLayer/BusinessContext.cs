@@ -12,6 +12,7 @@ namespace DataDictionary.BusinessLayer
     /// Used to define/set gobal values used by the business layer.
     /// This uses a simple Singleton Pattern.
     /// </summary>
+    [Obsolete()]
     public class BusinessContext
     {
         /// <summary>
@@ -34,7 +35,5 @@ namespace DataDictionary.BusinessLayer
         /// Database Context used by the Business Layer.
         /// </summary>
         public required Context DbContext { get; init; }
-
-
     }
 }

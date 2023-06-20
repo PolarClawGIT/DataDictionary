@@ -43,6 +43,7 @@
             fileToolStripMenuItem = new ToolStripMenuItem();
             newToolStripMenuItem = new ToolStripMenuItem();
             openToolStripMenuItem = new ToolStripMenuItem();
+            importFromDatabaseToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator = new ToolStripSeparator();
             saveToolStripMenuItem = new ToolStripMenuItem();
             saveAsToolStripMenuItem = new ToolStripMenuItem();
@@ -73,7 +74,6 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
-            importFromDatabaseToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
@@ -88,7 +88,7 @@
             navigationPanel.Dock = DockStyle.Left;
             navigationPanel.Location = new Point(0, 24);
             navigationPanel.Name = "navigationPanel";
-            navigationPanel.Size = new Size(220, 404);
+            navigationPanel.Size = new Size(220, 686);
             navigationPanel.TabIndex = 6;
             // 
             // navigationTabs
@@ -99,7 +99,7 @@
             navigationTabs.Location = new Point(0, 0);
             navigationTabs.Name = "navigationTabs";
             navigationTabs.SelectedIndex = 0;
-            navigationTabs.Size = new Size(220, 404);
+            navigationTabs.Size = new Size(220, 686);
             navigationTabs.TabIndex = 0;
             // 
             // navigationDbSchemaTab
@@ -107,7 +107,7 @@
             navigationDbSchemaTab.Location = new Point(4, 24);
             navigationDbSchemaTab.Name = "navigationDbSchemaTab";
             navigationDbSchemaTab.Padding = new Padding(3);
-            navigationDbSchemaTab.Size = new Size(212, 376);
+            navigationDbSchemaTab.Size = new Size(212, 658);
             navigationDbSchemaTab.TabIndex = 0;
             navigationDbSchemaTab.Text = "Db Schema";
             navigationDbSchemaTab.UseVisualStyleBackColor = true;
@@ -126,16 +126,16 @@
             // 
             navigationSpliter.Location = new Point(220, 24);
             navigationSpliter.Name = "navigationSpliter";
-            navigationSpliter.Size = new Size(3, 404);
+            navigationSpliter.Size = new Size(3, 686);
             navigationSpliter.TabIndex = 8;
             navigationSpliter.TabStop = false;
             // 
             // statusStrip
             // 
             statusStrip.Items.AddRange(new ToolStripItem[] { toolStripInfo, toolStripWhiteSpace, toolStripWorkerTask, toolStripProgressBar });
-            statusStrip.Location = new Point(0, 428);
+            statusStrip.Location = new Point(0, 710);
             statusStrip.Name = "statusStrip";
-            statusStrip.Size = new Size(800, 22);
+            statusStrip.Size = new Size(1141, 22);
             statusStrip.TabIndex = 0;
             statusStrip.Text = "statusStrip1";
             // 
@@ -148,7 +148,7 @@
             // toolStripWhiteSpace
             // 
             toolStripWhiteSpace.Name = "toolStripWhiteSpace";
-            toolStripWhiteSpace.Size = new Size(507, 17);
+            toolStripWhiteSpace.Size = new Size(848, 17);
             toolStripWhiteSpace.Spring = true;
             // 
             // toolStripWorkerTask
@@ -167,7 +167,7 @@
             menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, toolsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(800, 24);
+            menuStrip.Size = new Size(1141, 24);
             menuStrip.TabIndex = 1;
             menuStrip.Text = "menuStrip1";
             // 
@@ -197,6 +197,14 @@
             openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
             openToolStripMenuItem.Size = new Size(190, 22);
             openToolStripMenuItem.Text = "&Open";
+            // 
+            // importFromDatabaseToolStripMenuItem
+            // 
+            importFromDatabaseToolStripMenuItem.Image = Properties.Resources.Database;
+            importFromDatabaseToolStripMenuItem.Name = "importFromDatabaseToolStripMenuItem";
+            importFromDatabaseToolStripMenuItem.Size = new Size(190, 22);
+            importFromDatabaseToolStripMenuItem.Text = "Import from Database";
+            importFromDatabaseToolStripMenuItem.Click += importFromDatabaseToolStripMenuItem_Click;
             // 
             // toolStripSeparator
             // 
@@ -406,19 +414,11 @@
             aboutToolStripMenuItem.Size = new Size(122, 22);
             aboutToolStripMenuItem.Text = "&About...";
             // 
-            // importFromDatabaseToolStripMenuItem
-            // 
-            importFromDatabaseToolStripMenuItem.Image = Properties.Resources.Database;
-            importFromDatabaseToolStripMenuItem.Name = "importFromDatabaseToolStripMenuItem";
-            importFromDatabaseToolStripMenuItem.Size = new Size(190, 22);
-            importFromDatabaseToolStripMenuItem.Text = "Import from Database";
-            importFromDatabaseToolStripMenuItem.Click += importFromDatabaseToolStripMenuItem_Click;
-            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1141, 732);
             Controls.Add(navigationSpliter);
             Controls.Add(navigationPanel);
             Controls.Add(statusStrip);

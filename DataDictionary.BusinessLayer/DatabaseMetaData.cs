@@ -22,10 +22,9 @@ namespace DataDictionary.BusinessLayer
 
         public IReadOnlyList<Context> Connections { get { return connections.AsReadOnly(); } }
 
-        public IEnumerable<IWorkItem> ImportDb(Context connection)
+        public IWorkItem ImportDb(Context connection)
         {
             raiseListChanged = false;
-            List<IWorkItem> results = new List<IWorkItem>();
 
             if (connections.FirstOrDefault(w => w.ServerName == connection.ServerName && w.DatabaseName == connection.DatabaseName) is Context item)
             {
@@ -39,6 +38,7 @@ namespace DataDictionary.BusinessLayer
                 WorkName = "Load DataRepository",
                 Connection = connection.CreateConnection()
             };
+            dbData.WorkCompleting += WorkCompleting;
 
             dbData.WorkItems.Add(new DbOpen()
             {
@@ -79,9 +79,7 @@ namespace DataDictionary.BusinessLayer
                 ReportError = dbData.AddError
             });
 
-            results.Add(dbData);
-
-            results.Add(new DbParellel()
+            dbData.WorkItems.Add(new DbParellel()
             {
                 WorkName = "Load Extended Properties, Schema",
                 Connection = connection.CreateConnection,
@@ -90,7 +88,16 @@ namespace DataDictionary.BusinessLayer
                 ReportError = dbData.AddError
             });
 
-            results.Add(new DbParellel()
+            dbData.WorkItems.Add(new DbParellel()
+            {
+                WorkName = "Load Extended Properties, Schema",
+                Connection = connection.CreateConnection,
+                MaxDegreeOfParallelism = 1,
+                Tasks = DbSchemas.Select<DbSchemaItem, Action>(s => () => DbExtendedProperties.Load(dbData.Connection.GetReader(s.GetProperties(dbData.Connection)))),
+                ReportError = dbData.AddError
+            });
+
+            dbData.WorkItems.Add(new DbParellel()
             {
                 WorkName = "Load Extended Properties, Table",
                 Connection = connection.CreateConnection,
@@ -99,7 +106,7 @@ namespace DataDictionary.BusinessLayer
                 ReportError = dbData.AddError
             });
 
-            results.Add(new DbParellel()
+            dbData.WorkItems.Add(new DbParellel()
             {
                 WorkName = "Load Extended Properties, Column",
                 Connection = connection.CreateConnection,
@@ -108,18 +115,58 @@ namespace DataDictionary.BusinessLayer
                 ReportError = dbData.AddError
             });
 
-            results.Last().WorkCompleting += DatabaseMetaData_WorkCompleting;
+            return dbData;
 
-            return results;
-
-            void DatabaseMetaData_WorkCompleting(object? sender, EventArgs e)
+            void WorkCompleting(object? sender, EventArgs e)
             {
-                results.Last().WorkCompleting -= DatabaseMetaData_WorkCompleting;
+                dbData.WorkCompleting -= WorkCompleting;
                 raiseListChanged = true;
                 DbData_ListChanged(this, new ListChangedEventArgs(ListChangedType.Reset, -1));
             }
         }
 
+        public IWorkItem GetDatabases(Context connection, Action<IEnumerable<IDbCatalogItem>> onComplete)
+        {
+            BindingTable<DbCatalogItem> resultData = new BindingTable<DbCatalogItem>();
+
+            DbConnection dbData = new DbConnection()
+            {
+                WorkName = "Load DataRepository",
+                Connection = connection.CreateConnection(),
+            };
+            dbData.WorkCompleting += WorkCompleting;
+
+            dbData.WorkItems.Add(new DbOpen()
+            {
+                WorkName = "Open Connection",
+                Connection = dbData.Connection,
+                ReportError = dbData.AddError,
+            });
+
+            dbData.WorkItems.Add(new DbLoad()
+            {
+                WorkName = "Load Databases",
+                Connection = dbData.Connection,
+                Load = resultData.Load,
+                ReportError = dbData.AddError
+            });
+
+            dbData.WorkItems.Add(new DbClose()
+            {
+                WorkName = "Close Connection",
+                Connection = dbData.Connection,
+                CommentTransaction = dbData.CommentTransaction,
+                ReportError = dbData.AddError
+            });
+
+            return dbData;
+
+            void WorkCompleting(object? sender, EventArgs e)
+            {
+                dbData.WorkCompleting -= WorkCompleting;
+                if(onComplete is Action<IEnumerable<IDbCatalogItem>>) { onComplete(resultData); }
+            }
+        }
 
         public DatabaseMetaData() : base()
         {
