@@ -17,8 +17,7 @@ namespace Toolbox.DbContext
     {
         internal SqlConnectionStringBuilder ConnectionBuilder { get; set; } = new SqlConnectionStringBuilder()
         { 
-            ApplicationName = "Data Dictionary Manager (C) William Howard",
-            Authentication = SqlAuthenticationMethod.ActiveDirectoryDefault,
+            ApplicationName = "Data Dictionary Manager (C) 2023 William Howard" // TODO: pull this from the Assebmly?
         };
 
         public String ServerName { get { return ConnectionBuilder.DataSource; } init { ConnectionBuilder.DataSource = value; } }
