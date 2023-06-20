@@ -36,6 +36,8 @@ namespace DataDictionary.Main
         {
             ApplicationConfiguration.Initialize();
 
+            WorkerQueue.WorkException += WorkerQueue_WorkException;
+
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             Application.ThreadException += Application_ThreadException;
             Application.ApplicationExit += Application_ApplicationExit;
@@ -45,7 +47,13 @@ namespace DataDictionary.Main
         private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
             using (Dialog.ExceptionDialog dialog = new Dialog.ExceptionDialog(e.Exception))
-            { dialog.Show(); }
+            { dialog.ShowDialog(); }
+        }
+
+        private static void WorkerQueue_WorkException(object? sender, Exception e)
+        {
+            using (Dialog.ExceptionDialog dialog = new Dialog.ExceptionDialog(e))
+            { dialog.ShowDialog(); }
         }
 
         private static void Application_ApplicationExit(object? sender, EventArgs e)
@@ -55,10 +63,6 @@ namespace DataDictionary.Main
             WorkerQueue.Dispose();
             Messenger.Dispose();
         }
-
-
-
-
 
     }
 }

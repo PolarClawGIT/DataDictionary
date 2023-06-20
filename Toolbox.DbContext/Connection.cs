@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -11,6 +12,11 @@ namespace Toolbox.DbContext
 {
     public interface IConnection : IDisposable
     {
+        /// <summary>
+        /// Has an Exception occured within the scope of this connection.
+        /// </summary>
+        Boolean HasException { get; }
+
         /// <summary>
         /// Opens a new connection to the database and starts a transaction.
         /// </summary>
@@ -41,7 +47,8 @@ namespace Toolbox.DbContext
     {
         public required Context DbContext { get; init; }
 
-        private Boolean disposedValue;
+        private Boolean disposedValue = false;
+        public Boolean HasException { get; private set; } = false;
         private SqlConnection connection = new SqlConnection();
         private SqlTransaction transaction = null!;
 
@@ -60,6 +67,7 @@ namespace Toolbox.DbContext
             }
             catch (Exception ex)
             {
+                HasException = true;
                 ex.Data.Add("ConnectionString", DbContext.ConnectionBuilder.ConnectionString);
                 throw;
             }
@@ -76,7 +84,10 @@ namespace Toolbox.DbContext
                 connection.Close();
             }
             catch (Exception)
-            { throw; }
+            {
+                HasException = true;
+                throw;
+            }
         }
 
         /// <summary>
@@ -111,7 +122,17 @@ namespace Toolbox.DbContext
         /// <param name="command"></param>
         /// <returns></returns>
         public IDataReader GetReader(SqlCommand command)
-        { return command.ExecuteReader(); }
+        {
+            if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
+
+            try
+            {   return command.ExecuteReader(); }
+            catch (Exception ex)
+            {
+                AddExceptionData(command, ex);
+                throw;
+            }
+        }
 
         /// <summary>
         /// Specialized GetReader for the GetSchema method.
@@ -127,19 +148,29 @@ namespace Toolbox.DbContext
         /// </remarks>
         public IDataReader GetReader(Schema.Collection collection)
         {
+            if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
+
             IDataReader result;
             SqlConnection connection = new SqlConnection();
             connection.ConnectionString = DbContext.ConnectionBuilder.ConnectionString;
-            connection.Open();
 
-            DataTable data = connection.GetSchema(collection.ToString());
-            result = data.CreateDataReader();
+            try
+            {
+                connection.Open();
+                DataTable data = connection.GetSchema(collection.ToString());
+                result = data.CreateDataReader();
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add(nameof(collection), collection.ToString());
+                throw;
+            }
 
-            connection.Close();
+
+
             return result;
         }
-
-
 
         #region IDisposable
         protected virtual void Dispose(bool disposing)
@@ -163,6 +194,16 @@ namespace Toolbox.DbContext
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+        #endregion
+
+        #region Exception handing
+        protected void AddExceptionData(SqlCommand command, Exception ex)
+        {
+            ex.Data.Add(nameof(command.CommandText), command.CommandText);
+            foreach (SqlParameter item in command.Parameters)
+            { ex.Data.Add(String.Format("Parameter: {1}", nameof(item.ParameterName)), item.Value.ToString()); }
+        }
+
         #endregion
     }
 }

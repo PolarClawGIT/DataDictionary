@@ -44,7 +44,6 @@ namespace DataDictionary.BusinessLayer
             {
                 WorkName = "Open Connection",
                 Connection = dbData.Connection,
-                ReportError = dbData.AddError,
             });
 
             dbData.WorkItems.Add(new DbLoad()
@@ -52,7 +51,6 @@ namespace DataDictionary.BusinessLayer
                 WorkName = "Load Schema",
                 Connection = dbData.Connection,
                 Load = DbSchemas.Load,
-                ReportError = dbData.AddError
             });
 
             dbData.WorkItems.Add(new DbLoad()
@@ -60,7 +58,6 @@ namespace DataDictionary.BusinessLayer
                 WorkName = "Load Tables",
                 Connection = dbData.Connection,
                 Load = DbTables.Load,
-                ReportError = dbData.AddError
             });
 
             dbData.WorkItems.Add(new DbLoad()
@@ -68,15 +65,12 @@ namespace DataDictionary.BusinessLayer
                 WorkName = "Load Columns",
                 Connection = dbData.Connection,
                 Load = DbColumns.Load,
-                ReportError = dbData.AddError
             });
 
             dbData.WorkItems.Add(new DbClose()
             {
                 WorkName = "Close Connection",
                 Connection = dbData.Connection,
-                CommentTransaction = dbData.CommentTransaction,
-                ReportError = dbData.AddError
             });
 
             dbData.WorkItems.Add(new DbParellel()
@@ -85,7 +79,6 @@ namespace DataDictionary.BusinessLayer
                 Connection = connection.CreateConnection,
                 MaxDegreeOfParallelism = 1,
                 Tasks = DbSchemas.Select<DbSchemaItem, Action>(s => () => DbExtendedProperties.Load(dbData.Connection.GetReader(s.GetProperties(dbData.Connection)))),
-                ReportError = dbData.AddError
             });
 
             dbData.WorkItems.Add(new DbParellel()
@@ -94,7 +87,6 @@ namespace DataDictionary.BusinessLayer
                 Connection = connection.CreateConnection,
                 MaxDegreeOfParallelism = 1,
                 Tasks = DbSchemas.Select<DbSchemaItem, Action>(s => () => DbExtendedProperties.Load(dbData.Connection.GetReader(s.GetProperties(dbData.Connection)))),
-                ReportError = dbData.AddError
             });
 
             dbData.WorkItems.Add(new DbParellel()
@@ -103,7 +95,6 @@ namespace DataDictionary.BusinessLayer
                 Connection = connection.CreateConnection,
                 MaxDegreeOfParallelism = 1,
                 Tasks = DbTables.Select<DbTableItem, Action>(s => () => DbExtendedProperties.Load(dbData.Connection.GetReader(s.GetProperties(dbData.Connection)))),
-                ReportError = dbData.AddError
             });
 
             dbData.WorkItems.Add(new DbParellel()
@@ -112,7 +103,6 @@ namespace DataDictionary.BusinessLayer
                 Connection = connection.CreateConnection,
                 MaxDegreeOfParallelism = 1,
                 Tasks = DbColumns.Select<DbColumnItem, Action>(s => () => DbExtendedProperties.Load(dbData.Connection.GetReader(s.GetProperties(dbData.Connection)))),
-                ReportError = dbData.AddError
             });
 
             return dbData;
@@ -140,7 +130,6 @@ namespace DataDictionary.BusinessLayer
             {
                 WorkName = "Open Connection",
                 Connection = dbData.Connection,
-                ReportError = dbData.AddError,
             });
 
             dbData.WorkItems.Add(new DbLoad()
@@ -148,15 +137,12 @@ namespace DataDictionary.BusinessLayer
                 WorkName = "Load Databases",
                 Connection = dbData.Connection,
                 Load = resultData.Load,
-                ReportError = dbData.AddError
             });
 
             dbData.WorkItems.Add(new DbClose()
             {
                 WorkName = "Close Connection",
                 Connection = dbData.Connection,
-                CommentTransaction = dbData.CommentTransaction,
-                ReportError = dbData.AddError
             });
 
             return dbData;

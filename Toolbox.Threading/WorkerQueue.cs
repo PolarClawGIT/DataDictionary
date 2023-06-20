@@ -33,7 +33,9 @@ namespace Toolbox.Threading
         {
             WorkStarting += WorkerQueue_WorkStarting;
             WorkCompleted += WorkerQueue_WorkCompleted;
+            WorkException += WorkerQueue_WorkException;
         }
+
 
         public virtual void Enqueue(IWorkItem work)
         {
@@ -45,8 +47,9 @@ namespace Toolbox.Threading
         public virtual void Enqueue(IEnumerable<IWorkItem> work)
         { foreach (var item in work) { Enqueue(item); } }
 
-        protected event EventHandler WorkStarting;
-        protected event EventHandler<WorkerEventArgs> WorkCompleted;
+        public event EventHandler WorkStarting;
+        public event EventHandler<WorkerEventArgs> WorkCompleted;
+        public event EventHandler<Exception> WorkException;
 
         protected virtual void WorkerQueue_WorkStarting(object? sender, EventArgs e)
         {
@@ -74,6 +77,9 @@ namespace Toolbox.Threading
             OnProgressChanged();
         }
 
+        protected virtual void WorkerQueue_WorkException(object? sender, Exception e)
+        { }
+
         protected virtual void DoWork(WorkBase item)
         { throw new NotImplementedException(); }
 
@@ -96,9 +102,16 @@ namespace Toolbox.Threading
             {
                 BackgroundWorker.DoWork -= BackgroundWorker_DoWork;
                 BackgroundWorker.RunWorkerCompleted -= BackgroundWorker_RunWorkerCompleted;
-                if (e.Error is Exception) { item.OnException(e.Error); }
+                if (e.Error is Exception)
+                {
+                    item.OnException(e.Error);
+                    WorkException(item, e.Error);
+                }
 
-                item.OnCompleting();
+                try
+                { item.OnCompleting(); }
+                catch (Exception ex)
+                { WorkException(item, ex); }
 
                 WorkCompleted(this, eventArgs);
             }
@@ -106,7 +119,10 @@ namespace Toolbox.Threading
 
         protected virtual void DoWork(BatchWork item)
         {
-            item.OnStarting();
+            try
+            { item.OnStarting(); }
+            catch (Exception ex)
+            { WorkException(item, ex); }
 
             WorkBase? lastItem = item.WorkItems.LastOrDefault(); // So the list of items to be worked with becomes static.
             if (lastItem is WorkBase workItem) { workItem.WorkCompleting += WorkItem_WorkCompleting; }
@@ -119,8 +135,11 @@ namespace Toolbox.Threading
             void WorkItem_WorkCompleting(object? sender, EventArgs e)
             {
                 if (lastItem is WorkItem.WorkBase workItem) { workItem.WorkCompleting -= WorkItem_WorkCompleting; }
-                item.OnCompleting();
 
+                try
+                { item.OnCompleting(); }
+                catch (Exception ex)
+                { WorkException(item, ex); }
             }
         }
 
@@ -139,7 +158,7 @@ namespace Toolbox.Threading
                     );
             }
             catch (Exception ex)
-            { item.OnException(ex); }
+            { WorkException(item, ex); }
 
             WorkCompleted(this, new WorkerEventArgs(item));
 
@@ -155,7 +174,7 @@ namespace Toolbox.Threading
             try
             { item.DoWork(); }
             catch (Exception ex)
-            { item.OnException(ex); }
+            { WorkException(item, ex); }
 
             WorkCompleted(this, new WorkerEventArgs(item));
         }
@@ -180,6 +199,8 @@ namespace Toolbox.Threading
                 if (disposing)
                 {
                     WorkStarting -= WorkerQueue_WorkStarting;
+                    WorkCompleted -= WorkerQueue_WorkCompleted;
+                    WorkException -= WorkerQueue_WorkException;
                     BackgroundWorker.Dispose();
                     WorkQueue.Clear();
                 }

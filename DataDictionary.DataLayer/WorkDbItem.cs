@@ -14,100 +14,58 @@ namespace DataDictionary.DataLayer
         public class DbConnection : BatchWork
         {
             public required IConnection Connection { get; init; }
-            public List<Exception> Errors { get; } = new List<Exception>();
-
-            public void AddError(Exception ex) { Errors.Add(ex); }
-
-            public bool CommentTransaction()
-            {
-                if (Errors.Count > 0) { return false; }
-                return true;
-            }
-
-            public override void OnCompleting()
-            {
-                if (Errors.FirstOrDefault() is Exception ex) { OnException(ex); }
-
-                base.OnCompleting();
-            }
         }
 
         public class DbOpen : BackgroundWork
         {
             public required IConnection Connection { get; init; }
-            public required Action<Exception> ReportError { get; init; }
 
             public override void DoWork()
             {
                 base.DoWork();
-
-                try
-                { Connection.Open(); }
-                catch (Exception ex)
-                { ReportError(ex); }
+                Connection.Open();
             }
         }
 
         public class DbClose : BackgroundWork
         {
             public required IConnection Connection { get; init; }
-            public required Func<bool> CommentTransaction { get; init; }
-            public required Action<Exception> ReportError { get; init; }
 
             public override void DoWork()
             {
-                try
-                {
-                    if (CommentTransaction()) { Connection.Commit(); }
-                    else { Connection.Rollback(); }
-                }
-                catch (Exception ex)
-                { ReportError(ex); }
-
                 base.DoWork();
+
+                if (Connection.HasException) { Connection.Rollback(); }
+                else { Connection.Commit(); }
             }
         }
 
         public class DbLoad : BackgroundWork
         {
             public required IConnection Connection { get; init; }
-            public required Action<Exception> ReportError { get; init; }
             public required Action<IConnection> Load { get; init; }
 
             public override void DoWork()
             {
-                base.DoWork();
+                if (Connection.HasException) { }
+                else { Load(Connection); }
 
-                try
-                { Load(Connection); }
-                catch (Exception ex)
-                { ReportError(ex); }
+                base.DoWork();
             }
         }
 
         public class DbParellel : ParellelWork
         {
             public required Func<IConnection> Connection { get; init; }
-            public required Action<Exception> ReportError { get; init; }
 
             public override void DoWork(Action action)
             {
                 using (IConnection connection = Connection())
                 {
-                    try
-                    {
-                        connection.Open();
-                        base.DoWork(action);
-                        connection.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        connection.Rollback();
-                        { ReportError(ex); }
-                    }
-                    
+                    connection.Open();
+                    base.DoWork(action);
+                    connection.Commit();
                 }
-
             }
         }
 
