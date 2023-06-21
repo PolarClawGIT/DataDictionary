@@ -58,9 +58,8 @@ namespace Toolbox.Threading
                 CurrentWork = item;
                 item.OnStarting();
                 DoWork((dynamic)item);
+                OnProgressChanged();
             }
-
-            OnProgressChanged();
         }
 
         protected virtual void WorkerQueue_WorkCompleted(object? sender, WorkerEventArgs e)
@@ -71,10 +70,13 @@ namespace Toolbox.Threading
                 WorkComplete++;
             }
 
-            if (WorkQueue.IsEmpty) { WorkAdded = 0; WorkComplete = 0; }
+            if (WorkQueue.IsEmpty)
+            {
+                WorkAdded = 0;
+                WorkComplete = 0;
+                OnProgressChanged();
+            }
             else { WorkStarting(this, new EventArgs()); }
-
-            OnProgressChanged();
         }
 
         protected virtual void WorkerQueue_WorkException(object? sender, Exception e)
@@ -124,17 +126,21 @@ namespace Toolbox.Threading
             catch (Exception ex)
             { WorkException(item, ex); }
 
-            WorkBase? lastItem = item.WorkItems.LastOrDefault(); // So the list of items to be worked with becomes static.
-            if (lastItem is WorkBase workItem) { workItem.WorkCompleting += WorkItem_WorkCompleting; }
+            // So the list of items to be worked with becomes static.
+            IEnumerable<IWorkItem> workItems = item.WorkItems.ToList();
 
-            foreach (WorkBase work in item.WorkItems)
+            if (workItems.LastOrDefault() is WorkBase workItem)
+            { workItem.WorkCompleting += WorkItem_WorkCompleting; }
+
+            foreach (WorkBase work in workItems)
             { this.Enqueue(work); }
 
             WorkCompleted(this, new WorkerEventArgs(item));
 
             void WorkItem_WorkCompleting(object? sender, EventArgs e)
             {
-                if (lastItem is WorkItem.WorkBase workItem) { workItem.WorkCompleting -= WorkItem_WorkCompleting; }
+                if (workItems.LastOrDefault() is WorkItem.WorkBase workItem)
+                { workItem.WorkCompleting -= WorkItem_WorkCompleting; }
 
                 try
                 { item.OnCompleting(); }
@@ -142,20 +148,24 @@ namespace Toolbox.Threading
                 { WorkException(item, ex); }
             }
         }
-
+        
         protected virtual void DoWork(ParellelWork item)
         {
-            item.OnStarting();
-            List<Action> work = item.Tasks.ToList(); // So the list of items to be worked with becomes static.
+            // So the list of items to be worked with becomes static.
+            List<IWorkItem> work = item.WorkItems.ToList();
             WorkAdded = WorkAdded + work.Count;
 
             try
             {
+                item.OnStarting();
+
                 Parallel.ForEach(
                     work,
                     new ParallelOptions() { MaxDegreeOfParallelism = item.MaxDegreeOfParallelism },
                     DoWork
                     );
+
+                item.OnCompleting();
             }
             catch (Exception ex)
             { WorkException(item, ex); }
@@ -164,7 +174,8 @@ namespace Toolbox.Threading
 
             void DoWork(object source, ParallelLoopState state, long arg3)
             {
-                if (source is Action action) { action(); }
+                if (source is IWorkItem item)
+                { item.DoWork(); }
                 WorkComplete++;
             }
         }

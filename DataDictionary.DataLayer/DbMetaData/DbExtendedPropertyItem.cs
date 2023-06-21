@@ -72,7 +72,6 @@ namespace DataDictionary.DataLayer.DbMetaData
 
     public class DbExtendedPropertyItem : BindingTableRow, IDbExtendedPropertyItem, INotifyPropertyChanged
     {
-
         public String? CatalogName { get { return GetValue("CatalogName"); } }
         public String? Level0Type { get { return GetValue("Level0Type"); } }
         public String? Level0Name { get { return GetValue("Level0Name"); } }
@@ -85,7 +84,6 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? ObjectName { get { return GetValue("objname"); } }
         public String? PropertyName { get { return GetValue("name"); } }
         public String? PropertyValue { get { return GetValue("value"); } }
-
-        
+       
     }
 }

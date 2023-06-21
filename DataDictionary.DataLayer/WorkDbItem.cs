@@ -1,9 +1,12 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.DbMetaData;
+using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.BindingTable;
 using Toolbox.DbContext;
 using Toolbox.Threading.WorkItem;
 
@@ -54,16 +57,36 @@ namespace DataDictionary.DataLayer
             }
         }
 
-        public class DbParellel : ParellelWork
+        public class DbPropertiesLoad : BackgroundWork
         {
             public required Func<IConnection> Connection { get; init; }
+            public required Func<IConnection, SqlCommand> GetCommand { get; init; }
+            public required BindingTable<DbExtendedPropertyItem> Target { get; init; }
 
-            public override void DoWork(Action action)
+            public override void DoWork()
             {
                 using (IConnection connection = Connection())
                 {
                     connection.Open();
-                    base.DoWork(action);
+                    Target.Load(connection.GetReader(GetCommand(connection)));
+                    connection.Commit();
+                }
+            }
+        }
+
+
+        public class DbParellel : BackgroundWork
+        {
+            public required Func<IConnection> Connection { get; init; }
+            public required Func<IConnection, SqlCommand> GetCommand { get; init; }
+            public required BindingTable<DbExtendedPropertyItem> Target { get; init; }
+
+            public override void DoWork()
+            {
+                using (IConnection connection = Connection())
+                {
+                    connection.Open();
+                    Target.Load(connection.GetReader(GetCommand(connection)));
                     connection.Commit();
                 }
             }

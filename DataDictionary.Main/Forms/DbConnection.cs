@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.DbMetaData;
+using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,16 @@ namespace DataDictionary.Main.Forms
 {
     public partial class DbConnection : Form, IColleague
     {
-        List<(String ServerName, String DatabaseName)> ServerDatabasePairs = new List<(String ServerName, String DatabaseName)>();
+        List<(String ServerName, String DatabaseName)> serverDatabasePairs = new List<(String ServerName, String DatabaseName)>();
 
         public DbConnection()
         {
             InitializeComponent();
+        }
+
+        private void DbData_ListChanged(object? sender, ListChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void authenticateWindows_CheckedChanged(object sender, EventArgs e)
@@ -53,18 +59,18 @@ namespace DataDictionary.Main.Forms
                     if (dbServer.Length > 1 &&
                         dbServer[0] is String serverName &&
                         dbServer[1] is String databaseName &&
-                        !ServerDatabasePairs.Contains((serverName, databaseName)))
-                    { ServerDatabasePairs.Add((serverName, databaseName)); }
+                        !serverDatabasePairs.Contains((serverName, databaseName)))
+                    { serverDatabasePairs.Add((serverName, databaseName)); }
                 }
             }
 
             // Setup Server list. 
-            IEnumerable<String> serverNames = ServerDatabasePairs.OrderBy(o => o.ServerName).Select(s => s.ServerName).Distinct();
+            IEnumerable<String> serverNames = serverDatabasePairs.OrderBy(o => o.ServerName).Select(s => s.ServerName).Distinct();
             serverNameData.Items.AddRange(serverNames.ToArray());
             if (serverNameData.Items.Count > 0) { serverNameData.SelectedIndex = 0; }
 
             // Sets up the Database list (needs to be repeated if the Server Name changes)
-            IEnumerable<String> databaseNames = ServerDatabasePairs.Where(w => w.ServerName == serverNameData.Text).OrderBy(o => o.DatabaseName).Select(s => s.DatabaseName).Distinct();
+            IEnumerable<String> databaseNames = serverDatabasePairs.Where(w => w.ServerName == serverNameData.Text).OrderBy(o => o.DatabaseName).Select(s => s.DatabaseName).Distinct();
             databaseNameData.Items.Clear();
             databaseNameData.Text = String.Empty;
             databaseNameData.Items.AddRange(databaseNames.ToArray());
@@ -73,8 +79,10 @@ namespace DataDictionary.Main.Forms
 
             // Setup Connection type
             authenticateWindows_CheckedChanged(this, EventArgs.Empty);
-        }
 
+            // Hook up Database Connection list
+            dbConnectionsData.DataSource = Program.DbData.DbConnections;
+        }
 
         private void serverNameData_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -83,7 +91,7 @@ namespace DataDictionary.Main.Forms
 
         private void serverNameData_Validated(object sender, EventArgs e)
         {
-            IEnumerable<String> databaseNames = ServerDatabasePairs.Where(w => w.ServerName == serverNameData.Text).OrderBy(o => o.DatabaseName).Select(s => s.DatabaseName).Distinct();
+            IEnumerable<String> databaseNames = serverDatabasePairs.Where(w => w.ServerName == serverNameData.Text).OrderBy(o => o.DatabaseName).Select(s => s.DatabaseName).Distinct();
             databaseNameData.Items.Clear();
             databaseNameData.Text = String.Empty;
             databaseNameData.Items.AddRange(databaseNames.ToArray());
@@ -96,9 +104,6 @@ namespace DataDictionary.Main.Forms
             DbContext context = new DbContext() { ServerName = serverNameData.Text };
             this.UseWaitCursor = true;
             Program.WorkerQueue.Enqueue(Program.DbData.GetDatabases(context, onComplete));
-
-            // TODO: Allow connection without specifying a Db, Db list needs to refresh from server.
-            // TODO: On succesful Connection, add item to list of settings
 
             void onComplete(IEnumerable<IDbCatalogItem> catalogs)
             {
@@ -124,18 +129,28 @@ namespace DataDictionary.Main.Forms
             }
         }
 
-
         private void importCommand_Click(object sender, EventArgs e)
         {
-            // TODO: Import the data into the data structure
+            DbContext context = new DbContext() { ServerName = serverNameData.Text, DatabaseName = databaseNameData.Text };
+            this.UseWaitCursor = true;
+
+            Program.WorkerQueue.Enqueue(Program.DbData.ImportDb(context, onComplete));
+
+            void onComplete()
+            { this.UseWaitCursor = false; }
         }
+
 
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;
 
         public void RecieveMessage(object? sender, MessageEventArgs message)
+        { }
+
+        void SendMessage(MessageEventArgs message)
         {
-            throw new NotImplementedException();
+            if (OnSendMessage is EventHandler<MessageEventArgs> handler)
+            { handler(this, message); }
         }
         #endregion
 

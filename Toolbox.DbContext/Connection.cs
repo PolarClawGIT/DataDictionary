@@ -126,7 +126,7 @@ namespace Toolbox.DbContext
             if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
 
             try
-            {   return command.ExecuteReader(); }
+            { return command.ExecuteReader(); }
             catch (Exception ex)
             {
                 AddExceptionData(command, ex);
@@ -201,7 +201,7 @@ namespace Toolbox.DbContext
         {
             ex.Data.Add(nameof(command.CommandText), command.CommandText);
             foreach (SqlParameter item in command.Parameters)
-            { ex.Data.Add(String.Format("Parameter: {1}", nameof(item.ParameterName)), item.Value.ToString()); }
+            { ex.Data.Add(String.Format("Parameter: {0}", item.ParameterName), item.Value.ToString()); }
         }
 
         #endregion

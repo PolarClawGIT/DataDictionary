@@ -94,39 +94,29 @@ namespace Toolbox.BindingTable
         public virtual void Load(IDataReader reader)
         {
             dataItems.Load(reader);
-
-            foreach (DataRow row in dataItems.Rows)
-            {
-                TBindingItem item = new TBindingItem();
-                item.ImportRow(row);
-                this.Add(item);
-            }
+            ImportRows();
         }
 
         /// <inheritdoc cref="DataTable.Load(IDataReader, LoadOption)"/>
         public virtual void Load(IDataReader reader, LoadOption loadOption)
         {
             dataItems.Load(reader, loadOption);
-
-            foreach (DataRow row in dataItems.Rows)
-            {
-                TBindingItem item = new TBindingItem();
-                item.ImportRow(row);
-                this.Add(item);
-            }
+            ImportRows();
         }
 
         /// <inheritdoc cref="DataTable.Load(IDataReader, LoadOption, FillErrorEventHandler?)"/>
         public virtual void Load(IDataReader reader, LoadOption loadOption, FillErrorEventHandler? errorHandler)
         {
             dataItems.Load(reader, loadOption, errorHandler);
-
             ImportRows();
         }
 
         protected virtual void ImportRows()
         {
-            foreach (DataRow row in dataItems.Rows)
+            IEnumerable<DataRow> newRows = dataItems.Rows.
+                Cast<DataRow>().Where(w => this.Count(f => Object.ReferenceEquals(f.GetRow(), w)) == 0).ToList();
+
+            foreach (DataRow row in newRows)
             {
                 TBindingItem item = new TBindingItem();
                 item.ImportRow(row);
@@ -181,7 +171,7 @@ namespace Toolbox.BindingTable
 
         #region BindingList
         //Track the extra row created by DataGridView. Changes should not be accepted on this row.
-        TBindingItem? newItem = null; 
+        TBindingItem? newItem = null;
 
         protected override Object? AddNewCore()
         {
@@ -199,7 +189,7 @@ namespace Toolbox.BindingTable
         public override void CancelNew(Int32 itemIndex)
         {
             if (itemIndex >= 0 && this[itemIndex] == newItem) { newItem = null; }
-            base.CancelNew(itemIndex); 
+            base.CancelNew(itemIndex);
         }
 
         protected override void ClearItems()

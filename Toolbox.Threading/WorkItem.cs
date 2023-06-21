@@ -16,16 +16,23 @@ namespace Toolbox.Threading
             void OnStarting();
             void OnCompleting();
             void OnException(Exception ex);
+
+            void DoWork();
         }
 
 
         public abstract class WorkBase :IWorkItem
         {
             public required String WorkName { get; init; }
+            public Action OnDoWork { get; init; } = () => { };
 
             public event EventHandler? WorkStarting;
             public event EventHandler? WorkCompleting;
             public event EventHandler<Exception>? WorkException;
+
+            public WorkBase() : base() { }
+            
+            public virtual void DoWork() { OnDoWork(); }
 
             public virtual void OnStarting()
             { if (WorkStarting is EventHandler onEvent) { onEvent(this, EventArgs.Empty); } }
@@ -35,14 +42,11 @@ namespace Toolbox.Threading
 
             public virtual void OnException(Exception ex)
             { if (WorkException is EventHandler<Exception> onEvent) { onEvent(this, ex); } }
-
-            public WorkBase() : base() { }
         }
 
         public abstract class SynchronousWork : WorkBase
         {
-            public Action OnDoWork { get; init; } = () => { };
-            public virtual void DoWork() { OnDoWork(); }
+
         }
 
         public class BackgroundWork : SynchronousWork
@@ -55,16 +59,15 @@ namespace Toolbox.Threading
 
         public class BatchWork : SynchronousWork
         {
-            public List<WorkBase> WorkItems { get; } = new List<WorkBase>();
+            public required IEnumerable<IWorkItem> WorkItems { get; init; }
         }
 
         public abstract class AsynchronousWork : WorkBase { }
 
         public class ParellelWork : AsynchronousWork
         {
-            public required IEnumerable<Action> Tasks { get; init; }
+            public required IEnumerable<IWorkItem> WorkItems { get; init; }
             public Int32 MaxDegreeOfParallelism { get; init; } = -1;
-            public virtual void DoWork(Action action) { action(); }
         }
 
     }

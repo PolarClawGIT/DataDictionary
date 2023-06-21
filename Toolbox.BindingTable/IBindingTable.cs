@@ -8,11 +8,14 @@ using System.Threading.Tasks;
 
 namespace Toolbox.BindingTable
 {
-    public interface IBindingTable<T> : IBindingList, ICollection<T>, IDisposable, ICloneable
-        where T : class, INotifyPropertyChanged
+    public interface IBindingTable : IBindingList, IDisposable, ICloneable
     {
         void Load(IDataReader reader);
         void Load(IDataReader reader, LoadOption loadOption);
         void Load(IDataReader reader, LoadOption loadOption, FillErrorEventHandler? errorHandler);
     }
+
+    public interface IBindingTable<T> : IBindingTable, ICollection<T>
+        where T : class, INotifyPropertyChanged
+    { }
 }

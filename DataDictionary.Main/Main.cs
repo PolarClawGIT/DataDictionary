@@ -33,7 +33,6 @@ namespace DataDictionary.Main
             { navigationTabs.ImageList.Images.Add(item.ToString(), navigationTabImages[item]); }
             navigationDbSchemaTab.ImageKey = navigationTabImageIndex.Database.ToString();
             navigationDomainTab.ImageKey = navigationTabImageIndex.Domain.ToString();
-
         }
 
 
@@ -93,6 +92,7 @@ namespace DataDictionary.Main
             { handler(sender, openMessage); }
 
         }
+
         void SendMessage(MessageEventArgs message)
         {
             if (OnSendMessage is EventHandler<MessageEventArgs> handler)
