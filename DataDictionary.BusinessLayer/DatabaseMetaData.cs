@@ -33,19 +33,12 @@ namespace DataDictionary.BusinessLayer
 
             List<IWorkItem> workItems = new List<IWorkItem>();
 
-            DbConnection dbData = new DbConnection()
+            DbConnection dbData = new DbConnection(connection)
             {
                 WorkName = "Load DataRepository",
-                Connection = connection.CreateConnection(),
                 WorkItems = workItems.Select(s => s)
             };
             dbData.WorkCompleting += WorkCompleting;
-
-            workItems.Add(new DbOpen()
-            {
-                WorkName = "Open Connection",
-                Connection = dbData.Connection,
-            });
 
             workItems.Add(new DbLoad()
             {
@@ -68,19 +61,13 @@ namespace DataDictionary.BusinessLayer
                 Load = DbColumns.Load,
             });
 
-            workItems.Add(new DbClose()
-            {
-                WorkName = "Close Connection",
-                Connection = dbData.Connection,
-            });
-
             workItems.Add(new BatchWork()
             {
                 WorkName = "Load Extended Properties, Schema",
                 WorkItems = DbSchemas.Select(s => new DbPropertiesLoad()
                 {
                     WorkName = String.Format("Load Extended Properties, Schema: {0}", s.SchemaName),
-                    Connection = connection.CreateConnection,
+                    Connection = dbData.Connection,
                     GetCommand = s.GetProperties,
                     Target = DbExtendedProperties
                 })
@@ -92,7 +79,7 @@ namespace DataDictionary.BusinessLayer
                 WorkItems = DbTables.Select(s => new DbPropertiesLoad()
                 {
                     WorkName = String.Format("Load Extended Properties, Table: {0}.{1}", s.SchemaName, s.TableName),
-                    Connection = connection.CreateConnection,
+                    Connection = dbData.Connection,
                     GetCommand = s.GetProperties,
                     Target = DbExtendedProperties
                 })
@@ -104,7 +91,7 @@ namespace DataDictionary.BusinessLayer
                 WorkItems = DbColumns.Select(s => new DbPropertiesLoad()
                 {
                     WorkName = String.Format("Load Extended Properties, Column: {0}.{1}.{2}", s.SchemaName, s.TableName, s.ColumnName),
-                    Connection = connection.CreateConnection,
+                    Connection = dbData.Connection,
                     GetCommand = s.GetProperties,
                     Target = DbExtendedProperties
                 })
@@ -129,21 +116,12 @@ namespace DataDictionary.BusinessLayer
 
             List<IWorkItem> workItems = new List<IWorkItem>();
 
-
-
-            DbConnection dbData = new DbConnection()
+            DbConnection dbData = new DbConnection(connection)
             {
                 WorkName = "Load DataRepository",
-                Connection = connection.CreateConnection(),
                 WorkItems = workItems.Select(s => s)
             };
             dbData.WorkCompleting += WorkCompleting;
-
-            workItems.Add(new DbOpen()
-            {
-                WorkName = "Open Connection",
-                Connection = dbData.Connection,
-            });
 
             workItems.Add(new DbLoad()
             {
@@ -151,13 +129,6 @@ namespace DataDictionary.BusinessLayer
                 Connection = dbData.Connection,
                 Load = resultData.Load,
             });
-
-            workItems.Add(new DbClose()
-            {
-                WorkName = "Close Connection",
-                Connection = dbData.Connection,
-            });
-
             return dbData;
 
             void WorkCompleting(object? sender, EventArgs e)

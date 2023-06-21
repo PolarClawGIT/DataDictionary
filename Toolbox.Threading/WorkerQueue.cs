@@ -56,7 +56,6 @@ namespace Toolbox.Threading
             if (WorkQueue.TryDequeue(out IWorkItem? item) && item is not null)
             {
                 CurrentWork = item;
-                item.OnStarting();
                 DoWork((dynamic)item);
                 OnProgressChanged();
             }

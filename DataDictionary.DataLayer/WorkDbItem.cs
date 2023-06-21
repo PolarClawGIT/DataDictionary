@@ -16,30 +16,28 @@ namespace DataDictionary.DataLayer
     {
         public class DbConnection : BatchWork
         {
-            public required IConnection Connection { get; init; }
-        }
+            public IConnection Connection { get; private set; }
 
-        public class DbOpen : BackgroundWork
-        {
-            public required IConnection Connection { get; init; }
+            public DbConnection(Context dbContext)
+            { Connection = dbContext.CreateConnection(); }
 
-            public override void DoWork()
+            public override void OnStarting()
             {
-                base.DoWork();
+                base.OnStarting();
                 Connection.Open();
             }
-        }
 
-        public class DbClose : BackgroundWork
-        {
-            public required IConnection Connection { get; init; }
-
-            public override void DoWork()
+            public override void OnCompleting()
             {
-                base.DoWork();
+                if (Connection is IConnection)
+                {
+                    if (Connection.HasException) { Connection.Rollback(); }
+                    else { Connection.Commit(); }
 
-                if (Connection.HasException) { Connection.Rollback(); }
-                else { Connection.Commit(); }
+                    Connection.Dispose();
+                }
+
+                base.OnCompleting();
             }
         }
 
@@ -50,31 +48,27 @@ namespace DataDictionary.DataLayer
 
             public override void DoWork()
             {
+                base.DoWork();
+
                 if (Connection.HasException) { }
                 else { Load(Connection); }
-
-                base.DoWork();
             }
         }
 
         public class DbPropertiesLoad : BackgroundWork
         {
-            public required Func<IConnection> Connection { get; init; }
+            public required IConnection Connection { get; init; }
             public required Func<IConnection, SqlCommand> GetCommand { get; init; }
             public required BindingTable<DbExtendedPropertyItem> Target { get; init; }
 
             public override void DoWork()
             {
-                using (IConnection connection = Connection())
-                {
-                    connection.Open();
-                    Target.Load(connection.GetReader(GetCommand(connection)));
-                    connection.Commit();
-                }
+                base.DoWork();
+                Target.Load(Connection.GetReader(GetCommand(Connection)));
             }
         }
 
-
+        [Obsolete()]
         public class DbParellel : BackgroundWork
         {
             public required Func<IConnection> Connection { get; init; }
@@ -92,6 +86,7 @@ namespace DataDictionary.DataLayer
             }
         }
 
+        [Obsolete()]
         public class DbReader : BackgroundWork
         {
             public required IConnection Connection { get; init; }

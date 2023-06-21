@@ -21,9 +21,7 @@ namespace DataDictionary.Main.Forms
         List<(String ServerName, String DatabaseName)> serverDatabasePairs = new List<(String ServerName, String DatabaseName)>();
 
         public DbConnection()
-        {
-            InitializeComponent();
-        }
+        {   InitializeComponent(); }
 
         private void DbData_ListChanged(object? sender, ListChangedEventArgs e)
         {
@@ -103,6 +101,7 @@ namespace DataDictionary.Main.Forms
         {
             DbContext context = new DbContext() { ServerName = serverNameData.Text };
             this.UseWaitCursor = true;
+            this.Enabled = false;
             Program.WorkerQueue.Enqueue(Program.DbData.GetDatabases(context, onComplete));
 
             void onComplete(IEnumerable<IDbCatalogItem> catalogs)
@@ -126,6 +125,7 @@ namespace DataDictionary.Main.Forms
                 }
 
                 this.UseWaitCursor = false;
+                this.Enabled = true;
             }
         }
 
@@ -133,11 +133,15 @@ namespace DataDictionary.Main.Forms
         {
             DbContext context = new DbContext() { ServerName = serverNameData.Text, DatabaseName = databaseNameData.Text };
             this.UseWaitCursor = true;
+            this.Enabled = false;
 
             Program.WorkerQueue.Enqueue(Program.DbData.ImportDb(context, onComplete));
 
             void onComplete()
-            { this.UseWaitCursor = false; }
+            {
+                this.UseWaitCursor = false;
+                this.Enabled = true;
+            }
         }
 
 
