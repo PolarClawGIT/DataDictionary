@@ -14,14 +14,14 @@ namespace DataDictionary.BusinessLayer
 {
     public class DatabaseMetaData
     {
-        public BindingList<Context> DbConnections { get; } = new BindingList<Context>();
+        public BindingList<DbContext> DbConnections { get; } = new BindingList<DbContext>();
         public BindingTable<DbCatalogItem> DbCatalogs { get; } = new BindingTable<DbCatalogItem>();
         public BindingTable<DbSchemaItem> DbSchemas { get; } = new BindingTable<DbSchemaItem>();
         public BindingTable<DbTableItem> DbTables { get; } = new BindingTable<DbTableItem>();
         public BindingTable<DbColumnItem> DbColumns { get; } = new BindingTable<DbColumnItem>();
         public BindingTable<DbExtendedPropertyItem> DbExtendedProperties = new BindingTable<DbExtendedPropertyItem>();
 
-        public IWorkItem ImportDb(Context connection, Action? onComplete = null)
+        public IWorkItem ImportDb(DbContext connection, Action? onComplete = null)
         {
             raiseListChanged = false;
 
@@ -36,7 +36,7 @@ namespace DataDictionary.BusinessLayer
 
             DbConnection dbData = new DbConnection(connection)
             {
-                WorkName = "Open Connection",
+                WorkName = "Import Db",
                 WorkItems = workItems.Select(s => s)
             };
             dbData.WorkCompleting += WorkCompleting;
@@ -126,7 +126,7 @@ namespace DataDictionary.BusinessLayer
 
             DbConnection dbData = new DbConnection(connection)
             {
-                WorkName = "Open Connection",
+                WorkName = "Get Databases",
                 WorkItems = workItems.Select(s => s)
             };
             dbData.WorkCompleting += WorkCompleting;
@@ -144,6 +144,27 @@ namespace DataDictionary.BusinessLayer
                 dbData.WorkCompleting -= WorkCompleting;
                 if (onComplete is Action<IEnumerable<IDbCatalogItem>>) { onComplete(resultData); }
             }
+        }
+
+        public void RemoveDb(DbContext connection)
+        {
+            while (DbCatalogs.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbCatalogItem item)
+            { DbCatalogs.Remove(item); }
+
+            while (DbSchemas.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbSchemaItem item)
+            { DbSchemas.Remove(item); }
+
+            while (DbTables.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbTableItem item)
+            { DbTables.Remove(item); }
+
+            while (DbColumns.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbColumnItem item)
+            { DbColumns.Remove(item); }
+
+            while (DbExtendedProperties.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbExtendedPropertyItem item)
+            { DbExtendedProperties.Remove(item); }
+
+            while (DbConnections.FirstOrDefault(w => w.DatabaseName == connection.DatabaseName) is DbContext item)
+            { DbConnections.Remove(item); }
         }
 
         public DatabaseMetaData() : base()

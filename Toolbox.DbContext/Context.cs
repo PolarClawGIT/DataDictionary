@@ -16,15 +16,24 @@ namespace Toolbox.DbContext
     public class Context
     {
         internal SqlConnectionStringBuilder ConnectionBuilder { get; set; } = new SqlConnectionStringBuilder()
-        { 
+        {
             ApplicationName = "Data Dictionary Manager (C) 2023 William Howard" // TODO: pull this from the Assebmly?
         };
 
         public String ServerName { get { return ConnectionBuilder.DataSource; } init { ConnectionBuilder.DataSource = value; } }
-        public String DatabaseName { get { return ConnectionBuilder.InitialCatalog; } init { ConnectionBuilder.InitialCatalog = value; } }
-        public SqlAuthenticationMethod Authentication { get { return ConnectionBuilder.Authentication; } }
-        public String ServerUserName { get { return ConnectionBuilder.UserID; } init { ConnectionBuilder.UserID =  value; } }
-        public String ServerUserPassword { get { return ConnectionBuilder.Password; } init { ConnectionBuilder.Password = value; } }    
+        public String DatabaseName
+        {
+            get { return ConnectionBuilder.InitialCatalog; }
+
+            init
+            {
+                if (String.IsNullOrWhiteSpace(value)) { ConnectionBuilder.InitialCatalog = "master"; }
+                else { ConnectionBuilder.InitialCatalog = value; }
+            }
+        }
+        public SqlAuthenticationMethod? Authentication { get { return ConnectionBuilder.Authentication; } }
+        public String ServerUserName { get { return ConnectionBuilder.UserID; } init { ConnectionBuilder.UserID = value; } }
+        public String ServerUserPassword { get { return ConnectionBuilder.Password; } init { ConnectionBuilder.Password = value; } }
 
         /// <summary>
         /// Constructor.
@@ -40,6 +49,6 @@ namespace Toolbox.DbContext
         }
 
         public override string ToString()
-        {   return ConnectionBuilder.ConnectionString; }
+        { return ConnectionBuilder.ConnectionString; }
     }
 }

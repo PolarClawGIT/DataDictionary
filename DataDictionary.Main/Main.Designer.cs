@@ -33,6 +33,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             navigationTabs = new TabControl();
             navigationDbSchemaTab = new TabPage();
+            dbMetaDataNavigation = new TreeView();
             navigationDomainTab = new TabPage();
             statusStrip = new StatusStrip();
             toolStripInfo = new ToolStripStatusLabel();
@@ -43,7 +44,6 @@
             fileToolStripMenuItem = new ToolStripMenuItem();
             newToolStripMenuItem = new ToolStripMenuItem();
             openToolStripMenuItem = new ToolStripMenuItem();
-            importFromDatabaseToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator = new ToolStripSeparator();
             saveToolStripMenuItem = new ToolStripMenuItem();
             saveAsToolStripMenuItem = new ToolStripMenuItem();
@@ -62,6 +62,7 @@
             toolStripSeparator4 = new ToolStripSeparator();
             selectAllToolStripMenuItem = new ToolStripMenuItem();
             toolsToolStripMenuItem = new ToolStripMenuItem();
+            importFromDatabaseToolStripMenuItem = new ToolStripMenuItem();
             customizeToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
@@ -70,7 +71,6 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
-            dbMetaDataNavigation = new TreeView();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
@@ -110,6 +110,14 @@
             navigationDbSchemaTab.TabIndex = 0;
             navigationDbSchemaTab.Text = "Db Schema";
             navigationDbSchemaTab.UseVisualStyleBackColor = true;
+            // 
+            // dbMetaDataNavigation
+            // 
+            dbMetaDataNavigation.Dock = DockStyle.Fill;
+            dbMetaDataNavigation.Location = new Point(3, 3);
+            dbMetaDataNavigation.Name = "dbMetaDataNavigation";
+            dbMetaDataNavigation.Size = new Size(206, 652);
+            dbMetaDataNavigation.TabIndex = 0;
             // 
             // navigationDomainTab
             // 
@@ -172,7 +180,7 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem, openToolStripMenuItem, importFromDatabaseToolStripMenuItem, toolStripSeparator, saveToolStripMenuItem, saveAsToolStripMenuItem, toolStripSeparator1, printToolStripMenuItem, printPreviewToolStripMenuItem, toolStripSeparator2, exitToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem, openToolStripMenuItem, toolStripSeparator, saveToolStripMenuItem, saveAsToolStripMenuItem, toolStripSeparator1, printToolStripMenuItem, printPreviewToolStripMenuItem, toolStripSeparator2, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(37, 20);
             fileToolStripMenuItem.Text = "&File";
@@ -184,7 +192,7 @@
             newToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             newToolStripMenuItem.Name = "newToolStripMenuItem";
             newToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            newToolStripMenuItem.Size = new Size(190, 22);
+            newToolStripMenuItem.Size = new Size(180, 22);
             newToolStripMenuItem.Text = "&New";
             // 
             // openToolStripMenuItem
@@ -194,21 +202,13 @@
             openToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             openToolStripMenuItem.Name = "openToolStripMenuItem";
             openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
-            openToolStripMenuItem.Size = new Size(190, 22);
+            openToolStripMenuItem.Size = new Size(180, 22);
             openToolStripMenuItem.Text = "&Open";
-            // 
-            // importFromDatabaseToolStripMenuItem
-            // 
-            importFromDatabaseToolStripMenuItem.Image = Properties.Resources.Database;
-            importFromDatabaseToolStripMenuItem.Name = "importFromDatabaseToolStripMenuItem";
-            importFromDatabaseToolStripMenuItem.Size = new Size(190, 22);
-            importFromDatabaseToolStripMenuItem.Text = "Import from Database";
-            importFromDatabaseToolStripMenuItem.Click += importFromDatabaseToolStripMenuItem_Click;
             // 
             // toolStripSeparator
             // 
             toolStripSeparator.Name = "toolStripSeparator";
-            toolStripSeparator.Size = new Size(187, 6);
+            toolStripSeparator.Size = new Size(177, 6);
             // 
             // saveToolStripMenuItem
             // 
@@ -217,20 +217,20 @@
             saveToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            saveToolStripMenuItem.Size = new Size(190, 22);
+            saveToolStripMenuItem.Size = new Size(180, 22);
             saveToolStripMenuItem.Text = "&Save";
             // 
             // saveAsToolStripMenuItem
             // 
             saveAsToolStripMenuItem.Enabled = false;
             saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            saveAsToolStripMenuItem.Size = new Size(190, 22);
+            saveAsToolStripMenuItem.Size = new Size(180, 22);
             saveAsToolStripMenuItem.Text = "Save &As";
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(187, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // printToolStripMenuItem
             // 
@@ -239,7 +239,7 @@
             printToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             printToolStripMenuItem.Name = "printToolStripMenuItem";
             printToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.P;
-            printToolStripMenuItem.Size = new Size(190, 22);
+            printToolStripMenuItem.Size = new Size(180, 22);
             printToolStripMenuItem.Text = "&Print";
             // 
             // printPreviewToolStripMenuItem
@@ -248,18 +248,18 @@
             printPreviewToolStripMenuItem.Image = (Image)resources.GetObject("printPreviewToolStripMenuItem.Image");
             printPreviewToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
-            printPreviewToolStripMenuItem.Size = new Size(190, 22);
+            printPreviewToolStripMenuItem.Size = new Size(180, 22);
             printPreviewToolStripMenuItem.Text = "Print Pre&view";
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(187, 6);
+            toolStripSeparator2.Size = new Size(177, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(190, 22);
+            exitToolStripMenuItem.Size = new Size(180, 22);
             exitToolStripMenuItem.Text = "E&xit";
             // 
             // editToolStripMenuItem
@@ -329,23 +329,31 @@
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { importFromDatabaseToolStripMenuItem, customizeToolStripMenuItem, optionsToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(46, 20);
             toolsToolStripMenuItem.Text = "&Tools";
+            // 
+            // importFromDatabaseToolStripMenuItem
+            // 
+            importFromDatabaseToolStripMenuItem.Image = Properties.Resources.Database;
+            importFromDatabaseToolStripMenuItem.Name = "importFromDatabaseToolStripMenuItem";
+            importFromDatabaseToolStripMenuItem.Size = new Size(190, 22);
+            importFromDatabaseToolStripMenuItem.Text = "Import from Database";
+            importFromDatabaseToolStripMenuItem.Click += importFromDatabaseToolStripMenuItem_Click;
             // 
             // customizeToolStripMenuItem
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(130, 22);
+            customizeToolStripMenuItem.Size = new Size(190, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(130, 22);
+            optionsToolStripMenuItem.Size = new Size(190, 22);
             optionsToolStripMenuItem.Text = "&Options";
             // 
             // helpToolStripMenuItem
@@ -384,14 +392,6 @@
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             aboutToolStripMenuItem.Size = new Size(122, 22);
             aboutToolStripMenuItem.Text = "&About...";
-            // 
-            // dbMetaDataNavigation
-            // 
-            dbMetaDataNavigation.Dock = DockStyle.Fill;
-            dbMetaDataNavigation.Location = new Point(3, 3);
-            dbMetaDataNavigation.Name = "dbMetaDataNavigation";
-            dbMetaDataNavigation.Size = new Size(206, 652);
-            dbMetaDataNavigation.TabIndex = 0;
             // 
             // Main
             // 
@@ -461,7 +461,7 @@
         private TabControl navigationTabs;
         private TabPage navigationDbSchemaTab;
         private TabPage navigationDomainTab;
-        private ToolStripMenuItem importFromDatabaseToolStripMenuItem;
         private TreeView dbMetaDataNavigation;
+        private ToolStripMenuItem importFromDatabaseToolStripMenuItem;
     }
 }

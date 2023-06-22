@@ -36,6 +36,8 @@ namespace DataDictionary.Main
         {
             ApplicationConfiguration.Initialize();
 
+            Settings.Default.Reset();
+
             WorkerQueue.WorkException += WorkerQueue_WorkException;
 
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);

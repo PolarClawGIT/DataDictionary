@@ -37,6 +37,8 @@
             TableLayoutPanel authenticationChoiceLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbConnection));
             dbConnectionsData = new DataGridView();
+            dbConnectionsServerNameData = new DataGridViewTextBoxColumn();
+            dbConnectionsDatabaseData = new DataGridViewTextBoxColumn();
             databaseNameHeader = new Label();
             serverNameData = new ComboBox();
             databaseNameData = new ComboBox();
@@ -88,13 +90,33 @@
             dbConnectionsData.AllowUserToAddRows = false;
             dbConnectionsData.AllowUserToDeleteRows = false;
             dbConnectionsData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dbConnectionsData.Columns.AddRange(new DataGridViewColumn[] { dbConnectionsServerNameData, dbConnectionsDatabaseData });
             dbConnectionsData.Dock = DockStyle.Fill;
             dbConnectionsData.Location = new Point(3, 273);
+            dbConnectionsData.MultiSelect = false;
             dbConnectionsData.Name = "dbConnectionsData";
             dbConnectionsData.ReadOnly = true;
             dbConnectionsData.RowTemplate.Height = 25;
+            dbConnectionsData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dbConnectionsData.Size = new Size(412, 154);
             dbConnectionsData.TabIndex = 0;
+            dbConnectionsData.SelectionChanged += dbConnectionsData_SelectionChanged;
+            // 
+            // dbConnectionsServerNameData
+            // 
+            dbConnectionsServerNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dbConnectionsServerNameData.DataPropertyName = "ServerName";
+            dbConnectionsServerNameData.HeaderText = "Server Name";
+            dbConnectionsServerNameData.Name = "dbConnectionsServerNameData";
+            dbConnectionsServerNameData.ReadOnly = true;
+            // 
+            // dbConnectionsDatabaseData
+            // 
+            dbConnectionsDatabaseData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dbConnectionsDatabaseData.DataPropertyName = "DatabaseName";
+            dbConnectionsDatabaseData.HeaderText = "Database Name";
+            dbConnectionsDatabaseData.Name = "dbConnectionsDatabaseData";
+            dbConnectionsDatabaseData.ReadOnly = true;
             // 
             // dbConnectionCurrentLayout
             // 
@@ -221,6 +243,7 @@
             removeCommand.TabIndex = 3;
             removeCommand.Text = "Remove";
             removeCommand.UseVisualStyleBackColor = true;
+            removeCommand.Click += removeCommand_Click;
             // 
             // authencationLayout
             // 
@@ -390,5 +413,7 @@
         private TableLayoutPanel authenticationChoiceLayout;
         private RadioButton authenticateWindows;
         private RadioButton authenticateDbServer;
+        private DataGridViewTextBoxColumn dbConnectionsServerNameData;
+        private DataGridViewTextBoxColumn dbConnectionsDatabaseData;
     }
 }

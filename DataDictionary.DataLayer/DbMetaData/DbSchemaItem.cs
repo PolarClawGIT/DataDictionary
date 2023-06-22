@@ -38,7 +38,8 @@ namespace DataDictionary.DataLayer.DbMetaData
                     "db_datawriter" or
                     "db_denydatareader" or
                     "db_denydatawriter" or
-                    "INFORMATION_SCHEMA";
+                    "INFORMATION_SCHEMA" or
+                    "guest";
             }
         }
 

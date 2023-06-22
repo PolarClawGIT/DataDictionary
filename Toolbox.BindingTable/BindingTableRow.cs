@@ -236,8 +236,8 @@ namespace Toolbox.BindingTable
         public event PropertyChangedEventHandler? PropertyChanged;
         public virtual void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler? handler = PropertyChanged;
-            if (handler is PropertyChangedEventHandler) { handler(this, new PropertyChangedEventArgs(propertyName)); }
+            if (PropertyChanged is PropertyChangedEventHandler handler)
+            { handler(this, new PropertyChangedEventArgs(propertyName)); }
         }
         #endregion
     }

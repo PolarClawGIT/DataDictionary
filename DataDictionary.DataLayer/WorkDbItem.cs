@@ -41,6 +41,21 @@ namespace DataDictionary.DataLayer
             }
         }
 
+        public class DbVerifyConnection : BackgroundWork
+        {
+            Context dbContext;
+
+            public DbVerifyConnection(Context context)
+            { dbContext = context; }
+
+            public override void DoWork()
+            {
+                base.DoWork();
+                using (IConnection Connection = dbContext.CreateConnection())
+                { Connection.Open(); }
+            }
+        }
+
         public class DbLoad : BackgroundWork
         {
             public required IConnection Connection { get; init; }
