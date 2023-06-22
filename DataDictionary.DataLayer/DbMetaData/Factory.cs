@@ -10,6 +10,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
+    [Obsolete("do not use this", true)]
     public static class Factory
     {
         static Dictionary<Type, Func<IConnection, IDataReader>> dataReaders = new Dictionary<Type, Func<IConnection, IDataReader>>()
@@ -20,6 +21,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             {typeof(DbSchemaItem), DbSchemaItem.GetDataReader },
         };
 
+        [Obsolete("do not use this", true)]
         public static IDataReader GetDataReader<TRow>(IConnection connection)
             where TRow : BindingTableRow
         {
@@ -34,6 +36,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             }
         }
 
+        [Obsolete("do not use this",true)]
         public static void Load<TRow>(this IBindingTable<TRow> data, IConnection connection)
             where TRow : BindingTableRow
         {

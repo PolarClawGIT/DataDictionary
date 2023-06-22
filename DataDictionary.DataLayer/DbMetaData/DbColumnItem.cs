@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? ColumnName { get; }
     }
 
-    public interface IDbColumnItem : IDbColumnName
+    public interface IDbColumnItem : IDbColumnName, IDbIsSystem
     {
         public Nullable<Int32> OrdinalPosition { get; }
         public String? ColumnDefault { get; }
@@ -76,18 +76,10 @@ namespace DataDictionary.DataLayer.DbMetaData
         public Nullable<Boolean> IsFileStream
         { get { return GetValue<Boolean>("IS_FILESTREAM", BindingItemParsers.BooleanTryPrase); } }
 
-        public BindingTable<DbExtendedPropertyItem> ExtendedProperties { get; } = new BindingTable<DbExtendedPropertyItem>();
+        public Boolean IsSystem { get { return false; } }
 
-        internal static IDataReader GetDataReader(IConnection connection)
+        public static IDataReader GetDataReader(IConnection connection)
         { return connection.GetReader(Schema.Collection.Columns); }
-
-        internal virtual void GetExtendedProperties(IConnection connection)
-        {
-            DbExtendedPropertyGetCommand command = new DbExtendedPropertyGetCommand(connection)
-            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = TableName, Level1Type = "TABLE", Level2Name = ColumnName, Level2Type ="COLUMN" };
-
-            ExtendedProperties.Load(connection.GetReader(command.GetCommand()));
-        }
 
         public virtual SqlCommand GetProperties(IConnection connection)
         {

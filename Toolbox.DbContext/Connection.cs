@@ -28,6 +28,9 @@ namespace Toolbox.DbContext
         /// <param name="collection"></param>
         /// <returns></returns>
         IDataReader GetReader(Schema.Collection collection);
+        IDataReader GetReader(Schema.Collection collection, String catalogName);
+        IDataReader GetReader(Schema.Collection collection, String catalogName, String schemaName);
+        IDataReader GetReader(Schema.Collection collection, String catalogName, String schemaName, String objectName);
 
         SqlCommand CreateCommand();
         IDataReader GetReader(SqlCommand command);
@@ -167,7 +170,77 @@ namespace Toolbox.DbContext
                 throw;
             }
 
+            return result;
+        }
 
+        public IDataReader GetReader(Schema.Collection collection, String catalogName)
+        {
+            if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
+
+            IDataReader result;
+            SqlConnection connection = new SqlConnection();
+            connection.ConnectionString = DbContext.ConnectionBuilder.ConnectionString;
+
+            try
+            {
+                connection.Open();
+                DataTable data = connection.GetSchema(collection.ToString(), new String[1] { catalogName });
+                result = data.CreateDataReader();
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add(nameof(collection), collection.ToString());
+                throw;
+            }
+
+            return result;
+        }
+
+        public IDataReader GetReader(Schema.Collection collection, String catalogName, String schemaName)
+        {
+            if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
+
+            IDataReader result;
+            SqlConnection connection = new SqlConnection();
+            connection.ConnectionString = DbContext.ConnectionBuilder.ConnectionString;
+
+            try
+            {
+                connection.Open();
+                DataTable data = connection.GetSchema(collection.ToString(), new String[2] { catalogName, schemaName });
+                result = data.CreateDataReader();
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add(nameof(collection), collection.ToString());
+                throw;
+            }
+
+            return result;
+        }
+
+        public IDataReader GetReader(Schema.Collection collection, String catalogName, String schemaName, String objectName)
+        {
+            if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
+
+            IDataReader result;
+            SqlConnection connection = new SqlConnection();
+            connection.ConnectionString = DbContext.ConnectionBuilder.ConnectionString;
+
+            try
+            {
+                connection.Open();
+                DataTable data = connection.GetSchema(collection.ToString(), new String[3] { catalogName, schemaName, objectName });
+                result = data.CreateDataReader();
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add(nameof(collection), collection.ToString());
+                throw;
+            }
 
             return result;
         }

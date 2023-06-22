@@ -30,7 +30,10 @@ namespace DataDictionary.DataLayer.DbMetaData
         public Nullable<DateTime> CreateDate { get { return GetValue<DateTime>("create_date"); } }
         public Boolean IsSystem { get { return CatalogName is "tempdb" or "master" or "msdb" or "model"; } }
 
-        internal static IDataReader GetDataReader(IConnection connection)
+        public static IDataReader GetDataReader(IConnection connection)
         { return connection.GetReader(Schema.Collection.Databases); }
+
+        public static IDataReader GetDataReader(IConnection connection, String catalog)
+        { return connection.GetReader(Schema.Collection.Databases, catalog); }
     }
 }

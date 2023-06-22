@@ -70,10 +70,12 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
+            dbMetaDataNavigation = new TreeView();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
             navigationTabs.SuspendLayout();
+            navigationDbSchemaTab.SuspendLayout();
             statusStrip.SuspendLayout();
             menuStrip.SuspendLayout();
             SuspendLayout();
@@ -100,6 +102,7 @@
             // 
             // navigationDbSchemaTab
             // 
+            navigationDbSchemaTab.Controls.Add(dbMetaDataNavigation);
             navigationDbSchemaTab.Location = new Point(4, 24);
             navigationDbSchemaTab.Name = "navigationDbSchemaTab";
             navigationDbSchemaTab.Padding = new Padding(3);
@@ -335,14 +338,14 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(180, 22);
+            customizeToolStripMenuItem.Size = new Size(130, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(180, 22);
+            optionsToolStripMenuItem.Size = new Size(130, 22);
             optionsToolStripMenuItem.Text = "&Options";
             // 
             // helpToolStripMenuItem
@@ -382,6 +385,14 @@
             aboutToolStripMenuItem.Size = new Size(122, 22);
             aboutToolStripMenuItem.Text = "&About...";
             // 
+            // dbMetaDataNavigation
+            // 
+            dbMetaDataNavigation.Dock = DockStyle.Fill;
+            dbMetaDataNavigation.Location = new Point(3, 3);
+            dbMetaDataNavigation.Name = "dbMetaDataNavigation";
+            dbMetaDataNavigation.Size = new Size(206, 652);
+            dbMetaDataNavigation.TabIndex = 0;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -400,6 +411,7 @@
             Load += Main_Load;
             navigationPanel.ResumeLayout(false);
             navigationTabs.ResumeLayout(false);
+            navigationDbSchemaTab.ResumeLayout(false);
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
             menuStrip.ResumeLayout(false);
@@ -450,5 +462,6 @@
         private TabPage navigationDbSchemaTab;
         private TabPage navigationDomainTab;
         private ToolStripMenuItem importFromDatabaseToolStripMenuItem;
+        private TreeView dbMetaDataNavigation;
     }
 }

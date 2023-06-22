@@ -15,6 +15,7 @@ namespace DataDictionary.BusinessLayer
     public class DatabaseMetaData
     {
         public BindingList<Context> DbConnections { get; } = new BindingList<Context>();
+        public BindingTable<DbCatalogItem> DbCatalogs { get; } = new BindingTable<DbCatalogItem>();
         public BindingTable<DbSchemaItem> DbSchemas { get; } = new BindingTable<DbSchemaItem>();
         public BindingTable<DbTableItem> DbTables { get; } = new BindingTable<DbTableItem>();
         public BindingTable<DbColumnItem> DbColumns { get; } = new BindingTable<DbColumnItem>();
@@ -35,30 +36,37 @@ namespace DataDictionary.BusinessLayer
 
             DbConnection dbData = new DbConnection(connection)
             {
-                WorkName = "Load DataRepository",
+                WorkName = "Open Connection",
                 WorkItems = workItems.Select(s => s)
             };
             dbData.WorkCompleting += WorkCompleting;
 
             workItems.Add(new DbLoad()
             {
-                WorkName = "Load Schema",
+                WorkName = "Load Catalogs",
                 Connection = dbData.Connection,
-                Load = DbSchemas.Load,
+                Load = (conn) => DbCatalogs.Load(DbCatalogItem.GetDataReader(conn, connection.DatabaseName)),
+            });
+
+            workItems.Add(new DbLoad()
+            {
+                WorkName = "Load Schemas",
+                Connection = dbData.Connection,
+                Load = (conn) => DbSchemas.Load(DbSchemaItem.GetDataReader(conn)),
             });
 
             workItems.Add(new DbLoad()
             {
                 WorkName = "Load Tables",
                 Connection = dbData.Connection,
-                Load = DbTables.Load,
+                Load = (conn) => DbTables.Load(DbTableItem.GetDataReader(conn)),
             });
 
             workItems.Add(new DbLoad()
             {
                 WorkName = "Load Columns",
                 Connection = dbData.Connection,
-                Load = DbColumns.Load,
+                Load = (conn) => DbColumns.Load(DbColumnItem.GetDataReader(conn)),
             });
 
             workItems.Add(new BatchWork()
@@ -118,7 +126,7 @@ namespace DataDictionary.BusinessLayer
 
             DbConnection dbData = new DbConnection(connection)
             {
-                WorkName = "Load DataRepository",
+                WorkName = "Open Connection",
                 WorkItems = workItems.Select(s => s)
             };
             dbData.WorkCompleting += WorkCompleting;
@@ -127,7 +135,7 @@ namespace DataDictionary.BusinessLayer
             {
                 WorkName = "Load Databases",
                 Connection = dbData.Connection,
-                Load = resultData.Load,
+                Load = (conn) => resultData.Load(DbCatalogItem.GetDataReader(conn)),
             });
             return dbData;
 
