@@ -143,6 +143,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon DbExtendedProperty {
+            get {
+                object obj = ResourceManager.GetObject("DbExtendedProperty", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon DbSchema {
             get {
                 object obj = ResourceManager.GetObject("DbSchema", resourceCulture);
@@ -166,6 +176,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap Dictionary {
             get {
                 object obj = ResourceManager.GetObject("Dictionary", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ExtendedProperty {
+            get {
+                object obj = ResourceManager.GetObject("ExtendedProperty", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

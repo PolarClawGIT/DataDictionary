@@ -26,11 +26,8 @@ namespace DataDictionary.BusinessLayer
             raiseListChanged = false;
 
             if (DbConnections.FirstOrDefault(w => w.ServerName == connection.ServerName && w.DatabaseName == connection.DatabaseName) is Context item)
-            {
-                //results.Add(new BackgroundWork() { WorkName = "Remove Database", OnDoWork = ClearData });
-            }
+            { RemoveDb(connection); }
             else { DbConnections.Add(connection); }
-
 
             List<IWorkItem> workItems = new List<IWorkItem>();
 
@@ -150,18 +147,23 @@ namespace DataDictionary.BusinessLayer
         {
             while (DbCatalogs.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbCatalogItem item)
             { DbCatalogs.Remove(item); }
+            DbCatalogs.AcceptChanges();
 
             while (DbSchemas.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbSchemaItem item)
             { DbSchemas.Remove(item); }
+            DbSchemas.AcceptChanges();
 
             while (DbTables.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbTableItem item)
             { DbTables.Remove(item); }
+            DbTables.AcceptChanges();
 
             while (DbColumns.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbColumnItem item)
             { DbColumns.Remove(item); }
+            DbColumns.AcceptChanges();
 
             while (DbExtendedProperties.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbExtendedPropertyItem item)
             { DbExtendedProperties.Remove(item); }
+            DbExtendedProperties.AcceptChanges();
 
             while (DbConnections.FirstOrDefault(w => w.DatabaseName == connection.DatabaseName) is DbContext item)
             { DbConnections.Remove(item); }

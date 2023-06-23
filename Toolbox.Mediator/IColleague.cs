@@ -15,7 +15,8 @@ namespace Toolbox.Mediator
         event EventHandler<MessageEventArgs>? OnSendMessage;
         event EventHandler Disposed;
     }
-    /* TODO: Cannot figure out how to get this to work.
+    // TODO: Cannot figure out how to get this to work.
+    /*
     public static class Colleague
     {
         public static void SendMessage(this IColleague colleague, MessageEventArgs message)
@@ -23,6 +24,5 @@ namespace Toolbox.Mediator
             if(colleague.OnSendMessage is EventHandler<MessageEventArgs> handler)
             { handler(colleague, message); }
         }
-    }
-    */
+    }*/
 }

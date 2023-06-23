@@ -7,6 +7,6 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Messages
 {
-    class FormOpenMessage : MessageEventArgs
-    {   public required Form FormOpened { get; init; } }
+    class FormAddMdiChild : MessageEventArgs
+    {   public required Form ChildForm { get; init; } }
 }

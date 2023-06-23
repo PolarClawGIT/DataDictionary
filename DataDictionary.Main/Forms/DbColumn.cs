@@ -18,24 +18,25 @@ namespace DataDictionary.Main.Forms
         IDbColumnItem? thisData;
 
         public DbColumn() : base()
-        { InitializeComponent(); }
+        { 
+            InitializeComponent(); 
+            Program.Messenger.AddColleague(this);
+            SendMessage(new FormAddMdiChild() { ChildForm = this });
+        }
 
-        public DbColumn(IDbColumnItem data)
+        public DbColumn(IDbColumnItem data) :this()
         { thisData = data; }
 
         private void DbColumn_Load(object sender, EventArgs e)
         {
-            Program.Messenger.AddColleague(this);
+            
         }
 
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;
 
         public void RecieveMessage(object? sender, MessageEventArgs message)
-        {
-            if (message is FormOpenMessage openMessage) { }
-
-        }
+        { }
 
         void SendMessage(MessageEventArgs message)
         {

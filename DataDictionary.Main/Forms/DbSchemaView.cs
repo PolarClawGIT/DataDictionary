@@ -1,6 +1,4 @@
-﻿using DataDictionary.DataLayer.DbMetaData;
-using DataDictionary.Main.Messages;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,27 +11,17 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    public partial class DbTable : Form, IColleague
+    public partial class DbSchemaView : Form, IColleague
     {
-        class FormData
-        {
-            public IDbTableItem? DbTable { get; set; }
-            public IEnumerable<IDbExtendedPropertyItem>? DbExtendedProperty { get; set; }
-        }
-        FormData thisData = new FormData();
-
-        public DbTable() : base()
+        public DbSchemaView()
         {
             InitializeComponent();
             Program.Messenger.AddColleague(this);
             SendMessage(new Messages.FormAddMdiChild() { ChildForm = this });
         }
 
-        public DbTable(IDbTableItem tableItem) :this()
-        { thisData.DbTable = tableItem; }
-
-        private void DbTable_Load(object sender, EventArgs e)
-        { }
+        private void DbSchemaView_Load(object sender, EventArgs e)
+        { schemaData.DataSource = Program.DbData.DbSchemas; }
 
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;

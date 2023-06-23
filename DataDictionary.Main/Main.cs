@@ -29,7 +29,6 @@ namespace DataDictionary.Main
         public Main()
         {
             InitializeComponent();
-            ChildFormOpening += Main_ChildFormOpening;
 
             navigationTabs.ImageList = new ImageList();
             foreach (navigationTabImageIndex item in Enum.GetValues(typeof(navigationTabImageIndex)))
@@ -37,8 +36,6 @@ namespace DataDictionary.Main
             navigationDbSchemaTab.ImageKey = navigationTabImageIndex.Database.ToString();
             navigationDomainTab.ImageKey = navigationTabImageIndex.Domain.ToString();
         }
-
-
 
         private void Main_Load(object sender, EventArgs e)
         {
@@ -48,7 +45,7 @@ namespace DataDictionary.Main
 
         }
 
-        #region DbData
+        #region dbMetaDataNavigation
         Dictionary<TreeNode, Object> dbDataNodes = new Dictionary<TreeNode, Object>();
         enum dbDataImageIndex
         {
@@ -126,8 +123,22 @@ namespace DataDictionary.Main
                 return result;
             }
         }
+
+
+        private void dbMetaDataNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (dbDataNodes.ContainsKey(e.Node))
+            {
+                Object dataNode = dbDataNodes[e.Node];
+                if (dataNode is IDbCatalogItem catalogItem) { }
+                if (dataNode is IDbSchemaItem schemaItem) { new Forms.DbSchema(schemaItem).Show(); }
+                if (dataNode is IDbTableItem tableItem) { new Forms.DbTable(tableItem).Show(); }
+                if (dataNode is IDbColumnItem columnItem) { new Forms.DbColumn(columnItem).Show(); }
+            }
+        }
         #endregion
 
+        #region Form
         private void Main_FormClosing(object? sender, FormClosingEventArgs e)
         { }
 
@@ -142,33 +153,33 @@ namespace DataDictionary.Main
             toolStripProgressBar.Value = e.ProgressPercent;
             toolStripWorkerTask.Text = e.ProgressText;
         }
+        #endregion
 
-
+        #region Menu Events
         private void importFromDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbConnection)) is Forms.DbConnection existingForm)
             { existingForm.Activate(); }
-            else
-            {
-                Form newForm = new Forms.DbConnection();
-                newForm.MdiParent = this;
-                newForm.Show();
-            }
+            else { new Forms.DbConnection().Show(); }
         }
 
+        private void viewExtendedPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        { new Forms.DbExtendedPropertyView().Show(); }
+
+        private void viewDatabaseSchemasToolStripMenuItem_Click(object sender, EventArgs e)
+        { new Forms.DbSchemaView().Show(); }
+        #endregion
 
         #region IColleague
-        event EventHandler<FormOpenMessage> ChildFormOpening;
-        private void Main_ChildFormOpening(object? sender, FormOpenMessage e)
-        { e.FormOpened.MdiParent = this; }
-
         public event EventHandler<MessageEventArgs>? OnSendMessage;
 
         public void RecieveMessage(object? sender, MessageEventArgs message)
         {
-            if (message is FormOpenMessage openMessage && ChildFormOpening is EventHandler<FormOpenMessage> handler)
-            { handler(sender, openMessage); }
+            if (message is FormAddMdiChild openMessage)
+            { AddMdiChild(openMessage.ChildForm); }
 
+            void AddMdiChild(Form child)
+            { if (child.MdiParent is null) { child.MdiParent = this; } }
         }
 
         void SendMessage(MessageEventArgs message)
@@ -177,6 +188,7 @@ namespace DataDictionary.Main
             { handler(this, message); }
         }
         #endregion
+
 
     }
 }

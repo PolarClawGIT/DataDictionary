@@ -68,10 +68,11 @@ namespace Toolbox.BindingTable
             where T : struct, IParsable<T>
         {
             if (data is not DataRow row) { throw new InvalidOperationException("Internal DataRow is not defined"); }
-            if (!row.Table.Columns.Contains(columnName)) { throw new IndexOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
+            if (!row.Table.Columns.Contains(columnName))
+            { throw new IndexOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
 
             // Generic handling
-            if (T.TryParse(row[columnName].ToString(), null, out T value))
+            if (row.RowState != DataRowState.Deleted && T.TryParse(row[columnName].ToString(), null, out T value))
             { return new Nullable<T>(value); }
 
             // Parsing failed, return null
@@ -83,15 +84,29 @@ namespace Toolbox.BindingTable
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        /// <remarks>Sting are a Microsoft special class and needs diffrent handling</remarks>
+        /// <remarks>String are a Microsoft special class and needs diffrent handling</remarks>
         protected virtual String? GetValue(String columnName)
         {
             if (data is not DataRow row) { throw new InvalidOperationException("Internal DataRow is not defined"); }
-            if (!row.Table.Columns.Contains(columnName)) { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
+            if (!row.Table.Columns.Contains(columnName))
+            {
+                if (String.IsNullOrEmpty(data.RowError))
+                {
+                    data.RowError = String.Format("{0} not in list of Columns", columnName);
+                    return null;
+                }
+                else
+                {
+                    data.RowError = String.Format("{0}; {1} not in list of Columns", data.RowError, columnName);
+                    return null;
+                }
+            }
 
-            if (row[columnName].ToString() is String value)
+            if (row.RowState != DataRowState.Deleted && row[columnName].ToString() is String value)
             { return value; }
-            else { return null; }
+
+            // Parsing failed, return null
+            return null; 
         }
 
         /// <summary>

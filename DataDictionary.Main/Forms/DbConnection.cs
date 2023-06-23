@@ -2,7 +2,6 @@
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.DataLayer.WorkDbItem;
-using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
@@ -44,6 +43,8 @@ namespace DataDictionary.Main.Forms
         public DbConnection()
         {
             InitializeComponent();
+            Program.Messenger.AddColleague(this);
+            SendMessage(new Messages.FormAddMdiChild() { ChildForm = this });
 
             // Create list of all known Server/Database Name Pairs
             foreach (String? item in Settings.Default.UserServers)
@@ -65,6 +66,7 @@ namespace DataDictionary.Main.Forms
 
             if (data.AvailableContexts.Count == 0) { data.CurrentContext = new DbContext(); }
             else { data.CurrentContext = data.AvailableContexts.First(); }
+
         }
 
         private void authenticateWindows_CheckedChanged(object sender, EventArgs e)
@@ -85,6 +87,7 @@ namespace DataDictionary.Main.Forms
 
         private void DbConnection_Load(object sender, EventArgs e)
         {
+
             // Setup Server list. 
             IEnumerable<String> serverNames = data.AvailableContexts.OrderBy(o => o.ServerName).Select(s => s.ServerName).Distinct();
             serverNameData.Items.AddRange(serverNames.ToArray());

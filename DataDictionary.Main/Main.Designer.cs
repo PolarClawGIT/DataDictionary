@@ -63,6 +63,7 @@
             selectAllToolStripMenuItem = new ToolStripMenuItem();
             toolsToolStripMenuItem = new ToolStripMenuItem();
             importFromDatabaseToolStripMenuItem = new ToolStripMenuItem();
+            viewExtendedPropertiesToolStripMenuItem = new ToolStripMenuItem();
             customizeToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
@@ -71,6 +72,7 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
+            viewDatabaseSchemasToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
@@ -118,6 +120,7 @@
             dbMetaDataNavigation.Name = "dbMetaDataNavigation";
             dbMetaDataNavigation.Size = new Size(206, 652);
             dbMetaDataNavigation.TabIndex = 0;
+            dbMetaDataNavigation.NodeMouseDoubleClick += dbMetaDataNavigation_NodeMouseDoubleClick;
             // 
             // navigationDomainTab
             // 
@@ -192,7 +195,7 @@
             newToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             newToolStripMenuItem.Name = "newToolStripMenuItem";
             newToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            newToolStripMenuItem.Size = new Size(180, 22);
+            newToolStripMenuItem.Size = new Size(146, 22);
             newToolStripMenuItem.Text = "&New";
             // 
             // openToolStripMenuItem
@@ -202,13 +205,13 @@
             openToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             openToolStripMenuItem.Name = "openToolStripMenuItem";
             openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
-            openToolStripMenuItem.Size = new Size(180, 22);
+            openToolStripMenuItem.Size = new Size(146, 22);
             openToolStripMenuItem.Text = "&Open";
             // 
             // toolStripSeparator
             // 
             toolStripSeparator.Name = "toolStripSeparator";
-            toolStripSeparator.Size = new Size(177, 6);
+            toolStripSeparator.Size = new Size(143, 6);
             // 
             // saveToolStripMenuItem
             // 
@@ -217,20 +220,20 @@
             saveToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            saveToolStripMenuItem.Size = new Size(180, 22);
+            saveToolStripMenuItem.Size = new Size(146, 22);
             saveToolStripMenuItem.Text = "&Save";
             // 
             // saveAsToolStripMenuItem
             // 
             saveAsToolStripMenuItem.Enabled = false;
             saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            saveAsToolStripMenuItem.Size = new Size(180, 22);
+            saveAsToolStripMenuItem.Size = new Size(146, 22);
             saveAsToolStripMenuItem.Text = "Save &As";
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(143, 6);
             // 
             // printToolStripMenuItem
             // 
@@ -239,7 +242,7 @@
             printToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             printToolStripMenuItem.Name = "printToolStripMenuItem";
             printToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.P;
-            printToolStripMenuItem.Size = new Size(180, 22);
+            printToolStripMenuItem.Size = new Size(146, 22);
             printToolStripMenuItem.Text = "&Print";
             // 
             // printPreviewToolStripMenuItem
@@ -248,18 +251,18 @@
             printPreviewToolStripMenuItem.Image = (Image)resources.GetObject("printPreviewToolStripMenuItem.Image");
             printPreviewToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
-            printPreviewToolStripMenuItem.Size = new Size(180, 22);
+            printPreviewToolStripMenuItem.Size = new Size(146, 22);
             printPreviewToolStripMenuItem.Text = "Print Pre&view";
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(177, 6);
+            toolStripSeparator2.Size = new Size(143, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(180, 22);
+            exitToolStripMenuItem.Size = new Size(146, 22);
             exitToolStripMenuItem.Text = "E&xit";
             // 
             // editToolStripMenuItem
@@ -329,7 +332,7 @@
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { importFromDatabaseToolStripMenuItem, customizeToolStripMenuItem, optionsToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { importFromDatabaseToolStripMenuItem, viewExtendedPropertiesToolStripMenuItem, viewDatabaseSchemasToolStripMenuItem, customizeToolStripMenuItem, optionsToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(46, 20);
             toolsToolStripMenuItem.Text = "&Tools";
@@ -338,22 +341,30 @@
             // 
             importFromDatabaseToolStripMenuItem.Image = Properties.Resources.Database;
             importFromDatabaseToolStripMenuItem.Name = "importFromDatabaseToolStripMenuItem";
-            importFromDatabaseToolStripMenuItem.Size = new Size(190, 22);
-            importFromDatabaseToolStripMenuItem.Text = "Import from Database";
+            importFromDatabaseToolStripMenuItem.Size = new Size(207, 22);
+            importFromDatabaseToolStripMenuItem.Text = "&Import from Database";
             importFromDatabaseToolStripMenuItem.Click += importFromDatabaseToolStripMenuItem_Click;
+            // 
+            // viewExtendedPropertiesToolStripMenuItem
+            // 
+            viewExtendedPropertiesToolStripMenuItem.Image = Properties.Resources.ExtendedProperty;
+            viewExtendedPropertiesToolStripMenuItem.Name = "viewExtendedPropertiesToolStripMenuItem";
+            viewExtendedPropertiesToolStripMenuItem.Size = new Size(207, 22);
+            viewExtendedPropertiesToolStripMenuItem.Text = "View &Extended Properties";
+            viewExtendedPropertiesToolStripMenuItem.Click += viewExtendedPropertiesToolStripMenuItem_Click;
             // 
             // customizeToolStripMenuItem
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(190, 22);
+            customizeToolStripMenuItem.Size = new Size(207, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(190, 22);
+            optionsToolStripMenuItem.Size = new Size(207, 22);
             optionsToolStripMenuItem.Text = "&Options";
             // 
             // helpToolStripMenuItem
@@ -392,6 +403,14 @@
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             aboutToolStripMenuItem.Size = new Size(122, 22);
             aboutToolStripMenuItem.Text = "&About...";
+            // 
+            // viewDatabaseSchemasToolStripMenuItem
+            // 
+            viewDatabaseSchemasToolStripMenuItem.Image = Properties.Resources.Schema;
+            viewDatabaseSchemasToolStripMenuItem.Name = "viewDatabaseSchemasToolStripMenuItem";
+            viewDatabaseSchemasToolStripMenuItem.Size = new Size(207, 22);
+            viewDatabaseSchemasToolStripMenuItem.Text = "View Database &Schemas";
+            viewDatabaseSchemasToolStripMenuItem.Click += viewDatabaseSchemasToolStripMenuItem_Click;
             // 
             // Main
             // 
@@ -463,5 +482,7 @@
         private TabPage navigationDomainTab;
         private TreeView dbMetaDataNavigation;
         private ToolStripMenuItem importFromDatabaseToolStripMenuItem;
+        private ToolStripMenuItem viewExtendedPropertiesToolStripMenuItem;
+        private ToolStripMenuItem viewDatabaseSchemasToolStripMenuItem;
     }
 }
