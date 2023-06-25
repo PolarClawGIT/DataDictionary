@@ -48,9 +48,9 @@
             removeCommand = new Button();
             tableLayoutPanel2 = new TableLayoutPanel();
             label2 = new Label();
-            userNameData = new TextBox();
+            serverUserNameData = new TextBox();
             label3 = new Label();
-            userPasswordData = new TextBox();
+            serverUserPasswordData = new TextBox();
             authenticateWindows = new RadioButton();
             authenticateDbServer = new RadioButton();
             dbConnectionLayout = new TableLayoutPanel();
@@ -265,9 +265,9 @@
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.Controls.Add(authenticationTypeLayout, 0, 0);
             tableLayoutPanel2.Controls.Add(label2, 0, 1);
-            tableLayoutPanel2.Controls.Add(userNameData, 1, 1);
+            tableLayoutPanel2.Controls.Add(serverUserNameData, 1, 1);
             tableLayoutPanel2.Controls.Add(label3, 0, 2);
-            tableLayoutPanel2.Controls.Add(userPasswordData, 1, 2);
+            tableLayoutPanel2.Controls.Add(serverUserPasswordData, 1, 2);
             tableLayoutPanel2.Controls.Add(authenticationChoiceLayout, 1, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(3, 19);
@@ -297,13 +297,13 @@
             label2.TabIndex = 2;
             label2.Text = "User Name";
             // 
-            // userNameData
+            // serverUserNameData
             // 
-            userNameData.Dock = DockStyle.Fill;
-            userNameData.Location = new Point(74, 34);
-            userNameData.Name = "userNameData";
-            userNameData.Size = new Size(317, 23);
-            userNameData.TabIndex = 3;
+            serverUserNameData.Dock = DockStyle.Fill;
+            serverUserNameData.Location = new Point(74, 34);
+            serverUserNameData.Name = "serverUserNameData";
+            serverUserNameData.Size = new Size(317, 23);
+            serverUserNameData.TabIndex = 3;
             // 
             // label3
             // 
@@ -314,14 +314,14 @@
             label3.TabIndex = 4;
             label3.Text = "Password";
             // 
-            // userPasswordData
+            // serverUserPasswordData
             // 
-            userPasswordData.Dock = DockStyle.Fill;
-            userPasswordData.Location = new Point(74, 63);
-            userPasswordData.Name = "userPasswordData";
-            userPasswordData.PasswordChar = '*';
-            userPasswordData.Size = new Size(317, 23);
-            userPasswordData.TabIndex = 5;
+            serverUserPasswordData.Dock = DockStyle.Fill;
+            serverUserPasswordData.Location = new Point(74, 63);
+            serverUserPasswordData.Name = "serverUserPasswordData";
+            serverUserPasswordData.PasswordChar = '*';
+            serverUserPasswordData.Size = new Size(317, 23);
+            serverUserPasswordData.TabIndex = 5;
             // 
             // authenticationChoiceLayout
             // 
@@ -407,9 +407,9 @@
         private TableLayoutPanel tableLayoutPanel2;
         private Label authenticationTypeLayout;
         private Label label2;
-        private TextBox userNameData;
+        private TextBox serverUserNameData;
         private Label label3;
-        private TextBox userPasswordData;
+        private TextBox serverUserPasswordData;
         private TableLayoutPanel authenticationChoiceLayout;
         private RadioButton authenticateWindows;
         private RadioButton authenticateDbServer;

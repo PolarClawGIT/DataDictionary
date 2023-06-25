@@ -27,7 +27,6 @@ namespace DataDictionary.BusinessLayer
 
             if (DbConnections.FirstOrDefault(w => w.ServerName == connection.ServerName && w.DatabaseName == connection.DatabaseName) is Context item)
             { RemoveDb(connection); }
-            else { DbConnections.Add(connection); }
 
             List<IWorkItem> workItems = new List<IWorkItem>();
 
@@ -106,6 +105,8 @@ namespace DataDictionary.BusinessLayer
 
             void WorkCompleting(object? sender, EventArgs e)
             {
+                DbConnections.Add(connection);
+
                 dbData.WorkCompleting -= WorkCompleting;
                 raiseListChanged = true;
                 if (onComplete is Action) { onComplete(); }

@@ -20,15 +20,53 @@ namespace DataDictionary.Main.Forms
     {
         class FormData : INotifyPropertyChanged
         {
-            DbContext currentContext = new DbContext();
-            public DbContext CurrentContext
-            {
-                get { return currentContext; }
-                set { currentContext = value; OnPropertyChanged(nameof(CurrentContext)); }
-            }
+            public BindingList<DbContext> AvailableContexts { get; } = new BindingList<DbContext>();
 
-            BindingList<DbContext> availableContexts = new BindingList<DbContext>();
-            public BindingList<DbContext> AvailableContexts { get { return availableContexts; } }
+            private string? serverName;
+            public String? ServerName { get { return serverName; } set { serverName = value; OnPropertyChanged(nameof(ServerName)); } }
+
+            public String? databaseName;
+            public String? DatabaseName { get { return databaseName; } set { databaseName = value; OnPropertyChanged(nameof(DatabaseName)); } }
+
+            public String? serverUserName;
+            public String? ServerUserName { get { return serverUserName; } set { serverUserName = value; OnPropertyChanged(nameof(ServerUserName)); } }
+
+            public String? serverUserPassword;
+            public String? ServerUserPassword { get { return serverUserPassword; } set { serverUserPassword = value; OnPropertyChanged(nameof(ServerUserPassword)); } }
+
+            public DbContext? DbContext
+            {
+                get
+                {
+                    if (String.IsNullOrEmpty(ServerName) || String.IsNullOrEmpty(DatabaseName)) { return null; }
+                    return new DbContext()
+                    {
+                        ServerName = ServerName,
+                        DatabaseName = DatabaseName,
+                        //TODO: User Name, Password, and authentcation option are not yet supported
+                        //ServerUserName = serverUserName,
+                        //ServerUserPassword = ServerUserPassword 
+                    };
+                }
+                set
+                {
+                    if(value is DbContext)
+                    {
+                        ServerName = value.ServerName;
+                        DatabaseName = value.DatabaseName;
+                        ServerUserName = value.ServerUserName;
+                        ServerUserPassword = value.ServerUserPassword;
+
+                    }
+                    else
+                    {
+                        ServerName = String.Empty;
+                        DatabaseName = String.Empty;
+                        ServerUserName = String.Empty;
+                        ServerUserPassword = String.Empty;
+                    }
+                }
+            }
 
             public event PropertyChangedEventHandler? PropertyChanged;
             public virtual void OnPropertyChanged(string propertyName)
@@ -63,27 +101,8 @@ namespace DataDictionary.Main.Forms
                     { data.AvailableContexts.Add(new DbContext() { ServerName = serverName, DatabaseName = databaseName }); }
                 }
             }
-
-            if (data.AvailableContexts.Count == 0) { data.CurrentContext = new DbContext(); }
-            else { data.CurrentContext = data.AvailableContexts.First(); }
-
         }
 
-        private void authenticateWindows_CheckedChanged(object sender, EventArgs e)
-        {
-            if (authenticateWindows.Checked)
-            {
-                userNameData.Enabled = false;
-                userNameData.Text = String.Format("{0}\\{1}", SystemInformation.UserDomainName, SystemInformation.UserName);
-                userPasswordData.Enabled = false;
-                userPasswordData.Text = String.Empty;
-            }
-            else
-            {
-                userNameData.Enabled = true;
-                userPasswordData.Enabled = true;
-            }
-        }
 
         private void DbConnection_Load(object sender, EventArgs e)
         {
@@ -106,9 +125,14 @@ namespace DataDictionary.Main.Forms
             dbConnectionsData.DataSource = Program.DbData.DbConnections;
 
             // Data Bindings
-            serverNameData.DataBindings.Add(new Binding(nameof(serverNameData.SelectedItem), data.CurrentContext, nameof(data.CurrentContext.ServerName), true, DataSourceUpdateMode.OnValidation));
-            databaseNameData.DataBindings.Add(new Binding(nameof(databaseNameData.SelectedItem), data.CurrentContext, nameof(data.CurrentContext.DatabaseName), true, DataSourceUpdateMode.OnValidation));
+            if(data.AvailableContexts.Count > 0) { data.DbContext = data.AvailableContexts[0]; }
+
+            serverNameData.DataBindings.Add(new Binding(nameof(serverNameData.SelectedItem), data, nameof(data.ServerName), true, DataSourceUpdateMode.OnValidation));
+            databaseNameData.DataBindings.Add(new Binding(nameof(databaseNameData.SelectedItem), data, nameof(data.DatabaseName), true, DataSourceUpdateMode.OnValidation));
+            serverUserNameData.DataBindings.Add(new Binding(nameof(serverUserNameData.Text), data, nameof(data.serverUserName), true, DataSourceUpdateMode.OnValidation));
+            serverUserPasswordData.DataBindings.Add(new Binding(nameof(serverUserPasswordData.Text), data, nameof(data.serverUserPassword), true, DataSourceUpdateMode.OnValidation));
         }
+
 
         private void serverNameData_SelectedIndexChanged(object sender, EventArgs e)
         { }
@@ -116,13 +140,32 @@ namespace DataDictionary.Main.Forms
         private void serverNameData_Validated(object sender, EventArgs e)
         { }
 
+        private void authenticateWindows_CheckedChanged(object sender, EventArgs e)
+        {
+            if (authenticateWindows.Checked)
+            {
+                serverUserNameData.Enabled = false;
+                serverUserNameData.Text = String.Format("{0}\\{1}", SystemInformation.UserDomainName, SystemInformation.UserName);
+                serverUserPasswordData.Enabled = false;
+                serverUserPasswordData.Text = String.Empty;
+            }
+            else
+            {
+                serverUserNameData.Enabled = true;
+                serverUserPasswordData.Enabled = true;
+            }
+        }
+
         private void connectCommand_Click(object sender, EventArgs e)
         {
             this.UseWaitCursor = true;
             this.Enabled = false;
 
-            Program.WorkerQueue.Enqueue(new DbVerifyConnection(data.CurrentContext) { WorkName = "Open Connection" });
-            Program.WorkerQueue.Enqueue(Program.DbData.GetDatabases(data.CurrentContext, onComplete));
+            if (data.DbContext is DbContext)
+            {
+                Program.WorkerQueue.Enqueue(new DbVerifyConnection(data.DbContext) { WorkName = "Open Connection" });
+                Program.WorkerQueue.Enqueue(Program.DbData.GetDatabases(data.DbContext, onComplete));
+            }
 
             void onComplete(IEnumerable<IDbCatalogItem> catalogs)
             {
@@ -154,12 +197,15 @@ namespace DataDictionary.Main.Forms
             this.UseWaitCursor = true;
             this.Enabled = false;
 
-            Program.WorkerQueue.Enqueue(new DbVerifyConnection(data.CurrentContext) { WorkName = "Open Connection" });
-            Program.WorkerQueue.Enqueue(Program.DbData.ImportDb(data.CurrentContext, onComplete));
+            if (data.DbContext is DbContext)
+            {
+                Program.WorkerQueue.Enqueue(new DbVerifyConnection(data.DbContext) { WorkName = "Open Connection" });
+                Program.WorkerQueue.Enqueue(Program.DbData.ImportDb(data.DbContext, onComplete));
+            }
 
             void onComplete()
             {
-                String newValue = String.Format("{0}.{1}", data.CurrentContext.ServerName, data.CurrentContext.DatabaseName);
+                String newValue = String.Format("{0}.{1}", data.DbContext.ServerName, data.DbContext.DatabaseName);
 
                 // Handle the User Settings
                 if (Settings.Default.UserServers.Contains(newValue))
@@ -183,11 +229,8 @@ namespace DataDictionary.Main.Forms
             this.UseWaitCursor = true;
             this.Enabled = false;
 
-            Program.DbData.RemoveDb(data.CurrentContext);
-            data.AvailableContexts.Remove(data.CurrentContext);
-
-            if (data.AvailableContexts.Count == 0) { data.CurrentContext = new DbContext(); }
-            else { data.CurrentContext = data.AvailableContexts.First(); }
+            if (data.DbContext is DbContext)
+            { Program.DbData.RemoveDb(data.DbContext); }
 
             // Done
             this.UseWaitCursor = false;
@@ -199,7 +242,7 @@ namespace DataDictionary.Main.Forms
             if (dbConnectionsData.SelectedRows.Count > 0)
             {
                 if (dbConnectionsData.SelectedRows[0].DataBoundItem is DbContext context)
-                { data.CurrentContext = context; }
+                { data.DbContext = context; }
             }
         }
 
