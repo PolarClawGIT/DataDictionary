@@ -3,6 +3,7 @@ using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
+using System.Windows.Forms;
 using Toolbox.BindingTable;
 using Toolbox.Mediator;
 using Toolbox.Threading;
@@ -41,7 +42,6 @@ namespace DataDictionary.Main
         {
             Program.WorkerQueue.ProgressChanged += WorkerQueue_ProgressChanged;
             Program.Messenger.AddColleague(this);
-            Program.DbData.ListChanged += DbData_ListChanged;
 
         }
 
@@ -50,10 +50,7 @@ namespace DataDictionary.Main
         { }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Program.WorkerQueue.ProgressChanged -= WorkerQueue_ProgressChanged;
-            Program.DbData.ListChanged -= DbData_ListChanged;
-        }
+        { Program.WorkerQueue.ProgressChanged -= WorkerQueue_ProgressChanged; }
 
         private void WorkerQueue_ProgressChanged(object? sender, WorkerProgressChangedEventArgs e)
         {
@@ -99,7 +96,9 @@ namespace DataDictionary.Main
             {dbDataImageIndex.Column,   ("Column",  Resources.Column) },
         };
 
-        private void DbData_ListChanged(object? sender, ListChangedEventArgs e)
+
+
+        void BuildDbDataTree()
         {
             dbMetaDataNavigation.Nodes.Clear();
             dbDataNodes.Clear();
@@ -113,7 +112,7 @@ namespace DataDictionary.Main
 
             foreach (IDbCatalogItem catalogItem in Program.DbData.DbCatalogs.OrderBy(o => o.CatalogName))
             {
-                if(String.IsNullOrWhiteSpace(catalogItem.CatalogName))
+                if (String.IsNullOrWhiteSpace(catalogItem.CatalogName))
                 {
                     //TODO: This event may fire when there is no data or the data is being changed. Cuased by the deleted row not being handled correctly.
                 }
@@ -179,20 +178,32 @@ namespace DataDictionary.Main
         public event EventHandler<MessageEventArgs>? OnSendMessage;
 
         public void RecieveMessage(object? sender, MessageEventArgs message)
-        {
-            if (message is FormAddMdiChild openMessage)
-            { AddMdiChild(openMessage.ChildForm); }
-
-            void AddMdiChild(Form child)
-            { if (child.MdiParent is null) { child.MdiParent = this; } }
-        }
+        { HandleMessage((dynamic)message); }
 
         void SendMessage(MessageEventArgs message)
         {
             if (OnSendMessage is EventHandler<MessageEventArgs> handler)
             { handler(this, message); }
         }
+
+        void HandleMessage(MessageEventArgs message) { }
+        void HandleMessage(FormAddMdiChild message)
+        { if (message.ChildForm.MdiParent is null) { message.ChildForm.MdiParent = this; } }
+
+        Form? lastActive;
+        void HandleMessage(DbDataBatchStarting message)
+        { lastActive = ActiveMdiChild; }
+
+        void HandleMessage(DbDataBatchCompleted message)
+        {
+            if (lastActive is Form)
+            { lastActive.Activate(); }
+
+            BuildDbDataTree();
+        }
+
         #endregion
+
 
 
     }

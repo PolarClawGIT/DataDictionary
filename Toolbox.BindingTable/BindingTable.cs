@@ -217,17 +217,17 @@ namespace Toolbox.BindingTable
         /// Used to temporarly disable or enable the Change List event.
         /// This allows a set of changes to be made before calling OnListChanged
         /// so that they are treated as a single logical change.
-        /// 
-        /// TODO: The OnListChanged can fire on a background thread. This creates a threading error and is not supported by WinForms.
-        /// Consider re-write to delay the event being fired until all the changes on a background thread is complete.
-        /// Look into how to make this class more "thread safe" as well.
-        /// Might store the thread that created the object using: System.Threading.Thread.CurrentThread.ManagedThreadId;
-        /// Might also be able to identify if on main thread using: SynchronizationContext.Current.
-        /// 
-        /// Items in the Binding list may also need to check before sending a notification.
         /// </summary>
         protected virtual Boolean OnListChangedEnabled { get; set; } = true;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        /// <remarks>
+        /// This can raise an Thread exception when a Form has a bound object, usally a DataGridView.
+        /// To address this, the Form needs to disconnect from the binding source and re-connect after the operation is complete.
+        /// </remarks>
         protected override void OnListChanged(ListChangedEventArgs e)
         { if (OnListChangedEnabled) { base.OnListChanged(e); } }
 

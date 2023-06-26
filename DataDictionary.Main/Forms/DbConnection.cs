@@ -121,19 +121,40 @@ namespace DataDictionary.Main.Forms
             // Setup Connection type
             authenticateWindows_CheckedChanged(this, EventArgs.Empty);
 
-            // Hook up Database Connection list
+            // Data Binding
+            if (data.AvailableContexts.Count > 0) { data.DbContext = data.AvailableContexts[0]; }
+            BindData();
+        }
+
+        void BindData()
+        {
             dbConnectionsData.AutoGenerateColumns = false;
             dbConnectionsData.DataSource = Program.DbData.DbConnections;
-
-            // Data Bindings
-            if (data.AvailableContexts.Count > 0) { data.DbContext = data.AvailableContexts[0]; }
 
             serverNameData.DataBindings.Add(new Binding(nameof(serverNameData.SelectedItem), data, nameof(data.ServerName), true, DataSourceUpdateMode.OnValidation));
             databaseNameData.DataBindings.Add(new Binding(nameof(databaseNameData.SelectedItem), data, nameof(data.DatabaseName), true, DataSourceUpdateMode.OnValidation));
             serverUserNameData.DataBindings.Add(new Binding(nameof(serverUserNameData.Text), data, nameof(data.serverUserName), true, DataSourceUpdateMode.OnValidation));
             serverUserPasswordData.DataBindings.Add(new Binding(nameof(serverUserPasswordData.Text), data, nameof(data.serverUserPassword), true, DataSourceUpdateMode.OnValidation));
+
+            // Select the connection
+            dbConnectionsData.ClearSelection();
+
+            if (dbConnectionsData.Rows.Cast<DataGridViewRow>().Where(
+                w => w.DataBoundItem is DbContext context &&
+                context.ServerName == data.ServerName &&
+                context.DatabaseName == data.DatabaseName).FirstOrDefault() is DataGridViewRow row)
+            { row.Selected = true; }
         }
 
+        void UnBindData()
+        {
+            dbConnectionsData.DataSource = null;
+
+            serverNameData.DataBindings.Clear();
+            databaseNameData.DataBindings.Clear();
+            serverUserNameData.DataBindings.Clear();
+            serverUserPasswordData.DataBindings.Clear();
+        }
 
         private void serverNameData_SelectedIndexChanged(object sender, EventArgs e)
         { }
@@ -197,10 +218,12 @@ namespace DataDictionary.Main.Forms
         {
             this.UseWaitCursor = true;
             this.Enabled = false;
+            UnBindData();
             SendMessage(new DbDataBatchStarting());
 
             if (data.DbContext is DbContext)
             {
+                if (data.DbContext is DbContext) { Program.WorkerQueue.Enqueue(Program.DbData.RemoveDb(data.DbContext)); }
                 Program.WorkerQueue.Enqueue(new DbVerifyConnection(data.DbContext) { WorkName = "Open Connection" });
                 Program.WorkerQueue.Enqueue(Program.DbData.ImportDb(data.DbContext, onComplete));
             }
@@ -220,17 +243,11 @@ namespace DataDictionary.Main.Forms
 
                 Settings.Default.Save();
 
-                // Select the connection
-                dbConnectionsData.ClearSelection();
-
-                if (dbConnectionsData.Rows.Cast<DataGridViewRow>().Where(
-                    w => w.DataBoundItem is DbContext context &&
-                    context.ServerName == data.ServerName &&
-                    context.DatabaseName == data.DatabaseName).FirstOrDefault() is DataGridViewRow row)
-                { row.Selected = true; }
 
                 // Done
                 SendMessage(new DbDataBatchCompleted());
+                BindData();
+
                 this.UseWaitCursor = false;
                 this.Enabled = true;
             }
@@ -240,16 +257,17 @@ namespace DataDictionary.Main.Forms
         {
             this.UseWaitCursor = true;
             this.Enabled = false;
+            UnBindData();
             SendMessage(new DbDataBatchStarting());
-            dbConnectionsData.DataSource = null;
+
 
             if (data.DbContext is DbContext)
             { Program.WorkerQueue.Enqueue(Program.DbData.RemoveDb(data.DbContext, onComplete)); }
 
             void onComplete()
             {
-                dbConnectionsData.DataSource = Program.DbData.DbConnections;
                 SendMessage(new DbDataBatchCompleted());
+                BindData();
                 this.UseWaitCursor = false;
                 this.Enabled = true;
             }

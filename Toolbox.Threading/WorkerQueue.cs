@@ -17,6 +17,7 @@ namespace Toolbox.Threading
         protected BackgroundWorker BackgroundWorker { get; } = new BackgroundWorker();
         public Int32 WorkAdded { get; protected set; } = 0;
         public Int32 WorkComplete { get; protected set; } = 0;
+        public Int32 WorkPending { get { return WorkQueue.Count; } }
         public Int32 WorkProgress
         {
             get
@@ -128,8 +129,8 @@ namespace Toolbox.Threading
             // So the list of items to be worked with becomes static.
             IEnumerable<IWorkItem> workItems = item.WorkItems.ToList();
 
-            if (workItems.LastOrDefault() is WorkBase workItem)
-            { workItem.WorkCompleting += WorkItem_WorkCompleting; }
+            IWorkItem? lastItem = workItems.LastOrDefault();
+            if (lastItem is IWorkItem) { lastItem.WorkCompleting += WorkItem_WorkCompleting; }
 
             foreach (WorkBase work in workItems)
             { this.Enqueue(work); }
@@ -138,8 +139,7 @@ namespace Toolbox.Threading
 
             void WorkItem_WorkCompleting(object? sender, EventArgs e)
             {
-                if (workItems.LastOrDefault() is WorkItem.WorkBase workItem)
-                { workItem.WorkCompleting -= WorkItem_WorkCompleting; }
+                if (lastItem is IWorkItem) { lastItem.WorkCompleting -= WorkItem_WorkCompleting; }
 
                 try
                 { item.OnCompleting(); }
@@ -147,7 +147,7 @@ namespace Toolbox.Threading
                 { WorkException(item, ex); }
             }
         }
-        
+
         protected virtual void DoWork(ParellelWork item)
         {
             // So the list of items to be worked with becomes static.

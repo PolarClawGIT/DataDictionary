@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.Main.Messages;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -21,7 +22,12 @@ namespace DataDictionary.Main.Forms
         }
 
         private void DbSchemaView_Load(object sender, EventArgs e)
+        { BindData(); }
+
+        void BindData()
         { schemaData.DataSource = Program.DbData.DbSchemas; }
+
+        void UnBindData() { schemaData.DataSource = null; }
 
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;
@@ -36,6 +42,12 @@ namespace DataDictionary.Main.Forms
         }
 
         void HandleMessage(MessageEventArgs message) { }
+
+        void HandleMessage(DbDataBatchStarting message)
+        { UnBindData(); }
+
+        void HandleMessage(DbDataBatchCompleted message)
+        { BindData(); }
         #endregion
     }
 }

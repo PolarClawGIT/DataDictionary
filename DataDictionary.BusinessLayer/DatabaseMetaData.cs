@@ -25,44 +25,41 @@ namespace DataDictionary.BusinessLayer
 
         public IWorkItem ImportDb(DbContext connection, Action? onComplete = null)
         {
-            if (DbConnections.FirstOrDefault(w => w.ServerName == connection.ServerName && w.DatabaseName == connection.DatabaseName) is Context item)
-            { RemoveDb(connection); }
-
             List<IWorkItem> workItems = new List<IWorkItem>();
 
-            DbConnection dbData = new DbConnection(connection)
+            DbConnection result = new DbConnection(connection)
             {
                 WorkName = "Import Db",
                 WorkItems = workItems.Select(s => s)
             };
-            dbData.WorkCompleting += WorkCompleting;
-            dbData.WorkStarting += WorkStarting;
+            result.WorkCompleting += WorkCompleting;
+            result.WorkStarting += WorkStarting;
 
             workItems.Add(new DbLoad()
             {
                 WorkName = "Load Catalogs",
-                Connection = dbData.Connection,
+                Connection = result.Connection,
                 Load = (conn) => DbCatalogs.Load(DbCatalogItem.GetDataReader(conn, connection.DatabaseName)),
             });
 
             workItems.Add(new DbLoad()
             {
                 WorkName = "Load Schemas",
-                Connection = dbData.Connection,
+                Connection = result.Connection,
                 Load = (conn) => DbSchemas.Load(DbSchemaItem.GetDataReader(conn)),
             });
 
             workItems.Add(new DbLoad()
             {
                 WorkName = "Load Tables",
-                Connection = dbData.Connection,
+                Connection = result.Connection,
                 Load = (conn) => DbTables.Load(DbTableItem.GetDataReader(conn)),
             });
 
             workItems.Add(new DbLoad()
             {
                 WorkName = "Load Columns",
-                Connection = dbData.Connection,
+                Connection = result.Connection,
                 Load = (conn) => DbColumns.Load(DbColumnItem.GetDataReader(conn)),
             });
 
@@ -72,7 +69,7 @@ namespace DataDictionary.BusinessLayer
                 WorkItems = DbSchemas.Select(s => new DbPropertiesLoad()
                 {
                     WorkName = "Load Extended Properties, Schemas",
-                    Connection = dbData.Connection,
+                    Connection = result.Connection,
                     GetCommand = s.GetProperties,
                     Target = DbExtendedProperties
                 })
@@ -84,7 +81,7 @@ namespace DataDictionary.BusinessLayer
                 WorkItems = DbTables.Select(s => new DbPropertiesLoad()
                 {
                     WorkName = "Load Extended Properties, Tables",
-                    Connection = dbData.Connection,
+                    Connection = result.Connection,
                     GetCommand = s.GetProperties,
                     Target = DbExtendedProperties
                 })
@@ -96,29 +93,32 @@ namespace DataDictionary.BusinessLayer
                 WorkItems = DbColumns.Select(s => new DbPropertiesLoad()
                 {
                     WorkName = "Load Extended Properties, Columns",
-                    Connection = dbData.Connection,
+                    Connection = result.Connection,
                     GetCommand = s.GetProperties,
                     Target = DbExtendedProperties
-                })
+                }),
             });
 
-            return dbData;
-
-            void WorkCompleting(object? sender, EventArgs e)
-            {
-                DbConnections.Add(connection);
-
-                dbData.WorkCompleting -= WorkCompleting;
-                raiseListChanged = true;
-                if (onComplete is Action) { onComplete(); }
-                DbData_ListChanged(this, new ListChangedEventArgs(ListChangedType.Reset, -1));
-            }
+            return result;
 
             void WorkStarting(object? sender, EventArgs e)
             {
-                dbData.WorkStarting -= WorkStarting;
+                result.WorkStarting -= WorkStarting;
                 raiseListChanged = false;
             }
+
+            void WorkCompleting(object? sender, EventArgs e)
+            {
+                result.WorkCompleting -= WorkCompleting;
+
+                raiseListChanged = true;
+                DbData_ListChanged(this, new ListChangedEventArgs(ListChangedType.Reset, -1));
+
+                DbConnections.Add(connection);
+
+                if (onComplete is Action) { onComplete(); }
+            }
+
         }
 
         public IWorkItem GetDatabases(Context connection, Action<IEnumerable<IDbCatalogItem>>? onComplete = null)

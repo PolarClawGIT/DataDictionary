@@ -42,6 +42,8 @@ namespace DataDictionary.Main.Forms
             { handler(this, message); }
         }
 
+        void HandleMessage(MessageEventArgs message) { }
+
         void HandleMessage(DbDataBatchStarting message)
         { UnBindData(); }
 

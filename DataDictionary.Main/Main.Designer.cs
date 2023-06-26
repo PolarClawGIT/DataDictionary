@@ -64,6 +64,7 @@
             toolsToolStripMenuItem = new ToolStripMenuItem();
             importFromDatabaseToolStripMenuItem = new ToolStripMenuItem();
             viewExtendedPropertiesToolStripMenuItem = new ToolStripMenuItem();
+            viewDatabaseSchemasToolStripMenuItem = new ToolStripMenuItem();
             customizeToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
@@ -72,7 +73,6 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
-            viewDatabaseSchemasToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
@@ -353,6 +353,14 @@
             viewExtendedPropertiesToolStripMenuItem.Text = "View &Extended Properties";
             viewExtendedPropertiesToolStripMenuItem.Click += viewExtendedPropertiesToolStripMenuItem_Click;
             // 
+            // viewDatabaseSchemasToolStripMenuItem
+            // 
+            viewDatabaseSchemasToolStripMenuItem.Image = Properties.Resources.Schema;
+            viewDatabaseSchemasToolStripMenuItem.Name = "viewDatabaseSchemasToolStripMenuItem";
+            viewDatabaseSchemasToolStripMenuItem.Size = new Size(207, 22);
+            viewDatabaseSchemasToolStripMenuItem.Text = "View Database &Schemas";
+            viewDatabaseSchemasToolStripMenuItem.Click += viewDatabaseSchemasToolStripMenuItem_Click;
+            // 
             // customizeToolStripMenuItem
             // 
             customizeToolStripMenuItem.Enabled = false;
@@ -403,14 +411,6 @@
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             aboutToolStripMenuItem.Size = new Size(122, 22);
             aboutToolStripMenuItem.Text = "&About...";
-            // 
-            // viewDatabaseSchemasToolStripMenuItem
-            // 
-            viewDatabaseSchemasToolStripMenuItem.Image = Properties.Resources.Schema;
-            viewDatabaseSchemasToolStripMenuItem.Name = "viewDatabaseSchemasToolStripMenuItem";
-            viewDatabaseSchemasToolStripMenuItem.Size = new Size(207, 22);
-            viewDatabaseSchemasToolStripMenuItem.Text = "View Database &Schemas";
-            viewDatabaseSchemasToolStripMenuItem.Click += viewDatabaseSchemasToolStripMenuItem_Click;
             // 
             // Main
             // 

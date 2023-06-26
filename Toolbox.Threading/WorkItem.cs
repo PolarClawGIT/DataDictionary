@@ -5,7 +5,7 @@ namespace Toolbox.Threading
     namespace WorkItem
     {
 
-        public interface IWorkItem 
+        public interface IWorkItem
         {
             String WorkName { get; init; }
 
@@ -21,7 +21,7 @@ namespace Toolbox.Threading
         }
 
 
-        public abstract class WorkBase :IWorkItem
+        public abstract class WorkBase : IWorkItem
         {
             public required String WorkName { get; init; }
             public Action OnDoWork { get; init; } = () => { };
@@ -31,7 +31,7 @@ namespace Toolbox.Threading
             public event EventHandler<Exception>? WorkException;
 
             public WorkBase() : base() { }
-            
+
             public virtual void DoWork() { OnDoWork(); }
 
             public virtual void OnStarting()
