@@ -50,7 +50,7 @@ namespace DataDictionary.Main.Forms
                 }
                 set
                 {
-                    if(value is DbContext)
+                    if (value is DbContext)
                     {
                         ServerName = value.ServerName;
                         DatabaseName = value.DatabaseName;
@@ -125,7 +125,7 @@ namespace DataDictionary.Main.Forms
             dbConnectionsData.DataSource = Program.DbData.DbConnections;
 
             // Data Bindings
-            if(data.AvailableContexts.Count > 0) { data.DbContext = data.AvailableContexts[0]; }
+            if (data.AvailableContexts.Count > 0) { data.DbContext = data.AvailableContexts[0]; }
 
             serverNameData.DataBindings.Add(new Binding(nameof(serverNameData.SelectedItem), data, nameof(data.ServerName), true, DataSourceUpdateMode.OnValidation));
             databaseNameData.DataBindings.Add(new Binding(nameof(databaseNameData.SelectedItem), data, nameof(data.DatabaseName), true, DataSourceUpdateMode.OnValidation));
@@ -218,6 +218,15 @@ namespace DataDictionary.Main.Forms
 
                 Settings.Default.Save();
 
+                // Select the connection
+                dbConnectionsData.ClearSelection();
+
+                if(dbConnectionsData.Rows.Cast<DataGridViewRow>().Where(
+                    w => w.DataBoundItem is DbContext context &&
+                    context.ServerName == data.ServerName &&
+                    context.DatabaseName == data.DatabaseName).FirstOrDefault() is DataGridViewRow row)
+                {   row.Selected = true; }
+
                 // Done
                 this.UseWaitCursor = false;
                 this.Enabled = true;
@@ -230,11 +239,13 @@ namespace DataDictionary.Main.Forms
             this.Enabled = false;
 
             if (data.DbContext is DbContext)
-            { Program.DbData.RemoveDb(data.DbContext); }
+            {   Program.WorkerQueue.Enqueue(Program.DbData.RemoveDb(data.DbContext,onComplete)); }
 
-            // Done
-            this.UseWaitCursor = false;
-            this.Enabled = true;
+            void onComplete()
+            {
+                this.UseWaitCursor = false;
+                this.Enabled = true;
+            }
         }
 
         private void dbConnectionsData_SelectionChanged(object sender, EventArgs e)

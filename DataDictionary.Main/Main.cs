@@ -45,6 +45,38 @@ namespace DataDictionary.Main
 
         }
 
+        #region Form
+        private void Main_FormClosing(object? sender, FormClosingEventArgs e)
+        { }
+
+        private void Main_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Program.WorkerQueue.ProgressChanged -= WorkerQueue_ProgressChanged;
+            Program.DbData.ListChanged -= DbData_ListChanged;
+        }
+
+        private void WorkerQueue_ProgressChanged(object? sender, WorkerProgressChangedEventArgs e)
+        {
+            toolStripProgressBar.Value = e.ProgressPercent;
+            toolStripWorkerTask.Text = e.ProgressText;
+        }
+        #endregion
+
+        #region Menu Events
+        private void importFromDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbConnection)) is Forms.DbConnection existingForm)
+            { existingForm.Activate(); }
+            else { new Forms.DbConnection().Show(); }
+        }
+
+        private void viewExtendedPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        { new Forms.DbExtendedPropertyView().Show(); }
+
+        private void viewDatabaseSchemasToolStripMenuItem_Click(object sender, EventArgs e)
+        { new Forms.DbSchemaView().Show(); }
+        #endregion
+
         #region dbMetaDataNavigation
         Dictionary<TreeNode, Object> dbDataNodes = new Dictionary<TreeNode, Object>();
         enum dbDataImageIndex
@@ -81,6 +113,11 @@ namespace DataDictionary.Main
 
             foreach (IDbCatalogItem catalogItem in Program.DbData.DbCatalogs.OrderBy(o => o.CatalogName))
             {
+                if(String.IsNullOrWhiteSpace(catalogItem.CatalogName))
+                {
+                    //TODO: This event may fire when there is no data or the data is being changed. Cuased by the deleted row not being handled correctly.
+                }
+
                 TreeNode catalogNode = CreateNode(catalogItem.CatalogName, dbDataImageIndex.Database, catalogItem);
                 dbMetaDataNavigation.Nodes.Add(catalogNode);
 
@@ -136,38 +173,6 @@ namespace DataDictionary.Main
                 if (dataNode is IDbColumnItem columnItem) { new Forms.DbColumn(columnItem).Show(); }
             }
         }
-        #endregion
-
-        #region Form
-        private void Main_FormClosing(object? sender, FormClosingEventArgs e)
-        { }
-
-        private void Main_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Program.WorkerQueue.ProgressChanged -= WorkerQueue_ProgressChanged;
-            Program.DbData.ListChanged -= DbData_ListChanged;
-        }
-
-        private void WorkerQueue_ProgressChanged(object? sender, WorkerProgressChangedEventArgs e)
-        {
-            toolStripProgressBar.Value = e.ProgressPercent;
-            toolStripWorkerTask.Text = e.ProgressText;
-        }
-        #endregion
-
-        #region Menu Events
-        private void importFromDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbConnection)) is Forms.DbConnection existingForm)
-            { existingForm.Activate(); }
-            else { new Forms.DbConnection().Show(); }
-        }
-
-        private void viewExtendedPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
-        { new Forms.DbExtendedPropertyView().Show(); }
-
-        private void viewDatabaseSchemasToolStripMenuItem_Click(object sender, EventArgs e)
-        { new Forms.DbSchemaView().Show(); }
         #endregion
 
         #region IColleague

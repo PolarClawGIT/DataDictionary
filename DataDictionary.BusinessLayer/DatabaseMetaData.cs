@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 using Toolbox.Threading.WorkItem;
@@ -23,8 +25,6 @@ namespace DataDictionary.BusinessLayer
 
         public IWorkItem ImportDb(DbContext connection, Action? onComplete = null)
         {
-            raiseListChanged = false;
-
             if (DbConnections.FirstOrDefault(w => w.ServerName == connection.ServerName && w.DatabaseName == connection.DatabaseName) is Context item)
             { RemoveDb(connection); }
 
@@ -36,6 +36,7 @@ namespace DataDictionary.BusinessLayer
                 WorkItems = workItems.Select(s => s)
             };
             dbData.WorkCompleting += WorkCompleting;
+            dbData.WorkStarting += WorkStarting;
 
             workItems.Add(new DbLoad()
             {
@@ -67,10 +68,10 @@ namespace DataDictionary.BusinessLayer
 
             workItems.Add(new BatchWork()
             {
-                WorkName = "Load Extended Properties, Schema",
+                WorkName = "Load Extended Properties, Schemas",
                 WorkItems = DbSchemas.Select(s => new DbPropertiesLoad()
                 {
-                    WorkName = String.Format("Load Extended Properties, Schema: {0}", s.SchemaName),
+                    WorkName = "Load Extended Properties, Schemas"
                     Connection = dbData.Connection,
                     GetCommand = s.GetProperties,
                     Target = DbExtendedProperties
@@ -79,10 +80,10 @@ namespace DataDictionary.BusinessLayer
 
             workItems.Add(new BatchWork()
             {
-                WorkName = "Load Extended Properties, Table",
+                WorkName = "Load Extended Properties, Tables",
                 WorkItems = DbTables.Select(s => new DbPropertiesLoad()
                 {
-                    WorkName = String.Format("Load Extended Properties, Table: {0}.{1}", s.SchemaName, s.TableName),
+                    WorkName = "Load Extended Properties, Tables",
                     Connection = dbData.Connection,
                     GetCommand = s.GetProperties,
                     Target = DbExtendedProperties
@@ -91,10 +92,10 @@ namespace DataDictionary.BusinessLayer
 
             workItems.Add(new BatchWork()
             {
-                WorkName = "Load Extended Properties, Column",
+                WorkName = "Load Extended Properties, Columns",
                 WorkItems = DbColumns.Select(s => new DbPropertiesLoad()
                 {
-                    WorkName = String.Format("Load Extended Properties, Column: {0}.{1}.{2}", s.SchemaName, s.TableName, s.ColumnName),
+                    WorkName = "Load Extended Properties, Columns",
                     Connection = dbData.Connection,
                     GetCommand = s.GetProperties,
                     Target = DbExtendedProperties
@@ -111,8 +112,12 @@ namespace DataDictionary.BusinessLayer
                 raiseListChanged = true;
                 if (onComplete is Action) { onComplete(); }
                 DbData_ListChanged(this, new ListChangedEventArgs(ListChangedType.Reset, -1));
+            }
 
-                var x = DbExtendedProperties;
+            void WorkStarting(object? sender, EventArgs e)
+            {
+                dbData.WorkStarting -= WorkStarting;
+                raiseListChanged = false;
             }
         }
 
@@ -144,30 +149,107 @@ namespace DataDictionary.BusinessLayer
             }
         }
 
-        public void RemoveDb(DbContext connection)
+        public IWorkItem RemoveDb(DbContext connection, Action? onComplete = null)
         {
-            while (DbCatalogs.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbCatalogItem item)
-            { DbCatalogs.Remove(item); }
-            DbCatalogs.AcceptChanges();
+            List<IWorkItem> workItems = new List<IWorkItem>();
 
-            while (DbSchemas.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbSchemaItem item)
-            { DbSchemas.Remove(item); }
-            DbSchemas.AcceptChanges();
+            IWorkItem result = new BatchWork()
+            {
+                WorkName = String.Format("Remove Db {0}", connection.DatabaseName),
+                WorkItems = workItems.Select(s => s)
+            };
+            result.WorkCompleting += WorkCompleting;
+            result.WorkStarting += WorkStarting;
 
-            while (DbTables.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbTableItem item)
-            { DbTables.Remove(item); }
-            DbTables.AcceptChanges();
+            workItems.Add(new BatchWork()
+            {
+                WorkName = "Removing Catalog Items",
+                WorkItems = DbCatalogs.
+                    Where(w => w.CatalogName == connection.DatabaseName).
+                    Select(s => new BackgroundWork()
+                    {
+                        WorkName = "Removing Catalog Items",
+                        OnDoWork = () => DbCatalogs.Remove(s)
+                    })
+            });
 
-            while (DbColumns.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbColumnItem item)
-            { DbColumns.Remove(item); }
-            DbColumns.AcceptChanges();
+            workItems.Add(new BatchWork()
+            {
+                WorkName = "Removing Schemas",
+                WorkItems = DbSchemas.
+                    Where(w => w.CatalogName == connection.DatabaseName).
+                    Select(s => new BackgroundWork()
+                    {
+                        WorkName = "Removing Schemas",
+                        OnDoWork = () => DbSchemas.Remove(s)
+                    })
+            });
 
-            while (DbExtendedProperties.FirstOrDefault(w => w.CatalogName == connection.DatabaseName) is DbExtendedPropertyItem item)
-            { DbExtendedProperties.Remove(item); }
-            DbExtendedProperties.AcceptChanges();
+            workItems.Add(new BatchWork()
+            {
+                WorkName = "Removing Tables",
+                WorkItems = DbTables.
+                    Where(w => w.CatalogName == connection.DatabaseName).
+                    Select(s => new BackgroundWork()
+                    {
+                        WorkName = "Removing Tables",
+                        OnDoWork = () => DbTables.Remove(s)
+                    })
+            });
 
-            while (DbConnections.FirstOrDefault(w => w.DatabaseName == connection.DatabaseName) is DbContext item)
-            { DbConnections.Remove(item); }
+            workItems.Add(new BatchWork()
+            {
+                WorkName = "Removing Column Items",
+                WorkItems = DbColumns.
+                    Where(w => w.CatalogName == connection.DatabaseName).
+                    Select(s => new BackgroundWork()
+                    {
+                        WorkName = "Removing Columns",
+                        OnDoWork = () => DbColumns.Remove(s)
+                    })
+            });
+
+            workItems.Add(new BatchWork()
+            {
+                WorkName = "Removing Extended Properties",
+                WorkItems = DbExtendedProperties.
+                    Where(w => w.CatalogName == connection.DatabaseName).
+                    Select(s => new BackgroundWork()
+                    {
+                        WorkName = "Removing Extended Properties",
+                        OnDoWork = () => DbExtendedProperties.Remove(s)
+                    })
+            });
+
+            workItems.Add(new BatchWork()
+            {
+                WorkName = "Removing Connections",
+                WorkItems = DbConnections.
+                    Where(w => w.DatabaseName == connection.DatabaseName).
+                    Select(s => new BackgroundWork()
+                    {
+                        WorkName = "Removing Connections",
+                        OnDoWork = () => DbConnections.Remove(s)
+                    })
+            });
+
+            return result;
+
+            void WorkCompleting(object? sender, EventArgs e)
+            {
+                DbConnections.Add(connection);
+
+                result.WorkCompleting -= WorkCompleting;
+                raiseListChanged = true;
+                if (onComplete is Action) { onComplete(); }
+                DbData_ListChanged(this, new ListChangedEventArgs(ListChangedType.Reset, -1));
+            }
+
+            void WorkStarting(object? sender, EventArgs e)
+            {
+                result.WorkStarting -= WorkStarting;
+                raiseListChanged = false;
+            }
         }
 
         public DatabaseMetaData() : base()

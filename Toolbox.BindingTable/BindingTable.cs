@@ -114,7 +114,7 @@ namespace Toolbox.BindingTable
         protected virtual void ImportRows()
         {
             IEnumerable<DataRow> newRows = dataItems.Rows.
-                Cast<DataRow>().Where(w => this.Count(f => Object.ReferenceEquals(f.GetRow(), w)) == 0).ToList();
+                Cast<DataRow>().Where(w => w.RowState != DataRowState.Deleted && this.Count(f => Object.ReferenceEquals(f.GetRow(), w)) == 0).ToList();
 
             foreach (DataRow row in newRows)
             {
@@ -216,6 +216,14 @@ namespace Toolbox.BindingTable
         /// Used to temporarly disable or enable the Change List event.
         /// This allows a set of changes to be made before calling OnListChanged
         /// so that they are treated as a single logical change.
+        /// 
+        /// TODO: The OnListChanged can fire on a background thread. This creates a threading error and is not supported by WinForms.
+        /// Consider re-write to delay the event being fired until all the changes on a background thread is complete.
+        /// Look into how to make this class more "thread safe" as well.
+        /// Might store the thread that created the object using: System.Threading.Thread.CurrentThread.ManagedThreadId;
+        /// Might also be able to identify if on main thread using: SynchronizationContext.Current.
+        /// 
+        /// Items in the Binding list may also need to check before sending a notification.
         /// </summary>
         protected virtual Boolean OnListChangedEnabled { get; set; } = true;
 
