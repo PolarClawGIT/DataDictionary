@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.Main.Messages;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -21,21 +22,31 @@ namespace DataDictionary.Main.Forms
         }
 
         private void DbExtendedPropertyView_Load(object sender, EventArgs e)
-        {
-            extendedPropertyData.DataSource = Program.DbData.DbExtendedProperties;
-        }
+        { BindData(); }
+
+        void BindData()
+        { extendedPropertyData.DataSource = Program.DbData.DbExtendedProperties; }
+
+        void UnBindData()
+        { extendedPropertyData.DataSource = null; }
 
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;
 
         public void RecieveMessage(object? sender, MessageEventArgs message)
-        { }
+        { HandleMessage((dynamic)message); }
 
         void SendMessage(MessageEventArgs message)
         {
             if (OnSendMessage is EventHandler<MessageEventArgs> handler)
             { handler(this, message); }
         }
+
+        void HandleMessage(DbDataBatchStarting message)
+        { UnBindData(); }
+
+        void HandleMessage(DbDataBatchCompleted message)
+        { BindData(); }
         #endregion
 
 

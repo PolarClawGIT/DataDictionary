@@ -57,7 +57,11 @@ namespace DataDictionary.Main.Forms
 
         private void DbSchema_Load(object sender, EventArgs e)
         {
-            // Data Binding
+            BindData();
+        }
+
+        void BindData()
+        {
             catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data.DbSchema, nameof(data.DbSchema.CatalogName)));
             schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data.DbSchema, nameof(data.DbSchema.SchemaName)));
 
@@ -65,17 +69,32 @@ namespace DataDictionary.Main.Forms
             extendedPropertiesData.DataSource = data.ExtendedProperties;
         }
 
+        void UnBindData()
+        {
+            catalogNameData.DataBindings.Clear();
+            schemaNameData.DataBindings.Clear();
+            extendedPropertiesData.DataSource = null;
+        }
+
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;
 
         public void RecieveMessage(object? sender, MessageEventArgs message)
-        { }
+        { HandleMessage((dynamic)message); }
 
         void SendMessage(MessageEventArgs message)
         {
             if (OnSendMessage is EventHandler<MessageEventArgs> handler)
             { handler(this, message); }
         }
+
+        void HandleMessage(MessageEventArgs message) { }
+
+        void HandleMessage(DbDataBatchStarting message)
+        { UnBindData(); }
+
+        void HandleMessage(DbDataBatchCompleted message)
+        { BindData(); }
         #endregion
     }
 }

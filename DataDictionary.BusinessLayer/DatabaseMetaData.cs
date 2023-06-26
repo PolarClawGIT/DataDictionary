@@ -71,7 +71,7 @@ namespace DataDictionary.BusinessLayer
                 WorkName = "Load Extended Properties, Schemas",
                 WorkItems = DbSchemas.Select(s => new DbPropertiesLoad()
                 {
-                    WorkName = "Load Extended Properties, Schemas"
+                    WorkName = "Load Extended Properties, Schemas",
                     Connection = dbData.Connection,
                     GetCommand = s.GetProperties,
                     Target = DbExtendedProperties
@@ -163,6 +163,18 @@ namespace DataDictionary.BusinessLayer
 
             workItems.Add(new BatchWork()
             {
+                WorkName = "Removing Connections",
+                WorkItems = DbConnections.
+                    Where(w => w.DatabaseName == connection.DatabaseName).
+                    Select(s => new BackgroundWork()
+                    {
+                        WorkName = "Removing Connections",
+                        OnDoWork = () => DbConnections.Remove(s)
+                    })
+            });
+
+            workItems.Add(new BatchWork()
+            {
                 WorkName = "Removing Catalog Items",
                 WorkItems = DbCatalogs.
                     Where(w => w.CatalogName == connection.DatabaseName).
@@ -221,24 +233,10 @@ namespace DataDictionary.BusinessLayer
                     })
             });
 
-            workItems.Add(new BatchWork()
-            {
-                WorkName = "Removing Connections",
-                WorkItems = DbConnections.
-                    Where(w => w.DatabaseName == connection.DatabaseName).
-                    Select(s => new BackgroundWork()
-                    {
-                        WorkName = "Removing Connections",
-                        OnDoWork = () => DbConnections.Remove(s)
-                    })
-            });
-
             return result;
 
             void WorkCompleting(object? sender, EventArgs e)
             {
-                DbConnections.Add(connection);
-
                 result.WorkCompleting -= WorkCompleting;
                 raiseListChanged = true;
                 if (onComplete is Action) { onComplete(); }

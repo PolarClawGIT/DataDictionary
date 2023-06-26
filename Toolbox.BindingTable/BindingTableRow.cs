@@ -17,6 +17,9 @@ namespace Toolbox.BindingTable
     /// </summary>
     public abstract class BindingTableRow : INotifyPropertyChanged
     {
+
+        public IBindingTable? BindingTable { get; internal set; }
+
         /// <summary>
         /// Internal DataRow being wrappered.
         /// </summary>

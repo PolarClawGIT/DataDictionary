@@ -178,6 +178,7 @@ namespace Toolbox.BindingTable
             if (base.AddNewCore() is TBindingItem item)
             {
                 DataRow row = dataItems.NewRow();
+                item.BindingTable = this;
                 item.ImportRow(row);
                 dataItems.Rows.Add(row);
                 newItem = item;

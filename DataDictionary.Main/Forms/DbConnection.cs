@@ -2,6 +2,7 @@
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.DataLayer.WorkDbItem;
+using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
@@ -196,6 +197,7 @@ namespace DataDictionary.Main.Forms
         {
             this.UseWaitCursor = true;
             this.Enabled = false;
+            SendMessage(new DbDataBatchStarting());
 
             if (data.DbContext is DbContext)
             {
@@ -221,13 +223,14 @@ namespace DataDictionary.Main.Forms
                 // Select the connection
                 dbConnectionsData.ClearSelection();
 
-                if(dbConnectionsData.Rows.Cast<DataGridViewRow>().Where(
+                if (dbConnectionsData.Rows.Cast<DataGridViewRow>().Where(
                     w => w.DataBoundItem is DbContext context &&
                     context.ServerName == data.ServerName &&
                     context.DatabaseName == data.DatabaseName).FirstOrDefault() is DataGridViewRow row)
-                {   row.Selected = true; }
+                { row.Selected = true; }
 
                 // Done
+                SendMessage(new DbDataBatchCompleted());
                 this.UseWaitCursor = false;
                 this.Enabled = true;
             }
@@ -237,12 +240,16 @@ namespace DataDictionary.Main.Forms
         {
             this.UseWaitCursor = true;
             this.Enabled = false;
+            SendMessage(new DbDataBatchStarting());
+            dbConnectionsData.DataSource = null;
 
             if (data.DbContext is DbContext)
-            {   Program.WorkerQueue.Enqueue(Program.DbData.RemoveDb(data.DbContext,onComplete)); }
+            { Program.WorkerQueue.Enqueue(Program.DbData.RemoveDb(data.DbContext, onComplete)); }
 
             void onComplete()
             {
+                dbConnectionsData.DataSource = Program.DbData.DbConnections;
+                SendMessage(new DbDataBatchCompleted());
                 this.UseWaitCursor = false;
                 this.Enabled = true;
             }
@@ -261,13 +268,15 @@ namespace DataDictionary.Main.Forms
         public event EventHandler<MessageEventArgs>? OnSendMessage;
 
         public void RecieveMessage(object? sender, MessageEventArgs message)
-        { }
+        { HandleMessage((dynamic)message); }
 
         void SendMessage(MessageEventArgs message)
         {
             if (OnSendMessage is EventHandler<MessageEventArgs> handler)
             { handler(this, message); }
         }
+
+        void HandleMessage(MessageEventArgs message) { }
         #endregion
     }
 }
