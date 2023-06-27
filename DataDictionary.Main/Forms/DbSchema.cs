@@ -19,8 +19,9 @@ namespace DataDictionary.Main.Forms
 
         class FormData : INotifyPropertyChanged
         {
-            IDbSchemaItem? schemaItem;
-            public IDbSchemaItem? DbSchema { get { return schemaItem; } set { schemaItem = value; OnPropertyChanged(nameof(DbSchema)); } }
+            public IDbSchemaName? SchemaName { get; set; }
+
+            public IDbSchemaItem? DbSchema { get { return Program.DbData.DbSchemas.FirstOrDefault(w => w == SchemaName); } }
 
             public BindingList<IDbExtendedPropertyItem> ExtendedProperties { get; set; } = new BindingList<IDbExtendedPropertyItem>();
 
@@ -42,7 +43,7 @@ namespace DataDictionary.Main.Forms
 
         public DbSchema(IDbSchemaItem schemaItem) : this()
         {
-            data.DbSchema = schemaItem;
+            data.SchemaName = new DbSchemaName(schemaItem);
 
             data.ExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.Where(
                 w =>
