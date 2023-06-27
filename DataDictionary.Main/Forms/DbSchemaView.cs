@@ -12,7 +12,7 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    public partial class DbSchemaView : Form, IColleague
+    partial class DbSchemaView : Form, IColleague
     {
         public DbSchemaView()
         {

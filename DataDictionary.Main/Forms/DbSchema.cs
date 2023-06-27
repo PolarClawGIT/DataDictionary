@@ -14,7 +14,7 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    public partial class DbSchema : Form, IColleague
+    partial class DbSchema : Form, IColleague
     {
 
         class FormData : INotifyPropertyChanged

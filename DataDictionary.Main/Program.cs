@@ -35,14 +35,13 @@ namespace DataDictionary.Main
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-
-            Settings.Default.Reset();
-
-            WorkerQueue.WorkException += WorkerQueue_WorkException;
-
+            
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             Application.ThreadException += Application_ThreadException;
             Application.ApplicationExit += Application_ApplicationExit;
+
+            WorkerQueue.WorkException += WorkerQueue_WorkException;
+
             Application.Run(new Main());
         }
 

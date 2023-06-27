@@ -12,7 +12,7 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    public partial class DbExtendedPropertyView : Form, IColleague
+    partial class DbExtendedPropertyView : Form, IColleague
     {
         public DbExtendedPropertyView()
         {
