@@ -17,7 +17,7 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbConnection : Form, IColleague
+    partial class DbConnection : ApplicationFormBase
     {
         class FormData : INotifyPropertyChanged
         {
@@ -82,8 +82,6 @@ namespace DataDictionary.Main.Forms
         public DbConnection()
         {
             InitializeComponent();
-            Program.Messenger.AddColleague(this);
-            SendMessage(new Messages.FormAddMdiChild() { ChildForm = this });
 
             // Create list of all known Server/Database Name Pairs
             foreach (String? item in Settings.Default.UserServers)
@@ -248,6 +246,9 @@ namespace DataDictionary.Main.Forms
                 SendMessage(new DbDataBatchCompleted());
                 BindData();
 
+                // Because other forms can sometimes get focus during data binding
+                if(ParentForm is Form parent && ParentForm.ActiveMdiChild != this) { this.Activate(); }
+
                 this.UseWaitCursor = false;
                 this.Enabled = true;
             }
@@ -283,18 +284,6 @@ namespace DataDictionary.Main.Forms
         }
 
         #region IColleague
-        public event EventHandler<MessageEventArgs>? OnSendMessage;
-
-        public void RecieveMessage(object? sender, MessageEventArgs message)
-        { HandleMessage((dynamic)message); }
-
-        void SendMessage(MessageEventArgs message)
-        {
-            if (OnSendMessage is EventHandler<MessageEventArgs> handler)
-            { handler(this, message); }
-        }
-
-        void HandleMessage(MessageEventArgs message) { }
         #endregion
     }
 }

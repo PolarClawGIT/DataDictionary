@@ -12,13 +12,11 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbExtendedPropertyView : Form, IColleague
+    partial class DbExtendedPropertyView : ApplicationFormBase
     {
-        public DbExtendedPropertyView()
+        public DbExtendedPropertyView() : base()
         {
             InitializeComponent();
-            Program.Messenger.AddColleague(this);
-            SendMessage(new Messages.FormAddMdiChild() { ChildForm = this });
         }
 
         private void DbExtendedPropertyView_Load(object sender, EventArgs e)
@@ -31,24 +29,11 @@ namespace DataDictionary.Main.Forms
         { extendedPropertyData.DataSource = null; }
 
         #region IColleague
-        public event EventHandler<MessageEventArgs>? OnSendMessage;
+        protected override void HandleMessage(DbDataBatchStarting message)
+        { base.HandleMessage(message); UnBindData(); }
 
-        public void RecieveMessage(object? sender, MessageEventArgs message)
-        { HandleMessage((dynamic)message); }
-
-        void SendMessage(MessageEventArgs message)
-        {
-            if (OnSendMessage is EventHandler<MessageEventArgs> handler)
-            { handler(this, message); }
-        }
-
-        void HandleMessage(MessageEventArgs message) { }
-
-        void HandleMessage(DbDataBatchStarting message)
-        { UnBindData(); }
-
-        void HandleMessage(DbDataBatchCompleted message)
-        { BindData(); }
+        protected override void HandleMessage(DbDataBatchCompleted message)
+        { base.HandleMessage(message); BindData(); }
         #endregion
 
 

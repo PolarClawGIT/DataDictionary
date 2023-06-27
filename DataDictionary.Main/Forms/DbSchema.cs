@@ -14,7 +14,7 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbSchema : Form, IColleague
+    partial class DbSchema : ApplicationFormBase
     {
 
         class FormData : INotifyPropertyChanged
@@ -34,11 +34,9 @@ namespace DataDictionary.Main.Forms
 
         FormData data = new FormData();
 
-        public DbSchema()
+        public DbSchema() : base()
         {
             InitializeComponent();
-            Program.Messenger.AddColleague(this);
-            SendMessage(new Messages.FormAddMdiChild() { ChildForm = this });
 
         }
 
@@ -77,23 +75,10 @@ namespace DataDictionary.Main.Forms
         }
 
         #region IColleague
-        public event EventHandler<MessageEventArgs>? OnSendMessage;
-
-        public void RecieveMessage(object? sender, MessageEventArgs message)
-        { HandleMessage((dynamic)message); }
-
-        void SendMessage(MessageEventArgs message)
-        {
-            if (OnSendMessage is EventHandler<MessageEventArgs> handler)
-            { handler(this, message); }
-        }
-
-        void HandleMessage(MessageEventArgs message) { }
-
-        void HandleMessage(DbDataBatchStarting message)
+        protected override void HandleMessage(DbDataBatchStarting message)
         { UnBindData(); }
 
-        void HandleMessage(DbDataBatchCompleted message)
+        protected override void HandleMessage(DbDataBatchCompleted message)
         { BindData(); }
         #endregion
     }

@@ -13,7 +13,7 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbColumn : Form, IColleague
+    partial class DbColumn : ApplicationFormBase
     {
         IDbColumnItem? thisData;
 
@@ -33,18 +33,6 @@ namespace DataDictionary.Main.Forms
         }
 
         #region IColleague
-        public event EventHandler<MessageEventArgs>? OnSendMessage;
-
-        public void RecieveMessage(object? sender, MessageEventArgs message)
-        { HandleMessage((dynamic)message); }
-
-        void SendMessage(MessageEventArgs message)
-        {
-            if (OnSendMessage is EventHandler<MessageEventArgs> handler)
-            { handler(this, message); }
-        }
-
-        void HandleMessage(MessageEventArgs message) { }
         #endregion
     }
 }

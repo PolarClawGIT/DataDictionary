@@ -12,13 +12,11 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbSchemaView : Form, IColleague
+    partial class DbSchemaView : ApplicationFormBase
     {
-        public DbSchemaView()
+        public DbSchemaView() : base()
         {
             InitializeComponent();
-            Program.Messenger.AddColleague(this);
-            SendMessage(new Messages.FormAddMdiChild() { ChildForm = this });
         }
 
         private void DbSchemaView_Load(object sender, EventArgs e)
@@ -30,23 +28,10 @@ namespace DataDictionary.Main.Forms
         void UnBindData() { schemaData.DataSource = null; }
 
         #region IColleague
-        public event EventHandler<MessageEventArgs>? OnSendMessage;
-
-        public void RecieveMessage(object? sender, MessageEventArgs message)
-        { HandleMessage((dynamic)message); }
-
-        void SendMessage(MessageEventArgs message)
-        {
-            if (OnSendMessage is EventHandler<MessageEventArgs> handler)
-            { handler(this, message); }
-        }
-
-        void HandleMessage(MessageEventArgs message) { }
-
-        void HandleMessage(DbDataBatchStarting message)
+        protected override void HandleMessage(DbDataBatchStarting message)
         { UnBindData(); }
 
-        void HandleMessage(DbDataBatchCompleted message)
+        protected override void HandleMessage(DbDataBatchCompleted message)
         { BindData(); }
         #endregion
     }

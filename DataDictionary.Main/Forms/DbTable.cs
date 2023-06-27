@@ -13,7 +13,7 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbTable : Form, IColleague
+    partial class DbTable : ApplicationFormBase
     {
         class FormData
         {

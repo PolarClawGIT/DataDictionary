@@ -27,10 +27,11 @@ namespace DataDictionary.Main
         };
         #endregion
 
-        public Main()
+        public Main() : base()
         {
             InitializeComponent();
 
+            // Setup Images for Tree Control
             navigationTabs.ImageList = new ImageList();
             foreach (navigationTabImageIndex item in Enum.GetValues(typeof(navigationTabImageIndex)))
             { navigationTabs.ImageList.Images.Add(item.ToString(), navigationTabImages[item]); }
@@ -96,8 +97,6 @@ namespace DataDictionary.Main
             {dbDataImageIndex.Column,   ("Column",  Resources.Column) },
         };
 
-
-
         void BuildDbDataTree()
         {
             dbMetaDataNavigation.Nodes.Clear();
@@ -160,7 +159,6 @@ namespace DataDictionary.Main
             }
         }
 
-
         private void dbMetaDataNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (dbDataNodes.ContainsKey(e.Node))
@@ -195,12 +193,7 @@ namespace DataDictionary.Main
         { lastActive = ActiveMdiChild; }
 
         void HandleMessage(DbDataBatchCompleted message)
-        {
-            if (lastActive is Form)
-            { lastActive.Activate(); }
-
-            BuildDbDataTree();
-        }
+        { BuildDbDataTree(); }
 
         #endregion
 
