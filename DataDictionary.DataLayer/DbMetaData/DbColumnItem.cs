@@ -12,11 +12,6 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbColumnName : IDbTableName
-    {
-        public String? ColumnName { get; }
-    }
-
     public interface IDbColumnItem : IDbColumnName, IDbIsSystem
     {
         public Nullable<Int32> OrdinalPosition { get; }

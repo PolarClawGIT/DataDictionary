@@ -11,11 +11,6 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbTableName : IDbSchemaName
-    {
-        public String? TableName { get; }
-    }
-
     public interface IDbTableItem : IDbTableName, IDbIsSystem
     {
         public String? TableType { get; }

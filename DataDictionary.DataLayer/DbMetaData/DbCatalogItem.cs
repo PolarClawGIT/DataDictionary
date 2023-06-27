@@ -11,17 +11,11 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbCatalogName
-    {
-        String? CatalogName { get; }
-    }
-
     public interface IDbCatalogItem : IDbCatalogName, IDbIsSystem
     {
         Nullable<Int32> DatabaseId { get; }
         Nullable<DateTime> CreateDate { get; }
     }
-
 
     public class DbCatalogItem : BindingTableRow, IDbCatalogItem, INotifyPropertyChanged
     {

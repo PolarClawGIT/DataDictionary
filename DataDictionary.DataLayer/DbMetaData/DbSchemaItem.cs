@@ -11,14 +11,8 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbSchemaName : IDbCatalogName
-    {
-        String? SchemaName { get; }
-    }
-
     public interface IDbSchemaItem : IDbSchemaName, IDbIsSystem
-    {
-    }
+    { }
 
     public class DbSchemaItem : BindingTableRow, IDbSchemaItem, INotifyPropertyChanged
     {
