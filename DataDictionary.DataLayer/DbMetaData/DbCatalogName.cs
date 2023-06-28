@@ -11,7 +11,13 @@ namespace DataDictionary.DataLayer.DbMetaData
         String? CatalogName { get; }
     }
 
-    public record DbCatalogName : IDbCatalogName, IEquatable<IDbCatalogName>, IComparable<IDbCatalogName>
+    public static class IDbCatalogNameExtension
+    {
+        public static DbCatalogName ToCatalogName(this IDbCatalogName catalogName)
+        { return new DbCatalogName(catalogName); }
+    }
+
+    public class DbCatalogName : IDbCatalogName, IEquatable<IDbCatalogName>, IComparable<IDbCatalogName>, IComparable
     {
         public String? CatalogName { get; init; }
 
@@ -30,32 +36,53 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public int CompareTo(IDbCatalogName? other)
         {
-            if (other is IDbCatalogName)
-            { return String.Compare(CatalogName, other.CatalogName, true); }
-            else
-            {
-                if (String.IsNullOrEmpty(CatalogName)) { return 1; }
-                else { return -1; }
-            }
+            if (other is IDbCatalogName value) { return String.Compare(CatalogName, value.CatalogName, true); }
+            else { return 1; }
         }
 
-        public static bool operator <(DbCatalogName left, DbCatalogName right)
+        public int CompareTo(object? obj)
+        {
+            if (obj is IDbCatalogName value) { return this.CompareTo(value); }
+            else { return 1; }
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is IDbCatalogName value) { return this.Equals(value); }
+            else { return false; }
+        }
+
+        public static bool operator ==(DbCatalogName left, IDbCatalogName right)
+        { return left.Equals(right); }
+
+        public static bool operator !=(DbCatalogName left, IDbCatalogName right)
+        { return !left.Equals(right); }
+
+        public static bool operator <(DbCatalogName left, IDbCatalogName right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
-        public static bool operator <=(DbCatalogName left, DbCatalogName right)
+        public static bool operator <=(DbCatalogName left, IDbCatalogName right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
-        public static bool operator >(DbCatalogName left, DbCatalogName right)
+        public static bool operator >(DbCatalogName left, IDbCatalogName right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
-        public static bool operator >=(DbCatalogName left, DbCatalogName right)
+        public static bool operator >=(DbCatalogName left, IDbCatalogName right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
         #endregion
 
-        public override int GetHashCode()
+        public override Int32 GetHashCode()
         {
-            if (CatalogName is String) { return CatalogName.GetHashCode(); }
-            else { return base.GetHashCode(); }
+            if (CatalogName is String) { return (CatalogName).GetHashCode(); }
+            else { return String.Empty.GetHashCode(); }
         }
+
+        public override String ToString()
+        {
+            if (CatalogName is String) { return this.CatalogName; }
+            else { return String.Empty; }
+        }
+
+
     }
 }
