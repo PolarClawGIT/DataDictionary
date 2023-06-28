@@ -46,8 +46,6 @@ namespace DataDictionary.DataLayerTests.DbMetaData
             Assert.IsFalse(new DbSchemaName(dataA1) == new DbSchemaName(dataC1), "new DbSchemaName(dataA1) != new DbSchemaName(dataC)");
             Assert.IsFalse(new DbSchemaName(dataNull) == new DbSchemaName(dataNull), "new DbSchemaName(dataNull) != new DbSchemaName(dataNull)");
             Assert.IsFalse(new DbSchemaName(dataBlank) == new DbSchemaName(dataBlank), "new DbSchemaName(dataBlank) != new DbSchemaName(dataBlank)");
-
-
         }
 
         [Test()]
@@ -77,6 +75,20 @@ namespace DataDictionary.DataLayerTests.DbMetaData
             Assert.DoesNotThrow(() => dataC1.ToString(), "dataC.ToString()");
             Assert.DoesNotThrow(() => dataNull.ToString(), "dataNull.ToString()");
             Assert.DoesNotThrow(() => dataBlank.ToString(), "dataBlank.ToString()");
+        }
+
+        [Test()]
+        public void SortTest()
+        {
+            List<DbCatalogName> catalogNames = new List<DbCatalogName>()
+            { new DbCatalogName(dataC2), new DbCatalogName(dataA2), new DbCatalogName(dataC1), new DbCatalogName(dataA1) };
+
+            catalogNames.Sort();
+
+            Assert.AreEqual(catalogNames[0], dataA1);
+            Assert.AreEqual(catalogNames[1], dataA2);
+            Assert.AreEqual(catalogNames[2], dataC1);
+            Assert.AreEqual(catalogNames[3], dataC2);
         }
 
     }

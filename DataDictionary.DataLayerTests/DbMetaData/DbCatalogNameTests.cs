@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
 
         UnitTestData dataA1 = new UnitTestData() { CatalogName = "A" };
         UnitTestData dataA2 = new UnitTestData() { CatalogName = "a" };
-        UnitTestData dataC = new UnitTestData() { CatalogName = "C" };
+        UnitTestData dataC1 = new UnitTestData() { CatalogName = "C" };
         UnitTestData dataNull = new UnitTestData() { CatalogName = null };
         UnitTestData dataBlank = new UnitTestData() { CatalogName = String.Empty };
 
@@ -38,7 +38,7 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
             Assert.IsTrue(new DbCatalogName(dataA1) == new DbCatalogName(dataA2), "new DbCatalogName(dataA1) == new DbCatalogName(dataA2)");
             Assert.IsTrue(new DbCatalogName(dataA1) == dataA1, "new DbCatalogName(dataA1) == dataA1");
 
-            Assert.IsFalse(new DbCatalogName(dataA1) == new DbCatalogName(dataC), "new DbCatalogName(dataA1) != new DbCatalogName(dataC)");
+            Assert.IsFalse(new DbCatalogName(dataA1) == new DbCatalogName(dataC1), "new DbCatalogName(dataA1) != new DbCatalogName(dataC)");
             Assert.IsFalse(new DbCatalogName(dataNull) == new DbCatalogName(dataNull), "new DbCatalogName(dataNull) != new DbCatalogName(dataNull)");
             Assert.IsFalse(new DbCatalogName(dataBlank) == new DbCatalogName(dataBlank), "new DbCatalogName(dataBlank) != new DbCatalogName(dataBlank)");
         }
@@ -48,11 +48,11 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
         {
             Assert.AreEqual(0, new DbCatalogName(dataA1).CompareTo(new DbCatalogName(dataA1)), "new DbCatalogName(dataA1).CompareTo(new DbCatalogName(dataA1))");
             Assert.AreEqual(0, new DbCatalogName(dataA1).CompareTo(new DbCatalogName(dataA2)), "new DbCatalogName(dataA1).CompareTo(new DbCatalogName(dataA2))");
-            Assert.Greater(0, new DbCatalogName(dataA1).CompareTo(new DbCatalogName(dataC)), "new DbCatalogName(dataA1).CompareTo(new DbCatalogName(dataC))");
-            Assert.Less(0, new DbCatalogName(dataC).CompareTo(new DbCatalogName(dataA1)), "new DbCatalogName(dataC).CompareTo(new DbCatalogName(dataA1))");
+            Assert.Greater(0, new DbCatalogName(dataA1).CompareTo(new DbCatalogName(dataC1)), "new DbCatalogName(dataA1).CompareTo(new DbCatalogName(dataC))");
+            Assert.Less(0, new DbCatalogName(dataC1).CompareTo(new DbCatalogName(dataA1)), "new DbCatalogName(dataC).CompareTo(new DbCatalogName(dataA1))");
 
-            Assert.IsTrue(new DbCatalogName(dataA1) < new DbCatalogName(dataC), "new DbCatalogName(dataA1) < new DbCatalogName(dataC)");
-            Assert.IsTrue(new DbCatalogName(dataC) > new DbCatalogName(dataA1), "new DbCatalogName(dataC) > new DbCatalogName(dataA1)");
+            Assert.IsTrue(new DbCatalogName(dataA1) < new DbCatalogName(dataC1), "new DbCatalogName(dataA1) < new DbCatalogName(dataC)");
+            Assert.IsTrue(new DbCatalogName(dataC1) > new DbCatalogName(dataA1), "new DbCatalogName(dataC) > new DbCatalogName(dataA1)");
 
             Assert.IsTrue(new DbCatalogName(dataNull) < new DbCatalogName(dataA1), "new DbCatalogName(dataNull) < new DbCatalogName(dataA1)");
             Assert.IsTrue(new DbCatalogName(dataBlank) < new DbCatalogName(dataA1), "new DbCatalogName(dataBlank) < new DbCatalogName(dataA1)");
@@ -62,7 +62,7 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
         public void GetHashCodeTest()
         {
             Assert.DoesNotThrow(() => dataA1.GetHashCode(), "dataA1.GetHashCode()");
-            Assert.DoesNotThrow(() => dataC.GetHashCode(), "dataC.GetHashCode()");
+            Assert.DoesNotThrow(() => dataC1.GetHashCode(), "dataC.GetHashCode()");
             Assert.DoesNotThrow(() => dataNull.GetHashCode(), "dataNull.GetHashCode()");
             Assert.DoesNotThrow(() => dataBlank.GetHashCode(), "dataBlank.GetHashCode()");
         }
@@ -71,7 +71,7 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
         public void ToStringTest()
         {
             Assert.DoesNotThrow(() => dataA1.ToString(), "dataA1.ToString()");
-            Assert.DoesNotThrow(() => dataC.ToString(), "dataC.ToString()");
+            Assert.DoesNotThrow(() => dataC1.ToString(), "dataC.ToString()");
             Assert.DoesNotThrow(() => dataNull.ToString(), "dataNull.ToString()");
             Assert.DoesNotThrow(() => dataBlank.ToString(), "dataBlank.ToString()");
         }
@@ -80,13 +80,13 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
         public void SortTest()
         {
             List<DbCatalogName> catalogNames = new List<DbCatalogName>()
-            { new DbCatalogName(dataA2), new DbCatalogName(dataC), new DbCatalogName(dataA1) };
+            { new DbCatalogName(dataA2), new DbCatalogName(dataC1), new DbCatalogName(dataA1) };
 
             catalogNames.Sort();
 
             Assert.AreEqual(catalogNames[0], dataA1);
             Assert.AreEqual(catalogNames[1], dataA2);
-            Assert.AreEqual(catalogNames[2], dataC);
+            Assert.AreEqual(catalogNames[2], dataC1);
         }
     }
 }
