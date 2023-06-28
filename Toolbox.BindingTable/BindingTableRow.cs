@@ -1,4 +1,5 @@
 ﻿using System;
+
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -75,11 +76,13 @@ namespace Toolbox.BindingTable
             { throw new IndexOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
 
             // Generic handling
-            if (row.RowState != DataRowState.Deleted && T.TryParse(row[columnName].ToString(), null, out T value))
+            if (T.TryParse(row[columnName].ToString(), null, out T value))
             { return new Nullable<T>(value); }
-
-            // Parsing failed, return null
-            return new Nullable<T>();
+            else
+            { // Parsing failed, return null
+                data.RowError = String.Format("{0}; {1} is not a {2}", data.RowError, columnName,typeof(T).Name);
+                return new Nullable<T>();
+            }
         }
 
         /// <summary>
@@ -105,11 +108,17 @@ namespace Toolbox.BindingTable
                 }
             }
 
-            if (row.RowState != DataRowState.Deleted && row[columnName].ToString() is String value)
-            { return value; }
-
+            if (row[columnName] is String stringValue)
+            {
+                if (string.IsNullOrEmpty(stringValue)) { return null; }
+                else { return stringValue; }
+            }
             // Parsing failed, return null
-            return null; 
+            else
+            {
+                data.RowError = String.Format("{0}; {1} is not a String", data.RowError, columnName);
+                return null;
+            }
         }
 
         /// <summary>
