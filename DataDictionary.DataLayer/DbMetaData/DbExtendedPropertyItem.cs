@@ -113,6 +113,22 @@ namespace DataDictionary.DataLayer.DbMetaData
         public ExtendedPropertyObjectType PropertyObjectType { get { return ExtendedPropertyExtension.GetPropertyType(ObjectType); } }
         public String? PropertyName { get { return GetValue("name"); } }
         public String? PropertyValue { get { return GetValue("value"); } }
+
+        public override IReadOnlyList<DataColumn> ColumnDefinitions { get; } = new List<DataColumn>()
+        {
+            new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("Level0Type", typeof(String)){ AllowDBNull = true},
+            new DataColumn("Level0Name", typeof(String)){ AllowDBNull = true},
+            new DataColumn("Level1Type", typeof(String)){ AllowDBNull = true},
+            new DataColumn("Level1Name", typeof(String)){ AllowDBNull = true},
+            new DataColumn("Level2Type", typeof(String)){ AllowDBNull = true},
+            new DataColumn("Level2Name", typeof(String)){ AllowDBNull = true},
+
+            new DataColumn("objtype", typeof(String)){ AllowDBNull = false},
+            new DataColumn("objname", typeof(String)){ AllowDBNull = false},
+            new DataColumn("name", typeof(String)){ AllowDBNull = false},
+            new DataColumn("value", typeof(String)){ AllowDBNull = false},
+        };
     }
 
     #region Enum ExtendedProperty tranlation

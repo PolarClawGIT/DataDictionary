@@ -17,7 +17,7 @@ namespace Toolbox.BindingTable
     /// </summary>
     /// <typeparam name="TBindingItem"></typeparam>
     public class BindingTable<TBindingItem> : BindingList<TBindingItem>, IBindingTable<TBindingItem>
-        where TBindingItem : BindingTableRow, INotifyPropertyChanged, new()
+        where TBindingItem : BindingTableRow, INotifyPropertyChanged, IBindingTableRow, new()
     {
         /// <summary>
         /// Internal DataTable that hold the values.
@@ -25,16 +25,14 @@ namespace Toolbox.BindingTable
         protected DataTable dataItems;
 
         /// <summary>
-        /// Flag used by the Dispose method.
-        /// </summary>
-        private Boolean disposedValue;
-
-        /// <summary>
         /// Constructor for the class.
         /// </summary>
         public BindingTable() : base()
         {
             dataItems = new DataTable();
+            foreach (DataColumn item in new TBindingItem().ColumnDefinitions)
+            { dataItems.Columns.Add(item); }
+
             dataItems.Disposed += TableDisposed;
 
             dataItems.RowChanged += TableRowChanged;
@@ -92,35 +90,39 @@ namespace Toolbox.BindingTable
 
         /// <inheritdoc cref="DataTable.Load(IDataReader)"/>
         public virtual void Load(IDataReader reader)
-        {
-            dataItems.Load(reader);
-            ImportRows();
-        }
+        { this.Load(reader, LoadOption.PreserveChanges, null); }
 
         /// <inheritdoc cref="DataTable.Load(IDataReader, LoadOption)"/>
         public virtual void Load(IDataReader reader, LoadOption loadOption)
-        {
-            dataItems.Load(reader, loadOption);
-            ImportRows();
-        }
+        { this.Load(reader, loadOption, null); }
 
         /// <inheritdoc cref="DataTable.Load(IDataReader, LoadOption, FillErrorEventHandler?)"/>
         public virtual void Load(IDataReader reader, LoadOption loadOption, FillErrorEventHandler? errorHandler)
         {
-            dataItems.Load(reader, loadOption, errorHandler);
-            ImportRows();
-        }
-
-        protected virtual void ImportRows()
-        {
-            IEnumerable<DataRow> newRows = dataItems.Rows.
-                Cast<DataRow>().Where(w => w.RowState != DataRowState.Deleted && this.Count(f => Object.ReferenceEquals(f.GetRow(), w)) == 0).ToList();
-
-            foreach (DataRow row in newRows)
+            using (DataTable newData = new DataTable())
             {
-                TBindingItem item = new TBindingItem();
-                item.ImportRow(row);
-                this.Add(item);
+                // Import the Column definitions. Note: Decause each instance has its own definition list, this works. It is a "cheat".
+                foreach (DataColumn item in new TBindingItem().ColumnDefinitions)
+                { newData.Columns.Add(item); }
+
+                // Load to a work table
+                newData.Load(reader, loadOption, handleError);
+
+                // Transfer the work table to the data table, building the Binding Rows as we go.
+                foreach (DataRow row in newData.Rows)
+                {
+                    dataItems.ImportRow(row);
+                    DataRow newRow = dataItems.Rows[(dataItems.Rows.Count - 1)]; // new rows is always added at the end
+                    TBindingItem newItem = new TBindingItem();
+                    newItem.ImportRow(newRow);
+                    this.Add(newItem);
+                }
+            }
+
+            void handleError(object sender, FillErrorEventArgs e)
+            { // TODO: Figure out how to capture the row that thru the exception. Flag the Row using Rows[x].Errors if handled.
+                if (errorHandler != null) { errorHandler(sender, e); }
+                else if (e.Errors is not null) { throw e.Errors; } // TODO: Consider throwing only one error instead of one for each row?
             }
         }
 
@@ -413,6 +415,11 @@ namespace Toolbox.BindingTable
         #endregion
 
         #region IDisposable
+        /// <summary>
+        /// Flag used by the Dispose method.
+        /// </summary>
+        private Boolean disposedValue;
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

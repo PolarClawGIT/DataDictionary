@@ -8,7 +8,7 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    abstract class ApplicationFormBase : Form, IColleague
+    class ApplicationFormBase : Form, IColleague
     {
 
         public ApplicationFormBase() : base()

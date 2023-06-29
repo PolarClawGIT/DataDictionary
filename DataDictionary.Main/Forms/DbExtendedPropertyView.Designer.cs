@@ -35,6 +35,8 @@
             // 
             // extendedPropertyData
             // 
+            extendedPropertyData.AllowUserToAddRows = false;
+            extendedPropertyData.AllowUserToDeleteRows = false;
             extendedPropertyData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             extendedPropertyData.Dock = DockStyle.Fill;
             extendedPropertyData.Location = new Point(0, 0);

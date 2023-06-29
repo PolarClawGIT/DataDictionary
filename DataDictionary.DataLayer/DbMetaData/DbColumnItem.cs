@@ -73,6 +73,30 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public Boolean IsSystem { get { return false; } }
 
+        public override IReadOnlyList<DataColumn> ColumnDefinitions { get; } = new List<DataColumn>()
+        {
+            new DataColumn("TABLE_CATALOG", typeof(String)){ AllowDBNull = false},
+            new DataColumn("TABLE_SCHEMA", typeof(String)){ AllowDBNull = false},
+            new DataColumn("TABLE_NAME", typeof(String)){ AllowDBNull = false},
+            new DataColumn("COLUMN_NAME", typeof(String)){ AllowDBNull = false},
+            new DataColumn("ORDINAL_POSITION", typeof(Int32)){ AllowDBNull = false},
+            new DataColumn("COLUMN_DEFAULT", typeof(String)){ AllowDBNull = true},
+            new DataColumn("DATA_TYPE", typeof(String)){ AllowDBNull = true},
+            new DataColumn("CHARACTER_MAXIMUM_LENGTH", typeof(Int32)){ AllowDBNull = true},
+            new DataColumn("CHARACTER_OCTET_LENGTH", typeof(Int32)){ AllowDBNull = true},
+            new DataColumn("NUMERIC_PRECISION", typeof(Byte)){ AllowDBNull = true},
+            new DataColumn("NUMERIC_PRECISION_RADIX", typeof(Int16)){ AllowDBNull = true},
+            new DataColumn("NUMERIC_SCALE", typeof(Int32)){ AllowDBNull = true},
+            new DataColumn("DATETIME_PRECISION", typeof(Int16)){ AllowDBNull = true},
+            new DataColumn("CHARACTER_SET_CATALOG", typeof(String)){ AllowDBNull = true},
+            new DataColumn("CHARACTER_SET_SCHEMA", typeof(String)){ AllowDBNull = true},
+            new DataColumn("CHARACTER_SET_NAME", typeof(String)){ AllowDBNull = true},
+            new DataColumn("COLLATION_CATALOG", typeof(String)){ AllowDBNull = true},
+            new DataColumn("IS_SPARSE", typeof(String)){ AllowDBNull = true},
+            new DataColumn("IS_COLUMN_SET", typeof(String)){ AllowDBNull = true},
+            new DataColumn("IS_FILESTREAM", typeof(String)){ AllowDBNull = true},
+        };
+
         public static IDataReader GetDataReader(IConnection connection)
         { return connection.GetReader(Schema.Collection.Columns); }
 

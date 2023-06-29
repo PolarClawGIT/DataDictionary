@@ -1,4 +1,5 @@
-﻿using DataDictionary.Main.Messages;
+﻿using DataDictionary.Main.Controls;
+using DataDictionary.Main.Messages;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

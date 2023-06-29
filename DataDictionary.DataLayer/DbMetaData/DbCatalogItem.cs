@@ -24,6 +24,13 @@ namespace DataDictionary.DataLayer.DbMetaData
         public Nullable<DateTime> CreateDate { get { return GetValue<DateTime>("create_date"); } }
         public Boolean IsSystem { get { return CatalogName is "tempdb" or "master" or "msdb" or "model"; } }
 
+        public override IReadOnlyList<DataColumn> ColumnDefinitions { get; } = new List<DataColumn>() 
+        {
+            new DataColumn("database_name", typeof(String)){ AllowDBNull = false},
+            new DataColumn("DbId", typeof(Int32)) {AllowDBNull = false},
+            new DataColumn("create_date", typeof(DateTime)) {AllowDBNull = false},
+        };
+
         public static IDataReader GetDataReader(IConnection connection)
         { return connection.GetReader(Schema.Collection.Databases); }
 

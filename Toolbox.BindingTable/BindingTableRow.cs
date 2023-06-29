@@ -10,16 +10,47 @@ using System.Threading.Tasks;
 
 namespace Toolbox.BindingTable
 {
+    public interface IBindingTableRow
+    {
+        IBindingTable? BindingTable { get; }
+        IReadOnlyList<DataColumn> ColumnDefinitions { get; }
+
+        event PropertyChangedEventHandler? PropertyChanged;
+
+        String GetRowError();
+        Boolean HasRowErrors();
+        Boolean HasRowVersion(DataRowVersion version);
+        DataRowState RowState();
+        void ClearRowErrors();
+        void OnPropertyChanged(string propertyName);
+        void SetRowError(string value);
+        void SetColumnError(String columnName, String? error);
+        String? GetColumnError(String columnName);
+        String[] GetColumnsInError();
+    }
 
     /// <summary>
     /// The BindingTableRow is the wrappers around the DataRow used by the BindingTable class.
     /// This wrappers job is t expose the DataRow as a POCO like class while keeping the
     /// DataRow internal to the system.
     /// </summary>
-    public abstract class BindingTableRow : INotifyPropertyChanged
+    public abstract class BindingTableRow : INotifyPropertyChanged, IBindingTableRow
     {
-
+        /// <summary>
+        /// Refrence to the Binding Table that owns this row.
+        /// </summary>
         public IBindingTable? BindingTable { get; internal set; }
+
+        /// <summary>
+        /// A Comlumn Definition of the underlining table.
+        /// This is used to validate the data structure matches what is expected.
+        /// </summary>
+        /// <remarks>
+        /// This is intended to be Static for the child class.
+        /// Because of how it currently works, each instance of the class will have a diffrent set of column definitions.
+        /// Warning: The instances of DataColumns in this property will not match the DataTable the DataRow belongs to.
+        /// </remarks>
+        public abstract IReadOnlyList<DataColumn> ColumnDefinitions { get; }
 
         /// <summary>
         /// Internal DataRow being wrappered.
@@ -73,16 +104,16 @@ namespace Toolbox.BindingTable
         {
             if (data is not DataRow row) { throw new InvalidOperationException("Internal DataRow is not defined"); }
             if (!row.Table.Columns.Contains(columnName))
-            { throw new IndexOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
+            { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
+
+            if (row[columnName] == DBNull.Value) { return new Nullable<T>(); }
 
             // Generic handling
             if (T.TryParse(row[columnName].ToString(), null, out T value))
             { return new Nullable<T>(value); }
-            else
-            { // Parsing failed, return null
-                data.RowError = String.Format("{0}; {1} is not a {2}", data.RowError, columnName,typeof(T).Name);
-                return new Nullable<T>();
-            }
+            
+            // Parsing failed
+             throw new InvalidCastException(String.Format("{0} is not a {1}, actual type {2}", columnName, typeof(T).Name, row[columnName].GetType().Name)); 
         }
 
         /// <summary>
@@ -95,30 +126,18 @@ namespace Toolbox.BindingTable
         {
             if (data is not DataRow row) { throw new InvalidOperationException("Internal DataRow is not defined"); }
             if (!row.Table.Columns.Contains(columnName))
-            {
-                if (String.IsNullOrEmpty(data.RowError))
-                {
-                    data.RowError = String.Format("{0} not in list of Columns", columnName);
-                    return null;
-                }
-                else
-                {
-                    data.RowError = String.Format("{0}; {1} not in list of Columns", data.RowError, columnName);
-                    return null;
-                }
-            }
+            { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
+
+            if (row[columnName] == DBNull.Value) { return null; }
 
             if (row[columnName] is String stringValue)
             {
                 if (string.IsNullOrEmpty(stringValue)) { return null; }
                 else { return stringValue; }
             }
-            // Parsing failed, return null
-            else
-            {
-                data.RowError = String.Format("{0}; {1} is not a String", data.RowError, columnName);
-                return null;
-            }
+
+            // Parsing failed
+            throw new InvalidCastException(String.Format("{0} is not a {1}, actual type {2}", columnName, typeof(String).Name, row[columnName].GetType().Name)); 
         }
 
         /// <summary>
@@ -149,10 +168,14 @@ namespace Toolbox.BindingTable
             if (data is not DataRow row) { throw new InvalidOperationException("Internal DataRow is not defined"); }
             if (!row.Table.Columns.Contains(columnName)) { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
 
+            if (row[columnName] == DBNull.Value) { return new Nullable<T>(); }
+
             if (row[columnName].ToString() is String stringValue &&
                 praseFunction(stringValue, out T result))
             { return new Nullable<T>(result); }
-            else { return new Nullable<T>(); }
+
+            // Parsing failed
+            throw new InvalidCastException(String.Format("{0} is not a {1}, actual type {2}", columnName, typeof(String).Name, row[columnName].GetType().Name)); 
         }
 
         /// <summary>
@@ -253,6 +276,24 @@ namespace Toolbox.BindingTable
         /// <inheritdoc cref="DataRow.HasErrors"/>
         public virtual Boolean HasRowErrors()
         { if (data is DataRow row) { return row.HasErrors; } else { return false; } }
+
+        /// <inheritdoc cref="DataRow.GetColumnError"/>
+        public virtual String? GetColumnError(String columnName)
+        {
+            if (data is DataRow row) { return row.GetColumnError(columnName); }
+            else { return null; }
+        }
+
+        /// <inheritdoc cref="DataRow.SetColumnError"/>
+        public virtual void SetColumnError(String columnName, String? error)
+        { if (data is DataRow row) { row.SetColumnError(columnName, error); } }
+
+        /// <inheritdoc cref="DataRow.GetColumnsInError"/>
+        public virtual String[] GetColumnsInError()
+        {
+            if (data is DataRow row) { return row.GetColumnsInError().Cast<DataColumn>().Select(s => s.ColumnName).ToArray(); }
+            else { return new String[0]; }
+        }
 
         /// <inheritdoc cref="DataRow.HasVersion"/>
         public virtual Boolean HasRowVersion(DataRowVersion version)

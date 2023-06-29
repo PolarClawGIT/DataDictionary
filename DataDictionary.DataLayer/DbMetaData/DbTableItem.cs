@@ -24,6 +24,14 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? TableType { get { return GetValue("TABLE_TYPE"); } }
         public Boolean IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
 
+        public override IReadOnlyList<DataColumn> ColumnDefinitions { get; } = new List<DataColumn>()
+        {
+            new DataColumn("TABLE_CATALOG", typeof(String)){ AllowDBNull = false},
+            new DataColumn("TABLE_SCHEMA", typeof(String)){ AllowDBNull = false},
+            new DataColumn("TABLE_NAME", typeof(String)){ AllowDBNull = false},
+            new DataColumn("TABLE_TYPE", typeof(String)){ AllowDBNull = false},
+        };
+
         public static IDataReader GetDataReader(IConnection connection)
         { return connection.GetReader(Schema.Collection.Tables); }
 
