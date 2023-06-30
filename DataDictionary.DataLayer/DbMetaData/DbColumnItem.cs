@@ -35,7 +35,7 @@ namespace DataDictionary.DataLayer.DbMetaData
     {
         public String? CatalogName { get { return GetValue("TABLE_CATALOG"); } }
         public String? SchemaName { get { return GetValue("TABLE_SCHEMA"); } }
-        public String? TableName { get { return GetValue("TABLE_NAME"); } }
+        public String? ObjectName { get { return GetValue("TABLE_NAME"); } }
         public String? ColumnName { get { return GetValue("COLUMN_NAME"); } }
         public Nullable<Int32> OrdinalPosition { get { return GetValue<Int32>("ORDINAL_POSITION"); } }
         public String? ColumnDefault { get { return GetValue("COLUMN_DEFAULT"); } }
@@ -106,7 +106,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public virtual SqlCommand GetProperties(IConnection connection)
         {
             return (new DbExtendedPropertyGetCommand(connection)
-            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = TableName, Level1Type = "TABLE", Level2Name = ColumnName, Level2Type = "COLUMN" }).
+            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = ObjectName, Level1Type = "TABLE", Level2Name = ColumnName, Level2Type = "COLUMN" }).
             GetCommand();
         }
     }

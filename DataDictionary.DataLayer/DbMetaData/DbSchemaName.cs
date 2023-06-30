@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,10 +12,10 @@ namespace DataDictionary.DataLayer.DbMetaData
         String? SchemaName { get; }
     }
 
-    public class DbSchemaName : IDbSchemaName, IEquatable<IDbSchemaName>, IComparable<IDbSchemaName>
+    public class DbSchemaName : IDbSchemaName, IEquatable<IDbSchemaName>, IComparable<IDbSchemaName>, IComparable
     {
-        public string? SchemaName { get; init; }
-        public string? CatalogName { get; init; }
+        public String? SchemaName { get; init; }
+        public String? CatalogName { get; init; }
 
         public DbSchemaName(IDbSchemaName source) : base()
         {
@@ -22,7 +23,8 @@ namespace DataDictionary.DataLayer.DbMetaData
             SchemaName = source.SchemaName;
         }
 
-        public bool Equals(IDbSchemaName? other)
+        #region IEquatable, IComparable
+        public Boolean Equals(IDbSchemaName? other)
         {
             return (
                 other is IDbSchemaName &&
@@ -32,49 +34,53 @@ namespace DataDictionary.DataLayer.DbMetaData
                 SchemaName.Equals(other.SchemaName, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public int CompareTo(IDbSchemaName? other)
+        public Int32 CompareTo(IDbSchemaName? other)
         {
             if (other is null) { return 1; }
-            else if (new DbCatalogName(this).CompareTo(other) is Int32 catalogValue && catalogValue != 0) { return catalogValue; }
+            else if (new DbCatalogName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
             else { return String.Compare(SchemaName, other.SchemaName, true); }
         }
 
-        public static bool operator <(DbSchemaName left, IDbSchemaName right)
-        {
-            return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0;
-        }
-
-        public static bool operator <=(DbSchemaName left, IDbSchemaName right)
-        {
-            return ReferenceEquals(left, null) || left.CompareTo(right) <= 0;
-        }
-
-        public static bool operator >(DbSchemaName left, IDbSchemaName right)
-        {
-            return !ReferenceEquals(left, null) && left.CompareTo(right) > 0;
-        }
-
-        public static bool operator >=(DbSchemaName left, IDbSchemaName right)
-        {
-            return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
-        }
+        public int CompareTo(object? obj)
+        { if (obj is IDbSchemaName value) { return this.CompareTo(value); } else { return 1; } }
 
         public override bool Equals(object? obj)
-        {
-            if (obj is IDbCatalogName value) { return this.Equals(value); }
-            else { return false; }
-        }
-
-        public override int GetHashCode()
-        {
-            if(SchemaName is String) { return (new DbCatalogName(this), SchemaName).GetHashCode(); }
-            else { return (new DbCatalogName(this), String.Empty).GetHashCode(); }
-        }
+        { if (obj is IDbSchemaName value) { return this.Equals(value); } else { return false; } }
 
         public static bool operator ==(DbSchemaName left, IDbSchemaName right)
         { return left.Equals(right); }
 
         public static bool operator !=(DbSchemaName left, IDbSchemaName right)
         { return !left.Equals(right); }
+
+        public static bool operator <(DbSchemaName left, IDbSchemaName right)
+        { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
+
+        public static bool operator <=(DbSchemaName left, IDbSchemaName right)
+        { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
+
+        public static bool operator >(DbSchemaName left, IDbSchemaName right)
+        { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
+
+        public static bool operator >=(DbSchemaName left, IDbSchemaName right)
+        { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
+
+        public override Int32 GetHashCode()
+        {
+            if (CatalogName is String && SchemaName is String)
+            { return (CatalogName, SchemaName).GetHashCode(); }
+            else { return String.Empty.GetHashCode(); }
+        }
+        #endregion
+
+        public static implicit operator DbCatalogName(DbSchemaName value)
+        { return new DbCatalogName(value); }
+
+        public override string ToString()
+        {
+            if (SchemaName is String)
+            { return String.Format("{0}.{1}", ((DbCatalogName)this).ToString(), SchemaName); }
+            else { return String.Empty; }
+        }
     }
 }

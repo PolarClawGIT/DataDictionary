@@ -11,7 +11,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbTableItem : IDbTableName, IDbIsSystem
+    public interface IDbTableItem : IDbObjectName, IDbIsSystem
     {
         public String? TableType { get; }
     }
@@ -20,9 +20,9 @@ namespace DataDictionary.DataLayer.DbMetaData
     {
         public String? CatalogName { get { return GetValue("TABLE_CATALOG"); } }
         public String? SchemaName { get { return GetValue("TABLE_SCHEMA"); } }
-        public String? TableName { get { return GetValue("TABLE_NAME"); } }
+        public String? ObjectName { get { return GetValue("TABLE_NAME"); } }
         public String? TableType { get { return GetValue("TABLE_TYPE"); } }
-        public Boolean IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
+        public Boolean IsSystem { get { return ObjectName is "__RefactorLog" or "sysdiagrams"; } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -40,7 +40,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public virtual SqlCommand GetProperties(IConnection connection)
         {
             return (new DbExtendedPropertyGetCommand(connection)
-            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = TableName, Level1Type = "TABLE" }).
+            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = ObjectName, Level1Type = "TABLE" }).
             GetCommand();
         }
     }

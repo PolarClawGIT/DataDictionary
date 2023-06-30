@@ -6,28 +6,26 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbColumnName : IDbObjectName
+    public interface IDbObjectName : IDbSchemaName
     {
-        public String? ColumnName { get; }
+        public String? ObjectName { get; }
     }
 
-    public class DbColumnName : IDbColumnName, IEquatable<IDbColumnName>, IComparable<IDbColumnName>, IComparable
+    public class DbObjectName : IDbObjectName, IEquatable<IDbObjectName>, IComparable<IDbObjectName>, IComparable
     {
         public String? CatalogName { get; init; }
         public String? SchemaName { get; init; }
         public String? ObjectName { get; init; }
-        public String? ColumnName { get; init; }
 
-        public DbColumnName(IDbColumnName source) : base()
+        public DbObjectName(IDbObjectName source) : base()
         {
             CatalogName = source.CatalogName;
             SchemaName = source.SchemaName;
             ObjectName = source.ObjectName;
-            ColumnName = source.ColumnName;
         }
 
         #region IEquatable, IComparable
-        public Boolean Equals(IDbColumnName? other)
+        public Boolean Equals(IDbObjectName? other)
         {
             return (
                 other is IDbSchemaName &&
@@ -37,7 +35,7 @@ namespace DataDictionary.DataLayer.DbMetaData
                 ObjectName.Equals(other.ObjectName, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public Int32 CompareTo(IDbColumnName? other)
+        public Int32 CompareTo(IDbObjectName? other)
         {
             if (other is null) { return 1; }
             else if (new DbSchemaName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
@@ -48,48 +46,46 @@ namespace DataDictionary.DataLayer.DbMetaData
         { if (obj is IDbSchemaName value) { return this.CompareTo(value); } else { return 1; } }
 
         public override bool Equals(object? obj)
-        { if (obj is IDbColumnName value) { return this.Equals(value); } else { return false; } }
+        { if (obj is IDbObjectName value) { return this.Equals(value); } else { return false; } }
 
-        public static bool operator ==(DbColumnName left, IDbColumnName right)
+        public static bool operator ==(DbObjectName left, IDbObjectName right)
         { return left.Equals(right); }
 
-        public static bool operator !=(DbColumnName left, IDbColumnName right)
+        public static bool operator !=(DbObjectName left, IDbObjectName right)
         { return !left.Equals(right); }
 
-        public static bool operator <(DbColumnName left, IDbColumnName right)
+        public static bool operator <(DbObjectName left, IDbObjectName right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
-        public static bool operator <=(DbColumnName left, IDbColumnName right)
+        public static bool operator <=(DbObjectName left, IDbObjectName right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
-        public static bool operator >(DbColumnName left, IDbColumnName right)
+        public static bool operator >(DbObjectName left, IDbObjectName right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
-        public static bool operator >=(DbColumnName left, IDbColumnName right)
+        public static bool operator >=(DbObjectName left, IDbObjectName right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         public override Int32 GetHashCode()
         {
-            if (CatalogName is String && SchemaName is String && ObjectName is String && ColumnName is String)
-            { return (CatalogName, SchemaName, ObjectName, ColumnName).GetHashCode(); }
+            if (CatalogName is String && SchemaName is String && ObjectName is String)
+            { return (CatalogName, SchemaName, ObjectName).GetHashCode(); }
             else { return String.Empty.GetHashCode(); }
         }
         #endregion
 
-        public static implicit operator DbSchemaName(DbColumnName value)
+        public static implicit operator DbSchemaName(DbObjectName value)
         { return new DbSchemaName(value); }
 
-        public static implicit operator DbCatalogName(DbColumnName value)
+        public static implicit operator DbCatalogName(DbObjectName value)
         { return new DbSchemaName(value); }
-
-        public static implicit operator DbObjectName(DbColumnName value)
-        { return new DbObjectName(value); }
 
         public override string ToString()
         {
-            if (ColumnName is String)
-            { return String.Format("{0}.{1}", ((DbObjectName)this).ToString(), ColumnName); }
+            if (ObjectName is String)
+            { return String.Format("{0}.{1}", ((DbSchemaName)this).ToString(), ObjectName); }
             else { return String.Empty; }
         }
+
     }
 }

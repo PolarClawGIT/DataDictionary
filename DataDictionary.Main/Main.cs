@@ -126,19 +126,19 @@ namespace DataDictionary.Main
                     TreeNode schemaNode = CreateNode(schemaItem.SchemaName, dbDataImageIndex.Schema, schemaItem, catalogNode);
                     TreeNode tablesNode = CreateNode("Tables", dbDataImageIndex.Tables, null, schemaNode);
 
-                    foreach (IDbTableItem tableItem in Program.DbData.DbTables.OrderBy(o => o.TableName).Where(
+                    foreach (IDbTableItem tableItem in Program.DbData.DbTables.OrderBy(o => o.ObjectName).Where(
                         w => w.IsSystem == false &&
                         w.CatalogName == schemaItem.CatalogName &&
                         w.SchemaName == schemaItem.SchemaName))
                     {
-                        TreeNode tableNode = CreateNode(tableItem.TableName, dbDataImageIndex.Table, tableItem, tablesNode);
+                        TreeNode tableNode = CreateNode(tableItem.ObjectName, dbDataImageIndex.Table, tableItem, tablesNode);
                         TreeNode columnsNode = CreateNode("Columns", dbDataImageIndex.Columns, null, tableNode);
 
                         foreach (IDbColumnItem columnItem in Program.DbData.DbColumns.OrderBy(o => o.OrdinalPosition).Where(
                             w => w.IsSystem == false &&
                             w.CatalogName == tableItem.CatalogName &&
                             w.SchemaName == tableItem.SchemaName &&
-                            w.TableName == tableItem.TableName))
+                            w.ObjectName == tableItem.ObjectName))
                         { TreeNode columnNode = CreateNode(columnItem.ColumnName, dbDataImageIndex.Column, columnItem, columnsNode); }
                     }
                 }

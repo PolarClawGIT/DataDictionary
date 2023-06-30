@@ -35,22 +35,13 @@ namespace DataDictionary.DataLayer.DbMetaData
         }
 
         public int CompareTo(IDbCatalogName? other)
-        {
-            if (other is IDbCatalogName value) { return String.Compare(CatalogName, value.CatalogName, true); }
-            else { return 1; }
-        }
+        {   if (other is IDbCatalogName value) { return String.Compare(CatalogName, value.CatalogName, true); } else { return 1; } }
 
         public int CompareTo(object? obj)
-        {
-            if (obj is IDbCatalogName value) { return this.CompareTo(value); }
-            else { return 1; }
-        }
+        {   if (obj is IDbCatalogName value) { return this.CompareTo(value); } else { return 1; } }
 
         public override bool Equals(object? obj)
-        {
-            if (obj is IDbCatalogName value) { return this.Equals(value); }
-            else { return false; }
-        }
+        {   if (obj is IDbCatalogName value) { return this.Equals(value); } else { return false; } }
 
         public static bool operator ==(DbCatalogName left, IDbCatalogName right)
         { return left.Equals(right); }
@@ -69,17 +60,17 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public static bool operator >=(DbCatalogName left, IDbCatalogName right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
-        #endregion
 
         public override Int32 GetHashCode()
         {
             if (CatalogName is String) { return (CatalogName).GetHashCode(); }
             else { return String.Empty.GetHashCode(); }
         }
+        #endregion
 
         public override String ToString()
         {
-            if (CatalogName is String) { return this.CatalogName; }
+            if (CatalogName is String) { return CatalogName; }
             else { return String.Empty; }
         }
 
