@@ -33,7 +33,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             if (other is null) { return 1; }
             else if (new DbSchemaName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
-            else { return String.Compare(SchemaName, other.SchemaName, true); }
+            else { return String.Compare(ObjectName, other.ObjectName, true); }
         }
 
         public override int CompareTo(object? obj)
@@ -64,14 +64,14 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             if (CatalogName is String && SchemaName is String && ObjectName is String)
             { return (CatalogName, SchemaName, ObjectName).GetHashCode(); }
-            else { return String.Empty.GetHashCode(); }
+            else { return base.GetHashCode(); }
         }
         #endregion
 
         public override string ToString()
         {
             if (ObjectName is String)
-            { return String.Format("{0}.{1}", ((DbSchemaName)this).ToString(), ObjectName); }
+            { return String.Format("{0}.{1}", base.ToString(), ObjectName); }
             else { return String.Empty; }
         }
 

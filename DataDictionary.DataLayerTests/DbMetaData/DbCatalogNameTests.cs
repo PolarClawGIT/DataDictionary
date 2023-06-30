@@ -23,9 +23,10 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
         [Test()]
         public void DbCatalogNameTest()
         {
-            Assert.IsTrue(new DbCatalogName(dataA1) is DbCatalogName, "new DbCatalogName(dataA1) is DbCatalogName");
-            Assert.IsTrue(new DbCatalogName(dataA1) is IDbCatalogName, "new DbCatalogName(dataA1) is IDbCatalogName");
-            Assert.IsTrue(dataA1.ToCatalogName() is IDbCatalogName, "dataA1.ToCatalogName() is IDbCatalogName");
+            DbCatalogName item = new DbCatalogName(dataA1);
+
+            Assert.IsTrue(item is DbCatalogName, "new DbCatalogName(dataA1) is DbCatalogName");
+            Assert.IsTrue(item is IDbCatalogName, "new DbCatalogName(dataA1) is IDbCatalogName");
         }
 
         [Test()]
@@ -61,32 +62,32 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
         [Test()]
         public void GetHashCodeTest()
         {
-            Assert.DoesNotThrow(() => dataA1.GetHashCode(), "dataA1.GetHashCode()");
-            Assert.DoesNotThrow(() => dataC1.GetHashCode(), "dataC.GetHashCode()");
-            Assert.DoesNotThrow(() => dataNull.GetHashCode(), "dataNull.GetHashCode()");
-            Assert.DoesNotThrow(() => dataBlank.GetHashCode(), "dataBlank.GetHashCode()");
+            Assert.DoesNotThrow(() => new DbCatalogName(dataA1).GetHashCode(), "dataA1.GetHashCode()");
+            Assert.DoesNotThrow(() => new DbCatalogName(dataC1).GetHashCode(), "dataC.GetHashCode()");
+            Assert.DoesNotThrow(() => new DbCatalogName(dataNull).GetHashCode(), "dataNull.GetHashCode()");
+            Assert.DoesNotThrow(() => new DbCatalogName(dataBlank).GetHashCode(), "dataBlank.GetHashCode()");
         }
 
         [Test()]
         public void ToStringTest()
         {
-            Assert.DoesNotThrow(() => dataA1.ToString(), "dataA1.ToString()");
-            Assert.DoesNotThrow(() => dataC1.ToString(), "dataC.ToString()");
-            Assert.DoesNotThrow(() => dataNull.ToString(), "dataNull.ToString()");
-            Assert.DoesNotThrow(() => dataBlank.ToString(), "dataBlank.ToString()");
+            Assert.DoesNotThrow(() => new DbCatalogName(dataA1).ToString(), "dataA1.ToString()");
+            Assert.DoesNotThrow(() => new DbCatalogName(dataC1).ToString(), "dataC.ToString()");
+            Assert.DoesNotThrow(() => new DbCatalogName(dataNull).ToString(), "dataNull.ToString()");
+            Assert.DoesNotThrow(() => new DbCatalogName(dataBlank).ToString(), "dataBlank.ToString()");
         }
 
         [Test()]
         public void SortTest()
         {
-            List<DbCatalogName> catalogNames = new List<DbCatalogName>()
+            List<DbCatalogName> items = new List<DbCatalogName>()
             { new DbCatalogName(dataA2), new DbCatalogName(dataC1), new DbCatalogName(dataA1) };
 
-            catalogNames.Sort();
+            items.Sort();
 
-            Assert.AreEqual(catalogNames[0], dataA1);
-            Assert.AreEqual(catalogNames[1], dataA2);
-            Assert.AreEqual(catalogNames[2], dataC1);
+            Assert.AreEqual(items[0], dataA1);
+            Assert.AreEqual(items[1], dataA2);
+            Assert.AreEqual(items[2], dataC1);
         }
     }
 }

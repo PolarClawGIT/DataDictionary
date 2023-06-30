@@ -65,14 +65,14 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             if (CatalogName is String && SchemaName is String)
             { return (CatalogName, SchemaName).GetHashCode(); }
-            else { return String.Empty.GetHashCode(); }
+            else { return base.GetHashCode(); }
         }
         #endregion
 
         public override string ToString()
         {
             if (SchemaName is String)
-            { return String.Format("{0}.{1}", ((DbCatalogName)this).ToString(), SchemaName); }
+            { return String.Format("{0}.{1}", base.ToString(), SchemaName); }
             else { return String.Empty; }
         }
     }

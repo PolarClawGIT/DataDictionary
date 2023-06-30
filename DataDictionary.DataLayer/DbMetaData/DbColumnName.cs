@@ -23,17 +23,17 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             return (
                 other is IDbSchemaName &&
-                new DbSchemaName(this).Equals(other) &&
-                !String.IsNullOrEmpty(ObjectName) &&
-                !String.IsNullOrEmpty(other.ObjectName) &&
-                ObjectName.Equals(other.ObjectName, StringComparison.CurrentCultureIgnoreCase));
+                new DbCatalogName(this).Equals(other) &&
+                !String.IsNullOrEmpty(ColumnName) &&
+                !String.IsNullOrEmpty(other.ColumnName) &&
+                ColumnName.Equals(other.ColumnName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public Int32 CompareTo(IDbColumnName? other)
         {
             if (other is null) { return 1; }
-            else if (new DbSchemaName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
-            else { return String.Compare(SchemaName, other.SchemaName, true); }
+            else if (new DbCatalogName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
+            else { return String.Compare(ColumnName, other.ColumnName, true); }
         }
 
         public override int CompareTo(object? obj)
@@ -64,14 +64,14 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             if (CatalogName is String && SchemaName is String && ObjectName is String && ColumnName is String)
             { return (CatalogName, SchemaName, ObjectName, ColumnName).GetHashCode(); }
-            else { return String.Empty.GetHashCode(); }
+            else { return base.GetHashCode(); }
         }
         #endregion
 
         public override string ToString()
         {
             if (ColumnName is String)
-            { return String.Format("{0}.{1}", ((DbObjectName)this).ToString(), ColumnName); }
+            { return String.Format("{0}.{1}", base.ToString(), ColumnName); }
             else { return String.Empty; }
         }
     }

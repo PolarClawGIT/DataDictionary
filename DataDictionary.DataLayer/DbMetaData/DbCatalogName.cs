@@ -11,12 +11,6 @@ namespace DataDictionary.DataLayer.DbMetaData
         String? CatalogName { get; }
     }
 
-    public static class IDbCatalogNameExtension
-    {
-        public static DbCatalogName ToCatalogName(this IDbCatalogName catalogName)
-        { return new DbCatalogName(catalogName); }
-    }
-
     public class DbCatalogName : IDbCatalogName, IEquatable<IDbCatalogName>, IComparable<IDbCatalogName>, IComparable
     {
         public String? CatalogName { get; init; }
