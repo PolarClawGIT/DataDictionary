@@ -31,7 +31,11 @@ namespace Toolbox.BindingTable
         {
             dataItems = new DataTable();
             foreach (DataColumn item in new TBindingItem().ColumnDefinitions)
-            { dataItems.Columns.Add(item); }
+            {
+                using (DataColumn column = new DataColumn(item.ColumnName, item.DataType)
+                { AllowDBNull = item.AllowDBNull, Caption = item.Caption, DefaultValue = item.DefaultValue, })
+                { dataItems.Columns.Add(item); }
+            }
 
             dataItems.Disposed += TableDisposed;
 
@@ -99,12 +103,8 @@ namespace Toolbox.BindingTable
         /// <inheritdoc cref="DataTable.Load(IDataReader, LoadOption, FillErrorEventHandler?)"/>
         public virtual void Load(IDataReader reader, LoadOption loadOption, FillErrorEventHandler? errorHandler)
         {
-            using (DataTable newData = new DataTable())
+            using (DataTable newData = dataItems.Clone())
             {
-                // Import the Column definitions. Note: Decause each instance has its own definition list, this works. It is a "cheat".
-                foreach (DataColumn item in new TBindingItem().ColumnDefinitions)
-                { newData.Columns.Add(item); }
-
                 // Load to a work table
                 newData.Load(reader, loadOption, handleError);
 

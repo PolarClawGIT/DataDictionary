@@ -37,11 +37,13 @@ namespace DataDictionary.DataLayer.DbMetaData
             }
         }
 
-        public override IReadOnlyList<DataColumn> ColumnDefinitions { get; } = new List<DataColumn>()
+        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("SCHEMA_CATALOG", typeof(String)){ AllowDBNull = false},
             new DataColumn("SCHEMA_NAME", typeof(String)){ AllowDBNull = false},
         };
+
+        public override IReadOnlyList<DataColumn> ColumnDefinitions { get; } = columnDefinitions;
 
         public static IDataReader GetDataReader(IConnection connection)
         {

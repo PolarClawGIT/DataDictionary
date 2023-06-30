@@ -114,7 +114,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? PropertyName { get { return GetValue("name"); } }
         public String? PropertyValue { get { return GetValue("value"); } }
 
-        public override IReadOnlyList<DataColumn> ColumnDefinitions { get; } = new List<DataColumn>()
+        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
             new DataColumn("Level0Type", typeof(String)){ AllowDBNull = true},
@@ -129,6 +129,8 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("name", typeof(String)){ AllowDBNull = false},
             new DataColumn("value", typeof(String)){ AllowDBNull = false},
         };
+
+        public override IReadOnlyList<DataColumn> ColumnDefinitions { get; } = columnDefinitions;
     }
 
     #region Enum ExtendedProperty tranlation

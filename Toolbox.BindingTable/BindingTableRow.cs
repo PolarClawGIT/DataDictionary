@@ -43,12 +43,12 @@ namespace Toolbox.BindingTable
 
         /// <summary>
         /// A Comlumn Definition of the underlining table.
-        /// This is used to validate the data structure matches what is expected.
         /// </summary>
         /// <remarks>
-        /// This is intended to be Static for the child class.
-        /// Because of how it currently works, each instance of the class will have a diffrent set of column definitions.
-        /// Warning: The instances of DataColumns in this property will not match the DataTable the DataRow belongs to.
+        /// Implment by creating a Static Readonly list of DataColumns.
+        /// Assign that property to this property. 
+        /// This is used by BindingTable to construct the table definition but the columns are not bound to the table.
+        /// Not all attributes of DataColumn are copied to the table definition.
         /// </remarks>
         public abstract IReadOnlyList<DataColumn> ColumnDefinitions { get; }
 

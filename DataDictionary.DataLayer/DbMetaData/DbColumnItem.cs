@@ -73,7 +73,7 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public Boolean IsSystem { get { return false; } }
 
-        public override IReadOnlyList<DataColumn> ColumnDefinitions { get; } = new List<DataColumn>()
+        static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("TABLE_CATALOG", typeof(String)){ AllowDBNull = false},
             new DataColumn("TABLE_SCHEMA", typeof(String)){ AllowDBNull = false},
@@ -96,6 +96,9 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("IS_COLUMN_SET", typeof(String)){ AllowDBNull = true},
             new DataColumn("IS_FILESTREAM", typeof(String)){ AllowDBNull = true},
         };
+
+        public override IReadOnlyList<DataColumn> ColumnDefinitions { get; } = columnDefinitions;
+
 
         public static IDataReader GetDataReader(IConnection connection)
         { return connection.GetReader(Schema.Collection.Columns); }
