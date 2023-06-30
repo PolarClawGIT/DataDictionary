@@ -28,20 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel schemaLayout;
-            Label catalogNameLayout;
             Label schemaNameLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbSchema));
+            catalogNameLayout = new Label();
             catalogNameData = new TextBox();
             schemaNameData = new TextBox();
             extendedPropertiesData = new DataGridView();
             propertyNameData = new DataGridViewTextBoxColumn();
             propertyValueData = new DataGridViewTextBoxColumn();
+            errorProvider = new ErrorProvider(components);
             schemaLayout = new TableLayoutPanel();
-            catalogNameLayout = new Label();
             schemaNameLayout = new Label();
             schemaLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // schemaLayout
@@ -127,6 +129,10 @@
             propertyValueData.HeaderText = "PropertyValue";
             propertyValueData.Name = "propertyValueData";
             // 
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
+            // 
             // DbSchema
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -140,6 +146,7 @@
             schemaLayout.ResumeLayout(false);
             schemaLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
         }
 
@@ -151,5 +158,7 @@
         private DataGridView extendedPropertiesData;
         private DataGridViewTextBoxColumn propertyNameData;
         private DataGridViewTextBoxColumn propertyValueData;
+        private ErrorProvider errorProvider;
+        private Label catalogNameLayout;
     }
 }

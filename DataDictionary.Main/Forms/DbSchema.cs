@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -41,9 +42,7 @@ namespace DataDictionary.Main.Forms
         }
 
         private void DbSchema_Load(object sender, EventArgs e)
-        {
-            BindData();
-        }
+        { BindData(); }
 
         void BindData()
         {
@@ -53,17 +52,20 @@ namespace DataDictionary.Main.Forms
             {
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data.DbSchema, nameof(data.DbSchema.CatalogName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data.DbSchema, nameof(data.DbSchema.SchemaName)));
+                errorProvider.SetError(catalogNameLayout, String.Empty);
+
+                data.ExtendedProperties.Clear();
+                data.ExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.Where(
+                        w =>
+                        w.CatalogName == data.SchemaName.CatalogName &&
+                        w.Level0Name == data.SchemaName.SchemaName &&
+                        w.PropertyObjectType == ExtendedPropertyObjectType.Schema));
+
+                extendedPropertiesData.AutoGenerateColumns = false;
+                extendedPropertiesData.DataSource = data.ExtendedProperties;
             }
-
-            data.ExtendedProperties.Clear();
-            data.ExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.Where(
-                    w =>
-                    w.CatalogName == data.SchemaName.CatalogName &&
-                    w.Level0Name == data.SchemaName.SchemaName &&
-                    w.PropertyObjectType == ExtendedPropertyObjectType.Schema));
-
-            extendedPropertiesData.AutoGenerateColumns = false;
-            extendedPropertiesData.DataSource = data.ExtendedProperties;
+            else
+            { errorProvider.SetError(catalogNameLayout, "Schmema information not avaiable"); }
         }
 
         void UnBindData()
