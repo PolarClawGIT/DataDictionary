@@ -11,18 +11,12 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? ObjectName { get; }
     }
 
-    public class DbObjectName : IDbObjectName, IEquatable<IDbObjectName>, IComparable<IDbObjectName>, IComparable
+    public class DbObjectName : DbSchemaName, IDbObjectName, IEquatable<IDbObjectName>, IComparable<IDbObjectName>, IComparable
     {
-        public String? CatalogName { get; init; }
-        public String? SchemaName { get; init; }
         public String? ObjectName { get; init; }
 
-        public DbObjectName(IDbObjectName source) : base()
-        {
-            CatalogName = source.CatalogName;
-            SchemaName = source.SchemaName;
-            ObjectName = source.ObjectName;
-        }
+        public DbObjectName(IDbObjectName source) : base(source)
+        { ObjectName = source.ObjectName; }
 
         #region IEquatable, IComparable
         public Boolean Equals(IDbObjectName? other)
@@ -42,8 +36,8 @@ namespace DataDictionary.DataLayer.DbMetaData
             else { return String.Compare(SchemaName, other.SchemaName, true); }
         }
 
-        public int CompareTo(object? obj)
-        { if (obj is IDbSchemaName value) { return this.CompareTo(value); } else { return 1; } }
+        public override int CompareTo(object? obj)
+        { if (obj is IDbObjectName value) { return this.CompareTo(value); } else { return 1; } }
 
         public override bool Equals(object? obj)
         { if (obj is IDbObjectName value) { return this.Equals(value); } else { return false; } }
@@ -73,12 +67,6 @@ namespace DataDictionary.DataLayer.DbMetaData
             else { return String.Empty.GetHashCode(); }
         }
         #endregion
-
-        public static implicit operator DbSchemaName(DbObjectName value)
-        { return new DbSchemaName(value); }
-
-        public static implicit operator DbCatalogName(DbObjectName value)
-        { return new DbSchemaName(value); }
 
         public override string ToString()
         {

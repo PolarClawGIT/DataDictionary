@@ -11,20 +11,12 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? ColumnName { get; }
     }
 
-    public class DbColumnName : IDbColumnName, IEquatable<IDbColumnName>, IComparable<IDbColumnName>, IComparable
+    public class DbColumnName : DbObjectName, IDbColumnName, IEquatable<IDbColumnName>, IComparable<IDbColumnName>, IComparable
     {
-        public String? CatalogName { get; init; }
-        public String? SchemaName { get; init; }
-        public String? ObjectName { get; init; }
         public String? ColumnName { get; init; }
 
-        public DbColumnName(IDbColumnName source) : base()
-        {
-            CatalogName = source.CatalogName;
-            SchemaName = source.SchemaName;
-            ObjectName = source.ObjectName;
-            ColumnName = source.ColumnName;
-        }
+        public DbColumnName(IDbColumnName source) : base(source)
+        { ColumnName = source.ColumnName; }
 
         #region IEquatable, IComparable
         public Boolean Equals(IDbColumnName? other)
@@ -44,8 +36,8 @@ namespace DataDictionary.DataLayer.DbMetaData
             else { return String.Compare(SchemaName, other.SchemaName, true); }
         }
 
-        public int CompareTo(object? obj)
-        { if (obj is IDbSchemaName value) { return this.CompareTo(value); } else { return 1; } }
+        public override int CompareTo(object? obj)
+        { if (obj is IDbColumnName value) { return this.CompareTo(value); } else { return 1; } }
 
         public override bool Equals(object? obj)
         { if (obj is IDbColumnName value) { return this.Equals(value); } else { return false; } }
@@ -75,15 +67,6 @@ namespace DataDictionary.DataLayer.DbMetaData
             else { return String.Empty.GetHashCode(); }
         }
         #endregion
-
-        public static implicit operator DbSchemaName(DbColumnName value)
-        { return new DbSchemaName(value); }
-
-        public static implicit operator DbCatalogName(DbColumnName value)
-        { return new DbSchemaName(value); }
-
-        public static implicit operator DbObjectName(DbColumnName value)
-        { return new DbObjectName(value); }
 
         public override string ToString()
         {

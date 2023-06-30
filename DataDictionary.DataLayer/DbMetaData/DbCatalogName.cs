@@ -25,7 +25,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         { CatalogName = source.CatalogName; }
 
         #region IEquatable, IComparable
-        public bool Equals(IDbCatalogName? other)
+        public virtual bool Equals(IDbCatalogName? other)
         {
             return (
                 other is IDbCatalogName &&
@@ -34,10 +34,10 @@ namespace DataDictionary.DataLayer.DbMetaData
                 CatalogName.Equals(other.CatalogName, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public int CompareTo(IDbCatalogName? other)
+        public virtual int CompareTo(IDbCatalogName? other)
         {   if (other is IDbCatalogName value) { return String.Compare(CatalogName, value.CatalogName, true); } else { return 1; } }
 
-        public int CompareTo(object? obj)
+        public virtual int CompareTo(object? obj)
         {   if (obj is IDbCatalogName value) { return this.CompareTo(value); } else { return 1; } }
 
         public override bool Equals(object? obj)
