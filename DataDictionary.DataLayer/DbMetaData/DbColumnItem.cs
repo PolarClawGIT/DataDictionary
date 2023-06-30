@@ -81,6 +81,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("COLUMN_NAME", typeof(String)){ AllowDBNull = false},
             new DataColumn("ORDINAL_POSITION", typeof(Int32)){ AllowDBNull = false},
             new DataColumn("COLUMN_DEFAULT", typeof(String)){ AllowDBNull = true},
+            new DataColumn("IS_NULLABLE", typeof(String)){ AllowDBNull = true},
             new DataColumn("DATA_TYPE", typeof(String)){ AllowDBNull = true},
             new DataColumn("CHARACTER_MAXIMUM_LENGTH", typeof(Int32)){ AllowDBNull = true},
             new DataColumn("CHARACTER_OCTET_LENGTH", typeof(Int32)){ AllowDBNull = true},

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            TableLayoutPanel schemaLayout;
+            TableLayoutPanel dbSchemaLayout;
             Label schemaNameLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbSchema));
             catalogNameLayout = new Label();
@@ -39,42 +39,42 @@
             propertyNameData = new DataGridViewTextBoxColumn();
             propertyValueData = new DataGridViewTextBoxColumn();
             errorProvider = new ErrorProvider(components);
-            schemaLayout = new TableLayoutPanel();
+            dbSchemaLayout = new TableLayoutPanel();
             schemaNameLayout = new Label();
-            schemaLayout.SuspendLayout();
+            dbSchemaLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
-            // schemaLayout
+            // dbSchemaLayout
             // 
-            schemaLayout.ColumnCount = 1;
-            schemaLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            schemaLayout.Controls.Add(catalogNameLayout, 0, 0);
-            schemaLayout.Controls.Add(catalogNameData, 0, 1);
-            schemaLayout.Controls.Add(schemaNameLayout, 0, 2);
-            schemaLayout.Controls.Add(schemaNameData, 0, 3);
-            schemaLayout.Controls.Add(extendedPropertiesData, 0, 4);
-            schemaLayout.Dock = DockStyle.Fill;
-            schemaLayout.Location = new Point(0, 0);
-            schemaLayout.Name = "schemaLayout";
-            schemaLayout.RowCount = 5;
-            schemaLayout.RowStyles.Add(new RowStyle());
-            schemaLayout.RowStyles.Add(new RowStyle());
-            schemaLayout.RowStyles.Add(new RowStyle());
-            schemaLayout.RowStyles.Add(new RowStyle());
-            schemaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            schemaLayout.Size = new Size(384, 311);
-            schemaLayout.TabIndex = 0;
+            dbSchemaLayout.ColumnCount = 1;
+            dbSchemaLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            dbSchemaLayout.Controls.Add(catalogNameLayout, 0, 0);
+            dbSchemaLayout.Controls.Add(catalogNameData, 0, 1);
+            dbSchemaLayout.Controls.Add(schemaNameLayout, 0, 2);
+            dbSchemaLayout.Controls.Add(schemaNameData, 0, 3);
+            dbSchemaLayout.Controls.Add(extendedPropertiesData, 0, 4);
+            dbSchemaLayout.Dock = DockStyle.Fill;
+            dbSchemaLayout.Location = new Point(0, 0);
+            dbSchemaLayout.Name = "dbSchemaLayout";
+            dbSchemaLayout.RowCount = 5;
+            dbSchemaLayout.RowStyles.Add(new RowStyle());
+            dbSchemaLayout.RowStyles.Add(new RowStyle());
+            dbSchemaLayout.RowStyles.Add(new RowStyle());
+            dbSchemaLayout.RowStyles.Add(new RowStyle());
+            dbSchemaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            dbSchemaLayout.Size = new Size(384, 311);
+            dbSchemaLayout.TabIndex = 0;
             // 
             // catalogNameLayout
             // 
             catalogNameLayout.AutoSize = true;
             catalogNameLayout.Location = new Point(3, 0);
             catalogNameLayout.Name = "catalogNameLayout";
-            catalogNameLayout.Size = new Size(136, 15);
+            catalogNameLayout.Size = new Size(83, 15);
             catalogNameLayout.TabIndex = 0;
-            catalogNameLayout.Text = "Catalog Name/Database";
+            catalogNameLayout.Text = "Catalog Name";
             // 
             // catalogNameData
             // 
@@ -138,13 +138,13 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(384, 311);
-            Controls.Add(schemaLayout);
+            Controls.Add(dbSchemaLayout);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DbSchema";
             Text = "Database Schema";
             Load += DbSchema_Load;
-            schemaLayout.ResumeLayout(false);
-            schemaLayout.PerformLayout();
+            dbSchemaLayout.ResumeLayout(false);
+            dbSchemaLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);

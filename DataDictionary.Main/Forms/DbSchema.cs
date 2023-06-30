@@ -23,21 +23,17 @@ namespace DataDictionary.Main.Forms
             public DbSchemaName SchemaName { get; set; } = new DbSchemaName();
             public IDbSchemaItem? DbSchema { get; set; }
 
-            public BindingList<IDbExtendedPropertyItem> ExtendedProperties { get; set; } = new BindingList<IDbExtendedPropertyItem>();
+            public BindingList<DbExtendedPropertyItem> DbExtendedProperties { get; set; } = new BindingList<DbExtendedPropertyItem>();
         }
 
         FormData data = new FormData();
 
         public DbSchema() : base()
-        {
-            InitializeComponent();
-        }
+        { InitializeComponent(); }
 
         public DbSchema(IDbSchemaItem schemaItem) : this()
         {
             data.SchemaName = new DbSchemaName(schemaItem);
-            data.DbSchema = schemaItem;
-
             this.Text = String.Format("{0}: {1}", this.Text, data.SchemaName.ToString());
         }
 
@@ -54,18 +50,17 @@ namespace DataDictionary.Main.Forms
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data.DbSchema, nameof(data.DbSchema.SchemaName)));
                 errorProvider.SetError(catalogNameLayout, String.Empty);
 
-                data.ExtendedProperties.Clear();
-                data.ExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.Where(
+                data.DbExtendedProperties.Clear();
+                data.DbExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.Where(
                         w =>
                         w.CatalogName == data.SchemaName.CatalogName &&
                         w.Level0Name == data.SchemaName.SchemaName &&
                         w.PropertyObjectType == ExtendedPropertyObjectType.Schema));
 
                 extendedPropertiesData.AutoGenerateColumns = false;
-                extendedPropertiesData.DataSource = data.ExtendedProperties;
+                extendedPropertiesData.DataSource = data.DbExtendedProperties;
             }
-            else
-            { errorProvider.SetError(catalogNameLayout, "Schmema information not avaiable"); }
+            else { errorProvider.SetError(catalogNameLayout, "Schmema information not avaiable"); }
         }
 
         void UnBindData()
