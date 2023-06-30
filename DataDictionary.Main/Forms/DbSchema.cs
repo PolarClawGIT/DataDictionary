@@ -17,20 +17,12 @@ namespace DataDictionary.Main.Forms
     partial class DbSchema : ApplicationFormBase
     {
 
-        class FormData : INotifyPropertyChanged
+        class FormData
         {
-            public IDbSchemaName? SchemaName { get; set; }
-
-            public IDbSchemaItem? DbSchema { get { return Program.DbData.DbSchemas.FirstOrDefault(w => w == SchemaName); } }
+            public DbSchemaName SchemaName { get; set; } = new DbSchemaName();
+            public IDbSchemaItem? DbSchema { get; set; }
 
             public BindingList<IDbExtendedPropertyItem> ExtendedProperties { get; set; } = new BindingList<IDbExtendedPropertyItem>();
-
-            public event PropertyChangedEventHandler? PropertyChanged;
-            public virtual void OnPropertyChanged(string propertyName)
-            {
-                if (PropertyChanged is PropertyChangedEventHandler handler)
-                { handler(this, new PropertyChangedEventArgs(propertyName)); }
-            }
         }
 
         FormData data = new FormData();
@@ -38,20 +30,14 @@ namespace DataDictionary.Main.Forms
         public DbSchema() : base()
         {
             InitializeComponent();
-
         }
 
         public DbSchema(IDbSchemaItem schemaItem) : this()
         {
             data.SchemaName = new DbSchemaName(schemaItem);
+            data.DbSchema = schemaItem;
 
-            data.ExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.Where(
-                w =>
-                w.CatalogName == schemaItem.CatalogName &&
-                w.Level0Name == schemaItem.SchemaName &&
-                w.PropertyObjectType == ExtendedPropertyObjectType.Schema));
-
-            this.Text = String.Format("{0}: {1}.{2}", this.Text, schemaItem.CatalogName, schemaItem.SchemaName);
+            this.Text = String.Format("{0}: {1}", this.Text, data.SchemaName.ToString());
         }
 
         private void DbSchema_Load(object sender, EventArgs e)
@@ -61,8 +47,20 @@ namespace DataDictionary.Main.Forms
 
         void BindData()
         {
-            catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data.DbSchema, nameof(data.DbSchema.CatalogName)));
-            schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data.DbSchema, nameof(data.DbSchema.SchemaName)));
+            data.DbSchema = Program.DbData.DbSchemas.FirstOrDefault(w => data.SchemaName == w);
+
+            if (data.DbSchema is not null)
+            {
+                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data.DbSchema, nameof(data.DbSchema.CatalogName)));
+                schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data.DbSchema, nameof(data.DbSchema.SchemaName)));
+            }
+
+            data.ExtendedProperties.Clear();
+            data.ExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.Where(
+                    w =>
+                    w.CatalogName == data.SchemaName.CatalogName &&
+                    w.Level0Name == data.SchemaName.SchemaName &&
+                    w.PropertyObjectType == ExtendedPropertyObjectType.Schema));
 
             extendedPropertiesData.AutoGenerateColumns = false;
             extendedPropertiesData.DataSource = data.ExtendedProperties;

@@ -13,10 +13,15 @@ namespace DataDictionary.DataLayer.DbMetaData
 
     public class DbColumnName : DbObjectName, IDbColumnName, IEquatable<IDbColumnName>, IComparable<IDbColumnName>, IComparable
     {
-        public String? ColumnName { get; init; }
+        public String ColumnName { get; init; } = String.Empty;
+
+        public DbColumnName() : base() { }
 
         public DbColumnName(IDbColumnName source) : base(source)
-        { ColumnName = source.ColumnName; }
+        {
+            if (source.ColumnName is String) { ColumnName = source.ColumnName; }
+            else { ColumnName = String.Empty; }
+        }
 
         #region IEquatable, IComparable
         public Boolean Equals(IDbColumnName? other)

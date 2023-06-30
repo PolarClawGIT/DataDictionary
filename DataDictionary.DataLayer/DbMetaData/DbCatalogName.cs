@@ -13,10 +13,15 @@ namespace DataDictionary.DataLayer.DbMetaData
 
     public class DbCatalogName : IDbCatalogName, IEquatable<IDbCatalogName>, IComparable<IDbCatalogName>, IComparable
     {
-        public String? CatalogName { get; init; }
+        public String CatalogName { get; init; } = String.Empty;
+
+        public DbCatalogName() : base() { }
 
         public DbCatalogName(IDbCatalogName source) : base()
-        { CatalogName = source.CatalogName; }
+        {
+            if (source.CatalogName is String) { CatalogName = source.CatalogName; }
+            else { CatalogName = String.Empty; }
+        }
 
         #region IEquatable, IComparable
         public virtual bool Equals(IDbCatalogName? other)
@@ -29,13 +34,13 @@ namespace DataDictionary.DataLayer.DbMetaData
         }
 
         public virtual int CompareTo(IDbCatalogName? other)
-        {   if (other is IDbCatalogName value) { return String.Compare(CatalogName, value.CatalogName, true); } else { return 1; } }
+        { if (other is IDbCatalogName value) { return String.Compare(CatalogName, value.CatalogName, true); } else { return 1; } }
 
         public virtual int CompareTo(object? obj)
-        {   if (obj is IDbCatalogName value) { return this.CompareTo(value); } else { return 1; } }
+        { if (obj is IDbCatalogName value) { return this.CompareTo(value); } else { return 1; } }
 
         public override bool Equals(object? obj)
-        {   if (obj is IDbCatalogName value) { return this.Equals(value); } else { return false; } }
+        { if (obj is IDbCatalogName value) { return this.Equals(value); } else { return false; } }
 
         public static bool operator ==(DbCatalogName left, IDbCatalogName right)
         { return left.Equals(right); }

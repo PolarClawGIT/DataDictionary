@@ -14,10 +14,15 @@ namespace DataDictionary.DataLayer.DbMetaData
 
     public class DbSchemaName : DbCatalogName, IDbSchemaName, IEquatable<IDbSchemaName>, IComparable<IDbSchemaName>, IComparable
     {
-        public String? SchemaName { get; init; }
+        public String SchemaName { get; init; } = String.Empty;
+
+        public DbSchemaName() : base() { }
 
         public DbSchemaName(IDbSchemaName source) : base(source)
-        {   SchemaName = source.SchemaName; }
+        {
+            if (source.SchemaName is String) { SchemaName = source.SchemaName; }
+            else { SchemaName = String.Empty; }
+        }
 
         #region IEquatable, IComparable
         public Boolean Equals(IDbSchemaName? other)
