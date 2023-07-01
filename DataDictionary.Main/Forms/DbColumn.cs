@@ -3,8 +3,11 @@ using DataDictionary.Main.Messages;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Data.SqlTypes;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,6 +56,26 @@ namespace DataDictionary.Main.Forms
                 tableNameData.DataBindings.Add(new Binding(nameof(tableNameData.Text), data.DbColumn, nameof(data.DbColumn.ObjectName)));
                 columnNameData.DataBindings.Add(new Binding(nameof(columnNameData.Text), data.DbColumn, nameof(data.DbColumn.ColumnName)));
 
+                ordinalPositionData.DataBindings.Add(new Binding(nameof(ordinalPositionData.Text), data.DbColumn, nameof(data.DbColumn.OrdinalPosition)));
+                columnDefaultData.DataBindings.Add(new Binding(nameof(columnDefaultData.Text), data.DbColumn, nameof(data.DbColumn.ColumnDefault)));
+                isNullableData.DataBindings.Add(new Binding(nameof(isNullableData.Checked), data.DbColumn, nameof(data.DbColumn.IsNullable)));
+                dataTypeData.DataBindings.Add(new Binding(nameof(columnNameData.Text), data.DbColumn, nameof(data.DbColumn.DataType)));
+                characterMaximumLengthData.DataBindings.Add(new Binding(nameof(characterMaximumLengthData.Text), data.DbColumn, nameof(data.DbColumn.CharacterMaximumLength)));
+                characterOctetLengthData.DataBindings.Add(new Binding(nameof(characterOctetLengthData.Text), data.DbColumn, nameof(data.DbColumn.CharacterOctetLength)));
+                numericPrecisionData.DataBindings.Add(new Binding(nameof(numericPrecisionData.Text), data.DbColumn, nameof(data.DbColumn.NumericPrecision)));
+                numericPrecisionRadixData.DataBindings.Add(new Binding(nameof(numericPrecisionRadixData.Text), data.DbColumn, nameof(data.DbColumn.NumericPrecisionRadix)));
+                numericScaleData.DataBindings.Add(new Binding(nameof(numericScaleData.Text), data.DbColumn, nameof(data.DbColumn.NumericScale)));
+                dateTimePrecisionData.DataBindings.Add(new Binding(nameof(dateTimePrecisionData.Text), data.DbColumn, nameof(data.DbColumn.DateTimePrecision)));
+                characterSetCatalogData.DataBindings.Add(new Binding(nameof(characterSetCatalogData.Text), data.DbColumn, nameof(data.DbColumn.CharacterSetCatalog)));
+                characterSetSchemaData.DataBindings.Add(new Binding(nameof(characterSetSchemaData.Text), data.DbColumn, nameof(data.DbColumn.CharacterSetSchema)));
+                characterSetNameData.DataBindings.Add(new Binding(nameof(characterSetNameData.Text), data.DbColumn, nameof(data.DbColumn.CharacterSetName)));
+                collationCatalogData.DataBindings.Add(new Binding(nameof(collationCatalogData.Text), data.DbColumn, nameof(data.DbColumn.CollationCatalog)));
+
+                isSparseData.DataBindings.Add(new Binding(nameof(isNullableData.Checked), data.DbColumn, nameof(data.DbColumn.IsSparse)));
+                isColumnSetData.DataBindings.Add(new Binding(nameof(isColumnSetData.Checked), data.DbColumn, nameof(data.DbColumn.IsColumnSet)));
+                isFileStreamData.DataBindings.Add(new Binding(nameof(isFileStreamData.Checked), data.DbColumn, nameof(data.DbColumn.IsFileStream)));
+                isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), data.DbColumn, nameof(data.DbColumn.IsSystem)));
+
                 data.DbExtendedProperties.Clear();
                 data.DbExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.Where(
                         w =>
@@ -75,6 +98,27 @@ namespace DataDictionary.Main.Forms
             schemaNameData.DataBindings.Clear();
             tableNameData.DataBindings.Clear();
             columnNameData.DataBindings.Clear();
+
+            ordinalPositionData.DataBindings.Clear();
+            columnDefaultData.DataBindings.Clear();
+            isNullableData.DataBindings.Clear();
+            dataTypeData.DataBindings.Clear();
+            characterMaximumLengthData.DataBindings.Clear();
+            characterOctetLengthData.DataBindings.Clear();
+            numericPrecisionData.DataBindings.Clear();
+            numericPrecisionRadixData.DataBindings.Clear();
+            numericScaleData.DataBindings.Clear();
+            dateTimePrecisionData.DataBindings.Clear();
+            characterSetCatalogData.DataBindings.Clear();
+            characterSetSchemaData.DataBindings.Clear();
+            characterSetNameData.DataBindings.Clear();
+            collationCatalogData.DataBindings.Clear();
+
+            isSparseData.DataBindings.Clear();
+            isColumnSetData.DataBindings.Clear();
+            isFileStreamData.DataBindings.Clear();
+            isSystemData.DataBindings.Clear();
+
 
             extendedPropertiesData.DataSource = null;
         }

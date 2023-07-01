@@ -14,22 +14,24 @@ namespace DataDictionary.DataLayer.DbMetaData
 {
     public interface IDbColumnItem : IDbColumnName, IDbIsSystem
     {
-        public Nullable<Int32> OrdinalPosition { get; }
-        public String? ColumnDefault { get; }
-        public Nullable<Boolean> IsNullable { get; }
-        public String? DataType { get; }
-        public Nullable<Int32> CharacterMaximumLength { get; }
-        public Nullable<Int32> CharacterOctetLength { get; }
-        public Nullable<Byte> NumericPrecision { get; }
-        public Nullable<Int16> NumericPrecisionRadix  { get; }
-        public Nullable<Int32> NumericScale { get ; }
-        public Nullable<Int16> DateTimePrecision { get ; }
-        public String? CharacterSetCatalog { get; }
-        public String? CharacterSetSchema { get; }
-        public String? CharacterSetName { get; }
-        public String? CollationCatalog { get; }
+        Nullable<Int32> OrdinalPosition { get; }
+        String? ColumnDefault { get; }
+        Nullable<Boolean> IsNullable { get; }
+        String? DataType { get; }
+        Nullable<Int32> CharacterMaximumLength { get; }
+        Nullable<Int32> CharacterOctetLength { get; }
+        Nullable<Byte> NumericPrecision { get; }
+        Nullable<Int16> NumericPrecisionRadix { get; }
+        Nullable<Int32> NumericScale { get; }
+        Nullable<Int16> DateTimePrecision { get; }
+        String? CharacterSetCatalog { get; }
+        String? CharacterSetSchema { get; }
+        String? CharacterSetName { get; }
+        String? CollationCatalog { get; }
+        Nullable<Boolean> IsSparse { get; }
+        Nullable<Boolean> IsColumnSet { get; }
+        Nullable<Boolean> IsFileStream { get; }
     }
-
 
     public class DbColumnItem : BindingTableRow, IDbColumnItem, INotifyPropertyChanged
     {
@@ -39,16 +41,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? ColumnName { get { return GetValue("COLUMN_NAME"); } }
         public Nullable<Int32> OrdinalPosition { get { return GetValue<Int32>("ORDINAL_POSITION"); } }
         public String? ColumnDefault { get { return GetValue("COLUMN_DEFAULT"); } }
-        public Nullable<Boolean> IsNullable
-        {
-            get
-            {
-                String? value = GetValue("IS_NULLABLE");
-                if (value is "yes" or "YES" or "Yes" or "true" or "TRUE" or "True" or "1") { return new Nullable<Boolean>(true); }
-                if (value is "no" or "NO" or "No" or "false" or "FALSE" or "False" or "0") { return new Nullable<Boolean>(false); }
-                return new Nullable<Boolean>();
-            }
-        }
+        public Nullable<Boolean> IsNullable { get { return GetValue<Boolean>("IS_NULLABLE", BindingItemParsers.BooleanTryPrase); } }
         public String? DataType { get { return GetValue("DATA_TYPE"); } }
         public Nullable<Int32> CharacterMaximumLength { get { return GetValue<Int32>("CHARACTER_MAXIMUM_LENGTH"); } }
         public Nullable<Int32> CharacterOctetLength { get { return GetValue<Int32>("CHARACTER_OCTET_LENGTH"); } }
@@ -60,18 +53,10 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? CharacterSetSchema { get { return GetValue("CHARACTER_SET_SCHEMA"); } }
         public String? CharacterSetName { get { return GetValue("CHARACTER_SET_NAME"); } }
         public String? CollationCatalog { get { return GetValue("COLLATION_CATALOG"); } }
-
-        public Nullable<Boolean> IsSparse
-        { get { return GetValue<Boolean>("IS_SPARSE", BindingItemParsers.BooleanTryPrase); } }
-
-        public Nullable<Boolean> IsColumnSet
-        { get { return GetValue<Boolean>("IS_COLUMN_SET", BindingItemParsers.BooleanTryPrase); } }
-
-
-        public Nullable<Boolean> IsFileStream
-        { get { return GetValue<Boolean>("IS_FILESTREAM", BindingItemParsers.BooleanTryPrase); } }
-
-        public Boolean IsSystem { get { return false; } }
+        public Nullable<Boolean> IsSparse { get { return GetValue<Boolean>("IS_SPARSE", BindingItemParsers.BooleanTryPrase); } }
+        public Nullable<Boolean> IsColumnSet { get { return GetValue<Boolean>("IS_COLUMN_SET", BindingItemParsers.BooleanTryPrase); } }
+        public Nullable<Boolean> IsFileStream { get { return GetValue<Boolean>("IS_FILESTREAM", BindingItemParsers.BooleanTryPrase); } }
+        public Boolean IsSystem { get { return false; } } //TODO: Identites, calculated, and other system managed fields needs to be detected/addressed
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

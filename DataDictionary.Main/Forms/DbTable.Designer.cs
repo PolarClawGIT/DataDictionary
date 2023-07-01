@@ -134,8 +134,8 @@
             // 
             // tableIsSystemData
             // 
+            tableIsSystemData.AutoCheck = false;
             tableIsSystemData.AutoSize = true;
-            tableIsSystemData.Enabled = false;
             tableIsSystemData.Location = new Point(349, 18);
             tableIsSystemData.Name = "tableIsSystemData";
             tableIsSystemData.Size = new Size(75, 19);
