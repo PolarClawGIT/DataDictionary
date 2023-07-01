@@ -98,7 +98,8 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("IS_FILESTREAM", typeof(String)){ AllowDBNull = true},
         };
 
-        public override IReadOnlyList<DataColumn> ColumnDefinitions { get; } = columnDefinitions;
+        public override IReadOnlyList<DataColumn> ColumnDefinitions()
+        { return columnDefinitions; }
 
 
         public static IDataReader GetDataReader(IConnection connection)

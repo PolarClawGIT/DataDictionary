@@ -26,11 +26,7 @@ namespace DataDictionary.Main.Forms
         FormData data = new FormData();
 
         public DbTable() : base()
-        {
-            InitializeComponent();
-            Program.Messenger.AddColleague(this);
-            SendMessage(new Messages.FormAddMdiChild() { ChildForm = this });
-        }
+        { InitializeComponent(); }
 
         public DbTable(IDbTableItem tableItem) : this()
         {
@@ -55,7 +51,7 @@ namespace DataDictionary.Main.Forms
 
                 data.DbExtendedProperties.Clear();
                 data.DbExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.Where(
-                        w => 
+                        w =>
                         w.CatalogName == data.DbTable.CatalogName &&
                         w.Level0Name == data.DbTable.SchemaName &&
                         w.Level1Name == data.DbTable.ObjectName &&

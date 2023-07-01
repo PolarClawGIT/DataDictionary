@@ -401,7 +401,6 @@
         private TableLayoutPanel tableLayoutPanel1;
         private Button connectCommand;
         private Button importCommand;
-        private Button button3;
         private Button removeCommand;
         private GroupBox authencationLayout;
         private TableLayoutPanel tableLayoutPanel2;

@@ -32,7 +32,8 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("TABLE_TYPE", typeof(String)){ AllowDBNull = false},
         };
 
-        public override IReadOnlyList<DataColumn> ColumnDefinitions { get; } = columnDefinitions;
+        public override IReadOnlyList<DataColumn> ColumnDefinitions()
+        { return columnDefinitions; }
 
         public static IDataReader GetDataReader(IConnection connection)
         { return connection.GetReader(Schema.Collection.Tables); }

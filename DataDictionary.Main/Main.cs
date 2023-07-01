@@ -69,10 +69,32 @@ namespace DataDictionary.Main
         }
 
         private void viewExtendedPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
-        { new Forms.DbExtendedPropertyView().Show(); }
+        {
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbExtendedPropertyView)) is Forms.DbExtendedPropertyView existingForm)
+            { existingForm.Activate(); }
+            else { new Forms.DbExtendedPropertyView().Show(); }
+        }
 
-        private void viewDatabaseSchemasToolStripMenuItem_Click(object sender, EventArgs e)
-        { new Forms.DbSchemaView().Show(); }
+        private void viewSchemasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbSchemaView)) is Forms.DbSchemaView existingForm)
+            { existingForm.Activate(); }
+            else { new Forms.DbSchemaView().Show(); }
+        }
+
+        private void viewTablesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbTableView)) is Forms.DbTableView existingForm)
+            { existingForm.Activate(); }
+            else { new Forms.DbTableView().Show(); }
+        }
+
+        private void viewColumnsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbColumnView)) is Forms.DbColumnView existingForm)
+            { existingForm.Activate(); }
+            else { new Forms.DbColumnView().Show(); }
+        }
         #endregion
 
         #region dbMetaDataNavigation
@@ -83,6 +105,7 @@ namespace DataDictionary.Main
             Schema,
             Tables,
             Table,
+            View,
             Columns,
             Column
         }
@@ -95,6 +118,7 @@ namespace DataDictionary.Main
             {dbDataImageIndex.Table,    ("Table",   Resources.Table) },
             {dbDataImageIndex.Columns,  ("Columns", Resources.ColumnGroup) },
             {dbDataImageIndex.Column,   ("Column",  Resources.Column) },
+            {dbDataImageIndex.View,     ("View",    Resources.View) }
         };
 
         void BuildDbDataTree()
@@ -124,14 +148,18 @@ namespace DataDictionary.Main
                     w.CatalogName == catalogItem.CatalogName))
                 {
                     TreeNode schemaNode = CreateNode(schemaItem.SchemaName, dbDataImageIndex.Schema, schemaItem, catalogNode);
-                    TreeNode tablesNode = CreateNode("Tables", dbDataImageIndex.Tables, null, schemaNode);
+                    TreeNode tablesNode = CreateNode("Tables & Views", dbDataImageIndex.Tables, null, schemaNode);
 
                     foreach (IDbTableItem tableItem in Program.DbData.DbTables.OrderBy(o => o.ObjectName).Where(
                         w => w.IsSystem == false &&
                         w.CatalogName == schemaItem.CatalogName &&
                         w.SchemaName == schemaItem.SchemaName))
                     {
-                        TreeNode tableNode = CreateNode(tableItem.ObjectName, dbDataImageIndex.Table, tableItem, tablesNode);
+                        TreeNode tableNode;
+                        if (tableItem.TableType == "VIEW")
+                        { tableNode = CreateNode(tableItem.ObjectName, dbDataImageIndex.View, tableItem, tablesNode); }
+                        else { tableNode = CreateNode(tableItem.ObjectName, dbDataImageIndex.Table, tableItem, tablesNode); }
+
                         TreeNode columnsNode = CreateNode("Columns", dbDataImageIndex.Columns, null, tableNode);
 
                         foreach (IDbColumnItem columnItem in Program.DbData.DbColumns.OrderBy(o => o.OrdinalPosition).Where(
@@ -196,6 +224,7 @@ namespace DataDictionary.Main
         { BuildDbDataTree(); }
 
         #endregion
+
 
 
 

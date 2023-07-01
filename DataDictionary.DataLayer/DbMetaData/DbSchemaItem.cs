@@ -14,6 +14,7 @@ namespace DataDictionary.DataLayer.DbMetaData
     public interface IDbSchemaItem : IDbSchemaName, IDbIsSystem
     { }
 
+    
     public class DbSchemaItem : BindingTableRow, IDbSchemaItem, INotifyPropertyChanged
     {
         public String? CatalogName { get { return GetValue("SCHEMA_CATALOG"); } }
@@ -43,7 +44,8 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("SCHEMA_NAME", typeof(String)){ AllowDBNull = false},
         };
 
-        public override IReadOnlyList<DataColumn> ColumnDefinitions { get; } = columnDefinitions;
+        public override IReadOnlyList<DataColumn> ColumnDefinitions ()
+        { return columnDefinitions; }
 
         public static IDataReader GetDataReader(IConnection connection)
         {

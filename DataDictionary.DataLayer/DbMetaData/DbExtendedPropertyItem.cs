@@ -130,7 +130,8 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("value", typeof(String)){ AllowDBNull = false},
         };
 
-        public override IReadOnlyList<DataColumn> ColumnDefinitions { get; } = columnDefinitions;
+        public override IReadOnlyList<DataColumn> ColumnDefinitions()
+        { return columnDefinitions; }
     }
 
     #region Enum ExtendedProperty tranlation

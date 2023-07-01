@@ -13,7 +13,6 @@ namespace Toolbox.BindingTable
     public interface IBindingTableRow
     {
         IBindingTable? BindingTable { get; }
-        IReadOnlyList<DataColumn> ColumnDefinitions { get; }
 
         event PropertyChangedEventHandler? PropertyChanged;
 
@@ -27,6 +26,7 @@ namespace Toolbox.BindingTable
         void SetColumnError(String columnName, String? error);
         String? GetColumnError(String columnName);
         String[] GetColumnsInError();
+        IReadOnlyList<DataColumn> ColumnDefinitions();
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ namespace Toolbox.BindingTable
         /// This is used by BindingTable to construct the table definition but the columns are not bound to the table.
         /// Not all attributes of DataColumn are copied to the table definition.
         /// </remarks>
-        public abstract IReadOnlyList<DataColumn> ColumnDefinitions { get; }
+        public abstract IReadOnlyList<DataColumn> ColumnDefinitions();
 
         /// <summary>
         /// Internal DataRow being wrappered.

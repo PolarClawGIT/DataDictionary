@@ -30,7 +30,7 @@ namespace Toolbox.BindingTable
         public BindingTable() : base()
         {
             dataItems = new DataTable();
-            foreach (DataColumn item in new TBindingItem().ColumnDefinitions)
+            foreach (DataColumn item in new TBindingItem().ColumnDefinitions())
             {
                 using (DataColumn column = new DataColumn(item.ColumnName, item.DataType)
                 { AllowDBNull = item.AllowDBNull, Caption = item.Caption, DefaultValue = item.DefaultValue, })

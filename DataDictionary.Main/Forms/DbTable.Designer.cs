@@ -44,11 +44,11 @@
             catalogNameData = new TextBox();
             schemaNameData = new TextBox();
             tableNameData = new TextBox();
-            errorProvider = new ErrorProvider(components);
             extendedPropertiesData = new DataGridView();
             propertyNameData = new DataGridViewTextBoxColumn();
             propertyValueData = new DataGridViewTextBoxColumn();
             tableColumnsData = new DataGridView();
+            errorProvider = new ErrorProvider(components);
             dbTableLayout = new TableLayoutPanel();
             dbTableDetailLayout = new TableLayoutPanel();
             tableTypeLayout = new Label();
@@ -59,12 +59,12 @@
             columnsTab = new TabPage();
             dbTableLayout.SuspendLayout();
             dbTableDetailLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             tableDetailLayout.SuspendLayout();
             extendedPropertiesTab.SuspendLayout();
-            columnsTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).BeginInit();
+            columnsTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)tableColumnsData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // dbTableLayout
@@ -166,9 +166,9 @@
             tableNameLayout.AutoSize = true;
             tableNameLayout.Location = new Point(3, 88);
             tableNameLayout.Name = "tableNameLayout";
-            tableNameLayout.Size = new Size(69, 15);
+            tableNameLayout.Size = new Size(77, 15);
             tableNameLayout.TabIndex = 2;
-            tableNameLayout.Text = "Table Name";
+            tableNameLayout.Text = "Object Name";
             // 
             // catalogNameData
             // 
@@ -197,10 +197,6 @@
             tableNameData.Size = new Size(427, 23);
             tableNameData.TabIndex = 6;
             // 
-            // errorProvider
-            // 
-            errorProvider.ContainerControl = this;
-            // 
             // tableDetailLayout
             // 
             tableDetailLayout.Controls.Add(extendedPropertiesTab);
@@ -222,17 +218,6 @@
             extendedPropertiesTab.TabIndex = 0;
             extendedPropertiesTab.Text = "Extended Properties";
             extendedPropertiesTab.UseVisualStyleBackColor = true;
-            // 
-            // columnsTab
-            // 
-            columnsTab.Controls.Add(tableColumnsData);
-            columnsTab.Location = new Point(4, 24);
-            columnsTab.Name = "columnsTab";
-            columnsTab.Padding = new Padding(3);
-            columnsTab.Size = new Size(419, 167);
-            columnsTab.TabIndex = 1;
-            columnsTab.Text = "Columns";
-            columnsTab.UseVisualStyleBackColor = true;
             // 
             // extendedPropertiesData
             // 
@@ -260,6 +245,17 @@
             propertyValueData.HeaderText = "PropertyValue";
             propertyValueData.Name = "propertyValueData";
             // 
+            // columnsTab
+            // 
+            columnsTab.Controls.Add(tableColumnsData);
+            columnsTab.Location = new Point(4, 24);
+            columnsTab.Name = "columnsTab";
+            columnsTab.Padding = new Padding(3);
+            columnsTab.Size = new Size(419, 167);
+            columnsTab.TabIndex = 1;
+            columnsTab.Text = "Columns";
+            columnsTab.UseVisualStyleBackColor = true;
+            // 
             // tableColumnsData
             // 
             tableColumnsData.AllowUserToAddRows = false;
@@ -271,6 +267,10 @@
             tableColumnsData.RowTemplate.Height = 25;
             tableColumnsData.Size = new Size(413, 161);
             tableColumnsData.TabIndex = 0;
+            // 
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
             // 
             // DbTable
             // 
@@ -286,12 +286,12 @@
             dbTableLayout.PerformLayout();
             dbTableDetailLayout.ResumeLayout(false);
             dbTableDetailLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             tableDetailLayout.ResumeLayout(false);
             extendedPropertiesTab.ResumeLayout(false);
-            columnsTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).EndInit();
+            columnsTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)tableColumnsData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
         }
 

@@ -28,7 +28,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             return (
                 other is IDbSchemaName &&
-                new DbCatalogName(this).Equals(other) &&
+                new DbObjectName(this).Equals(other) &&
                 !String.IsNullOrEmpty(ColumnName) &&
                 !String.IsNullOrEmpty(other.ColumnName) &&
                 ColumnName.Equals(other.ColumnName, StringComparison.CurrentCultureIgnoreCase));
@@ -37,7 +37,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public Int32 CompareTo(IDbColumnName? other)
         {
             if (other is null) { return 1; }
-            else if (new DbCatalogName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
+            else if (new DbObjectName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
             else { return String.Compare(ColumnName, other.ColumnName, true); }
         }
 

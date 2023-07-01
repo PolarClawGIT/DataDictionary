@@ -8,22 +8,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbSchemaView : ApplicationFormBase
+    partial class DbColumnView : ApplicationFormBase
     {
-        public DbSchemaView() : base()
-        {   InitializeComponent(); }
+        public DbColumnView() : base()
+        { InitializeComponent(); }
 
-        private void DbSchemaView_Load(object sender, EventArgs e)
+        private void DbColumnView_Load(object sender, EventArgs e)
         { BindData(); }
 
         void BindData()
-        { schemaData.DataSource = Program.DbData.DbSchemas; }
+        { columnData.DataSource = Program.DbData.DbColumns; }
 
-        void UnBindData() { schemaData.DataSource = null; }
+        void UnBindData() { columnData.DataSource = null; }
 
         #region IColleague
         protected override void HandleMessage(DbDataBatchStarting message)
@@ -32,5 +31,7 @@ namespace DataDictionary.Main.Forms
         protected override void HandleMessage(DbDataBatchCompleted message)
         { BindData(); }
         #endregion
+
+
     }
 }

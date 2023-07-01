@@ -62,9 +62,6 @@
             toolStripSeparator4 = new ToolStripSeparator();
             selectAllToolStripMenuItem = new ToolStripMenuItem();
             toolsToolStripMenuItem = new ToolStripMenuItem();
-            importFromDatabaseToolStripMenuItem = new ToolStripMenuItem();
-            viewExtendedPropertiesToolStripMenuItem = new ToolStripMenuItem();
-            viewDatabaseSchemasToolStripMenuItem = new ToolStripMenuItem();
             customizeToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
@@ -73,6 +70,12 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
+            viewSchemasToolStripMenuItem = new ToolStripMenuItem();
+            viewTablesToolStripMenuItem = new ToolStripMenuItem();
+            viewColumnsToolStripMenuItem = new ToolStripMenuItem();
+            viewExtendedPropertiesToolStripMenuItem = new ToolStripMenuItem();
+            importFromDatabaseToolStripMenuItem = new ToolStripMenuItem();
+            importDatabaseToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
@@ -332,47 +335,23 @@
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { importFromDatabaseToolStripMenuItem, viewExtendedPropertiesToolStripMenuItem, viewDatabaseSchemasToolStripMenuItem, customizeToolStripMenuItem, optionsToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { importFromDatabaseToolStripMenuItem, customizeToolStripMenuItem, optionsToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(46, 20);
             toolsToolStripMenuItem.Text = "&Tools";
-            // 
-            // importFromDatabaseToolStripMenuItem
-            // 
-            importFromDatabaseToolStripMenuItem.Image = Properties.Resources.Database;
-            importFromDatabaseToolStripMenuItem.Name = "importFromDatabaseToolStripMenuItem";
-            importFromDatabaseToolStripMenuItem.Size = new Size(207, 22);
-            importFromDatabaseToolStripMenuItem.Text = "&Import from Database";
-            importFromDatabaseToolStripMenuItem.Click += importFromDatabaseToolStripMenuItem_Click;
-            // 
-            // viewExtendedPropertiesToolStripMenuItem
-            // 
-            viewExtendedPropertiesToolStripMenuItem.Image = Properties.Resources.ExtendedProperty;
-            viewExtendedPropertiesToolStripMenuItem.Name = "viewExtendedPropertiesToolStripMenuItem";
-            viewExtendedPropertiesToolStripMenuItem.Size = new Size(207, 22);
-            viewExtendedPropertiesToolStripMenuItem.Text = "View &Extended Properties";
-            viewExtendedPropertiesToolStripMenuItem.Click += viewExtendedPropertiesToolStripMenuItem_Click;
-            // 
-            // viewDatabaseSchemasToolStripMenuItem
-            // 
-            viewDatabaseSchemasToolStripMenuItem.Image = Properties.Resources.Schema;
-            viewDatabaseSchemasToolStripMenuItem.Name = "viewDatabaseSchemasToolStripMenuItem";
-            viewDatabaseSchemasToolStripMenuItem.Size = new Size(207, 22);
-            viewDatabaseSchemasToolStripMenuItem.Text = "View Database &Schemas";
-            viewDatabaseSchemasToolStripMenuItem.Click += viewDatabaseSchemasToolStripMenuItem_Click;
             // 
             // customizeToolStripMenuItem
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(207, 22);
+            customizeToolStripMenuItem.Size = new Size(190, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(207, 22);
+            optionsToolStripMenuItem.Size = new Size(190, 22);
             optionsToolStripMenuItem.Text = "&Options";
             // 
             // helpToolStripMenuItem
@@ -411,6 +390,55 @@
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             aboutToolStripMenuItem.Size = new Size(122, 22);
             aboutToolStripMenuItem.Text = "&About...";
+            // 
+            // viewSchemasToolStripMenuItem
+            // 
+            viewSchemasToolStripMenuItem.Image = Properties.Resources.Schema;
+            viewSchemasToolStripMenuItem.Name = "viewSchemasToolStripMenuItem";
+            viewSchemasToolStripMenuItem.Size = new Size(238, 22);
+            viewSchemasToolStripMenuItem.Text = "View &Schemas";
+            viewSchemasToolStripMenuItem.Click += viewSchemasToolStripMenuItem_Click;
+            // 
+            // viewTablesToolStripMenuItem
+            // 
+            viewTablesToolStripMenuItem.Image = Properties.Resources.Table;
+            viewTablesToolStripMenuItem.Name = "viewTablesToolStripMenuItem";
+            viewTablesToolStripMenuItem.Size = new Size(238, 22);
+            viewTablesToolStripMenuItem.Text = "View &Tables";
+            viewTablesToolStripMenuItem.Click += viewTablesToolStripMenuItem_Click;
+            // 
+            // viewColumnsToolStripMenuItem
+            // 
+            viewColumnsToolStripMenuItem.Image = Properties.Resources.Column;
+            viewColumnsToolStripMenuItem.Name = "viewColumnsToolStripMenuItem";
+            viewColumnsToolStripMenuItem.Size = new Size(238, 22);
+            viewColumnsToolStripMenuItem.Text = "View &Columns";
+            viewColumnsToolStripMenuItem.Click += viewColumnsToolStripMenuItem_Click;
+            // 
+            // viewExtendedPropertiesToolStripMenuItem
+            // 
+            viewExtendedPropertiesToolStripMenuItem.Image = Properties.Resources.ExtendedProperty;
+            viewExtendedPropertiesToolStripMenuItem.Name = "viewExtendedPropertiesToolStripMenuItem";
+            viewExtendedPropertiesToolStripMenuItem.Size = new Size(238, 22);
+            viewExtendedPropertiesToolStripMenuItem.Text = "View &Extended Properties";
+            viewExtendedPropertiesToolStripMenuItem.Click += viewExtendedPropertiesToolStripMenuItem_Click;
+            // 
+            // importFromDatabaseToolStripMenuItem
+            // 
+            importFromDatabaseToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { importDatabaseToolStripMenuItem, viewSchemasToolStripMenuItem, viewTablesToolStripMenuItem, viewColumnsToolStripMenuItem, viewExtendedPropertiesToolStripMenuItem });
+            importFromDatabaseToolStripMenuItem.Image = Properties.Resources.Database;
+            importFromDatabaseToolStripMenuItem.Name = "importFromDatabaseToolStripMenuItem";
+            importFromDatabaseToolStripMenuItem.Size = new Size(180, 22);
+            importFromDatabaseToolStripMenuItem.Text = "&Database";
+            importFromDatabaseToolStripMenuItem.DoubleClick += importFromDatabaseToolStripMenuItem_Click;
+            // 
+            // importDatabaseToolStripMenuItem
+            // 
+            importDatabaseToolStripMenuItem.Image = Properties.Resources.Database;
+            importDatabaseToolStripMenuItem.Name = "importDatabaseToolStripMenuItem";
+            importDatabaseToolStripMenuItem.Size = new Size(238, 22);
+            importDatabaseToolStripMenuItem.Text = "Manage &Database Connections";
+            importDatabaseToolStripMenuItem.Click += importFromDatabaseToolStripMenuItem_Click;
             // 
             // Main
             // 
@@ -482,7 +510,10 @@
         private TabPage navigationDomainTab;
         private TreeView dbMetaDataNavigation;
         private ToolStripMenuItem importFromDatabaseToolStripMenuItem;
+        private ToolStripMenuItem importDatabaseToolStripMenuItem;
+        private ToolStripMenuItem viewSchemasToolStripMenuItem;
+        private ToolStripMenuItem viewTablesToolStripMenuItem;
+        private ToolStripMenuItem viewColumnsToolStripMenuItem;
         private ToolStripMenuItem viewExtendedPropertiesToolStripMenuItem;
-        private ToolStripMenuItem viewDatabaseSchemasToolStripMenuItem;
     }
 }
