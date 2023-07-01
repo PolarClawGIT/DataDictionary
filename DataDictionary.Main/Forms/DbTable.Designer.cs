@@ -297,21 +297,16 @@
 
         #endregion
 
-        private TableLayoutPanel dbTableLayout;
-        private Label catalogNameLayout;
-        private Label schemaNameLayout;
-        private Label tableNameLayout;
         private TextBox catalogNameData;
         private TextBox schemaNameData;
         private TextBox tableNameData;
         private ErrorProvider errorProvider;
-        private TableLayoutPanel dbTableDetailLayout;
         private TextBox tableTypeData;
-        private Label tableTypeLayout;
         private CheckBox tableIsSystemData;
         private DataGridView extendedPropertiesData;
         private DataGridViewTextBoxColumn propertyNameData;
         private DataGridViewTextBoxColumn propertyValueData;
         private DataGridView tableColumnsData;
+        private Label catalogNameLayout;
     }
 }

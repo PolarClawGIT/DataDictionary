@@ -153,7 +153,6 @@
         #endregion
 
         private TextBox catalogNameData;
-        private Label schemaNameLayout;
         private TextBox schemaNameData;
         private DataGridView extendedPropertiesData;
         private DataGridViewTextBoxColumn propertyNameData;

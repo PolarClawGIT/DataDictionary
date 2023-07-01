@@ -247,7 +247,7 @@ namespace DataDictionary.Main.Forms
                 BindData();
 
                 // Because other forms can sometimes get focus during data binding
-                if(ParentForm is Form parent && ParentForm.ActiveMdiChild != this) { this.Activate(); }
+                if (ParentForm is Form parent && ParentForm.ActiveMdiChild != this) { this.Activate(); }
 
                 this.UseWaitCursor = false;
                 this.Enabled = true;

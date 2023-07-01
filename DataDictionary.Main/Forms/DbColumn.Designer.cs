@@ -35,6 +35,7 @@
             TabPage columnsTab;
             TabControl dataTypeDetailTab;
             Label ordinalPositionLayout;
+            Label dataTypeLayout;
             Label columnDefaultLayout;
             Label characterMaximumLengthLayout;
             Label characterOctetLengthLayout;
@@ -43,6 +44,7 @@
             Label characterSetNameLayout;
             Label numericPrecisionLayout;
             Label numericPrecisionRadixLayout;
+            Label numericScaleLayout;
             Label dateTimePrecisionLayout;
             Label schemaNameLayout;
             Label objectNameLayout;
@@ -52,7 +54,6 @@
             propertyValueData = new DataGridViewTextBoxColumn();
             generalDataTab = new TabPage();
             columnGeneralDataLayout = new TableLayoutPanel();
-            dataTypeLayout = new Label();
             ordinalPositionData = new TextBox();
             dataTypeData = new TextBox();
             isNullableData = new CheckBox();
@@ -68,7 +69,6 @@
             collationCatalogData = new TextBox();
             otherDataTab = new TabPage();
             numericDataLayout = new TableLayoutPanel();
-            numericScaleLayout = new Label();
             numericPrecisionData = new TextBox();
             numericPrecisionRadixData = new TextBox();
             numericScaleData = new TextBox();
@@ -90,6 +90,7 @@
             columnsTab = new TabPage();
             dataTypeDetailTab = new TabControl();
             ordinalPositionLayout = new Label();
+            dataTypeLayout = new Label();
             columnDefaultLayout = new Label();
             characterMaximumLengthLayout = new Label();
             characterOctetLengthLayout = new Label();
@@ -98,6 +99,7 @@
             characterSetNameLayout = new Label();
             numericPrecisionLayout = new Label();
             numericPrecisionRadixLayout = new Label();
+            numericScaleLayout = new Label();
             dateTimePrecisionLayout = new Label();
             schemaNameLayout = new Label();
             objectNameLayout = new Label();
@@ -747,7 +749,6 @@
         private TabPage otherDataTab;
         private TabPage generalDataTab;
         private TableLayoutPanel columnGeneralDataLayout;
-        private Label dataTypeLayout;
         private TextBox ordinalPositionData;
         private TextBox dataTypeData;
         private CheckBox isNullableData;
@@ -761,7 +762,6 @@
         private Label collationCatalogLayout;
         private TextBox collationCatalogData;
         private TableLayoutPanel numericDataLayout;
-        private Label numericScaleLayout;
         private TextBox numericPrecisionData;
         private TextBox numericPrecisionRadixData;
         private TextBox numericScaleData;

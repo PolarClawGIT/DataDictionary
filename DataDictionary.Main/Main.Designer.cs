@@ -504,7 +504,6 @@
         private ToolStripStatusLabel toolStripInfo;
         private ToolStripStatusLabel toolStripWhiteSpace;
         private ToolStripProgressBar toolStripProgressBar;
-        private Panel navigationPanel;
         private TabControl navigationTabs;
         private TabPage navigationDbSchemaTab;
         private TabPage navigationDomainTab;

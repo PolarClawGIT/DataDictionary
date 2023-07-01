@@ -32,24 +32,24 @@
             GroupBox dbConnectionCurrentLayout;
             TableLayoutPanel dbConnectionCurrentGridLayout;
             Label serverNameHeader;
+            Label databaseNameHeader;
+            TableLayoutPanel buttonControlsLayout;
             GroupBox authencationLayout;
+            TableLayoutPanel authenticationLayout;
             Label authenticationTypeLayout;
+            Label serverUserNameLayout;
+            Label serverUserPasswordLayout;
             TableLayoutPanel authenticationChoiceLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbConnection));
             dbConnectionsData = new DataGridView();
             dbConnectionsServerNameData = new DataGridViewTextBoxColumn();
             dbConnectionsDatabaseData = new DataGridViewTextBoxColumn();
-            databaseNameHeader = new Label();
             serverNameData = new ComboBox();
             databaseNameData = new ComboBox();
-            tableLayoutPanel1 = new TableLayoutPanel();
             connectCommand = new Button();
             importCommand = new Button();
             removeCommand = new Button();
-            tableLayoutPanel2 = new TableLayoutPanel();
-            label2 = new Label();
             serverUserNameData = new TextBox();
-            label3 = new Label();
             serverUserPasswordData = new TextBox();
             authenticateWindows = new RadioButton();
             authenticateDbServer = new RadioButton();
@@ -57,16 +57,21 @@
             dbConnectionCurrentLayout = new GroupBox();
             dbConnectionCurrentGridLayout = new TableLayoutPanel();
             serverNameHeader = new Label();
+            databaseNameHeader = new Label();
+            buttonControlsLayout = new TableLayoutPanel();
             authencationLayout = new GroupBox();
+            authenticationLayout = new TableLayoutPanel();
             authenticationTypeLayout = new Label();
+            serverUserNameLayout = new Label();
+            serverUserPasswordLayout = new Label();
             authenticationChoiceLayout = new TableLayoutPanel();
             dbConnectionLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dbConnectionsData).BeginInit();
             dbConnectionCurrentLayout.SuspendLayout();
             dbConnectionCurrentGridLayout.SuspendLayout();
-            tableLayoutPanel1.SuspendLayout();
+            buttonControlsLayout.SuspendLayout();
             authencationLayout.SuspendLayout();
-            tableLayoutPanel2.SuspendLayout();
+            authenticationLayout.SuspendLayout();
             authenticationChoiceLayout.SuspendLayout();
             SuspendLayout();
             // 
@@ -139,7 +144,7 @@
             dbConnectionCurrentGridLayout.Controls.Add(databaseNameHeader, 0, 2);
             dbConnectionCurrentGridLayout.Controls.Add(serverNameData, 0, 1);
             dbConnectionCurrentGridLayout.Controls.Add(databaseNameData, 0, 3);
-            dbConnectionCurrentGridLayout.Controls.Add(tableLayoutPanel1, 0, 5);
+            dbConnectionCurrentGridLayout.Controls.Add(buttonControlsLayout, 0, 5);
             dbConnectionCurrentGridLayout.Controls.Add(authencationLayout, 0, 4);
             dbConnectionCurrentGridLayout.Dock = DockStyle.Fill;
             dbConnectionCurrentGridLayout.Location = new Point(3, 19);
@@ -192,25 +197,25 @@
             databaseNameData.Size = new Size(400, 23);
             databaseNameData.TabIndex = 3;
             // 
-            // tableLayoutPanel1
+            // buttonControlsLayout
             // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.ColumnCount = 4;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.Controls.Add(connectCommand, 0, 0);
-            tableLayoutPanel1.Controls.Add(importCommand, 1, 0);
-            tableLayoutPanel1.Controls.Add(removeCommand, 3, 0);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(3, 208);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 1;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(400, 31);
-            tableLayoutPanel1.TabIndex = 4;
+            buttonControlsLayout.AutoSize = true;
+            buttonControlsLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            buttonControlsLayout.ColumnCount = 4;
+            buttonControlsLayout.ColumnStyles.Add(new ColumnStyle());
+            buttonControlsLayout.ColumnStyles.Add(new ColumnStyle());
+            buttonControlsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            buttonControlsLayout.ColumnStyles.Add(new ColumnStyle());
+            buttonControlsLayout.Controls.Add(connectCommand, 0, 0);
+            buttonControlsLayout.Controls.Add(importCommand, 1, 0);
+            buttonControlsLayout.Controls.Add(removeCommand, 3, 0);
+            buttonControlsLayout.Dock = DockStyle.Fill;
+            buttonControlsLayout.Location = new Point(3, 208);
+            buttonControlsLayout.Name = "buttonControlsLayout";
+            buttonControlsLayout.RowCount = 1;
+            buttonControlsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            buttonControlsLayout.Size = new Size(400, 31);
+            buttonControlsLayout.TabIndex = 4;
             // 
             // connectCommand
             // 
@@ -248,7 +253,7 @@
             // authencationLayout
             // 
             authencationLayout.AutoSize = true;
-            authencationLayout.Controls.Add(tableLayoutPanel2);
+            authencationLayout.Controls.Add(authenticationLayout);
             authencationLayout.Dock = DockStyle.Fill;
             authencationLayout.Location = new Point(3, 91);
             authencationLayout.Name = "authencationLayout";
@@ -257,27 +262,27 @@
             authencationLayout.TabStop = false;
             authencationLayout.Text = "Authentication";
             // 
-            // tableLayoutPanel2
+            // authenticationLayout
             // 
-            tableLayoutPanel2.AutoSize = true;
-            tableLayoutPanel2.ColumnCount = 2;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Controls.Add(authenticationTypeLayout, 0, 0);
-            tableLayoutPanel2.Controls.Add(label2, 0, 1);
-            tableLayoutPanel2.Controls.Add(serverUserNameData, 1, 1);
-            tableLayoutPanel2.Controls.Add(label3, 0, 2);
-            tableLayoutPanel2.Controls.Add(serverUserPasswordData, 1, 2);
-            tableLayoutPanel2.Controls.Add(authenticationChoiceLayout, 1, 0);
-            tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(3, 19);
-            tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 3;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle());
-            tableLayoutPanel2.RowStyles.Add(new RowStyle());
-            tableLayoutPanel2.RowStyles.Add(new RowStyle());
-            tableLayoutPanel2.Size = new Size(394, 89);
-            tableLayoutPanel2.TabIndex = 0;
+            authenticationLayout.AutoSize = true;
+            authenticationLayout.ColumnCount = 2;
+            authenticationLayout.ColumnStyles.Add(new ColumnStyle());
+            authenticationLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            authenticationLayout.Controls.Add(authenticationTypeLayout, 0, 0);
+            authenticationLayout.Controls.Add(serverUserNameLayout, 0, 1);
+            authenticationLayout.Controls.Add(serverUserNameData, 1, 1);
+            authenticationLayout.Controls.Add(serverUserPasswordLayout, 0, 2);
+            authenticationLayout.Controls.Add(serverUserPasswordData, 1, 2);
+            authenticationLayout.Controls.Add(authenticationChoiceLayout, 1, 0);
+            authenticationLayout.Dock = DockStyle.Fill;
+            authenticationLayout.Location = new Point(3, 19);
+            authenticationLayout.Name = "authenticationLayout";
+            authenticationLayout.RowCount = 3;
+            authenticationLayout.RowStyles.Add(new RowStyle());
+            authenticationLayout.RowStyles.Add(new RowStyle());
+            authenticationLayout.RowStyles.Add(new RowStyle());
+            authenticationLayout.Size = new Size(394, 89);
+            authenticationLayout.TabIndex = 0;
             // 
             // authenticationTypeLayout
             // 
@@ -288,14 +293,14 @@
             authenticationTypeLayout.TabIndex = 0;
             authenticationTypeLayout.Text = "Type";
             // 
-            // label2
+            // serverUserNameLayout
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(3, 31);
-            label2.Name = "label2";
-            label2.Size = new Size(65, 15);
-            label2.TabIndex = 2;
-            label2.Text = "User Name";
+            serverUserNameLayout.AutoSize = true;
+            serverUserNameLayout.Location = new Point(3, 31);
+            serverUserNameLayout.Name = "serverUserNameLayout";
+            serverUserNameLayout.Size = new Size(65, 15);
+            serverUserNameLayout.TabIndex = 2;
+            serverUserNameLayout.Text = "User Name";
             // 
             // serverUserNameData
             // 
@@ -305,14 +310,14 @@
             serverUserNameData.Size = new Size(317, 23);
             serverUserNameData.TabIndex = 3;
             // 
-            // label3
+            // serverUserPasswordLayout
             // 
-            label3.AutoSize = true;
-            label3.Location = new Point(3, 60);
-            label3.Name = "label3";
-            label3.Size = new Size(57, 15);
-            label3.TabIndex = 4;
-            label3.Text = "Password";
+            serverUserPasswordLayout.AutoSize = true;
+            serverUserPasswordLayout.Location = new Point(3, 60);
+            serverUserPasswordLayout.Name = "serverUserPasswordLayout";
+            serverUserPasswordLayout.Size = new Size(57, 15);
+            serverUserPasswordLayout.TabIndex = 4;
+            serverUserPasswordLayout.Text = "Password";
             // 
             // serverUserPasswordData
             // 
@@ -380,12 +385,12 @@
             dbConnectionCurrentLayout.PerformLayout();
             dbConnectionCurrentGridLayout.ResumeLayout(false);
             dbConnectionCurrentGridLayout.PerformLayout();
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
+            buttonControlsLayout.ResumeLayout(false);
+            buttonControlsLayout.PerformLayout();
             authencationLayout.ResumeLayout(false);
             authencationLayout.PerformLayout();
-            tableLayoutPanel2.ResumeLayout(false);
-            tableLayoutPanel2.PerformLayout();
+            authenticationLayout.ResumeLayout(false);
+            authenticationLayout.PerformLayout();
             authenticationChoiceLayout.ResumeLayout(false);
             authenticationChoiceLayout.PerformLayout();
             ResumeLayout(false);
@@ -393,23 +398,14 @@
 
         #endregion
 
-        private TableLayoutPanel dbConnectionLayout;
         private DataGridView dbConnectionsData;
-        private Label databaseNameHeader;
         private ComboBox serverNameData;
         private ComboBox databaseNameData;
-        private TableLayoutPanel tableLayoutPanel1;
         private Button connectCommand;
         private Button importCommand;
         private Button removeCommand;
-        private GroupBox authencationLayout;
-        private TableLayoutPanel tableLayoutPanel2;
-        private Label authenticationTypeLayout;
-        private Label label2;
         private TextBox serverUserNameData;
-        private Label label3;
         private TextBox serverUserPasswordData;
-        private TableLayoutPanel authenticationChoiceLayout;
         private RadioButton authenticateWindows;
         private RadioButton authenticateDbServer;
         private DataGridViewTextBoxColumn dbConnectionsServerNameData;
