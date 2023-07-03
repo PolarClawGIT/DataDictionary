@@ -1,17 +1,17 @@
 ﻿CREATE TABLE [App_DataDictionary].[DomainAttribute]
 (
-	[AttributeId] Int Not Null,
-	[AttributeParentId] Int Null,
+	[AttributeId] UniqueIdentifier  Not Null,
+	[AttributeParentId] UniqueIdentifier Null,
 	[AttributeTitle] NVarChar(100) Not Null,
-	[AttributeText] NVarChar(4000) Null,
-	-- TODO: Add System Versioning later once the schema is locked down
+	[AttributeDescription] NVarChar(Max) Null,
+	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DomainAttribute_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DomainAttribute_SysStart] DEFAULT (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_DomainAttribute_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
+	-- Keys
 	CONSTRAINT [PK_DomainAttribute] PRIMARY KEY CLUSTERED ([AttributeId] ASC),
 	CONSTRAINT [FK_DomainAttribute_Parent] FOREIGN KEY ([AttributeParentId]) REFERENCES [App_DataDictionary].[DomainAttribute] ([AttributeId]),
-
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DomainAttribute]

@@ -86,15 +86,23 @@
     <Build Include="dbo\Tables\SampleParent.sql" />
     <Build Include="dbo\Tables\SampleChild.sql" />
     <Build Include="dbo\DataDictionary.sql" />
-    <Build Include="App_DataDictionary\Tables\ExtendedPropertyObjectType.sql" />
-    <None Include="App_DataDictionary\ExtendedPropertyObjectType Data.sql" />
-    <Build Include="App_DataDictionary\Tables\ExtendedProperty.sql" />
+    <Build Include="App_DataDictionary\Tables\ApplicationProperty.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttributeProperty.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainEntity.sql" />
     <Build Include="App_Help\Tables\HelpDocument.sql" />
     <Build Include="App_DataDictionary\Tables\SecurityPrinciple.sql" />
     <Build Include="App_DataDictionary\Tables\SecurityRole.sql" />
     <Build Include="App_DataDictionary\Tables\SecurityPermission.sql" />
+    <Build Include="App_DataDictionary\Tables\ApplicationModel.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainEntity.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainEntityProperty.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainEntityAlias.sql" />
+    <Build Include="App_DataDictionary\Tables\DatabaseTable.sql" />
+    <Build Include="App_DataDictionary\Tables\ApplicationAttribute.sql" />
+    <Build Include="App_DataDictionary\Tables\ApplicationEntity.sql" />
+    <Build Include="App_DataDictionary\Tables\DatabaseCatalog.sql" />
+    <Build Include="App_DataDictionary\Tables\ApplicationCatalog.sql" />
+    <Build Include="App_DataDictionary\Tables\DatabaseSchema.sql" />
+    <Build Include="App_DataDictionary\Tables\DatabaseColumn.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
