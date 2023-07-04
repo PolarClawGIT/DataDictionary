@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [App_DataDictionary].[ApplicationModel]
 (
 	-- This is equivalent to a file within the file systems. Instead of saving to the file system, the data is saved to the database.
-	[ModelId] UniqueIdentifier NOT NULL,
+	[ModelId] UniqueIdentifier NOT NULL CONSTRAINT [DF_ApplicationModel_ModelId] DEFAULT (NEWSEQUENTIALID()),
 	[ModelTitle] NVarChar(100) Not Null,
 	[ModelDescription] NVarChar(Max) Null,
 	-- TODO: Add System Version later once the schema is locked down

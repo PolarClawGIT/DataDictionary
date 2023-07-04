@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [App_DataDictionary].[DomainEntity]
 (
-	[EntityId] UniqueIdentifier  Not Null,
+	[EntityId] UniqueIdentifier Not Null CONSTRAINT [DF_DomainEntity_EntityId] DEFAULT (NEWSEQUENTIALID()),
 	[EntityParentId] UniqueIdentifier Null,
 	[EntityTitle] NVarChar(100) Not Null,
 	[EntityDescription] NVarChar(Max) Null,
