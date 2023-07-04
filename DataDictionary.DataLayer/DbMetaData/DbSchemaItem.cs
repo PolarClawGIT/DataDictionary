@@ -50,7 +50,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public static IDataReader GetDataReader(IConnection connection)
         {
             SqlCommand getCommand = connection.CreateCommand();
-            getCommand.CommandText = "Select Db_Name() As [SCHEMA_CATALOG], [name] As [SCHEMA_NAME] From [Sys].[Schemas]";
+            getCommand.CommandText = DbScript.DbSchemaItem;
             getCommand.CommandType = CommandType.Text;
 
             return connection.GetReader(getCommand);

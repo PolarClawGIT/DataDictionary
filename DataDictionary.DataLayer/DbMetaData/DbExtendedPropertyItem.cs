@@ -68,10 +68,10 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public SqlCommand GetCommand()
         {
-            // There appears to be a bug in Microsoft Code that can cause the paramters to be incorrectly setup when building the SQL statement for the parameters.
-            // This appears to be avoid when the paramter is setup with a defined type and length.
-            // There is also no way to pass the parameter "Default". For this function, passing NULL is apporate but this is not always the case.
-            command.CommandText = "SELECT Db_Name() [CatalogName], @Level0Type [Level0Type], @Level0Name [Level0Name], @Level1Type [Level1Type], @Level1Name [Level1Name], @Level2Type [Level2Type], @Level2Name [Level2Name], [objtype], [objname], [name], [value] FROM [fn_listextendedproperty](@PropertyName, @Level0Type, @Level0Name, @Level1Type, @Level1Name, @Level2Type, @Level2Name)";
+            // There appears to be a bug in Microsoft Code that can cause the parameters to be incorrectly setup when building the SQL statement for the parameters.
+            // This appears to be avoid when the parameter is setup with a defined type and length.
+            // There is also no way to pass the parameter "Default". For this function, passing NULL is appropriate but this is not always the case.
+            command.CommandText = DbScript.DbExtendedPropertyItem;
             command.Parameters.Add(new SqlParameter("@PropertyName", SqlDbType.VarChar, 210));
             command.Parameters.Add(new SqlParameter("@Level0Type", SqlDbType.VarChar, 210));
             command.Parameters.Add(new SqlParameter("@Level0Name", SqlDbType.VarChar, 210));
@@ -134,7 +134,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         { return columnDefinitions; }
     }
 
-    #region Enum ExtendedProperty tranlation
+    #region Enum ExtendedProperty translation
     public enum ExtendedPropertyCatalogScope
     {
         NULL,
