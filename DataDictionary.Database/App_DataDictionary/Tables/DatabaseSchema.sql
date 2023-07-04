@@ -8,4 +8,5 @@
 	-- Keys
 	CONSTRAINT [PK_DatabaseSchema] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC),
 	CONSTRAINT [FK_DatabaseSchemaCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
+    -- Select Db_Name() As [SCHEMA_CATALOG], [name] As [SCHEMA_NAME] From [Sys].[Schemas]
 )

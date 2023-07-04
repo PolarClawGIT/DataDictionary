@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[ApplicationCatalog]
+﻿CREATE TABLE [App_DataDictionary].[ApplicationCatalog]
 (
 	[ModelId] UniqueIdentifier NOT NULL,
 	[CatalogId] UniqueIdentifier NOT NULL,
