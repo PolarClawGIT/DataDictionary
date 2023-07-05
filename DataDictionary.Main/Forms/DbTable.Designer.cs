@@ -166,9 +166,9 @@
             tableNameLayout.AutoSize = true;
             tableNameLayout.Location = new Point(3, 88);
             tableNameLayout.Name = "tableNameLayout";
-            tableNameLayout.Size = new Size(77, 15);
+            tableNameLayout.Size = new Size(69, 15);
             tableNameLayout.TabIndex = 2;
-            tableNameLayout.Text = "Object Name";
+            tableNameLayout.Text = "Table Name";
             // 
             // catalogNameData
             // 

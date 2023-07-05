@@ -1,6 +1,6 @@
 ﻿namespace DataDictionary.Main.Forms
 {
-    partial class DbConnection
+    partial class DbCatalog
     {
         /// <summary>
         /// Required designer variable.
@@ -40,7 +40,7 @@
             Label serverUserNameLayout;
             Label serverUserPasswordLayout;
             TableLayoutPanel authenticationChoiceLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbConnection));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbCatalog));
             dbConnectionsData = new DataGridView();
             dbConnectionsServerNameData = new DataGridViewTextBoxColumn();
             dbConnectionsDatabaseData = new DataGridViewTextBoxColumn();

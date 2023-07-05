@@ -47,7 +47,7 @@
             Label numericScaleLayout;
             Label dateTimePrecisionLayout;
             Label schemaNameLayout;
-            Label objectNameLayout;
+            Label tableNameLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbColumn));
             extendedPropertiesData = new DataGridView();
             propertyNameData = new DataGridViewTextBoxColumn();
@@ -102,7 +102,7 @@
             numericScaleLayout = new Label();
             dateTimePrecisionLayout = new Label();
             schemaNameLayout = new Label();
-            objectNameLayout = new Label();
+            tableNameLayout = new Label();
             dbTableLayout.SuspendLayout();
             columnDetailLayout.SuspendLayout();
             extendedPropertiesTab.SuspendLayout();
@@ -126,7 +126,7 @@
             dbTableLayout.Controls.Add(columnDetailLayout, 0, 8);
             dbTableLayout.Controls.Add(catalogNameLayout, 0, 0);
             dbTableLayout.Controls.Add(schemaNameLayout, 0, 2);
-            dbTableLayout.Controls.Add(objectNameLayout, 0, 4);
+            dbTableLayout.Controls.Add(tableNameLayout, 0, 4);
             dbTableLayout.Controls.Add(catalogNameData, 0, 1);
             dbTableLayout.Controls.Add(schemaNameData, 0, 3);
             dbTableLayout.Controls.Add(tableNameData, 0, 5);
@@ -645,14 +645,14 @@
             schemaNameLayout.TabIndex = 1;
             schemaNameLayout.Text = "Schema Name";
             // 
-            // objectNameLayout
+            // tableNameLayout
             // 
-            objectNameLayout.AutoSize = true;
-            objectNameLayout.Location = new Point(3, 88);
-            objectNameLayout.Name = "objectNameLayout";
-            objectNameLayout.Size = new Size(77, 15);
-            objectNameLayout.TabIndex = 2;
-            objectNameLayout.Text = "Object Name";
+            tableNameLayout.AutoSize = true;
+            tableNameLayout.Location = new Point(3, 88);
+            tableNameLayout.Name = "tableNameLayout";
+            tableNameLayout.Size = new Size(69, 15);
+            tableNameLayout.TabIndex = 2;
+            tableNameLayout.Text = "Table Name";
             // 
             // catalogNameData
             // 

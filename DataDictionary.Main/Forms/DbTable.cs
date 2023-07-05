@@ -18,7 +18,7 @@ namespace DataDictionary.Main.Forms
     {
         class FormData
         {
-            public DbObjectName TableName { get; set; } = new DbObjectName();
+            public DbTableName TableName { get; set; } = new DbTableName();
             public IDbTableItem? DbTable { get; set; }
             public BindingList<DbExtendedPropertyItem> DbExtendedProperties { get; set; } = new BindingList<DbExtendedPropertyItem>();
             public BindingList<DbColumnItem> DbColumn { get; set; } = new BindingList<DbColumnItem>();
@@ -30,7 +30,7 @@ namespace DataDictionary.Main.Forms
 
         public DbTable(IDbTableItem tableItem) : this()
         {
-            data.TableName = new DbObjectName(tableItem);
+            data.TableName = new DbTableName(tableItem);
             this.Text = String.Format("{0}: {1}", this.Text, data.TableName.ToString());
         }
 

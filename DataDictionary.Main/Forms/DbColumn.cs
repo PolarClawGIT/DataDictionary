@@ -88,7 +88,7 @@ namespace DataDictionary.Main.Forms
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = data.DbExtendedProperties;
             }
-            else { errorProvider.SetError(catalogNameLayout, "Schmema information not avaiable"); }
+            else { errorProvider.SetError(catalogNameLayout, "Schema information not available"); }
 
         }
 

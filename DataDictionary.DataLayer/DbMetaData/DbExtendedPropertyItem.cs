@@ -25,7 +25,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         String? Level2Name { get; }
         ExtendedPropertyCatalogScope CatalogScope { get; }
         ExtendedPropertyObjectScope ObjectScope { get; }
-        ExtendedPropertyItemScope ItemScope { get; }
+        ExtendedPropertyElementScope ElementScope { get; }
         String? ObjectType { get; }
         String? ObjectName { get; }
         ExtendedPropertyObjectType PropertyObjectType { get; }
@@ -55,7 +55,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             set { Level1Type = value.GetScope(); }
         }
 
-        public ExtendedPropertyItemScope ItemScope
+        public ExtendedPropertyElementScope ItemScope
         {
             get { return ExtendedPropertyExtension.GetItemScope(Level2Type); }
             set { Level2Type = value.GetScope(); }
@@ -105,7 +105,7 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public String? Level2Type { get { return GetValue("Level2Type"); } }
         public String? Level2Name { get { return GetValue("Level2Name"); } }
-        public ExtendedPropertyItemScope ItemScope { get { return ExtendedPropertyExtension.GetItemScope(Level2Type); } }
+        public ExtendedPropertyElementScope ElementScope { get { return ExtendedPropertyExtension.GetItemScope(Level2Type); } }
 
         public String? ObjectType { get { return GetValue("objtype"); } }
         public String? ObjectName { get { return GetValue("objname"); } }
@@ -171,7 +171,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         XmlSchemaCollection,
     }
 
-    public enum ExtendedPropertyItemScope
+    public enum ExtendedPropertyElementScope
     {
         NULL,
         Default,
@@ -275,21 +275,21 @@ namespace DataDictionary.DataLayer.DbMetaData
             else { return String.Empty; }
         }
 
-        static Dictionary<ExtendedPropertyItemScope, String> itemScope = new Dictionary<ExtendedPropertyItemScope, String>()
+        static Dictionary<ExtendedPropertyElementScope, String> itemScope = new Dictionary<ExtendedPropertyElementScope, String>()
         {
-            {ExtendedPropertyItemScope.Default,"DEFAULT"},
-            {ExtendedPropertyItemScope.Column,"COLUMN"},
-            {ExtendedPropertyItemScope.Constraint,"CONSTRAINT"},
-            {ExtendedPropertyItemScope.EventNotification,"EVENT NOTIFICATION"},
-            {ExtendedPropertyItemScope.Index,"INDEX"},
-            {ExtendedPropertyItemScope.Parameter,"PARAMETER"},
-            {ExtendedPropertyItemScope.Trigger,"TRIGGER"},
+            {ExtendedPropertyElementScope.Default,"DEFAULT"},
+            {ExtendedPropertyElementScope.Column,"COLUMN"},
+            {ExtendedPropertyElementScope.Constraint,"CONSTRAINT"},
+            {ExtendedPropertyElementScope.EventNotification,"EVENT NOTIFICATION"},
+            {ExtendedPropertyElementScope.Index,"INDEX"},
+            {ExtendedPropertyElementScope.Parameter,"PARAMETER"},
+            {ExtendedPropertyElementScope.Trigger,"TRIGGER"},
         };
 
-        public static ExtendedPropertyItemScope GetItemScope(String? value)
+        public static ExtendedPropertyElementScope GetItemScope(String? value)
         { return itemScope.FirstOrDefault(w => w.Value.Equals(value, StringComparison.CurrentCultureIgnoreCase)).Key; }
 
-        public static String? GetScope(this ExtendedPropertyItemScope value)
+        public static String? GetScope(this ExtendedPropertyElementScope value)
         {
             if (itemScope.ContainsKey(value)) { return itemScope[value]; }
             else { return null; }

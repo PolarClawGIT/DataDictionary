@@ -17,7 +17,7 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbConnection : ApplicationFormBase
+    partial class DbCatalog : ApplicationFormBase
     {
         class FormData : INotifyPropertyChanged
         {
@@ -44,7 +44,7 @@ namespace DataDictionary.Main.Forms
                     {
                         ServerName = ServerName,
                         DatabaseName = DatabaseName,
-                        //TODO: User Name, Password, and authentcation option are not yet supported
+                        //TODO: User Name, Password, and authentication option are not yet supported
                         //ServerUserName = serverUserName,
                         //ServerUserPassword = ServerUserPassword 
                     };
@@ -79,7 +79,7 @@ namespace DataDictionary.Main.Forms
 
         FormData data = new FormData();
 
-        public DbConnection()
+        public DbCatalog()
         {
             InitializeComponent();
 

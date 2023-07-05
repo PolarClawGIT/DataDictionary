@@ -11,7 +11,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbTableItem : IDbObjectName, IDbIsSystem
+    public interface IDbTableItem : IDbTableName, IDbIsSystem
     {
         public String? TableType { get; }
     }

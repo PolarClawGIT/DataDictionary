@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbColumnName : IDbObjectName
+    public interface IDbColumnName : IDbTableName
     {
         public String? ColumnName { get; }
     }
 
-    public class DbColumnName : DbObjectName, IDbColumnName, IEquatable<IDbColumnName>, IComparable<IDbColumnName>, IComparable
+    public class DbColumnName : DbTableName, IDbColumnName, IEquatable<IDbColumnName>, IComparable<IDbColumnName>, IComparable
     {
         public String ColumnName { get; init; } = String.Empty;
 
@@ -28,7 +28,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             return (
                 other is IDbSchemaName &&
-                new DbObjectName(this).Equals(other) &&
+                new DbTableName(this).Equals(other) &&
                 !String.IsNullOrEmpty(ColumnName) &&
                 !String.IsNullOrEmpty(other.ColumnName) &&
                 ColumnName.Equals(other.ColumnName, StringComparison.CurrentCultureIgnoreCase));
@@ -37,7 +37,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public Int32 CompareTo(IDbColumnName? other)
         {
             if (other is null) { return 1; }
-            else if (new DbObjectName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
+            else if (new DbTableName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
             else { return String.Compare(ColumnName, other.ColumnName, true); }
         }
 

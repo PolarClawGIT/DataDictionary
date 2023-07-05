@@ -63,9 +63,9 @@ namespace DataDictionary.Main
         #region Menu Events
         private void importFromDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbConnection)) is Forms.DbConnection existingForm)
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbCatalog)) is Forms.DbCatalog existingForm)
             { existingForm.Activate(); }
-            else { new Forms.DbConnection().Show(); }
+            else { new Forms.DbCatalog().Show(); }
         }
 
         private void viewExtendedPropertiesToolStripMenuItem_Click(object sender, EventArgs e)

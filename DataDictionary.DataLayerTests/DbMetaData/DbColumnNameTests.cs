@@ -33,14 +33,14 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
             DbColumnName item = new DbColumnName(dataA1);
 
             Assert.IsTrue(item is DbColumnName, "new DbColumnName(dataA1) is DbColumnName");
-            Assert.IsTrue(item is DbObjectName, "new DbColumnName(dataA1) is DbObjectName");
+            Assert.IsTrue(item is DbTableName, "new DbColumnName(dataA1) is DbObjectName");
             Assert.IsTrue(item is DbSchemaName, "new DbColumnName(dataA1) is DbSchemaName");
             Assert.IsTrue(item is DbCatalogName, "new DbColumnName(dataA1) is DbCatalogName");
 
             Assert.IsTrue(item is IDbColumnName, "new DbColumnName(dataA1) is IDbColumnName");
             Assert.IsTrue(item is IDbSchemaName, "new DbColumnName(dataA1) is IDbSchemaName");
             Assert.IsTrue(item is IDbCatalogName, "new DbColumnName(dataA1) is IDbCatalogName");
-            Assert.IsTrue(item is IDbObjectName, "new DbColumnName(dataA1) is IDbObjectName");
+            Assert.IsTrue(item is IDbTableName, "new DbColumnName(dataA1) is IDbObjectName");
         }
 
         [Test()]
