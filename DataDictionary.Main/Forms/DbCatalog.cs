@@ -21,7 +21,7 @@ namespace DataDictionary.Main.Forms
     {
         class FormData : INotifyPropertyChanged
         {
-            public BindingList<DbContext> AvailableContexts { get; } = new BindingList<DbContext>();
+            public BindingList<DbSchemaContext> AvailableContexts { get; } = new BindingList<DbSchemaContext>();
 
             private string? serverName;
             public String? ServerName { get { return serverName; } set { serverName = value; OnPropertyChanged(nameof(ServerName)); } }
@@ -35,12 +35,12 @@ namespace DataDictionary.Main.Forms
             public String? serverUserPassword;
             public String? ServerUserPassword { get { return serverUserPassword; } set { serverUserPassword = value; OnPropertyChanged(nameof(ServerUserPassword)); } }
 
-            public DbContext? DbContext
+            public DbSchemaContext? DbContext
             {
                 get
                 {
                     if (String.IsNullOrEmpty(ServerName) || String.IsNullOrEmpty(DatabaseName)) { return null; }
-                    return new DbContext()
+                    return new DbSchemaContext()
                     {
                         ServerName = ServerName,
                         DatabaseName = DatabaseName,
@@ -51,7 +51,7 @@ namespace DataDictionary.Main.Forms
                 }
                 set
                 {
-                    if (value is DbContext)
+                    if (value is DbSchemaContext)
                     {
                         ServerName = value.ServerName;
                         DatabaseName = value.DatabaseName;
@@ -97,7 +97,7 @@ namespace DataDictionary.Main.Forms
                         data.AvailableContexts.FirstOrDefault(
                             w => w.ServerName == serverName &&
                             w.DatabaseName == databaseName) is null)
-                    { data.AvailableContexts.Add(new DbContext() { ServerName = serverName, DatabaseName = databaseName }); }
+                    { data.AvailableContexts.Add(new DbSchemaContext() { ServerName = serverName, DatabaseName = databaseName }); }
                 }
             }
         }
@@ -138,7 +138,7 @@ namespace DataDictionary.Main.Forms
             dbConnectionsData.ClearSelection();
 
             if (dbConnectionsData.Rows.Cast<DataGridViewRow>().Where(
-                w => w.DataBoundItem is DbContext context &&
+                w => w.DataBoundItem is DbSchemaContext context &&
                 context.ServerName == data.ServerName &&
                 context.DatabaseName == data.DatabaseName).FirstOrDefault() is DataGridViewRow row)
             { row.Selected = true; }
@@ -181,7 +181,7 @@ namespace DataDictionary.Main.Forms
             this.UseWaitCursor = true;
             this.Enabled = false;
 
-            if (data.DbContext is DbContext)
+            if (data.DbContext is DbSchemaContext)
             {
                 Program.WorkerQueue.Enqueue(new DbVerifyConnection(data.DbContext) { WorkName = "Open Connection" });
                 Program.WorkerQueue.Enqueue(Program.DbData.GetDatabases(data.DbContext, onComplete));
@@ -219,9 +219,9 @@ namespace DataDictionary.Main.Forms
             UnBindData();
             SendMessage(new DbDataBatchStarting());
 
-            if (data.DbContext is DbContext)
+            if (data.DbContext is DbSchemaContext)
             {
-                if (data.DbContext is DbContext) { Program.WorkerQueue.Enqueue(Program.DbData.RemoveDb(data.DbContext)); }
+                if (data.DbContext is DbSchemaContext) { Program.WorkerQueue.Enqueue(Program.DbData.RemoveDb(data.DbContext)); }
                 Program.WorkerQueue.Enqueue(new DbVerifyConnection(data.DbContext) { WorkName = "Open Connection" });
                 Program.WorkerQueue.Enqueue(Program.DbData.ImportDb(data.DbContext, onComplete));
             }
@@ -262,7 +262,7 @@ namespace DataDictionary.Main.Forms
             SendMessage(new DbDataBatchStarting());
 
 
-            if (data.DbContext is DbContext)
+            if (data.DbContext is DbSchemaContext)
             { Program.WorkerQueue.Enqueue(Program.DbData.RemoveDb(data.DbContext, onComplete)); }
 
             void onComplete()
@@ -278,7 +278,7 @@ namespace DataDictionary.Main.Forms
         {
             if (dbConnectionsData.SelectedRows.Count > 0)
             {
-                if (dbConnectionsData.SelectedRows[0].DataBoundItem is DbContext context)
+                if (dbConnectionsData.SelectedRows[0].DataBoundItem is DbSchemaContext context)
                 { data.DbContext = context; }
             }
         }

@@ -16,14 +16,14 @@ namespace DataDictionary.BusinessLayer
 {
     public class DatabaseMetaData
     {
-        public BindingList<DbContext> DbConnections { get; } = new BindingList<DbContext>();
+        public BindingList<DbSchemaContext> DbConnections { get; } = new BindingList<DbSchemaContext>();
         public BindingTable<DbCatalogItem> DbCatalogs { get; } = new BindingTable<DbCatalogItem>();
         public BindingTable<DbSchemaItem> DbSchemas { get; } = new BindingTable<DbSchemaItem>();
         public BindingTable<DbTableItem> DbTables { get; } = new BindingTable<DbTableItem>();
         public BindingTable<DbColumnItem> DbColumns { get; } = new BindingTable<DbColumnItem>();
         public BindingTable<DbExtendedPropertyItem> DbExtendedProperties = new BindingTable<DbExtendedPropertyItem>();
 
-        public IWorkItem ImportDb(DbContext connection, Action? onComplete = null)
+        public IWorkItem ImportDb(DbSchemaContext connection, Action? onComplete = null)
         {
             List<IWorkItem> workItems = new List<IWorkItem>();
 
@@ -149,7 +149,7 @@ namespace DataDictionary.BusinessLayer
             }
         }
 
-        public IWorkItem RemoveDb(DbContext connection, Action? onComplete = null)
+        public IWorkItem RemoveDb(DbSchemaContext connection, Action? onComplete = null)
         {
             List<IWorkItem> workItems = new List<IWorkItem>();
 

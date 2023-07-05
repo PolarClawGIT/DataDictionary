@@ -17,7 +17,7 @@ namespace Toolbox.DbContext
     {
         internal SqlConnectionStringBuilder ConnectionBuilder { get; set; } = new SqlConnectionStringBuilder()
         {
-            ApplicationName = "Data Dictionary Manager (C) 2023 William Howard" // TODO: pull this from the Assebmly?
+            ApplicationName = "Data Dictionary Manager (C) 2023 William Howard" // TODO: pull this from the Assembly?
         };
 
         public String ServerName { get { return ConnectionBuilder.DataSource; } init { ConnectionBuilder.DataSource = value; } }
@@ -34,6 +34,9 @@ namespace Toolbox.DbContext
         public SqlAuthenticationMethod? Authentication { get { return ConnectionBuilder.Authentication; } }
         public String ServerUserName { get { return ConnectionBuilder.UserID; } init { ConnectionBuilder.UserID = value; } }
         public String ServerUserPassword { get { return ConnectionBuilder.Password; } init { ConnectionBuilder.Password = value; } }
+
+        public String? ApplicationRole { internal get; init; }
+        public String? ApplicationRolePassword { internal get; init; }
 
         /// <summary>
         /// Constructor.

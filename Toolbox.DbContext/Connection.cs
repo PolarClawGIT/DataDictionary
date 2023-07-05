@@ -13,7 +13,7 @@ namespace Toolbox.DbContext
     public interface IConnection : IDisposable
     {
         /// <summary>
-        /// Has an Exception occured within the scope of this connection.
+        /// Has an Exception occurred within the scope of this connection.
         /// </summary>
         Boolean HasException { get; }
 
@@ -23,7 +23,7 @@ namespace Toolbox.DbContext
         void Open();
 
         /// <summary>
-        /// Returns the Schema data for the spcefied Sql Collection.
+        /// Returns the Schema data for the specified SQL Collection.
         /// </summary>
         /// <param name="collection"></param>
         /// <returns></returns>
@@ -66,12 +66,27 @@ namespace Toolbox.DbContext
             {
                 connection.ConnectionString = DbContext.ConnectionBuilder.ConnectionString;
                 connection.Open();
+
+                // Activate the Application role
+                if (!String.IsNullOrEmpty(DbContext.ApplicationRole))
+                {
+                    SqlCommand roleCommand = connection.CreateCommand();
+                    roleCommand.CommandType = CommandType.StoredProcedure;
+                    roleCommand.CommandText = "sys.sp_setapprole";
+                    roleCommand.Parameters.Add(new SqlParameter("@rolename", DbContext.ApplicationRole));
+                    roleCommand.Parameters.Add(new SqlParameter("@password", DbContext.ApplicationRolePassword));
+                    roleCommand.ExecuteNonQuery();
+                }
+
                 transaction = connection.BeginTransaction();
             }
             catch (Exception ex)
             {
                 HasException = true;
-                ex.Data.Add("ConnectionString", DbContext.ConnectionBuilder.ConnectionString);
+                ex.Data.Add(nameof(DbContext.ConnectionBuilder.ConnectionString), DbContext.ConnectionBuilder.ConnectionString);
+                if (!String.IsNullOrEmpty(DbContext.ApplicationRole))
+                { ex.Data.Add(nameof(DbContext.ApplicationRole), DbContext.ApplicationRole); }
+
                 throw;
             }
         }
