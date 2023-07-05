@@ -35,10 +35,13 @@
             // 
             // schemaData
             // 
+            schemaData.AllowUserToAddRows = false;
+            schemaData.AllowUserToDeleteRows = false;
             schemaData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             schemaData.Dock = DockStyle.Fill;
             schemaData.Location = new Point(0, 0);
             schemaData.Name = "schemaData";
+            schemaData.ReadOnly = true;
             schemaData.RowTemplate.Height = 25;
             schemaData.Size = new Size(516, 343);
             schemaData.TabIndex = 0;

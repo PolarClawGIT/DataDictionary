@@ -38,10 +38,11 @@ namespace DataDictionary.DataLayer.DbMetaData
         public static IDataReader GetSchema(IConnection connection)
         {
             SqlCommand command = connection.CreateCommand();
+            command.CommandType = CommandType.Text;
             command.CommandText = DbScript.DbCatalogItem;
             command.Parameters.Add(new SqlParameter("@Server", SqlDbType.NVarChar) { Value = connection.ServerName });
 
-            return command.ExecuteReader();
+            return connection.ExecuteReader(command);
         }
     }
 }

@@ -61,11 +61,42 @@ namespace DataDictionary.DataLayer.DbMetaData {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select Convert(UniqueIdentifier,Null) As [CatalogId], Db_Name() As [CatalogName], @Server As [SourceServerName].
+        ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+        ///	Db_Name() As [CatalogName],
+        ///	@Server As [SourceServerName].
         /// </summary>
         internal static string DbCatalogItem {
             get {
                 return ResourceManager.GetString("DbCatalogItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+        ///	I.[TABLE_CATALOG],
+        ///	I.[TABLE_SCHEMA],
+        ///	I.[TABLE_NAME],
+        ///	I.[COLUMN_NAME],
+        ///	I.[ORDINAL_POSITION],
+        ///	I.[COLUMN_DEFAULT],
+        ///	I.[IS_NULLABLE],
+        ///	I.[DATA_TYPE],
+        ///	I.[CHARACTER_MAXIMUM_LENGTH],
+        ///	I.[CHARACTER_OCTET_LENGTH],
+        ///	I.[NUMERIC_PRECISION],
+        ///	I.[NUMERIC_PRECISION_RADIX],
+        ///	I.[NUMERIC_SCALE],
+        ///	I.[DATETIME_PRECISION],
+        ///	I.[CHARACTER_SET_CATALOG],
+        ///	I.[CHARACTER_SET_SCHEMA],
+        ///	I.[CHARACTER_SET_NAME],
+        ///	I.[COLLATION_CATALOG],
+        ///	I.[COLLATION_SCHEMA],
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DbColumnItem {
+            get {
+                return ResourceManager.GetString("DbColumnItem", resourceCulture);
             }
         }
         
@@ -79,11 +110,37 @@ namespace DataDictionary.DataLayer.DbMetaData {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select Db_Name() As [SCHEMA_CATALOG], [name] As [SCHEMA_NAME] From [Sys].[Schemas].
+        ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+        ///	[CATALOG_NAME],
+        ///	[SCHEMA_NAME]
+        ///From	[INFORMATION_SCHEMA].[SCHEMATA].
         /// </summary>
         internal static string DbSchemaItem {
             get {
                 return ResourceManager.GetString("DbSchemaItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+        ///	I.[TABLE_CATALOG],
+        ///	I.[TABLE_SCHEMA],
+        ///	I.[TABLE_NAME],
+        ///	Case
+        ///	When H.[object_id] is Not Null Then &apos;HISTORY TABLE&apos;
+        ///	When T.[history_table_id] is Not Null Then &apos;TEMPORAL TABLE&apos;
+        ///	Else I.[TABLE_TYPE]
+        ///	End As [TABLE_TYPE]
+        ///From	[INFORMATION_SCHEMA].[TABLES] I
+        ///	Left Join [sys].[Tables] T
+        ///	On	I.[TABLE_SCHEMA] = Object_Schema_Name(T.[object_id]) And
+        ///		I.[TABLE_NAME] = Object_Name(T.[object_id])
+        ///	Left Join [sys].[Tables] H
+        ///	On	I.[TABLE_SCHEMA] = Obj [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DbTableItem {
+            get {
+                return ResourceManager.GetString("DbTableItem", resourceCulture);
             }
         }
     }

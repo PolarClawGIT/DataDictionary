@@ -154,24 +154,24 @@ namespace Toolbox.BindingTable
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="columnName"></param>
-        /// <param name="praseFunction"></param>
+        /// <param name="parseFunction"></param>
         /// <returns></returns>
         /// <remarks>
         /// Some data types do not implment IParsable (like Boolean) or a specialzied version of TryParse is needed.
         /// This allows a TryParse function to be passed in.
         /// </remarks>
-        protected virtual Nullable<T> GetValue<T>(String columnName, tryParseDelegate<T> praseFunction)
+        protected virtual Nullable<T> GetValue<T>(String columnName, tryParseDelegate<T> parseFunction)
             where T : struct
         {
             if (String.IsNullOrWhiteSpace(columnName)) { throw new ArgumentNullException(nameof(columnName)); }
-            if (praseFunction is null) { throw new ArgumentNullException(nameof(praseFunction)); }
+            if (parseFunction is null) { throw new ArgumentNullException(nameof(parseFunction)); }
             if (data is not DataRow row) { throw new InvalidOperationException("Internal DataRow is not defined"); }
             if (!row.Table.Columns.Contains(columnName)) { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
 
             if (row[columnName] == DBNull.Value) { return new Nullable<T>(); }
 
             if (row[columnName].ToString() is String stringValue &&
-                praseFunction(stringValue, out T result))
+                parseFunction(stringValue, out T result))
             { return new Nullable<T>(result); }
 
             // Parsing failed

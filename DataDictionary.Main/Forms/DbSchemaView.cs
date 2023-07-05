@@ -15,7 +15,7 @@ namespace DataDictionary.Main.Forms
     partial class DbSchemaView : ApplicationFormBase
     {
         public DbSchemaView() : base()
-        {   InitializeComponent(); }
+        { InitializeComponent(); }
 
         private void DbSchemaView_Load(object sender, EventArgs e)
         { BindData(); }

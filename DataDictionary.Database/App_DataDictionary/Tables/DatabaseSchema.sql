@@ -7,7 +7,8 @@
 	CONSTRAINT [FK_DatabaseSchemaCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
 )
 /*
-Select	CATALOG_NAME,
-		SCHEMA_NAME
+Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+		[CATALOG_NAME],
+		[SCHEMA_NAME]
 From	[INFORMATION_SCHEMA].[SCHEMATA]
 */

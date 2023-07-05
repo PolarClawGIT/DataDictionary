@@ -45,16 +45,16 @@ namespace DataDictionary.Main.Forms
             {
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data.DbTable, nameof(data.DbTable.CatalogName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data.DbTable, nameof(data.DbTable.SchemaName)));
-                tableNameData.DataBindings.Add(new Binding(nameof(tableNameData.Text), data.DbTable, nameof(data.DbTable.ObjectName)));
+                tableNameData.DataBindings.Add(new Binding(nameof(tableNameData.Text), data.DbTable, nameof(data.DbTable.TableName)));
                 tableTypeData.DataBindings.Add(new Binding(nameof(tableTypeData.Text), data.DbTable, nameof(data.DbTable.TableType)));
-                tableIsSystemData.DataBindings.Add(new Binding(nameof(tableIsSystemData.Checked), data.DbTable, nameof(data.DbTable.IsSystem)));
+                isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), data.DbTable, nameof(data.DbTable.IsSystem)));
 
                 data.DbExtendedProperties.Clear();
                 data.DbExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.Where(
                         w =>
                         w.CatalogName == data.DbTable.CatalogName &&
                         w.Level0Name == data.DbTable.SchemaName &&
-                        w.Level1Name == data.DbTable.ObjectName &&
+                        w.Level1Name == data.DbTable.TableName &&
                         w.PropertyObjectType == ExtendedPropertyObjectType.Table));
 
                 extendedPropertiesData.AutoGenerateColumns = false;
@@ -75,7 +75,7 @@ namespace DataDictionary.Main.Forms
             schemaNameData.DataBindings.Clear();
             tableNameData.DataBindings.Clear();
             tableTypeData.DataBindings.Clear();
-            tableIsSystemData.DataBindings.Clear();
+            isSystemData.DataBindings.Clear();
 
             extendedPropertiesData.DataSource = null;
             tableColumnsData.DataSource = null;

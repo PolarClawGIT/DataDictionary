@@ -48,6 +48,7 @@ namespace DataDictionary.Main.Forms
             {
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data.DbSchema, nameof(data.DbSchema.CatalogName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data.DbSchema, nameof(data.DbSchema.SchemaName)));
+                isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), data.DbSchema, nameof(data.DbSchema.IsSystem)));
                 errorProvider.SetError(catalogNameLayout, String.Empty);
 
                 data.DbExtendedProperties.Clear();
@@ -60,7 +61,7 @@ namespace DataDictionary.Main.Forms
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = data.DbExtendedProperties;
             }
-            else { errorProvider.SetError(catalogNameLayout, "Schmema information not avaiable"); }
+            else { errorProvider.SetError(catalogNameLayout, "Schema information not available"); }
         }
 
         void UnBindData()

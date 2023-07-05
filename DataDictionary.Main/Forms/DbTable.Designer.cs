@@ -39,7 +39,7 @@
             TabPage columnsTab;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbTable));
             tableTypeData = new TextBox();
-            tableIsSystemData = new CheckBox();
+            isSystemData = new CheckBox();
             catalogNameLayout = new Label();
             catalogNameData = new TextBox();
             schemaNameData = new TextBox();
@@ -104,7 +104,7 @@
             dbTableDetailLayout.ColumnStyles.Add(new ColumnStyle());
             dbTableDetailLayout.Controls.Add(tableTypeData, 0, 1);
             dbTableDetailLayout.Controls.Add(tableTypeLayout, 0, 0);
-            dbTableDetailLayout.Controls.Add(tableIsSystemData, 2, 1);
+            dbTableDetailLayout.Controls.Add(isSystemData, 2, 1);
             dbTableDetailLayout.Dock = DockStyle.Fill;
             dbTableDetailLayout.Location = new Point(3, 135);
             dbTableDetailLayout.Name = "dbTableDetailLayout";
@@ -132,16 +132,16 @@
             tableTypeLayout.TabIndex = 1;
             tableTypeLayout.Text = "Table Type";
             // 
-            // tableIsSystemData
+            // isSystemData
             // 
-            tableIsSystemData.AutoCheck = false;
-            tableIsSystemData.AutoSize = true;
-            tableIsSystemData.Location = new Point(349, 18);
-            tableIsSystemData.Name = "tableIsSystemData";
-            tableIsSystemData.Size = new Size(75, 19);
-            tableIsSystemData.TabIndex = 3;
-            tableIsSystemData.Text = "Is System";
-            tableIsSystemData.UseVisualStyleBackColor = true;
+            isSystemData.AutoCheck = false;
+            isSystemData.AutoSize = true;
+            isSystemData.Location = new Point(349, 18);
+            isSystemData.Name = "isSystemData";
+            isSystemData.Size = new Size(75, 19);
+            isSystemData.TabIndex = 3;
+            isSystemData.Text = "Is System";
+            isSystemData.UseVisualStyleBackColor = true;
             // 
             // catalogNameLayout
             // 
@@ -302,7 +302,7 @@
         private TextBox tableNameData;
         private ErrorProvider errorProvider;
         private TextBox tableTypeData;
-        private CheckBox tableIsSystemData;
+        private CheckBox isSystemData;
         private DataGridView extendedPropertiesData;
         private DataGridViewTextBoxColumn propertyNameData;
         private DataGridViewTextBoxColumn propertyValueData;

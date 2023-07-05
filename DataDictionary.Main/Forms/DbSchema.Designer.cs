@@ -39,6 +39,7 @@
             propertyNameData = new DataGridViewTextBoxColumn();
             propertyValueData = new DataGridViewTextBoxColumn();
             errorProvider = new ErrorProvider(components);
+            isSystemData = new CheckBox();
             dbSchemaLayout = new TableLayoutPanel();
             schemaNameLayout = new Label();
             dbSchemaLayout.SuspendLayout();
@@ -48,13 +49,15 @@
             // 
             // dbSchemaLayout
             // 
-            dbSchemaLayout.ColumnCount = 1;
+            dbSchemaLayout.ColumnCount = 2;
             dbSchemaLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            dbSchemaLayout.ColumnStyles.Add(new ColumnStyle());
             dbSchemaLayout.Controls.Add(catalogNameLayout, 0, 0);
             dbSchemaLayout.Controls.Add(catalogNameData, 0, 1);
             dbSchemaLayout.Controls.Add(schemaNameLayout, 0, 2);
             dbSchemaLayout.Controls.Add(schemaNameData, 0, 3);
             dbSchemaLayout.Controls.Add(extendedPropertiesData, 0, 4);
+            dbSchemaLayout.Controls.Add(isSystemData, 1, 3);
             dbSchemaLayout.Dock = DockStyle.Fill;
             dbSchemaLayout.Location = new Point(0, 0);
             dbSchemaLayout.Name = "dbSchemaLayout";
@@ -78,6 +81,7 @@
             // 
             // catalogNameData
             // 
+            dbSchemaLayout.SetColumnSpan(catalogNameData, 2);
             catalogNameData.Dock = DockStyle.Fill;
             catalogNameData.Location = new Point(3, 18);
             catalogNameData.Name = "catalogNameData";
@@ -100,13 +104,14 @@
             schemaNameData.Location = new Point(3, 62);
             schemaNameData.Name = "schemaNameData";
             schemaNameData.ReadOnly = true;
-            schemaNameData.Size = new Size(378, 23);
+            schemaNameData.Size = new Size(297, 23);
             schemaNameData.TabIndex = 3;
             // 
             // extendedPropertiesData
             // 
             extendedPropertiesData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             extendedPropertiesData.Columns.AddRange(new DataGridViewColumn[] { propertyNameData, propertyValueData });
+            dbSchemaLayout.SetColumnSpan(extendedPropertiesData, 2);
             extendedPropertiesData.Dock = DockStyle.Fill;
             extendedPropertiesData.Location = new Point(3, 91);
             extendedPropertiesData.Name = "extendedPropertiesData";
@@ -132,6 +137,17 @@
             // errorProvider
             // 
             errorProvider.ContainerControl = this;
+            // 
+            // isSystemData
+            // 
+            isSystemData.AutoCheck = false;
+            isSystemData.AutoSize = true;
+            isSystemData.Location = new Point(306, 62);
+            isSystemData.Name = "isSystemData";
+            isSystemData.Size = new Size(75, 19);
+            isSystemData.TabIndex = 5;
+            isSystemData.Text = "Is System";
+            isSystemData.UseVisualStyleBackColor = true;
             // 
             // DbSchema
             // 
@@ -159,5 +175,6 @@
         private DataGridViewTextBoxColumn propertyValueData;
         private ErrorProvider errorProvider;
         private Label catalogNameLayout;
+        private CheckBox isSystemData;
     }
 }

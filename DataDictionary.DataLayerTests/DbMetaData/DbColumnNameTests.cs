@@ -15,16 +15,16 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
         {
             public String? CatalogName { get; init; }
             public String? SchemaName { get; init; }
-            public String? ObjectName { get; init; }
+            public String? TableName { get; init; }
             public String? ColumnName { get; init; }
         }
 
-        UnitTestData dataA1 = new UnitTestData() { CatalogName = "A", SchemaName = "A", ObjectName = "A", ColumnName = "A" };
-        UnitTestData dataA2 = new UnitTestData() { CatalogName = "a", SchemaName = "a", ObjectName = "a", ColumnName = "a" };
-        UnitTestData dataC1 = new UnitTestData() { CatalogName = "A", SchemaName = "A", ObjectName = "A", ColumnName = "C" };
-        UnitTestData dataC2 = new UnitTestData() { CatalogName = "C", SchemaName = "C", ObjectName = "C", ColumnName = "C" };
-        UnitTestData dataNull = new UnitTestData() { CatalogName = null, SchemaName = null, ObjectName = null, ColumnName = null };
-        UnitTestData dataBlank = new UnitTestData() { CatalogName = String.Empty, SchemaName = String.Empty, ObjectName = String.Empty, ColumnName= String.Empty };
+        UnitTestData dataA1 = new UnitTestData() { CatalogName = "A", SchemaName = "A", TableName = "A", ColumnName = "A" };
+        UnitTestData dataA2 = new UnitTestData() { CatalogName = "a", SchemaName = "a", TableName = "a", ColumnName = "a" };
+        UnitTestData dataC1 = new UnitTestData() { CatalogName = "A", SchemaName = "A", TableName = "A", ColumnName = "C" };
+        UnitTestData dataC2 = new UnitTestData() { CatalogName = "C", SchemaName = "C", TableName = "C", ColumnName = "C" };
+        UnitTestData dataNull = new UnitTestData() { CatalogName = null, SchemaName = null, TableName = null, ColumnName = null };
+        UnitTestData dataBlank = new UnitTestData() { CatalogName = String.Empty, SchemaName = String.Empty, TableName = String.Empty, ColumnName= String.Empty };
 
 
         [Test()]

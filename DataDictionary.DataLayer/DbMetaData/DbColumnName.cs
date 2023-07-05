@@ -67,8 +67,8 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public override Int32 GetHashCode()
         {
-            if (CatalogName is String && SchemaName is String && ObjectName is String && ColumnName is String)
-            { return (CatalogName, SchemaName, ObjectName, ColumnName).GetHashCode(); }
+            if (CatalogName is String && SchemaName is String && TableName is String && ColumnName is String)
+            { return (CatalogName, SchemaName, TableName, ColumnName).GetHashCode(); }
             else { return base.GetHashCode(); }
         }
         #endregion

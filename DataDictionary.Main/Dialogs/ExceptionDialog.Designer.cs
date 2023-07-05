@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             TabPage exceptionDetailStackTraceLaout;
+            Label exceptionSenderLayout;
             exceptionStackTraceData = new TextBox();
             exceptionLayout = new TableLayoutPanel();
             exceptionTypeLayout = new Label();
@@ -62,7 +63,9 @@
             exceptionSqlErrorLineNumber = new DataGridViewTextBoxColumn();
             exceptionDetailAsXmlLayout = new TabPage();
             exceptionAsXmlData = new TextBox();
+            exceptionSourceData = new TextBox();
             exceptionDetailStackTraceLaout = new TabPage();
+            exceptionSenderLayout = new Label();
             exceptionDetailStackTraceLaout.SuspendLayout();
             exceptionLayout.SuspendLayout();
             exceptionDetailLayout.SuspendLayout();
@@ -81,7 +84,7 @@
             exceptionDetailStackTraceLaout.Location = new Point(4, 24);
             exceptionDetailStackTraceLaout.Name = "exceptionDetailStackTraceLaout";
             exceptionDetailStackTraceLaout.Padding = new Padding(3);
-            exceptionDetailStackTraceLaout.Size = new Size(318, 310);
+            exceptionDetailStackTraceLaout.Size = new Size(318, 277);
             exceptionDetailStackTraceLaout.TabIndex = 5;
             exceptionDetailStackTraceLaout.Text = "Stack Trace";
             exceptionDetailStackTraceLaout.UseVisualStyleBackColor = true;
@@ -93,8 +96,17 @@
             exceptionStackTraceData.Multiline = true;
             exceptionStackTraceData.Name = "exceptionStackTraceData";
             exceptionStackTraceData.ReadOnly = true;
-            exceptionStackTraceData.Size = new Size(312, 304);
+            exceptionStackTraceData.Size = new Size(312, 271);
             exceptionStackTraceData.TabIndex = 12;
+            // 
+            // exceptionSenderLayout
+            // 
+            exceptionSenderLayout.AutoSize = true;
+            exceptionSenderLayout.Location = new Point(3, 44);
+            exceptionSenderLayout.Name = "exceptionSenderLayout";
+            exceptionSenderLayout.Size = new Size(43, 15);
+            exceptionSenderLayout.TabIndex = 6;
+            exceptionSenderLayout.Text = "Source";
             // 
             // exceptionLayout
             // 
@@ -102,13 +114,17 @@
             exceptionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             exceptionLayout.Controls.Add(exceptionTypeLayout, 0, 0);
             exceptionLayout.Controls.Add(exceptionTypeData, 0, 1);
-            exceptionLayout.Controls.Add(exceptionMessageLayout, 0, 2);
-            exceptionLayout.Controls.Add(exceptionMessageData, 0, 3);
-            exceptionLayout.Controls.Add(exceptionDetailLayout, 0, 4);
+            exceptionLayout.Controls.Add(exceptionMessageLayout, 0, 4);
+            exceptionLayout.Controls.Add(exceptionMessageData, 0, 5);
+            exceptionLayout.Controls.Add(exceptionDetailLayout, 0, 6);
+            exceptionLayout.Controls.Add(exceptionSourceData, 0, 3);
+            exceptionLayout.Controls.Add(exceptionSenderLayout, 0, 2);
             exceptionLayout.Dock = DockStyle.Fill;
             exceptionLayout.Location = new Point(0, 0);
             exceptionLayout.Name = "exceptionLayout";
-            exceptionLayout.RowCount = 5;
+            exceptionLayout.RowCount = 7;
+            exceptionLayout.RowStyles.Add(new RowStyle());
+            exceptionLayout.RowStyles.Add(new RowStyle());
             exceptionLayout.RowStyles.Add(new RowStyle());
             exceptionLayout.RowStyles.Add(new RowStyle());
             exceptionLayout.RowStyles.Add(new RowStyle());
@@ -139,7 +155,7 @@
             // 
             exceptionMessageLayout.AutoSize = true;
             exceptionMessageLayout.Dock = DockStyle.Fill;
-            exceptionMessageLayout.Location = new Point(3, 44);
+            exceptionMessageLayout.Location = new Point(3, 88);
             exceptionMessageLayout.Name = "exceptionMessageLayout";
             exceptionMessageLayout.Size = new Size(326, 15);
             exceptionMessageLayout.TabIndex = 2;
@@ -148,11 +164,11 @@
             // exceptionMessageData
             // 
             exceptionMessageData.Dock = DockStyle.Fill;
-            exceptionMessageData.Location = new Point(3, 62);
+            exceptionMessageData.Location = new Point(3, 106);
             exceptionMessageData.Multiline = true;
             exceptionMessageData.Name = "exceptionMessageData";
             exceptionMessageData.ReadOnly = true;
-            exceptionMessageData.Size = new Size(326, 108);
+            exceptionMessageData.Size = new Size(326, 97);
             exceptionMessageData.TabIndex = 3;
             // 
             // exceptionDetailLayout
@@ -163,10 +179,10 @@
             exceptionDetailLayout.Controls.Add(exceptionDetailSqlErrorLayout);
             exceptionDetailLayout.Controls.Add(exceptionDetailAsXmlLayout);
             exceptionDetailLayout.Dock = DockStyle.Fill;
-            exceptionDetailLayout.Location = new Point(3, 176);
+            exceptionDetailLayout.Location = new Point(3, 209);
             exceptionDetailLayout.Name = "exceptionDetailLayout";
             exceptionDetailLayout.SelectedIndex = 0;
-            exceptionDetailLayout.Size = new Size(326, 338);
+            exceptionDetailLayout.Size = new Size(326, 305);
             exceptionDetailLayout.TabIndex = 4;
             // 
             // exceptionDetailSummaryLayout
@@ -176,7 +192,7 @@
             exceptionDetailSummaryLayout.Location = new Point(4, 24);
             exceptionDetailSummaryLayout.Name = "exceptionDetailSummaryLayout";
             exceptionDetailSummaryLayout.Padding = new Padding(3);
-            exceptionDetailSummaryLayout.Size = new Size(318, 310);
+            exceptionDetailSummaryLayout.Size = new Size(318, 277);
             exceptionDetailSummaryLayout.TabIndex = 0;
             exceptionDetailSummaryLayout.Text = "Summary";
             // 
@@ -208,7 +224,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(312, 304);
+            tableLayoutPanel1.Size = new Size(312, 271);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // exceptionApplicationLayout
@@ -307,7 +323,7 @@
             exceptionDetailDataLayout.Controls.Add(exceptionData);
             exceptionDetailDataLayout.Location = new Point(4, 24);
             exceptionDetailDataLayout.Name = "exceptionDetailDataLayout";
-            exceptionDetailDataLayout.Size = new Size(318, 310);
+            exceptionDetailDataLayout.Size = new Size(318, 277);
             exceptionDetailDataLayout.TabIndex = 3;
             exceptionDetailDataLayout.Text = "Data";
             // 
@@ -321,7 +337,7 @@
             exceptionData.Location = new Point(0, 0);
             exceptionData.Name = "exceptionData";
             exceptionData.RowTemplate.Height = 25;
-            exceptionData.Size = new Size(318, 310);
+            exceptionData.Size = new Size(318, 277);
             exceptionData.TabIndex = 0;
             // 
             // exceptionDataKey
@@ -345,7 +361,7 @@
             exceptionDetailSqlErrorLayout.Controls.Add(exceptionSqlErrors);
             exceptionDetailSqlErrorLayout.Location = new Point(4, 24);
             exceptionDetailSqlErrorLayout.Name = "exceptionDetailSqlErrorLayout";
-            exceptionDetailSqlErrorLayout.Size = new Size(318, 310);
+            exceptionDetailSqlErrorLayout.Size = new Size(318, 277);
             exceptionDetailSqlErrorLayout.TabIndex = 4;
             exceptionDetailSqlErrorLayout.Text = "SQL Errors";
             // 
@@ -359,7 +375,7 @@
             exceptionSqlErrors.Location = new Point(0, 0);
             exceptionSqlErrors.Name = "exceptionSqlErrors";
             exceptionSqlErrors.RowTemplate.Height = 25;
-            exceptionSqlErrors.Size = new Size(318, 310);
+            exceptionSqlErrors.Size = new Size(318, 277);
             exceptionSqlErrors.TabIndex = 0;
             // 
             // exceptionSqlErrorClass
@@ -411,7 +427,7 @@
             exceptionDetailAsXmlLayout.Controls.Add(exceptionAsXmlData);
             exceptionDetailAsXmlLayout.Location = new Point(4, 24);
             exceptionDetailAsXmlLayout.Name = "exceptionDetailAsXmlLayout";
-            exceptionDetailAsXmlLayout.Size = new Size(318, 310);
+            exceptionDetailAsXmlLayout.Size = new Size(318, 277);
             exceptionDetailAsXmlLayout.TabIndex = 2;
             exceptionDetailAsXmlLayout.Text = "As XML";
             // 
@@ -423,9 +439,18 @@
             exceptionAsXmlData.Name = "exceptionAsXmlData";
             exceptionAsXmlData.ReadOnly = true;
             exceptionAsXmlData.ScrollBars = ScrollBars.Both;
-            exceptionAsXmlData.Size = new Size(318, 310);
+            exceptionAsXmlData.Size = new Size(318, 277);
             exceptionAsXmlData.TabIndex = 0;
             exceptionAsXmlData.WordWrap = false;
+            // 
+            // exceptionSourceData
+            // 
+            exceptionSourceData.Dock = DockStyle.Fill;
+            exceptionSourceData.Location = new Point(3, 62);
+            exceptionSourceData.Name = "exceptionSourceData";
+            exceptionSourceData.ReadOnly = true;
+            exceptionSourceData.Size = new Size(326, 23);
+            exceptionSourceData.TabIndex = 5;
             // 
             // ExceptionDialog
             // 
@@ -491,5 +516,6 @@
         private DataGridViewTextBoxColumn exceptionSqlErrorProcedure;
         private DataGridViewTextBoxColumn exceptionSqlErrorLineNumber;
         private TextBox exceptionStackTraceData;
+        private TextBox exceptionSourceData;
     }
 }

@@ -8,19 +8,19 @@ namespace DataDictionary.DataLayer.DbMetaData
 {
     public interface IDbTableName : IDbSchemaName
     {
-        public String? ObjectName { get; }
+        public String? TableName { get; }
     }
 
     public class DbTableName : DbSchemaName, IDbTableName, IEquatable<IDbTableName>, IComparable<IDbTableName>, IComparable
     {
-        public String ObjectName { get; init; } = String.Empty;
+        public String TableName { get; init; } = String.Empty;
 
         public DbTableName() : base() { }
 
         public DbTableName(IDbTableName source) : base(source)
         {
-            if (source.ObjectName is String) { ObjectName = source.ObjectName; }
-            else { ObjectName = String.Empty; }
+            if (source.TableName is String) { TableName = source.TableName; }
+            else { TableName = String.Empty; }
         }
 
         #region IEquatable, IComparable
@@ -29,16 +29,16 @@ namespace DataDictionary.DataLayer.DbMetaData
             return (
                 other is IDbSchemaName &&
                 new DbSchemaName(this).Equals(other) &&
-                !String.IsNullOrEmpty(ObjectName) &&
-                !String.IsNullOrEmpty(other.ObjectName) &&
-                ObjectName.Equals(other.ObjectName, StringComparison.CurrentCultureIgnoreCase));
+                !String.IsNullOrEmpty(TableName) &&
+                !String.IsNullOrEmpty(other.TableName) &&
+                TableName.Equals(other.TableName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public Int32 CompareTo(IDbTableName? other)
         {
             if (other is null) { return 1; }
             else if (new DbSchemaName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
-            else { return String.Compare(ObjectName, other.ObjectName, true); }
+            else { return String.Compare(TableName, other.TableName, true); }
         }
 
         public override int CompareTo(object? obj)
@@ -67,16 +67,16 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public override Int32 GetHashCode()
         {
-            if (CatalogName is String && SchemaName is String && ObjectName is String)
-            { return (CatalogName, SchemaName, ObjectName).GetHashCode(); }
+            if (CatalogName is String && SchemaName is String && TableName is String)
+            { return (CatalogName, SchemaName, TableName).GetHashCode(); }
             else { return base.GetHashCode(); }
         }
         #endregion
 
         public override string ToString()
         {
-            if (ObjectName is String)
-            { return String.Format("{0}.{1}", base.ToString(), ObjectName); }
+            if (TableName is String)
+            { return String.Format("{0}.{1}", base.ToString(), TableName); }
             else { return String.Empty; }
         }
 

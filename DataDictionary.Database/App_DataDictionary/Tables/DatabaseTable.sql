@@ -14,14 +14,15 @@
 	CONSTRAINT [FK_DatabaseTableCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
 )
 /*
-Select	I.[TABLE_CATALOG] As [TableCatalog],
-		I.[TABLE_SCHEMA] As [TableSchema],
-		I.[TABLE_NAME] As [TableName],
+Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+		I.[TABLE_CATALOG],
+		I.[TABLE_SCHEMA],
+		I.[TABLE_NAME],
 		Case
 			When H.[object_id] is Not Null Then 'HISTORY TABLE'
 			When T.[history_table_id] is Not Null Then 'TEMPORAL TABLE'
 			Else I.[TABLE_TYPE]
-			End As [TableType]
+			End As [TABLE_TYPE]
 From	[INFORMATION_SCHEMA].[TABLES] I
 		Left Join [sys].[Tables] T
 		On	I.[TABLE_SCHEMA] = Object_Schema_Name(T.[object_id]) And
@@ -30,7 +31,8 @@ From	[INFORMATION_SCHEMA].[TABLES] I
 		On	I.[TABLE_SCHEMA] = Object_Schema_Name(H.[history_table_id]) And
 			I.[TABLE_NAME] = Object_Name(H.[history_table_id])
 UNION
-Select	[TABLE_CATALOG],
+Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+		[TABLE_CATALOG],
 		[TABLE_SCHEMA],
 		[TABLE_NAME],
 		'VIEW' As [TableType]

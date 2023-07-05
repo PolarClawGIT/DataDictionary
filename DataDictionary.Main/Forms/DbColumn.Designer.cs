@@ -37,6 +37,7 @@
             Label ordinalPositionLayout;
             Label dataTypeLayout;
             Label columnDefaultLayout;
+            Label columnComputedLayout;
             Label characterMaximumLengthLayout;
             Label characterOctetLengthLayout;
             Label characterSetCatalogLayout;
@@ -46,8 +47,10 @@
             Label numericPrecisionRadixLayout;
             Label numericScaleLayout;
             Label dateTimePrecisionLayout;
+            Label generatedAlwayTypeLayout;
             Label schemaNameLayout;
             Label tableNameLayout;
+            TableLayoutPanel columnCheckBoxes;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbColumn));
             extendedPropertiesData = new DataGridView();
             propertyNameData = new DataGridViewTextBoxColumn();
@@ -58,6 +61,8 @@
             dataTypeData = new TextBox();
             isNullableData = new CheckBox();
             columnDefaultData = new TextBox();
+            columnComputedData = new TextBox();
+            isComputedData = new CheckBox();
             characterDataTab = new TabPage();
             characterDataLayout = new TableLayoutPanel();
             characterOctetLengthData = new TextBox();
@@ -73,10 +78,12 @@
             numericPrecisionRadixData = new TextBox();
             numericScaleData = new TextBox();
             dateTimePrecisionData = new TextBox();
-            isSparseData = new CheckBox();
-            isColumnSetData = new CheckBox();
             isFileStreamData = new CheckBox();
-            isSystemData = new CheckBox();
+            generatedAlwayTypeData = new TextBox();
+            isHiddenData = new CheckBox();
+            isColumnSetData = new CheckBox();
+            isIdentityData = new CheckBox();
+            isSparseData = new CheckBox();
             catalogNameLayout = new Label();
             catalogNameData = new TextBox();
             schemaNameData = new TextBox();
@@ -92,6 +99,7 @@
             ordinalPositionLayout = new Label();
             dataTypeLayout = new Label();
             columnDefaultLayout = new Label();
+            columnComputedLayout = new Label();
             characterMaximumLengthLayout = new Label();
             characterOctetLengthLayout = new Label();
             characterSetCatalogLayout = new Label();
@@ -101,8 +109,10 @@
             numericPrecisionRadixLayout = new Label();
             numericScaleLayout = new Label();
             dateTimePrecisionLayout = new Label();
+            generatedAlwayTypeLayout = new Label();
             schemaNameLayout = new Label();
             tableNameLayout = new Label();
+            columnCheckBoxes = new TableLayoutPanel();
             dbTableLayout.SuspendLayout();
             columnDetailLayout.SuspendLayout();
             extendedPropertiesTab.SuspendLayout();
@@ -116,6 +126,7 @@
             otherDataTab.SuspendLayout();
             numericDataLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
+            columnCheckBoxes.SuspendLayout();
             SuspendLayout();
             // 
             // dbTableLayout
@@ -145,7 +156,7 @@
             dbTableLayout.RowStyles.Add(new RowStyle());
             dbTableLayout.RowStyles.Add(new RowStyle());
             dbTableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            dbTableLayout.Size = new Size(383, 491);
+            dbTableLayout.Size = new Size(383, 434);
             dbTableLayout.TabIndex = 1;
             // 
             // columnDetailLayout
@@ -156,7 +167,7 @@
             columnDetailLayout.Location = new Point(3, 179);
             columnDetailLayout.Name = "columnDetailLayout";
             columnDetailLayout.SelectedIndex = 0;
-            columnDetailLayout.Size = new Size(377, 309);
+            columnDetailLayout.Size = new Size(377, 252);
             columnDetailLayout.TabIndex = 9;
             // 
             // extendedPropertiesTab
@@ -203,7 +214,7 @@
             columnsTab.Location = new Point(4, 24);
             columnsTab.Name = "columnsTab";
             columnsTab.Padding = new Padding(3);
-            columnsTab.Size = new Size(369, 281);
+            columnsTab.Size = new Size(369, 224);
             columnsTab.TabIndex = 1;
             columnsTab.Text = "Column Detail";
             // 
@@ -216,7 +227,7 @@
             dataTypeDetailTab.Location = new Point(3, 3);
             dataTypeDetailTab.Name = "dataTypeDetailTab";
             dataTypeDetailTab.SelectedIndex = 0;
-            dataTypeDetailTab.Size = new Size(363, 275);
+            dataTypeDetailTab.Size = new Size(363, 218);
             dataTypeDetailTab.TabIndex = 1;
             // 
             // generalDataTab
@@ -242,14 +253,19 @@
             columnGeneralDataLayout.Controls.Add(isNullableData, 2, 1);
             columnGeneralDataLayout.Controls.Add(columnDefaultData, 0, 3);
             columnGeneralDataLayout.Controls.Add(columnDefaultLayout, 0, 2);
+            columnGeneralDataLayout.Controls.Add(columnComputedLayout, 0, 4);
+            columnGeneralDataLayout.Controls.Add(columnComputedData, 0, 5);
+            columnGeneralDataLayout.Controls.Add(isComputedData, 2, 4);
             columnGeneralDataLayout.Dock = DockStyle.Fill;
             columnGeneralDataLayout.Location = new Point(0, 0);
             columnGeneralDataLayout.Name = "columnGeneralDataLayout";
-            columnGeneralDataLayout.RowCount = 4;
+            columnGeneralDataLayout.RowCount = 6;
             columnGeneralDataLayout.RowStyles.Add(new RowStyle());
             columnGeneralDataLayout.RowStyles.Add(new RowStyle());
             columnGeneralDataLayout.RowStyles.Add(new RowStyle());
-            columnGeneralDataLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            columnGeneralDataLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            columnGeneralDataLayout.RowStyles.Add(new RowStyle());
+            columnGeneralDataLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             columnGeneralDataLayout.Size = new Size(355, 247);
             columnGeneralDataLayout.TabIndex = 1;
             // 
@@ -306,7 +322,7 @@
             columnDefaultData.Multiline = true;
             columnDefaultData.Name = "columnDefaultData";
             columnDefaultData.ReadOnly = true;
-            columnDefaultData.Size = new Size(349, 182);
+            columnDefaultData.Size = new Size(349, 75);
             columnDefaultData.TabIndex = 6;
             // 
             // columnDefaultLayout
@@ -317,6 +333,36 @@
             columnDefaultLayout.Size = new Size(45, 15);
             columnDefaultLayout.TabIndex = 7;
             columnDefaultLayout.Text = "Default";
+            // 
+            // columnComputedLayout
+            // 
+            columnComputedLayout.AutoSize = true;
+            columnComputedLayout.Location = new Point(3, 140);
+            columnComputedLayout.Name = "columnComputedLayout";
+            columnComputedLayout.Size = new Size(64, 15);
+            columnComputedLayout.TabIndex = 8;
+            columnComputedLayout.Text = "Computed";
+            // 
+            // columnComputedData
+            // 
+            columnGeneralDataLayout.SetColumnSpan(columnComputedData, 3);
+            columnComputedData.Dock = DockStyle.Fill;
+            columnComputedData.Location = new Point(3, 168);
+            columnComputedData.Multiline = true;
+            columnComputedData.Name = "columnComputedData";
+            columnComputedData.ReadOnly = true;
+            columnComputedData.Size = new Size(349, 76);
+            columnComputedData.TabIndex = 9;
+            // 
+            // isComputedData
+            // 
+            isComputedData.AutoSize = true;
+            isComputedData.Location = new Point(215, 143);
+            isComputedData.Name = "isComputedData";
+            isComputedData.Size = new Size(94, 19);
+            isComputedData.TabIndex = 10;
+            isComputedData.Text = "Is Computed";
+            isComputedData.UseVisualStyleBackColor = true;
             // 
             // characterDataTab
             // 
@@ -481,14 +527,14 @@
             otherDataTab.Location = new Point(4, 24);
             otherDataTab.Name = "otherDataTab";
             otherDataTab.Padding = new Padding(3);
-            otherDataTab.Size = new Size(355, 247);
+            otherDataTab.Size = new Size(355, 190);
             otherDataTab.TabIndex = 1;
             otherDataTab.Text = "Other (Numeric, Date, ...)";
             // 
             // numericDataLayout
             // 
             numericDataLayout.ColumnCount = 3;
-            numericDataLayout.ColumnStyles.Add(new ColumnStyle());
+            numericDataLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             numericDataLayout.ColumnStyles.Add(new ColumnStyle());
             numericDataLayout.ColumnStyles.Add(new ColumnStyle());
             numericDataLayout.Controls.Add(numericPrecisionLayout, 0, 0);
@@ -499,20 +545,21 @@
             numericDataLayout.Controls.Add(numericScaleData, 2, 1);
             numericDataLayout.Controls.Add(dateTimePrecisionLayout, 0, 2);
             numericDataLayout.Controls.Add(dateTimePrecisionData, 0, 3);
-            numericDataLayout.Controls.Add(isSparseData, 1, 2);
-            numericDataLayout.Controls.Add(isColumnSetData, 2, 2);
-            numericDataLayout.Controls.Add(isFileStreamData, 1, 3);
-            numericDataLayout.Controls.Add(isSystemData, 2, 3);
+            numericDataLayout.Controls.Add(generatedAlwayTypeLayout, 0, 4);
+            numericDataLayout.Controls.Add(generatedAlwayTypeData, 0, 5);
+            numericDataLayout.Controls.Add(columnCheckBoxes, 1, 2);
             numericDataLayout.Dock = DockStyle.Fill;
             numericDataLayout.Location = new Point(3, 3);
             numericDataLayout.Name = "numericDataLayout";
-            numericDataLayout.RowCount = 5;
+            numericDataLayout.RowCount = 7;
+            numericDataLayout.RowStyles.Add(new RowStyle());
+            numericDataLayout.RowStyles.Add(new RowStyle());
             numericDataLayout.RowStyles.Add(new RowStyle());
             numericDataLayout.RowStyles.Add(new RowStyle());
             numericDataLayout.RowStyles.Add(new RowStyle());
             numericDataLayout.RowStyles.Add(new RowStyle());
             numericDataLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            numericDataLayout.Size = new Size(349, 241);
+            numericDataLayout.Size = new Size(349, 184);
             numericDataLayout.TabIndex = 3;
             // 
             // numericPrecisionLayout
@@ -527,7 +574,7 @@
             // numericPrecisionRadixLayout
             // 
             numericPrecisionRadixLayout.AutoSize = true;
-            numericPrecisionRadixLayout.Location = new Point(109, 0);
+            numericPrecisionRadixLayout.Location = new Point(136, 0);
             numericPrecisionRadixLayout.Name = "numericPrecisionRadixLayout";
             numericPrecisionRadixLayout.Size = new Size(87, 30);
             numericPrecisionRadixLayout.TabIndex = 1;
@@ -536,7 +583,7 @@
             // numericScaleLayout
             // 
             numericScaleLayout.AutoSize = true;
-            numericScaleLayout.Location = new Point(215, 0);
+            numericScaleLayout.Location = new Point(242, 0);
             numericScaleLayout.Name = "numericScaleLayout";
             numericScaleLayout.Size = new Size(53, 30);
             numericScaleLayout.TabIndex = 2;
@@ -552,7 +599,7 @@
             // 
             // numericPrecisionRadixData
             // 
-            numericPrecisionRadixData.Location = new Point(109, 33);
+            numericPrecisionRadixData.Location = new Point(136, 33);
             numericPrecisionRadixData.Name = "numericPrecisionRadixData";
             numericPrecisionRadixData.ReadOnly = true;
             numericPrecisionRadixData.Size = new Size(100, 23);
@@ -560,7 +607,7 @@
             // 
             // numericScaleData
             // 
-            numericScaleData.Location = new Point(215, 33);
+            numericScaleData.Location = new Point(242, 33);
             numericScaleData.Name = "numericScaleData";
             numericScaleData.ReadOnly = true;
             numericScaleData.Size = new Size(100, 23);
@@ -583,49 +630,81 @@
             dateTimePrecisionData.Size = new Size(100, 23);
             dateTimePrecisionData.TabIndex = 7;
             // 
-            // isSparseData
+            // isFileStreamData
             // 
-            isSparseData.AutoCheck = false;
-            isSparseData.AutoSize = true;
-            isSparseData.Location = new Point(109, 62);
-            isSparseData.Name = "isSparseData";
-            isSparseData.Size = new Size(71, 19);
-            isSparseData.TabIndex = 8;
-            isSparseData.Text = "Is Sparse";
-            isSparseData.UseVisualStyleBackColor = true;
+            isFileStreamData.AutoCheck = false;
+            isFileStreamData.AutoSize = true;
+            isFileStreamData.Location = new Point(108, 28);
+            isFileStreamData.Name = "isFileStreamData";
+            isFileStreamData.Size = new Size(95, 19);
+            isFileStreamData.TabIndex = 10;
+            isFileStreamData.Text = "Is File Stream";
+            isFileStreamData.ThreeState = true;
+            isFileStreamData.UseVisualStyleBackColor = true;
+            // 
+            // generatedAlwayTypeLayout
+            // 
+            generatedAlwayTypeLayout.AutoSize = true;
+            generatedAlwayTypeLayout.Location = new Point(3, 118);
+            generatedAlwayTypeLayout.Name = "generatedAlwayTypeLayout";
+            generatedAlwayTypeLayout.Size = new Size(96, 15);
+            generatedAlwayTypeLayout.TabIndex = 12;
+            generatedAlwayTypeLayout.Text = "Generated Alway";
+            // 
+            // generatedAlwayTypeData
+            // 
+            generatedAlwayTypeData.Dock = DockStyle.Fill;
+            generatedAlwayTypeData.Location = new Point(3, 136);
+            generatedAlwayTypeData.Name = "generatedAlwayTypeData";
+            generatedAlwayTypeData.ReadOnly = true;
+            generatedAlwayTypeData.Size = new Size(127, 23);
+            generatedAlwayTypeData.TabIndex = 13;
+            // 
+            // isHiddenData
+            // 
+            isHiddenData.AutoCheck = false;
+            isHiddenData.AutoSize = true;
+            isHiddenData.Location = new Point(3, 28);
+            isHiddenData.Name = "isHiddenData";
+            isHiddenData.Size = new Size(76, 19);
+            isHiddenData.TabIndex = 15;
+            isHiddenData.Text = "Is Hidden";
+            isHiddenData.UseVisualStyleBackColor = true;
             // 
             // isColumnSetData
             // 
             isColumnSetData.AutoCheck = false;
             isColumnSetData.AutoSize = true;
-            isColumnSetData.Location = new Point(215, 62);
+            isColumnSetData.Location = new Point(108, 3);
             isColumnSetData.Name = "isColumnSetData";
             isColumnSetData.Size = new Size(99, 19);
             isColumnSetData.TabIndex = 9;
             isColumnSetData.Text = "Is Column Set";
+            isColumnSetData.ThreeState = true;
             isColumnSetData.UseVisualStyleBackColor = true;
             // 
-            // isFileStreamData
+            // isIdentityData
             // 
-            isFileStreamData.AutoCheck = false;
-            isFileStreamData.AutoSize = true;
-            isFileStreamData.Location = new Point(109, 92);
-            isFileStreamData.Name = "isFileStreamData";
-            isFileStreamData.Size = new Size(95, 19);
-            isFileStreamData.TabIndex = 10;
-            isFileStreamData.Text = "Is File Stream";
-            isFileStreamData.UseVisualStyleBackColor = true;
+            isIdentityData.AutoCheck = false;
+            isIdentityData.AutoSize = true;
+            isIdentityData.Location = new Point(3, 3);
+            isIdentityData.Name = "isIdentityData";
+            isIdentityData.Size = new Size(77, 19);
+            isIdentityData.TabIndex = 14;
+            isIdentityData.Text = "Is Identity";
+            isIdentityData.UseVisualStyleBackColor = true;
             // 
-            // isSystemData
+            // isSparseData
             // 
-            isSystemData.AutoCheck = false;
-            isSystemData.AutoSize = true;
-            isSystemData.Location = new Point(215, 92);
-            isSystemData.Name = "isSystemData";
-            isSystemData.Size = new Size(75, 19);
-            isSystemData.TabIndex = 11;
-            isSystemData.Text = "Is System";
-            isSystemData.UseVisualStyleBackColor = true;
+            isSparseData.AutoCheck = false;
+            isSparseData.AutoSize = true;
+            isSparseData.Location = new Point(108, 53);
+            isSparseData.Name = "isSparseData";
+            isSparseData.Size = new Size(71, 19);
+            isSparseData.TabIndex = 8;
+            isSparseData.Text = "Is Sparse";
+            isSparseData.ThreeState = true;
+            isSparseData.UseVisualStyleBackColor = true;
             // 
             // catalogNameLayout
             // 
@@ -703,11 +782,34 @@
             // 
             errorProvider.ContainerControl = this;
             // 
+            // columnCheckBoxes
+            // 
+            columnCheckBoxes.AutoSize = true;
+            columnCheckBoxes.ColumnCount = 2;
+            numericDataLayout.SetColumnSpan(columnCheckBoxes, 2);
+            columnCheckBoxes.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            columnCheckBoxes.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            columnCheckBoxes.Controls.Add(isIdentityData, 0, 0);
+            columnCheckBoxes.Controls.Add(isHiddenData, 0, 1);
+            columnCheckBoxes.Controls.Add(isColumnSetData, 1, 0);
+            columnCheckBoxes.Controls.Add(isFileStreamData, 1, 1);
+            columnCheckBoxes.Controls.Add(isSparseData, 1, 2);
+            columnCheckBoxes.Dock = DockStyle.Fill;
+            columnCheckBoxes.Location = new Point(136, 62);
+            columnCheckBoxes.Name = "columnCheckBoxes";
+            columnCheckBoxes.RowCount = 3;
+            numericDataLayout.SetRowSpan(columnCheckBoxes, 4);
+            columnCheckBoxes.RowStyles.Add(new RowStyle());
+            columnCheckBoxes.RowStyles.Add(new RowStyle());
+            columnCheckBoxes.RowStyles.Add(new RowStyle());
+            columnCheckBoxes.Size = new Size(210, 97);
+            columnCheckBoxes.TabIndex = 16;
+            // 
             // DbColumn
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(383, 491);
+            ClientSize = new Size(383, 434);
             Controls.Add(dbTableLayout);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DbColumn";
@@ -730,6 +832,8 @@
             numericDataLayout.ResumeLayout(false);
             numericDataLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
+            columnCheckBoxes.ResumeLayout(false);
+            columnCheckBoxes.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -769,6 +873,12 @@
         private CheckBox isSparseData;
         private CheckBox isColumnSetData;
         private CheckBox isFileStreamData;
-        private CheckBox isSystemData;
+        private TextBox columnComputedData;
+        private CheckBox isComputedData;
+        private Label generatedAlwayTypeLayout;
+        private TextBox generatedAlwayTypeData;
+        private CheckBox isIdentityData;
+        private CheckBox isHiddenData;
+        private TableLayoutPanel columnCheckBoxes;
     }
 }

@@ -12,12 +12,15 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.DbMetaData
 {
     public interface IDbSchemaItem : IDbSchemaName, IDbIsSystem
-    { }
+    {
+        Guid? CatalogId { get; }
+    }
 
     
     public class DbSchemaItem : BindingTableRow, IDbSchemaItem, INotifyPropertyChanged
     {
-        public String? CatalogName { get { return GetValue("SCHEMA_CATALOG"); } }
+        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        public String? CatalogName { get { return GetValue("CATALOG_NAME"); } }
         public String? SchemaName { get { return GetValue("SCHEMA_NAME"); } }
         public Boolean IsSystem
         {
@@ -40,20 +43,21 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("SCHEMA_CATALOG", typeof(String)){ AllowDBNull = false},
+            new DataColumn("CatalogId", typeof(String)){ AllowDBNull = true},
+            new DataColumn("CATALOG_NAME", typeof(String)){ AllowDBNull = false},
             new DataColumn("SCHEMA_NAME", typeof(String)){ AllowDBNull = false},
         };
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions ()
         { return columnDefinitions; }
 
-        public static IDataReader GetDataReader(IConnection connection)
+        public static IDataReader GetSchema(IConnection connection)
         {
-            SqlCommand getCommand = connection.CreateCommand();
-            getCommand.CommandText = DbScript.DbSchemaItem;
-            getCommand.CommandType = CommandType.Text;
+            SqlCommand command = connection.CreateCommand();
+            command.CommandType = CommandType.Text;
+            command.CommandText = DbScript.DbSchemaItem;
 
-            return connection.ExecuteReader(getCommand);
+            return connection.ExecuteReader(command);
         }
 
         public virtual SqlCommand GetProperties(IConnection connection)

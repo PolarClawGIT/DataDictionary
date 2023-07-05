@@ -118,12 +118,81 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DbCatalogItem" xml:space="preserve">
-    <value>Select Convert(UniqueIdentifier,Null) As [CatalogId], Db_Name() As [CatalogName], @Server As [SourceServerName]</value>
+    <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+	Db_Name() As [CatalogName],
+	@Server As [SourceServerName]</value>
+  </data>
+  <data name="DbColumnItem" xml:space="preserve">
+    <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+	I.[TABLE_CATALOG],
+	I.[TABLE_SCHEMA],
+	I.[TABLE_NAME],
+	I.[COLUMN_NAME],
+	I.[ORDINAL_POSITION],
+	I.[COLUMN_DEFAULT],
+	I.[IS_NULLABLE],
+	I.[DATA_TYPE],
+	I.[CHARACTER_MAXIMUM_LENGTH],
+	I.[CHARACTER_OCTET_LENGTH],
+	I.[NUMERIC_PRECISION],
+	I.[NUMERIC_PRECISION_RADIX],
+	I.[NUMERIC_SCALE],
+	I.[DATETIME_PRECISION],
+	I.[CHARACTER_SET_CATALOG],
+	I.[CHARACTER_SET_SCHEMA],
+	I.[CHARACTER_SET_NAME],
+	I.[COLLATION_CATALOG],
+	I.[COLLATION_SCHEMA],
+	I.[COLLATION_NAME],
+	I.[DOMAIN_CATALOG],
+	I.[DOMAIN_SCHEMA],
+	I.[DOMAIN_NAME],
+	C.[is_identity] As [IsIdentity],
+	C.[is_hidden] As [IsHidden],
+	C.[is_computed] As [IsComputed],
+	P.[definition] As [ComputedDefinition],
+	NullIf(C.[generated_always_type_desc],'NOT_APPLICABLE') As [GeneratedAlwayType]
+From	[INFORMATION_SCHEMA].[COLUMNS] I
+	Left Join [sys].[Columns] C
+	On	I.[TABLE_SCHEMA] = Object_Schema_Name(C.[object_id]) And
+		I.[TABLE_NAME] = Object_Name(C.[object_id]) And
+		I.[COLUMN_NAME] = C.[name]
+	Left Join [sys].[computed_columns] P
+	On	C.[object_id] = P.[object_id] And
+		C.[column_id] = P.[column_id]</value>
   </data>
   <data name="DbExtendedPropertyItem" xml:space="preserve">
     <value>SELECT Db_Name() [CatalogName], @Level0Type [Level0Type], @Level0Name [Level0Name], @Level1Type [Level1Type], @Level1Name [Level1Name], @Level2Type [Level2Type], @Level2Name [Level2Name], [objtype], [objname], [name], [value] FROM [fn_listextendedproperty](@PropertyName, @Level0Type, @Level0Name, @Level1Type, @Level1Name, @Level2Type, @Level2Name)</value>
   </data>
   <data name="DbSchemaItem" xml:space="preserve">
-    <value>Select Db_Name() As [SCHEMA_CATALOG], [name] As [SCHEMA_NAME] From [Sys].[Schemas]</value>
+    <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+	[CATALOG_NAME],
+	[SCHEMA_NAME]
+From	[INFORMATION_SCHEMA].[SCHEMATA]</value>
+  </data>
+  <data name="DbTableItem" xml:space="preserve">
+    <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+	I.[TABLE_CATALOG],
+	I.[TABLE_SCHEMA],
+	I.[TABLE_NAME],
+	Case
+	When H.[object_id] is Not Null Then 'HISTORY TABLE'
+	When T.[history_table_id] is Not Null Then 'TEMPORAL TABLE'
+	Else I.[TABLE_TYPE]
+	End As [TABLE_TYPE]
+From	[INFORMATION_SCHEMA].[TABLES] I
+	Left Join [sys].[Tables] T
+	On	I.[TABLE_SCHEMA] = Object_Schema_Name(T.[object_id]) And
+		I.[TABLE_NAME] = Object_Name(T.[object_id])
+	Left Join [sys].[Tables] H
+	On	I.[TABLE_SCHEMA] = Object_Schema_Name(H.[history_table_id]) And
+		I.[TABLE_NAME] = Object_Name(H.[history_table_id])
+UNION
+Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+	[TABLE_CATALOG],
+	[TABLE_SCHEMA],
+	[TABLE_NAME],
+	'VIEW' As [TableType]
+From	[INFORMATION_SCHEMA].[VIEWS]</value>
   </data>
 </root>

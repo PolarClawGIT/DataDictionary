@@ -15,15 +15,15 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
         {
             public String? CatalogName { get; init; }
             public String? SchemaName { get; init; }
-            public String? ObjectName { get; init; }
+            public String? TableName { get; init; }
         }
 
-        UnitTestData dataA1 = new UnitTestData() { CatalogName = "A", SchemaName = "A", ObjectName = "A" };
-        UnitTestData dataA2 = new UnitTestData() { CatalogName = "a", SchemaName = "a", ObjectName = "a" };
-        UnitTestData dataC1 = new UnitTestData() { CatalogName = "A", SchemaName = "A", ObjectName = "C" };
-        UnitTestData dataC2 = new UnitTestData() { CatalogName = "C", SchemaName = "C", ObjectName = "C" };
-        UnitTestData dataNull = new UnitTestData() { CatalogName = null, SchemaName = null, ObjectName = null };
-        UnitTestData dataBlank = new UnitTestData() { CatalogName = String.Empty, SchemaName = String.Empty, ObjectName = String.Empty };
+        UnitTestData dataA1 = new UnitTestData() { CatalogName = "A", SchemaName = "A", TableName = "A" };
+        UnitTestData dataA2 = new UnitTestData() { CatalogName = "a", SchemaName = "a", TableName = "a" };
+        UnitTestData dataC1 = new UnitTestData() { CatalogName = "A", SchemaName = "A", TableName = "C" };
+        UnitTestData dataC2 = new UnitTestData() { CatalogName = "C", SchemaName = "C", TableName = "C" };
+        UnitTestData dataNull = new UnitTestData() { CatalogName = null, SchemaName = null, TableName = null };
+        UnitTestData dataBlank = new UnitTestData() { CatalogName = String.Empty, SchemaName = String.Empty, TableName = String.Empty };
 
         [Test()]
         public void DbObjectNameTest()

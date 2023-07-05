@@ -47,21 +47,21 @@ namespace DataDictionary.BusinessLayer
             {
                 WorkName = "Load Schemas",
                 Connection = result.Connection,
-                Load = (conn) => DbSchemas.Load(DbSchemaItem.GetDataReader(conn)),
+                Load = (conn) => DbSchemas.Load(DbSchemaItem.GetSchema(conn)),
             });
 
             workItems.Add(new DbLoad()
             {
                 WorkName = "Load Tables",
                 Connection = result.Connection,
-                Load = (conn) => DbTables.Load(DbTableItem.GetDataReader(conn)),
+                Load = (conn) => DbTables.Load(DbTableItem.GetSchema(conn)),
             });
 
             workItems.Add(new DbLoad()
             {
                 WorkName = "Load Columns",
                 Connection = result.Connection,
-                Load = (conn) => DbColumns.Load(DbColumnItem.GetDataReader(conn)),
+                Load = (conn) => DbColumns.Load(DbColumnItem.GetSchema(conn)),
             });
 
             workItems.Add(new BatchWork()

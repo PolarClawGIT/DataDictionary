@@ -71,6 +71,7 @@ namespace DataDictionary.Main.Dialog
             DateTime eventDate;
 
             public String Type { get { return baseException.GetType().ToString(); } }
+            public String? Source { get { return baseException.Source; } }
             public String Message { get { return baseException.Message; } }
             public String StackTrace { get { if (baseException.StackTrace is String valueString) { return valueString; } else { return String.Empty; } } }
 
@@ -245,6 +246,7 @@ namespace DataDictionary.Main.Dialog
             exceptionUserNameData.DataBindings.Add(new Binding(nameof(exceptionUserNameData.Text), thisData, nameof(thisData.UserName)));
             exceptionStackTraceData.DataBindings.Add(new Binding(nameof(exceptionStackTraceData.Text), thisData, nameof(thisData.StackTrace)));
             exceptionAsXmlData.DataBindings.Add(new Binding(nameof(exceptionAsXmlData.Text), thisData, nameof(thisData.AsXml)));
+            exceptionSourceData.DataBindings.Add(new Binding(nameof(exceptionSourceData.Text), thisData, nameof(thisData.Source)));
 
             exceptionData.AutoGenerateColumns = false;
             exceptionSqlErrors.AutoGenerateColumns = false;
