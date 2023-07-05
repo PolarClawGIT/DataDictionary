@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿// Ignore Spelling: Nullable
+
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -56,7 +58,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public Nullable<Boolean> IsSparse { get { return GetValue<Boolean>("IS_SPARSE", BindingItemParsers.BooleanTryPrase); } }
         public Nullable<Boolean> IsColumnSet { get { return GetValue<Boolean>("IS_COLUMN_SET", BindingItemParsers.BooleanTryPrase); } }
         public Nullable<Boolean> IsFileStream { get { return GetValue<Boolean>("IS_FILESTREAM", BindingItemParsers.BooleanTryPrase); } }
-        public Boolean IsSystem { get { return false; } } //TODO: Identites, calculated, and other system managed fields needs to be detected/addressed
+        public Boolean IsSystem { get { return false; } } //TODO: Identity, calculated, and other system managed fields needs to be detected/addressed
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

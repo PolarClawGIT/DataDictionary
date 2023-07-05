@@ -61,6 +61,15 @@ namespace DataDictionary.DataLayer.DbMetaData {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select Convert(UniqueIdentifier,Null) As [CatalogId], Db_Name() As [CatalogName], @Server As [SourceServerName].
+        /// </summary>
+        internal static string DbCatalogItem {
+            get {
+                return ResourceManager.GetString("DbCatalogItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT Db_Name() [CatalogName], @Level0Type [Level0Type], @Level0Name [Level0Name], @Level1Type [Level1Type], @Level1Name [Level1Name], @Level2Type [Level2Type], @Level2Name [Level2Name], [objtype], [objname], [name], [value] FROM [fn_listextendedproperty](@PropertyName, @Level0Type, @Level0Name, @Level1Type, @Level1Name, @Level2Type, @Level2Name).
         /// </summary>
         internal static string DbExtendedPropertyItem {

@@ -53,7 +53,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             getCommand.CommandText = DbScript.DbSchemaItem;
             getCommand.CommandType = CommandType.Text;
 
-            return connection.GetReader(getCommand);
+            return connection.ExecuteReader(getCommand);
         }
 
         public virtual SqlCommand GetProperties(IConnection connection)

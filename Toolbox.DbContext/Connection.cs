@@ -17,6 +17,9 @@ namespace Toolbox.DbContext
         /// </summary>
         Boolean HasException { get; }
 
+        String? ServerName { get; }
+        String? DatabaseName { get; }
+
         /// <summary>
         /// Opens a new connection to the database and starts a transaction.
         /// </summary>
@@ -32,8 +35,18 @@ namespace Toolbox.DbContext
         IDataReader GetReader(Schema.Collection collection, String catalogName, String schemaName);
         IDataReader GetReader(Schema.Collection collection, String catalogName, String schemaName, String objectName);
 
+        /// <summary>
+        /// Expose the Create Command function.
+        /// </summary>
+        /// <returns></returns>
         SqlCommand CreateCommand();
-        IDataReader GetReader(SqlCommand command);
+
+        /// <summary>
+        /// Wrappers the ExecuteReader and returns the Data Reader.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        IDataReader ExecuteReader(SqlCommand command);
 
         /// <summary>
         /// Commits the transaction on the Open Connection. The Connection is then closed.
@@ -49,9 +62,11 @@ namespace Toolbox.DbContext
     class Connection : IConnection
     {
         public required Context DbContext { get; init; }
+        public Boolean HasException { get; private set; } = false;
+        public String ServerName { get { return connection.DataSource; } }
+        public String DatabaseName { get { return connection.Database; } }
 
         private Boolean disposedValue = false;
-        public Boolean HasException { get; private set; } = false;
         private SqlConnection connection = new SqlConnection();
         private SqlTransaction transaction = null!;
 
@@ -139,7 +154,7 @@ namespace Toolbox.DbContext
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        public IDataReader GetReader(SqlCommand command)
+        public IDataReader ExecuteReader(SqlCommand command)
         {
             if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
 

@@ -11,3 +11,6 @@
 	-- Keys
 	CONSTRAINT [PK_DatabaseCatalog] PRIMARY KEY CLUSTERED ([CatalogId] ASC),
 )
+/*
+Select Convert(UniqueIdentifier,Null) As [CatalogId], Db_Name() As [CatalogName], @Server As [SourceServerName]
+*/

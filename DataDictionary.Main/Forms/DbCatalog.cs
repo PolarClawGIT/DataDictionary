@@ -21,8 +21,6 @@ namespace DataDictionary.Main.Forms
     {
         class FormData : INotifyPropertyChanged
         {
-            public BindingList<DbSchemaContext> AvailableContexts { get; } = new BindingList<DbSchemaContext>();
-
             private string? serverName;
             public String? ServerName { get { return serverName; } set { serverName = value; OnPropertyChanged(nameof(ServerName)); } }
 
@@ -77,13 +75,18 @@ namespace DataDictionary.Main.Forms
             }
         }
 
+        /// <summary>
+        /// Persists a list of all the connections this screen used for this session.
+        /// </summary>
+        static BindingList<DbSchemaContext> availableContexts = new BindingList<DbSchemaContext>();
+
         FormData data = new FormData();
 
         public DbCatalog()
         {
             InitializeComponent();
 
-            // Create list of all known Server/Database Name Pairs
+            // Create list of all known Server/Database Name Pairs to add to AvailableContexts
             foreach (String? item in Settings.Default.UserServers)
             {
                 if (String.IsNullOrEmpty(item)) { continue; }
@@ -94,11 +97,22 @@ namespace DataDictionary.Main.Forms
                     if (dbServer.Length > 1 &&
                         dbServer[0] is String serverName &&
                         dbServer[1] is String databaseName &&
-                        data.AvailableContexts.FirstOrDefault(
+                        availableContexts.FirstOrDefault(
                             w => w.ServerName == serverName &&
                             w.DatabaseName == databaseName) is null)
-                    { data.AvailableContexts.Add(new DbSchemaContext() { ServerName = serverName, DatabaseName = databaseName }); }
+                    { availableContexts.Add(new DbSchemaContext() { ServerName = serverName, DatabaseName = databaseName }); }
                 }
+            }
+
+            // Load any items in the Catalog not yet in the AvailableContexts
+            foreach (DbCatalogItem catalogItem in Program.DbData.DbCatalogs)
+            {
+                if (availableContexts.FirstOrDefault(
+                    w => w.ServerName.Equals(catalogItem.SourceServerName, StringComparison.CurrentCultureIgnoreCase) &&
+                    w.DatabaseName.Equals(catalogItem.CatalogName, StringComparison.CurrentCultureIgnoreCase)) is null &&
+                    catalogItem.SourceServerName is String &&
+                    catalogItem.CatalogName is String)
+                { availableContexts.Add(new DbSchemaContext() { ServerName = catalogItem.SourceServerName, DatabaseName = catalogItem.CatalogName }); }
             }
         }
 
@@ -107,11 +121,11 @@ namespace DataDictionary.Main.Forms
         {
 
             // Setup Server list. 
-            IEnumerable<String> serverNames = data.AvailableContexts.OrderBy(o => o.ServerName).Select(s => s.ServerName).Distinct();
+            IEnumerable<String> serverNames = availableContexts.OrderBy(o => o.ServerName).Select(s => s.ServerName).Distinct();
             serverNameData.Items.AddRange(serverNames.ToArray());
 
             // Sets up the Database list (needs to be repeated if the Server Name changes)
-            IEnumerable<String> databaseNames = data.AvailableContexts.OrderBy(o => o.DatabaseName).Select(s => s.DatabaseName).Distinct();
+            IEnumerable<String> databaseNames = availableContexts.OrderBy(o => o.DatabaseName).Select(s => s.DatabaseName).Distinct();
             databaseNameData.Items.Clear();
             databaseNameData.Text = String.Empty;
             databaseNameData.Items.AddRange(databaseNames.ToArray());
@@ -120,14 +134,14 @@ namespace DataDictionary.Main.Forms
             authenticateWindows_CheckedChanged(this, EventArgs.Empty);
 
             // Data Binding
-            if (data.AvailableContexts.Count > 0) { data.DbContext = data.AvailableContexts[0]; }
+            if (availableContexts.Count > 0) { data.DbContext = availableContexts[0]; }
             BindData();
         }
 
         void BindData()
         {
             dbConnectionsData.AutoGenerateColumns = false;
-            dbConnectionsData.DataSource = Program.DbData.DbConnections;
+            dbConnectionsData.DataSource = Program.DbData.DbCatalogs;
 
             serverNameData.DataBindings.Add(new Binding(nameof(serverNameData.SelectedItem), data, nameof(data.ServerName), true, DataSourceUpdateMode.OnValidation));
             databaseNameData.DataBindings.Add(new Binding(nameof(databaseNameData.SelectedItem), data, nameof(data.DatabaseName), true, DataSourceUpdateMode.OnValidation));
@@ -278,8 +292,17 @@ namespace DataDictionary.Main.Forms
         {
             if (dbConnectionsData.SelectedRows.Count > 0)
             {
-                if (dbConnectionsData.SelectedRows[0].DataBoundItem is DbSchemaContext context)
-                { data.DbContext = context; }
+                if (dbConnectionsData.SelectedRows[0].DataBoundItem is DbCatalogItem catalogItem &&
+                    availableContexts.FirstOrDefault(
+                        w => w.ServerName.Equals(catalogItem.SourceServerName, StringComparison.CurrentCultureIgnoreCase) &&
+                        w.DatabaseName.Equals(catalogItem.CatalogName, StringComparison.OrdinalIgnoreCase)) is DbSchemaContext newContext)
+                { data.DbContext = newContext; }
+                else
+                { // Not suppose to happen
+                    Exception ex = new InvalidOperationException();
+                    ex.Data.Add("BoundItem", dbConnectionsData.SelectedRows[0].DataBoundItem);
+                    throw ex;
+                }
             }
         }
 

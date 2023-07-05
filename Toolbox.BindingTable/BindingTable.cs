@@ -12,10 +12,9 @@ using System.Xml.Linq;
 namespace Toolbox.BindingTable
 {
     /// <summary>
-    /// The BindingTable repersent a class that wrappers a DataTable and presents it as if it was a Binding List.
-    /// The TBindingItem represents the mapping class between the DataRow and the POCO like object used in code.
+    /// The BindingTable represent a class that wrappers a DataTable and presents it as if it was a Binding List.
     /// </summary>
-    /// <typeparam name="TBindingItem"></typeparam>
+    /// <typeparam name="TBindingItem">the mapping class between the DataRow and the POCO like object used in code.</typeparam>
     public class BindingTable<TBindingItem> : BindingList<TBindingItem>, IBindingTable<TBindingItem>
         where TBindingItem : BindingTableRow, INotifyPropertyChanged, IBindingTableRow, new()
     {
@@ -30,6 +29,7 @@ namespace Toolbox.BindingTable
         public BindingTable() : base()
         {
             dataItems = new DataTable();
+            dataItems.TableName = typeof(TBindingItem).Name;
             foreach (DataColumn item in new TBindingItem().ColumnDefinitions())
             {
                 using (DataColumn column = new DataColumn(item.ColumnName, item.DataType)
@@ -103,15 +103,32 @@ namespace Toolbox.BindingTable
         /// <inheritdoc cref="DataTable.Load(IDataReader, LoadOption, FillErrorEventHandler?)"/>
         public virtual void Load(IDataReader reader, LoadOption loadOption, FillErrorEventHandler? errorHandler)
         {
-            using (DataTable newData = dataItems.Clone())
+            using (DataTable newData = new DataTable() { TableName = typeof(TBindingItem).Name })
             {
                 // Load to a work table
-                newData.Load(reader, loadOption, handleError);
+                try
+                { newData.Load(reader, loadOption, handleError); }
+                catch (Exception ex)
+                {
+                    ex.Data.Add(nameof(newData.TableName), newData.TableName);
+                    throw;
+                }
 
                 // Transfer the work table to the data table, building the Binding Rows as we go.
                 foreach (DataRow row in newData.Rows)
                 {
-                    dataItems.ImportRow(row);
+                    try
+                    { dataItems.ImportRow(row); }
+                    catch (Exception ex)
+                    {
+                        ex.Data.Add(nameof(newData.TableName), newData.TableName);
+
+                        foreach (DataColumn column in row.Table.Columns)
+                        { ex.Data.Add(String.Format("Data- {0}",column.ColumnName), row[column]); }
+
+                        throw;
+                    }
+
                     DataRow newRow = dataItems.Rows[(dataItems.Rows.Count - 1)]; // new rows is always added at the end
                     TBindingItem newItem = new TBindingItem();
                     newItem.ImportRow(newRow);

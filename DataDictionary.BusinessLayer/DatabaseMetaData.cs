@@ -1,4 +1,6 @@
-﻿using DataDictionary.DataLayer.DbMetaData;
+﻿// Ignore Spelling: Schemas
+
+using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.DataLayer.WorkDbItem;
 using System;
 using System.Collections.Generic;
@@ -16,7 +18,6 @@ namespace DataDictionary.BusinessLayer
 {
     public class DatabaseMetaData
     {
-        public BindingList<DbSchemaContext> DbConnections { get; } = new BindingList<DbSchemaContext>();
         public BindingTable<DbCatalogItem> DbCatalogs { get; } = new BindingTable<DbCatalogItem>();
         public BindingTable<DbSchemaItem> DbSchemas { get; } = new BindingTable<DbSchemaItem>();
         public BindingTable<DbTableItem> DbTables { get; } = new BindingTable<DbTableItem>();
@@ -39,7 +40,7 @@ namespace DataDictionary.BusinessLayer
             {
                 WorkName = "Load Catalogs",
                 Connection = result.Connection,
-                Load = (conn) => DbCatalogs.Load(DbCatalogItem.GetDataReader(conn, connection.DatabaseName)),
+                Load = (conn) => DbCatalogs.Load(DbCatalogItem.GetSchema(conn)),
             });
 
             workItems.Add(new DbLoad()
@@ -114,8 +115,6 @@ namespace DataDictionary.BusinessLayer
                 raiseListChanged = true;
                 DbData_ListChanged(this, new ListChangedEventArgs(ListChangedType.Reset, -1));
 
-                DbConnections.Add(connection);
-
                 if (onComplete is Action) { onComplete(); }
             }
 
@@ -138,7 +137,7 @@ namespace DataDictionary.BusinessLayer
             {
                 WorkName = "Load Databases",
                 Connection = dbData.Connection,
-                Load = (conn) => resultData.Load(DbCatalogItem.GetDataReader(conn)),
+                Load = (conn) => resultData.Load(DbCatalogItem.GetSchema(conn)),
             });
             return dbData;
 
@@ -160,18 +159,6 @@ namespace DataDictionary.BusinessLayer
             };
             result.WorkCompleting += WorkCompleting;
             result.WorkStarting += WorkStarting;
-
-            workItems.Add(new BatchWork()
-            {
-                WorkName = "Removing Connections",
-                WorkItems = DbConnections.
-                    Where(w => w.DatabaseName == connection.DatabaseName).
-                    Select(s => new BackgroundWork()
-                    {
-                        WorkName = "Removing Connections",
-                        OnDoWork = () => DbConnections.Remove(s)
-                    })
-            });
 
             workItems.Add(new BatchWork()
             {

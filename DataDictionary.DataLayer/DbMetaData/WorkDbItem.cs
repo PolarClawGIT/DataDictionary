@@ -79,7 +79,7 @@ namespace DataDictionary.DataLayer
             public override void DoWork()
             {
                 base.DoWork();
-                Target.Load(Connection.GetReader(GetCommand(Connection)));
+                Target.Load(Connection.ExecuteReader(GetCommand(Connection)));
             }
         }
 
@@ -95,7 +95,7 @@ namespace DataDictionary.DataLayer
                 using (IConnection connection = Connection())
                 {
                     connection.Open();
-                    Target.Load(connection.GetReader(GetCommand(connection)));
+                    Target.Load(connection.ExecuteReader(GetCommand(connection)));
                     connection.Commit();
                 }
             }

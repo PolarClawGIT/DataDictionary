@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,32 +14,34 @@ namespace DataDictionary.DataLayer.DbMetaData
 {
     public interface IDbCatalogItem : IDbCatalogName, IDbIsSystem
     {
-        Nullable<Int32> DatabaseId { get; }
-        Nullable<DateTime> CreateDate { get; }
+        Guid? CatalogId { get; }
+        String? SourceServerName { get; }
     }
 
     public class DbCatalogItem : BindingTableRow, IDbCatalogItem, INotifyPropertyChanged
     {
-        public String? CatalogName { get { return GetValue("database_name"); } }
-        public Nullable<Int32> DatabaseId { get { return GetValue<Int32>("DbId"); } }
-        public Nullable<DateTime> CreateDate { get { return GetValue<DateTime>("create_date"); } }
+        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        public String? CatalogName { get { return GetValue("CatalogName"); } }
+        public String? SourceServerName { get { return GetValue("SourceServerName"); } }
         public Boolean IsSystem { get { return CatalogName is "tempdb" or "master" or "msdb" or "model"; } }
-
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("database_name", typeof(String)){ AllowDBNull = false},
-            new DataColumn("DbId", typeof(Int32)) {AllowDBNull = false},
-            new DataColumn("create_date", typeof(DateTime)) {AllowDBNull = false},
+            new DataColumn("CatalogId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("SourceServerName", typeof(String)){ AllowDBNull = false},
         };
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        public static IDataReader GetDataReader(IConnection connection)
-        { return connection.GetReader(Schema.Collection.Databases); }
+        public static IDataReader GetSchema(IConnection connection)
+        {
+            SqlCommand command = connection.CreateCommand();
+            command.CommandText = DbScript.DbCatalogItem;
+            command.Parameters.Add(new SqlParameter("@Server", SqlDbType.NVarChar) { Value = connection.ServerName });
 
-        public static IDataReader GetDataReader(IConnection connection, String catalog)
-        { return connection.GetReader(Schema.Collection.Databases, catalog); }
+            return command.ExecuteReader();
+        }
     }
 }
