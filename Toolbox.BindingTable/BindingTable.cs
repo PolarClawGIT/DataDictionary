@@ -34,7 +34,7 @@ namespace Toolbox.BindingTable
             {
                 using (DataColumn column = new DataColumn(item.ColumnName, item.DataType)
                 { AllowDBNull = item.AllowDBNull, Caption = item.Caption, DefaultValue = item.DefaultValue, })
-                { dataItems.Columns.Add(item); }
+                { dataItems.Columns.Add(column); }
             }
 
             dataItems.Disposed += TableDisposed;
@@ -124,7 +124,7 @@ namespace Toolbox.BindingTable
                         ex.Data.Add(nameof(newData.TableName), newData.TableName);
 
                         foreach (DataColumn column in row.Table.Columns)
-                        { ex.Data.Add(String.Format("Data- {0}",column.ColumnName), row[column]); }
+                        { ex.Data.Add(String.Format("Data- {0}", column.ColumnName), row[column]); }
 
                         throw;
                     }
@@ -194,6 +194,7 @@ namespace Toolbox.BindingTable
 
         protected override Object? AddNewCore()
         {
+            return base.AddNewCore();
             if (base.AddNewCore() is TBindingItem item)
             {
                 DataRow row = dataItems.NewRow();
@@ -225,7 +226,26 @@ namespace Toolbox.BindingTable
         }
 
         protected override void InsertItem(Int32 index, TBindingItem item)
-        { base.InsertItem(index, item); }
+        {
+            if (item.GetRow() is DataRow row)
+            {
+                if (ReferenceEquals(row.Table, dataItems))
+                { }
+                else
+                { // Replace the row data with a copy that belongs to this table
+                    dataItems.ImportRow(item.GetRow());
+                    item.BindingTable = this;
+                    item.ImportRow(dataItems.Rows[dataItems.Rows.Count - 1]);
+                }
+            }
+            else
+            {
+                DataRow newRow = dataItems.NewRow();
+                item.BindingTable = this;
+                item.ImportRow(newRow);
+            }
+            base.InsertItem(index, item);
+        }
 
         protected override void OnAddingNew(AddingNewEventArgs e)
         { base.OnAddingNew(e); }
@@ -233,7 +253,7 @@ namespace Toolbox.BindingTable
         protected override Boolean SupportsChangeNotificationCore => true;
 
         /// <summary>
-        /// Used to temporarly disable or enable the Change List event.
+        /// Used to temporary disable or enable the Change List event.
         /// This allows a set of changes to be made before calling OnListChanged
         /// so that they are treated as a single logical change.
         /// </summary>

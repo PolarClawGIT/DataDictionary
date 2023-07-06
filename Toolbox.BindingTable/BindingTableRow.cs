@@ -37,15 +37,15 @@ namespace Toolbox.BindingTable
     public abstract class BindingTableRow : INotifyPropertyChanged, IBindingTableRow
     {
         /// <summary>
-        /// Refrence to the Binding Table that owns this row.
+        /// Reference to the Binding Table that owns this row.
         /// </summary>
         public IBindingTable? BindingTable { get; internal set; }
 
         /// <summary>
-        /// A Comlumn Definition of the underlining table.
+        /// A Column Definition of the underlining table.
         /// </summary>
         /// <remarks>
-        /// Implment by creating a Static Readonly list of DataColumns.
+        /// Implement by creating a Static Readonly list of DataColumns.
         /// Assign that property to this property. 
         /// This is used by BindingTable to construct the table definition but the columns are not bound to the table.
         /// Not all attributes of DataColumn are copied to the table definition.
@@ -55,19 +55,38 @@ namespace Toolbox.BindingTable
         /// <summary>
         /// Internal DataRow being wrappered.
         /// </summary>
-        private DataRow? data;
+        private DataRow data;
 
         /// <summary>
         /// Base Constructor for the BindingTableRow.
         /// </summary>
-        protected BindingTableRow() : base() { }
+        protected BindingTableRow() : base()
+        {
+            using (DataTable temp = new DataTable("Init_BindingTableRow"))
+            {
+                foreach (DataColumn item in this.ColumnDefinitions())
+                {
+                    using (DataColumn column = new DataColumn(item.ColumnName, item.DataType)
+                    { AllowDBNull = true, Caption = item.Caption, DefaultValue = item.DefaultValue, })
+                    { temp.Columns.Add(column); }
+                }
+
+                data = temp.NewRow();
+                temp.Rows.Add(data);
+
+                data.Table.RowChanging += Table_RowChanging;
+                data.Table.RowChanged += Table_RowChanged;
+                data.Table.RowDeleting += Table_RowDeleting;
+                data.Table.RowDeleted += Table_RowDeleted;
+                data.Table.Disposed += Table_Disposed;
+            }
+        }
 
         /// <summary>
         /// Constructor that loadeds the DataRow.
         /// </summary>
         /// <param name="row"></param>
-        protected BindingTableRow(DataRow row) : this()
-        { ImportRow(row); }
+        //protected BindingTableRow(DataRow row) : this() {ImportRow(row); }
 
         /// <summary>
         /// Used to assign a data row to the class.
@@ -76,7 +95,12 @@ namespace Toolbox.BindingTable
         /// <exception cref="InvalidOperationException"></exception>
         protected internal void ImportRow(DataRow row)
         {
-            if (data is DataRow) { throw new InvalidOperationException("DataRow is already assigned."); }
+            data.Table.RowChanging -= Table_RowChanging;
+            data.Table.RowChanged -= Table_RowChanged;
+            data.Table.RowDeleting -= Table_RowDeleting;
+            data.Table.RowDeleted -= Table_RowDeleted;
+            data.Table.Disposed -= Table_Disposed;
+
             row.Table.RowChanging += Table_RowChanging;
             row.Table.RowChanged += Table_RowChanged;
             row.Table.RowDeleting += Table_RowDeleting;
@@ -111,9 +135,9 @@ namespace Toolbox.BindingTable
             // Generic handling
             if (T.TryParse(row[columnName].ToString(), null, out T value))
             { return new Nullable<T>(value); }
-            
+
             // Parsing failed
-             throw new InvalidCastException(String.Format("{0} is not a {1}, actual type {2}", columnName, typeof(T).Name, row[columnName].GetType().Name)); 
+            throw new InvalidCastException(String.Format("{0} is not a {1}, actual type {2}", columnName, typeof(T).Name, row[columnName].GetType().Name));
         }
 
         /// <summary>
@@ -137,7 +161,7 @@ namespace Toolbox.BindingTable
             }
 
             // Parsing failed
-            throw new InvalidCastException(String.Format("{0} is not a {1}, actual type {2}", columnName, typeof(String).Name, row[columnName].GetType().Name)); 
+            throw new InvalidCastException(String.Format("{0} is not a {1}, actual type {2}", columnName, typeof(String).Name, row[columnName].GetType().Name));
         }
 
         /// <summary>
@@ -175,7 +199,7 @@ namespace Toolbox.BindingTable
             { return new Nullable<T>(result); }
 
             // Parsing failed
-            throw new InvalidCastException(String.Format("{0} is not a {1}, actual type {2}", columnName, typeof(String).Name, row[columnName].GetType().Name)); 
+            throw new InvalidCastException(String.Format("{0} is not a {1}, actual type {2}", columnName, typeof(String).Name, row[columnName].GetType().Name));
         }
 
         /// <summary>
