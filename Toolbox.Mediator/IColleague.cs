@@ -11,7 +11,7 @@ namespace Toolbox.Mediator
     /// </summary>
     public interface IColleague : IDisposable
     {
-        void RecieveMessage(object? sender, MessageEventArgs message);
+        void ReceiveMessage(object? sender, MessageEventArgs message);
         event EventHandler<MessageEventArgs>? OnSendMessage;
         event EventHandler Disposed;
     }
