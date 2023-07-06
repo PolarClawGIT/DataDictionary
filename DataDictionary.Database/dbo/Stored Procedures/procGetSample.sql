@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procGetSample]
+﻿CREATE PROCEDURE [dbo].[procGetSample]
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -21,7 +21,7 @@ Begin Try
 	-- Code here
 
 	-- Tracking statement, example
-	Print FormatMessage ('Get [App_DataDictionary].[Sample]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Get [dbo].[Sample]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
