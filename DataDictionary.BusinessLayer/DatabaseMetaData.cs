@@ -239,9 +239,11 @@ namespace DataDictionary.BusinessLayer
 
         public DatabaseMetaData() : base()
         {
+            DbCatalogs.ListChanged += DbData_ListChanged;
             DbSchemas.ListChanged += DbData_ListChanged;
             DbTables.ListChanged += DbData_ListChanged;
             DbColumns.ListChanged += DbData_ListChanged;
+            DbExtendedProperties.ListChanged += DbData_ListChanged;
         }
 
         public event EventHandler<ListChangedEventArgs>? ListChanged;

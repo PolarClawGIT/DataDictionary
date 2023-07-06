@@ -1,5 +1,6 @@
 using DataDictionary.BusinessLayer;
 using DataDictionary.DataLayer.DbMetaData;
+using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
@@ -44,6 +45,11 @@ namespace DataDictionary.Main
             Program.WorkerQueue.ProgressChanged += WorkerQueue_ProgressChanged;
             Program.Messenger.AddColleague(this);
 
+            SetImages(dbMetaDataNavigation, dbDataImageItems.Values);
+            SetImages(domainModelNavigation, domainModelImageItems.Values);
+
+            dbSchemaToolStripMenuItem.DropDownItems.AddRange(dbSchemaContextMenu.Items);
+            domainModelToolStripMenuItem.DropDownItems.AddRange(domainModelMenu.Items);
         }
 
         #region Form
@@ -61,40 +67,64 @@ namespace DataDictionary.Main
         #endregion
 
         #region Menu Events
-        private void importFromDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
+        private void menuCatalogItem_Click(object sender, EventArgs e)
         {
             if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbCatalog)) is Forms.DbCatalog existingForm)
             { existingForm.Activate(); }
             else { new Forms.DbCatalog().Show(); }
         }
 
-        private void viewExtendedPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbExtendedPropertyView)) is Forms.DbExtendedPropertyView existingForm)
-            { existingForm.Activate(); }
-            else { new Forms.DbExtendedPropertyView().Show(); }
-        }
-
-        private void viewSchemasToolStripMenuItem_Click(object sender, EventArgs e)
+        private void menuSchemaItem_Click(object sender, EventArgs e)
         {
             if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbSchemaView)) is Forms.DbSchemaView existingForm)
             { existingForm.Activate(); }
             else { new Forms.DbSchemaView().Show(); }
         }
 
-        private void viewTablesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void menuTableItem_Click(object sender, EventArgs e)
         {
             if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbTableView)) is Forms.DbTableView existingForm)
             { existingForm.Activate(); }
             else { new Forms.DbTableView().Show(); }
         }
 
-        private void viewColumnsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void menuColumnItem_Click(object sender, EventArgs e)
         {
             if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbColumnView)) is Forms.DbColumnView existingForm)
             { existingForm.Activate(); }
             else { new Forms.DbColumnView().Show(); }
         }
+
+        private void menuPropertyItem_Click(object sender, EventArgs e)
+        {
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbExtendedPropertyView)) is Forms.DbExtendedPropertyView existingForm)
+            { existingForm.Activate(); }
+            else { new Forms.DbExtendedPropertyView().Show(); }
+        }
+
+        private void menuImportDbSchema_Click(object sender, EventArgs e)
+        {
+            Program.DomainData.ImportAttributes(Program.DbData.DbColumns);
+            BuildDomainModelTree();
+        }
+
+        private void menuAttributes_Click(object sender, EventArgs e)
+        {
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DomainAttributeView)) is Forms.DomainAttributeView existingForm)
+            { existingForm.Activate(); }
+            else { new Forms.DomainAttributeView().Show(); }
+        }
+
+        private void navigationDbSchemaTab_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            dbSchemaContextMenu.Show();
+        }
+
+        private void navigationDomainTab_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            domainModelMenu.Show();
+        }
+
         #endregion
 
         #region dbMetaDataNavigation
@@ -107,31 +137,37 @@ namespace DataDictionary.Main
             Table,
             View,
             Columns,
-            Column
+            Column,
+            ComputedColumn,
+            KeyColumn
         }
 
         static Dictionary<dbDataImageIndex, (String imageKey, Image image)> dbDataImageItems = new Dictionary<dbDataImageIndex, (String imageKey, Image image)>()
         {
-            {dbDataImageIndex.Database, ("Database",Resources.Database) },
-            {dbDataImageIndex.Schema,   ("Schema",  Resources.Schema) },
-            {dbDataImageIndex.Tables,   ("Tables",  Resources.TableGroup) },
-            {dbDataImageIndex.Table,    ("Table",   Resources.Table) },
-            {dbDataImageIndex.Columns,  ("Columns", Resources.ColumnGroup) },
-            {dbDataImageIndex.Column,   ("Column",  Resources.Column) },
-            {dbDataImageIndex.View,     ("View",    Resources.View) }
+            {dbDataImageIndex.Database,         ("Database",        Resources.Database) },
+            {dbDataImageIndex.Schema,           ("Schema",          Resources.Schema) },
+            {dbDataImageIndex.Tables,           ("Tables",          Resources.TableGroup) },
+            {dbDataImageIndex.Table,            ("Table",           Resources.Table) },
+            {dbDataImageIndex.Columns,          ("Columns",         Resources.ColumnGroup) },
+            {dbDataImageIndex.Column,           ("Column",          Resources.Column) },
+            {dbDataImageIndex.ComputedColumn,   ("ComputedColumn",  Resources.ComputedColumn) },
+            {dbDataImageIndex.KeyColumn,        ("KeyColumn",       Resources.KeyColumn) },
+            {dbDataImageIndex.View,             ("View",            Resources.View) }
         };
+
+        void SetImages(TreeView tree, IEnumerable<(String imageKey, Image image)> images)
+        {
+            if (tree.ImageList is null)
+            { tree.ImageList = new ImageList(); }
+
+            foreach ((string imageKey, Image image) image in images.Where(w => !tree.ImageList.Images.ContainsKey(w.imageKey)))
+            { tree.ImageList.Images.Add(image.imageKey, image.image); }
+        }
 
         void BuildDbDataTree()
         {
             dbMetaDataNavigation.Nodes.Clear();
             dbDataNodes.Clear();
-
-            if (dbMetaDataNavigation.ImageList is null)
-            {
-                dbMetaDataNavigation.ImageList = new ImageList();
-                foreach (dbDataImageIndex item in Enum.GetValues(typeof(dbDataImageIndex)))
-                { dbMetaDataNavigation.ImageList.Images.Add(dbDataImageItems[item].imageKey, dbDataImageItems[item].image); }
-            }
 
             foreach (IDbCatalogItem catalogItem in Program.DbData.DbCatalogs.OrderBy(o => o.CatalogName))
             {
@@ -199,10 +235,67 @@ namespace DataDictionary.Main
         }
         #endregion
 
+        #region domainModelNavigation
+        Dictionary<TreeNode, Object> domainModelNodes = new Dictionary<TreeNode, Object>();
+        enum domainModelImageIndex
+        {
+            Attribute,
+            Attributes,
+        }
+
+        static Dictionary<domainModelImageIndex, (String imageKey, Image image)> domainModelImageItems = new Dictionary<domainModelImageIndex, (String imageKey, Image image)>()
+        {
+            {domainModelImageIndex.Attribute,    ("Attribute",   Resources.Attribute) },
+            {domainModelImageIndex.Attributes,   ("Attributes",  Resources.Parameter) },
+        };
+
+        void BuildDomainModelTree()
+        {
+            domainModelNavigation.Nodes.Clear();
+            domainModelNodes.Clear();
+
+            foreach (IDomainAttributeItem attributeItem in
+                Program.DomainData.DomainAttributes.
+                Where(w => w.ParentAttributeId is null).
+                OrderBy(o => o.AttributeTitle))
+            {
+                TreeNode attributeNode = CreateNode(attributeItem.AttributeTitle, domainModelImageIndex.Attribute, attributeItem);
+                domainModelNavigation.Nodes.Add(attributeNode);
+
+                //TODO: Need a recursive method to add children
+
+            }
+
+            TreeNode CreateNode(String? nodeText, domainModelImageIndex imageIndex, Object? source = null, TreeNode? parentNode = null)
+            {
+                if (String.IsNullOrWhiteSpace(nodeText)) { throw new ArgumentNullException(nameof(nodeText)); }
+
+                TreeNode result = new TreeNode(nodeText);
+                result.ImageKey = domainModelImageItems[imageIndex].imageKey;
+                result.SelectedImageKey = domainModelImageItems[imageIndex].imageKey;
+
+                if (parentNode is not null) { parentNode.Nodes.Add(result); }
+                if (source is not null) { dbDataNodes.Add(result, source); }
+
+                return result;
+            }
+        }
+
+        private void domainModelNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (domainModelNodes.ContainsKey(e.Node))
+            {
+                Object domainNode = domainModelNodes[e.Node];
+                if (domainNode is IDomainAttributeItem) { }
+            }
+        }
+
+
+        #endregion
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;
 
-        public void RecieveMessage(object? sender, MessageEventArgs message)
+        public void ReceiveMessage(object? sender, MessageEventArgs message)
         { HandleMessage((dynamic)message); }
 
         void SendMessage(MessageEventArgs message)
@@ -223,8 +316,6 @@ namespace DataDictionary.Main
         { BuildDbDataTree(); }
 
         #endregion
-
-
 
 
     }

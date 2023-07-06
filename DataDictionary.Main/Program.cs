@@ -11,7 +11,7 @@ namespace DataDictionary.Main
     {
 
         /// <summary>
-        /// Worker Queue (Background and Forground). Singleton access point.
+        /// Worker Queue (Background and Foreground). Singleton access point.
         /// </summary>
         public static WorkerQueue WorkerQueue { get; } = new WorkerQueue();
 
@@ -24,6 +24,11 @@ namespace DataDictionary.Main
         /// Application Data, Db MetaData
         /// </summary>
         public static DatabaseMetaData DbData { get; } = new DatabaseMetaData();
+
+        /// <summary>
+        /// The Domain Model Application Data
+        /// </summary>
+        public static DomainData DomainData { get; } = new DomainData();
 
         static Program()
         { }

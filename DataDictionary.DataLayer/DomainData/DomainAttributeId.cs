@@ -9,12 +9,12 @@ namespace DataDictionary.DataLayer.DomainData
 {
     public interface IDomainAttributeId
     {
-        Guid? AttributeId { get; }
+        Nullable<Guid> AttributeId { get; }
     }
 
     public class DomainAttributeId: IDomainAttributeId, IEquatable<IDomainAttributeId>
     {
-        public Guid? AttributeId { get; init; }
+        public Nullable<Guid> AttributeId { get; init; }
 
         public DomainAttributeId() : base() { }
 

@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Forms
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;
 
-        public virtual void RecieveMessage(object? sender, MessageEventArgs message)
+        public virtual void ReceiveMessage(object? sender, MessageEventArgs message)
         { HandleMessage((dynamic)message); }
 
         protected virtual void  SendMessage(MessageEventArgs message)
@@ -34,7 +34,7 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         /// <param name="message"></param>
         /// <remarks>
-        /// Override the specfic method to handl the event.
+        /// Override the specific method to handle the event.
         /// This is called by RecieveMessage with Dynamic typing.
         /// </remarks>
         protected virtual void HandleMessage(MessageEventArgs message) { }
