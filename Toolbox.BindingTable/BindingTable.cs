@@ -131,7 +131,7 @@ namespace Toolbox.BindingTable
 
                     DataRow newRow = dataItems.Rows[(dataItems.Rows.Count - 1)]; // new rows is always added at the end
                     TBindingItem newItem = new TBindingItem();
-                    newItem.ImportRow(newRow);
+                    newItem.SetRow(newRow);
                     this.Add(newItem);
                 }
             }
@@ -146,7 +146,7 @@ namespace Toolbox.BindingTable
         /// <inheritdoc cref="DataTable.AcceptChanges"/>
         public virtual void AcceptChanges()
         {
-            foreach (TBindingItem item in this.Where(w => !Object.ReferenceEquals(w, newItem)))
+            foreach (TBindingItem item in this.Where(w => !Object.ReferenceEquals(w, addNewCoreItem)))
             { if (item.GetRow() is DataRow row) { row.AcceptChanges(); } }
         }
 
@@ -166,7 +166,7 @@ namespace Toolbox.BindingTable
                 {
                     TBindingItem item = new TBindingItem();
                     row.RejectChanges();
-                    item.ImportRow(row);
+                    item.SetRow(row);
                     this.Add(item);
                 }
             }
@@ -189,27 +189,39 @@ namespace Toolbox.BindingTable
         #endregion
 
         #region BindingList
-        //Track the extra row created by DataGridView. Changes should not be accepted on this row.
-        TBindingItem? newItem = null;
+        TBindingItem? addNewCoreItem = null; // Track the extra row created by DataGridView.
+        Boolean isAddNewCore = false; // Tracks if AddNewCore is being executed. We are dealing with a fake DataGridView Row.
 
+        /// <remarks>
+        /// This is normally called by DataGridView to create a new row that is not yet part of the DataGridView.
+        /// The addNewCoreItem item tracks this row that is pending. 
+        /// The isAddingNewCore tracks if the AddNewCore is doing the work. 
+        /// The flow of this method is not easy to track. 
+        /// It is not called by the BindingList.Add.
+        /// InsertItem is called as part of the base call.
+        /// </remarks>
         protected override Object? AddNewCore()
         {
-            return base.AddNewCore();
-            if (base.AddNewCore() is TBindingItem item)
-            {
-                DataRow row = dataItems.NewRow();
-                item.BindingTable = this;
-                item.ImportRow(row);
-                dataItems.Rows.Add(row);
-                newItem = item;
-                return item;
-            }
-            else { return null; }
+            isAddNewCore = true;
+            Object? item = base.AddNewCore();
+
+            if (item is TBindingItem newItem) { addNewCoreItem = newItem; }
+            isAddNewCore = false;
+
+            return item;
         }
 
+        /// <remarks>
+        /// This is called if the DataGridView does not commit the new item.
+        /// Example: closing the Form or pressing Escape on the DataGridView.
+        /// The fake DataGridView row is removed from the data.
+        /// It is not called by the BindingList.Add.
+        /// </remarks>
         public override void CancelNew(Int32 itemIndex)
         {
-            if (itemIndex >= 0 && this[itemIndex] == newItem) { newItem = null; }
+            if (itemIndex >= 0 && this[itemIndex] == addNewCoreItem)
+            { addNewCoreItem = null; }
+
             base.CancelNew(itemIndex);
         }
 
@@ -219,31 +231,58 @@ namespace Toolbox.BindingTable
             base.ClearItems();
         }
 
+        /// <remarks>
+        /// This gets called several times during the process of the DataGridView working with a new row.
+        /// The first time is as part of the AddNewCore. At this point, the row is not real. Don't do anything to the row.
+        /// The second time it is when it is committing the insert. At this point, the row is real and needs to be part of the DataTable
+        /// The method can be called several more times before Adding or Canceling a new Row. I don't know what causes this or how to handle these calls.
+        /// It is not called by the BindingList.Add.
+        /// </remarks>
         public override void EndNew(Int32 itemIndex)
         {
-            if (itemIndex >= 0 && this[itemIndex] == newItem) { newItem = null; }
+            if (itemIndex >= 0 && this[itemIndex] == addNewCoreItem && !isAddNewCore)
+            { // Item is not being canceled or executing AddNewCore, finish adding the item.
+                try
+                {
+                    dataItems.ImportRow(addNewCoreItem.GetRow());
+                    addNewCoreItem.BindingTable = this;
+                    addNewCoreItem.SetRow(dataItems.Rows[dataItems.Rows.Count - 1]);
+                }
+                catch (Exception ex)
+                {
+                    foreach (DataColumn columnItem in addNewCoreItem.GetRow().Table.Columns)
+                    { ex.Data.Add(columnItem.ColumnName, addNewCoreItem.GetRow()[columnItem]); }
+
+                    throw;
+                }
+
+                addNewCoreItem = null;
+            }
+
             base.EndNew(itemIndex);
         }
 
         protected override void InsertItem(Int32 index, TBindingItem item)
         {
-            if (item.GetRow() is DataRow row)
+            DataRow itemRow = item.GetRow();
+            
+            try
             {
-                if (ReferenceEquals(row.Table, dataItems))
-                { }
-                else
+                if (!!ReferenceEquals(itemRow.Table, dataItems) || !isAddNewCore)
                 { // Replace the row data with a copy that belongs to this table
-                    dataItems.ImportRow(item.GetRow());
+                    dataItems.ImportRow(itemRow);
                     item.BindingTable = this;
-                    item.ImportRow(dataItems.Rows[dataItems.Rows.Count - 1]);
+                    item.SetRow(dataItems.Rows[dataItems.Rows.Count - 1]);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                DataRow newRow = dataItems.NewRow();
-                item.BindingTable = this;
-                item.ImportRow(newRow);
+                foreach (DataColumn columnItem in itemRow.Table.Columns)
+                { ex.Data.Add(columnItem.ColumnName, itemRow[columnItem]); }
+
+                throw;
             }
+
             base.InsertItem(index, item);
         }
 
@@ -264,7 +303,7 @@ namespace Toolbox.BindingTable
         /// </summary>
         /// <param name="e"></param>
         /// <remarks>
-        /// This can raise an Thread exception when a Form has a bound object, usally a DataGridView.
+        /// This can raise an Thread exception when a Form has a bound object, usually a DataGridView.
         /// To address this, the Form needs to disconnect from the binding source and re-connect after the operation is complete.
         /// </remarks>
         protected override void OnListChanged(ListChangedEventArgs e)

@@ -31,7 +31,7 @@ namespace Toolbox.BindingTable
 
     /// <summary>
     /// The BindingTableRow is the wrappers around the DataRow used by the BindingTable class.
-    /// This wrappers job is t expose the DataRow as a POCO like class while keeping the
+    /// This wrappers job is to expose the DataRow as a POCO like class while keeping the
     /// DataRow internal to the system.
     /// </summary>
     public abstract class BindingTableRow : INotifyPropertyChanged, IBindingTableRow
@@ -60,7 +60,12 @@ namespace Toolbox.BindingTable
         /// <summary>
         /// Base Constructor for the BindingTableRow.
         /// </summary>
-        protected BindingTableRow() : base()
+        /// <remarks>
+        /// The class as part of the constructor creates a temporary DataTable and
+        /// the row that goes with it. The Row matches the ColumnDefinitions, but
+        /// allows Null for all values.
+        /// </remarks>
+        protected internal BindingTableRow() : base()
         {
             using (DataTable temp = new DataTable("Init_BindingTableRow"))
             {
@@ -93,7 +98,7 @@ namespace Toolbox.BindingTable
         /// </summary>
         /// <param name="row"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        protected internal void ImportRow(DataRow row)
+        protected internal void SetRow(DataRow row)
         {
             data.Table.RowChanging -= Table_RowChanging;
             data.Table.RowChanged -= Table_RowChanged;
@@ -113,7 +118,7 @@ namespace Toolbox.BindingTable
         /// Gives access to the Internal DataRow.
         /// </summary>
         /// <returns></returns>
-        protected internal DataRow? GetRow()
+        protected internal DataRow GetRow()
         { return data; }
 
         /// <summary>
@@ -262,9 +267,11 @@ namespace Toolbox.BindingTable
         {
             if (data is DataRow row)
             {
-                row.Table.RowChanging -= Table_RowChanging;
-                row.Table.RowChanged -= Table_RowChanged;
-                row.Table.Disposed -= Table_Disposed;
+                data.Table.RowChanging -= Table_RowChanging;
+                data.Table.RowChanged -= Table_RowChanged;
+                data.Table.RowDeleting -= Table_RowDeleting;
+                data.Table.RowDeleted -= Table_RowDeleted;
+                data.Table.Disposed -= Table_Disposed;
             }
         }
 
@@ -273,12 +280,11 @@ namespace Toolbox.BindingTable
 
         protected virtual void Table_Disposed(object? sender, EventArgs e)
         {
-            if (data is DataRow row)
-            {
-                row.Table.RowChanging -= Table_RowChanging;
-                row.Table.RowChanged -= Table_RowChanged;
-                row.Table.Disposed -= Table_Disposed;
-            }
+            data.Table.RowChanging -= Table_RowChanging;
+            data.Table.RowChanged -= Table_RowChanged;
+            data.Table.RowDeleting -= Table_RowDeleting;
+            data.Table.RowDeleted -= Table_RowDeleted;
+            data.Table.Disposed -= Table_Disposed;
         }
 
         /// <inheritdoc cref="DataRow.RowState"/>
