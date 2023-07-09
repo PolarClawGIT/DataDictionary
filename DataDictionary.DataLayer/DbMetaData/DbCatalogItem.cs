@@ -14,16 +14,16 @@ namespace DataDictionary.DataLayer.DbMetaData
 {
     public interface IDbCatalogItem : IDbCatalogName, IDbIsSystem
     {
-        Guid? CatalogId { get; }
+        //Guid? CatalogId { get; }
         String? SourceServerName { get; }
     }
 
     public class DbCatalogItem : BindingTableRow, IDbCatalogItem, INotifyPropertyChanged
     {
-        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
-        public String? CatalogName { get { return GetValue("CatalogName"); } }
-        public String? SourceServerName { get { return GetValue("SourceServerName"); } }
-        public Boolean IsSystem { get { return CatalogName is "tempdb" or "master" or "msdb" or "model"; } }
+        //public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        public virtual String? CatalogName { get { return GetValue("CatalogName"); } }
+        public virtual String? SourceServerName { get { return GetValue("SourceServerName"); } }
+        public virtual Boolean IsSystem { get { return CatalogName is "tempdb" or "master" or "msdb" or "model"; } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -43,6 +43,28 @@ namespace DataDictionary.DataLayer.DbMetaData
             command.Parameters.Add(new SqlParameter("@Server", SqlDbType.NVarChar) { Value = connection.ServerName });
 
             return connection.ExecuteReader(command);
+        }
+    }
+
+    public static class DbCatalogItemExtension
+    {
+        public static DbCatalogItem? GetCatalog(this IEnumerable<DbCatalogItem> source, IDbCatalogName item)
+        {
+            DbCatalogName itemName = new DbCatalogName(item);
+            return source.FirstOrDefault(w => itemName == w);
+        }
+
+        public static DbCatalogItem? GetCatalog(this IDbCatalogName item, IEnumerable<DbCatalogItem> source)
+        {
+            DbCatalogName itemName = new DbCatalogName(item);
+            return source.FirstOrDefault(w => itemName == w);
+        }
+
+        public static DbCatalogItem? GetCatalog(this IEnumerable<DbCatalogItem> source, (String ServerName, String DatabaseName) item)
+        {
+            return source.FirstOrDefault(
+                w => item.DatabaseName.Equals(w.CatalogName, ModelFactory.CompareString) &&
+                item.ServerName.Equals(w.SourceServerName, ModelFactory.CompareString));
         }
     }
 }

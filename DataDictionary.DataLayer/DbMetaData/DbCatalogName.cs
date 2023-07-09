@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.DbMetaData
                 other is IDbCatalogName &&
                 !String.IsNullOrEmpty(CatalogName) &&
                 !String.IsNullOrEmpty(other.CatalogName) &&
-                CatalogName.Equals(other.CatalogName, StringComparison.CurrentCultureIgnoreCase));
+                CatalogName.Equals(other.CatalogName, ModelFactory.CompareString));
         }
 
         public virtual int CompareTo(IDbCatalogName? other)
@@ -72,7 +72,5 @@ namespace DataDictionary.DataLayer.DbMetaData
             if (CatalogName is String) { return CatalogName; }
             else { return String.Empty; }
         }
-
-
     }
 }

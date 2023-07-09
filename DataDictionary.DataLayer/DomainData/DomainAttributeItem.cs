@@ -11,17 +11,17 @@ namespace DataDictionary.DataLayer.DomainData
 {
     public interface IDomainAttributeItem : IDomainAttributeTitle, IDomainAttributeId
     {
-        Nullable<Guid> CatalogId { get; set; }
+        Nullable<Guid> CatalogId { get; }
         Nullable<Guid> ParentAttributeId { get; set; }
         String? AttributeText { get; set; }
         Boolean IsComposite { get { return CompositeOrder > 0; } }
         Nullable<Int32> CompositeOrder { get; set; }
     }
 
-    public class DomainAttributeItem : BindingTableRow, IDomainAttributeItem, INotifyPropertyChanged
+    public class DomainAttributeItem : BindingTableRow, IDomainAttributeItem
     {
         public Nullable<Guid> CatalogId
-        { get { return GetValue<Guid>("CatalogId"); } set { SetValue<Guid>("CatalogId", value); } }
+        { get { return GetValue<Guid>("CatalogId"); } protected set { SetValue<Guid>("CatalogId", value); } }
 
         public Nullable<Guid> AttributeId
         { get { return GetValue<Guid>("AttributeId"); } set { SetValue<Guid>("AttributeId", value); } }
@@ -32,6 +32,11 @@ namespace DataDictionary.DataLayer.DomainData
         public String? AttributeTitle { get { return GetValue("AttributeTitle"); } set { SetValue("AttributeTitle", value); } }
         public String? AttributeText { get { return GetValue("AttributeText"); } set { SetValue("AttributeText", value); } }
         public Nullable<Int32> CompositeOrder { get { return GetValue<Int32>("CompositeOrder"); } set { SetValue<Int32>("CompositeOrder", value); } }
+
+        public DomainAttributeItem () : base()
+        {
+            if(AttributeId is null) { AttributeId = Guid.NewGuid(); }
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

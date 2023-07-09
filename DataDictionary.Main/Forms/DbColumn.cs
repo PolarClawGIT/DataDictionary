@@ -82,13 +82,7 @@ namespace DataDictionary.Main.Forms
                 isHiddenData.DataBindings.Add(new Binding(nameof(isHiddenData.Checked), data.DbColumn, nameof(data.DbColumn.IsHidden), true, DataSourceUpdateMode.OnValidation, false));
 
                 data.DbExtendedProperties.Clear();
-                data.DbExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.Where(
-                        w =>
-                        w.CatalogName == data.DbColumn.CatalogName &&
-                        w.Level0Name == data.DbColumn.SchemaName &&
-                        w.Level1Name == data.DbColumn.TableName &&
-                        w.Level2Name == data.DbColumn.ColumnName &&
-                        w.PropertyObjectType == ExtendedPropertyObjectType.Column));
+                data.DbExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.GetProperties(data.DbColumn));
 
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = data.DbExtendedProperties;

@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: Schemas
 
+using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.DataLayer.WorkDbItem;
 using System;
@@ -18,11 +19,11 @@ namespace DataDictionary.BusinessLayer
 {
     public class DatabaseMetaData
     {
-        public BindingTable<DbCatalogItem> DbCatalogs { get; } = new BindingTable<DbCatalogItem>();
-        public BindingTable<DbSchemaItem> DbSchemas { get; } = new BindingTable<DbSchemaItem>();
-        public BindingTable<DbTableItem> DbTables { get; } = new BindingTable<DbTableItem>();
-        public BindingTable<DbColumnItem> DbColumns { get; } = new BindingTable<DbColumnItem>();
-        public BindingTable<DbExtendedPropertyItem> DbExtendedProperties = new BindingTable<DbExtendedPropertyItem>();
+        public BindingTable<DbCatalogItem> DbCatalogs { get; } = ModelFactory.Create<DbCatalogItem>();
+        public BindingTable<DbSchemaItem> DbSchemas { get; } = ModelFactory.Create<DbSchemaItem>();
+        public BindingTable<DbTableItem> DbTables { get; } = ModelFactory.Create<DbTableItem>();
+        public BindingTable<DbColumnItem> DbColumns { get; } = ModelFactory.Create<DbColumnItem>();
+        public BindingTable<DbExtendedPropertyItem> DbExtendedProperties = ModelFactory.Create<DbExtendedPropertyItem>();
 
         public IWorkItem ImportDb(DbSchemaContext connection, Action? onComplete = null)
         {

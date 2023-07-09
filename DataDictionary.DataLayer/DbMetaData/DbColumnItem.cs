@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -16,7 +17,7 @@ namespace DataDictionary.DataLayer.DbMetaData
 {
     public interface IDbColumnItem : IDbColumnName
     {
-        Guid? CatalogId { get; }
+        //Guid? CatalogId { get; }
         Nullable<Int32> OrdinalPosition { get; }
         String? ColumnDefault { get; }
         Nullable<Boolean> IsNullable { get; }
@@ -48,7 +49,7 @@ namespace DataDictionary.DataLayer.DbMetaData
 
     public class DbColumnItem : BindingTableRow, IDbColumnItem, INotifyPropertyChanged
     {
-        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        //public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("TABLE_CATALOG"); } }
         public String? SchemaName { get { return GetValue("TABLE_SCHEMA"); } }
         public String? TableName { get { return GetValue("TABLE_NAME"); } }
@@ -118,9 +119,6 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("GeneratedAlwayType", typeof(String)){ AllowDBNull = true},
         };
 
-
-
-
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
@@ -138,6 +136,34 @@ namespace DataDictionary.DataLayer.DbMetaData
             return (new DbExtendedPropertyGetCommand(connection)
             { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = TableName, Level1Type = "TABLE", Level2Name = ColumnName, Level2Type = "COLUMN" }).
             GetCommand();
+        }
+    }
+
+    public static class DbColumnItemExtension
+    {
+
+        public static DbColumnItem? GetColumn(this IEnumerable<DbColumnItem> source, IDbColumnName item)
+        {
+            DbColumnName itemName = new DbColumnName(item);
+            return source.FirstOrDefault(w => itemName == w);
+        }
+
+        public static DbColumnItem? GetColumn(this IDbColumnName item, IEnumerable<DbColumnItem> source)
+        {
+            DbColumnName itemName = new DbColumnName(item);
+            return source.FirstOrDefault(w => itemName == w);
+        }
+
+        public static IEnumerable<DbColumnItem> GetColumns(this IEnumerable<DbColumnItem> source, IDbTableName item)
+        {
+            DbTableName itemName = new DbTableName(item);
+            return source.Where(w => itemName == w);
+        }
+
+        public static IEnumerable<DbColumnItem> GetColumns(this IDbTableName item, IEnumerable<DbColumnItem> source)
+        {
+            DbTableName itemName = new DbTableName(item);
+            return source.Where(w => itemName == w);
         }
     }
 }

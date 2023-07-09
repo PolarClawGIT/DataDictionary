@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.Mediator;
+using Toolbox.Threading.WorkItem;
 
 namespace DataDictionary.Main.Forms
 {
@@ -254,7 +255,7 @@ namespace DataDictionary.Main.Forms
                 { Settings.Default.UserServers.RemoveAt(10); }
 
                 Settings.Default.Save();
-
+//                Program.DomainData.ImportAttributes(Program.DbData); // Currently a fast process, may need to reconsider later.
 
                 // Done
                 SendMessage(new DbDataBatchCompleted());

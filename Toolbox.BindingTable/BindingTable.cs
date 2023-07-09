@@ -343,7 +343,7 @@ namespace Toolbox.BindingTable
         protected override PropertyDescriptor? SortPropertyCore { get { return sortProrty; } }
 
         /// <summary>
-        /// Sets the behavior of String Comparsons for Sort and Search on Properties
+        /// Sets the behavior of String Comparisons for Sort and Search on Properties
         /// If the Property is a String or is not IComparable then strings are sorted or searched using this setting.
         /// If the Property is not a String and is IComparable then IComparable is used.
         /// </summary>
@@ -354,7 +354,7 @@ namespace Toolbox.BindingTable
         /// The default Comparer uses: SortPropertyCore, SortDirectionCore and StringComparison.
         /// </summary>
         /// <remarks>
-        /// Overriding this property allows a diffrent comparer method to be used.
+        /// Overriding this property allows a different comparer method to be used.
         /// </remarks>
         protected virtual IComparer<TBindingItem> Comparer
         {

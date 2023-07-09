@@ -13,13 +13,13 @@ namespace DataDictionary.DataLayer.DbMetaData
 {
     public interface IDbTableItem : IDbTableName, IDbIsSystem
     {
-        Guid? CatalogId { get; }
+        //Guid? CatalogId { get; }
         String? TableType { get; }
     }
 
     public class DbTableItem : BindingTableRow, IDbTableItem, INotifyPropertyChanged
     {
-        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        //public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("TABLE_CATALOG"); } }
         public String? SchemaName { get { return GetValue("TABLE_SCHEMA"); } }
         public String? TableName { get { return GetValue("TABLE_NAME"); } }
@@ -52,6 +52,46 @@ namespace DataDictionary.DataLayer.DbMetaData
             return (new DbExtendedPropertyGetCommand(connection)
             { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = TableName, Level1Type = "TABLE" }).
             GetCommand();
+        }
+    }
+
+    public static class DbTableItemExtension
+    {
+
+        public static DbTableItem? GetTable(this IEnumerable<DbTableItem> source, IDbTableName item)
+        {
+            DbTableName itemName = new DbTableName(item);
+            return source.FirstOrDefault(w => itemName == w);
+        }
+
+        public static DbTableItem? GetTable(this IDbTableName item, IEnumerable<DbTableItem> source)
+        {
+            DbTableName itemName = new DbTableName(item);
+            return source.FirstOrDefault(w => itemName == w);
+        }
+
+        public static IEnumerable<DbTableItem> GetTables(this IEnumerable<DbTableItem> source, IDbSchemaName item)
+        {
+            DbSchemaName itemName = new DbSchemaName(item);
+            return source.Where(w => itemName == w);
+        }
+
+        public static IEnumerable<DbTableItem> GetTables(this IDbSchemaName item, IEnumerable<DbTableItem> source)
+        {
+            DbSchemaName itemName = new DbSchemaName(item);
+            return source.Where(w => itemName == w);
+        }
+
+        public static IEnumerable<DbTableItem> GetTables(this IEnumerable<DbTableItem> source, IDbCatalogName item)
+        {
+            DbCatalogName itemName = new DbCatalogName(item);
+            return source.Where(w => itemName == w);
+        }
+
+        public static IEnumerable<DbTableItem> GetTables(this IDbCatalogName item, IEnumerable<DbTableItem> source)
+        {
+            DbCatalogName itemName = new DbCatalogName(item);
+            return source.Where(w => itemName == w);
         }
     }
 }

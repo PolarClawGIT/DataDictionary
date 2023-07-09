@@ -32,7 +32,7 @@ namespace DataDictionary.DataLayer.DbMetaData
                 new DbCatalogName(this).Equals(other) &&
                 !String.IsNullOrEmpty(SchemaName) &&
                 !String.IsNullOrEmpty(other.SchemaName) &&
-                SchemaName.Equals(other.SchemaName, StringComparison.CurrentCultureIgnoreCase));
+                SchemaName.Equals(other.SchemaName, ModelFactory.CompareString));
         }
 
         public Int32 CompareTo(IDbSchemaName? other)

@@ -31,7 +31,7 @@ namespace DataDictionary.DataLayer.DbMetaData
                 new DbSchemaName(this).Equals(other) &&
                 !String.IsNullOrEmpty(TableName) &&
                 !String.IsNullOrEmpty(other.TableName) &&
-                TableName.Equals(other.TableName, StringComparison.CurrentCultureIgnoreCase));
+                TableName.Equals(other.TableName, ModelFactory.CompareString));
         }
 
         public Int32 CompareTo(IDbTableName? other)

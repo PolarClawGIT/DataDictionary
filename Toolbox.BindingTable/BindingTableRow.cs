@@ -10,11 +10,9 @@ using System.Threading.Tasks;
 
 namespace Toolbox.BindingTable
 {
-    public interface IBindingTableRow
+    public interface IBindingTableRow : INotifyPropertyChanged
     {
         IBindingTable? BindingTable { get; }
-
-        event PropertyChangedEventHandler? PropertyChanged;
 
         String GetRowError();
         Boolean HasRowErrors();
@@ -34,7 +32,7 @@ namespace Toolbox.BindingTable
     /// This wrappers job is to expose the DataRow as a POCO like class while keeping the
     /// DataRow internal to the system.
     /// </summary>
-    public abstract class BindingTableRow : INotifyPropertyChanged, IBindingTableRow
+    public abstract class BindingTableRow : IBindingTableRow
     {
         /// <summary>
         /// Reference to the Binding Table that owns this row.
@@ -217,7 +215,10 @@ namespace Toolbox.BindingTable
             where T : struct
         {
             if (data is DataRow row && row.Table.Columns.Contains(columnName))
-            { row[columnName] = value; }
+            {
+                if (value is null) { row[columnName] = DBNull.Value; }
+                else { row[columnName] = value.Value; }
+            }
         }
 
         /// <summary>
@@ -228,7 +229,10 @@ namespace Toolbox.BindingTable
         protected virtual void SetValue(String columnName, String? value)
         {
             if (data is DataRow row && row.Table.Columns.Contains(columnName))
-            { row[columnName] = value; }
+            {
+                if (String.IsNullOrWhiteSpace(value)) { row[columnName] = DBNull.Value; }
+                else { row[columnName] = value; }
+            }
         }
 
         #region DataRow

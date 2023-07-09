@@ -1,6 +1,7 @@
 using DataDictionary.BusinessLayer;
 using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.DataLayer.DomainData;
+using DataDictionary.Main.Forms;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
@@ -9,11 +10,10 @@ using Toolbox.BindingTable;
 using Toolbox.Mediator;
 using Toolbox.Threading;
 using Toolbox.Threading.WorkItem;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace DataDictionary.Main
 {
-    partial class Main : Form, IColleague
+    partial class Main : ApplicationFormBase
     {
         #region Static Data
         enum navigationTabImageIndex
@@ -48,6 +48,7 @@ namespace DataDictionary.Main
             SetImages(dbMetaDataNavigation, dbDataImageItems.Values);
             SetImages(domainModelNavigation, domainModelImageItems.Values);
 
+            // TODO: Cannot get the Context menus to show. For now, add them to the Tools menu
             dbSchemaToolStripMenuItem.DropDownItems.AddRange(dbSchemaContextMenu.Items);
             domainModelToolStripMenuItem.DropDownItems.AddRange(domainModelMenu.Items);
         }
@@ -104,7 +105,7 @@ namespace DataDictionary.Main
 
         private void menuImportDbSchema_Click(object sender, EventArgs e)
         {
-            Program.DomainData.ImportAttributes(Program.DbData.DbColumns);
+            Program.DomainData.ImportAttributes(Program.DbData);
             BuildDomainModelTree();
         }
 
@@ -241,12 +242,16 @@ namespace DataDictionary.Main
         {
             Attribute,
             Attributes,
+            Property,
+            Alias
         }
 
         static Dictionary<domainModelImageIndex, (String imageKey, Image image)> domainModelImageItems = new Dictionary<domainModelImageIndex, (String imageKey, Image image)>()
         {
             {domainModelImageIndex.Attribute,    ("Attribute",   Resources.Attribute) },
             {domainModelImageIndex.Attributes,   ("Attributes",  Resources.Parameter) },
+            {domainModelImageIndex.Property,     ("Property",    Resources.ExtendedProperty) },
+            {domainModelImageIndex.Alias,        ("Alias",       Resources.Column) },
         };
 
         void BuildDomainModelTree()
@@ -259,11 +264,25 @@ namespace DataDictionary.Main
                 Where(w => w.ParentAttributeId is null).
                 OrderBy(o => o.AttributeTitle))
             {
-                TreeNode attributeNode = CreateNode(attributeItem.AttributeTitle, domainModelImageIndex.Attribute, attributeItem);
+                TreeNode attributeNode = CreateAttribute(attributeItem, null);
                 domainModelNavigation.Nodes.Add(attributeNode);
+            }
 
-                //TODO: Need a recursive method to add children
+            TreeNode CreateAttribute(IDomainAttributeItem attributeItem, TreeNode? parent)
+            {
+                TreeNode attributeNode = CreateNode(attributeItem.AttributeTitle, domainModelImageIndex.Attribute, attributeItem);
 
+                foreach (DomainAttributePropertyItem propertyItem in Program.DomainData.DomainAttributeProperties.Where(w => w.AttributeId == attributeItem.AttributeId))
+                { CreateNode(propertyItem.PropertyName, domainModelImageIndex.Property, propertyItem, attributeNode); }
+
+                foreach (DomainAttributeAliasItem aliasItem in Program.DomainData.DomainAttributeAliases.Where(w => w.AttributeId == attributeItem.AttributeId))
+                { CreateNode(aliasItem.ToString(), domainModelImageIndex.Alias, aliasItem, attributeNode); }
+
+                foreach (DomainAttributeItem childAttributeItem in Program.DomainData.DomainAttributes.Where(w => w.ParentAttributeId == attributeItem.AttributeId))
+                { attributeNode.Nodes.Add(CreateAttribute(childAttributeItem, attributeNode)); }
+
+                if (parent is not null) { parent.Nodes.Add(attributeNode); }
+                return attributeNode;
             }
 
             TreeNode CreateNode(String? nodeText, domainModelImageIndex imageIndex, Object? source = null, TreeNode? parentNode = null)
@@ -290,33 +309,28 @@ namespace DataDictionary.Main
             }
         }
 
-
         #endregion
+
         #region IColleague
-        public event EventHandler<MessageEventArgs>? OnSendMessage;
 
-        public void ReceiveMessage(object? sender, MessageEventArgs message)
-        { HandleMessage((dynamic)message); }
-
-        void SendMessage(MessageEventArgs message)
+        protected override void HandleMessage(FormAddMdiChild message)
         {
-            if (OnSendMessage is EventHandler<MessageEventArgs> handler)
-            { handler(this, message); }
+            if (!ReferenceEquals(this, message.ChildForm) && message.ChildForm.MdiParent is null)
+            { message.ChildForm.MdiParent = this; }
         }
 
-        void HandleMessage(MessageEventArgs message) { }
-        void HandleMessage(FormAddMdiChild message)
-        { if (message.ChildForm.MdiParent is null) { message.ChildForm.MdiParent = this; } }
-
         Form? lastActive;
-        void HandleMessage(DbDataBatchStarting message)
+        protected override void HandleMessage(DbDataBatchStarting message)
         { lastActive = ActiveMdiChild; }
 
-        void HandleMessage(DbDataBatchCompleted message)
-        { BuildDbDataTree(); }
+        protected override void HandleMessage(DbDataBatchCompleted message)
+        {
+            Program.DomainData.ImportAttributes(Program.DbData);
+            BuildDbDataTree();
+            BuildDomainModelTree();
+        }
 
         #endregion
-
 
     }
 }

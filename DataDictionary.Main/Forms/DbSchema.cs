@@ -52,11 +52,7 @@ namespace DataDictionary.Main.Forms
                 errorProvider.SetError(catalogNameLayout, String.Empty);
 
                 data.DbExtendedProperties.Clear();
-                data.DbExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.Where(
-                        w =>
-                        w.CatalogName == data.SchemaName.CatalogName &&
-                        w.Level0Name == data.SchemaName.SchemaName &&
-                        w.PropertyObjectType == ExtendedPropertyObjectType.Schema));
+                data.DbExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.GetProperties(data.DbSchema));
 
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = data.DbExtendedProperties;

@@ -50,12 +50,7 @@ namespace DataDictionary.Main.Forms
                 isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), data.DbTable, nameof(data.DbTable.IsSystem)));
 
                 data.DbExtendedProperties.Clear();
-                data.DbExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.Where(
-                        w =>
-                        w.CatalogName == data.DbTable.CatalogName &&
-                        w.Level0Name == data.DbTable.SchemaName &&
-                        w.Level1Name == data.DbTable.TableName &&
-                        w.PropertyObjectType == ExtendedPropertyObjectType.Table));
+                data.DbExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.GetProperties(data.DbTable));
 
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = data.DbExtendedProperties;

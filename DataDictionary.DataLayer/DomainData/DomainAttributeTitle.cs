@@ -32,7 +32,7 @@ namespace DataDictionary.DataLayer.DomainData
                 other is IDbSchemaName &&
                 !String.IsNullOrEmpty(AttributeTitle) &&
                 !String.IsNullOrEmpty(other.AttributeTitle) &&
-                AttributeTitle.Equals(other.AttributeTitle, StringComparison.CurrentCultureIgnoreCase));
+                AttributeTitle.Equals(other.AttributeTitle, ModelFactory.CompareString));
         }
 
         public Int32 CompareTo(IDomainAttributeTitle? other)

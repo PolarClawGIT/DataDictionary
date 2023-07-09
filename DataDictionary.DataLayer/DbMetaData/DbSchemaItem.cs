@@ -13,13 +13,12 @@ namespace DataDictionary.DataLayer.DbMetaData
 {
     public interface IDbSchemaItem : IDbSchemaName, IDbIsSystem
     {
-        Guid? CatalogId { get; }
+        //Guid? CatalogId { get; }
     }
-
     
     public class DbSchemaItem : BindingTableRow, IDbSchemaItem, INotifyPropertyChanged
     {
-        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        //public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CATALOG_NAME"); } }
         public String? SchemaName { get { return GetValue("SCHEMA_NAME"); } }
         public Boolean IsSystem
@@ -65,6 +64,33 @@ namespace DataDictionary.DataLayer.DbMetaData
             return (new DbExtendedPropertyGetCommand(connection)
             { Level0Name = SchemaName, Level0Type = "SCHEMA" }).
             GetCommand();
+        }
+    }
+
+    public static class DbSchemaItemExtension
+    {
+        public static DbSchemaItem? GetSchema(this IEnumerable<DbSchemaItem> source, IDbSchemaName item)
+        {
+            DbSchemaName itemName = new DbSchemaName(item);
+            return source.FirstOrDefault(w => itemName == w);
+        }
+
+        public static DbSchemaItem? GetSchema(this IDbSchemaName item, IEnumerable<DbSchemaItem> source)
+        {
+            DbSchemaName itemName = new DbSchemaName(item);
+            return source.FirstOrDefault(w => itemName == w);
+        }
+
+        public static IEnumerable<DbSchemaItem> GetSchemta(this IEnumerable<DbSchemaItem> source, IDbCatalogName item)
+        {
+            DbCatalogName itemName = new DbCatalogName(item);
+            return source.Where(w => itemName == w);
+        }
+
+        public static IEnumerable<DbSchemaItem> GetSchemta(this IDbCatalogName item, IEnumerable<DbSchemaItem> source)
+        {
+            DbCatalogName itemName = new DbCatalogName(item);
+            return source.Where(w => itemName == w);
         }
     }
 }

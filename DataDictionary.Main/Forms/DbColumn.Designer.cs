@@ -875,7 +875,6 @@
         private CheckBox isFileStreamData;
         private TextBox columnComputedData;
         private CheckBox isComputedData;
-        private Label generatedAlwayTypeLayout;
         private TextBox generatedAlwayTypeData;
         private CheckBox isIdentityData;
         private CheckBox isHiddenData;
