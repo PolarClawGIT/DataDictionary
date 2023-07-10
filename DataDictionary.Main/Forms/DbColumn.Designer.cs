@@ -878,6 +878,5 @@
         private TextBox generatedAlwayTypeData;
         private CheckBox isIdentityData;
         private CheckBox isHiddenData;
-        private TableLayoutPanel columnCheckBoxes;
     }
 }

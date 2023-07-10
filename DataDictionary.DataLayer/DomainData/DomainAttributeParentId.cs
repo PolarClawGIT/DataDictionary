@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.DbMetaData;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DomainData
 {
-    public interface IDomainAttributeId
+    public interface IDomainAttributeParentId
     {
-        Nullable<Guid> AttributeId { get; }
+        Nullable<Guid> ParentAttributeId { get; }
     }
 }

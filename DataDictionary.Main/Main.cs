@@ -294,7 +294,7 @@ namespace DataDictionary.Main
                 result.SelectedImageKey = domainModelImageItems[imageIndex].imageKey;
 
                 if (parentNode is not null) { parentNode.Nodes.Add(result); }
-                if (source is not null) { dbDataNodes.Add(result, source); }
+                if (source is not null) { domainModelNodes.Add(result, source); }
 
                 return result;
             }
@@ -305,7 +305,7 @@ namespace DataDictionary.Main
             if (domainModelNodes.ContainsKey(e.Node))
             {
                 Object domainNode = domainModelNodes[e.Node];
-                if (domainNode is IDomainAttributeItem) { }
+                if (domainNode is IDomainAttributeItem attributeItem) { new Forms.DomainAttribute(attributeItem).Show(); }
             }
         }
 
@@ -332,5 +332,33 @@ namespace DataDictionary.Main
 
         #endregion
 
+        //TODO: apparently when the ToolStrip contains the Cut/Copy/Paste options, the keystroke is not sent to the control that has focus.
+        // I think I will have to have each form/control handle the cut/copy/paste. Put in the Base Class?
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

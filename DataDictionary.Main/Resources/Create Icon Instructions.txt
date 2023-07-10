@@ -13,8 +13,12 @@ To work around this:
 - Use the Editor to set the transparent color within the image (as needed).
 
 I am using the icons from Microsofts Visual Studio 2022 image library.
-The SVC format files are Web friendly vector grahpics and will scale well.
+The SVC format files are Web friendly vector graphics and will scale well.
 The site https://cloudconvert.com/svg-to-ico will be able to convert and scale the SVC files.
-This site takes one SVG and produces a ICO file with one image of the specfied scale.
-As such, the same SVG file will need to be processed muliple times for each disired resolution.
+This site takes one SVG and produces a ICO file with one image of the specified scale.
+As such, the same SVG file will need to be processed multiple times for each desired resolution.
 The site limits the number of conversions to 10 a day for free.
+
+Note: Icon's are being added to the Application Resources. However, the WinForms takes Icon file
+and creates its own resource file for each form. As a result, changing the Icon file or the
+icon in the resource file does not change the icon on the form.

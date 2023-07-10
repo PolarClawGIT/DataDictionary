@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.DbMetaData;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,10 +10,9 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.DomainData
 {
-    public interface IDomainAttributeItem : IDomainAttributeTitle, IDomainAttributeId
+    public interface IDomainAttributeItem : IDomainAttributeTitle, IDomainAttributeId, IDomainAttributeParentId
     {
         Nullable<Guid> CatalogId { get; }
-        Nullable<Guid> ParentAttributeId { get; set; }
         String? AttributeText { get; set; }
         Boolean IsComposite { get { return CompositeOrder > 0; } }
         Nullable<Int32> CompositeOrder { get; set; }
@@ -33,9 +33,9 @@ namespace DataDictionary.DataLayer.DomainData
         public String? AttributeText { get { return GetValue("AttributeText"); } set { SetValue("AttributeText", value); } }
         public Nullable<Int32> CompositeOrder { get { return GetValue<Int32>("CompositeOrder"); } set { SetValue<Int32>("CompositeOrder", value); } }
 
-        public DomainAttributeItem () : base()
+        public DomainAttributeItem() : base()
         {
-            if(AttributeId is null) { AttributeId = Guid.NewGuid(); }
+            if (AttributeId is null) { AttributeId = Guid.NewGuid(); }
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
@@ -50,5 +50,20 @@ namespace DataDictionary.DataLayer.DomainData
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+    }
+
+    public static class DomainAttributeItemExtension
+    {
+        public static IDomainAttributeItem? GetAttribute(this IEnumerable<IDomainAttributeItem> source, IDomainAttributeId item)
+        { return source.FirstOrDefault(w => w.AttributeId == item.AttributeId); }
+
+        public static IDomainAttributeItem? GetAttribute(this IDomainAttributeId item, IEnumerable<IDomainAttributeItem> source)
+        { return source.FirstOrDefault(w => w.AttributeId == item.AttributeId); }
+
+        public static IDomainAttributeItem? GetParentAttribute(this IEnumerable<IDomainAttributeItem> source, IDomainAttributeParentId item)
+        { return source.FirstOrDefault(w => w.AttributeId == item.ParentAttributeId); }
+
+        public static IDomainAttributeItem? GetParentAttribute(this IDomainAttributeParentId item, IEnumerable<IDomainAttributeItem> source)
+        { return source.FirstOrDefault(w => w.AttributeId == item.ParentAttributeId); }
     }
 }
