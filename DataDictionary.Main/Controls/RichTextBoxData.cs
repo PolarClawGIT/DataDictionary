@@ -4,13 +4,14 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DataDictionary.Main.Controls
 {
-    public partial class RichTextBoxData : UserControl
+    public partial class RichTextBoxData : UserControl, ISupportEditMenu
     {
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
         public Boolean ReadOnly { get { return richTextBox.ReadOnly; } set { richTextBox.ReadOnly = value; } }
@@ -79,14 +80,21 @@ namespace DataDictionary.Main.Controls
             }
         }
 
-        private void toolStripCut_Click(object sender, EventArgs e)
-        { richTextBox.Cut(); }
+        public void Cut() { richTextBox.Cut(); }
 
-        private void toolStripCopy_Click(object sender, EventArgs e)
-        { richTextBox.Copy(); }
+        public void Copy() { richTextBox.Copy(); }
 
-        private void toolStripPaste_Click(object sender, EventArgs e)
-        { richTextBox.Paste(); }
+        public void Paste() { richTextBox.Paste(); }
+
+        public void SelectAll() { richTextBox.SelectAll(); }
+
+        public void Undo() { richTextBox.Undo(); }
+
+        private void toolStripCut_Click(object sender, EventArgs e) { Cut(); }
+
+        private void toolStripCopy_Click(object sender, EventArgs e) { Copy(); }
+
+        private void toolStripPaste_Click(object sender, EventArgs e) { Paste(); }
 
     }
 }

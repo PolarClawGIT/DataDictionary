@@ -336,29 +336,18 @@ namespace DataDictionary.Main
         // I think I will have to have each form/control handle the cut/copy/paste. Put in the Base Class?
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
+        { SendMessage(new WindowsCutCommand() { HandledBy = this.ActiveMdiChild }); }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
+        { SendMessage(new WindowsCopyCommand() { HandledBy = this.ActiveMdiChild }); }
 
         private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
+        { SendMessage(new WindowsPasteCommand() { HandledBy = this.ActiveMdiChild }); }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        { SendMessage(new WindowsUndoCommand() { HandledBy = this.ActiveMdiChild }); }
 
-        }
-
-        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        { SendMessage(new WindowsSelectAllCommand() { HandledBy = this.ActiveMdiChild }); }
     }
 }

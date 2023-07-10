@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Controls
 {
-    public partial class TextBoxData : UserControl
+    public partial class TextBoxData : UserControl, ISupportEditMenu
     {
 
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
@@ -21,5 +21,15 @@ namespace DataDictionary.Main.Controls
 
         public TextBoxData()
         { InitializeComponent(); }
+
+        public void Cut() { textBox.Cut(); }
+
+        public void Copy() { textBox.Copy(); }
+
+        public void Paste() { textBox.Paste(); }
+
+        public void SelectAll() { textBox.SelectAll(); }
+
+        public void Undo() { textBox.Undo(); }
     }
 }
