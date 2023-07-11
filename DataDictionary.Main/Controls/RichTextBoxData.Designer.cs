@@ -43,6 +43,7 @@
             toolStripCut = new ToolStripButton();
             toolStripCopy = new ToolStripButton();
             toolStripPaste = new ToolStripButton();
+            errorLocation = new Panel();
             richTextBoxLayout = new TableLayoutPanel();
             richTextBoxLayout.SuspendLayout();
             toolStrip.SuspendLayout();
@@ -50,11 +51,13 @@
             // 
             // richTextBoxLayout
             // 
-            richTextBoxLayout.ColumnCount = 1;
+            richTextBoxLayout.ColumnCount = 2;
             richTextBoxLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            richTextBoxLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 25F));
             richTextBoxLayout.Controls.Add(label, 0, 0);
             richTextBoxLayout.Controls.Add(richTextBox, 0, 2);
             richTextBoxLayout.Controls.Add(toolStrip, 0, 1);
+            richTextBoxLayout.Controls.Add(errorLocation, 1, 0);
             richTextBoxLayout.Dock = DockStyle.Fill;
             richTextBoxLayout.Location = new Point(0, 0);
             richTextBoxLayout.Margin = new Padding(0);
@@ -78,6 +81,7 @@
             // 
             // richTextBox
             // 
+            richTextBoxLayout.SetColumnSpan(richTextBox, 2);
             richTextBox.Dock = DockStyle.Fill;
             richTextBox.Location = new Point(3, 49);
             richTextBox.Name = "richTextBox";
@@ -90,6 +94,7 @@
             // 
             // toolStrip
             // 
+            richTextBoxLayout.SetColumnSpan(toolStrip, 2);
             toolStrip.Items.AddRange(new ToolStripItem[] { toolStripBold, toolStripItalic, toolStripUnderline, toolStripBulletList, toolStripStrikeThrough, toolStripClearFormating, toolStripSeparator, toolStripCut, toolStripCopy, toolStripPaste });
             toolStrip.Location = new Point(3, 18);
             toolStrip.Margin = new Padding(3);
@@ -198,6 +203,16 @@
             toolStripPaste.Text = "Paste";
             toolStripPaste.Click += toolStripPaste_Click;
             // 
+            // errorLocation
+            // 
+            errorLocation.AutoSize = true;
+            errorLocation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            errorLocation.Dock = DockStyle.Left;
+            errorLocation.Location = new Point(229, 3);
+            errorLocation.Name = "errorLocation";
+            errorLocation.Size = new Size(0, 9);
+            errorLocation.TabIndex = 3;
+            // 
             // RichTextBoxData
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -228,5 +243,6 @@
         private ToolStripButton toolStripCopy;
         private ToolStripButton toolStripPaste;
         private ToolStripButton toolStripStrikeThrough;
+        private Panel errorLocation;
     }
 }

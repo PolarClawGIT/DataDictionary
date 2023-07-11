@@ -32,6 +32,7 @@
             TableLayoutPanel controlLayout;
             label = new Label();
             textBox = new TextBox();
+            errorLocation = new Panel();
             errorProvider = new ErrorProvider(components);
             controlLayout = new TableLayoutPanel();
             controlLayout.SuspendLayout();
@@ -42,10 +43,12 @@
             // 
             controlLayout.AutoSize = true;
             controlLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            controlLayout.ColumnCount = 1;
+            controlLayout.ColumnCount = 2;
             controlLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            controlLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 25F));
             controlLayout.Controls.Add(label, 0, 0);
             controlLayout.Controls.Add(textBox, 0, 1);
+            controlLayout.Controls.Add(errorLocation, 1, 0);
             controlLayout.Dock = DockStyle.Fill;
             controlLayout.Location = new Point(0, 0);
             controlLayout.Margin = new Padding(0);
@@ -69,6 +72,7 @@
             // 
             // textBox
             // 
+            controlLayout.SetColumnSpan(textBox, 2);
             textBox.Dock = DockStyle.Fill;
             textBox.Location = new Point(3, 18);
             textBox.Name = "textBox";
@@ -76,6 +80,16 @@
             textBox.TabIndex = 1;
             textBox.Validating += textBox_Validating;
             textBox.Validated += textBox_Validated;
+            // 
+            // errorLocation
+            // 
+            errorLocation.AutoSize = true;
+            errorLocation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            errorLocation.Dock = DockStyle.Left;
+            errorLocation.Location = new Point(98, 3);
+            errorLocation.Name = "errorLocation";
+            errorLocation.Size = new Size(0, 9);
+            errorLocation.TabIndex = 2;
             // 
             // errorProvider
             // 
@@ -101,5 +115,6 @@
         private Label label;
         private TextBox textBox;
         private ErrorProvider errorProvider;
+        private Panel errorLocation;
     }
 }

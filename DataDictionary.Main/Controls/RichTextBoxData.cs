@@ -21,6 +21,14 @@ namespace DataDictionary.Main.Controls
         public new String Text { get { return richTextBox.Text; } set { richTextBox.Text = value; } }
         public String Rtf { get { return richTextBox.Rtf; } set { richTextBox.Rtf = value; } }
 
+        /// <summary>
+        /// Control used to position the Error Provider Icon.
+        /// </summary>
+        /// <remarks>
+        /// This is a panel in the upper right corner of the control.
+        /// </remarks>
+        public Control ErrorControl { get { return errorLocation; } }
+
         public RichTextBoxData()
         { InitializeComponent(); }
 
@@ -104,6 +112,6 @@ namespace DataDictionary.Main.Controls
 
         public new event CancelEventHandler? Validating;
         private void richTextBox_Validating(object sender, CancelEventArgs e)
-        { if (Validating is CancelEventHandler handler) { handler(sender, e); } }        
+        { if (Validating is CancelEventHandler handler) { handler(sender, e); } }
     }
 }

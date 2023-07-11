@@ -31,6 +31,7 @@
             TableLayoutPanel comboBoxLayout;
             label = new Label();
             comboBox = new ComboBox();
+            errorLocation = new Panel();
             comboBoxLayout = new TableLayoutPanel();
             comboBoxLayout.SuspendLayout();
             SuspendLayout();
@@ -39,10 +40,12 @@
             // 
             comboBoxLayout.AutoSize = true;
             comboBoxLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            comboBoxLayout.ColumnCount = 1;
+            comboBoxLayout.ColumnCount = 2;
             comboBoxLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            comboBoxLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 25F));
             comboBoxLayout.Controls.Add(label, 0, 0);
             comboBoxLayout.Controls.Add(comboBox, 0, 1);
+            comboBoxLayout.Controls.Add(errorLocation, 1, 0);
             comboBoxLayout.Dock = DockStyle.Fill;
             comboBoxLayout.Location = new Point(0, 0);
             comboBoxLayout.Margin = new Padding(0);
@@ -65,6 +68,7 @@
             // 
             // comboBox
             // 
+            comboBoxLayout.SetColumnSpan(comboBox, 2);
             comboBox.Dock = DockStyle.Fill;
             comboBox.FormattingEnabled = true;
             comboBox.Location = new Point(3, 18);
@@ -74,6 +78,16 @@
             comboBox.SelectedIndexChanged += comboBox_SelectedIndexChanged;
             comboBox.Validating += comboBox_Validating;
             comboBox.Validated += comboBox_Validated;
+            // 
+            // errorLocation
+            // 
+            errorLocation.AutoSize = true;
+            errorLocation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            errorLocation.Dock = DockStyle.Left;
+            errorLocation.Location = new Point(105, 3);
+            errorLocation.Name = "errorLocation";
+            errorLocation.Size = new Size(0, 9);
+            errorLocation.TabIndex = 2;
             // 
             // ComboBoxData
             // 
@@ -94,5 +108,6 @@
 
         private Label label;
         private ComboBox comboBox;
+        private Panel errorLocation;
     }
 }

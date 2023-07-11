@@ -22,10 +22,16 @@ namespace DataDictionary.Main.Controls
         public new String Text { get { return textBox.Text; } set { textBox.Text = value; } }
         public Boolean Multiline { get { return textBox.Multiline; } set { textBox.Multiline = value; } }
 
+        /// <summary>
+        /// Control used to position the Error Provider Icon.
+        /// </summary>
+        /// <remarks>
+        /// This is a panel in the upper right corner of the control.
+        /// </remarks>
+        public Control ErrorControl { get { return errorLocation; } }
+
         public TextBoxData()
-        {
-            InitializeComponent();
-        }
+        { InitializeComponent(); }
 
 
         public void Cut() { textBox.Cut(); }

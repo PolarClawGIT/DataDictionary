@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel dbConnectionLayout;
             GroupBox dbConnectionCurrentLayout;
             TableLayoutPanel dbConnectionCurrentGridLayout;
@@ -51,6 +52,7 @@
             authenticateDbServer = new RadioButton();
             serverNameData = new Controls.ComboBoxData();
             databaseNameData = new Controls.ComboBoxData();
+            errorProvider = new ErrorProvider(components);
             dbConnectionLayout = new TableLayoutPanel();
             dbConnectionCurrentLayout = new GroupBox();
             dbConnectionCurrentGridLayout = new TableLayoutPanel();
@@ -69,6 +71,7 @@
             authencationLayout.SuspendLayout();
             authenticationLayout.SuspendLayout();
             authenticationChoiceLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // dbConnectionLayout
@@ -93,13 +96,13 @@
             dbConnectionsData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dbConnectionsData.Columns.AddRange(new DataGridViewColumn[] { dbConnectionsServerNameData, dbConnectionsCatalogData });
             dbConnectionsData.Dock = DockStyle.Fill;
-            dbConnectionsData.Location = new Point(3, 273);
+            dbConnectionsData.Location = new Point(3, 285);
             dbConnectionsData.MultiSelect = false;
             dbConnectionsData.Name = "dbConnectionsData";
             dbConnectionsData.ReadOnly = true;
             dbConnectionsData.RowTemplate.Height = 25;
             dbConnectionsData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dbConnectionsData.Size = new Size(412, 154);
+            dbConnectionsData.Size = new Size(412, 142);
             dbConnectionsData.TabIndex = 0;
             dbConnectionsData.SelectionChanged += dbConnectionsData_SelectionChanged;
             // 
@@ -126,7 +129,7 @@
             dbConnectionCurrentLayout.Dock = DockStyle.Fill;
             dbConnectionCurrentLayout.Location = new Point(3, 3);
             dbConnectionCurrentLayout.Name = "dbConnectionCurrentLayout";
-            dbConnectionCurrentLayout.Size = new Size(412, 264);
+            dbConnectionCurrentLayout.Size = new Size(412, 276);
             dbConnectionCurrentLayout.TabIndex = 1;
             dbConnectionCurrentLayout.TabStop = false;
             dbConnectionCurrentLayout.Text = "Connection";
@@ -149,7 +152,7 @@
             dbConnectionCurrentGridLayout.RowStyles.Add(new RowStyle());
             dbConnectionCurrentGridLayout.RowStyles.Add(new RowStyle());
             dbConnectionCurrentGridLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            dbConnectionCurrentGridLayout.Size = new Size(406, 242);
+            dbConnectionCurrentGridLayout.Size = new Size(406, 254);
             dbConnectionCurrentGridLayout.TabIndex = 0;
             // 
             // buttonControlsLayout
@@ -165,7 +168,7 @@
             buttonControlsLayout.Controls.Add(importCommand, 1, 0);
             buttonControlsLayout.Controls.Add(removeCommand, 3, 0);
             buttonControlsLayout.Dock = DockStyle.Fill;
-            buttonControlsLayout.Location = new Point(3, 208);
+            buttonControlsLayout.Location = new Point(3, 220);
             buttonControlsLayout.Name = "buttonControlsLayout";
             buttonControlsLayout.RowCount = 1;
             buttonControlsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
@@ -210,7 +213,7 @@
             authencationLayout.AutoSize = true;
             authencationLayout.Controls.Add(authenticationLayout);
             authencationLayout.Dock = DockStyle.Fill;
-            authencationLayout.Location = new Point(3, 91);
+            authencationLayout.Location = new Point(3, 103);
             authencationLayout.Name = "authencationLayout";
             authencationLayout.Size = new Size(400, 111);
             authencationLayout.TabIndex = 5;
@@ -327,25 +330,37 @@
             // 
             serverNameData.AutoSize = true;
             serverNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            serverNameData.DataSource = null;
             serverNameData.Dock = DockStyle.Fill;
             serverNameData.HeaderText = "Server Name";
             serverNameData.Location = new Point(3, 3);
             serverNameData.Name = "serverNameData";
             serverNameData.ReadOnly = false;
-            serverNameData.Size = new Size(400, 38);
+            serverNameData.SelectedIndex = -1;
+            serverNameData.SelectedItem = null;
+            serverNameData.SelectedValue = null;
+            serverNameData.Size = new Size(400, 44);
             serverNameData.TabIndex = 6;
             // 
             // databaseNameData
             // 
             databaseNameData.AutoSize = true;
             databaseNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            databaseNameData.DataSource = null;
             databaseNameData.Dock = DockStyle.Fill;
             databaseNameData.HeaderText = "Database Name";
-            databaseNameData.Location = new Point(3, 47);
+            databaseNameData.Location = new Point(3, 53);
             databaseNameData.Name = "databaseNameData";
             databaseNameData.ReadOnly = false;
-            databaseNameData.Size = new Size(400, 38);
+            databaseNameData.SelectedIndex = -1;
+            databaseNameData.SelectedItem = null;
+            databaseNameData.SelectedValue = null;
+            databaseNameData.Size = new Size(400, 44);
             databaseNameData.TabIndex = 7;
+            // 
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
             // 
             // DbCatalog
             // 
@@ -372,6 +387,7 @@
             authenticationLayout.PerformLayout();
             authenticationChoiceLayout.ResumeLayout(false);
             authenticationChoiceLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
         }
 
@@ -389,5 +405,6 @@
         private DataGridViewTextBoxColumn dbConnectionsCatalogData;
         private Controls.ComboBoxData serverNameData;
         private Controls.ComboBoxData databaseNameData;
+        private ErrorProvider errorProvider;
     }
 }

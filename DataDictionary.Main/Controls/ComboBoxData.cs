@@ -23,6 +23,13 @@ namespace DataDictionary.Main.Controls
         public Int32 SelectedIndex { get { return comboBox.SelectedIndex; } set { comboBox.SelectedIndex = value; } }
         public ComboBox.ObjectCollection Items { get { return comboBox.Items; } }
 
+        /// <summary>
+        /// Control used to position the Error Provider Icon.
+        /// </summary>
+        /// <remarks>
+        /// This is a panel in the upper right corner of the control.
+        /// </remarks>
+        public Control ErrorControl { get { return errorLocation; } }
 
         public ComboBoxData()
         { InitializeComponent(); }
