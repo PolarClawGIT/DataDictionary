@@ -31,8 +31,6 @@
             TableLayoutPanel dbConnectionLayout;
             GroupBox dbConnectionCurrentLayout;
             TableLayoutPanel dbConnectionCurrentGridLayout;
-            Label serverNameHeader;
-            Label databaseNameHeader;
             TableLayoutPanel buttonControlsLayout;
             GroupBox authencationLayout;
             TableLayoutPanel authenticationLayout;
@@ -42,8 +40,8 @@
             TableLayoutPanel authenticationChoiceLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbCatalog));
             dbConnectionsData = new DataGridView();
-            serverNameData = new ComboBox();
-            databaseNameData = new ComboBox();
+            dbConnectionsServerNameData = new DataGridViewTextBoxColumn();
+            dbConnectionsCatalogData = new DataGridViewTextBoxColumn();
             connectCommand = new Button();
             importCommand = new Button();
             removeCommand = new Button();
@@ -51,13 +49,11 @@
             serverUserPasswordData = new TextBox();
             authenticateWindows = new RadioButton();
             authenticateDbServer = new RadioButton();
-            dbConnectionsServerNameData = new DataGridViewTextBoxColumn();
-            dbConnectionsCatalogData = new DataGridViewTextBoxColumn();
+            serverNameData = new Controls.ComboBoxData();
+            databaseNameData = new Controls.ComboBoxData();
             dbConnectionLayout = new TableLayoutPanel();
             dbConnectionCurrentLayout = new GroupBox();
             dbConnectionCurrentGridLayout = new TableLayoutPanel();
-            serverNameHeader = new Label();
-            databaseNameHeader = new Label();
             buttonControlsLayout = new TableLayoutPanel();
             authencationLayout = new GroupBox();
             authenticationLayout = new TableLayoutPanel();
@@ -107,6 +103,22 @@
             dbConnectionsData.TabIndex = 0;
             dbConnectionsData.SelectionChanged += dbConnectionsData_SelectionChanged;
             // 
+            // dbConnectionsServerNameData
+            // 
+            dbConnectionsServerNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dbConnectionsServerNameData.DataPropertyName = "SourceServerName";
+            dbConnectionsServerNameData.HeaderText = "Server Name";
+            dbConnectionsServerNameData.Name = "dbConnectionsServerNameData";
+            dbConnectionsServerNameData.ReadOnly = true;
+            // 
+            // dbConnectionsCatalogData
+            // 
+            dbConnectionsCatalogData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dbConnectionsCatalogData.DataPropertyName = "CatalogName";
+            dbConnectionsCatalogData.HeaderText = "Catalog Name";
+            dbConnectionsCatalogData.Name = "dbConnectionsCatalogData";
+            dbConnectionsCatalogData.ReadOnly = true;
+            // 
             // dbConnectionCurrentLayout
             // 
             dbConnectionCurrentLayout.AutoSize = true;
@@ -124,62 +136,21 @@
             dbConnectionCurrentGridLayout.AutoSize = true;
             dbConnectionCurrentGridLayout.ColumnCount = 1;
             dbConnectionCurrentGridLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            dbConnectionCurrentGridLayout.Controls.Add(serverNameHeader, 0, 0);
-            dbConnectionCurrentGridLayout.Controls.Add(databaseNameHeader, 0, 2);
-            dbConnectionCurrentGridLayout.Controls.Add(serverNameData, 0, 1);
-            dbConnectionCurrentGridLayout.Controls.Add(databaseNameData, 0, 3);
-            dbConnectionCurrentGridLayout.Controls.Add(buttonControlsLayout, 0, 5);
-            dbConnectionCurrentGridLayout.Controls.Add(authencationLayout, 0, 4);
+            dbConnectionCurrentGridLayout.Controls.Add(buttonControlsLayout, 0, 3);
+            dbConnectionCurrentGridLayout.Controls.Add(authencationLayout, 0, 2);
+            dbConnectionCurrentGridLayout.Controls.Add(serverNameData, 0, 0);
+            dbConnectionCurrentGridLayout.Controls.Add(databaseNameData, 0, 1);
             dbConnectionCurrentGridLayout.Dock = DockStyle.Fill;
             dbConnectionCurrentGridLayout.Location = new Point(3, 19);
             dbConnectionCurrentGridLayout.Name = "dbConnectionCurrentGridLayout";
-            dbConnectionCurrentGridLayout.RowCount = 6;
+            dbConnectionCurrentGridLayout.RowCount = 4;
             dbConnectionCurrentGridLayout.RowStyles.Add(new RowStyle());
             dbConnectionCurrentGridLayout.RowStyles.Add(new RowStyle());
             dbConnectionCurrentGridLayout.RowStyles.Add(new RowStyle());
             dbConnectionCurrentGridLayout.RowStyles.Add(new RowStyle());
-            dbConnectionCurrentGridLayout.RowStyles.Add(new RowStyle());
-            dbConnectionCurrentGridLayout.RowStyles.Add(new RowStyle());
+            dbConnectionCurrentGridLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             dbConnectionCurrentGridLayout.Size = new Size(406, 242);
             dbConnectionCurrentGridLayout.TabIndex = 0;
-            // 
-            // serverNameHeader
-            // 
-            serverNameHeader.AutoSize = true;
-            serverNameHeader.Location = new Point(3, 0);
-            serverNameHeader.Name = "serverNameHeader";
-            serverNameHeader.Size = new Size(74, 15);
-            serverNameHeader.TabIndex = 0;
-            serverNameHeader.Text = "Server Name";
-            // 
-            // databaseNameHeader
-            // 
-            databaseNameHeader.AutoSize = true;
-            databaseNameHeader.Location = new Point(3, 44);
-            databaseNameHeader.Name = "databaseNameHeader";
-            databaseNameHeader.Size = new Size(90, 15);
-            databaseNameHeader.TabIndex = 1;
-            databaseNameHeader.Text = "Database Name";
-            // 
-            // serverNameData
-            // 
-            serverNameData.Dock = DockStyle.Fill;
-            serverNameData.FormattingEnabled = true;
-            serverNameData.Location = new Point(3, 18);
-            serverNameData.Name = "serverNameData";
-            serverNameData.Size = new Size(400, 23);
-            serverNameData.TabIndex = 2;
-            serverNameData.SelectedIndexChanged += serverNameData_SelectedIndexChanged;
-            serverNameData.Validated += serverNameData_Validated;
-            // 
-            // databaseNameData
-            // 
-            databaseNameData.Dock = DockStyle.Fill;
-            databaseNameData.FormattingEnabled = true;
-            databaseNameData.Location = new Point(3, 62);
-            databaseNameData.Name = "databaseNameData";
-            databaseNameData.Size = new Size(400, 23);
-            databaseNameData.TabIndex = 3;
             // 
             // buttonControlsLayout
             // 
@@ -352,21 +323,29 @@
             authenticateDbServer.Text = "Db Server";
             authenticateDbServer.UseVisualStyleBackColor = true;
             // 
-            // dbConnectionsServerNameData
+            // serverNameData
             // 
-            dbConnectionsServerNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dbConnectionsServerNameData.DataPropertyName = "SourceServerName";
-            dbConnectionsServerNameData.HeaderText = "Server Name";
-            dbConnectionsServerNameData.Name = "dbConnectionsServerNameData";
-            dbConnectionsServerNameData.ReadOnly = true;
+            serverNameData.AutoSize = true;
+            serverNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            serverNameData.Dock = DockStyle.Fill;
+            serverNameData.HeaderText = "Server Name";
+            serverNameData.Location = new Point(3, 3);
+            serverNameData.Name = "serverNameData";
+            serverNameData.ReadOnly = false;
+            serverNameData.Size = new Size(400, 38);
+            serverNameData.TabIndex = 6;
             // 
-            // dbConnectionsCatalogData
+            // databaseNameData
             // 
-            dbConnectionsCatalogData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dbConnectionsCatalogData.DataPropertyName = "CatalogName";
-            dbConnectionsCatalogData.HeaderText = "Catalog Name";
-            dbConnectionsCatalogData.Name = "dbConnectionsCatalogData";
-            dbConnectionsCatalogData.ReadOnly = true;
+            databaseNameData.AutoSize = true;
+            databaseNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            databaseNameData.Dock = DockStyle.Fill;
+            databaseNameData.HeaderText = "Database Name";
+            databaseNameData.Location = new Point(3, 47);
+            databaseNameData.Name = "databaseNameData";
+            databaseNameData.ReadOnly = false;
+            databaseNameData.Size = new Size(400, 38);
+            databaseNameData.TabIndex = 7;
             // 
             // DbCatalog
             // 
@@ -399,8 +378,6 @@
         #endregion
 
         private DataGridView dbConnectionsData;
-        private ComboBox serverNameData;
-        private ComboBox databaseNameData;
         private Button connectCommand;
         private Button importCommand;
         private Button removeCommand;
@@ -410,5 +387,7 @@
         private RadioButton authenticateDbServer;
         private DataGridViewTextBoxColumn dbConnectionsServerNameData;
         private DataGridViewTextBoxColumn dbConnectionsCatalogData;
+        private Controls.ComboBoxData serverNameData;
+        private Controls.ComboBoxData databaseNameData;
     }
 }

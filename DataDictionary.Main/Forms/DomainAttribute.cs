@@ -39,9 +39,9 @@ namespace DataDictionary.Main.Forms
 
         private void DomainAttribute_Load(object sender, EventArgs e)
         {
-            attributeTitleData.TextBox.DataBindings.Add(new Binding(nameof(attributeTitleData.TextBox.Text), data.DomainAttribute, nameof(data.DomainAttribute.AttributeTitle)));
-            attributeTextData.TextBox.DataBindings.Add(new Binding(nameof(attributeTextData.TextBox.Rtf), data.DomainAttribute, nameof(data.DomainAttribute.AttributeText)));
-            attributeParentTitleData.TextBox.DataBindings.Add(new Binding(nameof(attributeParentTitleData.TextBox.Text), data.ParentAttribute, nameof(data.ParentAttribute.AttributeTitle)));
+            attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), data.DomainAttribute, nameof(data.DomainAttribute.AttributeTitle)));
+            attributeTextData.DataBindings.Add(new Binding(nameof(attributeTextData.Rtf), data.DomainAttribute, nameof(data.DomainAttribute.AttributeText)));
+            attributeParentTitleData.DataBindings.Add(new Binding(nameof(attributeParentTitleData.Text), data.ParentAttribute, nameof(data.ParentAttribute.AttributeTitle)));
         }
     }
 }

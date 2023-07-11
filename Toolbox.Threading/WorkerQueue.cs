@@ -147,7 +147,7 @@ namespace Toolbox.Threading
                 { WorkException(item, ex); }
             }
         }
-
+        /*
         protected virtual void DoWork(ParellelWork item)
         {
             // So the list of items to be worked with becomes static.
@@ -177,7 +177,7 @@ namespace Toolbox.Threading
                 { item.DoWork(); }
                 WorkComplete++;
             }
-        }
+        }*/
 
         protected virtual void DoWork(ForegroundWork item)
         {

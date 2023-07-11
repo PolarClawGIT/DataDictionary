@@ -8,6 +8,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace DataDictionary.Main.Controls
 {
@@ -16,8 +17,9 @@ namespace DataDictionary.Main.Controls
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
         public Boolean ReadOnly { get { return richTextBox.ReadOnly; } set { richTextBox.ReadOnly = value; } }
 
-        public Label Label { get { return label; } }
-        public RichTextBox TextBox { get { return richTextBox; } }
+        public new ControlBindingsCollection DataBindings { get { return richTextBox.DataBindings; } }
+        public new String Text { get { return richTextBox.Text; } set { richTextBox.Text = value; } }
+        public String Rtf { get { return richTextBox.Rtf; } set { richTextBox.Rtf = value; } }
 
         public RichTextBoxData()
         { InitializeComponent(); }
@@ -96,5 +98,12 @@ namespace DataDictionary.Main.Controls
 
         private void toolStripPaste_Click(object sender, EventArgs e) { Paste(); }
 
+        public new event EventHandler? Validated;
+        private void richTextBox_Validated(object sender, EventArgs e)
+        { if (Validated is EventHandler handler) { handler(sender, e); } }
+
+        public new event CancelEventHandler? Validating;
+        private void richTextBox_Validating(object sender, CancelEventArgs e)
+        { if (Validating is CancelEventHandler handler) { handler(sender, e); } }        
     }
 }

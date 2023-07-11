@@ -84,24 +84,6 @@ namespace DataDictionary.DataLayer
         }
 
         [Obsolete()]
-        public class DbParellel : BackgroundWork
-        {
-            public required Func<IConnection> Connection { get; init; }
-            public required Func<IConnection, SqlCommand> GetCommand { get; init; }
-            public required BindingTable<DbExtendedPropertyItem> Target { get; init; }
-
-            public override void DoWork()
-            {
-                using (IConnection connection = Connection())
-                {
-                    connection.Open();
-                    Target.Load(connection.ExecuteReader(GetCommand(connection)));
-                    connection.Commit();
-                }
-            }
-        }
-
-        [Obsolete()]
         public class DbReader : BackgroundWork
         {
             public required IConnection Connection { get; init; }

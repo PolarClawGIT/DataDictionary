@@ -1,20 +1,10 @@
 ﻿using DataDictionary.BusinessLayer;
-using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.DataLayer.WorkDbItem;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Toolbox.Mediator;
-using Toolbox.Threading.WorkItem;
 
 namespace DataDictionary.Main.Forms
 {
@@ -202,9 +192,9 @@ namespace DataDictionary.Main.Forms
                 Program.WorkerQueue.Enqueue(Program.DbData.GetDatabases(data.DbContext, onComplete));
             }
 
-            void onComplete(IEnumerable<IDbCatalogItem> catalogs)
+            void onComplete(IEnumerable<String?> catalogs)
             {
-                IEnumerable<String?> databaseNames = catalogs.Where(w => w.IsSystem == false).OrderBy(o => o.CatalogName).Select(s => s.CatalogName).Distinct();
+                IEnumerable<String?> databaseNames = catalogs.Where(w => !(w is "master" or "msdb" or "tempdb" or "model")).OrderBy(o => o).Distinct();
 
                 if (databaseNames.FirstOrDefault(w => w == databaseNameData.Text) is String currentDb)
                 {
@@ -255,7 +245,7 @@ namespace DataDictionary.Main.Forms
                 { Settings.Default.UserServers.RemoveAt(10); }
 
                 Settings.Default.Save();
-//                Program.DomainData.ImportAttributes(Program.DbData); // Currently a fast process, may need to reconsider later.
+                //                Program.DomainData.ImportAttributes(Program.DbData); // Currently a fast process, may need to reconsider later.
 
                 // Done
                 SendMessage(new DbDataBatchCompleted());

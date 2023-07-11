@@ -64,12 +64,6 @@ namespace Toolbox.Threading
 
         public abstract class AsynchronousWork : WorkBase { }
 
-        public class ParellelWork : AsynchronousWork
-        {
-            public required IEnumerable<IWorkItem> WorkItems { get; init; }
-            public Int32 MaxDegreeOfParallelism { get; init; } = -1;
-        }
-
     }
 
 }

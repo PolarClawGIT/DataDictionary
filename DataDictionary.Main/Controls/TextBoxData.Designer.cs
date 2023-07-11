@@ -28,11 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel controlLayout;
             label = new Label();
             textBox = new TextBox();
+            errorProvider = new ErrorProvider(components);
             controlLayout = new TableLayoutPanel();
             controlLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // controlLayout
@@ -50,13 +53,15 @@
             controlLayout.RowCount = 2;
             controlLayout.RowStyles.Add(new RowStyle());
             controlLayout.RowStyles.Add(new RowStyle());
-            controlLayout.Size = new Size(114, 44);
+            controlLayout.Size = new Size(120, 44);
             controlLayout.TabIndex = 0;
             // 
             // label
             // 
+            label.AutoEllipsis = true;
             label.AutoSize = true;
-            label.Location = new Point(3, 0);
+            label.Location = new Point(0, 0);
+            label.Margin = new Padding(0);
             label.Name = "label";
             label.Size = new Size(32, 15);
             label.TabIndex = 0;
@@ -67,8 +72,14 @@
             textBox.Dock = DockStyle.Fill;
             textBox.Location = new Point(3, 18);
             textBox.Name = "textBox";
-            textBox.Size = new Size(108, 23);
+            textBox.Size = new Size(114, 23);
             textBox.TabIndex = 1;
+            textBox.Validating += textBox_Validating;
+            textBox.Validated += textBox_Validated;
+            // 
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
             // 
             // TextBoxData
             // 
@@ -76,11 +87,11 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
             Controls.Add(controlLayout);
-            Margin = new Padding(0);
             Name = "TextBoxData";
-            Size = new Size(114, 44);
+            Size = new Size(120, 44);
             controlLayout.ResumeLayout(false);
             controlLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -89,5 +100,6 @@
 
         private Label label;
         private TextBox textBox;
+        private ErrorProvider errorProvider;
     }
 }

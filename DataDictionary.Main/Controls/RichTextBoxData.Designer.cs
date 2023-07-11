@@ -69,7 +69,8 @@
             // label
             // 
             label.AutoSize = true;
-            label.Location = new Point(3, 0);
+            label.Location = new Point(0, 0);
+            label.Margin = new Padding(0);
             label.Name = "label";
             label.Size = new Size(32, 15);
             label.TabIndex = 0;
@@ -78,19 +79,22 @@
             // richTextBox
             // 
             richTextBox.Dock = DockStyle.Fill;
-            richTextBox.Location = new Point(3, 43);
+            richTextBox.Location = new Point(3, 49);
             richTextBox.Name = "richTextBox";
-            richTextBox.Size = new Size(245, 93);
+            richTextBox.Size = new Size(245, 87);
             richTextBox.TabIndex = 1;
             richTextBox.Text = "";
             richTextBox.ReadOnlyChanged += richTextBox_ReadOnlyChanged;
+            richTextBox.Validating += richTextBox_Validating;
+            richTextBox.Validated += richTextBox_Validated;
             // 
             // toolStrip
             // 
             toolStrip.Items.AddRange(new ToolStripItem[] { toolStripBold, toolStripItalic, toolStripUnderline, toolStripBulletList, toolStripStrikeThrough, toolStripClearFormating, toolStripSeparator, toolStripCut, toolStripCopy, toolStripPaste });
-            toolStrip.Location = new Point(0, 15);
+            toolStrip.Location = new Point(3, 18);
+            toolStrip.Margin = new Padding(3);
             toolStrip.Name = "toolStrip";
-            toolStrip.Size = new Size(251, 25);
+            toolStrip.Size = new Size(245, 25);
             toolStrip.TabIndex = 2;
             toolStrip.Text = "toolStrip1";
             // 
@@ -200,7 +204,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
             Controls.Add(richTextBoxLayout);
-            Margin = new Padding(0);
             Name = "RichTextBoxData";
             Size = new Size(251, 139);
             richTextBoxLayout.ResumeLayout(false);

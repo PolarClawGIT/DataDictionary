@@ -1,20 +1,7 @@
 ﻿using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.Main.Messages;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
-using System.Data.SqlTypes;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
-using Toolbox.Mediator;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace DataDictionary.Main.Forms
 {
@@ -87,8 +74,6 @@ namespace DataDictionary.Main.Forms
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = data.DbExtendedProperties;
             }
-            else { errorProvider.SetError(catalogNameLayout, "Schema information not available"); }
-
         }
 
         void UnBindData()

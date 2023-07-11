@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Ignore Spelling: Multiline
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,11 +18,15 @@ namespace DataDictionary.Main.Controls
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
         public Boolean ReadOnly { get { return textBox.ReadOnly; } set { textBox.ReadOnly = value; } }
 
-        public Label Label { get { return label; } }
-        public TextBox TextBox { get { return textBox; } }
+        public new ControlBindingsCollection DataBindings { get { return textBox.DataBindings; } }
+        public new String Text { get { return textBox.Text; } set { textBox.Text = value; } }
+        public Boolean Multiline { get { return textBox.Multiline; } set { textBox.Multiline = value; } }
 
         public TextBoxData()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+        }
+
 
         public void Cut() { textBox.Cut(); }
 
@@ -31,5 +37,13 @@ namespace DataDictionary.Main.Controls
         public void SelectAll() { textBox.SelectAll(); }
 
         public void Undo() { textBox.Undo(); }
+
+        public new event EventHandler? Validated;
+        private void textBox_Validated(object sender, EventArgs e)
+        { if (Validated is EventHandler handler) { handler(sender, e); } }
+
+        public new event CancelEventHandler? Validating;
+        private void textBox_Validating(object sender, CancelEventArgs e)
+        { if (Validating is CancelEventHandler handler) { handler(sender, e); } }
     }
 }
