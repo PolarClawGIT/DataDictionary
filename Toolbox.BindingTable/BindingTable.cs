@@ -370,10 +370,10 @@ namespace Toolbox.BindingTable
         }
 
         /// <summary>
-        /// Class Defining the defaut behavior of the Compare operater used for sorting.
+        /// Class Defining the default behavior of the Compare operator used for sorting.
         /// </summary>
         /// <remarks>
-        /// Override the Comparer property to use a diffrent Compare class.
+        /// Override the Comparer property to use a different Compare class.
         /// This class can be used as a starter point.
         /// </remarks>
         protected class DefaultComparer : Comparer<TBindingItem>
@@ -482,7 +482,7 @@ namespace Toolbox.BindingTable
         /// <returns></returns>
         protected override int FindCore(PropertyDescriptor prop, Object key)
         {
-            //TODO: This is proabably incomplete and may not work. Check for IEquatable and handle String with StringComparison.
+            //TODO: This is probably incomplete and may not work. Check for IEquatable and handle String with StringComparison.
             if (this.FirstOrDefault(w => prop.GetValue(w) == key) is TBindingItem value)
             { return this.IndexOf(value); }
             else { return -1; }
