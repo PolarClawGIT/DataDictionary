@@ -6,6 +6,8 @@ using DataDictionary.DataLayer.WorkDbItem;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -121,31 +123,37 @@ namespace DataDictionary.BusinessLayer
 
         }
 
-        public IWorkItem GetDatabases(Context connection, Action<IEnumerable<IDbCatalogItem>>? onComplete = null)
+        public IWorkItem GetDatabases(Context connection, Action<IEnumerable<String?>>? onComplete = null)
         {
-            BindingTable<DbCatalogItem> resultData = new BindingTable<DbCatalogItem>();
+            List<String?> result = new List<String?>();
 
             List<IWorkItem> workItems = new List<IWorkItem>();
 
-            DbConnection dbData = new DbConnection(connection)
+            IWorkItem dbData = new DbLoad()
             {
-                WorkName = "Get Databases",
-                WorkItems = workItems.Select(s => s)
+                WorkName = "Load Databases",
+                Connection = connection.CreateConnection(),
+                Load = (conn) => LoadData(conn),
             };
             dbData.WorkCompleting += WorkCompleting;
 
-            workItems.Add(new DbLoad()
-            {
-                WorkName = "Load Databases",
-                Connection = dbData.Connection,
-                Load = (conn) => resultData.Load(DbCatalogItem.GetSchema(conn)),
-            });
             return dbData;
 
             void WorkCompleting(object? sender, EventArgs e)
             {
                 dbData.WorkCompleting -= WorkCompleting;
-                if (onComplete is Action<IEnumerable<IDbCatalogItem>>) { onComplete(resultData); }
+                if (onComplete is Action<IEnumerable<String?>>) { onComplete(result); }
+            }
+
+            void LoadData(IConnection conn)
+            {
+                using (DataTable data = new DataTable())
+                {
+                    data.Load(conn.GetReader(Schema.Collection.Databases));
+                    result.AddRange(
+                    data.Rows.Cast<DataRow>().
+                        Select(s => s[0].ToString()));
+                }
             }
         }
 
