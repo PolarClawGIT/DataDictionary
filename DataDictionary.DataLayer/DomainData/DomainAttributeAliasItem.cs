@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.DomainData
     public interface IDomainAttributeAliasItem : IDomainAttributeId
     {
         public String? CatalogName { get; }
-        public String? ScopeName { get; }
+        public String? SchemaName { get; }
         public String? ObjectName { get; }
         public String? ElementName { get; }
     }
@@ -23,7 +23,7 @@ namespace DataDictionary.DataLayer.DomainData
         public Nullable<Guid> AttributeId
         { get { return GetValue<Guid>("AttributeId"); } set { SetValue<Guid>("AttributeId", value); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } set { SetValue("CatalogName", value); } }
-        public String? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }
+        public String? SchemaName { get { return GetValue("SchemaName"); } set { SetValue("SchemaName", value); } }
         public String? ObjectName { get { return GetValue("ObjectName"); } set { SetValue("ObjectName", value); } }
         public String? ElementName { get { return GetValue("ElementName"); } set { SetValue("ElementName", value); } }
 
@@ -32,7 +32,7 @@ namespace DataDictionary.DataLayer.DomainData
         {
             new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("CatalogName", typeof(String)){ AllowDBNull = true},
-            new DataColumn("ScopeName", typeof(String)){ AllowDBNull = true},
+            new DataColumn("SchemaName", typeof(String)){ AllowDBNull = true},
             new DataColumn("ObjectName", typeof(String)){ AllowDBNull = true},
             new DataColumn("ElementName", typeof(String)){ AllowDBNull = true},
 
@@ -46,11 +46,11 @@ namespace DataDictionary.DataLayer.DomainData
             StringBuilder result = new StringBuilder();
             if (!String.IsNullOrWhiteSpace(CatalogName)) { result.Append(CatalogName); }
 
-            if (!String.IsNullOrWhiteSpace(ScopeName)) { result.Append(ScopeName); }
+            if (!String.IsNullOrWhiteSpace(SchemaName)) { result.Append(SchemaName); }
             {
                 if (!String.IsNullOrWhiteSpace(result.ToString()))
-                { result.Append(String.Format(".{0}", ScopeName)); }
-                else { result.Append(ScopeName); }
+                { result.Append(String.Format(".{0}", SchemaName)); }
+                else { result.Append(SchemaName); }
             }
 
             if (!String.IsNullOrWhiteSpace(ObjectName))

@@ -17,7 +17,12 @@ namespace DataDictionary.BusinessLayer
         public BindingTable<DomainAttributePropertyItem> DomainAttributeProperties = ModelFactory.Create<DomainAttributePropertyItem>();
         public BindingTable<DomainAttributeAliasItem> DomainAttributeAliases = ModelFactory.Create<DomainAttributeAliasItem>();
 
-        public DomainData() { }
+        // TODO: For now this is just a simple list. This may become a more complex class.
+        public BindingList<(String PropertyName, Boolean IsExtendedProperty)> PropertyNames = new BindingList<(String PropertyName, Boolean IsExtendedProperty)>()
+        { new("MS_Description",true) };
+
+        public DomainData()
+        { }
 
         public void ImportAttributes(DatabaseMetaData data)
         {
@@ -31,7 +36,7 @@ namespace DataDictionary.BusinessLayer
                 w.GetSchema(data.DbSchemas) is IDbSchemaItem schema && !schema.IsSystem &&
                 DomainAttributeAliases.FirstOrDefault(
                     a => w.CatalogName == a.CatalogName &&
-                    w.SchemaName == a.ScopeName &&
+                    w.SchemaName == a.SchemaName &&
                     w.TableName == a.ObjectName &&
                     w.CollationName == a.ElementName)
                 is null);
@@ -50,7 +55,7 @@ namespace DataDictionary.BusinessLayer
                     {
                         AttributeId = newAttribute.AttributeId,
                         CatalogName = aliasSource.CatalogName,
-                        ScopeName = aliasSource.SchemaName,
+                        SchemaName = aliasSource.SchemaName,
                         ObjectName = aliasSource.TableName,
                         ElementName = aliasSource.ColumnName
                     });
@@ -68,6 +73,9 @@ namespace DataDictionary.BusinessLayer
                         PropertyName = propertySource.PropertyName,
                         PropertyValue = propertySource.PropertyValue
                     });
+
+                    if (propertySource.PropertyName is not null && PropertyNames.Count(w => w.PropertyName == propertySource.PropertyName) == 0)
+                    { PropertyNames.Add(new(propertySource.PropertyName, true)); }
                 }
             }
         }

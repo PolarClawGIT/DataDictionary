@@ -35,15 +35,15 @@
             TabPage attributeAlaisTab;
             attributeDescriptionData = new Controls.RichTextBoxData();
             attributePropertiesData = new DataGridView();
-            propertyNameData = new DataGridViewTextBoxColumn();
-            propertyValueData = new DataGridViewTextBoxColumn();
             attributeAlaisData = new DataGridView();
             aliasCatalogNameData = new DataGridViewTextBoxColumn();
+            aliasSchemaNameData = new DataGridViewTextBoxColumn();
             alaisObjectNameData = new DataGridViewTextBoxColumn();
-            aliasScopeNameData = new DataGridViewTextBoxColumn();
             aliasElementNameData = new DataGridViewTextBoxColumn();
             attributeTitleData = new Controls.TextBoxData();
             attributeParentTitleData = new Controls.TextBoxData();
+            propertyNameData = new DataGridViewComboBoxColumn();
+            propertyValueData = new DataGridViewTextBoxColumn();
             attributeLayout = new TableLayoutPanel();
             attributeTabLayout = new TabControl();
             attributeDefinitionTab = new TabPage();
@@ -72,7 +72,7 @@
             attributeLayout.RowStyles.Add(new RowStyle());
             attributeLayout.RowStyles.Add(new RowStyle());
             attributeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            attributeLayout.Size = new Size(337, 522);
+            attributeLayout.Size = new Size(529, 522);
             attributeLayout.TabIndex = 0;
             // 
             // attributeTabLayout
@@ -84,7 +84,7 @@
             attributeTabLayout.Location = new Point(3, 91);
             attributeTabLayout.Name = "attributeTabLayout";
             attributeTabLayout.SelectedIndex = 0;
-            attributeTabLayout.Size = new Size(331, 428);
+            attributeTabLayout.Size = new Size(523, 428);
             attributeTabLayout.TabIndex = 4;
             // 
             // attributeDefinitionTab
@@ -93,7 +93,7 @@
             attributeDefinitionTab.Location = new Point(4, 24);
             attributeDefinitionTab.Name = "attributeDefinitionTab";
             attributeDefinitionTab.Padding = new Padding(3);
-            attributeDefinitionTab.Size = new Size(323, 400);
+            attributeDefinitionTab.Size = new Size(515, 400);
             attributeDefinitionTab.TabIndex = 0;
             attributeDefinitionTab.Text = "Definition";
             attributeDefinitionTab.UseVisualStyleBackColor = true;
@@ -108,7 +108,7 @@
             attributeDescriptionData.Name = "attributeDescriptionData";
             attributeDescriptionData.ReadOnly = false;
             attributeDescriptionData.RichText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
-            attributeDescriptionData.Size = new Size(317, 394);
+            attributeDescriptionData.Size = new Size(509, 394);
             attributeDescriptionData.TabIndex = 3;
             // 
             // attributePropertyTab
@@ -117,7 +117,7 @@
             attributePropertyTab.Location = new Point(4, 24);
             attributePropertyTab.Name = "attributePropertyTab";
             attributePropertyTab.Padding = new Padding(3);
-            attributePropertyTab.Size = new Size(323, 400);
+            attributePropertyTab.Size = new Size(515, 400);
             attributePropertyTab.TabIndex = 1;
             attributePropertyTab.Text = "Properties";
             attributePropertyTab.UseVisualStyleBackColor = true;
@@ -130,30 +130,15 @@
             attributePropertiesData.Location = new Point(3, 3);
             attributePropertiesData.Name = "attributePropertiesData";
             attributePropertiesData.RowTemplate.Height = 25;
-            attributePropertiesData.Size = new Size(317, 394);
+            attributePropertiesData.Size = new Size(509, 394);
             attributePropertiesData.TabIndex = 0;
-            // 
-            // propertyNameData
-            // 
-            propertyNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            propertyNameData.DataPropertyName = "PropertyName";
-            propertyNameData.HeaderText = "Property Name";
-            propertyNameData.Name = "propertyNameData";
-            propertyNameData.Width = 112;
-            // 
-            // propertyValueData
-            // 
-            propertyValueData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            propertyValueData.DataPropertyName = "PropertyValue";
-            propertyValueData.HeaderText = "Property Value";
-            propertyValueData.Name = "propertyValueData";
             // 
             // attributeAlaisTab
             // 
             attributeAlaisTab.Controls.Add(attributeAlaisData);
             attributeAlaisTab.Location = new Point(4, 24);
             attributeAlaisTab.Name = "attributeAlaisTab";
-            attributeAlaisTab.Size = new Size(323, 400);
+            attributeAlaisTab.Size = new Size(515, 400);
             attributeAlaisTab.TabIndex = 2;
             attributeAlaisTab.Text = "Alias";
             attributeAlaisTab.UseVisualStyleBackColor = true;
@@ -161,12 +146,12 @@
             // attributeAlaisData
             // 
             attributeAlaisData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            attributeAlaisData.Columns.AddRange(new DataGridViewColumn[] { aliasCatalogNameData, alaisObjectNameData, aliasScopeNameData, aliasElementNameData });
+            attributeAlaisData.Columns.AddRange(new DataGridViewColumn[] { aliasCatalogNameData, aliasSchemaNameData, alaisObjectNameData, aliasElementNameData });
             attributeAlaisData.Dock = DockStyle.Fill;
             attributeAlaisData.Location = new Point(0, 0);
             attributeAlaisData.Name = "attributeAlaisData";
             attributeAlaisData.RowTemplate.Height = 25;
-            attributeAlaisData.Size = new Size(323, 400);
+            attributeAlaisData.Size = new Size(515, 400);
             attributeAlaisData.TabIndex = 0;
             // 
             // aliasCatalogNameData
@@ -176,19 +161,19 @@
             aliasCatalogNameData.HeaderText = "Catalog Name";
             aliasCatalogNameData.Name = "aliasCatalogNameData";
             // 
+            // aliasSchemaNameData
+            // 
+            aliasSchemaNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliasSchemaNameData.DataPropertyName = "SchemaName";
+            aliasSchemaNameData.HeaderText = "Schema Name";
+            aliasSchemaNameData.Name = "aliasSchemaNameData";
+            // 
             // alaisObjectNameData
             // 
             alaisObjectNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             alaisObjectNameData.DataPropertyName = "ObjectName";
             alaisObjectNameData.HeaderText = "Object Name";
             alaisObjectNameData.Name = "alaisObjectNameData";
-            // 
-            // aliasScopeNameData
-            // 
-            aliasScopeNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliasScopeNameData.DataPropertyName = "ScopeName";
-            aliasScopeNameData.HeaderText = "Scope Name";
-            aliasScopeNameData.Name = "aliasScopeNameData";
             // 
             // aliasElementNameData
             // 
@@ -207,7 +192,7 @@
             attributeTitleData.Multiline = false;
             attributeTitleData.Name = "attributeTitleData";
             attributeTitleData.ReadOnly = false;
-            attributeTitleData.Size = new Size(337, 44);
+            attributeTitleData.Size = new Size(529, 44);
             attributeTitleData.TabIndex = 0;
             // 
             // attributeParentTitleData
@@ -220,14 +205,28 @@
             attributeParentTitleData.Multiline = false;
             attributeParentTitleData.Name = "attributeParentTitleData";
             attributeParentTitleData.ReadOnly = true;
-            attributeParentTitleData.Size = new Size(337, 44);
+            attributeParentTitleData.Size = new Size(529, 44);
             attributeParentTitleData.TabIndex = 1;
+            // 
+            // propertyNameData
+            // 
+            propertyNameData.DataPropertyName = "PropertyName";
+            propertyNameData.HeaderText = "Property Name";
+            propertyNameData.Name = "propertyNameData";
+            propertyNameData.Width = 150;
+            // 
+            // propertyValueData
+            // 
+            propertyValueData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            propertyValueData.DataPropertyName = "PropertyValue";
+            propertyValueData.HeaderText = "Property Value";
+            propertyValueData.Name = "propertyValueData";
             // 
             // DomainAttribute
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(337, 522);
+            ClientSize = new Size(529, 522);
             Controls.Add(attributeLayout);
             Name = "DomainAttribute";
             Text = "Domain Attribute";
@@ -251,11 +250,11 @@
         private Controls.RichTextBoxData attributeDescriptionData;
         private DataGridView attributePropertiesData;
         private DataGridView attributeAlaisData;
-        private DataGridViewTextBoxColumn propertyNameData;
-        private DataGridViewTextBoxColumn propertyValueData;
         private DataGridViewTextBoxColumn aliasCatalogNameData;
+        private DataGridViewTextBoxColumn aliasSchemaNameData;
         private DataGridViewTextBoxColumn alaisObjectNameData;
-        private DataGridViewTextBoxColumn aliasScopeNameData;
         private DataGridViewTextBoxColumn aliasElementNameData;
+        private DataGridViewComboBoxColumn propertyNameData;
+        private DataGridViewTextBoxColumn propertyValueData;
     }
 }

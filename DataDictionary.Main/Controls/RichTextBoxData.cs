@@ -34,7 +34,7 @@ namespace DataDictionary.Main.Controls
         // Expose Control Properties
         public Boolean ReadOnly { get { return richTextBox.ReadOnly; } set { richTextBox.ReadOnly = value; } }
 
-        [Browsable(false)]
+        [Browsable(false), Bindable(true)]
         public String RichText { get { return richTextBox.Rtf; } set { richTextBox.Rtf = value; } }
 
         /// <summary>

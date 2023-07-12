@@ -30,6 +30,9 @@ namespace DataDictionary.Main.Forms
         {
             InitializeComponent();
             this.Icon = Resources.DomainAttribute;
+
+            //propertyNameData.Items.AddRange(Program.DomainData.PropertyNames.Select(s => s.PropertyName).ToArray());
+            propertyNameData.DataSource = Program.DomainData.PropertyNames.Select(s => s.PropertyName).ToList();
         }
 
         public DomainAttribute(IDomainAttributeItem domainAttributeItem) : this()
@@ -50,7 +53,7 @@ namespace DataDictionary.Main.Forms
         void BindData()
         {
             attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), data.DomainAttribute, nameof(data.DomainAttribute.AttributeTitle)));
-            attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.RichText), data.DomainAttribute, nameof(data.DomainAttribute.AttributeDescription)));
+            attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), data.DomainAttribute, nameof(data.DomainAttribute.AttributeDescription)));
             attributeParentTitleData.DataBindings.Add(new Binding(nameof(attributeParentTitleData.Text), data.ParentAttribute, nameof(data.ParentAttribute.AttributeTitle)));
 
             attributeAlaisData.AutoGenerateColumns = false;
