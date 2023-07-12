@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.Main.Messages;
+using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 
@@ -19,8 +20,7 @@ namespace DataDictionary.Main.Forms
         public DbColumn() : base()
         {
             InitializeComponent();
-            Program.Messenger.AddColleague(this);
-            SendMessage(new FormAddMdiChild() { ChildForm = this });
+            this.Icon = Resources.DbColumn;
         }
 
         public DbColumn(IDbColumnItem columnItem) : this()

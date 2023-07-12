@@ -1,4 +1,5 @@
 ﻿using DataDictionary.Main.Messages;
+using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,7 +16,10 @@ namespace DataDictionary.Main.Forms
     partial class DbSchemaView : ApplicationFormBase
     {
         public DbSchemaView() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+            this.Icon = Resources.DbSchema;
+        }
 
         private void DbSchemaView_Load(object sender, EventArgs e)
         { BindData(); }

@@ -76,6 +76,7 @@ namespace DataDictionary.Main.Forms
         public DbCatalog()
         {
             InitializeComponent();
+            this.Icon = Resources.DbCatalog;
 
             // Create list of all known Server/Database Name Pairs to add to AvailableContexts
             foreach (String? item in Settings.Default.UserServers)

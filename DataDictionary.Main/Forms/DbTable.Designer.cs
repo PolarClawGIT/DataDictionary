@@ -30,35 +30,24 @@
         {
             components = new System.ComponentModel.Container();
             TableLayoutPanel dbTableLayout;
-            TableLayoutPanel dbTableDetailLayout;
-            Label tableTypeLayout;
-            Label schemaNameLayout;
-            Label tableNameLayout;
             TabControl tableDetailLayout;
             TabPage extendedPropertiesTab;
             TabPage columnsTab;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbTable));
-            tableTypeData = new TextBox();
             isSystemData = new CheckBox();
-            catalogNameLayout = new Label();
-            catalogNameData = new TextBox();
-            schemaNameData = new TextBox();
-            tableNameData = new TextBox();
             extendedPropertiesData = new DataGridView();
             propertyNameData = new DataGridViewTextBoxColumn();
             propertyValueData = new DataGridViewTextBoxColumn();
             tableColumnsData = new DataGridView();
+            catalogNameData = new Controls.TextBoxData();
+            schemaNameData = new Controls.TextBoxData();
+            tableNameData = new Controls.TextBoxData();
+            tableTypeData = new Controls.TextBoxData();
             errorProvider = new ErrorProvider(components);
             dbTableLayout = new TableLayoutPanel();
-            dbTableDetailLayout = new TableLayoutPanel();
-            tableTypeLayout = new Label();
-            schemaNameLayout = new Label();
-            tableNameLayout = new Label();
             tableDetailLayout = new TabControl();
             extendedPropertiesTab = new TabPage();
             columnsTab = new TabPage();
             dbTableLayout.SuspendLayout();
-            dbTableDetailLayout.SuspendLayout();
             tableDetailLayout.SuspendLayout();
             extendedPropertiesTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).BeginInit();
@@ -70,142 +59,51 @@
             // dbTableLayout
             // 
             dbTableLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            dbTableLayout.ColumnCount = 1;
+            dbTableLayout.ColumnCount = 2;
             dbTableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            dbTableLayout.Controls.Add(dbTableDetailLayout, 0, 6);
-            dbTableLayout.Controls.Add(catalogNameLayout, 0, 0);
-            dbTableLayout.Controls.Add(schemaNameLayout, 0, 2);
-            dbTableLayout.Controls.Add(tableNameLayout, 0, 4);
-            dbTableLayout.Controls.Add(catalogNameData, 0, 1);
-            dbTableLayout.Controls.Add(schemaNameData, 0, 3);
-            dbTableLayout.Controls.Add(tableNameData, 0, 5);
-            dbTableLayout.Controls.Add(tableDetailLayout, 0, 7);
+            dbTableLayout.ColumnStyles.Add(new ColumnStyle());
+            dbTableLayout.Controls.Add(isSystemData, 1, 3);
+            dbTableLayout.Controls.Add(tableDetailLayout, 0, 4);
+            dbTableLayout.Controls.Add(catalogNameData, 0, 0);
+            dbTableLayout.Controls.Add(schemaNameData, 0, 1);
+            dbTableLayout.Controls.Add(tableNameData, 0, 2);
+            dbTableLayout.Controls.Add(tableTypeData, 0, 3);
             dbTableLayout.Dock = DockStyle.Fill;
             dbTableLayout.Location = new Point(0, 0);
             dbTableLayout.Name = "dbTableLayout";
-            dbTableLayout.RowCount = 8;
-            dbTableLayout.RowStyles.Add(new RowStyle());
-            dbTableLayout.RowStyles.Add(new RowStyle());
-            dbTableLayout.RowStyles.Add(new RowStyle());
+            dbTableLayout.RowCount = 5;
             dbTableLayout.RowStyles.Add(new RowStyle());
             dbTableLayout.RowStyles.Add(new RowStyle());
             dbTableLayout.RowStyles.Add(new RowStyle());
             dbTableLayout.RowStyles.Add(new RowStyle());
             dbTableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            dbTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            dbTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            dbTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             dbTableLayout.Size = new Size(433, 383);
             dbTableLayout.TabIndex = 0;
-            // 
-            // dbTableDetailLayout
-            // 
-            dbTableDetailLayout.AutoSize = true;
-            dbTableDetailLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            dbTableDetailLayout.ColumnCount = 2;
-            dbTableDetailLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            dbTableDetailLayout.ColumnStyles.Add(new ColumnStyle());
-            dbTableDetailLayout.Controls.Add(tableTypeData, 0, 1);
-            dbTableDetailLayout.Controls.Add(tableTypeLayout, 0, 0);
-            dbTableDetailLayout.Controls.Add(isSystemData, 2, 1);
-            dbTableDetailLayout.Dock = DockStyle.Fill;
-            dbTableDetailLayout.Location = new Point(3, 135);
-            dbTableDetailLayout.Name = "dbTableDetailLayout";
-            dbTableDetailLayout.RowCount = 2;
-            dbTableDetailLayout.RowStyles.Add(new RowStyle());
-            dbTableDetailLayout.RowStyles.Add(new RowStyle());
-            dbTableDetailLayout.Size = new Size(427, 44);
-            dbTableDetailLayout.TabIndex = 1;
-            // 
-            // tableTypeData
-            // 
-            tableTypeData.Dock = DockStyle.Fill;
-            tableTypeData.Location = new Point(3, 18);
-            tableTypeData.Name = "tableTypeData";
-            tableTypeData.ReadOnly = true;
-            tableTypeData.Size = new Size(340, 23);
-            tableTypeData.TabIndex = 0;
-            // 
-            // tableTypeLayout
-            // 
-            tableTypeLayout.AutoSize = true;
-            tableTypeLayout.Location = new Point(3, 0);
-            tableTypeLayout.Name = "tableTypeLayout";
-            tableTypeLayout.Size = new Size(61, 15);
-            tableTypeLayout.TabIndex = 1;
-            tableTypeLayout.Text = "Table Type";
             // 
             // isSystemData
             // 
             isSystemData.AutoCheck = false;
             isSystemData.AutoSize = true;
-            isSystemData.Location = new Point(349, 18);
+            isSystemData.Location = new Point(355, 153);
             isSystemData.Name = "isSystemData";
             isSystemData.Size = new Size(75, 19);
             isSystemData.TabIndex = 3;
             isSystemData.Text = "Is System";
             isSystemData.UseVisualStyleBackColor = true;
             // 
-            // catalogNameLayout
-            // 
-            catalogNameLayout.AutoSize = true;
-            catalogNameLayout.Location = new Point(3, 0);
-            catalogNameLayout.Name = "catalogNameLayout";
-            catalogNameLayout.Size = new Size(83, 15);
-            catalogNameLayout.TabIndex = 0;
-            catalogNameLayout.Text = "Catalog Name";
-            // 
-            // schemaNameLayout
-            // 
-            schemaNameLayout.AutoSize = true;
-            schemaNameLayout.Location = new Point(3, 44);
-            schemaNameLayout.Name = "schemaNameLayout";
-            schemaNameLayout.Size = new Size(84, 15);
-            schemaNameLayout.TabIndex = 1;
-            schemaNameLayout.Text = "Schema Name";
-            // 
-            // tableNameLayout
-            // 
-            tableNameLayout.AutoSize = true;
-            tableNameLayout.Location = new Point(3, 88);
-            tableNameLayout.Name = "tableNameLayout";
-            tableNameLayout.Size = new Size(69, 15);
-            tableNameLayout.TabIndex = 2;
-            tableNameLayout.Text = "Table Name";
-            // 
-            // catalogNameData
-            // 
-            catalogNameData.Dock = DockStyle.Fill;
-            catalogNameData.Location = new Point(3, 18);
-            catalogNameData.Name = "catalogNameData";
-            catalogNameData.ReadOnly = true;
-            catalogNameData.Size = new Size(427, 23);
-            catalogNameData.TabIndex = 4;
-            // 
-            // schemaNameData
-            // 
-            schemaNameData.Dock = DockStyle.Fill;
-            schemaNameData.Location = new Point(3, 62);
-            schemaNameData.Name = "schemaNameData";
-            schemaNameData.ReadOnly = true;
-            schemaNameData.Size = new Size(427, 23);
-            schemaNameData.TabIndex = 5;
-            // 
-            // tableNameData
-            // 
-            tableNameData.Dock = DockStyle.Fill;
-            tableNameData.Location = new Point(3, 106);
-            tableNameData.Name = "tableNameData";
-            tableNameData.ReadOnly = true;
-            tableNameData.Size = new Size(427, 23);
-            tableNameData.TabIndex = 6;
-            // 
             // tableDetailLayout
             // 
+            dbTableLayout.SetColumnSpan(tableDetailLayout, 2);
             tableDetailLayout.Controls.Add(extendedPropertiesTab);
             tableDetailLayout.Controls.Add(columnsTab);
             tableDetailLayout.Dock = DockStyle.Fill;
-            tableDetailLayout.Location = new Point(3, 185);
+            tableDetailLayout.Location = new Point(3, 203);
             tableDetailLayout.Name = "tableDetailLayout";
             tableDetailLayout.SelectedIndex = 0;
-            tableDetailLayout.Size = new Size(427, 195);
+            tableDetailLayout.Size = new Size(427, 177);
             tableDetailLayout.TabIndex = 7;
             // 
             // extendedPropertiesTab
@@ -214,7 +112,7 @@
             extendedPropertiesTab.Location = new Point(4, 24);
             extendedPropertiesTab.Name = "extendedPropertiesTab";
             extendedPropertiesTab.Padding = new Padding(3);
-            extendedPropertiesTab.Size = new Size(419, 167);
+            extendedPropertiesTab.Size = new Size(419, 149);
             extendedPropertiesTab.TabIndex = 0;
             extendedPropertiesTab.Text = "Extended Properties";
             extendedPropertiesTab.UseVisualStyleBackColor = true;
@@ -227,7 +125,7 @@
             extendedPropertiesData.Location = new Point(3, 3);
             extendedPropertiesData.Name = "extendedPropertiesData";
             extendedPropertiesData.RowTemplate.Height = 25;
-            extendedPropertiesData.Size = new Size(413, 161);
+            extendedPropertiesData.Size = new Size(413, 143);
             extendedPropertiesData.TabIndex = 5;
             // 
             // propertyNameData
@@ -251,7 +149,7 @@
             columnsTab.Location = new Point(4, 24);
             columnsTab.Name = "columnsTab";
             columnsTab.Padding = new Padding(3);
-            columnsTab.Size = new Size(419, 167);
+            columnsTab.Size = new Size(419, 149);
             columnsTab.TabIndex = 1;
             columnsTab.Text = "Columns";
             columnsTab.UseVisualStyleBackColor = true;
@@ -265,8 +163,59 @@
             tableColumnsData.Location = new Point(3, 3);
             tableColumnsData.Name = "tableColumnsData";
             tableColumnsData.RowTemplate.Height = 25;
-            tableColumnsData.Size = new Size(413, 161);
+            tableColumnsData.Size = new Size(413, 143);
             tableColumnsData.TabIndex = 0;
+            // 
+            // catalogNameData
+            // 
+            catalogNameData.AutoSize = true;
+            dbTableLayout.SetColumnSpan(catalogNameData, 2);
+            catalogNameData.Dock = DockStyle.Fill;
+            catalogNameData.HeaderText = "Catalog Name";
+            catalogNameData.Location = new Point(3, 3);
+            catalogNameData.Multiline = false;
+            catalogNameData.Name = "catalogNameData";
+            catalogNameData.ReadOnly = true;
+            catalogNameData.Size = new Size(427, 44);
+            catalogNameData.TabIndex = 8;
+            // 
+            // schemaNameData
+            // 
+            schemaNameData.AutoSize = true;
+            dbTableLayout.SetColumnSpan(schemaNameData, 2);
+            schemaNameData.Dock = DockStyle.Fill;
+            schemaNameData.HeaderText = "Schema Name";
+            schemaNameData.Location = new Point(3, 53);
+            schemaNameData.Multiline = false;
+            schemaNameData.Name = "schemaNameData";
+            schemaNameData.ReadOnly = true;
+            schemaNameData.Size = new Size(427, 44);
+            schemaNameData.TabIndex = 9;
+            // 
+            // tableNameData
+            // 
+            tableNameData.AutoSize = true;
+            dbTableLayout.SetColumnSpan(tableNameData, 2);
+            tableNameData.Dock = DockStyle.Fill;
+            tableNameData.HeaderText = "Table Name";
+            tableNameData.Location = new Point(3, 103);
+            tableNameData.Multiline = false;
+            tableNameData.Name = "tableNameData";
+            tableNameData.ReadOnly = true;
+            tableNameData.Size = new Size(427, 44);
+            tableNameData.TabIndex = 10;
+            // 
+            // tableTypeData
+            // 
+            tableTypeData.AutoSize = true;
+            tableTypeData.Dock = DockStyle.Fill;
+            tableTypeData.HeaderText = "Table Type";
+            tableTypeData.Location = new Point(3, 153);
+            tableTypeData.Multiline = false;
+            tableTypeData.Name = "tableTypeData";
+            tableTypeData.ReadOnly = true;
+            tableTypeData.Size = new Size(346, 44);
+            tableTypeData.TabIndex = 11;
             // 
             // errorProvider
             // 
@@ -278,14 +227,11 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(433, 383);
             Controls.Add(dbTableLayout);
-            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DbTable";
             Text = "Database Table";
             Load += DbTable_Load;
             dbTableLayout.ResumeLayout(false);
             dbTableLayout.PerformLayout();
-            dbTableDetailLayout.ResumeLayout(false);
-            dbTableDetailLayout.PerformLayout();
             tableDetailLayout.ResumeLayout(false);
             extendedPropertiesTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).EndInit();
@@ -297,16 +243,15 @@
 
         #endregion
 
-        private TextBox catalogNameData;
-        private TextBox schemaNameData;
-        private TextBox tableNameData;
         private ErrorProvider errorProvider;
-        private TextBox tableTypeData;
         private CheckBox isSystemData;
         private DataGridView extendedPropertiesData;
         private DataGridViewTextBoxColumn propertyNameData;
         private DataGridViewTextBoxColumn propertyValueData;
         private DataGridView tableColumnsData;
-        private Label catalogNameLayout;
+        private Controls.TextBoxData catalogNameData;
+        private Controls.TextBoxData schemaNameData;
+        private Controls.TextBoxData tableNameData;
+        private Controls.TextBoxData tableTypeData;
     }
 }

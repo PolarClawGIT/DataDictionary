@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbTableView));
             tableData = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)tableData).BeginInit();
             SuspendLayout();
@@ -52,7 +51,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(665, 390);
             Controls.Add(tableData);
-            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DbTableView";
             Text = "Database Tables";
             Load += DbTableView_Load;

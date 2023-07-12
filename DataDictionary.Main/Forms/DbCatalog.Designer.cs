@@ -39,7 +39,6 @@
             Label serverUserNameLayout;
             Label serverUserPasswordLayout;
             TableLayoutPanel authenticationChoiceLayout;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbCatalog));
             dbConnectionsData = new DataGridView();
             dbConnectionsServerNameData = new DataGridViewTextBoxColumn();
             dbConnectionsCatalogData = new DataGridViewTextBoxColumn();
@@ -368,7 +367,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(418, 430);
             Controls.Add(dbConnectionLayout);
-            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DbCatalog";
             Text = "Database Connections";
             Load += DbConnection_Load;

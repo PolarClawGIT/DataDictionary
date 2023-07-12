@@ -153,9 +153,9 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon DbColumn {
+        internal static System.Drawing.Icon DbCatalog {
             get {
-                object obj = ResourceManager.GetObject("DbColumn", resourceCulture);
+                object obj = ResourceManager.GetObject("DbCatalog", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -163,9 +163,9 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon DbContext {
+        internal static System.Drawing.Icon DbColumn {
             get {
-                object obj = ResourceManager.GetObject("DbContext", resourceCulture);
+                object obj = ResourceManager.GetObject("DbColumn", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

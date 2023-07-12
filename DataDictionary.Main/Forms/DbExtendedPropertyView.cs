@@ -1,4 +1,5 @@
 ﻿using DataDictionary.Main.Messages;
+using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace DataDictionary.Main.Forms
         public DbExtendedPropertyView() : base()
         {
             InitializeComponent();
+            this.Icon = Resources.DbExtendedProperty;
         }
 
         private void DbExtendedPropertyView_Load(object sender, EventArgs e)

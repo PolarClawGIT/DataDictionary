@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbColumnView));
             columnData = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)columnData).BeginInit();
             SuspendLayout();
@@ -52,7 +51,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(columnData);
-            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DbColumnView";
             Text = "Database Columns";
             Load += DbColumnView_Load;

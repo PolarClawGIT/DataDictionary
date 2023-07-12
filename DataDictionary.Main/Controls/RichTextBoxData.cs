@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Ignore Spelling: Rtf
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +14,13 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace DataDictionary.Main.Controls
 {
+    /// <summary>
+    /// Combination Control for a RichTextBox.
+    /// </summary>
+    /// <remarks>
+    /// Wrappers the base control into a Table Layout with a Label and a spot to place to reference the Error Provider.
+    /// Each property to be used from the base control has to be exposed. Same thing with events.
+    /// </remarks>
     public partial class RichTextBoxData : UserControl, ISupportEditMenu
     {
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
@@ -27,6 +36,7 @@ namespace DataDictionary.Main.Controls
         /// <remarks>
         /// This is a panel in the upper right corner of the control.
         /// </remarks>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public Control ErrorControl { get { return errorLocation; } }
 
         public RichTextBoxData()

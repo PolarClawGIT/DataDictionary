@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.Main.Messages;
+using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,7 +30,10 @@ namespace DataDictionary.Main.Forms
         FormData data = new FormData();
 
         public DbSchema() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+            this.Icon = Resources.DbSchema;
+        }
 
         public DbSchema(IDbSchemaItem schemaItem) : this()
         {
@@ -49,7 +53,7 @@ namespace DataDictionary.Main.Forms
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data.DbSchema, nameof(data.DbSchema.CatalogName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data.DbSchema, nameof(data.DbSchema.SchemaName)));
                 isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), data.DbSchema, nameof(data.DbSchema.IsSystem)));
-                errorProvider.SetError(catalogNameLayout, String.Empty);
+                errorProvider.SetError(schemaNameData.ErrorControl, String.Empty);
 
                 data.DbExtendedProperties.Clear();
                 data.DbExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.GetProperties(data.DbSchema));
@@ -57,7 +61,6 @@ namespace DataDictionary.Main.Forms
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = data.DbExtendedProperties;
             }
-            else { errorProvider.SetError(catalogNameLayout, "Schema information not available"); }
         }
 
         void UnBindData()

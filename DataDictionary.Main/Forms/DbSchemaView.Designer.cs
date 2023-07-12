@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbSchemaView));
             schemaData = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)schemaData).BeginInit();
             SuspendLayout();
@@ -52,7 +51,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(516, 343);
             Controls.Add(schemaData);
-            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DbSchemaView";
             Text = "Database Schemas";
             Load += DbSchemaView_Load;

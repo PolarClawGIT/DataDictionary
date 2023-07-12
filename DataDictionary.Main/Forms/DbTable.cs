@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.Main.Messages;
+using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,7 +27,10 @@ namespace DataDictionary.Main.Forms
         FormData data = new FormData();
 
         public DbTable() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+            this.Icon = Resources.DbTable;
+        }
 
         public DbTable(IDbTableItem tableItem) : this()
         {
@@ -60,8 +64,6 @@ namespace DataDictionary.Main.Forms
 
                 tableColumnsData.DataSource = data.DbColumn;
             }
-            else { errorProvider.SetError(catalogNameLayout, "Schmema information not avaiable"); }
-
         }
 
         void UnBindData()

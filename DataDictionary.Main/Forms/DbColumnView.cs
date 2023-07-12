@@ -1,4 +1,5 @@
 ﻿using DataDictionary.Main.Messages;
+using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +15,10 @@ namespace DataDictionary.Main.Forms
     partial class DbColumnView : ApplicationFormBase
     {
         public DbColumnView() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+            this.Icon = Resources.DbColumn;
+        }
 
         private void DbColumnView_Load(object sender, EventArgs e)
         { BindData(); }

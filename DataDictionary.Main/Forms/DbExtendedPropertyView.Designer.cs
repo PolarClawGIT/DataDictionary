@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbExtendedPropertyView));
             extendedPropertyData = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)extendedPropertyData).BeginInit();
             SuspendLayout();
@@ -52,7 +51,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(extendedPropertyData);
-            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DbExtendedPropertyView";
             Text = "Extended Properties";
             Load += DbExtendedPropertyView_Load;

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.Main.Messages;
+using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,8 +14,11 @@ namespace DataDictionary.Main.Forms
 {
     partial class DbTableView : ApplicationFormBase
     {
-        public DbTableView() :base()
-        { InitializeComponent(); }
+        public DbTableView() : base()
+        {
+            InitializeComponent();
+            this.Icon = Resources.DbTable;
+        }
 
 
         private void DbTableView_Load(object sender, EventArgs e)
