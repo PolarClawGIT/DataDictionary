@@ -12,6 +12,7 @@ namespace DataDictionary.DataLayer.DomainData
 {
     public interface IDomainAttributeAliasItem : IDomainAttributeId
     {
+        public String? CatalogName { get; }
         public String? ScopeName { get; }
         public String? ObjectName { get; }
         public String? ElementName { get; }
@@ -21,6 +22,7 @@ namespace DataDictionary.DataLayer.DomainData
     {
         public Nullable<Guid> AttributeId
         { get { return GetValue<Guid>("AttributeId"); } set { SetValue<Guid>("AttributeId", value); } }
+        public String? CatalogName { get { return GetValue("CatalogName"); } set { SetValue("CatalogName", value); } }
         public String? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }
         public String? ObjectName { get { return GetValue("ObjectName"); } set { SetValue("ObjectName", value); } }
         public String? ElementName { get { return GetValue("ElementName"); } set { SetValue("ElementName", value); } }
@@ -29,21 +31,32 @@ namespace DataDictionary.DataLayer.DomainData
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn("CatalogName", typeof(String)){ AllowDBNull = true},
             new DataColumn("ScopeName", typeof(String)){ AllowDBNull = true},
             new DataColumn("ObjectName", typeof(String)){ AllowDBNull = true},
             new DataColumn("ElementName", typeof(String)){ AllowDBNull = true},
 
         };
 
+        public override IReadOnlyList<DataColumn> ColumnDefinitions()
+        { return columnDefinitions; }
+
         public override String ToString()
         {
             StringBuilder result = new StringBuilder();
-            if(!String.IsNullOrWhiteSpace(ScopeName)) { result.Append(ScopeName); }
+            if (!String.IsNullOrWhiteSpace(CatalogName)) { result.Append(CatalogName); }
+
+            if (!String.IsNullOrWhiteSpace(ScopeName)) { result.Append(ScopeName); }
+            {
+                if (!String.IsNullOrWhiteSpace(result.ToString()))
+                { result.Append(String.Format(".{0}", ScopeName)); }
+                else { result.Append(ScopeName); }
+            }
 
             if (!String.IsNullOrWhiteSpace(ObjectName))
             {
                 if (!String.IsNullOrWhiteSpace(result.ToString()))
-                {   result.Append(String.Format(".{0}", ObjectName)); }
+                { result.Append(String.Format(".{0}", ObjectName)); }
                 else { result.Append(ObjectName); }
             }
 
@@ -57,8 +70,11 @@ namespace DataDictionary.DataLayer.DomainData
             return result.ToString();
         }
 
-        public override IReadOnlyList<DataColumn> ColumnDefinitions()
-        { return columnDefinitions; }
+    }
 
+    public static class DomainAttributeAliasItemExtension
+    {
+        public static IEnumerable<DomainAttributeAliasItem> GetProperties(this IEnumerable<DomainAttributeAliasItem> source, IDomainAttributeId item)
+        { return source.Where(w => item.AttributeId == w.AttributeId); }
     }
 }

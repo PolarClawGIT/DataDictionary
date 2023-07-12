@@ -21,6 +21,8 @@ namespace DataDictionary.BusinessLayer
 
         public void ImportAttributes(DatabaseMetaData data)
         {
+            //TODO: This needs more work to handle existing items.
+
             // Looking for: 
             // - Not in System Tables or System Schema's
             // - Not already aliased to another attribute
@@ -28,7 +30,8 @@ namespace DataDictionary.BusinessLayer
                 w => w.GetTable(data.DbTables) is IDbTableItem table && !table.IsSystem &&
                 w.GetSchema(data.DbSchemas) is IDbSchemaItem schema && !schema.IsSystem &&
                 DomainAttributeAliases.FirstOrDefault(
-                    a => w.SchemaName == a.ScopeName &&
+                    a => w.CatalogName == a.CatalogName &&
+                    w.SchemaName == a.ScopeName &&
                     w.TableName == a.ObjectName &&
                     w.CollationName == a.ElementName)
                 is null);
@@ -41,17 +44,18 @@ namespace DataDictionary.BusinessLayer
 
                 DomainAttributes.Add(newAttribute);
 
-                foreach (IDbColumnItem newAlais in columnItem)
+                foreach (IDbColumnItem aliasSource in columnItem)
                 {
                     DomainAttributeAliases.Add(new DomainAttributeAliasItem()
                     {
                         AttributeId = newAttribute.AttributeId,
-                        ScopeName = newAlais.SchemaName,
-                        ObjectName = newAlais.TableName,
-                        ElementName = newAlais.ColumnName
+                        CatalogName = aliasSource.CatalogName,
+                        ScopeName = aliasSource.SchemaName,
+                        ObjectName = aliasSource.TableName,
+                        ElementName = aliasSource.ColumnName
                     });
 
-                    propeties.AddRange(newAlais.GetProperties(data.DbExtendedProperties));
+                    propeties.AddRange(aliasSource.GetProperties(data.DbExtendedProperties));
                 }
 
                 foreach (IGrouping<String?, IDbExtendedPropertyItem> propertyItem in propeties.GroupBy(g => g.PropertyName))
