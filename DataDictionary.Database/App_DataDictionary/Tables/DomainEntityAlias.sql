@@ -18,5 +18,5 @@
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DomainEntityAlias]
-    ON [App_DataDictionary].[DomainEntityAlias]([ScopeName] ASC, [ObjectName] ASC);
+    ON [App_DataDictionary].[DomainEntityAlias]([CatalogName] ASC, [ScopeName] ASC, [ObjectName] ASC);
 GO
