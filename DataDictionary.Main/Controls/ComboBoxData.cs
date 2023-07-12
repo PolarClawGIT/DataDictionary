@@ -19,11 +19,15 @@ namespace DataDictionary.Main.Controls
     /// </remarks>
     public partial class ComboBoxData : UserControl, ISupportEditMenu
     {
+        // Expose Header Properties
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
-        public Boolean ReadOnly { get { return !comboBox.Enabled; } set { comboBox.Enabled = !value; } }
 
+        // Override of default properties
         public new ControlBindingsCollection DataBindings { get { return comboBox.DataBindings; } }
         public new String Text { get { return comboBox.Text; } set { comboBox.Text = value; } }
+
+        // Expose Control Properties
+        public Boolean ReadOnly { get { return !comboBox.Enabled; } set { comboBox.Enabled = !value; } }
         public Object DataSource { get { return comboBox.DataSource; } set { comboBox.DataSource = value; } }
         public Object SelectedItem { get { return comboBox.SelectedItem; } set { comboBox.SelectedItem = value; } }
         public Object? SelectedValue { get { return comboBox.SelectedValue; } set { comboBox.SelectedValue = value; } }
@@ -36,7 +40,7 @@ namespace DataDictionary.Main.Controls
         /// <remarks>
         /// This is a panel in the upper right corner of the control.
         /// </remarks>
-        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Browsable(false)]
         public Control ErrorControl { get { return errorLocation; } }
 
         public ComboBoxData()

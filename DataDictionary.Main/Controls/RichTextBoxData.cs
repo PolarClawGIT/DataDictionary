@@ -23,12 +23,19 @@ namespace DataDictionary.Main.Controls
     /// </remarks>
     public partial class RichTextBoxData : UserControl, ISupportEditMenu
     {
-        public String HeaderText { get { return label.Text; } set { label.Text = value; } }
-        public Boolean ReadOnly { get { return richTextBox.ReadOnly; } set { richTextBox.ReadOnly = value; } }
 
+        // Expose Header Properties
+        public String HeaderText { get { return label.Text; } set { label.Text = value; } }
+
+        // Override of default properties
         public new ControlBindingsCollection DataBindings { get { return richTextBox.DataBindings; } }
         public new String Text { get { return richTextBox.Text; } set { richTextBox.Text = value; } }
-        public String Rtf { get { return richTextBox.Rtf; } set { richTextBox.Rtf = value; } }
+
+        // Expose Control Properties
+        public Boolean ReadOnly { get { return richTextBox.ReadOnly; } set { richTextBox.ReadOnly = value; } }
+
+        [Browsable(false)]
+        public String RichText { get { return richTextBox.Rtf; } set { richTextBox.Rtf = value; } }
 
         /// <summary>
         /// Control used to position the Error Provider Icon.
@@ -36,7 +43,7 @@ namespace DataDictionary.Main.Controls
         /// <remarks>
         /// This is a panel in the upper right corner of the control.
         /// </remarks>
-        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Browsable(false)]
         public Control ErrorControl { get { return errorLocation; } }
 
         public RichTextBoxData()

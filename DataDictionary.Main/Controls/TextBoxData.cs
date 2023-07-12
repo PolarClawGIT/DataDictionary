@@ -21,12 +21,15 @@ namespace DataDictionary.Main.Controls
     /// </remarks>
     public partial class TextBoxData : UserControl, ISupportEditMenu
     {
-
+        // Expose Header Properties
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
-        public Boolean ReadOnly { get { return textBox.ReadOnly; } set { textBox.ReadOnly = value; } }
 
+        // Override of default properties
         public new ControlBindingsCollection DataBindings { get { return textBox.DataBindings; } }
         public new String Text { get { return textBox.Text; } set { textBox.Text = value; } }
+
+        // Expose Control Properties
+        public Boolean ReadOnly { get { return textBox.ReadOnly; } set { textBox.ReadOnly = value; } }
         public Boolean Multiline { get { return textBox.Multiline; } set { textBox.Multiline = value; } }
 
         /// <summary>
@@ -35,7 +38,7 @@ namespace DataDictionary.Main.Controls
         /// <remarks>
         /// This is a panel in the upper right corner of the control.
         /// </remarks>
-        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Browsable(false)]
         public Control ErrorControl { get { return errorLocation; } }
 
         public TextBoxData()
