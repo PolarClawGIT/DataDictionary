@@ -11,14 +11,32 @@ using Toolbox.Threading.WorkItem;
 
 namespace Toolbox.Threading
 {
-    public class WorkerQueue : IDisposable
+    public interface IWorkerQueue: IDisposable
     {
+        void Enqueue(IEnumerable<IWorkItem> work);
+        void Enqueue(IWorkItem work);
+    }
+
+    public class WorkerQueue : IWorkerQueue
+    {
+        //TODO: This has some issues.
+        //
+        //By design, only Enqueue would execute on the main thread but could also be on other threads.
+        //In implementation, the process runs mainly on the thread that calls the Enqueue method.
+        //The exception being when the Background worker is called while doing the work.
+        //Normally, this is the main thread. This defeats the purpose of the class.
+        //The results is that the main thread can become "non-response".
+        //Another scenario that occurs is that the Background worker may change objects
+        //that are not completely thread safe. This includes a DataTable and BindingList.
+        //The class may raise an event during the execution of the Background Worker.
+        //The event tries to run on the Background Worker thread and throws a threading exception.
+
         protected ConcurrentQueue<IWorkItem> WorkQueue { get; } = new ConcurrentQueue<IWorkItem>();
         protected BackgroundWorker BackgroundWorker { get; } = new BackgroundWorker();
         public Int32 WorkAdded { get; protected set; } = 0;
         public Int32 WorkComplete { get; protected set; } = 0;
         public Int32 WorkPending { get { return WorkQueue.Count; } }
-        public Int32 WorkProgress
+        protected Int32 WorkProgress
         {
             get
             {
@@ -121,6 +139,12 @@ namespace Toolbox.Threading
 
         protected virtual void DoWork(BatchWork item)
         {
+            //TODO: This method has an issue that it cannot correctly detect when it is compete.
+            //The issue comes up if one of the BatchWork items is itself a BatchWork.
+            //When it comes time to execute the child BatchWork, the child call adds
+            //the items to the queue but are not associated with the parent work item.
+            //As a result the parent is be complete but the child BatchWork is not.
+
             try
             { item.OnStarting(); }
             catch (Exception ex)
