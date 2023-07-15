@@ -25,6 +25,7 @@ namespace DataDictionary.BusinessLayer
         {
             GetInformationSchema<DbCatalogName> item = new GetInformationSchema<DbCatalogName>(this)
             {
+                WorkName = "Get Database List",
                 Collection = InformationSchema.Collection.Databases,
                 Transform = convert,
                 Target = target,

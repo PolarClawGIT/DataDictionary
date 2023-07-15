@@ -189,7 +189,7 @@ namespace DataDictionary.Main.Forms
             List<DbCatalogName> databaseNames = new List<DbCatalogName>();
 
             if (data.DbContext is DbSchemaContext)
-            { Program.WorkerQueue.Enqueue(data.DbContext.GetDatabaseList(databaseNames), onComplete); }
+            { Program.Worker.Enqueue(data.DbContext.GetDatabaseList(databaseNames), onComplete); }
 
             void onComplete(RunWorkerCompletedEventArgs result)
             {
@@ -233,7 +233,7 @@ namespace DataDictionary.Main.Forms
                 if (data.DbContext is DbSchemaContext)
                 {
                     IEnumerable<WorkItem> workItems = Program.Data.Load(data.DbContext);
-                    Program.WorkerQueue.Enqueue(workItems, onCompleting);
+                    Program.Worker.Enqueue(workItems, onCompleting);
                 }
             }
 
@@ -278,7 +278,7 @@ namespace DataDictionary.Main.Forms
 
 
             if (data.DbContext is DbSchemaContext)
-            { Program.WorkerQueue.Enqueue(Program.Data.RemoveCatalog(data.DbContext), onComplete); }
+            { Program.Worker.Enqueue(Program.Data.RemoveCatalog(data.DbContext), onComplete); }
 
             void onComplete(RunWorkerCompletedEventArgs result)
             {

@@ -52,15 +52,32 @@ namespace Toolbox.Threading
         /// <summary>
         /// This triggers after the DoWork method is complete.
         /// </summary>
-        /// <remarks>
-        /// The event fires within the scope of a Background Worker thread of the WorkerQueue.
-        /// As such, it is possible to get cross thread exceptions.
-        /// </remarks>
         public event EventHandler<RunWorkerCompletedEventArgs>? Completing;
-        internal virtual void OnCompleting(Exception? error, Boolean canceled)
+
+
+        /// <summary>
+        /// Fires the Completing event.
+        /// </summary>
+        /// <param name="error"></param>
+        /// <param name="canceled"></param>
+        /// <remarks>
+        /// This is called by the Background Worker of the WorkerQueue.
+        /// If the InvokeUsing value is set, the process uses the method passed to execute the statement.
+        /// The goal here is to execute on the UI thread so the InvokeUsing is expected to have the Invoke method of a Control on the UI thread.
+        /// If the InvokeUsing is not set, then the event occurs on the Background Worker thread and can cause a cross thread exception.
+        /// </remarks>
+        internal virtual void OnCompleting(Exception? error, Boolean canceled, Action<Action>? InvokeUsing = null)
         {
             if (Completing is EventHandler<RunWorkerCompletedEventArgs> handler)
-            { handler(this, new RunWorkerCompletedEventArgs(this, error, canceled)); }
+            {
+                //handler.BeginInvoke(this, new RunWorkerCompletedEventArgs(this, error, canceled), null, null); // Throws error, not available on platform
+                //handler(this, new RunWorkerCompletedEventArgs(this, error, canceled)); // Invokes the event on the same thread that the method was called on not the thread that created the object. Throws Cross threading exception.
+                //Completing.Invoke(this, new RunWorkerCompletedEventArgs(this, error, canceled)) // Does the same as above but clearly not thread safe.
+
+                if (InvokeUsing is not null)
+                { InvokeUsing(() => handler(this, new RunWorkerCompletedEventArgs(this, error, canceled))); }
+                else { handler(this, new RunWorkerCompletedEventArgs(this, error, canceled)); }
+            }
         }
 
         /// <summary>

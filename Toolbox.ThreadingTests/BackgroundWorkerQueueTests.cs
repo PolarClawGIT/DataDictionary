@@ -41,45 +41,14 @@ namespace Toolbox.Threading.Tests
         }
 
         [Test()]
-        public void EnqueueTest_OnCompeting()
-        {
-            Int32 sleepFor = 10000;
-            Boolean completed = false;
-            Boolean starting = false;
-            Boolean worked = false;
-            int countProgress = 0;
-
-            worker.ProgressChanged += Worker_ProgressChanged;
-
-            var item = new WorkItem()
-            {
-                WorkName = "Work test",
-                DoWork = DoWork,
-                //OnCompleting = DoCompleting,
-                //OnStarting = DoStarting,
-            };
-            worker.Enqueue(item);
-
-            Thread.Sleep(sleepFor + 1000);
-
-            Assert.IsTrue(completed);
-            Assert.IsTrue(starting);
-            Assert.IsTrue(worked);
-            Assert.IsTrue(countProgress > 0);
-
-            void DoWork()
-            { Thread.Sleep(sleepFor); worked = true; }
-
-            void Worker_ProgressChanged(object? sender, WorkerProgressChangedEventArgs e)
-            { countProgress++; }
-        }
-
-        [Test()]
         public void EnqueueTest_Completed()
         {
             Int32 sleepFor = 10000;
             Boolean completed = false;
             Boolean worked = false;
+            Int32 baseThread = Thread.CurrentThread.ManagedThreadId;
+            Int32 workThread = -1;
+            Int32 completeThread = -1;
 
             var item = new WorkItem()
             {
@@ -92,22 +61,30 @@ namespace Toolbox.Threading.Tests
 
             Thread.Sleep(sleepFor + 10000);
 
-            Assert.IsTrue(completed);
-            Assert.IsTrue(worked);
+            Assert.IsTrue(completed,"The completed Event is expected to have fired");
+            Assert.IsTrue(worked,"Worker is expected to have completed work");
+            Assert.IsTrue(baseThread == completeThread, "Event is expected to be on the same thread that created the queue");
+            Assert.IsFalse(baseThread == workThread, "Worker is expected to be on the background thread");
 
             void DoWork()
-            { Thread.Sleep(sleepFor); worked = true;}
+            {
+                Thread.Sleep(sleepFor);
+                worked = true;
+                workThread = Thread.CurrentThread.ManagedThreadId;
+            }
 
             void Item_Completed(object? sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
             {
                 item.Completing -= Item_Completed;
                 completed = true;
+                completeThread = Thread.CurrentThread.ManagedThreadId;
             }
         }
 
         [Test()]
         public void BindingListTest()
         {
+            //This should fail with a cross thread exception but it does not.
             Int32 sleepFor = 10000;
             Boolean completed = false;
             Boolean worked = false;
@@ -143,6 +120,10 @@ namespace Toolbox.Threading.Tests
             void Item_Completed(object? sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
             {
                 item.Completing -= Item_Completed;
+
+                data.Add("Add Three");
+                data.Add("Add Four");
+
                 completed = true;
             }
         }

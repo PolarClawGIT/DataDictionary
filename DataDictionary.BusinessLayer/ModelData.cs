@@ -226,15 +226,5 @@ namespace DataDictionary.BusinessLayer
             }
 
         }
-
-        [Obsolete()]
-        public event EventHandler<ListChangedEventArgs>? ListChanged;
-
-        [Obsolete()]
-        protected void OnListChanged()
-        {
-            if (ListChanged is EventHandler<ListChangedEventArgs> hander)
-            { ListChanged(this, new ListChangedEventArgs(ListChangedType.Reset, -1)); }
-        }
     }
 }

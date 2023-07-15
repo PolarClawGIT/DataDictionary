@@ -24,9 +24,9 @@ namespace Toolbox.Threading
 
         public WorkerProgressChangedEventArgs(String status, Int32 progress) : this(status)
         {
-            if (progress <= 0) { ProgressPercent = 0; }
-            else if (progress > 0 && progress < 100) { ProgressPercent = progress; }
-            else if (progress >= 100) { ProgressPercent = 100; }
+            if (progress <= 0) { ProgressPercent = 0; ProgressText = "(ideal)"; }
+            else if (progress > 0 && progress < 100) { ProgressPercent = progress; ProgressText = status; }
+            else if (progress >= 100) { ProgressPercent = 100; ProgressText = "(done)"; }
         }
 
         public WorkerProgressChangedEventArgs(IWorkItem item) : this(item.WorkName) { }

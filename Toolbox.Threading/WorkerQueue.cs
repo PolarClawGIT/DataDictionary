@@ -29,6 +29,16 @@ namespace Toolbox.Threading
         public Int32 WorkPending { get { return WorkQueue.Count; } }
         public Boolean IsBusy { get { return backgroundWorker.IsBusy; } }
 
+        /// <summary>
+        /// Used to pass the Invoke method from a Control on the main UI thread
+        /// </summary>
+        /// <remarks>
+        /// This really problematic, but it gets around the Cross Threading problem.
+        /// By passing Invoke method of any control on the UI thread, the call then can be made on the UI thread.
+        /// Why can't I find out what thread created this instance and invoke events on that thread?
+        /// </remarks>
+        public Action<Action>? InvokeUsing { get; set; }
+
         // Because I don't know how to setup Async correctly
         protected BackgroundWorker backgroundWorker { get; } = new BackgroundWorker()
         { WorkerReportsProgress = true, WorkerSupportsCancellation = true };
@@ -48,6 +58,7 @@ namespace Toolbox.Threading
         public virtual void Enqueue(WorkItem work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
         {
             if (onCompleting is not null) { work.Completing += Work_Completing; }
+            work.InvokeUsing = InvokeUsing;
 
             WorkQueue.Enqueue(work);
             WorkAdded++;
@@ -74,6 +85,7 @@ namespace Toolbox.Threading
 
             foreach (WorkItem item in work)
             {
+                item.InvokeUsing = InvokeUsing;
                 if (onCompleting is not null) { item.Completing += Item_Completing; }
                 WorkQueue.Enqueue(item);
                 WorkAdded++;
@@ -127,7 +139,7 @@ namespace Toolbox.Threading
                 {
                     if (backgroundWorker.CancellationPending || workItem.IsCanceling())
                     {
-                        workItem.OnCompleting(null, true);
+                        workItem.OnCompleting(null, true, InvokeUsing);
                         backgroundWorker.ReportProgress(100, workItem);
                     }
                     else
@@ -136,14 +148,14 @@ namespace Toolbox.Threading
                         backgroundWorker.ReportProgress(0, workItem);
 
                         workItem.DoWork();
-                        workItem.OnCompleting(null, false);
+                        workItem.OnCompleting(null, false, InvokeUsing);
 
                         backgroundWorker.ReportProgress(100, workItem);
                     }
                 }
                 catch (Exception ex)
                 {
-                    workItem.OnCompleting(ex, false);
+                    workItem.OnCompleting(ex, false, InvokeUsing);
                     backgroundWorker.ReportProgress(100, workItem);
                 }
                 finally
@@ -190,7 +202,9 @@ namespace Toolbox.Threading
                     { progress = (WorkComplete * 100.0 + e.ProgressPercentage) / (WorkAdded * 100); }
                     else { progress = (WorkComplete) / WorkAdded; }
 
-                    handler(sender, new WorkerProgressChangedEventArgs(workItem.WorkName, (int)(progress * 100.0)));
+                    if (InvokeUsing is not null)
+                    { InvokeUsing(() => handler(sender, new WorkerProgressChangedEventArgs(workItem.WorkName, (int)(progress * 100.0)))); }
+                    else { handler(sender, new WorkerProgressChangedEventArgs(workItem.WorkName, (int)(progress * 100.0))); }
                 }
             }
         }
@@ -215,7 +229,11 @@ namespace Toolbox.Threading
         protected void OnWorkException(Exception ex)
         {
             if (WorkException is EventHandler<WorkerExceptionEventArgs> handler)
-            { handler(this, new WorkerExceptionEventArgs() { Exception = ex }); }
+            {
+                if (InvokeUsing is not null)
+                { InvokeUsing(() => handler(this, new WorkerExceptionEventArgs() { Exception = ex })); }
+                else { handler(this, new WorkerExceptionEventArgs() { Exception = ex }); }
+            }
         }
 
         #region IDisposable

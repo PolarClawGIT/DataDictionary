@@ -13,7 +13,7 @@ namespace DataDictionary.Main
         /// <summary>
         /// Worker Queue (Background and Foreground). Singleton access point.
         /// </summary>
-        public static WorkerQueue WorkerQueue { get; } = new WorkerQueue();
+        public static WorkerQueue Worker { get; } = new WorkerQueue();
 
         /// <summary>
         /// Mediator to allow messages to be sent between related forms. Messenger
@@ -40,7 +40,7 @@ namespace DataDictionary.Main
             Application.ThreadException += Application_ThreadException;
             Application.ApplicationExit += Application_ApplicationExit;
 
-            WorkerQueue.WorkException += WorkerQueue_WorkException;
+            Worker.WorkException += WorkerQueue_WorkException;
 
             Application.Run(new Main());
         }
@@ -55,7 +55,7 @@ namespace DataDictionary.Main
         {
             Application.ThreadException -= Application_ThreadException;
             Application.ApplicationExit -= Application_ApplicationExit;
-            WorkerQueue.Dispose();
+            Worker.Dispose();
             Messenger.Dispose();
         }
 

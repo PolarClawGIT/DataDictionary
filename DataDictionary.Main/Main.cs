@@ -37,11 +37,14 @@ namespace DataDictionary.Main
             { navigationTabs.ImageList.Images.Add(item.ToString(), navigationTabImages[item]); }
             navigationDbSchemaTab.ImageKey = navigationTabImageIndex.Database.ToString();
             navigationDomainTab.ImageKey = navigationTabImageIndex.Domain.ToString();
+
+            //Hook the WorkerQueue up to this forms UI thread for events.
+            Program.Worker.InvokeUsing = this.Invoke;
         }
 
         private void Main_Load(object sender, EventArgs e)
         {
-            Program.WorkerQueue.ProgressChanged += WorkerQueue_ProgressChanged;
+            Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
             Program.Messenger.AddColleague(this);
 
             SetImages(dbMetaDataNavigation, dbDataImageItems.Values);
@@ -57,7 +60,7 @@ namespace DataDictionary.Main
         { }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
-        { Program.WorkerQueue.ProgressChanged -= WorkerQueue_ProgressChanged; }
+        { Program.Worker.ProgressChanged -= WorkerQueue_ProgressChanged; }
 
         private void WorkerQueue_ProgressChanged(object? sender, WorkerProgressChangedEventArgs e)
         {

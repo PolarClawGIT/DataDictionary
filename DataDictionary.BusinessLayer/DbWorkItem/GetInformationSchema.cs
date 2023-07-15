@@ -20,6 +20,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         public required Func<DataRow, TResult> Transform { get; init; }
         public required IList<TResult> Target { get; init; }
         public Func<TResult, Boolean>? Filter { get; init; }
+        public override string WorkName { get; init; } = "Get InformationSchema";
 
         public GetInformationSchema(IContext context) : base()
         { Connection = context.CreateConnection(); }
