@@ -1,69 +1,81 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Toolbox.Threading
 {
-    namespace WorkItem
+    public interface IWorkItem
     {
-
-        public interface IWorkItem
-        {
-            String WorkName { get; init; }
-
-            event EventHandler? WorkStarting;
-            event EventHandler? WorkCompleting;
-            event EventHandler<Exception>? WorkException;
-
-            void OnStarting();
-            void OnCompleting();
-            void OnException(Exception ex);
-
-            void DoWork();
-        }
-
-
-        public abstract class WorkBase : IWorkItem
-        {
-            public required String WorkName { get; init; }
-            public Action OnDoWork { get; init; } = () => { };
-
-            public event EventHandler? WorkStarting;
-            public event EventHandler? WorkCompleting;
-            public event EventHandler<Exception>? WorkException;
-
-            public WorkBase() : base() { }
-
-            public virtual void DoWork() { OnDoWork(); }
-
-            public virtual void OnStarting()
-            { if (WorkStarting is EventHandler onEvent) { onEvent(this, EventArgs.Empty); } }
-
-            public virtual void OnCompleting()
-            { if (WorkCompleting is EventHandler onEvent) { onEvent(this, EventArgs.Empty); } }
-
-            public virtual void OnException(Exception ex)
-            { if (WorkException is EventHandler<Exception> onEvent) { onEvent(this, ex); } }
-        }
-
-        public abstract class SynchronousWork : WorkBase
-        {
-
-        }
-
-        public class BackgroundWork : SynchronousWork
-        {
-            public RunWorkerCompletedEventArgs? CompletedResult { get; set; }
-        }
-
-        public class ForegroundWork : SynchronousWork
-        { }
-
-        public class BatchWork : SynchronousWork
-        {
-            public required IEnumerable<IWorkItem> WorkItems { get; init; }
-        }
-
-        public abstract class AsynchronousWork : WorkBase { }
-
+        String WorkName { get; }
+        event EventHandler<RunWorkerCompletedEventArgs>? Completing;
     }
 
+    /// <summary>
+    /// Represents a unit of work to be performed
+    /// </summary>
+    /// <remarks>
+    /// Using Action Or Func instead of Events because I am having problems with Events not working across threads.
+    /// Method calls do not seem to have this issue.
+    /// </remarks>
+    public class WorkItem : IWorkItem
+    {
+        /// <summary>
+        /// Name for the unit of work.
+        /// </summary>
+        public virtual String WorkName { get; init; } = "Work Item";
+
+        /// <summary>
+        /// The action/Work to be performed.
+        /// </summary>
+        public virtual Action DoWork { get; init; }
+
+        /// <summary>
+        /// Function to return if this work item should be canceled.
+        /// </summary>
+        /// <remarks>
+        /// The intent here is to have a way of having one WorkItem fail and
+        /// cancel all the dependent WorkItems. When this evaluates true,
+        /// the DoWork is not executed and the Completing is marked as canceled.
+        /// By default, the function always returns false.
+        /// </remarks>
+        public virtual Func<Boolean> IsCanceling { get; init; } = () => false;
+
+        public WorkItem() : base()
+        { DoWork = Work; }
+
+        protected virtual void Work() { }
+
+        /// <summary>
+        /// This triggers after the DoWork method is complete.
+        /// </summary>
+        /// <remarks>
+        /// The event fires within the scope of a Background Worker thread of the WorkerQueue.
+        /// As such, it is possible to get cross thread exceptions.
+        /// </remarks>
+        public event EventHandler<RunWorkerCompletedEventArgs>? Completing;
+        internal virtual void OnCompleting(Exception? error, Boolean canceled)
+        {
+            if (Completing is EventHandler<RunWorkerCompletedEventArgs> handler)
+            { handler(this, new RunWorkerCompletedEventArgs(this, error, canceled)); }
+        }
+
+        /// <summary>
+        /// This event is for trigging progress within the DoWork method.
+        /// </summary>
+        /// <remarks>
+        /// Progress should be for this task only.
+        /// Overall progress is computed by WorkerQueue.ProgressChanged
+        /// </remarks>
+        public event EventHandler<ProgressChangedEventArgs>? ProgressChanged;
+        public virtual void OnProgressChanged(Int32 progress)
+        {
+            if (ProgressChanged is EventHandler<ProgressChangedEventArgs> handler)
+            { handler(this, new ProgressChangedEventArgs(progress, null)); }
+        }
+
+    }
 }

@@ -32,18 +32,18 @@ namespace DataDictionary.Main.Forms
             this.Icon = Resources.DomainAttribute;
 
             //propertyNameData.Items.AddRange(Program.DomainData.PropertyNames.Select(s => s.PropertyName).ToArray());
-            propertyNameData.DataSource = Program.DomainData.PropertyNames.Select(s => s.PropertyName).ToList();
+            propertyNameData.DataSource = Program.Data.DomainAttributeProperties.Select(s => s.PropertyName).ToList();
         }
 
         public DomainAttribute(IDomainAttributeItem domainAttributeItem) : this()
         {
             data.DomainAttribute = domainAttributeItem;
-            if (Program.DomainData.DomainAttributes.GetParentAttribute(data.DomainAttribute) is IDomainAttributeItem parent)
+            if (Program.Data.DomainAttributes.GetParentAttribute(data.DomainAttribute) is IDomainAttributeItem parent)
             { data.ParentAttribute = parent; }
             else { data.ParentAttribute = new DomainAttributeItem(); }
 
-            data.AttributeProperties.AddRange(Program.DomainData.DomainAttributeProperties.GetProperties(data.DomainAttribute));
-            data.AttributeAlias.AddRange(Program.DomainData.DomainAttributeAliases.GetProperties(data.DomainAttribute));
+            data.AttributeProperties.AddRange(Program.Data.DomainAttributeProperties.GetProperties(data.DomainAttribute));
+            data.AttributeAlias.AddRange(Program.Data.DomainAttributeAliases.GetProperties(data.DomainAttribute));
 
         }
 

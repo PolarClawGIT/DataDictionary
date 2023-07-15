@@ -33,6 +33,11 @@ namespace DataDictionary.DataLayer.DbMetaData
         String? PropertyValue { get; }
     }
 
+    public interface IDbExtendedProperties
+    {  // DB Classes that have extended properties.
+        SqlCommand GetProperties(IConnection connection);
+    }
+
     internal class DbExtendedPropertyGetCommand
     {
         public String? PropertyName { get; set; } // Null will return all extended properties

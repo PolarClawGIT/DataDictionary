@@ -22,7 +22,7 @@ namespace DataDictionary.Main.Forms
         { BindData(); }
 
         void BindData()
-        { attributeData.DataSource = Program.DomainData.DomainAttributes; }
+        { attributeData.DataSource = Program.Data.DomainAttributes; }
 
         void UnBindData() { attributeData.DataSource = null; }
 

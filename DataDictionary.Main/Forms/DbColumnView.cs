@@ -24,7 +24,7 @@ namespace DataDictionary.Main.Forms
         { BindData(); }
 
         void BindData()
-        { columnData.DataSource = Program.DbData.DbColumns; }
+        { columnData.DataSource = Program.Data.DbColumns; }
 
         void UnBindData() { columnData.DataSource = null; }
 

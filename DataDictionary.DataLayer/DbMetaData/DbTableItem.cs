@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         String? TableType { get; }
     }
 
-    public class DbTableItem : BindingTableRow, IDbTableItem, INotifyPropertyChanged
+    public class DbTableItem : BindingTableRow, IDbTableItem, INotifyPropertyChanged, IDbExtendedProperties
     {
         //public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("TABLE_CATALOG"); } }

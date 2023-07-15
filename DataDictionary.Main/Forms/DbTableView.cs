@@ -25,7 +25,7 @@ namespace DataDictionary.Main.Forms
         { BindData(); }
 
         void BindData()
-        { tableData.DataSource = Program.DbData.DbTables; }
+        { tableData.DataSource = Program.Data.DbTables; }
 
         void UnBindData() { tableData.DataSource = null; }
 

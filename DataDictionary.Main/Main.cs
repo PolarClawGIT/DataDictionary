@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using Toolbox.BindingTable;
 using Toolbox.Mediator;
 using Toolbox.Threading;
-using Toolbox.Threading.WorkItem;
 
 namespace DataDictionary.Main
 {
@@ -105,7 +104,7 @@ namespace DataDictionary.Main
 
         private void menuImportDbSchema_Click(object sender, EventArgs e)
         {
-            Program.DomainData.ImportAttributes(Program.DbData);
+            Program.Data.ImportDbSchemaToDomain();
             BuildDomainModelTree();
         }
 
@@ -170,7 +169,7 @@ namespace DataDictionary.Main
             dbMetaDataNavigation.Nodes.Clear();
             dbDataNodes.Clear();
 
-            foreach (IDbCatalogItem catalogItem in Program.DbData.DbCatalogs.OrderBy(o => o.CatalogName))
+            foreach (IDbCatalogItem catalogItem in Program.Data.DbCatalogs.OrderBy(o => o.CatalogName))
             {
                 if (String.IsNullOrWhiteSpace(catalogItem.CatalogName))
                 {
@@ -180,14 +179,14 @@ namespace DataDictionary.Main
                 TreeNode catalogNode = CreateNode(catalogItem.CatalogName, dbDataImageIndex.Database, catalogItem);
                 dbMetaDataNavigation.Nodes.Add(catalogNode);
 
-                foreach (IDbSchemaItem schemaItem in Program.DbData.DbSchemas.OrderBy(o => o.SchemaName).Where(
+                foreach (IDbSchemaItem schemaItem in Program.Data.DbSchemta.OrderBy(o => o.SchemaName).Where(
                     w => w.IsSystem == false &&
                     w.CatalogName == catalogItem.CatalogName))
                 {
                     TreeNode schemaNode = CreateNode(schemaItem.SchemaName, dbDataImageIndex.Schema, schemaItem, catalogNode);
                     TreeNode tablesNode = CreateNode("Tables & Views", dbDataImageIndex.Tables, null, schemaNode);
 
-                    foreach (IDbTableItem tableItem in Program.DbData.DbTables.OrderBy(o => o.TableName).Where(
+                    foreach (IDbTableItem tableItem in Program.Data.DbTables.OrderBy(o => o.TableName).Where(
                         w => w.IsSystem == false &&
                         w.CatalogName == schemaItem.CatalogName &&
                         w.SchemaName == schemaItem.SchemaName))
@@ -199,7 +198,7 @@ namespace DataDictionary.Main
 
                         TreeNode columnsNode = CreateNode("Columns", dbDataImageIndex.Columns, null, tableNode);
 
-                        foreach (IDbColumnItem columnItem in Program.DbData.DbColumns.OrderBy(o => o.OrdinalPosition).Where(
+                        foreach (IDbColumnItem columnItem in Program.Data.DbColumns.OrderBy(o => o.OrdinalPosition).Where(
                             w => w.CatalogName == tableItem.CatalogName &&
                             w.SchemaName == tableItem.SchemaName &&
                             w.TableName == tableItem.TableName))
@@ -260,7 +259,7 @@ namespace DataDictionary.Main
             domainModelNodes.Clear();
 
             foreach (IDomainAttributeItem attributeItem in
-                Program.DomainData.DomainAttributes.
+                Program.Data.DomainAttributes.
                 Where(w => w.ParentAttributeId is null).
                 OrderBy(o => o.AttributeTitle))
             {
@@ -272,13 +271,13 @@ namespace DataDictionary.Main
             {
                 TreeNode attributeNode = CreateNode(attributeItem.AttributeTitle, domainModelImageIndex.Attribute, attributeItem);
 
-                foreach (DomainAttributePropertyItem propertyItem in Program.DomainData.DomainAttributeProperties.Where(w => w.AttributeId == attributeItem.AttributeId))
+                foreach (DomainAttributePropertyItem propertyItem in Program.Data.DomainAttributeProperties.Where(w => w.AttributeId == attributeItem.AttributeId))
                 { CreateNode(propertyItem.PropertyName, domainModelImageIndex.Property, propertyItem, attributeNode); }
 
-                foreach (DomainAttributeAliasItem aliasItem in Program.DomainData.DomainAttributeAliases.Where(w => w.AttributeId == attributeItem.AttributeId))
+                foreach (DomainAttributeAliasItem aliasItem in Program.Data.DomainAttributeAliases.Where(w => w.AttributeId == attributeItem.AttributeId))
                 { CreateNode(aliasItem.ToString(), domainModelImageIndex.Alias, aliasItem, attributeNode); }
 
-                foreach (DomainAttributeItem childAttributeItem in Program.DomainData.DomainAttributes.Where(w => w.ParentAttributeId == attributeItem.AttributeId))
+                foreach (DomainAttributeItem childAttributeItem in Program.Data.DomainAttributes.Where(w => w.ParentAttributeId == attributeItem.AttributeId))
                 { attributeNode.Nodes.Add(CreateAttribute(childAttributeItem, attributeNode)); }
 
                 if (parent is not null) { parent.Nodes.Add(attributeNode); }
@@ -325,7 +324,7 @@ namespace DataDictionary.Main
 
         protected override void HandleMessage(DbDataBatchCompleted message)
         {
-            Program.DomainData.ImportAttributes(Program.DbData);
+            Program.Data.ImportDbSchemaToDomain();
             BuildDbDataTree();
             BuildDomainModelTree();
         }

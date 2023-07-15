@@ -34,7 +34,7 @@ namespace DataDictionary.Main.Forms
 
         void BindData()
         {
-            data.DbColumn = Program.DbData.DbColumns.FirstOrDefault(w => data.ColumnName == w);
+            data.DbColumn = Program.Data.DbColumns.FirstOrDefault(w => data.ColumnName == w);
 
             if (data.DbColumn is not null)
             {
@@ -69,7 +69,7 @@ namespace DataDictionary.Main.Forms
                 isHiddenData.DataBindings.Add(new Binding(nameof(isHiddenData.Checked), data.DbColumn, nameof(data.DbColumn.IsHidden), true, DataSourceUpdateMode.OnValidation, false));
 
                 data.DbExtendedProperties.Clear();
-                data.DbExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.GetProperties(data.DbColumn));
+                data.DbExtendedProperties.AddRange(Program.Data.DbExtendedProperties.GetProperties(data.DbColumn));
 
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = data.DbExtendedProperties;

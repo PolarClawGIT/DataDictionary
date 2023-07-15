@@ -43,7 +43,7 @@ namespace DataDictionary.Main.Forms
 
         void BindData()
         {
-            data.DbTable = Program.DbData.DbTables.FirstOrDefault(w => data.TableName == w);
+            data.DbTable = Program.Data.DbTables.FirstOrDefault(w => data.TableName == w);
 
             if (data.DbTable is not null)
             {
@@ -54,13 +54,13 @@ namespace DataDictionary.Main.Forms
                 isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), data.DbTable, nameof(data.DbTable.IsSystem)));
 
                 data.DbExtendedProperties.Clear();
-                data.DbExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.GetProperties(data.DbTable));
+                data.DbExtendedProperties.AddRange(Program.Data.DbExtendedProperties.GetProperties(data.DbTable));
 
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = data.DbExtendedProperties;
 
                 data.DbColumn.Clear();
-                data.DbColumn.AddRange(Program.DbData.DbColumns.Where(w => data.TableName == w));
+                data.DbColumn.AddRange(Program.Data.DbColumns.Where(w => data.TableName == w));
 
                 tableColumnsData.DataSource = data.DbColumn;
             }

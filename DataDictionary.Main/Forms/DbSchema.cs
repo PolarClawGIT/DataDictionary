@@ -46,7 +46,7 @@ namespace DataDictionary.Main.Forms
 
         void BindData()
         {
-            data.DbSchema = Program.DbData.DbSchemas.FirstOrDefault(w => data.SchemaName == w);
+            data.DbSchema = Program.Data.DbSchemta.FirstOrDefault(w => data.SchemaName == w);
 
             if (data.DbSchema is not null)
             {
@@ -56,7 +56,7 @@ namespace DataDictionary.Main.Forms
                 errorProvider.SetError(schemaNameData.ErrorControl, String.Empty);
 
                 data.DbExtendedProperties.Clear();
-                data.DbExtendedProperties.AddRange(Program.DbData.DbExtendedProperties.GetProperties(data.DbSchema));
+                data.DbExtendedProperties.AddRange(Program.Data.DbExtendedProperties.GetProperties(data.DbSchema));
 
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = data.DbExtendedProperties;

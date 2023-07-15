@@ -9,11 +9,18 @@ using System.Threading.Tasks;
 
 namespace Toolbox.DbContext
 {
+    public interface IContext
+    {
+        String ServerName { get; }
+        String DatabaseName { get; }
+        IConnection CreateConnection();
+    }
+
     /// <summary>
     /// Class containing the data needed to create a Database Connection.
     /// </summary>
     /// <remarks>This wrappers a Connection String.</remarks>
-    public class Context
+    public class Context: IContext
     {
         internal SqlConnectionStringBuilder ConnectionBuilder { get; set; } = new SqlConnectionStringBuilder()
         {

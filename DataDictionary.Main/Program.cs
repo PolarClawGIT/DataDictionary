@@ -21,14 +21,9 @@ namespace DataDictionary.Main
         public static Mediator Messenger { get; } = new Mediator();
 
         /// <summary>
-        /// Application Data, Db MetaData
+        /// Data used by the Application
         /// </summary>
-        public static DatabaseMetaData DbData { get; } = new DatabaseMetaData();
-
-        /// <summary>
-        /// The Domain Model Application Data
-        /// </summary>
-        public static DomainData DomainData { get; } = new DomainData();
+        public static ModelData Data { get; } = new ModelData();
 
         static Program()
         { }
@@ -53,8 +48,8 @@ namespace DataDictionary.Main
         private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         { ShowException(e.Exception); }
 
-        private static void WorkerQueue_WorkException(object? sender, Exception e)
-        { ShowException(e); }
+        private static void WorkerQueue_WorkException(object? sender, WorkerExceptionEventArgs e)
+        { ShowException(e.Exception); }
 
         private static void Application_ApplicationExit(object? sender, EventArgs e)
         {

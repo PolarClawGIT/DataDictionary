@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Toolbox.DbContext
 {
-    public class Schema
+    public class InformationSchema
     {
         /// <summary>
         /// List of Collections returned by GetSchema.

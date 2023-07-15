@@ -30,10 +30,10 @@ namespace Toolbox.DbContext
         /// </summary>
         /// <param name="collection"></param>
         /// <returns></returns>
-        IDataReader GetReader(Schema.Collection collection);
-        IDataReader GetReader(Schema.Collection collection, String catalogName);
-        IDataReader GetReader(Schema.Collection collection, String catalogName, String schemaName);
-        IDataReader GetReader(Schema.Collection collection, String catalogName, String schemaName, String objectName);
+        IDataReader GetReader(InformationSchema.Collection collection);
+        IDataReader GetReader(InformationSchema.Collection collection, String catalogName);
+        IDataReader GetReader(InformationSchema.Collection collection, String catalogName, String schemaName);
+        IDataReader GetReader(InformationSchema.Collection collection, String catalogName, String schemaName, String objectName);
 
         /// <summary>
         /// Expose the Create Command function.
@@ -139,7 +139,7 @@ namespace Toolbox.DbContext
 
         /// <summary>
         /// Exposes the CreateCommand.
-        /// The Command created is already assocated with the Transaction.
+        /// The Command created is already associated with the Transaction.
         /// </summary>
         /// <returns></returns>
         public SqlCommand CreateCommand()
@@ -179,7 +179,7 @@ namespace Toolbox.DbContext
         /// creates its own connection without a transaction and executes
         /// the GetSchema method.
         /// </remarks>
-        public IDataReader GetReader(Schema.Collection collection)
+        public IDataReader GetReader(InformationSchema.Collection collection)
         {
             if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
 
@@ -203,7 +203,7 @@ namespace Toolbox.DbContext
             return result;
         }
 
-        public IDataReader GetReader(Schema.Collection collection, String catalogName)
+        public IDataReader GetReader(InformationSchema.Collection collection, String catalogName)
         {
             if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
 
@@ -227,7 +227,7 @@ namespace Toolbox.DbContext
             return result;
         }
 
-        public IDataReader GetReader(Schema.Collection collection, String catalogName, String schemaName)
+        public IDataReader GetReader(InformationSchema.Collection collection, String catalogName, String schemaName)
         {
             if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
 
@@ -251,7 +251,7 @@ namespace Toolbox.DbContext
             return result;
         }
 
-        public IDataReader GetReader(Schema.Collection collection, String catalogName, String schemaName, String objectName)
+        public IDataReader GetReader(InformationSchema.Collection collection, String catalogName, String schemaName, String objectName)
         {
             if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
 

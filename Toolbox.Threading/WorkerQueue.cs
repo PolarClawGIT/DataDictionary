@@ -2,242 +2,234 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.Tracing;
 using System.Linq;
-using System.Security.Cryptography;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Toolbox.Threading.WorkItem;
 
 namespace Toolbox.Threading
 {
-    public interface IWorkerQueue: IDisposable
+    public interface IWorkerQueue : IDisposable
     {
-        void Enqueue(IEnumerable<IWorkItem> work);
-        void Enqueue(IWorkItem work);
+        void Enqueue(WorkItem work, Action<RunWorkerCompletedEventArgs>? onCompleting);
+        void Enqueue(IEnumerable<WorkItem> work, Action<RunWorkerCompletedEventArgs>? onCompleting);
     }
 
+    /// <summary>
+    /// Performs work on a Background thread.
+    /// </summary>
+    /// <remarks>
+    /// This is attempting to address issues with original.
+    /// </remarks>
     public class WorkerQueue : IWorkerQueue
     {
-        //TODO: This has some issues.
-        //
-        //By design, only Enqueue would execute on the main thread but could also be on other threads.
-        //In implementation, the process runs mainly on the thread that calls the Enqueue method.
-        //The exception being when the Background worker is called while doing the work.
-        //Normally, this is the main thread. This defeats the purpose of the class.
-        //The results is that the main thread can become "non-response".
-        //Another scenario that occurs is that the Background worker may change objects
-        //that are not completely thread safe. This includes a DataTable and BindingList.
-        //The class may raise an event during the execution of the Background Worker.
-        //The event tries to run on the Background Worker thread and throws a threading exception.
-
-        protected ConcurrentQueue<IWorkItem> WorkQueue { get; } = new ConcurrentQueue<IWorkItem>();
-        protected BackgroundWorker BackgroundWorker { get; } = new BackgroundWorker();
+        protected ConcurrentQueue<WorkItem> WorkQueue { get; } = new ConcurrentQueue<WorkItem>();
         public Int32 WorkAdded { get; protected set; } = 0;
         public Int32 WorkComplete { get; protected set; } = 0;
         public Int32 WorkPending { get { return WorkQueue.Count; } }
-        protected Int32 WorkProgress
-        {
-            get
-            {
-                if (WorkAdded == 0) { return 0; }
-                else { return ((Int32)Math.Truncate(((((decimal)WorkComplete / (decimal)WorkAdded) * (decimal)100.0)))); }
-            }
-        }
+        public Boolean IsBusy { get { return backgroundWorker.IsBusy; } }
 
-        public Int32 WorkQueued { get { return WorkQueue.Count; } }
-        protected IWorkItem? CurrentWork { get; private set; } = null;
+        // Because I don't know how to setup Async correctly
+        protected BackgroundWorker backgroundWorker { get; } = new BackgroundWorker()
+        { WorkerReportsProgress = true, WorkerSupportsCancellation = true };
 
         public WorkerQueue() : base()
         {
-            WorkStarting += WorkerQueue_WorkStarting;
-            WorkCompleted += WorkerQueue_WorkCompleted;
-            WorkException += WorkerQueue_WorkException;
+            backgroundWorker.DoWork += RunWorker;
+            backgroundWorker.RunWorkerCompleted += RunWorkerCompleted;
+            backgroundWorker.ProgressChanged += OnProgressChanged;
         }
 
-
-        public virtual void Enqueue(IWorkItem work)
+        /// <summary>
+        /// Adds a WorkItem to the queue. Starts the queue if not running.
+        /// </summary>
+        /// <param name="work">The Work Item to add</param>
+        /// <param name="onCompleting">Optional: the Action to perform when this work items is completed.</param>
+        public virtual void Enqueue(WorkItem work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
         {
+            if (onCompleting is not null) { work.Completing += Work_Completing; }
+
             WorkQueue.Enqueue(work);
             WorkAdded++;
-            if (CurrentWork is null) { WorkStarting(this, new EventArgs()); }
-        }
 
-        public virtual void Enqueue(IEnumerable<IWorkItem> work)
-        { foreach (var item in work) { Enqueue(item); } }
+            if (!backgroundWorker.IsBusy) { backgroundWorker.RunWorkerAsync(); }
 
-        public event EventHandler WorkStarting;
-        public event EventHandler<WorkerEventArgs> WorkCompleted;
-        public event EventHandler<Exception> WorkException;
-
-        protected virtual void WorkerQueue_WorkStarting(object? sender, EventArgs e)
-        {
-            if (WorkQueue.TryDequeue(out IWorkItem? item) && item is not null)
+            void Work_Completing(object? sender, RunWorkerCompletedEventArgs e)
             {
-                CurrentWork = item;
-                DoWork((dynamic)item);
-                OnProgressChanged();
+                work.Completing -= Work_Completing;
+                onCompleting(e);
             }
         }
 
-        protected virtual void WorkerQueue_WorkCompleted(object? sender, WorkerEventArgs e)
+        /// <summary>
+        /// Adds a set of items to the queue. Starts the queue if not running.
+        /// </summary>
+        /// <param name="work"></param>
+        public virtual void Enqueue(IEnumerable<WorkItem> work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
         {
-            if (CurrentWork is WorkBase)
+            WorkItem lastWork = work.Last();
+            Exception? firstException = null;
+            WorkItem? firstExceptionItem = null;
+
+
+            foreach (WorkItem item in work)
             {
-                CurrentWork = null;
-                WorkComplete++;
+                if (onCompleting is not null) { item.Completing += Item_Completing; }
+                WorkQueue.Enqueue(item);
+                WorkAdded++;
             }
 
-            if (WorkQueue.IsEmpty)
+            if (!backgroundWorker.IsBusy) { backgroundWorker.RunWorkerAsync(); }
+
+            void Item_Completing(object? sender, RunWorkerCompletedEventArgs e)
+            {
+                if (sender is WorkItem item)
+                {
+                    item.Completing -= Item_Completing;
+                    if (firstException is null && e.Error is not null)
+                    {
+                        firstException = e.Error;
+                        firstExceptionItem = item;
+                    }
+
+                    if (ReferenceEquals(item, lastWork) && onCompleting is not null)
+                    {
+                        if (firstExceptionItem is null)
+                        { onCompleting(new RunWorkerCompletedEventArgs(lastWork, null, e.Cancelled)); }
+                        else { onCompleting(new RunWorkerCompletedEventArgs(lastWork, e.Error, e.Cancelled)); }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Triggers a Cancel on the Background worker.
+        /// </summary>
+        /// <remarks>
+        /// The current item being worked will continue.
+        /// All other items in the queue will be canceled.
+        /// </remarks>
+        public virtual void Cancel()
+        { backgroundWorker.CancelAsync(); }
+
+        /// <summary>
+        /// Primary Worker Loop of the Queue.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void RunWorker(object? sender, DoWorkEventArgs e)
+        {
+            WorkItem? workItem;
+
+            while (WorkQueue.TryDequeue(out workItem) && workItem is not null)
+            {
+                try
+                {
+                    if (backgroundWorker.CancellationPending || workItem.IsCanceling())
+                    {
+                        workItem.OnCompleting(null, true);
+                        backgroundWorker.ReportProgress(100, workItem);
+                    }
+                    else
+                    {
+                        workItem.ProgressChanged += WorkItem_OnProgress;
+                        backgroundWorker.ReportProgress(0, workItem);
+
+                        workItem.DoWork();
+                        workItem.OnCompleting(null, false);
+
+                        backgroundWorker.ReportProgress(100, workItem);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    workItem.OnCompleting(ex, false);
+                    backgroundWorker.ReportProgress(100, workItem);
+                }
+                finally
+                {
+                    workItem.ProgressChanged -= WorkItem_OnProgress;
+                    WorkComplete++;
+                }
+            }
+
+            void WorkItem_OnProgress(object? sender, ProgressChangedEventArgs e)
+            { backgroundWorker.ReportProgress(e.ProgressPercentage, workItem); }
+        }
+
+        /// <summary>
+        /// Progress has changed.
+        /// </summary>
+        /// <remarks>
+        /// Overall progress is computed by treating each WorkItem as 100 points.
+        /// Calculations of completed is computed from the last time the queue was empty.
+        /// Total points is the number items added to the queue * 100.
+        /// Completed points is the number of items completed * 100
+        /// If the WorkItem support ProgressChanged, then the progress is added to the Completed.
+        /// </remarks>
+        public event EventHandler<WorkerProgressChangedEventArgs>? ProgressChanged;
+
+        /// <summary>
+        /// Responds to the Background Worker Progress changed and throws the event up to the next level.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <remarks>
+        /// This receives the progress of the current WorkItem.
+        /// The overall progress is reported up based on the computation described in ProgressChanged.
+        /// </remarks>
+        protected void OnProgressChanged(object? sender, ProgressChangedEventArgs e)
+        {
+            if (ProgressChanged is EventHandler<WorkerProgressChangedEventArgs> handler)
+            {
+                if (e.UserState is WorkItem workItem)
+                {
+                    Double progress = 0;
+                    if (WorkAdded == 0) { progress = 0; }
+                    else if (e.ProgressPercentage > 0 && e.ProgressPercentage < 100)
+                    { progress = (WorkComplete * 100.0 + e.ProgressPercentage) / (WorkAdded * 100); }
+                    else { progress = (WorkComplete) / WorkAdded; }
+
+                    handler(sender, new WorkerProgressChangedEventArgs(workItem.WorkName, (int)(progress * 100.0)));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Background worker has completed and the queue is expected to be empty.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
+        {
+            if (WorkQueue.Count == 0)
             {
                 WorkAdded = 0;
                 WorkComplete = 0;
-                OnProgressChanged();
             }
-            else { WorkStarting(this, new EventArgs()); }
+
+            if (e.Error is not null) { throw e.Error; }
         }
 
-        protected virtual void WorkerQueue_WorkException(object? sender, Exception e)
-        { }
-
-        protected virtual void DoWork(WorkBase item)
-        { throw new NotImplementedException(); }
-
-        protected virtual void DoWork(BackgroundWork item)
+        public event EventHandler<WorkerExceptionEventArgs>? WorkException;
+        protected void OnWorkException(Exception ex)
         {
-            WorkerEventArgs eventArgs = new WorkerEventArgs(item);
-
-            BackgroundWorker.DoWork += BackgroundWorker_DoWork;
-            BackgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
-
-            BackgroundWorker.RunWorkerAsync(item);
-
-            void BackgroundWorker_DoWork(object? sender, DoWorkEventArgs e)
-            {
-                item.OnStarting();
-                item.DoWork();
-            }
-
-            void BackgroundWorker_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
-            {
-                BackgroundWorker.DoWork -= BackgroundWorker_DoWork;
-                BackgroundWorker.RunWorkerCompleted -= BackgroundWorker_RunWorkerCompleted;
-                if (e.Error is Exception)
-                {
-                    item.OnException(e.Error);
-                    WorkException(item, e.Error);
-                }
-
-                try
-                { item.OnCompleting(); }
-                catch (Exception ex)
-                { WorkException(item, ex); }
-
-                WorkCompleted(this, eventArgs);
-            }
-        }
-
-        protected virtual void DoWork(BatchWork item)
-        {
-            //TODO: This method has an issue that it cannot correctly detect when it is compete.
-            //The issue comes up if one of the BatchWork items is itself a BatchWork.
-            //When it comes time to execute the child BatchWork, the child call adds
-            //the items to the queue but are not associated with the parent work item.
-            //As a result the parent is be complete but the child BatchWork is not.
-
-            try
-            { item.OnStarting(); }
-            catch (Exception ex)
-            { WorkException(item, ex); }
-
-            // So the list of items to be worked with becomes static.
-            IEnumerable<IWorkItem> workItems = item.WorkItems.ToList();
-
-            IWorkItem? lastItem = workItems.LastOrDefault();
-            if (lastItem is IWorkItem) { lastItem.WorkCompleting += WorkItem_WorkCompleting; }
-
-            foreach (WorkBase work in workItems)
-            { this.Enqueue(work); }
-
-            WorkCompleted(this, new WorkerEventArgs(item));
-
-            void WorkItem_WorkCompleting(object? sender, EventArgs e)
-            {
-                if (lastItem is IWorkItem) { lastItem.WorkCompleting -= WorkItem_WorkCompleting; }
-
-                try
-                { item.OnCompleting(); }
-                catch (Exception ex)
-                { WorkException(item, ex); }
-            }
-        }
-        /*
-        protected virtual void DoWork(ParellelWork item)
-        {
-            // So the list of items to be worked with becomes static.
-            List<IWorkItem> work = item.WorkItems.ToList();
-            WorkAdded = WorkAdded + work.Count;
-
-            try
-            {
-                item.OnStarting();
-
-                Parallel.ForEach(
-                    work,
-                    new ParallelOptions() { MaxDegreeOfParallelism = item.MaxDegreeOfParallelism },
-                    DoWork
-                    );
-
-                item.OnCompleting();
-            }
-            catch (Exception ex)
-            { WorkException(item, ex); }
-
-            WorkCompleted(this, new WorkerEventArgs(item));
-
-            void DoWork(object source, ParallelLoopState state, long arg3)
-            {
-                if (source is IWorkItem item)
-                { item.DoWork(); }
-                WorkComplete++;
-            }
-        }*/
-
-        protected virtual void DoWork(ForegroundWork item)
-        {
-            try
-            { item.DoWork(); }
-            catch (Exception ex)
-            { WorkException(item, ex); }
-
-            WorkCompleted(this, new WorkerEventArgs(item));
-        }
-
-        public event EventHandler<WorkerProgressChangedEventArgs>? ProgressChanged;
-        protected void OnProgressChanged()
-        {
-            if (ProgressChanged is EventHandler<WorkerProgressChangedEventArgs> progress)
-            {
-                if (CurrentWork is WorkItem.WorkBase)
-                { progress(this, new WorkerProgressChangedEventArgs(CurrentWork, WorkProgress)); }
-                else { progress(this, new WorkerProgressChangedEventArgs(WorkProgress)); }
-            }
+            if (WorkException is EventHandler<WorkerExceptionEventArgs> handler)
+            { handler(this, new WorkerExceptionEventArgs() { Exception = ex }); }
         }
 
         #region IDisposable
-        private bool disposedValue;
-        protected virtual void Dispose(bool disposing)
+        private Boolean disposedValue;
+        protected virtual void Dispose(Boolean disposing)
         {
             if (!disposedValue)
             {
                 if (disposing)
                 {
-                    WorkStarting -= WorkerQueue_WorkStarting;
-                    WorkCompleted -= WorkerQueue_WorkCompleted;
-                    WorkException -= WorkerQueue_WorkException;
-                    BackgroundWorker.Dispose();
                     WorkQueue.Clear();
+                    backgroundWorker.Dispose();
                 }
+
                 disposedValue = true;
             }
         }

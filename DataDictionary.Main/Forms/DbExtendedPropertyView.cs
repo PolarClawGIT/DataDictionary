@@ -25,7 +25,7 @@ namespace DataDictionary.Main.Forms
         { BindData(); }
 
         void BindData()
-        { extendedPropertyData.DataSource = Program.DbData.DbExtendedProperties; }
+        { extendedPropertyData.DataSource = Program.Data.DbExtendedProperties; }
 
         void UnBindData()
         { extendedPropertyData.DataSource = null; }

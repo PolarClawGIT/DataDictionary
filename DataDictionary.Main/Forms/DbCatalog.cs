@@ -1,10 +1,10 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.DataLayer.DbMetaData;
-using DataDictionary.DataLayer.WorkDbItem;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using System.Data;
+using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms
 {
@@ -97,7 +97,7 @@ namespace DataDictionary.Main.Forms
             }
 
             // Load any items in the Catalog not yet in the AvailableContexts
-            foreach (DbCatalogItem catalogItem in Program.DbData.DbCatalogs)
+            foreach (DbCatalogItem catalogItem in Program.Data.DbCatalogs)
             {
                 if (availableContexts.FirstOrDefault(
                     w => w.ServerName.Equals(catalogItem.SourceServerName, StringComparison.CurrentCultureIgnoreCase) &&
@@ -133,7 +133,7 @@ namespace DataDictionary.Main.Forms
         void BindData()
         {
             dbConnectionsData.AutoGenerateColumns = false;
-            dbConnectionsData.DataSource = Program.DbData.DbCatalogs;
+            dbConnectionsData.DataSource = Program.Data.DbCatalogs;
 
             serverNameData.DataBindings.Add(new Binding(nameof(serverNameData.SelectedItem), data, nameof(data.ServerName), true, DataSourceUpdateMode.OnValidation));
             databaseNameData.DataBindings.Add(new Binding(nameof(databaseNameData.SelectedItem), data, nameof(data.DatabaseName), true, DataSourceUpdateMode.OnValidation));
@@ -186,37 +186,40 @@ namespace DataDictionary.Main.Forms
         {
             this.UseWaitCursor = true;
             this.Enabled = false;
+            List<DbCatalogName> databaseNames = new List<DbCatalogName>();
 
             if (data.DbContext is DbSchemaContext)
-            {
-                Program.WorkerQueue.Enqueue(new DbVerifyConnection(data.DbContext) { WorkName = "Open Connection" });
-                Program.WorkerQueue.Enqueue(Program.DbData.GetDatabases(data.DbContext, onComplete));
-            }
+            { Program.WorkerQueue.Enqueue(data.DbContext.GetDatabaseList(databaseNames), onComplete); }
 
-            void onComplete(IEnumerable<String?> catalogs)
+            void onComplete(RunWorkerCompletedEventArgs result)
             {
-                IEnumerable<String?> databaseNames = catalogs.Where(w => !(w is "master" or "msdb" or "tempdb" or "model")).OrderBy(o => o).Distinct();
+                if (result.Error is not null) { Program.ShowException(result.Error); }
+                else if (!result.Cancelled)
+                {
 
-                if (databaseNames.FirstOrDefault(w => w == databaseNameData.Text) is String currentDb)
-                {
-                    databaseNameData.Items.Clear();
-                    databaseNameData.Text = String.Empty;
-                    databaseNameData.Items.AddRange(databaseNames.ToArray());
-                    databaseNameData.SelectedIndex = databaseNameData.Items.IndexOf(currentDb);
-                }
-                else
-                {
-                    databaseNameData.Items.Clear();
-                    databaseNameData.Text = String.Empty;
-                    databaseNameData.Items.AddRange(databaseNames.ToArray());
-                    if (databaseNameData.Items.Count > 0) { databaseNameData.SelectedIndex = 0; }
-                    else { databaseNameData.SelectedIndex = -1; }
+                    if (databaseNames.FirstOrDefault(w => w.CatalogName == databaseNameData.Text) is DbCatalogName currentDb)
+                    {
+                        databaseNameData.Items.Clear();
+                        databaseNameData.Text = String.Empty;
+                        databaseNameData.Items.AddRange(databaseNames.Select(s => s.CatalogName).ToArray());
+                        databaseNameData.SelectedIndex = databaseNameData.Items.IndexOf(currentDb.CatalogName);
+                    }
+                    else
+                    {
+                        databaseNameData.Items.Clear();
+                        databaseNameData.Text = String.Empty;
+                        databaseNameData.Items.AddRange(databaseNames.Select(s => s.CatalogName).ToArray());
+                        if (databaseNameData.Items.Count > 0) { databaseNameData.SelectedIndex = 0; }
+                        else { databaseNameData.SelectedIndex = -1; }
+                    }
                 }
 
                 this.UseWaitCursor = false;
                 this.Enabled = true;
             }
         }
+
+
 
         private void importCommand_Click(object sender, EventArgs e)
         {
@@ -227,26 +230,31 @@ namespace DataDictionary.Main.Forms
 
             if (data.DbContext is DbSchemaContext)
             {
-                if (data.DbContext is DbSchemaContext) { Program.WorkerQueue.Enqueue(Program.DbData.RemoveDb(data.DbContext)); }
-                Program.WorkerQueue.Enqueue(new DbVerifyConnection(data.DbContext) { WorkName = "Open Connection" });
-                Program.WorkerQueue.Enqueue(Program.DbData.ImportDb(data.DbContext, onComplete));
+                if (data.DbContext is DbSchemaContext)
+                {
+                    IEnumerable<WorkItem> workItems = Program.Data.Load(data.DbContext);
+                    Program.WorkerQueue.Enqueue(workItems, onCompleting);
+                }
             }
 
-            void onComplete()
+            void onCompleting(RunWorkerCompletedEventArgs result)
             {
-                String newValue = String.Format("{0}.{1}", data.DbContext.ServerName, data.DbContext.DatabaseName);
+                if (result.Error is not null) { Program.ShowException(result.Error); }
+                else if (!result.Cancelled)
+                {
+                    String newValue = String.Format("{0}.{1}", data.DbContext.ServerName, data.DbContext.DatabaseName);
 
-                // Handle the User Settings
-                if (Settings.Default.UserServers.Contains(newValue))
-                { Settings.Default.UserServers.Remove(newValue); }
+                    // Handle the User Settings
+                    if (Settings.Default.UserServers.Contains(newValue))
+                    { Settings.Default.UserServers.Remove(newValue); }
 
-                Settings.Default.UserServers.Insert(0, newValue);
+                    Settings.Default.UserServers.Insert(0, newValue);
 
-                while (Settings.Default.UserServers.Count > 10)
-                { Settings.Default.UserServers.RemoveAt(10); }
+                    while (Settings.Default.UserServers.Count > 10)
+                    { Settings.Default.UserServers.RemoveAt(10); }
 
-                Settings.Default.Save();
-                //                Program.DomainData.ImportAttributes(Program.DbData); // Currently a fast process, may need to reconsider later.
+                    Settings.Default.Save();
+                }
 
                 // Done
                 SendMessage(new DbDataBatchCompleted());
@@ -260,6 +268,7 @@ namespace DataDictionary.Main.Forms
             }
         }
 
+
         private void removeCommand_Click(object sender, EventArgs e)
         {
             this.UseWaitCursor = true;
@@ -269,9 +278,9 @@ namespace DataDictionary.Main.Forms
 
 
             if (data.DbContext is DbSchemaContext)
-            { Program.WorkerQueue.Enqueue(Program.DbData.RemoveDb(data.DbContext, onComplete)); }
+            { Program.WorkerQueue.Enqueue(Program.Data.RemoveCatalog(data.DbContext), onComplete); }
 
-            void onComplete()
+            void onComplete(RunWorkerCompletedEventArgs result)
             {
                 SendMessage(new DbDataBatchCompleted());
                 BindData();

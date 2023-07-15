@@ -47,7 +47,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         String? GeneratedAlwayType { get; }
     }
 
-    public class DbColumnItem : BindingTableRow, IDbColumnItem, INotifyPropertyChanged
+    public class DbColumnItem : BindingTableRow, IDbColumnItem, INotifyPropertyChanged, IDbExtendedProperties
     {
         //public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("TABLE_CATALOG"); } }
