@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -58,7 +59,6 @@ namespace Toolbox.Threading
         public virtual void Enqueue(WorkItem work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
         {
             if (onCompleting is not null) { work.Completing += Work_Completing; }
-            work.InvokeUsing = InvokeUsing;
 
             WorkQueue.Enqueue(work);
             WorkAdded++;
@@ -85,7 +85,6 @@ namespace Toolbox.Threading
 
             foreach (WorkItem item in work)
             {
-                item.InvokeUsing = InvokeUsing;
                 if (onCompleting is not null) { item.Completing += Item_Completing; }
                 WorkQueue.Enqueue(item);
                 WorkAdded++;
@@ -150,7 +149,7 @@ namespace Toolbox.Threading
                         workItem.DoWork();
                         workItem.OnCompleting(null, false, InvokeUsing);
 
-                        backgroundWorker.ReportProgress(100, workItem);
+                        //backgroundWorker.ReportProgress(0, workItem);
                     }
                 }
                 catch (Exception ex)
@@ -197,10 +196,9 @@ namespace Toolbox.Threading
                 if (e.UserState is WorkItem workItem)
                 {
                     Double progress = 0;
+
                     if (WorkAdded == 0) { progress = 0; }
-                    else if (e.ProgressPercentage > 0 && e.ProgressPercentage < 100)
-                    { progress = (WorkComplete * 100.0 + e.ProgressPercentage) / (WorkAdded * 100); }
-                    else { progress = (WorkComplete) / WorkAdded; }
+                    else { progress = ((Double)WorkComplete * 100.0 + (Double)e.ProgressPercentage) / ((Double)WorkAdded * 100); }
 
                     if (InvokeUsing is not null)
                     { InvokeUsing(() => handler(sender, new WorkerProgressChangedEventArgs(workItem.WorkName, (int)(progress * 100.0)))); }

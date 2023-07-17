@@ -19,14 +19,13 @@ namespace Toolbox.Threading
         {
             if (progress <= 0) { ProgressPercent = 0; ProgressText = "(ideal)"; }
             else if (progress > 0 && progress < 100) { ProgressPercent = progress; ProgressText = "(working)"; }
-            else if (progress >= 100) { ProgressPercent = 100; ProgressText = "(done)"; }
+            else if (progress >= 100) { ProgressPercent = 0; ProgressText = "(done)"; }
         }
 
-        public WorkerProgressChangedEventArgs(String status, Int32 progress) : this(status)
+        public WorkerProgressChangedEventArgs(String status, Int32 progress) : this(progress)
         {
-            if (progress <= 0) { ProgressPercent = 0; ProgressText = "(ideal)"; }
-            else if (progress > 0 && progress < 100) { ProgressPercent = progress; ProgressText = status; }
-            else if (progress >= 100) { ProgressPercent = 100; ProgressText = "(done)"; }
+            if(progress < 100 && !String.IsNullOrWhiteSpace(status))
+            { ProgressText = status; }
         }
 
         public WorkerProgressChangedEventArgs(IWorkItem item) : this(item.WorkName) { }

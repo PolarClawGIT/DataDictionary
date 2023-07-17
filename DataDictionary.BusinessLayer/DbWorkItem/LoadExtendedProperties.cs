@@ -11,15 +11,18 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
-    class LoadExtendedProperties<TDbItem> : WorkItem
+    class LoadExtendedProperties<TDbItem> : WorkItem, IDbWorkItem
         where TDbItem : class, IBindingTableRow, IDbExtendedProperties
     {
         public required BindingTable<DbExtendedPropertyItem> Target { get; init; }
         public required IBindingTable<TDbItem> Source { get; init; }
-        IConnection connection;
+        readonly IConnection connection;
 
-        public LoadExtendedProperties(IContext context) : base()
-        {   connection = context.CreateConnection(); }
+        public LoadExtendedProperties(OpenConnection conn) : base()
+        {
+            this.connection = conn.Connection;
+            conn.Dependency(this);
+        }
 
         protected override void Work()
         {
@@ -30,7 +33,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             {
                 Target.Load(connection.ExecuteReader(item.GetProperties(connection)));
                 complete++;
-                Double progress = (complete / toDo) * 100.0;
+                Double progress = ((Double)complete / (Double)toDo) * (Double)100.0;
                 this.OnProgressChanged((Int32)progress);
             }
         }

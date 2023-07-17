@@ -119,11 +119,14 @@
             // 
             // extendedPropertiesData
             // 
+            extendedPropertiesData.AllowUserToAddRows = false;
+            extendedPropertiesData.AllowUserToDeleteRows = false;
             extendedPropertiesData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             extendedPropertiesData.Columns.AddRange(new DataGridViewColumn[] { propertyNameData, propertyValueData });
             extendedPropertiesData.Dock = DockStyle.Fill;
             extendedPropertiesData.Location = new Point(3, 3);
             extendedPropertiesData.Name = "extendedPropertiesData";
+            extendedPropertiesData.ReadOnly = true;
             extendedPropertiesData.RowTemplate.Height = 25;
             extendedPropertiesData.Size = new Size(413, 143);
             extendedPropertiesData.TabIndex = 5;

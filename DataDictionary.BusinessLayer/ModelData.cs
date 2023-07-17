@@ -77,21 +77,21 @@ namespace DataDictionary.BusinessLayer
                 Target = DbColumns
             });
 
-            workItems.Add(new LoadExtendedProperties<DbSchemaItem>(context)
+            workItems.Add(new LoadExtendedProperties<DbSchemaItem>(openConnection)
             {
                 WorkName = "Load DbExtendedProperties, DbSchemta",
                 Source = DbSchemta,
                 Target = DbExtendedProperties
             });
 
-            workItems.Add(new LoadExtendedProperties<DbTableItem>(context)
+            workItems.Add(new LoadExtendedProperties<DbTableItem>(openConnection)
             {
                 WorkName = "Load DbExtendedProperties, DbTables",
                 Source = DbTables,
                 Target = DbExtendedProperties
             });
 
-            workItems.Add(new LoadExtendedProperties<DbColumnItem>(context)
+            workItems.Add(new LoadExtendedProperties<DbColumnItem>(openConnection)
             {
                 WorkName = "Load DbExtendedProperties, DbColumns",
                 Source = DbColumns,
@@ -172,7 +172,7 @@ namespace DataDictionary.BusinessLayer
                     a => w.CatalogName == a.CatalogName &&
                     w.SchemaName == a.SchemaName &&
                     w.TableName == a.ObjectName &&
-                    w.CollationName == a.ElementName)
+                    w.ColumnName == a.ElementName)
                 is null);
 
 
