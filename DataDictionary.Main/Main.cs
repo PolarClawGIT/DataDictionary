@@ -5,9 +5,9 @@ using DataDictionary.Main.Forms;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
+using System.Diagnostics.Eventing.Reader;
+using System.Linq;
 using System.Windows.Forms;
-using Toolbox.BindingTable;
-using Toolbox.Mediator;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main
@@ -119,12 +119,12 @@ namespace DataDictionary.Main
         }
 
         private void navigationDbSchemaTab_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
+        { //TODO: Not Working. Does not show when the context menu is assigned to the control or rigged to an event.
             dbSchemaContextMenu.Show();
         }
 
         private void navigationDomainTab_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
+        { //TODO: Not Working. Does not show when the context menu is assigned to the control or rigged to an event.
             domainModelMenu.Show();
         }
 
@@ -230,10 +230,18 @@ namespace DataDictionary.Main
             if (dbDataNodes.ContainsKey(e.Node))
             {
                 Object dataNode = dbDataNodes[e.Node];
-                if (dataNode is IDbCatalogItem catalogItem) { }
-                if (dataNode is IDbSchemaItem schemaItem) { new Forms.DbSchema(schemaItem).Show(); }
-                if (dataNode is IDbTableItem tableItem) { new Forms.DbTable(tableItem).Show(); }
-                if (dataNode is IDbColumnItem columnItem) { new Forms.DbColumn(columnItem).Show(); }
+
+                if (FindDataForm<IDbSchemaItem, Forms.DbSchema>(dataNode) is Forms.DbSchema schemaForm)
+                { schemaForm.Activate(); }
+                else { if (dataNode is IDbSchemaItem schemaItem) { new Forms.DbSchema(schemaItem).Show(); } }
+
+                if (FindDataForm<IDbTableItem, Forms.DbTable>(dataNode) is Forms.DbTable tableForm)
+                { tableForm.Activate(); }
+                else { if (dataNode is IDbTableItem tableItem) { new Forms.DbTable(tableItem).Show(); } }
+
+                if (FindDataForm<IDbColumnItem, Forms.DbColumn>(dataNode) is Forms.DbColumn columnForm)
+                { columnForm.Activate(); }
+                else { if (dataNode is IDbColumnItem columnItem) { new Forms.DbColumn(columnItem).Show(); } }
             }
         }
         #endregion
@@ -306,12 +314,22 @@ namespace DataDictionary.Main
         {
             if (domainModelNodes.ContainsKey(e.Node))
             {
-                Object domainNode = domainModelNodes[e.Node];
-                if (domainNode is IDomainAttributeItem attributeItem) { new Forms.DomainAttribute(attributeItem).Show(); }
+                Object dataNode = domainModelNodes[e.Node];
+
+                if (FindDataForm<IDomainAttributeItem, Forms.DomainAttribute>(dataNode) is Forms.DomainAttribute attributeForm)
+                { attributeForm.Activate(); }
+                else { if (dataNode is IDomainAttributeItem attributeItem) { new Forms.DomainAttribute(attributeItem).Show(); } }
             }
         }
-
         #endregion
+
+        TForm? FindDataForm<TData, TForm>(Object data)
+            where TForm : Form, IApplicationDataForm
+        {
+            if (this.MdiChildren.OfType<IApplicationDataForm>().Where(w => ReferenceEquals(data, w.OpenItem)).OfType<TForm>().FirstOrDefault() is TForm existingForm)
+            { return existingForm; }
+            else { return null; }
+        }
 
         #region IColleague
 
@@ -334,8 +352,8 @@ namespace DataDictionary.Main
 
         #endregion
 
-        //TODO: apparently when the ToolStrip contains the Cut/Copy/Paste options, the keystroke is not sent to the control that has focus.
-        // I think I will have to have each form/control handle the cut/copy/paste. Put in the Base Class?
+
+
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         { SendMessage(new WindowsCutCommand() { HandledBy = this.ActiveMdiChild }); }

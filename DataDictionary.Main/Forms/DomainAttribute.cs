@@ -14,10 +14,11 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DomainAttribute : ApplicationFormBase
+    partial class DomainAttribute : ApplicationFormBase, IApplicationDataForm
     {
         class FormData
         {
+            public DomainAttributeId DomainAttributeId { get; set; } = new DomainAttributeId();
             public IDomainAttributeItem? DomainAttribute { get; set; }
             public IDomainAttributeItem? ParentAttribute { get; set; }
             public BindingList<DomainAttributePropertyItem> AttributeProperties { get; set; } = new BindingList<DomainAttributePropertyItem>();
@@ -25,6 +26,7 @@ namespace DataDictionary.Main.Forms
         }
 
         FormData data = new FormData();
+        public Object? OpenItem { get; }
 
         public DomainAttribute() : base()
         {
@@ -37,14 +39,8 @@ namespace DataDictionary.Main.Forms
 
         public DomainAttribute(IDomainAttributeItem domainAttributeItem) : this()
         {
-            data.DomainAttribute = domainAttributeItem;
-            if (Program.Data.DomainAttributes.GetParentAttribute(data.DomainAttribute) is IDomainAttributeItem parent)
-            { data.ParentAttribute = parent; }
-            else { data.ParentAttribute = new DomainAttributeItem(); }
-
-            data.AttributeProperties.AddRange(Program.Data.DomainAttributeProperties.GetProperties(data.DomainAttribute));
-            data.AttributeAlias.AddRange(Program.Data.DomainAttributeAliases.GetProperties(data.DomainAttribute));
-
+            data.DomainAttributeId = new DomainAttributeId(domainAttributeItem);
+            OpenItem = domainAttributeItem;
         }
 
         private void DomainAttribute_Load(object sender, EventArgs e)
@@ -52,15 +48,32 @@ namespace DataDictionary.Main.Forms
 
         void BindData()
         {
-            attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), data.DomainAttribute, nameof(data.DomainAttribute.AttributeTitle)));
-            attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), data.DomainAttribute, nameof(data.DomainAttribute.AttributeDescription)));
-            attributeParentTitleData.DataBindings.Add(new Binding(nameof(attributeParentTitleData.Text), data.ParentAttribute, nameof(data.ParentAttribute.AttributeTitle)));
+            data.DomainAttribute = Program.Data.DomainAttributes.FirstOrDefault(w => data.DomainAttributeId == w);
 
-            attributeAlaisData.AutoGenerateColumns = false;
-            attributeAlaisData.DataSource = data.AttributeAlias;
+            if (data.DomainAttribute is not null)
+            {
+                this.Text = data.DomainAttribute.AttributeTitle;
 
-            attributePropertiesData.AutoGenerateColumns = false;
-            attributePropertiesData.DataSource = data.AttributeProperties;
+                if (Program.Data.DomainAttributes.GetParentAttribute(data.DomainAttribute) is IDomainAttributeItem parent)
+                { data.ParentAttribute = parent; }
+                else { data.ParentAttribute = new DomainAttributeItem(); }
+
+                data.AttributeProperties.Clear();
+                data.AttributeAlias.Clear();
+
+                data.AttributeProperties.AddRange(Program.Data.DomainAttributeProperties.GetProperties(data.DomainAttribute));
+                data.AttributeAlias.AddRange(Program.Data.DomainAttributeAliases.GetProperties(data.DomainAttribute));
+
+                attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), data.DomainAttribute, nameof(data.DomainAttribute.AttributeTitle)));
+                attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), data.DomainAttribute, nameof(data.DomainAttribute.AttributeDescription)));
+                attributeParentTitleData.DataBindings.Add(new Binding(nameof(attributeParentTitleData.Text), data.ParentAttribute, nameof(data.ParentAttribute.AttributeTitle)));
+
+                attributeAlaisData.AutoGenerateColumns = false;
+                attributeAlaisData.DataSource = data.AttributeAlias;
+
+                attributePropertiesData.AutoGenerateColumns = false;
+                attributePropertiesData.DataSource = data.AttributeProperties;
+            }
         }
 
         void UnbindData()

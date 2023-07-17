@@ -6,7 +6,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbColumn : ApplicationFormBase
+    partial class DbColumn : ApplicationFormBase, IApplicationDataForm
     {
         class FormData
         {
@@ -15,7 +15,10 @@ namespace DataDictionary.Main.Forms
             public BindingList<DbExtendedPropertyItem> DbExtendedProperties { get; set; } = new BindingList<DbExtendedPropertyItem>();
 
         }
+
         FormData data = new FormData();
+
+        public Object? OpenItem { get; }
 
         public DbColumn() : base()
         {
@@ -26,7 +29,8 @@ namespace DataDictionary.Main.Forms
         public DbColumn(IDbColumnItem columnItem) : this()
         {
             data.ColumnName = new DbColumnName(columnItem);
-            this.Text = String.Format("{0}: {1}", this.Text, data.ColumnName.ToString());
+            OpenItem = columnItem;
+            this.Text = data.ColumnName.ToString();
         }
 
         private void DbColumn_Load(object sender, EventArgs e)

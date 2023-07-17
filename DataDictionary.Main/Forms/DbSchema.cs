@@ -16,7 +16,7 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbSchema : ApplicationFormBase
+    partial class DbSchema : ApplicationFormBase, IApplicationDataForm
     {
 
         class FormData
@@ -29,6 +29,8 @@ namespace DataDictionary.Main.Forms
 
         FormData data = new FormData();
 
+        public Object? OpenItem { get; }
+
         public DbSchema() : base()
         {
             InitializeComponent();
@@ -38,7 +40,8 @@ namespace DataDictionary.Main.Forms
         public DbSchema(IDbSchemaItem schemaItem) : this()
         {
             data.SchemaName = new DbSchemaName(schemaItem);
-            this.Text = String.Format("{0}: {1}", this.Text, data.SchemaName.ToString());
+            OpenItem = schemaItem;
+            this.Text = data.SchemaName.ToString();
         }
 
         private void DbSchema_Load(object sender, EventArgs e)

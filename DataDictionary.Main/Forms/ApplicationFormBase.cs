@@ -4,9 +4,13 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
+    interface IApplicationDataForm
+    {
+        public Object? OpenItem { get; }
+    }
+
     class ApplicationFormBase : Form, IColleague
     {
-
         public ApplicationFormBase() : base()
         {
             Program.Messenger.AddColleague(this);

@@ -15,7 +15,7 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbTable : ApplicationFormBase
+    partial class DbTable : ApplicationFormBase, IApplicationDataForm
     {
         class FormData
         {
@@ -26,6 +26,8 @@ namespace DataDictionary.Main.Forms
         }
         FormData data = new FormData();
 
+        public Object? OpenItem { get; }
+
         public DbTable() : base()
         {
             InitializeComponent();
@@ -35,7 +37,8 @@ namespace DataDictionary.Main.Forms
         public DbTable(IDbTableItem tableItem) : this()
         {
             data.TableName = new DbTableName(tableItem);
-            this.Text = String.Format("{0}: {1}", this.Text, data.TableName.ToString());
+            OpenItem = tableItem;
+            this.Text = data.TableName.ToString();
         }
 
         private void DbTable_Load(object sender, EventArgs e)
