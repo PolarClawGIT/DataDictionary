@@ -66,6 +66,7 @@
     <Folder Include="dbo\Stored Procedures" />
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\Sequence" />
+    <Folder Include="App_DataDictionary\User Defined Types\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DataDictionary.Database.publish.xml" />
@@ -104,6 +105,9 @@
     <Build Include="App_DataDictionary\Tables\ApplicationHelp.sql" />
     <Build Include="Security\DataDictionaryApp.sql" />
     <Build Include="dbo\Stored Procedures\procGetSample.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainAttribute.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationModel.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationModel.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

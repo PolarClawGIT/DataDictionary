@@ -1,1 +1,4 @@
-﻿CREATE SCHEMA [App_DataDictionary]  AUTHORIZATION [dbo];
+﻿CREATE SCHEMA [App_DataDictionary]
+    AUTHORIZATION [dbo];
+
+
