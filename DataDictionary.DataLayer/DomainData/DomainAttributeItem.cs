@@ -33,10 +33,11 @@ namespace DataDictionary.DataLayer.DomainData
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("ParentAttributeId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("AttributeTitle", typeof(String)){ AllowDBNull = true},
+            new DataColumn("AttributeTitle", typeof(String)){ AllowDBNull = false},
             new DataColumn("AttributeDescription", typeof(String)){ AllowDBNull = true},
+            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()

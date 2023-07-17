@@ -29,6 +29,7 @@ namespace DataDictionary.DataLayer.DomainData
             new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("PropertyName", typeof(String)){ AllowDBNull = true},
             new DataColumn("PropertyValue", typeof(String)){ AllowDBNull = true},
+            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()

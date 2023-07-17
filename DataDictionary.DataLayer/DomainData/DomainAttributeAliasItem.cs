@@ -35,6 +35,7 @@ namespace DataDictionary.DataLayer.DomainData
             new DataColumn("SchemaName", typeof(String)){ AllowDBNull = true},
             new DataColumn("ObjectName", typeof(String)){ AllowDBNull = true},
             new DataColumn("ElementName", typeof(String)){ AllowDBNull = true},
+            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
 
         };
 
