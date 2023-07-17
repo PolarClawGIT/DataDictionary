@@ -30,11 +30,12 @@
         {
             components = new System.ComponentModel.Container();
             Panel navigationPanel;
-            TableLayoutPanel navigationLayout;
+            SplitContainer modelSpliter;
             TableLayoutPanel navigationModelLayout;
-            Label modelNameLayout;
             Splitter navigationSpliter;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+            modelNameData = new Controls.TextBoxData();
+            modelDescriptionData = new Controls.TextBoxData();
             navigationTabs = new TabControl();
             navigationDbSchemaTab = new TabPage();
             dbMetaDataNavigation = new TreeView();
@@ -49,7 +50,6 @@
             domainModelMenu = new ContextMenuStrip(components);
             menuImportDbSchema = new ToolStripMenuItem();
             menuAttributes = new ToolStripMenuItem();
-            modelNameData = new TextBox();
             statusStrip = new StatusStrip();
             toolStripInfo = new ToolStripStatusLabel();
             toolStripWhiteSpace = new ToolStripStatusLabel();
@@ -88,56 +88,103 @@
             toolStripSeparator5 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
-            navigationLayout = new TableLayoutPanel();
+            modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
-            modelNameLayout = new Label();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
-            navigationLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)modelSpliter).BeginInit();
+            modelSpliter.Panel1.SuspendLayout();
+            modelSpliter.Panel2.SuspendLayout();
+            modelSpliter.SuspendLayout();
+            navigationModelLayout.SuspendLayout();
             navigationTabs.SuspendLayout();
             navigationDbSchemaTab.SuspendLayout();
             dbSchemaContextMenu.SuspendLayout();
             navigationDomainTab.SuspendLayout();
             domainModelMenu.SuspendLayout();
-            navigationModelLayout.SuspendLayout();
             statusStrip.SuspendLayout();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // navigationPanel
             // 
-            navigationPanel.Controls.Add(navigationLayout);
+            navigationPanel.Controls.Add(modelSpliter);
             navigationPanel.Dock = DockStyle.Left;
             navigationPanel.Location = new Point(0, 24);
             navigationPanel.Name = "navigationPanel";
             navigationPanel.Size = new Size(220, 686);
             navigationPanel.TabIndex = 6;
             // 
-            // navigationLayout
+            // modelSpliter
             // 
-            navigationLayout.ColumnCount = 1;
-            navigationLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            navigationLayout.Controls.Add(navigationTabs, 0, 1);
-            navigationLayout.Controls.Add(navigationModelLayout, 0, 0);
-            navigationLayout.Dock = DockStyle.Fill;
-            navigationLayout.Location = new Point(0, 0);
-            navigationLayout.Name = "navigationLayout";
-            navigationLayout.RowCount = 2;
-            navigationLayout.RowStyles.Add(new RowStyle());
-            navigationLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            navigationLayout.Size = new Size(220, 686);
-            navigationLayout.TabIndex = 1;
+            modelSpliter.BorderStyle = BorderStyle.FixedSingle;
+            modelSpliter.Dock = DockStyle.Fill;
+            modelSpliter.Location = new Point(0, 0);
+            modelSpliter.Name = "modelSpliter";
+            modelSpliter.Orientation = Orientation.Horizontal;
+            // 
+            // modelSpliter.Panel1
+            // 
+            modelSpliter.Panel1.Controls.Add(navigationModelLayout);
+            // 
+            // modelSpliter.Panel2
+            // 
+            modelSpliter.Panel2.Controls.Add(navigationTabs);
+            modelSpliter.Size = new Size(220, 686);
+            modelSpliter.SplitterDistance = 110;
+            modelSpliter.TabIndex = 2;
+            // 
+            // navigationModelLayout
+            // 
+            navigationModelLayout.AutoSize = true;
+            navigationModelLayout.ColumnCount = 1;
+            navigationModelLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            navigationModelLayout.Controls.Add(modelNameData, 0, 0);
+            navigationModelLayout.Controls.Add(modelDescriptionData, 0, 1);
+            navigationModelLayout.Dock = DockStyle.Fill;
+            navigationModelLayout.Location = new Point(0, 0);
+            navigationModelLayout.Name = "navigationModelLayout";
+            navigationModelLayout.RowCount = 2;
+            navigationModelLayout.RowStyles.Add(new RowStyle());
+            navigationModelLayout.RowStyles.Add(new RowStyle());
+            navigationModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            navigationModelLayout.Size = new Size(218, 108);
+            navigationModelLayout.TabIndex = 2;
+            // 
+            // modelNameData
+            // 
+            modelNameData.AutoSize = true;
+            modelNameData.Dock = DockStyle.Fill;
+            modelNameData.HeaderText = "Model";
+            modelNameData.Location = new Point(3, 3);
+            modelNameData.Multiline = false;
+            modelNameData.Name = "modelNameData";
+            modelNameData.ReadOnly = false;
+            modelNameData.Size = new Size(212, 44);
+            modelNameData.TabIndex = 2;
+            // 
+            // modelDescriptionData
+            // 
+            modelDescriptionData.AutoSize = true;
+            modelDescriptionData.Dock = DockStyle.Fill;
+            modelDescriptionData.HeaderText = "Description";
+            modelDescriptionData.Location = new Point(3, 53);
+            modelDescriptionData.Multiline = true;
+            modelDescriptionData.Name = "modelDescriptionData";
+            modelDescriptionData.ReadOnly = false;
+            modelDescriptionData.Size = new Size(212, 52);
+            modelDescriptionData.TabIndex = 3;
             // 
             // navigationTabs
             // 
             navigationTabs.Controls.Add(navigationDbSchemaTab);
             navigationTabs.Controls.Add(navigationDomainTab);
             navigationTabs.Dock = DockStyle.Fill;
-            navigationTabs.Location = new Point(3, 73);
+            navigationTabs.Location = new Point(0, 0);
             navigationTabs.Name = "navigationTabs";
             navigationTabs.SelectedIndex = 0;
-            navigationTabs.Size = new Size(214, 610);
-            navigationTabs.TabIndex = 0;
+            navigationTabs.Size = new Size(218, 570);
+            navigationTabs.TabIndex = 1;
             // 
             // navigationDbSchemaTab
             // 
@@ -145,7 +192,7 @@
             navigationDbSchemaTab.Location = new Point(4, 24);
             navigationDbSchemaTab.Name = "navigationDbSchemaTab";
             navigationDbSchemaTab.Padding = new Padding(3);
-            navigationDbSchemaTab.Size = new Size(206, 582);
+            navigationDbSchemaTab.Size = new Size(210, 542);
             navigationDbSchemaTab.TabIndex = 0;
             navigationDbSchemaTab.Text = "Db Schema";
             navigationDbSchemaTab.UseVisualStyleBackColor = true;
@@ -156,9 +203,8 @@
             dbMetaDataNavigation.Dock = DockStyle.Fill;
             dbMetaDataNavigation.Location = new Point(3, 3);
             dbMetaDataNavigation.Name = "dbMetaDataNavigation";
-            dbMetaDataNavigation.Size = new Size(200, 576);
+            dbMetaDataNavigation.Size = new Size(204, 536);
             dbMetaDataNavigation.TabIndex = 0;
-            dbMetaDataNavigation.NodeMouseDoubleClick += dbMetaDataNavigation_NodeMouseDoubleClick;
             // 
             // dbSchemaContextMenu
             // 
@@ -212,7 +258,7 @@
             navigationDomainTab.Location = new Point(4, 24);
             navigationDomainTab.Name = "navigationDomainTab";
             navigationDomainTab.Padding = new Padding(3);
-            navigationDomainTab.Size = new Size(206, 582);
+            navigationDomainTab.Size = new Size(210, 508);
             navigationDomainTab.TabIndex = 1;
             navigationDomainTab.Text = "Domain Model";
             navigationDomainTab.UseVisualStyleBackColor = true;
@@ -223,9 +269,8 @@
             domainModelNavigation.Dock = DockStyle.Fill;
             domainModelNavigation.Location = new Point(3, 3);
             domainModelNavigation.Name = "domainModelNavigation";
-            domainModelNavigation.Size = new Size(200, 576);
+            domainModelNavigation.Size = new Size(204, 502);
             domainModelNavigation.TabIndex = 0;
-            domainModelNavigation.NodeMouseDoubleClick += domainModelNavigation_NodeMouseDoubleClick;
             // 
             // domainModelMenu
             // 
@@ -248,41 +293,6 @@
             menuAttributes.Size = new Size(202, 22);
             menuAttributes.Text = "Browse &Attributes";
             menuAttributes.Click += menuAttributes_Click;
-            // 
-            // navigationModelLayout
-            // 
-            navigationModelLayout.AutoSize = true;
-            navigationModelLayout.ColumnCount = 1;
-            navigationModelLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            navigationModelLayout.Controls.Add(modelNameData, 0, 1);
-            navigationModelLayout.Controls.Add(modelNameLayout, 0, 0);
-            navigationModelLayout.Dock = DockStyle.Fill;
-            navigationModelLayout.Location = new Point(3, 3);
-            navigationModelLayout.Name = "navigationModelLayout";
-            navigationModelLayout.RowCount = 3;
-            navigationModelLayout.RowStyles.Add(new RowStyle());
-            navigationModelLayout.RowStyles.Add(new RowStyle());
-            navigationModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            navigationModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            navigationModelLayout.Size = new Size(214, 64);
-            navigationModelLayout.TabIndex = 1;
-            // 
-            // modelNameData
-            // 
-            modelNameData.Dock = DockStyle.Fill;
-            modelNameData.Location = new Point(3, 18);
-            modelNameData.Name = "modelNameData";
-            modelNameData.Size = new Size(208, 23);
-            modelNameData.TabIndex = 0;
-            // 
-            // modelNameLayout
-            // 
-            modelNameLayout.AutoSize = true;
-            modelNameLayout.Location = new Point(3, 0);
-            modelNameLayout.Name = "modelNameLayout";
-            modelNameLayout.Size = new Size(41, 15);
-            modelNameLayout.TabIndex = 1;
-            modelNameLayout.Text = "Model";
             // 
             // navigationSpliter
             // 
@@ -428,7 +438,7 @@
             // 
             undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             undoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Z;
-            undoToolStripMenuItem.Size = new Size(180, 22);
+            undoToolStripMenuItem.Size = new Size(144, 22);
             undoToolStripMenuItem.Text = "&Undo";
             undoToolStripMenuItem.Click += undoToolStripMenuItem_Click;
             // 
@@ -436,13 +446,13 @@
             // 
             redoToolStripMenuItem.Name = "redoToolStripMenuItem";
             redoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Y;
-            redoToolStripMenuItem.Size = new Size(180, 22);
+            redoToolStripMenuItem.Size = new Size(144, 22);
             redoToolStripMenuItem.Text = "&Redo";
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(177, 6);
+            toolStripSeparator3.Size = new Size(141, 6);
             // 
             // cutToolStripMenuItem
             // 
@@ -450,7 +460,7 @@
             cutToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             cutToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.X;
-            cutToolStripMenuItem.Size = new Size(180, 22);
+            cutToolStripMenuItem.Size = new Size(144, 22);
             cutToolStripMenuItem.Text = "Cu&t";
             cutToolStripMenuItem.Click += cutToolStripMenuItem_Click;
             // 
@@ -460,7 +470,7 @@
             copyToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             copyToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.C;
-            copyToolStripMenuItem.Size = new Size(180, 22);
+            copyToolStripMenuItem.Size = new Size(144, 22);
             copyToolStripMenuItem.Text = "&Copy";
             copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
             // 
@@ -470,19 +480,19 @@
             pasteToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             pasteToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.V;
-            pasteToolStripMenuItem.Size = new Size(180, 22);
+            pasteToolStripMenuItem.Size = new Size(144, 22);
             pasteToolStripMenuItem.Text = "&Paste";
             pasteToolStripMenuItem.Click += pasteToolStripMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new Size(177, 6);
+            toolStripSeparator4.Size = new Size(141, 6);
             // 
             // selectAllToolStripMenuItem
             // 
             selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            selectAllToolStripMenuItem.Size = new Size(180, 22);
+            selectAllToolStripMenuItem.Size = new Size(144, 22);
             selectAllToolStripMenuItem.Text = "Select &All";
             selectAllToolStripMenuItem.Click += selectAllToolStripMenuItem_Click;
             // 
@@ -497,28 +507,28 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(180, 22);
+            customizeToolStripMenuItem.Size = new Size(153, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(180, 22);
+            optionsToolStripMenuItem.Size = new Size(153, 22);
             optionsToolStripMenuItem.Text = "&Options";
             // 
             // dbSchemaToolStripMenuItem
             // 
             dbSchemaToolStripMenuItem.Image = Properties.Resources.Database;
             dbSchemaToolStripMenuItem.Name = "dbSchemaToolStripMenuItem";
-            dbSchemaToolStripMenuItem.Size = new Size(180, 22);
+            dbSchemaToolStripMenuItem.Size = new Size(153, 22);
             dbSchemaToolStripMenuItem.Text = "Db &Schema";
             // 
             // domainModelToolStripMenuItem
             // 
             domainModelToolStripMenuItem.Image = Properties.Resources.Dictionary;
             domainModelToolStripMenuItem.Name = "domainModelToolStripMenuItem";
-            domainModelToolStripMenuItem.Size = new Size(180, 22);
+            domainModelToolStripMenuItem.Size = new Size(153, 22);
             domainModelToolStripMenuItem.Text = "Domain &Model";
             // 
             // helpToolStripMenuItem
@@ -575,15 +585,18 @@
             FormClosed += Main_FormClosed;
             Load += Main_Load;
             navigationPanel.ResumeLayout(false);
-            navigationLayout.ResumeLayout(false);
-            navigationLayout.PerformLayout();
+            modelSpliter.Panel1.ResumeLayout(false);
+            modelSpliter.Panel1.PerformLayout();
+            modelSpliter.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)modelSpliter).EndInit();
+            modelSpliter.ResumeLayout(false);
+            navigationModelLayout.ResumeLayout(false);
+            navigationModelLayout.PerformLayout();
             navigationTabs.ResumeLayout(false);
             navigationDbSchemaTab.ResumeLayout(false);
             dbSchemaContextMenu.ResumeLayout(false);
             navigationDomainTab.ResumeLayout(false);
             domainModelMenu.ResumeLayout(false);
-            navigationModelLayout.ResumeLayout(false);
-            navigationModelLayout.PerformLayout();
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
             menuStrip.ResumeLayout(false);
@@ -629,12 +642,6 @@
         private ToolStripStatusLabel toolStripInfo;
         private ToolStripStatusLabel toolStripWhiteSpace;
         private ToolStripProgressBar toolStripProgressBar;
-        private TabControl navigationTabs;
-        private TabPage navigationDbSchemaTab;
-        private TabPage navigationDomainTab;
-        private TreeView dbMetaDataNavigation;
-        private TextBox modelNameData;
-        private TreeView domainModelNavigation;
         private ContextMenuStrip dbSchemaContextMenu;
         private ContextMenuStrip domainModelMenu;
         private ToolStripMenuItem menuCatalogItem;
@@ -646,5 +653,12 @@
         private ToolStripMenuItem menuAttributes;
         private ToolStripMenuItem dbSchemaToolStripMenuItem;
         private ToolStripMenuItem domainModelToolStripMenuItem;
+        private TabControl navigationTabs;
+        private TabPage navigationDbSchemaTab;
+        private TreeView dbMetaDataNavigation;
+        private TabPage navigationDomainTab;
+        private TreeView domainModelNavigation;
+        private Controls.TextBoxData modelNameData;
+        private Controls.TextBoxData modelDescriptionData;
     }
 }

@@ -12,8 +12,6 @@ namespace Toolbox.BindingTable
 {
     public interface IBindingTableRow : INotifyPropertyChanged
     {
-        IBindingTable? BindingTable { get; }
-
         String GetRowError();
         Boolean HasRowErrors();
         Boolean HasRowVersion(DataRowVersion version);
@@ -37,7 +35,7 @@ namespace Toolbox.BindingTable
         /// <summary>
         /// Reference to the Binding Table that owns this row.
         /// </summary>
-        public IBindingTable? BindingTable { get; internal set; }
+        protected internal IBindingTable? BindingTable { get; set; }
 
         /// <summary>
         /// A Column Definition of the underlining table.

@@ -1,4 +1,5 @@
 using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Forms;
@@ -14,6 +15,13 @@ namespace DataDictionary.Main
 {
     partial class Main : ApplicationFormBase
     {
+
+        class FormData
+        {
+            public ModelItem Model { get; set; } = new ModelItem();
+        }
+
+        FormData data = new FormData();
         #region Static Data
         enum navigationTabImageIndex
         {
@@ -49,6 +57,9 @@ namespace DataDictionary.Main
 
             SetImages(dbMetaDataNavigation, dbDataImageItems.Values);
             SetImages(domainModelNavigation, domainModelImageItems.Values);
+
+            modelNameData.DataBindings.Add(new Binding(nameof(modelNameData.Text), data.Model, nameof(data.Model.ModelTitle)));
+            modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), data.Model, nameof(data.Model.ModelDescription)));
 
             // TODO: Cannot get the Context menus to show. For now, add them to the Tools menu
             dbSchemaToolStripMenuItem.DropDownItems.AddRange(dbSchemaContextMenu.Items);
