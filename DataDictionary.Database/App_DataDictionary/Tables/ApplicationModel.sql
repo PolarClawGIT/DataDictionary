@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [App_DataDictionary].[ApplicationModel]
 (
 	-- This is equivalent to a file within the file systems. Instead of saving to the file system, the data is saved to the database.
-	[ModelId] UniqueIdentifier NOT NULL CONSTRAINT [DF_ApplicationModel_ModelId] DEFAULT (newsequentialid()),
+	[ModelId] UniqueIdentifier NOT NULL CONSTRAINT [DF_ApplicationModel_ModelId] DEFAULT (newid()),
 	[ModelTitle] NVarChar(100) Not Null,
 	[ModelDescription] NVarChar(1000) Null,
 	[Obsolete] As (CONVERT([bit],case when [ObsoleteDate] IS NULL then (0) else (1) end)),

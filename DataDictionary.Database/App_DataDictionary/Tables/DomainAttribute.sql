@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [App_DataDictionary].[DomainAttribute]
 (
-	[AttributeId] UniqueIdentifier Not Null CONSTRAINT [DF_DomainAttribute_AttributeId] DEFAULT (newsequentialid()),
+	[AttributeId] UniqueIdentifier Not Null CONSTRAINT [DF_DomainAttribute_AttributeId] DEFAULT (newid()),
 	[AttributeParentId] UniqueIdentifier Null,
 	[AttributeTitle] NVarChar(100) Not Null,
 	[AttributeDescription] NVarChar(Max) Null,

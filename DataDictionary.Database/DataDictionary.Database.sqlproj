@@ -67,12 +67,14 @@
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\Sequence" />
     <Folder Include="App_DataDictionary\User Defined Types\" />
+    <Folder Include="App_DataDictionary\Unit Test scripts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DataDictionary.Database.publish.xml" />
     <None Include="Schema.scmp" />
     <None Include="dbo\Extended Property query.sql" />
     <None Include="App_DataDictionary\ExtendedProperty Data.sql" />
+    <None Include="App_DataDictionary\Unit Test scripts\DomainAttribute tests.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Security\App_DataDictionary.sql" />
@@ -108,6 +110,15 @@
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationModel.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationModel.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttribute.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttribute.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procDeleteDomainAttribute.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttributeAlias.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainAttributeAlias.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainAttributeProperty.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttributeProperty.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeAlias.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeProperty.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

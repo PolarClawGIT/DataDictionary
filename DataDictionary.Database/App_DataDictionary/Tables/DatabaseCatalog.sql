@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [App_DataDictionary].[DatabaseCatalog]
 (
-	[CatalogId] UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseCatalog_CatalogId] DEFAULT (NEWSEQUENTIALID()),
+	[CatalogId] UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseCatalog_CatalogId] DEFAULT (newid()),
 	[CatalogName] SysName Not Null,
 	[SourceServerName] SysName Null,
 	-- TODO: Add System Version later once the schema is locked down

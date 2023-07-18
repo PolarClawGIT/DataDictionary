@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [App_DataDictionary].[DomainEntity]
 (
 	-- Entities are a catch-all item that are not a Column or Parameter. They are to be implemented later.
-	[EntityId] UniqueIdentifier Not Null CONSTRAINT [DF_DomainEntity_EntityId] DEFAULT (NEWSEQUENTIALID()),
+	[EntityId] UniqueIdentifier Not Null CONSTRAINT [DF_DomainEntity_EntityId] DEFAULT (newid()),
 	[EntityParentId] UniqueIdentifier Null,
 	[EntityTitle] NVarChar(100) Not Null,
 	[EntityDescription] NVarChar(Max) Null,
