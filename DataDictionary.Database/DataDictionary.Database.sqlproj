@@ -131,6 +131,9 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseSchema.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseTable.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseColumn.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeApplicationHelp.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationHelp.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationHelp.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

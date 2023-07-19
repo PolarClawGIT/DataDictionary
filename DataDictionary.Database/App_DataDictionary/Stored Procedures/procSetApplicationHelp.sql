@@ -1,10 +1,9 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainAttribute]
-		@ModelId UniqueIdentifier,
-		@Data [App_DataDictionary].[typeDomainAttribute] ReadOnly
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetApplicationHelp]
+		@Data [App_DataDictionary].[typeApplicationHelp] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on DomainAttribute.
+/* Description: Performs Set on ApplicationHelp.
 */
 
 -- Transaction Handling
@@ -19,95 +18,64 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDomainAttribute]
+	Declare @Values [App_DataDictionary].[typeApplicationHelp]
 	Insert Into @Values
-	Select	IsNull(D.[AttributeId],NewId()) As [AttributeId],
-			P.[AttributeParentId] As [AttributeParentId],
-			NullIf(Trim(D.[AttributeTitle]),'') As [AttributeTitle],
-			NullIf(Trim(D.[AttributeDescription]),'') As [AttributeDescription],
+	Select	IsNull(D.[HelpId],NewId()) As [HelpId],
+			D.[HelpParentId],
+			NullIf(Trim(D.[HelpSubject]),'') As [HelpSubject],
+			NullIf(Trim(D.[HelpText]),'') As [HelpText],
+			NullIf(Trim(D.[NameSpace]),'') As [NameSpace],
 			D.[Obsolete],
 			D.[SysStart]
 	From	@Data D
-			Left Join @Data P
-			On	D.[AttributeParentId] = P.[AttributeId]
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[ApplicationModel] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
-
 	If Exists (
-		Select	[AttributeParentId], [AttributeTitle]
+		Select	[HelpParentId], [HelpSubject]
 		From	@Values
-		Group By [AttributeParentId], [AttributeTitle]
+		Group By [HelpParentId], [HelpSubject]
 		Having	Count(*) > 1)
-	Throw 50000, '[AttributeTitle] cannot be duplicate for the same parent attribute', 2;
-
-	If Exists (
-		Select	[AttributeId]
-		From	@Values
-		Group By [AttributeId]
-		Having Count(*) > 1)
-	Throw 50000, '[AttributeId] cannot be duplicate', 3;
+	Throw 50000, '[HelpParentId] cannot be duplicate for the same parent topic', 2;
 
 	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
-		Select	D.[AttributeId]
+		Select	D.[HelpId]
 		From	@Values D
-				Inner Join [App_DataDictionary].[DomainAttribute] A
-				On D.[AttributeId] = A.[AttributeId]
+				Inner Join [App_DataDictionary].[ApplicationHelp] A
+				On D.[HelpId] = A.[HelpId]
 		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
 	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 4;
 
 	-- Apply Changes
-	With [Data] As (
-		Select	D.[AttributeId],
-				D.[AttributeParentId],
-				D.[AttributeTitle],
-				D.[AttributeDescription],
-				IIF(IsNull(D.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
-		From	@Values D
-				Left Join [App_DataDictionary].[ApplicationAttribute] P
-				On	@ModelId = P.[ModelId] And
-					IsNull(D.[AttributeId],NewId()) = P.[AttributeId]
-				Left Join [App_DataDictionary].[DomainAttribute] A
-				On	P.[AttributeId] = A.[AttributeId]),
-	[Delta] As (
-		Select	[AttributeId],
-				[AttributeParentId],
-				[AttributeTitle],
-				[AttributeDescription],
-				[ObsoleteDate]
-		From	[Data]
+	With [Delta] As (
+		Select	V.[HelpId],
+				V.[HelpParentId],
+				V.[HelpSubject],
+				V.[HelpText],
+				V.[NameSpace],
+				IIF(IsNull(V.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
+		From	@Values V
+				Left Join [App_DataDictionary].[ApplicationHelp] A
+				On	V.[HelpId] = A.[HelpId]
 		Except
-		Select	[AttributeId],
-				[AttributeParentId],
-				[AttributeTitle],
-				[AttributeDescription],
+		Select	[HelpId],
+				[HelpParentId],
+				[HelpSubject],
+				[HelpText],
+				[NameSpace],
 				[ObsoleteDate]
-		From	[App_DataDictionary].[DomainAttribute])
-	Merge [App_DataDictionary].[DomainAttribute] As T
+		From	[App_DataDictionary].[ApplicationHelp])
+	Merge [App_DataDictionary].[ApplicationHelp] As T
 	Using [Delta] As S
-	On T.[AttributeId] = T.[AttributeId]
+	On	T.[HelpId] = S.[HelpId]
 	When Matched Then Update
-	Set	[AttributeParentId] = S.[AttributeParentId],
-		[AttributeTitle] = S.[AttributeTitle],
-		[AttributeDescription] = S.[AttributeDescription],
-		[ObsoleteDate] = S.[ObsoleteDate]
+		Set	[HelpParentId] = S.[HelpParentId],
+			[HelpSubject] = S.[HelpSubject],
+			[HelpText] = S.[HelpText],
+			[NameSpace] = S.[NameSpace],
+			[ObsoleteDate] = S.[ObsoleteDate]
 	When Not Matched by Target Then
-		Insert ([AttributeId], [AttributeParentId], [AttributeTitle], [AttributeDescription], [ObsoleteDate])
-		Values ([AttributeId], [AttributeParentId], [AttributeTitle], [AttributeDescription], [ObsoleteDate]);
-
-	With [Data] As (
-		Select	@ModelId As [ModelId],
-				[AttributeId]
-		From	@Values)
-	Merge [App_DataDictionary].[ApplicationAttribute] As T
-	Using [Data] As S
-	On	T.[ModelId] = S.[ModelId] And
-		T.[AttributeId] = S.[AttributeId]
-	When Not Matched by Target Then
-		Insert ([ModelId], [AttributeId])
-		Values ([ModelId], [AttributeId])
-	When Not Matched by Source And T.[ModelId] = @ModelId Then Delete;
+		Insert([HelpId], [HelpParentId], [HelpSubject], [HelpText], [NameSpace], [ObsoleteDate])
+		Values ([HelpId], [HelpParentId], [HelpSubject], [HelpText], [NameSpace], [ObsoleteDate]);
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -134,7 +102,6 @@ Begin Catch
 	Print FormatMessage (' Current_User - %s', Current_User)
 	Print FormatMessage (' XAct_State - %i', XAct_State())
 	Print '*** Debug Report ***'
-	Print FormatMessage (' @ModelId- %s',Convert(NVarChar(50),@ModelId))
 
 	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
 
@@ -153,5 +120,12 @@ GO
 -- Provide System Documentation
 EXEC sp_addextendedproperty @name = N'MS_Description',
 	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDomainAttribute',
-	@value = N'Performs Set on DomainAttribute.'
+    @level1type = N'PROCEDURE', @level1name = N'procSetApplicationHelp',
+	@value = N'Performs Set on ApplicationHelp.'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
+    @level1type = N'PROCEDURE', @level1name = N'procSetApplicationHelp',
+	@level2type = N'PARAMETER', @level2name = N'@Data',
+	@value = N'Data'
+GO

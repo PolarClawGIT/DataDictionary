@@ -1,5 +1,4 @@
-﻿GO
-CREATE PROCEDURE [App_DataDictionary].[procGetDatabaseCatalog]
+﻿CREATE PROCEDURE [App_DataDictionary].[procGetDatabaseCatalog]
 		@ModelId UniqueIdentifier = Null,
 		@CatalogId UniqueIdentifier = Null,
 		@CatalogName SysName = Null
