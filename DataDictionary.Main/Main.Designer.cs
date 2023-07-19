@@ -205,6 +205,7 @@
             dbMetaDataNavigation.Name = "dbMetaDataNavigation";
             dbMetaDataNavigation.Size = new Size(204, 536);
             dbMetaDataNavigation.TabIndex = 0;
+            dbMetaDataNavigation.NodeMouseDoubleClick += dbMetaDataNavigation_NodeMouseDoubleClick;
             // 
             // dbSchemaContextMenu
             // 
@@ -258,7 +259,7 @@
             navigationDomainTab.Location = new Point(4, 24);
             navigationDomainTab.Name = "navigationDomainTab";
             navigationDomainTab.Padding = new Padding(3);
-            navigationDomainTab.Size = new Size(210, 508);
+            navigationDomainTab.Size = new Size(210, 542);
             navigationDomainTab.TabIndex = 1;
             navigationDomainTab.Text = "Domain Model";
             navigationDomainTab.UseVisualStyleBackColor = true;
@@ -269,8 +270,9 @@
             domainModelNavigation.Dock = DockStyle.Fill;
             domainModelNavigation.Location = new Point(3, 3);
             domainModelNavigation.Name = "domainModelNavigation";
-            domainModelNavigation.Size = new Size(204, 502);
+            domainModelNavigation.Size = new Size(204, 536);
             domainModelNavigation.TabIndex = 0;
+            domainModelNavigation.NodeMouseDoubleClick += domainModelNavigation_NodeMouseDoubleClick;
             // 
             // domainModelMenu
             // 
@@ -534,7 +536,6 @@
             // helpToolStripMenuItem
             // 
             helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { contentsToolStripMenuItem, indexToolStripMenuItem, searchToolStripMenuItem, toolStripSeparator5, aboutToolStripMenuItem });
-            helpToolStripMenuItem.Enabled = false;
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             helpToolStripMenuItem.Size = new Size(44, 20);
             helpToolStripMenuItem.Text = "&Help";
@@ -544,15 +545,18 @@
             contentsToolStripMenuItem.Name = "contentsToolStripMenuItem";
             contentsToolStripMenuItem.Size = new Size(122, 22);
             contentsToolStripMenuItem.Text = "&Contents";
+            contentsToolStripMenuItem.Click += contentsToolStripMenuItem_Click;
             // 
             // indexToolStripMenuItem
             // 
+            indexToolStripMenuItem.Enabled = false;
             indexToolStripMenuItem.Name = "indexToolStripMenuItem";
             indexToolStripMenuItem.Size = new Size(122, 22);
             indexToolStripMenuItem.Text = "&Index";
             // 
             // searchToolStripMenuItem
             // 
+            searchToolStripMenuItem.Enabled = false;
             searchToolStripMenuItem.Name = "searchToolStripMenuItem";
             searchToolStripMenuItem.Size = new Size(122, 22);
             searchToolStripMenuItem.Text = "&Search";
@@ -564,6 +568,7 @@
             // 
             // aboutToolStripMenuItem
             // 
+            aboutToolStripMenuItem.Enabled = false;
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             aboutToolStripMenuItem.Size = new Size(122, 22);
             aboutToolStripMenuItem.Text = "&About...";

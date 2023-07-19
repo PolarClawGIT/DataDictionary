@@ -18,7 +18,7 @@ namespace DataDictionary.Main
 
         class FormData
         {
-            public ModelItem Model { get; set; } = new ModelItem();
+            public IModelItem Model { get; set; } = new ModelItem();
         }
 
         FormData data = new FormData();
@@ -127,6 +127,13 @@ namespace DataDictionary.Main
             if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DomainAttributeView)) is Forms.DomainAttributeView existingForm)
             { existingForm.Activate(); }
             else { new Forms.DomainAttributeView().Show(); }
+        }
+
+        private void contentsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.HelpSubject)) is Forms.HelpSubject existingForm)
+            { existingForm.Activate(); }
+            else { new Forms.HelpSubject().Show(); }
         }
 
         private void navigationDbSchemaTab_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -380,5 +387,6 @@ namespace DataDictionary.Main
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         { SendMessage(new WindowsSelectAllCommand() { HandledBy = this.ActiveMdiChild }); }
+
     }
 }

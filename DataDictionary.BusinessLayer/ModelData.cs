@@ -22,7 +22,7 @@ namespace DataDictionary.BusinessLayer
     /// </summary>
     public class ModelData
     {
-        public IModelItem Model { get; } = new ModelItem();
+        public IModelItem Model { get { return Models.First(); } }
         public FileInfo? ModelFile { get; private set; }
 
         // Database Model
@@ -37,8 +37,12 @@ namespace DataDictionary.BusinessLayer
         public BindingTable<DomainAttributeAliasItem> DomainAttributeAliases = ModelFactory.Create<DomainAttributeAliasItem>();
         public BindingTable<DomainAttributePropertyItem> DomainAttributeProperties = ModelFactory.Create<DomainAttributePropertyItem>();
 
+        // Application Data
+        public BindingTable<ModelItem> Models { get; } = ModelFactory.Create<ModelItem>();
+        public BindingTable<HelpItem> HelpSubjects { get; } = ModelFactory.Create<HelpItem>();
+
         public ModelData() : base()
-        { }
+        { Models.Add(new ModelItem()); }
 
         public IReadOnlyList<WorkItem> Load(DbSchemaContext context)
         {

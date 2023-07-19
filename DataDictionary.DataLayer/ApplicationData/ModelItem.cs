@@ -36,7 +36,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         {
             new DataColumn("ModelId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("ModelTitle", typeof(String)){ AllowDBNull = false},
-            new DataColumn("ModelDescription", typeof(String)){ AllowDBNull = false},
+            new DataColumn("ModelDescription", typeof(String)){ AllowDBNull = true},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 

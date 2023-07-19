@@ -25,10 +25,12 @@ namespace DataDictionary.DataLayer.DomainData
 
         public String? AttributeTitle { get { return GetValue("AttributeTitle"); } set { SetValue("AttributeTitle", value); } }
         public String? AttributeDescription { get { return GetValue("AttributeDescription"); } set { SetValue("AttributeDescription", value); } }
+        public Nullable<Boolean> Obsolete { get { return GetValue<Boolean>("Obsolete", BindingItemParsers.BooleanTryPrase); } set { SetValue<Boolean>("Obsolete", value); } }
 
         public DomainAttributeItem() : base()
         {
             if (AttributeId is null) { AttributeId = Guid.NewGuid(); }
+            if(Obsolete is null) { Obsolete = false; }
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
@@ -37,6 +39,7 @@ namespace DataDictionary.DataLayer.DomainData
             new DataColumn("ParentAttributeId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("AttributeTitle", typeof(String)){ AllowDBNull = false},
             new DataColumn("AttributeDescription", typeof(String)){ AllowDBNull = true},
+            new DataColumn("Obsolete", typeof(Boolean)){ AllowDBNull = false},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
