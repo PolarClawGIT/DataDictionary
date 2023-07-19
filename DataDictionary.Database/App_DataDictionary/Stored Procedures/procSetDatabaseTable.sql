@@ -1,10 +1,10 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainAttributeProperty]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseTable]
 		@ModelId UniqueIdentifier,
-		@Data [App_DataDictionary].[typeDomainAttributeProperty] ReadOnly
+		@Data [App_DataDictionary].[typeDatabaseTable] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on DomainAttributeProperty.
+/* Description: Performs Set on DatabaseTable.
 */
 
 -- Transaction Handling
@@ -19,83 +19,96 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDomainAttributeProperty]
+	Declare @Values [App_DataDictionary].[typeDatabaseTable]
 	Insert Into @Values
-	Select	[AttributeId],
-			NullIf(Trim([PropertyName]),'') As [PropertyName],
-			NullIf(Trim([PropertyValue]),'') As [PropertyValue],
-			[SysStart]
-	From	@Data
+	Select	P.[CatalogId] As [CatalogId],
+			P.[CatalogName] As [CatalogName],
+			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
+			NullIf(Trim(D.[TableName]),'') As [TableName],
+			NullIf(Trim(D.[TableType]),'') As [TableType]
+	From	@Data D
+			Left Join [App_DataDictionary].[ApplicationCatalog] C
+			On	C.[ModelId] = @ModelId
+			Left Join [App_DataDictionary].[DatabaseCatalog] P
+			On	D.[CatalogName] = P.[CatalogName]
 
 	-- Validation
 	If Not Exists (Select 1 From [App_DataDictionary].[ApplicationModel] Where [ModelId] = @ModelId)
 	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
 
 	If Exists (
-		Select	V.[AttributeId]
-		From	@Values V
-				Left Join [App_DataDictionary].[DomainAttribute] A
-				On	V.[AttributeId] = A.[AttributeId]
-				Left Join [App_DataDictionary].[ApplicationAttribute] P
-				On	V.[AttributeId] = P.[AttributeId] And
-					P.[ModelId] = @ModelId
-		Where	A.[AttributeId] is Null Or
-				P.[AttributeId] is Null)
-	Throw 50000, '[AttributeId] could not be found or is not associated with Model specified', 2;
-
-	If Exists (
-		Select	[AttributeId],
-				[PropertyName]
+		Select	[CatalogName], [SchemaName], [TableName]
 		From	@Values
-		Group By [AttributeId],
-				[PropertyName]
-		Having Count(*) > 1)
-		Throw 50000, '[AttributeId] Property cannot be duplicated', 3;
+		Group By [CatalogName], [SchemaName], [TableName]
+		Having	Count(*) > 1)
+	Throw 50000, '[TableName] cannot be duplicate within a Schema', 2;
 
-	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
-		Select	D.[AttributeId]
-		From	@Values D
-				Inner Join [App_DataDictionary].[DomainAttributeProperty] A
-				On D.[AttributeId] = A.[AttributeId] And
-					D.[PropertyName] = A.[PropertyName]
-		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
-	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 4;
+	-- Cascade Delete
+	Declare @Delete Table (
+		[CatalogId] UniqueIdentifier Not Null,
+		[SchemaName] SysName Not Null,
+		[TableName] SysName Not Null,
+		Primary key ([CatalogId], [SchemaName], [TableName]));
+
+	Insert Into @Delete
+	Select	T.[CatalogId],
+			T.[SchemaName],
+			T.[TableName]
+	From	[App_DataDictionary].[DatabaseTable] T
+			Inner Join [App_DataDictionary].[ApplicationCatalog] M
+			On	T.[CatalogId] = M.[CatalogId] And
+				M.[ModelId] = @ModelId
+			Left Join @Values V
+			On	T.[CatalogId] = V.[CatalogId] And
+				T.[SchemaName] = V.[SchemaName] And
+				T.[TableName] = V.[TableName]
+
+	Delete From [App_DataDictionary].[DatabaseColumn]
+	From	[App_DataDictionary].[DatabaseColumn] T
+			Inner Join @Delete D
+			On	T.[CatalogId] = D.[CatalogId] And
+				T.[SchemaName] = D.[SchemaName] And
+				T.[TableName] = D.[TableName];
 
 	-- Apply Changes
 	With [Delta] As (
-		Select	[AttributeId],
-				[PropertyName],
-				[PropertyValue]
+		Select	[CatalogId],
+				[SchemaName],
+				[TableName],
+				[TableType]
 		From	@Values
 		Except
-		Select	[AttributeId],
-				[PropertyName],
-				[PropertyValue]
-		From	[App_DataDictionary].[DomainAttributeProperty]),
+		Select	[CatalogId],
+				[SchemaName],
+				[TableName],
+				[TableType]
+		From	[App_DataDictionary].[DatabaseTable]),
 	[Data] As (
-		Select	V.[AttributeId],
-				V.[PropertyName],
-				V.[PropertyValue],
-				IIF(D.[AttributeId] is Null,1, 0) As [IsDiffrent]
+		Select	V.[CatalogId],
+				V.[SchemaName],
+				V.[TableName],
+				V.[TableType],
+				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
-				On	V.[AttributeId] = D.[AttributeId] and
-					V.[PropertyName] = D.[PropertyName])
-	Merge [App_DataDictionary].[DomainAttributeProperty] T
-	Using [Data] S
-	On	T.[AttributeId] = S.[AttributeId] And
-		T.[PropertyName] = S.[PropertyName]
-	When Matched And S.[IsDiffrent] = 1 Then Update
-		Set	[PropertyValue] = S.[PropertyValue]
+				On	V.[CatalogId] = D.[CatalogId] And
+					V.[SchemaName] = D.[SchemaName] And
+					V.[TableName] = D.[TableName])
+	Merge [App_DataDictionary].[DatabaseTable] As T
+	Using [Data] As S
+	On	T.[CatalogId] = S.[CatalogId] And
+		T.[SchemaName] = S.[SchemaName] And
+		T.[TableName] = S.[TableName]
+	When Matched and [IsDiffrent] = 1 Then Update Set
+		[TableType] = S.[TableType]
 	When Not Matched by Target Then
-		Insert ([AttributeId], [PropertyName], [PropertyValue])
-		Values ([AttributeId], [PropertyName], [PropertyValue])
-	When Not Matched by Source And (T.[AttributeId] in (
-		Select	[AttributeId]
-		From	[App_DataDictionary].[ApplicationAttribute]
+		Insert ([CatalogId], [SchemaName], [TableName], [TableType])
+		Values ([CatalogId], [SchemaName], [TableName], [TableType])
+	When Not Matched by Source And (T.[CatalogId] In (
+		Select	[CatalogId]
+		From	[App_DataDictionary].[ApplicationCatalog]
 		Where	[ModelId] = @ModelId))
 		Then Delete;
-
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -122,6 +135,7 @@ Begin Catch
 	Print FormatMessage (' Current_User - %s', Current_User)
 	Print FormatMessage (' XAct_State - %i', XAct_State())
 	Print '*** Debug Report ***'
+	Print FormatMessage (' @ModelId- %s',Convert(NVarChar,@ModelId))
 
 	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
 
@@ -140,6 +154,12 @@ GO
 -- Provide System Documentation
 EXEC sp_addextendedproperty @name = N'MS_Description',
 	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDomainAttributeProperty',
-	@value = N'Performs Set on DomainAttributeProperty.'
+    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseTable',
+	@value = N'Performs Set on DatabaseTable.'
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
+    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseTable',
+	@level2type = N'PARAMETER', @level2name = N'@ModelId',
+	@value = N'ModelId'
 GO

@@ -119,6 +119,18 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttributeProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeAlias.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeProperty.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseCatalog.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseSchema.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseTable.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseColumn.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseCatalog.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseSchema.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseTable.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseColumn.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseCatalog.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseSchema.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseTable.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseColumn.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

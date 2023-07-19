@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainAttribute]
-		@ModelId UniqueIdentifier = Null,
+		@ModelId UniqueIdentifier,
 		@Data [App_DataDictionary].[typeDomainAttribute] ReadOnly
 As
 Set NoCount On -- Do not show record counts

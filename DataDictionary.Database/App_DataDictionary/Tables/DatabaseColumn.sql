@@ -35,7 +35,6 @@
 	-- Keys
 	CONSTRAINT [PK_DatabaseColumn] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [TableName] ASC, [ColumnName] ASC),
 	CONSTRAINT [FK_DatabaseColumnCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
-	CONSTRAINT [FK_DatabaseColumnTable] FOREIGN KEY ([CatalogId], [SchemaName], [TableName]) REFERENCES [App_DataDictionary].[DatabaseTable] ([CatalogId], [SchemaName], [TableName]),
 )
 /*
 Select	Convert(UniqueIdentifier,Null) As [CatalogId],

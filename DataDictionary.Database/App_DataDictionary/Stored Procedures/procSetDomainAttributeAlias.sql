@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainAttributeAlias]
-		@ModelId UniqueIdentifier = Null,
+		@ModelId UniqueIdentifier,
 		@Data [App_DataDictionary].[typeDomainAttributeAlias] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -97,7 +97,11 @@ Begin Try
 	When Not Matched by Target Then
 		Insert ([AttributeId], [AttributeAliasId], [CatalogName], [SchemaName], [ObjectName], [ElementName])
 		Values ([AttributeId], [AttributeAliasId], [CatalogName], [SchemaName], [ObjectName], [ElementName])
-	When Not Matched by Source Then Delete;
+	When Not Matched by Source And (T.[AttributeId] in (
+		Select	[AttributeId]
+		From	[App_DataDictionary].[ApplicationAttribute]
+		Where	[ModelId] = @ModelId))
+		Then Delete;
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
