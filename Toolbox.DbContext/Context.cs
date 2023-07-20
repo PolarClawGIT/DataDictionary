@@ -42,8 +42,8 @@ namespace Toolbox.DbContext
         public String ServerUserName { get { return ConnectionBuilder.UserID; } init { ConnectionBuilder.UserID = value; } }
         public String ServerUserPassword { get { return ConnectionBuilder.Password; } init { ConnectionBuilder.Password = value; } }
 
-        public String? ApplicationRole { internal get; init; }
-        public String? ApplicationRolePassword { internal get; init; }
+        public String? ApplicationRole { get; init; }
+        public String? ApplicationRolePassword { get; init; }
 
         /// <summary>
         /// Constructor.

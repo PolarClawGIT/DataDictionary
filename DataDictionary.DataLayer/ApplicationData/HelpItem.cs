@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
+using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.ApplicationData
 {
@@ -46,5 +49,37 @@ namespace DataDictionary.DataLayer.ApplicationData
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        public static IDataReader GetData(IConnection connection)
+        {
+            SqlCommand command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "procGetApplicationHelp";
+            return command.ExecuteReader();
+        }
+
+        public static SqlCommand SetData(IBindingTable<HelpItem> source, IConnection connection)
+        {
+            SqlCommand command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "procSetApplicationHelp";
+
+            SqlParameter dataValues = new SqlParameter("@Data", SqlDbType.Structured);
+            dataValues.TypeName = "App_DataDictionary.typeApplicationHelp";
+            DataTable data = new DataTable();
+            data.Load(source.CreateDataReader());
+            dataValues.Value = data;
+            command.Parameters.Add(dataValues);
+            return command;
+        }
+
     }
+
+    public static class HelpItemExtension
+    {
+        public static IHelpItem? GetSubject(this IEnumerable<IHelpItem> source, String nameSpace)
+        { return source.FirstOrDefault(w => String.Equals(w.NameSpace, nameSpace, ModelFactory.CompareString)); }
+
+    }
+
 }

@@ -148,8 +148,6 @@ namespace Toolbox.Threading
 
                         workItem.DoWork();
                         workItem.OnCompleting(null, false, InvokeUsing);
-
-                        //backgroundWorker.ReportProgress(0, workItem);
                     }
                 }
                 catch (Exception ex)
@@ -161,6 +159,7 @@ namespace Toolbox.Threading
                 {
                     workItem.ProgressChanged -= WorkItem_OnProgress;
                     WorkComplete++;
+                    backgroundWorker.ReportProgress(0, workItem);
                 }
             }
 

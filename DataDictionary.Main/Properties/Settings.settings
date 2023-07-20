@@ -8,17 +8,17 @@
     <Setting Name="AppDatabase" Type="System.String" Scope="Application">
       <Value Profile="(Default)">DataDictionary</Value>
     </Setting>
-    <Setting Name="HelpServer" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">(LocalDb)\MSSQLLocalDb</Value>
-    </Setting>
-    <Setting Name="HelpDatabase" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">DataDictionary</Value>
-    </Setting>
     <Setting Name="UserServers" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
   &lt;string&gt;(LocalDb)\MSSQLLocalDb.DataDictionary&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="AppDbRole" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">DataDictionaryApp</Value>
+    </Setting>
+    <Setting Name="AppDbRolePassword" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">MyApp131*99</Value>
     </Setting>
   </Settings>
 </SettingsFile>

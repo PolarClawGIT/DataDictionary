@@ -40,6 +40,10 @@ namespace DataDictionary.Main
             InitializeComponent();
 
             // Setup Images for Tree Control
+            SetImages(dbMetaDataNavigation, dbDataImageItems.Values);
+            SetImages(domainModelNavigation, domainModelImageItems.Values);
+
+            // Setup Tabs
             navigationTabs.ImageList = new ImageList();
             foreach (navigationTabImageIndex item in Enum.GetValues(typeof(navigationTabImageIndex)))
             { navigationTabs.ImageList.Images.Add(item.ToString(), navigationTabImages[item]); }
@@ -55,11 +59,12 @@ namespace DataDictionary.Main
             Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
             Program.Messenger.AddColleague(this);
 
-            SetImages(dbMetaDataNavigation, dbDataImageItems.Values);
-            SetImages(domainModelNavigation, domainModelImageItems.Values);
+
 
             modelNameData.DataBindings.Add(new Binding(nameof(modelNameData.Text), data.Model, nameof(data.Model.ModelTitle)));
             modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), data.Model, nameof(data.Model.ModelDescription)));
+
+            //Program.Worker.Enqueue(Program.Data.LoadHelp());
 
             // TODO: Cannot get the Context menus to show. For now, add them to the Tools menu
             dbSchemaToolStripMenuItem.DropDownItems.AddRange(dbSchemaContextMenu.Items);
@@ -131,10 +136,44 @@ namespace DataDictionary.Main
 
         private void contentsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.HelpSubject)) is Forms.HelpSubject existingForm)
+            {
+                if (ActiveMdiChild is Form && ActiveMdiChild != existingForm)
+                {
+                    existingForm.NavigateTo(ActiveMdiChild);
+                    existingForm.Activate();
+                }
+                else
+                { existingForm.Activate(); }
+
+            }
+            else
+            {
+                if (ActiveMdiChild is Form)
+                { new Forms.HelpSubject(ActiveMdiChild).Show(); }
+                else { new Forms.HelpSubject().Show(); }
+            }
+        }
+
+        private void indexToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.HelpSubject)) is Forms.HelpSubject existingForm)
             { existingForm.Activate(); }
             else { new Forms.HelpSubject().Show(); }
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.HelpSubject)) is Forms.HelpSubject existingForm)
+            {
+                existingForm.NavigateTo("About");
+                existingForm.Activate();
+            }
+            else
+            { new Forms.HelpSubject("About").Show(); }
+        }
+
 
         private void navigationDbSchemaTab_MouseDoubleClick(object sender, MouseEventArgs e)
         { //TODO: Not Working. Does not show when the context menu is assigned to the control or rigged to an event.
@@ -145,6 +184,9 @@ namespace DataDictionary.Main
         { //TODO: Not Working. Does not show when the context menu is assigned to the control or rigged to an event.
             domainModelMenu.Show();
         }
+
+
+
 
         #endregion
 
@@ -371,8 +413,6 @@ namespace DataDictionary.Main
         #endregion
 
 
-
-
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         { SendMessage(new WindowsCutCommand() { HandledBy = this.ActiveMdiChild }); }
 
@@ -387,6 +427,7 @@ namespace DataDictionary.Main
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         { SendMessage(new WindowsSelectAllCommand() { HandledBy = this.ActiveMdiChild }); }
+
 
     }
 }

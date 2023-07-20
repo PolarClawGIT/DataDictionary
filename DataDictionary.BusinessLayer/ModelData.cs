@@ -24,6 +24,7 @@ namespace DataDictionary.BusinessLayer
     {
         public IModelItem Model { get { return Models.First(); } }
         public FileInfo? ModelFile { get; private set; }
+        Context modelContext = new Context();
 
         // Database Model
         public BindingTable<DbCatalogItem> DbCatalogs { get; } = ModelFactory.Create<DbCatalogItem>();
@@ -44,7 +45,18 @@ namespace DataDictionary.BusinessLayer
         public ModelData() : base()
         { Models.Add(new ModelItem()); }
 
-        public IReadOnlyList<WorkItem> Load(DbSchemaContext context)
+        public ModelData(Context context) : this()
+        {
+            modelContext = new Context()
+            {
+                ServerName = context.ServerName,
+                DatabaseName = context.DatabaseName,
+                ApplicationRole = context.ApplicationRole,
+                ApplicationRolePassword = context.ApplicationRolePassword
+            };
+        }
+
+        public IReadOnlyList<WorkItem> LoadDbSchema(DbSchemaContext context)
         {
             List<WorkItem> workItems = new List<WorkItem>();
 
@@ -105,25 +117,75 @@ namespace DataDictionary.BusinessLayer
             return workItems.AsReadOnly();
         }
 
-        public IReadOnlyList<WorkItem> Load(IModelId modelId)
+        public IReadOnlyList<WorkItem> LoadModel(IModelId modelId)
         { //TODO: Load from Database by Model ID
             return new List<WorkItem>().AsReadOnly();
         }
 
-        public IReadOnlyList<WorkItem> Load(FileInfo file)
+        public IReadOnlyList<WorkItem> LoadModel(FileInfo file)
         { //TODO: Load from File System
             return new List<WorkItem>().AsReadOnly();
         }
 
-        public IReadOnlyList<WorkItem> Save()
+        public IReadOnlyList<WorkItem> LoadHelp()
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(modelContext);
+            workItems.Add(openConnection);
+
+            workItems.Add(new WorkItem()
+            {
+                WorkName = "Clear Help",
+                DoWork = HelpSubjects.Clear
+            });
+
+            workItems.Add(new LoadBindingTable(openConnection)
+            {
+                WorkName = "Load Help",
+                Reader = HelpItem.GetData,
+                Target = HelpSubjects
+            });
+
+            return workItems;
+        }
+
+        public IReadOnlyList<WorkItem> SaveModel()
         { //TODO: Save to Database
             return new List<WorkItem>().AsReadOnly();
         }
 
-        public IReadOnlyList<WorkItem> Save(FileInfo file)
+        public IReadOnlyList<WorkItem> SaveModel(FileInfo file)
         { //TODO: Save to File System
             ModelFile = file;
             return new List<WorkItem>().AsReadOnly();
+        }
+
+        public IReadOnlyList<WorkItem> SaveHelp()
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(modelContext);
+            workItems.Add(openConnection);
+
+            workItems.Add(new SaveBindingTable(openConnection)
+            {
+                WorkName = "Save Help",
+                Command = (conn) => HelpItem.SetData(HelpSubjects, conn)
+            });
+
+            workItems.Add(new WorkItem()
+            {
+                WorkName = "Clear Help",
+                DoWork = HelpSubjects.Clear
+            });
+
+            workItems.Add(new LoadBindingTable(openConnection)
+            {
+                WorkName = "Load Help",
+                Reader = HelpItem.GetData,
+                Target = HelpSubjects
+            });
+
+            return workItems;
         }
 
         public IReadOnlyList<WorkItem> RemoveCatalog(DbSchemaContext context)

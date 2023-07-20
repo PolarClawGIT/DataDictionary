@@ -10,21 +10,27 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
-    interface IDbWorkItem: IWorkItem
+    interface IDbWorkItem : IWorkItem
     { }
 
     class OpenConnection : WorkItem
     {
+        class ChildItem
+        {
+            public Boolean IsComplete { get; set; }
+            public Exception? Ex { get; set; }
+        }
+
         public IConnection Connection { get; private set; }
-        Dictionary<IDbWorkItem, (Boolean IsComplete, Exception? Ex)> children = new Dictionary<IDbWorkItem, (bool IsComplete, Exception? Ex)>();
+        Dictionary<IDbWorkItem, ChildItem> children = new Dictionary<IDbWorkItem, ChildItem>();
         public override string WorkName { get; init; } = "Open Connection";
 
         public OpenConnection(IContext context) : base()
-        {   Connection = context.CreateConnection(); }
+        { Connection = context.CreateConnection(); }
 
         public void Dependency(IDbWorkItem item)
         {
-            children.Add(item, (false, null));
+            children.Add(item, new ChildItem() { IsComplete = false, Ex = null }); ;
             item.Completing += WorkItem_Completing;
         }
 
@@ -32,9 +38,8 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         {
             if (sender is IDbWorkItem item && children.ContainsKey(item))
             {
-                (Boolean IsComplete, Exception? Ex) child = children[item];
-                child.IsComplete = true;
-                child.Ex = e.Error;
+                children[item].IsComplete = true;
+                children[item].Ex = e.Error;
                 item.Completing -= WorkItem_Completing;
             }
 
@@ -44,7 +49,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
                 else { Connection.Commit(); }
             }
         }
-        
+
         protected override void Work()
         { Connection.Open(); }
     }

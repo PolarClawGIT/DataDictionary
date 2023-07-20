@@ -28,14 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             SplitContainer helpSplitLayout;
             TableLayoutPanel helpDetailLayout;
             ToolStrip helpSubjectToolStrip;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HelpSubject));
-            helpContentData = new TreeView();
-            helpNameSpaceData = new Controls.TextBoxData();
-            helpSubjectTextData = new Controls.RichTextBoxData();
-            helpSubjectData = new Controls.TextBoxData();
+            helpContentNavigation = new TreeView();
             newToolStripButton = new ToolStripButton();
             openToolStripButton = new ToolStripButton();
             saveToolStripButton = new ToolStripButton();
@@ -44,8 +42,10 @@
             cutToolStripButton = new ToolStripButton();
             copyToolStripButton = new ToolStripButton();
             pasteToolStripButton = new ToolStripButton();
-            toolStripSeparator1 = new ToolStripSeparator();
-            helpToolStripButton = new ToolStripButton();
+            helpSubjectData = new Controls.TextBoxData();
+            helpNameSpaceData = new Controls.TextBoxData();
+            helpTextData = new Controls.RichTextBoxData();
+            errorProvider = new ErrorProvider(components);
             helpSplitLayout = new SplitContainer();
             helpDetailLayout = new TableLayoutPanel();
             helpSubjectToolStrip = new ToolStrip();
@@ -55,6 +55,7 @@
             helpSplitLayout.SuspendLayout();
             helpDetailLayout.SuspendLayout();
             helpSubjectToolStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // helpSplitLayout
@@ -66,7 +67,7 @@
             // 
             // helpSplitLayout.Panel1
             // 
-            helpSplitLayout.Panel1.Controls.Add(helpContentData);
+            helpSplitLayout.Panel1.Controls.Add(helpContentNavigation);
             // 
             // helpSplitLayout.Panel2
             // 
@@ -75,13 +76,13 @@
             helpSplitLayout.SplitterDistance = 153;
             helpSplitLayout.TabIndex = 0;
             // 
-            // helpContentData
+            // helpContentNavigation
             // 
-            helpContentData.Dock = DockStyle.Fill;
-            helpContentData.Location = new Point(0, 0);
-            helpContentData.Name = "helpContentData";
-            helpContentData.Size = new Size(151, 594);
-            helpContentData.TabIndex = 0;
+            helpContentNavigation.Dock = DockStyle.Fill;
+            helpContentNavigation.Location = new Point(0, 0);
+            helpContentNavigation.Name = "helpContentNavigation";
+            helpContentNavigation.Size = new Size(151, 594);
+            helpContentNavigation.TabIndex = 0;
             // 
             // helpDetailLayout
             // 
@@ -90,7 +91,7 @@
             helpDetailLayout.Controls.Add(helpSubjectToolStrip, 0, 0);
             helpDetailLayout.Controls.Add(helpSubjectData, 0, 1);
             helpDetailLayout.Controls.Add(helpNameSpaceData, 0, 2);
-            helpDetailLayout.Controls.Add(helpSubjectTextData, 0, 3);
+            helpDetailLayout.Controls.Add(helpTextData, 0, 3);
             helpDetailLayout.Dock = DockStyle.Fill;
             helpDetailLayout.Location = new Point(0, 0);
             helpDetailLayout.Name = "helpDetailLayout";
@@ -102,45 +103,9 @@
             helpDetailLayout.Size = new Size(577, 594);
             helpDetailLayout.TabIndex = 0;
             // 
-            // helpNameSpaceData
-            // 
-            helpNameSpaceData.AutoSize = true;
-            helpNameSpaceData.Dock = DockStyle.Fill;
-            helpNameSpaceData.HeaderText = "Name Space";
-            helpNameSpaceData.Location = new Point(3, 78);
-            helpNameSpaceData.Multiline = false;
-            helpNameSpaceData.Name = "helpNameSpaceData";
-            helpNameSpaceData.ReadOnly = false;
-            helpNameSpaceData.Size = new Size(571, 44);
-            helpNameSpaceData.TabIndex = 1;
-            // 
-            // helpSubjectTextData
-            // 
-            helpSubjectTextData.AutoSize = true;
-            helpSubjectTextData.Dock = DockStyle.Fill;
-            helpSubjectTextData.HeaderText = "Text";
-            helpSubjectTextData.Location = new Point(3, 128);
-            helpSubjectTextData.Name = "helpSubjectTextData";
-            helpSubjectTextData.ReadOnly = false;
-            helpSubjectTextData.RichText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
-            helpSubjectTextData.Size = new Size(571, 463);
-            helpSubjectTextData.TabIndex = 2;
-            // 
-            // helpSubjectData
-            // 
-            helpSubjectData.AutoSize = true;
-            helpSubjectData.Dock = DockStyle.Fill;
-            helpSubjectData.HeaderText = "Subject";
-            helpSubjectData.Location = new Point(3, 28);
-            helpSubjectData.Multiline = false;
-            helpSubjectData.Name = "helpSubjectData";
-            helpSubjectData.ReadOnly = false;
-            helpSubjectData.Size = new Size(571, 44);
-            helpSubjectData.TabIndex = 0;
-            // 
             // helpSubjectToolStrip
             // 
-            helpSubjectToolStrip.Items.AddRange(new ToolStripItem[] { newToolStripButton, openToolStripButton, saveToolStripButton, printToolStripButton, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator1, helpToolStripButton });
+            helpSubjectToolStrip.Items.AddRange(new ToolStripItem[] { newToolStripButton, openToolStripButton, saveToolStripButton, printToolStripButton, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton });
             helpSubjectToolStrip.Location = new Point(0, 0);
             helpSubjectToolStrip.Name = "helpSubjectToolStrip";
             helpSubjectToolStrip.Size = new Size(577, 25);
@@ -155,6 +120,7 @@
             newToolStripButton.Name = "newToolStripButton";
             newToolStripButton.Size = new Size(23, 22);
             newToolStripButton.Text = "&New";
+            newToolStripButton.Click += newToolStripButton_Click;
             // 
             // openToolStripButton
             // 
@@ -164,6 +130,7 @@
             openToolStripButton.Name = "openToolStripButton";
             openToolStripButton.Size = new Size(23, 22);
             openToolStripButton.Text = "&Open";
+            openToolStripButton.Click += openToolStripButton_Click;
             // 
             // saveToolStripButton
             // 
@@ -173,10 +140,12 @@
             saveToolStripButton.Name = "saveToolStripButton";
             saveToolStripButton.Size = new Size(23, 22);
             saveToolStripButton.Text = "&Save";
+            saveToolStripButton.Click += saveToolStripButton_Click;
             // 
             // printToolStripButton
             // 
             printToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            printToolStripButton.Enabled = false;
             printToolStripButton.Image = (Image)resources.GetObject("printToolStripButton.Image");
             printToolStripButton.ImageTransparentColor = Color.Magenta;
             printToolStripButton.Name = "printToolStripButton";
@@ -191,6 +160,7 @@
             // cutToolStripButton
             // 
             cutToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            cutToolStripButton.Enabled = false;
             cutToolStripButton.Image = (Image)resources.GetObject("cutToolStripButton.Image");
             cutToolStripButton.ImageTransparentColor = Color.Magenta;
             cutToolStripButton.Name = "cutToolStripButton";
@@ -200,6 +170,7 @@
             // copyToolStripButton
             // 
             copyToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            copyToolStripButton.Enabled = false;
             copyToolStripButton.Image = (Image)resources.GetObject("copyToolStripButton.Image");
             copyToolStripButton.ImageTransparentColor = Color.Magenta;
             copyToolStripButton.Name = "copyToolStripButton";
@@ -209,25 +180,56 @@
             // pasteToolStripButton
             // 
             pasteToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            pasteToolStripButton.Enabled = false;
             pasteToolStripButton.Image = (Image)resources.GetObject("pasteToolStripButton.Image");
             pasteToolStripButton.ImageTransparentColor = Color.Magenta;
             pasteToolStripButton.Name = "pasteToolStripButton";
             pasteToolStripButton.Size = new Size(23, 22);
             pasteToolStripButton.Text = "&Paste";
             // 
-            // toolStripSeparator1
+            // helpSubjectData
             // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(6, 25);
+            helpSubjectData.AutoSize = true;
+            helpSubjectData.Dock = DockStyle.Fill;
+            helpSubjectData.HeaderText = "Subject";
+            helpSubjectData.Location = new Point(3, 28);
+            helpSubjectData.Multiline = false;
+            helpSubjectData.Name = "helpSubjectData";
+            helpSubjectData.ReadOnly = false;
+            helpSubjectData.Size = new Size(571, 44);
+            helpSubjectData.TabIndex = 0;
+            helpSubjectData.Validated += helpSubjectData_Validated;
+            helpSubjectData.Validating += helpSubjectData_Validating;
             // 
-            // helpToolStripButton
+            // helpNameSpaceData
             // 
-            helpToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            helpToolStripButton.Image = (Image)resources.GetObject("helpToolStripButton.Image");
-            helpToolStripButton.ImageTransparentColor = Color.Magenta;
-            helpToolStripButton.Name = "helpToolStripButton";
-            helpToolStripButton.Size = new Size(23, 22);
-            helpToolStripButton.Text = "He&lp";
+            helpNameSpaceData.AutoSize = true;
+            helpNameSpaceData.Dock = DockStyle.Fill;
+            helpNameSpaceData.HeaderText = "Name Space";
+            helpNameSpaceData.Location = new Point(3, 78);
+            helpNameSpaceData.Multiline = false;
+            helpNameSpaceData.Name = "helpNameSpaceData";
+            helpNameSpaceData.ReadOnly = false;
+            helpNameSpaceData.Size = new Size(571, 44);
+            helpNameSpaceData.TabIndex = 1;
+            // 
+            // helpTextData
+            // 
+            helpTextData.AutoSize = true;
+            helpTextData.Dock = DockStyle.Fill;
+            helpTextData.HeaderText = "Text";
+            helpTextData.Location = new Point(3, 128);
+            helpTextData.Name = "helpTextData";
+            helpTextData.ReadOnly = false;
+            helpTextData.RichText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
+            helpTextData.Size = new Size(571, 463);
+            helpTextData.TabIndex = 2;
+            helpTextData.Validated += helpTextData_Validated;
+            helpTextData.Validating += helpTextData_Validating;
+            // 
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
             // 
             // HelpSubject
             // 
@@ -237,6 +239,7 @@
             Controls.Add(helpSplitLayout);
             Name = "HelpSubject";
             Text = "Help Subject";
+            Load += HelpSubject_Load;
             helpSplitLayout.Panel1.ResumeLayout(false);
             helpSplitLayout.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)helpSplitLayout).EndInit();
@@ -245,15 +248,15 @@
             helpDetailLayout.PerformLayout();
             helpSubjectToolStrip.ResumeLayout(false);
             helpSubjectToolStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private TreeView helpContentData;
-        private TableLayoutPanel helpDetailLayout;
+        private TreeView helpContentNavigation;
         private Controls.TextBoxData helpNameSpaceData;
-        private Controls.RichTextBoxData helpSubjectTextData;
+        private Controls.RichTextBoxData helpTextData;
         private Controls.TextBoxData helpSubjectData;
         private ToolStripButton newToolStripButton;
         private ToolStripButton openToolStripButton;
@@ -263,7 +266,6 @@
         private ToolStripButton cutToolStripButton;
         private ToolStripButton copyToolStripButton;
         private ToolStripButton pasteToolStripButton;
-        private ToolStripSeparator toolStripSeparator1;
-        private ToolStripButton helpToolStripButton;
+        private ErrorProvider errorProvider;
     }
 }

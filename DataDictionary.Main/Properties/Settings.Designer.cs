@@ -41,24 +41,6 @@ namespace DataDictionary.Main.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("(LocalDb)\\MSSQLLocalDb")]
-        public string HelpServer {
-            get {
-                return ((string)(this["HelpServer"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("DataDictionary")]
-        public string HelpDatabase {
-            get {
-                return ((string)(this["HelpDatabase"]));
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsd=\"http://www.w3." +
@@ -70,6 +52,24 @@ namespace DataDictionary.Main.Properties {
             }
             set {
                 this["UserServers"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DataDictionaryApp")]
+        public string AppDbRole {
+            get {
+                return ((string)(this["AppDbRole"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("MyApp131*99")]
+        public string AppDbRolePassword {
+            get {
+                return ((string)(this["AppDbRolePassword"]));
             }
         }
     }

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,21 +10,21 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
-    class LoadBindingTable : WorkItem, IDbWorkItem
+    class SaveBindingTable : WorkItem, IDbWorkItem
     {
-        public required IBindingTable Target { get; init; }
-        public required Func<IConnection, IDataReader> Reader { get; init; }
+        public required Func<IConnection,SqlCommand> Command { get; init; }
         readonly IConnection connection;
 
-        //public override required string WorkName { get; init; }
-
-        public LoadBindingTable(OpenConnection conn) : base()
+        public SaveBindingTable(OpenConnection conn) : base()
         {
             this.connection = conn.Connection;
             conn.Dependency(this);
         }
 
         protected override void Work()
-        { Target.Load(Reader(connection)); }
+        {
+            SqlCommand command = Command(connection);
+            command.ExecuteNonQuery();
+        }
     }
 }

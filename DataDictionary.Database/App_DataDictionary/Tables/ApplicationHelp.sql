@@ -4,7 +4,7 @@
 	[HelpParentId] UniqueIdentifier Null,
 	[HelpSubject] NVarChar(100) Not Null,
 	[HelpText] NVarChar(Max) Not Null,
-	[NameSpace] NVarChar(1000) Not Null,
+	[NameSpace] NVarChar(1000) Null,
 	[Obsolete] As (CONVERT([bit],case when [ObsoleteDate] IS NULL then (0) else (1) end)),
 	-- TODO: Add System Version later once the schema is locked down
 	[ObsoleteDate] DATETIME2 Null, -- Used to flag an item as a candidate for being deleted. Null = active, anything else is Obsolete.

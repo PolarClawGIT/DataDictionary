@@ -20,10 +20,17 @@ namespace DataDictionary.Main
         /// </summary>
         public static Mediator Messenger { get; } = new Mediator();
 
+
         /// <summary>
         /// Data used by the Application
         /// </summary>
-        public static ModelData Data { get; } = new ModelData();
+        public static ModelData Data { get; } = new ModelData(new Context()
+        { //TODO: Can this be secured better?
+            ServerName = Settings.Default.AppServer,
+            DatabaseName = Settings.Default.AppDatabase,
+            ApplicationRole = Settings.Default.AppDbRole,
+            ApplicationRolePassword = Settings.Default.AppDbRolePassword
+        });
 
         static Program()
         { }
@@ -58,6 +65,12 @@ namespace DataDictionary.Main
             Worker.Dispose();
             Messenger.Dispose();
         }
+
+        private static Toolbox.DbContext.Context AppContext = new DbSchemaContext()
+        {
+            ApplicationRole = Settings.Default.AppDbRole,
+            ApplicationRolePassword = Settings.Default.AppDbRolePassword
+        };
 
         public static void ShowException(Exception ex)
         {

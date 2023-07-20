@@ -509,28 +509,28 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(153, 22);
+            customizeToolStripMenuItem.Size = new Size(180, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(153, 22);
+            optionsToolStripMenuItem.Size = new Size(180, 22);
             optionsToolStripMenuItem.Text = "&Options";
             // 
             // dbSchemaToolStripMenuItem
             // 
             dbSchemaToolStripMenuItem.Image = Properties.Resources.Database;
             dbSchemaToolStripMenuItem.Name = "dbSchemaToolStripMenuItem";
-            dbSchemaToolStripMenuItem.Size = new Size(153, 22);
+            dbSchemaToolStripMenuItem.Size = new Size(180, 22);
             dbSchemaToolStripMenuItem.Text = "Db &Schema";
             // 
             // domainModelToolStripMenuItem
             // 
             domainModelToolStripMenuItem.Image = Properties.Resources.Dictionary;
             domainModelToolStripMenuItem.Name = "domainModelToolStripMenuItem";
-            domainModelToolStripMenuItem.Size = new Size(153, 22);
+            domainModelToolStripMenuItem.Size = new Size(180, 22);
             domainModelToolStripMenuItem.Text = "Domain &Model";
             // 
             // helpToolStripMenuItem
@@ -543,35 +543,35 @@
             // contentsToolStripMenuItem
             // 
             contentsToolStripMenuItem.Name = "contentsToolStripMenuItem";
-            contentsToolStripMenuItem.Size = new Size(122, 22);
+            contentsToolStripMenuItem.Size = new Size(180, 22);
             contentsToolStripMenuItem.Text = "&Contents";
             contentsToolStripMenuItem.Click += contentsToolStripMenuItem_Click;
             // 
             // indexToolStripMenuItem
             // 
-            indexToolStripMenuItem.Enabled = false;
             indexToolStripMenuItem.Name = "indexToolStripMenuItem";
-            indexToolStripMenuItem.Size = new Size(122, 22);
+            indexToolStripMenuItem.Size = new Size(180, 22);
             indexToolStripMenuItem.Text = "&Index";
+            indexToolStripMenuItem.Click += indexToolStripMenuItem_Click;
             // 
             // searchToolStripMenuItem
             // 
             searchToolStripMenuItem.Enabled = false;
             searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            searchToolStripMenuItem.Size = new Size(122, 22);
+            searchToolStripMenuItem.Size = new Size(180, 22);
             searchToolStripMenuItem.Text = "&Search";
             // 
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new Size(119, 6);
+            toolStripSeparator5.Size = new Size(177, 6);
             // 
             // aboutToolStripMenuItem
             // 
-            aboutToolStripMenuItem.Enabled = false;
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(122, 22);
+            aboutToolStripMenuItem.Size = new Size(180, 22);
             aboutToolStripMenuItem.Text = "&About...";
+            aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
             // Main
             // 
@@ -582,6 +582,7 @@
             Controls.Add(navigationPanel);
             Controls.Add(statusStrip);
             Controls.Add(menuStrip);
+            HelpButton = true;
             Icon = (Icon)resources.GetObject("$this.Icon");
             IsMdiContainer = true;
             MainMenuStrip = menuStrip;

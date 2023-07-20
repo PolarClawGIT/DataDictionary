@@ -92,15 +92,12 @@ namespace Toolbox.BindingTable
         /// <inheritdoc cref="DataTable.HasErrors"/>
         public virtual Boolean HasErrors { get { return dataItems.HasErrors; } }
 
-        /// <inheritdoc cref="DataTable.Load(IDataReader)"/>
         public virtual void Load(IDataReader reader)
         { this.Load(reader, LoadOption.PreserveChanges, null); }
 
-        /// <inheritdoc cref="DataTable.Load(IDataReader, LoadOption)"/>
         public virtual void Load(IDataReader reader, LoadOption loadOption)
         { this.Load(reader, loadOption, null); }
 
-        /// <inheritdoc cref="DataTable.Load(IDataReader, LoadOption, FillErrorEventHandler?)"/>
         public virtual void Load(IDataReader reader, LoadOption loadOption, FillErrorEventHandler? errorHandler)
         {
             using (DataTable newData = new DataTable() { TableName = typeof(TBindingItem).Name })
@@ -142,6 +139,9 @@ namespace Toolbox.BindingTable
                 else if (e.Errors is not null) { throw e.Errors; } // TODO: Consider throwing only one error instead of one for each row?
             }
         }
+
+        public virtual IDataReader CreateDataReader()
+        { return dataItems.CreateDataReader(); }
 
         /// <inheritdoc cref="DataTable.AcceptChanges"/>
         public virtual void AcceptChanges()
@@ -265,7 +265,7 @@ namespace Toolbox.BindingTable
         protected override void InsertItem(Int32 index, TBindingItem item)
         {
             DataRow itemRow = item.GetRow();
-            
+
             try
             {
                 if (!!ReferenceEquals(itemRow.Table, dataItems) || !isAddNewCore)

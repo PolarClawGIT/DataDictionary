@@ -232,7 +232,7 @@ namespace DataDictionary.Main.Forms
             {
                 if (data.DbContext is DbSchemaContext)
                 {
-                    IEnumerable<WorkItem> workItems = Program.Data.Load(data.DbContext);
+                    IEnumerable<WorkItem> workItems = Program.Data.LoadDbSchema(data.DbContext);
                     Program.Worker.Enqueue(workItems, onCompleting);
                 }
             }
