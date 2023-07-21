@@ -140,16 +140,21 @@ namespace DataDictionary.Main.Forms
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             {
+                if (args.Error is not null) { Program.ShowException(args.Error); }
+
                 this.UseWaitCursor = false;
                 this.Enabled = true;
                 BindData();
             }
         }
 
+
         private void saveToolStripButton_Click(object sender, EventArgs e)
         {
-            if (errorProvider.HasErrors)
-            { return; } //TODO: Cause the errors to flash?
+            this.ValidateChildren();
+
+            if (errorProvider.GetAllErrors(this).Count != 0)
+            { return; }
 
             this.UseWaitCursor = true;
             this.Enabled = false;
@@ -162,6 +167,8 @@ namespace DataDictionary.Main.Forms
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             {
+                if(args.Error is not null) { Program.ShowException(args.Error); }
+
                 this.UseWaitCursor = false;
                 this.Enabled = true;
                 BindData();

@@ -52,20 +52,20 @@ namespace DataDictionary.DataLayer.ApplicationData
 
         public static IDataReader GetData(IConnection connection)
         {
-            SqlCommand command = connection.CreateCommand();
+            Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "procGetApplicationHelp";
-            return command.ExecuteReader();
+            command.CommandText = "[App_DataDictionary].[procGetApplicationHelp]";
+            return connection.ExecuteReader(command) ;
         }
 
-        public static SqlCommand SetData(IBindingTable<HelpItem> source, IConnection connection)
+        public static Command SetData(IBindingTable<HelpItem> source, IConnection connection)
         {
-            SqlCommand command = connection.CreateCommand();
+            Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "procSetApplicationHelp";
+            command.CommandText = "[App_DataDictionary].[procSetApplicationHelp]";
 
             SqlParameter dataValues = new SqlParameter("@Data", SqlDbType.Structured);
-            dataValues.TypeName = "App_DataDictionary.typeApplicationHelp";
+            dataValues.TypeName = "[App_DataDictionary].[typeApplicationHelp]";
             DataTable data = new DataTable();
             data.Load(source.CreateDataReader());
             dataValues.Value = data;

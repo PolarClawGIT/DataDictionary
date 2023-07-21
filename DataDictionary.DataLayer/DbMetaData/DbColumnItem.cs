@@ -124,14 +124,14 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public static IDataReader GetSchema(IConnection connection)
         {
-            SqlCommand command = connection.CreateCommand();
+            Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = DbScript.DbColumnItem;
 
             return connection.ExecuteReader(command);
         }
 
-        public virtual SqlCommand GetProperties(IConnection connection)
+        public virtual Command GetProperties(IConnection connection)
         {
             return (new DbExtendedPropertyGetCommand(connection)
             { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = TableName, Level1Type = "TABLE", Level2Name = ColumnName, Level2Type = "COLUMN" }).

@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlTypes;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +18,7 @@ namespace Toolbox.DbContext
         /// Has an Exception occurred within the scope of this connection.
         /// </summary>
         Boolean HasException { get; }
+        IReadOnlyList<Exception> Errors { get; }
 
         String? ServerName { get; }
         String? DatabaseName { get; }
@@ -35,18 +38,20 @@ namespace Toolbox.DbContext
         IDataReader GetReader(InformationSchema.Collection collection, String catalogName, String schemaName);
         IDataReader GetReader(InformationSchema.Collection collection, String catalogName, String schemaName, String objectName);
 
+        void ExecuteNonQuery(Command command);
+
         /// <summary>
         /// Expose the Create Command function.
         /// </summary>
         /// <returns></returns>
-        SqlCommand CreateCommand();
+        Command CreateCommand();
 
         /// <summary>
         /// Wrappers the ExecuteReader and returns the Data Reader.
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        IDataReader ExecuteReader(SqlCommand command);
+        IDataReader ExecuteReader(Command command);
 
         /// <summary>
         /// Commits the transaction on the Open Connection. The Connection is then closed.
@@ -62,13 +67,18 @@ namespace Toolbox.DbContext
     class Connection : IConnection
     {
         public required Context DbContext { get; init; }
-        public Boolean HasException { get; private set; } = false;
+        public Boolean HasException { get { return (Errors.Count > 0); } }
+
+        List<Exception> exceptions = new List<Exception>();
+        public IReadOnlyList<Exception> Errors { get { return exceptions.AsReadOnly(); } }
+
         public String ServerName { get { return connection.DataSource; } }
         public String DatabaseName { get { return connection.Database; } }
 
         private Boolean disposedValue = false;
         private SqlConnection connection = new SqlConnection();
         private SqlTransaction transaction = null!;
+        private Byte[]? applicationRoleCookie = null;
 
         public Connection() { }
 
@@ -85,22 +95,31 @@ namespace Toolbox.DbContext
                 // Activate the Application role
                 if (!String.IsNullOrEmpty(DbContext.ApplicationRole))
                 {
+                    // This is the only way I could get the sp_setapprole to work.
+                    // On-line documentation was filled with incorrect solutions.
+                    // @cookie needs to come out as a Byte[50]
+                    // Using a CommandType.StoredProcedure, @cookie was returned as Int32 and retrieved only the first 4 bytes
+                    // Using Parameters with CommandType.Text, SQL generates an error because it the call uses sp_executeSql which is not allowed with sp_setapprole.
                     SqlCommand roleCommand = connection.CreateCommand();
-                    roleCommand.CommandType = CommandType.StoredProcedure;
-                    roleCommand.CommandText = "sys.sp_setapprole";
-                    roleCommand.Parameters.Add(new SqlParameter("@rolename", DbContext.ApplicationRole));
-                    roleCommand.Parameters.Add(new SqlParameter("@password", DbContext.ApplicationRolePassword));
-                    roleCommand.ExecuteNonQuery();
+
+                    roleCommand.CommandType = CommandType.Text;
+                    roleCommand.CommandText = String.Format("Declare @cookie VarBinary(8000); Exec sp_setapprole '{0}', N'{1}', @fCreateCookie = true, @cookie = @cookie OUTPUT; Select @cookie", DbContext.ApplicationRole, DbContext.ApplicationRolePassword);
+
+                    using (DataTable data = new DataTable())
+                    {
+                        data.Load(roleCommand.ExecuteReader());
+                        applicationRoleCookie = (Byte[])data.Rows[0][0];
+                    }
                 }
 
                 transaction = connection.BeginTransaction();
             }
             catch (Exception ex)
             {
-                HasException = true;
                 ex.Data.Add(nameof(DbContext.ConnectionBuilder.ConnectionString), DbContext.ConnectionBuilder.ConnectionString);
                 if (!String.IsNullOrEmpty(DbContext.ApplicationRole))
                 { ex.Data.Add(nameof(DbContext.ApplicationRole), DbContext.ApplicationRole); }
+                exceptions.Add(ex);
 
                 throw;
             }
@@ -114,11 +133,23 @@ namespace Toolbox.DbContext
             try
             {
                 if (transaction != null) { transaction.Commit(); }
+
+                if (applicationRoleCookie is not null)
+                {
+                    SqlCommand roleCommand = connection.CreateCommand();
+                    roleCommand.CommandType = CommandType.StoredProcedure;
+                    roleCommand.CommandText = "sys.sp_unsetapprole";
+                    SqlParameter parameter = new SqlParameter("@cookie", applicationRoleCookie);
+                    roleCommand.Parameters.Add(parameter);
+
+                    roleCommand.ExecuteNonQuery();
+                }
+
                 connection.Close();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                HasException = true;
+                exceptions.Add(ex);
                 throw;
             }
         }
@@ -131,10 +162,23 @@ namespace Toolbox.DbContext
             try
             {
                 if (transaction != null) { transaction.Rollback(); }
+
+                if (applicationRoleCookie is not null)
+                {
+                    SqlCommand roleCommand = connection.CreateCommand();
+                    roleCommand.CommandType = CommandType.StoredProcedure;
+                    roleCommand.CommandText = "sys.sp_unsetapprole";
+                    roleCommand.Parameters.Add(new SqlParameter("@cookie", applicationRoleCookie));
+                    roleCommand.ExecuteNonQuery();
+                }
+
                 connection.Close();
             }
-            catch (Exception)
-            { throw; }
+            catch (Exception ex)
+            {
+                exceptions.Add(ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -142,10 +186,10 @@ namespace Toolbox.DbContext
         /// The Command created is already associated with the Transaction.
         /// </summary>
         /// <returns></returns>
-        public SqlCommand CreateCommand()
+        public Command CreateCommand()
         {
-            SqlCommand result = connection.CreateCommand();
-            result.Transaction = transaction;
+            Command result = new Command(connection.CreateCommand());
+            result.BaseCommand.Transaction = transaction;
             return result;
         }
 
@@ -154,15 +198,30 @@ namespace Toolbox.DbContext
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        public IDataReader ExecuteReader(SqlCommand command)
+        public IDataReader ExecuteReader(Command command)
         {
-            if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
+            //if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
 
             try
-            { return command.ExecuteReader(); }
+            { return command.BaseCommand.ExecuteReader(); }
             catch (Exception ex)
             {
-                AddExceptionData(command, ex);
+                AddExceptionData(command.BaseCommand, ex);
+                exceptions.Add(ex);
+                throw;
+            }
+        }
+
+        public void ExecuteNonQuery(Command command)
+        {
+            //if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
+
+            try
+            { command.BaseCommand.ExecuteNonQuery(); }
+            catch (Exception ex)
+            {
+                AddExceptionData(command.BaseCommand, ex);
+                exceptions.Add(ex);
                 throw;
             }
         }
@@ -197,6 +256,7 @@ namespace Toolbox.DbContext
             catch (Exception ex)
             {
                 ex.Data.Add(nameof(collection), collection.ToString());
+                exceptions.Add(ex);
                 throw;
             }
 
@@ -221,6 +281,7 @@ namespace Toolbox.DbContext
             catch (Exception ex)
             {
                 ex.Data.Add(nameof(collection), collection.ToString());
+                exceptions.Add(ex);
                 throw;
             }
 
@@ -245,6 +306,7 @@ namespace Toolbox.DbContext
             catch (Exception ex)
             {
                 ex.Data.Add(nameof(collection), collection.ToString());
+                exceptions.Add(ex);
                 throw;
             }
 
@@ -269,6 +331,7 @@ namespace Toolbox.DbContext
             catch (Exception ex)
             {
                 ex.Data.Add(nameof(collection), collection.ToString());
+                exceptions.Add(ex);
                 throw;
             }
 

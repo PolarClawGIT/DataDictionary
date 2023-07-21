@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
 {
     class SaveBindingTable : WorkItem, IDbWorkItem
     {
-        public required Func<IConnection,SqlCommand> Command { get; init; }
+        public required Func<IConnection, Command> Command { get; init; }
         readonly IConnection connection;
 
         public SaveBindingTable(OpenConnection conn) : base()
@@ -23,8 +23,8 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
 
         protected override void Work()
         {
-            SqlCommand command = Command(connection);
-            command.ExecuteNonQuery();
+            Command command = Command(connection);
+            connection.ExecuteNonQuery(command);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
+using System.Windows.Forms;
 using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
@@ -158,5 +159,37 @@ namespace DataDictionary.Main.Forms
         }
 
         #endregion
+    }
+
+    static class ApplicationFormExtension
+    {
+        /// <summary>
+        /// Searches the control passed and all child controls for an error associated with the ErrorProvider and return the text.
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="rootControl"></param>
+        /// <returns>List of controls and the error text that goes with them.</returns>
+        /// <remarks>
+        /// The error provider does not contain this function.
+        /// Also, for some reason the Error Provider can return HasErrors = true when no control on the form has an error.
+        /// This way, I can search for controls within a specific scope looking for errors.
+        /// </remarks>
+        public static Dictionary<Control, String> GetAllErrors(this ErrorProvider provider,  Control rootControl)
+        {
+            Dictionary<Control, String> errors = new Dictionary<Control, String>();
+            String errorText = provider.GetError(rootControl);
+
+            if (!String.IsNullOrWhiteSpace(errorText))
+            { errors.Add(rootControl, errorText); }
+
+            foreach (Control item in rootControl.Controls)
+            {
+                Dictionary<Control, String> child = provider.GetAllErrors(item);
+                foreach (var childItem in child)
+                { errors.Add(childItem.Key, childItem.Value); }
+            }
+
+            return errors;
+        }
     }
 }

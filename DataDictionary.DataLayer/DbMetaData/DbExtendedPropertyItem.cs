@@ -35,7 +35,7 @@ namespace DataDictionary.DataLayer.DbMetaData
 
     public interface IDbExtendedProperties
     {  // DB Classes that have extended properties.
-        SqlCommand GetProperties(IConnection connection);
+        Command GetProperties(IConnection connection);
     }
 
     internal class DbExtendedPropertyGetCommand
@@ -66,12 +66,12 @@ namespace DataDictionary.DataLayer.DbMetaData
             set { Level2Type = value.GetScope(); }
         }
 
-        readonly SqlCommand command;
+        readonly Command command;
 
         public DbExtendedPropertyGetCommand(IConnection connection) : base()
         { command = connection.CreateCommand(); }
 
-        public SqlCommand GetCommand()
+        public Command GetCommand()
         {
             // There appears to be a bug in Microsoft Code that can cause the parameters to be incorrectly setup when building the SQL statement for the parameters.
             // This appears to be avoid when the parameter is setup with a defined type and length.

@@ -38,7 +38,9 @@ namespace Toolbox.DbContext
                 else { ConnectionBuilder.InitialCatalog = value; }
             }
         }
-        public SqlAuthenticationMethod? Authentication { get { return ConnectionBuilder.Authentication; } }
+        
+        public Boolean IntegratedSecurity { get { return ConnectionBuilder.IntegratedSecurity; } set { ConnectionBuilder.IntegratedSecurity = value; } }
+
         public String ServerUserName { get { return ConnectionBuilder.UserID; } init { ConnectionBuilder.UserID = value; } }
         public String ServerUserPassword { get { return ConnectionBuilder.Password; } init { ConnectionBuilder.Password = value; } }
 
