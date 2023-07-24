@@ -134,7 +134,7 @@ namespace DataDictionary.Main
             else { new Forms.DomainAttributeView().Show(); }
         }
 
-        private void contentsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void HelpContentsMenuItem_Click(object sender, EventArgs e)
         {
 
             if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.HelpSubject)) is Forms.HelpSubject existingForm)
@@ -156,24 +156,40 @@ namespace DataDictionary.Main
             }
         }
 
-        private void indexToolStripMenuItem_Click(object sender, EventArgs e)
+        private void HelpIndexMenuItem_Click(object sender, EventArgs e)
         {
             if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.HelpSubject)) is Forms.HelpSubject existingForm)
             { existingForm.Activate(); }
             else { new Forms.HelpSubject().Show(); }
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void HelpAboutMenuItem_Click(object sender, EventArgs e)
         {
             if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.HelpSubject)) is Forms.HelpSubject existingForm)
             {
-                existingForm.NavigateTo("About");
                 existingForm.Activate();
+                existingForm.NavigateTo("About");
             }
             else
             { new Forms.HelpSubject("About").Show(); }
         }
 
+        private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.HelpSubject)) is Forms.HelpSubject existingForm)
+            {
+                existingForm.Activate();
+                if (this.ActiveMdiChild is Form activeChild)
+                { existingForm.NavigateTo(activeChild); }
+                else { existingForm.NavigateTo(this); }
+            }
+            else
+            {
+                if (this.ActiveMdiChild is Form activeChild)
+                { new Forms.HelpSubject(activeChild).Show(); }
+                else { new Forms.HelpSubject(this).Show(); }
+            }
+        }
 
         private void navigationDbSchemaTab_MouseDoubleClick(object sender, MouseEventArgs e)
         { //TODO: Not Working. Does not show when the context menu is assigned to the control or rigged to an event.

@@ -82,11 +82,11 @@
             dbSchemaToolStripMenuItem = new ToolStripMenuItem();
             domainModelToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
-            contentsToolStripMenuItem = new ToolStripMenuItem();
-            indexToolStripMenuItem = new ToolStripMenuItem();
+            helpContentsMenuItem = new ToolStripMenuItem();
+            helpIndexMenuItem = new ToolStripMenuItem();
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
-            aboutToolStripMenuItem = new ToolStripMenuItem();
+            helpAboutMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
@@ -535,24 +535,24 @@
             // 
             // helpToolStripMenuItem
             // 
-            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { contentsToolStripMenuItem, indexToolStripMenuItem, searchToolStripMenuItem, toolStripSeparator5, aboutToolStripMenuItem });
+            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { helpContentsMenuItem, helpIndexMenuItem, searchToolStripMenuItem, toolStripSeparator5, helpAboutMenuItem });
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             helpToolStripMenuItem.Size = new Size(44, 20);
             helpToolStripMenuItem.Text = "&Help";
             // 
-            // contentsToolStripMenuItem
+            // helpContentsMenuItem
             // 
-            contentsToolStripMenuItem.Name = "contentsToolStripMenuItem";
-            contentsToolStripMenuItem.Size = new Size(180, 22);
-            contentsToolStripMenuItem.Text = "&Contents";
-            contentsToolStripMenuItem.Click += contentsToolStripMenuItem_Click;
+            helpContentsMenuItem.Name = "helpContentsMenuItem";
+            helpContentsMenuItem.Size = new Size(180, 22);
+            helpContentsMenuItem.Text = "&Contents";
+            helpContentsMenuItem.Click += HelpContentsMenuItem_Click;
             // 
-            // indexToolStripMenuItem
+            // helpIndexMenuItem
             // 
-            indexToolStripMenuItem.Name = "indexToolStripMenuItem";
-            indexToolStripMenuItem.Size = new Size(180, 22);
-            indexToolStripMenuItem.Text = "&Index";
-            indexToolStripMenuItem.Click += indexToolStripMenuItem_Click;
+            helpIndexMenuItem.Name = "helpIndexMenuItem";
+            helpIndexMenuItem.Size = new Size(180, 22);
+            helpIndexMenuItem.Text = "&Index";
+            helpIndexMenuItem.Click += HelpIndexMenuItem_Click;
             // 
             // searchToolStripMenuItem
             // 
@@ -566,12 +566,12 @@
             toolStripSeparator5.Name = "toolStripSeparator5";
             toolStripSeparator5.Size = new Size(177, 6);
             // 
-            // aboutToolStripMenuItem
+            // helpAboutMenuItem
             // 
-            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(180, 22);
-            aboutToolStripMenuItem.Text = "&About...";
-            aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
+            helpAboutMenuItem.Name = "helpAboutMenuItem";
+            helpAboutMenuItem.Size = new Size(180, 22);
+            helpAboutMenuItem.Text = "&About...";
+            helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
             // 
             // Main
             // 
@@ -590,6 +590,7 @@
             Text = "Data Dictionary manager";
             FormClosed += Main_FormClosed;
             Load += Main_Load;
+            HelpRequested += Main_HelpRequested;
             navigationPanel.ResumeLayout(false);
             modelSpliter.Panel1.ResumeLayout(false);
             modelSpliter.Panel1.PerformLayout();
@@ -639,11 +640,11 @@
         private ToolStripMenuItem customizeToolStripMenuItem;
         private ToolStripMenuItem optionsToolStripMenuItem;
         private ToolStripMenuItem helpToolStripMenuItem;
-        private ToolStripMenuItem contentsToolStripMenuItem;
-        private ToolStripMenuItem indexToolStripMenuItem;
+        private ToolStripMenuItem helpContentsMenuItem;
+        private ToolStripMenuItem helpIndexMenuItem;
         private ToolStripMenuItem searchToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator5;
-        private ToolStripMenuItem aboutToolStripMenuItem;
+        private ToolStripMenuItem helpAboutMenuItem;
         private ToolStripStatusLabel toolStripWorkerTask;
         private ToolStripStatusLabel toolStripInfo;
         private ToolStripStatusLabel toolStripWhiteSpace;

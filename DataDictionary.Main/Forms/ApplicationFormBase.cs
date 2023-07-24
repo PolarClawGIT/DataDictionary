@@ -49,19 +49,19 @@ namespace DataDictionary.Main.Forms
 
         protected virtual void HandleMessage(WindowsCopyCommand message)
         {
-            if (ReferenceEquals(this, message.HandledBy))
+            if (ReferenceEquals(this, message.HandledBy) &&
+                this.ActiveControl is Control activeControl &&
+                !message.IsHandled)
+            { HandleControl(activeControl); }
+
+            void HandleControl(Control control)
             {
                 if (this.ActiveControl is TextBoxBase controlBase)
                 {
                     controlBase.Copy();
                     message.IsHandled = true;
                 }
-                else if (this.ActiveControl is ISupportEditMenu control)
-                {
-                    control.Copy();
-                    message.IsHandled = true;
-                }
-                else if (this.ActiveControl is ComboBox combo)
+                else if (control is ComboBox combo)
                 {
                     if (!String.IsNullOrEmpty(combo.SelectedText))
                     {
@@ -69,25 +69,38 @@ namespace DataDictionary.Main.Forms
                         message.IsHandled = true;
                     }
                 }
+                else if (control is ISupportEditMenu menuControl)
+                {
+                    menuControl.Copy();
+                    message.IsHandled = true;
+                }
+                else if (control is ContainerControl Container && Container.ActiveControl is Control containerControl)
+                { HandleControl(containerControl); }
+                else
+                {
+                    Exception ex = new NotSupportedException();
+                    ex.Data.Add("ActiveControl", control.GetType().FullName);
+                    throw ex;
+                }
 
             }
         }
 
         protected virtual void HandleMessage(WindowsCutCommand message)
         {
-            if (ReferenceEquals(this, message.HandledBy))
+            if (ReferenceEquals(this, message.HandledBy) &&
+                this.ActiveControl is Control activeControl &&
+                !message.IsHandled)
+            { HandleControl(activeControl); }
+
+            void HandleControl(Control control)
             {
-                if (this.ActiveControl is TextBoxBase controlBase)
+                if (control is TextBoxBase controlBase)
                 {
                     controlBase.Cut();
                     message.IsHandled = true;
                 }
-                else if (this.ActiveControl is ISupportEditMenu control)
-                {
-                    control.Cut();
-                    message.IsHandled = true;
-                }
-                else if (this.ActiveControl is ComboBox combo)
+                else if (control is ComboBox combo)
                 {
                     if (!String.IsNullOrEmpty(combo.SelectedText))
                     {
@@ -96,24 +109,42 @@ namespace DataDictionary.Main.Forms
                         message.IsHandled = true;
                     }
                 }
+                else if (control is ISupportEditMenu menuControl)
+                {
+                    menuControl.Cut();
+                    message.IsHandled = true;
+                }
+                else if (control is ContainerControl Container && Container.ActiveControl is Control containerControl)
+                { HandleControl(containerControl); }
+                else
+                {
+                    Exception ex = new NotSupportedException();
+                    ex.Data.Add("ActiveControl", control.GetType().FullName);
+                    throw ex;
+                }
             }
         }
 
         protected virtual void HandleMessage(WindowsPasteCommand message)
         {
-            if (ReferenceEquals(this, message.HandledBy))
+            if (ReferenceEquals(this, message.HandledBy) &&
+                this.ActiveControl is Control activeControl &&
+                !message.IsHandled)
+            { HandleControl(activeControl); }
+
+            void HandleControl(Control control)
             {
-                if (this.ActiveControl is TextBoxBase controlBase)
+                if (control is TextBoxBase controlBase)
                 {
                     controlBase.Paste();
                     message.IsHandled = true;
                 }
-                else if (this.ActiveControl is ISupportEditMenu control)
+                else if (control is ISupportEditMenu menuControl)
                 {
-                    control.Paste();
+                    menuControl.Paste();
                     message.IsHandled = true;
                 }
-                else if (this.ActiveControl is ComboBox combo)
+                else if (control is ComboBox combo)
                 {
                     if (Clipboard.GetText() is String newText)
                     {
@@ -121,39 +152,73 @@ namespace DataDictionary.Main.Forms
                         message.IsHandled = true;
                     }
                 }
+                else if (control is ContainerControl Container && Container.ActiveControl is Control containerControl)
+                { HandleControl(containerControl); }
+                else
+                {
+                    Exception ex = new NotSupportedException();
+                    ex.Data.Add("ActiveControl", control.GetType().FullName);
+                    throw ex;
+                }
             }
         }
 
         protected virtual void HandleMessage(WindowsUndoCommand message)
         {
-            if (ReferenceEquals(this, message.HandledBy))
+            if (ReferenceEquals(this, message.HandledBy) &&
+                this.ActiveControl is Control activeControl &&
+                !message.IsHandled)
+            { HandleControl(activeControl); }
+
+            void HandleControl(Control control)
             {
-                if (this.ActiveControl is TextBoxBase controlBase)
+                if (control is TextBoxBase controlBase)
                 {
                     controlBase.Undo();
                     message.IsHandled = true;
                 }
-                else if (this.ActiveControl is ISupportEditMenu control)
+                else if (control is ISupportEditMenu menuControl)
                 {
-                    control.Undo();
+                    menuControl.Undo();
                     message.IsHandled = true;
+                }
+                else if (control is ContainerControl Container && Container.ActiveControl is Control containerControl)
+                { HandleControl(containerControl); }
+                else
+                {
+                    Exception ex = new NotSupportedException();
+                    ex.Data.Add("ActiveControl", control.GetType().FullName);
+                    throw ex;
                 }
             }
         }
 
         protected virtual void HandleMessage(WindowsSelectAllCommand message)
         {
-            if (ReferenceEquals(this, message.HandledBy))
+            if (ReferenceEquals(this, message.HandledBy) &&
+                this.ActiveControl is Control activeControl &&
+                !message.IsHandled)
+            { HandleControl(activeControl); }
+
+            void HandleControl(Control control)
             {
-                if (this.ActiveControl is TextBoxBase controlBase)
+                if (control is TextBoxBase controlBase)
                 {
                     controlBase.SelectAll();
                     message.IsHandled = true;
                 }
-                else if (this.ActiveControl is ISupportEditMenu control)
+                else if (control is ISupportEditMenu menuControl)
                 {
-                    control.SelectAll();
+                    menuControl.SelectAll();
                     message.IsHandled = true;
+                }
+                else if (control is ContainerControl Container && Container.ActiveControl is Control containerControl)
+                { HandleControl(containerControl); }
+                else
+                {
+                    Exception ex = new NotSupportedException();
+                    ex.Data.Add("ActiveControl", control.GetType().FullName);
+                    throw ex;
                 }
             }
         }
@@ -174,7 +239,7 @@ namespace DataDictionary.Main.Forms
         /// Also, for some reason the Error Provider can return HasErrors = true when no control on the form has an error.
         /// This way, I can search for controls within a specific scope looking for errors.
         /// </remarks>
-        public static Dictionary<Control, String> GetAllErrors(this ErrorProvider provider,  Control rootControl)
+        public static Dictionary<Control, String> GetAllErrors(this ErrorProvider provider, Control rootControl)
         {
             Dictionary<Control, String> errors = new Dictionary<Control, String>();
             String errorText = provider.GetError(rootControl);

@@ -107,7 +107,7 @@
             attributeDescriptionData.Margin = new Padding(0);
             attributeDescriptionData.Name = "attributeDescriptionData";
             attributeDescriptionData.ReadOnly = false;
-            attributeDescriptionData.RichText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
+            attributeDescriptionData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
             attributeDescriptionData.Size = new Size(509, 394);
             attributeDescriptionData.TabIndex = 3;
             // 

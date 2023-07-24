@@ -38,4 +38,5 @@ namespace DataDictionary.Main.Messages
 
     class WindowsSelectAllCommand : WindowsCommand { }
 
+    class WindowsHelpCommand : WindowsCommand { }
 }

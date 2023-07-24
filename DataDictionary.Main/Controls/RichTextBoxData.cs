@@ -21,6 +21,7 @@ namespace DataDictionary.Main.Controls
     /// Wrappers the base control into a Table Layout with a Label and a spot to place to reference the Error Provider.
     /// Each property to be used from the base control has to be exposed. Same thing with events.
     /// </remarks>
+    [DefaultBindingProperty("Rtf")]
     public partial class RichTextBoxData : UserControl, ISupportEditMenu
     {
 
@@ -34,8 +35,26 @@ namespace DataDictionary.Main.Controls
         // Expose Control Properties
         public Boolean ReadOnly { get { return richTextBox.ReadOnly; } set { richTextBox.ReadOnly = value; } }
 
-        [Browsable(false), Bindable(true)]
-        public String RichText { get { return richTextBox.Rtf; } set { richTextBox.Rtf = value; } }
+        /// <summary>
+        /// Exposes the Rich Text attribute.
+        /// </summary>
+        /// <remarks>
+        /// The name appears to be very touchy. Changing it to "RichText" causes an error during binding while "Rtf" does not.
+        /// </remarks>
+        [Browsable(false), RefreshProperties(RefreshProperties.All), SettingsBindable(true), DefaultValue(""), Category("Appearance")]
+        public String Rtf
+        {
+            get
+            { return richTextBox.Rtf; }
+            set
+            {
+                try
+                { richTextBox.Rtf = value; }
+                catch (Exception)
+                { richTextBox.Text = value; }
+
+            }
+        }
 
         /// <summary>
         /// Control used to position the Error Provider Icon.

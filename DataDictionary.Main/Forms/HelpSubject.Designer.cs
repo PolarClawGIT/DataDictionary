@@ -38,10 +38,6 @@
             openToolStripButton = new ToolStripButton();
             saveToolStripButton = new ToolStripButton();
             printToolStripButton = new ToolStripButton();
-            toolStripSeparator = new ToolStripSeparator();
-            cutToolStripButton = new ToolStripButton();
-            copyToolStripButton = new ToolStripButton();
-            pasteToolStripButton = new ToolStripButton();
             helpSubjectData = new Controls.TextBoxData();
             helpNameSpaceData = new Controls.TextBoxData();
             helpTextData = new Controls.RichTextBoxData();
@@ -105,7 +101,7 @@
             // 
             // helpSubjectToolStrip
             // 
-            helpSubjectToolStrip.Items.AddRange(new ToolStripItem[] { newToolStripButton, openToolStripButton, saveToolStripButton, printToolStripButton, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton });
+            helpSubjectToolStrip.Items.AddRange(new ToolStripItem[] { newToolStripButton, openToolStripButton, saveToolStripButton, printToolStripButton });
             helpSubjectToolStrip.Location = new Point(0, 0);
             helpSubjectToolStrip.Name = "helpSubjectToolStrip";
             helpSubjectToolStrip.Size = new Size(577, 25);
@@ -152,41 +148,6 @@
             printToolStripButton.Size = new Size(23, 22);
             printToolStripButton.Text = "&Print";
             // 
-            // toolStripSeparator
-            // 
-            toolStripSeparator.Name = "toolStripSeparator";
-            toolStripSeparator.Size = new Size(6, 25);
-            // 
-            // cutToolStripButton
-            // 
-            cutToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            cutToolStripButton.Enabled = false;
-            cutToolStripButton.Image = (Image)resources.GetObject("cutToolStripButton.Image");
-            cutToolStripButton.ImageTransparentColor = Color.Magenta;
-            cutToolStripButton.Name = "cutToolStripButton";
-            cutToolStripButton.Size = new Size(23, 22);
-            cutToolStripButton.Text = "C&ut";
-            // 
-            // copyToolStripButton
-            // 
-            copyToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            copyToolStripButton.Enabled = false;
-            copyToolStripButton.Image = (Image)resources.GetObject("copyToolStripButton.Image");
-            copyToolStripButton.ImageTransparentColor = Color.Magenta;
-            copyToolStripButton.Name = "copyToolStripButton";
-            copyToolStripButton.Size = new Size(23, 22);
-            copyToolStripButton.Text = "&Copy";
-            // 
-            // pasteToolStripButton
-            // 
-            pasteToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            pasteToolStripButton.Enabled = false;
-            pasteToolStripButton.Image = (Image)resources.GetObject("pasteToolStripButton.Image");
-            pasteToolStripButton.ImageTransparentColor = Color.Magenta;
-            pasteToolStripButton.Name = "pasteToolStripButton";
-            pasteToolStripButton.Size = new Size(23, 22);
-            pasteToolStripButton.Text = "&Paste";
-            // 
             // helpSubjectData
             // 
             helpSubjectData.AutoSize = true;
@@ -209,7 +170,7 @@
             helpNameSpaceData.Location = new Point(3, 78);
             helpNameSpaceData.Multiline = false;
             helpNameSpaceData.Name = "helpNameSpaceData";
-            helpNameSpaceData.ReadOnly = false;
+            helpNameSpaceData.ReadOnly = true;
             helpNameSpaceData.Size = new Size(571, 44);
             helpNameSpaceData.TabIndex = 1;
             // 
@@ -221,7 +182,7 @@
             helpTextData.Location = new Point(3, 128);
             helpTextData.Name = "helpTextData";
             helpTextData.ReadOnly = false;
-            helpTextData.RichText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
+            helpTextData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
             helpTextData.Size = new Size(571, 463);
             helpTextData.TabIndex = 2;
             helpTextData.Validated += helpTextData_Validated;
@@ -262,10 +223,6 @@
         private ToolStripButton openToolStripButton;
         private ToolStripButton saveToolStripButton;
         private ToolStripButton printToolStripButton;
-        private ToolStripSeparator toolStripSeparator;
-        private ToolStripButton cutToolStripButton;
-        private ToolStripButton copyToolStripButton;
-        private ToolStripButton pasteToolStripButton;
         private ErrorProvider errorProvider;
     }
 }
