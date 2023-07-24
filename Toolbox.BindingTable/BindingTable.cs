@@ -268,8 +268,8 @@ namespace Toolbox.BindingTable
 
             try
             {
-                if (!!ReferenceEquals(itemRow.Table, dataItems) || !isAddNewCore)
-                { // Replace the row data with a copy that belongs to this table
+                if (!ReferenceEquals(itemRow.Table, dataItems) && !isAddNewCore)
+                {// Replace the row data with a copy that belongs to this table
                     dataItems.ImportRow(itemRow);
                     item.BindingTable = this;
                     item.SetRow(dataItems.Rows[dataItems.Rows.Count - 1]);

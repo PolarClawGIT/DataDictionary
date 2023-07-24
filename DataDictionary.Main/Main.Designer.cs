@@ -87,6 +87,8 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
+            unitTestingToolStripMenuItem = new ToolStripMenuItem();
+            gridViewToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
@@ -500,7 +502,7 @@
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem, dbSchemaToolStripMenuItem, domainModelToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem, dbSchemaToolStripMenuItem, domainModelToolStripMenuItem, unitTestingToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(46, 20);
             toolsToolStripMenuItem.Text = "&Tools";
@@ -543,14 +545,14 @@
             // helpContentsMenuItem
             // 
             helpContentsMenuItem.Name = "helpContentsMenuItem";
-            helpContentsMenuItem.Size = new Size(180, 22);
+            helpContentsMenuItem.Size = new Size(122, 22);
             helpContentsMenuItem.Text = "&Contents";
             helpContentsMenuItem.Click += HelpContentsMenuItem_Click;
             // 
             // helpIndexMenuItem
             // 
             helpIndexMenuItem.Name = "helpIndexMenuItem";
-            helpIndexMenuItem.Size = new Size(180, 22);
+            helpIndexMenuItem.Size = new Size(122, 22);
             helpIndexMenuItem.Text = "&Index";
             helpIndexMenuItem.Click += HelpIndexMenuItem_Click;
             // 
@@ -558,20 +560,34 @@
             // 
             searchToolStripMenuItem.Enabled = false;
             searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            searchToolStripMenuItem.Size = new Size(180, 22);
+            searchToolStripMenuItem.Size = new Size(122, 22);
             searchToolStripMenuItem.Text = "&Search";
             // 
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new Size(177, 6);
+            toolStripSeparator5.Size = new Size(119, 6);
             // 
             // helpAboutMenuItem
             // 
             helpAboutMenuItem.Name = "helpAboutMenuItem";
-            helpAboutMenuItem.Size = new Size(180, 22);
+            helpAboutMenuItem.Size = new Size(122, 22);
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
+            // 
+            // unitTestingToolStripMenuItem
+            // 
+            unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem });
+            unitTestingToolStripMenuItem.Name = "unitTestingToolStripMenuItem";
+            unitTestingToolStripMenuItem.Size = new Size(180, 22);
+            unitTestingToolStripMenuItem.Text = "Unit Testing";
+            // 
+            // gridViewToolStripMenuItem
+            // 
+            gridViewToolStripMenuItem.Name = "gridViewToolStripMenuItem";
+            gridViewToolStripMenuItem.Size = new Size(180, 22);
+            gridViewToolStripMenuItem.Text = "Grid View";
+            gridViewToolStripMenuItem.Click += gridViewToolStripMenuItem_Click;
             // 
             // Main
             // 
@@ -667,5 +683,7 @@
         private TreeView domainModelNavigation;
         private Controls.TextBoxData modelNameData;
         private Controls.TextBoxData modelDescriptionData;
+        private ToolStripMenuItem unitTestingToolStripMenuItem;
+        private ToolStripMenuItem gridViewToolStripMenuItem;
     }
 }

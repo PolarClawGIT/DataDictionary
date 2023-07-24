@@ -444,6 +444,9 @@ namespace DataDictionary.Main
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         { SendMessage(new WindowsSelectAllCommand() { HandledBy = this.ActiveMdiChild }); }
 
-
+        private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new Forms.UnitTestGridView().Show();
+        }
     }
 }

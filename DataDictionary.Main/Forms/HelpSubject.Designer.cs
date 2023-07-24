@@ -79,6 +79,7 @@
             helpContentNavigation.Name = "helpContentNavigation";
             helpContentNavigation.Size = new Size(151, 594);
             helpContentNavigation.TabIndex = 0;
+            helpContentNavigation.NodeMouseDoubleClick += helpContentNavigation_NodeMouseDoubleClick;
             // 
             // helpDetailLayout
             // 
@@ -200,6 +201,7 @@
             Controls.Add(helpSplitLayout);
             Name = "HelpSubject";
             Text = "Help Subject";
+            FormClosing += HelpSubject_FormClosing;
             Load += HelpSubject_Load;
             helpSplitLayout.Panel1.ResumeLayout(false);
             helpSplitLayout.Panel2.ResumeLayout(false);

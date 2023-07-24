@@ -76,25 +76,19 @@ namespace DataDictionary.Main.Forms
         public void NavigateTo(Form targetForm)
         {
             if (targetForm.GetType().FullName is String value)
-            {
-                data.TargetNameSpace = value;
-                NavigateTo();
-            }
+            { NavigateTo(value); }
         }
 
         public void NavigateTo(String targetName)
         {
             data.TargetNameSpace = targetName;
             data.HelpId = Guid.Empty;
-            NavigateTo();
-        }
 
-        void NavigateTo()
-        {
             if (Program.Data.HelpSubjects.FirstOrDefault(w => w.NameSpace == data.TargetNameSpace) is HelpItem item && item.HelpId is Guid itemGuid)
             {
                 data.HelpItem = item;
                 data.HelpId = itemGuid;
+                if (!String.IsNullOrWhiteSpace(item.NameSpace)) { data.TargetNameSpace = item.NameSpace; }
             }
             else
             {
@@ -104,12 +98,16 @@ namespace DataDictionary.Main.Forms
             }
         }
 
+
         void BindData()
         {
             errorProvider.Clear();
 
             if (Program.Data.HelpSubjects.FirstOrDefault(w => w.HelpId == data.HelpId) is HelpItem item)
-            { data.HelpItem = item; }
+            {
+                data.HelpItem = item;
+                if (!String.IsNullOrWhiteSpace(item.NameSpace)) { data.TargetNameSpace = item.NameSpace; }
+            }
 
             if (data.HelpItem is not null)
             {
@@ -129,7 +127,7 @@ namespace DataDictionary.Main.Forms
             helpTextData.DataBindings.Clear();
         }
 
-        #region 
+        #region Help Content Tree
         Dictionary<TreeNode, Object> helpContentNodes = new Dictionary<TreeNode, Object>();
         enum helpContentImageIndex
         {
@@ -177,6 +175,18 @@ namespace DataDictionary.Main.Forms
             foreach ((string imageKey, Image image) image in images.Where(w => !tree.ImageList.Images.ContainsKey(w.imageKey)))
             { tree.ImageList.Images.Add(image.imageKey, image.image); }
         }
+
+        private void helpContentNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (helpContentNodes.ContainsKey(e.Node) &&
+                helpContentNodes[e.Node] is HelpItem helpItem &&
+                helpItem.HelpId is Guid helpId)
+            {
+                UnBindData();
+                data.HelpId = helpId;
+                BindData();
+            }
+        }
         #endregion
 
 
@@ -192,7 +202,7 @@ namespace DataDictionary.Main.Forms
             {
                 if (args.Error is not null) { Program.ShowException(args.Error); }
 
-                NavigateTo();
+                NavigateTo("About");
                 BindData();
                 this.UseWaitCursor = false;
                 this.Enabled = true;
@@ -219,7 +229,6 @@ namespace DataDictionary.Main.Forms
             {
                 if (args.Error is not null) { Program.ShowException(args.Error); }
 
-                NavigateTo();
                 BindData();
                 this.UseWaitCursor = false;
                 this.Enabled = true;
@@ -259,5 +268,12 @@ namespace DataDictionary.Main.Forms
 
         private void helpTextData_Validated(object sender, EventArgs e)
         { errorProvider.SetError(helpTextData.ErrorControl, String.Empty); }
+
+        private void HelpSubject_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // If I am closing the form, ignore errors.
+            // Error Provider will set this to e.Cancel to true, blocking the closing of the form.
+            if (errorProvider.GetAllErrors(this).Count()  > 0 && e.Cancel) { e.Cancel = false; }
+        }
     }
 }
