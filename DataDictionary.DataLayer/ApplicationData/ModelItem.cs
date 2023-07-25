@@ -1,21 +1,18 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
+using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.ApplicationData
 {
-    public interface IModelId
-    {
-        Nullable<Guid> ModelId { get; }
-    }
 
-    public interface IModelItem: IModelId
+    public interface IModelItem : IModelIdentifier
     {
-
         String? ModelTitle { get; set; }
         String? ModelDescription { get; set; }
     }
@@ -37,10 +34,48 @@ namespace DataDictionary.DataLayer.ApplicationData
             new DataColumn("ModelId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("ModelTitle", typeof(String)){ AllowDBNull = false},
             new DataColumn("ModelDescription", typeof(String)){ AllowDBNull = true},
+            new DataColumn("Obsolete", typeof(Boolean)){ AllowDBNull = true},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        public static IDataReader GetData(IConnection connection, IModelIdentifier? modelIdentifier = null)
+        {
+            Guid? modelId = null;
+            if(modelIdentifier is not null && modelIdentifier.ModelId is not null) 
+            { modelId = modelIdentifier.ModelId; }
+
+            return GetData(connection, (modelId, null, false));
+        }
+
+        public static IDataReader GetData(IConnection connection, (Guid? modelId, String? modelTitle, Boolean? obsolete) parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procGetApplicationModel]";
+
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@ModelTitle", parameters.modelTitle);
+            command.AddParameter("@Obsolete", parameters.obsolete);
+
+            return connection.ExecuteReader(command);
+        }
+
+        public Command SetData(IConnection connection)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procSetApplicationModel]";
+
+            command.AddParameter("@ModelId", ModelId);
+            command.AddParameter("@ModelTitle", ModelTitle);
+            command.AddParameter("@ModelDescription", ModelDescription);
+            command.AddParameter("@Obsolete", GetValue("Obsolete"));
+            command.AddParameter("@SysStart", GetValue("SysStart"));
+
+            return command;
+        }
     }
 }

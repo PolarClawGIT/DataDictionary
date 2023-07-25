@@ -271,7 +271,7 @@ namespace DataDictionary.Main.Forms
 
         private void HelpSubject_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // If I am closing the form, ignore errors.
+            // If the forms closing, ignore errors.
             // Error Provider will set this to e.Cancel to true, blocking the closing of the form.
             if (errorProvider.GetAllErrors(this).Count()  > 0 && e.Cancel) { e.Cancel = false; }
         }

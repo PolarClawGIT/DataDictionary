@@ -55,21 +55,29 @@ namespace DataDictionary.DataLayer.ApplicationData
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procGetApplicationHelp]";
-            return connection.ExecuteReader(command) ;
+            return connection.ExecuteReader(command);
         }
 
-        public static Command SetData(IBindingTable<HelpItem> source, IConnection connection)
+        public static IDataReader GetData(IConnection connection, (Guid? helpId, String? helpSubject, String? nameSpace, Boolean? obsolete) parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procGetApplicationHelp]";
+
+            command.AddParameter("@HelpId", parameters.helpId);
+            command.AddParameter("@HelpSubject", parameters.helpSubject);
+            command.AddParameter("@NameSpace", parameters.nameSpace);
+            command.AddParameter("@Obsolete", parameters.obsolete);
+
+            return connection.ExecuteReader(command);
+        }
+
+        public static Command SetData(IConnection connection, IBindingTable<HelpItem> source)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetApplicationHelp]";
-
-            SqlParameter dataValues = new SqlParameter("@Data", SqlDbType.Structured);
-            dataValues.TypeName = "[App_DataDictionary].[typeApplicationHelp]";
-            DataTable data = new DataTable();
-            data.Load(source.CreateDataReader());
-            dataValues.Value = data;
-            command.Parameters.Add(dataValues);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationHelp]", source);
             return command;
         }
 

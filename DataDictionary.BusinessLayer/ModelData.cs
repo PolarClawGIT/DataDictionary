@@ -117,7 +117,7 @@ namespace DataDictionary.BusinessLayer
             return workItems.AsReadOnly();
         }
 
-        public IReadOnlyList<WorkItem> LoadModel(IModelId modelId)
+        public IReadOnlyList<WorkItem> LoadModel(IModelIdentifier modelId)
         { //TODO: Load from Database by Model ID
             return new List<WorkItem>().AsReadOnly();
         }
@@ -169,7 +169,7 @@ namespace DataDictionary.BusinessLayer
             workItems.Add(new SaveBindingTable(openConnection)
             {
                 WorkName = "Save Help",
-                Command = (conn) => HelpItem.SetData(HelpSubjects, conn)
+                Command = (conn) => HelpItem.SetData(conn, HelpSubjects)
             });
 
             workItems.Add(new WorkItem()
