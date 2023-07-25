@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer
 {
     public static class ModelFactory
     {
-        internal static StringComparison CompareString { get; } = StringComparison.CurrentCultureIgnoreCase;
+        public static StringComparison CompareString { get; } = StringComparison.CurrentCultureIgnoreCase;
 
         /// <summary>
         /// Helper method to create BindingTables with the default initialization state.
@@ -25,7 +25,10 @@ namespace DataDictionary.DataLayer
         {
             return new BindingTable<TBinding>() { CompareString = ModelFactory.CompareString };
         }
+    }
 
+    static class ModelFactoryInternal
+    {
         /// <summary>
         /// Conditionally adds the parameter to the command
         /// </summary>
@@ -104,8 +107,8 @@ namespace DataDictionary.DataLayer
                     command.Parameters.Add(new SqlParameter(parameterName, SqlDbType.Structured)
                     { Value = data, TypeName = structureType });
                 }
-                
             }
         }
+
     }
 }
