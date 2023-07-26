@@ -13,7 +13,8 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
     class LoadBindingTable : WorkItem, IDbWorkItem
     {
         public required IBindingTable Target { get; init; }
-        public required Func<IConnection, IDataReader> Reader { get; init; }
+        //public required Func<IConnection, IDataReader> Reader { get; init; }
+        public required Func<IConnection, Command> Command { get; init; }
         readonly IConnection connection;
 
         //public override required string WorkName { get; init; }
@@ -25,6 +26,6 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         }
 
         protected override void Work()
-        { Target.Load(Reader(connection)); }
+        { Target.Load(connection.ExecuteReader(Command(connection))); }
     }
 }

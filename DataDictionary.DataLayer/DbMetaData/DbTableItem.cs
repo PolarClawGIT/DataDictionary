@@ -38,13 +38,12 @@ namespace DataDictionary.DataLayer.DbMetaData
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        public static IDataReader GetSchema(IConnection connection)
+        public static Command GetSchema(IConnection connection)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = DbScript.DbTableItem;
-
-            return connection.ExecuteReader(command);
+            return command;
         }
 
         public virtual Command GetProperties(IConnection connection)

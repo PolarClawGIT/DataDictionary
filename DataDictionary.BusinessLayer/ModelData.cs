@@ -68,28 +68,28 @@ namespace DataDictionary.BusinessLayer
             workItems.Add(new LoadBindingTable(openConnection)
             {
                 WorkName = "Load DbCatalogs",
-                Reader = DbCatalogItem.GetSchema,
+                Command = DbCatalogItem.GetSchema,
                 Target = DbCatalogs
             });
 
             workItems.Add(new LoadBindingTable(openConnection)
             {
                 WorkName = "Load DbSchemta",
-                Reader = DbSchemaItem.GetSchema,
+                Command = DbSchemaItem.GetSchema,
                 Target = DbSchemta
             });
 
             workItems.Add(new LoadBindingTable(openConnection)
             {
                 WorkName = "Load DbTables",
-                Reader = DbTableItem.GetSchema,
+                Command = DbTableItem.GetSchema,
                 Target = DbTables
             });
 
             workItems.Add(new LoadBindingTable(openConnection)
             {
                 WorkName = "Load DbColumns",
-                Reader = DbColumnItem.GetSchema,
+                Command = DbColumnItem.GetSchema,
                 Target = DbColumns
             });
 
@@ -154,7 +154,7 @@ namespace DataDictionary.BusinessLayer
             workItems.Add(new LoadBindingTable(openConnection)
             {
                 WorkName = "Load Help",
-                Reader = HelpItem.GetData,
+                Command = HelpItem.GetData,
                 Target = HelpSubjects
             });
 
@@ -206,7 +206,7 @@ namespace DataDictionary.BusinessLayer
             workItems.Add(new LoadBindingTable(openConnection)
             {
                 WorkName = "Load Help",
-                Reader = HelpItem.GetData,
+                Command = HelpItem.GetData,
                 Target = HelpSubjects
             });
 
