@@ -173,8 +173,8 @@ namespace Toolbox.BindingTable
 
             foreach (TBindingItem item in inserted)
             {
-                this.Remove(item);
                 if (item.GetRow() is DataRow row) { row.RejectChanges(); }
+                this.Remove(item);
             }
 
             foreach (TBindingItem item in modified)

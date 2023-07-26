@@ -16,12 +16,6 @@ namespace DataDictionary.Main
     partial class Main : ApplicationFormBase
     {
 
-        class FormData
-        {
-            public IModelItem Model { get; set; } = new ModelItem();
-        }
-
-        FormData data = new FormData();
         #region Static Data
         enum navigationTabImageIndex
         {
@@ -54,15 +48,14 @@ namespace DataDictionary.Main
             Program.Worker.InvokeUsing = this.Invoke;
         }
 
+        #region Form
         private void Main_Load(object sender, EventArgs e)
         {
             Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
             Program.Messenger.AddColleague(this);
 
-
-
-            modelNameData.DataBindings.Add(new Binding(nameof(modelNameData.Text), data.Model, nameof(data.Model.ModelTitle)));
-            modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), data.Model, nameof(data.Model.ModelDescription)));
+            modelNameData.DataBindings.Add(new Binding(nameof(modelNameData.Text), Program.Data.Model, nameof(Program.Data.Model.ModelTitle)));
+            modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), Program.Data.Model, nameof(Program.Data.Model.ModelDescription)));
 
             //Program.Worker.Enqueue(Program.Data.LoadHelp());
 
@@ -71,7 +64,6 @@ namespace DataDictionary.Main
             domainModelToolStripMenuItem.DropDownItems.AddRange(domainModelMenu.Items);
         }
 
-        #region Form
         private void Main_FormClosing(object? sender, FormClosingEventArgs e)
         { }
 
@@ -445,8 +437,24 @@ namespace DataDictionary.Main
         { SendMessage(new WindowsSelectAllCommand() { HandledBy = this.ActiveMdiChild }); }
 
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
+        {   new Forms.UnitTestGridView().Show(); }
+
+        private void openFromDbMenuItem_Click(object sender, EventArgs e)
         {
-            new Forms.UnitTestGridView().Show();
+            using (Dialogs.OpenSaveDbDialog dialog = new Dialogs.OpenSaveDbDialog(Dialogs.OpenSaveDbDialog.OpenSaveOption.Open))
+            {
+                DialogResult result = dialog.ShowDialog();
+                //TODO do the Open
+            }
+        }
+
+        private void saveToDbMenuItem_Click(object sender, EventArgs e)
+        {
+            using (Dialogs.OpenSaveDbDialog dialog = new Dialogs.OpenSaveDbDialog(Dialogs.OpenSaveDbDialog.OpenSaveOption.Save))
+            {
+                DialogResult result = dialog.ShowDialog();
+                //TODO do the Save
+            }
         }
     }
 }

@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.ApplicationData
     {
         public Nullable<Guid> ModelId { get { return GetValue<Guid>("ModelId"); } protected set { SetValue<Guid>("ModelId", value); } }
         public String? ModelTitle { get { return GetValue("ModelTitle"); } set { SetValue("ModelTitle", value); } }
-        public String? ModelDescription { get { return GetValue("ModelDescription"); } set { SetValue("ModelTitle", value); } }
+        public String? ModelDescription { get { return GetValue("ModelDescription"); } set { SetValue("ModelDescription", value); } }
 
         public ModelItem() : base()
         {

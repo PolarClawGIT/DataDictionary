@@ -42,6 +42,10 @@ namespace DataDictionary.BusinessLayer
         public BindingTable<ModelItem> Models { get; } = ModelFactory.Create<ModelItem>();
         public BindingTable<HelpItem> HelpSubjects { get; } = ModelFactory.Create<HelpItem>();
 
+        // Connection Data
+        public String ServerName { get { return modelContext.ServerName; } }
+        public String DatabaseName { get { return modelContext.DatabaseName; } }
+
         public ModelData() : base()
         { Models.Add(new ModelItem()); }
 
