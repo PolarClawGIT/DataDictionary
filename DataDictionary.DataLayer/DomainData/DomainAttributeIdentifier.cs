@@ -7,41 +7,41 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DomainData
 {
-    public interface IDomainAttributeId
+    public interface IDomainAttributeIdentifier
     {
         Nullable<Guid> AttributeId { get; }
     }
 
-    public class DomainAttributeId : IDomainAttributeId, IEquatable<IDomainAttributeId>
+    public class DomainAttributeIdentifier : IDomainAttributeIdentifier, IEquatable<IDomainAttributeIdentifier>
     {
 
         public Nullable<Guid> AttributeId { get; init; } = Guid.Empty;
 
-        public DomainAttributeId() : base() { }
+        public DomainAttributeIdentifier() : base() { }
 
-        public DomainAttributeId(IDomainAttributeId source) : this()
+        public DomainAttributeIdentifier(IDomainAttributeIdentifier source) : this()
         {
             if (source.AttributeId is Guid) { AttributeId = source.AttributeId; }
             else { AttributeId = Guid.Empty; }
         }
 
         #region IEquatable, IComparable
-        public Boolean Equals(IDomainAttributeId? other)
+        public Boolean Equals(IDomainAttributeIdentifier? other)
         {
             return (
-                other is IDomainAttributeId &&
+                other is IDomainAttributeIdentifier &&
                 AttributeId != Guid.Empty &&
                 other.AttributeId != Guid.Empty &&
                 AttributeId == other.AttributeId);
         }
 
         public override bool Equals(object? obj)
-        { if (obj is IDomainAttributeId value) { return this.Equals(value); } else { return false; } }
+        { if (obj is IDomainAttributeIdentifier value) { return this.Equals(value); } else { return false; } }
 
-        public static bool operator ==(DomainAttributeId left, IDomainAttributeId right)
+        public static bool operator ==(DomainAttributeIdentifier left, IDomainAttributeIdentifier right)
         { return left.Equals(right); }
 
-        public static bool operator !=(DomainAttributeId left, IDomainAttributeId right)
+        public static bool operator !=(DomainAttributeIdentifier left, IDomainAttributeIdentifier right)
         { return !left.Equals(right); }
 
 

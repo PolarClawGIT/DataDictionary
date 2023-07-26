@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DbMetaData;
+﻿using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.DbMetaData;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,10 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
+using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DomainData
 {
-    public interface IDomainAttributeItem : IDomainAttributeTitle, IDomainAttributeId, IDomainAttributeParentId
+    public interface IDomainAttributeItem : IDomainAttributeTitle, IDomainAttributeIdentifier, IDomainAttributeParentId
     {
         String? AttributeDescription { get; set; }
     }
@@ -30,7 +32,7 @@ namespace DataDictionary.DataLayer.DomainData
         public DomainAttributeItem() : base()
         {
             if (AttributeId is null) { AttributeId = Guid.NewGuid(); }
-            if(Obsolete is null) { Obsolete = false; }
+            if (Obsolete is null) { Obsolete = false; }
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
@@ -45,14 +47,42 @@ namespace DataDictionary.DataLayer.DomainData
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        public static Command GetData(IConnection connection, IModelIdentifier modelId)
+        { return GetData(connection, (modelId.ModelId, null, null, null)); }
+
+        static Command GetData(IConnection connection, (Guid? modelId, Guid? attributeId, String? attributeTitle, Boolean? obsolete) parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procGetDomainAttribute]";
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@AttributeId", parameters.attributeId);
+            command.AddParameter("@AttributeTitle", parameters.attributeTitle);
+            command.AddParameter("@Obsolete", parameters.obsolete);
+            return command;
+        }
+
+        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DomainAttributeItem> source)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procSetDomainAttribute]";
+            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttribute]", source);
+            return command;
+        }
+
+        public override String ToString()
+        { if(AttributeTitle is not null) { return AttributeTitle; } else { return String.Empty; } }
     }
 
     public static class DomainAttributeItemExtension
     {
-        public static IDomainAttributeItem? GetAttribute(this IEnumerable<IDomainAttributeItem> source, IDomainAttributeId item)
+        public static IDomainAttributeItem? GetAttribute(this IEnumerable<IDomainAttributeItem> source, IDomainAttributeIdentifier item)
         { return source.FirstOrDefault(w => w.AttributeId == item.AttributeId); }
 
-        public static IDomainAttributeItem? GetAttribute(this IDomainAttributeId item, IEnumerable<IDomainAttributeItem> source)
+        public static IDomainAttributeItem? GetAttribute(this IDomainAttributeIdentifier item, IEnumerable<IDomainAttributeItem> source)
         { return source.FirstOrDefault(w => w.AttributeId == item.AttributeId); }
 
         public static IDomainAttributeItem? GetParentAttribute(this IEnumerable<IDomainAttributeItem> source, IDomainAttributeParentId item)

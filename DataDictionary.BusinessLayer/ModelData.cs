@@ -124,6 +124,18 @@ namespace DataDictionary.BusinessLayer
 
         public IReadOnlyList<WorkItem> LoadModel(FileInfo file)
         { //TODO: Load from File System
+
+            using (DataSet data = new DataSet())
+            {
+                data.ReadXml(file.FullName, XmlReadMode.ReadSchema); // background work
+
+                // Repeat for each data object, background work
+                if (data.Tables.Contains(nameof(ModelItem)) && data.Tables[nameof(ModelItem)] is DataTable source)
+                {
+                    Models.Clear();
+                    Models.Load(source.CreateDataReader());
+                }
+            }
             return new List<WorkItem>().AsReadOnly();
         }
 
@@ -157,6 +169,19 @@ namespace DataDictionary.BusinessLayer
         public IReadOnlyList<WorkItem> SaveModel(FileInfo file)
         { //TODO: Save to File System
             ModelFile = file;
+
+            using (DataSet data = new DataSet())
+            {
+                // repeat for each data object
+                using (DataTable model = new DataTable())
+                {
+                    model.Load(Models.CreateDataReader()); // Background work
+                    data.Tables.Add(model);
+                }
+
+                data.WriteXml(file.FullName, XmlWriteMode.WriteSchema); // Background work
+            }
+
             return new List<WorkItem>().AsReadOnly();
         }
 

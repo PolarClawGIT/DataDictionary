@@ -41,16 +41,10 @@ namespace DataDictionary.DataLayer.ApplicationData
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        public static IDataReader GetData(IConnection connection, IModelIdentifier? modelIdentifier = null)
-        {
-            Guid? modelId = null;
-            if(modelIdentifier is not null && modelIdentifier.ModelId is not null) 
-            { modelId = modelIdentifier.ModelId; }
+        public static Command GetData(IConnection connection, IModelIdentifier modelIdentifier)
+        { return GetData(connection, (modelIdentifier.ModelId, null, null)); }
 
-            return GetData(connection, (modelId, null, false));
-        }
-
-        public static IDataReader GetData(IConnection connection, (Guid? modelId, String? modelTitle, Boolean? obsolete) parameters)
+        static Command GetData(IConnection connection, (Guid? modelId, String? modelTitle, Boolean? obsolete) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
@@ -60,7 +54,7 @@ namespace DataDictionary.DataLayer.ApplicationData
             command.AddParameter("@ModelTitle", parameters.modelTitle);
             command.AddParameter("@Obsolete", parameters.obsolete);
 
-            return connection.ExecuteReader(command);
+            return command;
         }
 
         public Command SetData(IConnection connection)

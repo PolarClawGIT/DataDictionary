@@ -50,15 +50,10 @@ namespace DataDictionary.DataLayer.ApplicationData
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        public static IDataReader GetData(IConnection connection)
-        {
-            Command command = connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetApplicationHelp]";
-            return connection.ExecuteReader(command);
-        }
+        public static Command GetData(IConnection connection)
+        { return GetData(connection, (null, null, null, null)); }
 
-        public static IDataReader GetData(IConnection connection, (Guid? helpId, String? helpSubject, String? nameSpace, Boolean? obsolete) parameters)
+        static Command GetData(IConnection connection, (Guid? helpId, String? helpSubject, String? nameSpace, Boolean? obsolete) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
@@ -68,8 +63,7 @@ namespace DataDictionary.DataLayer.ApplicationData
             command.AddParameter("@HelpSubject", parameters.helpSubject);
             command.AddParameter("@NameSpace", parameters.nameSpace);
             command.AddParameter("@Obsolete", parameters.obsolete);
-
-            return connection.ExecuteReader(command);
+            return command;
         }
 
         public static Command SetData(IConnection connection, IBindingTable<HelpItem> source)
@@ -80,7 +74,6 @@ namespace DataDictionary.DataLayer.ApplicationData
             command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationHelp]", source);
             return command;
         }
-
     }
 
     public static class HelpItemExtension

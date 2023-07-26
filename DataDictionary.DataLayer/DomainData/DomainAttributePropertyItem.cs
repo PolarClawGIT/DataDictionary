@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DbMetaData;
+﻿using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.DbMetaData;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -6,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
+using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DomainData
 {
-    public interface IDomainAttributePropertyItem : IDomainAttributeId
+    public interface IDomainAttributePropertyItem : IDomainAttributeIdentifier
     {
         public Nullable<Guid> PropertyId { get; }
         public String? PropertyName { get; }
@@ -34,11 +36,42 @@ namespace DataDictionary.DataLayer.DomainData
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        public static Command GetData(IConnection connection, IModelIdentifier modelId)
+        { return GetData(connection, (modelId.ModelId, null, null)); }
+
+        static Command GetData(IConnection connection, (Guid? modelId, Guid? attributeId, String? propertyName) parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procGetDomainAttributeProperty]";
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@AttributeId", parameters.attributeId);
+            command.AddParameter("@PropertyName", parameters.propertyName);
+            return command;
+        }
+
+        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DomainAttributePropertyItem> source)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procSetDomainAttributeProperty]";
+            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttributeProperty]", source);
+            return command;
+        }
+
+        public override String ToString()
+        {
+            if (PropertyName is not null && PropertyValue is not null)
+            { return String.Format("{0}: {1}", PropertyName, PropertyValue); }
+            else { return String.Empty; }
+        }
     }
 
     public static class DomainAttributePropertyItemExtension
     {
-        public static IEnumerable<DomainAttributePropertyItem> GetProperties(this IEnumerable<DomainAttributePropertyItem> source, IDomainAttributeId item)
+        public static IEnumerable<DomainAttributePropertyItem> GetProperties(this IEnumerable<DomainAttributePropertyItem> source, IDomainAttributeIdentifier item)
         { return source.Where(w => item.AttributeId == w.AttributeId); }
     }
 }

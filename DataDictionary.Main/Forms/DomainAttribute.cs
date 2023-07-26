@@ -18,7 +18,7 @@ namespace DataDictionary.Main.Forms
     {
         class FormData
         {
-            public DomainAttributeId DomainAttributeId { get; set; } = new DomainAttributeId();
+            public DomainAttributeIdentifier DomainAttributeId { get; set; } = new DomainAttributeIdentifier();
             public IDomainAttributeItem? DomainAttribute { get; set; }
             public IDomainAttributeItem? ParentAttribute { get; set; }
             public BindingList<DomainAttributePropertyItem> AttributeProperties { get; set; } = new BindingList<DomainAttributePropertyItem>();
@@ -39,7 +39,7 @@ namespace DataDictionary.Main.Forms
 
         public DomainAttribute(IDomainAttributeItem domainAttributeItem) : this()
         {
-            data.DomainAttributeId = new DomainAttributeId(domainAttributeItem);
+            data.DomainAttributeId = new DomainAttributeIdentifier(domainAttributeItem);
             OpenItem = domainAttributeItem;
         }
 

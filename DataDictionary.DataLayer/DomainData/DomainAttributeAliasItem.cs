@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.ApplicationData;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -7,10 +8,11 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
+using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DomainData
 {
-    public interface IDomainAttributeAliasItem : IDomainAttributeId
+    public interface IDomainAttributeAliasItem : IDomainAttributeIdentifier
     {
         public String? CatalogName { get; }
         public String? SchemaName { get; }
@@ -41,6 +43,33 @@ namespace DataDictionary.DataLayer.DomainData
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        public static Command GetData(IConnection connection, IModelIdentifier modelId)
+        { return GetData(connection, (modelId.ModelId, null, null, null, null, null)); }
+
+        static Command GetData(IConnection connection, (Guid? modelId, Guid? attributeId, String? catalogName, String? schemaName, String? objectName, String? elementName) parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procGetDomainAttributeAlias]";
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@AttributeId", parameters.attributeId);
+            command.AddParameter("@CatalogName", parameters.catalogName);
+            command.AddParameter("@SchemaName", parameters.schemaName);
+            command.AddParameter("@ObjectName", parameters.objectName);
+            command.AddParameter("@ElementName", parameters.elementName);
+            return command;
+        }
+
+        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DomainAttributeAliasItem> source)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procSetDomainAttributeAlias]";
+            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttributeAlias]", source);
+            return command;
+        }
 
         public override String ToString()
         {
@@ -75,7 +104,7 @@ namespace DataDictionary.DataLayer.DomainData
 
     public static class DomainAttributeAliasItemExtension
     {
-        public static IEnumerable<DomainAttributeAliasItem> GetProperties(this IEnumerable<DomainAttributeAliasItem> source, IDomainAttributeId item)
+        public static IEnumerable<DomainAttributeAliasItem> GetProperties(this IEnumerable<DomainAttributeAliasItem> source, IDomainAttributeIdentifier item)
         { return source.Where(w => item.AttributeId == w.AttributeId); }
     }
 }
