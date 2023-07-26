@@ -1,5 +1,7 @@
 ﻿// Ignore Spelling: Nullable
 
+using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.DomainData;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -136,6 +138,35 @@ namespace DataDictionary.DataLayer.DbMetaData
             { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = TableName, Level1Type = "TABLE", Level2Name = ColumnName, Level2Type = "COLUMN" }).
             GetCommand();
         }
+
+        public static Command GetData(IConnection connection, IModelIdentifier modelId)
+        { return GetData(connection, (modelId.ModelId, null, null, null, null)); }
+
+        static Command GetData(IConnection connection, (Guid? modelId, String? catalogName, String? schemaName, String? tableName, String? columnName) parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseColumn]";
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@CatalogName", parameters.catalogName);
+            command.AddParameter("@SchemaName", parameters.schemaName);
+            command.AddParameter("@TableName", parameters.tableName);
+            command.AddParameter("@ColumnName", parameters.columnName);
+            return command;
+        }
+
+        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DbColumnItem> source)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseColumn]";
+            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseColumn]", source);
+            return command;
+        }
+
+        public override String ToString()
+        { return new DbColumnName(this).ToString(); }
     }
 
     public static class DbColumnItemExtension

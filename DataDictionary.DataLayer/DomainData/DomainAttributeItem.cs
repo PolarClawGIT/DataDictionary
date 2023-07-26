@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.DomainData
     public class DomainAttributeItem : BindingTableRow, IDomainAttributeItem
     {
         public Nullable<Guid> AttributeId
-        { get { return GetValue<Guid>("AttributeId"); } set { SetValue<Guid>("AttributeId", value); } }
+        { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue<Guid>("AttributeId", value); } }
 
         public Nullable<Guid> ParentAttributeId
         { get { return GetValue<Guid>("ParentAttributeId"); } set { SetValue<Guid>("ParentAttributeId", value); } }

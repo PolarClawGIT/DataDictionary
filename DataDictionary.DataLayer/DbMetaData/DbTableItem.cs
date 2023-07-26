@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.DomainData;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -52,6 +54,34 @@ namespace DataDictionary.DataLayer.DbMetaData
             { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = TableName, Level1Type = "TABLE" }).
             GetCommand();
         }
+
+        public static Command GetData(IConnection connection, IModelIdentifier modelId)
+        { return GetData(connection, (modelId.ModelId, null, null, null)); }
+
+        static Command GetData(IConnection connection, (Guid? modelId, String? catalogName, String? schemaName, String? tableName) parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseTable]";
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@CatalogName", parameters.catalogName);
+            command.AddParameter("@SchemaName", parameters.schemaName);
+            command.AddParameter("@TableName", parameters.tableName);
+            return command;
+        }
+
+        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DbTableItem> source)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseTable]";
+            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseTable]", source);
+            return command;
+        }
+
+        public override String ToString()
+        { return new DbTableName(this).ToString(); }
     }
 
     public static class DbTableItemExtension

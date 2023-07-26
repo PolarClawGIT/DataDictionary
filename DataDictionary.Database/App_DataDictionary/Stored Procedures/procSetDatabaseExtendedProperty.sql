@@ -1,10 +1,10 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseTable]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseExtendedProperty]
 		@ModelId UniqueIdentifier,
-		@Data [App_DataDictionary].[typeDatabaseTable] ReadOnly
+		@Data    [App_DataDictionary].[typeDatabaseExtendedProperty] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on DatabaseTable.
+/* Description: Performs Set on DatabaseExtendedProperty.
 */
 
 -- Transaction Handling
@@ -19,13 +19,21 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDatabaseTable]
+	Declare @Values  [App_DataDictionary].[typeDatabaseExtendedProperty]
 	Insert Into @Values
-	Select	P.[CatalogId] As [CatalogId],
+	Select	D.[PropertyId],
+			P.[CatalogId],
 			P.[CatalogName] As [CatalogName],
-			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
-			NullIf(Trim(D.[TableName]),'') As [TableName],
-			NullIf(Trim(D.[TableType]),'') As [TableType]
+			NullIf(Trim(D.[Level0Type]),'') As [Level0Type],
+			NullIf(Trim(D.[Level0Name]),'') As [Level0Name],
+			NullIf(Trim(D.[Level1Type]),'') As [Level1Type],
+			NullIf(Trim(D.[Level1Name]),'') As [Level1Name],
+			NullIf(Trim(D.[Level2Type]),'') As [Level2Type],
+			NullIf(Trim(D.[Level2Name]),'') As [Level2Name],
+			NullIf(Trim(D.[ObjType]),'') As [ObjType],
+			NullIf(Trim(D.[ObjName]),'') As [ObjName],
+			NullIf(Trim(D.[PropertyName]),'') As [PropertyName],
+			NullIf(D.[PropertyValue],'') As [PropertyValue]
 	From	@Data D
 			Left Join [App_DataDictionary].[ApplicationCatalog] C
 			On	C.[ModelId] = @ModelId
@@ -37,74 +45,89 @@ Begin Try
 	If Not Exists (Select 1 From [App_DataDictionary].[ApplicationModel] Where [ModelId] = @ModelId)
 	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
 
-	If Exists (
-		Select	[CatalogName], [SchemaName], [TableName]
-		From	@Values
-		Group By [CatalogName], [SchemaName], [TableName]
-		Having	Count(*) > 1)
-	Throw 50000, '[TableName] cannot be duplicate within a Schema', 2;
-
-	-- Cascade Delete
-	Declare @Delete Table (
-		[CatalogId] UniqueIdentifier Not Null,
-		[SchemaName] SysName Not Null,
-		[TableName] SysName Not Null,
-		Primary key ([CatalogId], [SchemaName], [TableName]));
-
-	Insert Into @Delete
-	Select	T.[CatalogId],
-			T.[SchemaName],
-			T.[TableName]
-	From	[App_DataDictionary].[DatabaseTable] T
-			Inner Join [App_DataDictionary].[ApplicationCatalog] M
-			On	T.[CatalogId] = M.[CatalogId] And
-				M.[ModelId] = @ModelId
-			Left Join @Values V
-			On	T.[CatalogId] = V.[CatalogId] And
-				T.[SchemaName] = V.[SchemaName] And
-				T.[TableName] = V.[TableName]
-
-	Delete From [App_DataDictionary].[DatabaseColumn]
-	From	[App_DataDictionary].[DatabaseColumn] T
-			Inner Join @Delete D
-			On	T.[CatalogId] = D.[CatalogId] And
-				T.[SchemaName] = D.[SchemaName] And
-				T.[TableName] = D.[TableName];
-
 	-- Apply Changes
 	With [Delta] As (
-		Select	[CatalogId],
-				[SchemaName],
-				[TableName],
-				[TableType]
+		Select	[PropertyId],
+				[Level0Type],
+				[Level0Name],
+				[Level1Type],
+				[Level1Name],
+				[Level2Type],
+				[Level2Name],
+				[ObjType],
+				[ObjName],
+				[PropertyName],
+				[PropertyValue]
 		From	@Values
 		Except
-		Select	[CatalogId],
-				[SchemaName],
-				[TableName],
-				[TableType]
-		From	[App_DataDictionary].[DatabaseTable]),
+		Select	[PropertyId],
+				[Level0Type],
+				[Level0Name],
+				[Level1Type],
+				[Level1Name],
+				[Level2Type],
+				[Level2Name],
+				[ObjType],
+				[ObjName],
+				[PropertyName],
+				[PropertyValue]
+		From	[App_DataDictionary].[DatabaseExtendedProperty]),
 	[Data] As (
-		Select	V.[CatalogId],
-				V.[SchemaName],
-				V.[TableName],
-				V.[TableType],
-				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
+		Select	V.[PropertyId],
+				V.[CatalogId],
+				V.[Level0Type],
+				V.[Level0Name],
+				V.[Level1Type],
+				V.[Level1Name],
+				V.[Level2Type],
+				V.[Level2Name],
+				V.[ObjType],
+				V.[ObjName],
+				V.[PropertyName],
+				V.[PropertyValue],
+				IIF(D.[PropertyId] is Null,1, 0) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
-				On	V.[CatalogId] = D.[CatalogId] And
-					V.[SchemaName] = D.[SchemaName] And
-					V.[TableName] = D.[TableName])
-	Merge [App_DataDictionary].[DatabaseTable] As T
-	Using [Data] As S
-	On	T.[CatalogId] = S.[CatalogId] And
-		T.[SchemaName] = S.[SchemaName] And
-		T.[TableName] = S.[TableName]
+				On	V.[PropertyId] = D.[PropertyId])
+	Merge [App_DataDictionary].[DatabaseExtendedProperty] T
+	Using [Data] S
+	On	T.[PropertyId] = S.[PropertyId]
 	When Matched and [IsDiffrent] = 1 Then Update Set
-		[TableType] = S.[TableType]
+		[Level0Type] = S.[Level0Type],
+		[Level0Name] = S.[Level0Name],
+		[Level1Type] = S.[Level1Type],
+		[Level1Name] = S.[Level1Name],
+		[Level2Type] = S.[Level2Type],
+		[Level2Name] = S.[Level2Name],
+		[ObjType] = S.[ObjType],
+		[ObjName] = S.[ObjName],
+		[PropertyName] = S.[PropertyName],
+		[PropertyValue] = S.[PropertyValue]
 	When Not Matched by Target Then
-		Insert ([CatalogId], [SchemaName], [TableName], [TableType])
-		Values ([CatalogId], [SchemaName], [TableName], [TableType])
+		Insert ([PropertyId],
+				[CatalogId],
+				[Level0Type],
+				[Level0Name],
+				[Level1Type],
+				[Level1Name],
+				[Level2Type],
+				[Level2Name],
+				[ObjType],
+				[ObjName],
+				[PropertyName],
+				[PropertyValue])
+		Values ([PropertyId],
+				[CatalogId],
+				[Level0Type],
+				[Level0Name],
+				[Level1Type],
+				[Level1Name],
+				[Level2Type],
+				[Level2Name],
+				[ObjType],
+				[ObjName],
+				[PropertyName],
+				[PropertyValue])
 	When Not Matched by Source And (T.[CatalogId] In (
 		Select	[CatalogId]
 		From	[App_DataDictionary].[ApplicationCatalog]
@@ -151,16 +174,4 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
-GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseTable',
-	@value = N'Performs Set on DatabaseTable.'
-GO
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseTable',
-	@level2type = N'PARAMETER', @level2name = N'@ModelId',
-	@value = N'ModelId'
 GO

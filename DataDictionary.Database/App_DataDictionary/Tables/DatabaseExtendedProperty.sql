@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [App_DataDictionary].[DatabaseExtendedProperty]
 (
+		[PropertyId]     UniqueIdentifier Not Null,
 		[CatalogId]      UniqueIdentifier Not Null,
 		-- Parameters for [fn_listextendedproperty]
 		[Level0Type]     SysName Null,
@@ -13,12 +14,14 @@
 		[ObjName]        SysName Not Null,
 		[PropertyName]   SysName Not Null,
 		[PropertyValue]  Sql_variant Null,
+		-- Keys
+		CONSTRAINT [PK_DatabaseExtendedProperty] PRIMARY KEY CLUSTERED ([PropertyId] ASC),
 		CONSTRAINT [FK_DatabaseExtendedPropertyCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
 )
 GO
 -- There is no key structure returned by the function [fn_listextendedproperty]
 -- This may not work as it may be possible to have multiple elements with the same name but different types.
-CREATE UNIQUE CLUSTERED INDEX [UX_DatabaseExtendedProperty]
+CREATE UNIQUE INDEX [UX_DatabaseExtendedProperty]
     ON [App_DataDictionary].[DatabaseExtendedProperty]([CatalogId] ASC, [Level0Name], [Level1Name], [Level2Name], [PropertyName]);
 GO
 /*

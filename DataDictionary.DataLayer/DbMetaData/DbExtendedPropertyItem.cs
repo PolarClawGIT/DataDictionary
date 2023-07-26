@@ -12,6 +12,8 @@ using Microsoft.Data.SqlClient;
 using System.Collections.Concurrent;
 using System.Diagnostics.Contracts;
 using System.Reflection;
+using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.DomainData;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
@@ -99,6 +101,7 @@ namespace DataDictionary.DataLayer.DbMetaData
 
     public class DbExtendedPropertyItem : BindingTableRow, IDbExtendedPropertyItem, INotifyPropertyChanged
     {
+        public Guid? PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
         public String? Level0Type { get { return GetValue("Level0Type"); } }
         public String? Level0Name { get { return GetValue("Level0Name"); } }
@@ -119,8 +122,12 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? PropertyName { get { return GetValue("name"); } }
         public String? PropertyValue { get { return GetValue("value"); } }
 
+        public DbExtendedPropertyItem() : base()
+        { PropertyId = Guid.NewGuid(); }
+
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
+            new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("CatalogId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
             new DataColumn("Level0Type", typeof(String)){ AllowDBNull = true},
@@ -138,6 +145,31 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        public static Command GetData(IConnection connection, IModelIdentifier modelId)
+        { return GetData(connection, (modelId.ModelId, null, null)); }
+
+        static Command GetData(IConnection connection, (Guid? modelId, Guid? propertyId, String? catalogName) parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseExtendedProperty]";
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@PropertyId", parameters.propertyId);
+            command.AddParameter("@CatalogName", parameters.catalogName);
+            return command;
+        }
+
+        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DbExtendedPropertyItem> source)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseExtendedProperty]";
+            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseExtendedProperty]", source);
+            return command;
+        }
+
     }
 
     public static class DbExtendedPropertyItemExtension

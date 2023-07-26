@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.DomainData;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -64,6 +66,33 @@ namespace DataDictionary.DataLayer.DbMetaData
             { Level0Name = SchemaName, Level0Type = "SCHEMA" }).
             GetCommand();
         }
+
+        public static Command GetData(IConnection connection, IModelIdentifier modelId)
+        { return GetData(connection, (modelId.ModelId, null, null)); }
+
+        static Command GetData(IConnection connection, (Guid? modelId, String? catalogName, String? schemaName) parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseSchema]";
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@CatalogName", parameters.catalogName);
+            command.AddParameter("@SchemaName", parameters.schemaName);
+            return command;
+        }
+
+        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DbSchemaItem> source)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseSchema]";
+            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseSchema]", source);
+            return command;
+        }
+
+        public override String ToString()
+        { return new DbSchemaName(this).ToString(); }
     }
 
     public static class DbSchemaItemExtension

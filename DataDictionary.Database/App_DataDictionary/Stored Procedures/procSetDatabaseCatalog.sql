@@ -29,7 +29,8 @@ Begin Try
 			Left Join [App_DataDictionary].[ApplicationCatalog] C
 			On	C.[ModelId] = @ModelId
 			Left Join [App_DataDictionary].[DatabaseCatalog] P
-			On	D.[CatalogName] = P.[CatalogName]
+			On	C.[CatalogId] = P.[CatalogId] And
+				D.[CatalogName] = P.[CatalogName]
 
 	-- Validation
 	If Not Exists (Select 1 From [App_DataDictionary].[ApplicationModel] Where [ModelId] = @ModelId)
