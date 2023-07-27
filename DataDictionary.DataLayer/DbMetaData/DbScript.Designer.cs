@@ -99,10 +99,10 @@ namespace DataDictionary.DataLayer.DbMetaData {
         ///	@Level1Name [Level1Name],
         ///	@Level2Type [Level2Type],
         ///	@Level2Name [Level2Name],
-        ///	[objtype],
-        ///	[objname],
-        ///	[name],
-        ///	Convert(NVarChar(Max),[value]) As [Value]
+        ///	[objtype] As [ObjType],
+        ///	[objname] As [ObjName],
+        ///	[name] As [PropertyName],
+        ///	Convert(NVarChar(Max),[value]) As [PropertyValue]
         ///FROM [fn_listextendedproperty] (
         ///	@PropertyName,
         ///	@Level0Type,
@@ -120,8 +120,8 @@ namespace DataDictionary.DataLayer.DbMetaData {
         
         /// <summary>
         ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
-        ///	[CATALOG_NAME],
-        ///	[SCHEMA_NAME]
+        ///	[CATALOG_NAME] As [CatalogName],
+        ///	[SCHEMA_NAME] As [SchemaName]
         ///From	[INFORMATION_SCHEMA].[SCHEMATA].
         /// </summary>
         internal static string DbSchemaItem {
@@ -132,20 +132,19 @@ namespace DataDictionary.DataLayer.DbMetaData {
         
         /// <summary>
         ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
-        ///	I.[TABLE_CATALOG],
-        ///	I.[TABLE_SCHEMA],
-        ///	I.[TABLE_NAME],
+        ///	I.[TABLE_CATALOG] As [CatalogName],
+        ///	I.[TABLE_SCHEMA] As [SchemaName],
+        ///	I.[TABLE_NAME] As [TableName],
         ///	Case
         ///	When H.[object_id] is Not Null Then &apos;HISTORY TABLE&apos;
         ///	When T.[history_table_id] is Not Null Then &apos;TEMPORAL TABLE&apos;
         ///	Else I.[TABLE_TYPE]
-        ///	End As [TABLE_TYPE]
+        ///	End As [TableType]
         ///From	[INFORMATION_SCHEMA].[TABLES] I
         ///	Left Join [sys].[Tables] T
         ///	On	I.[TABLE_SCHEMA] = Object_Schema_Name(T.[object_id]) And
         ///		I.[TABLE_NAME] = Object_Name(T.[object_id])
-        ///	Left Join [sys].[Tables] H
-        ///	On	I.[TABLE_SCHEMA] = Obj [rest of string was truncated]&quot;;.
+        ///	Left Jo [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbTableItem {
             get {

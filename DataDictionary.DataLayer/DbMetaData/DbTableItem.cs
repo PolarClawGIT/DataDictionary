@@ -22,19 +22,19 @@ namespace DataDictionary.DataLayer.DbMetaData
     public class DbTableItem : BindingTableRow, IDbTableItem, INotifyPropertyChanged, IDbExtendedProperties
     {
         //public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
-        public String? CatalogName { get { return GetValue("TABLE_CATALOG"); } }
-        public String? SchemaName { get { return GetValue("TABLE_SCHEMA"); } }
-        public String? TableName { get { return GetValue("TABLE_NAME"); } }
-        public String? TableType { get { return GetValue("TABLE_TYPE"); } }
+        public String? CatalogName { get { return GetValue("CatalogName"); } }
+        public String? SchemaName { get { return GetValue("SchemaName"); } }
+        public String? TableName { get { return GetValue("TableName"); } }
+        public String? TableType { get { return GetValue("TableType"); } }
         public Boolean IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(String)){ AllowDBNull = true},
-            new DataColumn("TABLE_CATALOG", typeof(String)){ AllowDBNull = false},
-            new DataColumn("TABLE_SCHEMA", typeof(String)){ AllowDBNull = false},
-            new DataColumn("TABLE_NAME", typeof(String)){ AllowDBNull = false},
-            new DataColumn("TABLE_TYPE", typeof(String)){ AllowDBNull = false},
+            new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("SchemaName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("TableName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("TableType", typeof(String)){ AllowDBNull = false},
         };
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()

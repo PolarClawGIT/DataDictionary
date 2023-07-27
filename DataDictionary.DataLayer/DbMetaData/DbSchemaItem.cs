@@ -21,8 +21,8 @@ namespace DataDictionary.DataLayer.DbMetaData
     public class DbSchemaItem : BindingTableRow, IDbSchemaItem, INotifyPropertyChanged, IDbExtendedProperties
     {
         //public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
-        public String? CatalogName { get { return GetValue("CATALOG_NAME"); } }
-        public String? SchemaName { get { return GetValue("SCHEMA_NAME"); } }
+        public String? CatalogName { get { return GetValue("CatalogName"); } }
+        public String? SchemaName { get { return GetValue("SchemaName"); } }
         public Boolean IsSystem
         {
             get
@@ -45,8 +45,8 @@ namespace DataDictionary.DataLayer.DbMetaData
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(String)){ AllowDBNull = true},
-            new DataColumn("CATALOG_NAME", typeof(String)){ AllowDBNull = false},
-            new DataColumn("SCHEMA_NAME", typeof(String)){ AllowDBNull = false},
+            new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("SchemaName", typeof(String)){ AllowDBNull = false},
         };
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions ()

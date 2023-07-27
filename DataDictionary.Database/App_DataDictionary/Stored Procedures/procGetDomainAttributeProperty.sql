@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[procGetDomainAttributeProperty]
+﻿CREATE PROCEDURE [App_DataDictionary].[procGetDomainAttributeProperty]
 		@ModelId UniqueIdentifier = Null,
 		@AttributeId UniqueIdentifier = Null,
 		@PropertyName SysName = Null

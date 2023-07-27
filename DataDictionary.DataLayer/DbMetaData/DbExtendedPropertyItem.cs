@@ -115,12 +115,12 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? Level2Name { get { return GetValue("Level2Name"); } }
         public ExtendedPropertyElementScope ElementScope { get { return ExtendedPropertyExtension.GetItemScope(Level2Type); } }
 
-        public String? ObjectType { get { return GetValue("objtype"); } }
-        public String? ObjectName { get { return GetValue("objname"); } }
+        public String? ObjectType { get { return GetValue("ObjType"); } }
+        public String? ObjectName { get { return GetValue("ObjName"); } }
 
         //public ExtendedPropertyObjectType PropertyObjectType { get { return ExtendedPropertyExtension.GetPropertyType(ObjectType); } }
-        public String? PropertyName { get { return GetValue("name"); } }
-        public String? PropertyValue { get { return GetValue("value"); } }
+        public String? PropertyName { get { return GetValue("PropertyName"); } }
+        public String? PropertyValue { get { return GetValue("PropertyValue"); } }
 
         public DbExtendedPropertyItem() : base()
         { PropertyId = Guid.NewGuid(); }
@@ -137,12 +137,12 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("Level2Type", typeof(String)){ AllowDBNull = true},
             new DataColumn("Level2Name", typeof(String)){ AllowDBNull = true},
 
-            new DataColumn("objtype", typeof(String)){ AllowDBNull = false},
-            new DataColumn("objname", typeof(String)){ AllowDBNull = false},
-            new DataColumn("name", typeof(String)){ AllowDBNull = false},
-            new DataColumn("value", typeof(String)){ AllowDBNull = false},
+            new DataColumn("ObjType", typeof(String)){ AllowDBNull = false},
+            new DataColumn("ObjName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("PropertyName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("PropertyValue", typeof(String)){ AllowDBNull = false},
         };
-
+        //[ObjType][ObjName][PropertyName][PropertyValue]
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
