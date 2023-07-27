@@ -82,7 +82,6 @@ namespace Toolbox.Threading
             Exception? firstException = null;
             WorkItem? firstExceptionItem = null;
 
-
             foreach (WorkItem item in work)
             {
                 if (onCompleting is not null) { item.Completing += Item_Completing; }
@@ -104,11 +103,7 @@ namespace Toolbox.Threading
                     }
 
                     if (ReferenceEquals(item, lastWork) && onCompleting is not null)
-                    {
-                        if (firstExceptionItem is null)
-                        { onCompleting(new RunWorkerCompletedEventArgs(lastWork, null, e.Cancelled)); }
-                        else { onCompleting(new RunWorkerCompletedEventArgs(lastWork, e.Error, e.Cancelled)); }
-                    }
+                    { onCompleting(new RunWorkerCompletedEventArgs(lastWork, firstException, e.Cancelled)); }
                 }
             }
         }

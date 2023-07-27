@@ -1,6 +1,6 @@
-﻿namespace DataDictionary.Main.Dialogs
+﻿namespace DataDictionary.Main.Forms
 {
-    partial class OpenSaveDbDialog
+    partial class ModelManagement
     {
         /// <summary>
         /// Required designer variable.
@@ -34,10 +34,13 @@
             serverNameData = new Controls.TextBoxData();
             databaseNameData = new Controls.TextBoxData();
             modelListData = new DataGridView();
-            modelNameData = new Controls.TextBoxData();
+            modelTitleColumn = new DataGridViewTextBoxColumn();
+            modelDescriptionColumn = new DataGridViewTextBoxColumn();
+            modelTitleData = new Controls.TextBoxData();
             modelDescriptionData = new Controls.TextBoxData();
-            cancelCommand = new Button();
-            okCommand = new Button();
+            deleteCommand = new Button();
+            loadCommand = new Button();
+            saveCommand = new Button();
             dialogLayout = new TableLayoutPanel();
             modelsLayout = new Label();
             buttonLayout = new TableLayoutPanel();
@@ -54,7 +57,7 @@
             dialogLayout.Controls.Add(databaseNameData, 0, 1);
             dialogLayout.Controls.Add(modelsLayout, 0, 2);
             dialogLayout.Controls.Add(modelListData, 0, 3);
-            dialogLayout.Controls.Add(modelNameData, 0, 4);
+            dialogLayout.Controls.Add(modelTitleData, 0, 4);
             dialogLayout.Controls.Add(modelDescriptionData, 0, 5);
             dialogLayout.Controls.Add(buttonLayout, 0, 6);
             dialogLayout.Dock = DockStyle.Fill;
@@ -106,25 +109,44 @@
             // 
             // modelListData
             // 
+            modelListData.AllowUserToAddRows = false;
+            modelListData.AllowUserToDeleteRows = false;
             modelListData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            modelListData.Columns.AddRange(new DataGridViewColumn[] { modelTitleColumn, modelDescriptionColumn });
             modelListData.Dock = DockStyle.Fill;
             modelListData.Location = new Point(3, 118);
             modelListData.Name = "modelListData";
             modelListData.RowTemplate.Height = 25;
+            modelListData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             modelListData.Size = new Size(451, 169);
             modelListData.TabIndex = 3;
+            modelListData.SelectionChanged += modelListData_SelectionChanged;
             // 
-            // modelNameData
+            // modelTitleColumn
             // 
-            modelNameData.AutoSize = true;
-            modelNameData.Dock = DockStyle.Fill;
-            modelNameData.HeaderText = "Model Name";
-            modelNameData.Location = new Point(3, 293);
-            modelNameData.Multiline = false;
-            modelNameData.Name = "modelNameData";
-            modelNameData.ReadOnly = false;
-            modelNameData.Size = new Size(451, 44);
-            modelNameData.TabIndex = 4;
+            modelTitleColumn.DataPropertyName = "ModelTitle";
+            modelTitleColumn.HeaderText = "Model Title";
+            modelTitleColumn.Name = "modelTitleColumn";
+            modelTitleColumn.Width = 200;
+            // 
+            // modelDescriptionColumn
+            // 
+            modelDescriptionColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            modelDescriptionColumn.DataPropertyName = "ModelDescription";
+            modelDescriptionColumn.HeaderText = "Description";
+            modelDescriptionColumn.Name = "modelDescriptionColumn";
+            // 
+            // modelTitleData
+            // 
+            modelTitleData.AutoSize = true;
+            modelTitleData.Dock = DockStyle.Fill;
+            modelTitleData.HeaderText = "Model Title";
+            modelTitleData.Location = new Point(3, 293);
+            modelTitleData.Multiline = false;
+            modelTitleData.Name = "modelTitleData";
+            modelTitleData.ReadOnly = false;
+            modelTitleData.Size = new Size(451, 44);
+            modelTitleData.TabIndex = 4;
             // 
             // modelDescriptionData
             // 
@@ -142,13 +164,15 @@
             // 
             buttonLayout.AutoSize = true;
             buttonLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            buttonLayout.ColumnCount = 4;
+            buttonLayout.ColumnCount = 5;
+            buttonLayout.ColumnStyles.Add(new ColumnStyle());
+            buttonLayout.ColumnStyles.Add(new ColumnStyle());
             buttonLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             buttonLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             buttonLayout.ColumnStyles.Add(new ColumnStyle());
-            buttonLayout.ColumnStyles.Add(new ColumnStyle());
-            buttonLayout.Controls.Add(cancelCommand, 3, 0);
-            buttonLayout.Controls.Add(okCommand, 2, 0);
+            buttonLayout.Controls.Add(deleteCommand, 4, 0);
+            buttonLayout.Controls.Add(loadCommand, 1, 0);
+            buttonLayout.Controls.Add(saveCommand, 0, 0);
             buttonLayout.Dock = DockStyle.Fill;
             buttonLayout.Location = new Point(3, 430);
             buttonLayout.Name = "buttonLayout";
@@ -157,37 +181,46 @@
             buttonLayout.Size = new Size(451, 30);
             buttonLayout.TabIndex = 6;
             // 
-            // cancelCommand
+            // deleteCommand
             // 
-            cancelCommand.DialogResult = DialogResult.Cancel;
-            cancelCommand.Location = new Point(372, 3);
-            cancelCommand.Name = "cancelCommand";
-            cancelCommand.Size = new Size(75, 23);
-            cancelCommand.TabIndex = 0;
-            cancelCommand.Text = "&Cancel";
-            cancelCommand.UseVisualStyleBackColor = true;
-            cancelCommand.Click += cancelCommand_Click;
+            deleteCommand.DialogResult = DialogResult.Cancel;
+            deleteCommand.Location = new Point(373, 3);
+            deleteCommand.Name = "deleteCommand";
+            deleteCommand.Size = new Size(75, 23);
+            deleteCommand.TabIndex = 0;
+            deleteCommand.Text = "&Delete";
+            deleteCommand.UseVisualStyleBackColor = true;
             // 
-            // okCommand
+            // loadCommand
             // 
-            okCommand.DialogResult = DialogResult.OK;
-            okCommand.Location = new Point(291, 3);
-            okCommand.Name = "okCommand";
-            okCommand.Size = new Size(75, 23);
-            okCommand.TabIndex = 1;
-            okCommand.Text = "&Ok";
-            okCommand.UseVisualStyleBackColor = true;
-            okCommand.Click += okCommand_Click;
+            loadCommand.Location = new Point(84, 3);
+            loadCommand.Name = "loadCommand";
+            loadCommand.Size = new Size(75, 23);
+            loadCommand.TabIndex = 2;
+            loadCommand.Text = "&Load";
+            loadCommand.UseVisualStyleBackColor = true;
+            loadCommand.Click += loadCommand_Click;
             // 
-            // OpenSaveDbDialog
+            // saveCommand
+            // 
+            saveCommand.DialogResult = DialogResult.OK;
+            saveCommand.Location = new Point(3, 3);
+            saveCommand.Name = "saveCommand";
+            saveCommand.Size = new Size(75, 23);
+            saveCommand.TabIndex = 1;
+            saveCommand.Text = "&Save";
+            saveCommand.UseVisualStyleBackColor = true;
+            saveCommand.Click += saveCommand_Click;
+            // 
+            // ModelManagement
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(457, 463);
             Controls.Add(dialogLayout);
-            Name = "OpenSaveDbDialog";
+            Name = "ModelManagement";
             Text = "Open or Save Model";
-            Load += OpenSaveDbDialog_Load;
+            Load += ModelManagement_Load;
             dialogLayout.ResumeLayout(false);
             dialogLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)modelListData).EndInit();
@@ -197,15 +230,15 @@
 
         #endregion
 
-        private TableLayoutPanel dialogLayout;
         private Controls.TextBoxData serverNameData;
         private Controls.TextBoxData databaseNameData;
-        private Label modelsLayout;
         private DataGridView modelListData;
-        private Controls.TextBoxData modelNameData;
+        private Controls.TextBoxData modelTitleData;
         private Controls.TextBoxData modelDescriptionData;
-        private TableLayoutPanel buttonLayout;
-        private Button cancelCommand;
-        private Button okCommand;
+        private Button deleteCommand;
+        private Button saveCommand;
+        private Button loadCommand;
+        private DataGridViewTextBoxColumn modelTitleColumn;
+        private DataGridViewTextBoxColumn modelDescriptionColumn;
     }
 }

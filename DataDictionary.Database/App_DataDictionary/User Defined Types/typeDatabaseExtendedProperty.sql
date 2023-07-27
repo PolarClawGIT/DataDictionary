@@ -14,5 +14,5 @@
 	[ObjType]                SysName          Null,
 	[ObjName]                SysName          Null,
 	[PropertyName]           SysName          Null,
-	[PropertyValue]          Sql_variant      Null
+	[PropertyValue]          NVarChar(Max)    Null
 )

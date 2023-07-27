@@ -113,10 +113,11 @@ namespace DataDictionary.Main
             else { new Forms.DbExtendedPropertyView().Show(); }
         }
 
+        [Obsolete()]
         private void menuImportDbSchema_Click(object sender, EventArgs e)
         {
-            Program.Data.ImportDbSchemaToDomain();
-            BuildDomainModelTree();
+            //Program.Data.ImportDbSchemaToDomain();
+            //BuildDomainModelTree();
         }
 
         private void menuAttributes_Click(object sender, EventArgs e)
@@ -183,6 +184,13 @@ namespace DataDictionary.Main
             }
         }
 
+        private void manageDbModelMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.ModelManagement)) is Forms.ModelManagement existingForm)
+            { existingForm.Activate(); }
+            else { new Forms.ModelManagement().Show(); }
+        }
+
         private void navigationDbSchemaTab_MouseDoubleClick(object sender, MouseEventArgs e)
         { //TODO: Not Working. Does not show when the context menu is assigned to the control or rigged to an event.
             dbSchemaContextMenu.Show();
@@ -192,10 +200,6 @@ namespace DataDictionary.Main
         { //TODO: Not Working. Does not show when the context menu is assigned to the control or rigged to an event.
             domainModelMenu.Show();
         }
-
-
-
-
         #endregion
 
         #region dbMetaDataNavigation
@@ -413,7 +417,7 @@ namespace DataDictionary.Main
 
         protected override void HandleMessage(DbDataBatchCompleted message)
         {
-            Program.Data.ImportDbSchemaToDomain();
+            //Program.Data.ImportDbSchemaToDomain();
             BuildDbDataTree();
             BuildDomainModelTree();
         }
@@ -436,25 +440,8 @@ namespace DataDictionary.Main
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         { SendMessage(new WindowsSelectAllCommand() { HandledBy = this.ActiveMdiChild }); }
 
+
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
-        {   new Forms.UnitTestGridView().Show(); }
-
-        private void openFromDbMenuItem_Click(object sender, EventArgs e)
-        {
-            using (Dialogs.OpenSaveDbDialog dialog = new Dialogs.OpenSaveDbDialog(Dialogs.OpenSaveDbDialog.OpenSaveOption.Open))
-            {
-                DialogResult result = dialog.ShowDialog();
-                //TODO do the Open
-            }
-        }
-
-        private void saveToDbMenuItem_Click(object sender, EventArgs e)
-        {
-            using (Dialogs.OpenSaveDbDialog dialog = new Dialogs.OpenSaveDbDialog(Dialogs.OpenSaveDbDialog.OpenSaveOption.Save))
-            {
-                DialogResult result = dialog.ShowDialog();
-                //TODO do the Save
-            }
-        }
+        { new Forms.UnitTestGridView().Show(); }
     }
 }

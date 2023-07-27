@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.ApplicationData;
+﻿using DataDictionary.BusinessLayer.WorkFlows;
+using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -44,9 +45,7 @@ namespace DataDictionary.Main.Forms
         {
             if (Program.Data.HelpSubjects.Count() == 0)
             {
-                this.UseWaitCursor = true;
-                this.Enabled = false;
-                Program.Worker.Enqueue(Program.Data.LoadHelp(), OnComplete);
+                this.DoWork(Program.Data.LoadHelp(), OnComplete);
             }
             else
             {
@@ -67,9 +66,6 @@ namespace DataDictionary.Main.Forms
 
                 NavigateTo(data.TargetNameSpace);
                 BindData();
-
-                this.UseWaitCursor = false;
-                this.Enabled = true;
             }
         }
 
@@ -196,7 +192,7 @@ namespace DataDictionary.Main.Forms
             this.Enabled = false;
             UnBindData();
 
-            Program.Worker.Enqueue(Program.Data.LoadHelp(), OnComplete);
+            this.DoWork(Program.Data.LoadHelp(), OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             {
@@ -204,9 +200,6 @@ namespace DataDictionary.Main.Forms
 
                 NavigateTo("About");
                 BindData();
-                this.UseWaitCursor = false;
-                this.Enabled = true;
-
             }
         }
 
@@ -223,7 +216,7 @@ namespace DataDictionary.Main.Forms
             if (data.HelpItem is HelpItem && !Program.Data.HelpSubjects.Contains(data.HelpItem))
             { Program.Data.HelpSubjects.Add(data.HelpItem); }
 
-            Program.Worker.Enqueue(Program.Data.SaveHelp(), OnComplete);
+            this.DoWork(Program.Data.SaveHelp(), OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             {

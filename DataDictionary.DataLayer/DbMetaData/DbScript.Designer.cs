@@ -73,26 +73,17 @@ namespace DataDictionary.DataLayer.DbMetaData {
         
         /// <summary>
         ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
-        ///	I.[TABLE_CATALOG],
-        ///	I.[TABLE_SCHEMA],
-        ///	I.[TABLE_NAME],
-        ///	I.[COLUMN_NAME],
-        ///	I.[ORDINAL_POSITION],
-        ///	I.[COLUMN_DEFAULT],
-        ///	I.[IS_NULLABLE],
-        ///	I.[DATA_TYPE],
-        ///	I.[CHARACTER_MAXIMUM_LENGTH],
-        ///	I.[CHARACTER_OCTET_LENGTH],
-        ///	I.[NUMERIC_PRECISION],
-        ///	I.[NUMERIC_PRECISION_RADIX],
-        ///	I.[NUMERIC_SCALE],
-        ///	I.[DATETIME_PRECISION],
-        ///	I.[CHARACTER_SET_CATALOG],
-        ///	I.[CHARACTER_SET_SCHEMA],
-        ///	I.[CHARACTER_SET_NAME],
-        ///	I.[COLLATION_CATALOG],
-        ///	I.[COLLATION_SCHEMA],
-        /// [rest of string was truncated]&quot;;.
+        ///	I.[TABLE_CATALOG] As [CatalogName],
+        ///	I.[TABLE_SCHEMA] As [SchemaName],
+        ///	I.[TABLE_NAME] As [TableName],
+        ///	I.[COLUMN_NAME] As [ColumnName],
+        ///	I.[ORDINAL_POSITION] As [OrdinalPosition],
+        ///	I.[COLUMN_DEFAULT] As [ColumnDefault],
+        ///	iif(I.[IS_NULLABLE] In (&apos;YES&apos;,&apos;TRUE&apos;,&apos;1&apos;),1,0) As [IsNullable],
+        ///	I.[DATA_TYPE] As [DataType],
+        ///	I.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaxiumLength],
+        ///	I.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLenght],
+        ///	I.[NUMERIC_PRECI [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbColumnItem {
             get {
@@ -101,7 +92,25 @@ namespace DataDictionary.DataLayer.DbMetaData {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Db_Name() [CatalogName], @Level0Type [Level0Type], @Level0Name [Level0Name], @Level1Type [Level1Type], @Level1Name [Level1Name], @Level2Type [Level2Type], @Level2Name [Level2Name], [objtype], [objname], [name], [value] FROM [fn_listextendedproperty](@PropertyName, @Level0Type, @Level0Name, @Level1Type, @Level1Name, @Level2Type, @Level2Name).
+        ///   Looks up a localized string similar to SELECT Db_Name() [CatalogName],
+        ///	@Level0Type [Level0Type],
+        ///	@Level0Name [Level0Name],
+        ///	@Level1Type [Level1Type],
+        ///	@Level1Name [Level1Name],
+        ///	@Level2Type [Level2Type],
+        ///	@Level2Name [Level2Name],
+        ///	[objtype],
+        ///	[objname],
+        ///	[name],
+        ///	Convert(NVarChar(Max),[value]) As [Value]
+        ///FROM [fn_listextendedproperty] (
+        ///	@PropertyName,
+        ///	@Level0Type,
+        ///	@Level0Name,
+        ///	@Level1Type,
+        ///	@Level1Name,
+        ///	@Level2Type,
+        ///	@Level2Name).
         /// </summary>
         internal static string DbExtendedPropertyItem {
             get {

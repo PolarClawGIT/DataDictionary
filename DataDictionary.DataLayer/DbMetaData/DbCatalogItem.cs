@@ -35,6 +35,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("CatalogId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
             new DataColumn("SourceServerName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()

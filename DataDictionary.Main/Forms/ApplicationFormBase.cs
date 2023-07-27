@@ -1,7 +1,9 @@
 ﻿using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
+using System.ComponentModel;
 using System.Windows.Forms;
 using Toolbox.Mediator;
+using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms
 {
@@ -17,6 +19,7 @@ namespace DataDictionary.Main.Forms
             Program.Messenger.AddColleague(this);
             SendMessage(new FormAddMdiChild() { ChildForm = this });
         }
+
 
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;
@@ -255,6 +258,38 @@ namespace DataDictionary.Main.Forms
             }
 
             return errors;
+        }
+
+        public static void DoWork(this Form form, IEnumerable<WorkItem> work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
+        {
+            form.UseWaitCursor = true;
+            form.Enabled = false;
+            Program.Worker.Enqueue(work, completing);
+
+            void completing(RunWorkerCompletedEventArgs result)
+            {
+                if (result.Error is not null) { Program.ShowException(result.Error); }
+                if (onCompleting is not null) { onCompleting(result); }
+
+                form.UseWaitCursor = false;
+                form.Enabled = true;
+            }
+        }
+
+        public static void DoWork(this Form form, WorkItem work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
+        {
+            form.UseWaitCursor = true;
+            form.Enabled = false;
+            Program.Worker.Enqueue(work, completing);
+
+            void completing(RunWorkerCompletedEventArgs result)
+            {
+                if (result.Error is not null) { Program.ShowException(result.Error); }
+                if (onCompleting is not null) { onCompleting(result); }
+
+                form.UseWaitCursor = false;
+                form.Enabled = true;
+            }
         }
     }
 }

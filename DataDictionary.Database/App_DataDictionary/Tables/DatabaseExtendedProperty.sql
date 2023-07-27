@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [App_DataDictionary].[DatabaseExtendedProperty]
 (
-		[PropertyId]     UniqueIdentifier Not Null,
+		[PropertyId]     UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseExtendedProperty_PropertyId] DEFAULT (newid()),
 		[CatalogId]      UniqueIdentifier Not Null,
 		-- Parameters for [fn_listextendedproperty]
 		[Level0Type]     SysName Null,
@@ -13,7 +13,7 @@
 		[ObjType]        SysName Not Null,
 		[ObjName]        SysName Not Null,
 		[PropertyName]   SysName Not Null,
-		[PropertyValue]  Sql_variant Null,
+		[PropertyValue]  NVarChar(Max) Null,
 		-- Keys
 		CONSTRAINT [PK_DatabaseExtendedProperty] PRIMARY KEY CLUSTERED ([PropertyId] ASC),
 		CONSTRAINT [FK_DatabaseExtendedPropertyCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),

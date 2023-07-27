@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         public static IReadOnlyList<WorkItem> LoadHelp(this ModelData data)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(data.modelContext);
+            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(data.ModelContext);
             workItems.Add(openConnection);
 
             workItems.Add(new WorkItem()
@@ -36,7 +36,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         public static IReadOnlyList<WorkItem> SaveHelp(this ModelData data)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(data.modelContext);
+            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(data.ModelContext);
             workItems.Add(openConnection);
 
             workItems.Add(new SaveBindingTable(openConnection)

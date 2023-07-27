@@ -21,7 +21,7 @@ Begin Try
 	-- Clean the Data
 	Declare @Values  [App_DataDictionary].[typeDatabaseExtendedProperty]
 	Insert Into @Values
-	Select	D.[PropertyId],
+	Select	IsNull(O.[PropertyId],newid()) As [PropertyId],
 			P.[CatalogId],
 			P.[CatalogName] As [CatalogName],
 			NullIf(Trim(D.[Level0Type]),'') As [Level0Type],
@@ -40,6 +40,12 @@ Begin Try
 			Left Join [App_DataDictionary].[DatabaseCatalog] P
 			On	C.[CatalogId] = P.[CatalogId] And
 				D.[CatalogName] = P.[CatalogName]
+			Left Join [App_DataDictionary].[DatabaseExtendedProperty] O
+			On	P.[CatalogId] = O.[CatalogId] And
+				IsNull(D.[Level0Name],'') = IsNull(O.[Level0Name],'') And
+				IsNull(D.[Level1Name],'') = IsNull(O.[Level1Name],'') And
+				IsNull(D.[Level2Name],'') = IsNull(O.[Level2Name],'') And
+				IsNull(D.[PropertyName],'') = IsNull(O.[PropertyName],'')
 
 	-- Validation
 	If Not Exists (Select 1 From [App_DataDictionary].[ApplicationModel] Where [ModelId] = @ModelId)

@@ -72,6 +72,13 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Target = data.DbExtendedProperties
             });
 
+            workItems.Add(new WorkItem()
+            {
+                WorkName="Import Schema to Domain Model", 
+                DoWork = ()=> ImportDbSchemaToDomain(data), 
+                IsCanceling = openConnection.IsCanceling
+            });
+
             return workItems.AsReadOnly();
         }
 

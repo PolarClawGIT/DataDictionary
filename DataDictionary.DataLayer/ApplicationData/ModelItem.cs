@@ -44,6 +44,9 @@ namespace DataDictionary.DataLayer.ApplicationData
         public static Command GetData(IConnection connection, IModelIdentifier modelIdentifier)
         { return GetData(connection, (modelIdentifier.ModelId, null, null)); }
 
+        public static Command GetData(IConnection connection)
+        { return GetData(connection, (null, null, false)); }
+
         static Command GetData(IConnection connection, (Guid? modelId, String? modelTitle, Boolean? obsolete) parameters)
         {
             Command command = connection.CreateCommand();
@@ -57,17 +60,17 @@ namespace DataDictionary.DataLayer.ApplicationData
             return command;
         }
 
-        public Command SetData(IConnection connection)
+        public static Command SetData(IConnection connection, ModelItem source)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetApplicationModel]";
 
-            command.AddParameter("@ModelId", ModelId);
-            command.AddParameter("@ModelTitle", ModelTitle);
-            command.AddParameter("@ModelDescription", ModelDescription);
-            command.AddParameter("@Obsolete", GetValue("Obsolete"));
-            command.AddParameter("@SysStart", GetValue("SysStart"));
+            command.AddParameter("@ModelId", source.ModelId);
+            command.AddParameter("@ModelTitle", source.ModelTitle);
+            command.AddParameter("@ModelDescription", source.ModelDescription);
+            command.AddParameter("@Obsolete", source.GetValue("Obsolete"));
+            command.AddParameter("@SysStart", source.GetValue("SysStart"));
 
             return command;
         }

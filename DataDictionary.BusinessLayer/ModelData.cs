@@ -1,5 +1,4 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer;
+﻿using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.DataLayer.DomainData;
@@ -10,10 +9,8 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
-using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer
 {
@@ -22,9 +19,9 @@ namespace DataDictionary.BusinessLayer
     /// </summary>
     public class ModelData
     {
-        public IModelItem Model { get { return Models.First(); } }
+        public ModelItem Model { get { return Models.First(); } }
         public FileInfo? ModelFile { get; internal set; }
-        internal Context modelContext = new Context();
+        internal protected Context ModelContext { get; protected set; }= new Context();
 
         // Database Model
         public BindingTable<DbCatalogItem> DbCatalogs { get; } = ModelFactory.Create<DbCatalogItem>();
@@ -43,15 +40,15 @@ namespace DataDictionary.BusinessLayer
         public BindingTable<HelpItem> HelpSubjects { get; } = ModelFactory.Create<HelpItem>();
 
         // Connection Data
-        public String ServerName { get { return modelContext.ServerName; } }
-        public String DatabaseName { get { return modelContext.DatabaseName; } }
+        public String ServerName { get { return ModelContext.ServerName; } }
+        public String DatabaseName { get { return ModelContext.DatabaseName; } }
 
         protected ModelData() : base()
         { Models.Add(new ModelItem()); }
 
         public ModelData(Context context) : this()
         {
-            modelContext = new Context()
+            ModelContext = new Context()
             {
                 ServerName = context.ServerName,
                 DatabaseName = context.DatabaseName,

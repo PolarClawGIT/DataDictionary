@@ -66,9 +66,6 @@ namespace DataDictionary.Main.Forms
                 collationCatalogData.DataBindings.Add(new Binding(nameof(collationCatalogData.Text), data.DbColumn, nameof(data.DbColumn.CollationCatalog)));
 
                 generatedAlwayTypeData.DataBindings.Add(new Binding(nameof(generatedAlwayTypeData.Text), data.DbColumn, nameof(data.DbColumn.GeneratedAlwayType)));
-                isSparseData.DataBindings.Add(new Binding(nameof(isSparseData.Checked), data.DbColumn, nameof(data.DbColumn.IsSparse), true, DataSourceUpdateMode.OnValidation, false));
-                isColumnSetData.DataBindings.Add(new Binding(nameof(isColumnSetData.Checked), data.DbColumn, nameof(data.DbColumn.IsColumnSet), true, DataSourceUpdateMode.OnValidation, false));
-                isFileStreamData.DataBindings.Add(new Binding(nameof(isFileStreamData.Checked), data.DbColumn, nameof(data.DbColumn.IsFileStream), true, DataSourceUpdateMode.OnValidation, false));
                 isIdentityData.DataBindings.Add(new Binding(nameof(isIdentityData.Checked), data.DbColumn, nameof(data.DbColumn.IsIdentity), true, DataSourceUpdateMode.OnValidation, false));
                 isHiddenData.DataBindings.Add(new Binding(nameof(isHiddenData.Checked), data.DbColumn, nameof(data.DbColumn.IsHidden), true, DataSourceUpdateMode.OnValidation, false));
 
@@ -104,10 +101,6 @@ namespace DataDictionary.Main.Forms
             characterSetNameData.DataBindings.Clear();
             collationCatalogData.DataBindings.Clear();
             generatedAlwayTypeData.DataBindings.Clear();
-
-            isSparseData.DataBindings.Clear();
-            isColumnSetData.DataBindings.Clear();
-            isFileStreamData.DataBindings.Clear();
             isIdentityData.DataBindings.Clear();
             isHiddenData.DataBindings.Clear();
 

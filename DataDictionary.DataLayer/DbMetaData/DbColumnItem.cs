@@ -39,9 +39,6 @@ namespace DataDictionary.DataLayer.DbMetaData
         String? DomainCatalog { get; }
         String? DomainSchema { get; }
         String? DomainName { get; }
-        Nullable<Boolean> IsSparse { get; }
-        Nullable<Boolean> IsColumnSet { get; }
-        Nullable<Boolean> IsFileStream { get; }
         Nullable<Boolean> IsIdentity { get; }
         Nullable<Boolean> IsHidden { get; }
         Nullable<Boolean> IsComputed { get; }
@@ -52,32 +49,29 @@ namespace DataDictionary.DataLayer.DbMetaData
     public class DbColumnItem : BindingTableRow, IDbColumnItem, INotifyPropertyChanged, IDbExtendedProperties
     {
         //public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
-        public String? CatalogName { get { return GetValue("TABLE_CATALOG"); } }
-        public String? SchemaName { get { return GetValue("TABLE_SCHEMA"); } }
-        public String? TableName { get { return GetValue("TABLE_NAME"); } }
-        public String? ColumnName { get { return GetValue("COLUMN_NAME"); } }
-        public Nullable<Int32> OrdinalPosition { get { return GetValue<Int32>("ORDINAL_POSITION"); } }
-        public String? ColumnDefault { get { return GetValue("COLUMN_DEFAULT"); } }
-        public Nullable<Boolean> IsNullable { get { return GetValue<Boolean>("IS_NULLABLE", BindingItemParsers.BooleanTryPrase); } }
-        public String? DataType { get { return GetValue("DATA_TYPE"); } }
-        public Nullable<Int32> CharacterMaximumLength { get { return GetValue<Int32>("CHARACTER_MAXIMUM_LENGTH"); } }
-        public Nullable<Int32> CharacterOctetLength { get { return GetValue<Int32>("CHARACTER_OCTET_LENGTH"); } }
-        public Nullable<Byte> NumericPrecision { get { return GetValue<Byte>("NUMERIC_PRECISION"); } }
-        public Nullable<Int16> NumericPrecisionRadix { get { return GetValue<Int16>("NUMERIC_PRECISION_RADIX"); } }
-        public Nullable<Int32> NumericScale { get { return GetValue<Int32>("NUMERIC_SCALE"); } }
-        public Nullable<Int16> DateTimePrecision { get { return GetValue<Int16>("DATETIME_PRECISION"); } }
-        public String? CharacterSetCatalog { get { return GetValue("CHARACTER_SET_CATALOG"); } }
-        public String? CharacterSetSchema { get { return GetValue("CHARACTER_SET_SCHEMA"); } }
-        public String? CharacterSetName { get { return GetValue("CHARACTER_SET_NAME"); } }
-        public String? CollationCatalog { get { return GetValue("COLLATION_CATALOG"); } }
-        public String? CollationSchema { get { return GetValue("COLLATION_SCHEMA"); } }
-        public String? CollationName { get { return GetValue("COLLATION_NAME"); } }
-        public String? DomainCatalog { get { return GetValue("DOMAIN_CATALOG"); } }
-        public String? DomainSchema { get { return GetValue("DOMAIN_SCHEMA"); } }
-        public String? DomainName { get { return GetValue("DOMAIN_NAME"); } }
-        public Nullable<Boolean> IsSparse { get { return GetValue<Boolean>("IS_SPARSE", BindingItemParsers.BooleanTryPrase); } }
-        public Nullable<Boolean> IsColumnSet { get { return GetValue<Boolean>("IS_COLUMN_SET", BindingItemParsers.BooleanTryPrase); } }
-        public Nullable<Boolean> IsFileStream { get { return GetValue<Boolean>("IS_FILESTREAM", BindingItemParsers.BooleanTryPrase); } }
+        public String? CatalogName { get { return GetValue("CatalogName"); } }
+        public String? SchemaName { get { return GetValue("SchemaName"); } }
+        public String? TableName { get { return GetValue("TableName"); } }
+        public String? ColumnName { get { return GetValue("ColumnName"); } }
+        public Nullable<Int32> OrdinalPosition { get { return GetValue<Int32>("OrdinalPosition"); } }
+        public String? ColumnDefault { get { return GetValue("ColumnDefault"); } }
+        public Nullable<Boolean> IsNullable { get { return GetValue<Boolean>("IsNullable", BindingItemParsers.BooleanTryPrase); } }
+        public String? DataType { get { return GetValue("DataType"); } }
+        public Nullable<Int32> CharacterMaximumLength { get { return GetValue<Int32>("CharacterMaximumLength"); } }
+        public Nullable<Int32> CharacterOctetLength { get { return GetValue<Int32>("CharacterOctetLength"); } }
+        public Nullable<Byte> NumericPrecision { get { return GetValue<Byte>("NumericPrecision"); } }
+        public Nullable<Int16> NumericPrecisionRadix { get { return GetValue<Int16>("NumericPrecisionRadix"); } }
+        public Nullable<Int32> NumericScale { get { return GetValue<Int32>("NumericScale"); } }
+        public Nullable<Int16> DateTimePrecision { get { return GetValue<Int16>("DateTimePrecision"); } }
+        public String? CharacterSetCatalog { get { return GetValue("CharacterSetCatalog"); } }
+        public String? CharacterSetSchema { get { return GetValue("CharacterSetSchema"); } }
+        public String? CharacterSetName { get { return GetValue("CharacterSetName"); } }
+        public String? CollationCatalog { get { return GetValue("CollationCatalog"); } }
+        public String? CollationSchema { get { return GetValue("CollationSchema"); } }
+        public String? CollationName { get { return GetValue("CollationName"); } }
+        public String? DomainCatalog { get { return GetValue("DomainCatalog"); } }
+        public String? DomainSchema { get { return GetValue("DomainSchema"); } }
+        public String? DomainName { get { return GetValue("DomainName"); } }
         public Nullable<Boolean> IsIdentity { get { return GetValue<Boolean>("IsIdentity", BindingItemParsers.BooleanTryPrase); } }
         public Nullable<Boolean> IsHidden { get { return GetValue<Boolean>("IsHidden", BindingItemParsers.BooleanTryPrase); } }
         public Nullable<Boolean> IsComputed { get { return GetValue<Boolean>("IsComputed", BindingItemParsers.BooleanTryPrase); } }
@@ -88,32 +82,29 @@ namespace DataDictionary.DataLayer.DbMetaData
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(String)){ AllowDBNull = true},
-            new DataColumn("TABLE_CATALOG", typeof(String)){ AllowDBNull = false},
-            new DataColumn("TABLE_SCHEMA", typeof(String)){ AllowDBNull = false},
-            new DataColumn("TABLE_NAME", typeof(String)){ AllowDBNull = false},
-            new DataColumn("COLUMN_NAME", typeof(String)){ AllowDBNull = false},
-            new DataColumn("ORDINAL_POSITION", typeof(Int32)){ AllowDBNull = false},
-            new DataColumn("COLUMN_DEFAULT", typeof(String)){ AllowDBNull = true},
-            new DataColumn("IS_NULLABLE", typeof(String)){ AllowDBNull = true},
-            new DataColumn("DATA_TYPE", typeof(String)){ AllowDBNull = true},
-            new DataColumn("CHARACTER_MAXIMUM_LENGTH", typeof(Int32)){ AllowDBNull = true},
-            new DataColumn("CHARACTER_OCTET_LENGTH", typeof(Int32)){ AllowDBNull = true},
-            new DataColumn("NUMERIC_PRECISION", typeof(Byte)){ AllowDBNull = true},
-            new DataColumn("NUMERIC_PRECISION_RADIX", typeof(Int16)){ AllowDBNull = true},
-            new DataColumn("NUMERIC_SCALE", typeof(Int32)){ AllowDBNull = true},
-            new DataColumn("DATETIME_PRECISION", typeof(Int16)){ AllowDBNull = true},
-            new DataColumn("CHARACTER_SET_CATALOG", typeof(String)){ AllowDBNull = true},
-            new DataColumn("CHARACTER_SET_SCHEMA", typeof(String)){ AllowDBNull = true},
-            new DataColumn("CHARACTER_SET_NAME", typeof(String)){ AllowDBNull = true},
-            new DataColumn("COLLATION_CATALOG", typeof(String)){ AllowDBNull = true},
-            new DataColumn("COLLATION_SCHEMA", typeof(String)){ AllowDBNull = true},
-            new DataColumn("COLLATION_NAME", typeof(String)){ AllowDBNull = true},
-            new DataColumn("DOMAIN_CATALOG", typeof(String)){ AllowDBNull = true},
-            new DataColumn("DOMAIN_SCHEMA", typeof(String)){ AllowDBNull = true},
-            new DataColumn("DOMAIN_NAME", typeof(String)){ AllowDBNull = true},
-            new DataColumn("IS_SPARSE", typeof(String)){ AllowDBNull = true},
-            new DataColumn("IS_COLUMN_SET", typeof(String)){ AllowDBNull = true},
-            new DataColumn("IS_FILESTREAM", typeof(String)){ AllowDBNull = true},
+            new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("SchemaName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("TableName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("ColumnName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("OrdinalPosition", typeof(Int32)){ AllowDBNull = false},
+            new DataColumn("ColumnDefault", typeof(String)){ AllowDBNull = true},
+            new DataColumn("IsNullable", typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn("DataType", typeof(String)){ AllowDBNull = true},
+            new DataColumn("CharacterMaximumLength", typeof(Int32)){ AllowDBNull = true},
+            new DataColumn("CharacterOctetLength", typeof(Int32)){ AllowDBNull = true},
+            new DataColumn("NumericPrecision", typeof(Byte)){ AllowDBNull = true},
+            new DataColumn("NumericPrecisionRadix", typeof(Int16)){ AllowDBNull = true},
+            new DataColumn("NumericScale", typeof(Int32)){ AllowDBNull = true},
+            new DataColumn("DateTimePrecision", typeof(Int16)){ AllowDBNull = true},
+            new DataColumn("CharacterSetCatalog", typeof(String)){ AllowDBNull = true},
+            new DataColumn("CharacterSetSchema", typeof(String)){ AllowDBNull = true},
+            new DataColumn("CharacterSetName", typeof(String)){ AllowDBNull = true},
+            new DataColumn("CollationCatalog", typeof(String)){ AllowDBNull = true},
+            new DataColumn("CollationSchema", typeof(String)){ AllowDBNull = true},
+            new DataColumn("CollationName", typeof(String)){ AllowDBNull = true},
+            new DataColumn("DomainCatalog", typeof(String)){ AllowDBNull = true},
+            new DataColumn("DomainSchema", typeof(String)){ AllowDBNull = true},
+            new DataColumn("DomainName", typeof(String)){ AllowDBNull = true},
             new DataColumn("IsIdentity", typeof(Boolean)){ AllowDBNull = true},
             new DataColumn("IsHidden", typeof(Boolean)){ AllowDBNull = true},
             new DataColumn("IsComputed", typeof(Boolean)){ AllowDBNull = true},

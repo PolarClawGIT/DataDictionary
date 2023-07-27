@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -184,17 +185,14 @@ namespace DataDictionary.Main.Forms
 
         private void connectCommand_Click(object sender, EventArgs e)
         {
-            this.UseWaitCursor = true;
-            this.Enabled = false;
             List<DbCatalogName> databaseNames = new List<DbCatalogName>();
 
             if (data.DbContext is DbSchemaContext)
-            { Program.Worker.Enqueue(data.DbContext.GetDatabaseList(databaseNames), onComplete); }
+            { this.DoWork(data.DbContext.GetDatabaseList(databaseNames), onComplete); }
 
             void onComplete(RunWorkerCompletedEventArgs result)
             {
-                if (result.Error is not null) { Program.ShowException(result.Error); }
-                else if (!result.Cancelled)
+                if (!result.Cancelled)
                 {
 
                     if (databaseNames.FirstOrDefault(w => w.CatalogName == databaseNameData.Text) is DbCatalogName currentDb)
@@ -213,9 +211,6 @@ namespace DataDictionary.Main.Forms
                         else { databaseNameData.SelectedIndex = -1; }
                     }
                 }
-
-                this.UseWaitCursor = false;
-                this.Enabled = true;
             }
         }
 
@@ -223,24 +218,18 @@ namespace DataDictionary.Main.Forms
 
         private void importCommand_Click(object sender, EventArgs e)
         {
-            this.UseWaitCursor = true;
-            this.Enabled = false;
             UnBindData();
             SendMessage(new DbDataBatchStarting());
 
             if (data.DbContext is DbSchemaContext)
             {
                 if (data.DbContext is DbSchemaContext)
-                {
-                    IEnumerable<WorkItem> workItems = Program.Data.LoadDbSchema(data.DbContext);
-                    Program.Worker.Enqueue(workItems, onCompleting);
-                }
+                { this.DoWork(Program.Data.LoadDbSchema(data.DbContext), onCompleting); }
             }
 
             void onCompleting(RunWorkerCompletedEventArgs result)
             {
-                if (result.Error is not null) { Program.ShowException(result.Error); }
-                else if (!result.Cancelled)
+                if (!result.Cancelled)
                 {
                     String newValue = String.Format("{0}.{1}", data.DbContext.ServerName, data.DbContext.DatabaseName);
 
@@ -262,9 +251,6 @@ namespace DataDictionary.Main.Forms
 
                 // Because other forms can sometimes get focus during data binding
                 if (ParentForm is Form parent && ParentForm.ActiveMdiChild != this) { this.Activate(); }
-
-                this.UseWaitCursor = false;
-                this.Enabled = true;
             }
         }
 
@@ -278,7 +264,7 @@ namespace DataDictionary.Main.Forms
 
 
             if (data.DbContext is DbSchemaContext)
-            { Program.Worker.Enqueue(Program.Data.RemoveCatalog(data.DbContext), onComplete); }
+            { this.DoWork(Program.Data.RemoveCatalog(data.DbContext), onComplete); }
 
             void onComplete(RunWorkerCompletedEventArgs result)
             {
