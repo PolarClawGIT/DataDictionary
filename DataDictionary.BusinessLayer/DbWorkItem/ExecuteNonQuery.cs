@@ -10,12 +10,12 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
-    class SaveBindingTable : WorkItem, IDbWorkItem
+    class ExecuteNonQuery : WorkItem, IDbWorkItem
     {
         public required Func<IConnection, Command> Command { get; init; }
         readonly IConnection connection;
 
-        public SaveBindingTable(OpenConnection conn) : base()
+        public ExecuteNonQuery(OpenConnection conn) : base()
         {
             this.connection = conn.Connection;
             conn.Dependency(this);

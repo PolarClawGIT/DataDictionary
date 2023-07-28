@@ -8,7 +8,7 @@ namespace Toolbox.BindingTable
 {
     public static class BindingItemParsers
     {
-        public static Boolean BooleanTryPrase(String value, out Boolean result)
+        public static Boolean BooleanTryParse(String value, out Boolean result)
         {
             if (String.IsNullOrWhiteSpace(value)) { throw new ArgumentNullException(nameof(value)); }
 

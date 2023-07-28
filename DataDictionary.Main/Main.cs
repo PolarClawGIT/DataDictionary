@@ -53,15 +53,26 @@ namespace DataDictionary.Main
         {
             Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
             Program.Messenger.AddColleague(this);
-
-            modelNameData.DataBindings.Add(new Binding(nameof(modelNameData.Text), Program.Data.Model, nameof(Program.Data.Model.ModelTitle)));
-            modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), Program.Data.Model, nameof(Program.Data.Model.ModelDescription)));
-
-            //Program.Worker.Enqueue(Program.Data.LoadHelp());
+            BindData();
 
             // TODO: Cannot get the Context menus to show. For now, add them to the Tools menu
             dbSchemaToolStripMenuItem.DropDownItems.AddRange(dbSchemaContextMenu.Items);
             domainModelToolStripMenuItem.DropDownItems.AddRange(domainModelMenu.Items);
+        }
+
+        void BindData()
+        {
+            modelNameData.DataBindings.Add(new Binding(nameof(modelNameData.Text), Program.Data.Model, nameof(Program.Data.Model.ModelTitle)));
+            modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), Program.Data.Model, nameof(Program.Data.Model.ModelDescription)));
+
+            BuildDbDataTree();
+            BuildDomainModelTree();
+        }
+
+        void UnBindData()
+        {
+            modelNameData.DataBindings.Clear();
+            modelDescriptionData.DataBindings.Clear();
         }
 
         private void Main_FormClosing(object? sender, FormClosingEventArgs e)
@@ -413,15 +424,14 @@ namespace DataDictionary.Main
 
         Form? lastActive;
         protected override void HandleMessage(DbDataBatchStarting message)
-        { lastActive = ActiveMdiChild; }
-
-        protected override void HandleMessage(DbDataBatchCompleted message)
         {
-            //Program.Data.ImportDbSchemaToDomain();
-            BuildDbDataTree();
-            BuildDomainModelTree();
+            this.Controls[0].Focus();
+            lastActive = ActiveMdiChild;
+            UnBindData();
         }
 
+        protected override void HandleMessage(DbDataBatchCompleted message)
+        { BindData(); }
         #endregion
 
 

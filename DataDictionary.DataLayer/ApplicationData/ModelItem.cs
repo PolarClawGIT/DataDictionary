@@ -22,11 +22,13 @@ namespace DataDictionary.DataLayer.ApplicationData
         public Nullable<Guid> ModelId { get { return GetValue<Guid>("ModelId"); } protected set { SetValue<Guid>("ModelId", value); } }
         public String? ModelTitle { get { return GetValue("ModelTitle"); } set { SetValue("ModelTitle", value); } }
         public String? ModelDescription { get { return GetValue("ModelDescription"); } set { SetValue("ModelDescription", value); } }
+        public Boolean? Obsolete { get { return GetValue<Boolean>("Obsolete", BindingItemParsers.BooleanTryParse); } set { SetValue("Obsolete", value); } }
 
         public ModelItem() : base()
         {
             ModelId = Guid.NewGuid();
             ModelTitle = "New Model";
+            Obsolete = false;
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
@@ -42,10 +44,10 @@ namespace DataDictionary.DataLayer.ApplicationData
         { return columnDefinitions; }
 
         public static Command GetData(IConnection connection, IModelIdentifier modelIdentifier)
-        { return GetData(connection, (modelIdentifier.ModelId, null, null)); }
+        { return GetData(connection, (modelIdentifier.ModelId, null, true)); }
 
         public static Command GetData(IConnection connection)
-        { return GetData(connection, (null, null, false)); }
+        { return GetData(connection, (null, null, true)); }
 
         static Command GetData(IConnection connection, (Guid? modelId, String? modelTitle, Boolean? obsolete) parameters)
         {
@@ -60,17 +62,22 @@ namespace DataDictionary.DataLayer.ApplicationData
             return command;
         }
 
-        public static Command SetData(IConnection connection, ModelItem source)
+        public static Command SetData(IConnection connection, IBindingTable<ModelItem> source)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetApplicationModel]";
+            command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationModel]", source);
 
-            command.AddParameter("@ModelId", source.ModelId);
-            command.AddParameter("@ModelTitle", source.ModelTitle);
-            command.AddParameter("@ModelDescription", source.ModelDescription);
-            command.AddParameter("@Obsolete", source.GetValue("Obsolete"));
-            command.AddParameter("@SysStart", source.GetValue("SysStart"));
+            return command;
+        }
+
+        public static Command DeleteData (IConnection connection, IModelIdentifier parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procDeleteApplicationModel]";
+            command.AddParameter("@ModelId", parameters.ModelId);
 
             return command;
         }

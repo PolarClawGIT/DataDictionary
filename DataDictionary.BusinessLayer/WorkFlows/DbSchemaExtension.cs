@@ -23,28 +23,28 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
             workItems.AddRange(data.RemoveCatalog(context));
 
-            workItems.Add(new LoadBindingTable(openConnection)
+            workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbCatalogs",
                 Command = DbCatalogItem.GetSchema,
                 Target = data.DbCatalogs
             });
 
-            workItems.Add(new LoadBindingTable(openConnection)
+            workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbSchemta",
                 Command = DbSchemaItem.GetSchema,
                 Target = data.DbSchemta
             });
 
-            workItems.Add(new LoadBindingTable(openConnection)
+            workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbTables",
                 Command = DbTableItem.GetSchema,
                 Target = data.DbTables
             });
 
-            workItems.Add(new LoadBindingTable(openConnection)
+            workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbColumns",
                 Command = DbColumnItem.GetSchema,

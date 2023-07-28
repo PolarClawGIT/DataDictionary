@@ -58,9 +58,10 @@ Begin Try
 	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 4;
 
 	-- Apply Changes
+	-- Note: Merge statement can throw errors with FK and UK constraints.
 	With [Data] As (
 		Select	D.[AttributeId],
-				D.[AttributeParentId],
+				R.[AttributeId] As [AttributeParentId],
 				D.[AttributeTitle],
 				D.[AttributeDescription],
 				IIF(IsNull(D.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
@@ -68,8 +69,10 @@ Begin Try
 				Left Join [App_DataDictionary].[ApplicationAttribute] P
 				On	@ModelId = P.[ModelId] And
 					IsNull(D.[AttributeId],NewId()) = P.[AttributeId]
-				Left Join [App_DataDictionary].[DomainAttribute] A
-				On	P.[AttributeId] = A.[AttributeId]),
+				Inner Join [App_DataDictionary].[DomainAttribute] A
+				On	P.[AttributeId] = A.[AttributeId]
+				Left Join [App_DataDictionary].[ApplicationAttribute] R
+				On	D.[AttributeParentId] = R.[AttributeId]),
 	[Delta] As (
 		Select	[AttributeId],
 				[AttributeParentId],
@@ -84,17 +87,32 @@ Begin Try
 				[AttributeDescription],
 				[ObsoleteDate]
 		From	[App_DataDictionary].[DomainAttribute])
-	Merge [App_DataDictionary].[DomainAttribute] As T
-	Using [Delta] As S
-	On T.[AttributeId] = T.[AttributeId]
-	When Matched Then Update
-	Set	[AttributeParentId] = S.[AttributeParentId],
-		[AttributeTitle] = S.[AttributeTitle],
-		[AttributeDescription] = S.[AttributeDescription],
-		[ObsoleteDate] = S.[ObsoleteDate]
-	When Not Matched by Target Then
-		Insert ([AttributeId], [AttributeParentId], [AttributeTitle], [AttributeDescription], [ObsoleteDate])
-		Values ([AttributeId], [AttributeParentId], [AttributeTitle], [AttributeDescription], [ObsoleteDate]);
+	Update [App_DataDictionary].[DomainAttribute]
+	Set		[AttributeParentId] = S.[AttributeParentId],
+			[AttributeTitle] = S.[AttributeTitle],
+			[AttributeDescription] = S.[AttributeDescription],
+			[ObsoleteDate] = S.[ObsoleteDate]
+	From	[Delta] S
+			Inner Join [App_DataDictionary].[DomainAttribute] T
+			On	S.[AttributeId] = T.[AttributeId];
+	Print FormatMessage ('Update [App_DataDictionary].[DomainAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[DomainAttribute] (
+			[AttributeId],
+			[AttributeParentId],
+			[AttributeTitle],
+			[AttributeDescription],
+			[ObsoleteDate])
+	Select	S.[AttributeId],
+			S.[AttributeParentId],
+			S.[AttributeTitle],
+			S.[AttributeDescription],
+			IIF(S.[Obsolete] = 0, Convert(DateTime2, Null), SysDateTime()) As [ObsoleteDate]
+	From	@Values S
+			Left Join [App_DataDictionary].[DomainAttribute] T
+			On	S.[AttributeId] = T.[AttributeId]
+	Where	T.[AttributeId] is Null;
+	Print FormatMessage ('Insert [App_DataDictionary].[DomainAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	With [Data] As (
 		Select	@ModelId As [ModelId],
@@ -108,6 +126,7 @@ Begin Try
 		Insert ([ModelId], [AttributeId])
 		Values ([ModelId], [AttributeId])
 	When Not Matched by Source And T.[ModelId] = @ModelId Then Delete;
+	Print FormatMessage ('Merge [App_DataDictionary].[ApplicationAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

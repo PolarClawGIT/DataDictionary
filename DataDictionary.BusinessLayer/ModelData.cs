@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer
     /// </summary>
     public class ModelData
     {
-        public ModelItem Model { get { return Models.First(); } }
+        public ModelItem Model { get { return Models.First(); } } // There should always be exactly one model.
         public FileInfo? ModelFile { get; internal set; }
         internal protected Context ModelContext { get; protected set; }= new Context();
 
@@ -55,6 +55,19 @@ namespace DataDictionary.BusinessLayer
                 ApplicationRole = context.ApplicationRole,
                 ApplicationRolePassword = context.ApplicationRolePassword
             };
+        }
+
+        public void Clear()
+        {
+            DbCatalogs.Clear();
+            DbSchemta.Clear();
+            DbTables.Clear();
+            DbColumns.Clear();
+            DbExtendedProperties.Clear();
+            DomainAttributes.Clear();
+            DomainAttributeAliases.Clear();
+            DomainAttributeProperties.Clear();
+            Models.Clear();
         }
     }
 }

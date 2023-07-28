@@ -23,7 +23,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 DoWork = data.HelpSubjects.Clear
             });
 
-            workItems.Add(new LoadBindingTable(openConnection)
+            workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Help",
                 Command = HelpItem.GetData,
@@ -39,7 +39,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(data.ModelContext);
             workItems.Add(openConnection);
 
-            workItems.Add(new SaveBindingTable(openConnection)
+            workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Help",
                 Command = (conn) => HelpItem.SetData(conn, data.HelpSubjects)
@@ -51,7 +51,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 DoWork = data.HelpSubjects.Clear
             });
 
-            workItems.Add(new LoadBindingTable(openConnection)
+            workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Help",
                 Command = HelpItem.GetData,

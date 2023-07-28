@@ -17,5 +17,5 @@ Select	[ModelId],
 From	[App_DataDictionary].[ApplicationModel]
 Where	(@ModelId is Null or @ModelId = [ModelId]) And
 		(@ModelTitle is Null or @ModelTitle = [ModelTitle]) And
-		(@Obsolete is Null or @Obsolete = [Obsolete])
+		(@Obsolete is Null or @Obsolete = 1 or @Obsolete = [Obsolete])
 GO

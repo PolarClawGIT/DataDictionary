@@ -1,9 +1,5 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetApplicationModel]
-		@ModelId UniqueIdentifier = Null,
-		@ModelTitle NVarChar(100) = Null,
-		@ModelDescription NVarChar(1000) = Null,
-		@Obsolete Bit = Null,
-		@SysStart DateTime2 = Null
+		@Data [App_DataDictionary].[typeApplicationModel] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -20,43 +16,42 @@ Begin Try
 		Begin Transaction
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
-	   
-	Select	@ModelTitle = NullIf(Trim(@ModelTitle),''),
-			@ModelDescription = NullIf(Trim(@ModelDescription),''),
-			@Obsolete = IsNull(@Obsolete,0)
+
+	-- Clean the Data
+	Declare @Values [App_DataDictionary].[typeApplicationModel]
+	Insert Into @Values
+	Select	IsNull([ModelId],NewId()) As [ModelId],
+			NullIf(Trim([ModelTitle]),'') As [ModelTitle],
+			NullIf(Trim([ModelDescription]),'') As [ModelDescription],
+			[Obsolete],
+			[SysStart]
+	From	@Data
 
 	-- Validation
-	If @ModelTitle is Null
-	Throw 50000, '[ModelTitle] cannot be null or white-space',1;
-
 	If Exists (
-		Select	[ModelId]
-		From	[App_DataDictionary].[ApplicationModel]
-		Where	IsNull(@ModelId,'') <> [ModelId] And
-				@ModelTitle = [ModelTitle] And [Obsolete] = 0)
-	Throw 50000, '[ModelTitle] Can not be a duplicate, other then when Obsolete',2;
+		Select	[ModelTitle]
+		From	@Values
+		Group By [ModelTitle]
+		Having	Count(*) > 1)
+	Throw 50000, '[ModelTitle] cannot be duplicate', 2;
 
 	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
-		Select	[ModelId]
-		From	[App_DataDictionary].[ApplicationModel]
-		Where	@ModelId = [ModelId] And
-				IsNull(@SysStart,[SysStart]) <> [SysStart])
-	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted',3;
+		Select	D.[ModelId]
+		From	@Values D
+				Inner Join [App_DataDictionary].[ApplicationModel] A
+				On D.[ModelId] = A.[ModelId]
+		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
+	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 4;
 
 	-- Apply Changes
-	With [Data] As (
-		Select	IsNull(@ModelId,newid()) As [ModelId],
-				@ModelTitle As [ModelTitle],
-				@ModelDescription As [ModelDescription],
-				IsNull(@Obsolete,0) As [Obsolete]),
-	[Delta] As (
-		Select	S.[ModelId],
-				S.[ModelTitle],
-				S.[ModelDescription],
-				IIF(@Obsolete = 0, Convert(DateTime2, Null), IsNull([ObsoleteDate],SysDateTime())) As [ObsoleteDate]
-		From	[Data] S
-				Left Join [App_DataDictionary].[ApplicationModel] T
-				On	S.[ModelId] = T.[ModelId]
+	With [Delta] As (
+		Select	V.[ModelId],
+				V.[ModelTitle],
+				V.[ModelDescription],
+				IIF(IsNull(V.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
+		From	@Values V
+				Left Join [App_DataDictionary].[ApplicationModel] A
+				On	V.[ModelId] = A.[ModelId]
 		Except
 		Select	[ModelId],
 				[ModelTitle],
@@ -65,11 +60,11 @@ Begin Try
 		From	[App_DataDictionary].[ApplicationModel])
 	Merge [App_DataDictionary].[ApplicationModel] As T
 	Using [Delta] As S
-	On T.[ModelId] = S.[ModelId]
+	On	T.[ModelId] = S.[ModelId]
 	When Matched Then Update
-	Set	[ModelTitle] = S.[ModelTitle],
-		[ModelDescription] = S.[ModelDescription],
-		[ObsoleteDate] = S.[ObsoleteDate]
+		Set	[ModelTitle] = S.[ModelTitle],
+			[ModelDescription] = S.[ModelDescription],
+			[ObsoleteDate] = S.[ObsoleteDate]
 	When Not Matched by Target Then
 		Insert ([ModelId], [ModelTitle], [ModelDescription], [ObsoleteDate])
 		Values ([ModelId], [ModelTitle], [ModelDescription], [ObsoleteDate]);
@@ -99,11 +94,6 @@ Begin Catch
 	Print FormatMessage (' Current_User - %s', Current_User)
 	Print FormatMessage (' XAct_State - %i', XAct_State())
 	Print '*** Debug Report ***'
-	Print FormatMessage (' @ModelId- %s',Convert(NVarChar(50),@ModelId))
-	Print FormatMessage (' @ModelTitle- %s',Convert(NVarChar,@ModelTitle))
-	Print FormatMessage (' @ModelDescription- %s',Convert(NVarChar,@ModelDescription))
-	Print FormatMessage (' @Obsolete- %s',Convert(NVarChar,@Obsolete))
-	Print FormatMessage (' @SysStart- %s',Convert(NVarChar,@SysStart,101))
 
 	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
 

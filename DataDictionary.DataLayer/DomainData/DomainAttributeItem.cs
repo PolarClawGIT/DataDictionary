@@ -27,7 +27,7 @@ namespace DataDictionary.DataLayer.DomainData
 
         public String? AttributeTitle { get { return GetValue("AttributeTitle"); } set { SetValue("AttributeTitle", value); } }
         public String? AttributeDescription { get { return GetValue("AttributeDescription"); } set { SetValue("AttributeDescription", value); } }
-        public Nullable<Boolean> Obsolete { get { return GetValue<Boolean>("Obsolete", BindingItemParsers.BooleanTryPrase); } set { SetValue<Boolean>("Obsolete", value); } }
+        public Nullable<Boolean> Obsolete { get { return GetValue<Boolean>("Obsolete", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("Obsolete", value); } }
 
         public DomainAttributeItem() : base()
         {

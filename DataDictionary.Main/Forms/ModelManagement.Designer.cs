@@ -36,6 +36,7 @@
             modelListData = new DataGridView();
             modelTitleColumn = new DataGridViewTextBoxColumn();
             modelDescriptionColumn = new DataGridViewTextBoxColumn();
+            modelObsoleteColumn = new DataGridViewCheckBoxColumn();
             modelTitleData = new Controls.TextBoxData();
             modelDescriptionData = new Controls.TextBoxData();
             deleteCommand = new Button();
@@ -112,7 +113,7 @@
             modelListData.AllowUserToAddRows = false;
             modelListData.AllowUserToDeleteRows = false;
             modelListData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            modelListData.Columns.AddRange(new DataGridViewColumn[] { modelTitleColumn, modelDescriptionColumn });
+            modelListData.Columns.AddRange(new DataGridViewColumn[] { modelTitleColumn, modelDescriptionColumn, modelObsoleteColumn });
             modelListData.Dock = DockStyle.Fill;
             modelListData.Location = new Point(3, 118);
             modelListData.Name = "modelListData";
@@ -135,6 +136,14 @@
             modelDescriptionColumn.DataPropertyName = "ModelDescription";
             modelDescriptionColumn.HeaderText = "Description";
             modelDescriptionColumn.Name = "modelDescriptionColumn";
+            // 
+            // modelObsoleteColumn
+            // 
+            modelObsoleteColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            modelObsoleteColumn.DataPropertyName = "Obsolete";
+            modelObsoleteColumn.HeaderText = "Obsolete";
+            modelObsoleteColumn.Name = "modelObsoleteColumn";
+            modelObsoleteColumn.Width = 60;
             // 
             // modelTitleData
             // 
@@ -184,12 +193,14 @@
             // deleteCommand
             // 
             deleteCommand.DialogResult = DialogResult.Cancel;
+            deleteCommand.Enabled = false;
             deleteCommand.Location = new Point(373, 3);
             deleteCommand.Name = "deleteCommand";
             deleteCommand.Size = new Size(75, 23);
             deleteCommand.TabIndex = 0;
             deleteCommand.Text = "&Delete";
             deleteCommand.UseVisualStyleBackColor = true;
+            deleteCommand.Click += deleteCommand_Click;
             // 
             // loadCommand
             // 
@@ -220,6 +231,7 @@
             Controls.Add(dialogLayout);
             Name = "ModelManagement";
             Text = "Open or Save Model";
+            FormClosing += ModelManagement_FormClosing;
             Load += ModelManagement_Load;
             dialogLayout.ResumeLayout(false);
             dialogLayout.PerformLayout();
@@ -240,5 +252,6 @@
         private Button loadCommand;
         private DataGridViewTextBoxColumn modelTitleColumn;
         private DataGridViewTextBoxColumn modelDescriptionColumn;
+        private DataGridViewCheckBoxColumn modelObsoleteColumn;
     }
 }

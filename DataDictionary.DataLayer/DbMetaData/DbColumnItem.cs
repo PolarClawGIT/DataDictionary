@@ -55,7 +55,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? ColumnName { get { return GetValue("ColumnName"); } }
         public Nullable<Int32> OrdinalPosition { get { return GetValue<Int32>("OrdinalPosition"); } }
         public String? ColumnDefault { get { return GetValue("ColumnDefault"); } }
-        public Nullable<Boolean> IsNullable { get { return GetValue<Boolean>("IsNullable", BindingItemParsers.BooleanTryPrase); } }
+        public Nullable<Boolean> IsNullable { get { return GetValue<Boolean>("IsNullable", BindingItemParsers.BooleanTryParse); } }
         public String? DataType { get { return GetValue("DataType"); } }
         public Nullable<Int32> CharacterMaximumLength { get { return GetValue<Int32>("CharacterMaximumLength"); } }
         public Nullable<Int32> CharacterOctetLength { get { return GetValue<Int32>("CharacterOctetLength"); } }
@@ -72,9 +72,9 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? DomainCatalog { get { return GetValue("DomainCatalog"); } }
         public String? DomainSchema { get { return GetValue("DomainSchema"); } }
         public String? DomainName { get { return GetValue("DomainName"); } }
-        public Nullable<Boolean> IsIdentity { get { return GetValue<Boolean>("IsIdentity", BindingItemParsers.BooleanTryPrase); } }
-        public Nullable<Boolean> IsHidden { get { return GetValue<Boolean>("IsHidden", BindingItemParsers.BooleanTryPrase); } }
-        public Nullable<Boolean> IsComputed { get { return GetValue<Boolean>("IsComputed", BindingItemParsers.BooleanTryPrase); } }
+        public Nullable<Boolean> IsIdentity { get { return GetValue<Boolean>("IsIdentity", BindingItemParsers.BooleanTryParse); } }
+        public Nullable<Boolean> IsHidden { get { return GetValue<Boolean>("IsHidden", BindingItemParsers.BooleanTryParse); } }
+        public Nullable<Boolean> IsComputed { get { return GetValue<Boolean>("IsComputed", BindingItemParsers.BooleanTryParse); } }
         public String? ComputedDefinition { get { return GetValue("ComputedDefinition"); } }
         public String? GeneratedAlwayType { get { return GetValue("GeneratedAlwayType"); } }
 

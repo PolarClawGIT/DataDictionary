@@ -28,7 +28,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         public String? HelpSubject { get { return GetValue("HelpSubject"); } set { SetValue("HelpSubject", value); } }
         public String? HelpText { get { return GetValue("HelpText"); } set { SetValue("HelpText", value); } }
         public String? NameSpace { get { return GetValue("NameSpace"); } set { SetValue("NameSpace", value); } }
-        public Nullable<Boolean> Obsolete { get { return GetValue<Boolean>("Obsolete", BindingItemParsers.BooleanTryPrase); } set { SetValue<Boolean>("Obsolete", value); } }
+        public Nullable<Boolean> Obsolete { get { return GetValue<Boolean>("Obsolete", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("Obsolete", value); } }
 
         public HelpItem() : base()
         {

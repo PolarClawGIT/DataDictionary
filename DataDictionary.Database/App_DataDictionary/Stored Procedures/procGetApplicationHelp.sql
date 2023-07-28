@@ -20,7 +20,7 @@ From	[App_DataDictionary].[ApplicationHelp]
 Where	(@HelpId is Null or @HelpId = [HelpId]) And
 		(@HelpSubject is Null or @HelpSubject = [HelpSubject]) And
 		(@NameSpace is Null or @NameSpace = [NameSpace]) And
-		(IsNull(@Obsolete,0) = [Obsolete])
+		(@Obsolete is Null or @Obsolete = 1 or @Obsolete = [Obsolete])
 GO
 -- Provide System Documentation
 EXEC sp_addextendedproperty @name = N'MS_Description',

@@ -22,5 +22,5 @@ From	[App_DataDictionary].[DomainAttribute] D
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@AttributeId is Null or @AttributeId = D.[AttributeId]) And
 		(@AttributeTitle is Null or @AttributeTitle = D.[AttributeTitle]) And
-		(@Obsolete is Null or @Obsolete = D.[Obsolete])
+		(@Obsolete is Null or @Obsolete = 1 or @Obsolete = [Obsolete])
 GO

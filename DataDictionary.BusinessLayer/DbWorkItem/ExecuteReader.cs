@@ -10,7 +10,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
-    class LoadBindingTable : WorkItem, IDbWorkItem
+    class ExecuteReader : WorkItem, IDbWorkItem
     {
         public required IBindingTable Target { get; init; }
         //public required Func<IConnection, IDataReader> Reader { get; init; }
@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
 
         //public override required string WorkName { get; init; }
 
-        public LoadBindingTable(OpenConnection conn) : base()
+        public ExecuteReader(OpenConnection conn) : base()
         {
             this.connection = conn.Connection;
             conn.Dependency(this);

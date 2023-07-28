@@ -137,6 +137,8 @@
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseExtendedProperty.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procDeleteApplicationModel.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeApplicationModel.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

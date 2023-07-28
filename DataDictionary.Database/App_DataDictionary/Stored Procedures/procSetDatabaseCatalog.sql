@@ -87,9 +87,9 @@ Begin Try
 				[SourceServerName]
 		From	[App_DataDictionary].[DatabaseCatalog]),
 	[Data] As (
-		Select	D.[CatalogId],
-				D.[CatalogName],
-				D.[SourceServerName],
+		Select	V.[CatalogId],
+				V.[CatalogName],
+				V.[SourceServerName],
 				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
@@ -143,7 +143,6 @@ Begin Catch
 	Print FormatMessage (' Current_User - %s', Current_User)
 	Print FormatMessage (' XAct_State - %i', XAct_State())
 	Print '*** Debug Report ***'
-	Print FormatMessage (' @ModelId- %s',Convert(NVarChar,@ModelId))
 
 	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
 

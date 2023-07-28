@@ -25,7 +25,7 @@ namespace DataDictionary.Main.Forms
         class UnitTestItem : BindingTableRow, IUnitTestItem, INotifyPropertyChanged
         {
             public Nullable<Guid> GuidValue { get { return GetValue<Guid>("GuidValue"); } protected set { SetValue<Guid>("GuidValue", value); } }
-            public Nullable<Boolean> BoolValue { get { return GetValue<Boolean>("BoolValue", BindingItemParsers.BooleanTryPrase); } set { SetValue<Boolean>("BoolValue", value); } }
+            public Nullable<Boolean> BoolValue { get { return GetValue<Boolean>("BoolValue", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("BoolValue", value); } }
             public Nullable<Int32> IntValue { get { return GetValue<Int32>("IntValue"); } set { SetValue<Int32>("IntValue", value); } }
 
             public String? Title { get { return GetValue("Title"); } set { SetValue("Title", value); } }
