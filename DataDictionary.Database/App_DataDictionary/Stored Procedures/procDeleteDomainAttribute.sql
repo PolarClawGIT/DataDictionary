@@ -59,7 +59,7 @@ Begin Catch
 	Print FormatMessage (' Current_User - %s', Current_User)
 	Print FormatMessage (' XAct_State - %i', XAct_State())
 	Print '*** Debug Report ***'
-	Print FormatMessage (' @AttributeId- %s',Convert(NVarChar,@AttributeId))
+	Print FormatMessage (' @AttributeId- %s',Convert(NVarChar(50),@AttributeId))
 
 	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
 

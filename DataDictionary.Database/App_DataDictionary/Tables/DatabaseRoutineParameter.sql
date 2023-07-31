@@ -1,0 +1,28 @@
+﻿CREATE TABLE [App_DataDictionary].[DatabaseRoutineParameter]
+(
+	[CatalogId]              UniqueIdentifier Not Null,
+	[SchemaName]             SysName Not Null,
+	[RoutineName]            SysName Not Null,
+	[ParameterName]          SysName Not Null,
+	[OrdinalPosition]        Int Not Null,
+	[DataType]               SysName Null,
+	[CharacterMaxiumLength]  Int Null,
+	[CharacterOctetLenght]   Int Null,
+	[NumericPercision]       TinyInt Null,
+	[NumericPercisionRaxix]  SmallInt Null,
+	[NumericScale]           Int Null,
+	[DateTimePrecision]      SmallInt Null,
+	[CharacterSetCatalog]    SysName Null,
+	[CharacterSetSchema]     SysName Null,
+	[CharacterSetName]       SysName Null,
+	[CollationCatalog]       SysName Null,
+	[CollationSchema]        SysName Null,
+	[CollationName]          SysName Null,
+	[UserDefinedTypeCatalog] SysName,
+	[UserDefinedTypeSchema]  SysName,
+	[UserDefinedTypeName]    SysName,
+
+	CONSTRAINT [PK_DatabaseParameter] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [RoutineName] ASC, [ParameterName] ASC),
+	--CONSTRAINT [FK_DatabaseParameterCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
+	CONSTRAINT [FK_DatabaseRoutineParameterRoutine] FOREIGN KEY ([CatalogId], [SchemaName], [RoutineName]) REFERENCES [App_DataDictionary].[DatabaseRoutine] ([CatalogId], [SchemaName], [RoutineName]),
+)

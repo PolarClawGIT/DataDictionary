@@ -1,6 +1,9 @@
 ﻿CREATE TABLE [App_DataDictionary].[DomainEntity]
 (
-	-- Entities are a catch-all item that are not a Column or Parameter. They are to be implemented later.
+	-- In ER Diagrams, an Entity is a Table, View, or other supported object type.
+	-- For this tool Entities are a catch-all item that are not a Column or Parameter.
+	-- This includes Tables, Views, Procedures Functions and User Defined Data Types.
+	-- To be implemented later.
 	[EntityId] UniqueIdentifier Not Null CONSTRAINT [DF_DomainEntity_EntityId] DEFAULT (newid()),
 	[EntityParentId] UniqueIdentifier Null,
 	[EntityTitle] NVarChar(100) Not Null,

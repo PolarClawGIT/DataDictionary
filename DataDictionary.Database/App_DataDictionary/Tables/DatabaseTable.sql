@@ -11,7 +11,8 @@
 	[TableType]         NVarChar(60) Null, -- BASE TABLE, VIEW, HISTORY TABLE, TEMPTORAL TABLE
 	-- Keys
 	CONSTRAINT [PK_DatabaseTable] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [TableName] ASC),
-	CONSTRAINT [FK_DatabaseTableCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
+--	CONSTRAINT [FK_DatabaseTableCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
+	CONSTRAINT [FK_DatabaseTableSchema] FOREIGN KEY ([CatalogId], [SchemaName]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([CatalogId], [SchemaName]),
 )
 /*
 Select	Convert(UniqueIdentifier,Null) As [CatalogId],

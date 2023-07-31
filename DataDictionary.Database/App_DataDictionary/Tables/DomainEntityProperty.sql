@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [App_DataDictionary].[DomainEntityProperty]
 (
+	-- To be implemented later.
 	[EntityId] UniqueIdentifier Not Null,
 	[PropertyName] SysName Not Null, -- It is assumed that the Property Name when combined with the Alias details is enough information to create the extended property
 	[PropertyValue] NVarChar(4000) Not Null, -- Only supporting SQLVarent as character data

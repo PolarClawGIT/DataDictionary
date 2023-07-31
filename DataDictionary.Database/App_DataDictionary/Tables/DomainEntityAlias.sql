@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [App_DataDictionary].[DomainEntityAlias]
 (
+	-- To be implemented later.
 	[EntityId] UniqueIdentifier Not Null,
 	[EntityAliasId] Int Not Null,
 	-- This is based on https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16

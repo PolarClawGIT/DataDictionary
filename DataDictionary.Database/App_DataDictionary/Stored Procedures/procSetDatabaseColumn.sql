@@ -27,9 +27,9 @@ Begin Try
 			NullIf(Trim(D.[TableName]),'') As [TableName],
 			NullIf(Trim([ColumnName]),'') As [ColumnName],
 			[OrdinalPosition],
-			NullIf(Trim([ColumnDefault]),'') As [ColumnDefault],
 			[IsNullable],
 			NullIf(Trim([DataType]),'') As [DataType],
+			NullIf(Trim([ColumnDefault]),'') As [ColumnDefault],
 			[CharacterMaxiumLength],
 			[CharacterOctetLenght],
 			[NumericPercision],
@@ -281,7 +281,7 @@ Begin Catch
 	Print FormatMessage (' Current_User - %s', Current_User)
 	Print FormatMessage (' XAct_State - %i', XAct_State())
 	Print '*** Debug Report ***'
-	Print FormatMessage (' @ModelId- %s',Convert(NVarChar,@ModelId))
+	Print FormatMessage (' @ModelId- %s',Convert(NVarChar(50),@ModelId))
 
 	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
 

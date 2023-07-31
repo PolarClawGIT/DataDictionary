@@ -9,3 +9,6 @@ GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_SampleParent]
     ON [dbo].[SampleParent]([SampleParentTitle] ASC);
 GO
+CREATE NONCLUSTERED INDEX [IX_SampleParent]
+    ON [dbo].[SampleParent]([SampleSequence] ASC);
+GO
