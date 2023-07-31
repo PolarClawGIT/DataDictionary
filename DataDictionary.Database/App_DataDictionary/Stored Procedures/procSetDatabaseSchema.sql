@@ -59,8 +59,8 @@ Begin Try
 			On	T.[CatalogId] = V.[CatalogId] And
 				T.[SchemaName] = V.[SchemaName];
 
-	Delete From [App_DataDictionary].[DatabaseColumn]
-	From	[App_DataDictionary].[DatabaseColumn] T
+	Delete From [App_DataDictionary].[DatabaseTableColumn]
+	From	[App_DataDictionary].[DatabaseTableColumn] T
 			Inner Join @Delete D
 			On	T.[CatalogId] = D.[CatalogId] And
 				T.[SchemaName] = D.[SchemaName];

@@ -57,7 +57,7 @@ Begin Try
 	Delete From [App_DataDictionary].[DatabaseExtendedProperty]
 	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
 
-	Delete From [App_DataDictionary].[DatabaseColumn]
+	Delete From [App_DataDictionary].[DatabaseTableColumn]
 	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
 
 	Delete From [App_DataDictionary].[DatabaseTable]

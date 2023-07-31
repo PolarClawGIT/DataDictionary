@@ -65,7 +65,7 @@ namespace DataDictionary.Main.Forms
                 data.AttributeAlias.AddRange(Program.Data.DomainAttributeAliases.GetProperties(data.DomainAttribute));
 
                 attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), data.DomainAttribute, nameof(data.DomainAttribute.AttributeTitle)));
-                attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), data.DomainAttribute, nameof(data.DomainAttribute.AttributeDescription)));
+                attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Rtf), data.DomainAttribute, nameof(data.DomainAttribute.AttributeDescription)));
                 attributeParentTitleData.DataBindings.Add(new Binding(nameof(attributeParentTitleData.Text), data.ParentAttribute, nameof(data.ParentAttribute.AttributeTitle)));
 
                 attributeAlaisData.AutoGenerateColumns = false;

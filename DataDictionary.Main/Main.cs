@@ -1,4 +1,5 @@
 using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.DataLayer.DomainData;
@@ -55,9 +56,16 @@ namespace DataDictionary.Main
             Program.Messenger.AddColleague(this);
             BindData();
 
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(Program.Data.LoadHelp());
+            this.DoWork(work, OnComplete);
+
             // TODO: Cannot get the Context menus to show. For now, add them to the Tools menu
             dbSchemaToolStripMenuItem.DropDownItems.AddRange(dbSchemaContextMenu.Items);
             domainModelToolStripMenuItem.DropDownItems.AddRange(domainModelMenu.Items);
+
+            void OnComplete(RunWorkerCompletedEventArgs args)
+            { } // Nothing to do at this point
         }
 
         void BindData()

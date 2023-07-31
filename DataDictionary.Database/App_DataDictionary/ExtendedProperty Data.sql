@@ -1,4 +1,5 @@
-﻿Begin Try;
+﻿-- TODO: Obsolete, needs to be re-done for new structure
+Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 

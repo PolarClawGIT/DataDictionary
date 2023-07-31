@@ -11,14 +11,19 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 
 Select	A.[ModelId],
 		D.[AttributeId],
-		D.[PropertyName],
+		D.[PropertyId],
+		P.[PropertyTitle],
+		P.[PropertyName],
 		D.[PropertyValue],
 		D.[ModfiedBy],
 		D.[SysStart]
 From	[App_DataDictionary].[DomainAttributeProperty] D
 		Inner Join [App_DataDictionary].[ApplicationAttribute] A
-			On	D.[AttributeId] = A.[AttributeId]
+		On	D.[AttributeId] = A.[AttributeId]
+		Left Join [App_DataDictionary].[ApplicationProperty] P
+		On	A.[ModelId] = IsNull(P.[ModelId],A.[ModelId]) And
+			D.[PropertyId] = P.[PropertyId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@AttributeId is Null or @AttributeId = D.[AttributeId]) And
-		(@PropertyName is Null or @PropertyName = D.[PropertyName])
+		(@PropertyName is Null or @PropertyName = P.[PropertyName])
 GO

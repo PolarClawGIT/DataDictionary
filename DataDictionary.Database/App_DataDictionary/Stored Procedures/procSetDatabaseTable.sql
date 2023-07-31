@@ -64,8 +64,8 @@ Begin Try
 				T.[SchemaName] = V.[SchemaName] And
 				T.[TableName] = V.[TableName]
 
-	Delete From [App_DataDictionary].[DatabaseColumn]
-	From	[App_DataDictionary].[DatabaseColumn] T
+	Delete From [App_DataDictionary].[DatabaseTableColumn]
+	From	[App_DataDictionary].[DatabaseTableColumn] T
 			Inner Join @Delete D
 			On	T.[CatalogId] = D.[CatalogId] And
 				T.[SchemaName] = D.[SchemaName] And

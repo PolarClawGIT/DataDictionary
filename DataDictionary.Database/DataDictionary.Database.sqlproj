@@ -145,6 +145,8 @@
     <Build Include="App_DataDictionary\Tables\DatabaseRoutineParameter.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseRoutineColumn.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseDomain.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationProperty.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeApplicationProperty.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

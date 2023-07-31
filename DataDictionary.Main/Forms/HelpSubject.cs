@@ -43,30 +43,17 @@ namespace DataDictionary.Main.Forms
 
         private void HelpSubject_Load(object sender, EventArgs e)
         {
-            if (Program.Data.HelpSubjects.Count() == 0)
+            if (data.HelpId == Guid.Empty && !String.IsNullOrWhiteSpace(data.TargetNameSpace))
             {
-                this.DoWork(Program.Data.LoadHelp(), OnComplete);
-            }
-            else
-            {
-                NavigateTo(data.TargetNameSpace);
-                BindData();
-            }
-
-            void OnComplete(RunWorkerCompletedEventArgs args)
-            {
-                if (data.HelpId == Guid.Empty && !String.IsNullOrWhiteSpace(data.TargetNameSpace))
+                if (Program.Data.HelpSubjects.FirstOrDefault(w => w.NameSpace == data.TargetNameSpace) is HelpItem item && item.HelpId is Guid itemGuid)
                 {
-                    if (Program.Data.HelpSubjects.FirstOrDefault(w => w.NameSpace == data.TargetNameSpace) is HelpItem item && item.HelpId is Guid itemGuid)
-                    {
-                        data.HelpItem = item;
-                        data.HelpId = itemGuid;
-                    }
+                    data.HelpItem = item;
+                    data.HelpId = itemGuid;
                 }
-
-                NavigateTo(data.TargetNameSpace);
-                BindData();
             }
+
+            NavigateTo(data.TargetNameSpace);
+            BindData();
         }
 
         public void NavigateTo(Form targetForm)
@@ -266,7 +253,7 @@ namespace DataDictionary.Main.Forms
         {
             // If the forms closing, ignore errors.
             // Error Provider will set this to e.Cancel to true, blocking the closing of the form.
-            if (errorProvider.GetAllErrors(this).Count()  > 0 && e.Cancel) { e.Cancel = false; }
+            if (errorProvider.GetAllErrors(this).Count() > 0 && e.Cancel) { e.Cancel = false; }
         }
     }
 }

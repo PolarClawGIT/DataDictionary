@@ -63,7 +63,7 @@ Begin Try
 	Where	V.[CatalogId] is Null And
 			T.[ModelId] = @ModelId
 
-	Delete From [App_DataDictionary].[DatabaseColumn]
+	Delete From [App_DataDictionary].[DatabaseTableColumn]
 	Where	[CatalogId] In (Select [CatalogId] From @Delete);
 
 	Delete From [App_DataDictionary].[DatabaseTable]
