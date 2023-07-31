@@ -132,6 +132,7 @@
 	I.[COLUMN_DEFAULT] As [ColumnDefault],
 	iif(I.[IS_NULLABLE] In ('YES','TRUE','1'),1,0) As [IsNullable],
 	I.[DATA_TYPE] As [DataType],
+	P.[definition] As [ComputedDefinition],
 	I.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaxiumLength],
 	I.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLenght],
 	I.[NUMERIC_PRECISION] As [NumericPercision],
@@ -150,7 +151,6 @@
 	C.[is_identity] As [IsIdentity],
 	C.[is_hidden] As [IsHidden],
 	C.[is_computed] As [IsComputed],
-	P.[definition] As [ComputedDefinition],
 	NullIf(C.[generated_always_type_desc],'NOT_APPLICABLE') As [GeneratedAlwayType]
 From	[INFORMATION_SCHEMA].[COLUMNS] I
 	Left Join [sys].[Columns] C

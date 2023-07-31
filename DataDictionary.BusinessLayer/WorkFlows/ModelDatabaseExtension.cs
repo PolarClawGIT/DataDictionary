@@ -96,7 +96,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Columns",
-                Command = (conn) => DbColumnItem.GetData(conn, modelId),
+                Command = (conn) => DbTableColumnItem.GetData(conn, modelId),
                 Target = data.DbColumns
             });
 
@@ -166,7 +166,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Columns",
-                Command = (conn) => DbColumnItem.SetData(conn, modelId, data.DbColumns)
+                Command = (conn) => DbTableColumnItem.SetData(conn, modelId, data.DbColumns)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)

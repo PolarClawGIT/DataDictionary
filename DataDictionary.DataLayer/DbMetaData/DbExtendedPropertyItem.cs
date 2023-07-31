@@ -220,7 +220,7 @@ namespace DataDictionary.DataLayer.DbMetaData
                 );
         }
 
-        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbColumnName item, IEnumerable<DbExtendedPropertyItem> source)
+        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbTableColumnName item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
                 w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
@@ -233,7 +233,7 @@ namespace DataDictionary.DataLayer.DbMetaData
                 );
         }
 
-        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbColumnName item)
+        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbTableColumnName item)
         {
             return source.Where(
                 w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&

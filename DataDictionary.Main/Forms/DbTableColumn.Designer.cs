@@ -1,6 +1,6 @@
 ﻿namespace DataDictionary.Main.Forms
 {
-    partial class DbColumn
+    partial class DbTableColumn
     {
         /// <summary>
         /// Required designer variable.
@@ -54,6 +54,8 @@
             characterSetSchemaData = new Controls.TextBoxData();
             characterSetNameData = new Controls.TextBoxData();
             collationCatalogData = new Controls.TextBoxData();
+            collationSchemaData = new Controls.TextBoxData();
+            collationNameData = new Controls.TextBoxData();
             otherDataTab = new TabPage();
             numericDataLayout = new TableLayoutPanel();
             isIdentityData = new CheckBox();
@@ -63,6 +65,9 @@
             numericScaleData = new Controls.TextBoxData();
             dateTimePrecisionData = new Controls.TextBoxData();
             generatedAlwayTypeData = new Controls.TextBoxData();
+            domainCatalogData = new Controls.TextBoxData();
+            domainSchemaData = new Controls.TextBoxData();
+            domainNameData = new Controls.TextBoxData();
             catalogNameData = new Controls.TextBoxData();
             schemaNameData = new Controls.TextBoxData();
             tableNameData = new Controls.TextBoxData();
@@ -114,18 +119,18 @@
             dbTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             dbTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             dbTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            dbTableLayout.Size = new Size(486, 558);
+            dbTableLayout.Size = new Size(486, 645);
             dbTableLayout.TabIndex = 1;
             // 
             // columnDetailLayout
             // 
-            columnDetailLayout.Controls.Add(extendedPropertiesTab);
             columnDetailLayout.Controls.Add(columnsTab);
+            columnDetailLayout.Controls.Add(extendedPropertiesTab);
             columnDetailLayout.Dock = DockStyle.Fill;
             columnDetailLayout.Location = new Point(3, 203);
             columnDetailLayout.Name = "columnDetailLayout";
             columnDetailLayout.SelectedIndex = 0;
-            columnDetailLayout.Size = new Size(480, 352);
+            columnDetailLayout.Size = new Size(480, 439);
             columnDetailLayout.TabIndex = 9;
             // 
             // extendedPropertiesTab
@@ -134,7 +139,7 @@
             extendedPropertiesTab.Location = new Point(4, 24);
             extendedPropertiesTab.Name = "extendedPropertiesTab";
             extendedPropertiesTab.Padding = new Padding(3);
-            extendedPropertiesTab.Size = new Size(423, 324);
+            extendedPropertiesTab.Size = new Size(472, 411);
             extendedPropertiesTab.TabIndex = 0;
             extendedPropertiesTab.Text = "Extended Properties";
             extendedPropertiesTab.UseVisualStyleBackColor = true;
@@ -150,7 +155,7 @@
             extendedPropertiesData.Name = "extendedPropertiesData";
             extendedPropertiesData.ReadOnly = true;
             extendedPropertiesData.RowTemplate.Height = 25;
-            extendedPropertiesData.Size = new Size(417, 318);
+            extendedPropertiesData.Size = new Size(466, 405);
             extendedPropertiesData.TabIndex = 5;
             // 
             // propertyNameData
@@ -177,7 +182,7 @@
             columnsTab.Location = new Point(4, 24);
             columnsTab.Name = "columnsTab";
             columnsTab.Padding = new Padding(3);
-            columnsTab.Size = new Size(472, 324);
+            columnsTab.Size = new Size(472, 411);
             columnsTab.TabIndex = 1;
             columnsTab.Text = "Column Detail";
             // 
@@ -190,7 +195,7 @@
             dataTypeDetailTab.Location = new Point(3, 3);
             dataTypeDetailTab.Name = "dataTypeDetailTab";
             dataTypeDetailTab.SelectedIndex = 0;
-            dataTypeDetailTab.Size = new Size(466, 318);
+            dataTypeDetailTab.Size = new Size(466, 405);
             dataTypeDetailTab.TabIndex = 1;
             // 
             // generalDataTab
@@ -199,7 +204,7 @@
             generalDataTab.Controls.Add(columnGeneralDataLayout);
             generalDataTab.Location = new Point(4, 24);
             generalDataTab.Name = "generalDataTab";
-            generalDataTab.Size = new Size(458, 290);
+            generalDataTab.Size = new Size(458, 377);
             generalDataTab.TabIndex = 3;
             generalDataTab.Text = "General";
             // 
@@ -222,7 +227,7 @@
             columnGeneralDataLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             columnGeneralDataLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             columnGeneralDataLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            columnGeneralDataLayout.Size = new Size(458, 290);
+            columnGeneralDataLayout.Size = new Size(458, 377);
             columnGeneralDataLayout.TabIndex = 1;
             // 
             // ordinalPositionData
@@ -259,7 +264,7 @@
             columnDefaultData.Multiline = true;
             columnDefaultData.Name = "columnDefaultData";
             columnDefaultData.ReadOnly = true;
-            columnDefaultData.Size = new Size(452, 111);
+            columnDefaultData.Size = new Size(452, 154);
             columnDefaultData.TabIndex = 13;
             // 
             // columnFlagsLayout
@@ -305,11 +310,11 @@
             columnGeneralDataLayout.SetColumnSpan(columnComputedData, 3);
             columnComputedData.Dock = DockStyle.Fill;
             columnComputedData.HeaderText = "Computed";
-            columnComputedData.Location = new Point(3, 176);
+            columnComputedData.Location = new Point(3, 219);
             columnComputedData.Multiline = true;
             columnComputedData.Name = "columnComputedData";
             columnComputedData.ReadOnly = true;
-            columnComputedData.Size = new Size(452, 111);
+            columnComputedData.Size = new Size(452, 155);
             columnComputedData.TabIndex = 15;
             // 
             // characterDataTab
@@ -319,7 +324,7 @@
             characterDataTab.Location = new Point(4, 24);
             characterDataTab.Name = "characterDataTab";
             characterDataTab.Padding = new Padding(3);
-            characterDataTab.Size = new Size(458, 290);
+            characterDataTab.Size = new Size(458, 377);
             characterDataTab.TabIndex = 0;
             characterDataTab.Text = "Character";
             // 
@@ -334,22 +339,21 @@
             characterDataLayout.Controls.Add(characterSetSchemaData, 0, 2);
             characterDataLayout.Controls.Add(characterSetNameData, 0, 3);
             characterDataLayout.Controls.Add(collationCatalogData, 0, 4);
+            characterDataLayout.Controls.Add(collationSchemaData, 0, 5);
+            characterDataLayout.Controls.Add(collationNameData, 0, 6);
             characterDataLayout.Dock = DockStyle.Fill;
             characterDataLayout.Location = new Point(3, 3);
             characterDataLayout.Name = "characterDataLayout";
-            characterDataLayout.RowCount = 6;
+            characterDataLayout.RowCount = 8;
+            characterDataLayout.RowStyles.Add(new RowStyle());
+            characterDataLayout.RowStyles.Add(new RowStyle());
             characterDataLayout.RowStyles.Add(new RowStyle());
             characterDataLayout.RowStyles.Add(new RowStyle());
             characterDataLayout.RowStyles.Add(new RowStyle());
             characterDataLayout.RowStyles.Add(new RowStyle());
             characterDataLayout.RowStyles.Add(new RowStyle());
             characterDataLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            characterDataLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            characterDataLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            characterDataLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            characterDataLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            characterDataLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            characterDataLayout.Size = new Size(452, 284);
+            characterDataLayout.Size = new Size(452, 371);
             characterDataLayout.TabIndex = 3;
             // 
             // characterMaximumLengthData
@@ -426,6 +430,32 @@
             collationCatalogData.Size = new Size(446, 44);
             collationCatalogData.TabIndex = 19;
             // 
+            // collationSchemaData
+            // 
+            collationSchemaData.AutoSize = true;
+            characterDataLayout.SetColumnSpan(collationSchemaData, 2);
+            collationSchemaData.Dock = DockStyle.Fill;
+            collationSchemaData.HeaderText = "Collation Schema";
+            collationSchemaData.Location = new Point(3, 253);
+            collationSchemaData.Multiline = false;
+            collationSchemaData.Name = "collationSchemaData";
+            collationSchemaData.ReadOnly = true;
+            collationSchemaData.Size = new Size(446, 44);
+            collationSchemaData.TabIndex = 20;
+            // 
+            // collationNameData
+            // 
+            collationNameData.AutoSize = true;
+            characterDataLayout.SetColumnSpan(collationNameData, 2);
+            collationNameData.Dock = DockStyle.Fill;
+            collationNameData.HeaderText = "Collation (sort) Name";
+            collationNameData.Location = new Point(3, 303);
+            collationNameData.Multiline = false;
+            collationNameData.Name = "collationNameData";
+            collationNameData.ReadOnly = true;
+            collationNameData.Size = new Size(446, 44);
+            collationNameData.TabIndex = 21;
+            // 
             // otherDataTab
             // 
             otherDataTab.BackColor = SystemColors.Control;
@@ -433,17 +463,16 @@
             otherDataTab.Location = new Point(4, 24);
             otherDataTab.Name = "otherDataTab";
             otherDataTab.Padding = new Padding(3);
-            otherDataTab.Size = new Size(458, 290);
+            otherDataTab.Size = new Size(458, 377);
             otherDataTab.TabIndex = 1;
             otherDataTab.Text = "Other (Numeric, Date, ...)";
             // 
             // numericDataLayout
             // 
-            numericDataLayout.ColumnCount = 4;
+            numericDataLayout.ColumnCount = 3;
             numericDataLayout.ColumnStyles.Add(new ColumnStyle());
             numericDataLayout.ColumnStyles.Add(new ColumnStyle());
             numericDataLayout.ColumnStyles.Add(new ColumnStyle());
-            numericDataLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             numericDataLayout.Controls.Add(isIdentityData, 0, 0);
             numericDataLayout.Controls.Add(isHiddenData, 1, 0);
             numericDataLayout.Controls.Add(numericPrecisionData, 0, 1);
@@ -451,15 +480,21 @@
             numericDataLayout.Controls.Add(numericScaleData, 2, 1);
             numericDataLayout.Controls.Add(dateTimePrecisionData, 0, 2);
             numericDataLayout.Controls.Add(generatedAlwayTypeData, 1, 2);
+            numericDataLayout.Controls.Add(domainCatalogData, 0, 3);
+            numericDataLayout.Controls.Add(domainSchemaData, 0, 4);
+            numericDataLayout.Controls.Add(domainNameData, 0, 5);
             numericDataLayout.Dock = DockStyle.Fill;
             numericDataLayout.Location = new Point(3, 3);
             numericDataLayout.Name = "numericDataLayout";
-            numericDataLayout.RowCount = 4;
+            numericDataLayout.RowCount = 7;
+            numericDataLayout.RowStyles.Add(new RowStyle());
+            numericDataLayout.RowStyles.Add(new RowStyle());
+            numericDataLayout.RowStyles.Add(new RowStyle());
             numericDataLayout.RowStyles.Add(new RowStyle());
             numericDataLayout.RowStyles.Add(new RowStyle());
             numericDataLayout.RowStyles.Add(new RowStyle());
             numericDataLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            numericDataLayout.Size = new Size(452, 284);
+            numericDataLayout.Size = new Size(452, 371);
             numericDataLayout.TabIndex = 3;
             // 
             // isIdentityData
@@ -517,7 +552,7 @@
             numericScaleData.Multiline = false;
             numericScaleData.Name = "numericScaleData";
             numericScaleData.ReadOnly = true;
-            numericScaleData.Size = new Size(120, 44);
+            numericScaleData.Size = new Size(137, 44);
             numericScaleData.TabIndex = 18;
             // 
             // dateTimePrecisionData
@@ -543,6 +578,45 @@
             generatedAlwayTypeData.ReadOnly = true;
             generatedAlwayTypeData.Size = new Size(161, 44);
             generatedAlwayTypeData.TabIndex = 20;
+            // 
+            // domainCatalogData
+            // 
+            domainCatalogData.AutoSize = true;
+            numericDataLayout.SetColumnSpan(domainCatalogData, 3);
+            domainCatalogData.Dock = DockStyle.Fill;
+            domainCatalogData.HeaderText = "Domain Catalog";
+            domainCatalogData.Location = new Point(3, 128);
+            domainCatalogData.Multiline = false;
+            domainCatalogData.Name = "domainCatalogData";
+            domainCatalogData.ReadOnly = true;
+            domainCatalogData.Size = new Size(446, 44);
+            domainCatalogData.TabIndex = 21;
+            // 
+            // domainSchemaData
+            // 
+            domainSchemaData.AutoSize = true;
+            numericDataLayout.SetColumnSpan(domainSchemaData, 3);
+            domainSchemaData.Dock = DockStyle.Fill;
+            domainSchemaData.HeaderText = "Domain Schema";
+            domainSchemaData.Location = new Point(3, 178);
+            domainSchemaData.Multiline = false;
+            domainSchemaData.Name = "domainSchemaData";
+            domainSchemaData.ReadOnly = true;
+            domainSchemaData.Size = new Size(446, 44);
+            domainSchemaData.TabIndex = 22;
+            // 
+            // domainNameData
+            // 
+            domainNameData.AutoSize = true;
+            numericDataLayout.SetColumnSpan(domainNameData, 3);
+            domainNameData.Dock = DockStyle.Fill;
+            domainNameData.HeaderText = "Domain (Data Type) Name";
+            domainNameData.Location = new Point(3, 228);
+            domainNameData.Multiline = false;
+            domainNameData.Name = "domainNameData";
+            domainNameData.ReadOnly = true;
+            domainNameData.Size = new Size(446, 44);
+            domainNameData.TabIndex = 23;
             // 
             // catalogNameData
             // 
@@ -600,7 +674,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(486, 558);
+            ClientSize = new Size(486, 645);
             Controls.Add(dbTableLayout);
             Name = "DbColumn";
             Text = "Database Column";
@@ -654,12 +728,17 @@
         private Controls.TextBoxData characterSetCatalogData;
         private Controls.TextBoxData characterSetSchemaData;
         private Controls.TextBoxData characterSetNameData;
-        private Controls.TextBoxData collationCatalogData;
         private Controls.TextBoxData numericPrecisionData;
         private Controls.TextBoxData numericPrecisionRadixData;
         private Controls.TextBoxData numericScaleData;
         private Controls.TextBoxData dateTimePrecisionData;
         private Controls.TextBoxData generatedAlwayTypeData;
         private ErrorProvider errorProvider;
+        private Controls.TextBoxData domainCatalogData;
+        private Controls.TextBoxData domainSchemaData;
+        private Controls.TextBoxData domainNameData;
+        private Controls.TextBoxData collationCatalogData;
+        private Controls.TextBoxData collationSchemaData;
+        private Controls.TextBoxData collationNameData;
     }
 }

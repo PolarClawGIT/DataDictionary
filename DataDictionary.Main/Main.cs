@@ -112,9 +112,9 @@ namespace DataDictionary.Main
 
         private void menuColumnItem_Click(object sender, EventArgs e)
         {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbColumnView)) is Forms.DbColumnView existingForm)
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbTableColumnView)) is Forms.DbTableColumnView existingForm)
             { existingForm.Activate(); }
-            else { new Forms.DbColumnView().Show(); }
+            else { new Forms.DbTableColumnView().Show(); }
         }
 
         private void menuPropertyItem_Click(object sender, EventArgs e)
@@ -284,7 +284,7 @@ namespace DataDictionary.Main
 
                         TreeNode columnsNode = CreateNode("Columns", dbDataImageIndex.Columns, null, tableNode);
 
-                        foreach (IDbColumnItem columnItem in Program.Data.DbColumns.OrderBy(o => o.OrdinalPosition).Where(
+                        foreach (IDbTableColumnItem columnItem in Program.Data.DbColumns.OrderBy(o => o.OrdinalPosition).Where(
                             w => w.CatalogName == tableItem.CatalogName &&
                             w.SchemaName == tableItem.SchemaName &&
                             w.TableName == tableItem.TableName))
@@ -322,9 +322,9 @@ namespace DataDictionary.Main
                 { tableForm.Activate(); }
                 else { if (dataNode is IDbTableItem tableItem) { new Forms.DbTable(tableItem).Show(); } }
 
-                if (FindDataForm<IDbColumnItem, Forms.DbColumn>(dataNode) is Forms.DbColumn columnForm)
+                if (FindDataForm<IDbTableColumnItem, Forms.DbTableColumn>(dataNode) is Forms.DbTableColumn columnForm)
                 { columnForm.Activate(); }
-                else { if (dataNode is IDbColumnItem columnItem) { new Forms.DbColumn(columnItem).Show(); } }
+                else { if (dataNode is IDbTableColumnItem columnItem) { new Forms.DbTableColumn(columnItem).Show(); } }
             }
         }
         #endregion

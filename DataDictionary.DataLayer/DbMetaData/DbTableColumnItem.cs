@@ -17,7 +17,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbColumnItem : IDbColumnName
+    public interface IDbTableColumnItem : IDbTableColumnName
     {
         //Guid? CatalogId { get; }
         Nullable<Int32> OrdinalPosition { get; }
@@ -46,7 +46,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         String? GeneratedAlwayType { get; }
     }
 
-    public class DbColumnItem : BindingTableRow, IDbColumnItem, INotifyPropertyChanged, IDbExtendedProperties
+    public class DbTableColumnItem : BindingTableRow, IDbTableColumnItem, INotifyPropertyChanged, IDbExtendedProperties
     {
         //public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
@@ -87,9 +87,9 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("TableName", typeof(String)){ AllowDBNull = false},
             new DataColumn("ColumnName", typeof(String)){ AllowDBNull = false},
             new DataColumn("OrdinalPosition", typeof(Int32)){ AllowDBNull = false},
-            new DataColumn("ColumnDefault", typeof(String)){ AllowDBNull = true},
             new DataColumn("IsNullable", typeof(Boolean)){ AllowDBNull = true},
             new DataColumn("DataType", typeof(String)){ AllowDBNull = true},
+            new DataColumn("ColumnDefault", typeof(String)){ AllowDBNull = true},
             new DataColumn("CharacterMaximumLength", typeof(Int32)){ AllowDBNull = true},
             new DataColumn("CharacterOctetLength", typeof(Int32)){ AllowDBNull = true},
             new DataColumn("NumericPrecision", typeof(Byte)){ AllowDBNull = true},
@@ -137,7 +137,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDatabaseColumn]";
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseTableColumn]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogName", parameters.catalogName);
             command.AddParameter("@SchemaName", parameters.schemaName);
@@ -146,42 +146,42 @@ namespace DataDictionary.DataLayer.DbMetaData
             return command;
         }
 
-        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DbColumnItem> source)
+        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DbTableColumnItem> source)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDatabaseColumn]";
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseTableColumn]";
             command.AddParameter("@ModelId", modelId.ModelId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseColumn]", source);
             return command;
         }
 
         public override String ToString()
-        { return new DbColumnName(this).ToString(); }
+        { return new DbTableColumnName(this).ToString(); }
     }
 
     public static class DbColumnItemExtension
     {
 
-        public static DbColumnItem? GetColumn(this IEnumerable<DbColumnItem> source, IDbColumnName item)
+        public static DbTableColumnItem? GetColumn(this IEnumerable<DbTableColumnItem> source, IDbTableColumnName item)
         {
-            DbColumnName itemName = new DbColumnName(item);
+            DbTableColumnName itemName = new DbTableColumnName(item);
             return source.FirstOrDefault(w => itemName == w);
         }
 
-        public static DbColumnItem? GetColumn(this IDbColumnName item, IEnumerable<DbColumnItem> source)
+        public static DbTableColumnItem? GetColumn(this IDbTableColumnName item, IEnumerable<DbTableColumnItem> source)
         {
-            DbColumnName itemName = new DbColumnName(item);
+            DbTableColumnName itemName = new DbTableColumnName(item);
             return source.FirstOrDefault(w => itemName == w);
         }
 
-        public static IEnumerable<DbColumnItem> GetColumns(this IEnumerable<DbColumnItem> source, IDbTableName item)
+        public static IEnumerable<DbTableColumnItem> GetColumns(this IEnumerable<DbTableColumnItem> source, IDbTableName item)
         {
             DbTableName itemName = new DbTableName(item);
             return source.Where(w => itemName == w);
         }
 
-        public static IEnumerable<DbColumnItem> GetColumns(this IDbTableName item, IEnumerable<DbColumnItem> source)
+        public static IEnumerable<DbTableColumnItem> GetColumns(this IDbTableName item, IEnumerable<DbTableColumnItem> source)
         {
             DbTableName itemName = new DbTableName(item);
             return source.Where(w => itemName == w);

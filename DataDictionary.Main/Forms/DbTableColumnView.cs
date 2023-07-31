@@ -12,9 +12,9 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbColumnView : ApplicationFormBase
+    partial class DbTableColumnView : ApplicationFormBase
     {
-        public DbColumnView() : base()
+        public DbTableColumnView() : base()
         {
             InitializeComponent();
             this.Icon = Resources.DbColumn;

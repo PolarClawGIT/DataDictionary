@@ -6,12 +6,12 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbColumn : ApplicationFormBase, IApplicationDataForm
+    partial class DbTableColumn : ApplicationFormBase, IApplicationDataForm
     {
         class FormData
         {
-            public DbColumnName ColumnName { get; set; } = new DbColumnName();
-            public IDbColumnItem? DbColumn { get; set; }
+            public DbTableColumnName ColumnName { get; set; } = new DbTableColumnName();
+            public IDbTableColumnItem? DbColumn { get; set; }
             public BindingList<DbExtendedPropertyItem> DbExtendedProperties { get; set; } = new BindingList<DbExtendedPropertyItem>();
 
         }
@@ -20,15 +20,15 @@ namespace DataDictionary.Main.Forms
 
         public Object? OpenItem { get; }
 
-        public DbColumn() : base()
+        public DbTableColumn() : base()
         {
             InitializeComponent();
             this.Icon = Resources.DbColumn;
         }
 
-        public DbColumn(IDbColumnItem columnItem) : this()
+        public DbTableColumn(IDbTableColumnItem columnItem) : this()
         {
-            data.ColumnName = new DbColumnName(columnItem);
+            data.ColumnName = new DbTableColumnName(columnItem);
             OpenItem = columnItem;
             this.Text = data.ColumnName.ToString();
         }
@@ -63,7 +63,14 @@ namespace DataDictionary.Main.Forms
                 characterSetCatalogData.DataBindings.Add(new Binding(nameof(characterSetCatalogData.Text), data.DbColumn, nameof(data.DbColumn.CharacterSetCatalog)));
                 characterSetSchemaData.DataBindings.Add(new Binding(nameof(characterSetSchemaData.Text), data.DbColumn, nameof(data.DbColumn.CharacterSetSchema)));
                 characterSetNameData.DataBindings.Add(new Binding(nameof(characterSetNameData.Text), data.DbColumn, nameof(data.DbColumn.CharacterSetName)));
+
                 collationCatalogData.DataBindings.Add(new Binding(nameof(collationCatalogData.Text), data.DbColumn, nameof(data.DbColumn.CollationCatalog)));
+                collationSchemaData.DataBindings.Add(new Binding(nameof(collationSchemaData.Text), data.DbColumn, nameof(data.DbColumn.CollationSchema)));
+                collationNameData.DataBindings.Add(new Binding(nameof(collationNameData.Text), data.DbColumn, nameof(data.DbColumn.CollationName)));
+
+                domainCatalogData.DataBindings.Add(new Binding(nameof(domainCatalogData.Text), data.DbColumn, nameof(data.DbColumn.CollationCatalog)));
+                domainSchemaData.DataBindings.Add(new Binding(nameof(domainSchemaData.Text), data.DbColumn, nameof(data.DbColumn.DomainSchema)));
+                domainNameData.DataBindings.Add(new Binding(nameof(domainNameData.Text), data.DbColumn, nameof(data.DbColumn.DomainName)));
 
                 generatedAlwayTypeData.DataBindings.Add(new Binding(nameof(generatedAlwayTypeData.Text), data.DbColumn, nameof(data.DbColumn.GeneratedAlwayType)));
                 isIdentityData.DataBindings.Add(new Binding(nameof(isIdentityData.Checked), data.DbColumn, nameof(data.DbColumn.IsIdentity), true, DataSourceUpdateMode.OnValidation, false));
@@ -83,7 +90,6 @@ namespace DataDictionary.Main.Forms
             schemaNameData.DataBindings.Clear();
             tableNameData.DataBindings.Clear();
             columnNameData.DataBindings.Clear();
-
             ordinalPositionData.DataBindings.Clear();
             columnDefaultData.DataBindings.Clear();
             columnComputedData.DataBindings.Clear();
@@ -100,6 +106,10 @@ namespace DataDictionary.Main.Forms
             characterSetSchemaData.DataBindings.Clear();
             characterSetNameData.DataBindings.Clear();
             collationCatalogData.DataBindings.Clear();
+            collationSchemaData.DataBindings.Clear();
+            collationNameData.DataBindings.Clear();
+            domainCatalogData.DataBindings.Clear();
+            domainNameData.DataBindings.Clear();
             generatedAlwayTypeData.DataBindings.Clear();
             isIdentityData.DataBindings.Clear();
             isHiddenData.DataBindings.Clear();

@@ -47,7 +47,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbColumns",
-                Command = DbColumnItem.GetSchema,
+                Command = DbTableColumnItem.GetSchema,
                 Target = data.DbColumns
             });
 
@@ -65,7 +65,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Target = data.DbExtendedProperties
             });
 
-            workItems.Add(new LoadExtendedProperties<DbColumnItem>(openConnection)
+            workItems.Add(new LoadExtendedProperties<DbTableColumnItem>(openConnection)
             {
                 WorkName = "Load DbExtendedProperties, DbColumns",
                 Source = data.DbColumns,
@@ -92,7 +92,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Target = data.DbExtendedProperties
             });
 
-            workItems.Add(new RemoveCatalog<DbColumnItem>()
+            workItems.Add(new RemoveCatalog<DbTableColumnItem>()
             {
                 WorkName = "Remove DbColumns by Catalog",
                 CatalogName = new DbCatalogName() { CatalogName = context.DatabaseName },
@@ -125,7 +125,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
         public static void ImportDbSchemaToDomain(this ModelData data)
         {
-            IEnumerable<IDbColumnItem> newAttributes = data.DbColumns.Where(
+            IEnumerable<IDbTableColumnItem> newAttributes = data.DbColumns.Where(
                 w => w.GetTable(data.DbTables) is IDbTableItem table && !table.IsSystem && // Do not want System Tables
                 w.GetSchema(data.DbSchemta) is IDbSchemaItem schema && !schema.IsSystem && // Do not want System Schemta
                 data.DomainAttributeAliases.FirstOrDefault( // Do not want Columns already aliased to an attribute
@@ -136,15 +136,15 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 is null);
 
 
-            foreach (IGrouping<String?, IDbColumnItem> columnItem in newAttributes.GroupBy(g => g.ColumnName))
+            foreach (IGrouping<String?, IDbTableColumnItem> columnItem in newAttributes.GroupBy(g => g.ColumnName))
             {
-                IDbColumnItem columnSource = columnItem.First();
+                IDbTableColumnItem columnSource = columnItem.First();
                 DomainAttributeItem newAttribute = new DomainAttributeItem() { AttributeTitle = columnSource.ColumnName };
                 List<IDbExtendedPropertyItem> propeties = new List<IDbExtendedPropertyItem>();
 
                 data.DomainAttributes.Add(newAttribute);
 
-                foreach (IDbColumnItem aliasSource in columnItem)
+                foreach (IDbTableColumnItem aliasSource in columnItem)
                 {
                     data.DomainAttributeAliases.Add(new DomainAttributeAliasItem()
                     {

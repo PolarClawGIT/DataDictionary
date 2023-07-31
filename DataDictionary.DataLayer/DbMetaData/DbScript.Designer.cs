@@ -81,9 +81,9 @@ namespace DataDictionary.DataLayer.DbMetaData {
         ///	I.[COLUMN_DEFAULT] As [ColumnDefault],
         ///	iif(I.[IS_NULLABLE] In (&apos;YES&apos;,&apos;TRUE&apos;,&apos;1&apos;),1,0) As [IsNullable],
         ///	I.[DATA_TYPE] As [DataType],
+        ///	P.[definition] As [ComputedDefinition],
         ///	I.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaxiumLength],
-        ///	I.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLenght],
-        ///	I.[NUMERIC_PRECI [rest of string was truncated]&quot;;.
+        ///	I.[CHARACTER_OCTET_LENGTH] As  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbColumnItem {
             get {

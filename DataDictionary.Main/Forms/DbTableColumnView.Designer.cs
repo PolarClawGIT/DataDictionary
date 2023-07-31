@@ -1,6 +1,6 @@
 ﻿namespace DataDictionary.Main.Forms
 {
-    partial class DbColumnView
+    partial class DbTableColumnView
     {
         /// <summary>
         /// Required designer variable.

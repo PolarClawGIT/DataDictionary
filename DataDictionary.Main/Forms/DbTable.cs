@@ -22,7 +22,7 @@ namespace DataDictionary.Main.Forms
             public DbTableName TableName { get; set; } = new DbTableName();
             public IDbTableItem? DbTable { get; set; }
             public BindingList<DbExtendedPropertyItem> DbExtendedProperties { get; set; } = new BindingList<DbExtendedPropertyItem>();
-            public BindingList<DbColumnItem> DbColumn { get; set; } = new BindingList<DbColumnItem>();
+            public BindingList<DbTableColumnItem> DbColumn { get; set; } = new BindingList<DbTableColumnItem>();
         }
         FormData data = new FormData();
 
