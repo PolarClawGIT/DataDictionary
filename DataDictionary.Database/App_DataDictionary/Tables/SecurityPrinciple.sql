@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [App_DataDictionary].[SecurityPrinciple]
 (
+	-- To be implemented later
 	[SecurityPrincipleId] Int Not Null,
 	[SecurityPrinciple] NVarChar(256) Not Null,
 	[DisplayName] NVarChar(1000) Not Null,
