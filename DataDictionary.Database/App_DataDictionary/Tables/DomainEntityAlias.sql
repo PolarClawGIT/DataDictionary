@@ -1,5 +1,8 @@
 ﻿CREATE TABLE [App_DataDictionary].[DomainEntityAlias]
-(
+( 
+	-- Alias are used to keep track of what Entities goes with what Database object.
+	-- Specifically, tables, procedures, functions and domains appear here.
+	-- A hard FK reference is not maintained as the associated Catalog may not be attached to the Model.
 	-- To be implemented later.
 	[EntityId] UniqueIdentifier Not Null,
 	[EntityAliasId] Int Not Null,

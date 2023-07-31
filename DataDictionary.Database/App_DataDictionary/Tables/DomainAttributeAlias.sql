@@ -1,5 +1,8 @@
 ﻿CREATE TABLE [App_DataDictionary].[DomainAttributeAlias]
 (
+	-- Alias are used to keep track of what Attribute goes with what Database object.
+	-- Specifically, column and parameters can be mapped to Attributes.
+	-- A hard FK reference is not maintained as the associated Catalog may not be attached to the Model.
 	[AttributeId] UniqueIdentifier Not Null,
 	[AttributeAliasId] Int Not Null,
 	-- This is based on https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16

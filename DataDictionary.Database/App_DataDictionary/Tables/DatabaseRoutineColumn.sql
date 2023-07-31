@@ -9,7 +9,7 @@
 	[SchemaName]         SysName Not Null,
 	[RoutineName]        SysName Not Null,
 	[RefrenceSchemaName] SysName Null,
-	[RefrenceObjectName] SysName Null, -- Expect this to always be a Table or View
+	[RefrenceTableName]  SysName Null, -- Expect this to always be a Table or View
 	[RefrenceColumnName] SysName Null,
 	[RefrenceObjectType] NVarChar(60) Null, -- Known types: USER_TABLE
 	[IsCallerDependent]  Bit Null,
@@ -25,9 +25,9 @@
 	--CONSTRAINT [PK_DatabaseRoutineColumn] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [RoutineName] ASC, [RefrenceSchemaName] ASC, [RefrenceTableName] ASC, [RefrenceColumnName] ASC),
 --	CONSTRAINT [FK_DatabaseRoutineColumnCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
 	CONSTRAINT [FK_DatabaseRoutineColumnRoutine] FOREIGN KEY ([CatalogId], [SchemaName], [RoutineName]) REFERENCES [App_DataDictionary].[DatabaseRoutine] ([CatalogId], [SchemaName], [RoutineName]),
-	CONSTRAINT [FK_DatabaseRoutineColumnTableColumn] FOREIGN KEY ([CatalogId], [RefrenceSchemaName], [RefrenceObjectName], [RefrenceColumnName]) REFERENCES [App_DataDictionary].[DatabaseColumn] ([CatalogId], [SchemaName], [TableName], [ColumnName])
+	CONSTRAINT [FK_DatabaseRoutineColumnTableColumn] FOREIGN KEY ([CatalogId], [RefrenceSchemaName], [RefrenceTableName], [RefrenceColumnName]) REFERENCES [App_DataDictionary].[DatabaseTableColumn] ([CatalogId], [SchemaName], [TableName], [ColumnName])
 )
 GO
 CREATE UNIQUE CLUSTERED INDEX [PK_DatabaseRoutineColumn]
-    ON [App_DataDictionary].[DatabaseRoutineColumn] ([CatalogId] ASC, [SchemaName] ASC, [RoutineName] ASC, [RefrenceSchemaName] ASC, [RefrenceObjectName] ASC, [RefrenceColumnName] ASC);
+    ON [App_DataDictionary].[DatabaseRoutineColumn] ([CatalogId] ASC, [SchemaName] ASC, [RoutineName] ASC, [RefrenceSchemaName] ASC, [RefrenceTableName] ASC, [RefrenceColumnName] ASC);
 GO

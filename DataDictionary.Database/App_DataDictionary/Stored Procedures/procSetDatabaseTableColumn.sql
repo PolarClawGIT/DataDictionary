@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseColumn]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseTableColumn]
 		@ModelId UniqueIdentifier,
 		@Data [App_DataDictionary].[typeDatabaseColumn] ReadOnly
 As
@@ -126,7 +126,7 @@ Begin Try
 				[IsComputed],
 				[ComputedDefinition],
 				[GeneratedAlwayType]
-		From	[App_DataDictionary].[DatabaseColumn]),
+		From	[App_DataDictionary].[DatabaseTableColumn]),
 	[Data] As (
 		Select	V.[CatalogId],
 				V.[SchemaName],
@@ -162,7 +162,7 @@ Begin Try
 					V.[SchemaName] = D.[SchemaName] And
 					V.[TableName] = D.[TableName] And
 					V.[ColumnName] = D.[ColumnName])
-	Merge [App_DataDictionary].[DatabaseColumn] As T
+	Merge [App_DataDictionary].[DatabaseTableColumn] As T
 	Using [Data] As S
 	On	T.[CatalogId] = S.[CatalogId] And
 		T.[SchemaName] = S.[SchemaName] And
@@ -254,7 +254,7 @@ Begin Try
 		Then Delete;
 
 	-- Tracking statement, example
-	Print FormatMessage ('Set [App_DataDictionary].[DatabaseColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Set [App_DataDictionary].[DatabaseTableColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -296,16 +296,4 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
-GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseColumn',
-	@value = N'Performs Set on DatabaseColumn.'
-GO
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseColumn',
-	@level2type = N'PARAMETER', @level2name = N'@ModelId',
-	@value = N'ModelId'
 GO

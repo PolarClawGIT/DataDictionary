@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [App_DataDictionary].[ApplicationCatalog]
 (
+	-- It is possible to have a single catalog used in multiple models.
 	[ModelId] UniqueIdentifier NOT NULL,
 	[CatalogId] UniqueIdentifier NOT NULL,
 	-- Keys

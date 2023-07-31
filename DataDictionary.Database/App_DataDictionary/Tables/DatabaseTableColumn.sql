@@ -1,4 +1,4 @@
-﻿CREATE TABLE [App_DataDictionary].[DatabaseColumn]
+﻿CREATE TABLE [App_DataDictionary].[DatabaseTableColumn]
 (
 	-- Note: GetSchema returns the columns for both View and Tables.
 	-- [INFORMATION_SCHEMA] has one view that represents columns from View and Tables.
@@ -33,9 +33,9 @@
 	[ComputedDefinition]    NVarChar(Max) Null,
 	[GeneratedAlwayType]    NVarChar(60) Null,
 	-- Keys
-	CONSTRAINT [PK_DatabaseColumn] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [TableName] ASC, [ColumnName] ASC),
+	CONSTRAINT [PK_DatabaseTableColumn] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [TableName] ASC, [ColumnName] ASC),
 --	CONSTRAINT [FK_DatabaseColumnCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
-	CONSTRAINT [FK_DatabaseColumnTable] FOREIGN KEY ([CatalogId], [SchemaName], [TableName]) REFERENCES [App_DataDictionary].[DatabaseTable] ([CatalogId], [SchemaName], [TableName])
+	CONSTRAINT [FK_DatabaseTableColumnTable] FOREIGN KEY ([CatalogId], [SchemaName], [TableName]) REFERENCES [App_DataDictionary].[DatabaseTable] ([CatalogId], [SchemaName], [TableName])
 
 )
 /*

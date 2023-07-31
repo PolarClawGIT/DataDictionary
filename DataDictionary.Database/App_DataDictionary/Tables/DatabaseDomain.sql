@@ -1,4 +1,4 @@
-﻿CREATE TABLE [App_DataDictionary].[DatabaseDomian]
+﻿CREATE TABLE [App_DataDictionary].[DatabaseDomain]
 (
 	-- Domain is a synonym for user defined type.
 	-- ER Diagrams tools also refer to Domains with a similar definition.
@@ -19,7 +19,7 @@
 	[CollationCatalog]      SysName Null,
 	[CollationSchema]       SysName Null,
 	[CollationName]         SysName Null,
-	CONSTRAINT [PK_DatabaseDomian] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [DomainName] ASC),
-	CONSTRAINT [FK_DatabaseDomianSchema] FOREIGN KEY ([CatalogId], [SchemaName]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([CatalogId], [SchemaName]),
+	CONSTRAINT [PK_DatabaseDomain] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [DomainName] ASC),
+	CONSTRAINT [FK_DatabaseDomainSchema] FOREIGN KEY ([CatalogId], [SchemaName]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([CatalogId], [SchemaName]),
 
 )

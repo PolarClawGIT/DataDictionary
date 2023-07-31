@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procGetDatabaseColumn]
+﻿CREATE PROCEDURE [App_DataDictionary].[procGetDatabaseTableColumn]
 		@ModelId UniqueIdentifier = Null,
 		@CatalogName SysName = Null,
 		@SchemaName SysName = Null,
@@ -39,7 +39,7 @@ Select	A.[ModelId],
 		D.[IsComputed],
 		D.[ComputedDefinition],
 		D.[GeneratedAlwayType]
-From	[App_DataDictionary].[DatabaseColumn] D
+From	[App_DataDictionary].[DatabaseTableColumn] D
 		Inner Join [App_DataDictionary].[ApplicationCatalog] A
 		On	D.[CatalogId] = A.[CatalogId]
 		Inner Join [App_DataDictionary].[DatabaseCatalog] C

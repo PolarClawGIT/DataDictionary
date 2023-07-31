@@ -1,5 +1,9 @@
 ﻿CREATE TABLE [App_DataDictionary].[DatabaseCatalog]
 (
+	-- The Catalog or Database Schema side of the Model assumes the data is always coming from the database.
+	-- The objects are never edited directly by the end-users. (This is not a DDL tool)
+	-- Instead the objects are used to provide a Snapshot of the Database and objects of interest.
+	-- The Object names are used as the key rather then creating a surrogate key that needs to be reconciled.
 	[CatalogId] UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseCatalog_CatalogId] DEFAULT (newid()),
 	[CatalogName] SysName Not Null,
 	[SourceServerName] SysName Null,
