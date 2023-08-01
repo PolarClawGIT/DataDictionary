@@ -3,6 +3,21 @@ Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
+Declare @Property Table (
+	[PropertyId] Int Not Null,
+	[PropertyName] SysName Not Null,
+	[PropertyTitle] NVarChar(100) Not Null)
+Insert into @Property Values (1,'MS_Description','Description');
+
+Merge [App_DataDictionary].[ApplicationProperty] T
+Using @Property S
+On	T.[PropertyId] = S.[PropertyId]
+When Matched Then Update Set
+	[PropertyTitle] = S.[PropertyTitle]
+When Not Matched by Target Then
+	Insert ([PropertyId], [PropertyTitle])
+	Values ([PropertyId], [PropertyTitle]);
+	
 
 -- This script is used to build and maintain the data in the DomainObjectType list.
 -- This list is intended to support the diffrent things MS SQL extended properties can be placed upon
@@ -56,9 +71,6 @@ With [Level0] As (
 	--Union Select 'TABLE',	'TRIGGER'
 	--Union Select 'VIEW',	'TRIGGER'
 	),
-[Properties] As (
-	Select	Convert(sysname,Null) As [PropertyName] Where 1=2
-	Union Select 'MS_Description'),
 [Combine] As (
 	Select	Convert(sysname,Null) As [level0type],
 			Convert(sysname,Null) As [level1type],
@@ -86,40 +98,37 @@ With [Level0] As (
 			Inner Join [Level0] G
 			On	P.[level0type] = G.[level0type]),
 [Data] As (
-	Select	IsNull(P.[PropertyId],
-				IsNull((Select Max([PropertyId]) From [App_DataDictionary].[ApplicationProperty]),0) +
-				Row_Number() Over (Partition By P.[PropertyId] Order By [level0type], [level1type], [level2type]))
-				As [PropertyId],
-			X.[PropertyName] + ': ' + isNull([level0type] + IsNull('.' + [level1type] + IsNull('.' + [level2type],''),''),'')
-			As [PropertyTitle],
+	Select	X.[PropertyId],
 			X.[PropertyName],
 			[level0type] As [ScopeType],
 			[level1type] As [ObjectType],
 			[level2type] As [ElementType]
 	From	[Combine] C
-			Left Join [App_DataDictionary].[ApplicationProperty] P
+			Cross Join @Property X
+			Left Join [App_DataDictionary].[ApplicationPropertyScope] P
 			On	IsNull(C.[level0type],'') = IsNull(P.[ScopeType],'') And
 				IsNull(C.[level1type],'') = IsNull(P.[ObjectType],'') And
 				IsNull(C.[level2type],'') = IsNull(P.[ElementType],'')
-			Cross Join [Properties] X
 				)
-Merge [App_DataDictionary].[ApplicationProperty] As T
+Merge [App_DataDictionary].[ApplicationPropertyScope] As T
 Using [Data] S
 On T.[PropertyId] = S.[PropertyId]
 When Matched Then Update Set 
 	PropertyId = S.PropertyId,
-	PropertyTitle = S.PropertyTitle,
 	PropertyName = S.PropertyName,
 	ScopeType = S.ScopeType,
 	ObjectType = S.ObjectType,
 	ElementType = S.ElementType
 When Not Matched By Target Then
-	Insert (PropertyId, PropertyTitle, PropertyName, ScopeType, ObjectType, ElementType)
-	Values (PropertyId, PropertyTitle, PropertyName, ScopeType, ObjectType, ElementType)
+	Insert (PropertyId, PropertyName, ScopeType, ObjectType, ElementType)
+	Values (PropertyId, PropertyName, ScopeType, ObjectType, ElementType)
 When Not Matched by Source Then Delete;
 
 Select	*
 From	[App_DataDictionary].[ApplicationProperty]
+
+Select	*
+From	[App_DataDictionary].[ApplicationPropertyScope]
 
 	-- By default, throw and error and exit without committing
 ;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;

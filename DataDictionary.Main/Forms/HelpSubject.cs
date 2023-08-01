@@ -179,7 +179,7 @@ namespace DataDictionary.Main.Forms
             this.Enabled = false;
             UnBindData();
 
-            this.DoWork(Program.Data.LoadHelp(), OnComplete);
+            this.DoWork(Program.Data.LoadApplication(), OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             {

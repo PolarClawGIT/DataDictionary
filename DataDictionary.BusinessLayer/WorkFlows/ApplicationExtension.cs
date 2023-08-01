@@ -9,9 +9,9 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.WorkFlows
 {
-    public static class HelpExtension
+    public static class ApplicationExtension
     {
-        public static IReadOnlyList<WorkItem> LoadHelp(this ModelData data)
+        public static IReadOnlyList<WorkItem> LoadApplication(this ModelData data)
         {
             List<WorkItem> workItems = new List<WorkItem>();
             DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(data.ModelContext);
@@ -23,11 +23,24 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 DoWork = data.HelpSubjects.Clear
             });
 
+            workItems.Add(new WorkItem()
+            {
+                WorkName = "Clear Properties",
+                DoWork = data.HelpSubjects.Clear
+            });
+
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Help",
                 Command = HelpItem.GetData,
                 Target = data.HelpSubjects
+            });
+
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Load Properties",
+                Command = PropertyItem.GetData,
+                Target = data.Properties
             });
 
             return workItems;
@@ -60,5 +73,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
             return workItems;
         }
+
+
     }
 }

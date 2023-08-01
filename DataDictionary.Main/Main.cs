@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Windows.Forms;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main
@@ -56,9 +57,7 @@ namespace DataDictionary.Main
             Program.Messenger.AddColleague(this);
             BindData();
 
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(Program.Data.LoadHelp());
-            this.DoWork(work, OnComplete);
+            this.DoWork(Program.Data.LoadApplication(), OnComplete);
 
             // TODO: Cannot get the Context menus to show. For now, add them to the Tools menu
             dbSchemaToolStripMenuItem.DropDownItems.AddRange(dbSchemaContextMenu.Items);
@@ -97,40 +96,56 @@ namespace DataDictionary.Main
         #endregion
 
         #region Menu Events
-        private void menuCatalogItem_Click(object sender, EventArgs e)
+        private TForm Activate<TForm>(Func<IBindingTable, TForm> constructor, IBindingTable data)
+            where TForm : ApplicationFormBase
         {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbCatalog)) is Forms.DbCatalog existingForm)
-            { existingForm.Activate(); }
-            else { new Forms.DbCatalog().Show(); }
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
+            {
+                if (existingForm is IApplicationDataForm existingData && ReferenceEquals(existingData.OpenItem,data))
+                { existingForm.Activate(); }
+
+                return existingForm;
+            }
+            else
+            {
+                TForm newForm = constructor(data);
+                newForm.Show();
+                return newForm;
+            }
         }
+
+        private TForm Activate<TForm>(Func<TForm> constructor)
+            where TForm : ApplicationFormBase
+        {
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
+            {
+                if (existingForm is IApplicationDataForm existingData)
+                { existingForm.Activate(); }
+
+                return existingForm;
+            }
+            else
+            {
+                TForm newForm = constructor();
+                newForm.Show();
+                return newForm;
+            }
+        }
+
+        private void menuCatalogItem_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.DbCatalog()); }
 
         private void menuSchemaItem_Click(object sender, EventArgs e)
-        {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbSchemaView)) is Forms.DbSchemaView existingForm)
-            { existingForm.Activate(); }
-            else { new Forms.DbSchemaView().Show(); }
-        }
+        { Activate((data) => new Forms.BindingDataView(data, Resources.DbSchema), Program.Data.DbSchemta); }
 
         private void menuTableItem_Click(object sender, EventArgs e)
-        {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbTableView)) is Forms.DbTableView existingForm)
-            { existingForm.Activate(); }
-            else { new Forms.DbTableView().Show(); }
-        }
+        { Activate((data) => new Forms.BindingDataView(data, Resources.DbTable), Program.Data.DbTables); }
 
         private void menuColumnItem_Click(object sender, EventArgs e)
-        {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbTableColumnView)) is Forms.DbTableColumnView existingForm)
-            { existingForm.Activate(); }
-            else { new Forms.DbTableColumnView().Show(); }
-        }
+        { Activate((data) => new Forms.BindingDataView(data, Resources.DbColumn), Program.Data.DbColumns); }
 
         private void menuPropertyItem_Click(object sender, EventArgs e)
-        {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DbExtendedPropertyView)) is Forms.DbExtendedPropertyView existingForm)
-            { existingForm.Activate(); }
-            else { new Forms.DbExtendedPropertyView().Show(); }
-        }
+        { Activate((data) => new Forms.BindingDataView(data, Resources.DbExtendedProperty), Program.Data.DbExtendedProperties); }
 
         [Obsolete()]
         private void menuImportDbSchema_Click(object sender, EventArgs e)
@@ -140,75 +155,32 @@ namespace DataDictionary.Main
         }
 
         private void menuAttributes_Click(object sender, EventArgs e)
-        {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.DomainAttributeView)) is Forms.DomainAttributeView existingForm)
-            { existingForm.Activate(); }
-            else { new Forms.DomainAttributeView().Show(); }
-        }
+        { Activate((data) => new Forms.BindingDataView(data, Resources.DomainAttribute), Program.Data.DomainAttributes); }
+
 
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)
         {
-
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.HelpSubject)) is Forms.HelpSubject existingForm)
-            {
-                if (ActiveMdiChild is Form && ActiveMdiChild != existingForm)
-                {
-                    existingForm.NavigateTo(ActiveMdiChild);
-                    existingForm.Activate();
-                }
-                else
-                { existingForm.Activate(); }
-
-            }
-            else
-            {
-                if (ActiveMdiChild is Form)
-                { new Forms.HelpSubject(ActiveMdiChild).Show(); }
-                else { new Forms.HelpSubject().Show(); }
-            }
+            if (ActiveMdiChild is Form currentForm &&
+                Activate(() => new Forms.HelpSubject()) is Forms.HelpSubject helpForm)
+            { helpForm.NavigateTo(currentForm); }
         }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.HelpSubject)) is Forms.HelpSubject existingForm)
-            { existingForm.Activate(); }
-            else { new Forms.HelpSubject().Show(); }
-        }
+        { Activate(() => new Forms.HelpSubject()); }
 
         private void HelpAboutMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.HelpSubject)) is Forms.HelpSubject existingForm)
-            {
-                existingForm.Activate();
-                existingForm.NavigateTo("About");
-            }
-            else
-            { new Forms.HelpSubject("About").Show(); }
-        }
+        { Activate(() => new Forms.HelpSubject("About")); }
+
 
         private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.HelpSubject)) is Forms.HelpSubject existingForm)
-            {
-                existingForm.Activate();
-                if (this.ActiveMdiChild is Form activeChild)
-                { existingForm.NavigateTo(activeChild); }
-                else { existingForm.NavigateTo(this); }
-            }
-            else
-            {
-                if (this.ActiveMdiChild is Form activeChild)
-                { new Forms.HelpSubject(activeChild).Show(); }
-                else { new Forms.HelpSubject(this).Show(); }
-            }
+            if (ActiveMdiChild is Form currentForm &&
+                Activate(() => new Forms.HelpSubject()) is Forms.HelpSubject helpForm)
+            { helpForm.NavigateTo(currentForm); }
         }
 
         private void manageDbModelMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(Forms.ModelManagement)) is Forms.ModelManagement existingForm)
-            { existingForm.Activate(); }
-            else { new Forms.ModelManagement().Show(); }
-        }
+        { Activate(() => new Forms.ModelManagement()); }
 
         private void navigationDbSchemaTab_MouseDoubleClick(object sender, MouseEventArgs e)
         { //TODO: Not Working. Does not show when the context menu is assigned to the control or rigged to an event.
@@ -322,17 +294,17 @@ namespace DataDictionary.Main
             {
                 Object dataNode = dbDataNodes[e.Node];
 
-                if (FindDataForm<IDbSchemaItem, Forms.DbSchema>(dataNode) is Forms.DbSchema schemaForm)
-                { schemaForm.Activate(); }
-                else { if (dataNode is IDbSchemaItem schemaItem) { new Forms.DbSchema(schemaItem).Show(); } }
+                if(dataNode is IBindingTable bindingItem)
+                {
+                    if (dataNode is IDbSchemaItem schemaItem)
+                    { Activate((data) => new Forms.DbSchema(schemaItem), bindingItem); }
 
-                if (FindDataForm<IDbTableItem, Forms.DbTable>(dataNode) is Forms.DbTable tableForm)
-                { tableForm.Activate(); }
-                else { if (dataNode is IDbTableItem tableItem) { new Forms.DbTable(tableItem).Show(); } }
+                    if (dataNode is IDbTableItem tableItem)
+                    { Activate((data) => new Forms.DbTable(tableItem), bindingItem); }
 
-                if (FindDataForm<IDbTableColumnItem, Forms.DbTableColumn>(dataNode) is Forms.DbTableColumn columnForm)
-                { columnForm.Activate(); }
-                else { if (dataNode is IDbTableColumnItem columnItem) { new Forms.DbTableColumn(columnItem).Show(); } }
+                    if (dataNode is IDbTableColumnItem columnItem)
+                    { Activate((data) => new Forms.DbTableColumn(columnItem), bindingItem); }
+                }
             }
         }
         #endregion
@@ -406,21 +378,14 @@ namespace DataDictionary.Main
             if (domainModelNodes.ContainsKey(e.Node))
             {
                 Object dataNode = domainModelNodes[e.Node];
-
-                if (FindDataForm<IDomainAttributeItem, Forms.DomainAttribute>(dataNode) is Forms.DomainAttribute attributeForm)
-                { attributeForm.Activate(); }
-                else { if (dataNode is IDomainAttributeItem attributeItem) { new Forms.DomainAttribute(attributeItem).Show(); } }
+                if (dataNode is IBindingTable bindingItem)
+                {
+                    if (dataNode is IDomainAttributeItem attributeItem)
+                    { Activate((data) => new Forms.DomainAttribute(attributeItem), bindingItem); }
+                }
             }
         }
         #endregion
-
-        TForm? FindDataForm<TData, TForm>(Object data)
-            where TForm : Form, IApplicationDataForm
-        {
-            if (this.MdiChildren.OfType<IApplicationDataForm>().Where(w => ReferenceEquals(data, w.OpenItem)).OfType<TForm>().FirstOrDefault() is TForm existingForm)
-            { return existingForm; }
-            else { return null; }
-        }
 
         #region IColleague
 

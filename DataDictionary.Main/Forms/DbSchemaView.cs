@@ -13,6 +13,7 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
+    [Obsolete("do not use", true)]
     partial class DbSchemaView : ApplicationFormBase
     {
         public DbSchemaView() : base()

@@ -161,6 +161,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 foreach (IGrouping<String?, IDbExtendedPropertyItem> propertyItem in propeties.GroupBy(g => g.PropertyName))
                 {
                     IDbExtendedPropertyItem propertySource = propertyItem.First();
+                    
 
                     data.DomainAttributeProperties.Add(
                         new DomainAttributePropertyItem()

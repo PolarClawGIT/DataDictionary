@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procGetDomainAttributeProperty]
 		@ModelId UniqueIdentifier = Null,
 		@AttributeId UniqueIdentifier = Null,
-		@PropertyName SysName = Null
+		@PropertyTitle NVarChar(100) = Null
 
 As
 Set NoCount On -- Do not show record counts
@@ -13,7 +13,6 @@ Select	A.[ModelId],
 		D.[AttributeId],
 		D.[PropertyId],
 		P.[PropertyTitle],
-		P.[PropertyName],
 		D.[PropertyValue],
 		D.[ModfiedBy],
 		D.[SysStart]
@@ -25,5 +24,5 @@ From	[App_DataDictionary].[DomainAttributeProperty] D
 			D.[PropertyId] = P.[PropertyId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@AttributeId is Null or @AttributeId = D.[AttributeId]) And
-		(@PropertyName is Null or @PropertyName = P.[PropertyName])
+		(@PropertyTitle is Null or @PropertyTitle = P.[PropertyTitle])
 GO

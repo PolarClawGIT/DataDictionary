@@ -11,6 +11,7 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms
 {
+    [Obsolete("do not use", true)]
     partial class DomainAttributeView : ApplicationFormBase
     {
         public DomainAttributeView() : base()

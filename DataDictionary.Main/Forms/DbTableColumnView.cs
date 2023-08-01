@@ -12,6 +12,7 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms
 {
+    [Obsolete("do not use", true)]
     partial class DbTableColumnView : ApplicationFormBase
     {
         public DbTableColumnView() : base()
