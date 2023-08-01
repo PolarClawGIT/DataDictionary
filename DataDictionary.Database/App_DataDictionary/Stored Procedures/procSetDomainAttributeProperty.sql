@@ -22,7 +22,7 @@ Begin Try
 	Declare @Values [App_DataDictionary].[typeDomainAttributeProperty]
 	Insert Into @Values
 	Select	[AttributeId],
-			NullIf(Trim([PropertyName]),'') As [PropertyName],
+			[PropertyId],
 			NullIf(Trim([PropertyValue]),'') As [PropertyValue],
 			[SysStart]
 	From	@Data
@@ -43,53 +43,44 @@ Begin Try
 				P.[AttributeId] is Null)
 	Throw 50000, '[AttributeId] could not be found or is not associated with Model specified', 2;
 
-	If Exists (
-		Select	[AttributeId],
-				[PropertyName]
-		From	@Values
-		Group By [AttributeId],
-				[PropertyName]
-		Having Count(*) > 1)
-		Throw 50000, '[AttributeId] Property cannot be duplicated', 3;
-
 	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
 		Select	D.[AttributeId]
 		From	@Values D
 				Inner Join [App_DataDictionary].[DomainAttributeProperty] A
 				On D.[AttributeId] = A.[AttributeId] And
-					D.[PropertyName] = A.[PropertyName]
+					D.[PropertyId] = A.[PropertyId]
 		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
 	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 4;
 
 	-- Apply Changes
 	With [Delta] As (
 		Select	[AttributeId],
-				[PropertyName],
+				[PropertyId],
 				[PropertyValue]
 		From	@Values
 		Except
 		Select	[AttributeId],
-				[PropertyName],
+				[PropertyId],
 				[PropertyValue]
 		From	[App_DataDictionary].[DomainAttributeProperty]),
 	[Data] As (
 		Select	V.[AttributeId],
-				V.[PropertyName],
+				V.[PropertyId],
 				V.[PropertyValue],
 				IIF(D.[AttributeId] is Null,1, 0) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
 				On	V.[AttributeId] = D.[AttributeId] and
-					V.[PropertyName] = D.[PropertyName])
+					V.[PropertyId] = D.[PropertyId])
 	Merge [App_DataDictionary].[DomainAttributeProperty] T
 	Using [Data] S
 	On	T.[AttributeId] = S.[AttributeId] And
-		T.[PropertyName] = S.[PropertyName]
+		T.[PropertyId] = S.[PropertyId]
 	When Matched And S.[IsDiffrent] = 1 Then Update
 		Set	[PropertyValue] = S.[PropertyValue]
 	When Not Matched by Target Then
-		Insert ([AttributeId], [PropertyName], [PropertyValue])
-		Values ([AttributeId], [PropertyName], [PropertyValue])
+		Insert ([AttributeId], [PropertyId], [PropertyValue])
+		Values ([AttributeId], [PropertyId], [PropertyValue])
 	When Not Matched by Source And (T.[AttributeId] in (
 		Select	[AttributeId]
 		From	[App_DataDictionary].[ApplicationAttribute]
