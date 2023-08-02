@@ -18,18 +18,18 @@ namespace DataDictionary.DataLayer.ApplicationData
     {
         public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }
         public String? PropertyTitle { get { return GetValue("PropertyTitle"); } set { SetValue("PropertyTitle", value); } }
+        public String? PropertyName { get { return GetValue("PropertyName"); } set { SetValue("PropertyName", value); } }
         public Nullable<Guid> ModelId { get { return GetValue<Guid>("ModelId"); } set { SetValue<Guid>("ModelId", value); } }
 
         public PropertyItem() : base()
-        {
-            PropertyId = Guid.NewGuid();
-        }
+        { PropertyId = Guid.NewGuid(); }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("PropertyTitle", typeof(String)){ AllowDBNull = false},
             new DataColumn("ModelId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn("PropertyName", typeof(String)){ AllowDBNull = true},
         };
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()

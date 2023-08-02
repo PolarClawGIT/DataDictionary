@@ -17,7 +17,7 @@ using DataDictionary.DataLayer.DomainData;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbExtendedPropertyItem : IDbCatalogName
+    public interface IDbExtendedPropertyItem : IDbCatalogName, IBindingTableRow
     {
         String? Level0Type { get; }
         String? Level0Name { get; }

@@ -39,6 +39,7 @@ namespace DataDictionary.BusinessLayer
         public BindingTable<ModelItem> Models { get; } = ModelFactory.Create<ModelItem>();
         public BindingTable<HelpItem> HelpSubjects { get; } = ModelFactory.Create<HelpItem>();
         public BindingTable<PropertyItem> Properties { get; } = ModelFactory.Create<PropertyItem>();
+        public BindingTable<PropertyScopeItem> PropertyScopes { get; } = ModelFactory.Create<PropertyScopeItem>();
 
         // Connection Data
         public String ServerName { get { return ModelContext.ServerName; } }

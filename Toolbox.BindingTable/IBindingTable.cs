@@ -10,6 +10,11 @@ namespace Toolbox.BindingTable
 {
     public interface IBindingTable : IBindingList, IDisposable, ICloneable
     {
+        /// <summary>
+        /// Name given to the Binding Table.
+        /// </summary>
+        String BindingTableName { get; }
+
         /// <inheritdoc cref="DataTable.Load(IDataReader)"/>
         void Load(IDataReader reader);
 

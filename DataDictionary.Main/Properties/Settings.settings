@@ -20,5 +20,11 @@
     <Setting Name="AppDbRolePassword" Type="System.String" Scope="Application">
       <Value Profile="(Default)">MyApp131*99</Value>
     </Setting>
+    <Setting Name="AppDataFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">AppData.XML</Value>
+    </Setting>
+    <Setting Name="IsOnLineMode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

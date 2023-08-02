@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.DataLayer.DomainData;
 using System;
@@ -74,8 +76,8 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
             workItems.Add(new WorkItem()
             {
-                WorkName="Import Schema to Domain Model", 
-                DoWork = ()=> ImportDbSchemaToDomain(data), 
+                WorkName = "Import Schema to Domain Model",
+                DoWork = () => ImportDbSchemaToDomain(data),
                 IsCanceling = openConnection.IsCanceling
             });
 
@@ -161,27 +163,18 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 foreach (IGrouping<String?, IDbExtendedPropertyItem> propertyItem in propeties.GroupBy(g => g.PropertyName))
                 {
                     IDbExtendedPropertyItem propertySource = propertyItem.First();
-                    
 
-                    data.DomainAttributeProperties.Add(
-                        new DomainAttributePropertyItem()
-                        {
-                            AttributeId = newAttribute.AttributeId,
-                            PropertyName = propertySource.PropertyName,
-                            PropertyValue = propertySource.PropertyValue
-                        });
-
-                    if (propertySource.PropertyName is not null &&
-                        data.DomainAttributeProperties.
-                        Count(w => w.PropertyName == propertySource.PropertyName) == 0)
+                    if (data.Properties.FirstOrDefault(w =>
+                            w.PropertyName is not null &&
+                            w.PropertyName.Equals(propertySource.PropertyName, ModelFactory.CompareString)) is IPropertyItem property)
                     {
                         data.DomainAttributeProperties.Add(
-                        new DomainAttributePropertyItem()
-                        {
-                            AttributeId = newAttribute.AttributeId,
-                            PropertyName = propertySource.PropertyName,
-                            PropertyValue = propertySource.PropertyValue
-                        });
+                            new DomainAttributePropertyItem()
+                            {
+                                AttributeId = newAttribute.AttributeId,
+                                PropertyId = property.PropertyId,
+                                PropertyValue = propertySource.PropertyValue
+                            });
                     }
                 }
             }

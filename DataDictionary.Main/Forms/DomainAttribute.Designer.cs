@@ -210,7 +210,7 @@
             // 
             // propertyNameData
             // 
-            propertyNameData.DataPropertyName = "PropertyName";
+            propertyNameData.DataPropertyName = "PropertyId";
             propertyNameData.HeaderText = "Property Name";
             propertyNameData.Name = "propertyNameData";
             propertyNameData.Width = 150;

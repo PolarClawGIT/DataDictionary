@@ -53,18 +53,19 @@ namespace DataDictionary.Main
         #region Form
         private void Main_Load(object sender, EventArgs e)
         {
+            if (Settings.Default.IsOnLineMode)
+            { onLineModetoolStripMenuItem.CheckState = CheckState.Checked; }
+            else { onLineModetoolStripMenuItem.CheckState = CheckState.Unchecked; }
+
+            manageDbModelMenuItem.Enabled = Settings.Default.IsOnLineMode;
+
             Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
             Program.Messenger.AddColleague(this);
             BindData();
 
-            this.DoWork(Program.Data.LoadApplication(), OnComplete);
-
             // TODO: Cannot get the Context menus to show. For now, add them to the Tools menu
             dbSchemaToolStripMenuItem.DropDownItems.AddRange(dbSchemaContextMenu.Items);
             domainModelToolStripMenuItem.DropDownItems.AddRange(domainModelMenu.Items);
-
-            void OnComplete(RunWorkerCompletedEventArgs args)
-            { } // Nothing to do at this point
         }
 
         void BindData()
@@ -96,12 +97,30 @@ namespace DataDictionary.Main
         #endregion
 
         #region Menu Events
+        private TForm Activate<TForm>(Func<TForm> constructor)
+           where TForm : ApplicationFormBase
+        {
+            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
+            {
+                if (existingForm is IApplicationDataForm existingData)
+                { existingForm.Activate(); }
+
+                return existingForm;
+            }
+            else
+            {
+                TForm newForm = constructor();
+                newForm.Show();
+                return newForm;
+            }
+        }
+
         private TForm Activate<TForm>(Func<IBindingTable, TForm> constructor, IBindingTable data)
             where TForm : ApplicationFormBase
         {
             if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
             {
-                if (existingForm is IApplicationDataForm existingData && ReferenceEquals(existingData.OpenItem,data))
+                if (existingForm is IApplicationDataForm existingData && ReferenceEquals(existingData.OpenItem, data))
                 { existingForm.Activate(); }
 
                 return existingForm;
@@ -114,19 +133,19 @@ namespace DataDictionary.Main
             }
         }
 
-        private TForm Activate<TForm>(Func<TForm> constructor)
+        private TForm Activate<TForm>(Func<IBindingTableRow, TForm> constructor, IBindingTableRow data)
             where TForm : ApplicationFormBase
         {
             if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
             {
-                if (existingForm is IApplicationDataForm existingData)
+                if (existingForm is IApplicationDataForm existingData && ReferenceEquals(existingData.OpenItem, data))
                 { existingForm.Activate(); }
 
                 return existingForm;
             }
             else
             {
-                TForm newForm = constructor();
+                TForm newForm = constructor(data);
                 newForm.Show();
                 return newForm;
             }
@@ -181,6 +200,28 @@ namespace DataDictionary.Main
 
         private void manageDbModelMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Forms.ModelManagement()); }
+
+        private void onLineModetoolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (onLineModetoolStripMenuItem.Checked)
+            { this.DoWork(Program.Data.LoadApplicationData(), OnComplete); }
+            else
+            {
+                List<WorkItem> work = new List<WorkItem>();
+                if (Settings.Default.IsOnLineMode)
+                { work.AddRange(Program.Data.SaveApplicationData(new FileInfo(Settings.Default.AppDataFile))); }
+
+                work.AddRange(Program.Data.LoadApplicationData(new FileInfo(Settings.Default.AppDataFile)));
+
+                this.DoWork(work, OnComplete);
+            }
+
+            Settings.Default.IsOnLineMode = onLineModetoolStripMenuItem.Checked;
+            Settings.Default.Save();
+
+            void OnComplete(RunWorkerCompletedEventArgs args)
+            { } // Nothing to do at this point
+        }
 
         private void navigationDbSchemaTab_MouseDoubleClick(object sender, MouseEventArgs e)
         { //TODO: Not Working. Does not show when the context menu is assigned to the control or rigged to an event.
@@ -294,17 +335,15 @@ namespace DataDictionary.Main
             {
                 Object dataNode = dbDataNodes[e.Node];
 
-                if(dataNode is IBindingTable bindingItem)
-                {
-                    if (dataNode is IDbSchemaItem schemaItem)
-                    { Activate((data) => new Forms.DbSchema(schemaItem), bindingItem); }
+                if (dataNode is IDbSchemaItem schemaItem)
+                { Activate((data) => new Forms.DbSchema(schemaItem), schemaItem); }
 
-                    if (dataNode is IDbTableItem tableItem)
-                    { Activate((data) => new Forms.DbTable(tableItem), bindingItem); }
+                if (dataNode is IDbTableItem tableItem)
+                { Activate((data) => new Forms.DbTable(tableItem), tableItem); }
 
-                    if (dataNode is IDbTableColumnItem columnItem)
-                    { Activate((data) => new Forms.DbTableColumn(columnItem), bindingItem); }
-                }
+                if (dataNode is IDbTableColumnItem columnItem)
+                { Activate((data) => new Forms.DbTableColumn(columnItem), columnItem); }
+
             }
         }
         #endregion
@@ -345,9 +384,6 @@ namespace DataDictionary.Main
             {
                 TreeNode attributeNode = CreateNode(attributeItem.AttributeTitle, domainModelImageIndex.Attribute, attributeItem);
 
-                foreach (DomainAttributePropertyItem propertyItem in Program.Data.DomainAttributeProperties.Where(w => w.AttributeId == attributeItem.AttributeId))
-                { CreateNode(propertyItem.PropertyName, domainModelImageIndex.Property, propertyItem, attributeNode); }
-
                 foreach (DomainAttributeAliasItem aliasItem in Program.Data.DomainAttributeAliases.Where(w => w.AttributeId == attributeItem.AttributeId))
                 { CreateNode(aliasItem.ToString(), domainModelImageIndex.Alias, aliasItem, attributeNode); }
 
@@ -378,11 +414,9 @@ namespace DataDictionary.Main
             if (domainModelNodes.ContainsKey(e.Node))
             {
                 Object dataNode = domainModelNodes[e.Node];
-                if (dataNode is IBindingTable bindingItem)
-                {
-                    if (dataNode is IDomainAttributeItem attributeItem)
-                    { Activate((data) => new Forms.DomainAttribute(attributeItem), bindingItem); }
-                }
+
+                if (dataNode is IDomainAttributeItem item)
+                { Activate((data) => new Forms.DomainAttribute(item), item); }
             }
         }
         #endregion
@@ -426,5 +460,8 @@ namespace DataDictionary.Main
 
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
         { new Forms.UnitTestGridView().Show(); }
+
+
+
     }
 }

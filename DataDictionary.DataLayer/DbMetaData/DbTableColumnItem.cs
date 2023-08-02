@@ -17,7 +17,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbTableColumnItem : IDbTableColumnName
+    public interface IDbTableColumnItem : IDbTableColumnName, IBindingTableRow
     {
         //Guid? CatalogId { get; }
         Nullable<Int32> OrdinalPosition { get; }

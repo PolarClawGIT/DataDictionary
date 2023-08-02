@@ -35,7 +35,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HelpSubject));
             helpContentNavigation = new TreeView();
             newToolStripButton = new ToolStripButton();
-            openToolStripButton = new ToolStripButton();
             saveToolStripButton = new ToolStripButton();
             printToolStripButton = new ToolStripButton();
             helpSubjectData = new Controls.TextBoxData();
@@ -102,7 +101,7 @@
             // 
             // helpSubjectToolStrip
             // 
-            helpSubjectToolStrip.Items.AddRange(new ToolStripItem[] { newToolStripButton, openToolStripButton, saveToolStripButton, printToolStripButton });
+            helpSubjectToolStrip.Items.AddRange(new ToolStripItem[] { newToolStripButton, saveToolStripButton, printToolStripButton });
             helpSubjectToolStrip.Location = new Point(0, 0);
             helpSubjectToolStrip.Name = "helpSubjectToolStrip";
             helpSubjectToolStrip.Size = new Size(577, 25);
@@ -118,16 +117,6 @@
             newToolStripButton.Size = new Size(23, 22);
             newToolStripButton.Text = "&New";
             newToolStripButton.Click += newToolStripButton_Click;
-            // 
-            // openToolStripButton
-            // 
-            openToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            openToolStripButton.Image = (Image)resources.GetObject("openToolStripButton.Image");
-            openToolStripButton.ImageTransparentColor = Color.Magenta;
-            openToolStripButton.Name = "openToolStripButton";
-            openToolStripButton.Size = new Size(23, 22);
-            openToolStripButton.Text = "&Open";
-            openToolStripButton.Click += openToolStripButton_Click;
             // 
             // saveToolStripButton
             // 
@@ -222,7 +211,6 @@
         private Controls.RichTextBoxData helpTextData;
         private Controls.TextBoxData helpSubjectData;
         private ToolStripButton newToolStripButton;
-        private ToolStripButton openToolStripButton;
         private ToolStripButton saveToolStripButton;
         private ToolStripButton printToolStripButton;
         private ErrorProvider errorProvider;

@@ -14,7 +14,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbCatalogItem : IDbCatalogName, IDbIsSystem
+    public interface IDbCatalogItem : IDbCatalogName, IDbIsSystem, IBindingTableRow
     {
         //Guid? CatalogId { get; }
         String? SourceServerName { get; }

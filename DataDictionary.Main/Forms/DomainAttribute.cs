@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DomainData;
+﻿using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
@@ -32,9 +33,6 @@ namespace DataDictionary.Main.Forms
         {
             InitializeComponent();
             this.Icon = Resources.DomainAttribute;
-
-            //propertyNameData.Items.AddRange(Program.DomainData.PropertyNames.Select(s => s.PropertyName).ToArray());
-            propertyNameData.DataSource = Program.Data.DomainAttributeProperties.Select(s => s.PropertyName).ToList();
         }
 
         public DomainAttribute(IDomainAttributeItem domainAttributeItem) : this()
@@ -71,9 +69,41 @@ namespace DataDictionary.Main.Forms
                 attributeAlaisData.AutoGenerateColumns = false;
                 attributeAlaisData.DataSource = data.AttributeAlias;
 
+
+                PropertyNameDataItems defaultItem = new PropertyNameDataItems();
+                propertyNameData.DisplayMember = nameof(defaultItem.PropertyTitle);
+                propertyNameData.ValueMember = nameof(defaultItem.PropertyId);
+                propertyNameData.DataSource = PropertyNameDataItems.Create();
+
                 attributePropertiesData.AutoGenerateColumns = false;
                 attributePropertiesData.DataSource = data.AttributeProperties;
+                attributePropertiesData.DataError += AttributePropertiesData_DataError;
             }
+        }
+
+        // Because DataGridComboItem cannot correctly bind anything but a very simple object.
+        record PropertyNameDataItems
+        {
+            public Guid? PropertyId { get; set; }
+            public string? PropertyTitle { get; set; }
+
+            public static IReadOnlyList<PropertyNameDataItems> Create()
+            { return Program.Data.Properties.Select(s => new PropertyNameDataItems() { PropertyId = s.PropertyId, PropertyTitle = s.PropertyTitle }).ToList(); }
+        }
+
+        private void AttributePropertiesData_DataError(object? sender, DataGridViewDataErrorEventArgs e)
+        {
+            //TODO: Cannot determine why this is occurring
+            var x = attributePropertiesData[e.ColumnIndex, e.RowIndex];
+
+            if (propertyNameData.DataSource is BindingTable<PropertyItem> propertyTable &&
+                attributePropertiesData[e.ColumnIndex, e.RowIndex].Value is Guid value)
+            {
+                var y = propertyTable.Where(w => w.PropertyId == value);
+            }
+
+
+            if (e.Exception is not null) { throw e.Exception; }
         }
 
         void UnbindData()

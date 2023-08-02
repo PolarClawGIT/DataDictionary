@@ -12,7 +12,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DomainData
 {
-    public interface IDomainAttributeItem : IDomainAttributeTitle, IDomainAttributeIdentifier, IDomainAttributeParentId
+    public interface IDomainAttributeItem : IDomainAttributeTitle, IDomainAttributeIdentifier, IDomainAttributeParentId, IBindingTableRow
     {
         String? AttributeDescription { get; set; }
     }

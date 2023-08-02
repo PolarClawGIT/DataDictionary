@@ -12,7 +12,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DomainData
 {
-    public interface IDomainAttributeAliasItem : IDomainAttributeIdentifier
+    public interface IDomainAttributeAliasItem : IDomainAttributeIdentifier, IBindingTableRow
     {
         public String? CatalogName { get; }
         public String? SchemaName { get; }

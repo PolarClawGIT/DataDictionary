@@ -13,7 +13,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbSchemaItem : IDbSchemaName, IDbIsSystem
+    public interface IDbSchemaItem : IDbSchemaName, IDbIsSystem, IBindingTableRow
     {
         //Guid? CatalogId { get; }
     }

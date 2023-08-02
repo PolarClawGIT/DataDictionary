@@ -72,5 +72,26 @@ namespace DataDictionary.Main.Properties {
                 return ((string)(this["AppDbRolePassword"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("AppData.XML")]
+        public string AppDataFile {
+            get {
+                return ((string)(this["AppDataFile"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsOnLineMode {
+            get {
+                return ((bool)(this["IsOnLineMode"]));
+            }
+            set {
+                this["IsOnLineMode"] = value;
+            }
+        }
     }
 }

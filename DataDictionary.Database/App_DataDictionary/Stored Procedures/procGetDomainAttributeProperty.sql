@@ -12,6 +12,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 Select	A.[ModelId],
 		D.[AttributeId],
 		D.[PropertyId],
+		--P.[PropertyName],
 		P.[PropertyTitle],
 		D.[PropertyValue],
 		D.[ModfiedBy],

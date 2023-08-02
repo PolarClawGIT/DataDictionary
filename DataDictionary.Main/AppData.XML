@@ -1,0 +1,116 @@
+<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+      <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="HelpItem">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="HelpId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" />
+                <xs:element name="HelpParentId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" minOccurs="0" />
+                <xs:element name="HelpSubject" type="xs:string" />
+                <xs:element name="HelpText" type="xs:string" />
+                <xs:element name="NameSpace" type="xs:string" />
+                <xs:element name="Obsolete" type="xs:boolean" />
+                <xs:element name="SysStart" type="xs:dateTime" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="PropertyItem">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="PropertyId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" />
+                <xs:element name="PropertyTitle" type="xs:string" />
+                <xs:element name="ModelId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" minOccurs="0" />
+                <xs:element name="PropertyName" type="xs:string" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="PropertyScopeItem">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="PropertyId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" />
+                <xs:element name="ScopeType" type="xs:string" minOccurs="0" />
+                <xs:element name="ObjectType" type="xs:string" minOccurs="0" />
+                <xs:element name="ElementType" type="xs:string" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <HelpItem>
+    <HelpId>41c0f5a1-9f6e-4ee4-98ae-97068774475a</HelpId>
+    <HelpSubject>About Application</HelpSubject>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\b\f0\fs18 Data Dictionary Manager\b0\f1\par
+\f0\'a9 2023 William Howard, All Rights Reserved\par
+\par
+\i Purpose\i0 : This application is intended as an editor for the Extended Properties within Microsoft SQL Server. The primary property of interest is the \ldblquote MS_Description\rdblquote  property. This is the property Microsoft and other products uses to populate meta data information.\par
+\par
+This is a tool I had wished we had during my professional carrier. Yes, Entity Relationship diagram (ERD) tools have this built in. But they are expensive and required every user to be licensed just to edit the data dictionary. Something my organization was not interested in paying for. We tried to maintain this within Visual Studio Database projects. It requires a lot of attention to detail and was not an interface that business users could deal with.\par
+\par
+This tool is intended to fill the gap. Something easy enough for Business to use to help maintain but technical enough that developers and designers can use to actually apply the descriptions to the extended properties.\par
+\f1\par
+}
+</HelpText>
+    <NameSpace>About</NameSpace>
+    <Obsolete>false</Obsolete>
+    <SysStart>2023-07-24T19:29:41.3331908-07:00</SysStart>
+  </HelpItem>
+  <PropertyItem>
+    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
+    <PropertyTitle>Description</PropertyTitle>
+  </PropertyItem>
+  <PropertyScopeItem>
+    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
+    <ScopeType>SCHEMA</ScopeType>
+  </PropertyScopeItem>
+  <PropertyScopeItem>
+    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
+    <ScopeType>SCHEMA</ScopeType>
+    <ObjectType>FUNCTION</ObjectType>
+  </PropertyScopeItem>
+  <PropertyScopeItem>
+    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
+    <ScopeType>SCHEMA</ScopeType>
+    <ObjectType>FUNCTION</ObjectType>
+    <ElementType>PARAMETER</ElementType>
+  </PropertyScopeItem>
+  <PropertyScopeItem>
+    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
+    <ScopeType>SCHEMA</ScopeType>
+    <ObjectType>PROCEDURE</ObjectType>
+  </PropertyScopeItem>
+  <PropertyScopeItem>
+    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
+    <ScopeType>SCHEMA</ScopeType>
+    <ObjectType>PROCEDURE</ObjectType>
+    <ElementType>PARAMETER</ElementType>
+  </PropertyScopeItem>
+  <PropertyScopeItem>
+    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
+    <ScopeType>SCHEMA</ScopeType>
+    <ObjectType>TABLE</ObjectType>
+  </PropertyScopeItem>
+  <PropertyScopeItem>
+    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
+    <ScopeType>SCHEMA</ScopeType>
+    <ObjectType>TABLE</ObjectType>
+    <ElementType>COLUMN</ElementType>
+  </PropertyScopeItem>
+  <PropertyScopeItem>
+    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
+    <ScopeType>SCHEMA</ScopeType>
+    <ObjectType>VIEW</ObjectType>
+  </PropertyScopeItem>
+  <PropertyScopeItem>
+    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
+    <ScopeType>SCHEMA</ScopeType>
+    <ObjectType>VIEW</ObjectType>
+    <ElementType>COLUMN</ElementType>
+  </PropertyScopeItem>
+</NewDataSet>

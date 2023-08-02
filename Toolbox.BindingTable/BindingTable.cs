@@ -19,6 +19,11 @@ namespace Toolbox.BindingTable
         where TBindingItem : BindingTableRow, INotifyPropertyChanged, IBindingTableRow, new()
     {
         /// <summary>
+        /// Name given to the Binding Table.
+        /// </summary>
+        public String BindingTableName { get; init; }
+
+        /// <summary>
         /// Internal DataTable that hold the values.
         /// </summary>
         protected DataTable dataItems;
@@ -30,6 +35,7 @@ namespace Toolbox.BindingTable
         {
             dataItems = new DataTable();
             dataItems.TableName = typeof(TBindingItem).Name;
+            BindingTableName = typeof(TBindingItem).Name;
             foreach (DataColumn item in new TBindingItem().ColumnDefinitions())
             {
                 using (DataColumn column = new DataColumn(item.ColumnName, item.DataType)

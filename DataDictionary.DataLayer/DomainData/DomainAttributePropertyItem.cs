@@ -11,22 +11,23 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DomainData
 {
-    public interface IDomainAttributePropertyItem : IDomainAttributeIdentifier
+    public interface IDomainAttributePropertyItem : IDomainAttributeIdentifier, IPropertyIdentifier, IBindingTableRow
     {
-        public String? PropertyName { get; }
         public String? PropertyValue { get; }
     }
 
     public class DomainAttributePropertyItem : BindingTableRow, IDomainAttributePropertyItem
     {
         public Nullable<Guid> AttributeId { get { return GetValue<Guid>("AttributeId"); } set { SetValue<Guid>("AttributeId", value); } }
-        public String? PropertyName { get { return GetValue("PropertyName"); } set { SetValue("PropertyName", value); } }
+        public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } set { SetValue<Guid>("PropertyId", value); } }
+//        public String? PropertyTitle { get { return GetValue("PropertyTitle"); } set { SetValue("PropertyTitle", value); } }
         public String? PropertyValue { get { return GetValue("PropertyValue"); } set { SetValue("PropertyValue", value); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("PropertyName", typeof(String)){ AllowDBNull = true},
+            new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = true},
+//            new DataColumn("PropertyTitle", typeof(String)){ AllowDBNull = true},
             new DataColumn("PropertyValue", typeof(String)){ AllowDBNull = true},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
@@ -60,8 +61,8 @@ namespace DataDictionary.DataLayer.DomainData
 
         public override String ToString()
         {
-            if (PropertyName is not null && PropertyValue is not null)
-            { return String.Format("{0}: {1}", PropertyName, PropertyValue); }
+            if (PropertyValue is not null)
+            { return PropertyValue; }
             else { return String.Empty; }
         }
     }

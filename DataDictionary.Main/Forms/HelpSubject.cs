@@ -43,6 +43,9 @@ namespace DataDictionary.Main.Forms
 
         private void HelpSubject_Load(object sender, EventArgs e)
         {
+            saveToolStripButton.Enabled = Settings.Default.IsOnLineMode;
+            newToolStripButton.Enabled = Settings.Default.IsOnLineMode;
+
             if (data.HelpId == Guid.Empty && !String.IsNullOrWhiteSpace(data.TargetNameSpace))
             {
                 if (Program.Data.HelpSubjects.FirstOrDefault(w => w.NameSpace == data.TargetNameSpace) is HelpItem item && item.HelpId is Guid itemGuid)
@@ -179,7 +182,7 @@ namespace DataDictionary.Main.Forms
             this.Enabled = false;
             UnBindData();
 
-            this.DoWork(Program.Data.LoadApplication(), OnComplete);
+            this.DoWork(Program.Data.LoadApplicationData(), OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             {
