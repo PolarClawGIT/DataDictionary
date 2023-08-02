@@ -9,23 +9,25 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.ApplicationData
 {
-    public interface IPropertyItem: IModelIdentifier
+    public interface IPropertyItem : IPropertyIdentifier, IModelIdentifier
     {
-
+        String? PropertyTitle { get; }
     }
 
     public class PropertyItem : BindingTableRow, IPropertyItem
     {
-        public Nullable<Int32> PropertyId { get { return GetValue<Int32>("PropertyId"); } }
-        public String? PropertyTitle { get { return GetValue("PropertyTitle"); }  }
-        public Nullable<Guid> ModelId { get { return GetValue<Guid>("ModelId"); } }
+        public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }
+        public String? PropertyTitle { get { return GetValue("PropertyTitle"); } set { SetValue("PropertyTitle", value); } }
+        public Nullable<Guid> ModelId { get { return GetValue<Guid>("ModelId"); } set { SetValue<Guid>("ModelId", value); } }
 
         public PropertyItem() : base()
-        { }
+        {
+            PropertyId = Guid.NewGuid();
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("PropertyId", typeof(Int32)){ AllowDBNull = false},
+            new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("PropertyTitle", typeof(String)){ AllowDBNull = false},
             new DataColumn("ModelId", typeof(Guid)){ AllowDBNull = true},
         };

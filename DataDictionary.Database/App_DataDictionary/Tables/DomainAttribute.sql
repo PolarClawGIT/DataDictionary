@@ -3,7 +3,7 @@
 	-- In ER diagram tools, a Domain is associated with a Data Type.
 	-- An ER diagram attribute is is associated with a Column or Parameter.
 	-- For this tool, the focus is on the Attribute not the Domain or the Entity.
-	[AttributeId] UniqueIdentifier Not Null CONSTRAINT [DF_DomainAttribute_AttributeId] DEFAULT (newid()),
+	[AttributeId] UniqueIdentifier Not Null CONSTRAINT [DF_DomainAttributeAttributeId] DEFAULT (newid()),
 	[AttributeParentId] UniqueIdentifier Null,
 	[AttributeTitle] NVarChar(100) Not Null,
 	[AttributeDescription] NVarChar(Max) Null,

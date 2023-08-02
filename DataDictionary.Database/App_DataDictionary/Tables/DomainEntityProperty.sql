@@ -2,7 +2,7 @@
 (
 	-- To be implemented later.
 	[EntityId]      UniqueIdentifier Not Null,
-	[PropertyId]    Int NOT Null,
+	[PropertyId]    UniqueIdentifier NOT Null,
 	[PropertyValue] NVarChar(4000) Not Null, -- Only supporting SQLVarent as character data
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy]     SysName Not Null CONSTRAINT [DF_DomainEntityProperty_ModfiedBy] DEFAULT (original_login()),

@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [App_DataDictionary].[ApplicationHelp]
 (
-	[HelpId] UniqueIdentifier Not Null CONSTRAINT [DF_ApplicationHelp_HelpId] DEFAULT (newsequentialid()),
+	[HelpId] UniqueIdentifier Not Null CONSTRAINT [DF_ApplicationHelpHelpId] DEFAULT (newsequentialid()),
 	[HelpParentId] UniqueIdentifier Null,
 	[HelpSubject] NVarChar(100) Not Null,
 	[HelpText] NVarChar(Max) Not Null,

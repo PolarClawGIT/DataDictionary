@@ -1,26 +1,26 @@
-﻿-- TODO: Obsolete, needs to be re-done for new structure
-Begin Try;
+﻿Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
 Declare @Property Table (
-	[PropertyId] Int Not Null,
+	[PropertyId] UniqueIdentifier Not Null,
 	[PropertyName] SysName Not Null,
 	[PropertyTitle] NVarChar(100) Not Null)
-Insert into @Property Values (1,'MS_Description','Description');
+Insert into @Property Values ('00000000-0000-0000-0000-000000000001','MS_Description','Description');
 
 Merge [App_DataDictionary].[ApplicationProperty] T
 Using @Property S
 On	T.[PropertyId] = S.[PropertyId]
 When Matched Then Update Set
-	[PropertyTitle] = S.[PropertyTitle]
+	[PropertyTitle] = S.[PropertyTitle],
+	[PropertyName] = S.[PropertyName]
 When Not Matched by Target Then
-	Insert ([PropertyId], [PropertyTitle])
-	Values ([PropertyId], [PropertyTitle]);
+	Insert ([PropertyId], [PropertyTitle], [PropertyName])
+	Values ([PropertyId], [PropertyTitle], [PropertyName]);
 	
 
 -- This script is used to build and maintain the data in the DomainObjectType list.
--- This list is intended to support the diffrent things MS SQL extended properties can be placed upon
+-- This list is intended to support the different things MS SQL extended properties can be placed upon
 -- AND ones going to be supported by the application
 -- List is sourced from: https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16
 With [Level0] As (
@@ -115,13 +115,12 @@ Using [Data] S
 On T.[PropertyId] = S.[PropertyId]
 When Matched Then Update Set 
 	PropertyId = S.PropertyId,
-	PropertyName = S.PropertyName,
 	ScopeType = S.ScopeType,
 	ObjectType = S.ObjectType,
 	ElementType = S.ElementType
 When Not Matched By Target Then
-	Insert (PropertyId, PropertyName, ScopeType, ObjectType, ElementType)
-	Values (PropertyId, PropertyName, ScopeType, ObjectType, ElementType)
+	Insert (PropertyId, ScopeType, ObjectType, ElementType)
+	Values (PropertyId, ScopeType, ObjectType, ElementType)
 When Not Matched by Source Then Delete;
 
 Select	*
