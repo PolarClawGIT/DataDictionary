@@ -198,6 +198,10 @@ namespace Toolbox.BindingTable
         TBindingItem? addNewCoreItem = null; // Track the extra row created by DataGridView.
         Boolean isAddNewCore = false; // Tracks if AddNewCore is being executed. We are dealing with a fake DataGridView Row.
 
+        /// <summary>
+        /// Adds a new item to the end of the collection.
+        /// </summary>
+        /// <returns></returns>
         /// <remarks>
         /// This is normally called by DataGridView to create a new row that is not yet part of the DataGridView.
         /// The addNewCoreItem item tracks this row that is pending. 
@@ -217,6 +221,10 @@ namespace Toolbox.BindingTable
             return item;
         }
 
+        /// <summary>
+        /// Discards a pending new item.
+        /// </summary>
+        /// <param name="itemIndex"></param>
         /// <remarks>
         /// This is called if the DataGridView does not commit the new item.
         /// Example: closing the Form or pressing Escape on the DataGridView.
@@ -231,12 +239,10 @@ namespace Toolbox.BindingTable
             base.CancelNew(itemIndex);
         }
 
-        protected override void ClearItems()
-        {
-            dataItems.Clear();
-            base.ClearItems();
-        }
-
+        /// <summary>
+        /// Commits a pending new item to the collection.
+        /// </summary>
+        /// <param name="itemIndex"></param>
         /// <remarks>
         /// This gets called several times during the process of the DataGridView working with a new row.
         /// The first time is as part of the AddNewCore. At this point, the row is not real. Don't do anything to the row.
@@ -266,6 +272,12 @@ namespace Toolbox.BindingTable
             }
 
             base.EndNew(itemIndex);
+        }
+
+        protected override void ClearItems()
+        {
+            dataItems.Clear();
+            base.ClearItems();
         }
 
         protected override void InsertItem(Int32 index, TBindingItem item)

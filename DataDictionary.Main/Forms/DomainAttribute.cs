@@ -22,8 +22,8 @@ namespace DataDictionary.Main.Forms
             public DomainAttributeIdentifier DomainAttributeId { get; set; } = new DomainAttributeIdentifier();
             public IDomainAttributeItem? DomainAttribute { get; set; }
             public IDomainAttributeItem? ParentAttribute { get; set; }
-            public BindingList<DomainAttributePropertyItem> AttributeProperties { get; set; } = new BindingList<DomainAttributePropertyItem>();
-            public BindingList<DomainAttributeAliasItem> AttributeAlias { get; set; } = new BindingList<DomainAttributeAliasItem>();
+            public BindingView<DomainAttributePropertyItem>? AttributeProperties { get; set; }
+            public BindingView<DomainAttributeAliasItem>? AttributeAlias { get; set; }
         }
 
         FormData data = new FormData();
@@ -56,11 +56,14 @@ namespace DataDictionary.Main.Forms
                 { data.ParentAttribute = parent; }
                 else { data.ParentAttribute = new DomainAttributeItem(); }
 
-                data.AttributeProperties.Clear();
-                data.AttributeAlias.Clear();
+                data.AttributeProperties =
+                    new BindingView<DomainAttributePropertyItem>(
+                        Program.Data.DomainAttributeProperties,
+                        w => data.DomainAttributeId == w);
+                data.AttributeAlias = new BindingView<DomainAttributeAliasItem>(
+                    Program.Data.DomainAttributeAliases,
+                    w => data.DomainAttributeId == w);
 
-                data.AttributeProperties.AddRange(Program.Data.DomainAttributeProperties.GetProperties(data.DomainAttribute));
-                data.AttributeAlias.AddRange(Program.Data.DomainAttributeAliases.GetProperties(data.DomainAttribute));
 
                 attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), data.DomainAttribute, nameof(data.DomainAttribute.AttributeTitle)));
                 attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Rtf), data.DomainAttribute, nameof(data.DomainAttribute.AttributeDescription)));
@@ -69,7 +72,6 @@ namespace DataDictionary.Main.Forms
                 attributeAlaisData.AutoGenerateColumns = false;
                 attributeAlaisData.DataSource = data.AttributeAlias;
 
-
                 PropertyNameDataItems defaultItem = new PropertyNameDataItems();
                 propertyNameData.DisplayMember = nameof(defaultItem.PropertyTitle);
                 propertyNameData.ValueMember = nameof(defaultItem.PropertyId);
@@ -77,11 +79,10 @@ namespace DataDictionary.Main.Forms
 
                 attributePropertiesData.AutoGenerateColumns = false;
                 attributePropertiesData.DataSource = data.AttributeProperties;
-                //TODO: Because I am not binding directly to the Program.Dagta, adds
-                // Need to create something that is similar to a DataView where adding an item to a filtered version of an instance also adds to the root.
-                attributePropertiesData.DataError += AttributePropertiesData_DataError;
             }
         }
+
+
 
         // Because DataGridComboItem cannot correctly bind anything but a very simple object.
         record PropertyNameDataItems
@@ -93,20 +94,6 @@ namespace DataDictionary.Main.Forms
             { return Program.Data.Properties.Select(s => new PropertyNameDataItems() { PropertyId = s.PropertyId, PropertyTitle = s.PropertyTitle }).ToList(); }
         }
 
-        private void AttributePropertiesData_DataError(object? sender, DataGridViewDataErrorEventArgs e)
-        {
-            //TODO: Cannot determine why this is occurring
-            var x = attributePropertiesData[e.ColumnIndex, e.RowIndex];
-
-            if (propertyNameData.DataSource is BindingTable<PropertyItem> propertyTable &&
-                attributePropertiesData[e.ColumnIndex, e.RowIndex].Value is Guid value)
-            {
-                var y = propertyTable.Where(w => w.PropertyId == value);
-            }
-
-
-            if (e.Exception is not null) { throw e.Exception; }
-        }
 
         void UnbindData()
         {
@@ -116,6 +103,18 @@ namespace DataDictionary.Main.Forms
 
             attributeAlaisData = null;
             attributePropertiesData = null;
+        }
+
+        private void attributePropertiesData_RowValidated(object sender, DataGridViewCellEventArgs e)
+        {
+            if (attributePropertiesData.Rows[e.RowIndex].DataBoundItem is DomainAttributePropertyItem item)
+            { item.AttributeId = data.DomainAttributeId.AttributeId; }
+        }
+
+        private void attributeAlaisData_RowValidated(object sender, DataGridViewCellEventArgs e)
+        {
+            if (attributeAlaisData.Rows[e.RowIndex].DataBoundItem is DomainAttributeAliasItem item)
+            { item.AttributeId = data.DomainAttributeId.AttributeId; }
         }
     }
 }

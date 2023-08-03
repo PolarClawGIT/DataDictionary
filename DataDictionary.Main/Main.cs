@@ -461,7 +461,14 @@ namespace DataDictionary.Main
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
         { new Forms.UnitTestGridView().Show(); }
 
+        private void menuAttributeProperties_Click(object sender, EventArgs e)
+        {
+            Activate((data) => new Forms.DetailDataView(data, Resources.DbExtendedProperty), Program.Data.DomainAttributeProperties);
+        }
 
-
+        private void menuAttributeAlaises_Click(object sender, EventArgs e)
+        {
+            Activate((data) => new Forms.DetailDataView(data, Resources.DbExtendedProperty), Program.Data.DomainAttributeAliases);
+        }
     }
 }

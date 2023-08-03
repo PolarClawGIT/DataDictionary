@@ -35,6 +35,8 @@
             TabPage attributeAlaisTab;
             attributeDescriptionData = new Controls.RichTextBoxData();
             attributePropertiesData = new DataGridView();
+            propertyNameData = new DataGridViewComboBoxColumn();
+            propertyValueData = new DataGridViewTextBoxColumn();
             attributeAlaisData = new DataGridView();
             aliasCatalogNameData = new DataGridViewTextBoxColumn();
             aliasSchemaNameData = new DataGridViewTextBoxColumn();
@@ -42,8 +44,6 @@
             aliasElementNameData = new DataGridViewTextBoxColumn();
             attributeTitleData = new Controls.TextBoxData();
             attributeParentTitleData = new Controls.TextBoxData();
-            propertyNameData = new DataGridViewComboBoxColumn();
-            propertyValueData = new DataGridViewTextBoxColumn();
             attributeLayout = new TableLayoutPanel();
             attributeTabLayout = new TabControl();
             attributeDefinitionTab = new TabPage();
@@ -132,6 +132,21 @@
             attributePropertiesData.RowTemplate.Height = 25;
             attributePropertiesData.Size = new Size(509, 394);
             attributePropertiesData.TabIndex = 0;
+            attributePropertiesData.RowValidated += attributePropertiesData_RowValidated;
+            // 
+            // propertyNameData
+            // 
+            propertyNameData.DataPropertyName = "PropertyId";
+            propertyNameData.HeaderText = "Property Name";
+            propertyNameData.Name = "propertyNameData";
+            propertyNameData.Width = 150;
+            // 
+            // propertyValueData
+            // 
+            propertyValueData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            propertyValueData.DataPropertyName = "PropertyValue";
+            propertyValueData.HeaderText = "Property Value";
+            propertyValueData.Name = "propertyValueData";
             // 
             // attributeAlaisTab
             // 
@@ -153,6 +168,7 @@
             attributeAlaisData.RowTemplate.Height = 25;
             attributeAlaisData.Size = new Size(515, 400);
             attributeAlaisData.TabIndex = 0;
+            attributeAlaisData.RowValidated += attributeAlaisData_RowValidated;
             // 
             // aliasCatalogNameData
             // 
@@ -207,20 +223,6 @@
             attributeParentTitleData.ReadOnly = true;
             attributeParentTitleData.Size = new Size(529, 44);
             attributeParentTitleData.TabIndex = 1;
-            // 
-            // propertyNameData
-            // 
-            propertyNameData.DataPropertyName = "PropertyId";
-            propertyNameData.HeaderText = "Property Name";
-            propertyNameData.Name = "propertyNameData";
-            propertyNameData.Width = 150;
-            // 
-            // propertyValueData
-            // 
-            propertyValueData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            propertyValueData.DataPropertyName = "PropertyValue";
-            propertyValueData.HeaderText = "Property Value";
-            propertyValueData.Name = "propertyValueData";
             // 
             // DomainAttribute
             // 

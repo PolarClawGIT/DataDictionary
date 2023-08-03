@@ -49,12 +49,13 @@ namespace DataDictionary.Main.Forms
             { return columnDefinitions; }
         }
 
-
-        BindingTable<UnitTestItem> data = new BindingTable<UnitTestItem>();
+        BindingTable<UnitTestItem> baseData = new BindingTable<UnitTestItem>();
+        BindingView<UnitTestItem> data;
 
         public UnitTestGridView() : base()
         {
             InitializeComponent();
+            data = new BindingView<UnitTestItem>(baseData, w => true);
         }
 
         private void UnitTestGridView_Load(object sender, EventArgs e)
@@ -63,9 +64,7 @@ namespace DataDictionary.Main.Forms
         void BindData()
         {
             unitTestData.DataSource = data;
-
-            var x = unitTestData.ReadOnly;
-            
+           
 
             //foreach (DataGridViewColumn item in unitTestData.Columns)
             //{ item.ReadOnly = false; }
