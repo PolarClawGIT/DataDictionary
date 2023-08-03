@@ -15,7 +15,7 @@ namespace Toolbox.BindingTable
     /// The BindingTable represent a class that wrappers a DataTable and presents it as if it was a Binding List.
     /// </summary>
     /// <typeparam name="TBindingItem">the mapping class between the DataRow and the POCO like object used in code.</typeparam>
-    public class BindingTable<TBindingItem> : BindingList<TBindingItem>, IBindingTable<TBindingItem>
+    public class BindingTable<TBindingItem> : BindingList<TBindingItem>, IBindingTable<TBindingItem>, IBindingList<TBindingItem>
         where TBindingItem : BindingTableRow, INotifyPropertyChanged, IBindingTableRow, new()
     {
         /// <summary>

@@ -12,7 +12,7 @@ namespace Toolbox.BindingTable
     {
         public static void AddRange<T>(this BindingList<T> target, IEnumerable<T> source)
         {
-            foreach (T item in source)
+            foreach (T item in source.ToList())
             { target.Add(item); }
         }
 
