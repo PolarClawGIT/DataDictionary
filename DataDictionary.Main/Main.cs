@@ -223,6 +223,27 @@ namespace DataDictionary.Main
             { } // Nothing to do at this point
         }
 
+        private void menuAttributeProperties_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.DomainProperty), Program.Data.DomainAttributeProperties); }
+
+        private void menuAttributeAlaises_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.DomainAlias), Program.Data.DomainAttributeAliases); }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        { SendMessage(new WindowsCutCommand() { HandledBy = this.ActiveMdiChild }); }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        { SendMessage(new WindowsCopyCommand() { HandledBy = this.ActiveMdiChild }); }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        { SendMessage(new WindowsPasteCommand() { HandledBy = this.ActiveMdiChild }); }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        { SendMessage(new WindowsUndoCommand() { HandledBy = this.ActiveMdiChild }); }
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        { SendMessage(new WindowsSelectAllCommand() { HandledBy = this.ActiveMdiChild }); }
+
         private void navigationDbSchemaTab_MouseDoubleClick(object sender, MouseEventArgs e)
         { //TODO: Not Working. Does not show when the context menu is assigned to the control or rigged to an event.
             dbSchemaContextMenu.Show();
@@ -362,8 +383,8 @@ namespace DataDictionary.Main
         {
             {domainModelImageIndex.Attribute,    ("Attribute",   Resources.Attribute) },
             {domainModelImageIndex.Attributes,   ("Attributes",  Resources.Parameter) },
-            {domainModelImageIndex.Property,     ("Property",    Resources.ExtendedProperty) },
-            {domainModelImageIndex.Alias,        ("Alias",       Resources.Column) },
+            {domainModelImageIndex.Property,     ("Property",    Resources.Property) },
+            {domainModelImageIndex.Alias,        ("Alias",       Resources.Synonym) },
         };
 
         void BuildDomainModelTree()
@@ -384,10 +405,19 @@ namespace DataDictionary.Main
             {
                 TreeNode attributeNode = CreateNode(attributeItem.AttributeTitle, domainModelImageIndex.Attribute, attributeItem);
 
+                foreach (DomainAttributePropertyItem propertyItem in Program.Data.DomainAttributeProperties.Where(w => w.AttributeId == attributeItem.AttributeId))
+                {
+                    String propertyTitle = String.Empty;
+                    if (Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propertyItem.PropertyId) is PropertyItem property && property.PropertyTitle is not null)
+                    { propertyTitle = property.PropertyTitle; }
+
+                    CreateNode(propertyTitle, domainModelImageIndex.Property, propertyItem, attributeNode);
+                }
+
                 foreach (DomainAttributeAliasItem aliasItem in Program.Data.DomainAttributeAliases.Where(w => w.AttributeId == attributeItem.AttributeId))
                 { CreateNode(aliasItem.ToString(), domainModelImageIndex.Alias, aliasItem, attributeNode); }
 
-                foreach (DomainAttributeItem childAttributeItem in Program.Data.DomainAttributes.Where(w => w.ParentAttributeId == attributeItem.AttributeId))
+                foreach (DomainAttributeItem childAttributeItem in Program.Data.DomainAttributes.Where(w => w.AttributeId == attributeItem.ParentAttributeId))
                 { attributeNode.Nodes.Add(CreateAttribute(childAttributeItem, attributeNode)); }
 
                 if (parent is not null) { parent.Nodes.Add(attributeNode); }
@@ -442,33 +472,10 @@ namespace DataDictionary.Main
         #endregion
 
 
-        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
-        { SendMessage(new WindowsCutCommand() { HandledBy = this.ActiveMdiChild }); }
-
-        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
-        { SendMessage(new WindowsCopyCommand() { HandledBy = this.ActiveMdiChild }); }
-
-        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
-        { SendMessage(new WindowsPasteCommand() { HandledBy = this.ActiveMdiChild }); }
-
-        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
-        { SendMessage(new WindowsUndoCommand() { HandledBy = this.ActiveMdiChild }); }
-
-        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
-        { SendMessage(new WindowsSelectAllCommand() { HandledBy = this.ActiveMdiChild }); }
 
 
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
         { new Forms.UnitTestGridView().Show(); }
 
-        private void menuAttributeProperties_Click(object sender, EventArgs e)
-        {
-            Activate((data) => new Forms.DetailDataView(data, Resources.DbExtendedProperty), Program.Data.DomainAttributeProperties);
-        }
-
-        private void menuAttributeAlaises_Click(object sender, EventArgs e)
-        {
-            Activate((data) => new Forms.DetailDataView(data, Resources.DbExtendedProperty), Program.Data.DomainAttributeAliases);
-        }
     }
 }

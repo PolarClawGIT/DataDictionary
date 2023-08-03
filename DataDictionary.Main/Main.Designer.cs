@@ -42,6 +42,8 @@
             domainModelMenu = new ContextMenuStrip(components);
             menuImportDbSchema = new ToolStripMenuItem();
             menuAttributes = new ToolStripMenuItem();
+            menuAttributeProperties = new ToolStripMenuItem();
+            menuAttributeAlaises = new ToolStripMenuItem();
             navigationDbSchemaTab = new TabPage();
             dbMetaDataNavigation = new TreeView();
             dbSchemaContextMenu = new ContextMenuStrip(components);
@@ -91,8 +93,6 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
-            menuAttributeProperties = new ToolStripMenuItem();
-            menuAttributeAlaises = new ToolStripMenuItem();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
@@ -217,10 +217,11 @@
             // 
             domainModelMenu.Items.AddRange(new ToolStripItem[] { menuImportDbSchema, menuAttributes, menuAttributeProperties, menuAttributeAlaises });
             domainModelMenu.Name = "domainModelMenu";
-            domainModelMenu.Size = new Size(203, 114);
+            domainModelMenu.Size = new Size(203, 92);
             // 
             // menuImportDbSchema
             // 
+            menuImportDbSchema.Enabled = false;
             menuImportDbSchema.Image = Properties.Resources.Dictionary;
             menuImportDbSchema.Name = "menuImportDbSchema";
             menuImportDbSchema.Size = new Size(202, 22);
@@ -231,8 +232,24 @@
             menuAttributes.Image = Properties.Resources.Attribute;
             menuAttributes.Name = "menuAttributes";
             menuAttributes.Size = new Size(202, 22);
-            menuAttributes.Text = "&Attributes";
+            menuAttributes.Text = "Browse  &Attributes";
             menuAttributes.Click += menuAttributes_Click;
+            // 
+            // menuAttributeProperties
+            // 
+            menuAttributeProperties.Image = Properties.Resources.Property;
+            menuAttributeProperties.Name = "menuAttributeProperties";
+            menuAttributeProperties.Size = new Size(202, 22);
+            menuAttributeProperties.Text = "Browse  &Properties";
+            menuAttributeProperties.Click += menuAttributeProperties_Click;
+            // 
+            // menuAttributeAlaises
+            // 
+            menuAttributeAlaises.Image = Properties.Resources.Synonym;
+            menuAttributeAlaises.Name = "menuAttributeAlaises";
+            menuAttributeAlaises.Size = new Size(202, 22);
+            menuAttributeAlaises.Text = "Browse  A&laises";
+            menuAttributeAlaises.Click += menuAttributeAlaises_Click;
             // 
             // navigationDbSchemaTab
             // 
@@ -364,7 +381,7 @@
             newToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             newToolStripMenuItem.Name = "newToolStripMenuItem";
             newToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            newToolStripMenuItem.Size = new Size(172, 22);
+            newToolStripMenuItem.Size = new Size(180, 22);
             newToolStripMenuItem.Text = "&New";
             // 
             // openToolStripMenuItem
@@ -561,14 +578,15 @@
             // unitTestingToolStripMenuItem
             // 
             unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem });
+            unitTestingToolStripMenuItem.Enabled = false;
             unitTestingToolStripMenuItem.Name = "unitTestingToolStripMenuItem";
             unitTestingToolStripMenuItem.Size = new Size(180, 22);
-            unitTestingToolStripMenuItem.Text = "Unit Testing";
+            unitTestingToolStripMenuItem.Text = "Testing";
             // 
             // gridViewToolStripMenuItem
             // 
             gridViewToolStripMenuItem.Name = "gridViewToolStripMenuItem";
-            gridViewToolStripMenuItem.Size = new Size(124, 22);
+            gridViewToolStripMenuItem.Size = new Size(180, 22);
             gridViewToolStripMenuItem.Text = "Grid View";
             gridViewToolStripMenuItem.Click += gridViewToolStripMenuItem_Click;
             // 
@@ -611,21 +629,6 @@
             helpAboutMenuItem.Size = new Size(122, 22);
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
-            // 
-            // menuAttributeProperties
-            // 
-            menuAttributeProperties.Image = Properties.Resources.ExtendedProperty;
-            menuAttributeProperties.Name = "menuAttributeProperties";
-            menuAttributeProperties.Size = new Size(202, 22);
-            menuAttributeProperties.Text = "Attribute &Properties";
-            menuAttributeProperties.Click += menuAttributeProperties_Click;
-            // 
-            // menuAttributeAlaises
-            // 
-            menuAttributeAlaises.Name = "menuAttributeAlaises";
-            menuAttributeAlaises.Size = new Size(202, 22);
-            menuAttributeAlaises.Text = "Attribute A&laises";
-            menuAttributeAlaises.Click += menuAttributeAlaises_Click;
             // 
             // Main
             // 

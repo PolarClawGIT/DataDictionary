@@ -223,9 +223,29 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon DomainAlias {
+            get {
+                object obj = ResourceManager.GetObject("DomainAlias", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon DomainAttribute {
             get {
                 object obj = ResourceManager.GetObject("DomainAttribute", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon DomainProperty {
+            get {
+                object obj = ResourceManager.GetObject("DomainProperty", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -383,6 +403,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Property {
+            get {
+                object obj = ResourceManager.GetObject("Property", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Save {
             get {
                 object obj = ResourceManager.GetObject("Save", resourceCulture);
@@ -436,6 +466,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap StrikeThrough {
             get {
                 object obj = ResourceManager.GetObject("StrikeThrough", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Synonym {
+            get {
+                object obj = ResourceManager.GetObject("Synonym", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
