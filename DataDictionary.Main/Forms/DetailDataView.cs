@@ -1,4 +1,6 @@
-﻿using DataDictionary.Main.Properties;
+﻿using DataDictionary.DataLayer.DbMetaData;
+using DataDictionary.DataLayer.DomainData;
+using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -53,6 +55,22 @@ namespace DataDictionary.Main.Forms
         {
             bindingTableValue.DataSource = null;
             dataTableValue.DataSource = null;
+        }
+
+        private void bindingTableValue_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DbSchemaItem schemaItem)
+            { Activate((data) => new Forms.DbSchema(schemaItem), schemaItem); }
+
+            if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DbTableItem tableItem)
+            { Activate((data) => new Forms.DbTable(tableItem), tableItem); }
+
+            if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DbTableColumnItem columnItem)
+            { Activate((data) => new Forms.DbTableColumn(columnItem), columnItem); }
+
+            if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DomainAttributeItem attributeItem)
+            { Activate((data) => new Forms.DomainAttribute(attributeItem), attributeItem); }
+
         }
     }
 }

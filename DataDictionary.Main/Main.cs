@@ -97,77 +97,7 @@ namespace DataDictionary.Main
         #endregion
 
         #region Menu Events
-        private TForm Activate<TForm>(Func<TForm> constructor)
-           where TForm : ApplicationFormBase
-        {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
-            {
-                if (existingForm is IApplicationDataForm existingData)
-                { existingForm.Activate(); }
-                else
-                {
-                    TForm newForm = constructor();
-                    newForm.Show();
-                    return newForm;
-                }
 
-                return existingForm;
-            }
-            else
-            {
-                TForm newForm = constructor();
-                newForm.Show();
-                return newForm;
-            }
-        }
-
-        private TForm Activate<TForm>(Func<IBindingTable, TForm> constructor, IBindingTable data)
-            where TForm : ApplicationFormBase
-        {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
-            {
-                if (existingForm is IApplicationDataForm existingData && ReferenceEquals(existingData.OpenItem, data))
-                { existingForm.Activate(); }
-                else
-                {
-                    TForm newForm = constructor(data);
-                    newForm.Show();
-                    return newForm;
-                }
-
-                return existingForm;
-            }
-            else
-            {
-                TForm newForm = constructor(data);
-                newForm.Show();
-                return newForm;
-            }
-        }
-
-        private TForm Activate<TForm>(Func<IBindingTableRow, TForm> constructor, IBindingTableRow data)
-            where TForm : ApplicationFormBase
-        {
-            if (this.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
-            {
-                if (existingForm is IApplicationDataForm existingData && ReferenceEquals(existingData.OpenItem, data))
-                { existingForm.Activate(); }
-                else
-                {
-                    TForm newForm = constructor(data);
-                    newForm.Show();
-                    return newForm;
-                }
-
-                return existingForm;
-            }
-            else
-            {
-                TForm newForm = constructor(data);
-                newForm.Show();
-                return newForm;
-            }
-        }
 
         private void menuCatalogItem_Click(object sender, EventArgs e)
         { Activate(() => new Forms.DbCatalog()); }

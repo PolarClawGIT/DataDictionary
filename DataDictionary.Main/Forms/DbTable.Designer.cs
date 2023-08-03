@@ -137,6 +137,7 @@
             propertyNameData.DataPropertyName = "PropertyName";
             propertyNameData.HeaderText = "Property Name";
             propertyNameData.Name = "propertyNameData";
+            propertyNameData.ReadOnly = true;
             propertyNameData.Width = 112;
             // 
             // propertyValueData
@@ -145,6 +146,7 @@
             propertyValueData.DataPropertyName = "PropertyValue";
             propertyValueData.HeaderText = "PropertyValue";
             propertyValueData.Name = "propertyValueData";
+            propertyValueData.ReadOnly = true;
             // 
             // columnsTab
             // 
@@ -168,6 +170,7 @@
             tableColumnsData.RowTemplate.Height = 25;
             tableColumnsData.Size = new Size(413, 143);
             tableColumnsData.TabIndex = 0;
+            tableColumnsData.RowHeaderMouseDoubleClick += tableColumnsData_RowHeaderMouseDoubleClick;
             // 
             // catalogNameData
             // 

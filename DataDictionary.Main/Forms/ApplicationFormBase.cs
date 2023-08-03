@@ -2,6 +2,7 @@
 using DataDictionary.Main.Messages;
 using System.ComponentModel;
 using System.Windows.Forms;
+using Toolbox.BindingTable;
 using Toolbox.Mediator;
 using Toolbox.Threading;
 
@@ -20,6 +21,100 @@ namespace DataDictionary.Main.Forms
             SendMessage(new FormAddMdiChild() { ChildForm = this });
         }
 
+        #region Open Form
+        /// <summary>
+        /// Looks for the Target Form already open. If it is open, just activate it. Otherwise, show/activate the form.
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <param name="constructor"></param>
+        /// <returns></returns>
+        protected virtual TForm Activate<TForm>(Func<TForm> constructor)
+            where TForm : ApplicationFormBase
+        {
+            Form parent = this.MdiParent ?? this;
+
+            if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
+            {
+                existingForm.Activate();
+                return existingForm;
+            }
+            else
+            {
+                TForm newForm = constructor();
+                newForm.Show();
+                return newForm;
+            }
+        }
+
+        /// <summary>
+        /// Looks for the Target Form already open with the specified BindingTable.
+        /// If it is open, just activate it. Otherwise, show/activate the form.
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <param name="constructor"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected virtual TForm Activate<TForm>(Func<IBindingTable, TForm> constructor, IBindingTable data)
+            where TForm : ApplicationFormBase
+        {
+            Form parent = this.MdiParent ?? this;
+
+            if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
+            {
+                if (existingForm is IApplicationDataForm existingData && ReferenceEquals(existingData.OpenItem, data))
+                { existingForm.Activate(); }
+                else
+                {
+                    TForm newForm = constructor(data);
+                    newForm.Show();
+                    return newForm;
+                }
+
+                return existingForm;
+            }
+            else
+            {
+                TForm newForm = constructor(data);
+                newForm.Show();
+                return newForm;
+            }
+        }
+
+        /// <summary>
+        /// Looks for the Target Form already open with the specified BindingTableRow.
+        /// If it is open, just activate it. Otherwise, show/activate the form.
+        /// </summary>
+        /// <typeparam name="TForm"></typeparam>
+        /// <param name="constructor"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected virtual TForm Activate<TForm>(Func<IBindingTableRow, TForm> constructor, IBindingTableRow data)
+            where TForm : ApplicationFormBase
+        {
+            Form parent = this.MdiParent ?? this;
+
+            if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
+            {
+                if (existingForm is IApplicationDataForm existingData && ReferenceEquals(existingData.OpenItem, data))
+                { existingForm.Activate(); }
+                else
+                {
+                    TForm newForm = constructor(data);
+                    newForm.Show();
+                    return newForm;
+                }
+
+                return existingForm;
+            }
+            else
+            {
+                TForm newForm = constructor(data);
+                newForm.Show();
+                return newForm;
+            }
+        }
+
+        #endregion@endr
 
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;

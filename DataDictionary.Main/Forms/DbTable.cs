@@ -88,5 +88,11 @@ namespace DataDictionary.Main.Forms
         protected override void HandleMessage(DbDataBatchCompleted message)
         { BindData(); }
         #endregion
+
+        private void tableColumnsData_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (tableColumnsData.Rows[e.RowIndex].DataBoundItem is DbTableColumnItem columnItem)
+            { Activate((data) => new Forms.DbTableColumn(columnItem), columnItem); }
+        }
     }
 }

@@ -101,7 +101,6 @@ namespace DataDictionary.DataLayer.DbMetaData
 
     public class DbExtendedPropertyItem : BindingTableRow, IDbExtendedPropertyItem, INotifyPropertyChanged
     {
-        public Guid? PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
         public String? Level0Type { get { return GetValue("Level0Type"); } }
         public String? Level0Name { get { return GetValue("Level0Name"); } }
@@ -123,11 +122,10 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? PropertyValue { get { return GetValue("PropertyValue"); } }
 
         public DbExtendedPropertyItem() : base()
-        { PropertyId = Guid.NewGuid(); }
+        {  }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("CatalogId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
             new DataColumn("Level0Type", typeof(String)){ AllowDBNull = true},

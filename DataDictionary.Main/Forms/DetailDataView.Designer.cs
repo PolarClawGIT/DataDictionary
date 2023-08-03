@@ -77,6 +77,7 @@
             bindingTableValue.RowTemplate.Height = 25;
             bindingTableValue.Size = new Size(594, 320);
             bindingTableValue.TabIndex = 0;
+            bindingTableValue.RowHeaderMouseDoubleClick += bindingTableValue_RowHeaderMouseDoubleClick;
             // 
             // dataTableLayout
             // 
@@ -102,13 +103,13 @@
             dataTableValue.Size = new Size(594, 320);
             dataTableValue.TabIndex = 0;
             // 
-            // BindingDataView
+            // DetailDataView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(608, 354);
             Controls.Add(dataViewLayout);
-            Name = "BindingDataView";
+            Name = "DetailDataView";
             Text = "Binding Data";
             Load += BindingDataView_Load;
             dataViewLayout.ResumeLayout(false);
