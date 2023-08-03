@@ -119,22 +119,22 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 {
                     workSet.ReadXml(file.FullName, XmlReadMode.ReadSchema);
 
-                    if (workSet.Tables.Contains(data.HelpSubjects.BindingTableName) &&
-                        workSet.Tables[data.HelpSubjects.BindingTableName] is DataTable helpData)
+                    if (workSet.Tables.Contains(data.HelpSubjects.BindingName) &&
+                        workSet.Tables[data.HelpSubjects.BindingName] is DataTable helpData)
                     {
                         data.HelpSubjects.Clear();
                         data.HelpSubjects.Load(helpData.CreateDataReader());
                     }
 
-                    if (workSet.Tables.Contains(data.Properties.BindingTableName) &&
-                        workSet.Tables[data.Properties.BindingTableName] is DataTable propertiesData)
+                    if (workSet.Tables.Contains(data.Properties.BindingName) &&
+                        workSet.Tables[data.Properties.BindingName] is DataTable propertiesData)
                     {
                         data.Properties.Clear();
                         data.Properties.Load(propertiesData.CreateDataReader());
                     }
 
-                    if (workSet.Tables.Contains(data.PropertyScopes.BindingTableName) &&
-                        workSet.Tables[data.PropertyScopes.BindingTableName] is DataTable propertyScopesData)
+                    if (workSet.Tables.Contains(data.PropertyScopes.BindingName) &&
+                        workSet.Tables[data.PropertyScopes.BindingName] is DataTable propertyScopesData)
                     {
                         data.PropertyScopes.Clear();
                         data.PropertyScopes.Load(propertyScopesData.CreateDataReader());

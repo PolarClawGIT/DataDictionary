@@ -21,7 +21,7 @@ namespace Toolbox.BindingTable
         /// <summary>
         /// Name given to the Binding Table.
         /// </summary>
-        public String BindingTableName { get; init; }
+        public String BindingName { get; init; }
 
         /// <summary>
         /// Internal DataTable that hold the values.
@@ -35,7 +35,7 @@ namespace Toolbox.BindingTable
         {
             dataItems = new DataTable();
             dataItems.TableName = typeof(TBindingItem).Name;
-            BindingTableName = typeof(TBindingItem).Name;
+            BindingName = typeof(TBindingItem).Name;
             foreach (DataColumn item in new TBindingItem().ColumnDefinitions())
             {
                 using (DataColumn column = new DataColumn(item.ColumnName, item.DataType)

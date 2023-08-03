@@ -12,21 +12,21 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class BindingDataView : ApplicationFormBase, IApplicationDataForm
+    partial class DetailDataView : ApplicationFormBase, IApplicationDataForm
     {
         public Object? OpenItem { get; private set; }
         IBindingTable? bindingTableSource
         { get { if (OpenItem is IBindingTable value) { return value; } else { return null; } } }
 
-        public BindingDataView() : base()
+        public DetailDataView() : base()
         {
             InitializeComponent();
         }
 
-        public BindingDataView(IBindingTable data, Icon? icon = null) : this()
+        public DetailDataView(IBindingTable data, Icon? icon = null) : this()
         {
             OpenItem = data;
-            this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name);
+            this.Text = String.Format("{0}: {1}", this.Text, data.BindingName);
             if (icon is Icon value) { this.Icon = value; }
             else { this.Icon = Resources.DataDictionaryApplication; }
         }

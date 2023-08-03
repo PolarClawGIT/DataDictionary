@@ -155,16 +155,16 @@ namespace DataDictionary.Main
         { Activate(() => new Forms.DbCatalog()); }
 
         private void menuSchemaItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.BindingDataView(data, Resources.DbSchema), Program.Data.DbSchemta); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.DbSchema), Program.Data.DbSchemta); }
 
         private void menuTableItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.BindingDataView(data, Resources.DbTable), Program.Data.DbTables); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.DbTable), Program.Data.DbTables); }
 
         private void menuColumnItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.BindingDataView(data, Resources.DbColumn), Program.Data.DbColumns); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.DbColumn), Program.Data.DbColumns); }
 
         private void menuPropertyItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.BindingDataView(data, Resources.DbExtendedProperty), Program.Data.DbExtendedProperties); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.DbExtendedProperty), Program.Data.DbExtendedProperties); }
 
         [Obsolete()]
         private void menuImportDbSchema_Click(object sender, EventArgs e)
@@ -174,7 +174,7 @@ namespace DataDictionary.Main
         }
 
         private void menuAttributes_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.BindingDataView(data, Resources.DomainAttribute), Program.Data.DomainAttributes); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.DomainAttribute), Program.Data.DomainAttributes); }
 
 
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)

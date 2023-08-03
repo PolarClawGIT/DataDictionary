@@ -26,7 +26,7 @@ namespace Toolbox.BindingTable
         {
             using (DataTable data = new DataTable())
             {
-                data.TableName = source.BindingTableName;
+                data.TableName = source.BindingName;
                 data.Load(source.CreateDataReader());
                 return data;
             }

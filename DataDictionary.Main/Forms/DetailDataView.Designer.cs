@@ -1,6 +1,6 @@
 ﻿namespace DataDictionary.Main.Forms
 {
-    partial class BindingDataView
+    partial class DetailDataView
     {
         /// <summary>
         /// Required designer variable.

@@ -13,7 +13,7 @@ namespace Toolbox.BindingTable
         /// <summary>
         /// Name given to the Binding Table.
         /// </summary>
-        String BindingTableName { get; }
+        String BindingName { get; }
 
         /// <inheritdoc cref="DataTable.Load(IDataReader)"/>
         void Load(IDataReader reader);
