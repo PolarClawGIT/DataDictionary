@@ -2,9 +2,5 @@
 (    -- TIP: This matches the C# DataTable structure
 	[PropertyId]         UniqueIdentifier Null,
 	[PropertyTitle]      NVarChar(100) Null,
-	[ModelId]            UniqueIdentifier Null,
-	[PropertyName]       SysName Null,
-	[ScopeType]          SysName Null,
-	[ObjectType]         SysName Null,
-	[ElementType]        SysName Null
+	[PropertyName]       SysName Null
 )

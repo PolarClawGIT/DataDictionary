@@ -77,13 +77,15 @@ namespace DataDictionary.Main.Forms
 
                 attributePropertiesData.AutoGenerateColumns = false;
                 attributePropertiesData.DataSource = data.AttributeProperties;
+                //TODO: Because I am not binding directly to the Program.Dagta, adds
+                // Need to create something that is similar to a DataView where adding an item to a filtered version of an instance also adds to the root.
                 attributePropertiesData.DataError += AttributePropertiesData_DataError;
             }
         }
 
         // Because DataGridComboItem cannot correctly bind anything but a very simple object.
         record PropertyNameDataItems
-        {
+        {// TODO: Make this into a generic
             public Guid? PropertyId { get; set; }
             public string? PropertyTitle { get; set; }
 
