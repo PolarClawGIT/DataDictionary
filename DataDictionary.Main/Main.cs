@@ -104,6 +104,12 @@ namespace DataDictionary.Main
             {
                 if (existingForm is IApplicationDataForm existingData)
                 { existingForm.Activate(); }
+                else
+                {
+                    TForm newForm = constructor();
+                    newForm.Show();
+                    return newForm;
+                }
 
                 return existingForm;
             }
@@ -122,6 +128,12 @@ namespace DataDictionary.Main
             {
                 if (existingForm is IApplicationDataForm existingData && ReferenceEquals(existingData.OpenItem, data))
                 { existingForm.Activate(); }
+                else
+                {
+                    TForm newForm = constructor(data);
+                    newForm.Show();
+                    return newForm;
+                }
 
                 return existingForm;
             }
@@ -140,6 +152,12 @@ namespace DataDictionary.Main
             {
                 if (existingForm is IApplicationDataForm existingData && ReferenceEquals(existingData.OpenItem, data))
                 { existingForm.Activate(); }
+                else
+                {
+                    TForm newForm = constructor(data);
+                    newForm.Show();
+                    return newForm;
+                }
 
                 return existingForm;
             }
