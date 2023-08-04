@@ -17,7 +17,7 @@ using DataDictionary.DataLayer.DomainData;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbExtendedPropertyItem : IDbCatalogName, IBindingTableRow
+    public interface IDbExtendedPropertyItem : IDbCatalogKeyUnique, IBindingTableRow
     {
         String? Level0Type { get; }
         String? Level0Name { get; }
@@ -144,7 +144,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        public static Command GetData(IConnection connection, IModelIdentifier modelId)
+        public static Command GetData(IConnection connection, IModelKey modelId)
         { return GetData(connection, (modelId.ModelId, null, null)); }
 
         static Command GetData(IConnection connection, (Guid? modelId, Guid? propertyId, String? catalogName) parameters)
@@ -158,7 +158,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             return command;
         }
 
-        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DbExtendedPropertyItem> source)
+        public static Command SetData(IConnection connection, IModelKey modelId, IBindingTable<DbExtendedPropertyItem> source)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
@@ -172,7 +172,7 @@ namespace DataDictionary.DataLayer.DbMetaData
 
     public static class DbExtendedPropertyItemExtension
     {
-        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbSchemaName item, IEnumerable<DbExtendedPropertyItem> source)
+        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbSchemaKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
                 w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
@@ -183,7 +183,7 @@ namespace DataDictionary.DataLayer.DbMetaData
                 );
         }
 
-        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbSchemaName item)
+        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbSchemaKey item)
         {
             return source.Where(
                 w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
@@ -194,7 +194,7 @@ namespace DataDictionary.DataLayer.DbMetaData
                 );
         }
 
-        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbTableName item, IEnumerable<DbExtendedPropertyItem> source)
+        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbTableKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
                 w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
@@ -206,7 +206,7 @@ namespace DataDictionary.DataLayer.DbMetaData
                 );
         }
 
-        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbTableName item)
+        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbTableKey item)
         {
             return source.Where(
                 w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
@@ -218,7 +218,7 @@ namespace DataDictionary.DataLayer.DbMetaData
                 );
         }
 
-        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbTableColumnName item, IEnumerable<DbExtendedPropertyItem> source)
+        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbTableColumnKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
                 w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
@@ -231,7 +231,7 @@ namespace DataDictionary.DataLayer.DbMetaData
                 );
         }
 
-        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbTableColumnName item)
+        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbTableColumnKey item)
         {
             return source.Where(
                 w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&

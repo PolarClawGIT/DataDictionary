@@ -12,8 +12,9 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DomainData
 {
-    public interface IDomainAttributeItem : IDomainAttributeTitle, IDomainAttributeIdentifier, IDomainAttributeParentId, IBindingTableRow
+    public interface IDomainAttributeItem : IDomainAttributeKey, IDomainAttributeParentKey, IBindingTableRow
     {
+        String? AttributeTitle { get; }
         String? AttributeDescription { get; set; }
     }
 
@@ -23,11 +24,14 @@ namespace DataDictionary.DataLayer.DomainData
         { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue<Guid>("AttributeId", value); } }
 
         public Nullable<Guid> ParentAttributeId
-        { get { return GetValue<Guid>("ParentAttributeId"); } set { SetValue<Guid>("ParentAttributeId", value); } }
+        { get { return GetValue<Guid>("ParentAttributeId"); } protected set { SetValue<Guid>("ParentAttributeId", value); } }
 
         public String? AttributeTitle { get { return GetValue("AttributeTitle"); } set { SetValue("AttributeTitle", value); } }
         public String? AttributeDescription { get { return GetValue("AttributeDescription"); } set { SetValue("AttributeDescription", value); } }
         public Nullable<Boolean> Obsolete { get { return GetValue<Boolean>("Obsolete", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("Obsolete", value); } }
+
+        [Browsable(false)]
+        public DomainAttributeKey AttributeKey { get { return new DomainAttributeKey(this); } set { SetValue<Guid>("AttributeId", value.AttributeId); } }
 
         public DomainAttributeItem() : base()
         {
@@ -48,7 +52,7 @@ namespace DataDictionary.DataLayer.DomainData
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        public static Command GetData(IConnection connection, IModelIdentifier modelId)
+        public static Command GetData(IConnection connection, IModelKey modelId)
         { return GetData(connection, (modelId.ModelId, null, null, null)); }
 
         static Command GetData(IConnection connection, (Guid? modelId, Guid? attributeId, String? attributeTitle, Boolean? obsolete) parameters)
@@ -63,7 +67,7 @@ namespace DataDictionary.DataLayer.DomainData
             return command;
         }
 
-        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DomainAttributeItem> source)
+        public static Command SetData(IConnection connection, IModelKey modelId, IBindingTable<DomainAttributeItem> source)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
@@ -79,16 +83,16 @@ namespace DataDictionary.DataLayer.DomainData
 
     public static class DomainAttributeItemExtension
     {
-        public static IDomainAttributeItem? GetAttribute(this IEnumerable<IDomainAttributeItem> source, IDomainAttributeIdentifier item)
+        public static IDomainAttributeItem? GetAttribute(this IEnumerable<IDomainAttributeItem> source, IDomainAttributeKey item)
         { return source.FirstOrDefault(w => w.AttributeId == item.AttributeId); }
 
-        public static IDomainAttributeItem? GetAttribute(this IDomainAttributeIdentifier item, IEnumerable<IDomainAttributeItem> source)
+        public static IDomainAttributeItem? GetAttribute(this IDomainAttributeKey item, IEnumerable<IDomainAttributeItem> source)
         { return source.FirstOrDefault(w => w.AttributeId == item.AttributeId); }
 
-        public static IDomainAttributeItem? GetParentAttribute(this IEnumerable<IDomainAttributeItem> source, IDomainAttributeParentId item)
+        public static IDomainAttributeItem? GetParentAttribute(this IEnumerable<IDomainAttributeItem> source, IDomainAttributeParentKey item)
         { return source.FirstOrDefault(w => w.AttributeId == item.ParentAttributeId); }
 
-        public static IDomainAttributeItem? GetParentAttribute(this IDomainAttributeParentId item, IEnumerable<IDomainAttributeItem> source)
+        public static IDomainAttributeItem? GetParentAttribute(this IDomainAttributeParentKey item, IEnumerable<IDomainAttributeItem> source)
         { return source.FirstOrDefault(w => w.AttributeId == item.ParentAttributeId); }
     }
 }

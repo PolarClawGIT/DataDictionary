@@ -6,63 +6,61 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbTableColumnName : IDbTableName
+    public interface IDbTableColumnKey : IDbTableKey
     {
         public String? ColumnName { get; }
     }
 
-    public class DbTableColumnName : DbTableName, IDbTableColumnName, IEquatable<IDbTableColumnName>, IComparable<IDbTableColumnName>, IComparable
+    public class DbTableColumnKey : DbTableKey, IDbTableColumnKey, IEquatable<DbTableColumnKey>, IComparable<DbTableColumnKey>, IComparable
     {
         public String ColumnName { get; init; } = String.Empty;
 
-        public DbTableColumnName() : base() { }
-
-        public DbTableColumnName(IDbTableColumnName source) : base(source)
+        public DbTableColumnKey(IDbTableColumnKey source) : base(source)
         {
             if (source.ColumnName is String) { ColumnName = source.ColumnName; }
             else { ColumnName = String.Empty; }
         }
 
         #region IEquatable, IComparable
-        public Boolean Equals(IDbTableColumnName? other)
+        public Boolean Equals(DbTableColumnKey? other)
         {
             return (
-                other is IDbSchemaName &&
-                new DbTableName(this).Equals(other) &&
+                other is IDbSchemaKey &&
+                new DbTableKey(this).Equals(other) &&
                 !String.IsNullOrEmpty(ColumnName) &&
                 !String.IsNullOrEmpty(other.ColumnName) &&
                 ColumnName.Equals(other.ColumnName, ModelFactory.CompareString));
         }
 
-        public Int32 CompareTo(IDbTableColumnName? other)
+        public Int32 CompareTo(DbTableColumnKey? other)
         {
             if (other is null) { return 1; }
-            else if (new DbTableName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
+            else if (new DbTableKey(this).CompareTo(other) is Int32 value && value != 0) { return value; }
             else { return String.Compare(ColumnName, other.ColumnName, true); }
         }
 
         public override int CompareTo(object? obj)
-        { if (obj is IDbTableColumnName value) { return this.CompareTo(value); } else { return 1; } }
+        { if (obj is DbTableColumnKey value) { return this.CompareTo(value); } else { return 1; } }
 
         public override bool Equals(object? obj)
-        { if (obj is IDbTableColumnName value) { return this.Equals(value); } else { return false; } }
+        { if (obj is DbTableColumnKey value) { return this.Equals(value); } else { return false; } }
 
-        public static bool operator ==(DbTableColumnName left, IDbTableColumnName right)
+        public static bool operator ==(DbTableColumnKey left, DbTableColumnKey right)
         { return left.Equals(right); }
 
-        public static bool operator !=(DbTableColumnName left, IDbTableColumnName right)
+        public static bool operator !=(DbTableColumnKey left, DbTableColumnKey right)
         { return !left.Equals(right); }
 
-        public static bool operator <(DbTableColumnName left, IDbTableColumnName right)
+        public static bool operator <(DbTableColumnKey left, DbTableColumnKey right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
-        public static bool operator <=(DbTableColumnName left, IDbTableColumnName right)
+        public static bool operator <=(DbTableColumnKey left, DbTableColumnKey right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
-        public static bool operator >(DbTableColumnName left, IDbTableColumnName right)
+        public static bool operator >(DbTableColumnKey left, DbTableColumnKey right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
-        public static bool operator >=(DbTableColumnName left, IDbTableColumnName right)
+        public static bool operator >=(DbTableColumnKey left, DbTableColumnKey right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         public override Int32 GetHashCode()

@@ -1,6 +1,9 @@
 ﻿using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.DbMetaData;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -12,7 +15,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DomainData
 {
-    public interface IDomainAttributeAliasItem : IDomainAttributeIdentifier, IBindingTableRow
+    public interface IDomainAttributeAliasItem : IDomainAttributeKey, IBindingTableRow
     {
         public String? CatalogName { get; }
         public String? SchemaName { get; }
@@ -23,12 +26,14 @@ namespace DataDictionary.DataLayer.DomainData
     public class DomainAttributeAliasItem : BindingTableRow, IDomainAttributeAliasItem
     {
         public Nullable<Guid> AttributeId
-        { get { return GetValue<Guid>("AttributeId"); } set { SetValue<Guid>("AttributeId", value); } }
+        { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue<Guid>("AttributeId", value); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } set { SetValue("CatalogName", value); } }
         public String? SchemaName { get { return GetValue("SchemaName"); } set { SetValue("SchemaName", value); } }
         public String? ObjectName { get { return GetValue("ObjectName"); } set { SetValue("ObjectName", value); } }
         public String? ElementName { get { return GetValue("ElementName"); } set { SetValue("ElementName", value); } }
 
+        [Browsable(false)]
+        public DomainAttributeKey AttributeKey { get { return new DomainAttributeKey(this); } set { AttributeId = value.AttributeId; } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -41,10 +46,21 @@ namespace DataDictionary.DataLayer.DomainData
 
         };
 
+        public DomainAttributeAliasItem() : base() { }
+
+        public DomainAttributeAliasItem(IDomainAttributeKey key, IDbTableColumnItem source) :this ()
+        {
+            AttributeId = key.AttributeId;
+            CatalogName = source.CatalogName;
+            SchemaName = source.SchemaName;
+            ObjectName = source.TableName;
+            ElementName = source.ColumnName;
+        }
+
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        public static Command GetData(IConnection connection, IModelIdentifier modelId)
+        public static Command GetData(IConnection connection, IModelKey modelId)
         { return GetData(connection, (modelId.ModelId, null, null, null, null, null)); }
 
         static Command GetData(IConnection connection, (Guid? modelId, Guid? attributeId, String? catalogName, String? schemaName, String? objectName, String? elementName) parameters)
@@ -61,7 +77,7 @@ namespace DataDictionary.DataLayer.DomainData
             return command;
         }
 
-        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DomainAttributeAliasItem> source)
+        public static Command SetData(IConnection connection, IModelKey modelId, IBindingTable<DomainAttributeAliasItem> source)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
@@ -104,7 +120,7 @@ namespace DataDictionary.DataLayer.DomainData
 
     public static class DomainAttributeAliasItemExtension
     {
-        public static IEnumerable<DomainAttributeAliasItem> GetProperties(this IEnumerable<DomainAttributeAliasItem> source, IDomainAttributeIdentifier item)
+        public static IEnumerable<DomainAttributeAliasItem> GetProperties(this IEnumerable<DomainAttributeAliasItem> source, IDomainAttributeKey item)
         { return source.Where(w => item.AttributeId == w.AttributeId); }
     }
 }

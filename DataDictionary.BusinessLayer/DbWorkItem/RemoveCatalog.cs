@@ -10,9 +10,9 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
     class RemoveCatalog<TDbItem> : WorkItem
-        where TDbItem : class, IDbCatalogName, IBindingTableRow
+        where TDbItem : class, IDbCatalogKeyUnique, IBindingTableRow
     {
-        public required DbCatalogName CatalogName { get; set; }
+        public required DbCatalogKeyUnique Catalog { get; set; }
         public required IBindingTable<TDbItem> Target { get; set; }
 
         public RemoveCatalog() : base() { }
@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         protected override void Work()
         {
             base.Work();
-            IEnumerable<TDbItem> toRemove = Target.Where(w => CatalogName == w).ToList();
+            IEnumerable<TDbItem> toRemove = Target.Where(w => Catalog == new DbCatalogKeyUnique(w)).ToList();
 
             foreach (TDbItem item in toRemove)
             { Target.Remove(item); }

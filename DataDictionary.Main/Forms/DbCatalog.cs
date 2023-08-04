@@ -1,10 +1,12 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.WorkFlows;
+using DataDictionary.DataLayer.DbGetSchema;
 using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using System.Data;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms
@@ -185,17 +187,17 @@ namespace DataDictionary.Main.Forms
 
         private void connectCommand_Click(object sender, EventArgs e)
         {
-            List<DbCatalogName> databaseNames = new List<DbCatalogName>();
+            BindingTable<GetSchemaDatabase> databaseNames = new BindingTable<GetSchemaDatabase>();
 
             if (data.DbContext is DbSchemaContext)
-            { this.DoWork(data.DbContext.GetDatabaseList(databaseNames), onComplete); }
+            { this.DoWork(data.DbContext.GetDatabaseSchema(databaseNames), onComplete) ; }
 
             void onComplete(RunWorkerCompletedEventArgs result)
             {
                 if (!result.Cancelled)
                 {
 
-                    if (databaseNames.FirstOrDefault(w => w.CatalogName == databaseNameData.Text) is DbCatalogName currentDb)
+                    if (databaseNames.FirstOrDefault(w => w.CatalogName == databaseNameData.Text) is GetSchemaDatabase currentDb)
                     {
                         databaseNameData.Items.Clear();
                         databaseNameData.Text = String.Empty;

@@ -90,35 +90,35 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new RemoveCatalog<DbExtendedPropertyItem>()
             {
                 WorkName = "Remove DbExtendedProperties by Catalog",
-                CatalogName = new DbCatalogName() { CatalogName = context.DatabaseName },
+                Catalog = new DbCatalogKeyUnique(context),
                 Target = data.DbExtendedProperties
             });
 
             workItems.Add(new RemoveCatalog<DbTableColumnItem>()
             {
                 WorkName = "Remove DbColumns by Catalog",
-                CatalogName = new DbCatalogName() { CatalogName = context.DatabaseName },
+                Catalog = new DbCatalogKeyUnique(context),
                 Target = data.DbColumns
             });
 
             workItems.Add(new RemoveCatalog<DbTableItem>()
             {
                 WorkName = "Remove DbTables by Catalog",
-                CatalogName = new DbCatalogName() { CatalogName = context.DatabaseName },
+                Catalog = new DbCatalogKeyUnique(context),
                 Target = data.DbTables
             });
 
             workItems.Add(new RemoveCatalog<DbSchemaItem>()
             {
                 WorkName = "Remove DbSchemta by Catalog",
-                CatalogName = new DbCatalogName() { CatalogName = context.DatabaseName },
+                Catalog = new DbCatalogKeyUnique(context),
                 Target = data.DbSchemta
             });
 
             workItems.Add(new RemoveCatalog<DbCatalogItem>()
             {
                 WorkName = "Remove DbCatalogs by Catalog",
-                CatalogName = new DbCatalogName() { CatalogName = context.DatabaseName },
+                Catalog = new DbCatalogKeyUnique(context),
                 Target = data.DbCatalogs
             });
 
@@ -148,14 +148,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
                 foreach (IDbTableColumnItem aliasSource in columnItem)
                 {
-                    data.DomainAttributeAliases.Add(new DomainAttributeAliasItem()
-                    {
-                        AttributeId = newAttribute.AttributeId,
-                        CatalogName = aliasSource.CatalogName,
-                        SchemaName = aliasSource.SchemaName,
-                        ObjectName = aliasSource.TableName,
-                        ElementName = aliasSource.ColumnName
-                    });
+                    data.DomainAttributeAliases.Add(new DomainAttributeAliasItem(newAttribute, aliasSource));
 
                     propeties.AddRange(aliasSource.GetProperties(data.DbExtendedProperties));
                 }
@@ -168,13 +161,8 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                             w.PropertyName is not null &&
                             w.PropertyName.Equals(propertySource.PropertyName, ModelFactory.CompareString)) is IPropertyItem property)
                     {
-                        data.DomainAttributeProperties.Add(
-                            new DomainAttributePropertyItem()
-                            {
-                                AttributeId = newAttribute.AttributeId,
-                                PropertyId = property.PropertyId,
-                                PropertyValue = propertySource.PropertyValue
-                            });
+                        data.DomainAttributeProperties.
+                            Add(new DomainAttributePropertyItem(newAttribute, property, propertySource));
                     }
                 }
             }

@@ -7,63 +7,61 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbSchemaName : IDbCatalogName
+    public interface IDbSchemaKey : IDbCatalogKeyUnique
     {
         String? SchemaName { get; }
     }
 
-    public class DbSchemaName : DbCatalogName, IDbSchemaName, IEquatable<IDbSchemaName>, IComparable<IDbSchemaName>, IComparable
+    public class DbSchemaKey : DbCatalogKeyUnique, IDbSchemaKey, IEquatable<DbSchemaKey>, IComparable<DbSchemaKey>, IComparable
     {
         public String SchemaName { get; init; } = String.Empty;
 
-        public DbSchemaName() : base() { }
-
-        public DbSchemaName(IDbSchemaName source) : base(source)
+        public DbSchemaKey(IDbSchemaKey source) : base(source)
         {
             if (source.SchemaName is String) { SchemaName = source.SchemaName; }
             else { SchemaName = String.Empty; }
         }
 
         #region IEquatable, IComparable
-        public Boolean Equals(IDbSchemaName? other)
+        public Boolean Equals(DbSchemaKey? other)
         {
             return (
-                other is IDbSchemaName &&
-                new DbCatalogName(this).Equals(other) &&
+                other is IDbSchemaKey &&
+                new DbCatalogKeyUnique(this).Equals(other) &&
                 !String.IsNullOrEmpty(SchemaName) &&
                 !String.IsNullOrEmpty(other.SchemaName) &&
                 SchemaName.Equals(other.SchemaName, ModelFactory.CompareString));
         }
 
-        public Int32 CompareTo(IDbSchemaName? other)
+        public Int32 CompareTo(DbSchemaKey? other)
         {
             if (other is null) { return 1; }
-            else if (new DbCatalogName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
+            else if (new DbCatalogKeyUnique(this).CompareTo(other) is Int32 value && value != 0) { return value; }
             else { return String.Compare(SchemaName, other.SchemaName, true); }
         }
 
         public override int CompareTo(object? obj)
-        { if (obj is IDbSchemaName value) { return this.CompareTo(value); } else { return 1; } }
+        { if (obj is DbSchemaKey value) { return this.CompareTo(value); } else { return 1; } }
 
         public override bool Equals(object? obj)
-        { if (obj is IDbSchemaName value) { return this.Equals(value); } else { return false; } }
+        { if (obj is DbSchemaKey value) { return this.Equals(value); } else { return false; } }
 
-        public static bool operator ==(DbSchemaName left, IDbSchemaName right)
+        public static bool operator ==(DbSchemaKey left, DbSchemaKey right)
         { return left.Equals(right); }
 
-        public static bool operator !=(DbSchemaName left, IDbSchemaName right)
+        public static bool operator !=(DbSchemaKey left, DbSchemaKey right)
         { return !left.Equals(right); }
 
-        public static bool operator <(DbSchemaName left, IDbSchemaName right)
+        public static bool operator <(DbSchemaKey left, DbSchemaKey right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
-        public static bool operator <=(DbSchemaName left, IDbSchemaName right)
+        public static bool operator <=(DbSchemaKey left, DbSchemaKey right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
-        public static bool operator >(DbSchemaName left, IDbSchemaName right)
+        public static bool operator >(DbSchemaKey left, DbSchemaKey right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
-        public static bool operator >=(DbSchemaName left, IDbSchemaName right)
+        public static bool operator >=(DbSchemaKey left, DbSchemaKey right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         public override Int32 GetHashCode()

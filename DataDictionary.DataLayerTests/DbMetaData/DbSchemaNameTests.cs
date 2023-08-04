@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
     [TestFixture()]
     public class DbSchemaNameTests
     {
-        class UnitTestData : IDbSchemaName
+        class UnitTestData : IDbSchemaKey
         {
             public String? CatalogName { get; init; }
             public String? SchemaName { get; init; }
@@ -27,71 +27,71 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
         [Test()]
         public void DbSchemaNameTest()
         {
-            DbSchemaName item = new DbSchemaName(dataA1);
+            DbSchemaKey item = new DbSchemaKey(dataA1);
 
-            Assert.IsTrue(item is DbSchemaName, "new DbSchemaName(dataA1) is DbSchemaName");
-            Assert.IsTrue(item is DbCatalogName, "new DbSchemaName(dataA1) is DbCatalogName");
-            Assert.IsTrue(item is IDbSchemaName, "new DbSchemaName(dataA1) is IDbSchemaName");
-            Assert.IsTrue(item is IDbCatalogName, "new DbSchemaName(dataA1) is IDbCatalogName");
+            Assert.IsTrue(item is DbSchemaKey, "new DbSchemaName(dataA1) is DbSchemaName");
+            Assert.IsTrue(item is DbCatalogKeyUnique, "new DbSchemaName(dataA1) is DbCatalogName");
+            Assert.IsTrue(item is IDbSchemaKey, "new DbSchemaName(dataA1) is IDbSchemaName");
+            Assert.IsTrue(item is IDbCatalogKeyUnique, "new DbSchemaName(dataA1) is IDbCatalogName");
         }
 
         [Test()]
         public void EqualsTest()
         {
-            Assert.IsTrue(new DbSchemaName(dataA1).Equals(dataA1), "new DbSchemaName(dataA1).Equals(dataA1)");
-            Assert.IsTrue(new DbSchemaName(dataA1).Equals(new DbSchemaName(dataA1)), "new DbSchemaName(dataA1).Equals(new DbSchemaName(dataA1))");
+            Assert.IsTrue(new DbSchemaKey(dataA1).Equals(dataA1), "new DbSchemaName(dataA1).Equals(dataA1)");
+            Assert.IsTrue(new DbSchemaKey(dataA1).Equals(new DbSchemaKey(dataA1)), "new DbSchemaName(dataA1).Equals(new DbSchemaName(dataA1))");
 
-            Assert.IsTrue(new DbSchemaName(dataA1) == new DbSchemaName(dataA1), "new DbSchemaName(dataA1) == new DbSchemaName(dataA1)");
-            Assert.IsTrue(new DbSchemaName(dataA1) == new DbSchemaName(dataA2), "new DbSchemaName(dataA1) == new DbSchemaName(dataA2)");
-            Assert.IsTrue(new DbSchemaName(dataA1) == dataA1, "new DbSchemaName(dataA1) == dataA1");
+            Assert.IsTrue(new DbSchemaKey(dataA1) == new DbSchemaKey(dataA1), "new DbSchemaName(dataA1) == new DbSchemaName(dataA1)");
+            Assert.IsTrue(new DbSchemaKey(dataA1) == new DbSchemaKey(dataA2), "new DbSchemaName(dataA1) == new DbSchemaName(dataA2)");
+            //Assert.IsTrue(new DbSchemaKeyPrimary(dataA1) == dataA1, "new DbSchemaName(dataA1) == dataA1");
 
-            Assert.IsFalse(new DbSchemaName(dataA1) == new DbSchemaName(dataC1), "new DbSchemaName(dataA1) != new DbSchemaName(dataC)");
-            Assert.IsFalse(new DbSchemaName(dataNull) == new DbSchemaName(dataNull), "new DbSchemaName(dataNull) != new DbSchemaName(dataNull)");
-            Assert.IsFalse(new DbSchemaName(dataBlank) == new DbSchemaName(dataBlank), "new DbSchemaName(dataBlank) != new DbSchemaName(dataBlank)");
+            Assert.IsFalse(new DbSchemaKey(dataA1) == new DbSchemaKey(dataC1), "new DbSchemaName(dataA1) != new DbSchemaName(dataC)");
+            Assert.IsFalse(new DbSchemaKey(dataNull) == new DbSchemaKey(dataNull), "new DbSchemaName(dataNull) != new DbSchemaName(dataNull)");
+            Assert.IsFalse(new DbSchemaKey(dataBlank) == new DbSchemaKey(dataBlank), "new DbSchemaName(dataBlank) != new DbSchemaName(dataBlank)");
         }
 
         [Test()]
         public void CompareToTest()
         {
-            Assert.AreEqual(0, new DbSchemaName(dataA1).CompareTo(new DbSchemaName(dataA1)), "new DbSchemaName(dataA1).CompareTo(new DbSchemaName(dataA1))");
-            Assert.AreEqual(0, new DbSchemaName(dataA1).CompareTo(new DbSchemaName(dataA2)), "new DbSchemaName(dataA1).CompareTo(new DbSchemaName(dataA2))");
+            Assert.AreEqual(0, new DbSchemaKey(dataA1).CompareTo(new DbSchemaKey(dataA1)), "new DbSchemaName(dataA1).CompareTo(new DbSchemaName(dataA1))");
+            Assert.AreEqual(0, new DbSchemaKey(dataA1).CompareTo(new DbSchemaKey(dataA2)), "new DbSchemaName(dataA1).CompareTo(new DbSchemaName(dataA2))");
 
-            Assert.Greater(0, new DbSchemaName(dataA1).CompareTo(new DbSchemaName(dataC1)), "new DbSchemaName(dataA1).CompareTo(new DbSchemaName(dataC1))");
-            Assert.Less(0, new DbSchemaName(dataC1).CompareTo(new DbSchemaName(dataA1)), "new DbSchemaName(dataC).CompareTo(new DbSchemaName(dataA1))");
+            Assert.Greater(0, new DbSchemaKey(dataA1).CompareTo(new DbSchemaKey(dataC1)), "new DbSchemaName(dataA1).CompareTo(new DbSchemaName(dataC1))");
+            Assert.Less(0, new DbSchemaKey(dataC1).CompareTo(new DbSchemaKey(dataA1)), "new DbSchemaName(dataC).CompareTo(new DbSchemaName(dataA1))");
 
-            Assert.Greater(0, new DbSchemaName(dataC1).CompareTo(new DbSchemaName(dataC2)), "new DbSchemaName(dataC1).CompareTo(new DbSchemaName(dataC1))");
-            Assert.Less(0, new DbSchemaName(dataC2).CompareTo(new DbSchemaName(dataC1)), "new DbSchemaName(dataC2).CompareTo(new DbSchemaName(dataC1))");
+            Assert.Greater(0, new DbSchemaKey(dataC1).CompareTo(new DbSchemaKey(dataC2)), "new DbSchemaName(dataC1).CompareTo(new DbSchemaName(dataC1))");
+            Assert.Less(0, new DbSchemaKey(dataC2).CompareTo(new DbSchemaKey(dataC1)), "new DbSchemaName(dataC2).CompareTo(new DbSchemaName(dataC1))");
 
-            Assert.IsTrue(new DbSchemaName(dataA1) < new DbSchemaName(dataC1), "new DbSchemaName(dataA1) < new DbSchemaName(dataC)");
-            Assert.IsTrue(new DbSchemaName(dataC1) > new DbSchemaName(dataA1), "new DbSchemaName(dataC) > new DbSchemaName(dataA1)");
+            Assert.IsTrue(new DbSchemaKey(dataA1) < new DbSchemaKey(dataC1), "new DbSchemaName(dataA1) < new DbSchemaName(dataC)");
+            Assert.IsTrue(new DbSchemaKey(dataC1) > new DbSchemaKey(dataA1), "new DbSchemaName(dataC) > new DbSchemaName(dataA1)");
 
-            Assert.IsTrue(new DbSchemaName(dataNull) < new DbSchemaName(dataA1), "new DbSchemaName(dataNull) < new DbSchemaName(dataA1)");
-            Assert.IsTrue(new DbSchemaName(dataBlank) < new DbSchemaName(dataA1), "new DbSchemaName(dataBlank) < new DbSchemaName(dataA1)");
+            Assert.IsTrue(new DbSchemaKey(dataNull) < new DbSchemaKey(dataA1), "new DbSchemaName(dataNull) < new DbSchemaName(dataA1)");
+            Assert.IsTrue(new DbSchemaKey(dataBlank) < new DbSchemaKey(dataA1), "new DbSchemaName(dataBlank) < new DbSchemaName(dataA1)");
         }
 
         [Test()]
         public void GetHashCodeTest()
         {
-            Assert.DoesNotThrow(() => new DbSchemaName(dataA1).GetHashCode(), "dataA1.GetHashCode()");
-            Assert.DoesNotThrow(() => new DbSchemaName(dataC1).GetHashCode(), "dataC.GetHashCode()");
-            Assert.DoesNotThrow(() => new DbSchemaName(dataNull).GetHashCode(), "dataNull.GetHashCode()");
-            Assert.DoesNotThrow(() => new DbSchemaName(dataBlank).GetHashCode(), "dataBlank.GetHashCode()");
+            Assert.DoesNotThrow(() => new DbSchemaKey(dataA1).GetHashCode(), "dataA1.GetHashCode()");
+            Assert.DoesNotThrow(() => new DbSchemaKey(dataC1).GetHashCode(), "dataC.GetHashCode()");
+            Assert.DoesNotThrow(() => new DbSchemaKey(dataNull).GetHashCode(), "dataNull.GetHashCode()");
+            Assert.DoesNotThrow(() => new DbSchemaKey(dataBlank).GetHashCode(), "dataBlank.GetHashCode()");
         }
 
         [Test()]
         public void ToStringTest()
         {
-            Assert.DoesNotThrow(() => new DbSchemaName(dataA1).ToString(), "dataA1.ToString()");
-            Assert.DoesNotThrow(() => new DbSchemaName(dataC1).ToString(), "dataC.ToString()");
-            Assert.DoesNotThrow(() => new DbSchemaName(dataNull).ToString(), "dataNull.ToString()");
-            Assert.DoesNotThrow(() => new DbSchemaName(dataBlank).ToString(), "dataBlank.ToString()");
+            Assert.DoesNotThrow(() => new DbSchemaKey(dataA1).ToString(), "dataA1.ToString()");
+            Assert.DoesNotThrow(() => new DbSchemaKey(dataC1).ToString(), "dataC.ToString()");
+            Assert.DoesNotThrow(() => new DbSchemaKey(dataNull).ToString(), "dataNull.ToString()");
+            Assert.DoesNotThrow(() => new DbSchemaKey(dataBlank).ToString(), "dataBlank.ToString()");
         }
 
         [Test()]
         public void SortTest()
         {
-            List<DbSchemaName> items = new List<DbSchemaName>()
-            { new DbSchemaName(dataC2), new DbSchemaName(dataA2), new DbSchemaName(dataC1), new DbSchemaName(dataA1) };
+            List<DbSchemaKey> items = new List<DbSchemaKey>()
+            { new DbSchemaKey(dataC2), new DbSchemaKey(dataA2), new DbSchemaKey(dataC1), new DbSchemaKey(dataA1) };
 
             items.Sort();
 

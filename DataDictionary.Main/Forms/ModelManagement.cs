@@ -140,13 +140,12 @@ namespace DataDictionary.Main.Forms
 
         private void deleteCommand_Click(object sender, EventArgs e)
         {
-            ModelIdentifier item = new ModelIdentifier(data.Model);
             UnBindData();
             data.Models.Clear();
             data.Model = new ModelItem();
 
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(Program.Data.DeleteModel(item));
+            work.AddRange(Program.Data.DeleteModel(data.Model));
             work.AddRange(Program.Data.LoadModelList(data.Models));
             this.DoWork(work, onCompleting);
 

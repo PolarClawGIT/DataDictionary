@@ -10,7 +10,7 @@ namespace DataDictionary.Main.Forms
     {
         class FormData
         {
-            public DbTableColumnName ColumnName { get; set; } = new DbTableColumnName();
+            public DbTableColumnKey? ColumnKey { get; set; }
             public IDbTableColumnItem? DbColumn { get; set; }
             public BindingList<DbExtendedPropertyItem> DbExtendedProperties { get; set; } = new BindingList<DbExtendedPropertyItem>();
 
@@ -28,9 +28,9 @@ namespace DataDictionary.Main.Forms
 
         public DbTableColumn(IDbTableColumnItem columnItem) : this()
         {
-            data.ColumnName = new DbTableColumnName(columnItem);
+            data.ColumnKey = new DbTableColumnKey(columnItem);
             OpenItem = columnItem;
-            this.Text = data.ColumnName.ToString();
+            this.Text = data.ColumnKey.ToString();
         }
 
         private void DbColumn_Load(object sender, EventArgs e)
@@ -38,7 +38,8 @@ namespace DataDictionary.Main.Forms
 
         void BindData()
         {
-            data.DbColumn = Program.Data.DbColumns.FirstOrDefault(w => data.ColumnName == w);
+            if (data.ColumnKey is not null)
+            { data.DbColumn = Program.Data.DbColumns.FirstOrDefault(w => data.ColumnKey == new DbTableColumnKey(w)); }
 
             if (data.DbColumn is not null)
             {

@@ -11,7 +11,7 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.ApplicationData
 {
 
-    public interface IModelItem : IModelIdentifier
+    public interface IModelItem : IModelKey
     {
         String? ModelTitle { get; set; }
         String? ModelDescription { get; set; }
@@ -43,7 +43,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        public static Command GetData(IConnection connection, IModelIdentifier modelIdentifier)
+        public static Command GetData(IConnection connection, IModelKey modelIdentifier)
         { return GetData(connection, (modelIdentifier.ModelId, null, true)); }
 
         public static Command GetData(IConnection connection)
@@ -72,7 +72,7 @@ namespace DataDictionary.DataLayer.ApplicationData
             return command;
         }
 
-        public static Command DeleteData (IConnection connection, IModelIdentifier parameters)
+        public static Command DeleteData (IConnection connection, IModelKey parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;

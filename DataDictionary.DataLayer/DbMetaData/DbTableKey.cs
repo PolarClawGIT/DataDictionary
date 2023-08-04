@@ -6,63 +6,61 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbTableName : IDbSchemaName
+    public interface IDbTableKey : IDbSchemaKey
     {
         public String? TableName { get; }
     }
 
-    public class DbTableName : DbSchemaName, IDbTableName, IEquatable<IDbTableName>, IComparable<IDbTableName>, IComparable
+    public class DbTableKey : DbSchemaKey, IDbTableKey, IEquatable<DbTableKey>, IComparable<DbTableKey>, IComparable
     {
         public String TableName { get; init; } = String.Empty;
 
-        public DbTableName() : base() { }
-
-        public DbTableName(IDbTableName source) : base(source)
+        public DbTableKey(IDbTableKey source) : base(source)
         {
             if (source.TableName is String) { TableName = source.TableName; }
             else { TableName = String.Empty; }
         }
 
         #region IEquatable, IComparable
-        public Boolean Equals(IDbTableName? other)
+        public Boolean Equals(DbTableKey? other)
         {
             return (
-                other is IDbSchemaName &&
-                new DbSchemaName(this).Equals(other) &&
+                other is IDbSchemaKey &&
+                new DbSchemaKey(this).Equals(other) &&
                 !String.IsNullOrEmpty(TableName) &&
                 !String.IsNullOrEmpty(other.TableName) &&
                 TableName.Equals(other.TableName, ModelFactory.CompareString));
         }
 
-        public Int32 CompareTo(IDbTableName? other)
+        public Int32 CompareTo(DbTableKey? other)
         {
             if (other is null) { return 1; }
-            else if (new DbSchemaName(this).CompareTo(other) is Int32 value && value != 0) { return value; }
+            else if (new DbSchemaKey(this).CompareTo(other) is Int32 value && value != 0) { return value; }
             else { return String.Compare(TableName, other.TableName, true); }
         }
 
         public override int CompareTo(object? obj)
-        { if (obj is IDbTableName value) { return this.CompareTo(value); } else { return 1; } }
+        { if (obj is IDbTableKey value) { return this.CompareTo(value); } else { return 1; } }
 
         public override bool Equals(object? obj)
-        { if (obj is IDbTableName value) { return this.Equals(value); } else { return false; } }
+        { if (obj is IDbTableKey value) { return this.Equals(value); } else { return false; } }
 
-        public static bool operator ==(DbTableName left, IDbTableName right)
+        public static bool operator ==(DbTableKey left, DbTableKey right)
         { return left.Equals(right); }
 
-        public static bool operator !=(DbTableName left, IDbTableName right)
+        public static bool operator !=(DbTableKey left, DbTableKey right)
         { return !left.Equals(right); }
 
-        public static bool operator <(DbTableName left, IDbTableName right)
+        public static bool operator <(DbTableKey left, DbTableKey right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
-        public static bool operator <=(DbTableName left, IDbTableName right)
+        public static bool operator <=(DbTableKey left, DbTableKey right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
-        public static bool operator >(DbTableName left, IDbTableName right)
+        public static bool operator >(DbTableKey left, DbTableKey right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
-        public static bool operator >=(DbTableName left, IDbTableName right)
+        public static bool operator >=(DbTableKey left, DbTableKey right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         public override Int32 GetHashCode()

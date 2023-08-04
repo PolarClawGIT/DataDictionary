@@ -1,22 +1,14 @@
 ﻿using DataDictionary.DataLayer.ApplicationData;
-using DataDictionary.DataLayer.DomainData;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbCatalogItem : IDbCatalogName, IDbIsSystem, IBindingTableRow
+    public interface IDbCatalogItem : IDbCatalogKeyUnique, IDbCatalogKey, IDbIsSystem, IBindingTableRow
     {
-        //Guid? CatalogId { get; }
         String? SourceServerName { get; }
     }
 
@@ -50,7 +42,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             return command;
         }
 
-        public static Command GetData(IConnection connection, IModelIdentifier modelId)
+        public static Command GetData(IConnection connection, IModelKey modelId)
         { return GetData(connection, (modelId.ModelId, null, null)); }
 
         static Command GetData(IConnection connection, (Guid? modelId, Guid? catalogId, String? catalogName) parameters)
@@ -64,7 +56,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             return command;
         }
 
-        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DbCatalogItem> source)
+        public static Command SetData(IConnection connection, IModelKey modelId, IBindingTable<DbCatalogItem> source)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
@@ -75,21 +67,18 @@ namespace DataDictionary.DataLayer.DbMetaData
         }
 
         public override String ToString()
-        { return new DbCatalogName(this).ToString(); }
+        { return new DbCatalogKeyUnique(this).ToString(); }
     }
 
     public static class DbCatalogItemExtension
     {
-        public static DbCatalogItem? GetCatalog(this IEnumerable<DbCatalogItem> source, IDbCatalogName item)
-        {
-            DbCatalogName itemName = new DbCatalogName(item);
-            return source.FirstOrDefault(w => itemName == w);
-        }
+        public static DbCatalogItem? GetCatalog(this IEnumerable<DbCatalogItem> source, IDbCatalogKeyUnique item)
+        { return source.FirstOrDefault(w => new DbCatalogKeyUnique(item) == new DbCatalogKeyUnique(w)); }
 
-        public static DbCatalogItem? GetCatalog(this IDbCatalogName item, IEnumerable<DbCatalogItem> source)
+        public static DbCatalogItem? GetCatalog(this IDbCatalogKeyUnique item, IEnumerable<DbCatalogItem> source)
         {
-            DbCatalogName itemName = new DbCatalogName(item);
-            return source.FirstOrDefault(w => itemName == w);
+            DbCatalogKeyUnique itemName = new DbCatalogKeyUnique(item);
+            { return source.FirstOrDefault(w => new DbCatalogKeyUnique(item) == new DbCatalogKeyUnique(w)); }
         }
 
         public static DbCatalogItem? GetCatalog(this IEnumerable<DbCatalogItem> source, (String ServerName, String DatabaseName) item)

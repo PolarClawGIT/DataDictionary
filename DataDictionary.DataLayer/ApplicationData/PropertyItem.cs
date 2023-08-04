@@ -9,7 +9,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.ApplicationData
 {
-    public interface IPropertyItem : IPropertyIdentifier
+    public interface IPropertyItem : IPropertyKey
     {
         String? PropertyTitle { get; }
     }

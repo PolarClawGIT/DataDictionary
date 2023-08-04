@@ -1,9 +1,11 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.DbGetSchema;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.BindingTable;
 using Toolbox.DbContext;
 using Toolbox.Threading;
 
@@ -13,13 +15,11 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
     /// Worker that calls SqlConnection.GetSchema
     /// </summary>
     class GetInformationSchema<TResult> : WorkItem
-        where TResult : class
+        where TResult : class, IBindingTableRow
     {
         public IConnection Connection { get; private set; }
         public required InformationSchema.Collection Collection { get; init; }
-        public required Func<DataRow, TResult> Transform { get; init; }
-        public required IList<TResult> Target { get; init; }
-        public Func<TResult, Boolean>? Filter { get; init; }
+        public required IBindingTable<TResult> Target { get; init; }
         public override string WorkName { get; init; } = "Get InformationSchema";
 
         public GetInformationSchema(IContext context) : base()
@@ -27,20 +27,8 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
 
         protected override void Work()
         {
-            List<TResult> results = new List<TResult>();
-
             base.Work();
-            using (DataTable data = new DataTable())
-            {
-                data.Load(Connection.GetReader(Collection));
-
-                foreach (DataRow item in data.Rows)
-                {
-                    if (Filter is not null)
-                    { if (Filter(Transform(item))) { Target.Add(Transform(item)); } }
-                    else { Target.Add(Transform(item)); }
-                }
-            }
+            Target.Load(Connection.GetReader(Collection));
         }
     }
 }

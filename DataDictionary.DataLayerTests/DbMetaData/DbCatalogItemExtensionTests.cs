@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
             public override String? CatalogName { get { return catalogName; } }
         }
 
-        class UnitTestName : IDbCatalogName
+        class UnitTestName : IDbCatalogKeyUnique
         {
             public String? CatalogName { get; init; }
         }

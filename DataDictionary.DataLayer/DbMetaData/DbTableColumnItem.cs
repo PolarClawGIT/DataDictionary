@@ -17,9 +17,8 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbTableColumnItem : IDbTableColumnName, IBindingTableRow
+    public interface IDbTableColumnItem : IDbTableColumnKey, IDbCatalogKey, IBindingTableRow
     {
-        //Guid? CatalogId { get; }
         Nullable<Int32> OrdinalPosition { get; }
         String? ColumnDefault { get; }
         Nullable<Boolean> IsNullable { get; }
@@ -48,7 +47,7 @@ namespace DataDictionary.DataLayer.DbMetaData
 
     public class DbTableColumnItem : BindingTableRow, IDbTableColumnItem, INotifyPropertyChanged, IDbExtendedProperties
     {
-        //public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
         public String? SchemaName { get { return GetValue("SchemaName"); } }
         public String? TableName { get { return GetValue("TableName"); } }
@@ -130,7 +129,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             GetCommand();
         }
 
-        public static Command GetData(IConnection connection, IModelIdentifier modelId)
+        public static Command GetData(IConnection connection, IModelKey modelId)
         { return GetData(connection, (modelId.ModelId, null, null, null, null)); }
 
         static Command GetData(IConnection connection, (Guid? modelId, String? catalogName, String? schemaName, String? tableName, String? columnName) parameters)
@@ -146,7 +145,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             return command;
         }
 
-        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DbTableColumnItem> source)
+        public static Command SetData(IConnection connection, IModelKey modelId, IBindingTable<DbTableColumnItem> source)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
@@ -157,34 +156,21 @@ namespace DataDictionary.DataLayer.DbMetaData
         }
 
         public override String ToString()
-        { return new DbTableColumnName(this).ToString(); }
+        { return new DbTableColumnKey(this).ToString(); }
     }
 
     public static class DbColumnItemExtension
     {
+        public static DbTableColumnItem? GetColumn(this IEnumerable<DbTableColumnItem> source, IDbTableColumnKey item)
+        { return source.FirstOrDefault(w => new DbTableColumnKey(item) == new DbTableColumnKey(w)); }
 
-        public static DbTableColumnItem? GetColumn(this IEnumerable<DbTableColumnItem> source, IDbTableColumnName item)
-        {
-            DbTableColumnName itemName = new DbTableColumnName(item);
-            return source.FirstOrDefault(w => itemName == w);
-        }
+        public static DbTableColumnItem? GetColumn(this IDbTableColumnKey item, IEnumerable<DbTableColumnItem> source)
+        { return source.FirstOrDefault(w => new DbTableColumnKey(item) == new DbTableColumnKey(w)); }
 
-        public static DbTableColumnItem? GetColumn(this IDbTableColumnName item, IEnumerable<DbTableColumnItem> source)
-        {
-            DbTableColumnName itemName = new DbTableColumnName(item);
-            return source.FirstOrDefault(w => itemName == w);
-        }
+        public static IEnumerable<DbTableColumnItem> GetColumns(this IEnumerable<DbTableColumnItem> source, IDbTableKey item)
+        { return source.Where(w => new DbTableKey(item) == new DbTableKey(w)); }
 
-        public static IEnumerable<DbTableColumnItem> GetColumns(this IEnumerable<DbTableColumnItem> source, IDbTableName item)
-        {
-            DbTableName itemName = new DbTableName(item);
-            return source.Where(w => itemName == w);
-        }
-
-        public static IEnumerable<DbTableColumnItem> GetColumns(this IDbTableName item, IEnumerable<DbTableColumnItem> source)
-        {
-            DbTableName itemName = new DbTableName(item);
-            return source.Where(w => itemName == w);
-        }
+        public static IEnumerable<DbTableColumnItem> GetColumns(this IDbTableKey item, IEnumerable<DbTableColumnItem> source)
+        { return source.Where(w => new DbTableKey(item) == new DbTableKey(w)); }
     }
 }

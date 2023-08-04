@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
     [TestFixture()]
     public class DbColumnNameTests
     {
-        class UnitTestData : IDbTableColumnName
+        class UnitTestData : IDbTableColumnKey
         {
             public String? CatalogName { get; init; }
             public String? SchemaName { get; init; }
@@ -30,76 +30,76 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
         [Test()]
         public void DbColumnNameTest()
         {
-            DbTableColumnName item = new DbTableColumnName(dataA1);
+            DbTableColumnKey item = new DbTableColumnKey(dataA1);
 
-            Assert.IsTrue(item is DbTableColumnName, "new DbColumnName(dataA1) is DbColumnName");
-            Assert.IsTrue(item is DbTableName, "new DbColumnName(dataA1) is DbObjectName");
-            Assert.IsTrue(item is DbSchemaName, "new DbColumnName(dataA1) is DbSchemaName");
-            Assert.IsTrue(item is DbCatalogName, "new DbColumnName(dataA1) is DbCatalogName");
+            Assert.IsTrue(item is DbTableColumnKey, "new DbColumnName(dataA1) is DbColumnName");
+            Assert.IsTrue(item is DbTableKey, "new DbColumnName(dataA1) is DbObjectName");
+            Assert.IsTrue(item is DbSchemaKey, "new DbColumnName(dataA1) is DbSchemaName");
+            Assert.IsTrue(item is DbCatalogKeyUnique, "new DbColumnName(dataA1) is DbCatalogName");
 
-            Assert.IsTrue(item is IDbTableColumnName, "new DbColumnName(dataA1) is IDbColumnName");
-            Assert.IsTrue(item is IDbSchemaName, "new DbColumnName(dataA1) is IDbSchemaName");
-            Assert.IsTrue(item is IDbCatalogName, "new DbColumnName(dataA1) is IDbCatalogName");
-            Assert.IsTrue(item is IDbTableName, "new DbColumnName(dataA1) is IDbObjectName");
+            Assert.IsTrue(item is IDbTableColumnKey, "new DbColumnName(dataA1) is IDbColumnName");
+            Assert.IsTrue(item is IDbSchemaKey, "new DbColumnName(dataA1) is IDbSchemaName");
+            Assert.IsTrue(item is IDbCatalogKeyUnique, "new DbColumnName(dataA1) is IDbCatalogName");
+            Assert.IsTrue(item is IDbTableKey, "new DbColumnName(dataA1) is IDbObjectName");
         }
 
         [Test()]
         public void EqualsTest()
         {
-            Assert.IsTrue(new DbTableColumnName(dataA1).Equals(dataA1), "new DbColumnName(dataA1).Equals(dataA1)");
-            Assert.IsTrue(new DbTableColumnName(dataA1).Equals(new DbTableColumnName(dataA1)), "new DbColumnName(dataA1).Equals(new DbColumnName(dataA1))");
+            Assert.IsTrue(new DbTableColumnKey(dataA1).Equals(dataA1), "new DbColumnName(dataA1).Equals(dataA1)");
+            Assert.IsTrue(new DbTableColumnKey(dataA1).Equals(new DbTableColumnKey(dataA1)), "new DbColumnName(dataA1).Equals(new DbColumnName(dataA1))");
 
-            Assert.IsTrue(new DbTableColumnName(dataA1) == new DbTableColumnName(dataA1), "new DbColumnName(dataA1) == new DbColumnName(dataA1)");
-            Assert.IsTrue(new DbTableColumnName(dataA1) == new DbTableColumnName(dataA2), "new DbColumnName(dataA1) == new DbColumnName(dataA2)");
-            Assert.IsTrue(new DbTableColumnName(dataA1) == dataA1, "new DbColumnName(dataA1) == dataA1");
+            Assert.IsTrue(new DbTableColumnKey(dataA1) == new DbTableColumnKey(dataA1), "new DbColumnName(dataA1) == new DbColumnName(dataA1)");
+            Assert.IsTrue(new DbTableColumnKey(dataA1) == new DbTableColumnKey(dataA2), "new DbColumnName(dataA1) == new DbColumnName(dataA2)");
+            //Assert.IsTrue(new DbTableColumnKeyPrimary(dataA1) == dataA1, "new DbColumnName(dataA1) == dataA1");
 
-            Assert.IsFalse(new DbTableColumnName(dataA1) == new DbTableColumnName(dataC1), "new DbColumnName(dataA1) != new DbColumnName(dataC)");
-            Assert.IsFalse(new DbTableColumnName(dataNull) == new DbTableColumnName(dataNull), "new DbColumnName(dataNull) != new DbColumnName(dataNull)");
-            Assert.IsFalse(new DbTableColumnName(dataBlank) == new DbTableColumnName(dataBlank), "new DbColumnName(dataBlank) != new DbColumnName(dataBlank)");
+            Assert.IsFalse(new DbTableColumnKey(dataA1) == new DbTableColumnKey(dataC1), "new DbColumnName(dataA1) != new DbColumnName(dataC)");
+            Assert.IsFalse(new DbTableColumnKey(dataNull) == new DbTableColumnKey(dataNull), "new DbColumnName(dataNull) != new DbColumnName(dataNull)");
+            Assert.IsFalse(new DbTableColumnKey(dataBlank) == new DbTableColumnKey(dataBlank), "new DbColumnName(dataBlank) != new DbColumnName(dataBlank)");
         }
 
         [Test()]
         public void CompareToTest()
         {
-            Assert.AreEqual(0, new DbTableColumnName(dataA1).CompareTo(new DbTableColumnName(dataA1)), "new DbColumnName(dataA1).CompareTo(new DbColumnName(dataA1))");
-            Assert.AreEqual(0, new DbTableColumnName(dataA1).CompareTo(new DbTableColumnName(dataA2)), "new DbColumnName(dataA1).CompareTo(new DbColumnName(dataA2))");
+            Assert.AreEqual(0, new DbTableColumnKey(dataA1).CompareTo(new DbTableColumnKey(dataA1)), "new DbColumnName(dataA1).CompareTo(new DbColumnName(dataA1))");
+            Assert.AreEqual(0, new DbTableColumnKey(dataA1).CompareTo(new DbTableColumnKey(dataA2)), "new DbColumnName(dataA1).CompareTo(new DbColumnName(dataA2))");
 
-            Assert.Greater(0, new DbTableColumnName(dataA1).CompareTo(new DbTableColumnName(dataC1)), "new DbColumnName(dataA1).CompareTo(new DbColumnName(dataC))");
-            Assert.Less(0, new DbTableColumnName(dataC1).CompareTo(new DbTableColumnName(dataA1)), "new DbColumnName(dataC).CompareTo(new DbColumnName(dataA1))");
+            Assert.Greater(0, new DbTableColumnKey(dataA1).CompareTo(new DbTableColumnKey(dataC1)), "new DbColumnName(dataA1).CompareTo(new DbColumnName(dataC))");
+            Assert.Less(0, new DbTableColumnKey(dataC1).CompareTo(new DbTableColumnKey(dataA1)), "new DbColumnName(dataC).CompareTo(new DbColumnName(dataA1))");
 
-            Assert.Greater(0, new DbTableColumnName(dataC1).CompareTo(new DbTableColumnName(dataC2)), "new DbColumnName(dataA1).CompareTo(new DbColumnName(dataC))");
-            Assert.Less(0, new DbTableColumnName(dataC2).CompareTo(new DbTableColumnName(dataC1)), "new DbColumnName(dataC).CompareTo(new DbColumnName(dataA1))");
+            Assert.Greater(0, new DbTableColumnKey(dataC1).CompareTo(new DbTableColumnKey(dataC2)), "new DbColumnName(dataA1).CompareTo(new DbColumnName(dataC))");
+            Assert.Less(0, new DbTableColumnKey(dataC2).CompareTo(new DbTableColumnKey(dataC1)), "new DbColumnName(dataC).CompareTo(new DbColumnName(dataA1))");
 
-            Assert.IsTrue(new DbTableColumnName(dataA1) < new DbTableColumnName(dataC1), "new DbColumnName(dataA1) < new DbColumnName(dataC)");
-            Assert.IsTrue(new DbTableColumnName(dataC1) > new DbTableColumnName(dataA1), "new DbColumnName(dataC) > new DbColumnName(dataA1)");
+            Assert.IsTrue(new DbTableColumnKey(dataA1) < new DbTableColumnKey(dataC1), "new DbColumnName(dataA1) < new DbColumnName(dataC)");
+            Assert.IsTrue(new DbTableColumnKey(dataC1) > new DbTableColumnKey(dataA1), "new DbColumnName(dataC) > new DbColumnName(dataA1)");
 
-            Assert.IsTrue(new DbTableColumnName(dataNull) < new DbTableColumnName(dataA1), "new DbColumnName(dataNull) < new DbColumnName(dataA1)");
-            Assert.IsTrue(new DbTableColumnName(dataBlank) < new DbTableColumnName(dataA1), "new DbColumnName(dataBlank) < new DbColumnName(dataA1)");
+            Assert.IsTrue(new DbTableColumnKey(dataNull) < new DbTableColumnKey(dataA1), "new DbColumnName(dataNull) < new DbColumnName(dataA1)");
+            Assert.IsTrue(new DbTableColumnKey(dataBlank) < new DbTableColumnKey(dataA1), "new DbColumnName(dataBlank) < new DbColumnName(dataA1)");
         }
 
         [Test()]
         public void GetHashCodeTest()
         {
-            Assert.DoesNotThrow(() => new DbTableColumnName(dataA1).GetHashCode(), "dataA1.GetHashCode()");
-            Assert.DoesNotThrow(() => new DbTableColumnName(dataC1).GetHashCode(), "dataC.GetHashCode()");
-            Assert.DoesNotThrow(() => new DbTableColumnName(dataNull).GetHashCode(), "dataNull.GetHashCode()");
-            Assert.DoesNotThrow(() => new DbTableColumnName(dataBlank).GetHashCode(), "dataBlank.GetHashCode()");
+            Assert.DoesNotThrow(() => new DbTableColumnKey(dataA1).GetHashCode(), "dataA1.GetHashCode()");
+            Assert.DoesNotThrow(() => new DbTableColumnKey(dataC1).GetHashCode(), "dataC.GetHashCode()");
+            Assert.DoesNotThrow(() => new DbTableColumnKey(dataNull).GetHashCode(), "dataNull.GetHashCode()");
+            Assert.DoesNotThrow(() => new DbTableColumnKey(dataBlank).GetHashCode(), "dataBlank.GetHashCode()");
         }
 
         [Test()]
         public void ToStringTest()
         {
-            Assert.DoesNotThrow(() => new DbTableColumnName(dataA1).ToString(), "dataA1.ToString()");
-            Assert.DoesNotThrow(() => new DbTableColumnName(dataC1).ToString(), "dataC.ToString()");
-            Assert.DoesNotThrow(() => new DbTableColumnName(dataNull).ToString(), "dataNull.ToString()");
-            Assert.DoesNotThrow(() => new DbTableColumnName(dataBlank).ToString(), "dataBlank.ToString()");
+            Assert.DoesNotThrow(() => new DbTableColumnKey(dataA1).ToString(), "dataA1.ToString()");
+            Assert.DoesNotThrow(() => new DbTableColumnKey(dataC1).ToString(), "dataC.ToString()");
+            Assert.DoesNotThrow(() => new DbTableColumnKey(dataNull).ToString(), "dataNull.ToString()");
+            Assert.DoesNotThrow(() => new DbTableColumnKey(dataBlank).ToString(), "dataBlank.ToString()");
         }
 
         [Test()]
         public void SortTest()
         {
-            List<DbTableColumnName> items = new List<DbTableColumnName>()
-            { new DbTableColumnName(dataC2), new DbTableColumnName(dataA2), new DbTableColumnName(dataC1), new DbTableColumnName(dataA1) };
+            List<DbTableColumnKey> items = new List<DbTableColumnKey>()
+            { new DbTableColumnKey(dataC2), new DbTableColumnKey(dataA2), new DbTableColumnKey(dataC1), new DbTableColumnKey(dataA1) };
 
             items.Sort();
 

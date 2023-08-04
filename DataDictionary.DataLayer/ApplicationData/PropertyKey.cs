@@ -6,13 +6,19 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.ApplicationData
 {
-    public interface IPropertyIdentifier
+    public interface IPropertyKey
     {
         Nullable<Guid> PropertyId { get; }
     }
 
-    public class PropertyIdentifier: IPropertyIdentifier
+    public class PropertyKey: IPropertyKey
     {
         public Nullable<Guid> PropertyId { get; init; } = Guid.Empty;
+
+        public PropertyKey(IPropertyKey source) : base()
+        {
+            if (source.PropertyId is Guid) { PropertyId = source.PropertyId; }
+            else { PropertyId = Guid.Empty; }
+        }
     }
 }

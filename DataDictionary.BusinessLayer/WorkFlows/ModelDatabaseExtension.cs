@@ -36,7 +36,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         public static IReadOnlyList<WorkItem> SaveModelList(this ModelData data, IBindingTable<ModelItem> source)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            IModelIdentifier modelId = new ModelIdentifier(data.Model);
+            IModelKey modelId = new ModelKey(data.Model);
             data.Models.Clear();
 
             OpenConnection openConnection = new OpenConnection(data.ModelContext);
@@ -58,7 +58,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             return workItems.AsReadOnly();
         }
 
-        public static IReadOnlyList<WorkItem> LoadModel(this ModelData data, IModelIdentifier modelId)
+        public static IReadOnlyList<WorkItem> LoadModel(this ModelData data, IModelKey modelId)
         {
             List<WorkItem> workItems = new List<WorkItem>();
 
@@ -134,7 +134,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         public static IReadOnlyList<WorkItem> SaveModel(this ModelData data)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            IModelIdentifier modelId = data.Model;
+            IModelKey modelId = data.Model;
 
             OpenConnection openConnection = new OpenConnection(data.ModelContext);
             workItems.Add(openConnection);
@@ -196,7 +196,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             return workItems.AsReadOnly();
         }
 
-        public static IReadOnlyList<WorkItem> DeleteModel(this ModelData data, IModelIdentifier modelId)
+        public static IReadOnlyList<WorkItem> DeleteModel(this ModelData data, IModelKey modelId)
         {
             List<WorkItem> workItems = new List<WorkItem>();
 

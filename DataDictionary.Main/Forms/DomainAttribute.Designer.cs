@@ -33,6 +33,7 @@
             TabPage attributeDefinitionTab;
             TabPage attributePropertyTab;
             TabPage attributeAlaisTab;
+            TableLayoutPanel attributeAlaisTabLayout;
             attributeDescriptionData = new Controls.RichTextBoxData();
             attributePropertiesData = new DataGridView();
             propertyNameData = new DataGridViewComboBoxColumn();
@@ -49,12 +50,14 @@
             attributeDefinitionTab = new TabPage();
             attributePropertyTab = new TabPage();
             attributeAlaisTab = new TabPage();
+            attributeAlaisTabLayout = new TableLayoutPanel();
             attributeLayout.SuspendLayout();
             attributeTabLayout.SuspendLayout();
             attributeDefinitionTab.SuspendLayout();
             attributePropertyTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)attributePropertiesData).BeginInit();
             attributeAlaisTab.SuspendLayout();
+            attributeAlaisTabLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)attributeAlaisData).BeginInit();
             SuspendLayout();
             // 
@@ -150,7 +153,7 @@
             // 
             // attributeAlaisTab
             // 
-            attributeAlaisTab.Controls.Add(attributeAlaisData);
+            attributeAlaisTab.Controls.Add(attributeAlaisTabLayout);
             attributeAlaisTab.Location = new Point(4, 24);
             attributeAlaisTab.Name = "attributeAlaisTab";
             attributeAlaisTab.Size = new Size(515, 400);
@@ -158,15 +161,28 @@
             attributeAlaisTab.Text = "Alias";
             attributeAlaisTab.UseVisualStyleBackColor = true;
             // 
+            // attributeAlaisTabLayout
+            // 
+            attributeAlaisTabLayout.ColumnCount = 1;
+            attributeAlaisTabLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            attributeAlaisTabLayout.Controls.Add(attributeAlaisData, 0, 0);
+            attributeAlaisTabLayout.Dock = DockStyle.Fill;
+            attributeAlaisTabLayout.Location = new Point(0, 0);
+            attributeAlaisTabLayout.Name = "attributeAlaisTabLayout";
+            attributeAlaisTabLayout.RowCount = 1;
+            attributeAlaisTabLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            attributeAlaisTabLayout.Size = new Size(515, 400);
+            attributeAlaisTabLayout.TabIndex = 1;
+            // 
             // attributeAlaisData
             // 
             attributeAlaisData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             attributeAlaisData.Columns.AddRange(new DataGridViewColumn[] { aliasCatalogNameData, aliasSchemaNameData, alaisObjectNameData, aliasElementNameData });
             attributeAlaisData.Dock = DockStyle.Fill;
-            attributeAlaisData.Location = new Point(0, 0);
+            attributeAlaisData.Location = new Point(3, 3);
             attributeAlaisData.Name = "attributeAlaisData";
             attributeAlaisData.RowTemplate.Height = 25;
-            attributeAlaisData.Size = new Size(515, 400);
+            attributeAlaisData.Size = new Size(509, 394);
             attributeAlaisData.TabIndex = 0;
             attributeAlaisData.RowValidated += attributeAlaisData_RowValidated;
             // 
@@ -241,6 +257,7 @@
             attributePropertyTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)attributePropertiesData).EndInit();
             attributeAlaisTab.ResumeLayout(false);
+            attributeAlaisTabLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)attributeAlaisData).EndInit();
             ResumeLayout(false);
         }

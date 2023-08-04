@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DomainData
 {
+    [Obsolete("not needed", true)]
     public interface IDomainAttributeTitle
     {
         String? AttributeTitle { get; }
     }
 
+    [Obsolete("not needed", true)]
     public class DomainAttributeTitle : IDomainAttributeTitle, IEquatable<IDomainAttributeTitle>, IComparable<IDomainAttributeTitle>, IComparable
     {
         public String? AttributeTitle { get; init; }
@@ -29,7 +31,7 @@ namespace DataDictionary.DataLayer.DomainData
         public Boolean Equals(IDomainAttributeTitle? other)
         {
             return (
-                other is IDbSchemaName &&
+                other is IDbSchemaKey &&
                 !String.IsNullOrEmpty(AttributeTitle) &&
                 !String.IsNullOrEmpty(other.AttributeTitle) &&
                 AttributeTitle.Equals(other.AttributeTitle, ModelFactory.CompareString));

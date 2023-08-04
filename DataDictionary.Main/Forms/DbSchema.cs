@@ -21,7 +21,7 @@ namespace DataDictionary.Main.Forms
 
         class FormData
         {
-            public DbSchemaName SchemaName { get; set; } = new DbSchemaName();
+            public DbSchemaKey? SchemaKey { get; set; }
             public IDbSchemaItem? DbSchema { get; set; }
 
             public BindingList<DbExtendedPropertyItem> DbExtendedProperties { get; set; } = new BindingList<DbExtendedPropertyItem>();
@@ -39,9 +39,9 @@ namespace DataDictionary.Main.Forms
 
         public DbSchema(IDbSchemaItem schemaItem) : this()
         {
-            data.SchemaName = new DbSchemaName(schemaItem);
+            data.SchemaKey = new DbSchemaKey(schemaItem);
             OpenItem = schemaItem;
-            this.Text = data.SchemaName.ToString();
+            this.Text = data.SchemaKey.ToString();
         }
 
         private void DbSchema_Load(object sender, EventArgs e)
@@ -49,7 +49,8 @@ namespace DataDictionary.Main.Forms
 
         void BindData()
         {
-            data.DbSchema = Program.Data.DbSchemta.FirstOrDefault(w => data.SchemaName == w);
+            if (data.SchemaKey is not null)
+            { data.DbSchema = Program.Data.DbSchemta.FirstOrDefault(w => data.SchemaKey == new DbSchemaKey(w)); }
 
             if (data.DbSchema is not null)
             {

@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData;
-using DataDictionary.DataLayer.DomainData;
+﻿using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
@@ -19,7 +18,7 @@ namespace DataDictionary.Main.Forms
     {
         class FormData
         {
-            public DomainAttributeIdentifier DomainAttributeId { get; set; } = new DomainAttributeIdentifier();
+            public DomainAttributeKey? AttributeKey { get; set; }
             public IDomainAttributeItem? DomainAttribute { get; set; }
             public IDomainAttributeItem? ParentAttribute { get; set; }
             public BindingView<DomainAttributePropertyItem>? AttributeProperties { get; set; }
@@ -37,7 +36,7 @@ namespace DataDictionary.Main.Forms
 
         public DomainAttribute(IDomainAttributeItem domainAttributeItem) : this()
         {
-            data.DomainAttributeId = new DomainAttributeIdentifier(domainAttributeItem);
+            data.AttributeKey = new DomainAttributeKey(domainAttributeItem);
             OpenItem = domainAttributeItem;
         }
 
@@ -46,9 +45,10 @@ namespace DataDictionary.Main.Forms
 
         void BindData()
         {
-            data.DomainAttribute = Program.Data.DomainAttributes.FirstOrDefault(w => data.DomainAttributeId == w);
+            if (data.AttributeKey is not null)
+            { data.DomainAttribute = Program.Data.DomainAttributes.FirstOrDefault(w => data.AttributeKey == w.AttributeKey); }
 
-            if (data.DomainAttribute is not null)
+            if (data.DomainAttribute is not null && data.AttributeKey is not null)
             {
                 this.Text = data.DomainAttribute.AttributeTitle;
 
@@ -59,11 +59,10 @@ namespace DataDictionary.Main.Forms
                 data.AttributeProperties =
                     new BindingView<DomainAttributePropertyItem>(
                         Program.Data.DomainAttributeProperties,
-                        w => data.DomainAttributeId == w);
+                        w => data.AttributeKey == new DomainAttributeKey(w));
                 data.AttributeAlias = new BindingView<DomainAttributeAliasItem>(
                     Program.Data.DomainAttributeAliases,
-                    w => data.DomainAttributeId == w);
-
+                    w => data.AttributeKey == new DomainAttributeKey(w));
 
                 attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), data.DomainAttribute, nameof(data.DomainAttribute.AttributeTitle)));
                 attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Rtf), data.DomainAttribute, nameof(data.DomainAttribute.AttributeDescription)));
@@ -81,8 +80,6 @@ namespace DataDictionary.Main.Forms
                 attributePropertiesData.DataSource = data.AttributeProperties;
             }
         }
-
-
 
         // Because DataGridComboItem cannot correctly bind anything but a very simple object.
         record PropertyNameDataItems
@@ -107,14 +104,16 @@ namespace DataDictionary.Main.Forms
 
         private void attributePropertiesData_RowValidated(object sender, DataGridViewCellEventArgs e)
         {
-            if (attributePropertiesData.Rows[e.RowIndex].DataBoundItem is DomainAttributePropertyItem item)
-            { item.AttributeId = data.DomainAttributeId.AttributeId; }
+            if (attributePropertiesData.Rows[e.RowIndex].DataBoundItem is DomainAttributePropertyItem item
+                && data.AttributeKey is not null)
+            { item.AttributeKey = data.AttributeKey; }
         }
 
         private void attributeAlaisData_RowValidated(object sender, DataGridViewCellEventArgs e)
         {
-            if (attributeAlaisData.Rows[e.RowIndex].DataBoundItem is DomainAttributeAliasItem item)
-            { item.AttributeId = data.DomainAttributeId.AttributeId; }
+            if (attributeAlaisData.Rows[e.RowIndex].DataBoundItem is DomainAttributeAliasItem item
+                && data.AttributeKey is not null)
+            { item.AttributeKey = data.AttributeKey; }
         }
     }
 }

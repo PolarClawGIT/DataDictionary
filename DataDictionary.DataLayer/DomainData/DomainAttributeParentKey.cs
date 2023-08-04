@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DomainData
 {
-    public interface IDomainAttributeParentId
+    public interface IDomainAttributeParentKey
     {
         Nullable<Guid> ParentAttributeId { get; }
     }

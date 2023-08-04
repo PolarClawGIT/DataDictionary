@@ -13,14 +13,12 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbSchemaItem : IDbSchemaName, IDbIsSystem, IBindingTableRow
-    {
-        //Guid? CatalogId { get; }
-    }
-    
+    public interface IDbSchemaItem : IDbSchemaKey, IDbCatalogKey, IDbIsSystem, IBindingTableRow
+    { }
+
     public class DbSchemaItem : BindingTableRow, IDbSchemaItem, INotifyPropertyChanged, IDbExtendedProperties
     {
-        //public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
         public String? SchemaName { get { return GetValue("SchemaName"); } }
         public Boolean IsSystem
@@ -49,7 +47,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("SchemaName", typeof(String)){ AllowDBNull = false},
         };
 
-        public override IReadOnlyList<DataColumn> ColumnDefinitions ()
+        public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
         public static Command GetSchema(IConnection connection)
@@ -67,7 +65,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             GetCommand();
         }
 
-        public static Command GetData(IConnection connection, IModelIdentifier modelId)
+        public static Command GetData(IConnection connection, IModelKey modelId)
         { return GetData(connection, (modelId.ModelId, null, null)); }
 
         static Command GetData(IConnection connection, (Guid? modelId, String? catalogName, String? schemaName) parameters)
@@ -81,7 +79,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             return command;
         }
 
-        public static Command SetData(IConnection connection, IModelIdentifier modelId, IBindingTable<DbSchemaItem> source)
+        public static Command SetData(IConnection connection, IModelKey modelId, IBindingTable<DbSchemaItem> source)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
@@ -92,33 +90,21 @@ namespace DataDictionary.DataLayer.DbMetaData
         }
 
         public override String ToString()
-        { return new DbSchemaName(this).ToString(); }
+        { return new DbSchemaKey(this).ToString(); }
     }
 
     public static class DbSchemaItemExtension
     {
-        public static DbSchemaItem? GetSchema(this IEnumerable<DbSchemaItem> source, IDbSchemaName item)
-        {
-            DbSchemaName itemName = new DbSchemaName(item);
-            return source.FirstOrDefault(w => itemName == w);
-        }
+        public static DbSchemaItem? GetSchema(this IEnumerable<DbSchemaItem> source, IDbSchemaKey item)
+        { return source.FirstOrDefault(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
 
-        public static DbSchemaItem? GetSchema(this IDbSchemaName item, IEnumerable<DbSchemaItem> source)
-        {
-            DbSchemaName itemName = new DbSchemaName(item);
-            return source.FirstOrDefault(w => itemName == w);
-        }
+        public static DbSchemaItem? GetSchema(this IDbSchemaKey item, IEnumerable<DbSchemaItem> source)
+        { return source.FirstOrDefault(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
 
-        public static IEnumerable<DbSchemaItem> GetSchemta(this IEnumerable<DbSchemaItem> source, IDbCatalogName item)
-        {
-            DbCatalogName itemName = new DbCatalogName(item);
-            return source.Where(w => itemName == w);
-        }
+        public static IEnumerable<DbSchemaItem> GetSchemta(this IEnumerable<DbSchemaItem> source, IDbCatalogKeyUnique item)
+        { return source.Where(w => new DbCatalogKeyUnique(item) == new DbCatalogKeyUnique(w)); }
 
-        public static IEnumerable<DbSchemaItem> GetSchemta(this IDbCatalogName item, IEnumerable<DbSchemaItem> source)
-        {
-            DbCatalogName itemName = new DbCatalogName(item);
-            return source.Where(w => itemName == w);
-        }
+        public static IEnumerable<DbSchemaItem> GetSchemta(this IDbCatalogKeyUnique item, IEnumerable<DbSchemaItem> source)
+        { return source.Where(w => new DbCatalogKeyUnique(item) == new DbCatalogKeyUnique(w)); }
     }
 }

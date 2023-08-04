@@ -14,12 +14,6 @@ namespace Toolbox.DbContext.Tests
 
 
         [Test()]
-        public void ContextTest()
-        {
-            Assert.Fail();
-        }
-
-        [Test()]
         public void CreateConnectionTest()
         {
             
@@ -69,10 +63,6 @@ namespace Toolbox.DbContext.Tests
 
         }
 
-        [Test()]
-        public void ToStringTest()
-        {
-            Assert.Fail();
-        }
+
     }
 }

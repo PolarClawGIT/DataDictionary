@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
     [TestFixture()]
     public class DbSchemaItemExtensionTests
     {
-        class UnitTestData : IDbSchemaName
+        class UnitTestData : IDbSchemaKey
         {
             public String? CatalogName { get; init; }
             public String? SchemaName { get; init; }
@@ -23,10 +23,6 @@ namespace DataDictionary.DataLayer.DbMetaData.Tests
         UnitTestData dataNull = new UnitTestData() { CatalogName = null, SchemaName = null };
         UnitTestData dataBlank = new UnitTestData() { CatalogName = String.Empty, SchemaName = String.Empty };
 
-        [Test()]
-        public void GetSchemaTest()
-        {
-            Assert.Fail();
-        }
+
     }
 }

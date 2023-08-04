@@ -19,7 +19,7 @@ namespace DataDictionary.Main.Forms
     {
         class FormData
         {
-            public DbTableName TableName { get; set; } = new DbTableName();
+            public DbTableKey? TableKey { get; set; }
             public IDbTableItem? DbTable { get; set; }
             public BindingList<DbExtendedPropertyItem> DbExtendedProperties { get; set; } = new BindingList<DbExtendedPropertyItem>();
             public BindingList<DbTableColumnItem> DbColumn { get; set; } = new BindingList<DbTableColumnItem>();
@@ -36,9 +36,9 @@ namespace DataDictionary.Main.Forms
 
         public DbTable(IDbTableItem tableItem) : this()
         {
-            data.TableName = new DbTableName(tableItem);
+            data.TableKey = new DbTableKey(tableItem);
             OpenItem = tableItem;
-            this.Text = data.TableName.ToString();
+            this.Text = data.TableKey.ToString();
         }
 
         private void DbTable_Load(object sender, EventArgs e)
@@ -46,9 +46,10 @@ namespace DataDictionary.Main.Forms
 
         void BindData()
         {
-            data.DbTable = Program.Data.DbTables.FirstOrDefault(w => data.TableName == w);
+            if (data.TableKey is not null)
+            { data.DbTable = Program.Data.DbTables.FirstOrDefault(w => data.TableKey == new DbTableKey(w)); }
 
-            if (data.DbTable is not null)
+            if (data.TableKey is not null && data.DbTable is not null)
             {
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data.DbTable, nameof(data.DbTable.CatalogName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data.DbTable, nameof(data.DbTable.SchemaName)));
@@ -63,7 +64,7 @@ namespace DataDictionary.Main.Forms
                 extendedPropertiesData.DataSource = data.DbExtendedProperties;
 
                 data.DbColumn.Clear();
-                data.DbColumn.AddRange(Program.Data.DbColumns.Where(w => data.TableName == w));
+                data.DbColumn.AddRange(Program.Data.DbColumns.Where(w => data.TableKey == new DbTableKey(w)));
 
                 tableColumnsData.DataSource = data.DbColumn;
             }
