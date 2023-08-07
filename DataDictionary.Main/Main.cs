@@ -177,6 +177,12 @@ namespace DataDictionary.Main
         private void menuAttributeAlaises_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.DomainAlias), Program.Data.DomainAttributeAliases); }
 
+        private void menuConstraintItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.DbKey), Program.Data.DbConstraints); }
+
+        private void menuConstraintColumnItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.DbKeyColumn), Program.Data.DbConstraintColumns); }
+
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         { SendMessage(new WindowsCutCommand() { HandledBy = this.ActiveMdiChild }); }
 
@@ -211,24 +217,28 @@ namespace DataDictionary.Main
             Schema,
             Tables,
             Table,
+            TableKey,
             View,
             Columns,
             Column,
             ComputedColumn,
-            KeyColumn
+            Constraint,
+            ConstraintColumn
         }
 
         static Dictionary<dbDataImageIndex, (String imageKey, Image image)> dbDataImageItems = new Dictionary<dbDataImageIndex, (String imageKey, Image image)>()
         {
-            {dbDataImageIndex.Database,         ("Database",        Resources.Database) },
-            {dbDataImageIndex.Schema,           ("Schema",          Resources.Schema) },
-            {dbDataImageIndex.Tables,           ("Tables",          Resources.TableGroup) },
-            {dbDataImageIndex.Table,            ("Table",           Resources.Table) },
-            {dbDataImageIndex.Columns,          ("Columns",         Resources.ColumnGroup) },
-            {dbDataImageIndex.Column,           ("Column",          Resources.Column) },
-            {dbDataImageIndex.ComputedColumn,   ("ComputedColumn",  Resources.ComputedColumn) },
-            {dbDataImageIndex.KeyColumn,        ("KeyColumn",       Resources.KeyColumn) },
-            {dbDataImageIndex.View,             ("View",            Resources.View) }
+            {dbDataImageIndex.Database,         ("Database",         Resources.Database) },
+            {dbDataImageIndex.Schema,           ("Schema",           Resources.Schema) },
+            {dbDataImageIndex.Tables,           ("Tables",           Resources.TableGroup) },
+            {dbDataImageIndex.Table,            ("Table",            Resources.Table) },
+            {dbDataImageIndex.TableKey,         ("TableKey",         Resources.TableKey) },
+            {dbDataImageIndex.Columns,          ("Columns",          Resources.ColumnGroup) },
+            {dbDataImageIndex.Column,           ("Column",           Resources.Column) },
+            {dbDataImageIndex.ComputedColumn,   ("ComputedColumn",   Resources.ComputedColumn) },
+            {dbDataImageIndex.Constraint,       ("Constraint",       Resources.Key) },
+            {dbDataImageIndex.ConstraintColumn, ("ConstraintColumn", Resources.KeyColumn) },
+            {dbDataImageIndex.View,             ("View",             Resources.View) }
         };
 
         void SetImages(TreeView tree, IEnumerable<(String imageKey, Image image)> images)
@@ -263,11 +273,10 @@ namespace DataDictionary.Main
                     TreeNode tablesNode = CreateNode("Tables & Views", dbDataImageIndex.Tables, null, schemaNode);
 
                     foreach (IDbTableItem tableItem in Program.Data.DbTables.OrderBy(o => o.TableName).Where(
-                        w => w.IsSystem == false &&
-                        w.CatalogName == schemaItem.CatalogName &&
-                        w.SchemaName == schemaItem.SchemaName))
+                        w => w.IsSystem == false && new DbSchemaKey(w).Equals(new DbSchemaKey(schemaItem))))
                     {
                         TreeNode tableNode;
+                        TreeNode? tableConstraintNode = null;
                         if (tableItem.TableType == "VIEW")
                         { tableNode = CreateNode(tableItem.TableName, dbDataImageIndex.View, tableItem, tablesNode); }
                         else { tableNode = CreateNode(tableItem.TableName, dbDataImageIndex.Table, tableItem, tablesNode); }
@@ -275,10 +284,21 @@ namespace DataDictionary.Main
                         TreeNode columnsNode = CreateNode("Columns", dbDataImageIndex.Columns, null, tableNode);
 
                         foreach (IDbTableColumnItem columnItem in Program.Data.DbColumns.OrderBy(o => o.OrdinalPosition).Where(
-                            w => w.CatalogName == tableItem.CatalogName &&
-                            w.SchemaName == tableItem.SchemaName &&
-                            w.TableName == tableItem.TableName))
+                            w => new DbTableKey(w).Equals(new DbTableKey(tableItem))))
                         { TreeNode columnNode = CreateNode(columnItem.ColumnName, dbDataImageIndex.Column, columnItem, columnsNode); }
+
+                        foreach (DbConstraintItem contraintItem in Program.Data.DbConstraints.Where(
+                            w => new DbConstraintKeyTableReference(w).Equals(new DbTableKey(tableItem))))
+                        {
+                            if (tableConstraintNode is null)
+                            { tableConstraintNode = CreateNode("Constraints", dbDataImageIndex.TableKey, null, tableNode); }
+
+                            TreeNode constraintNode = CreateNode(contraintItem.ConstraintName, dbDataImageIndex.Constraint, contraintItem, tableConstraintNode);
+
+                            foreach (DbConstraintColumnItem contraintColumnItem in Program.Data.DbConstraintColumns.Where(
+                                w => new DbConstraintKey(w).Equals(new DbConstraintKey(contraintItem))))
+                            { TreeNode constraintColumnNode = CreateNode(contraintColumnItem.ReferenceColumnName, dbDataImageIndex.ConstraintColumn, contraintColumnItem, constraintNode); }
+                        }
                     }
                 }
             }
@@ -312,6 +332,9 @@ namespace DataDictionary.Main
 
                 if (dataNode is IDbTableColumnItem columnItem)
                 { Activate((data) => new Forms.DbTableColumn(columnItem), columnItem); }
+
+                if (dataNode is IDbConstraintItem constraintItem)
+                { Activate((data) => new Forms.DbConstraint(constraintItem), constraintItem); }
 
             }
         }
@@ -424,6 +447,7 @@ namespace DataDictionary.Main
 
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
         { new Forms.UnitTestGridView().Show(); }
+
 
     }
 }

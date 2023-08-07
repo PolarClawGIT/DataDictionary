@@ -183,6 +183,26 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon DbKey {
+            get {
+                object obj = ResourceManager.GetObject("DbKey", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon DbKeyColumn {
+            get {
+                object obj = ResourceManager.GetObject("DbKeyColumn", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon DbOpenSave {
             get {
                 object obj = ResourceManager.GetObject("DbOpenSave", resourceCulture);
@@ -496,6 +516,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap TableGroup {
             get {
                 object obj = ResourceManager.GetObject("TableGroup", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap TableKey {
+            get {
+                object obj = ResourceManager.GetObject("TableKey", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

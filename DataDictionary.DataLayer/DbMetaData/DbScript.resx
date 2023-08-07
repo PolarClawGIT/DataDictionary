@@ -161,6 +161,27 @@ From	[INFORMATION_SCHEMA].[COLUMNS] I
 	On	C.[object_id] = P.[object_id] And
 		C.[column_id] = P.[column_id]</value>
   </data>
+  <data name="DbConstraintColumnItem" xml:space="preserve">
+    <value>Select	[CONSTRAINT_CATALOG] As [CatalogName],
+	[CONSTRAINT_SCHEMA] As [SchemaName],
+	[CONSTRAINT_NAME] As [ConstraintName],
+	--TABLE_CATALOG,
+	[TABLE_SCHEMA] As [ReferenceSchemaName],
+	[TABLE_NAME] As [ReferenceTableName],
+	[COLUMN_NAME] As [ReferenceColumnName],
+	[ORDINAL_POSITION] As [OrdinalPosition]
+From	[INFORMATION_SCHEMA].[KEY_COLUMN_USAGE]</value>
+  </data>
+  <data name="DbConstraintItem" xml:space="preserve">
+    <value>Select	[CONSTRAINT_CATALOG] As [CatalogName],
+	[CONSTRAINT_SCHEMA] As [SchemaName],
+	[CONSTRAINT_NAME] As [ConstraintName],
+	--[TABLE_CATALOG] As ,
+	[CONSTRAINT_TYPE] As [ConstraintType],
+	[TABLE_SCHEMA] As [ReferenceSchemaName],
+	[TABLE_NAME] As [ReferenceTableName]
+From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS]</value>
+  </data>
   <data name="DbExtendedPropertyItem" xml:space="preserve">
     <value>SELECT Db_Name() [CatalogName],
 	@Level0Type [Level0Type],

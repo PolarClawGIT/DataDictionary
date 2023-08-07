@@ -7,10 +7,10 @@
 	[SchemaName]         SysName Not Null,
 	[ConstraintName]     SysName Not Null,
 	[ConstraintType]     NVarChar(60) Null, -- Known types: FOREIGN KEY, UNIQUE, PRIMARY KEY
-	[RefrenceSchemaName] SysName Not Null,
-	[RefrenceTableName]  SysName Not Null,
+	[ReferenceSchemaName] SysName Not Null,
+	[ReferenceTableName]  SysName Not Null,
 	CONSTRAINT [PK_DatabaseConstraint] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [ConstraintName] ASC),
 	--CONSTRAINT [FK_DatabaseConstraintCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
 	CONSTRAINT [FK_DatabaseConstraintSchema] FOREIGN KEY ([CatalogId], [SchemaName]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([CatalogId], [SchemaName]),
-	CONSTRAINT [FK_DatabaseConstraintRefrenceTable] FOREIGN KEY ([CatalogId], [RefrenceSchemaName], [RefrenceTableName]) REFERENCES [App_DataDictionary].[DatabaseTable] ([CatalogId], [SchemaName], [TableName])
+	CONSTRAINT [FK_DatabaseConstraintRefrenceTable] FOREIGN KEY ([CatalogId], [ReferenceSchemaName], [ReferenceTableName]) REFERENCES [App_DataDictionary].[DatabaseTable] ([CatalogId], [SchemaName], [TableName])
 )

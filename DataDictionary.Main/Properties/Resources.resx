@@ -154,6 +154,12 @@
   <data name="DbExtendedProperty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DbExtendedProperty.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DbKey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DbKey.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DbKeyColumn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DbKeyColumn.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="DbOpenSave" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DbSave.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -249,6 +255,9 @@
   </data>
   <data name="TableGroup" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\TableGroup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TableKey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TableKey.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Underline" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Underline.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

@@ -21,8 +21,6 @@ namespace DataDictionary.Main.Forms
         {
             public DbTableKey? TableKey { get; set; }
             public IDbTableItem? DbTable { get; set; }
-            public BindingList<DbExtendedPropertyItem> DbExtendedProperties { get; set; } = new BindingList<DbExtendedPropertyItem>();
-            public BindingList<DbTableColumnItem> DbColumn { get; set; } = new BindingList<DbTableColumnItem>();
         }
         FormData data = new FormData();
 
@@ -57,16 +55,14 @@ namespace DataDictionary.Main.Forms
                 tableTypeData.DataBindings.Add(new Binding(nameof(tableTypeData.Text), data.DbTable, nameof(data.DbTable.TableType)));
                 isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), data.DbTable, nameof(data.DbTable.IsSystem)));
 
-                data.DbExtendedProperties.Clear();
-                data.DbExtendedProperties.AddRange(Program.Data.DbExtendedProperties.GetProperties(data.DbTable));
-
                 extendedPropertiesData.AutoGenerateColumns = false;
-                extendedPropertiesData.DataSource = data.DbExtendedProperties;
+                extendedPropertiesData.DataSource = Program.Data.DbExtendedProperties.GetProperties(data.DbTable);
 
-                data.DbColumn.Clear();
-                data.DbColumn.AddRange(Program.Data.DbColumns.Where(w => data.TableKey == new DbTableKey(w)));
+                tableColumnsData.AutoGenerateColumns = false;
+                tableColumnsData.DataSource = new BindingView<DbTableColumnItem>(Program.Data.DbColumns, w => new DbTableKey(w).Equals(data.TableKey));
 
-                tableColumnsData.DataSource = data.DbColumn;
+                tableConstraintData.AutoGenerateColumns = false;
+                tableConstraintData.DataSource = new BindingView<DbConstraintItem>(Program.Data.DbConstraints, w => new DbConstraintKeyTableReference(w).Equals(data.TableKey));
             }
         }
 

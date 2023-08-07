@@ -171,7 +171,7 @@ namespace DataDictionary.DataLayer.DbMetaData
     }
 
     public static class DbExtendedPropertyItemExtension
-    {
+    { //TODO: These need to be work with BindingView. Return the Where clause not the result. For now it works.
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbSchemaKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
@@ -218,12 +218,36 @@ namespace DataDictionary.DataLayer.DbMetaData
                 );
         }
 
+        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbConstraintKey item, IEnumerable<DbExtendedPropertyItem> source)
+        {
+            return source.Where(
+                w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
+                w.ObjectScope is ExtendedPropertyObjectScope.Table or ExtendedPropertyObjectScope.View &&
+                w.ElementScope == ExtendedPropertyElementScope.NULL &&
+                item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
+                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
+                item.ConstraintName is not null && item.ConstraintName.Equals(w.Level2Name, ModelFactory.CompareString)
+                );
+        }
+
+        public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbConstraintKey item)
+        {
+            return source.Where(
+                w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
+                w.ObjectScope is ExtendedPropertyObjectScope.Table or ExtendedPropertyObjectScope.View &&
+                w.ElementScope == ExtendedPropertyElementScope.Constraint &&
+                item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
+                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
+                item.ConstraintName is not null && item.ConstraintName.Equals(w.Level2Name, ModelFactory.CompareString)
+                );
+        }
+
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbTableColumnKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
                 w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
                 w.ObjectScope is ExtendedPropertyObjectScope.Table or ExtendedPropertyObjectScope.View &&
-                w.ElementScope == ExtendedPropertyElementScope.Column &&
+                w.ElementScope == ExtendedPropertyElementScope.Constraint &&
                 item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
                 item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
                 item.TableName is not null && item.TableName.Equals(w.Level1Name, ModelFactory.CompareString) &&

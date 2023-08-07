@@ -53,6 +53,20 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Target = data.DbColumns
             });
 
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Load DbConstraints",
+                Command = DbConstraintItem.GetSchema,
+                Target = data.DbConstraints
+            });
+
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Load DbConstraintColumns",
+                Command = DbConstraintColumnItem.GetSchema,
+                Target = data.DbConstraintColumns
+            });
+
             workItems.Add(new LoadExtendedProperties<DbSchemaItem>(openConnection)
             {
                 WorkName = "Load DbExtendedProperties, DbSchemta",
@@ -71,6 +85,13 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             {
                 WorkName = "Load DbExtendedProperties, DbColumns",
                 Source = data.DbColumns,
+                Target = data.DbExtendedProperties
+            });
+
+            workItems.Add(new LoadExtendedProperties<DbConstraintItem>(openConnection)
+            {
+                WorkName = "Load DbExtendedProperties, DbConstraints",
+                Source = data.DbConstraints,
                 Target = data.DbExtendedProperties
             });
 

@@ -92,6 +92,39 @@ namespace DataDictionary.DataLayer.DbMetaData {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select	[CONSTRAINT_CATALOG] As [CatalogName],
+        ///	[CONSTRAINT_SCHEMA] As [SchemaName],
+        ///	[CONSTRAINT_NAME] As [ConstraintName],
+        ///	--TABLE_CATALOG,
+        ///	[TABLE_SCHEMA] As [ReferenceSchemaName],
+        ///	[TABLE_NAME] As [ReferenceTableName],
+        ///	[COLUMN_NAME] As [ReferenceColumnName],
+        ///	[ORDINAL_POSITION] As [OrdinalPosition]
+        ///From	[INFORMATION_SCHEMA].[KEY_COLUMN_USAGE].
+        /// </summary>
+        internal static string DbConstraintColumnItem {
+            get {
+                return ResourceManager.GetString("DbConstraintColumnItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select	[CONSTRAINT_CATALOG] As [CatalogName],
+        ///	[CONSTRAINT_SCHEMA] As [SchemaName],
+        ///	[CONSTRAINT_NAME] As [ConstraintName],
+        ///	--[TABLE_CATALOG] As ,
+        ///	[CONSTRAINT_TYPE] As [ConstraintType],
+        ///	[TABLE_SCHEMA] As [ReferenceSchemaName],
+        ///	[TABLE_NAME] As [ReferenceTableName]
+        ///From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS].
+        /// </summary>
+        internal static string DbConstraintItem {
+            get {
+                return ResourceManager.GetString("DbConstraintItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT Db_Name() [CatalogName],
         ///	@Level0Type [Level0Type],
         ///	@Level0Name [Level0Name],

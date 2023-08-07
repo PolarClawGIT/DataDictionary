@@ -33,27 +33,39 @@
             TabControl tableDetailLayout;
             TabPage extendedPropertiesTab;
             TabPage columnsTab;
+            TableLayoutPanel constraintLayout;
             isSystemData = new CheckBox();
             extendedPropertiesData = new DataGridView();
             propertyNameData = new DataGridViewTextBoxColumn();
             propertyValueData = new DataGridViewTextBoxColumn();
             tableColumnsData = new DataGridView();
+            ColumnNameValue = new DataGridViewTextBoxColumn();
+            DataTypeValue = new DataGridViewTextBoxColumn();
+            IsNullableValue = new DataGridViewCheckBoxColumn();
+            constraintTab = new TabPage();
+            tableConstraintData = new DataGridView();
             catalogNameData = new Controls.TextBoxData();
             schemaNameData = new Controls.TextBoxData();
             tableNameData = new Controls.TextBoxData();
             tableTypeData = new Controls.TextBoxData();
             errorProvider = new ErrorProvider(components);
+            ConstraintNameValue = new DataGridViewTextBoxColumn();
+            ConstraintTypeValue = new DataGridViewTextBoxColumn();
             dbTableLayout = new TableLayoutPanel();
             tableDetailLayout = new TabControl();
             extendedPropertiesTab = new TabPage();
             columnsTab = new TabPage();
+            constraintLayout = new TableLayoutPanel();
             dbTableLayout.SuspendLayout();
             tableDetailLayout.SuspendLayout();
             extendedPropertiesTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).BeginInit();
             columnsTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)tableColumnsData).BeginInit();
+            constraintTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)tableConstraintData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
+            constraintLayout.SuspendLayout();
             SuspendLayout();
             // 
             // dbTableLayout
@@ -99,6 +111,7 @@
             dbTableLayout.SetColumnSpan(tableDetailLayout, 2);
             tableDetailLayout.Controls.Add(extendedPropertiesTab);
             tableDetailLayout.Controls.Add(columnsTab);
+            tableDetailLayout.Controls.Add(constraintTab);
             tableDetailLayout.Dock = DockStyle.Fill;
             tableDetailLayout.Location = new Point(3, 203);
             tableDetailLayout.Name = "tableDetailLayout";
@@ -164,6 +177,7 @@
             tableColumnsData.AllowUserToAddRows = false;
             tableColumnsData.AllowUserToDeleteRows = false;
             tableColumnsData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            tableColumnsData.Columns.AddRange(new DataGridViewColumn[] { ColumnNameValue, DataTypeValue, IsNullableValue });
             tableColumnsData.Dock = DockStyle.Fill;
             tableColumnsData.Location = new Point(3, 3);
             tableColumnsData.Name = "tableColumnsData";
@@ -171,6 +185,52 @@
             tableColumnsData.Size = new Size(413, 143);
             tableColumnsData.TabIndex = 0;
             tableColumnsData.RowHeaderMouseDoubleClick += tableColumnsData_RowHeaderMouseDoubleClick;
+            // 
+            // ColumnNameValue
+            // 
+            ColumnNameValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            ColumnNameValue.DataPropertyName = "ColumnName";
+            ColumnNameValue.HeaderText = "Column Name";
+            ColumnNameValue.Name = "ColumnNameValue";
+            // 
+            // DataTypeValue
+            // 
+            DataTypeValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            DataTypeValue.DataPropertyName = "DataType";
+            DataTypeValue.HeaderText = "Data Type";
+            DataTypeValue.Name = "DataTypeValue";
+            // 
+            // IsNullableValue
+            // 
+            IsNullableValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            IsNullableValue.DataPropertyName = "IsNullable";
+            IsNullableValue.HeaderText = "Is Nullable";
+            IsNullableValue.Name = "IsNullableValue";
+            IsNullableValue.Width = 68;
+            // 
+            // constraintTab
+            // 
+            constraintTab.Controls.Add(constraintLayout);
+            constraintTab.Location = new Point(4, 24);
+            constraintTab.Name = "constraintTab";
+            constraintTab.Size = new Size(419, 149);
+            constraintTab.TabIndex = 2;
+            constraintTab.Text = "Constraints";
+            constraintTab.UseVisualStyleBackColor = true;
+            // 
+            // tableConstraintData
+            // 
+            tableConstraintData.AllowUserToAddRows = false;
+            tableConstraintData.AllowUserToDeleteRows = false;
+            tableConstraintData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            tableConstraintData.Columns.AddRange(new DataGridViewColumn[] { ConstraintNameValue, ConstraintTypeValue });
+            tableConstraintData.Dock = DockStyle.Fill;
+            tableConstraintData.Location = new Point(3, 3);
+            tableConstraintData.Name = "tableConstraintData";
+            tableConstraintData.ReadOnly = true;
+            tableConstraintData.RowTemplate.Height = 25;
+            tableConstraintData.Size = new Size(413, 143);
+            tableConstraintData.TabIndex = 0;
             // 
             // catalogNameData
             // 
@@ -227,6 +287,36 @@
             // 
             errorProvider.ContainerControl = this;
             // 
+            // ConstraintNameValue
+            // 
+            ConstraintNameValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            ConstraintNameValue.DataPropertyName = "ConstraintName";
+            ConstraintNameValue.HeaderText = "Constraint Name";
+            ConstraintNameValue.Name = "ConstraintNameValue";
+            ConstraintNameValue.ReadOnly = true;
+            // 
+            // ConstraintTypeValue
+            // 
+            ConstraintTypeValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            ConstraintTypeValue.DataPropertyName = "ConstraintType";
+            ConstraintTypeValue.HeaderText = "Constraint Type";
+            ConstraintTypeValue.Name = "ConstraintTypeValue";
+            ConstraintTypeValue.ReadOnly = true;
+            ConstraintTypeValue.Width = 114;
+            // 
+            // constraintLayout
+            // 
+            constraintLayout.ColumnCount = 1;
+            constraintLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            constraintLayout.Controls.Add(tableConstraintData, 0, 0);
+            constraintLayout.Dock = DockStyle.Fill;
+            constraintLayout.Location = new Point(0, 0);
+            constraintLayout.Name = "constraintLayout";
+            constraintLayout.RowCount = 1;
+            constraintLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            constraintLayout.Size = new Size(419, 149);
+            constraintLayout.TabIndex = 1;
+            // 
             // DbTable
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -243,7 +333,10 @@
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).EndInit();
             columnsTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)tableColumnsData).EndInit();
+            constraintTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)tableConstraintData).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
+            constraintLayout.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -259,5 +352,12 @@
         private Controls.TextBoxData schemaNameData;
         private Controls.TextBoxData tableNameData;
         private Controls.TextBoxData tableTypeData;
+        private DataGridViewTextBoxColumn ColumnNameValue;
+        private DataGridViewTextBoxColumn DataTypeValue;
+        private DataGridViewCheckBoxColumn IsNullableValue;
+        private TabPage constraintTab;
+        private DataGridView tableConstraintData;
+        private DataGridViewTextBoxColumn ConstraintNameValue;
+        private DataGridViewTextBoxColumn ConstraintTypeValue;
     }
 }
