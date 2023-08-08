@@ -18,9 +18,9 @@
 	[CollationCatalog]       SysName Null,
 	[CollationSchema]        SysName Null,
 	[CollationName]          SysName Null,
-	[UserDefinedTypeCatalog] SysName,
-	[UserDefinedTypeSchema]  SysName,
-	[UserDefinedTypeName]    SysName,
+	[DomainCatalog]          SysName Null,
+	[DomainSchema]           SysName Null,
+	[DomainName]             SysName Null,
 
 	CONSTRAINT [PK_DatabaseParameter] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [RoutineName] ASC, [ParameterName] ASC),
 	--CONSTRAINT [FK_DatabaseParameterCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),

@@ -62,3 +62,7 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
+
+GO
+EXECUTE sp_addextendedproperty @name = N'Test', @value = N'Test', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'PROCEDURE', @level1name = N'procGetSample';
+

@@ -41,10 +41,10 @@ namespace DataDictionary.DataLayer.DbMetaData
         }
 
         public override int CompareTo(object? obj)
-        { if (obj is DbSchemaKey value) { return this.CompareTo(value); } else { return 1; } }
+        { if (obj is IDbSchemaKey value) { return this.CompareTo(new DbSchemaKey(value)); } else { return 1; } }
 
         public override bool Equals(object? obj)
-        { if (obj is DbSchemaKey value) { return this.Equals(value); } else { return false; } }
+        { if (obj is IDbSchemaKey value) { return this.Equals(new DbSchemaKey(value)); } else { return false; } }
 
         public static bool operator ==(DbSchemaKey left, DbSchemaKey right)
         { return left.Equals(right); }

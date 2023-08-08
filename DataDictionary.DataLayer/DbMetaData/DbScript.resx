@@ -127,6 +127,7 @@
 	I.[TABLE_CATALOG] As [CatalogName],
 	I.[TABLE_SCHEMA] As [SchemaName],
 	I.[TABLE_NAME] As [TableName],
+	T.[TABLE_TYPE] As [TableType],
 	I.[COLUMN_NAME] As [ColumnName],
 	I.[ORDINAL_POSITION] As [OrdinalPosition],
 	I.[COLUMN_DEFAULT] As [ColumnDefault],
@@ -153,6 +154,10 @@
 	C.[is_computed] As [IsComputed],
 	NullIf(C.[generated_always_type_desc],'NOT_APPLICABLE') As [GeneratedAlwayType]
 From	[INFORMATION_SCHEMA].[COLUMNS] I
+	Left Join [INFORMATION_SCHEMA].[TABLES] T
+	On	I.[TABLE_CATALOG] = T.[TABLE_CATALOG] And
+		I.[TABLE_SCHEMA] = T.[TABLE_SCHEMA] And
+		I.[TABLE_NAME] = T.[TABLE_NAME]
 	Left Join [sys].[Columns] C
 	On	I.[TABLE_SCHEMA] = Object_Schema_Name(C.[object_id]) And
 		I.[TABLE_NAME] = Object_Name(C.[object_id]) And
@@ -182,6 +187,27 @@ From	[INFORMATION_SCHEMA].[KEY_COLUMN_USAGE]</value>
 	[TABLE_NAME] As [ReferenceTableName]
 From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS]</value>
   </data>
+  <data name="DbDomainItem" xml:space="preserve">
+    <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+	[DOMAIN_CATALOG] As [CatalogName],
+	[DOMAIN_SCHEMA] As [SchemaName],
+	[DOMAIN_NAME] As [DomainName],
+	[DATA_TYPE] As [DataType],
+	[DOMAIN_DEFAULT] As [DomainDefault],
+	[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
+	[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength],
+	[NUMERIC_PRECISION] As [NumericPrecision],
+	[NUMERIC_PRECISION_RADIX] As [NumericPrecisionRadix],
+	[NUMERIC_SCALE] As [NumericScale],
+	[DATETIME_PRECISION] As [DateTimePrecision],
+	[CHARACTER_SET_CATALOG] As [CharacterSetCatalog],
+	[CHARACTER_SET_SCHEMA] As [CharacterSetSchema],
+	[CHARACTER_SET_NAME] As [CharacterSetName],
+	[COLLATION_CATALOG] As [CollationCatalog],
+	[COLLATION_SCHEMA] As [CollationSchema], 
+	[COLLATION_NAME] As [CollationName]
+From	[INFORMATION_SCHEMA].[DOMAINS]</value>
+  </data>
   <data name="DbExtendedPropertyItem" xml:space="preserve">
     <value>SELECT Db_Name() [CatalogName],
 	@Level0Type [Level0Type],
@@ -202,6 +228,70 @@ FROM [fn_listextendedproperty] (
 	@Level1Name,
 	@Level2Type,
 	@Level2Name)</value>
+  </data>
+  <data name="DbRoutineColumnItem" xml:space="preserve">
+    <value>Begin Try;
+Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+	IsNull(R.[referenced_database_name],DB_Name()) As [CatalogName],
+	Object_Schema_Name(Object_id(@ObjectName)) As [SchemaName],
+	Object_Name(Object_id(@ObjectName)) As [ObjectName],
+	IsNull(R.[referenced_schema_name],'dbo') As [ReferencedSchema],
+	R.[referenced_entity_name] As [ReferencedObject],
+	R.[referenced_class_desc] As [RefrenceObjectType],
+	R.referenced_minor_name As [ReferencedColumnName],
+	R.[is_caller_dependent] As [IsCallerDependent],
+	R.[is_ambiguous] As [IsAmbiguous],
+	R.[is_selected] As [IsSelected],
+	R.[is_updated] As [IsUpdated],
+	R.[is_select_all] As [IsSelectAll],
+	R.[is_all_columns_found] As [IsAllColumnsFound],
+	R.[is_insert_all] As [IsInsertAll],
+	R.[is_incomplete] As [IsIncomplete]
+From	[sys].[dm_sql_referenced_entities] (@ObjectName, 'OBJECT') R
+End Try
+Begin Catch
+	Throw; -- Try/Catch is needed Because [sys].[dm_sql_referenced_entities] can generate error msg 2020 that the Try/Catch does not trap (be design).
+End Catch;</value>
+  </data>
+  <data name="DbRoutineItem" xml:space="preserve">
+    <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+	[ROUTINE_CATALOG] As [CatalogName], 
+	[ROUTINE_SCHEMA] As [SchemaName],
+	[ROUTINE_NAME] As [RoutineName],
+	[ROUTINE_TYPE] As [RoutineType]
+From	[INFORMATION_SCHEMA].[ROUTINES]</value>
+  </data>
+  <data name="DbRoutineParameterItem" xml:space="preserve">
+    <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+	P.[SPECIFIC_CATALOG] As [CatalogName],
+	P.[SPECIFIC_SCHEMA] As [SchemaName],
+	P.[SPECIFIC_NAME] As [RoutineName],
+	P.[PARAMETER_NAME] As [ParameterName],
+	P.[ORDINAL_POSITION] As [OrdinalPosition],
+	R.[ROUTINE_TYPE] As [RoutineType],
+	P.[PARAMETER_MODE] As [ParameterMode],
+	P.[IS_RESULT] As [IsResult],
+	P.[DATA_TYPE] As [DataType],
+	P.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
+	P.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength],
+	P.[NUMERIC_PRECISION] As [NumericPrecision],
+	P.[NUMERIC_PRECISION_RADIX] As [NumericPrecisionRadix],
+	P.[NUMERIC_SCALE] As [NumericScale],
+	P.[DATETIME_PRECISION] As [DateTimePrecision],
+	P.[CHARACTER_SET_CATALOG] As [CharacterSetCatalog],
+	P.[CHARACTER_SET_SCHEMA] As [CharacterSetSchema],
+	P.[CHARACTER_SET_NAME] As [CharacterSetName],
+	P.[COLLATION_CATALOG] As [CollationCatalog],
+	P.[COLLATION_SCHEMA] As [CollationSchema],
+	P.[COLLATION_NAME] As [CollationName],
+	P.[USER_DEFINED_TYPE_CATALOG] As [DomainCatalog],
+	P.[USER_DEFINED_TYPE_SCHEMA] As [DomainSchema],
+	P.[USER_DEFINED_TYPE_NAME] As [DomainName]
+From	[INFORMATION_SCHEMA].[PARAMETERS] P
+		Inner Join [INFORMATION_SCHEMA].[ROUTINES] R
+		On	P.[SPECIFIC_CATALOG] = R.[SPECIFIC_CATALOG] And
+			P.[SPECIFIC_SCHEMA] = R.[SPECIFIC_SCHEMA] And
+			P.[SPECIFIC_NAME] = R.[SPECIFIC_NAME]</value>
   </data>
   <data name="DbSchemaItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],

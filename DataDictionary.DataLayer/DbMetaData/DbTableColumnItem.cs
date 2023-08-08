@@ -17,27 +17,10 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbTableColumnItem : IDbTableColumnKey, IDbCatalogKey, IBindingTableRow
+    public interface IDbTableColumnItem : IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbColumn, IBindingTableRow
     {
-        Nullable<Int32> OrdinalPosition { get; }
-        String? ColumnDefault { get; }
         Nullable<Boolean> IsNullable { get; }
-        String? DataType { get; }
-        Nullable<Int32> CharacterMaximumLength { get; }
-        Nullable<Int32> CharacterOctetLength { get; }
-        Nullable<Byte> NumericPrecision { get; }
-        Nullable<Int16> NumericPrecisionRadix { get; }
-        Nullable<Int32> NumericScale { get; }
-        Nullable<Int16> DateTimePrecision { get; }
-        String? CharacterSetCatalog { get; }
-        String? CharacterSetSchema { get; }
-        String? CharacterSetName { get; }
-        String? CollationCatalog { get; }
-        String? CollationSchema { get; }
-        String? CollationName { get; }
-        String? DomainCatalog { get; }
-        String? DomainSchema { get; }
-        String? DomainName { get; }
+        String? ColumnDefault { get; }
         Nullable<Boolean> IsIdentity { get; }
         Nullable<Boolean> IsHidden { get; }
         Nullable<Boolean> IsComputed { get; }
@@ -53,9 +36,9 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? TableName { get { return GetValue("TableName"); } }
         public String? ColumnName { get { return GetValue("ColumnName"); } }
         public Nullable<Int32> OrdinalPosition { get { return GetValue<Int32>("OrdinalPosition"); } }
-        public String? ColumnDefault { get { return GetValue("ColumnDefault"); } }
         public Nullable<Boolean> IsNullable { get { return GetValue<Boolean>("IsNullable", BindingItemParsers.BooleanTryParse); } }
         public String? DataType { get { return GetValue("DataType"); } }
+        public String? ColumnDefault { get { return GetValue("ColumnDefault"); } }
         public Nullable<Int32> CharacterMaximumLength { get { return GetValue<Int32>("CharacterMaximumLength"); } }
         public Nullable<Int32> CharacterOctetLength { get { return GetValue<Int32>("CharacterOctetLength"); } }
         public Nullable<Byte> NumericPrecision { get { return GetValue<Byte>("NumericPrecision"); } }
@@ -77,13 +60,13 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? ComputedDefinition { get { return GetValue("ComputedDefinition"); } }
         public String? GeneratedAlwayType { get { return GetValue("GeneratedAlwayType"); } }
 
-
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(String)){ AllowDBNull = true},
             new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(String)){ AllowDBNull = false},
             new DataColumn("TableName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("TableType", typeof(String)){ AllowDBNull = false},
             new DataColumn("ColumnName", typeof(String)){ AllowDBNull = false},
             new DataColumn("OrdinalPosition", typeof(Int32)){ AllowDBNull = false},
             new DataColumn("IsNullable", typeof(Boolean)){ AllowDBNull = true},
@@ -124,8 +107,11 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public virtual Command GetProperties(IConnection connection)
         {
+            String level1Type = "TABLE";
+            if (GetValue("TableType") is "VIEW") { level1Type = "VIEW"; }
+
             return (new DbExtendedPropertyGetCommand(connection)
-            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = TableName, Level1Type = "TABLE", Level2Name = ColumnName, Level2Type = "COLUMN" }).
+            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = TableName, Level1Type = level1Type, Level2Name = ColumnName, Level2Type = "COLUMN" }).
             GetCommand();
         }
 

@@ -288,7 +288,7 @@ namespace DataDictionary.Main
                         { TreeNode columnNode = CreateNode(columnItem.ColumnName, dbDataImageIndex.Column, columnItem, columnsNode); }
 
                         foreach (DbConstraintItem contraintItem in Program.Data.DbConstraints.Where(
-                            w => new DbConstraintKeyTableReference(w).Equals(new DbTableKey(tableItem))))
+                            w => new DbTableReferenceKey(w).Equals(new DbTableKey(tableItem))))
                         {
                             if (tableConstraintNode is null)
                             { tableConstraintNode = CreateNode("Constraints", dbDataImageIndex.TableKey, null, tableNode); }

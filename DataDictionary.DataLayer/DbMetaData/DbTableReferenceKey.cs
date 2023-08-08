@@ -6,31 +6,31 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbConstraintKeyTableReference : IDbCatalogKeyUnique
+    public interface IDbTableReferenceKey : IDbCatalogKeyUnique
     {
         String? ReferenceSchemaName { get; }
-        String? ReferenceTableName { get; }
+        String? ReferenceObjectName { get; }
     }
 
-    public class DbConstraintKeyTableReference : DbCatalogKeyUnique, IEquatable<DbConstraintKeyTableReference>, IEquatable<DbTableKey>, IComparable<DbConstraintKeyTableReference>, IComparable
+    public class DbTableReferenceKey : DbCatalogKeyUnique, IEquatable<DbTableReferenceKey>, IEquatable<DbTableKey>, IComparable<DbTableReferenceKey>, IComparable
     {
         String ReferenceSchemaName { get; init; }
         String ReferenceTableName { get; init; }
 
-        public DbConstraintKeyTableReference(IDbConstraintKeyTableReference source) : base(source)
+        public DbTableReferenceKey(IDbTableReferenceKey source) : base(source)
         {
             if (source.ReferenceSchemaName is String) { ReferenceSchemaName = source.ReferenceSchemaName; }
             else { ReferenceSchemaName = String.Empty; }
 
-            if (source.ReferenceTableName is String) { ReferenceTableName = source.ReferenceTableName; }
+            if (source.ReferenceObjectName is String) { ReferenceTableName = source.ReferenceObjectName; }
             else { ReferenceTableName = String.Empty; }
         }
 
         #region IEquatable, IComparable
-        public Boolean Equals(DbConstraintKeyTableReference? other)
+        public Boolean Equals(DbTableReferenceKey? other)
         {
             return (
-                other is IDbConstraintKeyTableReference &&
+                other is IDbTableReferenceKey &&
                 new DbCatalogKeyUnique(this).Equals(other) &&
                 !String.IsNullOrEmpty(ReferenceSchemaName) &&
                 !String.IsNullOrEmpty(other.ReferenceSchemaName) &&
@@ -53,7 +53,7 @@ namespace DataDictionary.DataLayer.DbMetaData
                 ReferenceTableName.Equals(other.TableName, ModelFactory.CompareString));
         }
 
-        public Int32 CompareTo(DbConstraintKeyTableReference? other)
+        public Int32 CompareTo(DbTableReferenceKey? other)
         {
             if (other is null) { return 1; }
             else if (new DbCatalogKeyUnique(this).CompareTo(other) is Int32 value && value != 0)
@@ -68,27 +68,27 @@ namespace DataDictionary.DataLayer.DbMetaData
         }
 
         public override int CompareTo(object? obj)
-        { if (obj is IDbConstraintKeyTableReference value) { return this.CompareTo(value); } else { return 1; } }
+        { if (obj is IDbTableReferenceKey value) { return this.CompareTo(new DbTableReferenceKey(value)); } else { return 1; } }
 
         public override bool Equals(object? obj)
-        { if (obj is IDbConstraintKeyTableReference value) { return this.Equals(value); } else { return false; } }
+        { if (obj is IDbTableReferenceKey value) { return this.Equals(new DbTableReferenceKey(value)); } else { return false; } }
 
-        public static bool operator ==(DbConstraintKeyTableReference left, DbConstraintKeyTableReference right)
+        public static bool operator ==(DbTableReferenceKey left, DbTableReferenceKey right)
         { return left.Equals(right); }
 
-        public static bool operator !=(DbConstraintKeyTableReference left, DbConstraintKeyTableReference right)
+        public static bool operator !=(DbTableReferenceKey left, DbTableReferenceKey right)
         { return !left.Equals(right); }
 
-        public static bool operator <(DbConstraintKeyTableReference left, DbConstraintKeyTableReference right)
+        public static bool operator <(DbTableReferenceKey left, DbTableReferenceKey right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
-        public static bool operator <=(DbConstraintKeyTableReference left, DbConstraintKeyTableReference right)
+        public static bool operator <=(DbTableReferenceKey left, DbTableReferenceKey right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
-        public static bool operator >(DbConstraintKeyTableReference left, DbConstraintKeyTableReference right)
+        public static bool operator >(DbTableReferenceKey left, DbTableReferenceKey right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
-        public static bool operator >=(DbConstraintKeyTableReference left, DbConstraintKeyTableReference right)
+        public static bool operator >=(DbTableReferenceKey left, DbTableReferenceKey right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         public override Int32 GetHashCode()

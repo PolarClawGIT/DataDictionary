@@ -10,30 +10,41 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbConstraintItem : IDbConstraintKey, IDbCatalogKey, IBindingTableRow, IDbTableReferenceKey
+    public interface IDbRoutineItem : IDbRoutineKey, IDbCatalogKey, IDbIsSystem, IBindingTableRow
     {
-        String? ConstraintType { get; }
+        String? RoutineType { get; }
     }
 
-    public class DbConstraintItem : BindingTableRow, IDbConstraintItem, INotifyPropertyChanged, IDbExtendedProperties
+    public class DbRoutineItem : BindingTableRow, IDbRoutineItem, INotifyPropertyChanged, IDbExtendedProperties
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
         public String? SchemaName { get { return GetValue("SchemaName"); } }
-        public String? ConstraintName { get { return GetValue("ConstraintName"); } }
-        public String? ConstraintType { get { return GetValue("ConstraintType"); } }
-        public String? ReferenceSchemaName { get { return GetValue("ReferenceSchemaName"); } }
-        public String? ReferenceObjectName { get { return GetValue("ReferenceTableName"); } }
+        public String? RoutineName { get { return GetValue("TableName"); } }
+        public String? RoutineType { get { return GetValue("TableType"); } }
+        public Boolean IsSystem
+        {
+            get
+            {
+                return SchemaName is "dbo" &&
+                    RoutineName is "sp_creatediagram" or
+                    "sp_renamediagram" or
+                    "sp_alterdiagram" or
+                    "sp_dropdiagram" or
+                    "fn_diagramobjects" or
+                    "sp_helpdiagrams" or
+                    "sp_helpdiagramdefinition" or
+                    "sp_upgraddiagrams";
+            }
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(String)){ AllowDBNull = true},
             new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(String)){ AllowDBNull = false},
-            new DataColumn("ConstraintName", typeof(String)){ AllowDBNull = false},
-            new DataColumn("ConstraintType", typeof(String)){ AllowDBNull = false},
-            new DataColumn("ReferenceSchemaName", typeof(String)){ AllowDBNull = false},
-            new DataColumn("ReferenceTableName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("RoutineName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("RoutineType", typeof(String)){ AllowDBNull = false},
         };
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -43,7 +54,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbConstraintItem;
+            command.CommandText = DbScript.DbTableItem;
             return command;
         }
 
@@ -51,16 +62,12 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             return (new DbExtendedPropertyGetCommand(connection)
             {
-                Level0Name = ReferenceSchemaName,
+                Level0Name = SchemaName,
                 Level0Type = "SCHEMA",
-                Level1Name = ReferenceObjectName,
-                Level1Type = "TABLE",
-                Level2Name = ConstraintName,
-                Level2Type = "CONSTRAINT"
+                Level1Name = RoutineName,
+                Level1Type = RoutineType
             }).GetCommand();
-        }
 
-        public override String ToString()
-        { return new DbConstraintKey(this).ToString(); }
+        }
     }
 }

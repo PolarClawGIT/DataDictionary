@@ -15,9 +15,9 @@ namespace DataDictionary.DataLayer.DbMetaData
     public class DbCatalogItem : BindingTableRow, IDbCatalogItem, INotifyPropertyChanged
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } protected set { SetValue<Guid>("CatalogId", value); } }
-        public virtual String? CatalogName { get { return GetValue("CatalogName"); } }
-        public virtual String? SourceServerName { get { return GetValue("SourceServerName"); } }
-        public virtual Boolean IsSystem { get { return CatalogName is "tempdb" or "master" or "msdb" or "model"; } }
+        public String? CatalogName { get { return GetValue("CatalogName"); } }
+        public String? SourceServerName { get { return GetValue("SourceServerName"); } }
+        public Boolean IsSystem { get { return CatalogName is "tempdb" or "master" or "msdb" or "model"; } }
 
         public DbCatalogItem() : base()
         { CatalogId = Guid.NewGuid(); }

@@ -33,11 +33,11 @@
             else { return 1; }
         }
 
-        public virtual int CompareTo(object? obj)
-        { if (obj is DbCatalogKeyUnique value) { return this.CompareTo(value); } else { return 1; } }
-
         public override bool Equals(object? obj)
-        { if (obj is DbCatalogKeyUnique value) { return this.Equals(value); } else { return false; } }
+        { if (obj is IDbCatalogKeyUnique value) { return this.Equals(new DbCatalogKeyUnique(value)); } else { return false; } }
+
+        public virtual int CompareTo(object? obj)
+        { if (obj is IDbCatalogKeyUnique value) { return this.CompareTo(new DbCatalogKeyUnique(value)); } else { return 1; } }
 
         public static bool operator ==(DbCatalogKeyUnique left, DbCatalogKeyUnique right)
         { return left.Equals(right); }

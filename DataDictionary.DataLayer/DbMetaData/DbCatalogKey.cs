@@ -15,7 +15,7 @@
             else { CatalogId = Guid.Empty; }
         }
 
-        #region IEquatable, IComparable
+        #region IEquatable
         public virtual bool Equals(DbCatalogKey? other)
         {
             return (
@@ -25,11 +25,8 @@
                 CatalogId.Equals(other.CatalogId));
         }
 
-        public virtual int CompareTo(object? obj)
-        { if (obj is DbCatalogKey value) { return this.CompareTo(value); } else { return 1; } }
-
         public override bool Equals(object? obj)
-        { if (obj is DbCatalogKey value) { return this.Equals(value); } else { return false; } }
+        { if (obj is IDbCatalogKey value) { return this.Equals(new DbCatalogKey(value)); } else { return false; } }
 
         public static bool operator ==(DbCatalogKey left, DbCatalogKey right)
         { return left.Equals(right); }

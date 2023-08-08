@@ -40,10 +40,10 @@ namespace DataDictionary.DataLayer.DbMetaData
         }
 
         public override int CompareTo(object? obj)
-        { if (obj is IDbTableKey value) { return this.CompareTo(value); } else { return 1; } }
+        { if (obj is IDbTableKey value) { return this.CompareTo(new DbTableKey(value)); } else { return 1; } }
 
         public override bool Equals(object? obj)
-        { if (obj is IDbTableKey value) { return this.Equals(value); } else { return false; } }
+        { if (obj is IDbTableKey value) { return this.Equals(new DbTableKey(value)); } else { return false; } }
 
         public static bool operator ==(DbTableKey left, DbTableKey right)
         { return left.Equals(right); }

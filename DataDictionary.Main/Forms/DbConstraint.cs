@@ -55,7 +55,7 @@ namespace DataDictionary.Main.Forms
                 constraintNameData.DataBindings.Add(new Binding(nameof(constraintNameData.Text), data.DbConstraint, nameof(data.DbConstraint.ConstraintName)));
                 constraintTypeData.DataBindings.Add(new Binding(nameof(constraintTypeData.Text), data.DbConstraint, nameof(data.DbConstraint.ConstraintType)));
                 referenceSchemaNameData.DataBindings.Add(new Binding(nameof(referenceSchemaNameData.Text), data.DbConstraint, nameof(data.DbConstraint.ReferenceSchemaName)));
-                referenceTableNameData.DataBindings.Add(new Binding(nameof(referenceTableNameData.Text), data.DbConstraint, nameof(data.DbConstraint.ReferenceTableName)));
+                referenceTableNameData.DataBindings.Add(new Binding(nameof(referenceTableNameData.Text), data.DbConstraint, nameof(data.DbConstraint.ReferenceObjectName)));
 
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = Program.Data.DbExtendedProperties.GetProperties(data.DbConstraint).ToList();

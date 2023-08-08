@@ -76,14 +76,14 @@ namespace DataDictionary.DataLayer.DbMetaData {
         ///	I.[TABLE_CATALOG] As [CatalogName],
         ///	I.[TABLE_SCHEMA] As [SchemaName],
         ///	I.[TABLE_NAME] As [TableName],
+        ///	T.[TABLE_TYPE] As [TableType],
         ///	I.[COLUMN_NAME] As [ColumnName],
         ///	I.[ORDINAL_POSITION] As [OrdinalPosition],
         ///	I.[COLUMN_DEFAULT] As [ColumnDefault],
         ///	iif(I.[IS_NULLABLE] In (&apos;YES&apos;,&apos;TRUE&apos;,&apos;1&apos;),1,0) As [IsNullable],
         ///	I.[DATA_TYPE] As [DataType],
         ///	P.[definition] As [ComputedDefinition],
-        ///	I.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaxiumLength],
-        ///	I.[CHARACTER_OCTET_LENGTH] As  [rest of string was truncated]&quot;;.
+        ///	I.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaxiumLength], [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbColumnItem {
             get {
@@ -125,6 +125,26 @@ namespace DataDictionary.DataLayer.DbMetaData {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+        ///	[DOMAIN_CATALOG] As [CatalogName],
+        ///	[DOMAIN_SCHEMA] As [SchemaName],
+        ///	[DOMAIN_NAME] As [DomainName],
+        ///	[DATA_TYPE] As [DataType],
+        ///	[DOMAIN_DEFAULT] As [DomainDefault],
+        ///	[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
+        ///	[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength],
+        ///	[NUMERIC_PRECISION] As [NumericPrecision],
+        ///	[NUMERIC_PRECISION_RADIX] As [NumericPrecisionRadix],
+        ///	[NUMERIC_SCALE] As [NumericScale],
+        ///	[DATETIME_PRECISION] As [DateTime [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DbDomainItem {
+            get {
+                return ResourceManager.GetString("DbDomainItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT Db_Name() [CatalogName],
         ///	@Level0Type [Level0Type],
         ///	@Level0Name [Level0Name],
@@ -148,6 +168,58 @@ namespace DataDictionary.DataLayer.DbMetaData {
         internal static string DbExtendedPropertyItem {
             get {
                 return ResourceManager.GetString("DbExtendedPropertyItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Begin Try;
+        ///Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+        ///	IsNull(R.[referenced_database_name],DB_Name()) As [CatalogName],
+        ///	Object_Schema_Name(Object_id(@ObjectName)) As [SchemaName],
+        ///	Object_Name(Object_id(@ObjectName)) As [ObjectName],
+        ///	IsNull(R.[referenced_schema_name],&apos;dbo&apos;) As [ReferencedSchema],
+        ///	R.[referenced_entity_name] As [ReferencedObject],
+        ///	R.[referenced_class_desc] As [ReferenceObjectType],
+        ///	R.referenced_minor_name As [ReferencedColumnName],
+        ///	R.[is_caller_dependent] As [IsCaller [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DbRoutineColumnItem {
+            get {
+                return ResourceManager.GetString("DbRoutineColumnItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+        ///	[ROUTINE_CATALOG] As [CatalogName], 
+        ///	[ROUTINE_SCHEMA] As [SchemaName],
+        ///	[ROUTINE_NAME] As [RoutineName],
+        ///	[ROUTINE_TYPE] As [RoutineType]
+        ///From	[INFORMATION_SCHEMA].[ROUTINES].
+        /// </summary>
+        internal static string DbRoutineItem {
+            get {
+                return ResourceManager.GetString("DbRoutineItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+        ///	P.[SPECIFIC_CATALOG] As [CatalogName],
+        ///	P.[SPECIFIC_SCHEMA] As [SchemaName],
+        ///	P.[SPECIFIC_NAME] As [RoutineName],
+        ///	P.[PARAMETER_NAME] As [ParameterName],
+        ///	P.[ORDINAL_POSITION] As [OrdinalPosition],
+        ///	R.[ROUTINE_TYPE] As [RoutineType],
+        ///	P.[PARAMETER_MODE] As [ParameterMode],
+        ///	P.[IS_RESULT] As [IsResult],
+        ///	P.[DATA_TYPE] As [DataType],
+        ///	P.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
+        ///	P.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength] [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DbRoutineParameterItem {
+            get {
+                return ResourceManager.GetString("DbRoutineParameterItem", resourceCulture);
             }
         }
         
