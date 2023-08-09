@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.DomainData
         Nullable<Guid> AttributeId { get; }
     }
 
-    public class DomainAttributeKey : IEquatable<DomainAttributeKey>
+    public class DomainAttributeKey : IDomainAttributeKey, IEquatable<IDomainAttributeKey>
     {
 
         public Nullable<Guid> AttributeId { get; init; } = Guid.Empty;
@@ -24,17 +24,14 @@ namespace DataDictionary.DataLayer.DomainData
         }
 
         #region IEquatable, IComparable
-        public Boolean Equals(DomainAttributeKey? other)
+        public Boolean Equals(IDomainAttributeKey? other)
         {
-            return (
-                other is IDomainAttributeKey &&
-                AttributeId != Guid.Empty &&
-                other.AttributeId != Guid.Empty &&
-                AttributeId == other.AttributeId);
+            return other is IDomainAttributeKey key &&
+                EqualityComparer<Guid?>.Default.Equals(AttributeId, key.AttributeId);
         }
 
         public override bool Equals(object? obj)
-        { if (obj is DomainAttributeKey value) { return this.Equals(value); } else { return false; } }
+        { return obj is IDomainAttributeKey key && this.Equals(key); }
 
         public static bool operator ==(DomainAttributeKey left, DomainAttributeKey right)
         { return left.Equals(right); }
@@ -44,7 +41,7 @@ namespace DataDictionary.DataLayer.DomainData
 
 
         public override Int32 GetHashCode()
-        { return AttributeId.GetHashCode(); }
+        { return HashCode.Combine(AttributeId); }
         #endregion
 
         public override string ToString()

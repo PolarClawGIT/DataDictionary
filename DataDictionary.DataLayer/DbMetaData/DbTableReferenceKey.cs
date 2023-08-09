@@ -92,11 +92,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         public override Int32 GetHashCode()
-        {
-            if (CatalogName is String && ReferenceSchemaName is String && ReferenceTableName is String)
-            { return (CatalogName, ReferenceSchemaName, ReferenceTableName).GetHashCode(); }
-            else { return base.GetHashCode(); }
-        }
+        { return HashCode.Combine(CatalogName, ReferenceSchemaName, ReferenceTableName); }
         #endregion
 
         public override string ToString()

@@ -65,11 +65,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         public override Int32 GetHashCode()
-        {
-            if (CatalogName is String && SchemaName is String)
-            { return (CatalogName, SchemaName).GetHashCode(); }
-            else { return base.GetHashCode(); }
-        }
+        { return HashCode.Combine(CatalogName, SchemaName); }
         #endregion
 
         public override string ToString()

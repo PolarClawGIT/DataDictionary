@@ -58,10 +58,7 @@
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         public override Int32 GetHashCode()
-        {
-            if (CatalogName is String) { return (CatalogName).GetHashCode(); }
-            else { return String.Empty.GetHashCode(); }
-        }
+        { return HashCode.Combine(CatalogName); }
         #endregion
 
         public override String ToString()

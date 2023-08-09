@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbRoutineKey: IDbSchemaKey
+    public interface IDbRoutineKey : IDbSchemaKey
     {
         String? RoutineName { get; }
     }
@@ -64,11 +64,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         public override Int32 GetHashCode()
-        {
-            if (CatalogName is String && SchemaName is String && RoutineName is String)
-            { return (CatalogName, SchemaName, RoutineName).GetHashCode(); }
-            else { return base.GetHashCode(); }
-        }
+        { return HashCode.Combine(CatalogName, SchemaName, RoutineName); }
         #endregion
 
         public override string ToString()

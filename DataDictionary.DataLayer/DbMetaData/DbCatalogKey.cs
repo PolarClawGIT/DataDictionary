@@ -1,11 +1,13 @@
-﻿namespace DataDictionary.DataLayer.DbMetaData
+﻿using DataDictionary.DataLayer.DomainData;
+
+namespace DataDictionary.DataLayer.DbMetaData
 {
     public interface IDbCatalogKey
     {
         Guid? CatalogId { get; }
     }
 
-    public class DbCatalogKey: IEquatable<DbCatalogKey>
+    public class DbCatalogKey : IEquatable<DbCatalogKey>
     {
         public Guid CatalogId { get; init; } = Guid.Empty;
 
@@ -18,15 +20,15 @@
         #region IEquatable
         public virtual bool Equals(DbCatalogKey? other)
         {
-            return (
-                other is DbCatalogKey &&
-                !Guid.Empty.Equals(CatalogId) &&
-                !Guid.Empty.Equals(other.CatalogId) &&
-                CatalogId.Equals(other.CatalogId));
+            return other is DbCatalogKey key &&
+                EqualityComparer<Guid?>.Default.Equals(CatalogId, key.CatalogId);
         }
 
-        public override bool Equals(object? obj)
-        { if (obj is IDbCatalogKey value) { return this.Equals(new DbCatalogKey(value)); } else { return false; } }
+        public override bool Equals(object? other)
+        { 
+            return other is IDbCatalogKey key &&
+                EqualityComparer<Guid?>.Default.Equals(CatalogId, key.CatalogId);
+        }
 
         public static bool operator ==(DbCatalogKey left, DbCatalogKey right)
         { return left.Equals(right); }
@@ -36,10 +38,10 @@
 
 
         public override Int32 GetHashCode()
-        {   return CatalogId.GetHashCode(); }
+        { return HashCode.Combine(CatalogId); }
         #endregion
 
         public override String ToString()
-        {   return CatalogId.ToString(); }
+        { return CatalogId.ToString(); }
     }
 }
