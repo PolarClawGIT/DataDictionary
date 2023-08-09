@@ -151,6 +151,12 @@
   <data name="DbColumn" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DbColumn.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DbDependancy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DbDependancy.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DbDomainType" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DbDomainType.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="DbExtendedProperty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DbExtendedProperty.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -163,11 +169,20 @@
   <data name="DbOpenSave" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DbSave.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DbParameter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DbParameter.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DbProcedure" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DbProcedure.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="DbSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DbSchema.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DbTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DbTable.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Dependancy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Dependancy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Dictionary" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Dictionary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -180,6 +195,9 @@
   </data>
   <data name="DomainProperty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DomainProperty.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DomainType" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DomainType.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ExtendedProperty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ExtendedProperty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

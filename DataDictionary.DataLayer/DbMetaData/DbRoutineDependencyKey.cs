@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbRoutineColumnKey : IDbRoutineKey, IDbTableReferenceKey
+    public interface IDbRoutineDependencyKey : IDbRoutineKey, IDbTableReferenceKey
     {
         String? ReferenceColumnName { get; }
     }
 
-    public class DbRoutineColumnKey : DbRoutineKey, IDbRoutineColumnKey, IEquatable<DbRoutineColumnKey>, IComparable<DbRoutineColumnKey>, IComparable
+    public class DbRoutineDependencyKey : DbRoutineKey, IDbRoutineDependencyKey, IEquatable<DbRoutineDependencyKey>, IComparable<DbRoutineDependencyKey>, IComparable
     {
         public String ReferenceSchemaName { get; init; }
         public String ReferenceObjectName { get; init; }
         public String ReferenceColumnName { get; init; }
 
-        public DbRoutineColumnKey(IDbRoutineColumnKey source) : base(source)
+        public DbRoutineDependencyKey(IDbRoutineDependencyKey source) : base(source)
         {
             if (source.ReferenceSchemaName is String) { ReferenceSchemaName = source.ReferenceSchemaName; }
             else { ReferenceSchemaName = String.Empty; }
@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         }
 
         #region IEquatable, IComparable
-        public Boolean Equals(DbRoutineColumnKey? other)
+        public Boolean Equals(DbRoutineDependencyKey? other)
         {
             return (
                 other is IDbTableReferenceKey &&
@@ -63,7 +63,7 @@ namespace DataDictionary.DataLayer.DbMetaData
                 );
         }
 
-        public Int32 CompareTo(DbRoutineColumnKey? other)
+        public Int32 CompareTo(DbRoutineDependencyKey? other)
         {
             if (other is null) { return 1; }
             else if (new DbRoutineKey(this).CompareTo(other) is Int32 value && value != 0)
@@ -86,27 +86,27 @@ namespace DataDictionary.DataLayer.DbMetaData
         }
 
         public override int CompareTo(object? obj)
-        { if (obj is IDbRoutineColumnKey value) { return this.CompareTo(new DbRoutineColumnKey(value)); } else { return 1; } }
+        { if (obj is IDbRoutineDependencyKey value) { return this.CompareTo(new DbRoutineDependencyKey(value)); } else { return 1; } }
 
         public override bool Equals(object? obj)
-        { if (obj is IDbRoutineColumnKey value) { return this.Equals(new DbRoutineColumnKey(value)); } else { return false; } }
+        { if (obj is IDbRoutineDependencyKey value) { return this.Equals(new DbRoutineDependencyKey(value)); } else { return false; } }
 
-        public static bool operator ==(DbRoutineColumnKey left, DbRoutineColumnKey right)
+        public static bool operator ==(DbRoutineDependencyKey left, DbRoutineDependencyKey right)
         { return left.Equals(right); }
 
-        public static bool operator !=(DbRoutineColumnKey left, DbRoutineColumnKey right)
+        public static bool operator !=(DbRoutineDependencyKey left, DbRoutineDependencyKey right)
         { return !left.Equals(right); }
 
-        public static bool operator <(DbRoutineColumnKey left, DbRoutineColumnKey right)
+        public static bool operator <(DbRoutineDependencyKey left, DbRoutineDependencyKey right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
-        public static bool operator <=(DbRoutineColumnKey left, DbRoutineColumnKey right)
+        public static bool operator <=(DbRoutineDependencyKey left, DbRoutineDependencyKey right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
-        public static bool operator >(DbRoutineColumnKey left, DbRoutineColumnKey right)
+        public static bool operator >(DbRoutineDependencyKey left, DbRoutineDependencyKey right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
-        public static bool operator >=(DbRoutineColumnKey left, DbRoutineColumnKey right)
+        public static bool operator >=(DbRoutineDependencyKey left, DbRoutineDependencyKey right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         public override Int32 GetHashCode()

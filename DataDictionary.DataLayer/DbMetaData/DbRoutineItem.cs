@@ -20,8 +20,8 @@ namespace DataDictionary.DataLayer.DbMetaData
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
         public String? SchemaName { get { return GetValue("SchemaName"); } }
-        public String? RoutineName { get { return GetValue("TableName"); } }
-        public String? RoutineType { get { return GetValue("TableType"); } }
+        public String? RoutineName { get { return GetValue("RoutineName"); } }
+        public String? RoutineType { get { return GetValue("RoutineType"); } }
         public Boolean IsSystem
         {
             get
@@ -54,7 +54,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbTableItem;
+            command.CommandText = DbScript.DbRoutineItem;
             return command;
         }
 

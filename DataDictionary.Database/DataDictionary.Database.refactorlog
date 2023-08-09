@@ -70,4 +70,11 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[ApplicationProperty]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="3151bebd-f66e-4ae7-8bcf-b69b6fcbda1d" ChangeDateTime="08/09/2023 15:31:12">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseRoutineColumn]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[DatabaseRoutineDependency]" />
+  </Operation>
 </Operations>

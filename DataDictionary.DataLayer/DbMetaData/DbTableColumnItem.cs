@@ -60,6 +60,8 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? ComputedDefinition { get { return GetValue("ComputedDefinition"); } }
         public String? GeneratedAlwayType { get { return GetValue("GeneratedAlwayType"); } }
 
+
+
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(String)){ AllowDBNull = true},

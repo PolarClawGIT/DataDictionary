@@ -26,11 +26,16 @@ namespace DataDictionary.BusinessLayer
         // Database Model
         public BindingTable<DbCatalogItem> DbCatalogs { get; } = ModelFactory.Create<DbCatalogItem>();
         public BindingTable<DbSchemaItem> DbSchemta { get; } = ModelFactory.Create<DbSchemaItem>();
+        public BindingTable<DbDomainItem> DbDomains { get; } = ModelFactory.Create<DbDomainItem>();
         public BindingTable<DbTableItem> DbTables { get; } = ModelFactory.Create<DbTableItem>();
         public BindingTable<DbTableColumnItem> DbColumns { get; } = ModelFactory.Create<DbTableColumnItem>();
         public BindingTable<DbExtendedPropertyItem> DbExtendedProperties = ModelFactory.Create<DbExtendedPropertyItem>();
         public BindingTable<DbConstraintItem> DbConstraints { get; } = ModelFactory.Create<DbConstraintItem>();
         public BindingTable<DbConstraintColumnItem> DbConstraintColumns { get; } = ModelFactory.Create<DbConstraintColumnItem>();
+        public BindingTable<DbRoutineItem> DbRoutines { get; } = ModelFactory.Create<DbRoutineItem>();
+        public BindingTable<DbRoutineParameterItem> DbRoutineParameters { get; } = ModelFactory.Create<DbRoutineParameterItem>();
+        public BindingTable<DbRoutineDependencyItem> DbRoutineDependencies { get; } = ModelFactory.Create<DbRoutineDependencyItem>();
+
 
         // Domain Model
         public BindingTable<DomainAttributeItem> DomainAttributes = ModelFactory.Create<DomainAttributeItem>();

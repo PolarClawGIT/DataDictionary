@@ -41,6 +41,13 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
             workItems.Add(new ExecuteReader(openConnection)
             {
+                WorkName = "Load DbDomains",
+                Command = DbDomainItem.GetSchema,
+                Target = data.DbDomains
+            });
+
+            workItems.Add(new ExecuteReader(openConnection)
+            {
                 WorkName = "Load DbTables",
                 Command = DbTableItem.GetSchema,
                 Target = data.DbTables
@@ -65,6 +72,36 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 WorkName = "Load DbConstraintColumns",
                 Command = DbConstraintColumnItem.GetSchema,
                 Target = data.DbConstraintColumns
+            });
+
+
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Load DbRoutines",
+                Command = DbRoutineItem.GetSchema,
+                Target = data.DbRoutines
+            });
+
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Load DbRoutineParameters",
+                Command = DbRoutineParameterItem.GetSchema,
+                Target = data.DbRoutineParameters
+            });
+
+            workItems.Add(new WorkItem()
+            {
+                WorkName = "Load DbRoutineDependencies",
+                DoWork = () => {
+                    foreach (DbRoutineItem item in data.DbRoutines)
+                    {
+                        data.DbRoutineDependencies.Load(
+                            openConnection.Connection.ExecuteReader(
+                                DbRoutineDependencyItem.GetSchema(
+                                    openConnection.Connection, new DbRoutineKey(item))));
+                    }
+                },
+                IsCanceling = openConnection.IsCanceling
             });
 
             workItems.Add(new LoadExtendedProperties<DbSchemaItem>(openConnection)
@@ -92,6 +129,27 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             {
                 WorkName = "Load DbExtendedProperties, DbConstraints",
                 Source = data.DbConstraints,
+                Target = data.DbExtendedProperties
+            });
+
+            workItems.Add(new LoadExtendedProperties<DbDomainItem>(openConnection)
+            {
+                WorkName = "Load DbExtendedProperties, DbDomains",
+                Source = data.DbDomains,
+                Target = data.DbExtendedProperties
+            });
+
+            workItems.Add(new LoadExtendedProperties<DbRoutineItem>(openConnection)
+            {
+                WorkName = "Load DbExtendedProperties, DbRoutines",
+                Source = data.DbRoutines,
+                Target = data.DbExtendedProperties
+            });
+
+            workItems.Add(new LoadExtendedProperties<DbRoutineParameterItem>(openConnection)
+            {
+                WorkName = "Load DbExtendedProperties, DbRoutineParameters",
+                Source = data.DbRoutineParameters,
                 Target = data.DbExtendedProperties
             });
 

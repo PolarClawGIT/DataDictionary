@@ -11,7 +11,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbRoutineColumnItem : IDbRoutineColumnKey, IDbCatalogKey
+    public interface IDbRoutineDependencyItem : IDbRoutineDependencyKey, IDbCatalogKey
     {
         //Guid? CatalogId { get; }
         //String? SchemaName { get; }
@@ -31,7 +31,7 @@ namespace DataDictionary.DataLayer.DbMetaData
 
     }
 
-    public class DbRoutineColumnItem : BindingTableRow, IDbRoutineColumnItem, INotifyPropertyChanged
+    public class DbRoutineDependencyItem : BindingTableRow, IDbRoutineDependencyItem, INotifyPropertyChanged
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
@@ -77,9 +77,9 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             Command result = connection.CreateCommand();
             result.CommandType = CommandType.Text;
-            result.CommandText = DbScript.DbRoutineColumnItem;
+            result.CommandText = DbScript.DbRoutineDependencyItem;
             result.Parameters.Add(new SqlParameter("@ObjectName", SqlDbType.VarChar, 210));
-            result.Parameters["@ObjectName"].Value = String.Format("[{0}.{1}]", key.SchemaName, key.RoutineName);
+            result.Parameters["@ObjectName"].Value = String.Format("[{0}].[{1}]", key.SchemaName, key.RoutineName);
             return result;
         }
     }

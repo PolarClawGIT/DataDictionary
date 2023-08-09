@@ -173,6 +173,26 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon DbDependancy {
+            get {
+                object obj = ResourceManager.GetObject("DbDependancy", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon DbDomainType {
+            get {
+                object obj = ResourceManager.GetObject("DbDomainType", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon DbExtendedProperty {
             get {
                 object obj = ResourceManager.GetObject("DbExtendedProperty", resourceCulture);
@@ -213,6 +233,26 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon DbParameter {
+            get {
+                object obj = ResourceManager.GetObject("DbParameter", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon DbProcedure {
+            get {
+                object obj = ResourceManager.GetObject("DbProcedure", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon DbSchema {
             get {
                 object obj = ResourceManager.GetObject("DbSchema", resourceCulture);
@@ -227,6 +267,16 @@ namespace DataDictionary.Main.Properties {
             get {
                 object obj = ResourceManager.GetObject("DbTable", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Dependancy {
+            get {
+                object obj = ResourceManager.GetObject("Dependancy", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -267,6 +317,16 @@ namespace DataDictionary.Main.Properties {
             get {
                 object obj = ResourceManager.GetObject("DomainProperty", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DomainType {
+            get {
+                object obj = ResourceManager.GetObject("DomainType", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

@@ -1,4 +1,4 @@
-﻿CREATE TABLE [App_DataDictionary].[DatabaseRoutineColumn]
+﻿CREATE TABLE [App_DataDictionary].[DatabaseRoutineDependency]
 (
 	-- [INFORMATION_SCHEMA] does not contain a list of Columns referenced by Procedures or Functions.
 	-- The best source of this is sys.dm_sql_referenced_entities.
@@ -24,9 +24,9 @@
 	-- Because sys.dm_sql_referenced_entities can return Null for References Objects, a natural PK cannot be defined. Instead a Unique Key is used.
 	--CONSTRAINT [PK_DatabaseRoutineColumn] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [RoutineName] ASC, [RefrenceSchemaName] ASC, [RefrenceTableName] ASC, [RefrenceColumnName] ASC),
 --	CONSTRAINT [FK_DatabaseRoutineColumnCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
-	CONSTRAINT [FK_DatabaseRoutineColumnRoutine] FOREIGN KEY ([CatalogId], [SchemaName], [RoutineName]) REFERENCES [App_DataDictionary].[DatabaseRoutine] ([CatalogId], [SchemaName], [RoutineName]),
+	CONSTRAINT [FK_DatabaseRoutineDependencyRoutine] FOREIGN KEY ([CatalogId], [SchemaName], [RoutineName]) REFERENCES [App_DataDictionary].[DatabaseRoutine] ([CatalogId], [SchemaName], [RoutineName]),
 )
 GO
-CREATE UNIQUE CLUSTERED INDEX [PK_DatabaseRoutineColumn]
-    ON [App_DataDictionary].[DatabaseRoutineColumn] ([CatalogId] ASC, [SchemaName] ASC, [RoutineName] ASC, [ReferenceSchemaName] ASC, [ReferenceObjectName] ASC, [ReferenceColumnName] ASC);
+CREATE UNIQUE CLUSTERED INDEX [PK_DatabaseRoutineDependency]
+    ON [App_DataDictionary].[DatabaseRoutineDependency] ([CatalogId] ASC, [SchemaName] ASC, [RoutineName] ASC, [ReferenceSchemaName] ASC, [ReferenceObjectName] ASC, [ReferenceColumnName] ASC);
 GO

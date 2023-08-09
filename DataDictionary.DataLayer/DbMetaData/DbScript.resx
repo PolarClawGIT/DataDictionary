@@ -120,7 +120,8 @@
   <data name="DbCatalogItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
 	Db_Name() As [CatalogName],
-	@Server As [SourceServerName]</value>
+	@Server As [SourceServerName],
+	Convert(DateTime2, Null) As [SysStart]</value>
   </data>
   <data name="DbColumnItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
@@ -134,10 +135,10 @@
 	iif(I.[IS_NULLABLE] In ('YES','TRUE','1'),1,0) As [IsNullable],
 	I.[DATA_TYPE] As [DataType],
 	P.[definition] As [ComputedDefinition],
-	I.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaxiumLength],
-	I.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLenght],
-	I.[NUMERIC_PRECISION] As [NumericPercision],
-	I.[NUMERIC_PRECISION_RADIX] As [NumericPercisionRaxix],
+	I.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
+	I.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength],
+	I.[NUMERIC_PRECISION] As [NumericPrecision],
+	I.[NUMERIC_PRECISION_RADIX] As [NumericPrecisionRadix],
 	I.[NUMERIC_SCALE] As [NumericScale],
 	I.[DATETIME_PRECISION] As [DateTimePrecision],
 	I.[CHARACTER_SET_CATALOG] As [CharacterSetCatalog],
@@ -167,7 +168,8 @@ From	[INFORMATION_SCHEMA].[COLUMNS] I
 		C.[column_id] = P.[column_id]</value>
   </data>
   <data name="DbConstraintColumnItem" xml:space="preserve">
-    <value>Select	[CONSTRAINT_CATALOG] As [CatalogName],
+    <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+	[CONSTRAINT_CATALOG] As [CatalogName],
 	[CONSTRAINT_SCHEMA] As [SchemaName],
 	[CONSTRAINT_NAME] As [ConstraintName],
 	--TABLE_CATALOG,
@@ -178,7 +180,8 @@ From	[INFORMATION_SCHEMA].[COLUMNS] I
 From	[INFORMATION_SCHEMA].[KEY_COLUMN_USAGE]</value>
   </data>
   <data name="DbConstraintItem" xml:space="preserve">
-    <value>Select	[CONSTRAINT_CATALOG] As [CatalogName],
+    <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+	[CONSTRAINT_CATALOG] As [CatalogName],
 	[CONSTRAINT_SCHEMA] As [SchemaName],
 	[CONSTRAINT_NAME] As [ConstraintName],
 	--[TABLE_CATALOG] As ,
@@ -209,7 +212,8 @@ From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS]</value>
 From	[INFORMATION_SCHEMA].[DOMAINS]</value>
   </data>
   <data name="DbExtendedPropertyItem" xml:space="preserve">
-    <value>SELECT Db_Name() [CatalogName],
+    <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+	Db_Name() [CatalogName],
 	@Level0Type [Level0Type],
 	@Level0Name [Level0Name],
 	@Level1Type [Level1Type],
@@ -229,16 +233,16 @@ FROM [fn_listextendedproperty] (
 	@Level2Type,
 	@Level2Name)</value>
   </data>
-  <data name="DbRoutineColumnItem" xml:space="preserve">
+  <data name="DbRoutineDependencyItem" xml:space="preserve">
     <value>Begin Try;
 Select	Convert(UniqueIdentifier,Null) As [CatalogId],
 	IsNull(R.[referenced_database_name],DB_Name()) As [CatalogName],
 	Object_Schema_Name(Object_id(@ObjectName)) As [SchemaName],
-	Object_Name(Object_id(@ObjectName)) As [ObjectName],
-	IsNull(R.[referenced_schema_name],'dbo') As [ReferencedSchema],
-	R.[referenced_entity_name] As [ReferencedObject],
-	R.[referenced_class_desc] As [RefrenceObjectType],
-	R.referenced_minor_name As [ReferencedColumnName],
+	Object_Name(Object_id(@ObjectName)) As [RoutineName],
+	IsNull(R.[referenced_schema_name],'dbo') As [ReferenceSchemaName],
+	R.[referenced_entity_name] As [ReferenceObjectName],
+	R.[referenced_class_desc] As [ReferenceObjectType],
+	R.referenced_minor_name As [ReferenceColumnName],
 	R.[is_caller_dependent] As [IsCallerDependent],
 	R.[is_ambiguous] As [IsAmbiguous],
 	R.[is_selected] As [IsSelected],
@@ -270,7 +274,7 @@ From	[INFORMATION_SCHEMA].[ROUTINES]</value>
 	P.[ORDINAL_POSITION] As [OrdinalPosition],
 	R.[ROUTINE_TYPE] As [RoutineType],
 	P.[PARAMETER_MODE] As [ParameterMode],
-	P.[IS_RESULT] As [IsResult],
+	iif(P.[IS_RESULT] In ('YES','TRUE','1'),1,0) As [IsResult],
 	P.[DATA_TYPE] As [DataType],
 	P.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
 	P.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength],
@@ -288,10 +292,10 @@ From	[INFORMATION_SCHEMA].[ROUTINES]</value>
 	P.[USER_DEFINED_TYPE_SCHEMA] As [DomainSchema],
 	P.[USER_DEFINED_TYPE_NAME] As [DomainName]
 From	[INFORMATION_SCHEMA].[PARAMETERS] P
-		Inner Join [INFORMATION_SCHEMA].[ROUTINES] R
-		On	P.[SPECIFIC_CATALOG] = R.[SPECIFIC_CATALOG] And
-			P.[SPECIFIC_SCHEMA] = R.[SPECIFIC_SCHEMA] And
-			P.[SPECIFIC_NAME] = R.[SPECIFIC_NAME]</value>
+	Inner Join [INFORMATION_SCHEMA].[ROUTINES] R
+	On	P.[SPECIFIC_CATALOG] = R.[SPECIFIC_CATALOG] And
+		P.[SPECIFIC_SCHEMA] = R.[SPECIFIC_SCHEMA] And
+		P.[SPECIFIC_NAME] = R.[SPECIFIC_NAME]</value>
   </data>
   <data name="DbSchemaItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],

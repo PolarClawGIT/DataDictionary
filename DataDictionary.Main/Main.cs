@@ -183,6 +183,25 @@ namespace DataDictionary.Main
         private void menuConstraintColumnItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.DbKeyColumn), Program.Data.DbConstraintColumns); }
 
+        private void menuDataTypeItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.DbDomainType), Program.Data.DbDomains); }
+
+
+        private void menuRoutineItem_Click(object sender, EventArgs e)
+        {
+            Activate((data) => new Forms.DetailDataView(data, Resources.DbProcedure), Program.Data.DbRoutines);
+        }
+
+        private void menuRoutineParameterItem_Click(object sender, EventArgs e)
+        {
+            Activate((data) => new Forms.DetailDataView(data, Resources.DbParameter), Program.Data.DbRoutineParameters);
+        }
+
+        private void menuRoutineDependencyItem_Click(object sender, EventArgs e)
+        {
+            Activate((data) => new Forms.DetailDataView(data, Resources.DbDependancy), Program.Data.DbRoutineDependencies);
+        }
+
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         { SendMessage(new WindowsCutCommand() { HandledBy = this.ActiveMdiChild }); }
 
@@ -441,9 +460,6 @@ namespace DataDictionary.Main
         protected override void HandleMessage(DbDataBatchCompleted message)
         { BindData(); }
         #endregion
-
-
-
 
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
         { new Forms.UnitTestGridView().Show(); }

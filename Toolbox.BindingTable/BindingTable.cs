@@ -117,6 +117,29 @@ namespace Toolbox.BindingTable
                     throw;
                 }
 
+                // Validation Check
+                List<String> columnNames = new List<String>();
+                InvalidOperationException? coloumMismatch = null;
+
+                columnNames.AddRange(dataItems.Columns.Cast<DataColumn>().Select(s => s.ColumnName));
+                columnNames.AddRange(newData.Columns.Cast<DataColumn>().Select(s => s.ColumnName).Where(w => !columnNames.Contains(w)));
+
+                foreach (String item in columnNames)
+                {
+                    if (!dataItems.Columns.Contains(item) || !newData.Columns.Contains(item))
+                    {
+                        if (coloumMismatch is null)
+                        {
+                            coloumMismatch = new InvalidOperationException("Column Name not found");
+                            coloumMismatch.Data.Add(nameof(dataItems.TableName), dataItems.TableName);
+                        }
+
+                        coloumMismatch.Data.Add(item, String.Format("Target- {0}, Source- {1}",dataItems.Columns.Contains(item), newData.Columns.Contains(item)));
+                    }
+                }
+
+                if (coloumMismatch is not null) { throw coloumMismatch; }
+
                 // Transfer the work table to the data table, building the Binding Rows as we go.
                 foreach (DataRow row in newData.Rows)
                 {

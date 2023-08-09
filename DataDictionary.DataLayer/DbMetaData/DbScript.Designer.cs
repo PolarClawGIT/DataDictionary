@@ -63,7 +63,8 @@ namespace DataDictionary.DataLayer.DbMetaData {
         /// <summary>
         ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
         ///	Db_Name() As [CatalogName],
-        ///	@Server As [SourceServerName].
+        ///	@Server As [SourceServerName],
+        ///	Convert(DateTime2, Null) As [SysStart].
         /// </summary>
         internal static string DbCatalogItem {
             get {
@@ -83,7 +84,7 @@ namespace DataDictionary.DataLayer.DbMetaData {
         ///	iif(I.[IS_NULLABLE] In (&apos;YES&apos;,&apos;TRUE&apos;,&apos;1&apos;),1,0) As [IsNullable],
         ///	I.[DATA_TYPE] As [DataType],
         ///	P.[definition] As [ComputedDefinition],
-        ///	I.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaxiumLength], [rest of string was truncated]&quot;;.
+        ///	I.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength] [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbColumnItem {
             get {
@@ -92,7 +93,8 @@ namespace DataDictionary.DataLayer.DbMetaData {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select	[CONSTRAINT_CATALOG] As [CatalogName],
+        ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+        ///	[CONSTRAINT_CATALOG] As [CatalogName],
         ///	[CONSTRAINT_SCHEMA] As [SchemaName],
         ///	[CONSTRAINT_NAME] As [ConstraintName],
         ///	--TABLE_CATALOG,
@@ -109,7 +111,8 @@ namespace DataDictionary.DataLayer.DbMetaData {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select	[CONSTRAINT_CATALOG] As [CatalogName],
+        ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+        ///	[CONSTRAINT_CATALOG] As [CatalogName],
         ///	[CONSTRAINT_SCHEMA] As [SchemaName],
         ///	[CONSTRAINT_NAME] As [ConstraintName],
         ///	--[TABLE_CATALOG] As ,
@@ -145,7 +148,8 @@ namespace DataDictionary.DataLayer.DbMetaData {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Db_Name() [CatalogName],
+        ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+        ///	Db_Name() [CatalogName],
         ///	@Level0Type [Level0Type],
         ///	@Level0Name [Level0Name],
         ///	@Level1Type [Level1Type],
@@ -163,7 +167,7 @@ namespace DataDictionary.DataLayer.DbMetaData {
         ///	@Level1Type,
         ///	@Level1Name,
         ///	@Level2Type,
-        ///	@Level2Name).
+        ///	@Le [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbExtendedPropertyItem {
             get {
@@ -176,16 +180,16 @@ namespace DataDictionary.DataLayer.DbMetaData {
         ///Select	Convert(UniqueIdentifier,Null) As [CatalogId],
         ///	IsNull(R.[referenced_database_name],DB_Name()) As [CatalogName],
         ///	Object_Schema_Name(Object_id(@ObjectName)) As [SchemaName],
-        ///	Object_Name(Object_id(@ObjectName)) As [ObjectName],
-        ///	IsNull(R.[referenced_schema_name],&apos;dbo&apos;) As [ReferencedSchema],
-        ///	R.[referenced_entity_name] As [ReferencedObject],
+        ///	Object_Name(Object_id(@ObjectName)) As [RoutineName],
+        ///	IsNull(R.[referenced_schema_name],&apos;dbo&apos;) As [ReferenceSchemaName],
+        ///	R.[referenced_entity_name] As [ReferenceObjectName],
         ///	R.[referenced_class_desc] As [ReferenceObjectType],
-        ///	R.referenced_minor_name As [ReferencedColumnName],
-        ///	R.[is_caller_dependent] As [IsCaller [rest of string was truncated]&quot;;.
+        ///	R.referenced_minor_name As [ReferenceColumnName],
+        ///	R.[is_caller_dependent] As [I [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string DbRoutineColumnItem {
+        internal static string DbRoutineDependencyItem {
             get {
-                return ResourceManager.GetString("DbRoutineColumnItem", resourceCulture);
+                return ResourceManager.GetString("DbRoutineDependencyItem", resourceCulture);
             }
         }
         
@@ -212,10 +216,10 @@ namespace DataDictionary.DataLayer.DbMetaData {
         ///	P.[ORDINAL_POSITION] As [OrdinalPosition],
         ///	R.[ROUTINE_TYPE] As [RoutineType],
         ///	P.[PARAMETER_MODE] As [ParameterMode],
-        ///	P.[IS_RESULT] As [IsResult],
+        ///	iif(P.[IS_RESULT] In (&apos;YES&apos;,&apos;TRUE&apos;,&apos;1&apos;),1,0) As [IsResult],
         ///	P.[DATA_TYPE] As [DataType],
         ///	P.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
-        ///	P.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength] [rest of string was truncated]&quot;;.
+        ///	P.[CHARACTER_OCTET_LE [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbRoutineParameterItem {
             get {
