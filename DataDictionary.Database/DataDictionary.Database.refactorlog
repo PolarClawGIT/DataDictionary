@@ -77,4 +77,18 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[DatabaseRoutineDependency]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="add6228d-e97a-4bfc-8f8c-99c4f0117913" ChangeDateTime="08/10/2023 14:39:13">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeDatabaseColumn]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeDatabaseTableColumn]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f8acf10b-fded-4fc1-9cfd-df7329af38b1" ChangeDateTime="08/10/2023 15:04:27">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseTableColumn].[NumericPercisionRaxix]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseTableColumn]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[NumericPercisionRadix]" />
+  </Operation>
 </Operations>

@@ -9,7 +9,7 @@
 	[CharacterMaxiumLength]  Int Null,
 	[CharacterOctetLenght]   Int Null,
 	[NumericPercision]       TinyInt Null,
-	[NumericPercisionRaxix]  SmallInt Null,
+	[NumericPercisionRadix]  SmallInt Null,
 	[NumericScale]           Int Null,
 	[DateTimePrecision]      SmallInt Null,
 	[CharacterSetCatalog]    SysName Null,

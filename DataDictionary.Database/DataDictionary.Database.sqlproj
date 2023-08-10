@@ -9,8 +9,7 @@
     <ProjectGuid>{6812c29c-90cd-4aa7-b362-f3cf9acf9c56}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
-    <RootPath>
-    </RootPath>
+    <RootPath />
     <RootNamespace>DataDictionary.Database</RootNamespace>
     <AssemblyName>DataDictionary.Database</AssemblyName>
     <ModelCollation>1033,CI</ModelCollation>
@@ -50,7 +49,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
-    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
     <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
     <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
   </PropertyGroup>
@@ -126,7 +124,7 @@
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseCatalog.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseSchema.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseTable.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseColumn.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseTableColumn.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseCatalog.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseSchema.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseTable.sql" />
@@ -149,6 +147,24 @@
     <Build Include="App_DataDictionary\User Defined Types\typeApplicationProperty.sql" />
     <Build Include="App_DataDictionary\Tables\ApplicationPropertyScope.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationPropertyScope.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseDomain.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraint.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraintColumn.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseRoutine.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseRoutineParameter.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseRoutineDependency.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseDomain.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseDomain.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseConstraint.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseConstraint.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseConstraintColumn.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseConstraintColumn.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseRoutine.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseRoutine.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseRoutineParameter.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseRoutineParameter.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseRoutineDependency.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseRoutineDependency.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

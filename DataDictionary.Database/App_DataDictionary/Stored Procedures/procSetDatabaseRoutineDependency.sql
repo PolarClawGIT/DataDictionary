@@ -1,10 +1,10 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseTable]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseRoutineDependency]
 		@ModelId UniqueIdentifier,
-		@Data [App_DataDictionary].[typeDatabaseTable] ReadOnly
+		@Data [App_DataDictionary].[typeDatabaseRoutineDependency] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on DatabaseTable.
+/* Description: Performs Set on DatabaseRoutineDependency.
 */
 
 -- Transaction Handling
@@ -19,13 +19,24 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDatabaseTable]
+	Declare @Values [App_DataDictionary].[typeDatabaseRoutineDependency]
 	Insert Into @Values
 	Select	P.[CatalogId] As [CatalogId],
 			P.[CatalogName] As [CatalogName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
-			NullIf(Trim(D.[TableName]),'') As [TableName],
-			NullIf(Trim(D.[TableType]),'') As [TableType]
+			NullIf(Trim(D.[RoutineName]),'') As [RoutineName],
+			NullIf(Trim(D.[ReferenceSchemaName]),'') As [ReferenceSchemaName],
+			NullIf(Trim(D.[ReferenceObjectName]),'') As [ReferenceObjectName],
+			NullIf(Trim(D.[ReferenceObjectType]),'') As [ReferenceObjectType],
+			NullIf(Trim(D.[ReferenceColumnName]),'') As [ReferenceColumnName],
+			D.[IsCallerDependent],
+			D.[IsAmbiguous],
+			D.[IsSelected],
+			D.[IsUpdated],
+			D.[IsSelectAll],
+			D.[IsAllColumnsFound],
+			D.[IsInsertAll],
+			D.[IsIncomplete]
 	From	@Data D
 			Left Join [App_DataDictionary].[ApplicationCatalog] C
 			On	C.[ModelId] = @ModelId
@@ -37,75 +48,121 @@ Begin Try
 	If Not Exists (Select 1 From [App_DataDictionary].[ApplicationModel] Where [ModelId] = @ModelId)
 	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
 
-	If Exists (
-		Select	[CatalogName], [SchemaName], [TableName]
-		From	@Values
-		Group By [CatalogName], [SchemaName], [TableName]
-		Having	Count(*) > 1)
-	Throw 50000, '[TableName] cannot be duplicate within a Schema', 2;
-
-	-- Cascade Delete
-	Declare @Delete Table (
-		[CatalogId] UniqueIdentifier Not Null,
-		[SchemaName] SysName Not Null,
-		[TableName] SysName Not Null,
-		Primary key ([CatalogId], [SchemaName], [TableName]));
-
-	Insert Into @Delete
-	Select	T.[CatalogId],
-			T.[SchemaName],
-			T.[TableName]
-	From	[App_DataDictionary].[DatabaseTable] T
-			Inner Join [App_DataDictionary].[ApplicationCatalog] M
-			On	T.[CatalogId] = M.[CatalogId] And
-				M.[ModelId] = @ModelId
-			Left Join @Values V
-			On	T.[CatalogId] = V.[CatalogId] And
-				T.[SchemaName] = V.[SchemaName] And
-				T.[TableName] = V.[TableName]
-	Where	V.[CatalogId] is Null;
-
-	Delete From [App_DataDictionary].[DatabaseTableColumn]
-	From	[App_DataDictionary].[DatabaseTableColumn] T
-			Inner Join @Delete D
-			On	T.[CatalogId] = D.[CatalogId] And
-				T.[SchemaName] = D.[SchemaName] And
-				T.[TableName] = D.[TableName];
-
 	-- Apply Changes
 	With [Delta] As (
 		Select	[CatalogId],
 				[SchemaName],
-				[TableName],
-				[TableType]
+				[RoutineName],
+				[ReferenceSchemaName],
+				[ReferenceObjectName],
+				[ReferenceObjectType],
+				[ReferenceColumnName],
+				[IsCallerDependent],
+				[IsAmbiguous],
+				[IsSelected],
+				[IsUpdated],
+				[IsSelectAll],
+				[IsAllColumnsFound],
+				[IsInsertAll],
+				[IsIncomplete]
 		From	@Values
 		Except
 		Select	[CatalogId],
 				[SchemaName],
-				[TableName],
-				[TableType]
-		From	[App_DataDictionary].[DatabaseTable]),
+				[RoutineName],
+				[ReferenceSchemaName],
+				[ReferenceObjectName],
+				[ReferenceObjectType],
+				[ReferenceColumnName],
+				[IsCallerDependent],
+				[IsAmbiguous],
+				[IsSelected],
+				[IsUpdated],
+				[IsSelectAll],
+				[IsAllColumnsFound],
+				[IsInsertAll],
+				[IsIncomplete]
+		From	[App_DataDictionary].[DatabaseRoutineDependency]),
 	[Data] As (
 		Select	V.[CatalogId],
 				V.[SchemaName],
-				V.[TableName],
-				V.[TableType],
+				V.[RoutineName],
+				V.[ReferenceSchemaName],
+				V.[ReferenceObjectName],
+				V.[ReferenceObjectType],
+				V.[ReferenceColumnName],
+				V.[IsCallerDependent],
+				V.[IsAmbiguous],
+				V.[IsSelected],
+				V.[IsUpdated],
+				V.[IsSelectAll],
+				V.[IsAllColumnsFound],
+				V.[IsInsertAll],
+				V.[IsIncomplete],
 				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
 				On	V.[CatalogId] = D.[CatalogId] And
 					V.[SchemaName] = D.[SchemaName] And
-					V.[TableName] = D.[TableName])
-	Merge [App_DataDictionary].[DatabaseTable] As T
+					V.[RoutineName] = D.[RoutineName] And
+					IsNull(V.[ReferenceSchemaName],'') = IsNull(D.[ReferenceSchemaName],'') And
+					IsNull(V.[ReferenceObjectName],'') = IsNull(D.[ReferenceObjectName],'') And
+					IsNull(V.[ReferenceColumnName],'') = IsNull(D.[ReferenceColumnName],''))
+	Merge [App_DataDictionary].[DatabaseRoutineDependency] As T
 	Using [Data] As S
 	On	T.[CatalogId] = S.[CatalogId] And
 		T.[SchemaName] = S.[SchemaName] And
-		T.[TableName] = S.[TableName]
+		T.[RoutineName] = S.[RoutineName] And
+		IsNull(T.[ReferenceSchemaName],'') = IsNull(S.[ReferenceSchemaName],'') And
+		IsNull(T.[ReferenceObjectName],'') = IsNull(S.[ReferenceObjectName],'') And
+		IsNull(T.[ReferenceColumnName],'') = IsNull(S.[ReferenceColumnName],'')
 	When Matched and [IsDiffrent] = 1 Then Update Set
-		[TableType] = S.[TableType]
+		[CatalogId] = S.[CatalogId],
+		[SchemaName] = S.[SchemaName],
+		[RoutineName] = S.[RoutineName],
+		[ReferenceSchemaName] = S.[ReferenceSchemaName],
+		[ReferenceObjectName] = S.[ReferenceObjectName],
+		[ReferenceObjectType] = S.[ReferenceObjectType],
+		[ReferenceColumnName] = S.[ReferenceColumnName],
+		[IsCallerDependent] = S.[IsCallerDependent],
+		[IsAmbiguous] = S.[IsAmbiguous],
+		[IsSelected] = S.[IsSelected],
+		[IsUpdated] = S.[IsUpdated],
+		[IsSelectAll] = S.[IsSelectAll],
+		[IsAllColumnsFound] = S.[IsAllColumnsFound],
+		[IsInsertAll] = S.[IsInsertAll],
+		[IsIncomplete] = S.[IsIncomplete]
 	When Not Matched by Target Then
-		Insert ([CatalogId], [SchemaName], [TableName], [TableType])
-		Values ([CatalogId], [SchemaName], [TableName], [TableType])
+		Insert ([CatalogId],
+				[SchemaName],
+				[RoutineName],
+				[ReferenceSchemaName],
+				[ReferenceObjectName],
+				[ReferenceObjectType],
+				[ReferenceColumnName],
+				[IsCallerDependent],
+				[IsAmbiguous],
+				[IsSelected],
+				[IsUpdated],
+				[IsSelectAll],
+				[IsAllColumnsFound],
+				[IsInsertAll],
+				[IsIncomplete])
+		Values ([CatalogId],
+				[SchemaName],
+				[RoutineName],
+				[ReferenceSchemaName],
+				[ReferenceObjectName],
+				[ReferenceObjectType],
+				[ReferenceColumnName],
+				[IsCallerDependent],
+				[IsAmbiguous],
+				[IsSelected],
+				[IsUpdated],
+				[IsSelectAll],
+				[IsAllColumnsFound],
+				[IsInsertAll],
+				[IsIncomplete])
 	When Not Matched by Source And (T.[CatalogId] In (
 		Select	[CatalogId]
 		From	[App_DataDictionary].[ApplicationCatalog]
@@ -137,7 +194,6 @@ Begin Catch
 	Print FormatMessage (' Current_User - %s', Current_User)
 	Print FormatMessage (' XAct_State - %i', XAct_State())
 	Print '*** Debug Report ***'
-	Print FormatMessage (' @ModelId- %s',Convert(NVarChar(50),@ModelId))
 
 	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
 
@@ -152,16 +208,4 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
-GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseTable',
-	@value = N'Performs Set on DatabaseTable.'
-GO
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseTable',
-	@level2type = N'PARAMETER', @level2name = N'@ModelId',
-	@value = N'ModelId'
 GO

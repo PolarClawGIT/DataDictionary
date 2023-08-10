@@ -1,10 +1,10 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseTable]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseConstraint]
 		@ModelId UniqueIdentifier,
-		@Data [App_DataDictionary].[typeDatabaseTable] ReadOnly
+		@Data [App_DataDictionary].[typeDatabaseConstraint] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on DatabaseTable.
+/* Description: Performs Set on DatabaseConstraint.
 */
 
 -- Transaction Handling
@@ -19,13 +19,13 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDatabaseTable]
+	Declare @Values [App_DataDictionary].[typeDatabaseConstraint]
 	Insert Into @Values
 	Select	P.[CatalogId] As [CatalogId],
 			P.[CatalogName] As [CatalogName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
-			NullIf(Trim(D.[TableName]),'') As [TableName],
-			NullIf(Trim(D.[TableType]),'') As [TableType]
+			NullIf(Trim(D.[ConstraintName]),'') As [ConstraintName],
+			NullIf(Trim(D.[ConstraintType]),'') As [ConstraintType]
 	From	@Data D
 			Left Join [App_DataDictionary].[ApplicationCatalog] C
 			On	C.[ModelId] = @ModelId
@@ -38,74 +38,83 @@ Begin Try
 	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
 
 	If Exists (
-		Select	[CatalogName], [SchemaName], [TableName]
+		Select	[CatalogName], [SchemaName], [ConstraintName]
 		From	@Values
-		Group By [CatalogName], [SchemaName], [TableName]
+		Group By [CatalogName], [SchemaName], [ConstraintName]
 		Having	Count(*) > 1)
-	Throw 50000, '[TableName] cannot be duplicate within a Schema', 2;
+	Throw 50000, '[ConstraintName] cannot be duplicate', 2;
 
 	-- Cascade Delete
 	Declare @Delete Table (
 		[CatalogId] UniqueIdentifier Not Null,
 		[SchemaName] SysName Not Null,
-		[TableName] SysName Not Null,
-		Primary key ([CatalogId], [SchemaName], [TableName]));
+		[ConstraintName] SysName Not Null,
+		Primary key ([CatalogId], [SchemaName], [ConstraintName]));
 
 	Insert Into @Delete
 	Select	T.[CatalogId],
 			T.[SchemaName],
-			T.[TableName]
-	From	[App_DataDictionary].[DatabaseTable] T
+			T.[ConstraintName]
+	From	[App_DataDictionary].[DatabaseConstraint] T
 			Inner Join [App_DataDictionary].[ApplicationCatalog] M
 			On	T.[CatalogId] = M.[CatalogId] And
 				M.[ModelId] = @ModelId
 			Left Join @Values V
 			On	T.[CatalogId] = V.[CatalogId] And
 				T.[SchemaName] = V.[SchemaName] And
-				T.[TableName] = V.[TableName]
+				T.[ConstraintName] = V.[ConstraintName]
 	Where	V.[CatalogId] is Null;
 
-	Delete From [App_DataDictionary].[DatabaseTableColumn]
-	From	[App_DataDictionary].[DatabaseTableColumn] T
+	Delete From [App_DataDictionary].[DatabaseConstraintColumn]
+	From	[App_DataDictionary].[DatabaseConstraintColumn] T
 			Inner Join @Delete D
 			On	T.[CatalogId] = D.[CatalogId] And
 				T.[SchemaName] = D.[SchemaName] And
-				T.[TableName] = D.[TableName];
+				T.[ConstraintName] = D.[ConstraintName];
 
 	-- Apply Changes
 	With [Delta] As (
 		Select	[CatalogId],
 				[SchemaName],
-				[TableName],
-				[TableType]
+				[ConstraintName],
+				[ConstraintType]
 		From	@Values
 		Except
 		Select	[CatalogId],
 				[SchemaName],
-				[TableName],
-				[TableType]
-		From	[App_DataDictionary].[DatabaseTable]),
+				[ConstraintName],
+				[ConstraintType]
+		From	[App_DataDictionary].[DatabaseConstraint]),
 	[Data] As (
 		Select	V.[CatalogId],
 				V.[SchemaName],
-				V.[TableName],
-				V.[TableType],
+				V.[ConstraintName],
+				V.[ConstraintType],
 				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
 				On	V.[CatalogId] = D.[CatalogId] And
 					V.[SchemaName] = D.[SchemaName] And
-					V.[TableName] = D.[TableName])
-	Merge [App_DataDictionary].[DatabaseTable] As T
+					V.[ConstraintName] = D.[ConstraintName])
+	Merge [App_DataDictionary].[DatabaseConstraint] As T
 	Using [Data] As S
 	On	T.[CatalogId] = S.[CatalogId] And
 		T.[SchemaName] = S.[SchemaName] And
-		T.[TableName] = S.[TableName]
+		T.[ConstraintName] = S.[ConstraintName]
 	When Matched and [IsDiffrent] = 1 Then Update Set
-		[TableType] = S.[TableType]
+		[CatalogId] = S.[CatalogId],
+		[SchemaName] = S.[SchemaName],
+		[ConstraintName] = S.[ConstraintName],
+		[ConstraintType] = S.[ConstraintType]
 	When Not Matched by Target Then
-		Insert ([CatalogId], [SchemaName], [TableName], [TableType])
-		Values ([CatalogId], [SchemaName], [TableName], [TableType])
+		Insert ([CatalogId],
+				[SchemaName],
+				[ConstraintName],
+				[ConstraintType])
+		Values ([CatalogId],
+				[SchemaName],
+				[ConstraintName],
+				[ConstraintType])
 	When Not Matched by Source And (T.[CatalogId] In (
 		Select	[CatalogId]
 		From	[App_DataDictionary].[ApplicationCatalog]
@@ -137,7 +146,6 @@ Begin Catch
 	Print FormatMessage (' Current_User - %s', Current_User)
 	Print FormatMessage (' XAct_State - %i', XAct_State())
 	Print '*** Debug Report ***'
-	Print FormatMessage (' @ModelId- %s',Convert(NVarChar(50),@ModelId))
 
 	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
 
@@ -152,16 +160,4 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
-GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseTable',
-	@value = N'Performs Set on DatabaseTable.'
-GO
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseTable',
-	@level2type = N'PARAMETER', @level2name = N'@ModelId',
-	@value = N'ModelId'
 GO

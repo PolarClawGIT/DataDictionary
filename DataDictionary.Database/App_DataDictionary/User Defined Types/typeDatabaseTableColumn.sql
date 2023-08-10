@@ -1,4 +1,4 @@
-﻿CREATE TYPE [App_DataDictionary].[typeDatabaseColumn] AS TABLE
+﻿CREATE TYPE [App_DataDictionary].[typeDatabaseTableColumn] AS TABLE
 (
 	[CatalogId]              UniqueIdentifier Null,
 	[CatalogName]            SysName          Null,
@@ -12,7 +12,7 @@
 	[CharacterMaxiumLength]  Int              Null,
 	[CharacterOctetLenght]   Int              Null,
 	[NumericPercision]       TinyInt          Null,
-	[NumericPercisionRaxix]  SmallInt         Null,
+	[NumericPercisionRadix]  SmallInt         Null,
 	[NumericScale]           Int              Null,
 	[DateTimePrecision]      SmallInt         Null,
 	[CharacterSetCatalog]    SysName          Null,

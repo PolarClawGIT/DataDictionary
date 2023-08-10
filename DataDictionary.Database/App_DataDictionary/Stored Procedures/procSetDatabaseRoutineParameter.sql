@@ -1,10 +1,10 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseTableColumn]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseRoutineParameter]
 		@ModelId UniqueIdentifier,
-		@Data [App_DataDictionary].[typeDatabaseTableColumn] ReadOnly
+		@Data [App_DataDictionary].[typeDatabaseRoutineParameter] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on DatabaseColumn.
+/* Description: Performs Set on DatabaseRoutineParameter.
 */
 
 -- Transaction Handling
@@ -19,37 +19,30 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDatabaseTableColumn]
+	Declare @Values [App_DataDictionary].[typeDatabaseRoutineParameter]
 	Insert Into @Values
 	Select	P.[CatalogId] As [CatalogId],
 			P.[CatalogName] As [CatalogName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
-			NullIf(Trim(D.[TableName]),'') As [TableName],
-			NullIf(Trim([ColumnName]),'') As [ColumnName],
-			[OrdinalPosition],
-			[IsNullable],
-			NullIf(Trim([DataType]),'') As [DataType],
-			NullIf(Trim([ColumnDefault]),'') As [ColumnDefault],
-			[CharacterMaxiumLength],
-			[CharacterOctetLenght],
-			[NumericPercision],
-			[NumericPercisionRadix],
-			[NumericScale],
-			[DateTimePrecision],
-			NullIf(Trim([CharacterSetCatalog]),'') As [CharacterSetCatalog],
-			NullIf(Trim([CharacterSetSchema]),'') As [CharacterSetSchema],
-			NullIf(Trim([CharacterSetName]),'') As [CharacterSetName],
-			NullIf(Trim([CollationCatalog]),'') As [CollationCatalog],
-			NullIf(Trim([CollationSchema]),'') As [CollationSchema],
-			NullIf(Trim([CollationName]),'') As [CollationName],
-			NullIf(Trim([DomainCatalog]),'') As [DomainCatalog],
-			NullIf(Trim([DomainSchema]),'') As [DomainSchema],
-			NullIf(Trim([DomainName]),'') As [DomainName],
-			[IsIdentity],
-			[IsHidden],
-			[IsComputed],
-			NullIf(Trim([ComputedDefinition]),'') As [ComputedDefinition],
-			NullIf(Trim([GeneratedAlwayType]),'') As [GeneratedAlwayType]
+			NullIf(Trim(D.[RoutineName]),'') As [RoutineName],
+			NullIf(Trim(D.[ParameterName]),'') As [ParameterName],
+			D.[OrdinalPosition],
+			NullIf(Trim(D.[DataType]),'') As [DataType],
+			D.[CharacterMaxiumLength],
+			D.[CharacterOctetLenght],
+			D.[NumericPercision],
+			D.[NumericPercisionRadix],
+			D.[NumericScale],
+			D.[DateTimePrecision],
+			NullIf(Trim(D.[CharacterSetCatalog]),'') As [CharacterSetCatalog],
+			NullIf(Trim(D.[CharacterSetSchema]),'') As [CharacterSetSchema],
+			NullIf(Trim(D.[CharacterSetName]),'') As [CharacterSetName],
+			NullIf(Trim(D.[CollationCatalog]),'') As [CollationCatalog],
+			NullIf(Trim(D.[CollationSchema]),'') As [CollationSchema],
+			NullIf(Trim(D.[CollationName]),'') As [CollationName],
+			NullIf(Trim(D.[DomainCatalog]),'') As [DomainCatalog],
+			NullIf(Trim(D.[DomainSchema]),'') As [DomainSchema],
+			NullIf(Trim(D.[DomainName]),'') As [DomainName]
 	From	@Data D
 			Left Join [App_DataDictionary].[ApplicationCatalog] C
 			On	C.[ModelId] = @ModelId
@@ -62,21 +55,19 @@ Begin Try
 	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
 
 	If Exists (
-		Select	[CatalogName], [SchemaName], [TableName], [ColumnName]
+		Select	[CatalogName], [SchemaName], [RoutineName], [ParameterName]
 		From	@Values
-		Group By [CatalogName], [SchemaName], [TableName], [ColumnName]
+		Group By [CatalogName], [SchemaName], [RoutineName], [ParameterName]
 		Having	Count(*) > 1)
-	Throw 50000, '[ColumnName] cannot be duplicate within a Table', 2;
+	Throw 50000, '[ParameterName] cannot be duplicate', 2;
 
 	-- Apply Changes
-		With [Delta] As (
+	With [Delta] As (
 		Select	[CatalogId],
 				[SchemaName],
-				[TableName],
-				[ColumnName],
+				[RoutineName],
+				[ParameterName],
 				[OrdinalPosition],
-				[ColumnDefault],
-				[IsNullable],
 				[DataType],
 				[CharacterMaxiumLength],
 				[CharacterOctetLenght],
@@ -88,24 +79,18 @@ Begin Try
 				[CharacterSetSchema],
 				[CharacterSetName],
 				[CollationCatalog],
+				[CollationSchema],
 				[CollationName],
 				[DomainCatalog],
 				[DomainSchema],
-				[DomainName],
-				[IsIdentity],
-				[IsHidden],
-				[IsComputed],
-				[ComputedDefinition],
-				[GeneratedAlwayType]
+				[DomainName]
 		From	@Values
 		Except
 		Select	[CatalogId],
 				[SchemaName],
-				[TableName],
-				[ColumnName],
+				[RoutineName],
+				[ParameterName],
 				[OrdinalPosition],
-				[ColumnDefault],
-				[IsNullable],
 				[DataType],
 				[CharacterMaxiumLength],
 				[CharacterOctetLenght],
@@ -117,24 +102,18 @@ Begin Try
 				[CharacterSetSchema],
 				[CharacterSetName],
 				[CollationCatalog],
+				[CollationSchema],
 				[CollationName],
 				[DomainCatalog],
 				[DomainSchema],
-				[DomainName],
-				[IsIdentity],
-				[IsHidden],
-				[IsComputed],
-				[ComputedDefinition],
-				[GeneratedAlwayType]
-		From	[App_DataDictionary].[DatabaseTableColumn]),
+				[DomainName]
+		From	[App_DataDictionary].[DatabaseRoutineParameter]),
 	[Data] As (
 		Select	V.[CatalogId],
 				V.[SchemaName],
-				V.[TableName],
-				V.[ColumnName],
+				V.[RoutineName],
+				V.[ParameterName],
 				V.[OrdinalPosition],
-				V.[ColumnDefault],
-				V.[IsNullable],
 				V.[DataType],
 				V.[CharacterMaxiumLength],
 				V.[CharacterOctetLenght],
@@ -146,32 +125,30 @@ Begin Try
 				V.[CharacterSetSchema],
 				V.[CharacterSetName],
 				V.[CollationCatalog],
+				V.[CollationSchema],
 				V.[CollationName],
 				V.[DomainCatalog],
 				V.[DomainSchema],
 				V.[DomainName],
-				V.[IsIdentity],
-				V.[IsHidden],
-				V.[IsComputed],
-				V.[ComputedDefinition],
-				V.[GeneratedAlwayType],
 				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
 				On	V.[CatalogId] = D.[CatalogId] And
 					V.[SchemaName] = D.[SchemaName] And
-					V.[TableName] = D.[TableName] And
-					V.[ColumnName] = D.[ColumnName])
-	Merge [App_DataDictionary].[DatabaseTableColumn] As T
+					V.[RoutineName] = D.[RoutineName] And
+					V.[ParameterName] = D.[ParameterName])
+	Merge [App_DataDictionary].[DatabaseRoutineParameter] As T
 	Using [Data] As S
 	On	T.[CatalogId] = S.[CatalogId] And
 		T.[SchemaName] = S.[SchemaName] And
-		T.[TableName] = S.[TableName] And
-		T.[ColumnName] = S.[ColumnName]
+		T.[RoutineName] = S.[RoutineName] And
+		T.[ParameterName] = S.[ParameterName]
 	When Matched and [IsDiffrent] = 1 Then Update Set
+		[CatalogId] = S.[CatalogId],
+		[SchemaName] = S.[SchemaName],
+		[RoutineName] = S.[RoutineName],
+		[ParameterName] = S.[ParameterName],
 		[OrdinalPosition] = S.[OrdinalPosition],
-		[ColumnDefault] = S.[ColumnDefault],
-		[IsNullable] = S.[IsNullable],
 		[DataType] = S.[DataType],
 		[CharacterMaxiumLength] = S.[CharacterMaxiumLength],
 		[CharacterOctetLenght] = S.[CharacterOctetLenght],
@@ -183,23 +160,17 @@ Begin Try
 		[CharacterSetSchema] = S.[CharacterSetSchema],
 		[CharacterSetName] = S.[CharacterSetName],
 		[CollationCatalog] = S.[CollationCatalog],
+		[CollationSchema] = S.[CollationSchema],
 		[CollationName] = S.[CollationName],
 		[DomainCatalog] = S.[DomainCatalog],
 		[DomainSchema] = S.[DomainSchema],
-		[DomainName] = S.[DomainName],
-		[IsIdentity] = S.[IsIdentity],
-		[IsHidden] = S.[IsHidden],
-		[IsComputed] = S.[IsComputed],
-		[ComputedDefinition] = S.[ComputedDefinition],
-		[GeneratedAlwayType] = S.[GeneratedAlwayType]
+		[DomainName] = S.[DomainName]
 	When Not Matched by Target Then
 		Insert ([CatalogId],
 				[SchemaName],
-				[TableName],
-				[ColumnName],
+				[RoutineName],
+				[ParameterName],
 				[OrdinalPosition],
-				[ColumnDefault],
-				[IsNullable],
 				[DataType],
 				[CharacterMaxiumLength],
 				[CharacterOctetLenght],
@@ -211,22 +182,16 @@ Begin Try
 				[CharacterSetSchema],
 				[CharacterSetName],
 				[CollationCatalog],
+				[CollationSchema],
 				[CollationName],
 				[DomainCatalog],
 				[DomainSchema],
-				[DomainName],
-				[IsIdentity],
-				[IsHidden],
-				[IsComputed],
-				[ComputedDefinition],
-				[GeneratedAlwayType])
+				[DomainName])
 		Values ([CatalogId],
 				[SchemaName],
-				[TableName],
-				[ColumnName],
+				[RoutineName],
+				[ParameterName],
 				[OrdinalPosition],
-				[ColumnDefault],
-				[IsNullable],
 				[DataType],
 				[CharacterMaxiumLength],
 				[CharacterOctetLenght],
@@ -238,23 +203,16 @@ Begin Try
 				[CharacterSetSchema],
 				[CharacterSetName],
 				[CollationCatalog],
+				[CollationSchema],
 				[CollationName],
 				[DomainCatalog],
 				[DomainSchema],
-				[DomainName],
-				[IsIdentity],
-				[IsHidden],
-				[IsComputed],
-				[ComputedDefinition],
-				[GeneratedAlwayType])
+				[DomainName])
 	When Not Matched by Source And (T.[CatalogId] In (
 		Select	[CatalogId]
 		From	[App_DataDictionary].[ApplicationCatalog]
 		Where	[ModelId] = @ModelId))
 		Then Delete;
-
-	-- Tracking statement, example
-	Print FormatMessage ('Set [App_DataDictionary].[DatabaseTableColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -281,7 +239,6 @@ Begin Catch
 	Print FormatMessage (' Current_User - %s', Current_User)
 	Print FormatMessage (' XAct_State - %i', XAct_State())
 	Print '*** Debug Report ***'
-	Print FormatMessage (' @ModelId- %s',Convert(NVarChar(50),@ModelId))
 
 	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
 

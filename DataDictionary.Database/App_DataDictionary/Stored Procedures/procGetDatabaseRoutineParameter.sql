@@ -1,23 +1,20 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procGetDatabaseTableColumn]
+﻿CREATE PROCEDURE [App_DataDictionary].[procGetDatabaseRoutineParameter]
 		@ModelId UniqueIdentifier = Null,
 		@CatalogName SysName = Null,
 		@SchemaName SysName = Null,
-		@TableName SysName = Null,
-		@ColumnName SysName = Null
+		@RoutineName SysName = Null
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Get on DatabaseColumn.
+/* Description: Performs Get on DatabaseRoutineParameter.
 */
 Select	A.[ModelId],
 		D.[CatalogId],
 		C.[CatalogName],
 		D.[SchemaName],
-		D.[TableName],
-		D.[ColumnName],
+		D.[RoutineName],
+		D.[ParameterName],
 		D.[OrdinalPosition],
-		D.[ColumnDefault],
-		D.[IsNullable],
 		D.[DataType],
 		D.[CharacterMaxiumLength],
 		D.[CharacterOctetLenght],
@@ -33,13 +30,8 @@ Select	A.[ModelId],
 		D.[CollationName],
 		D.[DomainCatalog],
 		D.[DomainSchema],
-		D.[DomainName],
-		D.[IsIdentity],
-		D.[IsHidden],
-		D.[IsComputed],
-		D.[ComputedDefinition],
-		D.[GeneratedAlwayType]
-From	[App_DataDictionary].[DatabaseTableColumn] D
+		D.[DomainName]
+From	[App_DataDictionary].[DatabaseRoutineParameter] D
 		Inner Join [App_DataDictionary].[ApplicationCatalog] A
 		On	D.[CatalogId] = A.[CatalogId]
 		Inner Join [App_DataDictionary].[DatabaseCatalog] C
@@ -47,6 +39,5 @@ From	[App_DataDictionary].[DatabaseTableColumn] D
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@CatalogName is Null or @CatalogName = C.[CatalogName]) And
 		(@SchemaName is Null or @SchemaName = D.[SchemaName]) And
-		(@TableName is Null or @TableName = D.[TableName]) And
-		(@ColumnName is Null or @ColumnName = D.[ColumnName])
+		(@RoutineName is Null or @RoutineName = D.[RoutineName])
 GO
