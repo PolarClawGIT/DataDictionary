@@ -1,4 +1,4 @@
-﻿CREATE TYPE [App_DataDictionary].[typeApplicationModel] AS TABLE
+﻿CREATE TYPE [App_DataDictionary].[typeModel] AS TABLE
 (    -- TIP: This matches the C# DataTable structure
 	[ModelId]              UniqueIdentifier Null,
 	[ModelTitle]           NVarChar(100) Null,

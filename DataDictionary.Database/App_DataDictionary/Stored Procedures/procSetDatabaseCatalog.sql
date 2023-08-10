@@ -26,14 +26,14 @@ Begin Try
 			NullIf(Trim(D.[SourceServerName]),'') As [SourceServerName],
 			D.[SysStart]
 	From	@Data D
-			Left Join [App_DataDictionary].[ApplicationCatalog] C
+			Left Join [App_DataDictionary].[ModelCatalog] C
 			On	C.[ModelId] = @ModelId
 			Left Join [App_DataDictionary].[DatabaseCatalog] P
 			On	C.[CatalogId] = P.[CatalogId] And
 				D.[CatalogName] = P.[CatalogName]
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[ApplicationModel] Where [ModelId] = @ModelId)
+	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
 	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
 
 	If Exists (
@@ -57,7 +57,7 @@ Begin Try
 
 	Insert Into @Delete
 	Select	T.[CatalogId]
-	From	[App_DataDictionary].[ApplicationCatalog] T
+	From	[App_DataDictionary].[ModelCatalog] T
 			Left Join @Values V
 			On	V.[CatalogId] = T.[CatalogId]
 	Where	V.[CatalogId] is Null And
@@ -72,7 +72,7 @@ Begin Try
 	Delete From [App_DataDictionary].[DatabaseSchema]
 	Where	[CatalogId] In (Select [CatalogId] From @Delete);
 
-	Delete From [App_DataDictionary].[ApplicationCatalog]
+	Delete From [App_DataDictionary].[ModelCatalog]
 	Where	[CatalogId] In (Select [CatalogId] From @Delete);
 
 	-- Apply Changes
@@ -109,7 +109,7 @@ Begin Try
 		Select	@ModelId As [ModelId],
 				[CatalogId]
 		From	@Values)
-	Merge [App_DataDictionary].[ApplicationCatalog] T
+	Merge [App_DataDictionary].[ModelCatalog] T
 	Using [Data] D
 	On	T.[ModelId] = D.[ModelId] And
 		T.[CatalogId] = D.[CatalogId]

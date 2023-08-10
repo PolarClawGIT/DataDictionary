@@ -14,7 +14,7 @@ Select	A.[ModelId],
 		D.[ModfiedBy],
 		D.[SysStart]
 From	[App_DataDictionary].[DatabaseCatalog] D
-		Inner Join [App_DataDictionary].[ApplicationCatalog] A
+		Inner Join [App_DataDictionary].[ModelCatalog] A
 		On	D.[CatalogId] = A.[CatalogId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@CatalogId is Null or @CatalogId = D.[CatalogId]) And

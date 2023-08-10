@@ -6,14 +6,14 @@
 			@AttributeId UniqueIdentifier,
 			@Date DateTime2
 
-	Exec [App_DataDictionary].[procSetApplicationModel] @ModelId = null, @ModelTitle = 'Unit Test', @ModelDescription = Null, @Obsolete = 0, @SysStart = null
+	Exec [App_DataDictionary].[procSetModel] @ModelId = null, @ModelTitle = 'Unit Test', @ModelDescription = Null, @Obsolete = 0, @SysStart = null
 
 	Select	@ModelId = [ModelId],
 			@Date = GetDate()
-	From	[App_DataDictionary].[ApplicationModel]
+	From	[App_DataDictionary].[Model]
 
 
-	Exec [App_DataDictionary].[procSetApplicationModel] @ModelId = @ModelId, @ModelTitle = 'Update', @ModelDescription = Null, @Obsolete = 1, @SysStart = null
+	Exec [App_DataDictionary].[procSetModel] @ModelId = @ModelId, @ModelTitle = 'Update', @ModelDescription = Null, @Obsolete = 1, @SysStart = null
 
 
 	Declare @Data [App_DataDictionary].[typeDomainAttribute]
@@ -37,13 +37,13 @@
 	Exec [App_DataDictionary].[procSetDomainAttributeProperty] @ModelId = @ModelId, @Data = @Property
 
 	Select	*
-	From	[App_DataDictionary].[ApplicationModel]
+	From	[App_DataDictionary].[Model]
 
 	Select	*
 	From	[App_DataDictionary].[DomainAttribute]
 
 	Select	*
-	From	[App_DataDictionary].[ApplicationAttribute]
+	From	[App_DataDictionary].[ModelAttribute]
 
 	Select	*
 	From	[App_DataDictionary].[DomainAttributeAlias]

@@ -1,4 +1,4 @@
-﻿CREATE TABLE [App_DataDictionary].[ApplicationModel]
+﻿CREATE TABLE [App_DataDictionary].[Model]
 (
 	-- This is equivalent to a file within the file systems. Instead of saving to the file system, the data is saved to the database.
 	[ModelId] UniqueIdentifier NOT NULL CONSTRAINT [DF_ApplicationModelModelId] DEFAULT (newid()),
@@ -12,9 +12,9 @@
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_ApplicationModel_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
-	CONSTRAINT [PK_ApplicationModel] PRIMARY KEY CLUSTERED ([ModelId] ASC),
+	CONSTRAINT [PK_Model] PRIMARY KEY CLUSTERED ([ModelId] ASC),
 )
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [UX_ApplicationModel]
-    ON [App_DataDictionary].[ApplicationModel]([ModelTitle] ASC, [ObsoleteDate] ASC);
+CREATE UNIQUE NONCLUSTERED INDEX [UX_Model]
+    ON [App_DataDictionary].[Model]([ModelTitle] ASC, [ObsoleteDate] ASC);
 GO

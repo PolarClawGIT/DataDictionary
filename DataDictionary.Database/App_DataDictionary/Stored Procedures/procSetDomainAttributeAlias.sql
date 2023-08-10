@@ -30,7 +30,7 @@ Begin Try
 	From	@Data
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[ApplicationModel] Where [ModelId] = @ModelId)
+	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
 	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
 
 	If Exists (
@@ -38,7 +38,7 @@ Begin Try
 		From	@Values V
 				Left Join [App_DataDictionary].[DomainAttribute] A
 				On	V.[AttributeId] = A.[AttributeId]
-				Left Join [App_DataDictionary].[ApplicationAttribute] P
+				Left Join [App_DataDictionary].[ModelAttribute] P
 				On	V.[AttributeId] = P.[AttributeId] And
 					P.[ModelId] = @ModelId
 		Where	A.[AttributeId] is Null Or
@@ -99,7 +99,7 @@ Begin Try
 		Values ([AttributeId], [AttributeAliasId], [CatalogName], [SchemaName], [ObjectName], [ElementName])
 	When Not Matched by Source And (T.[AttributeId] in (
 		Select	[AttributeId]
-		From	[App_DataDictionary].[ApplicationAttribute]
+		From	[App_DataDictionary].[ModelAttribute]
 		Where	[ModelId] = @ModelId))
 		Then Delete;
 

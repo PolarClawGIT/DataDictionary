@@ -32,7 +32,7 @@ Begin Try
 			On	D.[AttributeParentId] = P.[AttributeId]
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[ApplicationModel] Where [ModelId] = @ModelId)
+	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
 	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
 
 	If Exists (
@@ -66,12 +66,12 @@ Begin Try
 				D.[AttributeDescription],
 				IIF(IsNull(D.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
 		From	@Values D
-				Left Join [App_DataDictionary].[ApplicationAttribute] P
+				Left Join [App_DataDictionary].[ModelAttribute] P
 				On	@ModelId = P.[ModelId] And
 					IsNull(D.[AttributeId],NewId()) = P.[AttributeId]
 				Inner Join [App_DataDictionary].[DomainAttribute] A
 				On	P.[AttributeId] = A.[AttributeId]
-				Left Join [App_DataDictionary].[ApplicationAttribute] R
+				Left Join [App_DataDictionary].[ModelAttribute] R
 				On	D.[AttributeParentId] = R.[AttributeId]),
 	[Delta] As (
 		Select	[AttributeId],
@@ -118,7 +118,7 @@ Begin Try
 		Select	@ModelId As [ModelId],
 				[AttributeId]
 		From	@Values)
-	Merge [App_DataDictionary].[ApplicationAttribute] As T
+	Merge [App_DataDictionary].[ModelAttribute] As T
 	Using [Data] As S
 	On	T.[ModelId] = S.[ModelId] And
 		T.[AttributeId] = S.[AttributeId]

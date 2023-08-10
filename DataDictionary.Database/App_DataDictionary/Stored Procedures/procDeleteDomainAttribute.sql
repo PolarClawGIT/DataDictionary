@@ -28,7 +28,7 @@ Begin Try
 	Delete From [App_DataDictionary].[DomainAttributeProperty]
 	Where [AttributeId] = @AttributeId 
 
-	Delete From [App_DataDictionary].[ApplicationAttribute]
+	Delete From [App_DataDictionary].[ModelAttribute]
 	Where [AttributeId] = @AttributeId
 
 	Delete From [App_DataDictionary].[DomainAttribute]

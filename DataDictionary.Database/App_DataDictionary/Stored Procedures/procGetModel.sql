@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procGetApplicationModel]
+﻿CREATE PROCEDURE [App_DataDictionary].[procGetModel]
 		@ModelId UniqueIdentifier = Null,
 		@ModelTitle NVarChar(100) = Null,
 		@Obsolete Bit = 0
@@ -14,7 +14,7 @@ Select	[ModelId],
 		[Obsolete],
 		[ModfiedBy],
 		[SysStart]
-From	[App_DataDictionary].[ApplicationModel]
+From	[App_DataDictionary].[Model]
 Where	(@ModelId is Null or @ModelId = [ModelId]) And
 		(@ModelTitle is Null or @ModelTitle = [ModelTitle]) And
 		(@Obsolete is Null or @Obsolete = 1 or @Obsolete = [Obsolete])

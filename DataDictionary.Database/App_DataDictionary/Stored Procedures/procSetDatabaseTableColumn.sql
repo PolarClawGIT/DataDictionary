@@ -51,14 +51,14 @@ Begin Try
 			NullIf(Trim([ComputedDefinition]),'') As [ComputedDefinition],
 			NullIf(Trim([GeneratedAlwayType]),'') As [GeneratedAlwayType]
 	From	@Data D
-			Left Join [App_DataDictionary].[ApplicationCatalog] C
+			Left Join [App_DataDictionary].[ModelCatalog] C
 			On	C.[ModelId] = @ModelId
 			Left Join [App_DataDictionary].[DatabaseCatalog] P
 			On	C.[CatalogId] = P.[CatalogId] And
 				D.[CatalogName] = P.[CatalogName]
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[ApplicationModel] Where [ModelId] = @ModelId)
+	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
 	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
 
 	If Exists (
@@ -249,7 +249,7 @@ Begin Try
 				[GeneratedAlwayType])
 	When Not Matched by Source And (T.[CatalogId] In (
 		Select	[CatalogId]
-		From	[App_DataDictionary].[ApplicationCatalog]
+		From	[App_DataDictionary].[ModelCatalog]
 		Where	[ModelId] = @ModelId))
 		Then Delete;
 

@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procDeleteApplicationModel]
+﻿CREATE PROCEDURE [App_DataDictionary].[procDeleteModel]
 		@ModelId UniqueIdentifier
 As
 Set NoCount On -- Do not show record counts
@@ -18,7 +18,7 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[ApplicationModel] Where [ModelId] = @ModelId And [Obsolete] = 1)
+	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId And [Obsolete] = 1)
 	Throw 50000, '[ModelId] could not be found or is not marked as [Obsolete]', 1;
 
 	-- Get List of items that can be deleted (Not in multiple Models)
@@ -28,29 +28,29 @@ Begin Try
 
 	Insert Into @Catalog
 	Select	[CatalogId]
-	From	[App_DataDictionary].[ApplicationCatalog]
+	From	[App_DataDictionary].[ModelCatalog]
 	Where	[ModelId] = @ModelId And
 			[CatalogId] Not In (
 				Select	[CatalogId]
-				From	[App_DataDictionary].[ApplicationCatalog]
+				From	[App_DataDictionary].[ModelCatalog]
 				Where	[ModelId] <> @ModelId)
 
 	Insert Into @Attribute
 	Select	[AttributeId]
-	From	[App_DataDictionary].[ApplicationAttribute]
+	From	[App_DataDictionary].[ModelAttribute]
 	Where	[ModelId] = @ModelId And
 			[AttributeId] Not In (
 				Select	[AttributeId]
-				From	[App_DataDictionary].[ApplicationAttribute]
+				From	[App_DataDictionary].[ModelAttribute]
 				Where	[ModelId] <> @ModelId)
 
 	Insert Into @Entity
 	Select	[EntityId]
-	From	[App_DataDictionary].[ApplicationEntity]
+	From	[App_DataDictionary].[ModelEntity]
 	Where	[ModelId] = @ModelId And
 			[EntityId] Not In (
 				Select	[EntityId]
-				From	[App_DataDictionary].[ApplicationEntity]
+				From	[App_DataDictionary].[ModelEntity]
 				Where	[ModelId] <> @ModelId)
 
 	-- Cascade Delete
@@ -66,7 +66,22 @@ Begin Try
 	Delete From [App_DataDictionary].[DatabaseSchema]
 	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
 
-	Delete From [App_DataDictionary].[ApplicationCatalog]
+	Delete From [App_DataDictionary].[DatabaseDomain]
+	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
+
+	Delete From [App_DataDictionary].[DatabaseConstraintColumn]
+	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
+
+	Delete From [App_DataDictionary].[DatabaseConstraint]
+	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
+
+	Delete From [App_DataDictionary].[DatabaseRoutineDependency]
+	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
+
+	Delete From [App_DataDictionary].[DatabaseRoutineParameter]
+	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
+
+	Delete From [App_DataDictionary].[ModelCatalog]
 	Where	[ModelId] = @ModelId And
 			[CatalogId] In (Select [CatalogId] From @Catalog)
 
@@ -79,9 +94,12 @@ Begin Try
 	Delete From [App_DataDictionary].[DomainAttributeAlias]
 	Where	[AttributeId] In (Select [AttributeId] From @Attribute)
 
-	Delete From [App_DataDictionary].[ApplicationAttribute]
+	Delete From [App_DataDictionary].[ModelAttribute]
 	Where	[ModelId] = @ModelId And
 			[AttributeId] In (Select [AttributeId] From @Attribute)
+
+	Delete From [App_DataDictionary].[ModelProperty]
+	Where	[ModelId] = @ModelId
 
 	Delete From [App_DataDictionary].[DomainAttribute]
 	Where	[AttributeId] In (Select [AttributeId] From @Attribute)
@@ -92,14 +110,14 @@ Begin Try
 	Delete From [App_DataDictionary].[DomainEntityAlias]
 	Where	[EntityId] In (Select [EntityId] From @Entity)
 
-	Delete From [App_DataDictionary].[ApplicationEntity]
+	Delete From [App_DataDictionary].[ModelEntity]
 	Where	[ModelId] = @ModelId And
 			[EntityId] In (Select [EntityId] From @Entity)
 
 	Delete From [App_DataDictionary].[DomainEntity]
 	Where	[EntityId] In (Select [EntityId] From @Entity)
 
-	Delete From [App_DataDictionary].[ApplicationModel]
+	Delete From [App_DataDictionary].[Model]
 	Where	[ModelId] = @ModelId
 
 	-- Commit Transaction

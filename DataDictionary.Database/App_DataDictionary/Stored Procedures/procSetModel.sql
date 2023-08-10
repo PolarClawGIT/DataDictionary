@@ -1,5 +1,5 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetApplicationModel]
-		@Data [App_DataDictionary].[typeApplicationModel] ReadOnly
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetModel]
+		@Data [App_DataDictionary].[typeModel] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -18,7 +18,7 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeApplicationModel]
+	Declare @Values [App_DataDictionary].[typeModel]
 	Insert Into @Values
 	Select	IsNull([ModelId],NewId()) As [ModelId],
 			NullIf(Trim([ModelTitle]),'') As [ModelTitle],
@@ -38,7 +38,7 @@ Begin Try
 	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
 		Select	D.[ModelId]
 		From	@Values D
-				Inner Join [App_DataDictionary].[ApplicationModel] A
+				Inner Join [App_DataDictionary].[Model] A
 				On D.[ModelId] = A.[ModelId]
 		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
 	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 4;
@@ -50,15 +50,15 @@ Begin Try
 				V.[ModelDescription],
 				IIF(IsNull(V.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
 		From	@Values V
-				Left Join [App_DataDictionary].[ApplicationModel] A
+				Left Join [App_DataDictionary].[Model] A
 				On	V.[ModelId] = A.[ModelId]
 		Except
 		Select	[ModelId],
 				[ModelTitle],
 				[ModelDescription],
 				[ObsoleteDate]
-		From	[App_DataDictionary].[ApplicationModel])
-	Merge [App_DataDictionary].[ApplicationModel] As T
+		From	[App_DataDictionary].[Model])
+	Merge [App_DataDictionary].[Model] As T
 	Using [Delta] As S
 	On	T.[ModelId] = S.[ModelId]
 	When Matched Then Update
@@ -112,6 +112,6 @@ GO
 -- Provide System Documentation
 EXEC sp_addextendedproperty @name = N'MS_Description',
 	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetApplicationModel',
+    @level1type = N'PROCEDURE', @level1name = N'procSetModel',
 	@value = N'Performs Set on ApplicationModel.'
 GO

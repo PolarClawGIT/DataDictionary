@@ -88,15 +88,15 @@
     <Build Include="App_DataDictionary\Tables\SecurityPrinciple.sql" />
     <Build Include="App_DataDictionary\Tables\SecurityRole.sql" />
     <Build Include="App_DataDictionary\Tables\SecurityPermission.sql" />
-    <Build Include="App_DataDictionary\Tables\ApplicationModel.sql" />
+    <Build Include="App_DataDictionary\Tables\Model.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntity.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntityProperty.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntityAlias.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseTable.sql" />
-    <Build Include="App_DataDictionary\Tables\ApplicationAttribute.sql" />
-    <Build Include="App_DataDictionary\Tables\ApplicationEntity.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelAttribute.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelEntity.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseCatalog.sql" />
-    <Build Include="App_DataDictionary\Tables\ApplicationCatalog.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelCatalog.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseSchema.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseTableColumn.sql" />
     <Build Include="dbo\Tables\SampleHistory.sql" />
@@ -106,8 +106,8 @@
     <Build Include="Security\DataDictionaryApp.sql" />
     <Build Include="dbo\Stored Procedures\procGetSample.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAttribute.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationModel.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationModel.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetModel.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetModel.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procDeleteDomainAttribute.sql" />
@@ -135,7 +135,7 @@
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseExtendedProperty.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procDeleteApplicationModel.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procDeleteModel.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeApplicationModel.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseConstraint.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseConstraintColumn.sql" />
@@ -165,6 +165,7 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseRoutineParameter.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseRoutineDependency.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseRoutineDependency.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelProperty.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
