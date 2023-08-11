@@ -75,21 +75,18 @@ Begin Try
 				On	D.[AttributeParentId] = R.[AttributeId]),
 	[Delta] As (
 		Select	[AttributeId],
-				[AttributeParentId],
 				[AttributeTitle],
 				[AttributeDescription],
 				[ObsoleteDate]
 		From	[Data]
 		Except
 		Select	[AttributeId],
-				[AttributeParentId],
 				[AttributeTitle],
 				[AttributeDescription],
 				[ObsoleteDate]
 		From	[App_DataDictionary].[DomainAttribute])
 	Update [App_DataDictionary].[DomainAttribute]
-	Set		[AttributeParentId] = S.[AttributeParentId],
-			[AttributeTitle] = S.[AttributeTitle],
+	Set		[AttributeTitle] = S.[AttributeTitle],
 			[AttributeDescription] = S.[AttributeDescription],
 			[ObsoleteDate] = S.[ObsoleteDate]
 	From	[Delta] S
@@ -99,12 +96,10 @@ Begin Try
 
 	Insert Into [App_DataDictionary].[DomainAttribute] (
 			[AttributeId],
-			[AttributeParentId],
 			[AttributeTitle],
 			[AttributeDescription],
 			[ObsoleteDate])
 	Select	S.[AttributeId],
-			S.[AttributeParentId],
 			S.[AttributeTitle],
 			S.[AttributeDescription],
 			IIF(S.[Obsolete] = 0, Convert(DateTime2, Null), SysDateTime()) As [ObsoleteDate]
@@ -116,15 +111,18 @@ Begin Try
 
 	With [Data] As (
 		Select	@ModelId As [ModelId],
-				[AttributeId]
+				[AttributeId],
+				[AttributeParentId]
 		From	@Values)
 	Merge [App_DataDictionary].[ModelAttribute] As T
 	Using [Data] As S
 	On	T.[ModelId] = S.[ModelId] And
 		T.[AttributeId] = S.[AttributeId]
+	When Matched Then Update Set
+		[AttributeParentId] = S.[AttributeParentId]
 	When Not Matched by Target Then
-		Insert ([ModelId], [AttributeId])
-		Values ([ModelId], [AttributeId])
+		Insert ([ModelId], [AttributeId], [AttributeParentId])
+		Values ([ModelId], [AttributeId], [AttributeParentId])
 	When Not Matched by Source And T.[ModelId] = @ModelId Then Delete;
 	Print FormatMessage ('Merge [App_DataDictionary].[ApplicationAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

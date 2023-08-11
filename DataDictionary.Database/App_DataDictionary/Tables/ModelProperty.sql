@@ -1,4 +1,6 @@
-﻿CREATE TABLE [App_DataDictionary].[ModelProperty]
+﻿
+/* This is not going to work. A view is possible.
+CREATE TABLE [App_DataDictionary].[ModelProperty]
 (
 	[ModelId]       UniqueIdentifier NOT NULL,
 	[PropertyId]    UniqueIdentifier NOT NULL,
@@ -7,3 +9,4 @@
 	CONSTRAINT [FK_ModelPropertyModel] FOREIGN KEY ([ModelId]) REFERENCES [App_DataDictionary].[Model] ([ModelId]),
 	CONSTRAINT [FK_ModelPropertyProperty] FOREIGN KEY ([PropertyId]) REFERENCES [App_DataDictionary].[ApplicationProperty] ([PropertyId]),
 )
+*/

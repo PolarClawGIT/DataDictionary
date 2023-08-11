@@ -98,9 +98,6 @@ Begin Try
 	Where	[ModelId] = @ModelId And
 			[AttributeId] In (Select [AttributeId] From @Attribute)
 
-	Delete From [App_DataDictionary].[ModelProperty]
-	Where	[ModelId] = @ModelId
-
 	Delete From [App_DataDictionary].[DomainAttribute]
 	Where	[AttributeId] In (Select [AttributeId] From @Attribute)
 

@@ -4,7 +4,6 @@
 	-- An ER diagram attribute is is associated with a Column or Parameter.
 	-- For this tool, the focus is on the Attribute not the Domain or the Entity.
 	[AttributeId] UniqueIdentifier Not Null CONSTRAINT [DF_DomainAttributeAttributeId] DEFAULT (newid()),
-	[AttributeParentId] UniqueIdentifier Null,
 	[AttributeTitle] NVarChar(100) Not Null,
 	[AttributeDescription] NVarChar(Max) Null,
 	[Obsolete] As (CONVERT([bit],case when [ObsoleteDate] IS NULL then (0) else (1) end)),
@@ -15,10 +14,7 @@
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_DomainAttribute_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
-	CONSTRAINT [PK_DomainAttribute] PRIMARY KEY CLUSTERED ([AttributeId] ASC),
-	CONSTRAINT [FK_DomainAttribute_Parent] FOREIGN KEY ([AttributeParentId]) REFERENCES [App_DataDictionary].[DomainAttribute] ([AttributeId]),
+	CONSTRAINT [PK_DomainAttribute] PRIMARY KEY CLUSTERED ([AttributeId] ASC),	
 )
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [UX_DomainAttribute]
-    ON [App_DataDictionary].[DomainAttribute]([AttributeTitle] ASC, [AttributeParentId] ASC);
-GO
+
