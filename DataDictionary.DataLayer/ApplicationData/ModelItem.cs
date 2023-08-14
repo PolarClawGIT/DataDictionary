@@ -23,6 +23,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         public String? ModelTitle { get { return GetValue("ModelTitle"); } set { SetValue("ModelTitle", value); } }
         public String? ModelDescription { get { return GetValue("ModelDescription"); } set { SetValue("ModelDescription", value); } }
         public Boolean? Obsolete { get { return GetValue<Boolean>("Obsolete", BindingItemParsers.BooleanTryParse); } set { SetValue("Obsolete", value); } }
+        public DateTime? SysStart { get { return GetValue<DateTime>("SysStart"); } }
 
         public ModelItem() : base()
         {
@@ -72,7 +73,21 @@ namespace DataDictionary.DataLayer.ApplicationData
             return command;
         }
 
-        public static Command DeleteData (IConnection connection, IModelKey parameters)
+        public static Command SetData(IConnection connection, ModelItem item)
+        {
+            using (BindingTable<ModelItem> source = new BindingTable<ModelItem>() { item })
+            {
+                Command command = connection.CreateCommand();
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "[App_DataDictionary].[procSetModel]";
+                command.AddParameter("@ModelId", item.ModelId);
+                command.AddParameter("@Data", "[App_DataDictionary].[typeModel]", source);
+
+                return command;
+            }
+        }
+
+        public static Command DeleteData(IConnection connection, IModelKey parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;

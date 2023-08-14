@@ -42,6 +42,8 @@ namespace DataDictionary.DataLayer.DomainData
         {
             new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn("PropertyTitle", typeof(String)){ AllowDBNull = false},
+            new DataColumn("PropertyName", typeof(String)){ AllowDBNull = true},
             new DataColumn("PropertyValue", typeof(String)){ AllowDBNull = true},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };

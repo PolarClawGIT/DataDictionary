@@ -8,8 +8,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 /* Description: Performs Get on DatabaseExtendedProperty.
 */
 
-Select	A.[ModelId],
-		C.[CatalogId],
+Select	C.[CatalogId],
 		C.[CatalogName],
 		D.[Level0Type],
 		D.[Level0Name],

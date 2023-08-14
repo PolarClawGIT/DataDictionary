@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 using Toolbox.Threading;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DataDictionary.Main.Forms
 {
@@ -23,7 +24,7 @@ namespace DataDictionary.Main.Forms
 
         class FormData
         {
-            public ModelItem Model { get; set; } = new ModelItem();
+            public ModelItem? Model { get; set; }
             public BindingTable<ModelItem> Models { get; } = new BindingTable<ModelItem>();
         }
 
@@ -46,10 +47,13 @@ namespace DataDictionary.Main.Forms
 
         void BindData()
         {
-            modelListData.ClearSelection();
-            if (modelListData.Rows.Cast<DataGridViewRow>().FirstOrDefault(w => w.DataBoundItem is ModelItem item && item.ModelId == Program.Data.Model.ModelId) is DataGridViewRow currentItem)
-            { currentItem.Selected = true; }
-            else { data.Model = Program.Data.Model; }
+            if (data.Models.FirstOrDefault(w => new ModelKey(w) == new ModelKey(Program.Data.Model)) is ModelItem modelExists)
+            { data.Model = modelExists; }
+            else
+            {
+                data.Models.Add(Program.Data.Model);
+                data.Model = Program.Data.Model;
+            }
 
             serverNameData.DataBindings.Add(new Binding(nameof(serverNameData.Text), Program.Data, nameof(Program.Data.ServerName)));
             databaseNameData.DataBindings.Add(new Binding(nameof(databaseNameData.Text), Program.Data, nameof(Program.Data.DatabaseName)));
@@ -60,17 +64,12 @@ namespace DataDictionary.Main.Forms
             modelListData.AutoGenerateColumns = false;
             modelListData.DataSource = data.Models;
 
-            if (data.Models.Count > 0)
-            { loadCommand.Enabled = true; }
-            else { loadCommand.Enabled = false; }
-
-            if (data.Model.Obsolete == true && data.Model.ModelId != Program.Data.Model.ModelId)
-            { deleteCommand.Enabled = true; }
-            else { deleteCommand.Enabled = false; }
-
-            if (data.Model.ModelId == Program.Data.Model.ModelId)
-            { saveCommand.Enabled = true; }
-            else { saveCommand.Enabled = false; }
+            // Because the DataGridView always selects a Row, even if it is just the first row.
+            if (modelListData.Rows.Cast<DataGridViewRow>().FirstOrDefault(w => w.DataBoundItem is ModelItem item && new ModelKey(item) == new ModelKey(data.Model)) is DataGridViewRow currentRow)
+            {
+                modelListData.ClearSelection();
+                currentRow.Selected = true;
+            }
         }
 
         void UnBindData()
@@ -84,25 +83,29 @@ namespace DataDictionary.Main.Forms
 
         private void modelListData_SelectionChanged(object sender, EventArgs e)
         {
-            if (modelListData.SelectedRows.Count > 0)
+            if (modelListData.SelectedRows.Count > 0 && modelListData.SelectedRows[0].DataBoundItem is ModelItem selectedModel)
             {
-                if (modelListData.SelectedRows[0].DataBoundItem is ModelItem newItem)
-                {
-                    modelTitleData.DataBindings.Clear();
-                    modelDescriptionData.DataBindings.Clear();
+                modelTitleData.DataBindings.Clear();
+                modelDescriptionData.DataBindings.Clear();
 
-                    data.Model = newItem;
-                    if (data.Model.ModelId == Program.Data.Model.ModelId)
-                    { saveCommand.Enabled = true; }
-                    else { saveCommand.Enabled = false; }
+                data.Model = selectedModel;
 
-                    if (data.Model.Obsolete == true && data.Model.ModelId != Program.Data.Model.ModelId)
-                    { deleteCommand.Enabled = true; }
-                    else { deleteCommand.Enabled = false; }
+                if (new ModelKey(data.Model) == new ModelKey(Program.Data.Model))
+                { saveCommand.Enabled = true; }
+                else
+                { saveCommand.Enabled = false; }
 
-                    modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), data.Model, nameof(data.Model.ModelTitle)));
-                    modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), data.Model, nameof(data.Model.ModelDescription)));
-                }
+                if (data.Model.SysStart is null)
+                { loadCommand.Enabled = false; }
+                else
+                { loadCommand.Enabled = true; }
+
+                if (data.Model.Obsolete == true && new ModelKey(data.Model) != new ModelKey(Program.Data.Model))
+                { deleteCommand.Enabled = true; }
+                else { deleteCommand.Enabled = false; }
+
+                modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), data.Model, nameof(data.Model.ModelTitle)));
+                modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), data.Model, nameof(data.Model.ModelDescription)));
             }
         }
 
@@ -126,15 +129,18 @@ namespace DataDictionary.Main.Forms
 
         private void loadCommand_Click(object sender, EventArgs e)
         {
-            SendMessage(new DbDataBatchStarting());
-            UnBindData();
-            Program.Data.Clear();
-            this.DoWork(Program.Data.LoadModel(data.Model), onCompleting);
+            if (data.Model is IModelItem model)
+            {
+                SendMessage(new DbDataBatchStarting());
+                UnBindData();
+                Program.Data.Clear();
+                this.DoWork(Program.Data.LoadModel(new ModelKey(model)), onCompleting);
+            }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                BindData();
                 SendMessage(new DbDataBatchCompleted());
+                this.Close();
             }
         }
 
@@ -153,14 +159,9 @@ namespace DataDictionary.Main.Forms
             { BindData(); }
         }
 
-        private void ModelManagement_FormClosing(object sender, FormClosingEventArgs e)
+        private void modelListData_RowValidated(object sender, DataGridViewCellEventArgs e)
         {
-            this.DoWork(Program.Data.SaveModelList(data.Models), onCompleting);
-
-            // Do not think there is anything to be done. 
-            void onCompleting(RunWorkerCompletedEventArgs args) { }
+            //TODO: Update in place? Obsolete?
         }
-
-
     }
 }

@@ -121,6 +121,7 @@
             modelListData.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             modelListData.Size = new Size(451, 169);
             modelListData.TabIndex = 3;
+            modelListData.RowValidated += modelListData_RowValidated;
             modelListData.SelectionChanged += modelListData_SelectionChanged;
             // 
             // modelTitleColumn
@@ -231,7 +232,6 @@
             Controls.Add(dialogLayout);
             Name = "ModelManagement";
             Text = "Open or Save Model";
-            FormClosing += ModelManagement_FormClosing;
             Load += ModelManagement_Load;
             dialogLayout.ResumeLayout(false);
             dialogLayout.PerformLayout();

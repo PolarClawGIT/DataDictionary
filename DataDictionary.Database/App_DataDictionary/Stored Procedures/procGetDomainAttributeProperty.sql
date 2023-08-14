@@ -9,13 +9,11 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 /* Description: Performs Get on DomainAttributeProperty.
 */
 
-Select	A.[ModelId],
-		D.[AttributeId],
+Select	D.[AttributeId],
 		D.[PropertyId],
-		--P.[PropertyName],
+		P.[PropertyName],
 		P.[PropertyTitle],
 		D.[PropertyValue],
-		D.[ModfiedBy],
 		D.[SysStart]
 From	[App_DataDictionary].[DomainAttributeProperty] D
 		Inner Join [App_DataDictionary].[ModelAttribute] A

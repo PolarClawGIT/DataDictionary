@@ -21,11 +21,15 @@ Begin Try
 	-- Clean the Data
 	Declare @Values [App_DataDictionary].[typeDomainAttributeProperty]
 	Insert Into @Values
-	Select	[AttributeId],
-			[PropertyId],
-			NullIf(Trim([PropertyValue]),'') As [PropertyValue],
+	Select	D.[AttributeId],
+			P.[PropertyId],
+			P.[PropertyName],
+			P.[PropertyTitle],
+			NullIf(Trim(D.[PropertyValue]),'') As [PropertyValue],
 			[SysStart]
-	From	@Data
+	From	@Data D
+			Inner Join [App_DataDictionary].[ApplicationProperty] P
+			On	D.[PropertyId] = P.[PropertyId]
 
 	-- Validation
 	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)

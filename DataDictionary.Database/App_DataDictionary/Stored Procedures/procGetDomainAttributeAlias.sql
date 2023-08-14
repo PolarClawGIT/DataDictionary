@@ -12,14 +12,12 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 /* Description: Performs Get on DomainAttributeAlias.
 */
 
-Select	A.[ModelId],
-		D.[AttributeId],
+Select	D.[AttributeId],
 		D.[AttributeAliasId],
 		D.[CatalogName],
 		D.[SchemaName],
 		D.[ObjectName],
 		D.[ElementName],
-		D.[ModfiedBy],
 		D.[SysStart]
 From	[App_DataDictionary].[DomainAttributeAlias] D
 		Inner Join [App_DataDictionary].[ModelAttribute] A

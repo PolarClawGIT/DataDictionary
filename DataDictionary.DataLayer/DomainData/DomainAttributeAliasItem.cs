@@ -38,12 +38,12 @@ namespace DataDictionary.DataLayer.DomainData
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn("AttributeAliasId", typeof(Int32)){ AllowDBNull = true},
             new DataColumn("CatalogName", typeof(String)){ AllowDBNull = true},
             new DataColumn("SchemaName", typeof(String)){ AllowDBNull = true},
             new DataColumn("ObjectName", typeof(String)){ AllowDBNull = true},
             new DataColumn("ElementName", typeof(String)){ AllowDBNull = true},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
-
         };
 
         public DomainAttributeAliasItem() : base() { }

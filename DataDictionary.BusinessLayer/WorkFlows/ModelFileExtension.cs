@@ -20,10 +20,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             {
                 // repeat for each data object
                 using (DataTable model = new DataTable())
-                {
-                    model.Load(data.Models.CreateDataReader()); // Background work
-                    workset.Tables.Add(model);
-                }
+                { }
 
                 workset.WriteXml(file.FullName, XmlWriteMode.WriteSchema); // Background work
             }
@@ -41,8 +38,6 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 // Repeat for each data object, background work
                 if (workset.Tables.Contains(nameof(ModelItem)) && workset.Tables[nameof(ModelItem)] is DataTable source)
                 {
-                    data.Models.Clear();
-                    data.Models.Load(source.CreateDataReader());
                 }
             }
             return new List<WorkItem>().AsReadOnly();

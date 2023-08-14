@@ -8,8 +8,7 @@ Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
 /* Description: Performs Get on DatabaseTable.
 */
-Select	A.[ModelId],
-		D.[CatalogId],
+Select	D.[CatalogId],
 		C.[CatalogName],
 		D.[SchemaName],
 		D.[TableName],

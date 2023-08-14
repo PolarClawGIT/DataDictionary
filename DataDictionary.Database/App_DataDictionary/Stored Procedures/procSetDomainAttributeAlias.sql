@@ -21,13 +21,25 @@ Begin Try
 	-- Clean the Data
 	Declare @Values [App_DataDictionary].[typeDomainAttributeAlias]
 	Insert Into @Values
-	Select	[AttributeId],
-			NullIf(Trim([CatalogName]),'') As [CatalogName],
-			NullIf(Trim([SchemaName]),'') As [SchemaName],
-			NullIf(Trim([ObjectName]),'') As [ObjectName],
-			NullIf(Trim([ElementName]),'') As [ElementName],
-			[SysStart]
-	From	@Data
+	Select	C.[AttributeId],
+			IsNull(C.[AttributeAliasId],
+				(Select IsNull(Max([AttributeAliasId]),0) From [App_DataDictionary].[DomainAttributeAlias] Where [AttributeId] = D.[AttributeId]) +
+				Row_Number() Over (
+					Partition By D.[AttributeId], C.[AttributeAliasId]
+					Order By D.[CatalogName], D.[SchemaName], D.[ObjectName], D.[ElementName]))
+				As [AttributeAliasId],
+			NullIf(Trim(D.[CatalogName]),'') As [CatalogName],
+			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
+			NullIf(Trim(D.[ObjectName]),'') As [ObjectName],
+			NullIf(Trim(D.[ElementName]),'') As [ElementName],
+			D.[SysStart]
+	From	@Data D
+			Left Join [App_DataDictionary].[DomainAttributeAlias] C
+			On	D.[AttributeId] = C.[AttributeId] And
+				D.[CatalogName] = C.[CatalogName] And
+				D.[SchemaName] = C.[SchemaName] And
+				D.[ObjectName] = C.[ObjectName] And
+				D.[ElementName] = C.[ElementName]
 
 	-- Validation
 	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
@@ -73,12 +85,7 @@ Begin Try
 	-- Apply Changes
 	With [Data] As (
 		Select	D.[AttributeId],
-				IsNull(A.[AttributeAliasId], 
-					(Select IsNull(Max([AttributeAliasId]),0) From [App_DataDictionary].[DomainAttributeAlias] Where [AttributeId] = D.[AttributeId]) +
-					Row_Number() Over (
-						Partition By D.[AttributeId], A.[AttributeAliasId]
-						Order By D.[CatalogName], D.[SchemaName], D.[ObjectName], D.[ElementName]))
-						As [AttributeAliasId],
+				D.[AttributeAliasId],
 				D.[CatalogName],
 				D.[SchemaName],
 				D.[ObjectName],

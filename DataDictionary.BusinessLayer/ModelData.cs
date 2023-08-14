@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer
     /// </summary>
     public class ModelData
     {
-        public ModelItem Model { get { return Models.First(); } } // There should always be exactly one model.
+        public ModelItem Model { get; internal set; } = new ModelItem();
         public FileInfo? ModelFile { get; internal set; }
         internal protected Context ModelContext { get; protected set; }= new Context();
 
@@ -42,7 +42,6 @@ namespace DataDictionary.BusinessLayer
         public BindingTable<DomainAttributePropertyItem> DomainAttributeProperties = ModelFactory.Create<DomainAttributePropertyItem>();
 
         // Application Data
-        internal BindingTable<ModelItem> Models { get; } = ModelFactory.Create<ModelItem>();
         public BindingTable<HelpItem> HelpSubjects { get; } = ModelFactory.Create<HelpItem>();
         public BindingTable<PropertyItem> Properties { get; } = ModelFactory.Create<PropertyItem>();
         public BindingTable<PropertyScopeItem> PropertyScopes { get; } = ModelFactory.Create<PropertyScopeItem>();
@@ -52,7 +51,7 @@ namespace DataDictionary.BusinessLayer
         public String DatabaseName { get { return ModelContext.DatabaseName; } }
 
         protected ModelData() : base()
-        { Models.Add(new ModelItem()); }
+        { }
 
         public ModelData(Context context) : this()
         {
@@ -75,7 +74,6 @@ namespace DataDictionary.BusinessLayer
             DomainAttributes.Clear();
             DomainAttributeAliases.Clear();
             DomainAttributeProperties.Clear();
-            Models.Clear();
         }
     }
 }

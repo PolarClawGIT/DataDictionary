@@ -1,4 +1,5 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetModel]
+		@ModelId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeModel] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -20,12 +21,14 @@ Begin Try
 	-- Clean the Data
 	Declare @Values [App_DataDictionary].[typeModel]
 	Insert Into @Values
-	Select	IsNull([ModelId],NewId()) As [ModelId],
+	Select	V.[ModelId],
 			NullIf(Trim([ModelTitle]),'') As [ModelTitle],
 			NullIf(Trim([ModelDescription]),'') As [ModelDescription],
 			[Obsolete],
 			[SysStart]
-	From	@Data
+	From	@Data D
+			Outer Apply (Select	IsNull([ModelId],NewId()) As [ModelId]) V
+	Where	(@ModelId is Null or @ModelId = V.[ModelId])
 
 	-- Validation
 	If Exists (
@@ -67,7 +70,9 @@ Begin Try
 			[ObsoleteDate] = S.[ObsoleteDate]
 	When Not Matched by Target Then
 		Insert ([ModelId], [ModelTitle], [ModelDescription], [ObsoleteDate])
-		Values ([ModelId], [ModelTitle], [ModelDescription], [ObsoleteDate]);
+		Values ([ModelId], [ModelTitle], [ModelDescription], [ObsoleteDate])
+	When Not Matched by Source And (@ModelId is Null or @ModelId = T.[ModelId]) Then
+		Delete;
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
