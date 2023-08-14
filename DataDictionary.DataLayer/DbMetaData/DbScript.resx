@@ -169,25 +169,37 @@ From	[INFORMATION_SCHEMA].[COLUMNS] I
   </data>
   <data name="DbConstraintColumnItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
-	[CONSTRAINT_CATALOG] As [CatalogName],
-	[CONSTRAINT_SCHEMA] As [SchemaName],
-	[CONSTRAINT_NAME] As [ConstraintName],
-	--TABLE_CATALOG,
-	[TABLE_SCHEMA] As [ReferenceSchemaName],
-	[TABLE_NAME] As [ReferenceTableName],
-	[COLUMN_NAME] As [ReferenceColumnName],
-	[ORDINAL_POSITION] As [OrdinalPosition]
-From	[INFORMATION_SCHEMA].[KEY_COLUMN_USAGE]</value>
+	C.[CONSTRAINT_CATALOG] As [CatalogName],
+	C.[CONSTRAINT_SCHEMA] As [SchemaName],
+	C.[CONSTRAINT_NAME] As [ConstraintName],
+	C.[TABLE_NAME] As [TableName],
+	C.[COLUMN_NAME] As [ColumnName],
+	C.[ORDINAL_POSITION] As [OrdinalPosition],
+	F.[TABLE_SCHEMA] As [ReferenceSchemaName],
+	F.[TABLE_NAME] As [ReferenceTableName],
+	F.[COLUMN_NAME] As [ReferenceColumnName]
+From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
+	Left Join [INFORMATION_SCHEMA].[KEY_COLUMN_USAGE] C
+	On T.[CONSTRAINT_CATALOG] = C.[CONSTRAINT_CATALOG] And
+	T.[CONSTRAINT_SCHEMA] = C.[CONSTRAINT_SCHEMA] And
+	T.[CONSTRAINT_NAME] = C.[CONSTRAINT_NAME]
+	Left Join [INFORMATION_SCHEMA].[REFERENTIAL_CONSTRAINTS] R
+	On T.[CONSTRAINT_CATALOG] = R.[CONSTRAINT_CATALOG] And
+	T.[CONSTRAINT_SCHEMA] = R.[CONSTRAINT_SCHEMA] And
+	T.[CONSTRAINT_NAME] = R.[CONSTRAINT_NAME]
+	Left Join [INFORMATION_SCHEMA].[KEY_COLUMN_USAGE] F
+	On R.[UNIQUE_CONSTRAINT_CATALOG] = F.[CONSTRAINT_CATALOG] And
+	R.[UNIQUE_CONSTRAINT_SCHEMA] = F.[CONSTRAINT_SCHEMA] And
+	R.[UNIQUE_CONSTRAINT_NAME] = F.[CONSTRAINT_NAME] And
+	C.[ORDINAL_POSITION] = F.[ORDINAL_POSITION]</value>
   </data>
   <data name="DbConstraintItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
 	[CONSTRAINT_CATALOG] As [CatalogName],
 	[CONSTRAINT_SCHEMA] As [SchemaName],
 	[CONSTRAINT_NAME] As [ConstraintName],
-	--[TABLE_CATALOG] As ,
-	[CONSTRAINT_TYPE] As [ConstraintType],
-	[TABLE_SCHEMA] As [ReferenceSchemaName],
-	[TABLE_NAME] As [ReferenceTableName]
+	[TABLE_NAME] As [TableName],
+	[CONSTRAINT_TYPE] As [ConstraintType]
 From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS]</value>
   </data>
   <data name="DbDomainItem" xml:space="preserve">
@@ -270,11 +282,9 @@ From	[INFORMATION_SCHEMA].[ROUTINES]</value>
 	P.[SPECIFIC_CATALOG] As [CatalogName],
 	P.[SPECIFIC_SCHEMA] As [SchemaName],
 	P.[SPECIFIC_NAME] As [RoutineName],
-	P.[PARAMETER_NAME] As [ParameterName],
-	P.[ORDINAL_POSITION] As [OrdinalPosition],
 	R.[ROUTINE_TYPE] As [RoutineType],
-	P.[PARAMETER_MODE] As [ParameterMode],
-	iif(P.[IS_RESULT] In ('YES','TRUE','1'),1,0) As [IsResult],
+	IIF(R.[ROUTINE_TYPE] IN ('FUNCTION') AND P.[ORDINAL_POSITION] = 0,'RETURN',P.[PARAMETER_NAME]) As [ParameterName],
+	P.[ORDINAL_POSITION] As [OrdinalPosition],
 	P.[DATA_TYPE] As [DataType],
 	P.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
 	P.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength],

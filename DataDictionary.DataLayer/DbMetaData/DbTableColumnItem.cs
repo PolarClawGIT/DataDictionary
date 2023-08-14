@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Nullable
 
 using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.DbGetSchema;
 using DataDictionary.DataLayer.DomainData;
 using Microsoft.Data.SqlClient;
 using System;
@@ -59,8 +60,6 @@ namespace DataDictionary.DataLayer.DbMetaData
         public Nullable<Boolean> IsComputed { get { return GetValue<Boolean>("IsComputed", BindingItemParsers.BooleanTryParse); } }
         public String? ComputedDefinition { get { return GetValue("ComputedDefinition"); } }
         public String? GeneratedAlwayType { get { return GetValue("GeneratedAlwayType"); } }
-
-
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -139,7 +138,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetDatabaseTableColumn]";
             command.AddParameter("@ModelId", modelId.ModelId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseColumn]", source);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseTableColumn]", source);
             return command;
         }
 

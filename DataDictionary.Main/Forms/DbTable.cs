@@ -62,7 +62,7 @@ namespace DataDictionary.Main.Forms
                 tableColumnsData.DataSource = new BindingView<DbTableColumnItem>(Program.Data.DbColumns, w => new DbTableKey(w).Equals(data.TableKey));
 
                 tableConstraintData.AutoGenerateColumns = false;
-                tableConstraintData.DataSource = new BindingView<DbConstraintItem>(Program.Data.DbConstraints, w => new DbTableReferenceKey(w).Equals(data.TableKey));
+                tableConstraintData.DataSource = new BindingView<DbConstraintItem>(Program.Data.DbConstraints, w => new DbTableKey(w).Equals(data.TableKey));
             }
         }
 

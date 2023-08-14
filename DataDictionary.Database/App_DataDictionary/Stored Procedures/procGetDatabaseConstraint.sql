@@ -13,6 +13,7 @@ Select	A.[ModelId],
 		C.[CatalogName],
 		D.[SchemaName],
 		D.[ConstraintName],
+		D.[TableName],
 		D.[ConstraintType]
 From	[App_DataDictionary].[DatabaseConstraint] D
 		Inner Join [App_DataDictionary].[ModelCatalog] A

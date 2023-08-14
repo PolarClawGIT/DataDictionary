@@ -33,23 +33,24 @@
             schemaNameData = new Controls.TextBoxData();
             constraintNameData = new Controls.TextBoxData();
             constraintTypeData = new Controls.TextBoxData();
-            referenceSchemaNameData = new Controls.TextBoxData();
-            referenceTableNameData = new Controls.TextBoxData();
-            contraintTabs = new TabControl();
-            columnsTab = new TabPage();
-            constraintColumnsData = new DataGridView();
+            tableNameData = new Controls.TextBoxData();
             extendedPropertiesTab = new TabPage();
             extendedPropertiesData = new DataGridView();
-            propertyNameData = new DataGridViewTextBoxColumn();
             propertyValueData = new DataGridViewTextBoxColumn();
+            propertyNameData = new DataGridViewTextBoxColumn();
+            columnsTab = new TabPage();
+            constraintColumnsData = new DataGridView();
+            contraintTabs = new TabControl();
+            referenceSchemaNameValue = new DataGridViewTextBoxColumn();
+            referenceTableNameValue = new DataGridViewTextBoxColumn();
             referenceColumnNameValue = new DataGridViewTextBoxColumn();
             constraintLayout = new TableLayoutPanel();
             constraintLayout.SuspendLayout();
-            contraintTabs.SuspendLayout();
-            columnsTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)constraintColumnsData).BeginInit();
             extendedPropertiesTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).BeginInit();
+            columnsTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)constraintColumnsData).BeginInit();
+            contraintTabs.SuspendLayout();
             SuspendLayout();
             // 
             // constraintLayout
@@ -59,15 +60,13 @@
             constraintLayout.Controls.Add(catalogNameData, 0, 0);
             constraintLayout.Controls.Add(schemaNameData, 0, 1);
             constraintLayout.Controls.Add(constraintNameData, 0, 2);
-            constraintLayout.Controls.Add(constraintTypeData, 0, 3);
-            constraintLayout.Controls.Add(referenceSchemaNameData, 0, 4);
-            constraintLayout.Controls.Add(referenceTableNameData, 0, 5);
-            constraintLayout.Controls.Add(contraintTabs, 0, 6);
+            constraintLayout.Controls.Add(contraintTabs, 0, 5);
+            constraintLayout.Controls.Add(constraintTypeData, 0, 4);
+            constraintLayout.Controls.Add(tableNameData, 0, 3);
             constraintLayout.Dock = DockStyle.Fill;
             constraintLayout.Location = new Point(0, 0);
             constraintLayout.Name = "constraintLayout";
-            constraintLayout.RowCount = 7;
-            constraintLayout.RowStyles.Add(new RowStyle());
+            constraintLayout.RowCount = 6;
             constraintLayout.RowStyles.Add(new RowStyle());
             constraintLayout.RowStyles.Add(new RowStyle());
             constraintLayout.RowStyles.Add(new RowStyle());
@@ -118,72 +117,24 @@
             constraintTypeData.AutoSize = true;
             constraintTypeData.Dock = DockStyle.Fill;
             constraintTypeData.HeaderText = "Constraint Type";
-            constraintTypeData.Location = new Point(3, 153);
+            constraintTypeData.Location = new Point(3, 203);
             constraintTypeData.Multiline = false;
             constraintTypeData.Name = "constraintTypeData";
             constraintTypeData.ReadOnly = true;
             constraintTypeData.Size = new Size(510, 44);
             constraintTypeData.TabIndex = 3;
             // 
-            // referenceSchemaNameData
+            // tableNameData
             // 
-            referenceSchemaNameData.AutoSize = true;
-            referenceSchemaNameData.Dock = DockStyle.Fill;
-            referenceSchemaNameData.HeaderText = "Reference SchemaN ame";
-            referenceSchemaNameData.Location = new Point(3, 203);
-            referenceSchemaNameData.Multiline = false;
-            referenceSchemaNameData.Name = "referenceSchemaNameData";
-            referenceSchemaNameData.ReadOnly = true;
-            referenceSchemaNameData.Size = new Size(510, 44);
-            referenceSchemaNameData.TabIndex = 4;
-            // 
-            // referenceTableNameData
-            // 
-            referenceTableNameData.AutoSize = true;
-            referenceTableNameData.Dock = DockStyle.Fill;
-            referenceTableNameData.HeaderText = "Reference Table Name";
-            referenceTableNameData.Location = new Point(3, 253);
-            referenceTableNameData.Multiline = false;
-            referenceTableNameData.Name = "referenceTableNameData";
-            referenceTableNameData.ReadOnly = true;
-            referenceTableNameData.Size = new Size(510, 44);
-            referenceTableNameData.TabIndex = 5;
-            // 
-            // contraintTabs
-            // 
-            contraintTabs.Controls.Add(columnsTab);
-            contraintTabs.Controls.Add(extendedPropertiesTab);
-            contraintTabs.Dock = DockStyle.Fill;
-            contraintTabs.Location = new Point(3, 303);
-            contraintTabs.Name = "contraintTabs";
-            contraintTabs.SelectedIndex = 0;
-            contraintTabs.Size = new Size(510, 237);
-            contraintTabs.TabIndex = 6;
-            // 
-            // columnsTab
-            // 
-            columnsTab.Controls.Add(constraintColumnsData);
-            columnsTab.Location = new Point(4, 24);
-            columnsTab.Name = "columnsTab";
-            columnsTab.Padding = new Padding(3);
-            columnsTab.Size = new Size(502, 209);
-            columnsTab.TabIndex = 1;
-            columnsTab.Text = "Columns";
-            columnsTab.UseVisualStyleBackColor = true;
-            // 
-            // constraintColumnsData
-            // 
-            constraintColumnsData.AllowUserToAddRows = false;
-            constraintColumnsData.AllowUserToDeleteRows = false;
-            constraintColumnsData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            constraintColumnsData.Columns.AddRange(new DataGridViewColumn[] { referenceColumnNameValue });
-            constraintColumnsData.Dock = DockStyle.Fill;
-            constraintColumnsData.Location = new Point(3, 3);
-            constraintColumnsData.Name = "constraintColumnsData";
-            constraintColumnsData.ReadOnly = true;
-            constraintColumnsData.RowTemplate.Height = 25;
-            constraintColumnsData.Size = new Size(496, 203);
-            constraintColumnsData.TabIndex = 0;
+            tableNameData.AutoSize = true;
+            tableNameData.Dock = DockStyle.Fill;
+            tableNameData.HeaderText = "Table Name";
+            tableNameData.Location = new Point(3, 153);
+            tableNameData.Multiline = false;
+            tableNameData.Name = "tableNameData";
+            tableNameData.ReadOnly = true;
+            tableNameData.Size = new Size(510, 44);
+            tableNameData.TabIndex = 5;
             // 
             // extendedPropertiesTab
             // 
@@ -191,7 +142,7 @@
             extendedPropertiesTab.Location = new Point(4, 24);
             extendedPropertiesTab.Name = "extendedPropertiesTab";
             extendedPropertiesTab.Padding = new Padding(3);
-            extendedPropertiesTab.Size = new Size(502, 209);
+            extendedPropertiesTab.Size = new Size(502, 127);
             extendedPropertiesTab.TabIndex = 0;
             extendedPropertiesTab.Text = "Extended Properties";
             extendedPropertiesTab.UseVisualStyleBackColor = true;
@@ -207,8 +158,16 @@
             extendedPropertiesData.Name = "extendedPropertiesData";
             extendedPropertiesData.ReadOnly = true;
             extendedPropertiesData.RowTemplate.Height = 25;
-            extendedPropertiesData.Size = new Size(496, 203);
+            extendedPropertiesData.Size = new Size(496, 121);
             extendedPropertiesData.TabIndex = 6;
+            // 
+            // propertyValueData
+            // 
+            propertyValueData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            propertyValueData.DataPropertyName = "PropertyValue";
+            propertyValueData.HeaderText = "PropertyValue";
+            propertyValueData.Name = "propertyValueData";
+            propertyValueData.ReadOnly = true;
             // 
             // propertyNameData
             // 
@@ -219,19 +178,63 @@
             propertyNameData.ReadOnly = true;
             propertyNameData.Width = 112;
             // 
-            // propertyValueData
+            // columnsTab
             // 
-            propertyValueData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            propertyValueData.DataPropertyName = "PropertyValue";
-            propertyValueData.HeaderText = "PropertyValue";
-            propertyValueData.Name = "propertyValueData";
-            propertyValueData.ReadOnly = true;
+            columnsTab.Controls.Add(constraintColumnsData);
+            columnsTab.Location = new Point(4, 24);
+            columnsTab.Name = "columnsTab";
+            columnsTab.Padding = new Padding(3);
+            columnsTab.Size = new Size(502, 259);
+            columnsTab.TabIndex = 1;
+            columnsTab.Text = "Columns";
+            columnsTab.UseVisualStyleBackColor = true;
+            // 
+            // constraintColumnsData
+            // 
+            constraintColumnsData.AllowUserToAddRows = false;
+            constraintColumnsData.AllowUserToDeleteRows = false;
+            constraintColumnsData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            constraintColumnsData.Columns.AddRange(new DataGridViewColumn[] { referenceSchemaNameValue, referenceTableNameValue, referenceColumnNameValue });
+            constraintColumnsData.Dock = DockStyle.Fill;
+            constraintColumnsData.Location = new Point(3, 3);
+            constraintColumnsData.Name = "constraintColumnsData";
+            constraintColumnsData.ReadOnly = true;
+            constraintColumnsData.RowTemplate.Height = 25;
+            constraintColumnsData.Size = new Size(496, 253);
+            constraintColumnsData.TabIndex = 0;
+            // 
+            // contraintTabs
+            // 
+            contraintTabs.Controls.Add(columnsTab);
+            contraintTabs.Controls.Add(extendedPropertiesTab);
+            contraintTabs.Dock = DockStyle.Fill;
+            contraintTabs.Location = new Point(3, 253);
+            contraintTabs.Name = "contraintTabs";
+            contraintTabs.SelectedIndex = 0;
+            contraintTabs.Size = new Size(510, 287);
+            contraintTabs.TabIndex = 6;
+            // 
+            // referenceSchemaNameValue
+            // 
+            referenceSchemaNameValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            referenceSchemaNameValue.DataPropertyName = "ReferenceSchemaName";
+            referenceSchemaNameValue.HeaderText = "Schema Name";
+            referenceSchemaNameValue.Name = "referenceSchemaNameValue";
+            referenceSchemaNameValue.ReadOnly = true;
+            // 
+            // referenceTableNameValue
+            // 
+            referenceTableNameValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            referenceTableNameValue.DataPropertyName = "ReferenceTableName";
+            referenceTableNameValue.HeaderText = "Table Name";
+            referenceTableNameValue.Name = "referenceTableNameValue";
+            referenceTableNameValue.ReadOnly = true;
             // 
             // referenceColumnNameValue
             // 
             referenceColumnNameValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             referenceColumnNameValue.DataPropertyName = "ReferenceColumnName";
-            referenceColumnNameValue.HeaderText = "Reference Column Name";
+            referenceColumnNameValue.HeaderText = "Column Name";
             referenceColumnNameValue.Name = "referenceColumnNameValue";
             referenceColumnNameValue.ReadOnly = true;
             // 
@@ -246,30 +249,30 @@
             Load += DbConstraint_Load;
             constraintLayout.ResumeLayout(false);
             constraintLayout.PerformLayout();
-            contraintTabs.ResumeLayout(false);
-            columnsTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)constraintColumnsData).EndInit();
             extendedPropertiesTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).EndInit();
+            columnsTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)constraintColumnsData).EndInit();
+            contraintTabs.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
-        private TableLayoutPanel constraintLayout;
         private Controls.TextBoxData catalogNameData;
         private Controls.TextBoxData schemaNameData;
         private Controls.TextBoxData constraintNameData;
         private Controls.TextBoxData constraintTypeData;
-        private Controls.TextBoxData referenceSchemaNameData;
-        private Controls.TextBoxData referenceTableNameData;
+        private Controls.TextBoxData tableNameData;
         private TabControl contraintTabs;
-        private TabPage extendedPropertiesTab;
         private TabPage columnsTab;
         private DataGridView constraintColumnsData;
+        private TabPage extendedPropertiesTab;
         private DataGridView extendedPropertiesData;
         private DataGridViewTextBoxColumn propertyNameData;
         private DataGridViewTextBoxColumn propertyValueData;
+        private DataGridViewTextBoxColumn referenceSchemaNameValue;
+        private DataGridViewTextBoxColumn referenceTableNameValue;
         private DataGridViewTextBoxColumn referenceColumnNameValue;
     }
 }

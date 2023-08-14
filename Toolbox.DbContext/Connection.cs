@@ -203,7 +203,10 @@ namespace Toolbox.DbContext
             //if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
 
             try
-            { return command.BaseCommand.ExecuteReader(); }
+            {
+                Validate(command);
+                return command.BaseCommand.ExecuteReader();
+            }
             catch (Exception ex)
             {
                 AddExceptionData(command.BaseCommand, ex);
@@ -212,17 +215,132 @@ namespace Toolbox.DbContext
             }
         }
 
+        /// <summary>
+        /// Exposes the ExecuteNonQuery
+        /// </summary>
+        /// <param name="command"></param>
         public void ExecuteNonQuery(Command command)
         {
             //if (HasException) { throw new InvalidOperationException("Connection has an Exception"); }
 
             try
-            { command.BaseCommand.ExecuteNonQuery(); }
+            {
+                if (DbContext.ValidateCommand) { Validate(command); }
+                command.BaseCommand.ExecuteNonQuery();
+            }
             catch (Exception ex)
             {
                 AddExceptionData(command.BaseCommand, ex);
                 exceptions.Add(ex);
                 throw;
+            }
+        }
+
+        /// <summary>
+        /// Performs the Validation of a Command.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <remarks>
+        /// The database is called to collect meta-data about the command being called.
+        /// The command is then compared to the data collected and issues are thrown as exceptions.
+        /// </remarks>
+        public void Validate(Command command)
+        {
+            foreach (SqlParameter item in command.Parameters)
+            {
+                if (!String.IsNullOrEmpty(item.TypeName))
+                { ValidateTableType(item); }
+            }
+
+            void ValidateTableType(SqlParameter parameter)
+            {
+                SqlCommand getTableType = connection.CreateCommand();
+                getTableType.CommandType = CommandType.Text;
+                getTableType.CommandText = DbScript.ValidateTableType;
+                getTableType.Transaction = transaction;
+
+                String[] objectName = parameter.TypeName.Split('.');
+                String schemaName = "dbo";
+                string typeName = String.Empty;
+                if (objectName.Length > 1)
+                {
+                    schemaName = objectName[0].Replace("[",String.Empty).Replace("]",String.Empty);
+                    typeName = objectName[1].Replace("[", String.Empty).Replace("]", String.Empty); 
+                }
+                else if (objectName.Length > 0)
+                { typeName = objectName[0].Replace("[", String.Empty).Replace("]", String.Empty); }
+                else
+                {
+                    Exception exception = new ArgumentException("Could not parse TypeName");
+                    exception.Data.Add(nameof(parameter.ParameterName), parameter.ParameterName);
+                    exception.Data.Add(nameof(parameter.TypeName), parameter.TypeName);
+                    throw exception;
+                }
+
+                getTableType.Parameters.Add(new SqlParameter("@SchemaName", schemaName));
+                getTableType.Parameters.Add(new SqlParameter("@TypeName", typeName));
+
+                using (DataTable dbTableType = new DataTable())
+                {
+                    dbTableType.Load(getTableType.ExecuteReader());
+                    Dictionary<String, String> issues = new Dictionary<String, String>();
+
+                    if (parameter.Value is DataTable applicationTable)
+                    {
+                        List<String?> dbColumns = dbTableType.Rows.Cast<DataRow>().Select(s => s["ColumnName"].ToString()).ToList();
+                        List<String?> applicationColumns = applicationTable.Columns.Cast<DataColumn>().Select(s => (String?)s.ColumnName).ToList();
+
+                        foreach (String? item in dbColumns.Union(applicationColumns))
+                        {
+                            if (item is not null)
+                            {
+                                Int32 dbIndex = dbColumns.IndexOf(item);
+                                Int32 applicationIndex = applicationColumns.IndexOf(item);
+
+                                if (dbIndex < 0 && applicationIndex < 0)
+                                { throw new InvalidOperationException(); } // This should never happen.
+                                else if (dbIndex >= 0 && applicationIndex >= 0 && dbIndex != applicationIndex)
+                                {
+                                    issues.Add(
+                                        String.Format("Index does not match: {0}", item),
+                                        String.Format("Db-{0}, App-{1}", dbIndex, applicationIndex));
+                                }
+                                else if (dbIndex < 0 && applicationIndex >= 0)
+                                {
+                                    issues.Add(
+                                        String.Format("Name Mismatch: {0}", item),
+                                        String.Format("Application Index: {0}", applicationIndex));
+                                }
+                                else if (dbIndex >= 0 && applicationIndex < 0)
+                                {
+                                    issues.Add(
+                                        String.Format("Name Mismatch: {0}", item),
+                                        String.Format("Database Index: {0}", dbIndex));
+                                }
+                            }
+                        }
+
+                        if (issues.Count > 0)
+                        {
+                            Exception exception = new ArgumentException("Application DataTable does not match SQL User Table Type");
+                            exception.Data.Add(nameof(parameter.ParameterName), parameter.ParameterName);
+                            exception.Data.Add(nameof(schemaName), schemaName);
+                            exception.Data.Add(nameof(typeName), typeName);
+
+                            foreach (KeyValuePair<string, string> item in issues)
+                            { exception.Data.Add(item.Key, item.Value); }
+                            throw exception;
+                        }
+                    }
+                    else
+                    {
+                        Exception exception = new ArgumentException("Parameter Value is not a DataTable");
+                        exception.Data.Add(nameof(parameter.ParameterName), parameter.ParameterName);
+                        throw exception;
+                    }
+
+                }
+
             }
         }
 

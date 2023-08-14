@@ -21,8 +21,7 @@ Begin Try
 	-- Clean the Data
 	Declare @Values  [App_DataDictionary].[typeDatabaseExtendedProperty]
 	Insert Into @Values
-	Select	IsNull(O.[PropertyId],newid()) As [PropertyId],
-			P.[CatalogId],
+	Select	P.[CatalogId] As [CatalogId],
 			P.[CatalogName] As [CatalogName],
 			NullIf(Trim(D.[Level0Type]),'') As [Level0Type],
 			NullIf(Trim(D.[Level0Name]),'') As [Level0Name],
@@ -53,7 +52,7 @@ Begin Try
 
 	-- Apply Changes
 	With [Delta] As (
-		Select	[PropertyId],
+		Select	[CatalogId],
 				[Level0Type],
 				[Level0Name],
 				[Level1Type],
@@ -66,7 +65,7 @@ Begin Try
 				[PropertyValue]
 		From	@Values
 		Except
-		Select	[PropertyId],
+		Select	[CatalogId],
 				[Level0Type],
 				[Level0Name],
 				[Level1Type],
@@ -79,8 +78,7 @@ Begin Try
 				[PropertyValue]
 		From	[App_DataDictionary].[DatabaseExtendedProperty]),
 	[Data] As (
-		Select	V.[PropertyId],
-				V.[CatalogId],
+		Select	V.[CatalogId],
 				V.[Level0Type],
 				V.[Level0Name],
 				V.[Level1Type],
@@ -91,13 +89,21 @@ Begin Try
 				V.[ObjName],
 				V.[PropertyName],
 				V.[PropertyValue],
-				IIF(D.[PropertyId] is Null,1, 0) As [IsDiffrent]
+				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
-				On	V.[PropertyId] = D.[PropertyId])
+				On	V.[CatalogId] = D.[CatalogId] And
+					IsNull(V.[Level0Name],'') = IsNull(D.[Level0Name],'') And
+					IsNull(V.[Level1Name],'') = IsNull(D.[Level1Name],'') And
+					IsNull(V.[Level2Name],'') = IsNull(D.[Level2Name],'') And
+					V.[PropertyName] = D.[PropertyName])
 	Merge [App_DataDictionary].[DatabaseExtendedProperty] T
 	Using [Data] S
-	On	T.[PropertyId] = S.[PropertyId]
+	On	T.[CatalogId] = S.[CatalogId] And
+		IsNull(T.[Level0Name],'') = IsNull(S.[Level0Name],'') And
+		IsNull(T.[Level1Name],'') = IsNull(S.[Level1Name],'') And
+		IsNull(T.[Level2Name],'') = IsNull(S.[Level2Name],'') And
+		T.[PropertyName] = S.[PropertyName]
 	When Matched and [IsDiffrent] = 1 Then Update Set
 		[Level0Type] = S.[Level0Type],
 		[Level0Name] = S.[Level0Name],
@@ -110,8 +116,7 @@ Begin Try
 		[PropertyName] = S.[PropertyName],
 		[PropertyValue] = S.[PropertyValue]
 	When Not Matched by Target Then
-		Insert ([PropertyId],
-				[CatalogId],
+		Insert ([CatalogId],
 				[Level0Type],
 				[Level0Name],
 				[Level1Type],
@@ -122,8 +127,7 @@ Begin Try
 				[ObjName],
 				[PropertyName],
 				[PropertyValue])
-		Values ([PropertyId],
-				[CatalogId],
+		Values ([CatalogId],
 				[Level0Type],
 				[Level0Name],
 				[Level1Type],

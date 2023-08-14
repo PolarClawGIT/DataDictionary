@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.ApplicationData;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -67,7 +68,34 @@ namespace DataDictionary.DataLayer.DbMetaData
                 Level1Name = RoutineName,
                 Level1Type = RoutineType
             }).GetCommand();
-
         }
+
+        public static Command GetData(IConnection connection, IModelKey modelId)
+        { return GetData(connection, (modelId.ModelId, null, null, null)); }
+
+        static Command GetData(IConnection connection, (Guid? modelId, String? catalogName, String? schemaName, String? routineName) parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseRoutine]";
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@CatalogName", parameters.catalogName);
+            command.AddParameter("@SchemaName", parameters.schemaName);
+            command.AddParameter("@RoutineName", parameters.routineName);
+            return command;
+        }
+
+        public static Command SetData(IConnection connection, IModelKey modelId, IBindingTable<DbRoutineItem> source)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseRoutine]";
+            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutine]", source);
+            return command;
+        }
+
+        public override String ToString()
+        { return new DbRoutineKey(this).ToString(); }
     }
 }

@@ -118,11 +118,9 @@ namespace Toolbox.BindingTable
                 }
 
                 // Validation Check
-                List<String> columnNames = new List<String>();
+                List<String> columnNames = dataItems.Columns.Cast<DataColumn>().Select(s => s.ColumnName).
+                    Union(newData.Columns.Cast<DataColumn>().Select(s => s.ColumnName)).ToList();
                 InvalidOperationException? coloumMismatch = null;
-
-                columnNames.AddRange(dataItems.Columns.Cast<DataColumn>().Select(s => s.ColumnName));
-                columnNames.AddRange(newData.Columns.Cast<DataColumn>().Select(s => s.ColumnName).Where(w => !columnNames.Contains(w)));
 
                 foreach (String item in columnNames)
                 {

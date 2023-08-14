@@ -147,4 +147,88 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[procSetModel]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="d232fa61-4e22-4e16-ada6-dd17e128ba9f" ChangeDateTime="08/11/2023 21:56:26">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseTableColumn].[CharacterMaxiumLength]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseTableColumn]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CharacterMaximumLength]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9d5a6c6c-e903-4953-b9f6-04f599570069" ChangeDateTime="08/11/2023 21:56:57">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseTableColumn].[CharacterOctetLenght]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseTableColumn]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CharacterOctetLength]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="39f5adb7-640c-423d-a6aa-f5122e6e9065" ChangeDateTime="08/11/2023 21:57:20">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseTableColumn].[NumericPercision]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseTableColumn]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[NumericPrecision]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ea4f63d6-6475-4cf8-8550-7a0c552d192c" ChangeDateTime="08/11/2023 21:57:33">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseTableColumn].[NumericPercisionRadix]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseTableColumn]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[NumericPrecisionRadix]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b649a67a-c9ec-493a-b914-a340e682e83f" ChangeDateTime="08/11/2023 22:00:40">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseDomain].[CharacterMaxiumLength]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseDomain]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CharacterMaximumLength]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="96ea03f1-4078-4b4b-b639-ab8ac950288e" ChangeDateTime="08/11/2023 22:00:56">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseDomain].[CharacterOctetLenght]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseDomain]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CharacterOctetLength]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="73dc313a-7d58-4a4f-9db8-f65b47e34ea7" ChangeDateTime="08/11/2023 22:01:20">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseDomain].[NumericPercision]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseDomain]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[NumericPrecision]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3267c5ec-4ab0-41d9-9275-beedd0fe8d22" ChangeDateTime="08/11/2023 22:01:36">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseDomain].[NumericPercisionRadix]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseDomain]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[NumericPrecisionRadix]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6024f707-32a3-44bf-838b-31ef04cd005f" ChangeDateTime="08/11/2023 22:02:08">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseRoutineParameter].[CharacterMaxiumLength]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseRoutineParameter]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CharacterMaximumLength]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="15d26552-036a-4b4e-b44e-1d6f98e73880" ChangeDateTime="08/11/2023 22:02:26">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseRoutineParameter].[CharacterOctetLenght]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseRoutineParameter]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CharacterOctetLength]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9663b2d8-8cf9-46b7-9415-16908e3cf481" ChangeDateTime="08/11/2023 22:02:40">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseRoutineParameter].[NumericPercision]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseRoutineParameter]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[NumericPrecision]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b582311c-af2a-41d7-8927-fc143f1adeac" ChangeDateTime="08/11/2023 22:02:57">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DatabaseRoutineParameter].[NumericPercisionRadix]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DatabaseRoutineParameter]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[NumericPrecisionRadix]" />
+  </Operation>
 </Operations>

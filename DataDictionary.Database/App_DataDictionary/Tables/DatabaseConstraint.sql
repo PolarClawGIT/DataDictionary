@@ -6,8 +6,8 @@
 	[CatalogId]          UniqueIdentifier Not Null,
 	[SchemaName]         SysName Not Null,
 	[ConstraintName]     SysName Not Null,
+	[TableName]          SysName Null, -- Needed for Extended Property Call at Constraint level
 	[ConstraintType]     NVarChar(60) Null, -- Known types: FOREIGN KEY, UNIQUE, PRIMARY KEY
 	CONSTRAINT [PK_DatabaseConstraint] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [ConstraintName] ASC),
-	--CONSTRAINT [FK_DatabaseConstraintCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
-	CONSTRAINT [FK_DatabaseConstraintSchema] FOREIGN KEY ([CatalogId], [SchemaName]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([CatalogId], [SchemaName]),
+	--CONSTRAINT [FK_DatabaseConstraintTable] FOREIGN KEY ([CatalogId], [SchemaName], [TableName]) REFERENCES [App_DataDictionary].[DatabaseTable] ([CatalogId], [SchemaName], [TableName])
 )

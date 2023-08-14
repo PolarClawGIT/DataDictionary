@@ -12,7 +12,6 @@ Select	[ModelId],
 		[ModelTitle],
 		[ModelDescription],
 		[Obsolete],
-		[ModfiedBy],
 		[SysStart]
 From	[App_DataDictionary].[Model]
 Where	(@ModelId is Null or @ModelId = [ModelId]) And

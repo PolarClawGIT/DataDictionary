@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DataDictionary.DataLayer.ApplicationData;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -81,6 +82,31 @@ namespace DataDictionary.DataLayer.DbMetaData
             result.Parameters.Add(new SqlParameter("@ObjectName", SqlDbType.VarChar, 210));
             result.Parameters["@ObjectName"].Value = String.Format("[{0}].[{1}]", key.SchemaName, key.RoutineName);
             return result;
+        }
+
+        public static Command GetData(IConnection connection, IModelKey modelId)
+        { return GetData(connection, (modelId.ModelId, null, null, null)); }
+
+        static Command GetData(IConnection connection, (Guid? modelId, String? catalogName, String? schemaName, String? routineName) parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseRoutineDependency]";
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@CatalogName", parameters.catalogName);
+            command.AddParameter("@SchemaName", parameters.schemaName);
+            command.AddParameter("@RoutineName", parameters.routineName);
+            return command;
+        }
+
+        public static Command SetData(IConnection connection, IModelKey modelId, IBindingTable<DbRoutineDependencyItem> source)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseRoutineDependency]";
+            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutineDependency]", source);
+            return command;
         }
     }
 

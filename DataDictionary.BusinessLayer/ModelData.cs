@@ -36,14 +36,13 @@ namespace DataDictionary.BusinessLayer
         public BindingTable<DbRoutineParameterItem> DbRoutineParameters { get; } = ModelFactory.Create<DbRoutineParameterItem>();
         public BindingTable<DbRoutineDependencyItem> DbRoutineDependencies { get; } = ModelFactory.Create<DbRoutineDependencyItem>();
 
-
         // Domain Model
         public BindingTable<DomainAttributeItem> DomainAttributes = ModelFactory.Create<DomainAttributeItem>();
         public BindingTable<DomainAttributeAliasItem> DomainAttributeAliases = ModelFactory.Create<DomainAttributeAliasItem>();
         public BindingTable<DomainAttributePropertyItem> DomainAttributeProperties = ModelFactory.Create<DomainAttributePropertyItem>();
 
         // Application Data
-        public BindingTable<ModelItem> Models { get; } = ModelFactory.Create<ModelItem>();
+        internal BindingTable<ModelItem> Models { get; } = ModelFactory.Create<ModelItem>();
         public BindingTable<HelpItem> HelpSubjects { get; } = ModelFactory.Create<HelpItem>();
         public BindingTable<PropertyItem> Properties { get; } = ModelFactory.Create<PropertyItem>();
         public BindingTable<PropertyScopeItem> PropertyScopes { get; } = ModelFactory.Create<PropertyScopeItem>();

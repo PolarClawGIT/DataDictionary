@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.ApplicationData;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,8 +13,6 @@ namespace DataDictionary.DataLayer.DbMetaData
 {
     public interface IDbRoutineParameterItem : IDbRoutineParameterKey, IDbDomainReferenceKey, IDbColumn, IDbCatalogKey
     {
-        String? ParameterMode { get; }
-        Nullable<Boolean> IsResult { get; }
     }
 
     public class DbRoutineParameterItem : BindingTableRow, IDbRoutineParameterItem, INotifyPropertyChanged, IDbExtendedProperties
@@ -23,8 +22,6 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? SchemaName { get { return GetValue("SchemaName"); } }
         public String? RoutineName { get { return GetValue("RoutineName"); } }
         public String? ParameterName { get { return GetValue("ParameterName"); } }
-        public String? ParameterMode { get { return GetValue("ParameterMode"); } }
-        public Nullable<Boolean> IsResult { get { return GetValue<Boolean>("IsResult", BindingItemParsers.BooleanTryParse); } }
         public Nullable<Int32> OrdinalPosition { get { return GetValue<Int32>("OrdinalPosition"); } }
         public String? DataType { get { return GetValue("DataType"); } }
         public Nullable<Int32> CharacterMaximumLength { get { return GetValue<Int32>("CharacterMaximumLength"); } }
@@ -49,12 +46,9 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(String)){ AllowDBNull = false},
             new DataColumn("RoutineName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("RoutineType", typeof(String)){ AllowDBNull = false},
             new DataColumn("ParameterName", typeof(String)){ AllowDBNull = false},
             new DataColumn("OrdinalPosition", typeof(Int32)){ AllowDBNull = true},
-            new DataColumn("RoutineType", typeof(String)){ AllowDBNull = false},
-            new DataColumn("ParameterMode", typeof(String)){ AllowDBNull = true},
-            new DataColumn("IsResult", typeof(Boolean)){ AllowDBNull = true},
-
             new DataColumn("DataType", typeof(String)){ AllowDBNull = true},
             new DataColumn("CharacterMaximumLength", typeof(Int32)){ AllowDBNull = true},
             new DataColumn("CharacterOctetLength", typeof(Int32)){ AllowDBNull = true},
@@ -72,6 +66,8 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("DomainSchema", typeof(String)){ AllowDBNull = true},
             new DataColumn("DomainName", typeof(String)){ AllowDBNull = true},
         };
+
+
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
@@ -92,5 +88,33 @@ namespace DataDictionary.DataLayer.DbMetaData
             { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = RoutineName, Level1Type = level1Type, Level2Name = ParameterName, Level2Type = "PARAMETER" }).
             GetCommand();
         }
+
+        public static Command GetData(IConnection connection, IModelKey modelId)
+        { return GetData(connection, (modelId.ModelId, null, null, null)); }
+
+        static Command GetData(IConnection connection, (Guid? modelId, String? catalogName, String? schemaName, String? routineName) parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseRoutineParameter]";
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@CatalogName", parameters.catalogName);
+            command.AddParameter("@SchemaName", parameters.schemaName);
+            command.AddParameter("@RoutineName", parameters.routineName);
+            return command;
+        }
+
+        public static Command SetData(IConnection connection, IModelKey modelId, IBindingTable<DbRoutineParameterItem> source)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseRoutineParameter]";
+            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutineParameter]", source);
+            return command;
+        }
+
+        public override String ToString()
+        { return new DbRoutineParameterKey(this).ToString(); }
     }
 }

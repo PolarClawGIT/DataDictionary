@@ -307,7 +307,7 @@ namespace DataDictionary.Main
                         { TreeNode columnNode = CreateNode(columnItem.ColumnName, dbDataImageIndex.Column, columnItem, columnsNode); }
 
                         foreach (DbConstraintItem contraintItem in Program.Data.DbConstraints.Where(
-                            w => new DbTableReferenceKey(w).Equals(new DbTableKey(tableItem))))
+                            w => new DbTableKey(w).Equals(new DbTableKey(tableItem))))
                         {
                             if (tableConstraintNode is null)
                             { tableConstraintNode = CreateNode("Constraints", dbDataImageIndex.TableKey, null, tableNode); }
@@ -316,7 +316,7 @@ namespace DataDictionary.Main
 
                             foreach (DbConstraintColumnItem contraintColumnItem in Program.Data.DbConstraintColumns.Where(
                                 w => new DbConstraintKey(w).Equals(new DbConstraintKey(contraintItem))))
-                            { TreeNode constraintColumnNode = CreateNode(contraintColumnItem.ReferenceColumnName, dbDataImageIndex.ConstraintColumn, contraintColumnItem, constraintNode); }
+                            { TreeNode constraintColumnNode = CreateNode(contraintColumnItem.ColumnName, dbDataImageIndex.ConstraintColumn, contraintColumnItem, constraintNode); }
                         }
                     }
                 }

@@ -14,6 +14,7 @@ namespace Toolbox.DbContext
         String ServerName { get; }
         String DatabaseName { get; }
         IConnection CreateConnection();
+        Boolean ValidateCommand { get; set; }
     }
 
     /// <summary>
@@ -46,6 +47,11 @@ namespace Toolbox.DbContext
 
         public String? ApplicationRole { get; init; }
         public String? ApplicationRolePassword { get; init; }
+
+        /// <summary>
+        /// Attempt to validate the command before executing it. Any issues are thrown as exceptions.
+        /// </summary>
+        public Boolean ValidateCommand { get; set; } = true;
 
         /// <summary>
         /// Constructor.

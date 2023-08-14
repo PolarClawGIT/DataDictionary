@@ -12,14 +12,14 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 {
     public static class GetSchemaExtension
     {
-        public static IReadOnlyList<WorkItem> GetDatabaseSchema(this DbSchemaContext context, IBindingTable<GetSchemaDatabase> target)
+        public static IReadOnlyList<WorkItem> GetDatabaseSchema(this DbSchemaContext context, IBindingTable<DatabaseSchema> target)
         {
             List<WorkItem> workItems = new List<WorkItem>();
 
             workItems.Add(
-                new GetInformationSchema<GetSchemaDatabase>(context)
+                new GetInformationSchema<DatabaseSchema>(context)
                 {
-                    Collection = GetSchemaDatabase.Schema,
+                    Collection = DatabaseSchema.Schema,
                     Target = target,
                     WorkName = "Get Databases"
                 });

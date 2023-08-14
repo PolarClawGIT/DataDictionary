@@ -94,15 +94,17 @@ namespace DataDictionary.DataLayer.DbMetaData {
         
         /// <summary>
         ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
-        ///	[CONSTRAINT_CATALOG] As [CatalogName],
-        ///	[CONSTRAINT_SCHEMA] As [SchemaName],
-        ///	[CONSTRAINT_NAME] As [ConstraintName],
-        ///	--TABLE_CATALOG,
-        ///	[TABLE_SCHEMA] As [ReferenceSchemaName],
-        ///	[TABLE_NAME] As [ReferenceTableName],
-        ///	[COLUMN_NAME] As [ReferenceColumnName],
-        ///	[ORDINAL_POSITION] As [OrdinalPosition]
-        ///From	[INFORMATION_SCHEMA].[KEY_COLUMN_USAGE].
+        ///	C.[CONSTRAINT_CATALOG] As [CatalogName],
+        ///	C.[CONSTRAINT_SCHEMA] As [SchemaName],
+        ///	C.[CONSTRAINT_NAME] As [ConstraintName],
+        ///	C.[TABLE_NAME] As [TableName],
+        ///	C.[COLUMN_NAME] As [ColumnName],
+        ///	C.[ORDINAL_POSITION] As [OrdinalPosition],
+        ///	F.[TABLE_SCHEMA] As [ReferenceSchemaName],
+        ///	F.[TABLE_NAME] As [ReferenceTableName],
+        ///	F.[COLUMN_NAME] As [ReferenceColumnName]
+        ///From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
+        ///	Left Join [INFORMATION_SCHEMA].[KEY_C [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbConstraintColumnItem {
             get {
@@ -115,10 +117,8 @@ namespace DataDictionary.DataLayer.DbMetaData {
         ///	[CONSTRAINT_CATALOG] As [CatalogName],
         ///	[CONSTRAINT_SCHEMA] As [SchemaName],
         ///	[CONSTRAINT_NAME] As [ConstraintName],
-        ///	--[TABLE_CATALOG] As ,
-        ///	[CONSTRAINT_TYPE] As [ConstraintType],
-        ///	[TABLE_SCHEMA] As [ReferenceSchemaName],
-        ///	[TABLE_NAME] As [ReferenceTableName]
+        ///	[TABLE_NAME] As [TableName],
+        ///	[CONSTRAINT_TYPE] As [ConstraintType]
         ///From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS].
         /// </summary>
         internal static string DbConstraintItem {
@@ -212,14 +212,12 @@ namespace DataDictionary.DataLayer.DbMetaData {
         ///	P.[SPECIFIC_CATALOG] As [CatalogName],
         ///	P.[SPECIFIC_SCHEMA] As [SchemaName],
         ///	P.[SPECIFIC_NAME] As [RoutineName],
-        ///	P.[PARAMETER_NAME] As [ParameterName],
-        ///	P.[ORDINAL_POSITION] As [OrdinalPosition],
         ///	R.[ROUTINE_TYPE] As [RoutineType],
-        ///	P.[PARAMETER_MODE] As [ParameterMode],
-        ///	iif(P.[IS_RESULT] In (&apos;YES&apos;,&apos;TRUE&apos;,&apos;1&apos;),1,0) As [IsResult],
+        ///	IIF(R.[ROUTINE_TYPE] IN (&apos;FUNCTION&apos;) AND P.[ORDINAL_POSITION] = 0,&apos;RETURN&apos;,P.[PARAMETER_NAME]) As [ParameterName],
+        ///	P.[ORDINAL_POSITION] As [OrdinalPosition],
         ///	P.[DATA_TYPE] As [DataType],
         ///	P.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
-        ///	P.[CHARACTER_OCTET_LE [rest of string was truncated]&quot;;.
+        ///	P.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLen [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbRoutineParameterItem {
             get {

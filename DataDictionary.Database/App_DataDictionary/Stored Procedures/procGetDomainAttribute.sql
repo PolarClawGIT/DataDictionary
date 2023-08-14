@@ -11,6 +11,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 
 Select	A.[ModelId],
 		D.[AttributeId],
+		A.[AttributeParentId],
 		D.[AttributeTitle],
 		D.[AttributeDescription],
 		D.[Obsolete],

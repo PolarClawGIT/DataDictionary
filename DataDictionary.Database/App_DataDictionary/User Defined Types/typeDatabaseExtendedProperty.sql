@@ -1,6 +1,5 @@
 ﻿CREATE TYPE [App_DataDictionary].[typeDatabaseExtendedProperty] AS TABLE
 (
-	[PropertyId]             UniqueIdentifier Null,
 	[CatalogId]              UniqueIdentifier Null,
 	[CatalogName]            SysName          Null,
 	-- Parameters for [fn_listextendedproperty]

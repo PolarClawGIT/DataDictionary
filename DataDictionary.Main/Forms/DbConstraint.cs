@@ -54,11 +54,10 @@ namespace DataDictionary.Main.Forms
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data.DbConstraint, nameof(data.DbConstraint.SchemaName)));
                 constraintNameData.DataBindings.Add(new Binding(nameof(constraintNameData.Text), data.DbConstraint, nameof(data.DbConstraint.ConstraintName)));
                 constraintTypeData.DataBindings.Add(new Binding(nameof(constraintTypeData.Text), data.DbConstraint, nameof(data.DbConstraint.ConstraintType)));
-                referenceSchemaNameData.DataBindings.Add(new Binding(nameof(referenceSchemaNameData.Text), data.DbConstraint, nameof(data.DbConstraint.ReferenceSchemaName)));
-                referenceTableNameData.DataBindings.Add(new Binding(nameof(referenceTableNameData.Text), data.DbConstraint, nameof(data.DbConstraint.ReferenceObjectName)));
+                tableNameData.DataBindings.Add(new Binding(nameof(tableNameData.Text), data.DbConstraint, nameof(data.DbConstraint.TableName)));
 
                 extendedPropertiesData.AutoGenerateColumns = false;
-                extendedPropertiesData.DataSource = Program.Data.DbExtendedProperties.GetProperties(data.DbConstraint).ToList();
+                extendedPropertiesData.DataSource = Program.Data.DbExtendedProperties.GetProperties((IDbConstraintKey)data.DbConstraint).ToList();
 
                 constraintColumnsData.AutoGenerateColumns = false;
                 constraintColumnsData.DataSource = new BindingView<DbConstraintColumnItem>(Program.Data.DbConstraintColumns, w => new DbConstraintKey(w).Equals(data.ConstraintKey));
@@ -71,8 +70,7 @@ namespace DataDictionary.Main.Forms
             schemaNameData.DataBindings.Clear();
             constraintNameData.DataBindings.Clear();
             constraintTypeData.DataBindings.Clear();
-            referenceSchemaNameData.DataBindings.Clear();
-            referenceTableNameData.DataBindings.Clear();
+            tableNameData.DataBindings.Clear();
 
             extendedPropertiesData.DataSource = null;
             constraintColumnsData.DataSource = null;

@@ -187,7 +187,7 @@ namespace DataDictionary.Main.Forms
 
         private void connectCommand_Click(object sender, EventArgs e)
         {
-            BindingTable<GetSchemaDatabase> databaseNames = new BindingTable<GetSchemaDatabase>();
+            BindingTable<DatabaseSchema> databaseNames = new BindingTable<DatabaseSchema>();
 
             if (data.DbContext is DbSchemaContext)
             { this.DoWork(data.DbContext.GetDatabaseSchema(databaseNames), onComplete) ; }
@@ -197,7 +197,7 @@ namespace DataDictionary.Main.Forms
                 if (!result.Cancelled)
                 {
 
-                    if (databaseNames.FirstOrDefault(w => w.CatalogName == databaseNameData.Text) is GetSchemaDatabase currentDb)
+                    if (databaseNames.FirstOrDefault(w => w.CatalogName == databaseNameData.Text) is DatabaseSchema currentDb)
                     {
                         databaseNameData.Items.Clear();
                         databaseNameData.Text = String.Empty;

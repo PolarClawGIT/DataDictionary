@@ -24,7 +24,7 @@ namespace DataDictionary.DataLayer.DomainData
         { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue<Guid>("AttributeId", value); } }
 
         public Nullable<Guid> ParentAttributeId
-        { get { return GetValue<Guid>("ParentAttributeId"); } protected set { SetValue<Guid>("ParentAttributeId", value); } }
+        { get { return GetValue<Guid>("AttributeParentId"); } protected set { SetValue<Guid>("ParenAttributeParentIdtAttributeId", value); } }
 
         public String? AttributeTitle { get { return GetValue("AttributeTitle"); } set { SetValue("AttributeTitle", value); } }
         public String? AttributeDescription { get { return GetValue("AttributeDescription"); } set { SetValue("AttributeDescription", value); } }
@@ -42,7 +42,7 @@ namespace DataDictionary.DataLayer.DomainData
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("ParentAttributeId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn("AttributeParentId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("AttributeTitle", typeof(String)){ AllowDBNull = false},
             new DataColumn("AttributeDescription", typeof(String)){ AllowDBNull = true},
             new DataColumn("Obsolete", typeof(Boolean)){ AllowDBNull = false},

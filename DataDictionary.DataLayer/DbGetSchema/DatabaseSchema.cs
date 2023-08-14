@@ -10,7 +10,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbGetSchema
 {
-    public class GetSchemaDatabase : BindingTableRow, IDbCatalogKeyUnique
+    public class DatabaseSchema : BindingTableRow, IDbCatalogKeyUnique
     {
         public virtual String? CatalogName { get { return GetValue("database_name"); } }
         public static InformationSchema.Collection Schema { get { return InformationSchema.Collection.Databases; } }

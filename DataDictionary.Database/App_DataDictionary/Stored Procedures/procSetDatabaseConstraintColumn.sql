@@ -25,10 +25,12 @@ Begin Try
 			P.[CatalogName] As [CatalogName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
 			NullIf(Trim(D.[ConstraintName]),'') As [ConstraintName],
+			NullIf(Trim(D.[TableName]),'') As [TableName],
+			NullIf(Trim(D.[ColumnName]),'') As [ColumnName],
+			D.[OrdinalPosition],
 			NullIf(Trim(D.[ReferenceSchemaName]),'') As [ReferenceSchemaName],
 			NullIf(Trim(D.[ReferenceTableName]),'') As [ReferenceTableName],
-			NullIf(Trim(D.[ReferenceColumnName]),'') As [ReferenceColumnName],
-			D.[OrdinalPosition]
+			NullIf(Trim(D.[ReferenceColumnName]),'') As [ReferenceColumnName]
 	From	@Data D
 			Left Join [App_DataDictionary].[ModelCatalog] C
 			On	C.[ModelId] = @ModelId
@@ -45,68 +47,78 @@ Begin Try
 		Select	[CatalogId],
 				[SchemaName],
 				[ConstraintName],
+				[TableName],
+				[ColumnName],
+				[OrdinalPosition],
 				[ReferenceSchemaName],
 				[ReferenceTableName],
-				[ReferenceColumnName],
-				[OrdinalPosition]
+				[ReferenceColumnName]
 		From	@Values
 		Except
 		Select	[CatalogId],
 				[SchemaName],
 				[ConstraintName],
+				[TableName],
+				[ColumnName],
+				[OrdinalPosition],
 				[ReferenceSchemaName],
 				[ReferenceTableName],
-				[ReferenceColumnName],
-				[OrdinalPosition]
+				[ReferenceColumnName]
 		From	[App_DataDictionary].[DatabaseConstraintColumn]),
 	[Data] As (
 		Select	V.[CatalogId],
 				V.[SchemaName],
 				V.[ConstraintName],
+				V.[TableName],
+				V.[ColumnName],
+				V.[OrdinalPosition],
 				V.[ReferenceSchemaName],
 				V.[ReferenceTableName],
 				V.[ReferenceColumnName],
-				V.[OrdinalPosition],
 				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
 				On	V.[CatalogId] = D.[CatalogId] And
 					V.[SchemaName] = D.[SchemaName] And
 					V.[ConstraintName] = D.[ConstraintName] And
-					V.[ReferenceSchemaName] = D.[ReferenceSchemaName] And
-					V.[ReferenceTableName] = D.[ReferenceTableName] And
-					V.[ReferenceColumnName] = D.[ReferenceColumnName])
+					V.[TableName] = D.[TableName] And
+					V.[ColumnName] = D.[ColumnName])
 	Merge [App_DataDictionary].[DatabaseConstraintColumn] As T
 	Using [Data] As S
 	On	T.[CatalogId] = S.[CatalogId] And
 		T.[SchemaName] = S.[SchemaName] And
 		T.[ConstraintName] = S.[ConstraintName] and
-		T.[ReferenceSchemaName] = S.[ReferenceSchemaName] And
-		T.[ReferenceTableName] = S.[ReferenceTableName] And
-		T.[ReferenceColumnName] = S.[ReferenceColumnName]
+		T.[TableName] = S.[TableName] And
+		T.[ColumnName] = S.[ColumnName]
 	When Matched and [IsDiffrent] = 1 Then Update Set
 		[CatalogId] = S.[CatalogId],
 		[SchemaName] = S.[SchemaName],
 		[ConstraintName] = S.[ConstraintName],
+		[TableName] = S.[TableName],
+		[ColumnName] = S.[ColumnName],
+		[OrdinalPosition] = S.[OrdinalPosition],
 		[ReferenceSchemaName] = S.[ReferenceSchemaName],
 		[ReferenceTableName] = S.[ReferenceTableName],
-		[ReferenceColumnName] = S.[ReferenceColumnName],
-		[OrdinalPosition] = S.[OrdinalPosition]
+		[ReferenceColumnName] = S.[ReferenceColumnName]
 	When Not Matched by Target Then
 		Insert ([CatalogId],
 				[SchemaName],
 				[ConstraintName],
+				[TableName],
+				[ColumnName],
+				[OrdinalPosition],
 				[ReferenceSchemaName],
 				[ReferenceTableName],
-				[ReferenceColumnName],
-				[OrdinalPosition])
+				[ReferenceColumnName])
 		Values ([CatalogId],
 				[SchemaName],
 				[ConstraintName],
+				[TableName],
+				[ColumnName],
+				[OrdinalPosition],
 				[ReferenceSchemaName],
 				[ReferenceTableName],
-				[ReferenceColumnName],
-				[OrdinalPosition])
+				[ReferenceColumnName])
 	When Not Matched by Source And (T.[CatalogId] In (
 		Select	[CatalogId]
 		From	[App_DataDictionary].[ModelCatalog]

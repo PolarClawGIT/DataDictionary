@@ -53,7 +53,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetApplicationModel]";
+            command.CommandText = "[App_DataDictionary].[procGetModel]";
 
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@ModelTitle", parameters.modelTitle);
@@ -66,8 +66,8 @@ namespace DataDictionary.DataLayer.ApplicationData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetApplicationModel]";
-            command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationModel]", source);
+            command.CommandText = "[App_DataDictionary].[procSetModel]";
+            command.AddParameter("@Data", "[App_DataDictionary].[typeModel]", source);
 
             return command;
         }
@@ -76,7 +76,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procDeleteApplicationModel]";
+            command.CommandText = "[App_DataDictionary].[procDeleteModel]";
             command.AddParameter("@ModelId", parameters.ModelId);
 
             return command;

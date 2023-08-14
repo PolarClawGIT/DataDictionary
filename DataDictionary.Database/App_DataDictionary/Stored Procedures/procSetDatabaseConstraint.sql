@@ -25,6 +25,7 @@ Begin Try
 			P.[CatalogName] As [CatalogName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
 			NullIf(Trim(D.[ConstraintName]),'') As [ConstraintName],
+			NullIF(TRIM(D.[TableName]),'') As [TableName],
 			NullIf(Trim(D.[ConstraintType]),'') As [ConstraintType]
 	From	@Data D
 			Left Join [App_DataDictionary].[ModelCatalog] C
@@ -77,18 +78,21 @@ Begin Try
 		Select	[CatalogId],
 				[SchemaName],
 				[ConstraintName],
+				[TableName],
 				[ConstraintType]
 		From	@Values
 		Except
 		Select	[CatalogId],
 				[SchemaName],
 				[ConstraintName],
+				[TableName],
 				[ConstraintType]
 		From	[App_DataDictionary].[DatabaseConstraint]),
 	[Data] As (
 		Select	V.[CatalogId],
 				V.[SchemaName],
 				V.[ConstraintName],
+				V.[TableName],
 				V.[ConstraintType],
 				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
 		From	@Values V
@@ -105,15 +109,18 @@ Begin Try
 		[CatalogId] = S.[CatalogId],
 		[SchemaName] = S.[SchemaName],
 		[ConstraintName] = S.[ConstraintName],
+		[TableName] = S.[TableName],
 		[ConstraintType] = S.[ConstraintType]
 	When Not Matched by Target Then
 		Insert ([CatalogId],
 				[SchemaName],
 				[ConstraintName],
+				[TableName],
 				[ConstraintType])
 		Values ([CatalogId],
 				[SchemaName],
 				[ConstraintName],
+				[TableName],
 				[ConstraintType])
 	When Not Matched by Source And (T.[CatalogId] In (
 		Select	[CatalogId]
