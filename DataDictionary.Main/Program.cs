@@ -74,7 +74,7 @@ namespace DataDictionary.Main
 
         public static void ShowException(Exception ex)
         {
-            using (Dialog.ExceptionDialog dialog = new Dialog.ExceptionDialog(ex))
+            using (Dialogs.ExceptionDialog dialog = new Dialogs.ExceptionDialog(ex))
             { dialog.ShowDialog(); }
         }
     }

@@ -57,7 +57,7 @@ namespace DataDictionary.Main
             { onLineModetoolStripMenuItem.CheckState = CheckState.Checked; }
             else { onLineModetoolStripMenuItem.CheckState = CheckState.Unchecked; }
 
-            manageDbModelMenuItem.Enabled = Settings.Default.IsOnLineMode;
+            saveModelToDatabaseMenuItem.Enabled = Settings.Default.IsOnLineMode;
 
             Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
             Program.Messenger.AddColleague(this);
@@ -146,8 +146,12 @@ namespace DataDictionary.Main
             { helpForm.NavigateTo(currentForm); }
         }
 
-        private void manageDbModelMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.ModelManagement()); }
+        private void saveModelToDatabaseMenuItem_Click(object sender, EventArgs e)
+        { Activate(() => new Dialogs.SaveModelToDatabase()); }
+
+
+        private void openModelFromDatabaseMenuItem_Click(object sender, EventArgs e)
+        { Activate(() => new Dialogs.LoadModelFromDatabase()); }
 
         private void onLineModetoolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
@@ -463,7 +467,6 @@ namespace DataDictionary.Main
 
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
         { new Forms.UnitTestGridView().Show(); }
-
 
     }
 }

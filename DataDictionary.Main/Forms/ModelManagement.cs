@@ -19,6 +19,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DataDictionary.Main.Forms
 {
+    [Obsolete()]// Going to have to split the screen into a Save and Load screen
     partial class ModelManagement : ApplicationFormBase
     {
 

@@ -55,6 +55,9 @@
             menuConstraintItem = new ToolStripMenuItem();
             menuConstraintColumnItem = new ToolStripMenuItem();
             menuDataTypeItem = new ToolStripMenuItem();
+            menuRoutineItem = new ToolStripMenuItem();
+            menuRoutineParameterItem = new ToolStripMenuItem();
+            menuRoutineDependencyItem = new ToolStripMenuItem();
             statusStrip = new StatusStrip();
             toolStripInfo = new ToolStripStatusLabel();
             toolStripWhiteSpace = new ToolStripStatusLabel();
@@ -64,10 +67,11 @@
             fileToolStripMenuItem = new ToolStripMenuItem();
             newToolStripMenuItem = new ToolStripMenuItem();
             openToolStripMenuItem = new ToolStripMenuItem();
+            openModelFromDatabaseMenuItem = new ToolStripMenuItem();
             toolStripSeparator = new ToolStripSeparator();
             saveToolStripMenuItem = new ToolStripMenuItem();
             saveAsToolStripMenuItem = new ToolStripMenuItem();
-            manageDbModelMenuItem = new ToolStripMenuItem();
+            saveModelToDatabaseMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             printToolStripMenuItem = new ToolStripMenuItem();
             printPreviewToolStripMenuItem = new ToolStripMenuItem();
@@ -96,9 +100,6 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
-            menuRoutineItem = new ToolStripMenuItem();
-            menuRoutineParameterItem = new ToolStripMenuItem();
-            menuRoutineDependencyItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
@@ -282,7 +283,7 @@
             // 
             dbSchemaContextMenu.Items.AddRange(new ToolStripItem[] { menuCatalogItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineDependencyItem });
             dbSchemaContextMenu.Name = "dbSchemacontextMenu";
-            dbSchemaContextMenu.Size = new Size(234, 268);
+            dbSchemaContextMenu.Size = new Size(234, 246);
             // 
             // menuCatalogItem
             // 
@@ -348,6 +349,30 @@
             menuDataTypeItem.Text = "Browse Data Types";
             menuDataTypeItem.Click += menuDataTypeItem_Click;
             // 
+            // menuRoutineItem
+            // 
+            menuRoutineItem.Image = Properties.Resources.Procedure;
+            menuRoutineItem.Name = "menuRoutineItem";
+            menuRoutineItem.Size = new Size(233, 22);
+            menuRoutineItem.Text = "Browse Routines";
+            menuRoutineItem.Click += menuRoutineItem_Click;
+            // 
+            // menuRoutineParameterItem
+            // 
+            menuRoutineParameterItem.Image = Properties.Resources.Parameter;
+            menuRoutineParameterItem.Name = "menuRoutineParameterItem";
+            menuRoutineParameterItem.Size = new Size(233, 22);
+            menuRoutineParameterItem.Text = "Browse Routine Parameters";
+            menuRoutineParameterItem.Click += menuRoutineParameterItem_Click;
+            // 
+            // menuRoutineDependencyItem
+            // 
+            menuRoutineDependencyItem.Image = Properties.Resources.Dependancy;
+            menuRoutineDependencyItem.Name = "menuRoutineDependencyItem";
+            menuRoutineDependencyItem.Size = new Size(233, 22);
+            menuRoutineDependencyItem.Text = "Browse Routine Dependencies";
+            menuRoutineDependencyItem.Click += menuRoutineDependencyItem_Click;
+            // 
             // navigationSpliter
             // 
             navigationSpliter.Location = new Point(220, 24);
@@ -399,7 +424,7 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem, openToolStripMenuItem, toolStripSeparator, saveToolStripMenuItem, saveAsToolStripMenuItem, manageDbModelMenuItem, toolStripSeparator1, printToolStripMenuItem, printPreviewToolStripMenuItem, toolStripSeparator2, exitToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem, openToolStripMenuItem, openModelFromDatabaseMenuItem, toolStripSeparator, saveToolStripMenuItem, saveAsToolStripMenuItem, saveModelToDatabaseMenuItem, toolStripSeparator1, printToolStripMenuItem, printPreviewToolStripMenuItem, toolStripSeparator2, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(37, 20);
             fileToolStripMenuItem.Text = "&File";
@@ -411,7 +436,7 @@
             newToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             newToolStripMenuItem.Name = "newToolStripMenuItem";
             newToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            newToolStripMenuItem.Size = new Size(172, 22);
+            newToolStripMenuItem.Size = new Size(183, 22);
             newToolStripMenuItem.Text = "&New";
             // 
             // openToolStripMenuItem
@@ -421,13 +446,21 @@
             openToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             openToolStripMenuItem.Name = "openToolStripMenuItem";
             openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
-            openToolStripMenuItem.Size = new Size(172, 22);
+            openToolStripMenuItem.Size = new Size(183, 22);
             openToolStripMenuItem.Text = "&Open";
+            // 
+            // openModelFromDatabaseMenuItem
+            // 
+            openModelFromDatabaseMenuItem.Image = Properties.Resources.OpenTable;
+            openModelFromDatabaseMenuItem.Name = "openModelFromDatabaseMenuItem";
+            openModelFromDatabaseMenuItem.Size = new Size(183, 22);
+            openModelFromDatabaseMenuItem.Text = "Open from Database";
+            openModelFromDatabaseMenuItem.Click += openModelFromDatabaseMenuItem_Click;
             // 
             // toolStripSeparator
             // 
             toolStripSeparator.Name = "toolStripSeparator";
-            toolStripSeparator.Size = new Size(169, 6);
+            toolStripSeparator.Size = new Size(180, 6);
             // 
             // saveToolStripMenuItem
             // 
@@ -436,7 +469,7 @@
             saveToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            saveToolStripMenuItem.Size = new Size(172, 22);
+            saveToolStripMenuItem.Size = new Size(183, 22);
             saveToolStripMenuItem.Text = "&Save";
             // 
             // saveAsToolStripMenuItem
@@ -444,21 +477,21 @@
             saveAsToolStripMenuItem.Enabled = false;
             saveAsToolStripMenuItem.Image = Properties.Resources.SaveAs;
             saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            saveAsToolStripMenuItem.Size = new Size(172, 22);
+            saveAsToolStripMenuItem.Size = new Size(183, 22);
             saveAsToolStripMenuItem.Text = "Save &As";
             // 
-            // manageDbModelMenuItem
+            // saveModelToDatabaseMenuItem
             // 
-            manageDbModelMenuItem.Image = Properties.Resources.SaveTable;
-            manageDbModelMenuItem.Name = "manageDbModelMenuItem";
-            manageDbModelMenuItem.Size = new Size(172, 22);
-            manageDbModelMenuItem.Text = "Manage Db &Model";
-            manageDbModelMenuItem.Click += manageDbModelMenuItem_Click;
+            saveModelToDatabaseMenuItem.Image = Properties.Resources.SaveTable;
+            saveModelToDatabaseMenuItem.Name = "saveModelToDatabaseMenuItem";
+            saveModelToDatabaseMenuItem.Size = new Size(183, 22);
+            saveModelToDatabaseMenuItem.Text = "Save to Database";
+            saveModelToDatabaseMenuItem.Click += saveModelToDatabaseMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(169, 6);
+            toolStripSeparator1.Size = new Size(180, 6);
             // 
             // printToolStripMenuItem
             // 
@@ -467,7 +500,7 @@
             printToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             printToolStripMenuItem.Name = "printToolStripMenuItem";
             printToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.P;
-            printToolStripMenuItem.Size = new Size(172, 22);
+            printToolStripMenuItem.Size = new Size(183, 22);
             printToolStripMenuItem.Text = "&Print";
             // 
             // printPreviewToolStripMenuItem
@@ -476,18 +509,18 @@
             printPreviewToolStripMenuItem.Image = (Image)resources.GetObject("printPreviewToolStripMenuItem.Image");
             printPreviewToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
-            printPreviewToolStripMenuItem.Size = new Size(172, 22);
+            printPreviewToolStripMenuItem.Size = new Size(183, 22);
             printPreviewToolStripMenuItem.Text = "Print Pre&view";
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(169, 6);
+            toolStripSeparator2.Size = new Size(180, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(172, 22);
+            exitToolStripMenuItem.Size = new Size(183, 22);
             exitToolStripMenuItem.Text = "E&xit";
             // 
             // editToolStripMenuItem
@@ -660,30 +693,6 @@
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
             // 
-            // menuRoutineItem
-            // 
-            menuRoutineItem.Image = Properties.Resources.Procedure;
-            menuRoutineItem.Name = "menuRoutineItem";
-            menuRoutineItem.Size = new Size(233, 22);
-            menuRoutineItem.Text = "Browse Routines";
-            menuRoutineItem.Click += menuRoutineItem_Click;
-            // 
-            // menuRoutineParameterItem
-            // 
-            menuRoutineParameterItem.Image = Properties.Resources.Parameter;
-            menuRoutineParameterItem.Name = "menuRoutineParameterItem";
-            menuRoutineParameterItem.Size = new Size(233, 22);
-            menuRoutineParameterItem.Text = "Browse Routine Parameters";
-            menuRoutineParameterItem.Click += menuRoutineParameterItem_Click;
-            // 
-            // menuRoutineDependencyItem
-            // 
-            menuRoutineDependencyItem.Image = Properties.Resources.Dependancy;
-            menuRoutineDependencyItem.Name = "menuRoutineDependencyItem";
-            menuRoutineDependencyItem.Size = new Size(233, 22);
-            menuRoutineDependencyItem.Text = "Browse Routine Dependencies";
-            menuRoutineDependencyItem.Click += menuRoutineDependencyItem_Click;
-            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -780,7 +789,7 @@
         private Controls.TextBoxData modelDescriptionData;
         private ToolStripMenuItem unitTestingToolStripMenuItem;
         private ToolStripMenuItem gridViewToolStripMenuItem;
-        private ToolStripMenuItem manageDbModelMenuItem;
+        private ToolStripMenuItem saveModelToDatabaseMenuItem;
         private ToolStripMenuItem onLineModetoolStripMenuItem;
         private ToolStripMenuItem menuAttributeProperties;
         private ToolStripMenuItem menuAttributeAlaises;
@@ -790,5 +799,6 @@
         private ToolStripMenuItem menuRoutineItem;
         private ToolStripMenuItem menuRoutineParameterItem;
         private ToolStripMenuItem menuRoutineDependencyItem;
+        private ToolStripMenuItem openModelFromDatabaseMenuItem;
     }
 }

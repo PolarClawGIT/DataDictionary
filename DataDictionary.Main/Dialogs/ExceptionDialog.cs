@@ -14,7 +14,7 @@ using System.Xml;
 using System.Xml.Linq;
 
 
-namespace DataDictionary.Main.Dialog
+namespace DataDictionary.Main.Dialogs
 {
     partial class ExceptionDialog : Form
     {
