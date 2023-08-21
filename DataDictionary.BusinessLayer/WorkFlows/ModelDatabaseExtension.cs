@@ -36,7 +36,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         public static IReadOnlyList<WorkItem> LoadModel(this ModelData data, IModelKey modelId)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            BindingTable<ModelItem> model = new BindingTable<ModelItem>();
+            //BindingTable<ModelItem> model = new BindingTable<ModelItem>();
             data.Clear();
 
             OpenConnection openConnection = new OpenConnection(data.ModelContext);
@@ -44,17 +44,10 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
             workItems.Add(new ExecuteReader(openConnection)
             {
-                WorkName = "Load Models",
+                WorkName = "Load Model",
                 Command = (conn) => ModelItem.GetData(conn, modelId),
-                Target = model
+                Target = data.Models
             });
-
-            workItems.Add(new WorkItem()
-            {
-                WorkName = "Set Model",
-                DoWork = () => { if (model.FirstOrDefault() is ModelItem modelItem) { data.Model = modelItem; } },
-                IsCanceling = openConnection.IsCanceling
-            }) ;
 
             workItems.Add(new ExecuteReader(openConnection)
             {
@@ -172,6 +165,19 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Command = (conn) => ModelItem.SetData(conn, data.Model)
             });
 
+            workItems.Add(new WorkItem()
+            {
+                WorkName = "Clear Model",
+                DoWork = data.Models.Clear
+            });
+
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Load Model",
+                Command = (conn) => ModelItem.GetData(conn, modelId),
+                Target = data.Models
+            });
+
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save DbCatalogs",
@@ -255,6 +261,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 WorkName = "Save Domain Attributes Properties",
                 Command = (conn) => DomainAttributePropertyItem.SetData(conn, modelId, data.DomainAttributeProperties)
             });
+
 
             return workItems.AsReadOnly();
         }

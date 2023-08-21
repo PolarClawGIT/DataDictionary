@@ -31,7 +31,7 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(String)){ AllowDBNull = false},
             new DataColumn("ConstraintName", typeof(String)){ AllowDBNull = false},
-            new DataColumn("TableName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("TableName", typeof(String)){ AllowDBNull = true},
             new DataColumn("ConstraintType", typeof(String)){ AllowDBNull = false},
         };
 

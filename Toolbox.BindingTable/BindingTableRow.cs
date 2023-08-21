@@ -128,7 +128,12 @@ namespace Toolbox.BindingTable
             where T : struct, IParsable<T>
         {
             if (data is not DataRow row || row.RowState == DataRowState.Detached)
-            { throw new InvalidOperationException("Internal DataRow is not defined"); }
+            {
+                Exception error = new InvalidOperationException("Internal DataRow is not defined");
+                if (BindingTable is not null) { error.Data.Add(nameof(BindingTable), BindingTable.BindingName); }
+                error.Data.Add(nameof(columnName), columnName);
+                throw error;
+            }
 
             if (!row.Table.Columns.Contains(columnName))
             { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
@@ -152,7 +157,12 @@ namespace Toolbox.BindingTable
         protected virtual String? GetValue(String columnName)
         {
             if (data is not DataRow row || row.RowState == DataRowState.Detached)
-            { throw new InvalidOperationException("Internal DataRow is not defined"); }
+            {
+                Exception error = new InvalidOperationException("Internal DataRow is not defined");
+                if (BindingTable is not null) { error.Data.Add(nameof(BindingTable), BindingTable.BindingName); }
+                error.Data.Add(nameof(columnName), columnName);
+                throw error;
+            }
 
             if (!row.Table.Columns.Contains(columnName))
             { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }

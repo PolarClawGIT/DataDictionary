@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer
     /// </summary>
     public class ModelData
     {
-        public ModelItem Model { get; internal set; } = new ModelItem();
+        public ModelItem Model { get { if (Models.FirstOrDefault() is ModelItem item) { return item; } else { return new ModelItem(); } } }
         public FileInfo? ModelFile { get; internal set; }
         internal protected Context ModelContext { get; protected set; }= new Context();
 
@@ -45,6 +45,7 @@ namespace DataDictionary.BusinessLayer
         public BindingTable<HelpItem> HelpSubjects { get; } = ModelFactory.Create<HelpItem>();
         public BindingTable<PropertyItem> Properties { get; } = ModelFactory.Create<PropertyItem>();
         public BindingTable<PropertyScopeItem> PropertyScopes { get; } = ModelFactory.Create<PropertyScopeItem>();
+        internal BindingTable<ModelItem> Models { get; } = ModelFactory.Create<ModelItem>();
 
         // Connection Data
         public String ServerName { get { return ModelContext.ServerName; } }
@@ -70,10 +71,17 @@ namespace DataDictionary.BusinessLayer
             DbSchemta.Clear();
             DbTables.Clear();
             DbColumns.Clear();
+            DbDomains.Clear();
+            DbConstraints.Clear();
+            DbConstraintColumns.Clear();
+            DbRoutines.Clear();
+            DbRoutineParameters.Clear();
+            DbRoutineDependencies.Clear();
             DbExtendedProperties.Clear();
             DomainAttributes.Clear();
             DomainAttributeAliases.Clear();
             DomainAttributeProperties.Clear();
+            Models.Clear();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Toolbox.BindingTable;
 using Toolbox.Mediator;
@@ -357,8 +358,7 @@ namespace DataDictionary.Main.Forms
 
         public static void DoWork(this Form form, IEnumerable<WorkItem> work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
         {
-            form.UseWaitCursor = true;
-            form.Enabled = false;
+            form.LockForm();
             Program.Worker.Enqueue(work, completing);
 
             void completing(RunWorkerCompletedEventArgs result)
@@ -366,8 +366,7 @@ namespace DataDictionary.Main.Forms
                 if (result.Error is not null) { Program.ShowException(result.Error); }
                 if (onCompleting is not null) { onCompleting(result); }
 
-                form.UseWaitCursor = false;
-                form.Enabled = true;
+                form.UnLockForm();
             }
         }
 
@@ -384,6 +383,24 @@ namespace DataDictionary.Main.Forms
 
                 form.UseWaitCursor = false;
                 form.Enabled = true;
+            }
+        }
+
+        public static void LockForm(this Form form)
+        { // This assumes that all form layouts start with a TablePanel Control. Nothing is expected outside of that control
+            foreach (Control item in form.Controls.Cast<Control>().Where(w => w.HasChildren))
+            {
+                item.Enabled = false;
+                item.UseWaitCursor = true;
+            }
+        }
+
+        public static void UnLockForm(this Form form)
+        { // This assumes that all form layouts start with a TablePanel Control. Nothing is expected outside of that control.
+            foreach (Control item in form.Controls.Cast<Control>().Where(w => w.HasChildren))
+            {
+                item.Enabled = true;
+                item.UseWaitCursor = false;
             }
         }
     }
