@@ -46,13 +46,9 @@ Begin Try
 	Throw 50000, '[ConstraintName] cannot be duplicate', 2;
 
 	-- Cascade Delete
-	Declare @Delete Table (
-		[CatalogId] UniqueIdentifier Not Null,
-		[SchemaName] SysName Not Null,
-		[ConstraintName] SysName Not Null,
-		Primary key ([CatalogId], [SchemaName], [ConstraintName]));
+	Declare @Delete [App_DataDictionary].[typeDatabaseCatalogObject] 
 
-	Insert Into @Delete
+	Insert Into @Delete ([CatalogId], [SchemaName], [ObjectName])
 	Select	T.[CatalogId],
 			T.[SchemaName],
 			T.[ConstraintName]
@@ -66,12 +62,8 @@ Begin Try
 				T.[ConstraintName] = V.[ConstraintName]
 	Where	V.[CatalogId] is Null;
 
-	Delete From [App_DataDictionary].[DatabaseConstraintColumn]
-	From	[App_DataDictionary].[DatabaseConstraintColumn] T
-			Inner Join @Delete D
-			On	T.[CatalogId] = D.[CatalogId] And
-				T.[SchemaName] = D.[SchemaName] And
-				T.[ConstraintName] = D.[ConstraintName];
+	if Exists (Select 1 From @Delete)
+	Exec [App_DataDictionary].[procDeleteDatabaseCatalogObject] @ModelId, @Delete;
 
 	-- Apply Changes
 	With [Delta] As (
@@ -112,21 +104,8 @@ Begin Try
 		[TableName] = S.[TableName],
 		[ConstraintType] = S.[ConstraintType]
 	When Not Matched by Target Then
-		Insert ([CatalogId],
-				[SchemaName],
-				[ConstraintName],
-				[TableName],
-				[ConstraintType])
-		Values ([CatalogId],
-				[SchemaName],
-				[ConstraintName],
-				[TableName],
-				[ConstraintType])
-	When Not Matched by Source And (T.[CatalogId] In (
-		Select	[CatalogId]
-		From	[App_DataDictionary].[ModelCatalog]
-		Where	[ModelId] = @ModelId))
-		Then Delete;
+		Insert ([CatalogId], [SchemaName], [ConstraintName], [TableName], [ConstraintType])
+		Values ([CatalogId], [SchemaName], [ConstraintName], [TableName], [ConstraintType]);
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

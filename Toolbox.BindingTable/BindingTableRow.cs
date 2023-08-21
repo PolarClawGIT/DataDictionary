@@ -127,7 +127,9 @@ namespace Toolbox.BindingTable
         protected virtual Nullable<T> GetValue<T>(String columnName)
             where T : struct, IParsable<T>
         {
-            if (data is not DataRow row) { throw new InvalidOperationException("Internal DataRow is not defined"); }
+            if (data is not DataRow row || row.RowState == DataRowState.Detached)
+            { throw new InvalidOperationException("Internal DataRow is not defined"); }
+
             if (!row.Table.Columns.Contains(columnName))
             { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
 
@@ -149,7 +151,9 @@ namespace Toolbox.BindingTable
         /// <remarks>String are a Microsoft special class and needs diffrent handling</remarks>
         protected virtual String? GetValue(String columnName)
         {
-            if (data is not DataRow row) { throw new InvalidOperationException("Internal DataRow is not defined"); }
+            if (data is not DataRow row || row.RowState == DataRowState.Detached)
+            { throw new InvalidOperationException("Internal DataRow is not defined"); }
+
             if (!row.Table.Columns.Contains(columnName))
             { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
 

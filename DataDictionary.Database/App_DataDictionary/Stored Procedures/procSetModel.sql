@@ -70,9 +70,7 @@ Begin Try
 			[ObsoleteDate] = S.[ObsoleteDate]
 	When Not Matched by Target Then
 		Insert ([ModelId], [ModelTitle], [ModelDescription], [ObsoleteDate])
-		Values ([ModelId], [ModelTitle], [ModelDescription], [ObsoleteDate])
-	When Not Matched by Source And (@ModelId is Null or @ModelId = T.[ModelId]) Then
-		Delete;
+		Values ([ModelId], [ModelTitle], [ModelDescription], [ObsoleteDate]);
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

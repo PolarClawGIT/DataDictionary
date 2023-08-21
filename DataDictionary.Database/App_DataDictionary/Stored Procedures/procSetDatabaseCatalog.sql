@@ -52,10 +52,9 @@ Begin Try
 	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 3;
 	
 	-- Cascade Delete
-	Declare @Delete Table (
-		[CatalogId] UniqueIdentifier Not Null Primary Key)
+	Declare @Delete [App_DataDictionary].[typeDatabaseCatalogObject] 
 
-	Insert Into @Delete
+	Insert Into @Delete ([CatalogId])
 	Select	T.[CatalogId]
 	From	[App_DataDictionary].[ModelCatalog] T
 			Left Join @Values V
@@ -63,17 +62,8 @@ Begin Try
 	Where	V.[CatalogId] is Null And
 			T.[ModelId] = @ModelId
 
-	Delete From [App_DataDictionary].[DatabaseTableColumn]
-	Where	[CatalogId] In (Select [CatalogId] From @Delete);
-
-	Delete From [App_DataDictionary].[DatabaseTable]
-	Where	[CatalogId] In (Select [CatalogId] From @Delete);
-
-	Delete From [App_DataDictionary].[DatabaseSchema]
-	Where	[CatalogId] In (Select [CatalogId] From @Delete);
-
-	Delete From [App_DataDictionary].[ModelCatalog]
-	Where	[CatalogId] In (Select [CatalogId] From @Delete);
+	if Exists (Select 1 From @Delete)
+	Exec [App_DataDictionary].[procDeleteDatabaseCatalogObject] @ModelId, @Delete;
 
 	-- Apply Changes
 	With [Delta] As (

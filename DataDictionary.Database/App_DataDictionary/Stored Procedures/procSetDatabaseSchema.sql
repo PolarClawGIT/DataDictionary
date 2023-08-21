@@ -43,12 +43,9 @@ Begin Try
 	Throw 50000, '[SchemaName] cannot be duplicate within a Catalog', 2;
 
 	-- Cascade Delete
-	Declare @Delete Table (
-		[CatalogId] UniqueIdentifier Not Null,
-		[SchemaName] SysName Not Null,
-		Primary key ([CatalogId], [SchemaName]));
+	Declare @Delete [App_DataDictionary].[typeDatabaseCatalogObject] 
 
-	Insert Into @Delete
+	Insert Into @Delete ([CatalogId], [SchemaName])
 	Select	T.[CatalogId],
 			T.[SchemaName]
 	From	[App_DataDictionary].[DatabaseSchema] T
@@ -57,20 +54,12 @@ Begin Try
 				M.[ModelId] = @ModelId
 			Left Join @Values V
 			On	T.[CatalogId] = V.[CatalogId] And
-				T.[SchemaName] = V.[SchemaName];
+				T.[SchemaName] = V.[SchemaName]
+	Where	V.[CatalogId] is Null;
 
-	Delete From [App_DataDictionary].[DatabaseTableColumn]
-	From	[App_DataDictionary].[DatabaseTableColumn] T
-			Inner Join @Delete D
-			On	T.[CatalogId] = D.[CatalogId] And
-				T.[SchemaName] = D.[SchemaName];
+	if Exists (Select 1 From @Delete)
+	Exec [App_DataDictionary].[procDeleteDatabaseCatalogObject] @ModelId, @Delete;
 
-	Delete From [App_DataDictionary].[DatabaseTable]
-	From	[App_DataDictionary].[DatabaseTable] T
-			Inner Join @Delete D
-			On	T.[CatalogId] = D.[CatalogId] And
-				T.[SchemaName] = D.[SchemaName];
-				
 	-- Apply Changes
 	With [Delta] As (
 		Select	[CatalogId],
@@ -95,12 +84,7 @@ Begin Try
 	-- When Matched and [IsDiffrent] = 1 Then Update Set -- Currently not needed
 	When Not Matched by Target Then
 		Insert ([CatalogId], [SchemaName])
-		Values ([CatalogId], [SchemaName])
-	When Not Matched by Source And (T.[CatalogId] In (
-		Select	[CatalogId]
-		From	[App_DataDictionary].[ModelCatalog]
-		Where	[ModelId] = @ModelId))
-		Then Delete;
+		Values ([CatalogId], [SchemaName]);
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

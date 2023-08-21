@@ -3,7 +3,7 @@
 	[CatalogId]              UniqueIdentifier Null,
 	[CatalogName]            SysName Null,
 	[SchemaName]             SysName Null,
-	[ConstraintName]         SysName Not Null,
-	[TableName]              SysName Not Null,
+	[ConstraintName]         SysName Null,
+	[TableName]              SysName Null,
 	[ConstraintType]         NVarChar(60) Null
 )

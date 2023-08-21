@@ -37,13 +37,14 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         {
             List<WorkItem> workItems = new List<WorkItem>();
             BindingTable<ModelItem> model = new BindingTable<ModelItem>();
+            data.Clear();
 
             OpenConnection openConnection = new OpenConnection(data.ModelContext);
             workItems.Add(openConnection);
 
             workItems.Add(new ExecuteReader(openConnection)
             {
-                WorkName = "Load Model",
+                WorkName = "Load Models",
                 Command = (conn) => ModelItem.GetData(conn, modelId),
                 Target = model
             });
@@ -160,8 +161,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         public static IReadOnlyList<WorkItem> SaveModel(this ModelData data)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            IModelKey modelId = data.Model;
-            BindingTable<ModelItem> models = new BindingTable<ModelItem>() { data.Model };
+            IModelKey modelId = new ModelKey(data.Model);
 
             OpenConnection openConnection = new OpenConnection(data.ModelContext);
             workItems.Add(openConnection);
@@ -169,7 +169,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Model",
-                Command = (conn) => ModelItem.SetData(conn, models)
+                Command = (conn) => ModelItem.SetData(conn, data.Model)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)

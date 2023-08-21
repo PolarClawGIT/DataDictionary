@@ -166,6 +166,8 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseRoutineDependency.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseRoutineDependency.sql" />
     <Build Include="App_DataDictionary\Tables\ModelProperty.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDatabaseCatalogObject.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procDeleteDatabaseCatalogObject.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
