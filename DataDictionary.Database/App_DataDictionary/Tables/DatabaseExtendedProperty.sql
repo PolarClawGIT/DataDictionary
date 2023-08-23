@@ -13,6 +13,11 @@
 		[ObjName]        SysName Not Null,
 		[PropertyName]   SysName Not Null,
 		[PropertyValue]  NVarChar(Max) Null,
+		-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
+		[ModfiedBy] SysName Not Null CONSTRAINT [DF_DatabaseExtendedProperty_ModfiedBy] DEFAULT (original_login()),
+		[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DatabaseExtendedProperty_SysStart] DEFAULT (sysdatetime()),
+		[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_DatabaseExtendedProperty_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
+   		PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 		-- Keys
 		CONSTRAINT [FK_DatabaseExtendedPropertyCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
 )

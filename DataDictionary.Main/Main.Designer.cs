@@ -65,13 +65,13 @@
             toolStripProgressBar = new ToolStripProgressBar();
             menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
-            newToolStripMenuItem = new ToolStripMenuItem();
+            newEmptyModelMenuItem = new ToolStripMenuItem();
+            newCloneModelMenuItem = new ToolStripMenuItem();
             openToolStripMenuItem = new ToolStripMenuItem();
-            openModelFromDatabaseMenuItem = new ToolStripMenuItem();
+            manageModelDatabaseMenuItem = new ToolStripMenuItem();
             toolStripSeparator = new ToolStripSeparator();
             saveToolStripMenuItem = new ToolStripMenuItem();
             saveAsToolStripMenuItem = new ToolStripMenuItem();
-            saveModelToDatabaseMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             printToolStripMenuItem = new ToolStripMenuItem();
             printPreviewToolStripMenuItem = new ToolStripMenuItem();
@@ -424,20 +424,30 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem, openToolStripMenuItem, openModelFromDatabaseMenuItem, toolStripSeparator, saveToolStripMenuItem, saveAsToolStripMenuItem, saveModelToDatabaseMenuItem, toolStripSeparator1, printToolStripMenuItem, printPreviewToolStripMenuItem, toolStripSeparator2, exitToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newEmptyModelMenuItem, newCloneModelMenuItem, manageModelDatabaseMenuItem, openToolStripMenuItem, toolStripSeparator, saveToolStripMenuItem, saveAsToolStripMenuItem, toolStripSeparator1, printToolStripMenuItem, printPreviewToolStripMenuItem, toolStripSeparator2, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(37, 20);
             fileToolStripMenuItem.Text = "&File";
             // 
-            // newToolStripMenuItem
+            // newEmptyModelMenuItem
             // 
-            newToolStripMenuItem.Enabled = false;
-            newToolStripMenuItem.Image = (Image)resources.GetObject("newToolStripMenuItem.Image");
-            newToolStripMenuItem.ImageTransparentColor = Color.Magenta;
-            newToolStripMenuItem.Name = "newToolStripMenuItem";
-            newToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            newToolStripMenuItem.Size = new Size(183, 22);
-            newToolStripMenuItem.Text = "&New";
+            newEmptyModelMenuItem.Image = (Image)resources.GetObject("newEmptyModelMenuItem.Image");
+            newEmptyModelMenuItem.ImageTransparentColor = Color.Magenta;
+            newEmptyModelMenuItem.Name = "newEmptyModelMenuItem";
+            newEmptyModelMenuItem.ShortcutKeys = Keys.Control | Keys.N;
+            newEmptyModelMenuItem.Size = new Size(180, 22);
+            newEmptyModelMenuItem.Text = "&New Model";
+            newEmptyModelMenuItem.ToolTipText = "Creates a New Empty Model";
+            newEmptyModelMenuItem.Click += newToolStripMenuItem_Click;
+            // 
+            // newCloneModelMenuItem
+            // 
+            newCloneModelMenuItem.Image = Properties.Resources.TableClone;
+            newCloneModelMenuItem.Name = "newCloneModelMenuItem";
+            newCloneModelMenuItem.Size = new Size(183, 22);
+            newCloneModelMenuItem.Text = "New Model Clone";
+            newCloneModelMenuItem.ToolTipText = "Clone the Existing Model to create a New Model";
+            newCloneModelMenuItem.Click += cloneModelMenuItem_Click;
             // 
             // openToolStripMenuItem
             // 
@@ -449,13 +459,14 @@
             openToolStripMenuItem.Size = new Size(183, 22);
             openToolStripMenuItem.Text = "&Open";
             // 
-            // openModelFromDatabaseMenuItem
+            // manageModelDatabaseMenuItem
             // 
-            openModelFromDatabaseMenuItem.Image = Properties.Resources.OpenTable;
-            openModelFromDatabaseMenuItem.Name = "openModelFromDatabaseMenuItem";
-            openModelFromDatabaseMenuItem.Size = new Size(183, 22);
-            openModelFromDatabaseMenuItem.Text = "Open from Database";
-            openModelFromDatabaseMenuItem.Click += openModelFromDatabaseMenuItem_Click;
+            manageModelDatabaseMenuItem.Image = Properties.Resources.SaveTable;
+            manageModelDatabaseMenuItem.Name = "manageModelDatabaseMenuItem";
+            manageModelDatabaseMenuItem.Size = new Size(180, 22);
+            manageModelDatabaseMenuItem.Text = "Model Database";
+            manageModelDatabaseMenuItem.ToolTipText = "Opens a Model from the Application Database";
+            manageModelDatabaseMenuItem.Click += openSaveModelDatabaseMenuItem_Click;
             // 
             // toolStripSeparator
             // 
@@ -479,14 +490,6 @@
             saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             saveAsToolStripMenuItem.Size = new Size(183, 22);
             saveAsToolStripMenuItem.Text = "Save &As";
-            // 
-            // saveModelToDatabaseMenuItem
-            // 
-            saveModelToDatabaseMenuItem.Image = Properties.Resources.SaveTable;
-            saveModelToDatabaseMenuItem.Name = "saveModelToDatabaseMenuItem";
-            saveModelToDatabaseMenuItem.Size = new Size(183, 22);
-            saveModelToDatabaseMenuItem.Text = "Save to Database";
-            saveModelToDatabaseMenuItem.Click += saveModelToDatabaseMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
@@ -737,7 +740,7 @@
         private StatusStrip statusStrip;
         private MenuStrip menuStrip;
         private ToolStripMenuItem fileToolStripMenuItem;
-        private ToolStripMenuItem newToolStripMenuItem;
+        private ToolStripMenuItem newEmptyModelMenuItem;
         private ToolStripMenuItem openToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator;
         private ToolStripMenuItem saveToolStripMenuItem;
@@ -799,6 +802,7 @@
         private ToolStripMenuItem menuRoutineItem;
         private ToolStripMenuItem menuRoutineParameterItem;
         private ToolStripMenuItem menuRoutineDependencyItem;
-        private ToolStripMenuItem openModelFromDatabaseMenuItem;
+        private ToolStripMenuItem manageModelDatabaseMenuItem;
+        private ToolStripMenuItem newCloneModelMenuItem;
     }
 }

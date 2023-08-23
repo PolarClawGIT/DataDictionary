@@ -21,101 +21,34 @@ Begin Try
 	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId And [Obsolete] = 1)
 	Throw 50000, '[ModelId] could not be found or is not marked as [Obsolete]', 1;
 
-	-- Get List of items that can be deleted (Not in multiple Models)
-	Declare @Catalog Table ([CatalogId] UniqueIdentifier Not Null Primary Key)
-	Declare @Attribute Table ([AttributeId] UniqueIdentifier Not Null Primary key)
-	Declare @Entity Table ([EntityId] UniqueIdentifier Not Null Primary key)
-
-	Insert Into @Catalog
-	Select	[CatalogId]
-	From	[App_DataDictionary].[ModelCatalog]
-	Where	[ModelId] = @ModelId And
-			[CatalogId] Not In (
-				Select	[CatalogId]
-				From	[App_DataDictionary].[ModelCatalog]
-				Where	[ModelId] <> @ModelId)
-
-	Insert Into @Attribute
-	Select	[AttributeId]
-	From	[App_DataDictionary].[ModelAttribute]
-	Where	[ModelId] = @ModelId And
-			[AttributeId] Not In (
-				Select	[AttributeId]
-				From	[App_DataDictionary].[ModelAttribute]
-				Where	[ModelId] <> @ModelId)
-
-	Insert Into @Entity
-	Select	[EntityId]
-	From	[App_DataDictionary].[ModelEntity]
-	Where	[ModelId] = @ModelId And
-			[EntityId] Not In (
-				Select	[EntityId]
-				From	[App_DataDictionary].[ModelEntity]
-				Where	[ModelId] <> @ModelId)
 
 	-- Cascade Delete
-	Delete From [App_DataDictionary].[DatabaseExtendedProperty]
-	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
+	Declare @Delete [App_DataDictionary].[typeDatabaseCatalogObject] 
 
-	Delete From [App_DataDictionary].[DatabaseTableColumn]
-	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
+	Insert Into @Delete ([CatalogId])
+	Select	T.[CatalogId]
+	From	[App_DataDictionary].[ModelCatalog] T
+	Where	T.[ModelId] = @ModelId
 
-	Delete From [App_DataDictionary].[DatabaseTable]
-	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
+	if Exists (Select 1 From @Delete)
+	Exec [App_DataDictionary].[procDeleteDatabaseCatalogObject] @ModelId, @Delete;
 
-	Delete From [App_DataDictionary].[DatabaseSchema]
-	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
-
-	Delete From [App_DataDictionary].[DatabaseDomain]
-	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
-
-	Delete From [App_DataDictionary].[DatabaseConstraintColumn]
-	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
-
-	Delete From [App_DataDictionary].[DatabaseConstraint]
-	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
-
-	Delete From [App_DataDictionary].[DatabaseRoutineDependency]
-	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
-
-	Delete From [App_DataDictionary].[DatabaseRoutineParameter]
-	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
+	-- Delete Model
+	Delete From [App_DataDictionary].[ModelAttribute]
+	Where	[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[ModelCatalog]
-	Where	[ModelId] = @ModelId And
-			[CatalogId] In (Select [CatalogId] From @Catalog)
-
-	Delete From [App_DataDictionary].[DatabaseCatalog]
-	Where	[CatalogId] In (Select [CatalogId] From @Catalog)
-
-	Delete From [App_DataDictionary].[DomainAttributeProperty]
-	Where	[AttributeId] In (Select [AttributeId] From @Attribute)
-
-	Delete From [App_DataDictionary].[DomainAttributeAlias]
-	Where	[AttributeId] In (Select [AttributeId] From @Attribute)
-
-	Delete From [App_DataDictionary].[ModelAttribute]
-	Where	[ModelId] = @ModelId And
-			[AttributeId] In (Select [AttributeId] From @Attribute)
-
-	Delete From [App_DataDictionary].[DomainAttribute]
-	Where	[AttributeId] In (Select [AttributeId] From @Attribute)
-
-	Delete From [App_DataDictionary].[DomainEntityProperty]
-	Where	[EntityId] In (Select [EntityId] From @Entity)
-
-	Delete From [App_DataDictionary].[DomainEntityAlias]
-	Where	[EntityId] In (Select [EntityId] From @Entity)
+	Where	[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelCatalog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[ModelEntity]
-	Where	[ModelId] = @ModelId And
-			[EntityId] In (Select [EntityId] From @Entity)
-
-	Delete From [App_DataDictionary].[DomainEntity]
-	Where	[EntityId] In (Select [EntityId] From @Entity)
+	Where	[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[Model]
 	Where	[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[Model]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

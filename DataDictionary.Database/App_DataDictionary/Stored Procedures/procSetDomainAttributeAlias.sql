@@ -21,7 +21,7 @@ Begin Try
 	-- Clean the Data
 	Declare @Values [App_DataDictionary].[typeDomainAttributeAlias]
 	Insert Into @Values
-	Select	C.[AttributeId],
+	Select	D.[AttributeId],
 			IsNull(C.[AttributeAliasId],
 				(Select IsNull(Max([AttributeAliasId]),0) From [App_DataDictionary].[DomainAttributeAlias] Where [AttributeId] = D.[AttributeId]) +
 				Row_Number() Over (

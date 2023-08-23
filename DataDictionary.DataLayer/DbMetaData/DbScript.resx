@@ -169,9 +169,9 @@ From	[INFORMATION_SCHEMA].[COLUMNS] I
   </data>
   <data name="DbConstraintColumnItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
-	C.[CONSTRAINT_CATALOG] As [CatalogName],
-	C.[CONSTRAINT_SCHEMA] As [SchemaName],
-	C.[CONSTRAINT_NAME] As [ConstraintName],
+	T.[CONSTRAINT_CATALOG] As [CatalogName],
+	T.[CONSTRAINT_SCHEMA] As [SchemaName],
+	T.[CONSTRAINT_NAME] As [ConstraintName],
 	C.[TABLE_NAME] As [TableName],
 	C.[COLUMN_NAME] As [ColumnName],
 	C.[ORDINAL_POSITION] As [OrdinalPosition],
@@ -179,7 +179,7 @@ From	[INFORMATION_SCHEMA].[COLUMNS] I
 	F.[TABLE_NAME] As [ReferenceTableName],
 	F.[COLUMN_NAME] As [ReferenceColumnName]
 From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
-	Left Join [INFORMATION_SCHEMA].[KEY_COLUMN_USAGE] C
+	Inner Join [INFORMATION_SCHEMA].[KEY_COLUMN_USAGE] C
 	On T.[CONSTRAINT_CATALOG] = C.[CONSTRAINT_CATALOG] And
 	T.[CONSTRAINT_SCHEMA] = C.[CONSTRAINT_SCHEMA] And
 	T.[CONSTRAINT_NAME] = C.[CONSTRAINT_NAME]

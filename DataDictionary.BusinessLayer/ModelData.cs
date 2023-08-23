@@ -19,9 +19,10 @@ namespace DataDictionary.BusinessLayer
     /// </summary>
     public class ModelData
     {
-        public ModelItem Model { get { if (Models.FirstOrDefault() is ModelItem item) { return item; } else { return new ModelItem(); } } }
+        ModelItem defaultModel = new ModelItem();
+        public ModelItem Model { get { if (Models.FirstOrDefault() is ModelItem item) { return item; } else { return defaultModel; } } }
         public FileInfo? ModelFile { get; internal set; }
-        internal protected Context ModelContext { get; protected set; }= new Context();
+        internal protected Context ModelContext { get; protected set; } = new Context();
 
         // Database Model
         public BindingTable<DbCatalogItem> DbCatalogs { get; } = ModelFactory.Create<DbCatalogItem>();
@@ -83,5 +84,8 @@ namespace DataDictionary.BusinessLayer
             DomainAttributeProperties.Clear();
             Models.Clear();
         }
+
+        public void NewModel()
+        { defaultModel = new ModelItem(); }
     }
 }

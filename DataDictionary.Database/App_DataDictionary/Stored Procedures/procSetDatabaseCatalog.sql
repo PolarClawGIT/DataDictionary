@@ -93,7 +93,13 @@ Begin Try
 	When Not Matched by Target Then
 		Insert ([CatalogId], [CatalogName], [SourceServerName])
 		Values ([CatalogId], [CatalogName], [SourceServerName])
-	When Not Matched by Source Then Delete;
+	When Not Matched by Source And T.[CatalogId] In (
+			Select	A.[CatalogId]
+			From	[App_DataDictionary].[ModelCatalog] A
+					Left Join [App_DataDictionary].[ModelCatalog] B
+					On	A.[CatalogId] = B.[CatalogId] And
+						A.[ModelId] <> B.[ModelId]
+			Where	A.[ModelId] = @ModelId And B.[ModelId] is Null) Then Delete;
 
 	With [Data] As (
 		Select	@ModelId As [ModelId],

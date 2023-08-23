@@ -94,9 +94,9 @@ namespace DataDictionary.DataLayer.DbMetaData {
         
         /// <summary>
         ///   Looks up a localized string similar to Select	Convert(UniqueIdentifier,Null) As [CatalogId],
-        ///	C.[CONSTRAINT_CATALOG] As [CatalogName],
-        ///	C.[CONSTRAINT_SCHEMA] As [SchemaName],
-        ///	C.[CONSTRAINT_NAME] As [ConstraintName],
+        ///	T.[CONSTRAINT_CATALOG] As [CatalogName],
+        ///	T.[CONSTRAINT_SCHEMA] As [SchemaName],
+        ///	T.[CONSTRAINT_NAME] As [ConstraintName],
         ///	C.[TABLE_NAME] As [TableName],
         ///	C.[COLUMN_NAME] As [ColumnName],
         ///	C.[ORDINAL_POSITION] As [OrdinalPosition],
@@ -104,7 +104,7 @@ namespace DataDictionary.DataLayer.DbMetaData {
         ///	F.[TABLE_NAME] As [ReferenceTableName],
         ///	F.[COLUMN_NAME] As [ReferenceColumnName]
         ///From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
-        ///	Left Join [INFORMATION_SCHEMA].[KEY_C [rest of string was truncated]&quot;;.
+        ///	Inner Join [INFORMATION_SCHEMA].[KEY_ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbConstraintColumnItem {
             get {

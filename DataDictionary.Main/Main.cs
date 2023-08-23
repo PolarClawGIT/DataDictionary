@@ -57,8 +57,6 @@ namespace DataDictionary.Main
             { onLineModetoolStripMenuItem.CheckState = CheckState.Checked; }
             else { onLineModetoolStripMenuItem.CheckState = CheckState.Unchecked; }
 
-            saveModelToDatabaseMenuItem.Enabled = Settings.Default.IsOnLineMode;
-
             Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
             Program.Messenger.AddColleague(this);
             BindData();
@@ -146,12 +144,9 @@ namespace DataDictionary.Main
             { helpForm.NavigateTo(currentForm); }
         }
 
-        private void saveModelToDatabaseMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Dialogs.SaveModelToDatabase()); }
 
-
-        private void openModelFromDatabaseMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Dialogs.LoadModelFromDatabase()); }
+        private void openSaveModelDatabaseMenuItem_Click(object sender, EventArgs e)
+        { Activate(() => new Dialogs.OpenSaveModelDatabase()); }
 
         private void onLineModetoolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
@@ -192,18 +187,27 @@ namespace DataDictionary.Main
 
 
         private void menuRoutineItem_Click(object sender, EventArgs e)
-        {
-            Activate((data) => new Forms.DetailDataView(data, Resources.DbProcedure), Program.Data.DbRoutines);
-        }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.DbProcedure), Program.Data.DbRoutines); }
 
         private void menuRoutineParameterItem_Click(object sender, EventArgs e)
-        {
-            Activate((data) => new Forms.DetailDataView(data, Resources.DbParameter), Program.Data.DbRoutineParameters);
-        }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.DbParameter), Program.Data.DbRoutineParameters); }
 
         private void menuRoutineDependencyItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.DbDependancy), Program.Data.DbRoutineDependencies); }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Activate((data) => new Forms.DetailDataView(data, Resources.DbDependancy), Program.Data.DbRoutineDependencies);
+            UnBindData();
+            Program.Data.Clear();
+            Program.Data.NewModel();
+            BindData();
+        }
+
+        private void cloneModelMenuItem_Click(object sender, EventArgs e)
+        {
+            UnBindData();
+            Program.Data.NewModel();
+            BindData();
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)

@@ -37,10 +37,15 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         {
             List<WorkItem> workItems = new List<WorkItem>();
             //BindingTable<ModelItem> model = new BindingTable<ModelItem>();
-            data.Clear();
 
             OpenConnection openConnection = new OpenConnection(data.ModelContext);
             workItems.Add(openConnection);
+
+            workItems.Add(new WorkItem()
+            {
+                WorkName = "Clear Model",
+                DoWork = () => { data.Clear(); }
+            });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
@@ -168,7 +173,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new WorkItem()
             {
                 WorkName = "Clear Model",
-                DoWork = data.Models.Clear
+                DoWork = () => { data.Models.Clear(); }
             });
 
             workItems.Add(new ExecuteReader(openConnection)

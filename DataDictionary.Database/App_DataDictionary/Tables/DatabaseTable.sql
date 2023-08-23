@@ -9,6 +9,11 @@
 	[SchemaName]        SysName Not Null,
 	[TableName]         SysName Not Null,
 	[TableType]         NVarChar(60) Null, -- BASE TABLE, VIEW, HISTORY TABLE, TEMPTORAL TABLE
+	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
+	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DatabaseTable_ModfiedBy] DEFAULT (original_login()),
+	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DatabaseTable_SysStart] DEFAULT (sysdatetime()),
+	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_DatabaseTable_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
+   	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_DatabaseTable] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [TableName] ASC),
 --	CONSTRAINT [FK_DatabaseTableCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),

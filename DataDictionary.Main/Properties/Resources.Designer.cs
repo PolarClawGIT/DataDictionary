@@ -573,6 +573,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap TableClone {
+            get {
+                object obj = ResourceManager.GetObject("TableClone", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap TableGroup {
             get {
                 object obj = ResourceManager.GetObject("TableGroup", resourceCulture);

@@ -51,7 +51,7 @@ namespace Toolbox.DbContext
         /// <summary>
         /// Attempt to validate the command before executing it. Any issues are thrown as exceptions.
         /// </summary>
-        public Boolean ValidateCommand { get; set; } = true;
+        public Boolean ValidateCommand { get; set; } = false;
 
         /// <summary>
         /// Constructor.
