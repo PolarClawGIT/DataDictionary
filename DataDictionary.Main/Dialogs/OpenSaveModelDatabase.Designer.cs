@@ -285,12 +285,10 @@
 
         #endregion
 
-        private TableLayoutPanel formLayout;
         private Controls.TextBoxData serverNameData;
         private Controls.TextBoxData databaseNameData;
         private DataGridView modelList;
         private Controls.TextBoxData modelTitleData;
-        private TableLayoutPanel buttonLayout;
         private Button loadCommand;
         private Button deleteCommand;
         private DataGridViewTextBoxColumn modelTitleColumn;
@@ -298,7 +296,6 @@
         private DataGridViewCheckBoxColumn modelObsoleteColumn;
         private Button saveCommand;
         private Controls.TextBoxData modelDescriptionData;
-        private TableLayoutPanel modelFlagsLayout;
         private CheckBox modelObsoleteData;
     }
 }

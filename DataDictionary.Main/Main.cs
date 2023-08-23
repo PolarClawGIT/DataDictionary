@@ -234,6 +234,11 @@ namespace DataDictionary.Main
         { //TODO: Not Working. Does not show when the context menu is assigned to the control or rigged to an event.
             domainModelMenu.Show();
         }
+
+        private void extendedPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Activate(() => new Dialogs.ViewTextTemplate());
+        }
         #endregion
 
         #region dbMetaDataNavigation
@@ -471,6 +476,7 @@ namespace DataDictionary.Main
 
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
         { new Forms.UnitTestGridView().Show(); }
+
 
     }
 }
