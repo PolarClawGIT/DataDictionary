@@ -9,9 +9,6 @@
 // ------------------------------------------------------------------------------
 namespace DataDictionary.Main.TextTemplates
 {
-    using System.Linq;
-    using System.Text;
-    using System.Collections.Generic;
     using System;
     
     /// <summary>
@@ -29,21 +26,71 @@ namespace DataDictionary.Main.TextTemplates
         public virtual string TransformText()
         {
             
-            #line 6 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
-foreach (DataLayer.DomainData.DomainAttributeItem item in this.data.DomainAttributes)
+            #line 3 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+foreach (DataDictionary.DataLayer.DbMetaData.DbExtendedPropertyParameter item in this.data)
 {
             
             #line default
             #line hidden
+            this.Write("exec sp_addextendedproperty\r\n\t@name = \'");
             
-            #line 8 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.AttributeTitle));
+            #line 6 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PropertyName));
             
             #line default
             #line hidden
-            this.Write("\r\n");
+            this.Write("\', @value = \'");
+            
+            #line 6 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PropertyValue));
+            
+            #line default
+            #line hidden
+            this.Write("\',\r\n\t@level0type = \'");
+            
+            #line 7 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.Level0Type));
+            
+            #line default
+            #line hidden
+            this.Write("\', @level0name = \'");
+            
+            #line 7 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.Level0Name));
+            
+            #line default
+            #line hidden
+            this.Write("\',\r\n\t@level1type = \'");
+            
+            #line 8 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.Level1Type));
+            
+            #line default
+            #line hidden
+            this.Write("\', @level1name = \'");
+            
+            #line 8 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.Level1Name));
+            
+            #line default
+            #line hidden
+            this.Write("\',\r\n\t@level2type = \'");
             
             #line 9 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.Level2Type));
+            
+            #line default
+            #line hidden
+            this.Write("\', @level2name = \'");
+            
+            #line 9 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.Level2Name));
+            
+            #line default
+            #line hidden
+            this.Write("\';\r\nGO\t\r\n");
+            
+            #line 11 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
 }
 
             

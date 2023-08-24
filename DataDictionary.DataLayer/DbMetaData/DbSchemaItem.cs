@@ -13,7 +13,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbSchemaItem : IDbSchemaKey, IDbCatalogKey, IDbIsSystem, IBindingTableRow
+    public interface IDbSchemaItem : IDbSchemaKey, IDbCatalogKey, IDbCatalogScope, IDbIsSystem, IBindingTableRow
     { }
 
     public class DbSchemaItem : BindingTableRow, IDbSchemaItem, INotifyPropertyChanged, IDbExtendedProperties
@@ -39,6 +39,8 @@ namespace DataDictionary.DataLayer.DbMetaData
                     "guest";
             }
         }
+
+        public DbCatalogScope CatalogScope { get; } = DbCatalogScope.Schema;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

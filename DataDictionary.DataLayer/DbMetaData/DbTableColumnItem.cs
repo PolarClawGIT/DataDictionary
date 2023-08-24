@@ -18,7 +18,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbTableColumnItem : IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbColumn, IBindingTableRow
+    public interface IDbTableColumnItem : IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbElementScope, IDbColumn, IBindingTableRow
     {
         Nullable<Boolean> IsNullable { get; }
         String? ColumnDefault { get; }
@@ -60,6 +60,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public Nullable<Boolean> IsComputed { get { return GetValue<Boolean>("IsComputed", BindingItemParsers.BooleanTryParse); } }
         public String? ComputedDefinition { get { return GetValue("ComputedDefinition"); } }
         public String? GeneratedAlwayType { get { return GetValue("GeneratedAlwayType"); } }
+        public DbElementScope ElementScope { get; } = DbElementScope.Column;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

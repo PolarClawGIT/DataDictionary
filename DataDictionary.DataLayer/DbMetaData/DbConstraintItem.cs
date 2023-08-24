@@ -11,7 +11,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbConstraintItem : IDbConstraintKey, IDbCatalogKey, IDbTableKey, IBindingTableRow
+    public interface IDbConstraintItem : IDbConstraintKey, IDbCatalogKey, IDbElementScope, IDbTableKey, IBindingTableRow
     {
         String? ConstraintType { get; }
     }
@@ -24,6 +24,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? ConstraintName { get { return GetValue("ConstraintName"); } }
         public String? TableName { get { return GetValue("TableName"); } }
         public String? ConstraintType { get { return GetValue("ConstraintType"); } }
+        public DbElementScope ElementScope { get; } = DbElementScope.Constraint;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

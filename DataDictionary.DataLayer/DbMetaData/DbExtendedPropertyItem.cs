@@ -17,7 +17,7 @@ using DataDictionary.DataLayer.DomainData;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbExtendedPropertyItem : IDbCatalogKeyUnique, IBindingTableRow
+    public interface IDbExtendedPropertyParameter
     {
         String? Level0Type { get; }
         String? Level0Name { get; }
@@ -25,14 +25,19 @@ namespace DataDictionary.DataLayer.DbMetaData
         String? Level1Name { get; }
         String? Level2Type { get; }
         String? Level2Name { get; }
-        ExtendedPropertyCatalogScope CatalogScope { get; }
-        ExtendedPropertyObjectScope ObjectScope { get; }
-        ExtendedPropertyElementScope ElementScope { get; }
+        String? PropertyName { get; }
+        String? PropertyValue { get; }
+    }
+
+    public interface IDbExtendedPropertyItem : IDbCatalogKeyUnique, IDbExtendedPropertyParameter, IBindingTableRow
+    {
+
+        DbCatalogScope CatalogScope { get; }
+        DbObjectScope ObjectScope { get; }
+        DbElementScope ElementScope { get; }
         String? ObjectType { get; }
         String? ObjectName { get; }
         //ExtendedPropertyObjectType PropertyObjectType { get; }
-        String? PropertyName { get; }
-        String? PropertyValue { get; }
     }
 
     public interface IDbExtendedProperties
@@ -40,9 +45,10 @@ namespace DataDictionary.DataLayer.DbMetaData
         Command GetProperties(IConnection connection);
     }
 
-    internal class DbExtendedPropertyGetCommand
+    public class DbExtendedPropertyParameter : IDbExtendedPropertyParameter
     {
         public String? PropertyName { get; set; } // Null will return all extended properties
+        public String? PropertyValue { get; set; } // Used in Set
         public String? Level0Type { get; set; }
         public String? Level0Name { get; set; } // Null will return all objects of Level0 matching the Type
         public String? Level1Type { get; set; }
@@ -50,19 +56,23 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? Level2Type { get; set; }
         public String? Level2Name { get; set; } // Null will return all objects of Level2 matching the Type and of Level0 & Level1 Name
 
-        public ExtendedPropertyCatalogScope CatalogScope
+    }
+
+    internal class DbExtendedPropertyGetCommand: DbExtendedPropertyParameter
+    {
+        public DbCatalogScope CatalogScope
         {
             get { return ExtendedPropertyExtension.GetCatalogScope(Level0Type); }
             set { Level0Type = value.GetScope(); }
         }
 
-        public ExtendedPropertyObjectScope ObjectScope
+        public DbObjectScope ObjectScope
         {
             get { return ExtendedPropertyExtension.GetObjectScope(Level1Type); }
             set { Level1Type = value.GetScope(); }
         }
 
-        public ExtendedPropertyElementScope ItemScope
+        public DbElementScope ItemScope
         {
             get { return ExtendedPropertyExtension.GetItemScope(Level2Type); }
             set { Level2Type = value.GetScope(); }
@@ -104,15 +114,15 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? CatalogName { get { return GetValue("CatalogName"); } }
         public String? Level0Type { get { return GetValue("Level0Type"); } }
         public String? Level0Name { get { return GetValue("Level0Name"); } }
-        public ExtendedPropertyCatalogScope CatalogScope { get { return ExtendedPropertyExtension.GetCatalogScope(Level0Type); } }
+        public DbCatalogScope CatalogScope { get { return ExtendedPropertyExtension.GetCatalogScope(Level0Type); } }
 
         public String? Level1Type { get { return GetValue("Level1Type"); } }
         public String? Level1Name { get { return GetValue("Level1Name"); } }
-        public ExtendedPropertyObjectScope ObjectScope { get { return ExtendedPropertyExtension.GetObjectScope(Level1Type); } }
+        public DbObjectScope ObjectScope { get { return ExtendedPropertyExtension.GetObjectScope(Level1Type); } }
 
         public String? Level2Type { get { return GetValue("Level2Type"); } }
         public String? Level2Name { get { return GetValue("Level2Name"); } }
-        public ExtendedPropertyElementScope ElementScope { get { return ExtendedPropertyExtension.GetItemScope(Level2Type); } }
+        public DbElementScope ElementScope { get { return ExtendedPropertyExtension.GetItemScope(Level2Type); } }
 
         public String? ObjectType { get { return GetValue("ObjType"); } }
         public String? ObjectName { get { return GetValue("ObjName"); } }
@@ -175,9 +185,9 @@ namespace DataDictionary.DataLayer.DbMetaData
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbSchemaKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
-                w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
-                w.ObjectScope is ExtendedPropertyObjectScope.NULL &&
-                w.ElementScope == ExtendedPropertyElementScope.NULL &&
+                w => w.CatalogScope == DbCatalogScope.Schema &&
+                w.ObjectScope is DbObjectScope.NULL &&
+                w.ElementScope == DbElementScope.NULL &&
                 item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
                 item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString)
                 );
@@ -186,9 +196,9 @@ namespace DataDictionary.DataLayer.DbMetaData
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbSchemaKey item)
         {
             return source.Where(
-                w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
-                w.ObjectScope is ExtendedPropertyObjectScope.NULL &&
-                w.ElementScope == ExtendedPropertyElementScope.NULL &&
+                w => w.CatalogScope == DbCatalogScope.Schema &&
+                w.ObjectScope is DbObjectScope.NULL &&
+                w.ElementScope == DbElementScope.NULL &&
                 item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
                 item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString)
                 );
@@ -197,9 +207,9 @@ namespace DataDictionary.DataLayer.DbMetaData
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbTableKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
-                w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
-                w.ObjectScope is ExtendedPropertyObjectScope.Table or ExtendedPropertyObjectScope.View &&
-                w.ElementScope == ExtendedPropertyElementScope.NULL &&
+                w => w.CatalogScope == DbCatalogScope.Schema &&
+                w.ObjectScope is DbObjectScope.Table or DbObjectScope.View &&
+                w.ElementScope == DbElementScope.NULL &&
                 item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
                 item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
                 item.TableName is not null && item.TableName.Equals(w.Level1Name, ModelFactory.CompareString)
@@ -209,9 +219,9 @@ namespace DataDictionary.DataLayer.DbMetaData
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbTableKey item)
         {
             return source.Where(
-                w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
-                w.ObjectScope is ExtendedPropertyObjectScope.Table or ExtendedPropertyObjectScope.View &&
-                w.ElementScope == ExtendedPropertyElementScope.NULL &&
+                w => w.CatalogScope == DbCatalogScope.Schema &&
+                w.ObjectScope is DbObjectScope.Table or DbObjectScope.View &&
+                w.ElementScope == DbElementScope.NULL &&
                 item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
                 item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
                 item.TableName is not null && item.TableName.Equals(w.Level1Name, ModelFactory.CompareString)
@@ -221,10 +231,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbConstraintKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
-                w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
-                w.ObjectScope is ExtendedPropertyObjectScope.Table or ExtendedPropertyObjectScope.View &&
-                w.ElementScope == ExtendedPropertyElementScope.NULL &&
-                item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
+                w =>  item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
                 item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
                 item.ConstraintName is not null && item.ConstraintName.Equals(w.Level2Name, ModelFactory.CompareString)
                 );
@@ -233,10 +240,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbConstraintKey item)
         {
             return source.Where(
-                w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
-                w.ObjectScope is ExtendedPropertyObjectScope.Table or ExtendedPropertyObjectScope.View &&
-                w.ElementScope == ExtendedPropertyElementScope.Constraint &&
-                item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
+                w => item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
                 item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
                 item.ConstraintName is not null && item.ConstraintName.Equals(w.Level2Name, ModelFactory.CompareString)
                 );
@@ -245,10 +249,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbTableColumnKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
-                w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
-                w.ObjectScope is ExtendedPropertyObjectScope.Table or ExtendedPropertyObjectScope.View &&
-                w.ElementScope == ExtendedPropertyElementScope.Constraint &&
-                item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
+                w => item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
                 item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
                 item.TableName is not null && item.TableName.Equals(w.Level1Name, ModelFactory.CompareString) &&
                 item.ColumnName is not null && item.ColumnName.Equals(w.Level2Name, ModelFactory.CompareString)
@@ -258,10 +259,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbTableColumnKey item)
         {
             return source.Where(
-                w => w.CatalogScope == ExtendedPropertyCatalogScope.Schema &&
-                w.ObjectScope is ExtendedPropertyObjectScope.Table or ExtendedPropertyObjectScope.View &&
-                w.ElementScope == ExtendedPropertyElementScope.Column &&
-                item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
+                w => item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
                 item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
                 item.TableName is not null && item.TableName.Equals(w.Level1Name, ModelFactory.CompareString) &&
                 item.ColumnName is not null && item.ColumnName.Equals(w.Level2Name, ModelFactory.CompareString)
@@ -270,53 +268,6 @@ namespace DataDictionary.DataLayer.DbMetaData
     }
 
     #region Enum ExtendedProperty translation
-    public enum ExtendedPropertyCatalogScope
-    {
-        NULL,
-        Assembly,
-        Contract,
-        EventNotification,
-        Filegroup,
-        MessageType,
-        PartitionFunction,
-        PartitionScheme,
-        RemoteServiceBinding,
-        Route,
-        Schema,
-        Service,
-        Trigger,
-        Type,
-        User,
-    }
-
-    public enum ExtendedPropertyObjectScope
-    {
-        NULL,
-        Aggregate,
-        Default,
-        Function,
-        LogicalFileName,
-        Procedure,
-        Queue,
-        Rule,
-        Synonym,
-        Table,
-        Type,
-        View,
-        XmlSchemaCollection,
-    }
-
-    public enum ExtendedPropertyElementScope
-    {
-        NULL,
-        Default,
-        Column,
-        Constraint,
-        EventNotification,
-        Index,
-        Parameter,
-        Trigger,
-    }
 
     /// <summary>
     /// Helper class that translates the Enums listed above to string values returned by the Database.
@@ -324,73 +275,73 @@ namespace DataDictionary.DataLayer.DbMetaData
     /// </summary>
     static class ExtendedPropertyExtension
     {
-        static Dictionary<ExtendedPropertyCatalogScope, String> catalogScope = new Dictionary<ExtendedPropertyCatalogScope, String>()
+        static Dictionary<DbCatalogScope, String> catalogScope = new Dictionary<DbCatalogScope, String>()
         {
-            {ExtendedPropertyCatalogScope.Assembly,"ASSEMBLY" },
-            {ExtendedPropertyCatalogScope.Contract,"CONTRACT"},
-            {ExtendedPropertyCatalogScope.EventNotification,"EVENT NOTIFICATION"},
-            {ExtendedPropertyCatalogScope.Filegroup,"FILEGROUP"},
-            {ExtendedPropertyCatalogScope.MessageType,"MESSAGE TYPE"},
-            {ExtendedPropertyCatalogScope.PartitionFunction,"PARTITION FUNCTION"},
-            {ExtendedPropertyCatalogScope.PartitionScheme,"PARTITION SCHEME"},
-            {ExtendedPropertyCatalogScope.RemoteServiceBinding,"REMOTE SERVICE BINDING"},
-            {ExtendedPropertyCatalogScope.Route,"ROUTE"},
-            {ExtendedPropertyCatalogScope.Schema,"SCHEMA"},
-            {ExtendedPropertyCatalogScope.Service,"SERVICE"},
-            {ExtendedPropertyCatalogScope.Trigger,"TRIGGER"},
-            {ExtendedPropertyCatalogScope.Type,"TYPE"},
-            {ExtendedPropertyCatalogScope.User,"USER"},
+            {DbCatalogScope.Assembly,"ASSEMBLY" },
+            {DbCatalogScope.Contract,"CONTRACT"},
+            {DbCatalogScope.EventNotification,"EVENT NOTIFICATION"},
+            {DbCatalogScope.Filegroup,"FILEGROUP"},
+            {DbCatalogScope.MessageType,"MESSAGE TYPE"},
+            {DbCatalogScope.PartitionFunction,"PARTITION FUNCTION"},
+            {DbCatalogScope.PartitionScheme,"PARTITION SCHEME"},
+            {DbCatalogScope.RemoteServiceBinding,"REMOTE SERVICE BINDING"},
+            {DbCatalogScope.Route,"ROUTE"},
+            {DbCatalogScope.Schema,"SCHEMA"},
+            {DbCatalogScope.Service,"SERVICE"},
+            {DbCatalogScope.Trigger,"TRIGGER"},
+            {DbCatalogScope.Type,"TYPE"},
+            {DbCatalogScope.User,"USER"},
         };
 
-        public static ExtendedPropertyCatalogScope GetCatalogScope(String? value)
+        public static DbCatalogScope GetCatalogScope(String? value)
         { return catalogScope.FirstOrDefault(w => w.Value.Equals(value, ModelFactory.CompareString)).Key; }
 
-        public static String GetScope(this ExtendedPropertyCatalogScope value)
+        public static String GetScope(this DbCatalogScope value)
         {
             if (catalogScope.ContainsKey(value)) { return catalogScope[value]; }
             else { return String.Empty; }
         }
 
-        static Dictionary<ExtendedPropertyObjectScope, String> objectScope = new Dictionary<ExtendedPropertyObjectScope, String>()
+        static Dictionary<DbObjectScope, String> objectScope = new Dictionary<DbObjectScope, String>()
         {
-            {ExtendedPropertyObjectScope.Aggregate,"AGGREGATE"},
-            {ExtendedPropertyObjectScope.Default,"DEFAULT"},
-            {ExtendedPropertyObjectScope.Function,"FUNCTION"},
-            {ExtendedPropertyObjectScope.LogicalFileName,"LOGICAL FILE NAME"},
-            {ExtendedPropertyObjectScope.Procedure,"PROCEDURE"},
-            {ExtendedPropertyObjectScope.Queue,"QUEUE"},
-            {ExtendedPropertyObjectScope.Rule,"RULE"},
-            {ExtendedPropertyObjectScope.Synonym,"SYNONYM"},
-            {ExtendedPropertyObjectScope.Table,"TABLE"},
-            {ExtendedPropertyObjectScope.Type,"TYPE"},
-            {ExtendedPropertyObjectScope.View,"VIEW"},
-            {ExtendedPropertyObjectScope.XmlSchemaCollection,"XML SCHEMA COLLECTION"},
+            {DbObjectScope.Aggregate,"AGGREGATE"},
+            {DbObjectScope.Default,"DEFAULT"},
+            {DbObjectScope.Function,"FUNCTION"},
+            {DbObjectScope.LogicalFileName,"LOGICAL FILE NAME"},
+            {DbObjectScope.Procedure,"PROCEDURE"},
+            {DbObjectScope.Queue,"QUEUE"},
+            {DbObjectScope.Rule,"RULE"},
+            {DbObjectScope.Synonym,"SYNONYM"},
+            {DbObjectScope.Table,"TABLE"},
+            {DbObjectScope.Type,"TYPE"},
+            {DbObjectScope.View,"VIEW"},
+            {DbObjectScope.XmlSchemaCollection,"XML SCHEMA COLLECTION"},
         };
 
-        public static ExtendedPropertyObjectScope GetObjectScope(String? value)
+        public static DbObjectScope GetObjectScope(String? value)
         { return objectScope.FirstOrDefault(w => w.Value.Equals(value, ModelFactory.CompareString)).Key; }
 
-        public static String GetScope(this ExtendedPropertyObjectScope value)
+        public static String GetScope(this DbObjectScope value)
         {
             if (objectScope.ContainsKey(value)) { return objectScope[value]; }
             else { return String.Empty; }
         }
 
-        static Dictionary<ExtendedPropertyElementScope, String> itemScope = new Dictionary<ExtendedPropertyElementScope, String>()
+        static Dictionary<DbElementScope, String> itemScope = new Dictionary<DbElementScope, String>()
         {
-            {ExtendedPropertyElementScope.Default,"DEFAULT"},
-            {ExtendedPropertyElementScope.Column,"COLUMN"},
-            {ExtendedPropertyElementScope.Constraint,"CONSTRAINT"},
-            {ExtendedPropertyElementScope.EventNotification,"EVENT NOTIFICATION"},
-            {ExtendedPropertyElementScope.Index,"INDEX"},
-            {ExtendedPropertyElementScope.Parameter,"PARAMETER"},
-            {ExtendedPropertyElementScope.Trigger,"TRIGGER"},
+            {DbElementScope.Default,"DEFAULT"},
+            {DbElementScope.Column,"COLUMN"},
+            {DbElementScope.Constraint,"CONSTRAINT"},
+            {DbElementScope.EventNotification,"EVENT NOTIFICATION"},
+            {DbElementScope.Index,"INDEX"},
+            {DbElementScope.Parameter,"PARAMETER"},
+            {DbElementScope.Trigger,"TRIGGER"},
         };
 
-        public static ExtendedPropertyElementScope GetItemScope(String? value)
+        public static DbElementScope GetItemScope(String? value)
         { return itemScope.FirstOrDefault(w => w.Value.Equals(value, ModelFactory.CompareString)).Key; }
 
-        public static String? GetScope(this ExtendedPropertyElementScope value)
+        public static String? GetScope(this DbElementScope value)
         {
             if (itemScope.ContainsKey(value)) { return itemScope[value]; }
             else { return null; }

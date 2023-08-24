@@ -92,7 +92,8 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new WorkItem()
             {
                 WorkName = "Load DbRoutineDependencies",
-                DoWork = () => {
+                DoWork = () =>
+                {
                     foreach (DbRoutineItem item in data.DbRoutines)
                     {
                         data.DbRoutineDependencies.Load(
@@ -227,7 +228,19 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
                 foreach (IDbTableColumnItem aliasSource in columnItem)
                 {
-                    data.DomainAttributeAliases.Add(new DomainAttributeAliasItem(newAttribute, aliasSource));
+                    DbCatalogScope catalogScope = DbCatalogScope.NULL;
+                    DbObjectScope objectScope = DbObjectScope.NULL;
+
+                    if(columnSource.GetSchema(data.DbSchemta) is DbSchemaItem schema) { catalogScope = schema.CatalogScope; }
+                    if(columnSource.GetTable(data.DbTables) is DbTableItem table) { objectScope = table.ObjectScope; }
+
+                    data.DomainAttributeAliases.Add(
+                        new DomainAttributeAliasItem(newAttribute, aliasSource)
+                        {
+                            CatalogScope = catalogScope,
+                            ObjectScope = objectScope,
+                            ElementScope = columnSource.ElementScope
+                        });
 
                     propeties.AddRange(aliasSource.GetProperties(data.DbExtendedProperties));
                 }

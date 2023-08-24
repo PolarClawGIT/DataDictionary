@@ -15,15 +15,10 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DomainData
 {
-    public interface IDomainAttributeAliasItem : IDomainAttributeKey, IBindingTableRow
-    {
-        public String? CatalogName { get; }
-        public String? SchemaName { get; }
-        public String? ObjectName { get; }
-        public String? ElementName { get; }
-    }
+    public interface IDomainAttributeAliasItem : IDomainAttributeAliasKey, IDomainAttributeKey, IDbCatalogScope, IDbObjectScope, IDbElementScope, IBindingTableRow
+    { }
 
-    public class DomainAttributeAliasItem : BindingTableRow, IDomainAttributeAliasItem
+    public class DomainAttributeAliasItem : BindingTableRow,  IDomainAttributeAliasItem
     {
         public Nullable<Guid> AttributeId
         { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue<Guid>("AttributeId", value); } }
@@ -31,6 +26,10 @@ namespace DataDictionary.DataLayer.DomainData
         public String? SchemaName { get { return GetValue("SchemaName"); } set { SetValue("SchemaName", value); } }
         public String? ObjectName { get { return GetValue("ObjectName"); } set { SetValue("ObjectName", value); } }
         public String? ElementName { get { return GetValue("ElementName"); } set { SetValue("ElementName", value); } }
+
+        public DbCatalogScope CatalogScope { get; set; } = DbCatalogScope.NULL;
+        public DbObjectScope ObjectScope { get; set; } = DbObjectScope.NULL;
+        public DbElementScope ElementScope { get; set; } = DbElementScope.NULL;
 
         [Browsable(false)]
         public DomainAttributeKey AttributeKey { get { return new DomainAttributeKey(this); } set { AttributeId = value.AttributeId; } }
@@ -55,6 +54,8 @@ namespace DataDictionary.DataLayer.DomainData
             SchemaName = source.SchemaName;
             ObjectName = source.TableName;
             ElementName = source.ColumnName;
+
+            ElementScope = source.ElementScope;
         }
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -120,7 +121,7 @@ namespace DataDictionary.DataLayer.DomainData
 
     public static class DomainAttributeAliasItemExtension
     {
-        public static IEnumerable<DomainAttributeAliasItem> GetProperties(this IEnumerable<DomainAttributeAliasItem> source, IDomainAttributeKey item)
+        public static IEnumerable<DomainAttributeAliasItem> GetAliases(this IEnumerable<DomainAttributeAliasItem> source, IDomainAttributeKey item)
         { return source.Where(w => item.AttributeId == w.AttributeId); }
     }
 }

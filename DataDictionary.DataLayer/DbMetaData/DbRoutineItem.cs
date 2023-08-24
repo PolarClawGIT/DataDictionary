@@ -11,7 +11,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbRoutineItem : IDbRoutineKey, IDbCatalogKey, IDbIsSystem, IBindingTableRow
+    public interface IDbRoutineItem : IDbRoutineKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IBindingTableRow
     {
         String? RoutineType { get; }
     }
@@ -36,6 +36,15 @@ namespace DataDictionary.DataLayer.DbMetaData
                     "sp_helpdiagrams" or
                     "sp_helpdiagramdefinition" or
                     "sp_upgraddiagrams";
+            }
+        }
+        public DbObjectScope ObjectScope
+        {
+            get
+            {
+                if (Enum.TryParse(RoutineType, true, out DbObjectScope value))
+                { return value; }
+                else { return DbObjectScope.NULL; }
             }
         }
 

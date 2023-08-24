@@ -16,10 +16,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String TableName { get; init; } = String.Empty;
 
         public DbTableKey(IDbTableKey source) : base(source)
-        {
-            if (source.TableName is String) { TableName = source.TableName; }
-            else { TableName = String.Empty; }
-        }
+        { if (source.TableName is String) { TableName = source.TableName; } }
 
         #region IEquatable, IComparable
         public Boolean Equals(DbTableKey? other)

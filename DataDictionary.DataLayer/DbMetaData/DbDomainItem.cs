@@ -11,7 +11,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbDomainItem : IDbDomainKey, IDbCatalogKey, IDbDomain, IBindingTableRow
+    public interface IDbDomainItem : IDbDomainKey, IDbCatalogKey, IDbObjectScope, IDbDomain, IBindingTableRow
     {
         String? DomainDefault { get; }
     }
@@ -36,6 +36,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? CollationCatalog { get { return GetValue("CollationCatalog"); } }
         public String? CollationSchema { get { return GetValue("CollationSchema"); } }
         public String? CollationName { get { return GetValue("CollationName"); } }
+        public DbObjectScope ObjectScope { get; } = DbObjectScope.Type;
 
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()

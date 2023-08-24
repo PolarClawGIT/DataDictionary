@@ -11,7 +11,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbRoutineParameterItem : IDbRoutineParameterKey, IDbDomainReferenceKey, IDbColumn, IDbCatalogKey
+    public interface IDbRoutineParameterItem : IDbRoutineParameterKey, IDbDomainReferenceKey, IDbElementScope, IDbColumn, IDbCatalogKey
     {
     }
 
@@ -39,6 +39,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? DomainCatalog { get { return GetValue("DomainCatalog"); } }
         public String? DomainSchema { get { return GetValue("DomainSchema"); } }
         public String? DomainName { get { return GetValue("DomainName"); } }
+        public DbElementScope ElementScope { get; } = DbElementScope.Parameter;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

@@ -13,7 +13,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DbMetaData
 {
-    public interface IDbTableItem : IDbTableKey, IDbCatalogKey, IDbIsSystem, IBindingTableRow
+    public interface IDbTableItem : IDbTableKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IBindingTableRow
     {
         String? TableType { get; }
     }
@@ -26,6 +26,16 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? TableName { get { return GetValue("TableName"); } }
         public String? TableType { get { return GetValue("TableType"); } }
         public Boolean IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
+        public DbObjectScope ObjectScope
+        {
+            get
+            {
+                if (Enum.TryParse(TableType, true, out DbObjectScope value))
+                { return value; }
+                else if (TableType is "BASE TABLE" or "HISTORY TABLE" or "TEMPORAL TABLE") { return DbObjectScope.Table; }
+                else { return DbObjectScope.NULL; }
+            }
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
