@@ -17,17 +17,53 @@ namespace DataDictionary.BusinessLayer.WorkFlows
     public static class ModelDatabaseExtension
     {
 
-        public static IReadOnlyList<WorkItem> LoadModelList(this ModelData data, IBindingTable<ModelItem> target)
+        public static IReadOnlyList<WorkItem> LoadModelList(this ModelData data, BindingTable<ModelItem> target)
         {
             List<WorkItem> workItems = new List<WorkItem>();
             OpenConnection openConnection = new OpenConnection(data.ModelContext);
             workItems.Add(openConnection);
+
+            workItems.Add(new WorkItem()
+            {
+                WorkName = "Clear Model",
+                DoWork = () => { target.Clear(); }
+            });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Get List of Models",
                 Command = ModelItem.GetData,
                 Target = target
+            });
+
+            return workItems.AsReadOnly();
+        }
+
+        public static IReadOnlyList<WorkItem> SaveModelList(this ModelData data, BindingTable<ModelItem> source)
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+            IModelKey modelId = new ModelKey(data.Model);
+
+            OpenConnection openConnection = new OpenConnection(data.ModelContext);
+            workItems.Add(openConnection);
+
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Save Model",
+                Command = (conn) => ModelItem.SetData(conn, source)
+            });
+
+            workItems.Add(new WorkItem()
+            {
+                WorkName = "Clear Model",
+                DoWork = () => { data.Models.Clear(); }
+            });
+
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Load Model",
+                Command = (conn) => ModelItem.GetData(conn, modelId),
+                Target = data.Models
             });
 
             return workItems.AsReadOnly();

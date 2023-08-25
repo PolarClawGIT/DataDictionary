@@ -11,8 +11,6 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 
 Select	D.[AttributeId],
 		D.[PropertyId],
-		P.[PropertyName],
-		P.[PropertyTitle],
 		D.[PropertyValue],
 		D.[SysStart]
 From	[App_DataDictionary].[DomainAttributeProperty] D

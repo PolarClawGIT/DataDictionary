@@ -130,7 +130,17 @@ Begin Try
 			Inner Join [App_DataDictionary].[DatabaseSchema] T
 			On	S.[CatalogId] = T.[CatalogId] And
 				IsNull(S.[SchemaName],T.[SchemaName]) = T.[SchemaName] And
-				S.[ObjectName] is Null
+				S.[SchemaName] is Null
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseSchema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[DatabaseCatalog]
+	From	@Data S
+			Inner Join [App_DataDictionary].[ModelCatalog] C
+			On	S.[CatalogId] = C.[CatalogId] And
+				C.[ModelId] = @ModelId
+			Inner Join [App_DataDictionary].[DatabaseCatalog] T
+			On	S.[CatalogId] = T.[CatalogId] And
+				S.[CatalogId] is Null
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseSchema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction

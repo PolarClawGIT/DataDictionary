@@ -23,8 +23,6 @@ Begin Try
 	Insert Into @Values
 	Select	D.[AttributeId],
 			P.[PropertyId],
-			P.[PropertyName],
-			P.[PropertyTitle],
 			NullIf(Trim(D.[PropertyValue]),'') As [PropertyValue],
 			[SysStart]
 	From	@Data D
