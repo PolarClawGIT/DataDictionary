@@ -16,19 +16,13 @@ using System.Windows.Forms.VisualStyles;
 using DataDictionary.Main.Forms;
 using System.Reflection;
 using Toolbox.Mediator;
+using Toolbox.Threading;
 
 namespace DataDictionary.Main.Dialogs
 {
     partial class OpenSaveModelDatabase : ApplicationFormBase
     {
-        class FormData
-        {
-            public ModelItem? Model { get; set; }
-            public BindingTable<ModelItem> ModelItems = new BindingTable<ModelItem>();
-        }
-
-        FormData data = new FormData();
-
+        ModelKey currentKey = new ModelKey(Program.Data.Model);
 
         public OpenSaveModelDatabase() : base()
         {
@@ -39,25 +33,42 @@ namespace DataDictionary.Main.Dialogs
 
         private void LoadModelFromDatabase_Load(object sender, EventArgs e)
         {
-            this.DoWork(Program.Data.LoadModelList(data.ModelItems), onCompleting);
+            // Constant, does not need to be rebound
+            serverNameData.DataBindings.Add(new Binding(nameof(serverNameData.Text), Program.Data, nameof(Program.Data.ServerName)));
+            databaseNameData.DataBindings.Add(new Binding(nameof(databaseNameData.Text), Program.Data, nameof(Program.Data.DatabaseName)));
+
+            this.DoWork(Program.Data.LoadModelList(), onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                serverNameData.DataBindings.Add(new Binding(nameof(serverNameData.Text), Program.Data, nameof(Program.Data.ServerName)));
-                databaseNameData.DataBindings.Add(new Binding(nameof(databaseNameData.Text), Program.Data, nameof(Program.Data.DatabaseName)));
-
-                modelList.AutoGenerateColumns = false;
-                modelList.DataSource = data.ModelItems;
-                modelList.ClearSelection();
+                BindData();
+                SelectionChanged(modelList, EventArgs.Empty);
             }
         }
 
         void BindData()
         {
-            modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), data.Model, nameof(data.Model.ModelTitle)));
-            modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), data.Model, nameof(data.Model.ModelDescription)));
-            modelObsoleteData.DataBindings.Add(new Binding(nameof(modelObsoleteData.Checked), data.Model, nameof(data.Model.Obsolete), true, DataSourceUpdateMode.OnValidation, false));
+            ModelItem currentModel = Program.Data.Model;
 
+            if (Program.Data.Models.FirstOrDefault(w => new ModelKey(w) == currentKey) is ModelItem item)
+            { currentModel = item; }
+
+            modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), currentModel, nameof(currentModel.ModelTitle)));
+            modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), currentModel, nameof(currentModel.ModelDescription)));
+            modelObsoleteData.DataBindings.Add(new Binding(nameof(modelObsoleteData.Checked), currentModel, nameof(currentModel.Obsolete), true, DataSourceUpdateMode.OnValidation, false));
+
+            modelList.SelectionChanged -= SelectionChanged; // Because setting the Data Source causes a Selection Change event to occur
+
+            modelList.AutoGenerateColumns = false;
+            modelList.DataSource = Program.Data.Models;
+            modelList.ClearSelection();
+
+            if (modelList.Rows.Cast<DataGridViewRow>().FirstOrDefault(w => w.DataBoundItem is ModelItem item && new ModelKey(item) == currentKey) is DataGridViewRow row)
+            { row.Selected = true; }
+            else
+            { currentKey = Program.Data.ModelKey; }
+
+            modelList.SelectionChanged += SelectionChanged;
         }
 
         void UnBindData()
@@ -65,39 +76,34 @@ namespace DataDictionary.Main.Dialogs
             modelTitleData.DataBindings.Clear();
             modelDescriptionData.DataBindings.Clear();
             modelObsoleteData.DataBindings.Clear();
+            modelList.DataSource = null;
         }
 
         private void loadCommand_Click(object sender, EventArgs e)
         {
-            if (modelList.SelectedRows.Count > 0 && modelList.SelectedRows[0].DataBoundItem is ModelItem item)
-            { data.Model = item; }
-
-            if (data.Model is not null)
-            {
-                SendMessage(new DbDataBatchStarting());
-                this.DoWork(Program.Data.LoadModel(new ModelKey(data.Model)), onCompleting);
-            }
+            SendMessage(new DbDataBatchStarting());
+            UnBindData();
+            this.DoWork(Program.Data.LoadModel(currentKey), onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
+                BindData();
                 SendMessage(new DbDataBatchCompleted());
-                this.Close();
+                SelectionChanged(modelList, EventArgs.Empty);
             }
         }
 
         private void deleteCommand_Click(object sender, EventArgs e)
         {
-            if (data.Model is not null && data.Model.Obsolete == true)
-            { this.DoWork(Program.Data.DeleteModel(data.Model), onCompleting); }
+            SendMessage(new DbDataBatchStarting());
+            UnBindData();
+            this.DoWork(Program.Data.DeleteModel(currentKey), onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                if (modelList.Rows.Cast<DataGridViewRow>().FirstOrDefault(w => w.DataBoundItem is ModelItem item && item == data.Model) is DataGridViewRow row)
-                {
-                    modelList.Rows.Remove(row);
-                    modelTitleData.DataBindings.Clear();
-                    data.Model = null;
-                }
+                BindData();
+                SendMessage(new DbDataBatchCompleted());
+                SelectionChanged(modelList, EventArgs.Empty);
             }
         }
 
@@ -105,69 +111,69 @@ namespace DataDictionary.Main.Dialogs
         {
             SendMessage(new DbDataBatchStarting());
             UnBindData();
-
             this.DoWork(Program.Data.SaveModel(), onCompleting);
+
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
+                List<WorkItem> work = new List<WorkItem>();
+
                 if (args.Error is null)
-                { this.DoWork(Program.Data.SaveModel(), onCompletingLoad); }
-                else { SendMessage(new DbDataBatchCompleted()); }
+                { this.DoWork(Program.Data.LoadModel(currentKey), onCompletingLoad); }
+                else { BindData(); SendMessage(new DbDataBatchCompleted()); }
             }
 
             void onCompletingLoad(RunWorkerCompletedEventArgs args)
-            {
-                SendMessage(new DbDataBatchCompleted());
-                BindData();
-            }
+            { BindData(); SendMessage(new DbDataBatchCompleted()); }
         }
 
-        private void modelList_SelectionChanged(object sender, EventArgs e)
+        private void SelectionChanged(object? sender, EventArgs e)
         {
             if (modelList.SelectedRows.Count > 0 && modelList.SelectedRows[0].DataBoundItem is ModelItem item)
             {
                 UnBindData();
-                data.Model = item;
+                currentKey = new ModelKey(item);
                 BindData();
+            }
 
-                if (data.Model is ModelItem && new ModelKey(data.Model) == new ModelKey(Program.Data.Model))
+            if (currentKey == Program.Data.ModelKey)
+            {
+                saveCommand.Enabled = true;
+
+                modelTitleData.ReadOnly = false;
+                modelDescriptionData.ReadOnly = false;
+
+                if (Program.Data.Model.SysStart is null)
                 {
-                    saveCommand.Enabled = true;
-                    loadCommand.Enabled = true;
-                    modelTitleData.ReadOnly = false;
-                    modelDescriptionData.ReadOnly = false;
-                    modelObsoleteData.Enabled = true;
+                    modelObsoleteData.Enabled = false;
+                    loadCommand.Enabled = false;
                 }
                 else
                 {
-                    saveCommand.Enabled = false;
+                    modelObsoleteData.Enabled = true;
                     loadCommand.Enabled = true;
-                    modelTitleData.ReadOnly = true;
-                    modelDescriptionData.ReadOnly = true;
-                    modelObsoleteData.Enabled = false;
                 }
-
-                if (data.Model.Obsolete == true)
-                { deleteCommand.Enabled = true; }
-                else { deleteCommand.Enabled = false; }
             }
             else
-            { // ClearSelection was called
-                UnBindData();
-                data.Model = Program.Data.Model;
-                BindData();
-
-                saveCommand.Enabled = true;
-                loadCommand.Enabled = false;
-                deleteCommand.Enabled = false;
-                modelTitleData.ReadOnly = false;
-                modelDescriptionData.ReadOnly = false;
-                modelObsoleteData.Enabled = true;
+            {
+                saveCommand.Enabled = false;
+                loadCommand.Enabled = true;
+                modelTitleData.ReadOnly = true;
+                modelDescriptionData.ReadOnly = true;
+                modelObsoleteData.Enabled = false;
             }
+
+            if (currentKey == Program.Data.ModelKey && Program.Data.Model.Obsolete == true)
+            { deleteCommand.Enabled = true; }
+            else { deleteCommand.Enabled = false; }
         }
 
         #region IColleague
+        protected override void HandleMessage(DbDataBatchStarting message)
+        { UnBindData(); }
 
+        protected override void HandleMessage(DbDataBatchCompleted message)
+        { BindData(); }
         #endregion
 
 

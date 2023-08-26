@@ -216,8 +216,6 @@ namespace DataDictionary.Main.Forms
             }
         }
 
-
-
         private void importCommand_Click(object sender, EventArgs e)
         {
             UnBindData();
@@ -255,7 +253,6 @@ namespace DataDictionary.Main.Forms
                 if (ParentForm is Form parent && ParentForm.ActiveMdiChild != this) { this.Activate(); }
             }
         }
-
 
         private void removeCommand_Click(object sender, EventArgs e)
         {

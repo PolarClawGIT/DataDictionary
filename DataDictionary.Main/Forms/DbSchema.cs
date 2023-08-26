@@ -71,6 +71,7 @@ namespace DataDictionary.Main.Forms
         {
             catalogNameData.DataBindings.Clear();
             schemaNameData.DataBindings.Clear();
+            isSystemData.DataBindings.Clear();
             extendedPropertiesData.DataSource = null;
         }
 

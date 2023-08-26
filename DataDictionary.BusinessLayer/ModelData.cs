@@ -19,8 +19,21 @@ namespace DataDictionary.BusinessLayer
     /// </summary>
     public class ModelData
     {
-        ModelItem defaultModel = new ModelItem();
-        public ModelItem Model { get { if (Models.FirstOrDefault() is ModelItem item) { return item; } else { return defaultModel; } } }
+        ModelItem defaultModel;
+
+        ModelKey modelKey;
+        public ModelKey ModelKey { get { return modelKey; } internal set { modelKey = new ModelKey(value); } }
+
+        public ModelItem Model
+        {
+            get
+            {
+                if (Models.FirstOrDefault(w => new ModelKey(w) == ModelKey) is ModelItem item)
+                { return item; }
+                else { return defaultModel; }
+            }
+        }
+
         public FileInfo? ModelFile { get; internal set; }
         internal protected Context ModelContext { get; protected set; } = new Context();
 
@@ -46,14 +59,17 @@ namespace DataDictionary.BusinessLayer
         public BindingTable<HelpItem> HelpSubjects { get; } = ModelFactory.Create<HelpItem>();
         public BindingTable<PropertyItem> Properties { get; } = ModelFactory.Create<PropertyItem>();
         public BindingTable<PropertyScopeItem> PropertyScopes { get; } = ModelFactory.Create<PropertyScopeItem>();
-        internal BindingTable<ModelItem> Models { get; } = ModelFactory.Create<ModelItem>();
+        public BindingTable<ModelItem> Models { get; } = ModelFactory.Create<ModelItem>();
 
         // Connection Data
         public String ServerName { get { return ModelContext.ServerName; } }
         public String DatabaseName { get { return ModelContext.DatabaseName; } }
 
         protected ModelData() : base()
-        { }
+        {
+            defaultModel = new ModelItem();
+            modelKey = new ModelKey(defaultModel);
+        }
 
         public ModelData(Context context) : this()
         {
@@ -86,6 +102,9 @@ namespace DataDictionary.BusinessLayer
         }
 
         public void NewModel()
-        { defaultModel = new ModelItem(); }
+        {
+            defaultModel = new ModelItem();
+            ModelKey = new ModelKey(defaultModel);
+        }
     }
 }

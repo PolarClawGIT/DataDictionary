@@ -117,7 +117,6 @@
             modelList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             modelList.Size = new Size(357, 123);
             modelList.TabIndex = 2;
-            modelList.SelectionChanged += modelList_SelectionChanged;
             // 
             // modelTitleColumn
             // 

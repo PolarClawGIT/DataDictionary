@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DomainData;
+using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
@@ -91,15 +92,14 @@ namespace DataDictionary.Main.Forms
             { return Program.Data.Properties.Select(s => new PropertyNameDataItems() { PropertyId = s.PropertyId, PropertyTitle = s.PropertyTitle }).ToList(); }
         }
 
-
-        void UnbindData()
+        void UnBindData()
         {
             attributeTitleData.DataBindings.Clear();
             attributeDescriptionData.DataBindings.Clear();
             attributeParentTitleData.DataBindings.Clear();
 
-            attributeAlaisData = null;
-            attributePropertiesData = null;
+            attributeAlaisData.DataSource = null;
+            attributePropertiesData.DataSource = null;
         }
 
         private void attributePropertiesData_RowValidated(object sender, DataGridViewCellEventArgs e)
@@ -115,5 +115,13 @@ namespace DataDictionary.Main.Forms
                 && data.AttributeKey is not null)
             { item.AttributeKey = data.AttributeKey; }
         }
+
+        #region IColleague
+        protected override void HandleMessage(DbDataBatchStarting message)
+        { UnBindData(); }
+
+        protected override void HandleMessage(DbDataBatchCompleted message)
+        { BindData(); }
+        #endregion
     }
 }

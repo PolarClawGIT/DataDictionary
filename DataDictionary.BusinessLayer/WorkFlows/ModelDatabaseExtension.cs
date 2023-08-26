@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
     public static class ModelDatabaseExtension
     {
 
-        public static IReadOnlyList<WorkItem> LoadModelList(this ModelData data, BindingTable<ModelItem> target)
+        public static IReadOnlyList<WorkItem> LoadModelList(this ModelData data)
         {
             List<WorkItem> workItems = new List<WorkItem>();
             OpenConnection openConnection = new OpenConnection(data.ModelContext);
@@ -25,44 +25,14 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
             workItems.Add(new WorkItem()
             {
-                WorkName = "Clear Model",
-                DoWork = () => { target.Clear(); }
-            });
-
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Get List of Models",
-                Command = ModelItem.GetData,
-                Target = target
-            });
-
-            return workItems.AsReadOnly();
-        }
-
-        public static IReadOnlyList<WorkItem> SaveModelList(this ModelData data, BindingTable<ModelItem> source)
-        {
-            List<WorkItem> workItems = new List<WorkItem>();
-            IModelKey modelId = new ModelKey(data.Model);
-
-            OpenConnection openConnection = new OpenConnection(data.ModelContext);
-            workItems.Add(openConnection);
-
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save Model",
-                Command = (conn) => ModelItem.SetData(conn, source)
-            });
-
-            workItems.Add(new WorkItem()
-            {
-                WorkName = "Clear Model",
+                WorkName = "Clear Model list",
                 DoWork = () => { data.Models.Clear(); }
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
-                WorkName = "Load Model",
-                Command = (conn) => ModelItem.GetData(conn, modelId),
+                WorkName = "Get list of Models",
+                Command = ModelItem.GetData,
                 Target = data.Models
             });
 
@@ -72,7 +42,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         public static IReadOnlyList<WorkItem> LoadModel(this ModelData data, IModelKey modelId)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            //BindingTable<ModelItem> model = new BindingTable<ModelItem>();
+            data.ModelKey = new ModelKey(modelId);
 
             OpenConnection openConnection = new OpenConnection(data.ModelContext);
             workItems.Add(openConnection);
@@ -85,8 +55,8 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
             workItems.Add(new ExecuteReader(openConnection)
             {
-                WorkName = "Load Model",
-                Command = (conn) => ModelItem.GetData(conn, modelId),
+                WorkName = "Load Models",
+                Command = ModelItem.GetData,
                 Target = data.Models
             });
 
@@ -208,14 +178,14 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
             workItems.Add(new WorkItem()
             {
-                WorkName = "Clear Model",
+                WorkName = "Clear Model list",
                 DoWork = () => { data.Models.Clear(); }
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
-                WorkName = "Load Model",
-                Command = (conn) => ModelItem.GetData(conn, modelId),
+                WorkName = "Get list of Models",
+                Command = ModelItem.GetData,
                 Target = data.Models
             });
 
@@ -310,6 +280,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         public static IReadOnlyList<WorkItem> DeleteModel(this ModelData data, IModelKey modelId)
         {
             List<WorkItem> workItems = new List<WorkItem>();
+            data.NewModel();
 
             OpenConnection openConnection = new OpenConnection(data.ModelContext);
             workItems.Add(openConnection);
@@ -318,6 +289,19 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             {
                 WorkName = "Delete Model",
                 Command = (conn) => ModelItem.DeleteData(conn, modelId)
+            });
+
+            workItems.Add(new WorkItem()
+            {
+                WorkName = "Clear Model",
+                DoWork = () => { data.Clear(); }
+            });
+
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Get list of Models",
+                Command = ModelItem.GetData,
+                Target = data.Models
             });
 
             return workItems.AsReadOnly();
