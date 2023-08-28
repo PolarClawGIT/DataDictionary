@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DataDictionary.Main.Forms
+namespace DataDictionary.Main.Dialogs
 {
     partial class HelpSubject : ApplicationFormBase
     {

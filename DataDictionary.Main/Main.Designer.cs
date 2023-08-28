@@ -86,10 +86,11 @@
             pasteToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
             selectAllToolStripMenuItem = new ToolStripMenuItem();
+            scriptMenuItem = new ToolStripMenuItem();
+            extendedPropertiesToolStripMenuItem = new ToolStripMenuItem();
             toolsToolStripMenuItem = new ToolStripMenuItem();
             customizeToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
-            onLineModetoolStripMenuItem = new ToolStripMenuItem();
             dbSchemaToolStripMenuItem = new ToolStripMenuItem();
             domainModelToolStripMenuItem = new ToolStripMenuItem();
             unitTestingToolStripMenuItem = new ToolStripMenuItem();
@@ -100,8 +101,9 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
-            scriptMenuItem = new ToolStripMenuItem();
-            extendedPropertiesToolStripMenuItem = new ToolStripMenuItem();
+            applicationToolStripMenuItem = new ToolStripMenuItem();
+            propertiesToolStripMenuItem = new ToolStripMenuItem();
+            definitionsToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
@@ -597,9 +599,23 @@
             selectAllToolStripMenuItem.Text = "Select &All";
             selectAllToolStripMenuItem.Click += selectAllToolStripMenuItem_Click;
             // 
+            // scriptMenuItem
+            // 
+            scriptMenuItem.DropDownItems.AddRange(new ToolStripItem[] { extendedPropertiesToolStripMenuItem });
+            scriptMenuItem.Name = "scriptMenuItem";
+            scriptMenuItem.Size = new Size(66, 20);
+            scriptMenuItem.Text = "Scripting";
+            // 
+            // extendedPropertiesToolStripMenuItem
+            // 
+            extendedPropertiesToolStripMenuItem.Name = "extendedPropertiesToolStripMenuItem";
+            extendedPropertiesToolStripMenuItem.Size = new Size(179, 22);
+            extendedPropertiesToolStripMenuItem.Text = "Extended Properties";
+            extendedPropertiesToolStripMenuItem.Click += extendedPropertiesToolStripMenuItem_Click;
+            // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem, onLineModetoolStripMenuItem, dbSchemaToolStripMenuItem, domainModelToolStripMenuItem, unitTestingToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem, applicationToolStripMenuItem, dbSchemaToolStripMenuItem, domainModelToolStripMenuItem, unitTestingToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(46, 20);
             toolsToolStripMenuItem.Text = "&Tools";
@@ -613,21 +629,10 @@
             // 
             // optionsToolStripMenuItem
             // 
-            optionsToolStripMenuItem.Enabled = false;
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             optionsToolStripMenuItem.Size = new Size(180, 22);
             optionsToolStripMenuItem.Text = "&Options";
-            // 
-            // onLineModetoolStripMenuItem
-            // 
-            onLineModetoolStripMenuItem.Checked = true;
-            onLineModetoolStripMenuItem.CheckOnClick = true;
-            onLineModetoolStripMenuItem.CheckState = CheckState.Indeterminate;
-            onLineModetoolStripMenuItem.Name = "onLineModetoolStripMenuItem";
-            onLineModetoolStripMenuItem.Size = new Size(180, 22);
-            onLineModetoolStripMenuItem.Text = "On-line Mode";
-            onLineModetoolStripMenuItem.ToolTipText = "On-line Mode applies changes to the application dabase, usally on form close. Off-line Mode saves the data to the file system On Save.";
-            onLineModetoolStripMenuItem.CheckedChanged += onLineModetoolStripMenuItem_CheckedChanged;
+            optionsToolStripMenuItem.Click += optionsToolStripMenuItem_Click;
             // 
             // dbSchemaToolStripMenuItem
             // 
@@ -668,14 +673,14 @@
             // helpContentsMenuItem
             // 
             helpContentsMenuItem.Name = "helpContentsMenuItem";
-            helpContentsMenuItem.Size = new Size(180, 22);
+            helpContentsMenuItem.Size = new Size(122, 22);
             helpContentsMenuItem.Text = "&Contents";
             helpContentsMenuItem.Click += HelpContentsMenuItem_Click;
             // 
             // helpIndexMenuItem
             // 
             helpIndexMenuItem.Name = "helpIndexMenuItem";
-            helpIndexMenuItem.Size = new Size(180, 22);
+            helpIndexMenuItem.Size = new Size(122, 22);
             helpIndexMenuItem.Text = "&Index";
             helpIndexMenuItem.Click += HelpIndexMenuItem_Click;
             // 
@@ -683,34 +688,42 @@
             // 
             searchToolStripMenuItem.Enabled = false;
             searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            searchToolStripMenuItem.Size = new Size(180, 22);
+            searchToolStripMenuItem.Size = new Size(122, 22);
             searchToolStripMenuItem.Text = "&Search";
             // 
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new Size(177, 6);
+            toolStripSeparator5.Size = new Size(119, 6);
             // 
             // helpAboutMenuItem
             // 
             helpAboutMenuItem.Name = "helpAboutMenuItem";
-            helpAboutMenuItem.Size = new Size(180, 22);
+            helpAboutMenuItem.Size = new Size(122, 22);
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
             // 
-            // scriptMenuItem
+            // applicationToolStripMenuItem
             // 
-            scriptMenuItem.DropDownItems.AddRange(new ToolStripItem[] { extendedPropertiesToolStripMenuItem });
-            scriptMenuItem.Name = "scriptMenuItem";
-            scriptMenuItem.Size = new Size(66, 20);
-            scriptMenuItem.Text = "Scripting";
+            applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { propertiesToolStripMenuItem, definitionsToolStripMenuItem });
+            applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
+            applicationToolStripMenuItem.Size = new Size(180, 22);
+            applicationToolStripMenuItem.Text = "Application";
             // 
-            // extendedPropertiesToolStripMenuItem
+            // propertiesToolStripMenuItem
             // 
-            extendedPropertiesToolStripMenuItem.Name = "extendedPropertiesToolStripMenuItem";
-            extendedPropertiesToolStripMenuItem.Size = new Size(180, 22);
-            extendedPropertiesToolStripMenuItem.Text = "Extended Properties";
-            extendedPropertiesToolStripMenuItem.Click += extendedPropertiesToolStripMenuItem_Click;
+            propertiesToolStripMenuItem.Image = Properties.Resources.ExtendedProperty;
+            propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
+            propertiesToolStripMenuItem.Size = new Size(180, 22);
+            propertiesToolStripMenuItem.Text = "Properties";
+            propertiesToolStripMenuItem.Click += propertiesToolStripMenuItem_Click;
+            // 
+            // definitionsToolStripMenuItem
+            // 
+            definitionsToolStripMenuItem.Enabled = false;
+            definitionsToolStripMenuItem.Name = "definitionsToolStripMenuItem";
+            definitionsToolStripMenuItem.Size = new Size(180, 22);
+            definitionsToolStripMenuItem.Text = "Definitions";
             // 
             // Main
             // 
@@ -808,7 +821,6 @@
         private Controls.TextBoxData modelDescriptionData;
         private ToolStripMenuItem unitTestingToolStripMenuItem;
         private ToolStripMenuItem gridViewToolStripMenuItem;
-        private ToolStripMenuItem onLineModetoolStripMenuItem;
         private ToolStripMenuItem menuAttributeProperties;
         private ToolStripMenuItem menuAttributeAlaises;
         private ToolStripMenuItem menuConstraintItem;
@@ -821,5 +833,8 @@
         private ToolStripMenuItem newCloneModelMenuItem;
         private ToolStripMenuItem scriptMenuItem;
         private ToolStripMenuItem extendedPropertiesToolStripMenuItem;
+        private ToolStripMenuItem applicationToolStripMenuItem;
+        private ToolStripMenuItem propertiesToolStripMenuItem;
+        private ToolStripMenuItem definitionsToolStripMenuItem;
     }
 }

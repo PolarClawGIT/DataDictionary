@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.DbMetaData;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -45,12 +46,42 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Target = data.Properties
             });
 
+            /*
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Property Scopes",
                 Command = PropertyScopeItem.GetData,
                 Target = data.PropertyScopes
+            });*/
+
+            return workItems;
+        }
+
+        public static IReadOnlyList<WorkItem> SaveApplicationData(this ModelData data)
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(data.ModelContext);
+            workItems.Add(openConnection);
+
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Save Help",
+                Command = (conn) => HelpItem.SetData(conn, data.HelpSubjects)
             });
+
+            
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Save Property Definition",
+                Command = (conn) => PropertyItem.SetData(conn, data.Properties)
+            });
+
+            /*
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Save Description Definition",
+                Command = (conn) => HelpItem.SetData(conn, data.HelpSubjects)
+            });*/
 
             return workItems;
         }
@@ -60,6 +91,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             List<WorkItem> workItems = new List<WorkItem>();
             DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(data.ModelContext);
             workItems.Add(openConnection);
+
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
@@ -87,7 +119,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         {
             List<WorkItem> workItems = new List<WorkItem>();
 
-            workItems.Add(new WorkItem() { WorkName = "Load Application Data", DoWork = DoWork });
+            workItems.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
 
             return workItems.AsReadOnly();
 
@@ -97,7 +129,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 {
                     workSet.Tables.Add(data.HelpSubjects.ToDataTable());
                     workSet.Tables.Add(data.Properties.ToDataTable());
-                    workSet.Tables.Add(data.PropertyScopes.ToDataTable());
+                    //workSet.Tables.Add(data.PropertyScopes.ToDataTable());
 
                     workSet.WriteXml(file.FullName, XmlWriteMode.WriteSchema);
                 }
@@ -132,13 +164,13 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                         data.Properties.Clear();
                         data.Properties.Load(propertiesData.CreateDataReader());
                     }
-
+                    /*
                     if (workSet.Tables.Contains(data.PropertyScopes.BindingName) &&
                         workSet.Tables[data.PropertyScopes.BindingName] is DataTable propertyScopesData)
                     {
                         data.PropertyScopes.Clear();
                         data.PropertyScopes.Load(propertyScopesData.CreateDataReader());
-                    }
+                    }*/
                 }
             }
         }

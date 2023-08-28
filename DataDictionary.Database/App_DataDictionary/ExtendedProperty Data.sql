@@ -5,38 +5,44 @@
 Declare @Property Table (
 	[PropertyId] UniqueIdentifier Not Null,
 	[PropertyName] SysName Not Null,
-	[PropertyTitle] NVarChar(100) Not Null)
-Insert into @Property Values ('00000000-0000-0000-0001-000000000001','MS_Description','Description');
+	[PropertyTitle] NVarChar(100) Not Null,
+	[PropertyDescription] NVarChar(1000) Not Null)
+Insert into @Property Values ('00000000-0000-0000-0001-000000000001','MS_Description','Description','Commonly used by Microsoft tools to store the user defined Description of the element.');
 
 Declare @Definition Table (
 	[DefinitionId] UniqueIdentifier Not Null,
-	[DefinitionTitle] NVarChar(100))
-Insert Into @Definition Values ('00000000-0000-0000-0002-000000000001','Business Definition')
-Insert Into @Definition Values ('00000000-0000-0000-0002-000000000002','Technical Definition')
+	[DefinitionTitle] NVarChar(100),
+	[DefinitionDescription] NVarChar(1000))
+Insert Into @Definition Values ('00000000-0000-0000-0002-000000000001','Business Definition','Definition of the item in Business Terms')
+Insert Into @Definition Values ('00000000-0000-0000-0002-000000000002','Technical Definition','Definition of the item in Technical Terms')
 
 Merge [App_DataDictionary].[ApplicationProperty] T
 Using @Property S
 On	T.[PropertyId] = S.[PropertyId]
 When Matched Then Update Set
 	[PropertyTitle] = S.[PropertyTitle],
-	[PropertyName] = S.[PropertyName]
+	[PropertyName] = S.[PropertyName],
+	[PropertyDescription] = S.[PropertyDescription]
 When Not Matched by Target Then
-	Insert ([PropertyId], [PropertyTitle], [PropertyName])
-	Values ([PropertyId], [PropertyTitle], [PropertyName]);
+	Insert ([PropertyId], [PropertyTitle], [PropertyName], [PropertyDescription])
+	Values ([PropertyId], [PropertyTitle], [PropertyName], [PropertyDescription]);
 	
 Merge [App_DataDictionary].[ApplicationDefinition] T
 Using @Definition S
 On	T.[DefinitionId] = S.[DefinitionId]
 When Matched Then Update Set
-	[DefinitionTitle] = S.[DefinitionTitle]
+	[DefinitionTitle] = S.[DefinitionTitle],
+	[DefinitionDescription] = S.[DefinitionDescription]
 When Not Matched by Target Then
-	Insert ([DefinitionId], [DefinitionTitle])
-	Values ([DefinitionId], [DefinitionTitle]);
+	Insert ([DefinitionId], [DefinitionTitle], [DefinitionDescription])
+	Values ([DefinitionId], [DefinitionTitle], [DefinitionDescription]);
 
 -- This script is used to build and maintain the data in the DomainObjectType list.
 -- This list is intended to support the different things MS SQL extended properties can be placed upon
 -- AND ones going to be supported by the application
 -- List is sourced from: https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16
+
+/*
 With [Level0] As (
 	Select	Convert(sysname,Null) As [level0type] Where 1 = 2
 	--Union Select 'ASSEMBLY'
@@ -135,7 +141,7 @@ When Matched Then Update Set
 When Not Matched By Target Then
 	Insert (PropertyId, ScopeType, ObjectType, ElementType)
 	Values (PropertyId, ScopeType, ObjectType, ElementType)
-When Not Matched by Source Then Delete;
+When Not Matched by Source Then Delete;*/
 
 Select	*
 From	[App_DataDictionary].[ApplicationProperty]

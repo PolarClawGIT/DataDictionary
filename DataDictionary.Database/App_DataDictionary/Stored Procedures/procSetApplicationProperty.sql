@@ -1,10 +1,9 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainAttributeProperty]
-		@ModelId UniqueIdentifier,
-		@Data [App_DataDictionary].[typeDomainAttributeProperty] ReadOnly
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetApplicationProperty]
+		@Data [App_DataDictionary].[typeApplicationProperty] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on DomainAttributeProperty.
+/* Description: Performs Set on ApplicationProperty.
 */
 
 -- Transaction Handling
@@ -19,76 +18,53 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDomainAttributeProperty]
+	Declare @Values [App_DataDictionary].[typeApplicationProperty]
 	Insert Into @Values
-	Select	D.[AttributeId],
-			P.[PropertyId],
-			NullIf(Trim(D.[PropertyValue]),'') As [PropertyValue],
+	Select	IsNull(D.[PropertyId],NewId()) As [PropertyId],
+			NullIf(Trim(D.[PropertyTitle]),'') As [PropertyTitle],
+			NullIf(Trim(D.[PropertyDescription]),'') As [PropertyDescription],
+			NullIf(Trim(D.[PropertyName]),'') As [PropertyName],
+			D.[Obsolete],
 			D.[SysStart]
 	From	@Data D
-			Inner Join [App_DataDictionary].[ApplicationProperty] P
-			On	D.[PropertyId] = P.[PropertyId]
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
-
-	If Exists (
-		Select	V.[AttributeId]
-		From	@Values V
-				Left Join [App_DataDictionary].[DomainAttribute] A
-				On	V.[AttributeId] = A.[AttributeId]
-				Left Join [App_DataDictionary].[ModelAttribute] P
-				On	V.[AttributeId] = P.[AttributeId] And
-					P.[ModelId] = @ModelId
-		Where	A.[AttributeId] is Null Or
-				P.[AttributeId] is Null)
-	Throw 50000, '[AttributeId] could not be found or is not associated with Model specified', 2;
-
 	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
-		Select	D.[AttributeId]
+		Select	D.[PropertyId]
 		From	@Values D
-				Inner Join [App_DataDictionary].[DomainAttributeProperty] A
-				On D.[AttributeId] = A.[AttributeId] And
-					D.[PropertyId] = A.[PropertyId]
+				Inner Join [App_DataDictionary].[ApplicationProperty] A
+				On D.[PropertyId] = A.[PropertyId]
 		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
 	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 4;
 
 	-- Apply Changes
 	With [Delta] As (
-		Select	[AttributeId],
-				[PropertyId],
-				[PropertyValue]
-		From	@Values
-		Except
-		Select	[AttributeId],
-				[PropertyId],
-				[PropertyValue]
-		From	[App_DataDictionary].[DomainAttributeProperty]),
-	[Data] As (
-		Select	V.[AttributeId],
-				V.[PropertyId],
-				V.[PropertyValue],
-				IIF(D.[AttributeId] is Null,1, 0) As [IsDiffrent]
+		Select	V.[PropertyId],
+				V.[PropertyTitle],
+				V.[PropertyDescription],
+				V.[PropertyName],
+				IIF(IsNull(V.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
 		From	@Values V
-				Left Join [Delta] D
-				On	V.[AttributeId] = D.[AttributeId] and
-					V.[PropertyId] = D.[PropertyId])
-	Merge [App_DataDictionary].[DomainAttributeProperty] T
-	Using [Data] S
-	On	T.[AttributeId] = S.[AttributeId] And
-		T.[PropertyId] = S.[PropertyId]
-	When Matched And S.[IsDiffrent] = 1 Then Update
-		Set	[PropertyValue] = S.[PropertyValue]
+				Left Join [App_DataDictionary].[ApplicationProperty] A
+				On	V.[PropertyId] = A.[PropertyId]
+		Except
+		Select	[PropertyId],
+				[PropertyTitle],
+				[PropertyDescription],
+				[PropertyName],
+				[ObsoleteDate]
+		From	[App_DataDictionary].[ApplicationProperty])
+	Merge [App_DataDictionary].[ApplicationProperty] As T
+	Using [Delta] As S
+	On	T.[PropertyId] = S.[PropertyId]
+	When Matched Then Update
+		Set	[PropertyTitle] = S.[PropertyTitle],
+			[PropertyDescription] = S.[PropertyDescription],
+			[PropertyName] = S.[PropertyName],
+			[ObsoleteDate] = S.[ObsoleteDate]
 	When Not Matched by Target Then
-		Insert ([AttributeId], [PropertyId], [PropertyValue])
-		Values ([AttributeId], [PropertyId], [PropertyValue])
-	When Not Matched by Source And (T.[AttributeId] in (
-		Select	[AttributeId]
-		From	[App_DataDictionary].[ModelAttribute]
-		Where	[ModelId] = @ModelId))
-		Then Delete;
-
+		Insert([PropertyId], [PropertyDescription], [PropertyName], [ObsoleteDate])
+		Values ([PropertyId], [PropertyDescription], [PropertyName], [ObsoleteDate]);
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -129,10 +105,4 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
-GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDomainAttributeProperty',
-	@value = N'Performs Set on DomainAttributeProperty.'
 GO

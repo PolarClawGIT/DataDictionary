@@ -7,11 +7,11 @@ using Toolbox.BindingTable;
 using Toolbox.Mediator;
 using Toolbox.Threading;
 
-namespace DataDictionary.Main.Forms
+namespace DataDictionary.Main
 {
     interface IApplicationDataForm
     {
-        public Object? OpenItem { get; }
+        public object? OpenItem { get; }
     }
 
     class ApplicationFormBase : Form, IColleague
@@ -32,7 +32,7 @@ namespace DataDictionary.Main.Forms
         protected virtual TForm Activate<TForm>(Func<TForm> constructor)
             where TForm : ApplicationFormBase
         {
-            Form parent = this.MdiParent ?? this;
+            Form parent = MdiParent ?? this;
 
             if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
             {
@@ -58,7 +58,7 @@ namespace DataDictionary.Main.Forms
         protected virtual TForm Activate<TForm>(Func<IBindingTable, TForm> constructor, IBindingTable data)
             where TForm : ApplicationFormBase
         {
-            Form parent = this.MdiParent ?? this;
+            Form parent = MdiParent ?? this;
 
             if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
             {
@@ -92,7 +92,7 @@ namespace DataDictionary.Main.Forms
         protected virtual TForm Activate<TForm>(Func<IBindingTableRow, TForm> constructor, IBindingTableRow data)
             where TForm : ApplicationFormBase
         {
-            Form parent = this.MdiParent ?? this;
+            Form parent = MdiParent ?? this;
 
             if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
             {
@@ -149,20 +149,20 @@ namespace DataDictionary.Main.Forms
         protected virtual void HandleMessage(WindowsCopyCommand message)
         {
             if (ReferenceEquals(this, message.HandledBy) &&
-                this.ActiveControl is Control activeControl &&
+                ActiveControl is Control activeControl &&
                 !message.IsHandled)
             { HandleControl(activeControl); }
 
             void HandleControl(Control control)
             {
-                if (this.ActiveControl is TextBoxBase controlBase)
+                if (ActiveControl is TextBoxBase controlBase)
                 {
                     controlBase.Copy();
                     message.IsHandled = true;
                 }
                 else if (control is ComboBox combo)
                 {
-                    if (!String.IsNullOrEmpty(combo.SelectedText))
+                    if (!string.IsNullOrEmpty(combo.SelectedText))
                     {
                         Clipboard.SetText(combo.SelectedText);
                         message.IsHandled = true;
@@ -188,7 +188,7 @@ namespace DataDictionary.Main.Forms
         protected virtual void HandleMessage(WindowsCutCommand message)
         {
             if (ReferenceEquals(this, message.HandledBy) &&
-                this.ActiveControl is Control activeControl &&
+                ActiveControl is Control activeControl &&
                 !message.IsHandled)
             { HandleControl(activeControl); }
 
@@ -201,10 +201,10 @@ namespace DataDictionary.Main.Forms
                 }
                 else if (control is ComboBox combo)
                 {
-                    if (!String.IsNullOrEmpty(combo.SelectedText))
+                    if (!string.IsNullOrEmpty(combo.SelectedText))
                     {
                         Clipboard.SetText(combo.SelectedText);
-                        combo.SelectedText = String.Empty;
+                        combo.SelectedText = string.Empty;
                         message.IsHandled = true;
                     }
                 }
@@ -227,7 +227,7 @@ namespace DataDictionary.Main.Forms
         protected virtual void HandleMessage(WindowsPasteCommand message)
         {
             if (ReferenceEquals(this, message.HandledBy) &&
-                this.ActiveControl is Control activeControl &&
+                ActiveControl is Control activeControl &&
                 !message.IsHandled)
             { HandleControl(activeControl); }
 
@@ -245,7 +245,7 @@ namespace DataDictionary.Main.Forms
                 }
                 else if (control is ComboBox combo)
                 {
-                    if (Clipboard.GetText() is String newText)
+                    if (Clipboard.GetText() is string newText)
                     {
                         combo.SelectedText = newText;
                         message.IsHandled = true;
@@ -265,7 +265,7 @@ namespace DataDictionary.Main.Forms
         protected virtual void HandleMessage(WindowsUndoCommand message)
         {
             if (ReferenceEquals(this, message.HandledBy) &&
-                this.ActiveControl is Control activeControl &&
+                ActiveControl is Control activeControl &&
                 !message.IsHandled)
             { HandleControl(activeControl); }
 
@@ -295,7 +295,7 @@ namespace DataDictionary.Main.Forms
         protected virtual void HandleMessage(WindowsSelectAllCommand message)
         {
             if (ReferenceEquals(this, message.HandledBy) &&
-                this.ActiveControl is Control activeControl &&
+                ActiveControl is Control activeControl &&
                 !message.IsHandled)
             { HandleControl(activeControl); }
 
@@ -338,17 +338,17 @@ namespace DataDictionary.Main.Forms
         /// Also, for some reason the Error Provider can return HasErrors = true when no control on the form has an error.
         /// This way, I can search for controls within a specific scope looking for errors.
         /// </remarks>
-        public static Dictionary<Control, String> GetAllErrors(this ErrorProvider provider, Control rootControl)
+        public static Dictionary<Control, string> GetAllErrors(this ErrorProvider provider, Control rootControl)
         {
-            Dictionary<Control, String> errors = new Dictionary<Control, String>();
-            String errorText = provider.GetError(rootControl);
+            Dictionary<Control, string> errors = new Dictionary<Control, string>();
+            string errorText = provider.GetError(rootControl);
 
-            if (!String.IsNullOrWhiteSpace(errorText))
+            if (!string.IsNullOrWhiteSpace(errorText))
             { errors.Add(rootControl, errorText); }
 
             foreach (Control item in rootControl.Controls)
             {
-                Dictionary<Control, String> child = provider.GetAllErrors(item);
+                Dictionary<Control, string> child = provider.GetAllErrors(item);
                 foreach (var childItem in child)
                 { errors.Add(childItem.Key, childItem.Value); }
             }

@@ -19,10 +19,11 @@ namespace DataDictionary.BusinessLayer
     /// </summary>
     public class ModelData
     {
+        // Model
         ModelItem defaultModel;
-
         ModelKey modelKey;
         public ModelKey ModelKey { get { return modelKey; } internal set { modelKey = new ModelKey(value); } }
+        public BindingTable<ModelItem> Models { get; } = ModelFactory.Create<ModelItem>();
 
         public ModelItem Model
         {
@@ -58,8 +59,7 @@ namespace DataDictionary.BusinessLayer
         // Application Data
         public BindingTable<HelpItem> HelpSubjects { get; } = ModelFactory.Create<HelpItem>();
         public BindingTable<PropertyItem> Properties { get; } = ModelFactory.Create<PropertyItem>();
-        public BindingTable<PropertyScopeItem> PropertyScopes { get; } = ModelFactory.Create<PropertyScopeItem>();
-        public BindingTable<ModelItem> Models { get; } = ModelFactory.Create<ModelItem>();
+        //public BindingTable<PropertyScopeItem> PropertyScopes { get; } = ModelFactory.Create<PropertyScopeItem>();
 
         // Connection Data
         public String ServerName { get { return ModelContext.ServerName; } }

@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.Forms
+﻿namespace DataDictionary.Main.Dialogs
 {
     partial class HelpSubject
     {

@@ -2,6 +2,7 @@
 (
 	[DefinitionId] UniqueIdentifier NOT NULL CONSTRAINT [DF_ApplicationDefinitionDefinitionId] DEFAULT (newid()),
 	[DefinitionTitle] [App_DataDictionary].[typeTitle] Not Null,
+	[DefinitionDescription] [App_DataDictionary].[typeDescription] Null,
 	[Obsolete] As (CONVERT([bit],case when [ObsoleteDate] IS NULL then (0) else (1) end)),
 	-- TODO: Add System Version later once the schema is locked down
 	[ObsoleteDate] DATETIME2 Null, -- Used to flag an item as a candidate for being deleted. Null = active, anything else is Obsolete.

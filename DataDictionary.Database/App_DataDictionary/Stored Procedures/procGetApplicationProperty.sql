@@ -9,7 +9,10 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Select	[PropertyId],
 		[PropertyTitle],
-		[PropertyName]
+		[PropertyDescription],
+		[PropertyName],
+		[Obsolete],
+		[SysStart]
 From	[App_DataDictionary].[ApplicationProperty]
 Where	(@PropertyId is Null Or @PropertyId = [PropertyId]) And
 		(@PropertyTitle is Null Or @PropertyTitle = [PropertyTitle]) And

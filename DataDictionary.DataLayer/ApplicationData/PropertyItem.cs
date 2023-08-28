@@ -18,7 +18,9 @@ namespace DataDictionary.DataLayer.ApplicationData
     {
         public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }
         public String? PropertyTitle { get { return GetValue("PropertyTitle"); } set { SetValue("PropertyTitle", value); } }
+        public String? PropertyDescription { get { return GetValue("PropertyDescription"); } set { SetValue("PropertyDescription", value); } }
         public String? PropertyName { get { return GetValue("PropertyName"); } set { SetValue("PropertyName", value); } }
+        public Nullable<Boolean> Obsolete { get { return GetValue<Boolean>("Obsolete", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("Obsolete", value); } }
 
         public PropertyItem() : base()
         { PropertyId = Guid.NewGuid(); }
@@ -27,7 +29,10 @@ namespace DataDictionary.DataLayer.ApplicationData
         {
             new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("PropertyTitle", typeof(String)){ AllowDBNull = false},
+            new DataColumn("PropertyDescription", typeof(String)){ AllowDBNull = true},
             new DataColumn("PropertyName", typeof(String)){ AllowDBNull = true},
+            new DataColumn("Obsolete", typeof(Boolean)){ AllowDBNull = false},
+            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -48,6 +53,14 @@ namespace DataDictionary.DataLayer.ApplicationData
             return command;
         }
 
+        public static Command SetData(IConnection connection, IBindingTable<PropertyItem> source)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procSetApplicationProperty]";
+            command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationProperty]", source);
+            return command;
+        }
 
     }
 }

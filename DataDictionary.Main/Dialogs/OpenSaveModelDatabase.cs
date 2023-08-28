@@ -13,7 +13,6 @@ using Toolbox.BindingTable;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.Main.Messages;
 using System.Windows.Forms.VisualStyles;
-using DataDictionary.Main.Forms;
 using System.Reflection;
 using Toolbox.Mediator;
 using Toolbox.Threading;

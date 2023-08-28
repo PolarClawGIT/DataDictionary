@@ -9,6 +9,7 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.ApplicationData
 {
+    [Obsolete("So far, not needed")]
     public interface IPropertyScopeItem : IPropertyKey
     {
         String? ScopeType { get; }
@@ -16,6 +17,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         String? ElementType { get; }
     }
 
+    [Obsolete("So far, not needed")]
     public class PropertyScopeItem : BindingTableRow, IPropertyScopeItem
     {
         public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }

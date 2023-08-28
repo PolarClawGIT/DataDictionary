@@ -3,7 +3,6 @@ using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.DbMetaData;
 using DataDictionary.DataLayer.DomainData;
-using DataDictionary.Main.Forms;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
@@ -53,17 +52,20 @@ namespace DataDictionary.Main
         #region Form
         private void Main_Load(object sender, EventArgs e)
         {
-            if (Settings.Default.IsOnLineMode)
-            { onLineModetoolStripMenuItem.CheckState = CheckState.Checked; }
-            else { onLineModetoolStripMenuItem.CheckState = CheckState.Unchecked; }
 
             Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
-            Program.Messenger.AddColleague(this);
-            BindData();
+            //Program.Messenger.AddColleague(this);
 
             // TODO: Cannot get the Context menus to show. For now, add them to the Tools menu
             dbSchemaToolStripMenuItem.DropDownItems.AddRange(dbSchemaContextMenu.Items);
             domainModelToolStripMenuItem.DropDownItems.AddRange(domainModelMenu.Items);
+
+            if (Settings.Default.IsOnLineMode)
+            { this.DoWork(Program.Data.LoadApplicationData(), OnComplete); }
+            else { this.DoWork(Program.Data.LoadApplicationData(new FileInfo(Settings.Default.AppDataFile)), OnComplete); }
+
+            void OnComplete(RunWorkerCompletedEventArgs args)
+            { BindData(); } // Nothing to do at this point
         }
 
         void BindData()
@@ -95,8 +97,6 @@ namespace DataDictionary.Main
         #endregion
 
         #region Menu Events
-
-
         private void menuCatalogItem_Click(object sender, EventArgs e)
         { Activate(() => new Forms.DbCatalog()); }
 
@@ -126,49 +126,26 @@ namespace DataDictionary.Main
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)
         {
             if (ActiveMdiChild is Form currentForm &&
-                Activate(() => new Forms.HelpSubject()) is Forms.HelpSubject helpForm)
+                Activate(() => new Dialogs.HelpSubject()) is Dialogs.HelpSubject helpForm)
             { helpForm.NavigateTo(currentForm); }
         }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.HelpSubject()); }
+        { Activate(() => new Dialogs.HelpSubject()); }
 
         private void HelpAboutMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.HelpSubject("About")); }
+        { Activate(() => new Dialogs.HelpSubject("About")); }
 
 
         private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             if (ActiveMdiChild is Form currentForm &&
-                Activate(() => new Forms.HelpSubject()) is Forms.HelpSubject helpForm)
+                Activate(() => new Dialogs.HelpSubject()) is Dialogs.HelpSubject helpForm)
             { helpForm.NavigateTo(currentForm); }
         }
 
-
         private void openSaveModelDatabaseMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.OpenSaveModelDatabase()); }
-
-        private void onLineModetoolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            if (onLineModetoolStripMenuItem.Checked)
-            { this.DoWork(Program.Data.LoadApplicationData(), OnComplete); }
-            else
-            {
-                List<WorkItem> work = new List<WorkItem>();
-                if (Settings.Default.IsOnLineMode)
-                { work.AddRange(Program.Data.SaveApplicationData(new FileInfo(Settings.Default.AppDataFile))); }
-
-                work.AddRange(Program.Data.LoadApplicationData(new FileInfo(Settings.Default.AppDataFile)));
-
-                this.DoWork(work, OnComplete);
-            }
-
-            Settings.Default.IsOnLineMode = onLineModetoolStripMenuItem.Checked;
-            Settings.Default.Save();
-
-            void OnComplete(RunWorkerCompletedEventArgs args)
-            { } // Nothing to do at this point
-        }
 
         private void menuAttributeProperties_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.DomainProperty), Program.Data.DomainAttributeProperties); }
@@ -185,7 +162,6 @@ namespace DataDictionary.Main
         private void menuDataTypeItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.DbDomainType), Program.Data.DbDomains); }
 
-
         private void menuRoutineItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.DbProcedure), Program.Data.DbRoutines); }
 
@@ -194,6 +170,9 @@ namespace DataDictionary.Main
 
         private void menuRoutineDependencyItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.DbDependancy), Program.Data.DbRoutineDependencies); }
+
+        private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.ApplicationProperty()); }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -236,9 +215,10 @@ namespace DataDictionary.Main
         }
 
         private void extendedPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Activate(() => new Dialogs.ViewTextTemplate());
-        }
+        { Activate(() => new Dialogs.ViewTextTemplate()); }
+
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        { Activate(() => new Dialogs.ApplicationOptions()); }
         #endregion
 
         #region dbMetaDataNavigation
@@ -476,7 +456,6 @@ namespace DataDictionary.Main
 
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
         { new Forms.UnitTestGridView().Show(); }
-
 
     }
 }
