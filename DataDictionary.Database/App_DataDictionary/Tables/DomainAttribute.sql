@@ -4,8 +4,8 @@
 	-- An ER diagram attribute is is associated with a Column or Parameter.
 	-- For this tool, the focus is on the Attribute not the Domain or the Entity.
 	[AttributeId] UniqueIdentifier Not Null CONSTRAINT [DF_DomainAttributeAttributeId] DEFAULT (newid()),
-	[AttributeTitle] NVarChar(100) Not Null,
-	[AttributeDescription] NVarChar(Max) Null,
+	[AttributeTitle] [App_DataDictionary].[typeTitle] Not Null,
+	[AttributeDescription] [App_DataDictionary].[typeDescription] Null,
 	[Obsolete] As (CONVERT([bit],case when [ObsoleteDate] IS NULL then (0) else (1) end)),
 	-- TODO: Add System Version later once the schema is locked down
 	[ObsoleteDate] DATETIME2 Null, -- Used to flag an item as a candidate for being deleted. Null = active, anything else is Obsolete.

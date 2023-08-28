@@ -66,6 +66,7 @@
     <Folder Include="dbo\Sequence" />
     <Folder Include="App_DataDictionary\User Defined Types\" />
     <Folder Include="App_DataDictionary\Unit Test scripts" />
+    <Folder Include="dbo\Views" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DataDictionary.Database.publish.xml" />
@@ -168,6 +169,12 @@
     <Build Include="App_DataDictionary\Tables\ModelProperty.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseCatalogObject.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procDeleteDatabaseCatalogObject.sql" />
+    <Build Include="App_DataDictionary\Tables\ApplicationDefinition.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeTitle.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDescription.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainAttributeDefinition.sql" />
+    <Build Include="dbo\Views\SampleView.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainEntityDefinition.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

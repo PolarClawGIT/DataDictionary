@@ -6,8 +6,8 @@
 	-- To be implemented later.
 	[EntityId] UniqueIdentifier Not Null CONSTRAINT [DF_DomainEntityEntityId] DEFAULT (newid()),
 	[EntityParentId] UniqueIdentifier Null,
-	[EntityTitle] NVarChar(100) Not Null,
-	[EntityDescription] NVarChar(Max) Null,
+	[EntityTitle] [App_DataDictionary].[typeTitle] Not Null,
+	[EntityDescription] [App_DataDictionary].[typeDescription] Null,
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DomainEntity_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DomainEntity_SysStart] DEFAULT (sysdatetime()),

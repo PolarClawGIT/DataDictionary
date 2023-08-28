@@ -3,6 +3,6 @@
     [AttributeId]          UNIQUEIDENTIFIER NULL,
     [AttributeParentId]    UNIQUEIDENTIFIER NULL,
     [AttributeTitle]       NVARCHAR (100)   NULL,
-    [AttributeDescription] NVARCHAR (MAX)   NULL,
+    [AttributeDescription] NVARCHAR (1000)  NULL,
     [Obsolete]             BIT              NULL,
     [SysStart]             DATETIME2 (7)    NULL);

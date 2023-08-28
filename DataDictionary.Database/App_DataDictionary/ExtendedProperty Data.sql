@@ -6,7 +6,13 @@ Declare @Property Table (
 	[PropertyId] UniqueIdentifier Not Null,
 	[PropertyName] SysName Not Null,
 	[PropertyTitle] NVarChar(100) Not Null)
-Insert into @Property Values ('00000000-0000-0000-0000-000000000001','MS_Description','Description');
+Insert into @Property Values ('00000000-0000-0000-0001-000000000001','MS_Description','Description');
+
+Declare @Definition Table (
+	[DefinitionId] UniqueIdentifier Not Null,
+	[DefinitionTitle] NVarChar(100))
+Insert Into @Definition Values ('00000000-0000-0000-0002-000000000001','Business Definition')
+Insert Into @Definition Values ('00000000-0000-0000-0002-000000000002','Technical Definition')
 
 Merge [App_DataDictionary].[ApplicationProperty] T
 Using @Property S
@@ -18,6 +24,14 @@ When Not Matched by Target Then
 	Insert ([PropertyId], [PropertyTitle], [PropertyName])
 	Values ([PropertyId], [PropertyTitle], [PropertyName]);
 	
+Merge [App_DataDictionary].[ApplicationDefinition] T
+Using @Definition S
+On	T.[DefinitionId] = S.[DefinitionId]
+When Matched Then Update Set
+	[DefinitionTitle] = S.[DefinitionTitle]
+When Not Matched by Target Then
+	Insert ([DefinitionId], [DefinitionTitle])
+	Values ([DefinitionId], [DefinitionTitle]);
 
 -- This script is used to build and maintain the data in the DomainObjectType list.
 -- This list is intended to support the different things MS SQL extended properties can be placed upon
@@ -128,6 +142,9 @@ From	[App_DataDictionary].[ApplicationProperty]
 
 Select	*
 From	[App_DataDictionary].[ApplicationPropertyScope]
+
+Select	*
+From	[App_DataDictionary].[ApplicationDefinition]
 
 	-- By default, throw and error and exit without committing
 ;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;

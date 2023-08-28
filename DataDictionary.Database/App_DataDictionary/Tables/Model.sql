@@ -2,8 +2,8 @@
 (
 	-- This is equivalent to a file within the file systems. Instead of saving to the file system, the data is saved to the database.
 	[ModelId] UniqueIdentifier NOT NULL CONSTRAINT [DF_ApplicationModelModelId] DEFAULT (newid()),
-	[ModelTitle] NVarChar(100) Not Null,
-	[ModelDescription] NVarChar(1000) Null,
+	[ModelTitle] [App_DataDictionary].[typeTitle] Not Null,
+	[ModelDescription] [App_DataDictionary].[typeDescription] Null,
 	[Obsolete] As (CONVERT([bit],case when [ObsoleteDate] IS NULL then (0) else (1) end)),
 	-- TODO: Add System Version later once the schema is locked down
 	[ObsoleteDate] DATETIME2 Null, -- Used to flag an item as a candidate for being deleted. Null = active, anything else is Obsolete.

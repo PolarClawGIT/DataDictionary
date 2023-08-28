@@ -2,11 +2,11 @@
 (
 	-- Works as a lookup to create/define an Extended Property.
 	[PropertyId]         UniqueIdentifier NOT NULL CONSTRAINT [DF_ApplicationPropertyPropertyId] DEFAULT (newid()),
-	[PropertyTitle]      NVarChar(100) Not Null, -- Title of the Property as it appears in the application. This may contain the Property Name but must be unique for each type of Extended Property it applies to.
+	[PropertyTitle]      [App_DataDictionary].[typeTitle] Not Null, -- Title of the Property as it appears in the application. This may contain the Property Name but must be unique for each type of Extended Property it applies to.
 	[PropertyName]       SysName Null, -- Name for the Extended property. Most interested in: MS_Description
- 	-- It is not intended to delete things belonging to the Null model. But they can be marked Obsolete.
+ 	-- It is not intended to delete things belonging to the model. But they can be marked Obsolete.
 	[Obsolete] As (CONVERT([bit],case when [ObsoleteDate] IS NULL then (0) else (1) end)),
-	[ObsoleteDate]       DATETIME2 Null, -- Used to flag an item as a candidate for being deleted. Null = active, anything else is Obsolete.
+	[ObsoleteDate]       DATETIME2 Null, -- Used to flag an item as an Obsolete item (should not be used). Null = active, anything else is Obsolete.
 	-- Keys
 	CONSTRAINT [PK_ApplicationProperty] PRIMARY KEY CLUSTERED ([PropertyId] ASC),
 )
