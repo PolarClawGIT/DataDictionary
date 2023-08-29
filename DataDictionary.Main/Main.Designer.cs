@@ -91,6 +91,9 @@
             toolsToolStripMenuItem = new ToolStripMenuItem();
             customizeToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
+            applicationToolStripMenuItem = new ToolStripMenuItem();
+            propertiesToolStripMenuItem = new ToolStripMenuItem();
+            definitionsToolStripMenuItem = new ToolStripMenuItem();
             dbSchemaToolStripMenuItem = new ToolStripMenuItem();
             domainModelToolStripMenuItem = new ToolStripMenuItem();
             unitTestingToolStripMenuItem = new ToolStripMenuItem();
@@ -101,9 +104,6 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
-            applicationToolStripMenuItem = new ToolStripMenuItem();
-            propertiesToolStripMenuItem = new ToolStripMenuItem();
-            definitionsToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
@@ -634,6 +634,29 @@
             optionsToolStripMenuItem.Text = "&Options";
             optionsToolStripMenuItem.Click += optionsToolStripMenuItem_Click;
             // 
+            // applicationToolStripMenuItem
+            // 
+            applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { propertiesToolStripMenuItem, definitionsToolStripMenuItem });
+            applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
+            applicationToolStripMenuItem.Size = new Size(180, 22);
+            applicationToolStripMenuItem.Text = "Application";
+            // 
+            // propertiesToolStripMenuItem
+            // 
+            propertiesToolStripMenuItem.Image = Properties.Resources.Property;
+            propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
+            propertiesToolStripMenuItem.Size = new Size(180, 22);
+            propertiesToolStripMenuItem.Text = "Properties";
+            propertiesToolStripMenuItem.Click += propertiesToolStripMenuItem_Click;
+            // 
+            // definitionsToolStripMenuItem
+            // 
+            definitionsToolStripMenuItem.Image = Properties.Resources.TextFile;
+            definitionsToolStripMenuItem.Name = "definitionsToolStripMenuItem";
+            definitionsToolStripMenuItem.Size = new Size(180, 22);
+            definitionsToolStripMenuItem.Text = "Definitions";
+            definitionsToolStripMenuItem.Click += definitionsToolStripMenuItem_Click;
+            // 
             // dbSchemaToolStripMenuItem
             // 
             dbSchemaToolStripMenuItem.Image = Properties.Resources.Database;
@@ -702,28 +725,6 @@
             helpAboutMenuItem.Size = new Size(122, 22);
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
-            // 
-            // applicationToolStripMenuItem
-            // 
-            applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { propertiesToolStripMenuItem, definitionsToolStripMenuItem });
-            applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
-            applicationToolStripMenuItem.Size = new Size(180, 22);
-            applicationToolStripMenuItem.Text = "Application";
-            // 
-            // propertiesToolStripMenuItem
-            // 
-            propertiesToolStripMenuItem.Image = Properties.Resources.ExtendedProperty;
-            propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
-            propertiesToolStripMenuItem.Size = new Size(180, 22);
-            propertiesToolStripMenuItem.Text = "Properties";
-            propertiesToolStripMenuItem.Click += propertiesToolStripMenuItem_Click;
-            // 
-            // definitionsToolStripMenuItem
-            // 
-            definitionsToolStripMenuItem.Enabled = false;
-            definitionsToolStripMenuItem.Name = "definitionsToolStripMenuItem";
-            definitionsToolStripMenuItem.Size = new Size(180, 22);
-            definitionsToolStripMenuItem.Text = "Definitions";
             // 
             // Main
             // 

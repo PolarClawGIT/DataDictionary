@@ -176,6 +176,9 @@
     <Build Include="dbo\Views\SampleView.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntityDefinition.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationProperty.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeApplicationDefinition.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationDefinition.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationDefinition.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

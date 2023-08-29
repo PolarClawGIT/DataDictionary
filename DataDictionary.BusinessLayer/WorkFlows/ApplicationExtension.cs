@@ -46,13 +46,12 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Target = data.Properties
             });
 
-            /*
             workItems.Add(new ExecuteReader(openConnection)
             {
-                WorkName = "Load Property Scopes",
-                Command = PropertyScopeItem.GetData,
-                Target = data.PropertyScopes
-            });*/
+                WorkName = "Load Definitions",
+                Command = DefinitionItem.GetData,
+                Target = data.Definitions
+            });
 
             return workItems;
         }
@@ -69,23 +68,22 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Command = (conn) => HelpItem.SetData(conn, data.HelpSubjects)
             });
 
-            
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
-                WorkName = "Save Property Definition",
+                WorkName = "Save Properties",
                 Command = (conn) => PropertyItem.SetData(conn, data.Properties)
             });
 
-            /*
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
-                WorkName = "Save Description Definition",
-                Command = (conn) => HelpItem.SetData(conn, data.HelpSubjects)
-            });*/
+                WorkName = "Save Definitions",
+                Command = (conn) => DefinitionItem.SetData(conn, data.Definitions)
+            });
 
             return workItems;
         }
 
+        [Obsolete()]
         public static IReadOnlyList<WorkItem> SaveHelp(this ModelData data)
         {
             List<WorkItem> workItems = new List<WorkItem>();
@@ -129,7 +127,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 {
                     workSet.Tables.Add(data.HelpSubjects.ToDataTable());
                     workSet.Tables.Add(data.Properties.ToDataTable());
-                    //workSet.Tables.Add(data.PropertyScopes.ToDataTable());
+                    workSet.Tables.Add(data.Definitions.ToDataTable());
 
                     workSet.WriteXml(file.FullName, XmlWriteMode.WriteSchema);
                 }
@@ -164,13 +162,14 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                         data.Properties.Clear();
                         data.Properties.Load(propertiesData.CreateDataReader());
                     }
-                    /*
-                    if (workSet.Tables.Contains(data.PropertyScopes.BindingName) &&
-                        workSet.Tables[data.PropertyScopes.BindingName] is DataTable propertyScopesData)
+
+                    if (workSet.Tables.Contains(data.Definitions.BindingName) &&
+                        workSet.Tables[data.Definitions.BindingName] is DataTable definitionsData)
                     {
-                        data.PropertyScopes.Clear();
-                        data.PropertyScopes.Load(propertyScopesData.CreateDataReader());
-                    }*/
+                        data.Definitions.Clear();
+                        data.Properties.Load(definitionsData.CreateDataReader());
+                    }
+
                 }
             }
         }

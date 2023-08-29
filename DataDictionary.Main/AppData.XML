@@ -22,18 +22,21 @@
               <xs:sequence>
                 <xs:element name="PropertyId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" />
                 <xs:element name="PropertyTitle" type="xs:string" />
-                <xs:element name="ModelId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" minOccurs="0" />
+                <xs:element name="PropertyDescription" type="xs:string" minOccurs="0" />
                 <xs:element name="PropertyName" type="xs:string" minOccurs="0" />
+                <xs:element name="Obsolete" type="xs:boolean" />
+                <xs:element name="SysStart" type="xs:dateTime" minOccurs="0" />
               </xs:sequence>
             </xs:complexType>
           </xs:element>
-          <xs:element name="PropertyScopeItem">
+          <xs:element name="DefinitionItem">
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="PropertyId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" />
-                <xs:element name="ScopeType" type="xs:string" minOccurs="0" />
-                <xs:element name="ObjectType" type="xs:string" minOccurs="0" />
-                <xs:element name="ElementType" type="xs:string" minOccurs="0" />
+                <xs:element name="DefinitionId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" />
+                <xs:element name="DefinitionTitle" type="xs:string" />
+                <xs:element name="DefinitionDescription" type="xs:string" minOccurs="0" />
+                <xs:element name="Obsolete" type="xs:boolean" />
+                <xs:element name="SysStart" type="xs:dateTime" minOccurs="0" />
               </xs:sequence>
             </xs:complexType>
           </xs:element>
@@ -62,55 +65,25 @@ This tool is intended to fill the gap. Something easy enough for Business to use
     <SysStart>2023-07-24T19:29:41.3331908-07:00</SysStart>
   </HelpItem>
   <PropertyItem>
-    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
+    <PropertyId>00000000-0000-0000-0001-000000000001</PropertyId>
     <PropertyTitle>Description</PropertyTitle>
+    <PropertyDescription>Commonly used by Microsoft tools to store the user defined Description of the element.</PropertyDescription>
+    <PropertyName>MS_Description</PropertyName>
+    <Obsolete>false</Obsolete>
+    <SysStart>2023-08-28T11:24:53.4547449-07:00</SysStart>
   </PropertyItem>
-  <PropertyScopeItem>
-    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
-    <ScopeType>SCHEMA</ScopeType>
-  </PropertyScopeItem>
-  <PropertyScopeItem>
-    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
-    <ScopeType>SCHEMA</ScopeType>
-    <ObjectType>FUNCTION</ObjectType>
-  </PropertyScopeItem>
-  <PropertyScopeItem>
-    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
-    <ScopeType>SCHEMA</ScopeType>
-    <ObjectType>FUNCTION</ObjectType>
-    <ElementType>PARAMETER</ElementType>
-  </PropertyScopeItem>
-  <PropertyScopeItem>
-    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
-    <ScopeType>SCHEMA</ScopeType>
-    <ObjectType>PROCEDURE</ObjectType>
-  </PropertyScopeItem>
-  <PropertyScopeItem>
-    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
-    <ScopeType>SCHEMA</ScopeType>
-    <ObjectType>PROCEDURE</ObjectType>
-    <ElementType>PARAMETER</ElementType>
-  </PropertyScopeItem>
-  <PropertyScopeItem>
-    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
-    <ScopeType>SCHEMA</ScopeType>
-    <ObjectType>TABLE</ObjectType>
-  </PropertyScopeItem>
-  <PropertyScopeItem>
-    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
-    <ScopeType>SCHEMA</ScopeType>
-    <ObjectType>TABLE</ObjectType>
-    <ElementType>COLUMN</ElementType>
-  </PropertyScopeItem>
-  <PropertyScopeItem>
-    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
-    <ScopeType>SCHEMA</ScopeType>
-    <ObjectType>VIEW</ObjectType>
-  </PropertyScopeItem>
-  <PropertyScopeItem>
-    <PropertyId>00000000-0000-0000-0000-000000000001</PropertyId>
-    <ScopeType>SCHEMA</ScopeType>
-    <ObjectType>VIEW</ObjectType>
-    <ElementType>COLUMN</ElementType>
-  </PropertyScopeItem>
+  <DefinitionItem>
+    <DefinitionId>00000000-0000-0000-0002-000000000001</DefinitionId>
+    <DefinitionTitle>Business Definition</DefinitionTitle>
+    <DefinitionDescription>Definition of the item in Business Terms</DefinitionDescription>
+    <Obsolete>false</Obsolete>
+    <SysStart>2023-08-28T17:09:13.501635-07:00</SysStart>
+  </DefinitionItem>
+  <DefinitionItem>
+    <DefinitionId>00000000-0000-0000-0002-000000000002</DefinitionId>
+    <DefinitionTitle>Technical Definition</DefinitionTitle>
+    <DefinitionDescription>Definition of the item in Technical Terms</DefinitionDescription>
+    <Obsolete>false</Obsolete>
+    <SysStart>2023-08-28T17:09:13.501635-07:00</SysStart>
+  </DefinitionItem>
 </NewDataSet>

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,7 +19,10 @@ namespace DataDictionary.Main.Forms
         PropertyItem? property;
 
         public ApplicationProperty() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+            this.Icon = Resources.DomainProperty;
+        }
 
         private void ApplicationProperty_Load(object sender, EventArgs e)
         {
