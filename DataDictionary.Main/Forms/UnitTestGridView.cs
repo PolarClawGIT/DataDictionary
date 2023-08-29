@@ -11,7 +11,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class UnitTestGridView : ApplicationFormBase
+    partial class UnitTestGridView : ApplicationBase
     {
         interface IUnitTestItem
         {

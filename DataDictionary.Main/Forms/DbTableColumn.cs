@@ -6,7 +6,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbTableColumn : ApplicationFormBase, IApplicationDataForm
+    partial class DbTableColumn : ApplicationBase, IApplicationDataForm
     {
         class FormData
         {

@@ -15,7 +15,7 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Dialogs
 {
-    partial class HelpSubject : ApplicationFormBase
+    partial class HelpSubject : ApplicationBase
     {
         class FormData
         {
@@ -30,6 +30,7 @@ namespace DataDictionary.Main.Dialogs
         {
             InitializeComponent();
             this.Icon = Resources.HelpTableOfContent;
+            helpToolStripButton.Enabled = false;
 
             // Setup Images for Tree Control
             SetImages(helpContentNavigation, helpContentImageItems.Values);

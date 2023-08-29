@@ -1,7 +1,13 @@
 ﻿using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.BindingTable;
 using Toolbox.Mediator;
@@ -14,12 +20,11 @@ namespace DataDictionary.Main
         public object? OpenItem { get; }
     }
 
-    class ApplicationFormBase : Form, IColleague
+    partial class ApplicationBase : Form, IColleague
     {
-        public ApplicationFormBase() : base()
+        public ApplicationBase() : base()
         {
-            Program.Messenger.AddColleague(this);
-            SendMessage(new FormAddMdiChild() { ChildForm = this });
+            InitializeComponent();
         }
 
         #region Open Form
@@ -30,7 +35,7 @@ namespace DataDictionary.Main
         /// <param name="constructor"></param>
         /// <returns></returns>
         protected virtual TForm Activate<TForm>(Func<TForm> constructor)
-            where TForm : ApplicationFormBase
+            where TForm : ApplicationBase
         {
             Form parent = MdiParent ?? this;
 
@@ -42,6 +47,7 @@ namespace DataDictionary.Main
             else
             {
                 TForm newForm = constructor();
+                newForm.MdiParent = parent;
                 newForm.Show();
                 return newForm;
             }
@@ -56,7 +62,7 @@ namespace DataDictionary.Main
         /// <param name="data"></param>
         /// <returns></returns>
         protected virtual TForm Activate<TForm>(Func<IBindingTable, TForm> constructor, IBindingTable data)
-            where TForm : ApplicationFormBase
+            where TForm : ApplicationBase
         {
             Form parent = MdiParent ?? this;
 
@@ -67,6 +73,7 @@ namespace DataDictionary.Main
                 else
                 {
                     TForm newForm = constructor(data);
+                    newForm.MdiParent = parent;
                     newForm.Show();
                     return newForm;
                 }
@@ -90,7 +97,7 @@ namespace DataDictionary.Main
         /// <param name="data"></param>
         /// <returns></returns>
         protected virtual TForm Activate<TForm>(Func<IBindingTableRow, TForm> constructor, IBindingTableRow data)
-            where TForm : ApplicationFormBase
+            where TForm : ApplicationBase
         {
             Form parent = MdiParent ?? this;
 
@@ -323,6 +330,31 @@ namespace DataDictionary.Main
         }
 
         #endregion
+
+        private void ApplicationBase_ControlAdded(object sender, ControlEventArgs e)
+        {
+            // Adjust the padding on child forms to allow for the shared tool strip
+            // This only effects controls added to the base form.
+            // It is expected that all child forms will have a single TablePanelControl as a base control.
+            // Child controls of the expected base control do not fire this event.
+            if (e.Control is not null &&
+                e.Control.Parent is ApplicationBase && // Top level controls only
+                toolStrip.Visible && // Caution, changing visibility dynamically could results in incorrect layout.
+                e.Control != toolStrip) // ignore the control being accounted for
+            {
+                e.Control.Padding = new Padding(
+                e.Control.Padding.Left,
+                toolStrip.Height + e.Control.Padding.Top,
+                e.Control.Padding.Right,
+                e.Control.Padding.Bottom);
+            }
+        }
+
+        private void helpToolStripButton_Click(object sender, EventArgs e)
+        {
+            Dialogs.HelpSubject x = Activate(() => new Dialogs.HelpSubject());
+            { x.NavigateTo(this); }
+        }
     }
 
     static class ApplicationFormExtension

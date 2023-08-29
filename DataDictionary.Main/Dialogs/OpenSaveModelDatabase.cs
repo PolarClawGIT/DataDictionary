@@ -19,7 +19,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Dialogs
 {
-    partial class OpenSaveModelDatabase : ApplicationFormBase
+    partial class OpenSaveModelDatabase : ApplicationBase
     {
         ModelKey currentKey = new ModelKey(Program.Data.Model);
 

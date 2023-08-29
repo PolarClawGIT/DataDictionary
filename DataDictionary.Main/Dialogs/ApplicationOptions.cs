@@ -12,7 +12,7 @@ using DataDictionary.Main.Properties;
 
 namespace DataDictionary.Main.Dialogs
 {
-    partial class ApplicationOptions : ApplicationFormBase
+    partial class ApplicationOptions : ApplicationBase
     {
         public ApplicationOptions() : base()
         {

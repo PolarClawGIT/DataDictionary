@@ -13,7 +13,7 @@ using System.Windows.Forms;
 namespace DataDictionary.Main.Forms
 {
 
-    partial class ApplicationProperty : ApplicationFormBase
+    partial class ApplicationProperty : ApplicationBase
     {
         PropertyKey? propertyKey;
         PropertyItem? property;

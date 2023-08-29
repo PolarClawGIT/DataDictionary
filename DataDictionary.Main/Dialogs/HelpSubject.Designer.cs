@@ -31,25 +31,18 @@
             components = new System.ComponentModel.Container();
             SplitContainer helpSplitLayout;
             TableLayoutPanel helpDetailLayout;
-            ToolStrip helpSubjectToolStrip;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HelpSubject));
             helpContentNavigation = new TreeView();
-            newToolStripButton = new ToolStripButton();
-            saveToolStripButton = new ToolStripButton();
-            printToolStripButton = new ToolStripButton();
             helpSubjectData = new Controls.TextBoxData();
             helpNameSpaceData = new Controls.TextBoxData();
             helpTextData = new Controls.RichTextBoxData();
             errorProvider = new ErrorProvider(components);
             helpSplitLayout = new SplitContainer();
             helpDetailLayout = new TableLayoutPanel();
-            helpSubjectToolStrip = new ToolStrip();
             ((System.ComponentModel.ISupportInitialize)helpSplitLayout).BeginInit();
             helpSplitLayout.Panel1.SuspendLayout();
             helpSplitLayout.Panel2.SuspendLayout();
             helpSplitLayout.SuspendLayout();
             helpDetailLayout.SuspendLayout();
-            helpSubjectToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
@@ -84,7 +77,6 @@
             // 
             helpDetailLayout.ColumnCount = 1;
             helpDetailLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            helpDetailLayout.Controls.Add(helpSubjectToolStrip, 0, 0);
             helpDetailLayout.Controls.Add(helpSubjectData, 0, 1);
             helpDetailLayout.Controls.Add(helpNameSpaceData, 0, 2);
             helpDetailLayout.Controls.Add(helpTextData, 0, 3);
@@ -99,51 +91,12 @@
             helpDetailLayout.Size = new Size(577, 594);
             helpDetailLayout.TabIndex = 0;
             // 
-            // helpSubjectToolStrip
-            // 
-            helpSubjectToolStrip.Items.AddRange(new ToolStripItem[] { newToolStripButton, saveToolStripButton, printToolStripButton });
-            helpSubjectToolStrip.Location = new Point(0, 0);
-            helpSubjectToolStrip.Name = "helpSubjectToolStrip";
-            helpSubjectToolStrip.Size = new Size(577, 25);
-            helpSubjectToolStrip.TabIndex = 1;
-            helpSubjectToolStrip.Text = "toolStrip1";
-            // 
-            // newToolStripButton
-            // 
-            newToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            newToolStripButton.Image = (Image)resources.GetObject("newToolStripButton.Image");
-            newToolStripButton.ImageTransparentColor = Color.Magenta;
-            newToolStripButton.Name = "newToolStripButton";
-            newToolStripButton.Size = new Size(23, 22);
-            newToolStripButton.Text = "&New";
-            newToolStripButton.Click += newToolStripButton_Click;
-            // 
-            // saveToolStripButton
-            // 
-            saveToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            saveToolStripButton.Image = (Image)resources.GetObject("saveToolStripButton.Image");
-            saveToolStripButton.ImageTransparentColor = Color.Magenta;
-            saveToolStripButton.Name = "saveToolStripButton";
-            saveToolStripButton.Size = new Size(23, 22);
-            saveToolStripButton.Text = "&Save";
-            saveToolStripButton.Click += saveToolStripButton_Click;
-            // 
-            // printToolStripButton
-            // 
-            printToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            printToolStripButton.Enabled = false;
-            printToolStripButton.Image = (Image)resources.GetObject("printToolStripButton.Image");
-            printToolStripButton.ImageTransparentColor = Color.Magenta;
-            printToolStripButton.Name = "printToolStripButton";
-            printToolStripButton.Size = new Size(23, 22);
-            printToolStripButton.Text = "&Print";
-            // 
             // helpSubjectData
             // 
             helpSubjectData.AutoSize = true;
             helpSubjectData.Dock = DockStyle.Fill;
             helpSubjectData.HeaderText = "Subject";
-            helpSubjectData.Location = new Point(3, 28);
+            helpSubjectData.Location = new Point(3, 3);
             helpSubjectData.Multiline = false;
             helpSubjectData.Name = "helpSubjectData";
             helpSubjectData.ReadOnly = false;
@@ -157,7 +110,7 @@
             helpNameSpaceData.AutoSize = true;
             helpNameSpaceData.Dock = DockStyle.Fill;
             helpNameSpaceData.HeaderText = "Name Space";
-            helpNameSpaceData.Location = new Point(3, 78);
+            helpNameSpaceData.Location = new Point(3, 53);
             helpNameSpaceData.Multiline = false;
             helpNameSpaceData.Name = "helpNameSpaceData";
             helpNameSpaceData.ReadOnly = true;
@@ -169,11 +122,11 @@
             helpTextData.AutoSize = true;
             helpTextData.Dock = DockStyle.Fill;
             helpTextData.HeaderText = "Text";
-            helpTextData.Location = new Point(3, 128);
+            helpTextData.Location = new Point(3, 103);
             helpTextData.Name = "helpTextData";
             helpTextData.ReadOnly = false;
             helpTextData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
-            helpTextData.Size = new Size(571, 463);
+            helpTextData.Size = new Size(571, 488);
             helpTextData.TabIndex = 2;
             helpTextData.Validated += helpTextData_Validated;
             helpTextData.Validating += helpTextData_Validating;
@@ -192,16 +145,16 @@
             Text = "Help Subject";
             FormClosing += HelpSubject_FormClosing;
             Load += HelpSubject_Load;
+            Controls.SetChildIndex(helpSplitLayout, 0);
             helpSplitLayout.Panel1.ResumeLayout(false);
             helpSplitLayout.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)helpSplitLayout).EndInit();
             helpSplitLayout.ResumeLayout(false);
             helpDetailLayout.ResumeLayout(false);
             helpDetailLayout.PerformLayout();
-            helpSubjectToolStrip.ResumeLayout(false);
-            helpSubjectToolStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -210,9 +163,6 @@
         private Controls.TextBoxData helpNameSpaceData;
         private Controls.RichTextBoxData helpTextData;
         private Controls.TextBoxData helpSubjectData;
-        private ToolStripButton newToolStripButton;
-        private ToolStripButton saveToolStripButton;
-        private ToolStripButton printToolStripButton;
         private ErrorProvider errorProvider;
     }
 }

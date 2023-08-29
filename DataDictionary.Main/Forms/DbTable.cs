@@ -15,7 +15,7 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbTable : ApplicationFormBase, IApplicationDataForm
+    partial class DbTable : ApplicationBase, IApplicationDataForm
     {
         class FormData
         {

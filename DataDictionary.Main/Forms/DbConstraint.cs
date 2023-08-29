@@ -14,7 +14,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbConstraint : ApplicationFormBase, IApplicationDataForm
+    partial class DbConstraint : ApplicationBase, IApplicationDataForm
     {
 
         class FormData

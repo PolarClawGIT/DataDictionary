@@ -11,7 +11,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbCatalog : ApplicationFormBase
+    partial class DbCatalog : ApplicationBase
     {
         class FormData : INotifyPropertyChanged
         {

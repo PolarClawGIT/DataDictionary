@@ -14,7 +14,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DetailDataView : ApplicationFormBase, IApplicationDataForm
+    partial class DetailDataView : ApplicationBase, IApplicationDataForm
     {
         public Object? OpenItem { get; private set; }
         IBindingTable? bindingTableSource

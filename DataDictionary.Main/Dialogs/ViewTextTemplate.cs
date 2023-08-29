@@ -13,7 +13,7 @@ using DataDictionary.DataLayer.DbMetaData;
 
 namespace DataDictionary.Main.Dialogs
 {
-    partial class ViewTextTemplate : ApplicationFormBase
+    partial class ViewTextTemplate : ApplicationBase
     {
         class FormData
         {

@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DomainProperty : ApplicationFormBase
+    partial class DomainProperty : ApplicationBase
     {
         class FormData
         {

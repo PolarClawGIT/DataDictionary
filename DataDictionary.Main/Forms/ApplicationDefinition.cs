@@ -13,7 +13,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class ApplicationDefinition : ApplicationFormBase
+    partial class ApplicationDefinition : ApplicationBase
     {
         DefinitionKey? definitionKey;
         DefinitionItem? definition;

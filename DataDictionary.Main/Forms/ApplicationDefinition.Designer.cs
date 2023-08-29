@@ -33,8 +33,8 @@
             definitionNavigation = new DataGridView();
             definitionTitleColumn = new DataGridViewTextBoxColumn();
             definitionDescriptionColumn = new DataGridViewTextBoxColumn();
-            definitionTitleData = new Controls.TextBoxData();
             definitionDescriptionData = new Controls.TextBoxData();
+            definitionTitleData = new Controls.TextBoxData();
             obsoleteData = new CheckBox();
             applicationDefinitionLayout = new TableLayoutPanel();
             definitionTitleLayout = new TableLayoutPanel();
@@ -51,13 +51,13 @@
             applicationDefinitionLayout.Controls.Add(definitionDescriptionData, 0, 2);
             applicationDefinitionLayout.Controls.Add(definitionTitleLayout, 0, 1);
             applicationDefinitionLayout.Dock = DockStyle.Fill;
-            applicationDefinitionLayout.Location = new Point(0, 0);
+            applicationDefinitionLayout.Location = new Point(0, 25);
             applicationDefinitionLayout.Name = "applicationDefinitionLayout";
             applicationDefinitionLayout.RowCount = 3;
             applicationDefinitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 75F));
             applicationDefinitionLayout.RowStyles.Add(new RowStyle());
             applicationDefinitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            applicationDefinitionLayout.Size = new Size(391, 355);
+            applicationDefinitionLayout.Size = new Size(391, 408);
             applicationDefinitionLayout.TabIndex = 0;
             // 
             // definitionNavigation
@@ -70,7 +70,7 @@
             definitionNavigation.Name = "definitionNavigation";
             definitionNavigation.RowTemplate.Height = 25;
             definitionNavigation.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            definitionNavigation.Size = new Size(385, 218);
+            definitionNavigation.Size = new Size(385, 258);
             definitionNavigation.TabIndex = 0;
             definitionNavigation.SelectionChanged += definitionNavigation_SelectionChanged;
             // 
@@ -88,28 +88,16 @@
             definitionDescriptionColumn.HeaderText = "Definition Description";
             definitionDescriptionColumn.Name = "definitionDescriptionColumn";
             // 
-            // definitionTitleData
-            // 
-            definitionTitleData.AutoSize = true;
-            definitionTitleData.Dock = DockStyle.Fill;
-            definitionTitleData.HeaderText = "Definition Title";
-            definitionTitleData.Location = new Point(3, 3);
-            definitionTitleData.Multiline = false;
-            definitionTitleData.Name = "definitionTitleData";
-            definitionTitleData.ReadOnly = false;
-            definitionTitleData.Size = new Size(300, 44);
-            definitionTitleData.TabIndex = 1;
-            // 
             // definitionDescriptionData
             // 
             definitionDescriptionData.AutoSize = true;
             definitionDescriptionData.Dock = DockStyle.Fill;
             definitionDescriptionData.HeaderText = "Definition Description";
-            definitionDescriptionData.Location = new Point(3, 283);
+            definitionDescriptionData.Location = new Point(3, 323);
             definitionDescriptionData.Multiline = true;
             definitionDescriptionData.Name = "definitionDescriptionData";
             definitionDescriptionData.ReadOnly = false;
-            definitionDescriptionData.Size = new Size(385, 69);
+            definitionDescriptionData.Size = new Size(385, 82);
             definitionDescriptionData.TabIndex = 2;
             // 
             // definitionTitleLayout
@@ -121,12 +109,24 @@
             definitionTitleLayout.Controls.Add(definitionTitleData, 0, 0);
             definitionTitleLayout.Controls.Add(obsoleteData, 1, 0);
             definitionTitleLayout.Dock = DockStyle.Fill;
-            definitionTitleLayout.Location = new Point(3, 227);
+            definitionTitleLayout.Location = new Point(3, 267);
             definitionTitleLayout.Name = "definitionTitleLayout";
             definitionTitleLayout.RowCount = 1;
             definitionTitleLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             definitionTitleLayout.Size = new Size(385, 50);
             definitionTitleLayout.TabIndex = 3;
+            // 
+            // definitionTitleData
+            // 
+            definitionTitleData.AutoSize = true;
+            definitionTitleData.Dock = DockStyle.Fill;
+            definitionTitleData.HeaderText = "Definition Title";
+            definitionTitleData.Location = new Point(3, 3);
+            definitionTitleData.Multiline = false;
+            definitionTitleData.Name = "definitionTitleData";
+            definitionTitleData.ReadOnly = false;
+            definitionTitleData.Size = new Size(300, 44);
+            definitionTitleData.TabIndex = 1;
             // 
             // obsoleteData
             // 
@@ -142,17 +142,19 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(391, 355);
+            ClientSize = new Size(391, 433);
             Controls.Add(applicationDefinitionLayout);
             Name = "ApplicationDefinition";
             Text = "Application Definition";
             Load += ApplicationDefinition_Load;
+            Controls.SetChildIndex(applicationDefinitionLayout, 0);
             applicationDefinitionLayout.ResumeLayout(false);
             applicationDefinitionLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)definitionNavigation).EndInit();
             definitionTitleLayout.ResumeLayout(false);
             definitionTitleLayout.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

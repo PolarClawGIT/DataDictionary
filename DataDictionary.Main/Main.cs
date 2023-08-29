@@ -14,7 +14,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main
 {
-    partial class Main : ApplicationFormBase
+    partial class Main : ApplicationBase
     {
 
         #region Static Data
@@ -33,6 +33,7 @@ namespace DataDictionary.Main
         public Main() : base()
         {
             InitializeComponent();
+            toolStrip.Visible = false; // Hide base ToolStrip
 
             // Setup Images for Tree Control
             SetImages(dbMetaDataNavigation, dbDataImageItems.Values);
@@ -52,7 +53,6 @@ namespace DataDictionary.Main
         #region Form
         private void Main_Load(object sender, EventArgs e)
         {
-
             Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
             //Program.Messenger.AddColleague(this);
 
