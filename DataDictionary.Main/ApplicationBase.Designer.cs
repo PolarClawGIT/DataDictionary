@@ -50,6 +50,7 @@
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(800, 25);
             toolStrip.TabIndex = 0;
+            toolStrip.VisibleChanged += toolStrip_VisibleChanged;
             // 
             // newToolStripButton
             // 
@@ -149,7 +150,6 @@
             Controls.Add(toolStrip);
             Name = "ApplicationBase";
             Text = "ApplicationBase";
-            ControlAdded += ApplicationBase_ControlAdded;
             toolStrip.ResumeLayout(false);
             toolStrip.PerformLayout();
             ResumeLayout(false);

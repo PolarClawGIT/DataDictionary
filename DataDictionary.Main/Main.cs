@@ -33,7 +33,7 @@ namespace DataDictionary.Main
         public Main() : base()
         {
             InitializeComponent();
-            toolStrip.Visible = false; // Hide base ToolStrip
+            toolStrip.Hide(); // Hide base ToolStrip
 
             // Setup Images for Tree Control
             SetImages(dbMetaDataNavigation, dbDataImageItems.Values);

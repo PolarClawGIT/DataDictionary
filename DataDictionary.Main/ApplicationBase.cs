@@ -25,6 +25,8 @@ namespace DataDictionary.Main
         public ApplicationBase() : base()
         {
             InitializeComponent();
+            Program.Messenger.AddColleague(this);
+            SendMessage(new FormAddMdiChild() { ChildForm = this });
         }
 
         #region Open Form
@@ -331,29 +333,32 @@ namespace DataDictionary.Main
 
         #endregion
 
-        private void ApplicationBase_ControlAdded(object sender, ControlEventArgs e)
-        {
-            // Adjust the padding on child forms to allow for the shared tool strip
-            // This only effects controls added to the base form.
-            // It is expected that all child forms will have a single TablePanelControl as a base control.
-            // Child controls of the expected base control do not fire this event.
-            if (e.Control is not null &&
-                e.Control.Parent is ApplicationBase && // Top level controls only
-                toolStrip.Visible && // Caution, changing visibility dynamically could results in incorrect layout.
-                e.Control != toolStrip) // ignore the control being accounted for
-            {
-                e.Control.Padding = new Padding(
-                e.Control.Padding.Left,
-                toolStrip.Height + e.Control.Padding.Top,
-                e.Control.Padding.Right,
-                e.Control.Padding.Bottom);
-            }
-        }
-
         private void helpToolStripButton_Click(object sender, EventArgs e)
         {
             Dialogs.HelpSubject x = Activate(() => new Dialogs.HelpSubject());
             { x.NavigateTo(this); }
+        }
+
+        private void toolStrip_VisibleChanged(object? sender, EventArgs e)
+        {
+            // Visibility can be set in code.
+            // More often it changes based on other controls on the Form and any over lapping controls or form not the top most form.
+            if (toolStrip.Visible) 
+            {
+                // Assumes that a TableLayout Control or similar is the only other control on the page.
+                // Condition and order is an attempt to prevent issues when multiple controls on the same form.
+                if(this.Controls.Cast<Control>().OrderBy(o=> o.Top).FirstOrDefault(w => w.HasChildren && w != toolStrip) is Control topControl)
+                {
+                    topControl.Padding = new Padding(
+                       topControl.Padding.Left,
+                       toolStrip.Height + topControl.Padding.Top,
+                       topControl.Padding.Right,
+                       topControl.Padding.Bottom);
+                }
+
+                // Don't respond to further changes to Visibility (change only on first time visible only).
+                toolStrip.VisibleChanged -= toolStrip_VisibleChanged;
+            }
         }
     }
 

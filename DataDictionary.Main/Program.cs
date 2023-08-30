@@ -29,7 +29,8 @@ namespace DataDictionary.Main
             ServerName = Settings.Default.AppServer,
             DatabaseName = Settings.Default.AppDatabase,
             ApplicationRole = Settings.Default.AppDbRole,
-            ApplicationRolePassword = Settings.Default.AppDbRolePassword
+            ApplicationRolePassword = Settings.Default.AppDbRolePassword,
+            ValidateCommand = true // TODO: Used for Debugging. Set to False when going live.
         });
 
         static Program()
@@ -65,12 +66,6 @@ namespace DataDictionary.Main
             Worker.Dispose();
             Messenger.Dispose();
         }
-
-        private static Toolbox.DbContext.Context AppContext = new DbSchemaContext()
-        {
-            ApplicationRole = Settings.Default.AppDbRole,
-            ApplicationRolePassword = Settings.Default.AppDbRolePassword
-        };
 
         public static void ShowException(Exception ex)
         {
