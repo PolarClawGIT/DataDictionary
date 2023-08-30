@@ -172,7 +172,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.DetailDataView(data, Resources.DbDependancy), Program.Data.DbRoutineDependencies); }
 
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.ApplicationProperty()); }
+        { Activate(() => new Dialogs.ApplicationProperty()); }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -221,7 +221,7 @@ namespace DataDictionary.Main
         { Activate(() => new Dialogs.ApplicationOptions()); }
 
         private void definitionsToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.ApplicationDefinition()); }
+        { Activate(() => new Dialogs.ApplicationDefinition()); }
         #endregion
 
         #region dbMetaDataNavigation

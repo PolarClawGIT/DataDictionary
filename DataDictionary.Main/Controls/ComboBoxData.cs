@@ -33,6 +33,8 @@ namespace DataDictionary.Main.Controls
         public Object? SelectedValue { get { return comboBox.SelectedValue; } set { comboBox.SelectedValue = value; } }
         public Int32 SelectedIndex { get { return comboBox.SelectedIndex; } set { comboBox.SelectedIndex = value; } }
         public ComboBox.ObjectCollection Items { get { return comboBox.Items; } }
+        public String ValueMember { get { return comboBox.ValueMember; } set { comboBox.ValueMember = value; } }
+        public String DisplayMember { get { return comboBox.DisplayMember; } set { comboBox.DisplayMember = value; } }
 
         /// <summary>
         /// Control used to position the Error Provider Icon.

@@ -1,4 +1,5 @@
-﻿using DataDictionary.Main.Controls;
+﻿using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using System;
 using System.Collections.Generic;
@@ -343,11 +344,16 @@ namespace DataDictionary.Main
         {
             // Visibility can be set in code.
             // More often it changes based on other controls on the Form and any over lapping controls or form not the top most form.
-            if (toolStrip.Visible) 
+            if (toolStrip.Visible)
             {
                 // Assumes that a TableLayout Control or similar is the only other control on the page.
                 // Condition and order is an attempt to prevent issues when multiple controls on the same form.
-                if(this.Controls.Cast<Control>().OrderBy(o=> o.Top).FirstOrDefault(w => w.HasChildren && w != toolStrip) is Control topControl)
+                if (this.Controls.Cast<Control>().
+                    OrderBy(o => o.Top).
+                    FirstOrDefault(w => w.HasChildren &&
+                        w != toolStrip && // Not the ToolStrip
+                        w.Top < toolStrip.Height // Top control does not overlap with ToolStrip
+                        ) is Control topControl)
                 {
                     topControl.Padding = new Padding(
                        topControl.Padding.Left,
@@ -439,6 +445,24 @@ namespace DataDictionary.Main
                 item.Enabled = true;
                 item.UseWaitCursor = false;
             }
+        }
+
+        /// <summary>
+        /// Finds a DataGridViewRow based on Key provided.
+        /// </summary>
+        /// <typeparam name="T">Type of data Item.</typeparam>
+        /// <typeparam name="K">Type of Key for compare</typeparam>
+        /// <param name="control"></param>
+        /// <param name="targetKey">Key to match</param>
+        /// <param name="newKey">Constructor that converts the Item into the Key</param>
+        /// <returns>Tuple of the Row and the Data item if found, null otherwise.</returns>
+        public static (DataGridViewRow? row, T? data) FindRow<T, K>(this DataGridView control, K targetKey, Func<T, K> newKey)
+            where T : class
+            where K : class, IEquatable<K>
+        {
+            if (control.Rows.Cast<DataGridViewRow>().FirstOrDefault(w => w.DataBoundItem is T item && newKey(item).Equals(targetKey)) is DataGridViewRow row)
+            { return (row, row.DataBoundItem as T); }
+            else { return (null, null); }
         }
     }
 }

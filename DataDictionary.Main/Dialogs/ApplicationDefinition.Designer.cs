@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.Forms
+﻿namespace DataDictionary.Main.Dialogs
 {
     partial class ApplicationDefinition
     {
@@ -62,6 +62,7 @@
             // 
             // definitionNavigation
             // 
+            definitionNavigation.AllowUserToAddRows = false;
             definitionNavigation.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             definitionNavigation.Columns.AddRange(new DataGridViewColumn[] { definitionTitleColumn, definitionDescriptionColumn });
             definitionNavigation.Dock = DockStyle.Fill;

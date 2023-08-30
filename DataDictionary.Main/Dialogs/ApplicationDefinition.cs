@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace DataDictionary.Main.Forms
+namespace DataDictionary.Main.Dialogs
 {
     partial class ApplicationDefinition : ApplicationBase
     {
@@ -22,6 +22,19 @@ namespace DataDictionary.Main.Forms
         {
             InitializeComponent();
             this.Icon = Resources.DomainDefinition;
+            newToolStripButton.Enabled = true;
+            newToolStripButton.Click += NewToolStripButton_Click;
+        }
+
+
+        private void NewToolStripButton_Click(object? sender, EventArgs e)
+        {
+            DefinitionItem newDefinition = new DefinitionItem() { DefinitionTitle = "new Definition", Obsolete = false };
+            DefinitionKey newKey = new DefinitionKey(newDefinition);
+            Program.Data.Definitions.Add(newDefinition);
+
+            if (definitionNavigation.FindRow<DefinitionItem, DefinitionKey>(newKey, (item) => new DefinitionKey(item)).row is DataGridViewRow row)
+            { row.Selected = true; }
         }
 
         private void ApplicationDefinition_Load(object sender, EventArgs e)
@@ -35,9 +48,8 @@ namespace DataDictionary.Main.Forms
 
             if (definitionNavigation.SelectedRows.Count > 0 && definitionNavigation.SelectedRows[0].DataBoundItem is DefinitionItem item)
             {
-                definitionKey = new DefinitionKey(item);
-
                 UnBindData();
+                definitionKey = new DefinitionKey(item);
                 BindData();
             }
         }
