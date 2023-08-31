@@ -46,6 +46,9 @@ namespace DataDictionary.DataLayer.DbMetaData
                 ReferenceColumnName.Equals(other.ReferenceColumnName, ModelFactory.CompareString));
         }
 
+        public override bool Equals(object? obj)
+        { return obj is IDbRoutineDependencyKey value && this.Equals(new DbRoutineDependencyKey(value)); }
+
         public Boolean Equals(DbTableColumnKey? other)
         {
             return (
@@ -87,9 +90,6 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public override int CompareTo(object? obj)
         { if (obj is IDbRoutineDependencyKey value) { return this.CompareTo(new DbRoutineDependencyKey(value)); } else { return 1; } }
-
-        public override bool Equals(object? obj)
-        { if (obj is IDbRoutineDependencyKey value) { return this.Equals(new DbRoutineDependencyKey(value)); } else { return false; } }
 
         public static bool operator ==(DbRoutineDependencyKey left, DbRoutineDependencyKey right)
         { return left.Equals(right); }

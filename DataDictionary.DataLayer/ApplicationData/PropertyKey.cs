@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         Nullable<Guid> PropertyId { get; }
     }
 
-    public class PropertyKey: IPropertyKey, IEquatable<PropertyKey>
+    public class PropertyKey : IPropertyKey, IEquatable<PropertyKey>
     {
         public Nullable<Guid> PropertyId { get; init; } = Guid.Empty;
 
@@ -23,10 +23,10 @@ namespace DataDictionary.DataLayer.ApplicationData
 
         #region IEquatable
         public Boolean Equals(PropertyKey? other)
-        { return (other is PropertyKey && this.PropertyId.Equals(other.PropertyId)); }
+        { return other is PropertyKey && EqualityComparer<Guid?>.Default.Equals(this.PropertyId, other.PropertyId); }
 
         public override bool Equals(object? obj)
-        { if (obj is IPropertyKey value) { return this.Equals(value); } else { return false; } }
+        { return obj is IPropertyKey value && this.Equals(new PropertyKey(value)); }
 
         public static bool operator ==(PropertyKey left, PropertyKey right)
         { return left.Equals(right); }

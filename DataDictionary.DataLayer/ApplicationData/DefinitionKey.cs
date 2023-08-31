@@ -26,7 +26,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         { return (other is DefinitionKey && this.DefinitionId.Equals(other.DefinitionId)); }
 
         public override bool Equals(object? obj)
-        { if (obj is IDefinitionKey value) { return this.Equals(value); } else { return false; } }
+        { if (obj is IDefinitionKey value) { return this.Equals(new DefinitionKey(value)); } else { return false; } }
 
         public static bool operator ==(DefinitionKey left, DefinitionKey right)
         { return left.Equals(right); }

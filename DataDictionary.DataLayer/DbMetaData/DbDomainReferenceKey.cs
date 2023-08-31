@@ -47,6 +47,9 @@ namespace DataDictionary.DataLayer.DbMetaData
                 DomainName.Equals(other.DomainName, ModelFactory.CompareString));
         }
 
+        public override bool Equals(object? obj)
+        { return obj is IDbDomainReferenceKey value && this.Equals(new DbDomainReferenceKey(value)); }
+
         public Int32 CompareTo(DbDomainReferenceKey? other)
         {
             if (other is null) { return 1; }
@@ -66,9 +69,6 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public virtual int CompareTo(object? obj)
         { if (obj is IDbDomainReferenceKey value) { return this.CompareTo(new DbDomainReferenceKey(value)); } else { return 1; } }
-
-        public override bool Equals(object? obj)
-        { if (obj is IDbDomainReferenceKey value) { return this.Equals(new DbDomainReferenceKey(value)); } else { return false; } }
 
         public static bool operator ==(DbDomainReferenceKey left, DbDomainReferenceKey right)
         { return left.Equals(right); }

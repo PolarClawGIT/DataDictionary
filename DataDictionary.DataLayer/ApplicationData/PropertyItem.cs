@@ -23,7 +23,10 @@ namespace DataDictionary.DataLayer.ApplicationData
         public Nullable<Boolean> Obsolete { get { return GetValue<Boolean>("Obsolete", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("Obsolete", value); } }
 
         public PropertyItem() : base()
-        { PropertyId = Guid.NewGuid(); }
+        {
+            PropertyId = Guid.NewGuid();
+            Obsolete = false;
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

@@ -27,7 +27,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         { return (other is ModelKey && this.ModelId.Equals(other.ModelId)); }
 
         public override bool Equals(object? obj)
-        { if (obj is IModelKey value) { return this.Equals(value); } else { return false; } }
+        { if (obj is IModelKey value) { return this.Equals(new ModelKey(value)); } else { return false; } }
 
         public static bool operator ==(ModelKey left, ModelKey right)
         { return left.Equals(right); }

@@ -19,16 +19,10 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         #region IEquatable
         public virtual bool Equals(DbCatalogKey? other)
-        {
-            return other is DbCatalogKey key &&
-                EqualityComparer<Guid?>.Default.Equals(CatalogId, key.CatalogId);
-        }
+        { return other is DbCatalogKey && EqualityComparer<Guid?>.Default.Equals(this.CatalogId, other.CatalogId); }
 
         public override bool Equals(object? other)
-        { 
-            return other is IDbCatalogKey key &&
-                EqualityComparer<Guid?>.Default.Equals(CatalogId, key.CatalogId);
-        }
+        { return other is IDbCatalogKey value && this.Equals(new DbCatalogKey(value)); }
 
         public static bool operator ==(DbCatalogKey left, DbCatalogKey right)
         { return left.Equals(right); }

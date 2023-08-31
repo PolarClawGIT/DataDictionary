@@ -26,15 +26,15 @@
                 CatalogName.Equals(other.CatalogName, ModelFactory.CompareString));
         }
 
+        public override bool Equals(object? obj)
+        { return obj is IDbCatalogKeyUnique value && this.Equals(new DbCatalogKeyUnique(value));  } 
+
         public virtual int CompareTo(DbCatalogKeyUnique? other)
         {
             if (other is DbCatalogKeyUnique value)
             { return String.Compare(CatalogName, value.CatalogName, true); }
             else { return 1; }
         }
-
-        public override bool Equals(object? obj)
-        { if (obj is IDbCatalogKeyUnique value) { return this.Equals(new DbCatalogKeyUnique(value)); } else { return false; } }
 
         public virtual int CompareTo(object? obj)
         { if (obj is IDbCatalogKeyUnique value) { return this.CompareTo(new DbCatalogKeyUnique(value)); } else { return 1; } }

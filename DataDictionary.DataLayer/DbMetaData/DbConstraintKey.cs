@@ -32,6 +32,9 @@ namespace DataDictionary.DataLayer.DbMetaData
                 ConstraintName.Equals(other.ConstraintName, ModelFactory.CompareString));
         }
 
+        public override bool Equals(object? obj)
+        { return obj is IDbConstraintKey value && this.Equals(new DbConstraintKey(value));  } 
+
         public Int32 CompareTo(DbConstraintKey? other)
         {
             if (other is null) { return 1; }
@@ -41,9 +44,6 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public override int CompareTo(object? obj)
         { if (obj is IDbConstraintKey value) { return this.CompareTo(new DbConstraintKey(value)); } else { return 1; } }
-
-        public override bool Equals(object? obj)
-        { if (obj is IDbConstraintKey value) { return this.Equals(new DbConstraintKey(value)); } else { return false; } }
 
         public static bool operator ==(DbConstraintKey left, DbConstraintKey right)
         { return left.Equals(right); }

@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.DomainData
         Nullable<Guid> ParentAttributeId { get; }
     }
 
-    public class DomainAttributeParentKey : IDomainAttributeParentKey, IEquatable<IDomainAttributeParentKey>, IEquatable<IDomainAttributeKey>
+    public class DomainAttributeParentKey : IDomainAttributeParentKey, IEquatable<DomainAttributeParentKey>, IEquatable<DomainAttributeKey>
     {
 
         public Nullable<Guid> ParentAttributeId { get; init; } = Guid.Empty;
@@ -22,21 +22,24 @@ namespace DataDictionary.DataLayer.DomainData
             else { ParentAttributeId = Guid.Empty; }
         }
 
-        #region IEquatable, IComparable
-        public Boolean Equals(IDomainAttributeParentKey? other)
+        public DomainAttributeParentKey(IDomainAttributeKey source) : base()
         {
-            return other is IDomainAttributeParentKey key &&
-                EqualityComparer<Guid?>.Default.Equals(ParentAttributeId, key.ParentAttributeId);
+            if (source.AttributeId is Guid) { ParentAttributeId = source.AttributeId; }
+            else { ParentAttributeId = Guid.Empty; }
         }
 
-        public Boolean Equals(IDomainAttributeKey? other)
-        {
-            return other is IDomainAttributeKey key &&
-                EqualityComparer<Guid?>.Default.Equals(ParentAttributeId, key.AttributeId);
-        }
+        #region IEquatable, IComparable
+        public Boolean Equals(DomainAttributeParentKey? other)
+        { return other is DomainAttributeParentKey key && EqualityComparer<Guid?>.Default.Equals(ParentAttributeId, key.ParentAttributeId); }
+
+        public Boolean Equals(DomainAttributeKey? other)
+        { return other is DomainAttributeKey key && EqualityComparer<Guid?>.Default.Equals(ParentAttributeId, key.AttributeId); }
 
         public override bool Equals(object? obj)
-        { return obj is IDomainAttributeKey key && this.Equals(key); }
+        {
+            return (obj is IDomainAttributeParentKey value && this.Equals(new DomainAttributeParentKey(value)))
+                || (obj is IDomainAttributeKey keyValue && this.Equals(new DomainAttributeParentKey(keyValue)));
+        }
 
         public static bool operator ==(DomainAttributeParentKey left, DomainAttributeParentKey right)
         { return left.Equals(right); }

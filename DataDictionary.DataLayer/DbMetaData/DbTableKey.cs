@@ -29,6 +29,9 @@ namespace DataDictionary.DataLayer.DbMetaData
                 TableName.Equals(other.TableName, ModelFactory.CompareString));
         }
 
+        public override bool Equals(object? obj)
+        { return obj is IDbTableKey value && this.Equals(new DbTableKey(value)); }
+
         public Int32 CompareTo(DbTableKey? other)
         {
             if (other is null) { return 1; }
@@ -38,9 +41,6 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public override int CompareTo(object? obj)
         { if (obj is IDbTableKey value) { return this.CompareTo(new DbTableKey(value)); } else { return 1; } }
-
-        public override bool Equals(object? obj)
-        { if (obj is IDbTableKey value) { return this.Equals(new DbTableKey(value)); } else { return false; } }
 
         public static bool operator ==(DbTableKey left, DbTableKey right)
         { return left.Equals(right); }

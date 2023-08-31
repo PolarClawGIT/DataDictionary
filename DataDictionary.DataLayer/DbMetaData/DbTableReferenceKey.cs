@@ -53,12 +53,19 @@ namespace DataDictionary.DataLayer.DbMetaData
                 ReferenceTableName.Equals(other.TableName, ModelFactory.CompareString));
         }
 
+        public override bool Equals(object? obj)
+        {
+            return (obj is IDbTableReferenceKey value && this.Equals(new DbTableReferenceKey(value)))
+                || (obj is IDbTableKey talbeValue && this.Equals(new DbTableKey(talbeValue)));
+        }
+
         public Int32 CompareTo(DbTableReferenceKey? other)
         {
             if (other is null) { return 1; }
             else if (new DbCatalogKeyUnique(this).CompareTo(other) is Int32 value && value != 0)
             { return value; }
-            else {
+            else
+            {
                 if (String.Compare(ReferenceSchemaName,
                                    other.ReferenceSchemaName,
                                    true) is Int32 schemaValue && schemaValue != 0)
@@ -69,9 +76,6 @@ namespace DataDictionary.DataLayer.DbMetaData
 
         public override int CompareTo(object? obj)
         { if (obj is IDbTableReferenceKey value) { return this.CompareTo(new DbTableReferenceKey(value)); } else { return 1; } }
-
-        public override bool Equals(object? obj)
-        { if (obj is IDbTableReferenceKey value) { return this.Equals(new DbTableReferenceKey(value)); } else { return false; } }
 
         public static bool operator ==(DbTableReferenceKey left, DbTableReferenceKey right)
         { return left.Equals(right); }

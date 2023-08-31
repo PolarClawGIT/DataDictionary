@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.DomainData
     public interface IDomainAttributePropertyKey : IDomainAttributeKey, IPropertyKey
     { }
 
-    public class DomainAttributePropertyKey : IDomainAttributePropertyKey, IEquatable<IDomainAttributePropertyKey>
+    public class DomainAttributePropertyKey : IDomainAttributePropertyKey, IEquatable<DomainAttributePropertyKey>
     {
         public Guid? AttributeId { get; init; } = Guid.Empty;
         public Guid? PropertyId { get; init; } = Guid.Empty;
@@ -22,7 +22,7 @@ namespace DataDictionary.DataLayer.DomainData
         }
 
         #region IEquatable
-        public bool Equals(IDomainAttributePropertyKey? other)
+        public bool Equals(DomainAttributePropertyKey? other)
         {
             return other is IDomainAttributePropertyKey key &&
                    EqualityComparer<Guid?>.Default.Equals(AttributeId, key.AttributeId) &&
@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.DomainData
         }
 
         public override bool Equals(object? obj)
-        { return obj is IDomainAttributePropertyKey key && this.Equals(key); }
+        { return obj is IDomainAttributePropertyKey value && this.Equals(new DomainAttributePropertyKey(value)); }
 
         public override int GetHashCode()
         { return HashCode.Combine(AttributeId, PropertyId); }

@@ -11,9 +11,8 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.ApplicationData
 {
-    public interface IHelpItem
+    public interface IHelpItem: IHelpKey
     {
-        Nullable<Guid> HelpId { get; }
         Nullable<Guid> HelpParentId { get; }
         String? HelpSubject { get; }
         String? HelpText { get; }

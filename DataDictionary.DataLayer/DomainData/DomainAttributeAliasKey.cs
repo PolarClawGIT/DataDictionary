@@ -36,6 +36,9 @@ namespace DataDictionary.DataLayer.DomainData
                 ElementName.Equals(other.ElementName, ModelFactory.CompareString));
         }
 
+        public override bool Equals(object? obj)
+        { return obj is IDomainAttributeAliasKey value && this.Equals(new DomainAttributeAliasKey(value)); }
+
         public Int32 CompareTo(DomainAttributeAliasKey? other)
         {
             if (other is null) { return 1; }
@@ -45,9 +48,6 @@ namespace DataDictionary.DataLayer.DomainData
 
         public override int CompareTo(object? obj)
         { if (obj is IDomainAttributeAliasKey value) { return this.CompareTo(new DomainAttributeAliasKey(value)); } else { return 1; } }
-
-        public override bool Equals(object? obj)
-        { if (obj is IDomainAttributeAliasKey value) { return this.Equals(new DomainAttributeAliasKey(value)); } else { return false; } }
 
         public static bool operator ==(DomainAttributeAliasKey left, DomainAttributeAliasKey right)
         { return left.Equals(right); }
