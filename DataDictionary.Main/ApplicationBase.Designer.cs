@@ -33,11 +33,15 @@
             newToolStripButton = new ToolStripButton();
             openToolStripButton = new ToolStripButton();
             saveToolStripButton = new ToolStripButton();
+            deleteToolStripButton = new ToolStripButton();
             printToolStripButton = new ToolStripButton();
             toolStripSeparator = new ToolStripSeparator();
             cutToolStripButton = new ToolStripButton();
             copyToolStripButton = new ToolStripButton();
             pasteToolStripButton = new ToolStripButton();
+            linkToolStripButton = new ToolStripButton();
+            addLinkToolStripButton = new ToolStripButton();
+            removeLinktoolStripButton = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
             helpToolStripButton = new ToolStripButton();
             toolStrip.SuspendLayout();
@@ -45,7 +49,7 @@
             // 
             // toolStrip
             // 
-            toolStrip.Items.AddRange(new ToolStripItem[] { newToolStripButton, openToolStripButton, saveToolStripButton, printToolStripButton, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator1, helpToolStripButton });
+            toolStrip.Items.AddRange(new ToolStripItem[] { newToolStripButton, openToolStripButton, saveToolStripButton, deleteToolStripButton, printToolStripButton, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, linkToolStripButton, addLinkToolStripButton, removeLinktoolStripButton, toolStripSeparator1, helpToolStripButton });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(800, 25);
@@ -81,6 +85,16 @@
             saveToolStripButton.Name = "saveToolStripButton";
             saveToolStripButton.Size = new Size(23, 22);
             saveToolStripButton.Text = "&Save";
+            // 
+            // deleteToolStripButton
+            // 
+            deleteToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            deleteToolStripButton.Enabled = false;
+            deleteToolStripButton.Image = Properties.Resources.Delete;
+            deleteToolStripButton.ImageTransparentColor = Color.Magenta;
+            deleteToolStripButton.Name = "deleteToolStripButton";
+            deleteToolStripButton.Size = new Size(23, 22);
+            deleteToolStripButton.Text = "&Delete";
             // 
             // printToolStripButton
             // 
@@ -127,6 +141,36 @@
             pasteToolStripButton.Size = new Size(23, 22);
             pasteToolStripButton.Text = "&Paste";
             // 
+            // linkToolStripButton
+            // 
+            linkToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            linkToolStripButton.Enabled = false;
+            linkToolStripButton.Image = Properties.Resources.Link;
+            linkToolStripButton.ImageTransparentColor = Color.Magenta;
+            linkToolStripButton.Name = "linkToolStripButton";
+            linkToolStripButton.Size = new Size(23, 22);
+            linkToolStripButton.Text = "&Link";
+            // 
+            // addLinkToolStripButton
+            // 
+            addLinkToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            addLinkToolStripButton.Enabled = false;
+            addLinkToolStripButton.Image = Properties.Resources.AddLink;
+            addLinkToolStripButton.ImageTransparentColor = Color.Magenta;
+            addLinkToolStripButton.Name = "addLinkToolStripButton";
+            addLinkToolStripButton.Size = new Size(23, 22);
+            addLinkToolStripButton.Text = "Add Link";
+            // 
+            // removeLinktoolStripButton
+            // 
+            removeLinktoolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            removeLinktoolStripButton.Enabled = false;
+            removeLinktoolStripButton.Image = Properties.Resources.RemoveLink;
+            removeLinktoolStripButton.ImageTransparentColor = Color.Magenta;
+            removeLinktoolStripButton.Name = "removeLinktoolStripButton";
+            removeLinktoolStripButton.Size = new Size(23, 22);
+            removeLinktoolStripButton.Text = "Remove Link";
+            // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
@@ -168,5 +212,9 @@
         protected ToolStripButton copyToolStripButton;
         protected ToolStripButton pasteToolStripButton;
         protected ToolStripButton helpToolStripButton;
+        protected ToolStripButton linkToolStripButton;
+        protected ToolStripButton addLinkToolStripButton;
+        protected ToolStripButton removeLinktoolStripButton;
+        protected ToolStripButton deleteToolStripButton;
     }
 }

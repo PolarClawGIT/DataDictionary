@@ -11,12 +11,11 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.ApplicationData
 {
-    public interface IHelpItem: IHelpKey
+    public interface IHelpItem: IHelpKey, IHelpKeyUnique
     {
         Nullable<Guid> HelpParentId { get; }
         String? HelpSubject { get; }
         String? HelpText { get; }
-        String? NameSpace { get; }
         Nullable<Boolean> Obsolete { get; }
     }
 

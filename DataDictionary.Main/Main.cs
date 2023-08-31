@@ -66,7 +66,16 @@ namespace DataDictionary.Main
             else { this.DoWork(Program.Data.LoadApplicationData(new FileInfo(Settings.Default.AppDataFile)), OnComplete); }
 
             void OnComplete(RunWorkerCompletedEventArgs args)
-            { BindData(); } // Nothing to do at this point
+            {
+                if (args.Error is not null && Settings.Default.IsOnLineMode)
+                { // Could not load the data from the database for whatever reason.
+                  // Switch to off-line mode and load from file if possible.
+                    Settings.Default.IsOnLineMode = false;
+                    Settings.Default.Save();
+                    this.DoWork(Program.Data.LoadApplicationData(new FileInfo(Settings.Default.AppDataFile)), OnComplete);
+                }
+                else if (args.Error is null) { BindData(); }
+            }
         }
 
         void BindData()
@@ -129,23 +138,20 @@ namespace DataDictionary.Main
 
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)
         {
-            if (ActiveMdiChild is Form currentForm &&
-                Activate(() => new Dialogs.HelpSubject()) is Dialogs.HelpSubject helpForm)
-            { helpForm.NavigateTo(currentForm); }
+            if (ActiveMdiChild is Form currentForm)
+            { Activate(() => new Dialogs.HelpSubject(currentForm)); }
         }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.HelpSubject()); }
 
         private void HelpAboutMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Dialogs.HelpSubject("About")); }
-
+        { Activate(() => new Dialogs.HelpSubject("About Application")); }
 
         private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            if (ActiveMdiChild is Form currentForm &&
-                Activate(() => new Dialogs.HelpSubject()) is Dialogs.HelpSubject helpForm)
-            { helpForm.NavigateTo(currentForm); }
+            if (ActiveMdiChild is Form currentForm)
+            { Activate(() => new Dialogs.HelpSubject(currentForm)); }
         }
 
         private void openSaveModelDatabaseMenuItem_Click(object sender, EventArgs e)

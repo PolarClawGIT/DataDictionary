@@ -338,10 +338,7 @@ namespace DataDictionary.Main
         #endregion
 
         private void helpToolStripButton_Click(object sender, EventArgs e)
-        {
-            Dialogs.HelpSubject x = Activate(() => new Dialogs.HelpSubject());
-            { x.NavigateTo(this); }
-        }
+        { Activate(() => new Dialogs.HelpSubject(this)); }
 
         private void toolStrip_VisibleChanged(object? sender, EventArgs e)
         {

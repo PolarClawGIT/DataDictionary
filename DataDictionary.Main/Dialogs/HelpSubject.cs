@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -17,94 +18,99 @@ namespace DataDictionary.Main.Dialogs
 {
     partial class HelpSubject : ApplicationBase
     {
-        class FormData
-        {
-            public Guid HelpId { get; set; } = Guid.Empty;
-            public String TargetNameSpace { get; set; } = String.Empty;
-            public HelpItem HelpItem { get; set; } = new HelpItem();
-        }
-
-        FormData data = new FormData();
+        HelpItem helpItem = new HelpItem();
+        HelpKey helpKey;
+        HelpKeyUnique initNameSpace;
+        String initHelpSubject = String.Empty;
 
         public HelpSubject() : base()
         {
             InitializeComponent();
             this.Icon = Resources.HelpTableOfContent;
+
             helpToolStripButton.Enabled = false;
+            newToolStripButton.Enabled = true;
+            newToolStripButton.Click += NewToolStripButton_Click;
+            saveToolStripButton.Enabled = true;
+            saveToolStripButton.Click += SaveToolStripButton_Click;
+            deleteToolStripButton.Enabled = true;
+            deleteToolStripButton.Click += DeleteToolStripButton_Click;
+
+            helpKey = new HelpKey(helpItem);
+            initNameSpace = new HelpKeyUnique(helpItem);
 
             // Setup Images for Tree Control
             SetImages(helpContentNavigation, helpContentImageItems.Values);
         }
 
-        public HelpSubject(String targetNameSpace) : this()
-        { data.TargetNameSpace = targetNameSpace; }
-
-        public HelpSubject(Form targetForm) : this()
-        { if (targetForm.GetType().FullName is String value) { data.TargetNameSpace = value; } }
-
-        private void HelpSubject_Load(object sender, EventArgs e)
+        public HelpSubject(Object targetForm) : this()
         {
-            saveToolStripButton.Enabled = Settings.Default.IsOnLineMode;
-            newToolStripButton.Enabled = Settings.Default.IsOnLineMode;
+            initNameSpace = new HelpKeyUnique(targetForm);
+            helpItem.NameSpace = initNameSpace.NameSpace;
+            helpItem.HelpSubject = targetForm.GetType().Name;
+        }
 
-            if (data.HelpId == Guid.Empty && !String.IsNullOrWhiteSpace(data.TargetNameSpace))
-            {
-                if (Program.Data.HelpSubjects.FirstOrDefault(w => w.NameSpace == data.TargetNameSpace) is HelpItem item && item.HelpId is Guid itemGuid)
-                {
-                    data.HelpItem = item;
-                    data.HelpId = itemGuid;
-                }
-            }
+        public HelpSubject(String targetSubject) : this()
+        {
+            initHelpSubject = targetSubject;
+            helpItem.HelpSubject = targetSubject;
+        }
 
-            NavigateTo(data.TargetNameSpace);
+        private void SaveToolStripButton_Click(object? sender, EventArgs e)
+        {
+            UnBindData();
+            Program.Data.HelpSubjects.Add(helpItem);
+            BuildHelpContentTree();
             BindData();
         }
 
-        public void NavigateTo(Form targetForm)
+        private void NewToolStripButton_Click(object? sender, EventArgs e)
         {
-            if (targetForm.GetType().FullName is String value)
-            { NavigateTo(value); }
+            UnBindData();
+            helpItem = new HelpItem();
+            helpKey = new HelpKey(helpItem);
+            BindData();
         }
 
-        public void NavigateTo(String targetName)
+        private void DeleteToolStripButton_Click(object? sender, EventArgs e)
         {
-            data.TargetNameSpace = targetName;
-            data.HelpId = Guid.Empty;
-
-            if (Program.Data.HelpSubjects.FirstOrDefault(w => w.NameSpace == data.TargetNameSpace) is HelpItem item && item.HelpId is Guid itemGuid)
+            
+            if(Program.Data.HelpSubjects.FirstOrDefault(w => helpKey.Equals(w)) is HelpItem item)
             {
-                data.HelpItem = item;
-                data.HelpId = itemGuid;
-                if (!String.IsNullOrWhiteSpace(item.NameSpace)) { data.TargetNameSpace = item.NameSpace; }
-            }
-            else
-            {
-                data.HelpItem = new HelpItem();
-                if (!String.IsNullOrWhiteSpace(data.TargetNameSpace)) { data.HelpItem.NameSpace = data.TargetNameSpace; }
-                if (data.HelpItem.HelpId is Guid newId) { data.HelpId = newId; }
+                UnBindData();
+                Program.Data.HelpSubjects.Remove(item);
+                helpItem = new HelpItem();
+                helpKey = new HelpKey(helpItem);
+                BuildHelpContentTree();
+                BindData();
             }
         }
 
+
+        private void HelpSubject_Load(object sender, EventArgs e)
+        {
+            BuildHelpContentTree();
+            BindData();
+        }
 
         void BindData()
         {
             errorProvider.Clear();
 
-            if (Program.Data.HelpSubjects.FirstOrDefault(w => w.HelpId == data.HelpId) is HelpItem item)
-            {
-                data.HelpItem = item;
-                if (!String.IsNullOrWhiteSpace(item.NameSpace)) { data.TargetNameSpace = item.NameSpace; }
-            }
+            if (Program.Data.HelpSubjects.FirstOrDefault(w => helpKey.Equals(w)) is HelpItem byKey)
+            { helpItem = byKey; }
+            else if (Program.Data.HelpSubjects.FirstOrDefault(w => initNameSpace.Equals(w)) is HelpItem byNameSpace)
+            { helpItem = byNameSpace; helpKey = new HelpKey(byNameSpace); }
+            else if (Program.Data.HelpSubjects.FirstOrDefault(w => String.Equals(w.HelpSubject, initHelpSubject, StringComparison.OrdinalIgnoreCase)) is HelpItem bySubject)
+            { helpItem = bySubject; helpKey = new HelpKey(bySubject); }
 
-            if (data.HelpItem is not null)
+            if (helpItem is not null)
             {
-                helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), data.HelpItem, nameof(data.HelpItem.HelpSubject)));
-                helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), data.HelpItem, nameof(data.HelpItem.NameSpace)));
-                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), data.HelpItem, nameof(data.HelpItem.HelpText), true));
+                helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpItem, nameof(helpItem.HelpSubject)));
+                helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpItem, nameof(helpItem.NameSpace)));
+                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpItem, nameof(helpItem.HelpText)));
                 ValidateChildren();
             }
-
-            BuildHelpContentTree();
         }
 
         void UnBindData()
@@ -135,6 +141,8 @@ namespace DataDictionary.Main.Dialogs
             {
                 TreeNode subjectNode = CreateNode(item, helpContentImageIndex.HelpPage, null);
                 helpContentNavigation.Nodes.Add(subjectNode);
+
+                if (helpKey.Equals(item)) { helpContentNavigation.SelectedNode = subjectNode; }
             }
 
             TreeNode CreateNode(HelpItem source, helpContentImageIndex imageIndex, TreeNode? parentNode = null)
@@ -166,40 +174,21 @@ namespace DataDictionary.Main.Dialogs
         private void helpContentNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (helpContentNodes.ContainsKey(e.Node) &&
-                helpContentNodes[e.Node] is HelpItem helpItem &&
-                helpItem.HelpId is Guid helpId)
+                helpContentNodes[e.Node] is HelpItem item)
             {
                 UnBindData();
-                data.HelpId = helpId;
+                helpItem = item;
+                helpKey = new HelpKey(item);
                 BindData();
             }
         }
         #endregion
 
-
-        private void openToolStripButton_Click(object sender, EventArgs e)
-        {
-            this.UseWaitCursor = true;
-            this.Enabled = false;
-            UnBindData();
-
-            this.DoWork(Program.Data.LoadApplicationData(), OnComplete);
-
-            void OnComplete(RunWorkerCompletedEventArgs args)
-            {
-                if (args.Error is not null) { Program.ShowException(args.Error); }
-
-                NavigateTo("About");
-                BindData();
-            }
-        }
-
         private void newToolStripButton_Click(object sender, EventArgs e)
         {
             UnBindData();
-            data.HelpItem = new HelpItem();
-            data.TargetNameSpace = String.Empty;
-            if (data.HelpItem.HelpId is Guid helpGuid) { data.HelpId = helpGuid; }
+            helpItem = new HelpItem();
+            helpKey = new HelpKey(helpItem);
             BindData();
         }
 
@@ -234,5 +223,14 @@ namespace DataDictionary.Main.Dialogs
             // Error Provider will set this to e.Cancel to true, blocking the closing of the form.
             if (errorProvider.GetAllErrors(this).Count() > 0 && e.Cancel) { e.Cancel = false; }
         }
+
+        #region IColleague
+
+        protected override void HandleMessage(DbApplicationBatchStarting message)
+        { UnBindData(); }
+
+        protected override void HandleMessage(DbApplicationBatchCompleted message)
+        { BuildHelpContentTree(); BindData();  }
+        #endregion
     }
 }
