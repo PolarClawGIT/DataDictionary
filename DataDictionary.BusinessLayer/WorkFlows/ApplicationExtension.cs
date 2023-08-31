@@ -29,7 +29,13 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new WorkItem()
             {
                 WorkName = "Clear Properties",
-                DoWork = data.HelpSubjects.Clear
+                DoWork = data.Properties.Clear
+            });
+
+            workItems.Add(new WorkItem()
+            {
+                WorkName = "Clear Definitions",
+                DoWork = data.Definitions.Clear
             });
 
             workItems.Add(new ExecuteReader(openConnection)
@@ -167,7 +173,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                         workSet.Tables[data.Definitions.BindingName] is DataTable definitionsData)
                     {
                         data.Definitions.Clear();
-                        data.Properties.Load(definitionsData.CreateDataReader());
+                        data.Definitions.Load(definitionsData.CreateDataReader());
                     }
 
                 }

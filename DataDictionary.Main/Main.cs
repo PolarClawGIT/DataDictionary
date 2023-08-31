@@ -34,6 +34,8 @@ namespace DataDictionary.Main
         {
             InitializeComponent();
             toolStrip.Hide(); // Hide base ToolStrip
+            menuStrip.Enabled = false;
+            navigationTabs.Enabled = false;
 
             // Setup Images for Tree Control
             SetImages(dbMetaDataNavigation, dbDataImageItems.Values);
@@ -54,7 +56,6 @@ namespace DataDictionary.Main
         private void Main_Load(object sender, EventArgs e)
         {
             Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
-            //Program.Messenger.AddColleague(this);
 
             // TODO: Cannot get the Context menus to show. For now, add them to the Tools menu
             dbSchemaToolStripMenuItem.DropDownItems.AddRange(dbSchemaContextMenu.Items);
@@ -75,6 +76,9 @@ namespace DataDictionary.Main
 
             BuildDbDataTree();
             BuildDomainModelTree();
+
+            menuStrip.Enabled = true;
+            navigationTabs.Enabled = true;
         }
 
         void UnBindData()

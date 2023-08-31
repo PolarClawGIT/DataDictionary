@@ -34,8 +34,8 @@
             propertyDescriptionColum = new DataGridViewTextBoxColumn();
             propertyDescriptionData = new Controls.TextBoxData();
             propertyNameData = new Controls.TextBoxData();
-            propertyTitleData = new Controls.TextBoxData();
             propertyTitleLayout = new TableLayoutPanel();
+            propertyTitleData = new Controls.TextBoxData();
             obsoleteData = new CheckBox();
             applicationPropertyLayout = new TableLayoutPanel();
             applicationPropertyLayout.SuspendLayout();
@@ -60,7 +60,7 @@
             applicationPropertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
             applicationPropertyLayout.RowStyles.Add(new RowStyle());
             applicationPropertyLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            applicationPropertyLayout.Size = new Size(424, 425);
+            applicationPropertyLayout.Size = new Size(393, 425);
             applicationPropertyLayout.TabIndex = 0;
             // 
             // applicationPropertyNavigation
@@ -74,7 +74,7 @@
             applicationPropertyNavigation.Name = "applicationPropertyNavigation";
             applicationPropertyNavigation.RowTemplate.Height = 25;
             applicationPropertyNavigation.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            applicationPropertyNavigation.Size = new Size(418, 206);
+            applicationPropertyNavigation.Size = new Size(387, 206);
             applicationPropertyNavigation.TabIndex = 0;
             applicationPropertyNavigation.SelectionChanged += applicationPropertyNavigation_SelectionChanged;
             // 
@@ -102,7 +102,7 @@
             propertyDescriptionData.Multiline = true;
             propertyDescriptionData.Name = "propertyDescriptionData";
             propertyDescriptionData.ReadOnly = false;
-            propertyDescriptionData.Size = new Size(418, 100);
+            propertyDescriptionData.Size = new Size(387, 100);
             propertyDescriptionData.TabIndex = 2;
             // 
             // propertyNameData
@@ -114,20 +114,8 @@
             propertyNameData.Multiline = false;
             propertyNameData.Name = "propertyNameData";
             propertyNameData.ReadOnly = false;
-            propertyNameData.Size = new Size(418, 45);
+            propertyNameData.Size = new Size(387, 45);
             propertyNameData.TabIndex = 3;
-            // 
-            // propertyTitleData
-            // 
-            propertyTitleData.AutoSize = true;
-            propertyTitleData.Dock = DockStyle.Fill;
-            propertyTitleData.HeaderText = "Property Title";
-            propertyTitleData.Location = new Point(3, 3);
-            propertyTitleData.Multiline = false;
-            propertyTitleData.Name = "propertyTitleData";
-            propertyTitleData.ReadOnly = false;
-            propertyTitleData.Size = new Size(333, 44);
-            propertyTitleData.TabIndex = 1;
             // 
             // propertyTitleLayout
             // 
@@ -142,13 +130,25 @@
             propertyTitleLayout.Name = "propertyTitleLayout";
             propertyTitleLayout.RowCount = 1;
             propertyTitleLayout.RowStyles.Add(new RowStyle());
-            propertyTitleLayout.Size = new Size(418, 50);
+            propertyTitleLayout.Size = new Size(387, 50);
             propertyTitleLayout.TabIndex = 4;
+            // 
+            // propertyTitleData
+            // 
+            propertyTitleData.AutoSize = true;
+            propertyTitleData.Dock = DockStyle.Fill;
+            propertyTitleData.HeaderText = "Property Title";
+            propertyTitleData.Location = new Point(3, 3);
+            propertyTitleData.Multiline = false;
+            propertyTitleData.Name = "propertyTitleData";
+            propertyTitleData.ReadOnly = false;
+            propertyTitleData.Size = new Size(302, 44);
+            propertyTitleData.TabIndex = 1;
             // 
             // obsoleteData
             // 
             obsoleteData.AutoSize = true;
-            obsoleteData.Location = new Point(342, 3);
+            obsoleteData.Location = new Point(311, 3);
             obsoleteData.Name = "obsoleteData";
             obsoleteData.Size = new Size(73, 19);
             obsoleteData.TabIndex = 2;
@@ -159,7 +159,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(424, 450);
+            ClientSize = new Size(393, 450);
             Controls.Add(applicationPropertyLayout);
             Name = "ApplicationProperty";
             Text = "ApplicationProperty";

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DataDictionary.Main.Properties;
+using DataDictionary.Main.Messages;
 
 namespace DataDictionary.Main.Dialogs
 {
@@ -40,10 +41,11 @@ namespace DataDictionary.Main.Dialogs
 
         private void commandLoadFromDatabase_Click(object sender, EventArgs e)
         {
+            SendMessage(new DbApplicationBatchStarting());
             this.DoWork(Program.Data.LoadApplicationData(), OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
-            { } // Nothing to do at this point
+            { SendMessage(new DbApplicationBatchCompleted()); } 
         }
 
         private void commandSaveToFile_Click(object sender, EventArgs e)
@@ -57,10 +59,11 @@ namespace DataDictionary.Main.Dialogs
 
         private void commandLoadFromFile_Click(object sender, EventArgs e)
         {
+            SendMessage(new DbApplicationBatchStarting());
             this.DoWork(Program.Data.LoadApplicationData(new FileInfo(Settings.Default.AppDataFile)), OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
-            { } // Nothing to do at this point
+            { SendMessage(new DbApplicationBatchCompleted()); }
         }
 
         private void defaultModeOnLine_CheckedChanged(object sender, EventArgs e)

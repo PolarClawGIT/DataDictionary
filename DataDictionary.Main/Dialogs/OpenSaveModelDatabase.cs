@@ -16,6 +16,7 @@ using System.Windows.Forms.VisualStyles;
 using System.Reflection;
 using Toolbox.Mediator;
 using Toolbox.Threading;
+using DataDictionary.Main.Controls;
 
 namespace DataDictionary.Main.Dialogs
 {
@@ -62,7 +63,7 @@ namespace DataDictionary.Main.Dialogs
             modelList.DataSource = Program.Data.Models;
             modelList.ClearSelection();
 
-            if (modelList.FindRow<ModelItem, ModelKey>(currentKey, (item) => new ModelKey(item)).row is DataGridViewRow row)
+            if (modelList.FirstOrDefault<ModelItem>(currentKey.Equals).Row is DataGridViewRow row)
             { row.Selected = true; }
             else
             { currentKey = Program.Data.ModelKey; }

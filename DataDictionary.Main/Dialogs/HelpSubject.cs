@@ -194,31 +194,6 @@ namespace DataDictionary.Main.Dialogs
             }
         }
 
-        private void saveToolStripButton_Click(object sender, EventArgs e)
-        {
-            errorProvider.Clear();
-            this.ValidateChildren();
-            if (errorProvider.GetAllErrors(this).Count != 0) { return; }
-
-            this.UseWaitCursor = true;
-            this.Enabled = false;
-            UnBindData();
-
-            if (data.HelpItem is HelpItem && !Program.Data.HelpSubjects.Contains(data.HelpItem))
-            { Program.Data.HelpSubjects.Add(data.HelpItem); }
-
-            this.DoWork(Program.Data.SaveHelp(), OnComplete);
-
-            void OnComplete(RunWorkerCompletedEventArgs args)
-            {
-                if (args.Error is not null) { Program.ShowException(args.Error); }
-
-                BindData();
-                this.UseWaitCursor = false;
-                this.Enabled = true;
-            }
-        }
-
         private void newToolStripButton_Click(object sender, EventArgs e)
         {
             UnBindData();

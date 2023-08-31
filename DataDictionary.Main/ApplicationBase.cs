@@ -154,6 +154,9 @@ namespace DataDictionary.Main
         protected virtual void HandleMessage(DbDataBatchStarting message) { }
         protected virtual void HandleMessage(DbDataBatchCompleted message) { }
 
+        protected virtual void HandleMessage(DbApplicationBatchStarting message) { }
+        protected virtual void HandleMessage(DbApplicationBatchCompleted message) { }
+
         protected virtual void HandleMessage(WindowsCommand message) { }
 
         protected virtual void HandleMessage(WindowsCopyCommand message)
@@ -399,7 +402,7 @@ namespace DataDictionary.Main
             return errors;
         }
 
-        public static void DoWork(this Form form, IEnumerable<WorkItem> work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
+        public static void DoWork(this ApplicationBase form, IEnumerable<WorkItem> work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
         {
             form.LockForm();
             Program.Worker.Enqueue(work, completing);
@@ -413,7 +416,7 @@ namespace DataDictionary.Main
             }
         }
 
-        public static void DoWork(this Form form, WorkItem work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
+        public static void DoWork(this ApplicationBase form, WorkItem work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
         {
             form.UseWaitCursor = true;
             form.Enabled = false;
@@ -429,7 +432,7 @@ namespace DataDictionary.Main
             }
         }
 
-        public static void LockForm(this Form form)
+        public static void LockForm(this ApplicationBase form)
         { // This assumes that all form layouts start with a TablePanel Control. Nothing is expected outside of that control
             foreach (Control item in form.Controls.Cast<Control>().Where(w => w.HasChildren))
             {
@@ -438,7 +441,7 @@ namespace DataDictionary.Main
             }
         }
 
-        public static void UnLockForm(this Form form)
+        public static void UnLockForm(this ApplicationBase form)
         { // This assumes that all form layouts start with a TablePanel Control. Nothing is expected outside of that control.
             foreach (Control item in form.Controls.Cast<Control>().Where(w => w.HasChildren))
             {
@@ -447,22 +450,5 @@ namespace DataDictionary.Main
             }
         }
 
-        /// <summary>
-        /// Finds a DataGridViewRow based on Key provided.
-        /// </summary>
-        /// <typeparam name="T">Type of data Item.</typeparam>
-        /// <typeparam name="K">Type of Key for compare</typeparam>
-        /// <param name="control"></param>
-        /// <param name="targetKey">Key to match</param>
-        /// <param name="newKey">Constructor that converts the Item into the Key</param>
-        /// <returns>Tuple of the Row and the Data item if found, null otherwise.</returns>
-        public static (DataGridViewRow? row, T? data) FindRow<T, K>(this DataGridView control, K targetKey, Func<T, K> newKey)
-            where T : class
-            where K : class, IEquatable<K>
-        {
-            if (control.Rows.Cast<DataGridViewRow>().FirstOrDefault(w => w.DataBoundItem is T item && newKey(item).Equals(targetKey)) is DataGridViewRow row)
-            { return (row, row.DataBoundItem as T); }
-            else { return (null, null); }
-        }
     }
 }

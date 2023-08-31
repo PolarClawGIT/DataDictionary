@@ -121,7 +121,7 @@ namespace DataDictionary.Main.Dialogs
                 }
             }
 
-            public IReadOnlyList<SqlError> SqlErrors
+            public IReadOnlyList<SqlError> SQLErrors
             {
                 get
                 {
@@ -252,7 +252,7 @@ namespace DataDictionary.Main.Dialogs
             exceptionSqlErrors.AutoGenerateColumns = false;
 
             exceptionData.DataSource = thisData.Data;
-            exceptionSqlErrors.DataSource = thisData.SqlErrors;
+            exceptionSqlErrors.DataSource = thisData.SQLErrors;
         }
 
     }
