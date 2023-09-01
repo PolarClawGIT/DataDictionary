@@ -1,10 +1,10 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procDeleteDomainAttribute]
-		@ModelId UniqueIdentifier = null,
-		@AttributeId UniqueIdentifier = Null
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainAttributeDefinition]
+		@ModelId UniqueIdentifier,
+		@Data [App_DataDictionary].[typeDomainAttributeDefinition] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Delete on DomainAttribute.
+/* Description: Performs Set on DomainAttributeDefinition.
 */
 
 -- Transaction Handling
@@ -18,39 +18,65 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
+
+	-- Clean the Data
+	Declare @Values [App_DataDictionary].[typeDomainAttributeDefinition]
+	Insert Into @Values
+	Select	D.[AttributeId],
+			D.[DefinitionId],
+			NullIf(Trim(D.[DefinitionText]),'') As [DefinitionText],
+			D.[SysStart]
+	From	@Data D
+			Left Join [App_DataDictionary].[DomainAttributeDefinition] C
+			On	D.[AttributeId] = C.[AttributeId] And
+				D.[DefinitionId] = C.[DefinitionId]
+
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[DomainAttribute] Where [AttributeId] = @AttributeId And [Obsolete] = 1)
-	Throw 50000, '[AttributeId] could not be found or is not marked as [Obsolete]', 1;
+	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
+	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
 
-	Declare @Delete Table (
-		[AttributeId] UniqueIdentifier Not Null)
+	If Exists (
+		Select	V.[AttributeId]
+		From	@Values V
+				Left Join [App_DataDictionary].[DomainAttribute] A
+				On	V.[AttributeId] = A.[AttributeId]
+				Left Join [App_DataDictionary].[ModelAttribute] P
+				On	V.[AttributeId] = P.[AttributeId] And
+					P.[ModelId] = @ModelId
+		Where	A.[AttributeId] is Null Or
+				P.[AttributeId] is Null)
+	Throw 50000, '[AttributeId] could not be found or is not associated with Model specified', 2;
+	
+	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
+		Select	D.[AttributeId]
+		From	@Values D
+				Inner Join [App_DataDictionary].[DomainAttributeDefinition] A
+				On D.[AttributeId] = A.[AttributeId] And
+					D.[DefinitionId] = A.[DefinitionId]
+		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
+	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 4;
 
-	Insert Into @Delete
-	Select	M.[AttributeId]
-	From	[App_DataDictionary].[ModelAttribute] M
-			Left Join [App_DataDictionary].[ModelAttribute] R
-			On	M.[AttributeId] = R.[AttributeId] And
-				R.[ModelId] <> @ModelId
-	Where	(@AttributeId is Null or M.[AttributeId] = @AttributeId) And
-			(@ModelId is Null or M.[ModelId] = @ModelId) And
-			(@AttributeId is Not Null Or @ModelId is Not Null) And
-			R.[ModelId] is Null
-
-	-- Cascade Delete
-	Delete From [App_DataDictionary].[DomainAttributeAlias]
-	Where [AttributeId] In (Select [AttributeId] From @Delete)
-
-	Delete From [App_DataDictionary].[DomainAttributeProperty]
-	Where [AttributeId] In (Select [AttributeId] From @Delete)
-
-	Delete From [App_DataDictionary].[DomainAttributeDefinition]
-	Where [AttributeId] In (Select [AttributeId] From @Delete)
-
-	Delete From [App_DataDictionary].[ModelAttribute]
-	Where [AttributeId] In (Select [AttributeId] From @Delete)
-
-	Delete From [App_DataDictionary].[DomainAttribute]
-	Where [AttributeId] In (Select [AttributeId] From @Delete)
+	-- Apply Changes
+	With [Data] As (
+		Select	D.[AttributeId],
+				D.[DefinitionId],
+				D.[DefinitionText]
+		From	@Values D
+				Left Join [App_DataDictionary].[DomainAttributeDefinition] A
+				On	D.[AttributeId] = A.[AttributeId] And
+					D.[DefinitionId] = A.[DefinitionId])
+	Merge [App_DataDictionary].[DomainAttributeDefinition] T
+	Using [Data] S
+	On	T.[AttributeId] = S.[AttributeId] And
+		T.[DefinitionId] = S.[DefinitionId]
+	When Not Matched by Target Then
+		Insert ([AttributeId], [DefinitionId], [DefinitionText])
+		Values ([AttributeId], [DefinitionId], [DefinitionText])
+	When Not Matched by Source And (T.[AttributeId] in (
+		Select	[AttributeId]
+		From	[App_DataDictionary].[ModelAttribute]
+		Where	[ModelId] = @ModelId))
+		Then Delete;
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -77,7 +103,6 @@ Begin Catch
 	Print FormatMessage (' Current_User - %s', Current_User)
 	Print FormatMessage (' XAct_State - %i', XAct_State())
 	Print '*** Debug Report ***'
-	Print FormatMessage (' @AttributeId- %s',Convert(NVarChar(50),@AttributeId))
 
 	Print FormatMessage ('*** End Report: %s ***', Object_Name(@@ProcID))
 
@@ -92,10 +117,4 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
-GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procDeleteDomainAttribute',
-	@value = N'Performs Delete on DomainAttribute.'
 GO

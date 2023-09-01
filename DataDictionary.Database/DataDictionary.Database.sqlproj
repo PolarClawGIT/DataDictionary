@@ -179,6 +179,9 @@
     <Build Include="App_DataDictionary\User Defined Types\typeApplicationDefinition.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationDefinition.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationDefinition.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainAttributeDefinition.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttributeDefinition.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeDefinition.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

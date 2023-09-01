@@ -159,6 +159,13 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Target = data.DomainAttributeProperties
             });
 
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Load Domain Attribute Definitions",
+                Command = (conn) => DomainAttributeDefinitionItem.GetData(conn, modelId),
+                Target = data.DomainAttributeDefinitions
+            });
+
             return workItems.AsReadOnly();
         }
 
@@ -273,6 +280,11 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Command = (conn) => DomainAttributePropertyItem.SetData(conn, modelId, data.DomainAttributeProperties)
             });
 
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Save Domain Attribute Definitions",
+                Command = (conn) => DomainAttributeDefinitionItem.SetData(conn, modelId, data.DomainAttributeDefinitions)
+            });
 
             return workItems.AsReadOnly();
         }
@@ -284,6 +296,12 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
             OpenConnection openConnection = new OpenConnection(data.ModelContext);
             workItems.Add(openConnection);
+
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Delete Attributes",
+                Command = (conn) => DomainAttributeItem.DeleteData(conn, modelId)
+            });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {

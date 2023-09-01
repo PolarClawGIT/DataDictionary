@@ -77,8 +77,25 @@ namespace DataDictionary.DataLayer.DomainData
             return command;
         }
 
+        public static Command DeleteData(IConnection connection, IDomainAttributeKey parameters)
+        { return DeleteData(connection, (null, parameters.AttributeId)); }
+
+        public static Command DeleteData(IConnection connection, IModelKey parameters)
+        { return DeleteData(connection, (null, parameters.ModelId)); }
+
+        static Command DeleteData(IConnection connection, (Guid? modelId, Guid? attributeId) parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procDeleteDomainAttribute]";
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@AttributeId", parameters.attributeId);
+
+            return command;
+        }
+
         public override String ToString()
-        { if(AttributeTitle is not null) { return AttributeTitle; } else { return String.Empty; } }
+        { if (AttributeTitle is not null) { return AttributeTitle; } else { return String.Empty; } }
     }
 
     public static class DomainAttributeItemExtension

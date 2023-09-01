@@ -23,10 +23,10 @@ namespace DataDictionary.DataLayer.ApplicationData
 
         #region IEquatable
         public Boolean Equals(DefinitionKey? other)
-        { return (other is DefinitionKey && this.DefinitionId.Equals(other.DefinitionId)); }
+        { return other is DefinitionKey && EqualityComparer<Guid?>.Default.Equals(this.DefinitionId, other.DefinitionId); }
 
         public override bool Equals(object? obj)
-        { if (obj is IDefinitionKey value) { return this.Equals(new DefinitionKey(value)); } else { return false; } }
+        { return obj is IDefinitionKey value && this.Equals(new DefinitionKey(value)); }
 
         public static bool operator ==(DefinitionKey left, DefinitionKey right)
         { return left.Equals(right); }

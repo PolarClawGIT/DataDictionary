@@ -55,6 +55,7 @@ namespace DataDictionary.BusinessLayer
         public BindingTable<DomainAttributeItem> DomainAttributes = ModelFactory.Create<DomainAttributeItem>();
         public BindingTable<DomainAttributeAliasItem> DomainAttributeAliases = ModelFactory.Create<DomainAttributeAliasItem>();
         public BindingTable<DomainAttributePropertyItem> DomainAttributeProperties = ModelFactory.Create<DomainAttributePropertyItem>();
+        public BindingTable<DomainAttributeDefinitionItem> DomainAttributeDefinitions = ModelFactory.Create<DomainAttributeDefinitionItem>();
 
         // Application Data
         public BindingTable<HelpItem> HelpSubjects { get; } = ModelFactory.Create<HelpItem>();
@@ -99,6 +100,7 @@ namespace DataDictionary.BusinessLayer
             DomainAttributes.Clear();
             DomainAttributeAliases.Clear();
             DomainAttributeProperties.Clear();
+            DomainAttributeDefinitions.Clear();
             Models.Clear();
         }
 
