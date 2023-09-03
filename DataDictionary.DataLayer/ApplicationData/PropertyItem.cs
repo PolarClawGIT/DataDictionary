@@ -25,6 +25,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         public PropertyItem() : base()
         {
             PropertyId = Guid.NewGuid();
+            PropertyTitle = "new Property";
             Obsolete = false;
         }
 
