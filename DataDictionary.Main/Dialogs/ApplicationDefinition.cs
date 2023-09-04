@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.ApplicationData;
+﻿using DataDictionary.BusinessLayer.Validation;
+using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -17,124 +18,128 @@ namespace DataDictionary.Main.Dialogs
     partial class ApplicationDefinition : ApplicationBase
     {
         DefinitionKey definitionKey;
-        DefinitionItem definition;
 
         public ApplicationDefinition() : base()
         {
             InitializeComponent();
             this.Icon = Resources.DomainDefinition;
 
-            if (Program.Data.Definitions.FirstOrDefault() is DefinitionItem item)
-            { definition = item; }
-            else
-            {
-                definition = new DefinitionItem() { DefinitionTitle = "new Definition", Obsolete = false };
-                Program.Data.Definitions.Add(definition);
-            }
-            definitionKey = new DefinitionKey(definition);
+            bindingSource.DataSource = Program.Data.Definitions;
+            if (bindingSource.Current is DefinitionItem item)
+            { definitionKey = new DefinitionKey(item); }
+            else { definitionKey = new DefinitionKey(new DefinitionItem()); }
 
             newToolStripButton.Enabled = true;
             newToolStripButton.Click += NewToolStripButton_Click;
         }
 
+        private void ApplicationDefinition_Load(object sender, EventArgs e)
+        {
+            BindData();
+
+            this.ValidateChildren();
+        }
+
         private void NewToolStripButton_Click(object? sender, EventArgs e)
         {
-            definition = new DefinitionItem() { DefinitionTitle = "new Definition", Obsolete = false };
-            Program.Data.Definitions.Add(definition);
-            definitionKey = new DefinitionKey(definition);
-
-            if (definitionNavigation.FirstOrDefault<DefinitionItem>(definitionKey.Equals).Row is DataGridViewRow row)
-            { row.Selected = true; }
-        }
-
-        private void ApplicationDefinition_Load(object sender, EventArgs e)
-        { BindNavigation(); SetNavigation(); }
-
-        private void definitionNavigation_SelectionChanged(object sender, EventArgs e)
-        {
-            if (isBinding) { return; }
-
-            if (definitionNavigation.SelectedRows.Count > 0 && definitionNavigation.SelectedRows[0].DataBoundItem is DefinitionItem item)
+            DefinitionItem? newItem = bindingSource.AddNew() as DefinitionItem;
+            if (newItem is not null)
             {
-                UnBindData();
-                definition = item;
-                definitionKey = new DefinitionKey(definition);
-                BindData();
+                definitionKey = new DefinitionKey(newItem);
+                bindingSource.Position = Program.Data.Definitions.IndexOf(newItem);
             }
+
+            definitionTitleData.Focus();
         }
 
-        Boolean isBinding = false; // Used to prevent the entering the Binding Logic when already binding
+        private void bindingSource_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            DefinitionItem newItem = new DefinitionItem();
+            definitionKey = new DefinitionKey(newItem);
+            e.NewObject = newItem;
+
+            definitionTitleData.Focus();
+        }
+
+        private void definitionTitleData_Validating(object sender, CancelEventArgs e)
+        {
+            if (String.IsNullOrEmpty(definitionTitleData.Text))
+            { errorProvider.SetError(definitionTitleData.ErrorControl, "DefinitionTitle required"); }
+            else { errorProvider.SetError(definitionTitleData.ErrorControl, String.Empty); }
+        }
+
+        private void definitionTitleData_Validated(object sender, EventArgs e)
+        { ValidateRows(); }
+
+        private void definitionNavigation_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
+        { ValidateRows(); }
+
+        private void definitionNavigation_RowValidated(object sender, DataGridViewCellEventArgs e)
+        { }
+
+        void ValidateRows()
+        { //TODO: This does not always cause the error icon to show.
+          // The icon does show if the user navigates to a different row.
+            foreach (DataGridViewRow row in definitionNavigation.Rows)
+            {
+                if (row.GetData() is DefinitionItem definitionItem)
+                { row.ErrorText = definitionItem.Validate(); }
+            }
+
+            definitionNavigation.Refresh();
+        }
+
+        private void definitionNavigation_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            if (e.Exception is not null && e.RowIndex < definitionNavigation.Rows.Count)
+            { definitionNavigation.Rows[e.RowIndex].ErrorText = e.Exception.Message; }
+            else { definitionNavigation.Rows[e.RowIndex].ErrorText = String.Empty; }
+        }
+
         void BindData()
         {
-            if (isBinding) { return; }
-            isBinding = true;
+            bindingSource.ResetBindings(false);
 
-            definitionTitleData.DataBindings.Add(new Binding(nameof(definitionTitleData.Text), definition, nameof(definition.DefinitionTitle)));
-            definitionDescriptionData.DataBindings.Add(new Binding(nameof(definitionDescriptionData.Text), definition, nameof(definition.DefinitionDescription)));
-            obsoleteData.DataBindings.Add(new Binding(nameof(obsoleteData.Checked), definition, nameof(definition.Obsolete), true, DataSourceUpdateMode.OnValidation, false));
-
-            isBinding = false;
-        }
-
-        void BindNavigation()
-        {
-            if (isBinding) { return; }
-            isBinding = true;
+            if (Program.Data.Definitions.FirstOrDefault(w => definitionKey is not null && definitionKey.Equals(w)) is DefinitionItem priorItem)
+            { bindingSource.Position = Program.Data.Definitions.IndexOf(priorItem); }
 
             definitionNavigation.AutoGenerateColumns = false;
-            definitionNavigation.DataSource = Program.Data.Definitions; // May cause the Selection Changed event to execute, but not always.
+            definitionNavigation.DataSource = bindingSource;
 
-            isBinding = false;
+            if (bindingSource.Current is DefinitionItem item)
+            {
+                definitionTitleData.DataBindings.Add(new Binding(nameof(definitionTitleData.Text), bindingSource, nameof(item.DefinitionTitle)));
+                definitionDescriptionData.DataBindings.Add(new Binding(nameof(definitionDescriptionData.Text), bindingSource, nameof(item.DefinitionDescription)));
+                obsoleteData.DataBindings.Add(new Binding(nameof(obsoleteData.Checked), bindingSource, nameof(item.Obsolete), false, DataSourceUpdateMode.OnValidation, false));
+            }
         }
 
         void UnBindData()
         {
-            if (isBinding) { return; }
+            if (bindingSource.Current is DefinitionItem item)
+            { definitionKey = new DefinitionKey(item); }
 
+            definitionNavigation.DataSource = null;
             definitionTitleData.DataBindings.Clear();
             definitionDescriptionData.DataBindings.Clear();
             obsoleteData.DataBindings.Clear();
         }
 
-        void UnBindNavigation()
-        {
-            if (isBinding) { return; }
-            definitionNavigation.DataSource = null;
-        }
-
-        void SetNavigation()
-        {
-            if (definitionNavigation.FirstOrDefault<DefinitionItem>(definitionKey.Equals) is (DataGridViewRow, DefinitionItem) value)
-            { // Found the current Key, use that row.
-                UnBindData();
-                value.Row.Selected = true; // May cause the Selection Changed event to execute, but not always.
-                definition = value.Data;
-                definitionKey = new DefinitionKey(definition);
-                BindData();
-            }
-            else if (definitionNavigation.FirstOrDefault<DefinitionItem>() is (DataGridViewRow, DefinitionItem) firstValue)
-            { // Did not find the current key, use the first row.
-                UnBindData();
-                firstValue.Row.Selected = true; // May cause the Selection Changed event to execute, but not always.
-                definition = firstValue.Data;
-                definitionKey = new DefinitionKey(definition);
-                BindData();
-            }
-        }
-
         #region IColleague
-
         protected override void HandleMessage(DbApplicationBatchStarting message)
-        { UnBindNavigation(); }
+        { UnBindData(); }
 
         protected override void HandleMessage(DbApplicationBatchCompleted message)
-        { BindNavigation(); SetNavigation(); }
+        { BindData(); }
 
         protected override void HandleMessage(DbDataBatchStarting message)
-        { UnBindNavigation(); }
+        { UnBindData(); }
 
         protected override void HandleMessage(DbDataBatchCompleted message)
-        { BindNavigation(); SetNavigation(); }
+        { BindData(); }
         #endregion
+
+
+
     }
 }

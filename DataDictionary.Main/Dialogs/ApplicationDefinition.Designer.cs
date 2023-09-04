@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel applicationDefinitionLayout;
             TableLayoutPanel definitionTitleLayout;
             definitionNavigation = new DataGridView();
@@ -36,11 +37,15 @@
             definitionDescriptionData = new Controls.TextBoxData();
             definitionTitleData = new Controls.TextBoxData();
             obsoleteData = new CheckBox();
+            bindingSource = new BindingSource(components);
+            errorProvider = new ErrorProvider(components);
             applicationDefinitionLayout = new TableLayoutPanel();
             definitionTitleLayout = new TableLayoutPanel();
             applicationDefinitionLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)definitionNavigation).BeginInit();
             definitionTitleLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // applicationDefinitionLayout
@@ -62,7 +67,6 @@
             // 
             // definitionNavigation
             // 
-            definitionNavigation.AllowUserToAddRows = false;
             definitionNavigation.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             definitionNavigation.Columns.AddRange(new DataGridViewColumn[] { definitionTitleColumn, definitionDescriptionColumn });
             definitionNavigation.Dock = DockStyle.Fill;
@@ -72,8 +76,11 @@
             definitionNavigation.RowTemplate.Height = 25;
             definitionNavigation.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             definitionNavigation.Size = new Size(386, 262);
-            definitionNavigation.TabIndex = 0;
-            definitionNavigation.SelectionChanged += definitionNavigation_SelectionChanged;
+            definitionNavigation.TabIndex = 3;
+            definitionNavigation.TabStop = false;
+            definitionNavigation.DataError += definitionNavigation_DataError;
+            definitionNavigation.RowValidated += definitionNavigation_RowValidated;
+            definitionNavigation.RowValidating += definitionNavigation_RowValidating;
             // 
             // definitionTitleColumn
             // 
@@ -115,7 +122,7 @@
             definitionTitleLayout.RowCount = 1;
             definitionTitleLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             definitionTitleLayout.Size = new Size(386, 50);
-            definitionTitleLayout.TabIndex = 3;
+            definitionTitleLayout.TabIndex = 1;
             // 
             // definitionTitleData
             // 
@@ -127,7 +134,9 @@
             definitionTitleData.Name = "definitionTitleData";
             definitionTitleData.ReadOnly = false;
             definitionTitleData.Size = new Size(301, 44);
-            definitionTitleData.TabIndex = 1;
+            definitionTitleData.TabIndex = 0;
+            definitionTitleData.Validated += definitionTitleData_Validated;
+            definitionTitleData.Validating += definitionTitleData_Validating;
             // 
             // obsoleteData
             // 
@@ -135,9 +144,17 @@
             obsoleteData.Location = new Point(310, 3);
             obsoleteData.Name = "obsoleteData";
             obsoleteData.Size = new Size(73, 19);
-            obsoleteData.TabIndex = 2;
+            obsoleteData.TabIndex = 1;
             obsoleteData.Text = "Obsolete";
             obsoleteData.UseVisualStyleBackColor = true;
+            // 
+            // bindingSource
+            // 
+            bindingSource.AddingNew += bindingSource_AddingNew;
+            // 
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
             // 
             // ApplicationDefinition
             // 
@@ -154,6 +171,8 @@
             ((System.ComponentModel.ISupportInitialize)definitionNavigation).EndInit();
             definitionTitleLayout.ResumeLayout(false);
             definitionTitleLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -166,5 +185,7 @@
         private DataGridViewTextBoxColumn definitionTitleColumn;
         private DataGridViewTextBoxColumn definitionDescriptionColumn;
         private CheckBox obsoleteData;
+        private BindingSource bindingSource;
+        private ErrorProvider errorProvider;
     }
 }

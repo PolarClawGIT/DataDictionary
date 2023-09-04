@@ -470,6 +470,7 @@ namespace DataDictionary.Main
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
         { new Forms.UnitTestGridView().Show(); }
 
-
+        private void testFormToolStripMenuItem_Click(object sender, EventArgs e)
+        { Activate(() => new Dialogs.Experiment()); }
     }
 }

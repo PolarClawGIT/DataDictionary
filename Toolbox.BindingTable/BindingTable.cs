@@ -155,6 +155,7 @@ namespace Toolbox.BindingTable
 
                     DataRow newRow = dataItems.Rows[(dataItems.Rows.Count - 1)]; // new rows is always added at the end
                     TBindingItem newItem = new TBindingItem();
+                    newItem.BindingTable = this;
                     newItem.SetRow(newRow);
                     this.Add(newItem);
                 }

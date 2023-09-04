@@ -35,7 +35,7 @@ namespace Toolbox.BindingTable
         /// <summary>
         /// Reference to the Binding Table that owns this row.
         /// </summary>
-        protected internal IBindingTable? BindingTable { get; set; }
+        public IBindingTable? BindingTable { get; protected internal set; }
 
         /// <summary>
         /// A Column Definition of the underlining table.
@@ -49,7 +49,7 @@ namespace Toolbox.BindingTable
         public abstract IReadOnlyList<DataColumn> ColumnDefinitions();
 
         /// <summary>
-        /// Internal DataRow being wrappered.
+        /// Internal DataRow being wrapper-ed.
         /// </summary>
         private DataRow data;
 

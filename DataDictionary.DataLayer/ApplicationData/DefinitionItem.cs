@@ -9,9 +9,10 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.ApplicationData
 {
-    public interface IDefinitionItem : IDefinitionKey
+    public interface IDefinitionItem : IDefinitionKey, IDefinitionKeyUnique
     {
-        String? DefinitionTitle { get; }
+        String? DefinitionDescription { get; }
+        Nullable<Boolean> Obsolete { get; }
     }
 
     public class DefinitionItem : BindingTableRow, IDefinitionItem
@@ -31,7 +32,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("DefinitionId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("DefinitionTitle", typeof(String)){ AllowDBNull = false},
+            new DataColumn("DefinitionTitle", typeof(String)){ AllowDBNull = true},
             new DataColumn("DefinitionDescription", typeof(String)){ AllowDBNull = true},
             new DataColumn("Obsolete", typeof(Boolean)){ AllowDBNull = false},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
@@ -62,6 +63,5 @@ namespace DataDictionary.DataLayer.ApplicationData
             command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationDefinition]", source);
             return command;
         }
-
     }
 }

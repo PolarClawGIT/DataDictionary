@@ -104,6 +104,7 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
+            testFormToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
@@ -645,7 +646,7 @@
             // 
             propertiesToolStripMenuItem.Image = Properties.Resources.Property;
             propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
-            propertiesToolStripMenuItem.Size = new Size(180, 22);
+            propertiesToolStripMenuItem.Size = new Size(131, 22);
             propertiesToolStripMenuItem.Text = "Properties";
             propertiesToolStripMenuItem.Click += propertiesToolStripMenuItem_Click;
             // 
@@ -653,7 +654,7 @@
             // 
             definitionsToolStripMenuItem.Image = Properties.Resources.TextFile;
             definitionsToolStripMenuItem.Name = "definitionsToolStripMenuItem";
-            definitionsToolStripMenuItem.Size = new Size(180, 22);
+            definitionsToolStripMenuItem.Size = new Size(131, 22);
             definitionsToolStripMenuItem.Text = "Definitions";
             definitionsToolStripMenuItem.Click += definitionsToolStripMenuItem_Click;
             // 
@@ -673,8 +674,7 @@
             // 
             // unitTestingToolStripMenuItem
             // 
-            unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem });
-            unitTestingToolStripMenuItem.Enabled = false;
+            unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem, testFormToolStripMenuItem });
             unitTestingToolStripMenuItem.Name = "unitTestingToolStripMenuItem";
             unitTestingToolStripMenuItem.Size = new Size(180, 22);
             unitTestingToolStripMenuItem.Text = "Testing";
@@ -682,7 +682,7 @@
             // gridViewToolStripMenuItem
             // 
             gridViewToolStripMenuItem.Name = "gridViewToolStripMenuItem";
-            gridViewToolStripMenuItem.Size = new Size(124, 22);
+            gridViewToolStripMenuItem.Size = new Size(180, 22);
             gridViewToolStripMenuItem.Text = "Grid View";
             gridViewToolStripMenuItem.Click += gridViewToolStripMenuItem_Click;
             // 
@@ -726,6 +726,13 @@
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
             // 
+            // testFormToolStripMenuItem
+            // 
+            testFormToolStripMenuItem.Name = "testFormToolStripMenuItem";
+            testFormToolStripMenuItem.Size = new Size(180, 22);
+            testFormToolStripMenuItem.Text = "Test Form";
+            testFormToolStripMenuItem.Click += testFormToolStripMenuItem_Click;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -744,6 +751,10 @@
             FormClosed += Main_FormClosed;
             Load += Main_Load;
             HelpRequested += Main_HelpRequested;
+            Controls.SetChildIndex(menuStrip, 0);
+            Controls.SetChildIndex(statusStrip, 0);
+            Controls.SetChildIndex(navigationPanel, 0);
+            Controls.SetChildIndex(navigationSpliter, 0);
             navigationPanel.ResumeLayout(false);
             modelSpliter.Panel1.ResumeLayout(false);
             modelSpliter.Panel1.PerformLayout();
@@ -837,5 +848,6 @@
         private ToolStripMenuItem applicationToolStripMenuItem;
         private ToolStripMenuItem propertiesToolStripMenuItem;
         private ToolStripMenuItem definitionsToolStripMenuItem;
+        private ToolStripMenuItem testFormToolStripMenuItem;
     }
 }
