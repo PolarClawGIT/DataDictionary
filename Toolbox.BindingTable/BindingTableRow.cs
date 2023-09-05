@@ -5,8 +5,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Toolbox.BindingTable
 {
@@ -30,7 +33,8 @@ namespace Toolbox.BindingTable
     /// This wrappers job is to expose the DataRow as a POCO like class while keeping the
     /// DataRow internal to the system.
     /// </summary>
-    public abstract class BindingTableRow : IBindingTableRow
+    [Serializable]
+    public abstract class BindingTableRow : IBindingTableRow, ISerializable
     {
         /// <summary>
         /// Reference to the Binding Table that owns this row.
@@ -84,7 +88,7 @@ namespace Toolbox.BindingTable
         }
 
         /// <summary>
-        /// Constructor that loadeds the DataRow.
+        /// Constructor that loaded the DataRow.
         /// </summary>
         /// <param name="row"></param>
         //protected BindingTableRow(DataRow row) : this() {ImportRow(row); }
@@ -352,6 +356,25 @@ namespace Toolbox.BindingTable
         {
             if (PropertyChanged is PropertyChangedEventHandler handler)
             { handler(this, new PropertyChangedEventArgs(propertyName)); }
+        }
+
+        #endregion
+
+        #region ISerializable
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            foreach (DataColumn item in data.Table.Columns)
+            { info.AddValue(item.ColumnName, this.data[item]); }
+        }
+
+        protected BindingTableRow(SerializationInfo info, StreamingContext context) : this()
+        {
+            foreach (DataColumn item in data.Table.Columns)
+            {
+                var value = info.GetValue(item.ColumnName, item.DataType);
+                if (value is DBNull) { this.data[item] = null; }
+                else { this.data[item] = info.GetValue(item.ColumnName, item.DataType); }
+            }
         }
         #endregion
     }

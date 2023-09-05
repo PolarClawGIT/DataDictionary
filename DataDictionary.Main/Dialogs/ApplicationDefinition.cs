@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -31,6 +32,12 @@ namespace DataDictionary.Main.Dialogs
 
             newToolStripButton.Enabled = true;
             newToolStripButton.Click += NewToolStripButton_Click;
+            //cutToolStripButton.Enabled = true;
+            //cutToolStripButton.Click += CutToolStripButton_Click;
+            copyToolStripButton.Enabled = true;
+            copyToolStripButton.Click += CopyToolStripButton_Click;
+            pasteToolStripButton.Enabled = true;
+            pasteToolStripButton.Click += PasteToolStripButton_Click;
         }
 
         private void ApplicationDefinition_Load(object sender, EventArgs e)
@@ -40,7 +47,29 @@ namespace DataDictionary.Main.Dialogs
             this.ValidateChildren();
         }
 
+
+        private void ApplicationDefinition_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            newToolStripButton.Click -= NewToolStripButton_Click;
+            cutToolStripButton.Click -= CutToolStripButton_Click;
+            copyToolStripButton.Click -= CopyToolStripButton_Click;
+            pasteToolStripButton.Click -= PasteToolStripButton_Click;
+
+        }
+
         private void NewToolStripButton_Click(object? sender, EventArgs e)
+        { NewCommand(); }
+
+        private void PasteToolStripButton_Click(object? sender, EventArgs e)
+        { PasteCommand(); }
+
+        private void CopyToolStripButton_Click(object? sender, EventArgs e)
+        { CopyCommand(); }
+
+        private void CutToolStripButton_Click(object? sender, EventArgs e)
+        { CutCommand(); }
+
+        void NewCommand()
         {
             DefinitionItem? newItem = bindingSource.AddNew() as DefinitionItem;
             if (newItem is not null)
@@ -52,13 +81,51 @@ namespace DataDictionary.Main.Dialogs
             definitionTitleData.Focus();
         }
 
+        void CopyCommand()
+        {
+            DataObject data = new DataObject();
+
+            // Overlays the existing Data, do first.
+            if (definitionNavigation.SelectedCells.Count > 0)
+            { data = definitionNavigation.GetClipboardContent(); }
+
+            // Add the specific data object
+            if (bindingSource.Current is DefinitionItem item)
+            { data.SetData(nameof(DefinitionItem), item); }
+
+            Clipboard.SetDataObject(data, true);
+        }
+
+        void CutCommand() { } // Have not deiced what to do here.
+
+        private DefinitionItem? pasteItem;
+        void PasteCommand()
+        {
+            if (Clipboard.GetDataObject() is DataObject source
+                && source.GetData(nameof(DefinitionItem)) is DefinitionItem item
+                && ActiveControl == definitionNavigation)
+            {
+                pasteItem = item;
+                bindingSource.AddNew();
+            }
+            else { pasteItem = null; }
+        }
+
+
         private void bindingSource_AddingNew(object sender, AddingNewEventArgs e)
         {
             DefinitionItem newItem = new DefinitionItem();
+
+            if (pasteItem is not null)
+            {
+                newItem.DefinitionTitle = pasteItem.DefinitionTitle;
+                newItem.DefinitionDescription = pasteItem.DefinitionDescription;
+            }
+
             definitionKey = new DefinitionKey(newItem);
             e.NewObject = newItem;
 
-            definitionTitleData.Focus();
+            //definitionTitleData.Focus();
         }
 
         private void definitionTitleData_Validating(object sender, CancelEventArgs e)
@@ -137,9 +204,27 @@ namespace DataDictionary.Main.Dialogs
 
         protected override void HandleMessage(DbDataBatchCompleted message)
         { BindData(); }
+
+        protected override void HandleMessage(WindowsCutCommand message)
+        {
+            base.HandleMessage(message);
+            if (!message.IsHandled) { CutCommand(); message.IsHandled = true; }
+        }
+
+        protected override void HandleMessage(WindowsCopyCommand message)
+        {
+            base.HandleMessage(message);
+            if (!message.IsHandled) { CopyCommand(); message.IsHandled = true; }
+        }
+
+        protected override void HandleMessage(WindowsPasteCommand message)
+        {
+            base.HandleMessage(message);
+            if (!message.IsHandled) { PasteCommand(); message.IsHandled = true; }
+        }
+
+
         #endregion
-
-
 
     }
 }

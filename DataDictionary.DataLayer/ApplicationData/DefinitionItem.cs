@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -15,7 +16,8 @@ namespace DataDictionary.DataLayer.ApplicationData
         Nullable<Boolean> Obsolete { get; }
     }
 
-    public class DefinitionItem : BindingTableRow, IDefinitionItem
+    [Serializable]
+    public class DefinitionItem : BindingTableRow, IDefinitionItem, ISerializable
     {
         public Nullable<Guid> DefinitionId { get { return GetValue<Guid>("DefinitionId"); } protected set { SetValue<Guid>("DefinitionId", value); } }
         public String? DefinitionTitle { get { return GetValue("DefinitionTitle"); } set { SetValue("DefinitionTitle", value); } }
@@ -63,5 +65,13 @@ namespace DataDictionary.DataLayer.ApplicationData
             command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationDefinition]", source);
             return command;
         }
+
+        #region ISerializable
+        protected DefinitionItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        { base.GetObjectData(info, context); }
+        #endregion
     }
 }

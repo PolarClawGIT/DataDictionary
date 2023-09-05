@@ -190,9 +190,9 @@ namespace DataDictionary.Main
                 { HandleControl(containerControl); }
                 else
                 {
-                    Exception ex = new NotSupportedException();
-                    ex.Data.Add("ActiveControl", control.GetType().FullName);
-                    throw ex;
+                    //Exception ex = new NotSupportedException();
+                    //ex.Data.Add("ActiveControl", control.GetType().FullName);
+                    //throw ex;
                 }
 
             }

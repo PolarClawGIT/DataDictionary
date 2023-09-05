@@ -89,36 +89,6 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             return workItems;
         }
 
-        [Obsolete()]
-        public static IReadOnlyList<WorkItem> SaveHelp(this ModelData data)
-        {
-            List<WorkItem> workItems = new List<WorkItem>();
-            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(data.ModelContext);
-            workItems.Add(openConnection);
-
-
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save Help",
-                Command = (conn) => HelpItem.SetData(conn, data.HelpSubjects)
-            });
-
-            workItems.Add(new WorkItem()
-            {
-                WorkName = "Clear Help",
-                DoWork = data.HelpSubjects.Clear
-            });
-
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Load Help",
-                Command = HelpItem.GetData,
-                Target = data.HelpSubjects
-            });
-
-            return workItems;
-        }
-
         public static IReadOnlyList<WorkItem> SaveApplicationData(this ModelData data, FileInfo file)
         {
             List<WorkItem> workItems = new List<WorkItem>();

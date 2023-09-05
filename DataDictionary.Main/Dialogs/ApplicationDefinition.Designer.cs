@@ -62,7 +62,7 @@
             applicationDefinitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 75F));
             applicationDefinitionLayout.RowStyles.Add(new RowStyle());
             applicationDefinitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            applicationDefinitionLayout.Size = new Size(392, 414);
+            applicationDefinitionLayout.Size = new Size(421, 414);
             applicationDefinitionLayout.TabIndex = 0;
             // 
             // definitionNavigation
@@ -71,11 +71,9 @@
             definitionNavigation.Columns.AddRange(new DataGridViewColumn[] { definitionTitleColumn, definitionDescriptionColumn });
             definitionNavigation.Dock = DockStyle.Fill;
             definitionNavigation.Location = new Point(3, 3);
-            definitionNavigation.MultiSelect = false;
             definitionNavigation.Name = "definitionNavigation";
             definitionNavigation.RowTemplate.Height = 25;
-            definitionNavigation.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            definitionNavigation.Size = new Size(386, 262);
+            definitionNavigation.Size = new Size(415, 262);
             definitionNavigation.TabIndex = 3;
             definitionNavigation.TabStop = false;
             definitionNavigation.DataError += definitionNavigation_DataError;
@@ -84,8 +82,9 @@
             // 
             // definitionTitleColumn
             // 
-            definitionTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            definitionTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             definitionTitleColumn.DataPropertyName = "DefinitionTitle";
+            definitionTitleColumn.FillWeight = 30F;
             definitionTitleColumn.HeaderText = "Definition Title";
             definitionTitleColumn.Name = "definitionTitleColumn";
             // 
@@ -93,6 +92,7 @@
             // 
             definitionDescriptionColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             definitionDescriptionColumn.DataPropertyName = "DefinitionDescription";
+            definitionDescriptionColumn.FillWeight = 70F;
             definitionDescriptionColumn.HeaderText = "Definition Description";
             definitionDescriptionColumn.Name = "definitionDescriptionColumn";
             // 
@@ -105,7 +105,7 @@
             definitionDescriptionData.Multiline = true;
             definitionDescriptionData.Name = "definitionDescriptionData";
             definitionDescriptionData.ReadOnly = false;
-            definitionDescriptionData.Size = new Size(386, 84);
+            definitionDescriptionData.Size = new Size(415, 84);
             definitionDescriptionData.TabIndex = 2;
             // 
             // definitionTitleLayout
@@ -121,7 +121,7 @@
             definitionTitleLayout.Name = "definitionTitleLayout";
             definitionTitleLayout.RowCount = 1;
             definitionTitleLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            definitionTitleLayout.Size = new Size(386, 50);
+            definitionTitleLayout.Size = new Size(415, 50);
             definitionTitleLayout.TabIndex = 1;
             // 
             // definitionTitleData
@@ -133,7 +133,7 @@
             definitionTitleData.Multiline = false;
             definitionTitleData.Name = "definitionTitleData";
             definitionTitleData.ReadOnly = false;
-            definitionTitleData.Size = new Size(301, 44);
+            definitionTitleData.Size = new Size(330, 44);
             definitionTitleData.TabIndex = 0;
             definitionTitleData.Validated += definitionTitleData_Validated;
             definitionTitleData.Validating += definitionTitleData_Validating;
@@ -141,7 +141,7 @@
             // obsoleteData
             // 
             obsoleteData.AutoSize = true;
-            obsoleteData.Location = new Point(310, 3);
+            obsoleteData.Location = new Point(339, 3);
             obsoleteData.Name = "obsoleteData";
             obsoleteData.Size = new Size(73, 19);
             obsoleteData.TabIndex = 1;
@@ -160,10 +160,11 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(392, 439);
+            ClientSize = new Size(421, 439);
             Controls.Add(applicationDefinitionLayout);
             Name = "ApplicationDefinition";
             Text = "Application Definition";
+            FormClosed += ApplicationDefinition_FormClosed;
             Load += ApplicationDefinition_Load;
             Controls.SetChildIndex(applicationDefinitionLayout, 0);
             applicationDefinitionLayout.ResumeLayout(false);
@@ -182,10 +183,10 @@
         private DataGridView definitionNavigation;
         private Controls.TextBoxData definitionTitleData;
         private Controls.TextBoxData definitionDescriptionData;
-        private DataGridViewTextBoxColumn definitionTitleColumn;
-        private DataGridViewTextBoxColumn definitionDescriptionColumn;
         private CheckBox obsoleteData;
         private BindingSource bindingSource;
         private ErrorProvider errorProvider;
+        private DataGridViewTextBoxColumn definitionTitleColumn;
+        private DataGridViewTextBoxColumn definitionDescriptionColumn;
     }
 }
