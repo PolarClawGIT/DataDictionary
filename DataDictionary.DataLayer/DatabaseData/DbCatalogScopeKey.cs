@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.DbMetaData
+namespace DataDictionary.DataLayer.DatabaseData
 {
     public enum DbCatalogScope
     {

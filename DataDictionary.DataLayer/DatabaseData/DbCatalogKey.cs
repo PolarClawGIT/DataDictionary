@@ -1,6 +1,6 @@
 ﻿using DataDictionary.DataLayer.DomainData;
 
-namespace DataDictionary.DataLayer.DbMetaData
+namespace DataDictionary.DataLayer.DatabaseData
 {
     public interface IDbCatalogKey
     {

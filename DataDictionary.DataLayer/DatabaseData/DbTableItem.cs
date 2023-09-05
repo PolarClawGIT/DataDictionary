@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DbMetaData
+namespace DataDictionary.DataLayer.DatabaseData
 {
     public interface IDbTableItem : IDbTableKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IBindingTableRow
     {

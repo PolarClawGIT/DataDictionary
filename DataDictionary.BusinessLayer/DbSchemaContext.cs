@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Threading;
 using Toolbox.DbContext;
-using DataDictionary.DataLayer.DbMetaData;
+using DataDictionary.DataLayer.DatabaseData;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer

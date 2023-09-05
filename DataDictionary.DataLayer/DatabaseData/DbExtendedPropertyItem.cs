@@ -15,7 +15,7 @@ using System.Reflection;
 using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.DomainData;
 
-namespace DataDictionary.DataLayer.DbMetaData
+namespace DataDictionary.DataLayer.DatabaseData
 {
     public interface IDbExtendedPropertyParameter
     {

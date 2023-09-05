@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="DbMetaData\DbScript.Designer.cs">
+    <Compile Update="DatabaseData\DbScript.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>DbScript.resx</DependentUpon>
@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="DbMetaData\DbScript.resx">
+    <EmbeddedResource Update="DatabaseData\DbScript.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DbScript.Designer.cs</LastGenOutput>
     </EmbeddedResource>

@@ -5,7 +5,7 @@ using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DbMetaData
+namespace DataDictionary.DataLayer.DatabaseData
 {
     public interface IDbCatalogItem : IDbCatalogKeyUnique, IDbCatalogKey, IDbIsSystem, IBindingTableRow
     {

@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DbMetaData;
+﻿using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Properties;
 using System;

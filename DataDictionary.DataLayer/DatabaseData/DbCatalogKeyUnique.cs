@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.DataLayer.DbMetaData
+﻿namespace DataDictionary.DataLayer.DatabaseData
 {
     public interface IDbCatalogKeyUnique
     {

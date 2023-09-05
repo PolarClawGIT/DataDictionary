@@ -9,22 +9,29 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DbMetaData
+namespace DataDictionary.DataLayer.DatabaseData
 {
-    public interface IDbConstraintItem : IDbConstraintKey, IDbCatalogKey, IDbElementScope, IDbTableKey, IBindingTableRow
+    public interface IDbConstraintColumnItem: IDbConstraintKey, IDbCatalogKey, IDbTableColumnKey, IBindingTableRow
     {
-        String? ConstraintType { get; }
+        String? ReferenceSchemaName { get; }
+        String? ReferenceTableName { get; }
+        String? ReferenceColumnName { get; }
+        Int32? OrdinalPosition { get; } 
     }
 
-    public class DbConstraintItem : BindingTableRow, IDbConstraintItem, INotifyPropertyChanged, IDbExtendedProperties
+    public class DbConstraintColumnItem : BindingTableRow, IDbConstraintColumnItem, INotifyPropertyChanged
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
         public String? SchemaName { get { return GetValue("SchemaName"); } }
         public String? ConstraintName { get { return GetValue("ConstraintName"); } }
         public String? TableName { get { return GetValue("TableName"); } }
-        public String? ConstraintType { get { return GetValue("ConstraintType"); } }
-        public DbElementScope ElementScope { get; } = DbElementScope.Constraint;
+        public String? ColumnName { get { return GetValue("ColumnName"); } }
+        public Int32? OrdinalPosition { get { return GetValue<Int32>("OrdinalPosition"); } }
+        public String? ReferenceSchemaName { get { return GetValue("ReferenceSchemaName"); } }
+        public String? ReferenceTableName { get { return GetValue("ReferenceTableName"); } }
+        public String? ReferenceColumnName { get { return GetValue("ReferenceColumnName"); } }
+
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -32,8 +39,12 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(String)){ AllowDBNull = false},
             new DataColumn("ConstraintName", typeof(String)){ AllowDBNull = false},
-            new DataColumn("TableName", typeof(String)){ AllowDBNull = true},
-            new DataColumn("ConstraintType", typeof(String)){ AllowDBNull = false},
+            new DataColumn("TableName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("ColumnName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("OrdinalPosition", typeof(Int32)){ AllowDBNull = true},
+            new DataColumn("ReferenceSchemaName", typeof(String)){ AllowDBNull = true},
+            new DataColumn("ReferenceTableName", typeof(String)){ AllowDBNull = true},
+            new DataColumn("ReferenceColumnName", typeof(String)){ AllowDBNull = true},
         };
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -43,21 +54,8 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbConstraintItem;
+            command.CommandText = DbScript.DbConstraintColumnItem;
             return command;
-        }
-
-        public virtual Command GetProperties(IConnection connection)
-        {
-            return (new DbExtendedPropertyGetCommand(connection)
-            {
-                Level0Name = SchemaName,
-                Level0Type = "SCHEMA",
-                Level1Name = TableName,
-                Level1Type = "TABLE",
-                Level2Name = ConstraintName,
-                Level2Type = "CONSTRAINT"
-            }).GetCommand();
         }
 
         public static Command GetData(IConnection connection, IModelKey modelId)
@@ -67,7 +65,7 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDatabaseConstraint]";
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseConstraintColumn]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogName", parameters.catalogName);
             command.AddParameter("@SchemaName", parameters.schemaName);
@@ -75,17 +73,16 @@ namespace DataDictionary.DataLayer.DbMetaData
             return command;
         }
 
-        public static Command SetData(IConnection connection, IModelKey modelId, IBindingTable<DbConstraintItem> source)
+        public static Command SetData(IConnection connection, IModelKey modelId, IBindingTable<DbConstraintColumnItem> source)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDatabaseConstraint]";
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseConstraintColumn]";
             command.AddParameter("@ModelId", modelId.ModelId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseConstraint]", source);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseConstraintColumn]", source);
             return command;
         }
 
-        public override String ToString()
-        { return new DbConstraintKey(this).ToString(); }
     }
+
 }

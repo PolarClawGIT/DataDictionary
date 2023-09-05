@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DataDictionary.Main.TextTemplates;
 using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.DbMetaData;
+using DataDictionary.DataLayer.DatabaseData;
 
 namespace DataDictionary.Main.Dialogs
 {

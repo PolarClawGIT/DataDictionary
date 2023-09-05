@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DbMetaData;
+﻿using DataDictionary.DataLayer.DatabaseData;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.DbMetaData.Tests
+namespace DataDictionary.DataLayer.DatabaseData.Tests
 {
     [TestFixture()]
     public class DbSchemaNameTests

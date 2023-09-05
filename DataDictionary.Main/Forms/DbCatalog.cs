@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.DbGetSchema;
-using DataDictionary.DataLayer.DbMetaData;
+using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;

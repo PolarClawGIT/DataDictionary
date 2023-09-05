@@ -27,7 +27,7 @@ namespace DataDictionary.Main.TextTemplates
         {
             
             #line 3 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
-foreach (DataDictionary.DataLayer.DbMetaData.DbExtendedPropertyParameter item in this.data)
+foreach (DataDictionary.DataLayer.DatabaseData.DbExtendedPropertyParameter item in this.data)
 {
             
             #line default

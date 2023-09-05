@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.ApplicationData;
-using DataDictionary.DataLayer.DbMetaData;
+using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.DomainData;
 using System;
 using System.Collections.Generic;

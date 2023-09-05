@@ -9,21 +9,21 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DbMetaData
+namespace DataDictionary.DataLayer.DatabaseData
 {
-    public interface IDbDomainItem : IDbDomainKey, IDbCatalogKey, IDbObjectScope, IDbDomain, IBindingTableRow
+    public interface IDbRoutineParameterItem : IDbRoutineParameterKey, IDbDomainReferenceKey, IDbElementScope, IDbColumn, IDbCatalogKey
     {
-        String? DomainDefault { get; }
     }
 
-    public class DbDomainItem : BindingTableRow, IDbDomainItem, INotifyPropertyChanged, IDbExtendedProperties
+    public class DbRoutineParameterItem : BindingTableRow, IDbRoutineParameterItem, INotifyPropertyChanged, IDbExtendedProperties
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
         public String? SchemaName { get { return GetValue("SchemaName"); } }
-        public String? DomainName { get { return GetValue("DomainName"); } }
+        public String? RoutineName { get { return GetValue("RoutineName"); } }
+        public String? ParameterName { get { return GetValue("ParameterName"); } }
+        public Nullable<Int32> OrdinalPosition { get { return GetValue<Int32>("OrdinalPosition"); } }
         public String? DataType { get { return GetValue("DataType"); } }
-        public String? DomainDefault { get { return GetValue("DomainDefault"); } }
         public Nullable<Int32> CharacterMaximumLength { get { return GetValue<Int32>("CharacterMaximumLength"); } }
         public Nullable<Int32> CharacterOctetLength { get { return GetValue<Int32>("CharacterOctetLength"); } }
         public Nullable<Byte> NumericPrecision { get { return GetValue<Byte>("NumericPrecision"); } }
@@ -36,17 +36,21 @@ namespace DataDictionary.DataLayer.DbMetaData
         public String? CollationCatalog { get { return GetValue("CollationCatalog"); } }
         public String? CollationSchema { get { return GetValue("CollationSchema"); } }
         public String? CollationName { get { return GetValue("CollationName"); } }
-        public DbObjectScope ObjectScope { get; } = DbObjectScope.Type;
-
+        public String? DomainCatalog { get { return GetValue("DomainCatalog"); } }
+        public String? DomainSchema { get { return GetValue("DomainSchema"); } }
+        public String? DomainName { get { return GetValue("DomainName"); } }
+        public DbElementScope ElementScope { get; } = DbElementScope.Parameter;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(String)){ AllowDBNull = true},
             new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(String)){ AllowDBNull = false},
-            new DataColumn("DomainName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("RoutineName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("RoutineType", typeof(String)){ AllowDBNull = false},
+            new DataColumn("ParameterName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("OrdinalPosition", typeof(Int32)){ AllowDBNull = true},
             new DataColumn("DataType", typeof(String)){ AllowDBNull = true},
-            new DataColumn("DomainDefault", typeof(String)){ AllowDBNull = true},
             new DataColumn("CharacterMaximumLength", typeof(Int32)){ AllowDBNull = true},
             new DataColumn("CharacterOctetLength", typeof(Int32)){ AllowDBNull = true},
             new DataColumn("NumericPrecision", typeof(Byte)){ AllowDBNull = true},
@@ -59,7 +63,12 @@ namespace DataDictionary.DataLayer.DbMetaData
             new DataColumn("CollationCatalog", typeof(String)){ AllowDBNull = true},
             new DataColumn("CollationSchema", typeof(String)){ AllowDBNull = true},
             new DataColumn("CollationName", typeof(String)){ AllowDBNull = true},
+            new DataColumn("DomainCatalog", typeof(String)){ AllowDBNull = true},
+            new DataColumn("DomainSchema", typeof(String)){ AllowDBNull = true},
+            new DataColumn("DomainName", typeof(String)){ AllowDBNull = true},
         };
+
+
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
@@ -68,43 +77,45 @@ namespace DataDictionary.DataLayer.DbMetaData
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbDomainItem;
+            command.CommandText = DbScript.DbRoutineParameterItem;
             return command;
         }
 
         public virtual Command GetProperties(IConnection connection)
         {
+            String? level1Type = GetValue("RoutineType");
+
             return (new DbExtendedPropertyGetCommand(connection)
-            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = DomainName, Level1Type = "TYPE" }).
+            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = RoutineName, Level1Type = level1Type, Level2Name = ParameterName, Level2Type = "PARAMETER" }).
             GetCommand();
         }
 
         public static Command GetData(IConnection connection, IModelKey modelId)
         { return GetData(connection, (modelId.ModelId, null, null, null)); }
 
-        static Command GetData(IConnection connection, (Guid? modelId, String? catalogName, String? schemaName, String? domainName) parameters)
+        static Command GetData(IConnection connection, (Guid? modelId, String? catalogName, String? schemaName, String? routineName) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDatabaseDomain]";
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseRoutineParameter]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogName", parameters.catalogName);
             command.AddParameter("@SchemaName", parameters.schemaName);
-            command.AddParameter("@DomainName", parameters.domainName);
+            command.AddParameter("@RoutineName", parameters.routineName);
             return command;
         }
 
-        public static Command SetData(IConnection connection, IModelKey modelId, IBindingTable<DbDomainItem> source)
+        public static Command SetData(IConnection connection, IModelKey modelId, IBindingTable<DbRoutineParameterItem> source)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDatabaseDomain]";
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseRoutineParameter]";
             command.AddParameter("@ModelId", modelId.ModelId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseDomain]", source);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutineParameter]", source);
             return command;
         }
 
         public override String ToString()
-        { return new DbDomainKey(this).ToString(); }
+        { return new DbRoutineParameterKey(this).ToString(); }
     }
 }

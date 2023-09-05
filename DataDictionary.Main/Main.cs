@@ -1,7 +1,7 @@
 using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.ApplicationData;
-using DataDictionary.DataLayer.DbMetaData;
+using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
