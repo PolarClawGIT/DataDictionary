@@ -231,7 +231,7 @@ namespace DataDictionary.Main
         { Activate(() => new Dialogs.ApplicationOptions()); }
 
         private void definitionsToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Dialogs.ApplicationDefinition()); }
+        { Activate(() => new Forms.Application.Definition()); }
         #endregion
 
         #region dbMetaDataNavigation

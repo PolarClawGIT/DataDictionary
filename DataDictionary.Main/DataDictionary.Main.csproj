@@ -63,9 +63,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Forms\DatabaseForm\" />
-    <Folder Include="Forms\DomainForm\" />
-    <Folder Include="Forms\ApplicationForm\" />
+    <Folder Include="Forms\Database\" />
+    <Folder Include="Forms\Domain\" />
   </ItemGroup>
 
 </Project>

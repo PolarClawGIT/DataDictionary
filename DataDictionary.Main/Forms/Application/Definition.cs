@@ -14,13 +14,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DataDictionary.Main.Dialogs
+namespace DataDictionary.Main.Forms.Application
 {
-    partial class ApplicationDefinition : ApplicationBase
+    partial class Definition : ApplicationBase
     {
         DefinitionKey definitionKey;
 
-        public ApplicationDefinition() : base()
+        public Definition() : base()
         {
             InitializeComponent();
             this.Icon = Resources.DomainDefinition;

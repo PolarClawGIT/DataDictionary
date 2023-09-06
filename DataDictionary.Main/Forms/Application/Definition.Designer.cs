@@ -1,6 +1,6 @@
-﻿namespace DataDictionary.Main.Dialogs
+﻿namespace DataDictionary.Main.Forms.Application
 {
-    partial class ApplicationDefinition
+    partial class Definition
     {
         /// <summary>
         /// Required designer variable.
