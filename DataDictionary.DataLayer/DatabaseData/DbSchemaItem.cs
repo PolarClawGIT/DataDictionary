@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -16,7 +17,8 @@ namespace DataDictionary.DataLayer.DatabaseData
     public interface IDbSchemaItem : IDbSchemaKey, IDbCatalogKey, IDbCatalogScope, IDbIsSystem, IBindingTableRow
     { }
 
-    public class DbSchemaItem : BindingTableRow, IDbSchemaItem, INotifyPropertyChanged, IDbExtendedProperties
+    [Serializable]
+    public class DbSchemaItem : BindingTableRow, IDbSchemaItem, INotifyPropertyChanged, IDbExtendedProperties, ISerializable
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
@@ -48,6 +50,8 @@ namespace DataDictionary.DataLayer.DatabaseData
             new DataColumn("CatalogName", typeof(String)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(String)){ AllowDBNull = false},
         };
+
+        public DbSchemaItem() : base() { }
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
@@ -90,6 +94,11 @@ namespace DataDictionary.DataLayer.DatabaseData
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseSchema]", source);
             return command;
         }
+
+        #region ISerializable
+        protected DbSchemaItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
 
         public override String ToString()
         { return new DbSchemaKey(this).ToString(); }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -19,7 +20,8 @@ namespace DataDictionary.DataLayer.DatabaseData
         Int32? OrdinalPosition { get; } 
     }
 
-    public class DbConstraintColumnItem : BindingTableRow, IDbConstraintColumnItem, INotifyPropertyChanged
+    [Serializable]
+    public class DbConstraintColumnItem : BindingTableRow, IDbConstraintColumnItem, INotifyPropertyChanged, ISerializable
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
@@ -46,6 +48,8 @@ namespace DataDictionary.DataLayer.DatabaseData
             new DataColumn("ReferenceTableName", typeof(String)){ AllowDBNull = true},
             new DataColumn("ReferenceColumnName", typeof(String)){ AllowDBNull = true},
         };
+
+        public DbConstraintColumnItem() : base() { }
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
@@ -82,6 +86,11 @@ namespace DataDictionary.DataLayer.DatabaseData
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseConstraintColumn]", source);
             return command;
         }
+
+        #region ISerializable
+        protected DbConstraintColumnItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
 
     }
 

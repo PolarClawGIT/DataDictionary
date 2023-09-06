@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -15,7 +16,8 @@ namespace DataDictionary.DataLayer.DatabaseData
     {
     }
 
-    public class DbRoutineParameterItem : BindingTableRow, IDbRoutineParameterItem, INotifyPropertyChanged, IDbExtendedProperties
+    [Serializable]
+    public class DbRoutineParameterItem : BindingTableRow, IDbRoutineParameterItem, INotifyPropertyChanged, IDbExtendedProperties, ISerializable
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
@@ -68,10 +70,10 @@ namespace DataDictionary.DataLayer.DatabaseData
             new DataColumn("DomainName", typeof(String)){ AllowDBNull = true},
         };
 
-
-
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        public DbRoutineParameterItem() : base() { }
 
         public static Command GetSchema(IConnection connection)
         {
@@ -114,6 +116,11 @@ namespace DataDictionary.DataLayer.DatabaseData
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutineParameter]", source);
             return command;
         }
+
+        #region ISerializable
+        protected DbRoutineParameterItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
 
         public override String ToString()
         { return new DbRoutineParameterKey(this).ToString(); }

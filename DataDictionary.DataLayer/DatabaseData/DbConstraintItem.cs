@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -16,7 +17,8 @@ namespace DataDictionary.DataLayer.DatabaseData
         String? ConstraintType { get; }
     }
 
-    public class DbConstraintItem : BindingTableRow, IDbConstraintItem, INotifyPropertyChanged, IDbExtendedProperties
+    [Serializable]
+    public class DbConstraintItem : BindingTableRow, IDbConstraintItem, INotifyPropertyChanged, IDbExtendedProperties, ISerializable
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
@@ -35,6 +37,8 @@ namespace DataDictionary.DataLayer.DatabaseData
             new DataColumn("TableName", typeof(String)){ AllowDBNull = true},
             new DataColumn("ConstraintType", typeof(String)){ AllowDBNull = false},
         };
+
+        public DbConstraintItem() : base() { }
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
@@ -84,6 +88,11 @@ namespace DataDictionary.DataLayer.DatabaseData
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseConstraint]", source);
             return command;
         }
+
+        #region ISerializable
+        protected DbConstraintItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
 
         public override String ToString()
         { return new DbConstraintKey(this).ToString(); }

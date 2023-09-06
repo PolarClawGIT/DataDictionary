@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -17,7 +18,8 @@ namespace DataDictionary.DataLayer.ApplicationData
         String? ModelDescription { get; set; }
     }
 
-    public class ModelItem : BindingTableRow, IModelItem
+    [Serializable]
+    public class ModelItem : BindingTableRow, IModelItem, ISerializable
     {
         public Nullable<Guid> ModelId { get { return GetValue<Guid>("ModelId"); } protected set { SetValue<Guid>("ModelId", value); } }
         public String? ModelTitle { get { return GetValue("ModelTitle"); } set { SetValue("ModelTitle", value); } }
@@ -96,5 +98,9 @@ namespace DataDictionary.DataLayer.ApplicationData
 
             return command;
         }
+        #region ISerializable
+        protected ModelItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
     }
 }

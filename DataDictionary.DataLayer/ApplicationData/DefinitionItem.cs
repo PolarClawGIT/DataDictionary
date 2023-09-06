@@ -69,9 +69,6 @@ namespace DataDictionary.DataLayer.ApplicationData
         #region ISerializable
         protected DefinitionItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        { base.GetObjectData(info, context); }
         #endregion
     }
 }

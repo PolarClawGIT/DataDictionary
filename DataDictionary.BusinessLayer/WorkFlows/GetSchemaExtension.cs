@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.DbGetSchema;
+using DataDictionary.DataLayer.DatabaseData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +12,14 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 {
     public static class GetSchemaExtension
     {
-        public static IReadOnlyList<WorkItem> GetDatabaseSchema(this DbSchemaContext context, IBindingTable<DatabaseSchema> target)
+        public static IReadOnlyList<WorkItem> GetDatabaseSchema(this DbSchemaContext context, IBindingTable<DbDatabaseItem> target)
         {
             List<WorkItem> workItems = new List<WorkItem>();
 
             workItems.Add(
-                new GetInformationSchema<DatabaseSchema>(context)
+                new GetInformationSchema<DbDatabaseItem>(context)
                 {
-                    Collection = DatabaseSchema.Schema,
+                    Collection = DbDatabaseItem.Schema,
                     Target = target,
                     WorkName = "Get Databases"
                 });

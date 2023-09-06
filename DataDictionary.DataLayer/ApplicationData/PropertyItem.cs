@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -14,7 +15,8 @@ namespace DataDictionary.DataLayer.ApplicationData
         String? PropertyTitle { get; }
     }
 
-    public class PropertyItem : BindingTableRow, IPropertyItem
+    [Serializable]
+    public class PropertyItem : BindingTableRow, IPropertyItem, ISerializable
     {
         public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }
         public String? PropertyTitle { get { return GetValue("PropertyTitle"); } set { SetValue("PropertyTitle", value); } }
@@ -66,5 +68,9 @@ namespace DataDictionary.DataLayer.ApplicationData
             return command;
         }
 
+        #region ISerializable
+        protected PropertyItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
     }
 }

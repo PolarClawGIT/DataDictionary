@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -19,7 +20,8 @@ namespace DataDictionary.DataLayer.ApplicationData
         Nullable<Boolean> Obsolete { get; }
     }
 
-    public class HelpItem : BindingTableRow, IHelpItem
+    [Serializable]
+    public class HelpItem : BindingTableRow, IHelpItem, ISerializable
     {
         public Nullable<Guid> HelpId { get { return GetValue<Guid>("HelpId"); } protected set { SetValue<Guid>("HelpId", value); } }
         public Nullable<Guid> HelpParentId { get { return GetValue<Guid>("HelpParentId"); } protected set { SetValue<Guid>("HelpParentId", value); } }
@@ -72,6 +74,10 @@ namespace DataDictionary.DataLayer.ApplicationData
             command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationHelp]", source);
             return command;
         }
+        #region ISerializable
+        protected HelpItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
     }
 
     public static class HelpItemExtension

@@ -1,7 +1,6 @@
 ﻿// Ignore Spelling: Nullable
 
 using DataDictionary.DataLayer.ApplicationData;
-using DataDictionary.DataLayer.DbGetSchema;
 using DataDictionary.DataLayer.DomainData;
 using Microsoft.Data.SqlClient;
 using System;
@@ -11,6 +10,7 @@ using System.Data;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Runtime.ExceptionServices;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -29,7 +29,8 @@ namespace DataDictionary.DataLayer.DatabaseData
         String? GeneratedAlwayType { get; }
     }
 
-    public class DbTableColumnItem : BindingTableRow, IDbTableColumnItem, INotifyPropertyChanged, IDbExtendedProperties
+    [Serializable]
+    public class DbTableColumnItem : BindingTableRow, IDbTableColumnItem, INotifyPropertyChanged, IDbExtendedProperties, ISerializable
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
@@ -96,6 +97,8 @@ namespace DataDictionary.DataLayer.DatabaseData
             new DataColumn("GeneratedAlwayType", typeof(String)){ AllowDBNull = true},
         };
 
+        public DbTableColumnItem() : base() { }
+
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
@@ -142,6 +145,11 @@ namespace DataDictionary.DataLayer.DatabaseData
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseTableColumn]", source);
             return command;
         }
+
+        #region ISerializable
+        protected DbTableColumnItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
 
         public override String ToString()
         { return new DbTableColumnKey(this).ToString(); }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -17,7 +18,8 @@ namespace DataDictionary.DataLayer.DomainData
         public String? PropertyValue { get; }
     }
 
-    public class DomainAttributePropertyItem : BindingTableRow, IDomainAttributePropertyItem
+    [Serializable]
+    public class DomainAttributePropertyItem : BindingTableRow, IDomainAttributePropertyItem, ISerializable
     {
         public Nullable<Guid> AttributeId { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue<Guid>("AttributeId", value); } }
         public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }
@@ -72,6 +74,11 @@ namespace DataDictionary.DataLayer.DomainData
             command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttributeProperty]", source);
             return command;
         }
+
+        #region ISerializable
+        protected DomainAttributePropertyItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
 
         public override String ToString()
         {

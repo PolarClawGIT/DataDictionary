@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using System.ComponentModel;
 using System.Data;
+using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -12,7 +13,8 @@ namespace DataDictionary.DataLayer.DatabaseData
         String? SourceServerName { get; }
     }
 
-    public class DbCatalogItem : BindingTableRow, IDbCatalogItem, INotifyPropertyChanged
+    [Serializable]
+    public class DbCatalogItem : BindingTableRow, IDbCatalogItem, INotifyPropertyChanged, ISerializable
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } protected set { SetValue<Guid>("CatalogId", value); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
@@ -65,6 +67,11 @@ namespace DataDictionary.DataLayer.DatabaseData
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseCatalog]", source);
             return command;
         }
+
+        #region ISerializable
+        protected DbCatalogItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
 
         public override String ToString()
         { return new DbCatalogKeyUnique(this).ToString(); }

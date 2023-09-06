@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -32,7 +33,8 @@ namespace DataDictionary.DataLayer.DatabaseData
 
     }
 
-    public class DbRoutineDependencyItem : BindingTableRow, IDbRoutineDependencyItem, INotifyPropertyChanged
+    [Serializable]
+    public class DbRoutineDependencyItem : BindingTableRow, IDbRoutineDependencyItem, INotifyPropertyChanged, ISerializable
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
@@ -71,6 +73,8 @@ namespace DataDictionary.DataLayer.DatabaseData
             new DataColumn("IsIncomplete", typeof(Boolean)){ AllowDBNull = true},
         };
 
+        public DbRoutineDependencyItem() : base() { }
+
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
@@ -108,6 +112,11 @@ namespace DataDictionary.DataLayer.DatabaseData
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutineDependency]", source);
             return command;
         }
+
+        #region ISerializable
+        protected DbRoutineDependencyItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
     }
 
 

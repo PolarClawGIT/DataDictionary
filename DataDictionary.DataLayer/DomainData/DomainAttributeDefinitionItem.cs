@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -15,7 +16,8 @@ namespace DataDictionary.DataLayer.DomainData
         String? DefinitionText { get; }
     }
 
-    public class DomainAttributeDefinitionItem : BindingTableRow, IDomainAttributeDefinitionItem
+    [Serializable]
+    public class DomainAttributeDefinitionItem : BindingTableRow, IDomainAttributeDefinitionItem, ISerializable
     {
         public Nullable<Guid> AttributeId { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue<Guid>("AttributeId", value); } }
         public Nullable<Guid> DefinitionId { get { return GetValue<Guid>("DefinitionId"); } protected set { SetValue<Guid>("DefinitionId", value); } }
@@ -31,6 +33,8 @@ namespace DataDictionary.DataLayer.DomainData
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        public DomainAttributeDefinitionItem() : base() { }
 
         public static Command GetData(IConnection connection)
         { return GetData(connection, (null, null, null)); }
@@ -58,5 +62,10 @@ namespace DataDictionary.DataLayer.DomainData
             command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttributeDefinition]", source);
             return command;
         }
+
+        #region ISerializable
+        protected DomainAttributeDefinitionItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -16,7 +17,8 @@ namespace DataDictionary.DataLayer.DatabaseData
         String? DomainDefault { get; }
     }
 
-    public class DbDomainItem : BindingTableRow, IDbDomainItem, INotifyPropertyChanged, IDbExtendedProperties
+    [Serializable]
+    public class DbDomainItem : BindingTableRow, IDbDomainItem, INotifyPropertyChanged, IDbExtendedProperties, ISerializable
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
@@ -61,6 +63,8 @@ namespace DataDictionary.DataLayer.DatabaseData
             new DataColumn("CollationName", typeof(String)){ AllowDBNull = true},
         };
 
+        public DbDomainItem() : base() { }
+
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
@@ -103,6 +107,11 @@ namespace DataDictionary.DataLayer.DatabaseData
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseDomain]", source);
             return command;
         }
+
+        #region ISerializable
+        protected DbDomainItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
 
         public override String ToString()
         { return new DbDomainKey(this).ToString(); }

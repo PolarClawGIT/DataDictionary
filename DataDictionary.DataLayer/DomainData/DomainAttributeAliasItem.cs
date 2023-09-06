@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
@@ -18,6 +19,7 @@ namespace DataDictionary.DataLayer.DomainData
     public interface IDomainAttributeAliasItem : IDomainAttributeAliasKey, IDomainAttributeKey, IDbCatalogScope, IDbObjectScope, IDbElementScope, IBindingTableRow
     { }
 
+    [Serializable]
     public class DomainAttributeAliasItem : BindingTableRow,  IDomainAttributeAliasItem
     {
         public Nullable<Guid> AttributeId
@@ -87,6 +89,11 @@ namespace DataDictionary.DataLayer.DomainData
             command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttributeAlias]", source);
             return command;
         }
+
+        #region ISerializable
+        protected DomainAttributeAliasItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
 
         public override String ToString()
         {

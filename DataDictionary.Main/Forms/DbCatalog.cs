@@ -1,6 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.WorkFlows;
-using DataDictionary.DataLayer.DbGetSchema;
 using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -187,7 +186,7 @@ namespace DataDictionary.Main.Forms
 
         private void connectCommand_Click(object sender, EventArgs e)
         {
-            BindingTable<DatabaseSchema> databaseNames = new BindingTable<DatabaseSchema>();
+            BindingTable<DbDatabaseItem> databaseNames = new BindingTable<DbDatabaseItem>();
 
             if (data.DbContext is DbSchemaContext)
             { this.DoWork(data.DbContext.GetDatabaseSchema(databaseNames), onComplete) ; }
@@ -197,7 +196,7 @@ namespace DataDictionary.Main.Forms
                 if (!result.Cancelled)
                 {
 
-                    if (databaseNames.FirstOrDefault(w => w.CatalogName == databaseNameData.Text) is DatabaseSchema currentDb)
+                    if (databaseNames.FirstOrDefault(w => w.CatalogName == databaseNameData.Text) is DbDatabaseItem currentDb)
                     {
                         databaseNameData.Items.Clear();
                         databaseNameData.Text = String.Empty;
