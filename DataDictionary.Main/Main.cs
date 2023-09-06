@@ -182,7 +182,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.DetailDataView(data, Resources.DbDependancy), Program.Data.DbRoutineDependencies); }
 
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Dialogs.ApplicationProperty()); }
+        { Activate(() => new Forms.Application.Property()); }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {

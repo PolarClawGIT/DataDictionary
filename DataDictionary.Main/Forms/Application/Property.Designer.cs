@@ -1,6 +1,6 @@
-﻿namespace DataDictionary.Main.Dialogs
+﻿namespace DataDictionary.Main.Forms.Application
 {
-    partial class ApplicationProperty
+    partial class Property
     {
         /// <summary>
         /// Required designer variable.
@@ -28,8 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel applicationPropertyLayout;
-            applicationPropertyNavigation = new DataGridView();
+            propertyNavigation = new DataGridView();
             propertyTitleColumn = new DataGridViewTextBoxColumn();
             propertyDescriptionColum = new DataGridViewTextBoxColumn();
             propertyDescriptionData = new Controls.TextBoxData();
@@ -37,17 +38,21 @@
             propertyTitleLayout = new TableLayoutPanel();
             propertyTitleData = new Controls.TextBoxData();
             obsoleteData = new CheckBox();
+            errorProvider = new ErrorProvider(components);
+            bindingSource = new BindingSource(components);
             applicationPropertyLayout = new TableLayoutPanel();
             applicationPropertyLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)applicationPropertyNavigation).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)propertyNavigation).BeginInit();
             propertyTitleLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingSource).BeginInit();
             SuspendLayout();
             // 
             // applicationPropertyLayout
             // 
             applicationPropertyLayout.ColumnCount = 1;
             applicationPropertyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            applicationPropertyLayout.Controls.Add(applicationPropertyNavigation, 0, 0);
+            applicationPropertyLayout.Controls.Add(propertyNavigation, 0, 0);
             applicationPropertyLayout.Controls.Add(propertyDescriptionData, 0, 2);
             applicationPropertyLayout.Controls.Add(propertyNameData, 0, 3);
             applicationPropertyLayout.Controls.Add(propertyTitleLayout, 0, 1);
@@ -61,22 +66,21 @@
             applicationPropertyLayout.RowStyles.Add(new RowStyle());
             applicationPropertyLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             applicationPropertyLayout.Size = new Size(393, 425);
-            applicationPropertyLayout.TabIndex = 0;
+            applicationPropertyLayout.TabIndex = 1;
             // 
-            // applicationPropertyNavigation
+            // propertyNavigation
             // 
-            applicationPropertyNavigation.AllowUserToAddRows = false;
-            applicationPropertyNavigation.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            applicationPropertyNavigation.Columns.AddRange(new DataGridViewColumn[] { propertyTitleColumn, propertyDescriptionColum });
-            applicationPropertyNavigation.Dock = DockStyle.Fill;
-            applicationPropertyNavigation.Location = new Point(3, 3);
-            applicationPropertyNavigation.MultiSelect = false;
-            applicationPropertyNavigation.Name = "applicationPropertyNavigation";
-            applicationPropertyNavigation.RowTemplate.Height = 25;
-            applicationPropertyNavigation.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            applicationPropertyNavigation.Size = new Size(387, 206);
-            applicationPropertyNavigation.TabIndex = 0;
-            applicationPropertyNavigation.SelectionChanged += applicationPropertyNavigation_SelectionChanged;
+            propertyNavigation.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            propertyNavigation.Columns.AddRange(new DataGridViewColumn[] { propertyTitleColumn, propertyDescriptionColum });
+            propertyNavigation.Dock = DockStyle.Fill;
+            propertyNavigation.Location = new Point(3, 3);
+            propertyNavigation.Name = "propertyNavigation";
+            propertyNavigation.RowTemplate.Height = 25;
+            propertyNavigation.Size = new Size(387, 206);
+            propertyNavigation.TabIndex = 3;
+            propertyNavigation.TabStop = false;
+            propertyNavigation.DataError += PropertyNavigation_DataError;
+            propertyNavigation.RowValidating += PropertyNavigation_RowValidating;
             // 
             // propertyTitleColumn
             // 
@@ -103,7 +107,7 @@
             propertyDescriptionData.Name = "propertyDescriptionData";
             propertyDescriptionData.ReadOnly = false;
             propertyDescriptionData.Size = new Size(387, 100);
-            propertyDescriptionData.TabIndex = 2;
+            propertyDescriptionData.TabIndex = 1;
             // 
             // propertyNameData
             // 
@@ -115,7 +119,7 @@
             propertyNameData.Name = "propertyNameData";
             propertyNameData.ReadOnly = false;
             propertyNameData.Size = new Size(387, 45);
-            propertyNameData.TabIndex = 3;
+            propertyNameData.TabIndex = 2;
             // 
             // propertyTitleLayout
             // 
@@ -131,7 +135,7 @@
             propertyTitleLayout.RowCount = 1;
             propertyTitleLayout.RowStyles.Add(new RowStyle());
             propertyTitleLayout.Size = new Size(387, 50);
-            propertyTitleLayout.TabIndex = 4;
+            propertyTitleLayout.TabIndex = 0;
             // 
             // propertyTitleData
             // 
@@ -143,7 +147,9 @@
             propertyTitleData.Name = "propertyTitleData";
             propertyTitleData.ReadOnly = false;
             propertyTitleData.Size = new Size(302, 44);
-            propertyTitleData.TabIndex = 1;
+            propertyTitleData.TabIndex = 0;
+            propertyTitleData.Validated += PropertyTitleData_Validated;
+            propertyTitleData.Validating += PropertyTitleData_Validating;
             // 
             // obsoleteData
             // 
@@ -155,28 +161,38 @@
             obsoleteData.Text = "Obsolete";
             obsoleteData.UseVisualStyleBackColor = true;
             // 
-            // ApplicationProperty
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
+            // 
+            // bindingSource
+            // 
+            bindingSource.AddingNew += bindingSource_AddingNew;
+            // 
+            // Property
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(393, 450);
             Controls.Add(applicationPropertyLayout);
-            Name = "ApplicationProperty";
+            Name = "Property";
             Text = "ApplicationProperty";
             Load += ApplicationProperty_Load;
             Controls.SetChildIndex(applicationPropertyLayout, 0);
             applicationPropertyLayout.ResumeLayout(false);
             applicationPropertyLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)applicationPropertyNavigation).EndInit();
+            ((System.ComponentModel.ISupportInitialize)propertyNavigation).EndInit();
             propertyTitleLayout.ResumeLayout(false);
             propertyTitleLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingSource).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private DataGridView applicationPropertyNavigation;
+        private DataGridView propertyNavigation;
         private Controls.TextBoxData propertyTitleData;
         private Controls.TextBoxData propertyDescriptionData;
         private Controls.TextBoxData propertyNameData;
@@ -184,5 +200,7 @@
         private DataGridViewTextBoxColumn propertyDescriptionColum;
         private TableLayoutPanel propertyTitleLayout;
         private CheckBox obsoleteData;
+        private ErrorProvider errorProvider;
+        private BindingSource bindingSource;
     }
 }

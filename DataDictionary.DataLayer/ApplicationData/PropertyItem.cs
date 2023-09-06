@@ -10,10 +10,8 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.ApplicationData
 {
-    public interface IPropertyItem : IPropertyKey
-    {
-        String? PropertyTitle { get; }
-    }
+    public interface IPropertyItem : IPropertyKey, IPropertyKeyUnique
+    { }
 
     [Serializable]
     public class PropertyItem : BindingTableRow, IPropertyItem, ISerializable

@@ -9,26 +9,25 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Application
 {
-    partial class Definition : ApplicationBase
+    partial class Property : ApplicationBase
     {
-        DefinitionKey definitionKey;
+        PropertyKey propertyKey;
 
-        public Definition() : base()
+        public Property() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.DomainDefinition;
+            this.Icon = Resources.DomainProperty;
 
-            bindingSource.DataSource = Program.Data.Definitions;
-            if (bindingSource.Current is DefinitionItem item)
-            { definitionKey = new DefinitionKey(item); }
-            else { definitionKey = new DefinitionKey(new DefinitionItem()); }
+            bindingSource.DataSource = Program.Data.Properties;
+            if (bindingSource.Current is PropertyItem item)
+            { propertyKey = new PropertyKey(item); }
+            else { propertyKey = new PropertyKey(new PropertyItem()); }
 
             newToolStripButton.Enabled = true;
             newToolStripButton.Click += NewToolStripButton_Click;
@@ -40,7 +39,7 @@ namespace DataDictionary.Main.Forms.Application
             pasteToolStripButton.Click += PasteToolStripButton_Click;
         }
 
-        private void ApplicationDefinition_Load(object sender, EventArgs e)
+        private void ApplicationProperty_Load(object sender, EventArgs e)
         {
             BindData();
 
@@ -48,7 +47,7 @@ namespace DataDictionary.Main.Forms.Application
         }
 
 
-        private void ApplicationDefinition_FormClosed(object sender, FormClosedEventArgs e)
+        private void ApplicationProperty_FormClosed(object sender, FormClosedEventArgs e)
         {
             newToolStripButton.Click -= NewToolStripButton_Click;
             cutToolStripButton.Click -= CutToolStripButton_Click;
@@ -71,14 +70,14 @@ namespace DataDictionary.Main.Forms.Application
 
         void NewCommand()
         {
-            DefinitionItem? newItem = bindingSource.AddNew() as DefinitionItem;
+            PropertyItem? newItem = bindingSource.AddNew() as PropertyItem;
             if (newItem is not null)
             {
-                definitionKey = new DefinitionKey(newItem);
-                bindingSource.Position = Program.Data.Definitions.IndexOf(newItem);
+                propertyKey = new PropertyKey(newItem);
+                bindingSource.Position = Program.Data.Properties.IndexOf(newItem);
             }
 
-            definitionTitleData.Focus();
+            propertyTitleData.Focus();
         }
 
         void CopyCommand()
@@ -86,24 +85,24 @@ namespace DataDictionary.Main.Forms.Application
             DataObject data = new DataObject();
 
             // Overlays the existing Data, do first.
-            if (definitionNavigation.SelectedCells.Count > 0)
-            { data = definitionNavigation.GetClipboardContent(); }
+            if (propertyNavigation.SelectedCells.Count > 0)
+            { data = propertyNavigation.GetClipboardContent(); }
 
             // Add the specific data object
-            if (bindingSource.Current is DefinitionItem item)
-            { data.SetData(nameof(DefinitionItem), item); }
+            if (bindingSource.Current is PropertyItem item)
+            { data.SetData(nameof(PropertyItem), item); }
 
             Clipboard.SetDataObject(data, true);
         }
 
         void CutCommand() { } // Have not deiced what to do here.
 
-        private DefinitionItem? pasteItem;
+        private PropertyItem? pasteItem;
         void PasteCommand()
         {
             if (Clipboard.GetDataObject() is DataObject source
-                && source.GetData(nameof(DefinitionItem)) is DefinitionItem item
-                && ActiveControl == definitionNavigation)
+                && source.GetData(nameof(PropertyItem)) is PropertyItem item
+                && ActiveControl == propertyNavigation)
             {
                 pasteItem = item;
                 bindingSource.AddNew();
@@ -113,77 +112,80 @@ namespace DataDictionary.Main.Forms.Application
 
         private void bindingSource_AddingNew(object sender, AddingNewEventArgs e)
         {
-            DefinitionItem newItem = new DefinitionItem();
+            PropertyItem newItem = new PropertyItem();
 
             if (pasteItem is not null)
             {
-                newItem.DefinitionTitle = pasteItem.DefinitionTitle;
-                newItem.DefinitionDescription = pasteItem.DefinitionDescription;
+                newItem.PropertyTitle = pasteItem.PropertyTitle;
+                newItem.PropertyDescription = pasteItem.PropertyDescription;
+                newItem.PropertyName = pasteItem.PropertyName;
             }
 
-            definitionKey = new DefinitionKey(newItem);
+            propertyKey = new PropertyKey(newItem);
             e.NewObject = newItem;
 
-            //definitionTitleData.Focus();
+            //PropertyTitleData.Focus();
         }
 
-        private void definitionTitleData_Validating(object sender, CancelEventArgs e)
+        private void PropertyTitleData_Validating(object sender, CancelEventArgs e)
         {
-            if (String.IsNullOrEmpty(definitionTitleData.Text))
-            { errorProvider.SetError(definitionTitleData.ErrorControl, "DefinitionTitle required"); }
-            else { errorProvider.SetError(definitionTitleData.ErrorControl, String.Empty); }
+            if (String.IsNullOrEmpty(propertyTitleData.Text))
+            { errorProvider.SetError(propertyTitleData.ErrorControl, "PropertyTitle required"); }
+            else { errorProvider.SetError(propertyTitleData.ErrorControl, String.Empty); }
         }
 
-        private void definitionTitleData_Validated(object sender, EventArgs e)
+        private void PropertyTitleData_Validated(object sender, EventArgs e)
         { ValidateRows(); }
 
-        private void definitionNavigation_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
+        private void PropertyNavigation_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
         { ValidateRows(); }
 
         void ValidateRows()
-        { 
-            foreach (DataGridViewRow row in definitionNavigation.Rows)
+        {
+            foreach (DataGridViewRow row in propertyNavigation.Rows)
             {
-                if (row.GetData() is DefinitionItem definitionItem)
-                { row.ErrorText = definitionItem.Validate(); }
+                if (row.GetData() is PropertyItem item)
+                { row.ErrorText = item.Validate(); }
             }
 
-            definitionNavigation.Refresh();
+            propertyNavigation.Refresh();
         }
 
-        private void definitionNavigation_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        private void PropertyNavigation_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            if (e.Exception is not null && e.RowIndex < definitionNavigation.Rows.Count)
-            { definitionNavigation.Rows[e.RowIndex].ErrorText = e.Exception.Message; }
-            else { definitionNavigation.Rows[e.RowIndex].ErrorText = String.Empty; }
+            if (e.Exception is not null && e.RowIndex < propertyNavigation.Rows.Count)
+            { propertyNavigation.Rows[e.RowIndex].ErrorText = e.Exception.Message; }
+            else { propertyNavigation.Rows[e.RowIndex].ErrorText = String.Empty; }
         }
 
         void BindData()
         {
             bindingSource.ResetBindings(false);
 
-            if (Program.Data.Definitions.FirstOrDefault(w => definitionKey is not null && definitionKey.Equals(w)) is DefinitionItem priorItem)
-            { bindingSource.Position = Program.Data.Definitions.IndexOf(priorItem); }
+            if (Program.Data.Properties.FirstOrDefault(w => propertyKey is not null && propertyKey.Equals(w)) is PropertyItem priorItem)
+            { bindingSource.Position = Program.Data.Properties.IndexOf(priorItem); }
 
-            definitionNavigation.AutoGenerateColumns = false;
-            definitionNavigation.DataSource = bindingSource;
+            propertyNavigation.AutoGenerateColumns = false;
+            propertyNavigation.DataSource = bindingSource;
 
-            if (bindingSource.Current is DefinitionItem item)
+            if (bindingSource.Current is PropertyItem item)
             {
-                definitionTitleData.DataBindings.Add(new Binding(nameof(definitionTitleData.Text), bindingSource, nameof(item.DefinitionTitle)));
-                definitionDescriptionData.DataBindings.Add(new Binding(nameof(definitionDescriptionData.Text), bindingSource, nameof(item.DefinitionDescription)));
+                propertyTitleData.DataBindings.Add(new Binding(nameof(propertyTitleData.Text), bindingSource, nameof(item.PropertyTitle)));
+                propertyDescriptionData.DataBindings.Add(new Binding(nameof(propertyDescriptionData.Text), bindingSource, nameof(item.PropertyDescription)));
+                propertyNameData.DataBindings.Add(new Binding(nameof(propertyNameData.Text), bindingSource, nameof(item.PropertyName)));
                 obsoleteData.DataBindings.Add(new Binding(nameof(obsoleteData.Checked), bindingSource, nameof(item.Obsolete), false, DataSourceUpdateMode.OnValidation, false));
             }
         }
 
         void UnBindData()
         {
-            if (bindingSource.Current is DefinitionItem item)
-            { definitionKey = new DefinitionKey(item); }
+            if (bindingSource.Current is PropertyItem item)
+            { propertyKey = new PropertyKey(item); }
 
-            definitionNavigation.DataSource = null;
-            definitionTitleData.DataBindings.Clear();
-            definitionDescriptionData.DataBindings.Clear();
+            propertyNavigation.DataSource = null;
+            propertyTitleData.DataBindings.Clear();
+            propertyDescriptionData.DataBindings.Clear();
+            propertyNameData.DataBindings.Clear();
             obsoleteData.DataBindings.Clear();
         }
 

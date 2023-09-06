@@ -74,10 +74,9 @@
             definitionNavigation.Name = "definitionNavigation";
             definitionNavigation.RowTemplate.Height = 25;
             definitionNavigation.Size = new Size(415, 262);
-            definitionNavigation.TabIndex = 3;
+            definitionNavigation.TabIndex = 2;
             definitionNavigation.TabStop = false;
             definitionNavigation.DataError += definitionNavigation_DataError;
-            definitionNavigation.RowValidated += definitionNavigation_RowValidated;
             definitionNavigation.RowValidating += definitionNavigation_RowValidating;
             // 
             // definitionTitleColumn
@@ -106,7 +105,7 @@
             definitionDescriptionData.Name = "definitionDescriptionData";
             definitionDescriptionData.ReadOnly = false;
             definitionDescriptionData.Size = new Size(415, 84);
-            definitionDescriptionData.TabIndex = 2;
+            definitionDescriptionData.TabIndex = 1;
             // 
             // definitionTitleLayout
             // 
@@ -122,7 +121,7 @@
             definitionTitleLayout.RowCount = 1;
             definitionTitleLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             definitionTitleLayout.Size = new Size(415, 50);
-            definitionTitleLayout.TabIndex = 1;
+            definitionTitleLayout.TabIndex = 0;
             // 
             // definitionTitleData
             // 
@@ -156,13 +155,13 @@
             // 
             errorProvider.ContainerControl = this;
             // 
-            // ApplicationDefinition
+            // Definition
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(421, 439);
             Controls.Add(applicationDefinitionLayout);
-            Name = "ApplicationDefinition";
+            Name = "Definition";
             Text = "Application Definition";
             FormClosed += ApplicationDefinition_FormClosed;
             Load += ApplicationDefinition_Load;
