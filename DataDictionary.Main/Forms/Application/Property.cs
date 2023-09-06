@@ -121,10 +121,16 @@ namespace DataDictionary.Main.Forms.Application
                 newItem.PropertyName = pasteItem.PropertyName;
             }
 
+            if (bindingSource.Current is null || propertyNavigation.CurrentRow is null)
+            {
+                newItem.PropertyTitle = propertyTitleData.Text;
+                newItem.PropertyDescription = propertyDescriptionData.Text;
+            }
+
             propertyKey = new PropertyKey(newItem);
             e.NewObject = newItem;
 
-            //PropertyTitleData.Focus();
+            if (propertyNavigation.Focused) { propertyTitleData.Focus(); }
         }
 
         private void PropertyTitleData_Validating(object sender, CancelEventArgs e)
@@ -135,7 +141,12 @@ namespace DataDictionary.Main.Forms.Application
         }
 
         private void PropertyTitleData_Validated(object sender, EventArgs e)
-        { ValidateRows(); }
+        {
+            if (bindingSource.Current is null || propertyNavigation.CurrentRow is null)
+            { bindingSource.AddNew(); }
+
+            ValidateRows();
+        }
 
         private void PropertyNavigation_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
         { ValidateRows(); }
@@ -156,6 +167,12 @@ namespace DataDictionary.Main.Forms.Application
             if (e.Exception is not null && e.RowIndex < propertyNavigation.Rows.Count)
             { propertyNavigation.Rows[e.RowIndex].ErrorText = e.Exception.Message; }
             else { propertyNavigation.Rows[e.RowIndex].ErrorText = String.Empty; }
+        }
+
+        private void propertyNavigation_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            propertyNavigation.ClearSelection();
+            propertyNavigation.Rows[e.RowIndex].Selected = true;
         }
 
         void BindData()
@@ -222,6 +239,7 @@ namespace DataDictionary.Main.Forms.Application
 
 
         #endregion
+
 
     }
 }

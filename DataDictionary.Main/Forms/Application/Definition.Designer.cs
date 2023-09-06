@@ -77,6 +77,7 @@
             definitionNavigation.TabIndex = 2;
             definitionNavigation.TabStop = false;
             definitionNavigation.DataError += definitionNavigation_DataError;
+            definitionNavigation.RowsAdded += definitionNavigation_RowsAdded;
             definitionNavigation.RowValidating += definitionNavigation_RowValidating;
             // 
             // definitionTitleColumn

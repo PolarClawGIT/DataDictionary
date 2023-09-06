@@ -80,6 +80,7 @@
             propertyNavigation.TabIndex = 3;
             propertyNavigation.TabStop = false;
             propertyNavigation.DataError += PropertyNavigation_DataError;
+            propertyNavigation.RowsAdded += propertyNavigation_RowsAdded;
             propertyNavigation.RowValidating += PropertyNavigation_RowValidating;
             // 
             // propertyTitleColumn

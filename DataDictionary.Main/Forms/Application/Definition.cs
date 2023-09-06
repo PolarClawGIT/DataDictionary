@@ -69,16 +69,7 @@ namespace DataDictionary.Main.Forms.Application
         { CutCommand(); }
 
         void NewCommand()
-        {
-            DefinitionItem? newItem = bindingSource.AddNew() as DefinitionItem;
-            if (newItem is not null)
-            {
-                definitionKey = new DefinitionKey(newItem);
-                bindingSource.Position = Program.Data.Definitions.IndexOf(newItem);
-            }
-
-            definitionTitleData.Focus();
-        }
+        { bindingSource.AddNew(); }
 
         void CopyCommand()
         {
@@ -120,10 +111,16 @@ namespace DataDictionary.Main.Forms.Application
                 newItem.DefinitionDescription = pasteItem.DefinitionDescription;
             }
 
+            if (bindingSource.Current is null || definitionNavigation.CurrentRow is null)
+            {
+                newItem.DefinitionTitle = definitionTitleData.Text;
+                newItem.DefinitionDescription = definitionDescriptionData.Text;
+            }
+
             definitionKey = new DefinitionKey(newItem);
             e.NewObject = newItem;
 
-            //definitionTitleData.Focus();
+            if (definitionNavigation.Focused) { definitionTitleData.Focus(); }
         }
 
         private void definitionTitleData_Validating(object sender, CancelEventArgs e)
@@ -134,13 +131,18 @@ namespace DataDictionary.Main.Forms.Application
         }
 
         private void definitionTitleData_Validated(object sender, EventArgs e)
-        { ValidateRows(); }
+        {
+            if (bindingSource.Current is null || definitionNavigation.CurrentRow is null)
+            { bindingSource.AddNew(); }
+
+            ValidateRows();
+        }
 
         private void definitionNavigation_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
         { ValidateRows(); }
 
         void ValidateRows()
-        { 
+        {
             foreach (DataGridViewRow row in definitionNavigation.Rows)
             {
                 if (row.GetData() is DefinitionItem definitionItem)
@@ -148,6 +150,12 @@ namespace DataDictionary.Main.Forms.Application
             }
 
             definitionNavigation.Refresh();
+        }
+
+        private void definitionNavigation_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            definitionNavigation.ClearSelection();
+            definitionNavigation.Rows[e.RowIndex].Selected = true;
         }
 
         private void definitionNavigation_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -167,12 +175,10 @@ namespace DataDictionary.Main.Forms.Application
             definitionNavigation.AutoGenerateColumns = false;
             definitionNavigation.DataSource = bindingSource;
 
-            if (bindingSource.Current is DefinitionItem item)
-            {
-                definitionTitleData.DataBindings.Add(new Binding(nameof(definitionTitleData.Text), bindingSource, nameof(item.DefinitionTitle)));
-                definitionDescriptionData.DataBindings.Add(new Binding(nameof(definitionDescriptionData.Text), bindingSource, nameof(item.DefinitionDescription)));
-                obsoleteData.DataBindings.Add(new Binding(nameof(obsoleteData.Checked), bindingSource, nameof(item.Obsolete), false, DataSourceUpdateMode.OnValidation, false));
-            }
+            DefinitionItem item = new DefinitionItem();
+            definitionTitleData.DataBindings.Add(new Binding(nameof(definitionTitleData.Text), bindingSource, nameof(item.DefinitionTitle)));
+            definitionDescriptionData.DataBindings.Add(new Binding(nameof(definitionDescriptionData.Text), bindingSource, nameof(item.DefinitionDescription)));
+            obsoleteData.DataBindings.Add(new Binding(nameof(obsoleteData.Checked), bindingSource, nameof(item.Obsolete), false, DataSourceUpdateMode.OnValidation, false));
         }
 
         void UnBindData()

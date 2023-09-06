@@ -27,7 +27,6 @@ namespace DataDictionary.DataLayer.ApplicationData
         public DefinitionItem() : base()
         {
             DefinitionId = Guid.NewGuid();
-            DefinitionTitle = "new Definition";
             Obsolete = false;
         }
 

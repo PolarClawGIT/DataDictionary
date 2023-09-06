@@ -76,7 +76,8 @@
             definitionDescriptionData.Name = "definitionDescriptionData";
             definitionDescriptionData.ReadOnly = false;
             definitionDescriptionData.Size = new Size(514, 44);
-            definitionDescriptionData.TabIndex = 3;
+            definitionDescriptionData.TabIndex = 2;
+            definitionDescriptionData.Validated += ControlValidated;
             // 
             // definitionNavigation
             // 
@@ -89,7 +90,10 @@
             definitionNavigation.RowTemplate.Height = 25;
             definitionNavigation.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             definitionNavigation.Size = new Size(514, 293);
-            definitionNavigation.TabIndex = 1;
+            definitionNavigation.TabIndex = 0;
+            definitionNavigation.TabStop = false;
+            definitionNavigation.RowsAdded += definitionNavigation_RowsAdded;
+            definitionNavigation.UserAddedRow += definitionNavigation_UserAddedRow;
             // 
             // definitionTitleColumn
             // 
@@ -119,7 +123,7 @@
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.Size = new Size(514, 50);
-            tableLayoutPanel2.TabIndex = 0;
+            tableLayoutPanel2.TabIndex = 1;
             // 
             // obsoleteData
             // 
@@ -127,7 +131,7 @@
             obsoleteData.Location = new Point(438, 3);
             obsoleteData.Name = "obsoleteData";
             obsoleteData.Size = new Size(73, 19);
-            obsoleteData.TabIndex = 3;
+            obsoleteData.TabIndex = 1;
             obsoleteData.Text = "Obsolete";
             obsoleteData.UseVisualStyleBackColor = true;
             // 
@@ -142,7 +146,8 @@
             definitionTitleData.Name = "definitionTitleData";
             definitionTitleData.ReadOnly = false;
             definitionTitleData.Size = new Size(429, 44);
-            definitionTitleData.TabIndex = 2;
+            definitionTitleData.TabIndex = 0;
+            definitionTitleData.Validated += ControlValidated;
             // 
             // Experiment
             // 

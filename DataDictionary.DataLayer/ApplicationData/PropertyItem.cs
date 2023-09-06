@@ -25,14 +25,13 @@ namespace DataDictionary.DataLayer.ApplicationData
         public PropertyItem() : base()
         {
             PropertyId = Guid.NewGuid();
-            PropertyTitle = "new Property";
             Obsolete = false;
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("PropertyTitle", typeof(String)){ AllowDBNull = false},
+            new DataColumn("PropertyTitle", typeof(String)){ AllowDBNull = true},
             new DataColumn("PropertyDescription", typeof(String)){ AllowDBNull = true},
             new DataColumn("PropertyName", typeof(String)){ AllowDBNull = true},
             new DataColumn("Obsolete", typeof(Boolean)){ AllowDBNull = false},

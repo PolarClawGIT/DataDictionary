@@ -32,9 +32,17 @@ namespace DataDictionary.Main.Dialogs
         private void bindingSource_AddingNew(object sender, AddingNewEventArgs e)
         {
             DefinitionItem newItem = new DefinitionItem();
+
+            if (bindingSource.Current is null || definitionNavigation.CurrentRow is null)
+            {
+                newItem.DefinitionTitle = definitionTitleData.Text;
+                newItem.DefinitionDescription = definitionDescriptionData.Text;
+            }
+
             e.NewObject = newItem;
-            Program.Data.Definitions.Add(newItem);
-            bindingSource.ResetBindings(false);
+
+            if (definitionNavigation.Focused)
+            { definitionTitleData.Focus(); }
         }
 
         void BindData()
@@ -47,12 +55,10 @@ namespace DataDictionary.Main.Dialogs
             definitionNavigation.AutoGenerateColumns = false;
             definitionNavigation.DataSource = bindingSource;
 
-            if (bindingSource.Current is DefinitionItem item)
-            {
-                definitionTitleData.DataBindings.Add(new Binding(nameof(definitionTitleData.Text), bindingSource, nameof(item.DefinitionTitle)));
-                definitionDescriptionData.DataBindings.Add(new Binding(nameof(definitionDescriptionData.Text), bindingSource, nameof(item.DefinitionDescription)));
-                obsoleteData.DataBindings.Add(new Binding(nameof(obsoleteData.Checked), bindingSource, nameof(item.Obsolete), true, DataSourceUpdateMode.OnValidation, false));
-            }
+            DefinitionItem item = new DefinitionItem();
+            definitionTitleData.DataBindings.Add(new Binding(nameof(definitionTitleData.Text), bindingSource, nameof(item.DefinitionTitle)));
+            definitionDescriptionData.DataBindings.Add(new Binding(nameof(definitionDescriptionData.Text), bindingSource, nameof(item.DefinitionDescription)));
+            obsoleteData.DataBindings.Add(new Binding(nameof(obsoleteData.Checked), bindingSource, nameof(item.Obsolete), true, DataSourceUpdateMode.OnValidation, false));
         }
 
         void UnBindData()
@@ -79,5 +85,23 @@ namespace DataDictionary.Main.Dialogs
         protected override void HandleMessage(DbDataBatchCompleted message)
         { BindData(); }
         #endregion
+
+        private void ControlValidated(object sender, EventArgs e)
+        {
+
+            if (bindingSource.Current is null || definitionNavigation.CurrentRow is null)
+            { bindingSource.AddNew(); }
+        }
+
+        private void definitionNavigation_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            definitionNavigation.ClearSelection();
+            definitionNavigation.Rows[e.RowIndex].Selected = true;
+        }
+
+        private void definitionNavigation_UserAddedRow(object sender, DataGridViewRowEventArgs e)
+        {
+
+        }
     }
 }
