@@ -16,9 +16,7 @@ namespace DataDictionary.Main.Forms
 {
     partial class DetailDataView : ApplicationBase, IApplicationDataForm
     {
-        public Object? OpenItem { get; private set; }
-        IBindingTable? bindingTableSource
-        { get { if (OpenItem is IBindingTable value) { return value; } else { return null; } } }
+        public IBindingTable? bindingTableSource { get; private set; }
 
         public DetailDataView() : base()
         {
@@ -27,11 +25,14 @@ namespace DataDictionary.Main.Forms
 
         public DetailDataView(IBindingTable data, Icon? icon = null) : this()
         {
-            OpenItem = data;
+            bindingTableSource = data;
             this.Text = String.Format("{0}: {1}", this.Text, data.BindingName);
             if (icon is Icon value) { this.Icon = value; }
             else { this.Icon = Resources.DataDictionaryApplication; }
         }
+
+        public Boolean IsOpenItem(Object? item)
+        { return ReferenceEquals(bindingTableSource, item); }
 
         private void BindingDataView_Load(object sender, EventArgs e)
         {
@@ -60,16 +61,16 @@ namespace DataDictionary.Main.Forms
         private void bindingTableValue_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DbSchemaItem schemaItem)
-            { Activate((data) => new Forms.DbSchema(schemaItem), schemaItem); }
+            { Activate((data) => new Forms.Database.DbSchema(schemaItem), schemaItem); }
 
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DbTableItem tableItem)
-            { Activate((data) => new Forms.DbTable(tableItem), tableItem); }
+            { Activate((data) => new Forms.Database.DbTable(tableItem), tableItem); }
 
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DbTableColumnItem columnItem)
-            { Activate((data) => new Forms.DbTableColumn(columnItem), columnItem); }
+            { Activate((data) => new Forms.Database.DbTableColumn(columnItem), columnItem); }
 
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DomainAttributeItem attributeItem)
-            { Activate((data) => new Forms.DomainAttribute(attributeItem), attributeItem); }
+            { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
 
         }
     }

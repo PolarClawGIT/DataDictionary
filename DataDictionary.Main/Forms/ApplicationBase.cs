@@ -14,11 +14,11 @@ using Toolbox.BindingTable;
 using Toolbox.Mediator;
 using Toolbox.Threading;
 
-namespace DataDictionary.Main
+namespace DataDictionary.Main.Forms
 {
     interface IApplicationDataForm
     {
-        public object? OpenItem { get; }
+        Boolean IsOpenItem(Object? Item);
     }
 
     partial class ApplicationBase : Form, IColleague
@@ -71,7 +71,7 @@ namespace DataDictionary.Main
 
             if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
             {
-                if (existingForm is IApplicationDataForm existingData && ReferenceEquals(existingData.OpenItem, data))
+                if (existingForm is IApplicationDataForm existingData && existingData.IsOpenItem(data))
                 { existingForm.Activate(); }
                 else
                 {
@@ -106,7 +106,7 @@ namespace DataDictionary.Main
 
             if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
             {
-                if (existingForm is IApplicationDataForm existingData && ReferenceEquals(existingData.OpenItem, data))
+                if (existingForm is IApplicationDataForm existingData && existingData.IsOpenItem(data))
                 { existingForm.Activate(); }
                 else
                 {

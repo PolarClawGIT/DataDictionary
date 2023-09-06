@@ -47,7 +47,6 @@ namespace DataDictionary.Main.Forms.Application
             this.ValidateChildren();
         }
 
-
         private void ApplicationDefinition_FormClosed(object sender, FormClosedEventArgs e)
         {
             newToolStripButton.Click -= NewToolStripButton_Click;

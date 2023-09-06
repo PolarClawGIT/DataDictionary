@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main
+﻿namespace DataDictionary.Main.Forms
 {
     partial class ApplicationBase
     {

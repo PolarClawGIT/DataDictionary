@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.DomainData;
+using DataDictionary.Main.Forms;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
@@ -350,16 +351,16 @@ namespace DataDictionary.Main
                 Object dataNode = dbDataNodes[e.Node];
 
                 if (dataNode is IDbSchemaItem schemaItem)
-                { Activate((data) => new Forms.DbSchema(schemaItem), schemaItem); }
+                { Activate((data) => new Forms.Database.DbSchema(schemaItem), schemaItem); }
 
                 if (dataNode is IDbTableItem tableItem)
-                { Activate((data) => new Forms.DbTable(tableItem), tableItem); }
+                { Activate((data) => new Forms.Database.DbTable(tableItem), tableItem); }
 
                 if (dataNode is IDbTableColumnItem columnItem)
-                { Activate((data) => new Forms.DbTableColumn(columnItem), columnItem); }
+                { Activate((data) => new Forms.Database.DbTableColumn(columnItem), columnItem); }
 
                 if (dataNode is IDbConstraintItem constraintItem)
-                { Activate((data) => new Forms.DbConstraint(constraintItem), constraintItem); }
+                { Activate((data) => new Forms.Database.DbConstraint(constraintItem), constraintItem); }
 
             }
         }
@@ -442,7 +443,7 @@ namespace DataDictionary.Main
                 Object dataNode = domainModelNodes[e.Node];
 
                 if (dataNode is IDomainAttributeItem item)
-                { Activate((data) => new Forms.DomainAttribute(item), item); }
+                { Activate((data) => new Forms.Domain.DomainAttribute(item), item); }
             }
         }
         #endregion

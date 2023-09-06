@@ -1,22 +1,11 @@
 ﻿using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Toolbox.BindingTable;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.Main.Messages;
-using System.Windows.Forms.VisualStyles;
-using System.Reflection;
-using Toolbox.Mediator;
 using Toolbox.Threading;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Forms;
 
 namespace DataDictionary.Main.Dialogs
 {

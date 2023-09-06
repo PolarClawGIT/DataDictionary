@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DataDictionary.Main.Properties;
 using DataDictionary.Main.Messages;
+using DataDictionary.Main.Forms;
 
 namespace DataDictionary.Main.Dialogs
 {

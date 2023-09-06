@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using DataDictionary.Main.TextTemplates;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.Main.Forms;
 
 namespace DataDictionary.Main.Dialogs
 {
