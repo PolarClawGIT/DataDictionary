@@ -2,7 +2,14 @@
 (
 	[AttributeId]   UniqueIdentifier Not Null,
 	[PropertyId]    UniqueIdentifier NOT Null,
-	[PropertyValue] NVarChar(4000) Not Null, -- Only supporting SQLVarent as character data
+	[AttributePropertyDescription]   [App_DataDictionary].[typeDescription] Null, -- Used for display/report purposes. Could use a better Name.
+	-- This is a Sub-Type based on what the Property Type defines.
+		-- Definition Sub-Type
+		[DefinitionText]          NVarChar(Max) Null, -- Contains Rich Text Definition
+		-- Extended Property Sub-Type
+		[ExtendedPropertyValue]   NVarChar(4000) Null, -- Only supporting SQLVarent as character data
+		-- Choice Property Sub-Type
+		[ChoiceValue]             NVarChar(50) Null, -- Choice Selection
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy]     SysName Not Null CONSTRAINT [DF_DomainAttributeProperty_ModfiedBy] DEFAULT (original_login()),
 	[SysStart]      DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DomainAttributeProperty_SysStart] DEFAULT (sysdatetime()),

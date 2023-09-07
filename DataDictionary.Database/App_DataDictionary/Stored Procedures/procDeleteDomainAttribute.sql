@@ -43,9 +43,6 @@ Begin Try
 	Delete From [App_DataDictionary].[DomainAttributeProperty]
 	Where [AttributeId] In (Select [AttributeId] From @Delete)
 
-	Delete From [App_DataDictionary].[DomainAttributeDefinition]
-	Where [AttributeId] In (Select [AttributeId] From @Delete)
-
 	Delete From [App_DataDictionary].[ModelAttribute]
 	Where [AttributeId] In (Select [AttributeId] From @Delete)
 

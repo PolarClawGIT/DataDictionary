@@ -250,8 +250,8 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                     IDbExtendedPropertyItem propertySource = propertyItem.First();
 
                     if (data.Properties.FirstOrDefault(w =>
-                            w.PropertyName is not null &&
-                            w.PropertyName.Equals(propertySource.PropertyName, ModelFactory.CompareString)) is IPropertyItem property)
+                            w.ExtendedProperty is not null &&
+                            w.ExtendedProperty.Equals(propertySource.PropertyName, ModelFactory.CompareString)) is IPropertyItem property)
                     {
                         data.DomainAttributeProperties.
                             Add(new DomainAttributePropertyItem(newAttribute, property, propertySource));

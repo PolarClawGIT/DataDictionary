@@ -334,7 +334,7 @@
             // 
             // bindingDefinition
             // 
-            bindingDefinition.AddingNew += bindingDefinition_AddingNew;
+
             // 
             // errorProvider
             // 

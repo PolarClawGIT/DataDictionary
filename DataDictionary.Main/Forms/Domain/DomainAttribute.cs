@@ -50,6 +50,7 @@ namespace DataDictionary.Main.Forms.Domain
                 attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), data, nameof(data.AttributeDescription)));
                 attributeParentTitleData.DataBindings.Add(new Binding(nameof(attributeParentTitleData.Text), parent, nameof(parent.AttributeTitle)));
 
+                /*
                 bindingDefinition.DataSource =
                     new BindingView<DomainAttributeDefinitionItem>(
                         Program.Data.DomainAttributeDefinitions,
@@ -74,7 +75,7 @@ namespace DataDictionary.Main.Forms.Domain
 
                 attributeDefinitionTypeData.DataBindings.Add(new Binding(nameof(attributeDefinitionTypeData.SelectedValue), bindingDefinition, nameof(definitionAttribute.DefinitionId), true));
                 attributeDefinitionData.DataBindings.Add(new Binding(nameof(attributeDefinitionData.Rtf), bindingDefinition, nameof(definitionAttribute.DefinitionText)));
-
+                */
 
                 /*
 
@@ -117,45 +118,6 @@ namespace DataDictionary.Main.Forms.Domain
             { return Program.Data.Properties.Select(s => new PropertyNameDataItem() { PropertyId = s.PropertyId, PropertyTitle = s.PropertyTitle }).ToList(); }
         }
 
-        record DefinitionNameDataItem
-        {
-            public required Guid DefinitionId { get; init; }
-            public required String DefinitionTitle { get; init; }
-
-            public static IReadOnlyList<DefinitionNameDataItem> Create()
-            {
-                List<DefinitionNameDataItem> result = new List<DefinitionNameDataItem>();
-
-                result.Add(new DefinitionNameDataItem() { DefinitionId = Guid.Empty, DefinitionTitle = "(select type)" });
-
-                foreach (DefinitionItem item in Program.Data.Definitions)
-                {
-                    if (item.DefinitionId is Guid id && item.DefinitionTitle is String title)
-                    { result.Add(new DefinitionNameDataItem() { DefinitionId = id, DefinitionTitle = title }); }
-                }
-
-                return result;
-            }
-        }
-
-        private void bindingDefinition_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            DomainAttributeDefinitionItem newItem = new DomainAttributeDefinitionItem()
-            { AttributeId = DataKey.AttributeId };
-
-            if (bindingDefinition.Current is null || attributeDefinitionNavigation.CurrentRow is null)
-            {
-                if (attributeDefinitionTypeData.SelectedValue is Guid guidValue)
-                { newItem.DefinitionId = guidValue; }
-
-                if (!String.IsNullOrEmpty(attributeDefinitionData.Text))
-                { newItem.DefinitionText = attributeDefinitionData.Rtf; }
-            }
-
-            e.NewObject = newItem;
-
-            if (attributeDefinitionNavigation.Focused) { attributeDefinitionTypeData.Focus(); }
-        }
 
         private void attributeDefinitionTypeData_Validated(object sender, EventArgs e)
         {

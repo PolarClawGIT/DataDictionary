@@ -32,12 +32,6 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 DoWork = data.Properties.Clear
             });
 
-            workItems.Add(new WorkItem()
-            {
-                WorkName = "Clear Definitions",
-                DoWork = data.Definitions.Clear
-            });
-
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Help",
@@ -50,13 +44,6 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 WorkName = "Load Properties",
                 Command = PropertyItem.GetData,
                 Target = data.Properties
-            });
-
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Load Definitions",
-                Command = DefinitionItem.GetData,
-                Target = data.Definitions
             });
 
             return workItems;
@@ -80,12 +67,6 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Command = (conn) => PropertyItem.SetData(conn, data.Properties)
             });
 
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save Definitions",
-                Command = (conn) => DefinitionItem.SetData(conn, data.Definitions)
-            });
-
             return workItems;
         }
 
@@ -103,7 +84,6 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 {
                     workSet.Tables.Add(data.HelpSubjects.ToDataTable());
                     workSet.Tables.Add(data.Properties.ToDataTable());
-                    workSet.Tables.Add(data.Definitions.ToDataTable());
 
                     workSet.WriteXml(file.FullName, XmlWriteMode.WriteSchema);
                 }
@@ -138,14 +118,6 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                         data.Properties.Clear();
                         data.Properties.Load(propertiesData.CreateDataReader());
                     }
-
-                    if (workSet.Tables.Contains(data.Definitions.BindingName) &&
-                        workSet.Tables[data.Definitions.BindingName] is DataTable definitionsData)
-                    {
-                        data.Definitions.Clear();
-                        data.Definitions.Load(definitionsData.CreateDataReader());
-                    }
-
                 }
             }
         }

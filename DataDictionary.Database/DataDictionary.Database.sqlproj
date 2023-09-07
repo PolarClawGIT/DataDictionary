@@ -147,7 +147,6 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationProperty.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeApplicationProperty.sql" />
     <Build Include="App_DataDictionary\Tables\ApplicationPropertyScope.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationPropertyScope.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseDomain.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraint.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraintColumn.sql" />
@@ -169,19 +168,11 @@
     <Build Include="App_DataDictionary\Tables\ModelProperty.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseCatalogObject.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procDeleteDatabaseCatalogObject.sql" />
-    <Build Include="App_DataDictionary\Tables\ApplicationDefinition.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeTitle.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDescription.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainAttributeDefinition.sql" />
     <Build Include="dbo\Views\SampleView.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainEntityDefinition.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationProperty.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeApplicationDefinition.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationDefinition.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationDefinition.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeDomainAttributeDefinition.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttributeDefinition.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeDefinition.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainSubjectArea.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

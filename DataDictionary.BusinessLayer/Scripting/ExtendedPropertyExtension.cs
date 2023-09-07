@@ -27,15 +27,15 @@ namespace DataDictionary.BusinessLayer.Scripting
                     String propertyName = "MS_Description";
                     PropertyItem? propertypeType = data.Properties.FirstOrDefault(w => new PropertyKey(w) == propertyKey);
 
-                    if(propertypeType is not null && propertypeType.PropertyName is String)
-                    { propertyName = propertypeType.PropertyName; }
+                    if(propertypeType is not null && propertypeType.ExtendedProperty is String)
+                    { propertyName = propertypeType.ExtendedProperty; }
 
                     foreach (DomainAttributeAliasItem aliasItem in data.DomainAttributeAliases.GetAliases(attributeKey))
                     {
                         DbExtendedPropertyParameter value = new DbExtendedPropertyParameter()
                         {
                             PropertyName = propertyName,
-                            PropertyValue = propertyItem.PropertyValue,
+                            PropertyValue = propertyItem.ExtendedPropertyValue,
                             Level0Type = aliasItem.CatalogScope.ToString(),
                             Level0Name = aliasItem.SchemaName,
                             Level1Type = aliasItem.ObjectScope.ToString(),

@@ -230,9 +230,6 @@ namespace DataDictionary.Main
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.ApplicationOptions()); }
-
-        private void definitionsToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Application.Definition()); }
         #endregion
 
         #region dbMetaDataNavigation
@@ -470,8 +467,5 @@ namespace DataDictionary.Main
 
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
         { new Forms.UnitTestGridView().Show(); }
-
-        private void testFormToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Dialogs.Experiment()); }
     }
 }

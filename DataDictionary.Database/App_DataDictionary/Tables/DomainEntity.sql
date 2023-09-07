@@ -5,7 +5,6 @@
 	-- This includes Tables, Views, Procedures Functions and User Defined Data Types.
 	-- To be implemented later.
 	[EntityId] UniqueIdentifier Not Null CONSTRAINT [DF_DomainEntityEntityId] DEFAULT (newid()),
-	[EntityParentId] UniqueIdentifier Null,
 	[EntityTitle] [App_DataDictionary].[typeTitle] Not Null,
 	[EntityDescription] [App_DataDictionary].[typeDescription] Null,
 	-- TODO: Add System Version later once the schema is locked down
@@ -15,9 +14,6 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_DomainEntity] PRIMARY KEY CLUSTERED ([EntityId] ASC),
-	CONSTRAINT [FK_DomainEntity_Parent] FOREIGN KEY ([EntityParentId]) REFERENCES [App_DataDictionary].[DomainEntity] ([EntityId]),
 )
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [UX_DomainEntity]
-    ON [App_DataDictionary].[DomainEntity]([EntityTitle] ASC, [EntityParentId] ASC);
-GO
+

@@ -23,7 +23,11 @@ Begin Try
 	Select	IsNull(D.[PropertyId],NewId()) As [PropertyId],
 			NullIf(Trim(D.[PropertyTitle]),'') As [PropertyTitle],
 			NullIf(Trim(D.[PropertyDescription]),'') As [PropertyDescription],
-			NullIf(Trim(D.[PropertyName]),'') As [PropertyName],
+			IsNull(D.[IsExtendedProperty],0) As [IsExtendedProperty],
+			IsNull(D.[IsDefinition],0) As [IsDefinition],
+			IsNull(D.[IsChoice], 0) As [IsChoice],
+			NullIf(Trim(D.[ExtendedProperty]),'') As [ExtendedProperty],
+			NullIf(Trim(D.[ChoiceList]),'') As [ChoiceList],
 			D.[Obsolete],
 			D.[SysStart]
 	From	@Data D
@@ -42,7 +46,9 @@ Begin Try
 		Select	V.[PropertyId],
 				V.[PropertyTitle],
 				V.[PropertyDescription],
-				V.[PropertyName],
+				V.[IsDefinition],
+				V.[ExtendedProperty],
+				V.[ChoiceList],
 				IIF(IsNull(V.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
 		From	@Values V
 				Left Join [App_DataDictionary].[ApplicationProperty] A
@@ -51,7 +57,9 @@ Begin Try
 		Select	[PropertyId],
 				[PropertyTitle],
 				[PropertyDescription],
-				[PropertyName],
+				[IsDefinition],
+				[ExtendedProperty],
+				[ChoiceList],
 				[ObsoleteDate]
 		From	[App_DataDictionary].[ApplicationProperty])
 	Merge [App_DataDictionary].[ApplicationProperty] As T
@@ -60,11 +68,13 @@ Begin Try
 	When Matched Then Update
 		Set	[PropertyTitle] = S.[PropertyTitle],
 			[PropertyDescription] = S.[PropertyDescription],
-			[PropertyName] = S.[PropertyName],
+			[IsDefinition] = S.[IsDefinition],
+			[ExtendedProperty] = S.[ExtendedProperty],
+			[ChoiceList] = S.[ChoiceList],
 			[ObsoleteDate] = S.[ObsoleteDate]
 	When Not Matched by Target Then
-		Insert([PropertyId], [PropertyDescription], [PropertyName], [ObsoleteDate])
-		Values ([PropertyId], [PropertyDescription], [PropertyName], [ObsoleteDate]);
+		Insert([PropertyId], [PropertyDescription], [IsDefinition], [ExtendedProperty], [ChoiceList], [ObsoleteDate])
+		Values ([PropertyId], [PropertyDescription], [IsDefinition], [ExtendedProperty], [ChoiceList], [ObsoleteDate]);
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

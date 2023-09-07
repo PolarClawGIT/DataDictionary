@@ -3,7 +3,11 @@
 	[PropertyId]          UniqueIdentifier Null,
 	[PropertyTitle]       [App_DataDictionary].[typeTitle] Null,
 	[PropertyDescription] [App_DataDictionary].[typeDescription] Null,
-	[PropertyName]        SysName Null,
+	[IsExtendedProperty]  Bit Null,
+	[IsDefinition]        Bit Null,
+	[IsChoice]            Bit Null,
+	[ExtendedProperty]    SysName Null,
+	[ChoiceList]          NVarChar(2000) Null,
 	[Obsolete]            Bit Null,
 	[SysStart]            DATETIME2 Null
 )

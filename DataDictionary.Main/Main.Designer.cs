@@ -656,7 +656,6 @@
             definitionsToolStripMenuItem.Name = "definitionsToolStripMenuItem";
             definitionsToolStripMenuItem.Size = new Size(131, 22);
             definitionsToolStripMenuItem.Text = "Definitions";
-            definitionsToolStripMenuItem.Click += definitionsToolStripMenuItem_Click;
             // 
             // dbSchemaToolStripMenuItem
             // 
@@ -731,7 +730,6 @@
             testFormToolStripMenuItem.Name = "testFormToolStripMenuItem";
             testFormToolStripMenuItem.Size = new Size(180, 22);
             testFormToolStripMenuItem.Text = "Test Form";
-            testFormToolStripMenuItem.Click += testFormToolStripMenuItem_Click;
             // 
             // Main
             // 

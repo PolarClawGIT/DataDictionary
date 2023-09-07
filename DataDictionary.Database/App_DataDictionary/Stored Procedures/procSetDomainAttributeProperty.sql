@@ -23,7 +23,10 @@ Begin Try
 	Insert Into @Values
 	Select	D.[AttributeId],
 			P.[PropertyId],
-			NullIf(Trim(D.[PropertyValue]),'') As [PropertyValue],
+			NullIf(Trim(D.[AttributePropertyDescription]),'') As [AttributePropertyDescription],
+			NullIf(Trim(D.[DefinitionText]),'') As [DefinitionText],
+			NullIf(Trim(D.[ExtendedPropertyValue]),'') As [ExtendedPropertyValue],
+			NullIf(Trim(D.[ChoiceValue]),'') As [ChoiceValue],
 			D.[SysStart]
 	From	@Data D
 			Inner Join [App_DataDictionary].[ApplicationProperty] P
@@ -58,17 +61,26 @@ Begin Try
 	With [Delta] As (
 		Select	[AttributeId],
 				[PropertyId],
-				[PropertyValue]
+				[AttributePropertyDescription],
+				[DefinitionText],
+				[ExtendedPropertyValue],
+				[ChoiceValue]
 		From	@Values
 		Except
 		Select	[AttributeId],
 				[PropertyId],
-				[PropertyValue]
+				[AttributePropertyDescription],
+				[DefinitionText],
+				[ExtendedPropertyValue],
+				[ChoiceValue]
 		From	[App_DataDictionary].[DomainAttributeProperty]),
 	[Data] As (
 		Select	V.[AttributeId],
 				V.[PropertyId],
-				V.[PropertyValue],
+				V.[AttributePropertyDescription],
+				V.[DefinitionText],
+				V.[ExtendedPropertyValue],
+				V.[ChoiceValue],
 				IIF(D.[AttributeId] is Null,1, 0) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
@@ -79,10 +91,13 @@ Begin Try
 	On	T.[AttributeId] = S.[AttributeId] And
 		T.[PropertyId] = S.[PropertyId]
 	When Matched And S.[IsDiffrent] = 1 Then Update
-		Set	[PropertyValue] = S.[PropertyValue]
+		Set	[AttributePropertyDescription] = S.[AttributePropertyDescription],
+			[DefinitionText] = S.[DefinitionText],
+			[ExtendedPropertyValue] = S.[ExtendedPropertyValue],
+			[ChoiceValue] = S.[ChoiceValue]
 	When Not Matched by Target Then
-		Insert ([AttributeId], [PropertyId], [PropertyValue])
-		Values ([AttributeId], [PropertyId], [PropertyValue])
+		Insert ([AttributeId], [PropertyId], [AttributePropertyDescription], [DefinitionText], [ExtendedPropertyValue], [ChoiceValue])
+		Values ([AttributeId], [PropertyId], [AttributePropertyDescription], [DefinitionText], [ExtendedPropertyValue], [ChoiceValue])
 	When Not Matched by Source And (T.[AttributeId] in (
 		Select	[AttributeId]
 		From	[App_DataDictionary].[ModelAttribute]

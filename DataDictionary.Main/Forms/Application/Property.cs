@@ -118,7 +118,7 @@ namespace DataDictionary.Main.Forms.Application
             {
                 newItem.PropertyTitle = pasteItem.PropertyTitle;
                 newItem.PropertyDescription = pasteItem.PropertyDescription;
-                newItem.PropertyName = pasteItem.PropertyName;
+                newItem.ExtendedProperty = pasteItem.ExtendedProperty;
             }
 
             if (bindingSource.Current is null || propertyNavigation.CurrentRow is null)
@@ -189,7 +189,7 @@ namespace DataDictionary.Main.Forms.Application
             {
                 propertyTitleData.DataBindings.Add(new Binding(nameof(propertyTitleData.Text), bindingSource, nameof(item.PropertyTitle)));
                 propertyDescriptionData.DataBindings.Add(new Binding(nameof(propertyDescriptionData.Text), bindingSource, nameof(item.PropertyDescription)));
-                propertyNameData.DataBindings.Add(new Binding(nameof(propertyNameData.Text), bindingSource, nameof(item.PropertyName)));
+                propertyNameData.DataBindings.Add(new Binding(nameof(propertyNameData.Text), bindingSource, nameof(item.ExtendedProperty)));
                 obsoleteData.DataBindings.Add(new Binding(nameof(obsoleteData.Checked), bindingSource, nameof(item.Obsolete), false, DataSourceUpdateMode.OnValidation, false));
             }
         }

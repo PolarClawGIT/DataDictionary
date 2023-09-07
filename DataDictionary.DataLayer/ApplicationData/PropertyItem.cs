@@ -11,7 +11,14 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.ApplicationData
 {
     public interface IPropertyItem : IPropertyKey, IPropertyKeyUnique
-    { }
+    {
+        String? PropertyDescription { get; }
+        Nullable<Boolean> IsExtendedProperty { get; }
+        Nullable<Boolean> IsDefinition { get; }
+        Nullable<Boolean> IsChoice { get; }
+        String? ExtendedProperty { get; }
+        String? ChoiceList { get; }
+    }
 
     [Serializable]
     public class PropertyItem : BindingTableRow, IPropertyItem, ISerializable
@@ -19,7 +26,11 @@ namespace DataDictionary.DataLayer.ApplicationData
         public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }
         public String? PropertyTitle { get { return GetValue("PropertyTitle"); } set { SetValue("PropertyTitle", value); } }
         public String? PropertyDescription { get { return GetValue("PropertyDescription"); } set { SetValue("PropertyDescription", value); } }
-        public String? PropertyName { get { return GetValue("PropertyName"); } set { SetValue("PropertyName", value); } }
+        public Nullable<Boolean> IsExtendedProperty { get { return GetValue<Boolean>("IsExtendedProperty", BindingItemParsers.BooleanTryParse); } }
+        public Nullable<Boolean> IsDefinition { get { return GetValue<Boolean>("IsDefinition", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("IsDefinition", value); } }
+        public Nullable<Boolean> IsChoice { get { return GetValue<Boolean>("IsChoice", BindingItemParsers.BooleanTryParse); } }
+        public String? ExtendedProperty { get { return GetValue("ExtendedProperty"); } set { SetValue("ExtendedProperty", value); } }
+        public String? ChoiceList { get { return GetValue("ChoiceList"); } set { SetValue("ChoiceList", value); } }
         public Nullable<Boolean> Obsolete { get { return GetValue<Boolean>("Obsolete", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("Obsolete", value); } }
 
         public PropertyItem() : base()
@@ -33,9 +44,14 @@ namespace DataDictionary.DataLayer.ApplicationData
             new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("PropertyTitle", typeof(String)){ AllowDBNull = true},
             new DataColumn("PropertyDescription", typeof(String)){ AllowDBNull = true},
-            new DataColumn("PropertyName", typeof(String)){ AllowDBNull = true},
+            new DataColumn("IsExtendedProperty", typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn("IsDefinition", typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn("IsChoice", typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn("ExtendedProperty", typeof(String)){ AllowDBNull = true},
+            new DataColumn("ChoiceList", typeof(String)){ AllowDBNull = true},
             new DataColumn("Obsolete", typeof(Boolean)){ AllowDBNull = false},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
+
         };
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
@@ -52,7 +68,6 @@ namespace DataDictionary.DataLayer.ApplicationData
 
             command.AddParameter("@PropertyId", parameters.PropertyId);
             command.AddParameter("@PropertyTitle", parameters.PropertyTitle);
-            command.AddParameter("@PropertyName", parameters.PropertyName);
             return command;
         }
 

@@ -15,7 +15,10 @@ namespace DataDictionary.DataLayer.DomainData
 {
     public interface IDomainAttributePropertyItem : IDomainAttributePropertyKey, IBindingTableRow
     {
-        public String? PropertyValue { get; }
+        public String? AttributePropertyDescription { get; }
+        public String? DefinitionText { get; }
+        public String? ExtendedPropertyValue { get; }
+        public String? ChoiceValue { get; }
     }
 
     [Serializable]
@@ -23,13 +26,10 @@ namespace DataDictionary.DataLayer.DomainData
     {
         public Nullable<Guid> AttributeId { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue<Guid>("AttributeId", value); } }
         public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }
-        public String? PropertyValue { get { return GetValue("PropertyValue"); } set { SetValue("PropertyValue", value); } }
-
-        [Browsable(false)]
-        public DomainAttributeKey AttributeKey { get { return new DomainAttributeKey(this); } set { AttributeId = value.AttributeId; } }
-
-        [Browsable(false)]
-        public PropertyKey PropertyKey { get { return new PropertyKey(this); } set { PropertyId = value.PropertyId; } }
+        public String? AttributePropertyDescription { get { return GetValue("AttributePropertyDescription"); } set { SetValue("AttributePropertyDescription", value); } }
+        public String? DefinitionText { get { return GetValue("DefinitionText"); } set { SetValue("DefinitionText", value); } }
+        public String? ExtendedPropertyValue { get { return GetValue("ExtendedPropertyValue"); } set { SetValue("ExtendedPropertyValue", value); } }
+        public String? ChoiceValue { get { return GetValue("ChoiceValue"); } set { SetValue("ChoiceValue", value); } }
 
         public DomainAttributePropertyItem() : base() { }
 
@@ -37,14 +37,17 @@ namespace DataDictionary.DataLayer.DomainData
         {
             AttributeId = attributeKey.AttributeId;
             PropertyId = propertyKey.PropertyId;
-            PropertyValue = value.PropertyValue;
+            ExtendedPropertyValue = value.PropertyValue;
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("PropertyValue", typeof(String)){ AllowDBNull = true},
+            new DataColumn("AttributePropertyDescription", typeof(String)){ AllowDBNull = true},
+            new DataColumn("DefinitionText", typeof(String)){ AllowDBNull = true},
+            new DataColumn("ExtendedPropertyValue", typeof(String)){ AllowDBNull = true},
+            new DataColumn("ChoiceValue", typeof(String)){ AllowDBNull = true},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
@@ -61,7 +64,6 @@ namespace DataDictionary.DataLayer.DomainData
             command.CommandText = "[App_DataDictionary].[procGetDomainAttributeProperty]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@AttributeId", parameters.attributeId);
-            command.AddParameter("@PropertyName", parameters.propertyName);
             return command;
         }
 
@@ -79,13 +81,6 @@ namespace DataDictionary.DataLayer.DomainData
         protected DomainAttributePropertyItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion
-
-        public override String ToString()
-        {
-            if (PropertyValue is not null)
-            { return PropertyValue; }
-            else { return String.Empty; }
-        }
     }
 
     public static class DomainAttributePropertyItemExtension
