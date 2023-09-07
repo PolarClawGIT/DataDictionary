@@ -115,8 +115,6 @@ namespace Toolbox.BindingTable
 
         protected override void InsertItem(int index, TRow item)
         {
-            var x = addNewCoreItem;
-
             if (!isAddNewCore)
             { baseData.Insert(baseData.Count(), item); }
 

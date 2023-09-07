@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DomainData;
+﻿using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
@@ -27,9 +28,7 @@ namespace DataDictionary.Main.Forms.Domain
         }
 
         public DomainAttribute(IDomainAttributeKey domainAttributeItem) : this()
-        {
-            DataKey = new DomainAttributeKey(domainAttributeItem);
-        }
+        { DataKey = new DomainAttributeKey(domainAttributeItem); }
 
         public Boolean IsOpenItem(Object? item)
         { return DataKey.Equals(item); }
@@ -51,33 +50,51 @@ namespace DataDictionary.Main.Forms.Domain
                 attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), data, nameof(data.AttributeDescription)));
                 attributeParentTitleData.DataBindings.Add(new Binding(nameof(attributeParentTitleData.Text), parent, nameof(parent.AttributeTitle)));
 
+                bindingDefinition.DataSource =
+                    new BindingView<DomainAttributeDefinitionItem>(
+                        Program.Data.DomainAttributeDefinitions,
+                        w => DataKey.Equals(w));
+
+                attributeDefinitionNavigation.AutoGenerateColumns = false;
+                attributeDefinitionNavigation.DataSource = bindingDefinition;
+
+                IEnumerable<DefinitionNameDataItem> definitionTypeColumnData = DefinitionNameDataItem.Create();
+                DefinitionNameDataItem definitionTypeFirst = definitionTypeColumnData.First(); // Used only to assign member column names
+                DomainAttributeDefinitionItem definitionAttribute = new DomainAttributeDefinitionItem(); // Used only to assign member column names
+
+                definitionTypeColumn.ValueMember = nameof(definitionTypeFirst.DefinitionId);
+                definitionTypeColumn.DisplayMember = nameof(definitionTypeFirst.DefinitionTitle);
+                definitionTypeColumn.DefaultCellStyle.DataSourceNullValue = definitionTypeFirst.DefinitionId;
+                definitionTypeColumn.DefaultCellStyle.NullValue = definitionTypeFirst.DefinitionTitle;
+                definitionTypeColumn.DataSource = definitionTypeColumnData;
+
+                attributeDefinitionTypeData.ValueMember = nameof(definitionTypeFirst.DefinitionId);
+                attributeDefinitionTypeData.DisplayMember = nameof(definitionTypeFirst.DefinitionTitle);
+                attributeDefinitionTypeData.DataSource = definitionTypeColumnData;
+
+                attributeDefinitionTypeData.DataBindings.Add(new Binding(nameof(attributeDefinitionTypeData.SelectedValue), bindingDefinition, nameof(definitionAttribute.DefinitionId), true));
+                attributeDefinitionData.DataBindings.Add(new Binding(nameof(attributeDefinitionData.Rtf), bindingDefinition, nameof(definitionAttribute.DefinitionText)));
+
+
+                /*
+
                 attributeAlaisData.AutoGenerateColumns = false;
                 attributeAlaisData.DataSource =
                     new BindingView<DomainAttributePropertyItem>(
                         Program.Data.DomainAttributeProperties,
                         w => DataKey.Equals(w));
 
-                PropertyNameDataItems defaultItem = new PropertyNameDataItems();
+                PropertyNameDataItem defaultItem = new PropertyNameDataItem();
                 propertyNameData.DisplayMember = nameof(defaultItem.PropertyTitle);
                 propertyNameData.ValueMember = nameof(defaultItem.PropertyId);
-                propertyNameData.DataSource = PropertyNameDataItems.Create();
+                propertyNameData.DataSource = PropertyNameDataItem.Create();
 
                 attributePropertiesData.AutoGenerateColumns = false;
                 attributePropertiesData.DataSource =
                     new BindingView<DomainAttributeAliasItem>(
                     Program.Data.DomainAttributeAliases,
-                    w => DataKey.Equals(w));
+                    w => DataKey.Equals(w));*/
             }
-        }
-
-        // Because DataGridComboItem cannot correctly bind anything but a very simple object.
-        record PropertyNameDataItems
-        {// TODO: Make this into a generic
-            public Guid? PropertyId { get; set; }
-            public string? PropertyTitle { get; set; }
-
-            public static IReadOnlyList<PropertyNameDataItems> Create()
-            { return Program.Data.Properties.Select(s => new PropertyNameDataItems() { PropertyId = s.PropertyId, PropertyTitle = s.PropertyTitle }).ToList(); }
         }
 
         void UnBindData()
@@ -88,6 +105,62 @@ namespace DataDictionary.Main.Forms.Domain
 
             attributeAlaisData.DataSource = null;
             attributePropertiesData.DataSource = null;
+        }
+
+        // Because DataGridComboItem cannot correctly bind anything but a very simple object.
+        record PropertyNameDataItem
+        {// TODO: Make this into a generic
+            public Guid? PropertyId { get; set; }
+            public string? PropertyTitle { get; set; }
+
+            public static IReadOnlyList<PropertyNameDataItem> Create()
+            { return Program.Data.Properties.Select(s => new PropertyNameDataItem() { PropertyId = s.PropertyId, PropertyTitle = s.PropertyTitle }).ToList(); }
+        }
+
+        record DefinitionNameDataItem
+        {
+            public required Guid DefinitionId { get; init; }
+            public required String DefinitionTitle { get; init; }
+
+            public static IReadOnlyList<DefinitionNameDataItem> Create()
+            {
+                List<DefinitionNameDataItem> result = new List<DefinitionNameDataItem>();
+
+                result.Add(new DefinitionNameDataItem() { DefinitionId = Guid.Empty, DefinitionTitle = "(select type)" });
+
+                foreach (DefinitionItem item in Program.Data.Definitions)
+                {
+                    if (item.DefinitionId is Guid id && item.DefinitionTitle is String title)
+                    { result.Add(new DefinitionNameDataItem() { DefinitionId = id, DefinitionTitle = title }); }
+                }
+
+                return result;
+            }
+        }
+
+        private void bindingDefinition_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            DomainAttributeDefinitionItem newItem = new DomainAttributeDefinitionItem()
+            { AttributeId = DataKey.AttributeId };
+
+            if (bindingDefinition.Current is null || attributeDefinitionNavigation.CurrentRow is null)
+            {
+                if (attributeDefinitionTypeData.SelectedValue is Guid guidValue)
+                { newItem.DefinitionId = guidValue; }
+
+                if (!String.IsNullOrEmpty(attributeDefinitionData.Text))
+                { newItem.DefinitionText = attributeDefinitionData.Rtf; }
+            }
+
+            e.NewObject = newItem;
+
+            if (attributeDefinitionNavigation.Focused) { attributeDefinitionTypeData.Focus(); }
+        }
+
+        private void attributeDefinitionTypeData_Validated(object sender, EventArgs e)
+        {
+            if (bindingDefinition.Current is null || attributeDefinitionNavigation.CurrentRow is null)
+            { bindingDefinition.AddNew(); }
         }
 
         private void attributePropertiesData_RowValidated(object sender, DataGridViewCellEventArgs e)
@@ -107,5 +180,6 @@ namespace DataDictionary.Main.Forms.Domain
         protected override void HandleMessage(DbDataBatchCompleted message)
         { BindData(); }
         #endregion
+
     }
 }

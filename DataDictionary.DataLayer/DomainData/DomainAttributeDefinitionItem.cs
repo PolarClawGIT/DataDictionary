@@ -19,14 +19,14 @@ namespace DataDictionary.DataLayer.DomainData
     [Serializable]
     public class DomainAttributeDefinitionItem : BindingTableRow, IDomainAttributeDefinitionItem, ISerializable
     {
-        public Nullable<Guid> AttributeId { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue<Guid>("AttributeId", value); } }
-        public Nullable<Guid> DefinitionId { get { return GetValue<Guid>("DefinitionId"); } protected set { SetValue<Guid>("DefinitionId", value); } }
+        public Nullable<Guid> AttributeId { get { return GetValue<Guid>("AttributeId"); } set { SetValue<Guid>("AttributeId", value); } }
+        public Nullable<Guid> DefinitionId { get { return GetValue<Guid>("DefinitionId"); } set { SetValue<Guid>("DefinitionId", value); } }
         public String? DefinitionText { get { return GetValue("DefinitionText"); } set { SetValue("DefinitionText", value); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("DefinitionId", typeof(Guid)){ AllowDBNull = false},
+            new DataColumn("DefinitionId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("DefinitionText", typeof(String)){ AllowDBNull = true},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
