@@ -8,38 +8,74 @@ namespace DataDictionary.Main.Controls
 {
     static class DataGridViewExtension
     {
-        public static (DataGridViewRow? Row, T? Data) FirstOrDefault<T>(this DataGridView control)
-            where T : class
-        {
-            if (control.Rows.Cast<DataGridViewRow>().FirstOrDefault(w => w.DataBoundItem is T) is DataGridViewRow row)
-            { return (row, row.DataBoundItem as T); }
-            else { return (null, null); }
-        }
-
-        public static (DataGridViewRow? Row, T? Data) FirstOrDefault<T>(this DataGridView control, Func<T, Boolean> predicate)
+        /// <summary>
+        /// Performs FirstOrDefault on the Rows and returns both the row and the Data of the specific type.
+        /// </summary>
+        /// <typeparam name="T">The expected Data Type</typeparam>
+        /// <param name="control">The DataGridView</param>
+        /// <param name="predicate">Where Condition</param>
+        /// <returns>Null or the row that matches the condition. If the T also matches, that is returned as part of the tuple.</returns>
+        public static (DataGridViewRow Row, T? Data)? FirstOrDefault<T>(this DataGridView control, Func<T, Boolean> predicate)
             where T : class
         {
             if (control.Rows.Cast<DataGridViewRow>().FirstOrDefault(w => w.DataBoundItem is T item && predicate(item)) is DataGridViewRow row)
-            { return (row, row.DataBoundItem as T); }
-            else { return (null, null); }
+            { return (row, row.GetDataBoundItem() as T); }
+            else { return null; }
         }
 
         /// <summary>
         /// Returns the DataBoundItem, if it exists.
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="control"></param>
         /// <returns></returns>
         /// <remarks>
         /// DataGridViewRow may be valid (has a row index and so on) but the DataBoundItem does not exist. 
         /// This can cause a IndexOutOfRange error (Microsoft Code?).
         /// Instead, this returns a null.
         /// </remarks>
-        public static Object? GetData(this DataGridViewRow source)
+        public static Object? GetDataBoundItem(this DataGridViewRow control)
         { // For some reason the DataGridViewRow may be valid but the DataBoundItem does not have a value.
             try
-            { return source.DataBoundItem; }
+            { return control.DataBoundItem; }
             catch (Exception)
             { return null; }
+        }
+
+        /// <summary>
+        /// This is used to set the Enabled/Disabled colors on a DataGridView. Set the Enabled flag first.
+        /// </summary>
+        /// <param name="control"></param>
+        /// <remarks>This does not work! Bad info from StackTrace.</remarks>
+        public static void SetEnabledColors(this DataGridView control)
+        {
+            foreach (DataGridViewRow row in control.Rows)
+            {
+                if (control.Enabled)
+                { row.HeaderCell.Style = new DataGridViewCellStyle(control.RowHeadersDefaultCellStyle); }
+                else
+                { row.HeaderCell.Style = new DataGridViewCellStyle(control.RowHeadersDefaultCellStyle) { BackColor = Color.BlueViolet }; }
+
+                foreach (DataGridViewCell item in row.Cells)
+                {
+                    if (control.Enabled)
+                    { item.Style = new DataGridViewCellStyle(control.DefaultCellStyle); }
+                    else
+                    {
+                        //item.DefaultCellStyle = new DataGridViewCellStyle(choiceData.DefaultCellStyle) { BackColor = SystemColors.ControlDark, ForeColor = SystemColors.InactiveCaptionText };
+                        item.Style = new DataGridViewCellStyle(control.DefaultCellStyle) { BackColor = Color.DarkRed, ForeColor = SystemColors.ControlLight };
+                    }
+                }
+            }
+
+            foreach (DataGridViewColumn item in control.Columns)
+            {
+                if (control.Enabled)
+                { item.HeaderCell.Style = new DataGridViewCellStyle(control.ColumnHeadersDefaultCellStyle); }
+                else
+                { item.HeaderCell.Style = new DataGridViewCellStyle(control.ColumnHeadersDefaultCellStyle) { BackColor = Color.Green }; }
+            }
+
+            control.Refresh();
         }
     }
 }

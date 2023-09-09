@@ -52,7 +52,7 @@ namespace DataDictionary.Main.Dialogs
             modelList.DataSource = Program.Data.Models;
             modelList.ClearSelection();
 
-            if (modelList.FirstOrDefault<ModelItem>(currentKey.Equals).Row is DataGridViewRow row)
+            if (modelList.FirstOrDefault<ModelItem>(currentKey.Equals) is (DataGridViewRow, ModelItem) value && value.Row is DataGridViewRow row)
             { row.Selected = true; }
             else
             { currentKey = Program.Data.ModelKey; }

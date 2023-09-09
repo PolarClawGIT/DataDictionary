@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Application
 {
@@ -119,18 +120,37 @@ namespace DataDictionary.Main.Forms.Application
                 newItem.PropertyTitle = pasteItem.PropertyTitle;
                 newItem.PropertyDescription = pasteItem.PropertyDescription;
                 newItem.ExtendedProperty = pasteItem.ExtendedProperty;
+                newItem.IsExtendedProperty = pasteItem.IsExtendedProperty;
+                newItem.IsDefinition = pasteItem.IsDefinition;
+                newItem.IsChoice = pasteItem.IsChoice;
+                newItem.Obsolete = pasteItem.Obsolete;
+                newItem.Choices.AddRange(pasteItem.Choices);
             }
-
-            if (bindingSource.Current is null || propertyNavigation.CurrentRow is null)
-            {
+            else if (bindingSource.Current is null || propertyNavigation.CurrentRow is null)
+            { // Empty Data Set. Not expected to occur.
                 newItem.PropertyTitle = propertyTitleData.Text;
                 newItem.PropertyDescription = propertyDescriptionData.Text;
+                newItem.ExtendedProperty = extendedPropertyData.Text;
+                newItem.IsExtendedProperty = isExtendedPropertyData.Checked;
+                newItem.IsDefinition = isDefinitionData.Checked;
+                newItem.IsChoice = isChoiceData.Checked;
+                newItem.Obsolete = obsoleteData.Checked;
+                newItem.Choices.AddRange(choiceData.Rows.Cast<DataGridViewRow>().Select(s => (PropertyItem.ChoiceItem)s.DataBoundItem));
+            }
+            else
+            {
+                newItem.PropertyTitle = String.Empty;
+                newItem.PropertyDescription = String.Empty;
+                newItem.ExtendedProperty = String.Empty;
+                newItem.IsExtendedProperty = false;
+                newItem.IsDefinition = false;
+                newItem.IsChoice = false;
+                newItem.Obsolete = false;
+                newItem.Choices.Clear();
             }
 
             propertyKey = new PropertyKey(newItem);
             e.NewObject = newItem;
-
-            if (propertyNavigation.Focused) { propertyTitleData.Focus(); }
         }
 
         private void PropertyTitleData_Validating(object sender, CancelEventArgs e)
@@ -143,7 +163,7 @@ namespace DataDictionary.Main.Forms.Application
         private void PropertyTitleData_Validated(object sender, EventArgs e)
         {
             if (bindingSource.Current is null || propertyNavigation.CurrentRow is null)
-            { bindingSource.AddNew(); }
+            { bindingSource.AddNew(); } // First Row scenario, force a first row to be created.
 
             ValidateRows();
         }
@@ -155,7 +175,7 @@ namespace DataDictionary.Main.Forms.Application
         {
             foreach (DataGridViewRow row in propertyNavigation.Rows)
             {
-                if (row.GetData() is PropertyItem item)
+                if (row.GetDataBoundItem() is PropertyItem item)
                 { row.ErrorText = item.Validate(); }
             }
 
@@ -169,29 +189,94 @@ namespace DataDictionary.Main.Forms.Application
             else { propertyNavigation.Rows[e.RowIndex].ErrorText = String.Empty; }
         }
 
-        private void propertyNavigation_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        private void PropertyNavigation_Leave(object sender, EventArgs e)
+        { // Want to keep the "new row" so that it can be edited in more detail.
+            if (propertyNavigation.CurrentRow is not null && propertyNavigation.CurrentRow.IsNewRow)
+            {
+                propertyNavigation.NotifyCurrentCellDirty(true); // Marks the row as dirty so when end-edit the row is retained.
+                propertyNavigation.EndEdit(); // Completes the edit so a binding error does not occur when focus changes.
+                propertyTitleData.Focus(); // Moves focus to the title field
+            }
+        }
+
+        private void BindingSource_CurrentChanged(object sender, EventArgs e)
+        { // Catches when the PropertyNavigation changes rows. This works better then the DataGridView events.
+            if (bindingSource.Current is PropertyItem item)
+            {
+                propertyKey = new PropertyKey(item);
+                choiceData.AutoGenerateColumns = false;
+                choiceData.DataSource = item.Choices;
+            }
+
+            if (propertyNavigation.Rows.Cast<DataGridViewRow>().FirstOrDefault(w => w.GetDataBoundItem() is PropertyItem item && propertyKey.Equals(item)) is DataGridViewRow row)
+            { if (!row.Selected) { propertyNavigation.ClearSelection(); row.Selected = true; } }
+        }
+
+        private void BindingSource_BindingComplete(object sender, BindingCompleteEventArgs e)
+        { // This is to help detecting binding errors and provide something meaningful.
+            Control? rootUserControl = null; // If this is a User Control, what is the control.
+
+            if (e.Binding is not null)
+            { rootUserControl = e.Binding.Control.FindUserControl(); }
+
+            if (e.Exception is not null)
+            {
+                if (e.Binding is not null)
+                {
+                    e.Exception.Data.Add(nameof(e.Binding.Control), e.Binding.Control.GetType().Name);
+                    if (rootUserControl is not null) { e.Exception.Data.Add(nameof(rootUserControl), rootUserControl.Name); }
+                }
+
+                Program.ShowException(e.Exception);
+            }
+        }
+
+        private void IsExtendedPropertyData_CheckedChanged(object sender, EventArgs e)
+        { extendedPropertyData.Enabled = isExtendedPropertyData.Checked; }
+
+        private void IsChoiceData_CheckedChanged(object sender, EventArgs e)
         {
-            propertyNavigation.ClearSelection();
-            propertyNavigation.Rows[e.RowIndex].Selected = true;
+            choiceData.Enabled = isChoiceData.Checked;
+            choiceData.ReadOnly = isChoiceData.Checked;
+            choiceData.AllowUserToAddRows = isChoiceData.Checked;
+            choicesHeader.Enabled = isChoiceData.Checked;
+        }
+
+        private void ChoiceData_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (sender is DataGridView control && e.CellStyle is not null)
+            {
+                if (control.Enabled)
+                { e.CellStyle = new DataGridViewCellStyle(control.DefaultCellStyle); }
+                else
+                { e.CellStyle = new DataGridViewCellStyle(control.DefaultCellStyle) { BackColor = SystemColors.ControlLight, ForeColor = SystemColors.GrayText }; }
+            }
         }
 
         void BindData()
         {
             bindingSource.ResetBindings(false);
 
-            if (Program.Data.Properties.FirstOrDefault(w => propertyKey is not null && propertyKey.Equals(w)) is PropertyItem priorItem)
-            { bindingSource.Position = Program.Data.Properties.IndexOf(priorItem); }
-
             propertyNavigation.AutoGenerateColumns = false;
             propertyNavigation.DataSource = bindingSource;
 
-            if (bindingSource.Current is PropertyItem item)
-            {
-                propertyTitleData.DataBindings.Add(new Binding(nameof(propertyTitleData.Text), bindingSource, nameof(item.PropertyTitle)));
-                propertyDescriptionData.DataBindings.Add(new Binding(nameof(propertyDescriptionData.Text), bindingSource, nameof(item.PropertyDescription)));
-                propertyNameData.DataBindings.Add(new Binding(nameof(propertyNameData.Text), bindingSource, nameof(item.ExtendedProperty)));
-                obsoleteData.DataBindings.Add(new Binding(nameof(obsoleteData.Checked), bindingSource, nameof(item.Obsolete), false, DataSourceUpdateMode.OnValidation, false));
-            }
+            PropertyItem propertyNameOf = new PropertyItem(); // Used for nameof function
+            propertyTitleData.DataBindings.Add(new Binding(nameof(propertyTitleData.Text), bindingSource, nameof(propertyNameOf.PropertyTitle), true));
+            propertyDescriptionData.DataBindings.Add(new Binding(nameof(propertyDescriptionData.Text), bindingSource, nameof(propertyNameOf.PropertyDescription), true));
+            extendedPropertyData.DataBindings.Add(new Binding(nameof(extendedPropertyData.Text), bindingSource, nameof(propertyNameOf.ExtendedProperty), true));
+
+            isExtendedPropertyData.DataBindings.Add(new Binding(nameof(isExtendedPropertyData.Checked), bindingSource, nameof(propertyNameOf.IsExtendedProperty), true));
+            isDefinitionData.DataBindings.Add(new Binding(nameof(isDefinitionData.Checked), bindingSource, nameof(propertyNameOf.IsDefinition), true));
+            isChoiceData.DataBindings.Add(new Binding(nameof(isChoiceData.Checked), bindingSource, nameof(propertyNameOf.IsChoice), true));
+            obsoleteData.DataBindings.Add(new Binding(nameof(obsoleteData.Checked), bindingSource, nameof(propertyNameOf.Obsolete), true));
+
+            extendedPropertyData.Enabled = isExtendedPropertyData.Checked;
+            choiceData.Enabled = isChoiceData.Checked;
+            choiceData.AllowUserToAddRows = isChoiceData.Checked;
+            choicesHeader.Enabled = isChoiceData.Checked;
+
+            if (Program.Data.Properties.FirstOrDefault(w => propertyKey is not null && propertyKey.Equals(w)) is PropertyItem item)
+            { bindingSource.Position = Program.Data.Properties.IndexOf(item); }
         }
 
         void UnBindData()
@@ -202,8 +287,12 @@ namespace DataDictionary.Main.Forms.Application
             propertyNavigation.DataSource = null;
             propertyTitleData.DataBindings.Clear();
             propertyDescriptionData.DataBindings.Clear();
-            propertyNameData.DataBindings.Clear();
+            extendedPropertyData.DataBindings.Clear();
+            isExtendedPropertyData.DataBindings.Clear();
+            isDefinitionData.DataBindings.Clear();
+            isChoiceData.DataBindings.Clear();
             obsoleteData.DataBindings.Clear();
+            choiceData.DataSource = null;
         }
 
         #region IColleague
@@ -236,10 +325,7 @@ namespace DataDictionary.Main.Forms.Application
             base.HandleMessage(message);
             if (!message.IsHandled) { PasteCommand(); message.IsHandled = true; }
         }
-
-
         #endregion
-
 
     }
 }

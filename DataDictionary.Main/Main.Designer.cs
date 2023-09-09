@@ -93,18 +93,17 @@
             optionsToolStripMenuItem = new ToolStripMenuItem();
             applicationToolStripMenuItem = new ToolStripMenuItem();
             propertiesToolStripMenuItem = new ToolStripMenuItem();
-            definitionsToolStripMenuItem = new ToolStripMenuItem();
             dbSchemaToolStripMenuItem = new ToolStripMenuItem();
             domainModelToolStripMenuItem = new ToolStripMenuItem();
             unitTestingToolStripMenuItem = new ToolStripMenuItem();
             gridViewToolStripMenuItem = new ToolStripMenuItem();
+            testFormToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             helpContentsMenuItem = new ToolStripMenuItem();
             helpIndexMenuItem = new ToolStripMenuItem();
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
-            testFormToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
@@ -128,9 +127,9 @@
             // 
             navigationPanel.Controls.Add(modelSpliter);
             navigationPanel.Dock = DockStyle.Left;
-            navigationPanel.Location = new Point(0, 24);
+            navigationPanel.Location = new Point(0, 49);
             navigationPanel.Name = "navigationPanel";
-            navigationPanel.Size = new Size(220, 686);
+            navigationPanel.Size = new Size(220, 661);
             navigationPanel.TabIndex = 6;
             // 
             // modelSpliter
@@ -148,8 +147,8 @@
             // modelSpliter.Panel2
             // 
             modelSpliter.Panel2.Controls.Add(navigationTabs);
-            modelSpliter.Size = new Size(220, 686);
-            modelSpliter.SplitterDistance = 110;
+            modelSpliter.Size = new Size(220, 661);
+            modelSpliter.SplitterDistance = 105;
             modelSpliter.TabIndex = 2;
             // 
             // navigationModelLayout
@@ -166,7 +165,7 @@
             navigationModelLayout.RowStyles.Add(new RowStyle());
             navigationModelLayout.RowStyles.Add(new RowStyle());
             navigationModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            navigationModelLayout.Size = new Size(218, 108);
+            navigationModelLayout.Size = new Size(218, 103);
             navigationModelLayout.TabIndex = 2;
             // 
             // modelNameData
@@ -190,7 +189,7 @@
             modelDescriptionData.Multiline = true;
             modelDescriptionData.Name = "modelDescriptionData";
             modelDescriptionData.ReadOnly = false;
-            modelDescriptionData.Size = new Size(212, 52);
+            modelDescriptionData.Size = new Size(212, 47);
             modelDescriptionData.TabIndex = 3;
             // 
             // navigationTabs
@@ -201,7 +200,7 @@
             navigationTabs.Location = new Point(0, 0);
             navigationTabs.Name = "navigationTabs";
             navigationTabs.SelectedIndex = 0;
-            navigationTabs.Size = new Size(218, 570);
+            navigationTabs.Size = new Size(218, 550);
             navigationTabs.TabIndex = 1;
             // 
             // navigationDomainTab
@@ -210,7 +209,7 @@
             navigationDomainTab.Location = new Point(4, 24);
             navigationDomainTab.Name = "navigationDomainTab";
             navigationDomainTab.Padding = new Padding(3);
-            navigationDomainTab.Size = new Size(210, 542);
+            navigationDomainTab.Size = new Size(210, 522);
             navigationDomainTab.TabIndex = 1;
             navigationDomainTab.Text = "Domain Model";
             navigationDomainTab.UseVisualStyleBackColor = true;
@@ -221,7 +220,7 @@
             domainModelNavigation.Dock = DockStyle.Fill;
             domainModelNavigation.Location = new Point(3, 3);
             domainModelNavigation.Name = "domainModelNavigation";
-            domainModelNavigation.Size = new Size(204, 536);
+            domainModelNavigation.Size = new Size(204, 516);
             domainModelNavigation.TabIndex = 0;
             domainModelNavigation.NodeMouseDoubleClick += domainModelNavigation_NodeMouseDoubleClick;
             // 
@@ -380,9 +379,9 @@
             // 
             // navigationSpliter
             // 
-            navigationSpliter.Location = new Point(220, 24);
+            navigationSpliter.Location = new Point(220, 49);
             navigationSpliter.Name = "navigationSpliter";
-            navigationSpliter.Size = new Size(3, 686);
+            navigationSpliter.Size = new Size(3, 661);
             navigationSpliter.TabIndex = 8;
             navigationSpliter.TabStop = false;
             // 
@@ -421,7 +420,7 @@
             // menuStrip
             // 
             menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, scriptMenuItem, toolsToolStripMenuItem, helpToolStripMenuItem });
-            menuStrip.Location = new Point(0, 0);
+            menuStrip.Location = new Point(0, 25);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(1141, 24);
             menuStrip.TabIndex = 1;
@@ -637,7 +636,7 @@
             // 
             // applicationToolStripMenuItem
             // 
-            applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { propertiesToolStripMenuItem, definitionsToolStripMenuItem });
+            applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { propertiesToolStripMenuItem });
             applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
             applicationToolStripMenuItem.Size = new Size(180, 22);
             applicationToolStripMenuItem.Text = "Application";
@@ -646,16 +645,9 @@
             // 
             propertiesToolStripMenuItem.Image = Properties.Resources.Property;
             propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
-            propertiesToolStripMenuItem.Size = new Size(131, 22);
+            propertiesToolStripMenuItem.Size = new Size(127, 22);
             propertiesToolStripMenuItem.Text = "Properties";
             propertiesToolStripMenuItem.Click += propertiesToolStripMenuItem_Click;
-            // 
-            // definitionsToolStripMenuItem
-            // 
-            definitionsToolStripMenuItem.Image = Properties.Resources.TextFile;
-            definitionsToolStripMenuItem.Name = "definitionsToolStripMenuItem";
-            definitionsToolStripMenuItem.Size = new Size(131, 22);
-            definitionsToolStripMenuItem.Text = "Definitions";
             // 
             // dbSchemaToolStripMenuItem
             // 
@@ -681,9 +673,15 @@
             // gridViewToolStripMenuItem
             // 
             gridViewToolStripMenuItem.Name = "gridViewToolStripMenuItem";
-            gridViewToolStripMenuItem.Size = new Size(180, 22);
+            gridViewToolStripMenuItem.Size = new Size(125, 22);
             gridViewToolStripMenuItem.Text = "Grid View";
             gridViewToolStripMenuItem.Click += gridViewToolStripMenuItem_Click;
+            // 
+            // testFormToolStripMenuItem
+            // 
+            testFormToolStripMenuItem.Name = "testFormToolStripMenuItem";
+            testFormToolStripMenuItem.Size = new Size(125, 22);
+            testFormToolStripMenuItem.Text = "Test Form";
             // 
             // helpToolStripMenuItem
             // 
@@ -724,12 +722,6 @@
             helpAboutMenuItem.Size = new Size(122, 22);
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
-            // 
-            // testFormToolStripMenuItem
-            // 
-            testFormToolStripMenuItem.Name = "testFormToolStripMenuItem";
-            testFormToolStripMenuItem.Size = new Size(180, 22);
-            testFormToolStripMenuItem.Text = "Test Form";
             // 
             // Main
             // 
@@ -845,7 +837,6 @@
         private ToolStripMenuItem extendedPropertiesToolStripMenuItem;
         private ToolStripMenuItem applicationToolStripMenuItem;
         private ToolStripMenuItem propertiesToolStripMenuItem;
-        private ToolStripMenuItem definitionsToolStripMenuItem;
         private ToolStripMenuItem testFormToolStripMenuItem;
     }
 }

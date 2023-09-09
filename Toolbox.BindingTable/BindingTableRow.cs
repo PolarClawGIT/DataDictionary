@@ -98,7 +98,7 @@ namespace Toolbox.BindingTable
         /// </summary>
         /// <param name="row"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        protected internal void SetRow(DataRow row)
+        protected virtual internal void SetRow(DataRow row)
         {
             data.Table.RowChanging -= Table_RowChanging;
             data.Table.RowChanged -= Table_RowChanged;
