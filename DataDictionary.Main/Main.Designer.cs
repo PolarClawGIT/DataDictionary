@@ -268,7 +268,7 @@
             navigationDbSchemaTab.Location = new Point(4, 24);
             navigationDbSchemaTab.Name = "navigationDbSchemaTab";
             navigationDbSchemaTab.Padding = new Padding(3);
-            navigationDbSchemaTab.Size = new Size(210, 542);
+            navigationDbSchemaTab.Size = new Size(210, 522);
             navigationDbSchemaTab.TabIndex = 0;
             navigationDbSchemaTab.Text = "Db Schema";
             navigationDbSchemaTab.UseVisualStyleBackColor = true;
@@ -279,7 +279,7 @@
             dbMetaDataNavigation.Dock = DockStyle.Fill;
             dbMetaDataNavigation.Location = new Point(3, 3);
             dbMetaDataNavigation.Name = "dbMetaDataNavigation";
-            dbMetaDataNavigation.Size = new Size(204, 536);
+            dbMetaDataNavigation.Size = new Size(204, 516);
             dbMetaDataNavigation.TabIndex = 0;
             dbMetaDataNavigation.NodeMouseDoubleClick += dbMetaDataNavigation_NodeMouseDoubleClick;
             // 
@@ -673,15 +673,16 @@
             // gridViewToolStripMenuItem
             // 
             gridViewToolStripMenuItem.Name = "gridViewToolStripMenuItem";
-            gridViewToolStripMenuItem.Size = new Size(125, 22);
+            gridViewToolStripMenuItem.Size = new Size(180, 22);
             gridViewToolStripMenuItem.Text = "Grid View";
             gridViewToolStripMenuItem.Click += gridViewToolStripMenuItem_Click;
             // 
             // testFormToolStripMenuItem
             // 
             testFormToolStripMenuItem.Name = "testFormToolStripMenuItem";
-            testFormToolStripMenuItem.Size = new Size(125, 22);
+            testFormToolStripMenuItem.Size = new Size(180, 22);
             testFormToolStripMenuItem.Text = "Test Form";
+            testFormToolStripMenuItem.Click += testFormToolStripMenuItem_Click;
             // 
             // helpToolStripMenuItem
             // 

@@ -2,6 +2,7 @@
 using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.DomainData;
+using DataDictionary.DataLayer.LibraryData;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -55,6 +56,10 @@ namespace DataDictionary.BusinessLayer
         public BindingTable<DomainAttributeItem> DomainAttributes = ModelFactory.Create<DomainAttributeItem>();
         public BindingTable<DomainAttributeAliasItem> DomainAttributeAliases = ModelFactory.Create<DomainAttributeAliasItem>();
         public BindingTable<DomainAttributePropertyItem> DomainAttributeProperties = ModelFactory.Create<DomainAttributePropertyItem>();
+
+        // Library Model
+        public BindingTable<LibraryAssemblyItem> LibraryAssemblies = ModelFactory.Create<LibraryAssemblyItem>();
+        public BindingTable<LibraryMemberItem> LibraryMembers = ModelFactory.Create<LibraryMemberItem>();
 
         // Application Data
         public BindingTable<HelpItem> HelpSubjects { get; } = ModelFactory.Create<HelpItem>();
