@@ -104,6 +104,7 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
+            peekAtClipboardToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
@@ -268,7 +269,7 @@
             navigationDbSchemaTab.Location = new Point(4, 24);
             navigationDbSchemaTab.Name = "navigationDbSchemaTab";
             navigationDbSchemaTab.Padding = new Padding(3);
-            navigationDbSchemaTab.Size = new Size(210, 522);
+            navigationDbSchemaTab.Size = new Size(210, 664);
             navigationDbSchemaTab.TabIndex = 0;
             navigationDbSchemaTab.Text = "Db Schema";
             navigationDbSchemaTab.UseVisualStyleBackColor = true;
@@ -279,7 +280,7 @@
             dbMetaDataNavigation.Dock = DockStyle.Fill;
             dbMetaDataNavigation.Location = new Point(3, 3);
             dbMetaDataNavigation.Name = "dbMetaDataNavigation";
-            dbMetaDataNavigation.Size = new Size(204, 516);
+            dbMetaDataNavigation.Size = new Size(204, 658);
             dbMetaDataNavigation.TabIndex = 0;
             dbMetaDataNavigation.NodeMouseDoubleClick += dbMetaDataNavigation_NodeMouseDoubleClick;
             // 
@@ -532,7 +533,7 @@
             // 
             // editToolStripMenuItem
             // 
-            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { undoToolStripMenuItem, redoToolStripMenuItem, toolStripSeparator3, cutToolStripMenuItem, copyToolStripMenuItem, pasteToolStripMenuItem, toolStripSeparator4, selectAllToolStripMenuItem });
+            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { undoToolStripMenuItem, redoToolStripMenuItem, toolStripSeparator3, cutToolStripMenuItem, copyToolStripMenuItem, pasteToolStripMenuItem, peekAtClipboardToolStripMenuItem, toolStripSeparator4, selectAllToolStripMenuItem });
             editToolStripMenuItem.Name = "editToolStripMenuItem";
             editToolStripMenuItem.Size = new Size(39, 20);
             editToolStripMenuItem.Text = "&Edit";
@@ -541,7 +542,7 @@
             // 
             undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             undoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Z;
-            undoToolStripMenuItem.Size = new Size(144, 22);
+            undoToolStripMenuItem.Size = new Size(180, 22);
             undoToolStripMenuItem.Text = "&Undo";
             undoToolStripMenuItem.Click += undoToolStripMenuItem_Click;
             // 
@@ -549,13 +550,13 @@
             // 
             redoToolStripMenuItem.Name = "redoToolStripMenuItem";
             redoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Y;
-            redoToolStripMenuItem.Size = new Size(144, 22);
+            redoToolStripMenuItem.Size = new Size(180, 22);
             redoToolStripMenuItem.Text = "&Redo";
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(141, 6);
+            toolStripSeparator3.Size = new Size(177, 6);
             // 
             // cutToolStripMenuItem
             // 
@@ -563,7 +564,7 @@
             cutToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             cutToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.X;
-            cutToolStripMenuItem.Size = new Size(144, 22);
+            cutToolStripMenuItem.Size = new Size(180, 22);
             cutToolStripMenuItem.Text = "Cu&t";
             cutToolStripMenuItem.Click += cutToolStripMenuItem_Click;
             // 
@@ -573,7 +574,7 @@
             copyToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             copyToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.C;
-            copyToolStripMenuItem.Size = new Size(144, 22);
+            copyToolStripMenuItem.Size = new Size(180, 22);
             copyToolStripMenuItem.Text = "&Copy";
             copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
             // 
@@ -583,19 +584,19 @@
             pasteToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             pasteToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.V;
-            pasteToolStripMenuItem.Size = new Size(144, 22);
+            pasteToolStripMenuItem.Size = new Size(180, 22);
             pasteToolStripMenuItem.Text = "&Paste";
             pasteToolStripMenuItem.Click += pasteToolStripMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new Size(141, 6);
+            toolStripSeparator4.Size = new Size(177, 6);
             // 
             // selectAllToolStripMenuItem
             // 
             selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            selectAllToolStripMenuItem.Size = new Size(144, 22);
+            selectAllToolStripMenuItem.Size = new Size(180, 22);
             selectAllToolStripMenuItem.Text = "Select &All";
             selectAllToolStripMenuItem.Click += selectAllToolStripMenuItem_Click;
             // 
@@ -724,6 +725,13 @@
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
             // 
+            // peekAtClipboardToolStripMenuItem
+            // 
+            peekAtClipboardToolStripMenuItem.Name = "peekAtClipboardToolStripMenuItem";
+            peekAtClipboardToolStripMenuItem.Size = new Size(180, 22);
+            peekAtClipboardToolStripMenuItem.Text = "Peek at Clipboard";
+            peekAtClipboardToolStripMenuItem.Click += peekAtClipboardToolStripMenuItem_Click;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -839,5 +847,6 @@
         private ToolStripMenuItem applicationToolStripMenuItem;
         private ToolStripMenuItem propertiesToolStripMenuItem;
         private ToolStripMenuItem testFormToolStripMenuItem;
+        private ToolStripMenuItem peekAtClipboardToolStripMenuItem;
     }
 }

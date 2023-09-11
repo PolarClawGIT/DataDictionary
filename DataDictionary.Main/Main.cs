@@ -469,8 +469,9 @@ namespace DataDictionary.Main
         { new Forms.UnitTestGridView().Show(); }
 
         private void testFormToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            { Activate(() => new Forms.Library.CodeLibrary()); }
-        }
+        { Activate(() => new Forms.Library.CodeLibrary()); }
+
+        private void peekAtClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.ClipboardView()); }
     }
 }
