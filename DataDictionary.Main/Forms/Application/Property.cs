@@ -18,22 +18,15 @@ namespace DataDictionary.Main.Forms.Application
 {
     partial class Property : ApplicationBase
     {
-        PropertyKey propertyKey;
+        PropertyKey? propertyKey;
 
         public Property() : base()
         {
             InitializeComponent();
             this.Icon = Resources.DomainProperty;
 
-            bindingSource.DataSource = Program.Data.Properties;
-            if (bindingSource.Current is PropertyItem item)
-            { propertyKey = new PropertyKey(item); }
-            else { propertyKey = new PropertyKey(new PropertyItem()); }
-
             newToolStripButton.Enabled = true;
             newToolStripButton.Click += NewToolStripButton_Click;
-            //cutToolStripButton.Enabled = true;
-            //cutToolStripButton.Click += CutToolStripButton_Click;
             copyToolStripButton.Enabled = true;
             copyToolStripButton.Click += CopyToolStripButton_Click;
             pasteToolStripButton.Enabled = true;
@@ -199,7 +192,7 @@ namespace DataDictionary.Main.Forms.Application
             }
         }
 
-        private void BindingSource_CurrentChanged(object sender, EventArgs e)
+        private void BindingSource_CurrentChanged(object? sender, EventArgs e)
         { // Catches when the PropertyNavigation changes rows. This works better then the DataGridView events.
             if (bindingSource.Current is PropertyItem item)
             {
@@ -208,7 +201,7 @@ namespace DataDictionary.Main.Forms.Application
                 choiceData.DataSource = item.Choices;
             }
 
-            if (propertyNavigation.Rows.Cast<DataGridViewRow>().FirstOrDefault(w => w.GetDataBoundItem() is PropertyItem item && propertyKey.Equals(item)) is DataGridViewRow row)
+            if (propertyNavigation.Rows.Cast<DataGridViewRow>().FirstOrDefault(w => w.GetDataBoundItem() is PropertyItem item && propertyKey is not null && propertyKey.Equals(item)) is DataGridViewRow row)
             { if (!row.Selected) { propertyNavigation.ClearSelection(); row.Selected = true; } }
         }
 
@@ -255,7 +248,14 @@ namespace DataDictionary.Main.Forms.Application
 
         void BindData()
         {
+            bindingSource.CurrentChanged -= BindingSource_CurrentChanged;
+            if (bindingSource.DataSource is null)
+            { bindingSource.DataSource = Program.Data.Properties; }
+
             bindingSource.ResetBindings(false);
+            if (Program.Data.Properties.FirstOrDefault(w => propertyKey is not null && propertyKey.Equals(w)) is PropertyItem current)
+            { bindingSource.Position = bindingSource.IndexOf(current); }
+            bindingSource.CurrentChanged += BindingSource_CurrentChanged;
 
             propertyNavigation.AutoGenerateColumns = false;
             propertyNavigation.DataSource = bindingSource;
@@ -274,9 +274,6 @@ namespace DataDictionary.Main.Forms.Application
             choiceData.Enabled = isChoiceData.Checked;
             choiceData.AllowUserToAddRows = isChoiceData.Checked;
             choicesHeader.Enabled = isChoiceData.Checked;
-
-            if (Program.Data.Properties.FirstOrDefault(w => propertyKey is not null && propertyKey.Equals(w)) is PropertyItem item)
-            { bindingSource.Position = Program.Data.Properties.IndexOf(item); }
         }
 
         void UnBindData()
@@ -293,6 +290,7 @@ namespace DataDictionary.Main.Forms.Application
             isChoiceData.DataBindings.Clear();
             obsoleteData.DataBindings.Clear();
             choiceData.DataSource = null;
+            bindingSource.DataSource = null;
         }
 
         #region IColleague
@@ -300,12 +298,6 @@ namespace DataDictionary.Main.Forms.Application
         { UnBindData(); }
 
         protected override void HandleMessage(DbApplicationBatchCompleted message)
-        { BindData(); }
-
-        protected override void HandleMessage(DbDataBatchStarting message)
-        { UnBindData(); }
-
-        protected override void HandleMessage(DbDataBatchCompleted message)
         { BindData(); }
 
         protected override void HandleMessage(WindowsCutCommand message)

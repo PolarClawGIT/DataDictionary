@@ -267,7 +267,6 @@
             // 
             bindingSource.AddingNew += bindingSource_AddingNew;
             bindingSource.BindingComplete += BindingSource_BindingComplete;
-            bindingSource.CurrentChanged += BindingSource_CurrentChanged;
             // 
             // Property
             // 
