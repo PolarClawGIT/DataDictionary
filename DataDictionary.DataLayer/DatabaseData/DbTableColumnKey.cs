@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.DomainData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,10 +17,10 @@ namespace DataDictionary.DataLayer.DatabaseData
         public String ColumnName { get; init; } = String.Empty;
 
         public DbTableColumnKey(IDbTableColumnKey source) : base(source)
-        {
-            if (source.ColumnName is String) { ColumnName = source.ColumnName; }
-            else { ColumnName = String.Empty; }
-        }
+        { if (source.ColumnName is String) { ColumnName = source.ColumnName; } }
+
+        public DbTableColumnKey(IDomainAttributeAliasKey source) : base(source)
+        { if (source.ElementName is String) { ColumnName = source.ElementName; } }
 
         #region IEquatable, IComparable
         public Boolean Equals(DbTableColumnKey? other)

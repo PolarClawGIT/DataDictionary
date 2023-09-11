@@ -14,8 +14,9 @@ namespace DataDictionary.DataLayer.ApplicationData
     public interface IPropertyItem : IPropertyKey, IPropertyKeyUnique
     {
         String? PropertyDescription { get; }
-        Nullable<Boolean> IsExtendedProperty { get; }
         Nullable<Boolean> IsDefinition { get; }
+        Nullable<Boolean> IsExtendedProperty { get; }
+        Nullable<Boolean> IsFrameworkSummary { get; }
         Nullable<Boolean> IsChoice { get; }
         String? ExtendedProperty { get; }
         //String? ChoiceList { get; }
@@ -28,8 +29,9 @@ namespace DataDictionary.DataLayer.ApplicationData
         public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }
         public String? PropertyTitle { get { return GetValue("PropertyTitle"); } set { SetValue("PropertyTitle", value); } }
         public String? PropertyDescription { get { return GetValue("PropertyDescription"); } set { SetValue("PropertyDescription", value); } }
-        public Nullable<Boolean> IsExtendedProperty { get { return GetValue<Boolean>("IsExtendedProperty", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("IsExtendedProperty", value); } }
         public Nullable<Boolean> IsDefinition { get { return GetValue<Boolean>("IsDefinition", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("IsDefinition", value); } }
+        public Nullable<Boolean> IsExtendedProperty { get { return GetValue<Boolean>("IsExtendedProperty", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("IsExtendedProperty", value); } }
+        public Nullable<Boolean> IsFrameworkSummary { get { return GetValue<Boolean>("IsFrameworkSummary", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("IsFrameworkSummary", value); } }
         public Nullable<Boolean> IsChoice { get { return GetValue<Boolean>("IsChoice", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("IsChoice", value); } }
         public String? ExtendedProperty { get { return GetValue("ExtendedProperty"); } set { SetValue("ExtendedProperty", value); } }
         protected String? ChoiceList { get { return GetValue("ChoiceList"); } set { SetValue("ChoiceList", value); } }
@@ -96,14 +98,14 @@ namespace DataDictionary.DataLayer.ApplicationData
             new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("PropertyTitle", typeof(String)){ AllowDBNull = true},
             new DataColumn("PropertyDescription", typeof(String)){ AllowDBNull = true},
-            new DataColumn("IsExtendedProperty", typeof(Boolean)){ AllowDBNull = true},
             new DataColumn("IsDefinition", typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn("IsExtendedProperty", typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn("IsFrameworkSummary", typeof(Boolean)){ AllowDBNull = true},
             new DataColumn("IsChoice", typeof(Boolean)){ AllowDBNull = true},
             new DataColumn("ExtendedProperty", typeof(String)){ AllowDBNull = true},
             new DataColumn("ChoiceList", typeof(String)){ AllowDBNull = true},
             new DataColumn("Obsolete", typeof(Boolean)){ AllowDBNull = false},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
-
         };
 
         public override IReadOnlyList<DataColumn> ColumnDefinitions()

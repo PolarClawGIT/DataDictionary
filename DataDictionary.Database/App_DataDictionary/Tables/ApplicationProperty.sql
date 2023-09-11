@@ -4,14 +4,16 @@
 	[PropertyId]             UniqueIdentifier NOT NULL CONSTRAINT [DF_ApplicationPropertyId] DEFAULT (newid()),
 	[PropertyTitle]          [App_DataDictionary].[typeTitle] Not Null, -- Title of the Property as it appears in the application. This may contain the Property Name but must be unique for each type of Extended Property it applies to.
 	[PropertyDescription]    [App_DataDictionary].[typeDescription] Null,
-	-- Properties are sub-typed. This defines the options for the sub-types.
-	-- This is a de-normalization choice to better accommodate a WinForm application
-		[IsExtendedProperty] As (Convert([Bit], case when [ExtendedProperty] is Null then (0) else (1) end)), -- Helper Flag for code
+	-- Properties are sub-typed. 
+	-- The flags below represent the different sub-types supported.
+	-- This is a de-normalization choice to better accommodate the application.
+	-- The application cannot handle creating new sub-types without code changes.
 		[IsDefinition]       Bit Null, -- Null or 0 = no Rich Text Definition allowed
+		[IsExtendedProperty] As (Convert([Bit], case when [ExtendedProperty] is Null then (0) else (1) end)), -- Helper Flag for code
+		[IsFrameworkSummary] Bit Null, -- Null or 0, do not use as .Net Framework Summary
 		[IsChoice]           AS (Convert([Bit], Case When [ChoiceList] is Null then (0) else (1) End)), -- Helper Flag for code
 		[ExtendedProperty]   SysName Null, -- Null do not populate an MS Extended Property. Name for the Extended property. Most interested in: MS_Description
-		-- Choice Sub-Type
-		[ChoiceList]         NVarChar(2000) Null, -- Null = no choices. Comma Separated List of Choices allowed (cannot not be verified)
+		[ChoiceList]         NVarChar(Max) Null, -- Null = no choices. Comma Separated List of Choices allowed (cannot not be verified)
 	-- End of Sub-Types
 	[Obsolete] As (CONVERT([bit],case when [ObsoleteDate] IS NULL then (0) else (1) end)),
 	[ObsoleteDate] DATETIME2 Null, -- Used to flag an item as a candidate for being deleted. Null = active, anything else is Obsolete.

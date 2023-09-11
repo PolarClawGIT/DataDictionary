@@ -18,12 +18,13 @@ namespace DataDictionary.Main.Forms.Application
 {
     partial class Property : ApplicationBase
     {
-        PropertyKey? propertyKey;
+        public PropertyKey DataKey { get; private set; }
 
         public Property() : base()
         {
             InitializeComponent();
             this.Icon = Resources.DomainProperty;
+            DataKey = new PropertyKey(new PropertyItem());
 
             newToolStripButton.Enabled = true;
             newToolStripButton.Click += NewToolStripButton_Click;
@@ -67,7 +68,7 @@ namespace DataDictionary.Main.Forms.Application
             PropertyItem? newItem = bindingSource.AddNew() as PropertyItem;
             if (newItem is not null)
             {
-                propertyKey = new PropertyKey(newItem);
+                DataKey = new PropertyKey(newItem);
                 bindingSource.Position = Program.Data.Properties.IndexOf(newItem);
             }
 
@@ -114,6 +115,7 @@ namespace DataDictionary.Main.Forms.Application
                 newItem.PropertyDescription = pasteItem.PropertyDescription;
                 newItem.ExtendedProperty = pasteItem.ExtendedProperty;
                 newItem.IsExtendedProperty = pasteItem.IsExtendedProperty;
+                newItem.IsFrameworkSummary = pasteItem.IsFrameworkSummary;
                 newItem.IsDefinition = pasteItem.IsDefinition;
                 newItem.IsChoice = pasteItem.IsChoice;
                 newItem.Obsolete = pasteItem.Obsolete;
@@ -125,6 +127,7 @@ namespace DataDictionary.Main.Forms.Application
                 newItem.PropertyDescription = propertyDescriptionData.Text;
                 newItem.ExtendedProperty = extendedPropertyData.Text;
                 newItem.IsExtendedProperty = isExtendedPropertyData.Checked;
+                newItem.IsFrameworkSummary = isFrameworkSummaryData.Checked;
                 newItem.IsDefinition = isDefinitionData.Checked;
                 newItem.IsChoice = isChoiceData.Checked;
                 newItem.Obsolete = obsoleteData.Checked;
@@ -136,13 +139,14 @@ namespace DataDictionary.Main.Forms.Application
                 newItem.PropertyDescription = String.Empty;
                 newItem.ExtendedProperty = String.Empty;
                 newItem.IsExtendedProperty = false;
+                newItem.IsFrameworkSummary = false;
                 newItem.IsDefinition = false;
                 newItem.IsChoice = false;
                 newItem.Obsolete = false;
                 newItem.Choices.Clear();
             }
 
-            propertyKey = new PropertyKey(newItem);
+            DataKey = new PropertyKey(newItem);
             e.NewObject = newItem;
         }
 
@@ -196,12 +200,12 @@ namespace DataDictionary.Main.Forms.Application
         { // Catches when the PropertyNavigation changes rows. This works better then the DataGridView events.
             if (bindingSource.Current is PropertyItem item)
             {
-                propertyKey = new PropertyKey(item);
+                DataKey = new PropertyKey(item);
                 choiceData.AutoGenerateColumns = false;
                 choiceData.DataSource = item.Choices;
             }
 
-            if (propertyNavigation.Rows.Cast<DataGridViewRow>().FirstOrDefault(w => w.GetDataBoundItem() is PropertyItem item && propertyKey is not null && propertyKey.Equals(item)) is DataGridViewRow row)
+            if (propertyNavigation.Rows.Cast<DataGridViewRow>().FirstOrDefault(w => w.GetDataBoundItem() is PropertyItem item && DataKey.Equals(item)) is DataGridViewRow row)
             { if (!row.Selected) { propertyNavigation.ClearSelection(); row.Selected = true; } }
         }
 
@@ -253,7 +257,7 @@ namespace DataDictionary.Main.Forms.Application
             { bindingSource.DataSource = Program.Data.Properties; }
 
             bindingSource.ResetBindings(false);
-            if (Program.Data.Properties.FirstOrDefault(w => propertyKey is not null && propertyKey.Equals(w)) is PropertyItem current)
+            if (Program.Data.Properties.FirstOrDefault(w => DataKey.Equals(w)) is PropertyItem current)
             { bindingSource.Position = bindingSource.IndexOf(current); }
             bindingSource.CurrentChanged += BindingSource_CurrentChanged;
 
@@ -266,6 +270,7 @@ namespace DataDictionary.Main.Forms.Application
             extendedPropertyData.DataBindings.Add(new Binding(nameof(extendedPropertyData.Text), bindingSource, nameof(propertyNameOf.ExtendedProperty), true));
 
             isExtendedPropertyData.DataBindings.Add(new Binding(nameof(isExtendedPropertyData.Checked), bindingSource, nameof(propertyNameOf.IsExtendedProperty), true));
+            isFrameworkSummaryData.DataBindings.Add(new Binding(nameof(isExtendedPropertyData.Checked), bindingSource, nameof(propertyNameOf.IsFrameworkSummary), true));
             isDefinitionData.DataBindings.Add(new Binding(nameof(isDefinitionData.Checked), bindingSource, nameof(propertyNameOf.IsDefinition), true));
             isChoiceData.DataBindings.Add(new Binding(nameof(isChoiceData.Checked), bindingSource, nameof(propertyNameOf.IsChoice), true));
             obsoleteData.DataBindings.Add(new Binding(nameof(obsoleteData.Checked), bindingSource, nameof(propertyNameOf.Obsolete), true));
@@ -279,13 +284,14 @@ namespace DataDictionary.Main.Forms.Application
         void UnBindData()
         {
             if (bindingSource.Current is PropertyItem item)
-            { propertyKey = new PropertyKey(item); }
+            { DataKey = new PropertyKey(item); }
 
             propertyNavigation.DataSource = null;
             propertyTitleData.DataBindings.Clear();
             propertyDescriptionData.DataBindings.Clear();
             extendedPropertyData.DataBindings.Clear();
             isExtendedPropertyData.DataBindings.Clear();
+            isFrameworkSummaryData.DataBindings.Clear();
             isDefinitionData.DataBindings.Clear();
             isChoiceData.DataBindings.Clear();
             obsoleteData.DataBindings.Clear();

@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.DomainData
 {
     public interface IDomainAttributePropertyItem : IDomainAttributePropertyKey, IBindingTableRow
     {
-        public String? AttributePropertyDescription { get; }
+        public String? PropertyValue { get; }
         public String? DefinitionText { get; }
         public String? ExtendedPropertyValue { get; }
         public String? ChoiceValue { get; }
@@ -26,7 +26,7 @@ namespace DataDictionary.DataLayer.DomainData
     {
         public Nullable<Guid> AttributeId { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue<Guid>("AttributeId", value); } }
         public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }
-        public String? AttributePropertyDescription { get { return GetValue("AttributePropertyDescription"); } set { SetValue("AttributePropertyDescription", value); } }
+        public String? PropertyValue { get { return GetValue("PropertyValue"); } set { SetValue("AttributePropertyDescription", value); } }
         public String? DefinitionText { get { return GetValue("DefinitionText"); } set { SetValue("DefinitionText", value); } }
         public String? ExtendedPropertyValue { get { return GetValue("ExtendedPropertyValue"); } set { SetValue("ExtendedPropertyValue", value); } }
         public String? ChoiceValue { get { return GetValue("ChoiceValue"); } set { SetValue("ChoiceValue", value); } }
@@ -44,7 +44,7 @@ namespace DataDictionary.DataLayer.DomainData
         {
             new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("AttributePropertyDescription", typeof(String)){ AllowDBNull = true},
+            new DataColumn("PropertyValue", typeof(String)){ AllowDBNull = true},
             new DataColumn("DefinitionText", typeof(String)){ AllowDBNull = true},
             new DataColumn("ExtendedPropertyValue", typeof(String)){ AllowDBNull = true},
             new DataColumn("ChoiceValue", typeof(String)){ AllowDBNull = true},

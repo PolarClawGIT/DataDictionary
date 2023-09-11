@@ -47,6 +47,7 @@
             propertyDescriptionData = new Controls.TextBoxData();
             errorProvider = new ErrorProvider(components);
             bindingSource = new BindingSource(components);
+            isFrameworkSummaryData = new CheckBox();
             applicationPropertyLayout = new TableLayoutPanel();
             subTypeFlagsLayout = new TableLayoutPanel();
             applicationPropertyLayout.SuspendLayout();
@@ -144,17 +145,19 @@
             subTypeFlagsLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             subTypeFlagsLayout.ColumnCount = 1;
             subTypeFlagsLayout.ColumnStyles.Add(new ColumnStyle());
-            subTypeFlagsLayout.Controls.Add(choiceData, 0, 6);
-            subTypeFlagsLayout.Controls.Add(obsoleteData, 0, 3);
-            subTypeFlagsLayout.Controls.Add(choicesHeader, 0, 5);
-            subTypeFlagsLayout.Controls.Add(isChoiceData, 0, 2);
-            subTypeFlagsLayout.Controls.Add(isDefinitionData, 0, 1);
-            subTypeFlagsLayout.Controls.Add(isExtendedPropertyData, 0, 0);
+            subTypeFlagsLayout.Controls.Add(choiceData, 0, 7);
+            subTypeFlagsLayout.Controls.Add(choicesHeader, 0, 6);
+            subTypeFlagsLayout.Controls.Add(obsoleteData, 0, 4);
+            subTypeFlagsLayout.Controls.Add(isChoiceData, 0, 3);
+            subTypeFlagsLayout.Controls.Add(isDefinitionData, 0, 0);
+            subTypeFlagsLayout.Controls.Add(isExtendedPropertyData, 0, 1);
+            subTypeFlagsLayout.Controls.Add(isFrameworkSummaryData, 0, 2);
             subTypeFlagsLayout.Dock = DockStyle.Fill;
             subTypeFlagsLayout.Location = new Point(448, 3);
             subTypeFlagsLayout.Name = "subTypeFlagsLayout";
-            subTypeFlagsLayout.RowCount = 7;
+            subTypeFlagsLayout.RowCount = 8;
             propertyTitleLayout.SetRowSpan(subTypeFlagsLayout, 3);
+            subTypeFlagsLayout.RowStyles.Add(new RowStyle());
             subTypeFlagsLayout.RowStyles.Add(new RowStyle());
             subTypeFlagsLayout.RowStyles.Add(new RowStyle());
             subTypeFlagsLayout.RowStyles.Add(new RowStyle());
@@ -170,10 +173,10 @@
             choiceData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             choiceData.Columns.AddRange(new DataGridViewColumn[] { choiceColumn });
             choiceData.Dock = DockStyle.Fill;
-            choiceData.Location = new Point(3, 138);
+            choiceData.Location = new Point(3, 163);
             choiceData.Name = "choiceData";
             choiceData.RowTemplate.Height = 25;
-            choiceData.Size = new Size(240, 153);
+            choiceData.Size = new Size(240, 128);
             choiceData.TabIndex = 4;
             choiceData.CellFormatting += ChoiceData_CellFormatting;
             // 
@@ -187,7 +190,7 @@
             // obsoleteData
             // 
             obsoleteData.AutoSize = true;
-            obsoleteData.Location = new Point(3, 78);
+            obsoleteData.Location = new Point(3, 103);
             obsoleteData.Name = "obsoleteData";
             obsoleteData.Size = new Size(73, 19);
             obsoleteData.TabIndex = 2;
@@ -197,7 +200,7 @@
             // choicesHeader
             // 
             choicesHeader.AutoSize = true;
-            choicesHeader.Location = new Point(3, 120);
+            choicesHeader.Location = new Point(3, 145);
             choicesHeader.Name = "choicesHeader";
             choicesHeader.Size = new Size(49, 15);
             choicesHeader.TabIndex = 5;
@@ -206,7 +209,7 @@
             // isChoiceData
             // 
             isChoiceData.AutoSize = true;
-            isChoiceData.Location = new Point(3, 53);
+            isChoiceData.Location = new Point(3, 78);
             isChoiceData.Name = "isChoiceData";
             isChoiceData.Size = new Size(63, 19);
             isChoiceData.TabIndex = 3;
@@ -217,7 +220,7 @@
             // isDefinitionData
             // 
             isDefinitionData.AutoSize = true;
-            isDefinitionData.Location = new Point(3, 28);
+            isDefinitionData.Location = new Point(3, 3);
             isDefinitionData.Name = "isDefinitionData";
             isDefinitionData.Size = new Size(78, 19);
             isDefinitionData.TabIndex = 4;
@@ -227,7 +230,7 @@
             // isExtendedPropertyData
             // 
             isExtendedPropertyData.AutoSize = true;
-            isExtendedPropertyData.Location = new Point(3, 3);
+            isExtendedPropertyData.Location = new Point(3, 28);
             isExtendedPropertyData.Name = "isExtendedPropertyData";
             isExtendedPropertyData.Size = new Size(123, 19);
             isExtendedPropertyData.TabIndex = 5;
@@ -267,6 +270,16 @@
             // 
             bindingSource.AddingNew += bindingSource_AddingNew;
             bindingSource.BindingComplete += BindingSource_BindingComplete;
+            // 
+            // isFrameworkSummaryData
+            // 
+            isFrameworkSummaryData.AutoSize = true;
+            isFrameworkSummaryData.Location = new Point(3, 53);
+            isFrameworkSummaryData.Name = "isFrameworkSummaryData";
+            isFrameworkSummaryData.Size = new Size(139, 19);
+            isFrameworkSummaryData.TabIndex = 6;
+            isFrameworkSummaryData.Text = "Framework Summary";
+            isFrameworkSummaryData.UseVisualStyleBackColor = true;
             // 
             // Property
             // 
@@ -311,5 +324,6 @@
         private DataGridViewTextBoxColumn choiceColumn;
         private DataGridViewTextBoxColumn propertyTitleColumn;
         private DataGridViewTextBoxColumn propertyDescriptionColum;
+        private CheckBox isFrameworkSummaryData;
     }
 }

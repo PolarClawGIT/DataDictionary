@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.DomainData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,9 @@ namespace DataDictionary.DataLayer.DatabaseData
 
         public DbTableKey(IDbTableKey source) : base(source)
         { if (source.TableName is String) { TableName = source.TableName; } }
+
+        public DbTableKey(IDomainEntityAliasKey source) : base(source)
+        { if (source.ObjectName is String) { TableName = source.ObjectName; } }
 
         #region IEquatable, IComparable
         public Boolean Equals(DbTableKey? other)

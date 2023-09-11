@@ -23,8 +23,9 @@ Begin Try
 	Select	IsNull(D.[PropertyId],NewId()) As [PropertyId],
 			NullIf(Trim(D.[PropertyTitle]),'') As [PropertyTitle],
 			NullIf(Trim(D.[PropertyDescription]),'') As [PropertyDescription],
-			IsNull(D.[IsExtendedProperty],0) As [IsExtendedProperty],
 			IsNull(D.[IsDefinition],0) As [IsDefinition],
+			IsNull(D.[IsExtendedProperty],0) As [IsExtendedProperty],
+			IsNull(D.[IsFrameworkSummary],0) As [IsFrameworkSummary],
 			IsNull(D.[IsChoice], 0) As [IsChoice],
 			NullIf(Trim(D.[ExtendedProperty]),'') As [ExtendedProperty],
 			NullIf(Trim(D.[ChoiceList]),'') As [ChoiceList],
@@ -47,6 +48,7 @@ Begin Try
 				V.[PropertyTitle],
 				V.[PropertyDescription],
 				V.[IsDefinition],
+				V.[IsFrameworkSummary],
 				V.[ExtendedProperty],
 				V.[ChoiceList],
 				IIF(IsNull(V.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
@@ -58,6 +60,7 @@ Begin Try
 				[PropertyTitle],
 				[PropertyDescription],
 				[IsDefinition],
+				[IsFrameworkSummary],
 				[ExtendedProperty],
 				[ChoiceList],
 				[ObsoleteDate]
@@ -69,12 +72,13 @@ Begin Try
 		Set	[PropertyTitle] = S.[PropertyTitle],
 			[PropertyDescription] = S.[PropertyDescription],
 			[IsDefinition] = S.[IsDefinition],
+			[IsFrameworkSummary] = S.[IsFrameworkSummary],
 			[ExtendedProperty] = S.[ExtendedProperty],
 			[ChoiceList] = S.[ChoiceList],
 			[ObsoleteDate] = S.[ObsoleteDate]
 	When Not Matched by Target Then
-		Insert([PropertyId], [PropertyDescription], [IsDefinition], [ExtendedProperty], [ChoiceList], [ObsoleteDate])
-		Values ([PropertyId], [PropertyDescription], [IsDefinition], [ExtendedProperty], [ChoiceList], [ObsoleteDate]);
+		Insert ([PropertyId], [PropertyTitle], [PropertyDescription], [IsDefinition], [IsFrameworkSummary], [ExtendedProperty], [ChoiceList], [ObsoleteDate])
+		Values ([PropertyId], [PropertyTitle], [PropertyDescription], [IsDefinition], [IsFrameworkSummary], [ExtendedProperty], [ChoiceList], [ObsoleteDate]);
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
