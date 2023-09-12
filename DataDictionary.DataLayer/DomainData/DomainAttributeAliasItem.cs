@@ -49,6 +49,9 @@ namespace DataDictionary.DataLayer.DomainData
 
         public DomainAttributeAliasItem() : base() { }
 
+        public DomainAttributeAliasItem(IDomainAttributeKey key) : this()
+        { AttributeId = key.AttributeId; }
+
         public DomainAttributeAliasItem(IDomainAttributeKey key, IDbTableColumnItem source) :this ()
         {
             AttributeId = key.AttributeId;

@@ -122,7 +122,7 @@ namespace DataDictionary.Main.Forms.Application
                 newItem.Choices.AddRange(pasteItem.Choices);
             }
             else if (bindingSource.Current is null || propertyNavigation.CurrentRow is null)
-            { // Empty Data Set. Not expected to occur.
+            { // First Row scenario
                 newItem.PropertyTitle = propertyTitleData.Text;
                 newItem.PropertyDescription = propertyDescriptionData.Text;
                 newItem.ExtendedProperty = extendedPropertyData.Text;
@@ -192,7 +192,6 @@ namespace DataDictionary.Main.Forms.Application
             {
                 propertyNavigation.NotifyCurrentCellDirty(true); // Marks the row as dirty so when end-edit the row is retained.
                 propertyNavigation.EndEdit(); // Completes the edit so a binding error does not occur when focus changes.
-                propertyTitleData.Focus(); // Moves focus to the title field
             }
         }
 

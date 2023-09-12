@@ -1,6 +1,7 @@
 ﻿using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.DomainData;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
@@ -37,14 +38,8 @@ namespace DataDictionary.Main.Forms.Domain
         private void DomainAttribute_Load(object sender, EventArgs e)
         {
             // one time bindings
-            PropertyNameDataItem propertyNameDataItem = new PropertyNameDataItem();
-            propertyTypeData.DataSource = PropertyNameDataItem.Create();
-            propertyTypeData.ValueMember = nameof(propertyNameDataItem.PropertyId);
-            propertyTypeData.DisplayMember = nameof(propertyNameDataItem.PropertyTitle);
-
-            propertyTypeColumn.DataSource = PropertyNameDataItem.Create();
-            propertyTypeColumn.ValueMember = nameof(propertyNameDataItem.PropertyId);
-            propertyTypeColumn.DisplayMember = nameof(propertyNameDataItem.PropertyTitle);
+            PropertyNameDataItem.Bind(propertyTypeData);
+            PropertyNameDataItem.Bind(propertyTypeColumn);
 
             BindData();
         }
@@ -72,9 +67,13 @@ namespace DataDictionary.Main.Forms.Domain
 
                 DomainAttributePropertyItem propertyMembers = new DomainAttributePropertyItem();
                 propertyTypeData.DataBindings.Add(new Binding(nameof(propertyTypeData.SelectedValue), bindingProperties, nameof(propertyMembers.PropertyId), true));
-                propertyValueData.DataBindings.Add(new Binding(nameof(propertyValueData.Text), bindingProperties, nameof(propertyMembers.PropertyValue)));
+                propertyValueData.DataBindings.Add(new Binding(nameof(propertyValueData.Text), bindingProperties, nameof(propertyMembers.PropertyValue), true));
                 //propertyChoiceData.DataBindings.Add(new Binding(nameof(propertyChoiceData.SelectedValue, bindingProperties, nameof(propertyNames.))));
-                propertyDefinitionData.DataBindings.Add(new Binding(nameof(propertyDefinitionData.Rtf), bindingProperties, nameof(propertyMembers.DefinitionText)));
+                propertyDefinitionData.DataBindings.Add(new Binding(nameof(propertyDefinitionData.Rtf), bindingProperties, nameof(propertyMembers.DefinitionText), true));
+
+                propertyChoiceData.Enabled = false;
+                propertyValueData.Enabled = false;
+                propertyDefinitionData.Enabled = false;
 
                 bindingDatabaseAlias.DataSource =
                     new BindingView<DomainAttributeAliasItem>(
@@ -85,31 +84,18 @@ namespace DataDictionary.Main.Forms.Domain
                 attributeAlaisData.DataSource = bindingDatabaseAlias;
 
                 DomainAttributeAliasItem aliasMembers = new DomainAttributeAliasItem();
-                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.SelectedValue), bindingDatabaseAlias, nameof(aliasMembers.CatalogName)));
-                schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.SelectedValue), bindingDatabaseAlias, nameof(aliasMembers.SchemaName)));
-                objectNameData.DataBindings.Add(new Binding(nameof(objectNameData.SelectedValue), bindingDatabaseAlias, nameof(aliasMembers.ObjectName)));
-                elementNameData.DataBindings.Add(new Binding(nameof(elementNameData.SelectedValue), bindingDatabaseAlias, nameof(aliasMembers.ElementName)));
+                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.CatalogName)));
+                schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.SchemaName)));
+                objectNameData.DataBindings.Add(new Binding(nameof(objectNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.ObjectName)));
+                elementNameData.DataBindings.Add(new Binding(nameof(elementNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.ElementName)));
 
-                if(bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
+                if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
                 {
-                    CatalogNameDataItem catalogMembers = new CatalogNameDataItem();
-                    catalogNameData.DataSource = CatalogNameDataItem.Create();
-                    catalogNameData.ValueMember = nameof(catalogMembers.CatalogName);
-
-                    SchemaNameDataItem schemaMembers = new SchemaNameDataItem();
-                    schemaNameData.DataSource = SchemaNameDataItem.Create(new DbCatalogKeyUnique(aliasItem));
-                    schemaNameData.ValueMember = nameof(schemaMembers.SchemaName);
-
-                    ObjectNameDataItem objectMembers = new ObjectNameDataItem();
-                    objectNameData.DataSource = ObjectNameDataItem.Create(new DbSchemaKey(aliasItem));
-                    objectNameData.ValueMember = nameof(ObjectNameDataItem.ObjectName);
-
-                    ElementNameDataItem elementMembers = new ElementNameDataItem();
-                    elementNameData.DataSource =  ElementNameDataItem.Create(new DbTableKey(aliasItem));
-                    elementNameData.ValueMember = nameof(ElementNameDataItem.ElementName);
+                    CatalogNameDataItem.Bind(catalogNameData);
+                    SchemaNameDataItem.Bind(schemaNameData, aliasItem);
+                    ObjectNameDataItem.Bind(objectNameData, aliasItem);
+                    ElementNameDataItem.Bind(elementNameData, aliasItem);
                 }
-
-
             }
         }
 
@@ -121,70 +107,6 @@ namespace DataDictionary.Main.Forms.Domain
 
             attributeAlaisData.DataSource = null;
         }
-
-        // Because DataGridComboItem cannot correctly bind anything but a very simple object.
-        record PropertyNameDataItem
-        {// TODO: Make this into a generic
-            public Guid? PropertyId { get; set; }
-            public String? PropertyTitle { get; set; }
-
-            public static IReadOnlyList<PropertyNameDataItem> Create()
-            {
-                List<PropertyNameDataItem> results = new List<PropertyNameDataItem>();
-                results.Add(new PropertyNameDataItem() { PropertyId = Guid.Empty, PropertyTitle = "(select property Type)" });
-                results.AddRange(Program.Data.Properties.Select(s => new PropertyNameDataItem() { PropertyId = s.PropertyId, PropertyTitle = s.PropertyTitle }).ToList());
-                return results;
-            }
-        }
-
-        record CatalogNameDataItem
-        {
-            public String? CatalogName { get; set; }
-
-            public static IReadOnlyList<CatalogNameDataItem> Create()
-            {
-                List<CatalogNameDataItem> results = new List<CatalogNameDataItem>();
-                results.AddRange(Program.Data.DbCatalogs.Where(w => w.IsSystem == false).Select(s => new CatalogNameDataItem() { CatalogName = s.CatalogName }));
-                return results;
-            }
-        }
-
-        record SchemaNameDataItem
-        {
-            public String? SchemaName { get; set; }
-
-            public static IReadOnlyList<SchemaNameDataItem> Create(DbCatalogKeyUnique key)
-            {
-                List<SchemaNameDataItem> results = new List<SchemaNameDataItem>();
-                results.AddRange(Program.Data.DbSchemta.Where(w => key.Equals(w) && w.IsSystem == false).Select(s => new SchemaNameDataItem() { SchemaName = s.SchemaName }));
-                return results;
-            }
-        }
-
-        record ObjectNameDataItem
-        {
-            public String? ObjectName { get; set; }
-
-            public static IReadOnlyList<ObjectNameDataItem> Create(DbSchemaKey key)
-            {
-                List<ObjectNameDataItem> results = new List<ObjectNameDataItem>();
-                results.AddRange(Program.Data.DbTables.Where(w => key.Equals(w) && w.IsSystem == false).Select(s => new ObjectNameDataItem() { ObjectName = s.TableName }));
-                return results;
-            }
-        }
-
-        record ElementNameDataItem
-        {
-            public String? ElementName { get; set; }
-
-            public static IReadOnlyList<ElementNameDataItem> Create(DbTableKey key)
-            {
-                List<ElementNameDataItem> results = new List<ElementNameDataItem>();
-                results.AddRange(Program.Data.DbColumns.Where(w => key.Equals(w)).Select(s => new ElementNameDataItem() { ElementName = s.ColumnName }));
-                return results;
-            }
-        }
-
 
         #region IColleague
         protected override void HandleMessage(DbDataBatchStarting message)
@@ -200,5 +122,189 @@ namespace DataDictionary.Main.Forms.Domain
         { BindData(); }
         #endregion
 
+        private void catalogNameData_Validating(object sender, CancelEventArgs e)
+        {
+            if (String.IsNullOrEmpty(catalogNameData.Text))
+            { errorProvider.SetError(catalogNameData.ErrorControl, "Catalog Name is required"); }
+            else { errorProvider.SetError(catalogNameData.ErrorControl, String.Empty); }
+        }
+
+        private void catalogNameData_Validated(object sender, EventArgs e)
+        {
+            if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
+            {
+                SchemaNameDataItem.Bind(schemaNameData, aliasItem);
+                ObjectNameDataItem.Bind(objectNameData, aliasItem);
+                ElementNameDataItem.Bind(elementNameData, aliasItem);
+            }
+        }
+
+        private void schemaNameData_Validating(object sender, CancelEventArgs e)
+        {
+            if (String.IsNullOrEmpty(schemaNameData.Text))
+            { errorProvider.SetError(schemaNameData.ErrorControl, "Schema Name is required"); }
+            else
+            { errorProvider.SetError(schemaNameData.ErrorControl, String.Empty); }
+        }
+
+        private void schemaNameData_Validated(object sender, EventArgs e)
+        {
+            if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
+            {
+                ObjectNameDataItem.Bind(objectNameData, aliasItem);
+                ElementNameDataItem.Bind(elementNameData, aliasItem);
+            }
+        }
+
+        private void objectNameData_Validating(object sender, CancelEventArgs e)
+        {
+            if (String.IsNullOrEmpty(objectNameData.Text))
+            { errorProvider.SetError(objectNameData.ErrorControl, "Object Name is required"); }
+            else
+            { errorProvider.SetError(objectNameData.ErrorControl, String.Empty); }
+        }
+
+        private void objectNameData_Validated(object sender, EventArgs e)
+        {
+            if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
+            {
+                ElementNameDataItem.Bind(elementNameData, aliasItem);
+            }
+        }
+
+        private void elementNameData_Validating(object sender, CancelEventArgs e)
+        {
+            if (String.IsNullOrEmpty(elementNameData.Text))
+            { errorProvider.SetError(elementNameData.ErrorControl, "Element Name is required"); }
+            else
+            { errorProvider.SetError(elementNameData.ErrorControl, String.Empty); }
+        }
+
+        private void elementNameData_Validated(object sender, EventArgs e)
+        {
+            if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
+            {
+
+            }
+        }
+
+        private void bindingProperties_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            DomainAttributePropertyItem newItem = new DomainAttributePropertyItem(DataKey);
+
+            if (bindingProperties.Current is null || propertyNavigation.CurrentRow is null)
+            { // First Row scenario
+                if (propertyTypeData.SelectedValue is Guid propertyId)
+                { newItem.PropertyId = propertyId; }
+            }
+
+            e.NewObject = newItem;
+        }
+
+        private void bindingDatabaseAlias_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            DomainAttributeAliasItem newItem = new DomainAttributeAliasItem(DataKey);
+
+            e.NewObject = newItem;
+        }
+
+        private void BindingComplete(object sender, BindingCompleteEventArgs e)
+        {
+            if (e.Exception is not null)
+            {
+
+            }
+        }
+
+        private void propertyNavigation_Leave(object sender, EventArgs e)
+        {
+            if (propertyNavigation.CurrentRow is not null && propertyNavigation.CurrentRow.IsNewRow)
+            {
+                propertyNavigation.NotifyCurrentCellDirty(true); // Marks the row as dirty so when end-edit the row is retained.
+                propertyNavigation.EndEdit(); // Completes the edit so a binding error does not occur when focus changes.
+            }
+        }
+
+        private void attributeAlaisData_Leave(object sender, EventArgs e)
+        {
+            if (attributeAlaisData.CurrentRow is not null && attributeAlaisData.CurrentRow.IsNewRow)
+            {
+                attributeAlaisData.NotifyCurrentCellDirty(true); // Marks the row as dirty so when end-edit the row is retained.
+                attributeAlaisData.EndEdit(); // Completes the edit so a binding error does not occur when focus changes.
+            }
+        }
+
+        private void bindingProperties_CurrentChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void propertyTypeData_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (bindingProperties.Current is null)
+            {
+                if (bindingProperties.AddNew() is DomainAttributePropertyItem newItem
+                    && bindingProperties.DataSource is BindingView<DomainAttributePropertyItem> data)
+                { bindingProperties.Position = data.IndexOf(newItem); }
+            }
+
+            if (propertyTypeData.SelectedItem is PropertyNameDataItem selected
+                && bindingProperties.Current is DomainAttributePropertyItem currentRow
+                && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == selected.PropertyId) is PropertyItem property)
+            { BindChoiceData(property, currentRow); }
+        }
+
+        void BindChoiceData(PropertyItem property, DomainAttributePropertyItem data)
+        {
+            propertyChoiceData.Enabled = (property.IsChoice == true);
+            propertyValueData.Enabled = (property.IsExtendedProperty == true || property.IsFrameworkSummary == true);
+            propertyDefinitionData.Enabled = (property.IsDefinition == true);
+
+            propertyChoiceData.Items.Clear();
+
+            List<String> selectedChoices = new List<String>();
+            if (data.ChoiceValue is not null)
+            { selectedChoices.AddRange(data.ChoiceValue.Split(",")); }
+
+            foreach (PropertyItem.ChoiceItem choice in property.Choices)
+            {
+                String newItem = choice.Choice;
+                propertyChoiceData.Items.Add(newItem);
+                Int32 index = propertyChoiceData.Items.IndexOf(newItem);
+                Boolean isChecked = selectedChoices.Contains(newItem);
+                propertyChoiceData.SetItemChecked(index, isChecked);
+            }
+        }
+
+        private void propertyChoiceData_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            List<String> values = new List<String>();
+
+            foreach (var item in propertyChoiceData.CheckedItems)
+            {
+                if (item is String value)
+                { values.Add(value); }
+            }
+
+            if (e.NewValue == CheckState.Checked)
+            {
+                if (propertyChoiceData.Items[e.Index] is String addValue)
+                { values.Add(addValue); }
+            }
+            else
+            {
+                if (propertyChoiceData.Items[e.Index] is String deletValue && values.Contains(deletValue))
+                { values.Remove(deletValue); }
+            }
+
+            if (bindingProperties.Current is DomainAttributePropertyItem current)
+            { current.PropertyValue = String.Join(", ", values); }
+        }
+
+        private void propertyChoiceData_EnabledChanged(object sender, EventArgs e)
+        {
+            if (propertyChoiceData.Enabled)
+            { propertyChoiceData.ResetBackColor(); }
+            else { propertyChoiceData.BackColor = SystemColors.Control; }
+        }
     }
 }

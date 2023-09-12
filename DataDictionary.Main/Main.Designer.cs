@@ -84,6 +84,7 @@
             cutToolStripMenuItem = new ToolStripMenuItem();
             copyToolStripMenuItem = new ToolStripMenuItem();
             pasteToolStripMenuItem = new ToolStripMenuItem();
+            peekAtClipboardToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
             selectAllToolStripMenuItem = new ToolStripMenuItem();
             scriptMenuItem = new ToolStripMenuItem();
@@ -104,7 +105,6 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
-            peekAtClipboardToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
@@ -130,7 +130,7 @@
             navigationPanel.Dock = DockStyle.Left;
             navigationPanel.Location = new Point(0, 49);
             navigationPanel.Name = "navigationPanel";
-            navigationPanel.Size = new Size(220, 829);
+            navigationPanel.Size = new Size(220, 547);
             navigationPanel.TabIndex = 6;
             // 
             // modelSpliter
@@ -148,8 +148,8 @@
             // modelSpliter.Panel2
             // 
             modelSpliter.Panel2.Controls.Add(navigationTabs);
-            modelSpliter.Size = new Size(220, 829);
-            modelSpliter.SplitterDistance = 131;
+            modelSpliter.Size = new Size(220, 547);
+            modelSpliter.SplitterDistance = 86;
             modelSpliter.TabIndex = 2;
             // 
             // navigationModelLayout
@@ -166,7 +166,7 @@
             navigationModelLayout.RowStyles.Add(new RowStyle());
             navigationModelLayout.RowStyles.Add(new RowStyle());
             navigationModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            navigationModelLayout.Size = new Size(218, 129);
+            navigationModelLayout.Size = new Size(218, 84);
             navigationModelLayout.TabIndex = 2;
             // 
             // modelNameData
@@ -190,7 +190,7 @@
             modelDescriptionData.Multiline = true;
             modelDescriptionData.Name = "modelDescriptionData";
             modelDescriptionData.ReadOnly = false;
-            modelDescriptionData.Size = new Size(212, 73);
+            modelDescriptionData.Size = new Size(212, 44);
             modelDescriptionData.TabIndex = 3;
             // 
             // navigationTabs
@@ -201,7 +201,7 @@
             navigationTabs.Location = new Point(0, 0);
             navigationTabs.Name = "navigationTabs";
             navigationTabs.SelectedIndex = 0;
-            navigationTabs.Size = new Size(218, 692);
+            navigationTabs.Size = new Size(218, 455);
             navigationTabs.TabIndex = 1;
             // 
             // navigationDomainTab
@@ -210,7 +210,7 @@
             navigationDomainTab.Location = new Point(4, 24);
             navigationDomainTab.Name = "navigationDomainTab";
             navigationDomainTab.Padding = new Padding(3);
-            navigationDomainTab.Size = new Size(210, 664);
+            navigationDomainTab.Size = new Size(210, 427);
             navigationDomainTab.TabIndex = 1;
             navigationDomainTab.Text = "Domain Model";
             navigationDomainTab.UseVisualStyleBackColor = true;
@@ -221,7 +221,7 @@
             domainModelNavigation.Dock = DockStyle.Fill;
             domainModelNavigation.Location = new Point(3, 3);
             domainModelNavigation.Name = "domainModelNavigation";
-            domainModelNavigation.Size = new Size(204, 658);
+            domainModelNavigation.Size = new Size(204, 421);
             domainModelNavigation.TabIndex = 0;
             domainModelNavigation.NodeMouseDoubleClick += domainModelNavigation_NodeMouseDoubleClick;
             // 
@@ -382,16 +382,16 @@
             // 
             navigationSpliter.Location = new Point(220, 49);
             navigationSpliter.Name = "navigationSpliter";
-            navigationSpliter.Size = new Size(3, 829);
+            navigationSpliter.Size = new Size(3, 547);
             navigationSpliter.TabIndex = 8;
             navigationSpliter.TabStop = false;
             // 
             // statusStrip
             // 
             statusStrip.Items.AddRange(new ToolStripItem[] { toolStripInfo, toolStripWhiteSpace, toolStripWorkerTask, toolStripProgressBar });
-            statusStrip.Location = new Point(0, 878);
+            statusStrip.Location = new Point(0, 596);
             statusStrip.Name = "statusStrip";
-            statusStrip.Size = new Size(1231, 22);
+            statusStrip.Size = new Size(917, 22);
             statusStrip.TabIndex = 0;
             statusStrip.Text = "statusStrip1";
             // 
@@ -404,7 +404,7 @@
             // toolStripWhiteSpace
             // 
             toolStripWhiteSpace.Name = "toolStripWhiteSpace";
-            toolStripWhiteSpace.Size = new Size(938, 17);
+            toolStripWhiteSpace.Size = new Size(624, 17);
             toolStripWhiteSpace.Spring = true;
             // 
             // toolStripWorkerTask
@@ -423,7 +423,7 @@
             menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, scriptMenuItem, toolsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip.Location = new Point(0, 25);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(1231, 24);
+            menuStrip.Size = new Size(917, 24);
             menuStrip.TabIndex = 1;
             menuStrip.Text = "menuStrip1";
             // 
@@ -542,7 +542,7 @@
             // 
             undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             undoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Z;
-            undoToolStripMenuItem.Size = new Size(180, 22);
+            undoToolStripMenuItem.Size = new Size(167, 22);
             undoToolStripMenuItem.Text = "&Undo";
             undoToolStripMenuItem.Click += undoToolStripMenuItem_Click;
             // 
@@ -550,13 +550,13 @@
             // 
             redoToolStripMenuItem.Name = "redoToolStripMenuItem";
             redoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Y;
-            redoToolStripMenuItem.Size = new Size(180, 22);
+            redoToolStripMenuItem.Size = new Size(167, 22);
             redoToolStripMenuItem.Text = "&Redo";
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(177, 6);
+            toolStripSeparator3.Size = new Size(164, 6);
             // 
             // cutToolStripMenuItem
             // 
@@ -564,7 +564,7 @@
             cutToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             cutToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.X;
-            cutToolStripMenuItem.Size = new Size(180, 22);
+            cutToolStripMenuItem.Size = new Size(167, 22);
             cutToolStripMenuItem.Text = "Cu&t";
             cutToolStripMenuItem.Click += cutToolStripMenuItem_Click;
             // 
@@ -574,7 +574,7 @@
             copyToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             copyToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.C;
-            copyToolStripMenuItem.Size = new Size(180, 22);
+            copyToolStripMenuItem.Size = new Size(167, 22);
             copyToolStripMenuItem.Text = "&Copy";
             copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
             // 
@@ -584,19 +584,26 @@
             pasteToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             pasteToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.V;
-            pasteToolStripMenuItem.Size = new Size(180, 22);
+            pasteToolStripMenuItem.Size = new Size(167, 22);
             pasteToolStripMenuItem.Text = "&Paste";
             pasteToolStripMenuItem.Click += pasteToolStripMenuItem_Click;
+            // 
+            // peekAtClipboardToolStripMenuItem
+            // 
+            peekAtClipboardToolStripMenuItem.Name = "peekAtClipboardToolStripMenuItem";
+            peekAtClipboardToolStripMenuItem.Size = new Size(167, 22);
+            peekAtClipboardToolStripMenuItem.Text = "Peek at Clipboard";
+            peekAtClipboardToolStripMenuItem.Click += peekAtClipboardToolStripMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new Size(177, 6);
+            toolStripSeparator4.Size = new Size(164, 6);
             // 
             // selectAllToolStripMenuItem
             // 
             selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            selectAllToolStripMenuItem.Size = new Size(180, 22);
+            selectAllToolStripMenuItem.Size = new Size(167, 22);
             selectAllToolStripMenuItem.Text = "Select &All";
             selectAllToolStripMenuItem.Click += selectAllToolStripMenuItem_Click;
             // 
@@ -725,18 +732,11 @@
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
             // 
-            // peekAtClipboardToolStripMenuItem
-            // 
-            peekAtClipboardToolStripMenuItem.Name = "peekAtClipboardToolStripMenuItem";
-            peekAtClipboardToolStripMenuItem.Size = new Size(180, 22);
-            peekAtClipboardToolStripMenuItem.Text = "Peek at Clipboard";
-            peekAtClipboardToolStripMenuItem.Click += peekAtClipboardToolStripMenuItem_Click;
-            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1231, 900);
+            ClientSize = new Size(917, 618);
             Controls.Add(navigationSpliter);
             Controls.Add(navigationPanel);
             Controls.Add(statusStrip);
@@ -747,6 +747,7 @@
             MainMenuStrip = menuStrip;
             Name = "Main";
             Text = "Data Dictionary manager";
+            WindowState = FormWindowState.Maximized;
             FormClosed += Main_FormClosed;
             Load += Main_Load;
             HelpRequested += Main_HelpRequested;

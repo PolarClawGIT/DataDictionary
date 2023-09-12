@@ -198,6 +198,7 @@
             propertyNavigation.RowTemplate.Height = 25;
             propertyNavigation.Size = new Size(503, 147);
             propertyNavigation.TabIndex = 0;
+            propertyNavigation.Leave += propertyNavigation_Leave;
             // 
             // propertyTypeColumn
             // 
@@ -214,6 +215,7 @@
             propertyValueColumn.FillWeight = 70F;
             propertyValueColumn.HeaderText = "Property Value";
             propertyValueColumn.Name = "propertyValueColumn";
+            propertyValueColumn.ReadOnly = true;
             // 
             // propertyTabLayout
             // 
@@ -271,6 +273,7 @@
             propertyTypeData.Size = new Size(238, 44);
             propertyTypeData.TabIndex = 0;
             propertyTypeData.ValueMember = "";
+            propertyTypeData.SelectedIndexChanged += propertyTypeData_SelectedIndexChanged;
             // 
             // propertyValueData
             // 
@@ -286,6 +289,7 @@
             // 
             // propertyChoiceData
             // 
+            propertyChoiceData.CheckOnClick = true;
             propertyChoiceData.Dock = DockStyle.Fill;
             propertyChoiceData.FormattingEnabled = true;
             propertyChoiceData.Location = new Point(247, 3);
@@ -293,6 +297,8 @@
             propertyValueLayout.SetRowSpan(propertyChoiceData, 2);
             propertyChoiceData.Size = new Size(239, 184);
             propertyChoiceData.TabIndex = 2;
+            propertyChoiceData.ItemCheck += propertyChoiceData_ItemCheck;
+            propertyChoiceData.EnabledChanged += propertyChoiceData_EnabledChanged;
             // 
             // prropertyDefinitionTab
             // 
@@ -324,7 +330,7 @@
             attributeDbAlaisTab.Location = new Point(4, 24);
             attributeDbAlaisTab.Name = "attributeDbAlaisTab";
             attributeDbAlaisTab.Padding = new Padding(3);
-            attributeDbAlaisTab.Size = new Size(515, 389);
+            attributeDbAlaisTab.Size = new Size(192, 72);
             attributeDbAlaisTab.TabIndex = 2;
             attributeDbAlaisTab.Text = "Db Alias";
             // 
@@ -346,7 +352,7 @@
             databaseAliasLayout.RowStyles.Add(new RowStyle());
             databaseAliasLayout.RowStyles.Add(new RowStyle());
             databaseAliasLayout.RowStyles.Add(new RowStyle());
-            databaseAliasLayout.Size = new Size(509, 383);
+            databaseAliasLayout.Size = new Size(186, 66);
             databaseAliasLayout.TabIndex = 1;
             // 
             // attributeAlaisData
@@ -357,8 +363,9 @@
             attributeAlaisData.Location = new Point(3, 3);
             attributeAlaisData.Name = "attributeAlaisData";
             attributeAlaisData.RowTemplate.Height = 25;
-            attributeAlaisData.Size = new Size(503, 177);
+            attributeAlaisData.Size = new Size(180, 1);
             attributeAlaisData.TabIndex = 0;
+            attributeAlaisData.Leave += attributeAlaisData_Leave;
             // 
             // aliasCatalogNameData
             // 
@@ -396,15 +403,17 @@
             catalogNameData.DisplayMember = "";
             catalogNameData.Dock = DockStyle.Fill;
             catalogNameData.HeaderText = "Catalog Name";
-            catalogNameData.Location = new Point(3, 186);
+            catalogNameData.Location = new Point(3, -131);
             catalogNameData.Name = "catalogNameData";
             catalogNameData.ReadOnly = false;
             catalogNameData.SelectedIndex = -1;
             catalogNameData.SelectedItem = null;
             catalogNameData.SelectedValue = null;
-            catalogNameData.Size = new Size(503, 44);
+            catalogNameData.Size = new Size(180, 44);
             catalogNameData.TabIndex = 1;
             catalogNameData.ValueMember = "";
+            catalogNameData.Validated += catalogNameData_Validated;
+            catalogNameData.Validating += catalogNameData_Validating;
             // 
             // schemaNameData
             // 
@@ -414,15 +423,17 @@
             schemaNameData.DisplayMember = "";
             schemaNameData.Dock = DockStyle.Fill;
             schemaNameData.HeaderText = "Schema Name";
-            schemaNameData.Location = new Point(3, 236);
+            schemaNameData.Location = new Point(3, -81);
             schemaNameData.Name = "schemaNameData";
             schemaNameData.ReadOnly = false;
             schemaNameData.SelectedIndex = -1;
             schemaNameData.SelectedItem = null;
             schemaNameData.SelectedValue = null;
-            schemaNameData.Size = new Size(503, 44);
+            schemaNameData.Size = new Size(180, 44);
             schemaNameData.TabIndex = 2;
             schemaNameData.ValueMember = "";
+            schemaNameData.Validated += schemaNameData_Validated;
+            schemaNameData.Validating += schemaNameData_Validating;
             // 
             // objectNameData
             // 
@@ -432,15 +443,17 @@
             objectNameData.DisplayMember = "";
             objectNameData.Dock = DockStyle.Fill;
             objectNameData.HeaderText = "Object Name";
-            objectNameData.Location = new Point(3, 286);
+            objectNameData.Location = new Point(3, -31);
             objectNameData.Name = "objectNameData";
             objectNameData.ReadOnly = false;
             objectNameData.SelectedIndex = -1;
             objectNameData.SelectedItem = null;
             objectNameData.SelectedValue = null;
-            objectNameData.Size = new Size(503, 44);
+            objectNameData.Size = new Size(180, 44);
             objectNameData.TabIndex = 3;
             objectNameData.ValueMember = "";
+            objectNameData.Validated += objectNameData_Validated;
+            objectNameData.Validating += objectNameData_Validating;
             // 
             // elementNameData
             // 
@@ -450,15 +463,17 @@
             elementNameData.DisplayMember = "";
             elementNameData.Dock = DockStyle.Fill;
             elementNameData.HeaderText = "Element Name";
-            elementNameData.Location = new Point(3, 336);
+            elementNameData.Location = new Point(3, 19);
             elementNameData.Name = "elementNameData";
             elementNameData.ReadOnly = false;
             elementNameData.SelectedIndex = -1;
             elementNameData.SelectedItem = null;
             elementNameData.SelectedValue = null;
-            elementNameData.Size = new Size(503, 44);
+            elementNameData.Size = new Size(180, 44);
             elementNameData.TabIndex = 4;
             elementNameData.ValueMember = "";
+            elementNameData.Validated += elementNameData_Validated;
+            elementNameData.Validating += elementNameData_Validating;
             // 
             // libraryAliasTab
             // 
@@ -483,6 +498,17 @@
             // errorProvider
             // 
             errorProvider.ContainerControl = this;
+            // 
+            // bindingProperties
+            // 
+            bindingProperties.AddingNew += bindingProperties_AddingNew;
+            bindingProperties.BindingComplete += BindingComplete;
+            bindingProperties.CurrentChanged += bindingProperties_CurrentChanged;
+            // 
+            // bindingDatabaseAlias
+            // 
+            bindingDatabaseAlias.AddingNew += bindingDatabaseAlias_AddingNew;
+            bindingDatabaseAlias.BindingComplete += BindingComplete;
             // 
             // DomainAttribute
             // 
@@ -533,8 +559,6 @@
         private BindingSource bindingDefinition;
         private ErrorProvider errorProvider;
         private DataGridView propertyNavigation;
-        private DataGridViewComboBoxColumn propertyTypeColumn;
-        private DataGridViewTextBoxColumn propertyValueColumn;
         private TabControl propertyTabLayout;
         private TabPage propertyValueTab;
         private TabPage prropertyDefinitionTab;
@@ -550,5 +574,7 @@
         private Label libraryAlaisToBeDetermined;
         private BindingSource bindingProperties;
         private BindingSource bindingDatabaseAlias;
+        private DataGridViewComboBoxColumn propertyTypeColumn;
+        private DataGridViewTextBoxColumn propertyValueColumn;
     }
 }

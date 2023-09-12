@@ -25,13 +25,16 @@ namespace DataDictionary.DataLayer.DomainData
     public class DomainAttributePropertyItem : BindingTableRow, IDomainAttributePropertyItem, ISerializable
     {
         public Nullable<Guid> AttributeId { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue<Guid>("AttributeId", value); } }
-        public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }
-        public String? PropertyValue { get { return GetValue("PropertyValue"); } set { SetValue("AttributePropertyDescription", value); } }
+        public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } set { SetValue<Guid>("PropertyId", value); } }
+        public String? PropertyValue { get { return GetValue("PropertyValue"); } set { SetValue("PropertyValue", value); } }
         public String? DefinitionText { get { return GetValue("DefinitionText"); } set { SetValue("DefinitionText", value); } }
         public String? ExtendedPropertyValue { get { return GetValue("ExtendedPropertyValue"); } set { SetValue("ExtendedPropertyValue", value); } }
         public String? ChoiceValue { get { return GetValue("ChoiceValue"); } set { SetValue("ChoiceValue", value); } }
 
         public DomainAttributePropertyItem() : base() { }
+
+        public DomainAttributePropertyItem(IDomainAttributeKey attributeKey) : this() 
+        { AttributeId = attributeKey.AttributeId; }
 
         public DomainAttributePropertyItem(IDomainAttributeKey attributeKey, IPropertyKey propertyKey, IDbExtendedPropertyItem value) : this() 
         {
