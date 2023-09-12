@@ -361,12 +361,22 @@ namespace Toolbox.BindingTable
         #endregion
 
         #region ISerializable
+        /// <inheritdoc/>
+        /// <remarks>
+        /// The Column values are written to the SerializationInfo.
+        /// </remarks>
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             foreach (DataColumn item in data.Table.Columns)
             { info.AddValue(item.ColumnName, this.data[item]); }
         }
 
+        /// <summary>
+        /// Serialization version of the constructor.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        /// <remarks>The Columns of the DataRow are read from the SerializationInfo.</remarks>
         protected BindingTableRow(SerializationInfo info, StreamingContext context) : this()
         {
             foreach (DataColumn item in data.Table.Columns)
