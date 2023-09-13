@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.ApplicationData
     /// <summary>
     /// Parent Key reference to the Primary Key of an Help Item.
     /// </summary>
-    public interface IHelpParentKey
+    public interface IHelpKeyParent
     {
         /// <summary>
         /// Parent Primary Key reference to a Parent Help document.
@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.ApplicationData
     }
 
     /// <inheritdoc/>
-    public class HelpParentKey: IHelpParentKey, IEquatable<HelpParentKey>, IEquatable<HelpKey>
+    public class HelpKeyParent: IHelpKeyParent, IEquatable<HelpKeyParent>, IEquatable<HelpKey>
     {
         /// <inheritdoc/>
         public Nullable<Guid> HelpParentId { get; init; } = Guid.Empty;
@@ -27,7 +27,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// Creates a Help Key from a item that implements the Primary key.
         /// </summary>
         /// <param name="source"></param>
-        public HelpParentKey(IHelpParentKey source) : base()
+        public HelpKeyParent(IHelpKeyParent source) : base()
         {
             if (source.HelpParentId is Guid) { HelpParentId = source.HelpParentId; }
             else { HelpParentId = Guid.Empty; }
@@ -35,8 +35,8 @@ namespace DataDictionary.DataLayer.ApplicationData
 
         #region IEquatable
         /// <inheritdoc/>
-        public Boolean Equals(HelpParentKey? other)
-        { return other is HelpParentKey && EqualityComparer<Guid?>.Default.Equals(this.HelpParentId, other.HelpParentId); }
+        public Boolean Equals(HelpKeyParent? other)
+        { return other is HelpKeyParent && EqualityComparer<Guid?>.Default.Equals(this.HelpParentId, other.HelpParentId); }
 
         /// <inheritdoc/>
         public Boolean Equals(HelpKey? other)
@@ -44,14 +44,14 @@ namespace DataDictionary.DataLayer.ApplicationData
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IHelpParentKey value && this.Equals(new HelpParentKey(value)); }
+        { return obj is IHelpKeyParent value && this.Equals(new HelpKeyParent(value)); }
 
         /// <inheritdoc/>
-        public static bool operator ==(HelpParentKey left, HelpParentKey right)
+        public static bool operator ==(HelpKeyParent left, HelpKeyParent right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(HelpParentKey left, HelpParentKey right)
+        public static bool operator !=(HelpKeyParent left, HelpKeyParent right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

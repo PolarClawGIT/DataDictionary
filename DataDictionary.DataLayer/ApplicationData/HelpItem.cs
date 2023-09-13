@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.ApplicationData
     /// <summary>
     /// Interface for a Help Item used for Help Text.
     /// </summary>
-    public interface IHelpItem: IHelpKey, IHelpParentKey, IHelpKeyUnique, IObsolete
+    public interface IHelpItem: IHelpKey, IHelpKeyParent, IHelpKeyUnique, IObsolete
     {
         /// <summary>
         /// Title/Subject of the Help Document.
