@@ -96,6 +96,10 @@ namespace DataDictionary.Main.Forms.Domain
                     ObjectNameDataItem.Bind(objectNameData, aliasItem);
                     ElementNameDataItem.Bind(elementNameData, aliasItem);
                 }
+
+                if (bindingProperties.Current is DomainAttributePropertyItem propItem
+                    && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)
+                { BindChoiceData(property, propItem); }
             }
         }
 
@@ -235,8 +239,7 @@ namespace DataDictionary.Main.Forms.Domain
         }
 
         private void bindingProperties_CurrentChanged(object sender, EventArgs e)
-        {
-        }
+        { }
 
         private void propertyTypeData_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -305,6 +308,32 @@ namespace DataDictionary.Main.Forms.Domain
             if (propertyChoiceData.Enabled)
             { propertyChoiceData.ResetBackColor(); }
             else { propertyChoiceData.BackColor = SystemColors.Control; }
+        }
+
+        private void bindingDatabaseAlias_CurrentChanged(object sender, EventArgs e)
+        { }
+
+        private void propertyDefinitionData_Validated(object sender, EventArgs e)
+        {
+            String value = propertyDefinitionData.Text.Trim();
+            Int32 maxCutOff = value.Length;
+            if (maxCutOff > 4000) { maxCutOff = 4000; }
+
+            Int32 firstBreak = value.Substring(0, maxCutOff).IndexOf("\n\n");
+            Int32 lastReturn = value.Substring(0, maxCutOff).LastIndexOf("\n");
+            Int32 lastSpace = value.Substring(0, maxCutOff).LastIndexOf(" ");
+
+            if (firstBreak > 0) { value = value.Substring(0, firstBreak); }
+            else if (lastReturn > 0) { value = value.Substring(0, lastReturn); }
+            else if (lastSpace > 0) { value = value.Substring(0, lastSpace); }
+            else { value = value.Substring(0, maxCutOff); }
+
+            value = value.Replace(Environment.NewLine, " ");
+            value = value.Replace("\t", " ");
+            value = value.Replace("\n", " ");
+
+            if (bindingProperties.Current is DomainAttributePropertyItem current)
+            { current.PropertyValue = value.Trim(); }
         }
     }
 }

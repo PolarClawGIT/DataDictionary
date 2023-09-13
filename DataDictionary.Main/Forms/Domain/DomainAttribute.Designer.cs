@@ -48,7 +48,7 @@
             propertyTypeData = new Controls.ComboBoxData();
             propertyValueData = new Controls.TextBoxData();
             propertyChoiceData = new CheckedListBox();
-            prropertyDefinitionTab = new TabPage();
+            propertyDefinitionTab = new TabPage();
             propertyDefinitionData = new Controls.RichTextBoxData();
             attributeAlaisData = new DataGridView();
             aliasCatalogNameData = new DataGridViewTextBoxColumn();
@@ -81,7 +81,7 @@
             propertyTabLayout.SuspendLayout();
             propertyValueTab.SuspendLayout();
             propertyValueLayout.SuspendLayout();
-            prropertyDefinitionTab.SuspendLayout();
+            propertyDefinitionTab.SuspendLayout();
             attributeDbAlaisTab.SuspendLayout();
             databaseAliasLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)attributeAlaisData).BeginInit();
@@ -220,7 +220,7 @@
             // propertyTabLayout
             // 
             propertyTabLayout.Controls.Add(propertyValueTab);
-            propertyTabLayout.Controls.Add(prropertyDefinitionTab);
+            propertyTabLayout.Controls.Add(propertyDefinitionTab);
             propertyTabLayout.Dock = DockStyle.Fill;
             propertyTabLayout.Location = new Point(3, 156);
             propertyTabLayout.Name = "propertyTabLayout";
@@ -300,16 +300,16 @@
             propertyChoiceData.ItemCheck += propertyChoiceData_ItemCheck;
             propertyChoiceData.EnabledChanged += propertyChoiceData_EnabledChanged;
             // 
-            // prropertyDefinitionTab
+            // propertyDefinitionTab
             // 
-            prropertyDefinitionTab.BackColor = SystemColors.Control;
-            prropertyDefinitionTab.Controls.Add(propertyDefinitionData);
-            prropertyDefinitionTab.Location = new Point(4, 24);
-            prropertyDefinitionTab.Name = "prropertyDefinitionTab";
-            prropertyDefinitionTab.Padding = new Padding(3);
-            prropertyDefinitionTab.Size = new Size(192, 72);
-            prropertyDefinitionTab.TabIndex = 1;
-            prropertyDefinitionTab.Text = "Defintion";
+            propertyDefinitionTab.BackColor = SystemColors.Control;
+            propertyDefinitionTab.Controls.Add(propertyDefinitionData);
+            propertyDefinitionTab.Location = new Point(4, 24);
+            propertyDefinitionTab.Name = "propertyDefinitionTab";
+            propertyDefinitionTab.Padding = new Padding(3);
+            propertyDefinitionTab.Size = new Size(495, 196);
+            propertyDefinitionTab.TabIndex = 1;
+            propertyDefinitionTab.Text = "Defintion";
             // 
             // propertyDefinitionData
             // 
@@ -320,8 +320,9 @@
             propertyDefinitionData.Name = "propertyDefinitionData";
             propertyDefinitionData.ReadOnly = false;
             propertyDefinitionData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
-            propertyDefinitionData.Size = new Size(186, 66);
+            propertyDefinitionData.Size = new Size(489, 190);
             propertyDefinitionData.TabIndex = 0;
+            propertyDefinitionData.Validated += propertyDefinitionData_Validated;
             // 
             // attributeDbAlaisTab
             // 
@@ -509,6 +510,7 @@
             // 
             bindingDatabaseAlias.AddingNew += bindingDatabaseAlias_AddingNew;
             bindingDatabaseAlias.BindingComplete += BindingComplete;
+            bindingDatabaseAlias.CurrentChanged += bindingDatabaseAlias_CurrentChanged;
             // 
             // DomainAttribute
             // 
@@ -530,8 +532,8 @@
             propertyValueTab.ResumeLayout(false);
             propertyValueLayout.ResumeLayout(false);
             propertyValueLayout.PerformLayout();
-            prropertyDefinitionTab.ResumeLayout(false);
-            prropertyDefinitionTab.PerformLayout();
+            propertyDefinitionTab.ResumeLayout(false);
+            propertyDefinitionTab.PerformLayout();
             attributeDbAlaisTab.ResumeLayout(false);
             databaseAliasLayout.ResumeLayout(false);
             databaseAliasLayout.PerformLayout();
@@ -561,7 +563,7 @@
         private DataGridView propertyNavigation;
         private TabControl propertyTabLayout;
         private TabPage propertyValueTab;
-        private TabPage prropertyDefinitionTab;
+        private TabPage propertyDefinitionTab;
         private Controls.ComboBoxData propertyTypeData;
         private Controls.TextBoxData propertyValueData;
         private CheckedListBox propertyChoiceData;
