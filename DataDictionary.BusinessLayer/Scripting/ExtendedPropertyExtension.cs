@@ -35,7 +35,7 @@ namespace DataDictionary.BusinessLayer.Scripting
                         DbExtendedPropertyParameter value = new DbExtendedPropertyParameter()
                         {
                             PropertyName = propertyName,
-                            PropertyValue = propertyItem.ExtendedPropertyValue,
+                            PropertyValue = propertyItem.PropertyValue,
                             Level0Type = aliasItem.CatalogScope.ToString(),
                             Level0Name = aliasItem.SchemaName,
                             Level1Type = aliasItem.ObjectScope.ToString(),

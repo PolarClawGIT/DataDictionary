@@ -12,7 +12,6 @@ Select	D.[AttributeId],
 		D.[PropertyId],
 		D.[PropertyValue],
 		D.[DefinitionText],
-		D.[ChoiceValue],
 		D.[SysStart]
 From	[App_DataDictionary].[DomainAttributeProperty] D
 		Inner Join [App_DataDictionary].[ModelAttribute] A

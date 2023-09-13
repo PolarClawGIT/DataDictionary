@@ -25,7 +25,6 @@ Begin Try
 			P.[PropertyId],
 			NullIf(Trim(D.[PropertyValue]),'') As [PropertyValue],
 			NullIf(Trim(D.[DefinitionText]),'') As [DefinitionText],
-			NullIf(Trim(D.[ChoiceValue]),'') As [ChoiceValue],
 			D.[SysStart]
 	From	@Data D
 			Inner Join [App_DataDictionary].[ApplicationProperty] P
@@ -61,22 +60,19 @@ Begin Try
 		Select	[AttributeId],
 				[PropertyId],
 				[PropertyValue],
-				[DefinitionText],
-				[ChoiceValue]
+				[DefinitionText]
 		From	@Values
 		Except
 		Select	[AttributeId],
 				[PropertyId],
 				[PropertyValue],
-				[DefinitionText],
-				[ChoiceValue]
+				[DefinitionText]
 		From	[App_DataDictionary].[DomainAttributeProperty]),
 	[Data] As (
 		Select	V.[AttributeId],
 				V.[PropertyId],
 				V.[PropertyValue],
 				V.[DefinitionText],
-				V.[ChoiceValue],
 				IIF(D.[AttributeId] is Null,1, 0) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
@@ -88,11 +84,10 @@ Begin Try
 		T.[PropertyId] = S.[PropertyId]
 	When Matched And S.[IsDiffrent] = 1 Then Update
 		Set	[PropertyValue] = S.[PropertyValue],
-			[DefinitionText] = S.[DefinitionText],
-			[ChoiceValue] = S.[ChoiceValue]
+			[DefinitionText] = S.[DefinitionText]
 	When Not Matched by Target Then
-		Insert ([AttributeId], [PropertyId], [PropertyValue], [DefinitionText], [ChoiceValue])
-		Values ([AttributeId], [PropertyId], [PropertyValue], [DefinitionText], [ChoiceValue])
+		Insert ([AttributeId], [PropertyId], [PropertyValue], [DefinitionText])
+		Values ([AttributeId], [PropertyId], [PropertyValue], [DefinitionText])
 	When Not Matched by Source And (T.[AttributeId] in (
 		Select	[AttributeId]
 		From	[App_DataDictionary].[ModelAttribute]

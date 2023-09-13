@@ -132,7 +132,7 @@ namespace DataDictionary.Main.Dialogs
                 modelTitleData.ReadOnly = false;
                 modelDescriptionData.ReadOnly = false;
 
-                if (Program.Data.Model.SysStart is null)
+                if (Program.Data.Model.RowState() == System.Data.DataRowState.Added)
                 {
                     modelObsoleteData.Enabled = false;
                     loadCommand.Enabled = false;

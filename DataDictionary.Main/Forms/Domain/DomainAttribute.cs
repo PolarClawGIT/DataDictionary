@@ -265,8 +265,8 @@ namespace DataDictionary.Main.Forms.Domain
             propertyChoiceData.Items.Clear();
 
             List<String> selectedChoices = new List<String>();
-            if (data.ChoiceValue is not null)
-            { selectedChoices.AddRange(data.ChoiceValue.Split(",")); }
+            if (data.PropertyValue is not null)
+            { selectedChoices.AddRange(data.PropertyValue.Split(",")); }
 
             foreach (PropertyItem.ChoiceItem choice in property.Choices)
             {
