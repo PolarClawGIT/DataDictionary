@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ApplicationData
+namespace DataDictionary.DataLayer.ApplicationData.Model
 {
     /// <summary>
     /// Interface for the Primary Key of the Model.
@@ -15,16 +15,16 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// <summary>
         /// The Id of the Model.
         /// </summary>
-        Nullable<Guid> ModelId { get; }
+        Guid? ModelId { get; }
     }
 
     /// <summary>
     /// Primary Key of the Model.
     /// </summary>
-    public class ModelKey : IModelKey, IEquatable<ModelKey>
+    public class ModelKey : IModelKey, IKeyEquality<ModelKey>
     {
         /// <inheritdoc/>
-        public Nullable<Guid> ModelId { get; init; } = Guid.Empty;
+        public Guid? ModelId { get; init; } = Guid.Empty;
 
         /// <summary>
         /// Constructor for the ModelKey.
@@ -38,12 +38,12 @@ namespace DataDictionary.DataLayer.ApplicationData
 
         #region IEquatable
         /// <inheritdoc/>
-        public Boolean Equals(ModelKey? other)
-        { return (other is ModelKey && this.ModelId.Equals(other.ModelId)); }
+        public bool Equals(ModelKey? other)
+        { return other is ModelKey && ModelId.Equals(other.ModelId); }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { if (obj is IModelKey value) { return this.Equals(new ModelKey(value)); } else { return false; } }
+        { if (obj is IModelKey value) { return Equals(new ModelKey(value)); } else { return false; } }
 
         /// <inheritdoc/>
         public static bool operator ==(ModelKey left, ModelKey right)
@@ -54,9 +54,9 @@ namespace DataDictionary.DataLayer.ApplicationData
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public override Int32 GetHashCode()
+        public override int GetHashCode()
         {
-            if (ModelId is Guid) { return (ModelId).GetHashCode(); }
+            if (ModelId is Guid) { return ModelId.GetHashCode(); }
             else { return Guid.Empty.GetHashCode(); }
         }
         #endregion

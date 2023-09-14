@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.DataLayer.DatabaseData;
 using System;
 using System.Collections.Generic;
@@ -35,14 +35,14 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Help",
-                Command = HelpItem.GetData,
+                Command = data.HelpSubjects.LoadCommand,
                 Target = data.HelpSubjects
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Properties",
-                Command = PropertyItem.GetData,
+                Command = data.Properties.LoadCommand,
                 Target = data.Properties
             });
 
@@ -58,13 +58,13 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Help",
-                Command = (conn) => HelpItem.SetData(conn, data.HelpSubjects)
+                Command = data.HelpSubjects.SaveCommand
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Properties",
-                Command = (conn) => PropertyItem.SetData(conn, data.Properties)
+                Command = data.Properties.SaveCommand
             });
 
             return workItems;

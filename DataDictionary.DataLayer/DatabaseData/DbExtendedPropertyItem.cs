@@ -12,8 +12,8 @@ using Microsoft.Data.SqlClient;
 using System.Collections.Concurrent;
 using System.Diagnostics.Contracts;
 using System.Reflection;
-using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.DomainData;
+using DataDictionary.DataLayer.ApplicationData.Model;
 
 namespace DataDictionary.DataLayer.DatabaseData
 {

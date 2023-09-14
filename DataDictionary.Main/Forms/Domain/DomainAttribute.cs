@@ -1,19 +1,9 @@
-﻿using DataDictionary.DataLayer.ApplicationData;
-using DataDictionary.DataLayer.DatabaseData;
+﻿using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain

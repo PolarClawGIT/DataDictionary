@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ApplicationData
+namespace DataDictionary.DataLayer
 {
     /// <summary>
     /// Interface for the Obsolete property
@@ -15,6 +15,6 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// An item is marked as Obsolete and its use should be phased out.
         /// The item is a candidate to be deleted when all references are removed.
         /// </summary>
-        Nullable<Boolean> Obsolete { get; }
+        bool? Obsolete { get; }
     }
 }

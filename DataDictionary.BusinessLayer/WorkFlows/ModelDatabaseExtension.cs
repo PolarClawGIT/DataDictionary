@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.DomainData;
 using System;
@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Get list of Models",
-                Command = ModelItem.GetData,
+                Command = data.Models.LoadCommand,
                 Target = data.Models
             });
 
@@ -56,7 +56,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Models",
-                Command = ModelItem.GetData,
+                Command = data.Models.LoadCommand,
                 Target = data.Models
             });
 
@@ -173,7 +173,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Model",
-                Command = (conn) => ModelItem.SetData(conn, data.Model)
+                Command = data.Models.SaveCommand
             });
 
             workItems.Add(new WorkItem()
@@ -185,7 +185,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Get list of Models",
-                Command = ModelItem.GetData,
+                Command = data.Models.LoadCommand,
                 Target = data.Models
             });
 
@@ -293,7 +293,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Delete Model",
-                Command = (conn) => ModelItem.DeleteData(conn, modelId)
+                Command = (conn) => data.Models.DeleteCommand(conn, modelId)
             });
 
             workItems.Add(new WorkItem()
@@ -305,7 +305,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Get list of Models",
-                Command = ModelItem.GetData,
+                Command = data.Models.LoadCommand,
                 Target = data.Models
             });
 

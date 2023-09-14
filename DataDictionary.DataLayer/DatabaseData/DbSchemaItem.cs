@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData;
+﻿using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DomainData;
 using Microsoft.Data.SqlClient;
 using System;

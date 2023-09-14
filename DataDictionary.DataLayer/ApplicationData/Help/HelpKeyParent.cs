@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ApplicationData
+namespace DataDictionary.DataLayer.ApplicationData.Help
 {
     /// <summary>
     /// Parent Key reference to the Primary Key of an Help Item.
@@ -14,14 +14,14 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// <summary>
         /// Parent Primary Key reference to a Parent Help document.
         /// </summary>
-        Nullable<Guid> HelpParentId { get; }
+        Guid? HelpParentId { get; }
     }
 
     /// <inheritdoc/>
-    public class HelpKeyParent: IHelpKeyParent, IEquatable<HelpKeyParent>, IEquatable<HelpKey>
+    public class HelpKeyParent : IHelpKeyParent, IEquatable<HelpKeyParent>, IEquatable<HelpKey>
     {
         /// <inheritdoc/>
-        public Nullable<Guid> HelpParentId { get; init; } = Guid.Empty;
+        public Guid? HelpParentId { get; init; } = Guid.Empty;
 
         /// <summary>
         /// Creates a Help Key from a item that implements the Primary key.
@@ -35,16 +35,16 @@ namespace DataDictionary.DataLayer.ApplicationData
 
         #region IEquatable
         /// <inheritdoc/>
-        public Boolean Equals(HelpKeyParent? other)
-        { return other is HelpKeyParent && EqualityComparer<Guid?>.Default.Equals(this.HelpParentId, other.HelpParentId); }
+        public bool Equals(HelpKeyParent? other)
+        { return other is HelpKeyParent && EqualityComparer<Guid?>.Default.Equals(HelpParentId, other.HelpParentId); }
 
         /// <inheritdoc/>
-        public Boolean Equals(HelpKey? other)
-        { return other is HelpKey && EqualityComparer<Guid?>.Default.Equals(this.HelpParentId, other.HelpId); }
+        public bool Equals(HelpKey? other)
+        { return other is HelpKey && EqualityComparer<Guid?>.Default.Equals(HelpParentId, other.HelpId); }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IHelpKeyParent value && this.Equals(new HelpKeyParent(value)); }
+        { return obj is IHelpKeyParent value && Equals(new HelpKeyParent(value)); }
 
         /// <inheritdoc/>
         public static bool operator ==(HelpKeyParent left, HelpKeyParent right)
@@ -55,9 +55,9 @@ namespace DataDictionary.DataLayer.ApplicationData
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public override Int32 GetHashCode()
+        public override int GetHashCode()
         {
-            if (HelpParentId is Guid) { return (HelpParentId).GetHashCode(); }
+            if (HelpParentId is Guid) { return HelpParentId.GetHashCode(); }
             else { return Guid.Empty.GetHashCode(); }
         }
         #endregion

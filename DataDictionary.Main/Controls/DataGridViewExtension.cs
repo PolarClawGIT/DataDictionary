@@ -1,8 +1,10 @@
-﻿using System;
+﻿using DataDictionary.DataLayer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Controls
 {
@@ -76,6 +78,37 @@ namespace DataDictionary.Main.Controls
             }
 
             control.Refresh();
+        }
+
+        /// <summary>
+        /// Validates all the Rows against the DataSource that implements Validation
+        /// </summary>
+        /// <param name="control"></param>
+        public static void ValidateRows<TRow>(this DataGridView control)
+            where TRow : class, IBindingTableRow, IValidateItem<TRow>
+        {
+            IValidateList<TRow>? data = control.DataSource as IValidateList<TRow>;
+
+            if (data is null && control.DataSource is BindingSource binding
+                && binding.DataSource is IValidateList<TRow> values)
+            { data = values; }
+
+            if (data is IValidateList<TRow>)
+            {
+                IReadOnlyList<TRow> errors = data.Validate();
+
+                foreach (DataGridViewRow item in control.Rows)
+                {
+                    if (item.DataBoundItem is TRow row)
+                    {
+                        if (errors.FirstOrDefault(w => ReferenceEquals(row,w)) is TRow error ) 
+                        { item.ErrorText = error.GetRowError(); }
+                        else { item.ErrorText = String.Empty; }
+                    }
+                    else { item.ErrorText = String.Empty; }
+                }
+
+            }
         }
     }
 }

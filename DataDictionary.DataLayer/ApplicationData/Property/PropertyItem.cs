@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.ApplicationData
+namespace DataDictionary.DataLayer.ApplicationData.Property
 {
     /// <summary>
     /// Interface for the Property data.
@@ -45,7 +45,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// The name of the MS SQL Extended Property to be populated.
         /// </summary>
         String? ExtendedProperty { get; }
-        
+
         /// <summary>
         /// List of Possible Choices to be presented.
         /// </summary>
@@ -56,7 +56,7 @@ namespace DataDictionary.DataLayer.ApplicationData
     /// Implementation of the Property data.
     /// </summary>
     [Serializable]
-    public class PropertyItem : BindingTableRow, IPropertyItem, ISerializable
+    public class PropertyItem : BindingTableRow, IPropertyItem, ISerializable, IValidateItem<PropertyItem>
     {
         /// <inheritdoc/>
         public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }
@@ -93,18 +93,26 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// </summary>
         public struct ChoiceItem : INotifyPropertyChanged
         {
-            String choice;
+            /// <summary>
+            /// The Choice from the Choice List.
+            /// </summary>
             public String Choice
             {
                 get { return choice; }
                 set { choice = value; OnPropertyChanged(nameof(Choice)); }
             }
+            String choice;
 
+            /// <summary>
+            /// Constructor for the Choice
+            /// </summary>
             public ChoiceItem()
             { choice = String.Empty; }
 
+            /// <inheritdoc/>
             public event PropertyChangedEventHandler? PropertyChanged;
-            public void OnPropertyChanged(string propertyName)
+
+            void OnPropertyChanged(string propertyName)
             {
                 if (PropertyChanged is PropertyChangedEventHandler handler)
                 { handler(this, new PropertyChangedEventArgs(propertyName)); }
@@ -148,7 +156,7 @@ namespace DataDictionary.DataLayer.ApplicationData
             choices.Clear();
             if (ChoiceList is not null)
             { choices.AddRange(ChoiceList.Split(",").Select(s => new ChoiceItem() { Choice = s })); }
-            
+
             choices.ListChanged += Choices_ListChanged;
         }
 
@@ -171,39 +179,21 @@ namespace DataDictionary.DataLayer.ApplicationData
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-        /// <summary>
-        /// Get all the Properties from the Database.
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <returns></returns>
-        public static Command GetData(IConnection connection)
-        { return GetData(connection, (null, null, null)); }
-
-        static Command GetData(IConnection connection, (Guid? PropertyId, String? PropertyTitle, String? PropertyName) parameters)
+        /// <inheritdoc/>
+        public Boolean Validate()
         {
-            Command command = connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetApplicationProperty]";
+            Boolean result = false;
 
-            command.AddParameter("@PropertyId", parameters.PropertyId);
-            command.AddParameter("@PropertyTitle", parameters.PropertyTitle);
-            return command;
+            if (String.IsNullOrWhiteSpace(this.PropertyTitle))
+            { SetRowError("[PropertyTitle] cannot be empty"); }
+            else if (this.PropertyId == Guid.Empty)
+            { SetRowError("[PropertyId] cannot be empty"); }
+            else { result = true; }
+
+            return result;
         }
 
-        /// <summary>
-        /// Save all the Property Data to the Database.
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public static Command SetData(IConnection connection, IBindingTable<PropertyItem> source)
-        {
-            Command command = connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetApplicationProperty]";
-            command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationProperty]", source);
-            return command;
-        }
+
 
         #region ISerializable
         /// <summary>
@@ -219,6 +209,4 @@ namespace DataDictionary.DataLayer.ApplicationData
         }
         #endregion
     }
-
-
 }

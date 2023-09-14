@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ApplicationData
+namespace DataDictionary.DataLayer.ApplicationData.Property
 {
     /// <summary>
     /// Interface for the Unique Key for the Property.
@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.ApplicationData
     /// <summary>
     /// Implementation of the Unique Key for the Property.
     /// </summary>
-    public class PropertyKeyUnique : IPropertyKeyUnique, IEquatable<PropertyKeyUnique>, IComparable<PropertyKeyUnique>, IComparable
+    public class PropertyKeyUnique : IPropertyKeyUnique, IKeyComparable<PropertyKeyUnique>
     {
         /// <inheritdoc/>
         public String PropertyTitle { get; init; } = String.Empty;

@@ -1,5 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Validation;
-using DataDictionary.DataLayer.ApplicationData;
+﻿using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -162,20 +162,13 @@ namespace DataDictionary.Main.Forms.Application
             if (bindingSource.Current is null || propertyNavigation.CurrentRow is null)
             { bindingSource.AddNew(); } // First Row scenario, force a first row to be created.
 
-            ValidateRows();
+            propertyNavigation.ValidateRows<PropertyItem>();
+            propertyNavigation.Refresh();
         }
 
         private void PropertyNavigation_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
-        { ValidateRows(); }
-
-        void ValidateRows()
         {
-            foreach (DataGridViewRow row in propertyNavigation.Rows)
-            {
-                if (row.GetDataBoundItem() is PropertyItem item)
-                { row.ErrorText = item.Validate(); }
-            }
-
+            propertyNavigation.ValidateRows<PropertyItem>();
             propertyNavigation.Refresh();
         }
 

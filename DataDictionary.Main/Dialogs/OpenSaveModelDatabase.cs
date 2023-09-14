@@ -1,11 +1,11 @@
-﻿using DataDictionary.DataLayer.ApplicationData;
-using DataDictionary.Main.Properties;
+﻿using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.Main.Messages;
 using Toolbox.Threading;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms;
+using DataDictionary.DataLayer.ApplicationData.Model;
 
 namespace DataDictionary.Main.Dialogs
 {

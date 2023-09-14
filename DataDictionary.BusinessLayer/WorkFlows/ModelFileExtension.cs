@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData;
+﻿using DataDictionary.DataLayer.ApplicationData.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -42,8 +42,5 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             }
             return new List<WorkItem>().AsReadOnly();
         }
-
-
-
     }
 }

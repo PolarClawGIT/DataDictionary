@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ApplicationData
+namespace DataDictionary.DataLayer.ApplicationData.Help
 {
     /// <summary>
     /// Primary key for the Help Documentation.
@@ -14,16 +14,16 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// <summary>
         /// Primary Key ID for the Help Documentation.
         /// </summary>
-        Nullable<Guid> HelpId { get; }
+        Guid? HelpId { get; }
     }
 
     /// <summary>
     /// Primary key for the Help Documentation.
     /// </summary>
-    public class HelpKey : IHelpKey, IEquatable<HelpKey>
+    public class HelpKey : IHelpKey, IKeyEquality<HelpKey>
     {
         /// <inheritdoc/>
-        public Nullable<Guid> HelpId { get; init; } = Guid.Empty;
+        public Guid? HelpId { get; init; } = Guid.Empty;
 
         /// <summary>
         /// Creates a Help Key from a item that implements the Primary key.
@@ -37,12 +37,12 @@ namespace DataDictionary.DataLayer.ApplicationData
 
         #region IEquatable
         /// <inheritdoc/>
-        public Boolean Equals(HelpKey? other)
-        { return other is HelpKey && EqualityComparer<Guid?>.Default.Equals(this.HelpId, other.HelpId); }
+        public bool Equals(HelpKey? other)
+        { return other is HelpKey && EqualityComparer<Guid?>.Default.Equals(HelpId, other.HelpId); }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IHelpKey value && this.Equals(new HelpKey(value)); }
+        { return obj is IHelpKey value && Equals(new HelpKey(value)); }
 
         /// <inheritdoc/>
         public static bool operator ==(HelpKey left, HelpKey right)
@@ -53,9 +53,9 @@ namespace DataDictionary.DataLayer.ApplicationData
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public override Int32 GetHashCode()
+        public override int GetHashCode()
         {
-            if (HelpId is Guid) { return (HelpId).GetHashCode(); }
+            if (HelpId is Guid) { return HelpId.GetHashCode(); }
             else { return Guid.Empty.GetHashCode(); }
         }
         #endregion

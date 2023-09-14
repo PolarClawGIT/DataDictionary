@@ -1,5 +1,7 @@
 ﻿using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.ApplicationData.Help;
+using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.DomainData;
 using DataDictionary.DataLayer.LibraryData;
@@ -24,7 +26,7 @@ namespace DataDictionary.BusinessLayer
         ModelItem defaultModel;
         ModelKey modelKey;
         public ModelKey ModelKey { get { return modelKey; } internal set { modelKey = new ModelKey(value); } }
-        public BindingTable<ModelItem> Models { get; } = ModelFactory.Create<ModelItem>();
+        public ModelList Models { get; } = new ModelList();
 
         public ModelItem Model
         {
@@ -62,9 +64,8 @@ namespace DataDictionary.BusinessLayer
         public BindingTable<LibraryMemberItem> LibraryMembers = ModelFactory.Create<LibraryMemberItem>();
 
         // Application Data
-        public BindingTable<HelpItem> HelpSubjects { get; } = ModelFactory.Create<HelpItem>();
-        public BindingTable<PropertyItem> Properties { get; } = ModelFactory.Create<PropertyItem>();
-        //public BindingTable<PropertyScopeItem> PropertyScopes { get; } = ModelFactory.Create<PropertyScopeItem>();
+        public HelpList HelpSubjects { get; } = new HelpList();
+        public PropertyList Properties { get; } = new PropertyList();
 
         // Connection Data
         public String ServerName { get { return ModelContext.ServerName; } }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ApplicationData
+namespace DataDictionary.DataLayer.ApplicationData.Property
 {
     /// <summary>
     /// Interface for the Primary Key for the Property.
@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.ApplicationData
     /// <summary>
     /// Implementation of the Primary Key of the Property.
     /// </summary>
-    public class PropertyKey : IPropertyKey, IEquatable<PropertyKey>
+    public class PropertyKey : IPropertyKey, IKeyEquality<PropertyKey>
     {
         /// <inheritdoc/>
         public Nullable<Guid> PropertyId { get; init; } = Guid.Empty;
@@ -61,3 +61,4 @@ namespace DataDictionary.DataLayer.ApplicationData
         #endregion
     }
 }
+
