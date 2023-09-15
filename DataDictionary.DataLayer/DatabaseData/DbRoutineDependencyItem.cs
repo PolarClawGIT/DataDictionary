@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;

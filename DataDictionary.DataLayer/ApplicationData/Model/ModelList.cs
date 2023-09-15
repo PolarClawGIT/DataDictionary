@@ -9,15 +9,12 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.ApplicationData.Model
 {
+    /// <summary>
+    /// List of Models
+    /// </summary>
     public class ModelList : BindingTable<ModelItem>, IReadData, IReadData<ModelKey>, IWriteData, IValidateList<ModelItem>
     {
-
-        /// <summary>
-        /// Get the Model Data given a Model Key  from the Database.
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="modelIdentifier"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ModelKey modelIdentifier)
         { return LoadCommand(connection, (modelIdentifier.ModelId, null, true)); }
 

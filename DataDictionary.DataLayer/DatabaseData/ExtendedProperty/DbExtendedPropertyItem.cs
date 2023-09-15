@@ -14,6 +14,8 @@ using System.Diagnostics.Contracts;
 using System.Reflection;
 using DataDictionary.DataLayer.DomainData;
 using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Constraint;
 
 namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 {
@@ -128,6 +130,13 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// </summary>
     public static class DbExtendedPropertyItemExtension
     { //TODO: These need to be work with BindingView. Return the Where clause not the result. For now it works.
+
+        /// <summary>
+        /// Gets the Extended Properties for the given Key.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbSchemaKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
@@ -139,6 +148,12 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
                 );
         }
 
+        /// <summary>
+        /// Gets the Extended Properties for the given Key.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbSchemaKey item)
         {
             return source.Where(
@@ -150,6 +165,12 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
                 );
         }
 
+        /// <summary>
+        /// Gets the Extended Properties for the given Key.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbTableKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
@@ -162,6 +183,12 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
                 );
         }
 
+        /// <summary>
+        /// Gets the Extended Properties for the given Key.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbTableKey item)
         {
             return source.Where(
@@ -174,6 +201,12 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
                 );
         }
 
+        /// <summary>
+        /// Gets the Extended Properties for the given Key.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbConstraintKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
@@ -183,6 +216,12 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
                 );
         }
 
+        /// <summary>
+        /// Gets the Extended Properties for the given Key.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbConstraintKey item)
         {
             return source.Where(
@@ -192,6 +231,12 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
                 );
         }
 
+        /// <summary>
+        /// Gets the Extended Properties for the given Key.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbTableColumnKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
@@ -202,6 +247,12 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
                 );
         }
 
+        /// <summary>
+        /// Gets the Extended Properties for the given Key.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbTableColumnKey item)
         {
             return source.Where(

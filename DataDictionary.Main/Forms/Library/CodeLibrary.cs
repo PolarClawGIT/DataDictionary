@@ -19,6 +19,9 @@ namespace DataDictionary.Main.Forms.Library
     /// Proof of Concept to read the XML Documentation files from Visual Studio.
     /// This would be another data source for the Model.
     /// https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/
+    /// This is currently limited to what is produced by the XML Documentation feature.
+    /// As such inheritdoc tags are not expanded unless the developer specifically adds a cref.
+    /// Example: inheritdoc cref="IDbCatalogKey.CatalogId"
     /// </remarks>
     partial class CodeLibrary : ApplicationBase
     {

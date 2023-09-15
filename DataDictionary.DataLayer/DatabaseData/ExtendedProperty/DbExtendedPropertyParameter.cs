@@ -56,7 +56,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// Parameters used by MS SQL ExtendedProperty methods.
     /// </summary>
     public class DbExtendedPropertyParameter : IDbExtendedPropertyParameter
-    {
+    { //TODO: Switch to using the Scope enumerations.
         /// <inheritdoc/>
         public string? PropertyName { get; set; } // Null will return all extended properties
 

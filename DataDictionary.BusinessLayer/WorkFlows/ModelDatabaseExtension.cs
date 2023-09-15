@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData;
 using System;
@@ -64,7 +66,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbCatalogs",
-                Command = (conn) => DbCatalogItem.GetData(conn, modelId),
+                Command = data.DbCatalogs.LoadCommand,
                 Target = data.DbCatalogs
             });
 
@@ -99,14 +101,14 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbConstraints",
-                Command = (conn) => DbConstraintItem.GetData(conn, modelId),
+                Command = (conn) => data.DbConstraints.LoadCommand(conn, modelId),
                 Target = data.DbConstraints
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbConstraintColumns",
-                Command = (conn) => DbConstraintColumnItem.GetData(conn, modelId),
+                Command = (conn) => data.DbConstraintColumns.LoadCommand(conn, modelId),
                 Target = data.DbConstraintColumns
             });
 
@@ -193,7 +195,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save DbCatalogs",
-                Command = (conn) => DbCatalogItem.SetData(conn, modelId, data.DbCatalogs)
+                Command = (conn) => data.DbCatalogs.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
@@ -229,13 +231,13 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save DbConstraints",
-                Command = (conn) => DbConstraintItem.SetData(conn, modelId, data.DbConstraints)
+                Command = (conn) => data.DbConstraints.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save DbConstraintColumns",
-                Command = (conn) => DbConstraintColumnItem.SetData(conn, modelId, data.DbConstraintColumns)
+                Command = (conn) => data.DbConstraintColumns.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
@@ -246,7 +248,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
-                WorkName = "Save DbConstraintColumns",
+                WorkName = "Save DbRoutineParameters",
                 Command = (conn) => DbRoutineParameterItem.SetData(conn, modelId, data.DbRoutineParameters)
             });
 

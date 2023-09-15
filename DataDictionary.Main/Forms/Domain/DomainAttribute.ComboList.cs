@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Controls;
 using System;

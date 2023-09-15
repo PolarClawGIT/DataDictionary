@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData;
 using Microsoft.Data.SqlClient;
@@ -19,7 +20,7 @@ namespace DataDictionary.DataLayer.DatabaseData
     { }
 
     [Serializable]
-    public class DbSchemaItem : BindingTableRow, IDbSchemaItem, INotifyPropertyChanged, IDbExtendedProperties, ISerializable
+    public class DbSchemaItem : BindingTableRow, IDbSchemaItem, INotifyPropertyChanged, IDbExtendedProperty, ISerializable
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
@@ -65,7 +66,7 @@ namespace DataDictionary.DataLayer.DatabaseData
             return command;
         }
 
-        public virtual Command GetProperties(IConnection connection)
+        public virtual Command PropertyCommand(IConnection connection)
         {
             return (new DbExtendedPropertyGetCommand(connection)
             { Level0Name = SchemaName, Level0Type = "SCHEMA" }).

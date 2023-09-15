@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData
     }
 
     [Serializable]
-    public class DbRoutineParameterItem : BindingTableRow, IDbRoutineParameterItem, INotifyPropertyChanged, IDbExtendedProperties, ISerializable
+    public class DbRoutineParameterItem : BindingTableRow, IDbRoutineParameterItem, INotifyPropertyChanged, IDbExtendedProperty, ISerializable
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
@@ -84,7 +85,7 @@ namespace DataDictionary.DataLayer.DatabaseData
             return command;
         }
 
-        public virtual Command GetProperties(IConnection connection)
+        public virtual Command PropertyCommand(IConnection connection)
         {
             String? level1Type = GetValue("RoutineType");
 

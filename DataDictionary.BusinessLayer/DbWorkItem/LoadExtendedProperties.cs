@@ -12,7 +12,7 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
     class LoadExtendedProperties<TDbItem> : WorkItem, IDbWorkItem
-        where TDbItem : class, IBindingTableRow, IDbExtendedProperties
+        where TDbItem : class, IBindingTableRow, IDbExtendedProperty
     {
         public required BindingTable<DbExtendedPropertyItem> Target { get; init; }
         public required IBindingTable<TDbItem> Source { get; init; }
@@ -31,7 +31,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
 
             foreach (TDbItem item in Source)
             {
-                Target.Load(connection.ExecuteReader(item.GetProperties(connection)));
+                Target.Load(connection.ExecuteReader(item.PropertyCommand(connection)));
                 complete++;
                 Double progress = ((Double)complete / (Double)toDo) * (Double)100.0;
                 this.OnProgressChanged((Int32)progress);

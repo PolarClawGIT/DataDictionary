@@ -10,7 +10,11 @@ namespace DataDictionary.DataLayer
     /// Interface common to all Keys.
     /// </summary>
     /// <remarks>
-    /// Use this for the interface of the Key, not the implementation.
+    /// Use this for the interface for Keys and Items.
+    /// The implementation of the key should use one of the child interfaces.
+    /// Keys use full classes, instead of record or structure.
+    /// This allows the implementation of IEquatable and inheritance restricted by the other types.
+    /// It is the intention that the Key is implemented with Immutability in mind.
     /// </remarks>
     public interface IKey { }
 

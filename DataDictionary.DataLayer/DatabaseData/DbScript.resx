@@ -122,6 +122,7 @@
 	Db_Name() As [CatalogName],
 	@Server As [SourceServerName],
 	Convert(DateTime2, Null) As [SysStart]</value>
+    <comment>SQL Script to get data for DbCatalogItem.</comment>
   </data>
   <data name="DbColumnItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
@@ -166,6 +167,7 @@ From	[INFORMATION_SCHEMA].[COLUMNS] I
 	Left Join [sys].[computed_columns] P
 	On	C.[object_id] = P.[object_id] And
 		C.[column_id] = P.[column_id]</value>
+    <comment>SQL Script to get data for DbColumnItem.</comment>
   </data>
   <data name="DbConstraintColumnItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
@@ -192,6 +194,7 @@ From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
 	R.[UNIQUE_CONSTRAINT_SCHEMA] = F.[CONSTRAINT_SCHEMA] And
 	R.[UNIQUE_CONSTRAINT_NAME] = F.[CONSTRAINT_NAME] And
 	C.[ORDINAL_POSITION] = F.[ORDINAL_POSITION]</value>
+    <comment>SQL Script to get data for DbConstraintColumnItem.</comment>
   </data>
   <data name="DbConstraintItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
@@ -201,6 +204,7 @@ From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
 	[TABLE_NAME] As [TableName],
 	[CONSTRAINT_TYPE] As [ConstraintType]
 From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS]</value>
+    <comment>SQL Script to get data for DbConstraintItem.</comment>
   </data>
   <data name="DbDomainItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
@@ -222,6 +226,7 @@ From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS]</value>
 	[COLLATION_SCHEMA] As [CollationSchema], 
 	[COLLATION_NAME] As [CollationName]
 From	[INFORMATION_SCHEMA].[DOMAINS]</value>
+    <comment>SQL Script to get data for DbDomainItem.</comment>
   </data>
   <data name="DbExtendedPropertyItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
@@ -244,6 +249,7 @@ FROM [fn_listextendedproperty] (
 	@Level1Name,
 	@Level2Type,
 	@Level2Name)</value>
+    <comment>SQL Script to get data for DbExtendedPropertyItem.</comment>
   </data>
   <data name="DbRoutineDependencyItem" xml:space="preserve">
     <value>Begin Try;
@@ -268,6 +274,7 @@ End Try
 Begin Catch
 	Throw; -- Try/Catch is needed Because [sys].[dm_sql_referenced_entities] can generate error msg 2020 that the Try/Catch does not trap (be design).
 End Catch;</value>
+    <comment>SQL Script to get data for DbRoutineDependencyItem.</comment>
   </data>
   <data name="DbRoutineItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
@@ -276,6 +283,7 @@ End Catch;</value>
 	[ROUTINE_NAME] As [RoutineName],
 	[ROUTINE_TYPE] As [RoutineType]
 From	[INFORMATION_SCHEMA].[ROUTINES]</value>
+    <comment>SQL Script to get data for DbRoutineItem.</comment>
   </data>
   <data name="DbRoutineParameterItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
@@ -306,12 +314,14 @@ From	[INFORMATION_SCHEMA].[PARAMETERS] P
 	On	P.[SPECIFIC_CATALOG] = R.[SPECIFIC_CATALOG] And
 		P.[SPECIFIC_SCHEMA] = R.[SPECIFIC_SCHEMA] And
 		P.[SPECIFIC_NAME] = R.[SPECIFIC_NAME]</value>
+    <comment>SQL Script to get data for DbRoutineParameterItem.</comment>
   </data>
   <data name="DbSchemaItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
 	[CATALOG_NAME] As [CatalogName],
 	[SCHEMA_NAME] As [SchemaName]
 From	[INFORMATION_SCHEMA].[SCHEMATA]</value>
+    <comment>SQL Script to get data for DbSchemaItem.</comment>
   </data>
   <data name="DbTableItem" xml:space="preserve">
     <value>Select	Convert(UniqueIdentifier,Null) As [CatalogId],
@@ -337,5 +347,9 @@ Select	Convert(UniqueIdentifier,Null) As [CatalogId],
 	[TABLE_NAME] As [TableName],
 	'VIEW' As [TableType]
 From	[INFORMATION_SCHEMA].[VIEWS]</value>
+    <comment>SQL Script to get data for DbTableItem.</comment>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
   </data>
 </root>

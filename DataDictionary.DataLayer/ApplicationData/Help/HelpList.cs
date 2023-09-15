@@ -14,11 +14,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     /// </summary>
     public class HelpList : BindingTable<HelpItem>, IReadData, IWriteData, IValidateList<HelpItem>
     {
-        /// <summary>
-        /// Load the Help Documentation from the Application Database.
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
         { return LoadCommand(connection, (null, null, null, null)); }
 
@@ -35,11 +31,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
             return command;
         }
 
-        /// <summary>
-        /// Stores the Help Documentation to the Application Database.
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
         {
             Command command = connection.CreateCommand();

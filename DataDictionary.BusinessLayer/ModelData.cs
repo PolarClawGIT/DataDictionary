@@ -3,6 +3,8 @@ using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData;
 using DataDictionary.DataLayer.LibraryData;
@@ -43,14 +45,14 @@ namespace DataDictionary.BusinessLayer
         internal protected Context ModelContext { get; protected set; } = new Context();
 
         // Database Model
-        public BindingTable<DbCatalogItem> DbCatalogs { get; } = ModelFactory.Create<DbCatalogItem>();
+        public DbCatalogList DbCatalogs { get; } = new DbCatalogList();
         public BindingTable<DbSchemaItem> DbSchemta { get; } = ModelFactory.Create<DbSchemaItem>();
         public BindingTable<DbDomainItem> DbDomains { get; } = ModelFactory.Create<DbDomainItem>();
         public BindingTable<DbTableItem> DbTables { get; } = ModelFactory.Create<DbTableItem>();
         public BindingTable<DbTableColumnItem> DbColumns { get; } = ModelFactory.Create<DbTableColumnItem>();
         public DbExtendedPropertyList DbExtendedProperties = new DbExtendedPropertyList();
-        public BindingTable<DbConstraintItem> DbConstraints { get; } = ModelFactory.Create<DbConstraintItem>();
-        public BindingTable<DbConstraintColumnItem> DbConstraintColumns { get; } = ModelFactory.Create<DbConstraintColumnItem>();
+        public DbConstraintList DbConstraints { get; } = new DbConstraintList();
+        public DbConstraintColumnList DbConstraintColumns { get; } = new DbConstraintColumnList();
         public BindingTable<DbRoutineItem> DbRoutines { get; } = ModelFactory.Create<DbRoutineItem>();
         public BindingTable<DbRoutineParameterItem> DbRoutineParameters { get; } = ModelFactory.Create<DbRoutineParameterItem>();
         public BindingTable<DbRoutineDependencyItem> DbRoutineDependencies { get; } = ModelFactory.Create<DbRoutineDependencyItem>();

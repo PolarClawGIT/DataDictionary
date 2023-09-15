@@ -8,15 +8,20 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DatabaseData
+namespace DataDictionary.DataLayer.DatabaseData.Catalog
 {
     /// <summary>
     /// This represents a list of Database on the Server.
+    /// This is used when filling a list of Catalogs for the User Interface.
     /// </summary>
-    [Serializable]
-    public class DbDatabaseItem : BindingTableRow, IDbCatalogKeyUnique, ISerializable
+    public class DbDatabaseItem : BindingTableRow, IDbCatalogKeyUnique
     {
+        /// <inheritdoc/>
         public virtual string? CatalogName { get { return GetValue("database_name"); } }
+
+        /// <summary>
+        /// Schema type to get using SqlClient GetSchema method.
+        /// </summary>
         public static InformationSchema.Collection Schema { get { return InformationSchema.Collection.Databases; } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
@@ -26,15 +31,13 @@ namespace DataDictionary.DataLayer.DatabaseData
             new DataColumn("create_date", typeof(DateTime)){ AllowDBNull = false},
         };
 
+        /// <summary>
+        /// Constructor for a DbDatabaseItem
+        /// </summary>
         public DbDatabaseItem() : base() { }
 
+        /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
-
-        #region ISerializable
-        protected DbDatabaseItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        { }
-        #endregion
-
     }
 }

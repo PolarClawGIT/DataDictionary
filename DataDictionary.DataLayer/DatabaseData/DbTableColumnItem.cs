@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Nullable
 
 using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData;
 using Microsoft.Data.SqlClient;
@@ -31,7 +32,7 @@ namespace DataDictionary.DataLayer.DatabaseData
     }
 
     [Serializable]
-    public class DbTableColumnItem : BindingTableRow, IDbTableColumnItem, INotifyPropertyChanged, IDbExtendedProperties, ISerializable
+    public class DbTableColumnItem : BindingTableRow, IDbTableColumnItem, INotifyPropertyChanged, IDbExtendedProperty, ISerializable
     {
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
         public String? CatalogName { get { return GetValue("CatalogName"); } }
@@ -111,7 +112,7 @@ namespace DataDictionary.DataLayer.DatabaseData
             return command;
         }
 
-        public virtual Command GetProperties(IConnection connection)
+        public virtual Command PropertyCommand(IConnection connection)
         {
             String level1Type = "TABLE";
             if (GetValue("TableType") is "VIEW") { level1Type = "VIEW"; }

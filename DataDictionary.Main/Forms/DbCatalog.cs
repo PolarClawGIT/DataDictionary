@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.WorkFlows;
-using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;

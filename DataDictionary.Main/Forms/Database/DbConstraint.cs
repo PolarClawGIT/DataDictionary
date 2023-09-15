@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
+﻿using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;

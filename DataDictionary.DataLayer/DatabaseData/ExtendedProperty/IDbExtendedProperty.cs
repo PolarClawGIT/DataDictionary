@@ -9,11 +9,19 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 {
-    public interface IDbExtendedProperties
+    /// <summary>
+    /// Interface for Database Extended Properties
+    /// </summary>
+    public interface IDbExtendedProperty
     {  // DB Classes that have extended properties.
-        Command GetProperties(IConnection connection);
-    }
 
+        /// <summary>
+        /// Returns the Command that Loads the Database Extended properties.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        Command PropertyCommand(IConnection connection);
+    }
 
     internal class DbExtendedPropertyGetCommand : DbExtendedPropertyParameter
     {

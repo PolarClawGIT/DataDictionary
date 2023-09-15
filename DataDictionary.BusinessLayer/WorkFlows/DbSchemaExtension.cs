@@ -2,6 +2,8 @@
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData;
 using System;
@@ -29,7 +31,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbCatalogs",
-                Command = DbCatalogItem.GetSchema,
+                Command = data.DbCatalogs.SchemaCommand,
                 Target = data.DbCatalogs
             });
 
@@ -64,14 +66,14 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbConstraints",
-                Command = DbConstraintItem.GetSchema,
+                Command = data.DbConstraints.SchemaCommand,
                 Target = data.DbConstraints
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbConstraintColumns",
-                Command = DbConstraintColumnItem.GetSchema,
+                Command = data.DbConstraintColumns.SchemaCommand,
                 Target = data.DbConstraintColumns
             });
 
