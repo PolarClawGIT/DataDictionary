@@ -36,8 +36,8 @@ namespace DataDictionary.DataLayer.DatabaseData
                 !String.IsNullOrEmpty(other.ReferenceSchemaName) &&
                 !String.IsNullOrEmpty(ReferenceTableName) &&
                 !String.IsNullOrEmpty(other.ReferenceTableName) &&
-                ReferenceSchemaName.Equals(other.ReferenceSchemaName, ModelFactory.CompareString) &&
-                ReferenceTableName.Equals(other.ReferenceTableName, ModelFactory.CompareString));
+                ReferenceSchemaName.Equals(other.ReferenceSchemaName, KeyExtension.CompareString) &&
+                ReferenceTableName.Equals(other.ReferenceTableName, KeyExtension.CompareString));
         }
 
         public Boolean Equals(DbTableKey? other)
@@ -49,8 +49,8 @@ namespace DataDictionary.DataLayer.DatabaseData
                 !String.IsNullOrEmpty(other.SchemaName) &&
                 !String.IsNullOrEmpty(ReferenceTableName) &&
                 !String.IsNullOrEmpty(other.TableName) &&
-                ReferenceSchemaName.Equals(other.SchemaName, ModelFactory.CompareString) &&
-                ReferenceTableName.Equals(other.TableName, ModelFactory.CompareString));
+                ReferenceSchemaName.Equals(other.SchemaName, KeyExtension.CompareString) &&
+                ReferenceTableName.Equals(other.TableName, KeyExtension.CompareString));
         }
 
         public override bool Equals(object? obj)

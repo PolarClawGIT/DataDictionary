@@ -134,8 +134,8 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
                 w => w.CatalogScope == DbCatalogScope.Schema &&
                 w.ObjectScope is DbObjectScope.NULL &&
                 w.ElementScope == DbElementScope.NULL &&
-                item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
-                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString)
+                item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, KeyExtension.CompareString) &&
+                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, KeyExtension.CompareString)
                 );
         }
 
@@ -145,8 +145,8 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
                 w => w.CatalogScope == DbCatalogScope.Schema &&
                 w.ObjectScope is DbObjectScope.NULL &&
                 w.ElementScope == DbElementScope.NULL &&
-                item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
-                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString)
+                item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, KeyExtension.CompareString) &&
+                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, KeyExtension.CompareString)
                 );
         }
 
@@ -156,9 +156,9 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
                 w => w.CatalogScope == DbCatalogScope.Schema &&
                 w.ObjectScope is DbObjectScope.Table or DbObjectScope.View &&
                 w.ElementScope == DbElementScope.NULL &&
-                item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
-                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
-                item.TableName is not null && item.TableName.Equals(w.Level1Name, ModelFactory.CompareString)
+                item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, KeyExtension.CompareString) &&
+                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, KeyExtension.CompareString) &&
+                item.TableName is not null && item.TableName.Equals(w.Level1Name, KeyExtension.CompareString)
                 );
         }
 
@@ -168,47 +168,47 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
                 w => w.CatalogScope == DbCatalogScope.Schema &&
                 w.ObjectScope is DbObjectScope.Table or DbObjectScope.View &&
                 w.ElementScope == DbElementScope.NULL &&
-                item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
-                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
-                item.TableName is not null && item.TableName.Equals(w.Level1Name, ModelFactory.CompareString)
+                item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, KeyExtension.CompareString) &&
+                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, KeyExtension.CompareString) &&
+                item.TableName is not null && item.TableName.Equals(w.Level1Name, KeyExtension.CompareString)
                 );
         }
 
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbConstraintKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
-                w => item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
-                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
-                item.ConstraintName is not null && item.ConstraintName.Equals(w.Level2Name, ModelFactory.CompareString)
+                w => item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, KeyExtension.CompareString) &&
+                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, KeyExtension.CompareString) &&
+                item.ConstraintName is not null && item.ConstraintName.Equals(w.Level2Name, KeyExtension.CompareString)
                 );
         }
 
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbConstraintKey item)
         {
             return source.Where(
-                w => item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
-                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
-                item.ConstraintName is not null && item.ConstraintName.Equals(w.Level2Name, ModelFactory.CompareString)
+                w => item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, KeyExtension.CompareString) &&
+                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, KeyExtension.CompareString) &&
+                item.ConstraintName is not null && item.ConstraintName.Equals(w.Level2Name, KeyExtension.CompareString)
                 );
         }
 
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IDbTableColumnKey item, IEnumerable<DbExtendedPropertyItem> source)
         {
             return source.Where(
-                w => item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
-                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
-                item.TableName is not null && item.TableName.Equals(w.Level1Name, ModelFactory.CompareString) &&
-                item.ColumnName is not null && item.ColumnName.Equals(w.Level2Name, ModelFactory.CompareString)
+                w => item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, KeyExtension.CompareString) &&
+                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, KeyExtension.CompareString) &&
+                item.TableName is not null && item.TableName.Equals(w.Level1Name, KeyExtension.CompareString) &&
+                item.ColumnName is not null && item.ColumnName.Equals(w.Level2Name, KeyExtension.CompareString)
                 );
         }
 
         public static IEnumerable<DbExtendedPropertyItem> GetProperties(this IEnumerable<DbExtendedPropertyItem> source, IDbTableColumnKey item)
         {
             return source.Where(
-                w => item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, ModelFactory.CompareString) &&
-                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, ModelFactory.CompareString) &&
-                item.TableName is not null && item.TableName.Equals(w.Level1Name, ModelFactory.CompareString) &&
-                item.ColumnName is not null && item.ColumnName.Equals(w.Level2Name, ModelFactory.CompareString)
+                w => item.CatalogName is not null && item.CatalogName.Equals(w.CatalogName, KeyExtension.CompareString) &&
+                item.SchemaName is not null && item.SchemaName.Equals(w.Level0Name, KeyExtension.CompareString) &&
+                item.TableName is not null && item.TableName.Equals(w.Level1Name, KeyExtension.CompareString) &&
+                item.ColumnName is not null && item.ColumnName.Equals(w.Level2Name, KeyExtension.CompareString)
                 );
         }
     }
@@ -240,7 +240,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         };
 
         public static DbCatalogScope GetCatalogScope(string? value)
-        { return catalogScope.FirstOrDefault(w => w.Value.Equals(value, ModelFactory.CompareString)).Key; }
+        { return catalogScope.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)).Key; }
 
         public static string GetScope(this DbCatalogScope value)
         {
@@ -265,7 +265,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         };
 
         public static DbObjectScope GetObjectScope(string? value)
-        { return objectScope.FirstOrDefault(w => w.Value.Equals(value, ModelFactory.CompareString)).Key; }
+        { return objectScope.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)).Key; }
 
         public static string GetScope(this DbObjectScope value)
         {
@@ -285,7 +285,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         };
 
         public static DbElementScope GetItemScope(string? value)
-        { return itemScope.FirstOrDefault(w => w.Value.Equals(value, ModelFactory.CompareString)).Key; }
+        { return itemScope.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)).Key; }
 
         public static string? GetScope(this DbElementScope value)
         {

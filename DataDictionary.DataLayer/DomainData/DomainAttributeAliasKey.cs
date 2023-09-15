@@ -33,7 +33,7 @@ namespace DataDictionary.DataLayer.DomainData
                 new DomainEntityAliasKey(this).Equals(other) &&
                 !String.IsNullOrEmpty(ElementName) &&
                 !String.IsNullOrEmpty(other.ElementName) &&
-                ElementName.Equals(other.ElementName, ModelFactory.CompareString));
+                ElementName.Equals(other.ElementName, KeyExtension.CompareString));
         }
 
         public override bool Equals(object? obj)

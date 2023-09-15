@@ -91,8 +91,8 @@ namespace DataDictionary.DataLayer.DatabaseData
         public static DbCatalogItem? GetCatalog(this IEnumerable<DbCatalogItem> source, (String ServerName, String DatabaseName) item)
         {
             return source.FirstOrDefault(
-                w => item.DatabaseName.Equals(w.CatalogName, ModelFactory.CompareString) &&
-                item.ServerName.Equals(w.SourceServerName, ModelFactory.CompareString));
+                w => item.DatabaseName.Equals(w.CatalogName, KeyExtension.CompareString) &&
+                item.ServerName.Equals(w.SourceServerName, KeyExtension.CompareString));
         }
     }
 }

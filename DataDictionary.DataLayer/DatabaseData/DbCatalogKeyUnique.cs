@@ -23,7 +23,7 @@
                 other is DbCatalogKeyUnique &&
                 !String.IsNullOrEmpty(CatalogName) &&
                 !String.IsNullOrEmpty(other.CatalogName) &&
-                CatalogName.Equals(other.CatalogName, ModelFactory.CompareString));
+                CatalogName.Equals(other.CatalogName, KeyExtension.CompareString));
         }
 
         public override bool Equals(object? obj)

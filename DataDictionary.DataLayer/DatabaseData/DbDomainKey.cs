@@ -29,7 +29,7 @@ namespace DataDictionary.DataLayer.DatabaseData
                 new DbSchemaKey(this).Equals(other) &&
                 !String.IsNullOrEmpty(DomainName) &&
                 !String.IsNullOrEmpty(other.DomainName) &&
-                DomainName.Equals(other.DomainName, ModelFactory.CompareString));
+                DomainName.Equals(other.DomainName, KeyExtension.CompareString));
         }
 
         public override bool Equals(object? obj)

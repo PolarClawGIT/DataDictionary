@@ -387,7 +387,7 @@ namespace Toolbox.BindingTable
         /// If the Property is a String or is not IComparable then strings are sorted or searched using this setting.
         /// If the Property is not a String and is IComparable then IComparable is used.
         /// </summary>
-        public virtual StringComparison CompareString { get; set; } = StringComparison.CurrentCulture;
+        public virtual StringComparison CompareString { get; init; } = StringComparison.CurrentCultureIgnoreCase;
 
         /// <summary>
         /// Contains the Comparer used for Sorting and Searching.

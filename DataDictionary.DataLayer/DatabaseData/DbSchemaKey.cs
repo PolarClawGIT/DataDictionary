@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.DatabaseData
                 new DbCatalogKeyUnique(this).Equals(other) &&
                 !String.IsNullOrEmpty(SchemaName) &&
                 !String.IsNullOrEmpty(other.SchemaName) &&
-                SchemaName.Equals(other.SchemaName, ModelFactory.CompareString));
+                SchemaName.Equals(other.SchemaName, KeyExtension.CompareString));
         }
 
         public override bool Equals(object? obj)

@@ -43,7 +43,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
                 other is PropertyKeyUnique &&
                 !String.IsNullOrEmpty(PropertyTitle) &&
                 !String.IsNullOrEmpty(other.PropertyTitle) &&
-                PropertyTitle.Equals(other.PropertyTitle, ModelFactory.CompareString));
+                PropertyTitle.Equals(other.PropertyTitle, KeyExtension.CompareString));
         }
 
         /// <inheritdoc/>

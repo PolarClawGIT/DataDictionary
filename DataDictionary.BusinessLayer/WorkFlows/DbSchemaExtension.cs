@@ -252,7 +252,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
                     if (data.Properties.FirstOrDefault(w =>
                             w.ExtendedProperty is not null &&
-                            w.ExtendedProperty.Equals(propertySource.PropertyName, ModelFactory.CompareString)) is IPropertyItem property)
+                            w.ExtendedProperty.Equals(propertySource.PropertyName, KeyExtension.CompareString)) is IPropertyItem property)
                     {
                         data.DomainAttributeProperties.
                             Add(new DomainAttributePropertyItem(newAttribute, property, propertySource));

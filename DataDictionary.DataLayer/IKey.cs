@@ -35,4 +35,15 @@ namespace DataDictionary.DataLayer
     public interface IKeyComparable<T> : IKeyEquality<T>, IComparable<T>, IComparable
         where T : IKey
     { }
+        
+    /// <summary>
+    /// Extensions for IKey.
+    /// </summary>
+    public static class KeyExtension
+    {
+        /// <summary>
+        /// String Compare option. Used in Key Equality.
+        /// </summary>
+        public static StringComparison CompareString { get; } = StringComparison.CurrentCultureIgnoreCase;
+    }
 }

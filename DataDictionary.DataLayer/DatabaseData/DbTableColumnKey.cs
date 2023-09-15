@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.DatabaseData
                 new DbTableKey(this).Equals(other) &&
                 !String.IsNullOrEmpty(ColumnName) &&
                 !String.IsNullOrEmpty(other.ColumnName) &&
-                ColumnName.Equals(other.ColumnName, ModelFactory.CompareString));
+                ColumnName.Equals(other.ColumnName, KeyExtension.CompareString));
         }
 
         public override bool Equals(object? obj)

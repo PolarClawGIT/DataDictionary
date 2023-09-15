@@ -53,7 +53,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
                 other is HelpKeyUnique &&
                 !string.IsNullOrEmpty(NameSpace) &&
                 !string.IsNullOrEmpty(other.NameSpace) &&
-                NameSpace.Equals(other.NameSpace, ModelFactory.CompareString);
+                NameSpace.Equals(other.NameSpace, KeyExtension.CompareString);
         }
 
         /// <inheritdoc/>

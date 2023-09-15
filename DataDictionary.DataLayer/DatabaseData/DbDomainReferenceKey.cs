@@ -42,9 +42,9 @@ namespace DataDictionary.DataLayer.DatabaseData
                 !String.IsNullOrEmpty(other.DomainSchema) &&
                 !String.IsNullOrEmpty(DomainName) &&
                 !String.IsNullOrEmpty(other.DomainName) &&
-                DomainCatalog.Equals(other.DomainCatalog, ModelFactory.CompareString) &&
-                DomainSchema.Equals(other.DomainSchema, ModelFactory.CompareString) &&
-                DomainName.Equals(other.DomainName, ModelFactory.CompareString));
+                DomainCatalog.Equals(other.DomainCatalog, KeyExtension.CompareString) &&
+                DomainSchema.Equals(other.DomainSchema, KeyExtension.CompareString) &&
+                DomainName.Equals(other.DomainName, KeyExtension.CompareString));
         }
 
         public override bool Equals(object? obj)

@@ -41,9 +41,9 @@ namespace DataDictionary.DataLayer.DatabaseData
                 !String.IsNullOrEmpty(other.ReferenceObjectName) &&
                 !String.IsNullOrEmpty(ReferenceColumnName) &&
                 !String.IsNullOrEmpty(other.ReferenceColumnName) &&
-                ReferenceSchemaName.Equals(other.ReferenceSchemaName, ModelFactory.CompareString) &&
-                ReferenceObjectName.Equals(other.ReferenceObjectName, ModelFactory.CompareString) &&
-                ReferenceColumnName.Equals(other.ReferenceColumnName, ModelFactory.CompareString));
+                ReferenceSchemaName.Equals(other.ReferenceSchemaName, KeyExtension.CompareString) &&
+                ReferenceObjectName.Equals(other.ReferenceObjectName, KeyExtension.CompareString) &&
+                ReferenceColumnName.Equals(other.ReferenceColumnName, KeyExtension.CompareString));
         }
 
         public override bool Equals(object? obj)
@@ -60,9 +60,9 @@ namespace DataDictionary.DataLayer.DatabaseData
                 !String.IsNullOrEmpty(other.TableName) &&
                 !String.IsNullOrEmpty(ReferenceColumnName) &&
                 !String.IsNullOrEmpty(other.ColumnName) &&
-                ReferenceSchemaName.Equals(other.SchemaName, ModelFactory.CompareString) &&
-                ReferenceObjectName.Equals(other.TableName, ModelFactory.CompareString) &&
-                ReferenceColumnName.Equals(other.ColumnName, ModelFactory.CompareString)
+                ReferenceSchemaName.Equals(other.SchemaName, KeyExtension.CompareString) &&
+                ReferenceObjectName.Equals(other.TableName, KeyExtension.CompareString) &&
+                ReferenceColumnName.Equals(other.ColumnName, KeyExtension.CompareString)
                 );
         }
 
