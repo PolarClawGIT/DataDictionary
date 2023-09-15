@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     /// <summary>
     /// Unique Key for Help Documents, by NameSpace
     /// </summary>
-    public interface IHelpKeyUnique
+    public interface IHelpKeyUnique: IKey
     {
         /// <summary>
         /// Key to reference a Help Document by Name Space

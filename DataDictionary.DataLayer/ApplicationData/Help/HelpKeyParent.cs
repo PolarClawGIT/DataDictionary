@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     /// <summary>
     /// Parent Key reference to the Primary Key of an Help Item.
     /// </summary>
-    public interface IHelpKeyParent
+    public interface IHelpKeyParent : IKey
     {
         /// <summary>
         /// Parent Primary Key reference to a Parent Help document.

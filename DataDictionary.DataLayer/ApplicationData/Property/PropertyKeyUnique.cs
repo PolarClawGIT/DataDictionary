@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// <summary>
     /// Interface for the Unique Key for the Property.
     /// </summary>
-    public interface IPropertyKeyUnique
+    public interface IPropertyKeyUnique: IKey
     {
         /// <summary>
         /// Title for the Property.

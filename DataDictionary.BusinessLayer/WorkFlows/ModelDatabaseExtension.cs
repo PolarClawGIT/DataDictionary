@@ -135,7 +135,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Extended Properties",
-                Command = (conn) => data.DbExtendedProperties.LoadCommand(conn, data.ModelKey),
+                Command = (conn) => data.DbExtendedProperties.LoadCommand(conn, modelId),
                 Target = data.DbExtendedProperties
             });
 
@@ -217,7 +217,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save DbExtendedProperties",
-                Command = (conn) => data.DbExtendedProperties.SaveCommand(conn, data.ModelKey)
+                Command = (conn) => data.DbExtendedProperties.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)

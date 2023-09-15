@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// List of DbExtendedProperty Items.
     /// </summary>
-    public class DbExtendedPropertyList : BindingTable<DbExtendedPropertyItem>, IReadData<ModelKey>, IWriteData<ModelKey>
+    public class DbExtendedPropertyList : BindingTable<DbExtendedPropertyItem>, IReadData<IModelKey>, IWriteData<IModelKey>
     {
         /// <summary>
         /// Loads the MS SQL Extended Properties to the Application database.
@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// <param name="connection"></param>
         /// <param name="modelId"></param>
         /// <returns></returns>
-        public Command LoadCommand(IConnection connection, ModelKey modelId)
+        public Command LoadCommand(IConnection connection, IModelKey modelId)
         { return LoadCommand(connection, (modelId.ModelId, null, null)); }
 
         Command LoadCommand(IConnection connection, (Guid? modelId, Guid? propertyId, string? catalogName) parameters)
@@ -41,7 +41,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// <param name="connection"></param>
         /// <param name="modelId"></param>
         /// <returns></returns>
-        public Command SaveCommand(IConnection connection, ModelKey modelId)
+        public Command SaveCommand(IConnection connection, IModelKey modelId)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;

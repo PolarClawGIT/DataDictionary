@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     /// <summary>
     /// Primary key for the Help Documentation.
     /// </summary>
-    public interface IHelpKey
+    public interface IHelpKey : IKey
     {
         /// <summary>
         /// Primary Key ID for the Help Documentation.

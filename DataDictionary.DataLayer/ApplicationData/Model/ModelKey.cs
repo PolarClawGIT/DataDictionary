@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Model
     /// <summary>
     /// Interface for the Primary Key of the Model.
     /// </summary>
-    public interface IModelKey
+    public interface IModelKey : IKey
     {
         /// <summary>
         /// The Id of the Model.
