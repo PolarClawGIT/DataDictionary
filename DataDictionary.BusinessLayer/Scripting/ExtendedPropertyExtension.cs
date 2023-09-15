@@ -1,5 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Property;
-using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData;
 using System;
 using System.Collections.Generic;

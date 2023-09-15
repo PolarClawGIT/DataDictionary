@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     public class HelpList : BindingTable<HelpItem>, IReadData, IWriteData, IValidateList<HelpItem>
     {
         /// <summary>
-        /// Get the Help Documentation from the Application Database.
+        /// Load the Help Documentation from the Application Database.
         /// </summary>
         /// <param name="connection"></param>
         /// <returns></returns>

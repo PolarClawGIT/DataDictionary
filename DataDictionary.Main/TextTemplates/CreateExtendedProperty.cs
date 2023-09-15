@@ -10,12 +10,12 @@
 namespace DataDictionary.Main.TextTemplates
 {
     using System;
-    
+
     /// <summary>
     /// Class to produce the template output
     /// </summary>
-    
-    #line 1 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+
+#line 1 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
     public partial class CreateExtendedProperty : CreateExtendedPropertyBase
     {
@@ -27,7 +27,7 @@ namespace DataDictionary.Main.TextTemplates
         {
             
             #line 3 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
-foreach (DataDictionary.DataLayer.DatabaseData.DbExtendedPropertyParameter item in this.data)
+foreach (DataLayer.DatabaseData.ExtendedProperty.DbExtendedPropertyParameter item in this.data)
 {
             
             #line default

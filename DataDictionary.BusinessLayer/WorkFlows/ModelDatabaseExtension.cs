@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData;
 using System;
 using System.Collections.Generic;
@@ -134,7 +135,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Extended Properties",
-                Command = (conn) => DbExtendedPropertyItem.GetData(conn, modelId),
+                Command = (conn) => data.DbExtendedProperties.LoadCommand(conn, data.ModelKey),
                 Target = data.DbExtendedProperties
             });
 
@@ -216,7 +217,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save DbExtendedProperties",
-                Command = (conn) => DbExtendedPropertyItem.SetData(conn, modelId, data.DbExtendedProperties)
+                Command = (conn) => data.DbExtendedProperties.SaveCommand(conn, data.ModelKey)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
