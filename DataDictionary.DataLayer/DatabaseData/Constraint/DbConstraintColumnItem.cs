@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Table;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,28 +14,62 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DatabaseData.Constraint
 {
-    public interface IDbConstraintColumnItem : IDbConstraintKey, IDbCatalogKey, IDbTableColumnKey, IBindingTableRow
+    /// <summary>
+    /// Interface for the Database Constraint Column
+    /// </summary>
+    public interface IDbConstraintColumnItem : IDbConstraintKey, IDbCatalogKey, IDbColumnPosition, IDbTableColumnKey, IBindingTableRow
     {
-        string? ReferenceSchemaName { get; }
-        string? ReferenceTableName { get; }
-        string? ReferenceColumnName { get; }
-        int? OrdinalPosition { get; }
+        /// <summary>
+        /// Reference Schema Name
+        /// </summary>
+        String? ReferenceSchemaName { get; }
+
+        /// <summary>
+        /// Reference Table Name
+        /// </summary>
+        String? ReferenceTableName { get; }
+
+        /// <summary>
+        /// Reference Column Name
+        /// </summary>
+        String? ReferenceColumnName { get; }
     }
 
+    /// <summary>
+    /// Implantation for the Database Constraint Column
+    /// </summary>
     [Serializable]
     public class DbConstraintColumnItem : BindingTableRow, IDbConstraintColumnItem, INotifyPropertyChanged, ISerializable
     {
+        /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
-        public string? CatalogName { get { return GetValue("CatalogName"); } }
-        public string? SchemaName { get { return GetValue("SchemaName"); } }
-        public string? ConstraintName { get { return GetValue("ConstraintName"); } }
-        public string? TableName { get { return GetValue("TableName"); } }
-        public string? ColumnName { get { return GetValue("ColumnName"); } }
-        public int? OrdinalPosition { get { return GetValue<int>("OrdinalPosition"); } }
-        public string? ReferenceSchemaName { get { return GetValue("ReferenceSchemaName"); } }
-        public string? ReferenceTableName { get { return GetValue("ReferenceTableName"); } }
-        public string? ReferenceColumnName { get { return GetValue("ReferenceColumnName"); } }
 
+        /// <inheritdoc/>
+        public string? CatalogName { get { return GetValue("CatalogName"); } }
+
+        /// <inheritdoc/>
+        public string? SchemaName { get { return GetValue("SchemaName"); } }
+
+        /// <inheritdoc/>
+        public string? ConstraintName { get { return GetValue("ConstraintName"); } }
+
+        /// <inheritdoc/>
+        public string? TableName { get { return GetValue("TableName"); } }
+
+        /// <inheritdoc/>
+        public string? ColumnName { get { return GetValue("ColumnName"); } }
+
+        /// <inheritdoc/>
+        public int? OrdinalPosition { get { return GetValue<int>("OrdinalPosition"); } }
+
+        /// <inheritdoc/>
+        public string? ReferenceSchemaName { get { return GetValue("ReferenceSchemaName"); } }
+
+        /// <inheritdoc/>
+        public string? ReferenceTableName { get { return GetValue("ReferenceTableName"); } }
+
+        /// <inheritdoc/>
+        public string? ReferenceColumnName { get { return GetValue("ReferenceColumnName"); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -50,14 +85,21 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
             new DataColumn("ReferenceColumnName", typeof(string)){ AllowDBNull = true},
         };
 
+        /// <summary>
+        /// Constructor for the Database Constraint Column
+        /// </summary>
         public DbConstraintColumnItem() : base() { }
 
+        /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
 
-
-
         #region ISerializable
+        /// <summary>
+        /// Serialization Constructor for the Database Constraint Column
+        /// </summary>
+        /// <param name="serializationInfo"></param>
+        /// <param name="streamingContext"></param>
         protected DbConstraintColumnItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion

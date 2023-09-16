@@ -1,11 +1,14 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Property;
-using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.DataLayer.DomainData;
+using DataDictionary.DataLayer.DatabaseData.Routine;
+using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.DomainData.Attribute;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -38,28 +41,28 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbSchemta",
-                Command = DbSchemaItem.GetSchema,
+                Command = data.DbSchemta.SchemaCommand,
                 Target = data.DbSchemta
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbDomains",
-                Command = DbDomainItem.GetSchema,
+                Command = data.DbDomains.SchemaCommand,
                 Target = data.DbDomains
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbTables",
-                Command = DbTableItem.GetSchema,
+                Command = data.DbTables.SchemaCommand,
                 Target = data.DbTables
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbColumns",
-                Command = DbTableColumnItem.GetSchema,
+                Command = data.DbColumns.SchemaCommand,
                 Target = data.DbColumns
             });
 
@@ -81,14 +84,14 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbRoutines",
-                Command = DbRoutineItem.GetSchema,
+                Command = data.DbRoutines.SchemaCommand,
                 Target = data.DbRoutines
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbRoutineParameters",
-                Command = DbRoutineParameterItem.GetSchema,
+                Command = data.DbRoutineParameters.SchemaCommand,
                 Target = data.DbRoutineParameters
             });
 
@@ -101,7 +104,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                     {
                         data.DbRoutineDependencies.Load(
                             openConnection.Connection.ExecuteReader(
-                                DbRoutineDependencyItem.GetSchema(
+                                data.DbRoutineDependencies.SchemaCommand(
                                     openConnection.Connection, new DbRoutineKey(item))));
                     }
                 },

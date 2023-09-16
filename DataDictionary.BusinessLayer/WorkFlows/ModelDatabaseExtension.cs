@@ -1,10 +1,13 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.ApplicationData.Model;
-using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.DataLayer.DomainData;
+using DataDictionary.DataLayer.DatabaseData.Routine;
+using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.DomainData.Attribute;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -73,28 +76,28 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbSchemta",
-                Command = (conn) => DbSchemaItem.GetData(conn, modelId),
+                Command = (conn) => data.DbSchemta.LoadCommand(conn, modelId),
                 Target = data.DbSchemta
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbTables",
-                Command = (conn) => DbTableItem.GetData(conn, modelId),
+                Command = (conn) => data.DbTables.LoadCommand(conn, modelId),
                 Target = data.DbTables
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbColumns",
-                Command = (conn) => DbTableColumnItem.GetData(conn, modelId),
+                Command = (conn) => data.DbColumns.LoadCommand(conn, modelId),
                 Target = data.DbColumns
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbDomains",
-                Command = (conn) => DbDomainItem.GetData(conn, modelId),
+                Command = (conn) => data.DbDomains.LoadCommand(conn, modelId),
                 Target = data.DbDomains
             });
 
@@ -115,14 +118,14 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbRoutines",
-                Command = (conn) => DbRoutineItem.GetData(conn, modelId),
+                Command = (conn) => data.DbRoutines.LoadCommand(conn, modelId),
                 Target = data.DbRoutines
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbRoutineParameters",
-                Command = (conn) => DbRoutineParameterItem.GetData(conn, modelId),
+                Command = (conn) => data.DbRoutineParameters.LoadCommand(conn, modelId),
                 Target = data.DbRoutineParameters
             });
 
@@ -130,7 +133,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbRoutineDependencies",
-                Command = (conn) => DbRoutineDependencyItem.GetData(conn, modelId),
+                Command = (conn) => data.DbRoutineDependencies.LoadCommand(conn, modelId),
                 Target = data.DbRoutineDependencies
             });
 
@@ -144,21 +147,21 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Domain Attributes",
-                Command = (conn) => DomainAttributeItem.GetData(conn, modelId),
+                Command = (conn) => data.DomainAttributes.LoadCommand(conn, modelId),
                 Target = data.DomainAttributes
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Domain Attributes Aliases",
-                Command = (conn) => DomainAttributeAliasItem.GetData(conn, modelId),
+                Command = (conn) => data.DomainAttributeAliases.LoadCommand(conn, modelId),
                 Target = data.DomainAttributeAliases
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Domain Attributes Properties",
-                Command = (conn) => DomainAttributePropertyItem.GetData(conn, modelId),
+                Command = (conn) => data.DomainAttributeProperties.LoadCommand(conn, modelId),
                 Target = data.DomainAttributeProperties
             });
 
@@ -201,19 +204,19 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save DbSchemta",
-                Command = (conn) => DbSchemaItem.SetData(conn, modelId, data.DbSchemta)
+                Command = (conn) => data.DbSchemta.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save DbTables",
-                Command = (conn) => DbTableItem.SetData(conn, modelId, data.DbTables)
+                Command = (conn) => data.DbTables.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save DbColumns",
-                Command = (conn) => DbTableColumnItem.SetData(conn, modelId, data.DbColumns)
+                Command = (conn) => data.DbColumns.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
@@ -225,7 +228,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save DbDomains",
-                Command = (conn) => DbDomainItem.SetData(conn, modelId, data.DbDomains)
+                Command = (conn) => data.DbDomains.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
@@ -243,37 +246,37 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save DbRoutines",
-                Command = (conn) => DbRoutineItem.SetData(conn, modelId, data.DbRoutines)
+                Command = (conn) => data.DbRoutines.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save DbRoutineParameters",
-                Command = (conn) => DbRoutineParameterItem.SetData(conn, modelId, data.DbRoutineParameters)
+                Command = (conn) => data.DbRoutineParameters.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save DbRoutineDependencies",
-                Command = (conn) => DbRoutineDependencyItem.SetData(conn, modelId, data.DbRoutineDependencies)
+                Command = (conn) => data.DbRoutineDependencies.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Domain Attributes",
-                Command = (conn) => DomainAttributeItem.SetData(conn, modelId, data.DomainAttributes)
+                Command = (conn) => data.DomainAttributes.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Domain Attributes Aliases",
-                Command = (conn) => DomainAttributeAliasItem.SetData(conn, modelId, data.DomainAttributeAliases)
+                Command = (conn) => data.DomainAttributeAliases.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Domain Attributes Properties",
-                Command = (conn) => DomainAttributePropertyItem.SetData(conn, modelId, data.DomainAttributeProperties)
+                Command = (conn) => data.DomainAttributeProperties.SaveCommand(conn, modelId)
             });
 
             return workItems.AsReadOnly();
@@ -290,7 +293,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Delete Attributes",
-                Command = (conn) => DomainAttributeItem.DeleteData(conn, modelId)
+                Command = (conn) => data.DomainAttributes.DeleteCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)

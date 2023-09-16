@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     /// <summary>
     /// Primary key for the Help Documentation.
     /// </summary>
-    public class HelpKey : IHelpKey, IKeyEquality<HelpKey>
+    public class HelpKey : IHelpKey, IKeyEquality<IHelpKey>
     {
         /// <inheritdoc/>
         public Guid? HelpId { get; init; } = Guid.Empty;
@@ -37,8 +37,8 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
 
         #region IEquatable
         /// <inheritdoc/>
-        public bool Equals(HelpKey? other)
-        { return other is HelpKey && EqualityComparer<Guid?>.Default.Equals(HelpId, other.HelpId); }
+        public bool Equals(IHelpKey? other)
+        { return other is IHelpKey && EqualityComparer<Guid?>.Default.Equals(HelpId, other.HelpId); }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)

@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// <summary>
     /// Implementation of the Unique Key for the Property.
     /// </summary>
-    public class PropertyKeyUnique : IPropertyKeyUnique, IKeyComparable<PropertyKeyUnique>
+    public class PropertyKeyUnique : IPropertyKeyUnique, IKeyComparable<IPropertyKeyUnique>
     {
         /// <inheritdoc/>
         public String PropertyTitle { get; init; } = String.Empty;
@@ -37,10 +37,10 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public virtual bool Equals(PropertyKeyUnique? other)
+        public virtual bool Equals(IPropertyKeyUnique? other)
         {
             return (
-                other is PropertyKeyUnique &&
+                other is IPropertyKeyUnique &&
                 !String.IsNullOrEmpty(PropertyTitle) &&
                 !String.IsNullOrEmpty(other.PropertyTitle) &&
                 PropertyTitle.Equals(other.PropertyTitle, KeyExtension.CompareString));
@@ -51,9 +51,9 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
         { return obj is IPropertyKeyUnique value && this.Equals(new PropertyKeyUnique(value)); }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(PropertyKeyUnique? other)
+        public virtual int CompareTo(IPropertyKeyUnique? other)
         {
-            if (other is PropertyKeyUnique value)
+            if (other is IPropertyKeyUnique value)
             { return String.Compare(PropertyTitle, value.PropertyTitle, true); }
             else { return 1; }
         }

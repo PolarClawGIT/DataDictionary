@@ -1,5 +1,6 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
-using DataDictionary.DataLayer.DomainData;
+﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;

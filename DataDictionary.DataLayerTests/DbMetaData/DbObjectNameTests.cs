@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.DatabaseData.Table;
 
 namespace DataDictionary.DataLayer.DatabaseData.Tests
 {

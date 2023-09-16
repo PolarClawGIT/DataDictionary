@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// Level1 MS Extended Property Types. These are Object Level.
     /// Not all types are supported by the Application.
     /// </summary>
-    /// <see cref="https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16"/>
+    /// <see href="https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16"/>
     public enum DbObjectScope
     {
         /// <summary>

@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Model
     /// <summary>
     /// Primary Key of the Model.
     /// </summary>
-    public class ModelKey : IModelKey, IKeyEquality<ModelKey>
+    public class ModelKey : IModelKey, IKeyEquality<IModelKey>
     {
         /// <inheritdoc/>
         public Guid? ModelId { get; init; } = Guid.Empty;
@@ -38,8 +38,8 @@ namespace DataDictionary.DataLayer.ApplicationData.Model
 
         #region IEquatable
         /// <inheritdoc/>
-        public bool Equals(ModelKey? other)
-        { return other is ModelKey && ModelId.Equals(other.ModelId); }
+        public bool Equals(IModelKey? other)
+        { return other is IModelKey && ModelId.Equals(other.ModelId); }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)

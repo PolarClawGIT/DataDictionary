@@ -19,4 +19,19 @@ namespace DataDictionary.DataLayer.DatabaseData
         /// <returns></returns>
         Command SchemaCommand(IConnection connection);
     }
+
+    /// <summary>
+    /// A data object capable of Reading Database Schema data
+    /// </summary>
+    public interface IReadSchema<TKey>
+        where TKey: IKey
+    {
+        /// <summary>
+        /// Gets the Database Command that returns schema data.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        Command SchemaCommand(IConnection connection,TKey key);
+    }
 }

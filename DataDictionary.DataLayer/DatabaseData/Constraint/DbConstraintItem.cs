@@ -1,6 +1,7 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+using DataDictionary.DataLayer.DatabaseData.Table;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

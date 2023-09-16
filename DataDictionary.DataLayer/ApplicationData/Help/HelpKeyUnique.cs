@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     /// <summary>
     /// Unique Key for Help Documents, by NameSpace
     /// </summary>
-    public class HelpKeyUnique : IHelpKeyUnique, IKeyComparable<HelpKeyUnique>
+    public class HelpKeyUnique : IHelpKeyUnique, IKeyComparable<IHelpKeyUnique>
     {
         /// <inheritdoc/>
         public string NameSpace { get; init; } = string.Empty;
@@ -47,10 +47,10 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public virtual bool Equals(HelpKeyUnique? other)
+        public virtual bool Equals(IHelpKeyUnique? other)
         {
             return 
-                other is HelpKeyUnique &&
+                other is IHelpKeyUnique &&
                 !string.IsNullOrEmpty(NameSpace) &&
                 !string.IsNullOrEmpty(other.NameSpace) &&
                 NameSpace.Equals(other.NameSpace, KeyExtension.CompareString);
@@ -61,7 +61,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
         { return obj is IHelpKeyUnique value && Equals(new HelpKeyUnique(value)); }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(HelpKeyUnique? other)
+        public virtual int CompareTo(IHelpKeyUnique? other)
         {
             if (other is HelpKeyUnique value)
             { return string.Compare(NameSpace, value.NameSpace, true); }
@@ -76,6 +76,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
         public static bool operator ==(HelpKeyUnique left, HelpKeyUnique right)
         { return left.Equals(right); }
 
+        /// <inheritdoc/>
         public static bool operator !=(HelpKeyUnique left, HelpKeyUnique right)
         { return !left.Equals(right); }
 

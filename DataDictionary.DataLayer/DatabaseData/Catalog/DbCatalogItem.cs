@@ -56,6 +56,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         { return columnDefinitions; }
 
         #region ISerializable
+        /// <summary>
+        /// Serialization Constructor for DbCatalogItem.
+        /// </summary>
+        /// <param name="serializationInfo"></param>
+        /// <param name="streamingContext"></param>
         protected DbCatalogItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
         #endregion

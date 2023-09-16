@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
-using DataDictionary.DataLayer.DatabaseData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataDictionary.DataLayer.DatabaseData.Schema;
 
 namespace DataDictionary.DataLayer.DatabaseData.Tests
 {

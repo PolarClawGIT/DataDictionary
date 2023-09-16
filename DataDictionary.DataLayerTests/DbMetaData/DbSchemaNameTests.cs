@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Schema;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

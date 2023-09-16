@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     }
 
     /// <inheritdoc/>
-    public class HelpKeyParent : IHelpKeyParent, IEquatable<HelpKeyParent>, IEquatable<HelpKey>
+    public class HelpKeyParent : IHelpKeyParent, IEquatable<IHelpKeyParent>, IEquatable<IHelpKey>
     {
         /// <inheritdoc/>
         public Guid? HelpParentId { get; init; } = Guid.Empty;
@@ -35,12 +35,12 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
 
         #region IEquatable
         /// <inheritdoc/>
-        public bool Equals(HelpKeyParent? other)
-        { return other is HelpKeyParent && EqualityComparer<Guid?>.Default.Equals(HelpParentId, other.HelpParentId); }
+        public bool Equals(IHelpKeyParent? other)
+        { return other is IHelpKeyParent && EqualityComparer<Guid?>.Default.Equals(HelpParentId, other.HelpParentId); }
 
         /// <inheritdoc/>
-        public bool Equals(HelpKey? other)
-        { return other is HelpKey && EqualityComparer<Guid?>.Default.Equals(HelpParentId, other.HelpId); }
+        public bool Equals(IHelpKey? other)
+        { return other is IHelpKey && EqualityComparer<Guid?>.Default.Equals(HelpParentId, other.HelpId); }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)

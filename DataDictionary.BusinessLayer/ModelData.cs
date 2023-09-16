@@ -2,11 +2,14 @@
 using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.ApplicationData.Property;
-using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.DataLayer.DomainData;
+using DataDictionary.DataLayer.DatabaseData.Routine;
+using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.LibraryData;
 using System;
 using System.Collections.Generic;
@@ -46,23 +49,23 @@ namespace DataDictionary.BusinessLayer
 
         // Database Model
         public DbCatalogList DbCatalogs { get; } = new DbCatalogList();
-        public BindingTable<DbSchemaItem> DbSchemta { get; } = ModelFactory.Create<DbSchemaItem>();
-        public BindingTable<DbDomainItem> DbDomains { get; } = ModelFactory.Create<DbDomainItem>();
-        public BindingTable<DbTableItem> DbTables { get; } = ModelFactory.Create<DbTableItem>();
-        public BindingTable<DbTableColumnItem> DbColumns { get; } = ModelFactory.Create<DbTableColumnItem>();
+        public DbSchemaList DbSchemta { get; } = new DbSchemaList();
+        public DbDomainList DbDomains { get; } = new DbDomainList();
+        public DbTableList DbTables { get; } = new DbTableList();
+        public DbTableColumnList DbColumns { get; } = new DbTableColumnList();
         public DbExtendedPropertyList DbExtendedProperties = new DbExtendedPropertyList();
         public DbConstraintList DbConstraints { get; } = new DbConstraintList();
         public DbConstraintColumnList DbConstraintColumns { get; } = new DbConstraintColumnList();
-        public BindingTable<DbRoutineItem> DbRoutines { get; } = ModelFactory.Create<DbRoutineItem>();
-        public BindingTable<DbRoutineParameterItem> DbRoutineParameters { get; } = ModelFactory.Create<DbRoutineParameterItem>();
-        public BindingTable<DbRoutineDependencyItem> DbRoutineDependencies { get; } = ModelFactory.Create<DbRoutineDependencyItem>();
+        public DbRoutineList DbRoutines { get; } = new DbRoutineList();
+        public DbRoutineParameterList DbRoutineParameters { get; } = new DbRoutineParameterList();
+        public DbRoutineDependencyList DbRoutineDependencies { get; } = new DbRoutineDependencyList();
 
         // Domain Model
-        public BindingTable<DomainAttributeItem> DomainAttributes = ModelFactory.Create<DomainAttributeItem>();
-        public BindingTable<DomainAttributeAliasItem> DomainAttributeAliases = ModelFactory.Create<DomainAttributeAliasItem>();
-        public BindingTable<DomainAttributePropertyItem> DomainAttributeProperties = ModelFactory.Create<DomainAttributePropertyItem>();
+        public DomainAttributeList DomainAttributes = new DomainAttributeList();
+        public DomainAttributeAliasList DomainAttributeAliases = new DomainAttributeAliasList();
+        public DomainAttributePropertyList DomainAttributeProperties = new DomainAttributePropertyList();
 
-        // Library Model
+        // Library Model, POC
         public BindingTable<LibraryAssemblyItem> LibraryAssemblies = ModelFactory.Create<LibraryAssemblyItem>();
         public BindingTable<LibraryMemberItem> LibraryMembers = ModelFactory.Create<LibraryMemberItem>();
 

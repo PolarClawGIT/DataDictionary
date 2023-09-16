@@ -1,6 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.DataLayer.DomainData;
+using DataDictionary.DataLayer.DomainData.Attribute;
 using System;
 using System.Collections.Generic;
 using System.Linq;

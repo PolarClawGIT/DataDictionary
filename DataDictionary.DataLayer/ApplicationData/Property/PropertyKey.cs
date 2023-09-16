@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// <summary>
     /// Implementation of the Primary Key of the Property.
     /// </summary>
-    public class PropertyKey : IPropertyKey, IKeyEquality<PropertyKey>
+    public class PropertyKey : IPropertyKey, IKeyEquality<IPropertyKey>
     {
         /// <inheritdoc/>
         public Nullable<Guid> PropertyId { get; init; } = Guid.Empty;
@@ -37,8 +37,8 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
 
         #region IEquatable
         /// <inheritdoc/>
-        public Boolean Equals(PropertyKey? other)
-        { return other is PropertyKey && EqualityComparer<Guid?>.Default.Equals(this.PropertyId, other.PropertyId); }
+        public Boolean Equals(IPropertyKey? other)
+        { return other is IPropertyKey && EqualityComparer<Guid?>.Default.Equals(this.PropertyId, other.PropertyId); }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)

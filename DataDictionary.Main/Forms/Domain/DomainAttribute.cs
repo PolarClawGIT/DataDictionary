@@ -1,5 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Property;
-using DataDictionary.DataLayer.DomainData;
+using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;

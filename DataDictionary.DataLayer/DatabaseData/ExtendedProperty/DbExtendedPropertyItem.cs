@@ -16,6 +16,8 @@ using DataDictionary.DataLayer.DomainData;
 using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.DatabaseData.Table;
 
 namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 {
