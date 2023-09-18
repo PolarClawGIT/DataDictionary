@@ -7,6 +7,7 @@ using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.Main.Forms;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -375,7 +376,8 @@ namespace DataDictionary.Main
             Attribute,
             Attributes,
             Property,
-            Alias
+            Alias,
+            Entity
         }
 
         static Dictionary<domainModelImageIndex, (String imageKey, Image image)> domainModelImageItems = new Dictionary<domainModelImageIndex, (String imageKey, Image image)>()
@@ -384,6 +386,7 @@ namespace DataDictionary.Main
             {domainModelImageIndex.Attributes,   ("Attributes",  Resources.Parameter) },
             {domainModelImageIndex.Property,     ("Property",    Resources.Property) },
             {domainModelImageIndex.Alias,        ("Alias",       Resources.Synonym) },
+            {domainModelImageIndex.Entity,       ("Entity",      Resources.ClassPublic) },
         };
 
         void BuildDomainModelTree()
@@ -403,8 +406,10 @@ namespace DataDictionary.Main
             TreeNode CreateAttribute(IDomainAttributeItem attributeItem, TreeNode? parent)
             {
                 TreeNode attributeNode = CreateNode(attributeItem.AttributeTitle, domainModelImageIndex.Attribute, attributeItem);
+                DomainAttributeKey key = new DomainAttributeKey(attributeItem);
 
-                foreach (DomainAttributePropertyItem propertyItem in Program.Data.DomainAttributeProperties.Where(w => w.AttributeId == attributeItem.AttributeId))
+                List<DomainAttributePropertyItem> properties = Program.Data.DomainAttributeProperties.Where(w => key.Equals(w)).ToList();
+                foreach (DomainAttributePropertyItem propertyItem in properties)
                 {
                     String propertyTitle = String.Empty;
                     if (Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propertyItem.PropertyId) is PropertyItem property && property.PropertyTitle is not null)
@@ -413,11 +418,26 @@ namespace DataDictionary.Main
                     CreateNode(propertyTitle, domainModelImageIndex.Property, propertyItem, attributeNode);
                 }
 
-                foreach (DomainAttributeAliasItem aliasItem in Program.Data.DomainAttributeAliases.Where(w => w.AttributeId == attributeItem.AttributeId))
+                List<DomainAttributeAliasItem> alias = Program.Data.DomainAttributeAliases.Where(w => key.Equals(w)).ToList();
+                foreach (DomainAttributeAliasItem aliasItem in alias)
                 { CreateNode(aliasItem.ToString(), domainModelImageIndex.Alias, aliasItem, attributeNode); }
 
-                foreach (DomainAttributeItem childAttributeItem in Program.Data.DomainAttributes.Where(w => w.AttributeId == attributeItem.ParentAttributeId))
-                { attributeNode.Nodes.Add(CreateAttribute(childAttributeItem, attributeNode)); }
+                // TODO: Children not yet supported
+                //var children = Program.Data.DomainAttributes.Where(w => w.AttributeId == attributeItem.ParentAttributeId).ToList();
+                //foreach (DomainAttributeItem childAttributeItem in Program.Data.DomainAttributes.Where(w => w.AttributeId == attributeItem.ParentAttributeId))
+                //{ attributeNode.Nodes.Add(CreateAttribute(childAttributeItem, attributeNode)); }
+
+
+                foreach (IGrouping<DomainEntityAliasKey, DomainAttributeAliasItem> entityKey in alias.GroupBy(g => new DomainEntityAliasKey(g)).OrderBy(o => o.Key.ObjectName))
+                {
+                    if (Program.Data.DomainEntityAliases.FirstOrDefault(w => entityKey.Key.Equals(w)) is DomainEntityAliasItem entityAlias)
+                    {
+                        DomainEntityKey aliasKey = new DomainEntityKey(entityAlias);
+                        if (Program.Data.DomainEntities.FirstOrDefault(w => aliasKey.Equals(w)) is DomainEntityItem entity)
+                        { CreateNode(entity.EntityTitle, domainModelImageIndex.Entity, entity, attributeNode); }
+                    }
+                }
+
 
                 if (parent is not null) { parent.Nodes.Add(attributeNode); }
                 return attributeNode;
@@ -444,8 +464,11 @@ namespace DataDictionary.Main
             {
                 Object dataNode = domainModelNodes[e.Node];
 
-                if (dataNode is IDomainAttributeItem item)
-                { Activate((data) => new Forms.Domain.DomainAttribute(item), item); }
+                if (dataNode is IDomainAttributeItem attributeItem)
+                { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
+
+                if (dataNode is IDomainEntityItem entityItem)
+                { Activate((data) => new Forms.Domain.DomainEntity(entityItem), entityItem); }
             }
         }
         #endregion

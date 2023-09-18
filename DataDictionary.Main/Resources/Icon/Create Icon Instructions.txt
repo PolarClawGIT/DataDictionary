@@ -12,7 +12,7 @@ To work around this:
 - Open then copy/paste the images into the correct resolutions
 - Use the Editor to set the transparent color within the image (as needed).
 
-I am using the icons from Microsofts Visual Studio 2022 image library.
+I am using the icons from Microsoft's Visual Studio 2022 image library.
 The SVC format files are Web friendly vector graphics and will scale well.
 The site https://cloudconvert.com/svg-to-ico will be able to convert and scale the SVC files.
 This site takes one SVG and produces a ICO file with one image of the specified scale.

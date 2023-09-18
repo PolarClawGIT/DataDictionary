@@ -34,7 +34,7 @@
         public virtual bool Equals(IDbCatalogKeyUnique? other)
         {
             return 
-                other is DbCatalogKeyUnique &&
+                other is IDbCatalogKeyUnique &&
                 !string.IsNullOrEmpty(CatalogName) &&
                 !string.IsNullOrEmpty(other.CatalogName) &&
                 CatalogName.Equals(other.CatalogName, KeyExtension.CompareString);

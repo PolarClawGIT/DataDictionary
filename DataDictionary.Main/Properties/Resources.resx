@@ -133,6 +133,9 @@
   <data name="BulletList" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\BulletList.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ClassPublic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ClassPublic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="CleanData" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CleanData.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -177,6 +180,9 @@
   </data>
   <data name="Icon_Attribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Attribute.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_ClassPublic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\ClassPublic.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Icon_Column" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Column.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

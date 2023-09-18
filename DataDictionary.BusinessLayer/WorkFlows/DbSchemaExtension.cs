@@ -9,6 +9,7 @@ using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.DomainData.Entity;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -240,7 +241,16 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                     w.SchemaName == a.SchemaName &&
                     w.TableName == a.ObjectName &&
                     w.ColumnName == a.ElementName)
-                is null);
+                is null).ToList();
+
+            List<DbTableItem> newEntites = data.DbTables.Where(
+                w => !w.IsSystem && // Do not want System Tables
+                w.GetSchema(data.DbSchemta) is IDbSchemaItem schema && !schema.IsSystem && // Do not want System Schemta
+                data.DomainEntityAliases.FirstOrDefault( // Do not want Tables already aliased to an entity
+                    a => w.CatalogName == a.CatalogName &&
+                    w.SchemaName == a.SchemaName &&
+                    w.TableName == a.ObjectName)
+                is null).ToList();
 
             // Get the Column information and create Attributes
             foreach (IGrouping<String?, IDbTableColumnItem> columnItem in newAttributes.GroupBy(g => g.ColumnName))
@@ -284,7 +294,46 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 }
             }
 
-            // TODO: Get the Table/View information and create Entities
+            // Get the Table Information and create Entities
+            foreach (IGrouping<String?, IDbTableItem> tableItem in newEntites.GroupBy(g => g.TableName))
+            {
+                IDbTableItem tableSource = tableItem.First();
+                DomainEntityItem newEntity = new DomainEntityItem() { EntityTitle = tableSource.TableName };
+                List<IDbExtendedPropertyItem> propeties = new List<IDbExtendedPropertyItem>();
+
+                data.DomainEntities.Add(newEntity);
+
+                foreach (IDbTableItem aliasSource in tableItem)
+                {
+                    DbCatalogScope catalogScope = DbCatalogScope.NULL;
+                    DbObjectScope objectScope = DbObjectScope.NULL;
+
+                    if (tableSource.GetSchema(data.DbSchemta) is DbSchemaItem schema) { catalogScope = schema.CatalogScope; }
+                    if (tableSource.GetTable(data.DbTables) is DbTableItem table) { objectScope = table.ObjectScope; }
+
+                    data.DomainEntityAliases.Add(
+                        new DomainEntityAliasItem(newEntity, aliasSource)
+                        {
+                            CatalogScope = catalogScope,
+                            ObjectScope = objectScope
+                        });
+
+                    propeties.AddRange(aliasSource.GetProperties(data.DbExtendedProperties));
+                }
+
+                foreach (IGrouping<String?, IDbExtendedPropertyItem> propertyItem in propeties.GroupBy(g => g.PropertyName))
+                {
+                    IDbExtendedPropertyItem propertySource = propertyItem.First();
+
+                    if (data.Properties.FirstOrDefault(w =>
+                            w.ExtendedProperty is not null &&
+                            w.ExtendedProperty.Equals(propertySource.PropertyName, KeyExtension.CompareString)) is IPropertyItem property)
+                    {
+                        data.DomainEntityProperties.
+                            Add(new DomainEntityPropertyItem(newEntity, property, propertySource));
+                    }
+                }
+            }
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Routine;
+﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using System;

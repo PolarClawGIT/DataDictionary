@@ -70,6 +70,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             AttributeId = attributeKey.AttributeId;
             PropertyId = propertyKey.PropertyId;
+            PropertyValue = value.PropertyValue;
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()

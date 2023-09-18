@@ -107,11 +107,5 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
 
         public static DbSchemaItem? GetSchema(this IDbSchemaKey item, IEnumerable<DbSchemaItem> source)
         { return source.FirstOrDefault(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
-
-        public static IEnumerable<DbSchemaItem> GetSchemta(this IEnumerable<DbSchemaItem> source, IDbCatalogKeyUnique item)
-        { return source.Where(w => new DbCatalogKeyUnique(item) == new DbCatalogKeyUnique(w)); }
-
-        public static IEnumerable<DbSchemaItem> GetSchemta(this IDbCatalogKeyUnique item, IEnumerable<DbSchemaItem> source)
-        { return source.Where(w => new DbCatalogKeyUnique(item) == new DbCatalogKeyUnique(w)); }
     }
 }
