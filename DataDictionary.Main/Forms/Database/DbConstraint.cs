@@ -25,7 +25,7 @@ namespace DataDictionary.Main.Forms.Database
         public DbConstraint() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.DbKey;
+            this.Icon = Resources.Icon_Key;
             DataKey = new DbConstraintKey(new DbConstraintItem());
         }
 

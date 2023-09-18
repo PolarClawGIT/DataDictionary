@@ -24,7 +24,7 @@ namespace DataDictionary.Main.Forms.Database
         public DbTable() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.DbTable;
+            this.Icon = Resources.Icon_Table;
             DataKey = new DbTableKey(new DbTableItem());
         }
 

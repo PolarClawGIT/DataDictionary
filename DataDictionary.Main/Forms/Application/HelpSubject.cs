@@ -27,7 +27,7 @@ namespace DataDictionary.Main.Dialogs
         public HelpSubject() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.HelpTableOfContent;
+            this.Icon = Resources.Icon_HelpTableOfContent;
 
             helpToolStripButton.Enabled = false;
             newToolStripButton.Enabled = true;

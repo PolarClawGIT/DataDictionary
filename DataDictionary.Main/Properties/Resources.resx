@@ -148,45 +148,6 @@
   <data name="Database" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Database.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="DataDictionaryApplication" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DataDictionaryApplication.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DbCatalog" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DbContext.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DbColumn" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DbColumn.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DbDependancy" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DbDependancy.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DbDomainType" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DbDomainType.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DbExtendedProperty" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DbExtendedProperty.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DbKey" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DbKey.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DbKeyColumn" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DbKeyColumn.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DbOpenSave" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DbSave.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DbParameter" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DbParameter.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DbProcedure" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DbProcedure.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DbSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DbSchema.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DbTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DbTable.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -195,18 +156,6 @@
   </data>
   <data name="Dictionary" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Dictionary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DomainAlias" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DomainAlias.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DomainAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DomainAttribute.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DomainDefinition" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DomainDefinition.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DomainProperty" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DomainProperty.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DomainType" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DomainType.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -223,8 +172,59 @@
   <data name="HelpIndexFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\HelpIndexFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="HelpTableOfContent" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\HelpTableOfContent.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Icon_Application" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\DataDictionaryApplication.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Attribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Attribute.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Column" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Column.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Database" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Database.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Dependancy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Dependancy.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_DomainType" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\DomainType.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_ExtendedProperty" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\ExtendedProperty.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_HelpTableOfContent" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\HelpTableOfContent.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Key" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Key.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_KeyColumn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\KeyColumn.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Parameter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Parameter.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Procedure" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Procedure.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Property" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Property.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_SaveTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\SaveTable.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Schema" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Schema.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Synonym" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Synonym.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_Table" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Table.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_TextFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\TextFile.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Italic" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Italic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

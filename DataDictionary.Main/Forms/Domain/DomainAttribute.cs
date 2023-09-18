@@ -15,7 +15,7 @@ namespace DataDictionary.Main.Forms.Domain
         public DomainAttribute() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.DomainAttribute;
+            this.Icon = Resources.Icon_Attribute;
             DataKey = new DomainAttributeKey(new DomainAttributeItem());
         }
 

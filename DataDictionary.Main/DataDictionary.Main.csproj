@@ -7,12 +7,12 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Copyright>© 2023 William Howard, All Rights Reserved</Copyright>
-    <ApplicationIcon>Resources\DataDictionaryApplication.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Icon\DataDictionaryApplication.ico</ApplicationIcon>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Resources\DataDictionaryApplication.ico" />
+    <Content Include="Resources\Icon\DataDictionaryApplication.ico" />
   </ItemGroup>
 
   <ItemGroup>

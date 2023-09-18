@@ -23,7 +23,7 @@ namespace DataDictionary.Main.Forms.Application
         public Property() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.DomainProperty;
+            this.Icon = Resources.Icon_Property;
             DataKey = new PropertyKey(new PropertyItem());
 
             newToolStripButton.Enabled = true;

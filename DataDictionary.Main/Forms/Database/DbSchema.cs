@@ -24,7 +24,7 @@ namespace DataDictionary.Main.Forms.Database
         public DbSchema() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.DbSchema;
+            this.Icon = Resources.Icon_Schema;
             DataKey = new DbSchemaKey(new DbSchemaItem() { });
         }
 

@@ -16,7 +16,7 @@ namespace DataDictionary.Main.Dialogs
         public OpenSaveModelDatabase() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.DbOpenSave;
+            this.Icon = Resources.Icon_SaveTable;
         }
 
 

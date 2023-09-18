@@ -29,7 +29,7 @@ namespace DataDictionary.Main.Forms
             bindingTableSource = data;
             this.Text = String.Format("{0}: {1}", this.Text, data.BindingName);
             if (icon is Icon value) { this.Icon = value; }
-            else { this.Icon = Resources.DataDictionaryApplication; }
+            else { this.Icon = Resources.Icon_Application; }
         }
 
         public Boolean IsOpenItem(Object? item)

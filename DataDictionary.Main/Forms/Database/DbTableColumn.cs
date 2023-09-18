@@ -16,7 +16,7 @@ namespace DataDictionary.Main.Forms.Database
         public DbTableColumn() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.DbColumn;
+            this.Icon = Resources.Icon_Column;
             DataKey = new DbTableColumnKey(new DbTableColumnItem());
         }
 
