@@ -4,7 +4,8 @@
 	-- Specifically, column and parameters can be mapped to Attributes.
 	-- A hard FK reference is not maintained as the associated Catalog may not be attached to the Model.
 	[AttributeId] UniqueIdentifier Not Null,
-	[AttributeAliasId] Int Not Null,
+	[AttributeAliasId] Int Not Null, -- Surrogate Key element, maintained by Database.
+	[ModelId] UniqueIdentifier NOT NULL, -- Needed to enforce Unique Key. Alias must be unique to a Model.
 	-- This is based on https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16
 	-- Not-normalized to better translate to SQL call.
 	[CatalogName] SysName Not Null, -- Database/Catalog Name
@@ -18,10 +19,10 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_DomainAttributeAlias] PRIMARY KEY CLUSTERED ([AttributeId] ASC, [AttributeAliasId] ASC),
-	CONSTRAINT [FK_DomainAttribute] FOREIGN KEY ([AttributeId]) REFERENCES [App_DataDictionary].[DomainAttribute] ([AttributeId]),
+--	CONSTRAINT [FK_DomainAttribute] FOREIGN KEY ([AttributeId]) REFERENCES [App_DataDictionary].[DomainAttribute] ([AttributeId]),
+	CONSTRAINT [FK_DomainAttributeModel] FOREIGN KEY ([ModelId], [AttributeId]) REFERENCES [App_DataDictionary].[ModelAttribute] ([ModelId], [AttributeId]),
 )
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [UX_DomainAttributeAlias]
-    ON [App_DataDictionary].[DomainAttributeAlias]([AttributeId] Asc, [CatalogName] Asc, [SchemaName] ASC, [ObjectName] ASC, [ElementName] ASC);
+CREATE UNIQUE NONCLUSTERED INDEX [UX_DomainAttributeAliasModel]
+    ON [App_DataDictionary].[DomainAttributeAlias]([ModelId] Asc, [CatalogName] Asc, [SchemaName] ASC, [ObjectName] ASC, [ElementName] ASC);
 GO
-

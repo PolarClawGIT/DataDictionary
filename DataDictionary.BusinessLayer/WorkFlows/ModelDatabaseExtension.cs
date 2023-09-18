@@ -20,9 +20,17 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.WorkFlows
 {
+    /// <summary>
+    /// Functions/Operations used to create WorkItems for the Model against the Database.
+    /// </summary>
     public static class ModelDatabaseExtension
     {
 
+        /// <summary>
+        /// Loads the List of Models from the Database.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadModelList(this ModelData data)
         {
             List<WorkItem> workItems = new List<WorkItem>();
@@ -45,6 +53,12 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             return workItems.AsReadOnly();
         }
 
+        /// <summary>
+        /// Loads the Model (by key) from the Database.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="modelId"></param>
+        /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadModel(this ModelData data, IModelKey modelId)
         {
             List<WorkItem> workItems = new List<WorkItem>();
@@ -90,8 +104,8 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbColumns",
-                Command = (conn) => data.DbColumns.LoadCommand(conn, modelId),
-                Target = data.DbColumns
+                Command = (conn) => data.DbTableColumns.LoadCommand(conn, modelId),
+                Target = data.DbTableColumns
             });
 
             workItems.Add(new ExecuteReader(openConnection)
@@ -165,9 +179,36 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Target = data.DomainAttributeProperties
             });
 
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Load Domain Entities",
+                Command = (conn) => data.DomainEntities.LoadCommand(conn, modelId),
+                Target = data.DomainEntities
+            });
+
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Load Domain Entities Aliases",
+                Command = (conn) => data.DomainEntityAliases.LoadCommand(conn, modelId),
+                Target = data.DomainEntityAliases
+            });
+
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Load Domain Entities Properties",
+                Command = (conn) => data.DomainEntityProperties.LoadCommand(conn, modelId),
+                Target = data.DomainEntityProperties
+            });
+
+
             return workItems.AsReadOnly();
         }
 
+        /// <summary>
+        /// Save the Model to the Database
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static IReadOnlyList<WorkItem> SaveModel(this ModelData data)
         {
             List<WorkItem> workItems = new List<WorkItem>();
@@ -216,7 +257,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save DbColumns",
-                Command = (conn) => data.DbColumns.SaveCommand(conn, modelId)
+                Command = (conn) => data.DbTableColumns.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
@@ -279,9 +320,33 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Command = (conn) => data.DomainAttributeProperties.SaveCommand(conn, modelId)
             });
 
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Save Domain Entities",
+                Command = (conn) => data.DomainEntities.SaveCommand(conn, modelId)
+            });
+
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Save Domain Entities Aliases",
+                Command = (conn) => data.DomainEntityAliases.SaveCommand(conn, modelId)
+            });
+
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Save Domain Entities Properties",
+                Command = (conn) => data.DomainEntityProperties.SaveCommand(conn, modelId)
+            });
+
             return workItems.AsReadOnly();
         }
 
+        /// <summary>
+        /// Removes the Model From the Database.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="modelId"></param>
+        /// <returns></returns>
         public static IReadOnlyList<WorkItem> DeleteModel(this ModelData data, IModelKey modelId)
         {
             List<WorkItem> workItems = new List<WorkItem>();
@@ -294,6 +359,12 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             {
                 WorkName = "Delete Attributes",
                 Command = (conn) => data.DomainAttributes.DeleteCommand(conn, modelId)
+            });
+
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Delete Entities",
+                Command = (conn) => data.DomainEntities.DeleteCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)

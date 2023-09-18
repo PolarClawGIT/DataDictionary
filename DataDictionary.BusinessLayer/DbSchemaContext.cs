@@ -19,6 +19,7 @@ namespace DataDictionary.BusinessLayer
     /// </summary>
     public class DbSchemaContext : Toolbox.DbContext.Context, IDbCatalogKeyUnique
     {
+        /// <inheritdoc/>
         public String? CatalogName { get { return this.DatabaseName; } }
     }
 }

@@ -34,7 +34,7 @@ namespace DataDictionary.Main.Forms.Database
 
         void BindData()
         {
-            DbTableColumnItem? data = Program.Data.DbColumns.FirstOrDefault(w => DataKey.Equals(w));
+            DbTableColumnItem? data = Program.Data.DbTableColumns.FirstOrDefault(w => DataKey.Equals(w));
 
             if (data is not null)
             {

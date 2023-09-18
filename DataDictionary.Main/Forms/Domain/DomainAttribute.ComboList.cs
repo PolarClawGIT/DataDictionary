@@ -170,7 +170,7 @@ namespace DataDictionary.Main.Forms.Domain
                 if (selected is null)
                 { selected = list.FirstOrDefault(w => currentKey.Equals(w) && control.Text.ToUpper() == w.ElementName.ToUpper()); }
 
-                list.AddRange(Program.Data.DbColumns.
+                list.AddRange(Program.Data.DbTableColumns.
                     Where(w => currentKey.Equals(w)).
                     Select(s => new ElementNameDataItem(s)));
 

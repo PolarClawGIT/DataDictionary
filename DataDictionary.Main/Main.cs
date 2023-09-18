@@ -125,7 +125,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.DetailDataView(data, Resources.DbTable), Program.Data.DbTables); }
 
         private void menuColumnItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.DbColumn), Program.Data.DbColumns); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.DbColumn), Program.Data.DbTableColumns); }
 
         private void menuPropertyItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.DbExtendedProperty), Program.Data.DbExtendedProperties); }
@@ -310,7 +310,7 @@ namespace DataDictionary.Main
 
                         TreeNode columnsNode = CreateNode("Columns", dbDataImageIndex.Columns, null, tableNode);
 
-                        foreach (IDbTableColumnItem columnItem in Program.Data.DbColumns.OrderBy(o => o.OrdinalPosition).Where(
+                        foreach (IDbTableColumnItem columnItem in Program.Data.DbTableColumns.OrderBy(o => o.OrdinalPosition).Where(
                             w => new DbTableKey(w).Equals(new DbTableKey(tableItem))))
                         { TreeNode columnNode = CreateNode(columnItem.ColumnName, dbDataImageIndex.Column, columnItem, columnsNode); }
 

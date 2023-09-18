@@ -56,7 +56,7 @@ namespace DataDictionary.Main.Forms.Database
                 extendedPropertiesData.DataSource = Program.Data.DbExtendedProperties.GetProperties(DataKey).ToList();
 
                 tableColumnsData.AutoGenerateColumns = false;
-                tableColumnsData.DataSource = new BindingView<DbTableColumnItem>(Program.Data.DbColumns, w => DataKey.Equals(w));
+                tableColumnsData.DataSource = new BindingView<DbTableColumnItem>(Program.Data.DbTableColumns, w => DataKey.Equals(w));
 
                 tableConstraintData.AutoGenerateColumns = false;
                 tableConstraintData.DataSource = new BindingView<DbConstraintItem>(Program.Data.DbConstraints, w => DataKey.Equals(w));

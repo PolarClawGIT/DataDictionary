@@ -1,10 +1,10 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainAttributeAlias]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainEntityAlias]
 		@ModelId UniqueIdentifier,
-		@Data [App_DataDictionary].[typeDomainAttributeAlias] ReadOnly
+		@Data [App_DataDictionary].[typeDomainEntityAlias] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on DomainAttributeAlias.
+/* Description: Performs Set on DomainEntityAlias.
 */
 
 -- Transaction Handling
@@ -19,95 +19,88 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDomainAttributeAlias]
+	Declare @Values [App_DataDictionary].[typeDomainEntityAlias]
 	Insert Into @Values
-	Select	D.[AttributeId],
-			IsNull(C.[AttributeAliasId],
-				(Select IsNull(Max([AttributeAliasId]),0) From [App_DataDictionary].[DomainAttributeAlias] Where [AttributeId] = D.[AttributeId]) +
+	Select	D.[EntityId],
+			IsNull(C.[EntityAliasId],
+				(Select IsNull(Max([EntityAliasId]),0) From [App_DataDictionary].[DomainEntityAlias] Where [EntityId] = D.[EntityId]) +
 				Row_Number() Over (
-					Partition By D.[AttributeId], C.[AttributeAliasId]
+					Partition By D.[EntityId], C.[EntityAliasId]
 					Order By D.[CatalogName], D.[SchemaName], D.[ObjectName], D.[ElementName]))
-				As [AttributeAliasId],
+				As [EntityAliasId],
 			NullIf(Trim(D.[CatalogName]),'') As [CatalogName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
 			NullIf(Trim(D.[ObjectName]),'') As [ObjectName],
-			NullIf(Trim(D.[ElementName]),'') As [ElementName],
 			D.[SysStart]
 	From	@Data D
-			Left Join [App_DataDictionary].[DomainAttributeAlias] C
-			On	D.[AttributeId] = C.[AttributeId] And
+			Left Join [App_DataDictionary].[DomainEntityAlias] C
+			On	D.[EntityId] = C.[EntityId] And
 				D.[CatalogName] = C.[CatalogName] And
 				D.[SchemaName] = C.[SchemaName] And
-				D.[ObjectName] = C.[ObjectName] And
-				D.[ElementName] = C.[ElementName]
+				D.[ObjectName] = C.[ObjectName]
 
 	-- Validation
 	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
 	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
 
 	If Exists (
-		Select	V.[AttributeId]
+		Select	V.[EntityId]
 		From	@Values V
-				Left Join [App_DataDictionary].[DomainAttribute] A
-				On	V.[AttributeId] = A.[AttributeId]
-				Left Join [App_DataDictionary].[ModelAttribute] P
-				On	V.[AttributeId] = P.[AttributeId] And
+				Left Join [App_DataDictionary].[DomainEntity] A
+				On	V.[EntityId] = A.[EntityId]
+				Left Join [App_DataDictionary].[ModelEntity] P
+				On	V.[EntityId] = P.[EntityId] And
 					P.[ModelId] = @ModelId
-		Where	A.[AttributeId] is Null Or
-				P.[AttributeId] is Null)
-	Throw 50000, '[AttributeId] could not be found or is not associated with Model specified', 2;
+		Where	A.[EntityId] is Null Or
+				P.[EntityId] is Null)
+	Throw 50000, '[EntityId] could not be found or is not associated with Model specified', 2;
 
 	If Exists (
 		Select	[CatalogName],
 				[SchemaName],
-				[ObjectName],
-				[ElementName]
+				[ObjectName]
 		From	@Values
 		Group By [CatalogName],
 				[SchemaName],
-				[ObjectName],
-				[ElementName]
+				[ObjectName]
 		Having Count(*) > 1)
-		Throw 50000, '[AttributeId] Aliases can only be associated with a single attribute', 3;
+		Throw 50000, '[EntityId] Aliases can only be associated with a single Entity', 3;
 
 	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
-		Select	D.[AttributeId]
+		Select	D.[EntityId]
 		From	@Values D
-				Inner Join [App_DataDictionary].[DomainAttributeAlias] A
-				On D.[AttributeId] = A.[AttributeId] And
+				Inner Join [App_DataDictionary].[DomainEntityAlias] A
+				On D.[EntityId] = A.[EntityId] And
 					D.[CatalogName] = A.[CatalogName] And
 					D.[SchemaName] = A.[SchemaName] And
-					D.[ObjectName] = A.[ObjectName] And
-					D.[ElementName] = A.[ElementName]
+					D.[ObjectName] = A.[ObjectName]
 		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
 	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 4;
 
 	-- Apply Changes
 	With [Data] As (
-		Select	D.[AttributeId],
-				D.[AttributeAliasId],
+		Select	D.[EntityId],
+				D.[EntityAliasId],
 				@ModelId As [ModelId],
 				D.[CatalogName],
 				D.[SchemaName],
-				D.[ObjectName],
-				D.[ElementName]
+				D.[ObjectName]
 		From	@Values D
-				Left Join [App_DataDictionary].[DomainAttributeAlias] A
-				On	D.[AttributeId] = A.[AttributeId] And
+				Left Join [App_DataDictionary].[DomainEntityAlias] A
+				On	D.[EntityId] = A.[EntityId] And
 					D.[CatalogName] = A.[CatalogName] And
 					D.[SchemaName] = A.[SchemaName] And
-					D.[ObjectName] = A.[ObjectName] And
-					D.[ElementName] = A.[ElementName])
-	Merge [App_DataDictionary].[DomainAttributeAlias] T
+					D.[ObjectName] = A.[ObjectName])
+	Merge [App_DataDictionary].[DomainEntityAlias] T
 	Using [Data] S
-	On	T.[AttributeId] = S.[AttributeId] And
-		T.[AttributeAliasId] = S.[AttributeAliasId]
+	On	T.[EntityId] = S.[EntityId] And
+		T.[EntityAliasId] = S.[EntityAliasId]
 	When Not Matched by Target Then
-		Insert ([AttributeId], [AttributeAliasId], [ModelId], [CatalogName], [SchemaName], [ObjectName], [ElementName])
-		Values ([AttributeId], [AttributeAliasId], [ModelId], [CatalogName], [SchemaName], [ObjectName], [ElementName])
-	When Not Matched by Source And (T.[AttributeId] in (
-		Select	[AttributeId]
-		From	[App_DataDictionary].[ModelAttribute]
+		Insert ([EntityId], [EntityAliasId], [ModelId], [CatalogName], [SchemaName], [ObjectName])
+		Values ([EntityId], [EntityAliasId], [ModelId], [CatalogName], [SchemaName], [ObjectName])
+	When Not Matched by Source And (T.[EntityId] in (
+		Select	[EntityId]
+		From	[App_DataDictionary].[ModelEntity]
 		Where	[ModelId] = @ModelId))
 		Then Delete;
 
@@ -150,10 +143,4 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
-GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDomainAttributeAlias',
-	@value = N'Performs Set on DomainAttributeAlias.'
 GO

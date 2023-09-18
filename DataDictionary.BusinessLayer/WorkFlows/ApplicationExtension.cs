@@ -12,8 +12,16 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.WorkFlows
 {
+    /// <summary>
+    /// Methods dealing with working with the Application Data. (Help Subjects and Properties)
+    /// </summary>
     public static class ApplicationExtension
     {
+        /// <summary>
+        /// Loads the Application Data from the Database.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadApplicationData(this ModelData data)
         {
             List<WorkItem> workItems = new List<WorkItem>();
@@ -49,6 +57,11 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             return workItems;
         }
 
+        /// <summary>
+        /// Saves the Application Data to the Database.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static IReadOnlyList<WorkItem> SaveApplicationData(this ModelData data)
         {
             List<WorkItem> workItems = new List<WorkItem>();
@@ -70,26 +83,12 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             return workItems;
         }
 
-        public static IReadOnlyList<WorkItem> SaveApplicationData(this ModelData data, FileInfo file)
-        {
-            List<WorkItem> workItems = new List<WorkItem>();
-
-            workItems.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
-
-            return workItems.AsReadOnly();
-
-            void DoWork()
-            {
-                using (DataSet workSet = new DataSet())
-                {
-                    workSet.Tables.Add(data.HelpSubjects.ToDataTable());
-                    workSet.Tables.Add(data.Properties.ToDataTable());
-
-                    workSet.WriteXml(file.FullName, XmlWriteMode.WriteSchema);
-                }
-            }
-        }
-
+        /// <summary>
+        /// Loads the Application Data from a File
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadApplicationData(this ModelData data, FileInfo file)
         {
             List<WorkItem> workItems = new List<WorkItem>
@@ -121,5 +120,33 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 }
             }
         }
+
+        /// <summary>
+        /// Saves the Application Data to a file.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> SaveApplicationData(this ModelData data, FileInfo file)
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+
+            workItems.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
+
+            return workItems.AsReadOnly();
+
+            void DoWork()
+            {
+                using (DataSet workSet = new DataSet())
+                {
+                    workSet.Tables.Add(data.HelpSubjects.ToDataTable());
+                    workSet.Tables.Add(data.Properties.ToDataTable());
+
+                    workSet.WriteXml(file.FullName, XmlWriteMode.WriteSchema);
+                }
+            }
+        }
+
+
     }
 }

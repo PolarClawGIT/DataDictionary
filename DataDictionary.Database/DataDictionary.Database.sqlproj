@@ -67,6 +67,7 @@
     <Folder Include="App_DataDictionary\User Defined Types\" />
     <Folder Include="App_DataDictionary\Unit Test scripts" />
     <Folder Include="dbo\Views" />
+    <Folder Include="App_DataDictionary\Views" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DataDictionary.Database.publish.xml" />
@@ -173,6 +174,16 @@
     <Build Include="dbo\Views\SampleView.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationProperty.sql" />
     <Build Include="App_DataDictionary\Tables\DomainSubjectArea.sql" />
+    <Build Include="App_DataDictionary\Views\DomainEntityAttribute.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainEntityProperty.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainEntityAlias.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainEntity.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainEntity.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainEntityAlias.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainEntityProperty.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntity.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntityProperty.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntityAlias.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

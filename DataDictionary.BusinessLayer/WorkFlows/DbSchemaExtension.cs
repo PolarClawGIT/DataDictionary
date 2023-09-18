@@ -15,13 +15,22 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.WorkFlows
 {
+    /// <summary>
+    /// Methods and Function dealing with working the Database Schema.
+    /// </summary>
     public static class DbSchemaExtension
     {
-
+        /// <summary>
+        /// Reads the Database Schema from a specified context into the data model.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadDbSchema(this ModelData data, DbSchemaContext context)
         {
             List<WorkItem> workItems = new List<WorkItem>();
@@ -62,8 +71,8 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbColumns",
-                Command = data.DbColumns.SchemaCommand,
-                Target = data.DbColumns
+                Command = data.DbTableColumns.SchemaCommand,
+                Target = data.DbTableColumns
             });
 
             workItems.Add(new ExecuteReader(openConnection)
@@ -128,7 +137,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new LoadExtendedProperties<DbTableColumnItem>(openConnection)
             {
                 WorkName = "Load DbExtendedProperties, DbColumns",
-                Source = data.DbColumns,
+                Source = data.DbTableColumns,
                 Target = data.DbExtendedProperties
             });
 
@@ -170,6 +179,12 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             return workItems.AsReadOnly();
         }
 
+        /// <summary>
+        /// Removes the Database Schema using the specified context from the Model (by Database Name)
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static IReadOnlyList<WorkItem> RemoveCatalog(this ModelData data, DbSchemaContext context)
         {
             List<WorkItem> workItems = new List<WorkItem>();
@@ -184,7 +199,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             {
                 WorkName = "Remove DbColumns by Catalog",
                 Catalog = new DbCatalogKeyUnique(context),
-                Target = data.DbColumns
+                Target = data.DbTableColumns
             });
 
             workItems.Add(new RemoveCatalog<DbTableItem>()
@@ -211,9 +226,13 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             return workItems.AsReadOnly();
         }
 
+        /// <summary>
+        /// Default method to import a Database Schema into the Attributes/Entities of the Model.
+        /// </summary>
+        /// <param name="data"></param>
         public static void ImportDbSchemaToDomain(this ModelData data)
         {
-            IEnumerable<IDbTableColumnItem> newAttributes = data.DbColumns.Where(
+            IEnumerable<IDbTableColumnItem> newAttributes = data.DbTableColumns.Where(
                 w => w.GetTable(data.DbTables) is IDbTableItem table && !table.IsSystem && // Do not want System Tables
                 w.GetSchema(data.DbSchemta) is IDbSchemaItem schema && !schema.IsSystem && // Do not want System Schemta
                 data.DomainAttributeAliases.FirstOrDefault( // Do not want Columns already aliased to an attribute
@@ -223,7 +242,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                     w.ColumnName == a.ElementName)
                 is null);
 
-
+            // Get the Column information and create Attributes
             foreach (IGrouping<String?, IDbTableColumnItem> columnItem in newAttributes.GroupBy(g => g.ColumnName))
             {
                 IDbTableColumnItem columnSource = columnItem.First();
@@ -265,6 +284,27 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 }
             }
 
+            // TODO: Get the Table/View information and create Entities
+        }
+
+        /// <summary>
+        /// Gets the Database information.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> GetDatabaseSchema(this DbSchemaContext context, IBindingTable<DbDatabaseItem> target)
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+
+            workItems.Add(
+                new GetInformationSchema<DbDatabaseItem>(context)
+                {
+                    Collection = DbDatabaseItem.Schema,
+                    Target = target,
+                    WorkName = "Get Databases"
+                });
+            return workItems;
         }
     }
 }
