@@ -1,6 +1,7 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
@@ -28,8 +29,8 @@ namespace DataDictionary.Main.Forms.Domain
         private void DomainAttribute_Load(object sender, EventArgs e)
         {
             // one time bindings
-            PropertyNameDataItem.Bind(propertyTypeData);
-            PropertyNameDataItem.Bind(propertyTypeColumn);
+            PropertyNameItem.Bind(propertyTypeData);
+            PropertyNameItem.Bind(propertyTypeColumn);
 
             BindData();
         }
@@ -81,11 +82,14 @@ namespace DataDictionary.Main.Forms.Domain
 
                 if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
                 {
-                    CatalogNameDataItem.Bind(catalogNameData);
-                    SchemaNameDataItem.Bind(schemaNameData, aliasItem);
-                    ObjectNameDataItem.Bind(objectNameData, aliasItem);
-                    ElementNameDataItem.Bind(elementNameData, aliasItem);
+                    CatalogNameItem.Bind(catalogNameData);
+                    SchemaNameItem.Bind(schemaNameData, aliasItem);
+                    ObjectNameItem.Bind(objectNameData, aliasItem);
+                    ElementNameItem.Bind(elementNameData, aliasItem);
                 }
+
+                entityData.AutoGenerateColumns = false;
+                entityData.DataSource = Program.Data.GetEntities(data).OrderBy(o => o.EntityTitle);
 
                 if (bindingProperties.Current is DomainAttributePropertyItem propItem
                     && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)
@@ -99,7 +103,39 @@ namespace DataDictionary.Main.Forms.Domain
             attributeDescriptionData.DataBindings.Clear();
             attributeParentTitleData.DataBindings.Clear();
 
+            propertyNavigation.DataSource = null;
+            propertyTypeData.DataBindings.Clear();
+            propertyValueData.DataBindings.Clear();
+            propertyDefinitionData.DataBindings.Clear();
+
             attributeAlaisData.DataSource = null;
+            catalogNameData.DataBindings.Clear();
+            schemaNameData.DataBindings.Clear();
+            objectNameData.DataBindings.Clear();
+
+            entityData.DataSource = null;
+        }
+
+        void BindChoiceData(PropertyItem property, DomainAttributePropertyItem data)
+        {
+            propertyChoiceData.Enabled = (property.IsChoice == true);
+            propertyValueData.Enabled = (property.IsExtendedProperty == true || property.IsFrameworkSummary == true);
+            propertyDefinitionData.Enabled = (property.IsDefinition == true);
+
+            propertyChoiceData.Items.Clear();
+
+            List<String> selectedChoices = new List<String>();
+            if (data.PropertyValue is not null)
+            { selectedChoices.AddRange(data.PropertyValue.Split(",")); }
+
+            foreach (PropertyItem.ChoiceItem choice in property.Choices)
+            {
+                String newItem = choice.Choice;
+                propertyChoiceData.Items.Add(newItem);
+                Int32 index = propertyChoiceData.Items.IndexOf(newItem);
+                Boolean isChecked = selectedChoices.Contains(newItem);
+                propertyChoiceData.SetItemChecked(index, isChecked);
+            }
         }
 
         #region IColleague
@@ -127,9 +163,9 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
             {
-                SchemaNameDataItem.Bind(schemaNameData, aliasItem);
-                ObjectNameDataItem.Bind(objectNameData, aliasItem);
-                ElementNameDataItem.Bind(elementNameData, aliasItem);
+                SchemaNameItem.Bind(schemaNameData, aliasItem);
+                ObjectNameItem.Bind(objectNameData, aliasItem);
+                ElementNameItem.Bind(elementNameData, aliasItem);
             }
         }
 
@@ -145,8 +181,8 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
             {
-                ObjectNameDataItem.Bind(objectNameData, aliasItem);
-                ElementNameDataItem.Bind(elementNameData, aliasItem);
+                ObjectNameItem.Bind(objectNameData, aliasItem);
+                ElementNameItem.Bind(elementNameData, aliasItem);
             }
         }
 
@@ -162,7 +198,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
             {
-                ElementNameDataItem.Bind(elementNameData, aliasItem);
+                ElementNameItem.Bind(elementNameData, aliasItem);
             }
         }
 
@@ -177,9 +213,7 @@ namespace DataDictionary.Main.Forms.Domain
         private void elementNameData_Validated(object sender, EventArgs e)
         {
             if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
-            {
-
-            }
+            { }
         }
 
         private void bindingProperties_AddingNew(object sender, AddingNewEventArgs e)
@@ -203,7 +237,7 @@ namespace DataDictionary.Main.Forms.Domain
         }
 
         private void BindingComplete(object sender, BindingCompleteEventArgs e)
-        {
+        { // Helps with debugging code.
             if (e.Exception is not null)
             {
 
@@ -240,32 +274,10 @@ namespace DataDictionary.Main.Forms.Domain
                 { bindingProperties.Position = data.IndexOf(newItem); }
             }
 
-            if (propertyTypeData.SelectedItem is PropertyNameDataItem selected
+            if (propertyTypeData.SelectedItem is PropertyNameItem selected
                 && bindingProperties.Current is DomainAttributePropertyItem currentRow
                 && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == selected.PropertyId) is PropertyItem property)
             { BindChoiceData(property, currentRow); }
-        }
-
-        void BindChoiceData(PropertyItem property, DomainAttributePropertyItem data)
-        {
-            propertyChoiceData.Enabled = (property.IsChoice == true);
-            propertyValueData.Enabled = (property.IsExtendedProperty == true || property.IsFrameworkSummary == true);
-            propertyDefinitionData.Enabled = (property.IsDefinition == true);
-
-            propertyChoiceData.Items.Clear();
-
-            List<String> selectedChoices = new List<String>();
-            if (data.PropertyValue is not null)
-            { selectedChoices.AddRange(data.PropertyValue.Split(",")); }
-
-            foreach (PropertyItem.ChoiceItem choice in property.Choices)
-            {
-                String newItem = choice.Choice;
-                propertyChoiceData.Items.Add(newItem);
-                Int32 index = propertyChoiceData.Items.IndexOf(newItem);
-                Boolean isChecked = selectedChoices.Contains(newItem);
-                propertyChoiceData.SetItemChecked(index, isChecked);
-            }
         }
 
         private void propertyChoiceData_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -324,6 +336,14 @@ namespace DataDictionary.Main.Forms.Domain
 
             if (bindingProperties.Current is DomainAttributePropertyItem current)
             { current.PropertyValue = value.Trim(); }
+        }
+
+        private void attributeTitleData_Validating(object sender, CancelEventArgs e)
+        {
+            if (String.IsNullOrEmpty(attributeTitleData.Text))
+            { errorProvider.SetError(attributeTitleData.ErrorControl, "Attribute Title is required"); }
+            else
+            { errorProvider.SetError(attributeTitleData.ErrorControl, String.Empty); }
         }
     }
 }

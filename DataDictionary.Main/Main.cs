@@ -142,6 +142,20 @@ namespace DataDictionary.Main
         private void menuAttributes_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Attribute), Program.Data.DomainAttributes); }
 
+        private void menuAttributeProperties_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), Program.Data.DomainAttributeProperties); }
+
+        private void menuAttributeAlaises_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), Program.Data.DomainAttributeAliases); }
+
+        private void entitiesToolStripMenuItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_ClassPublic), Program.Data.DomainEntities); }
+
+        private void entityPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), Program.Data.DomainEntityProperties); }
+
+        private void entityAliasToolStripMenuItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), Program.Data.DomainEntityAliases); }
 
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)
         {
@@ -163,12 +177,6 @@ namespace DataDictionary.Main
 
         private void openSaveModelDatabaseMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.OpenSaveModelDatabase()); }
-
-        private void menuAttributeProperties_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), Program.Data.DomainAttributeProperties); }
-
-        private void menuAttributeAlaises_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), Program.Data.DomainAttributeAliases); }
 
         private void menuConstraintItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Key), Program.Data.DbConstraints); }
@@ -427,17 +435,9 @@ namespace DataDictionary.Main
                 //foreach (DomainAttributeItem childAttributeItem in Program.Data.DomainAttributes.Where(w => w.AttributeId == attributeItem.ParentAttributeId))
                 //{ attributeNode.Nodes.Add(CreateAttribute(childAttributeItem, attributeNode)); }
 
-
-                foreach (IGrouping<DomainEntityAliasKey, DomainAttributeAliasItem> entityKey in alias.GroupBy(g => new DomainEntityAliasKey(g)).OrderBy(o => o.Key.ObjectName))
-                {
-                    if (Program.Data.DomainEntityAliases.FirstOrDefault(w => entityKey.Key.Equals(w)) is DomainEntityAliasItem entityAlias)
-                    {
-                        DomainEntityKey aliasKey = new DomainEntityKey(entityAlias);
-                        if (Program.Data.DomainEntities.FirstOrDefault(w => aliasKey.Equals(w)) is DomainEntityItem entity)
-                        { CreateNode(entity.EntityTitle, domainModelImageIndex.Entity, entity, attributeNode); }
-                    }
-                }
-
+                List<DomainEntityItem> entities = Program.Data.GetEntities(key).OrderBy(o => o.EntityTitle).ToList();
+                foreach (DomainEntityItem item in entities)
+                { CreateNode(item.EntityTitle, domainModelImageIndex.Entity, item, attributeNode); }
 
                 if (parent is not null) { parent.Nodes.Add(attributeNode); }
                 return attributeNode;
@@ -501,5 +501,7 @@ namespace DataDictionary.Main
 
         private void peekAtClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Forms.ClipboardView()); }
+
+
     }
 }

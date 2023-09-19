@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer
     /// Forms need to connect to the Key for the data object they are presenting.
     /// If the data should change, the Forms need to reset the bindings and get new data from this object.
     /// </remarks>
-    public class ModelData
+    public partial class ModelData
     {
         // Model
         ModelItem defaultModel;

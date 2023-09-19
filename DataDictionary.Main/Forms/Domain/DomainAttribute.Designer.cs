@@ -60,7 +60,10 @@
             objectNameData = new Controls.ComboBoxData();
             elementNameData = new Controls.ComboBoxData();
             libraryAlaisToBeDetermined = new Label();
-            bindingDefinition = new BindingSource(components);
+            entityTab = new TabPage();
+            entityData = new DataGridView();
+            entityTitleColumn = new DataGridViewTextBoxColumn();
+            entityDescriptionColumn = new DataGridViewTextBoxColumn();
             errorProvider = new ErrorProvider(components);
             bindingProperties = new BindingSource(components);
             bindingDatabaseAlias = new BindingSource(components);
@@ -86,7 +89,8 @@
             databaseAliasLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)attributeAlaisData).BeginInit();
             libraryAliasTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)bindingDefinition).BeginInit();
+            entityTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)entityData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDatabaseAlias).BeginInit();
@@ -136,6 +140,7 @@
             attributeTitleData.ReadOnly = false;
             attributeTitleData.Size = new Size(529, 44);
             attributeTitleData.TabIndex = 0;
+            attributeTitleData.Validating += attributeTitleData_Validating;
             // 
             // attributeParentTitleData
             // 
@@ -155,6 +160,7 @@
             attributeTabLayout.Controls.Add(attributePropertyTab);
             attributeTabLayout.Controls.Add(attributeDbAlaisTab);
             attributeTabLayout.Controls.Add(libraryAliasTab);
+            attributeTabLayout.Controls.Add(entityTab);
             attributeTabLayout.Dock = DockStyle.Fill;
             attributeTabLayout.Location = new Point(3, 196);
             attributeTabLayout.Name = "attributeTabLayout";
@@ -307,7 +313,7 @@
             propertyDefinitionTab.Location = new Point(4, 24);
             propertyDefinitionTab.Name = "propertyDefinitionTab";
             propertyDefinitionTab.Padding = new Padding(3);
-            propertyDefinitionTab.Size = new Size(495, 196);
+            propertyDefinitionTab.Size = new Size(192, 72);
             propertyDefinitionTab.TabIndex = 1;
             propertyDefinitionTab.Text = "Defintion";
             // 
@@ -320,7 +326,7 @@
             propertyDefinitionData.Name = "propertyDefinitionData";
             propertyDefinitionData.ReadOnly = false;
             propertyDefinitionData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
-            propertyDefinitionData.Size = new Size(489, 190);
+            propertyDefinitionData.Size = new Size(186, 66);
             propertyDefinitionData.TabIndex = 0;
             propertyDefinitionData.Validated += propertyDefinitionData_Validated;
             // 
@@ -496,6 +502,48 @@
             libraryAlaisToBeDetermined.TabIndex = 0;
             libraryAlaisToBeDetermined.Text = "To Be Determined";
             // 
+            // entityTab
+            // 
+            entityTab.Controls.Add(entityData);
+            entityTab.Location = new Point(4, 24);
+            entityTab.Name = "entityTab";
+            entityTab.Size = new Size(515, 389);
+            entityTab.TabIndex = 4;
+            entityTab.Text = "Entities";
+            entityTab.UseVisualStyleBackColor = true;
+            // 
+            // entityData
+            // 
+            entityData.AllowUserToAddRows = false;
+            entityData.AllowUserToDeleteRows = false;
+            entityData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            entityData.Columns.AddRange(new DataGridViewColumn[] { entityTitleColumn, entityDescriptionColumn });
+            entityData.Dock = DockStyle.Fill;
+            entityData.Location = new Point(0, 0);
+            entityData.Name = "entityData";
+            entityData.ReadOnly = true;
+            entityData.RowTemplate.Height = 25;
+            entityData.Size = new Size(515, 389);
+            entityData.TabIndex = 0;
+            // 
+            // entityTitleColumn
+            // 
+            entityTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            entityTitleColumn.DataPropertyName = "EntityTitle";
+            entityTitleColumn.FillWeight = 30F;
+            entityTitleColumn.HeaderText = "Entity Title";
+            entityTitleColumn.Name = "entityTitleColumn";
+            entityTitleColumn.ReadOnly = true;
+            // 
+            // entityDescriptionColumn
+            // 
+            entityDescriptionColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            entityDescriptionColumn.DataPropertyName = "EntityDescription";
+            entityDescriptionColumn.FillWeight = 70F;
+            entityDescriptionColumn.HeaderText = "Description";
+            entityDescriptionColumn.Name = "entityDescriptionColumn";
+            entityDescriptionColumn.ReadOnly = true;
+            // 
             // errorProvider
             // 
             errorProvider.ContainerControl = this;
@@ -540,7 +588,8 @@
             ((System.ComponentModel.ISupportInitialize)attributeAlaisData).EndInit();
             libraryAliasTab.ResumeLayout(false);
             libraryAliasTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)bindingDefinition).EndInit();
+            entityTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)entityData).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDatabaseAlias).EndInit();
@@ -558,7 +607,6 @@
         private DataGridViewTextBoxColumn alaisObjectNameData;
         private DataGridViewTextBoxColumn aliasElementNameData;
         private Controls.TextBoxData attributeDescriptionData;
-        private BindingSource bindingDefinition;
         private ErrorProvider errorProvider;
         private DataGridView propertyNavigation;
         private TabControl propertyTabLayout;
@@ -578,5 +626,9 @@
         private BindingSource bindingDatabaseAlias;
         private DataGridViewComboBoxColumn propertyTypeColumn;
         private DataGridViewTextBoxColumn propertyValueColumn;
+        private TabPage entityTab;
+        private DataGridView entityData;
+        private DataGridViewTextBoxColumn entityTitleColumn;
+        private DataGridViewTextBoxColumn entityDescriptionColumn;
     }
 }

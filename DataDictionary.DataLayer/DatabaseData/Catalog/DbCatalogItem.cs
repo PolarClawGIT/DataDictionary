@@ -70,44 +70,4 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         { return new DbCatalogKeyUnique(this).ToString(); }
     }
 
-    /// <summary>
-    /// Extension on the Database Catalog Item.
-    /// </summary>
-    public static class DbCatalogItemExtension
-    {// TODO: Consider moving these to the List
-
-        /// <summary>
-        /// Returns the Catalog that matches the key passed.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public static DbCatalogItem? GetCatalog(this IEnumerable<DbCatalogItem> source, IDbCatalogKeyUnique item)
-        { return source.FirstOrDefault(w => new DbCatalogKeyUnique(item) == new DbCatalogKeyUnique(w)); }
-
-        /// <summary>
-        /// Returns the Catalog that matches the key.
-        /// </summary>
-        /// <param name="item"></param>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public static DbCatalogItem? GetCatalog(this IDbCatalogKeyUnique item, IEnumerable<DbCatalogItem> source)
-        {
-            DbCatalogKeyUnique itemName = new DbCatalogKeyUnique(item);
-            { return source.FirstOrDefault(w => new DbCatalogKeyUnique(item) == new DbCatalogKeyUnique(w)); }
-        }
-
-        /// <summary>
-        /// Returns the Catalog that matches the Server/Database names passed.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        public static DbCatalogItem? GetCatalog(this IEnumerable<DbCatalogItem> source, (string ServerName, string DatabaseName) parameters)
-        {
-            return source.FirstOrDefault(
-                w => parameters.DatabaseName.Equals(w.CatalogName, KeyExtension.CompareString) &&
-                parameters.ServerName.Equals(w.SourceServerName, KeyExtension.CompareString));
-        }
-    }
 }

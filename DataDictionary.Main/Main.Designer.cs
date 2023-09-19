@@ -44,6 +44,9 @@
             menuAttributes = new ToolStripMenuItem();
             menuAttributeProperties = new ToolStripMenuItem();
             menuAttributeAlaises = new ToolStripMenuItem();
+            entitiesToolStripMenuItem = new ToolStripMenuItem();
+            entityPropertiesToolStripMenuItem = new ToolStripMenuItem();
+            entityAliasToolStripMenuItem = new ToolStripMenuItem();
             navigationDbSchemaTab = new TabPage();
             dbMetaDataNavigation = new TreeView();
             dbSchemaContextMenu = new ContextMenuStrip(components);
@@ -227,9 +230,9 @@
             // 
             // domainModelMenu
             // 
-            domainModelMenu.Items.AddRange(new ToolStripItem[] { menuImportDbSchema, menuAttributes, menuAttributeProperties, menuAttributeAlaises });
+            domainModelMenu.Items.AddRange(new ToolStripItem[] { menuImportDbSchema, menuAttributes, menuAttributeProperties, menuAttributeAlaises, entitiesToolStripMenuItem, entityPropertiesToolStripMenuItem, entityAliasToolStripMenuItem });
             domainModelMenu.Name = "domainModelMenu";
-            domainModelMenu.Size = new Size(203, 92);
+            domainModelMenu.Size = new Size(203, 158);
             // 
             // menuImportDbSchema
             // 
@@ -244,7 +247,7 @@
             menuAttributes.Image = Properties.Resources.Attribute;
             menuAttributes.Name = "menuAttributes";
             menuAttributes.Size = new Size(202, 22);
-            menuAttributes.Text = "Browse  &Attributes";
+            menuAttributes.Text = "Attributes";
             menuAttributes.Click += menuAttributes_Click;
             // 
             // menuAttributeProperties
@@ -252,7 +255,7 @@
             menuAttributeProperties.Image = Properties.Resources.Property;
             menuAttributeProperties.Name = "menuAttributeProperties";
             menuAttributeProperties.Size = new Size(202, 22);
-            menuAttributeProperties.Text = "Browse  &Properties";
+            menuAttributeProperties.Text = "Attribute Properties";
             menuAttributeProperties.Click += menuAttributeProperties_Click;
             // 
             // menuAttributeAlaises
@@ -260,8 +263,32 @@
             menuAttributeAlaises.Image = Properties.Resources.Synonym;
             menuAttributeAlaises.Name = "menuAttributeAlaises";
             menuAttributeAlaises.Size = new Size(202, 22);
-            menuAttributeAlaises.Text = "Browse  A&laises";
+            menuAttributeAlaises.Text = "Attribute Aliases";
             menuAttributeAlaises.Click += menuAttributeAlaises_Click;
+            // 
+            // entitiesToolStripMenuItem
+            // 
+            entitiesToolStripMenuItem.Image = Properties.Resources.ClassPublic;
+            entitiesToolStripMenuItem.Name = "entitiesToolStripMenuItem";
+            entitiesToolStripMenuItem.Size = new Size(202, 22);
+            entitiesToolStripMenuItem.Text = "Entities";
+            entitiesToolStripMenuItem.Click += entitiesToolStripMenuItem_Click;
+            // 
+            // entityPropertiesToolStripMenuItem
+            // 
+            entityPropertiesToolStripMenuItem.Image = Properties.Resources.Property;
+            entityPropertiesToolStripMenuItem.Name = "entityPropertiesToolStripMenuItem";
+            entityPropertiesToolStripMenuItem.Size = new Size(202, 22);
+            entityPropertiesToolStripMenuItem.Text = "Entity Properties";
+            entityPropertiesToolStripMenuItem.Click += entityPropertiesToolStripMenuItem_Click;
+            // 
+            // entityAliasToolStripMenuItem
+            // 
+            entityAliasToolStripMenuItem.Image = Properties.Resources.Synonym;
+            entityAliasToolStripMenuItem.Name = "entityAliasToolStripMenuItem";
+            entityAliasToolStripMenuItem.Size = new Size(202, 22);
+            entityAliasToolStripMenuItem.Text = "Entity Aliases";
+            entityAliasToolStripMenuItem.Click += entityAliasToolStripMenuItem_Click;
             // 
             // navigationDbSchemaTab
             // 
@@ -269,7 +296,7 @@
             navigationDbSchemaTab.Location = new Point(4, 24);
             navigationDbSchemaTab.Name = "navigationDbSchemaTab";
             navigationDbSchemaTab.Padding = new Padding(3);
-            navigationDbSchemaTab.Size = new Size(210, 664);
+            navigationDbSchemaTab.Size = new Size(210, 427);
             navigationDbSchemaTab.TabIndex = 0;
             navigationDbSchemaTab.Text = "Db Schema";
             navigationDbSchemaTab.UseVisualStyleBackColor = true;
@@ -280,7 +307,7 @@
             dbMetaDataNavigation.Dock = DockStyle.Fill;
             dbMetaDataNavigation.Location = new Point(3, 3);
             dbMetaDataNavigation.Name = "dbMetaDataNavigation";
-            dbMetaDataNavigation.Size = new Size(204, 658);
+            dbMetaDataNavigation.Size = new Size(204, 421);
             dbMetaDataNavigation.TabIndex = 0;
             dbMetaDataNavigation.NodeMouseDoubleClick += dbMetaDataNavigation_NodeMouseDoubleClick;
             // 
@@ -849,5 +876,8 @@
         private ToolStripMenuItem propertiesToolStripMenuItem;
         private ToolStripMenuItem testFormToolStripMenuItem;
         private ToolStripMenuItem peekAtClipboardToolStripMenuItem;
+        private ToolStripMenuItem entitiesToolStripMenuItem;
+        private ToolStripMenuItem entityPropertiesToolStripMenuItem;
+        private ToolStripMenuItem entityAliasToolStripMenuItem;
     }
 }
