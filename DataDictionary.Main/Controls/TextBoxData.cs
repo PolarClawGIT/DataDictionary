@@ -19,7 +19,7 @@ namespace DataDictionary.Main.Controls
     /// Wrappers the base control into a Table Layout with a Label and a spot to place to reference the Error Provider.
     /// Each property to be used from the base control has to be exposed. Same thing with events.
     /// </remarks>
-    public partial class TextBoxData : UserControl, ISupportEditMenu
+    partial class TextBoxData : UserControl, ISupportEditMenu
     {
         // Expose Header Properties
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }

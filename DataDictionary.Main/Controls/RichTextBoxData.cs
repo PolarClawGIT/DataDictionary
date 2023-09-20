@@ -22,7 +22,7 @@ namespace DataDictionary.Main.Controls
     /// Each property to be used from the base control has to be exposed. Same thing with events.
     /// </remarks>
     [DefaultBindingProperty("Rtf")]
-    public partial class RichTextBoxData : UserControl, ISupportEditMenu
+    partial class RichTextBoxData : UserControl, ISupportEditMenu
     {
 
         // Expose Header Properties

@@ -17,7 +17,7 @@ namespace DataDictionary.Main.TextTemplates
 
 #line 1 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
-    public partial class CreateExtendedProperty : CreateExtendedPropertyBase
+    partial class CreateExtendedProperty : CreateExtendedPropertyBase
     {
 #line hidden
         /// <summary>

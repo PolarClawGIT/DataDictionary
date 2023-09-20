@@ -315,7 +315,6 @@
         private CheckBox obsoleteData;
         private ErrorProvider errorProvider;
         private BindingSource bindingSource;
-        private TableLayoutPanel subTypeFlagsLayout;
         private CheckBox isChoiceData;
         private CheckBox isDefinitionData;
         private CheckBox isExtendedPropertyData;

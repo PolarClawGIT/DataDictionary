@@ -45,7 +45,7 @@
             propertyValueTab = new TabPage();
             propertyTypeData = new Controls.ComboBoxData();
             propertyValueData = new Controls.TextBoxData();
-            propertyChoiceData = new CheckedListBox();
+            propertyChoiceData = new Controls.CheckedListBoxData();
             propertyDefinitionTab = new TabPage();
             propertyDefinitionData = new Controls.RichTextBoxData();
             entityDbAliasTab = new TabPage();
@@ -60,12 +60,12 @@
             entityLibraryAlias = new TabPage();
             libraryAlaisToBeDetermined = new Label();
             attributeTab = new TabPage();
-            errorProvider = new ErrorProvider(components);
-            bindingProperties = new BindingSource(components);
-            bindingDatabaseAlias = new BindingSource(components);
             attributeData = new DataGridView();
             attributeTitleColumn = new DataGridViewTextBoxColumn();
             attributeDescriptionTitle = new DataGridViewTextBoxColumn();
+            errorProvider = new ErrorProvider(components);
+            bindingProperties = new BindingSource(components);
+            bindingDatabaseAlias = new BindingSource(components);
             entityLayout = new TableLayoutPanel();
             entityTabLayout = new TabControl();
             propertyLayout = new TableLayoutPanel();
@@ -86,10 +86,10 @@
             ((System.ComponentModel.ISupportInitialize)aliasNavigation).BeginInit();
             entityLibraryAlias.SuspendLayout();
             attributeTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)attributeData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDatabaseAlias).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)attributeData).BeginInit();
             SuspendLayout();
             // 
             // entityLayout
@@ -267,9 +267,6 @@
             propertyTypeData.Location = new Point(3, 3);
             propertyTypeData.Name = "propertyTypeData";
             propertyTypeData.ReadOnly = false;
-            propertyTypeData.SelectedIndex = -1;
-            propertyTypeData.SelectedItem = null;
-            propertyTypeData.SelectedValue = null;
             propertyTypeData.Size = new Size(236, 44);
             propertyTypeData.TabIndex = 0;
             propertyTypeData.ValueMember = "";
@@ -289,16 +286,19 @@
             // 
             // propertyChoiceData
             // 
+            propertyChoiceData.AutoSize = true;
+            propertyChoiceData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             propertyChoiceData.CheckOnClick = true;
+            propertyChoiceData.DataSource = null;
+            propertyChoiceData.DisplayMember = "";
             propertyChoiceData.Dock = DockStyle.Fill;
-            propertyChoiceData.FormattingEnabled = true;
+            propertyChoiceData.HeaderText = "Property Choice";
             propertyChoiceData.Location = new Point(245, 3);
             propertyChoiceData.Name = "propertyChoiceData";
             propertyValueLayout.SetRowSpan(propertyChoiceData, 2);
             propertyChoiceData.Size = new Size(236, 160);
             propertyChoiceData.TabIndex = 2;
             propertyChoiceData.ItemCheck += propertyChoiceData_ItemCheck;
-            propertyChoiceData.EnabledChanged += propertyChoiceData_EnabledChanged;
             // 
             // propertyDefinitionTab
             // 
@@ -406,9 +406,6 @@
             catalogNameData.Location = new Point(3, -81);
             catalogNameData.Name = "catalogNameData";
             catalogNameData.ReadOnly = false;
-            catalogNameData.SelectedIndex = -1;
-            catalogNameData.SelectedItem = null;
-            catalogNameData.SelectedValue = null;
             catalogNameData.Size = new Size(180, 44);
             catalogNameData.TabIndex = 1;
             catalogNameData.ValueMember = "";
@@ -426,9 +423,6 @@
             schemaNameData.Location = new Point(3, -31);
             schemaNameData.Name = "schemaNameData";
             schemaNameData.ReadOnly = false;
-            schemaNameData.SelectedIndex = -1;
-            schemaNameData.SelectedItem = null;
-            schemaNameData.SelectedValue = null;
             schemaNameData.Size = new Size(180, 44);
             schemaNameData.TabIndex = 2;
             schemaNameData.ValueMember = "";
@@ -446,9 +440,6 @@
             objectNameData.Location = new Point(3, 19);
             objectNameData.Name = "objectNameData";
             objectNameData.ReadOnly = false;
-            objectNameData.SelectedIndex = -1;
-            objectNameData.SelectedItem = null;
-            objectNameData.SelectedValue = null;
             objectNameData.Size = new Size(180, 44);
             objectNameData.TabIndex = 3;
             objectNameData.ValueMember = "";
@@ -479,24 +470,10 @@
             attributeTab.Controls.Add(attributeData);
             attributeTab.Location = new Point(4, 24);
             attributeTab.Name = "attributeTab";
-            attributeTab.Size = new Size(510, 348);
+            attributeTab.Size = new Size(192, 72);
             attributeTab.TabIndex = 3;
             attributeTab.Text = "Attributes";
             attributeTab.UseVisualStyleBackColor = true;
-            // 
-            // errorProvider
-            // 
-            errorProvider.ContainerControl = this;
-            // 
-            // bindingProperties
-            // 
-            bindingProperties.AddingNew += bindingProperties_AddingNew;
-            bindingProperties.BindingComplete += BindingComplete;
-            // 
-            // bindingDatabaseAlias
-            // 
-            bindingDatabaseAlias.AddingNew += bindingDatabaseAlias_AddingNew;
-            bindingDatabaseAlias.BindingComplete += BindingComplete;
             // 
             // attributeData
             // 
@@ -509,7 +486,7 @@
             attributeData.Name = "attributeData";
             attributeData.ReadOnly = true;
             attributeData.RowTemplate.Height = 25;
-            attributeData.Size = new Size(510, 348);
+            attributeData.Size = new Size(192, 72);
             attributeData.TabIndex = 0;
             // 
             // attributeTitleColumn
@@ -529,6 +506,20 @@
             attributeDescriptionTitle.HeaderText = "Attribute Description";
             attributeDescriptionTitle.Name = "attributeDescriptionTitle";
             attributeDescriptionTitle.ReadOnly = true;
+            // 
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
+            // 
+            // bindingProperties
+            // 
+            bindingProperties.AddingNew += bindingProperties_AddingNew;
+            bindingProperties.BindingComplete += BindingComplete;
+            // 
+            // bindingDatabaseAlias
+            // 
+            bindingDatabaseAlias.AddingNew += bindingDatabaseAlias_AddingNew;
+            bindingDatabaseAlias.BindingComplete += BindingComplete;
             // 
             // DomainEntity
             // 
@@ -559,21 +550,19 @@
             entityLibraryAlias.ResumeLayout(false);
             entityLibraryAlias.PerformLayout();
             attributeTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)attributeData).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDatabaseAlias).EndInit();
-            ((System.ComponentModel.ISupportInitialize)attributeData).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private TableLayoutPanel entityLayout;
         private Controls.TextBoxData entityTitleData;
         private Controls.TextBoxData entityParentData;
         private Controls.TextBoxData entityDescriptionData;
-        private TabControl entityTabLayout;
         private TabPage entityPropertyTab;
         private TabPage entityDbAliasTab;
         private TabPage entityLibraryAlias;
@@ -584,7 +573,6 @@
         private TabPage propertyValueTab;
         private Controls.ComboBoxData propertyTypeData;
         private Controls.TextBoxData propertyValueData;
-        private CheckedListBox propertyChoiceData;
         private TabPage propertyDefinitionTab;
         private Controls.RichTextBoxData propertyDefinitionData;
         private DataGridView aliasNavigation;
@@ -602,5 +590,6 @@
         private DataGridView attributeData;
         private DataGridViewTextBoxColumn attributeTitleColumn;
         private DataGridViewTextBoxColumn attributeDescriptionTitle;
+        private Controls.CheckedListBoxData propertyChoiceData;
     }
 }

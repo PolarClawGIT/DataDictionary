@@ -17,7 +17,7 @@ namespace DataDictionary.Main.Controls
     /// Wrappers the base control into a Table Layout with a Label and a spot to place to reference the Error Provider.
     /// Each property to be used from the base control has to be exposed. Same thing with events.
     /// </remarks>
-    public partial class ComboBoxData : UserControl, ISupportEditMenu
+    partial class ComboBoxData : UserControl, ISupportEditMenu
     {
         // Expose Header Properties
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
@@ -29,9 +29,19 @@ namespace DataDictionary.Main.Controls
         // Expose Control Properties
         public Boolean ReadOnly { get { return !comboBox.Enabled; } set { comboBox.Enabled = !value; } }
         public Object DataSource { get { return comboBox.DataSource; } set { comboBox.DataSource = value; } }
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Object SelectedItem { get { return comboBox.SelectedItem; } set { comboBox.SelectedItem = value; } }
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Object? SelectedValue { get { return comboBox.SelectedValue; } set { comboBox.SelectedValue = value; } }
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Int32 SelectedIndex { get { return comboBox.SelectedIndex; } set { comboBox.SelectedIndex = value; } }
+
         public ComboBox.ObjectCollection Items { get { return comboBox.Items; } }
         public String ValueMember { get { return comboBox.ValueMember; } set { comboBox.ValueMember = value; } }
         public String DisplayMember { get { return comboBox.DisplayMember; } set { comboBox.DisplayMember = value; } }
