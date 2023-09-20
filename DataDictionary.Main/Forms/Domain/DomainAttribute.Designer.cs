@@ -38,6 +38,7 @@
             TabPage attributeDbAlaisTab;
             TableLayoutPanel databaseAliasLayout;
             TabPage libraryAliasTab;
+            TableLayoutPanel entityLayout;
             attributeDescriptionData = new Controls.TextBoxData();
             attributeTitleData = new Controls.TextBoxData();
             attributeParentTitleData = new Controls.TextBoxData();
@@ -47,6 +48,7 @@
             propertyValueTab = new TabPage();
             propertyTypeData = new Controls.ComboBoxData();
             propertyValueData = new Controls.TextBoxData();
+            propertyChoiceData = new Controls.CheckedListBoxData();
             propertyDefinitionTab = new TabPage();
             propertyDefinitionData = new Controls.RichTextBoxData();
             attributeAlaisData = new DataGridView();
@@ -66,7 +68,6 @@
             errorProvider = new ErrorProvider(components);
             bindingProperties = new BindingSource(components);
             bindingDatabaseAlias = new BindingSource(components);
-            propertyChoiceData = new Controls.CheckedListBoxData();
             attributeLayout = new TableLayoutPanel();
             attributeTabLayout = new TabControl();
             attributePropertyTab = new TabPage();
@@ -76,6 +77,7 @@
             attributeDbAlaisTab = new TabPage();
             databaseAliasLayout = new TableLayoutPanel();
             libraryAliasTab = new TabPage();
+            entityLayout = new TableLayoutPanel();
             attributeLayout.SuspendLayout();
             attributeTabLayout.SuspendLayout();
             attributePropertyTab.SuspendLayout();
@@ -94,6 +96,7 @@
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDatabaseAlias).BeginInit();
+            entityLayout.SuspendLayout();
             SuspendLayout();
             // 
             // attributeLayout
@@ -290,6 +293,22 @@
             propertyValueData.Size = new Size(238, 134);
             propertyValueData.TabIndex = 1;
             // 
+            // propertyChoiceData
+            // 
+            propertyChoiceData.AutoSize = true;
+            propertyChoiceData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            propertyChoiceData.CheckOnClick = true;
+            propertyChoiceData.DataSource = null;
+            propertyChoiceData.DisplayMember = "";
+            propertyChoiceData.Dock = DockStyle.Fill;
+            propertyChoiceData.HeaderText = "Property Choice";
+            propertyChoiceData.Location = new Point(247, 3);
+            propertyChoiceData.Name = "propertyChoiceData";
+            propertyValueLayout.SetRowSpan(propertyChoiceData, 2);
+            propertyChoiceData.Size = new Size(239, 184);
+            propertyChoiceData.TabIndex = 2;
+            propertyChoiceData.ItemCheck += propertyChoiceData_ItemCheck;
+            // 
             // propertyDefinitionTab
             // 
             propertyDefinitionTab.BackColor = SystemColors.Control;
@@ -321,7 +340,7 @@
             attributeDbAlaisTab.Location = new Point(4, 24);
             attributeDbAlaisTab.Name = "attributeDbAlaisTab";
             attributeDbAlaisTab.Padding = new Padding(3);
-            attributeDbAlaisTab.Size = new Size(192, 72);
+            attributeDbAlaisTab.Size = new Size(515, 389);
             attributeDbAlaisTab.TabIndex = 2;
             attributeDbAlaisTab.Text = "Db Alias";
             // 
@@ -343,7 +362,7 @@
             databaseAliasLayout.RowStyles.Add(new RowStyle());
             databaseAliasLayout.RowStyles.Add(new RowStyle());
             databaseAliasLayout.RowStyles.Add(new RowStyle());
-            databaseAliasLayout.Size = new Size(186, 66);
+            databaseAliasLayout.Size = new Size(509, 383);
             databaseAliasLayout.TabIndex = 1;
             // 
             // attributeAlaisData
@@ -354,7 +373,7 @@
             attributeAlaisData.Location = new Point(3, 3);
             attributeAlaisData.Name = "attributeAlaisData";
             attributeAlaisData.RowTemplate.Height = 25;
-            attributeAlaisData.Size = new Size(180, 1);
+            attributeAlaisData.Size = new Size(503, 177);
             attributeAlaisData.TabIndex = 0;
             attributeAlaisData.Leave += attributeAlaisData_Leave;
             // 
@@ -394,10 +413,10 @@
             catalogNameData.DisplayMember = "";
             catalogNameData.Dock = DockStyle.Fill;
             catalogNameData.HeaderText = "Catalog Name";
-            catalogNameData.Location = new Point(3, -131);
+            catalogNameData.Location = new Point(3, 186);
             catalogNameData.Name = "catalogNameData";
             catalogNameData.ReadOnly = false;
-            catalogNameData.Size = new Size(180, 44);
+            catalogNameData.Size = new Size(503, 44);
             catalogNameData.TabIndex = 1;
             catalogNameData.ValueMember = "";
             catalogNameData.Validated += catalogNameData_Validated;
@@ -411,10 +430,10 @@
             schemaNameData.DisplayMember = "";
             schemaNameData.Dock = DockStyle.Fill;
             schemaNameData.HeaderText = "Schema Name";
-            schemaNameData.Location = new Point(3, -81);
+            schemaNameData.Location = new Point(3, 236);
             schemaNameData.Name = "schemaNameData";
             schemaNameData.ReadOnly = false;
-            schemaNameData.Size = new Size(180, 44);
+            schemaNameData.Size = new Size(503, 44);
             schemaNameData.TabIndex = 2;
             schemaNameData.ValueMember = "";
             schemaNameData.Validated += schemaNameData_Validated;
@@ -428,10 +447,10 @@
             objectNameData.DisplayMember = "";
             objectNameData.Dock = DockStyle.Fill;
             objectNameData.HeaderText = "Object Name";
-            objectNameData.Location = new Point(3, -31);
+            objectNameData.Location = new Point(3, 286);
             objectNameData.Name = "objectNameData";
             objectNameData.ReadOnly = false;
-            objectNameData.Size = new Size(180, 44);
+            objectNameData.Size = new Size(503, 44);
             objectNameData.TabIndex = 3;
             objectNameData.ValueMember = "";
             objectNameData.Validated += objectNameData_Validated;
@@ -445,10 +464,10 @@
             elementNameData.DisplayMember = "";
             elementNameData.Dock = DockStyle.Fill;
             elementNameData.HeaderText = "Element Name";
-            elementNameData.Location = new Point(3, 19);
+            elementNameData.Location = new Point(3, 336);
             elementNameData.Name = "elementNameData";
             elementNameData.ReadOnly = false;
-            elementNameData.Size = new Size(180, 44);
+            elementNameData.Size = new Size(503, 44);
             elementNameData.TabIndex = 4;
             elementNameData.ValueMember = "";
             elementNameData.Validated += elementNameData_Validated;
@@ -461,7 +480,7 @@
             libraryAliasTab.Location = new Point(4, 24);
             libraryAliasTab.Name = "libraryAliasTab";
             libraryAliasTab.Padding = new Padding(3);
-            libraryAliasTab.Size = new Size(192, 72);
+            libraryAliasTab.Size = new Size(515, 389);
             libraryAliasTab.TabIndex = 3;
             libraryAliasTab.Text = "Library Alais";
             // 
@@ -476,13 +495,13 @@
             // 
             // entityTab
             // 
-            entityTab.Controls.Add(entityData);
+            entityTab.BackColor = SystemColors.Control;
+            entityTab.Controls.Add(entityLayout);
             entityTab.Location = new Point(4, 24);
             entityTab.Name = "entityTab";
-            entityTab.Size = new Size(192, 72);
+            entityTab.Size = new Size(515, 389);
             entityTab.TabIndex = 4;
             entityTab.Text = "Entities";
-            entityTab.UseVisualStyleBackColor = true;
             // 
             // entityData
             // 
@@ -491,11 +510,11 @@
             entityData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             entityData.Columns.AddRange(new DataGridViewColumn[] { entityTitleColumn, entityDescriptionColumn });
             entityData.Dock = DockStyle.Fill;
-            entityData.Location = new Point(0, 0);
+            entityData.Location = new Point(6, 6);
             entityData.Name = "entityData";
             entityData.ReadOnly = true;
             entityData.RowTemplate.Height = 25;
-            entityData.Size = new Size(192, 72);
+            entityData.Size = new Size(503, 377);
             entityData.TabIndex = 0;
             // 
             // entityTitleColumn
@@ -532,21 +551,19 @@
             bindingDatabaseAlias.BindingComplete += BindingComplete;
             bindingDatabaseAlias.CurrentChanged += bindingDatabaseAlias_CurrentChanged;
             // 
-            // propertyChoiceData
+            // entityLayout
             // 
-            propertyChoiceData.AutoSize = true;
-            propertyChoiceData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            propertyChoiceData.CheckOnClick = true;
-            propertyChoiceData.DataSource = null;
-            propertyChoiceData.DisplayMember = "";
-            propertyChoiceData.Dock = DockStyle.Fill;
-            propertyChoiceData.HeaderText = "Property Choice";
-            propertyChoiceData.Location = new Point(247, 3);
-            propertyChoiceData.Name = "propertyChoiceData";
-            propertyValueLayout.SetRowSpan(propertyChoiceData, 2);
-            propertyChoiceData.Size = new Size(239, 184);
-            propertyChoiceData.TabIndex = 2;
-            propertyChoiceData.ItemCheck += propertyChoiceData_ItemCheck;
+            entityLayout.ColumnCount = 1;
+            entityLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            entityLayout.Controls.Add(entityData, 0, 0);
+            entityLayout.Dock = DockStyle.Fill;
+            entityLayout.Location = new Point(0, 0);
+            entityLayout.Name = "entityLayout";
+            entityLayout.Padding = new Padding(3);
+            entityLayout.RowCount = 1;
+            entityLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            entityLayout.Size = new Size(515, 389);
+            entityLayout.TabIndex = 1;
             // 
             // DomainAttribute
             // 
@@ -581,6 +598,7 @@
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDatabaseAlias).EndInit();
+            entityLayout.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }

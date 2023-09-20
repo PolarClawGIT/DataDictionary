@@ -89,7 +89,7 @@ namespace DataDictionary.Main.Forms.Domain
                 }
 
                 entityData.AutoGenerateColumns = false;
-                entityData.DataSource = Program.Data.GetEntities(data).OrderBy(o => o.EntityTitle);
+                entityData.DataSource = Program.Data.GetEntities(data).OrderBy(o => o.EntityTitle).ToList();
 
                 if (bindingProperties.Current is DomainAttributePropertyItem propItem
                     && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)

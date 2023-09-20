@@ -34,6 +34,9 @@
             TableLayoutPanel navigationModelLayout;
             Splitter navigationSpliter;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+            TableLayoutPanel domainModelLayout;
+            GroupBox displayOrdergroup;
+            TableLayoutPanel displayOrderChoiceLayout;
             modelNameData = new Controls.TextBoxData();
             modelDescriptionData = new Controls.TextBoxData();
             navigationTabs = new TabControl();
@@ -108,10 +111,15 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
+            choiceAttribute = new RadioButton();
+            choiceEntity = new RadioButton();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
             navigationSpliter = new Splitter();
+            domainModelLayout = new TableLayoutPanel();
+            displayOrdergroup = new GroupBox();
+            displayOrderChoiceLayout = new TableLayoutPanel();
             navigationPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)modelSpliter).BeginInit();
             modelSpliter.Panel1.SuspendLayout();
@@ -125,6 +133,9 @@
             dbSchemaContextMenu.SuspendLayout();
             statusStrip.SuspendLayout();
             menuStrip.SuspendLayout();
+            domainModelLayout.SuspendLayout();
+            displayOrdergroup.SuspendLayout();
+            displayOrderChoiceLayout.SuspendLayout();
             SuspendLayout();
             // 
             // navigationPanel
@@ -209,7 +220,7 @@
             // 
             // navigationDomainTab
             // 
-            navigationDomainTab.Controls.Add(domainModelNavigation);
+            navigationDomainTab.Controls.Add(domainModelLayout);
             navigationDomainTab.Location = new Point(4, 24);
             navigationDomainTab.Name = "navigationDomainTab";
             navigationDomainTab.Padding = new Padding(3);
@@ -222,9 +233,9 @@
             // 
             domainModelNavigation.ContextMenuStrip = domainModelMenu;
             domainModelNavigation.Dock = DockStyle.Fill;
-            domainModelNavigation.Location = new Point(3, 3);
+            domainModelNavigation.Location = new Point(3, 83);
             domainModelNavigation.Name = "domainModelNavigation";
-            domainModelNavigation.Size = new Size(204, 421);
+            domainModelNavigation.Size = new Size(198, 335);
             domainModelNavigation.TabIndex = 0;
             domainModelNavigation.NodeMouseDoubleClick += domainModelNavigation_NodeMouseDoubleClick;
             // 
@@ -759,6 +770,73 @@
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
             // 
+            // domainModelLayout
+            // 
+            domainModelLayout.ColumnCount = 1;
+            domainModelLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            domainModelLayout.Controls.Add(displayOrdergroup, 0, 0);
+            domainModelLayout.Controls.Add(domainModelNavigation, 0, 1);
+            domainModelLayout.Dock = DockStyle.Fill;
+            domainModelLayout.Location = new Point(3, 3);
+            domainModelLayout.Name = "domainModelLayout";
+            domainModelLayout.RowCount = 2;
+            domainModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
+            domainModelLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            domainModelLayout.Size = new Size(204, 421);
+            domainModelLayout.TabIndex = 1;
+            // 
+            // displayOrdergroup
+            // 
+            displayOrdergroup.AutoSize = true;
+            displayOrdergroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            displayOrdergroup.Controls.Add(displayOrderChoiceLayout);
+            displayOrdergroup.Dock = DockStyle.Fill;
+            displayOrdergroup.Location = new Point(3, 3);
+            displayOrdergroup.Name = "displayOrdergroup";
+            displayOrdergroup.Size = new Size(198, 74);
+            displayOrdergroup.TabIndex = 0;
+            displayOrdergroup.TabStop = false;
+            displayOrdergroup.Text = "Display Order";
+            // 
+            // displayOrderChoiceLayout
+            // 
+            displayOrderChoiceLayout.ColumnCount = 1;
+            displayOrderChoiceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            displayOrderChoiceLayout.Controls.Add(choiceAttribute, 0, 0);
+            displayOrderChoiceLayout.Controls.Add(choiceEntity, 0, 1);
+            displayOrderChoiceLayout.Dock = DockStyle.Fill;
+            displayOrderChoiceLayout.Location = new Point(3, 19);
+            displayOrderChoiceLayout.Name = "displayOrderChoiceLayout";
+            displayOrderChoiceLayout.RowCount = 2;
+            displayOrderChoiceLayout.RowStyles.Add(new RowStyle());
+            displayOrderChoiceLayout.RowStyles.Add(new RowStyle());
+            displayOrderChoiceLayout.Size = new Size(192, 52);
+            displayOrderChoiceLayout.TabIndex = 0;
+            // 
+            // choiceAttribute
+            // 
+            choiceAttribute.AutoSize = true;
+            choiceAttribute.Checked = true;
+            choiceAttribute.Location = new Point(3, 3);
+            choiceAttribute.Name = "choiceAttribute";
+            choiceAttribute.Size = new Size(107, 19);
+            choiceAttribute.TabIndex = 0;
+            choiceAttribute.TabStop = true;
+            choiceAttribute.Text = "Attribute/Entity";
+            choiceAttribute.UseVisualStyleBackColor = true;
+            choiceAttribute.CheckedChanged += choiceDisplayOrder_CheckedChanged;
+            // 
+            // choiceEntity
+            // 
+            choiceEntity.AutoSize = true;
+            choiceEntity.Location = new Point(3, 28);
+            choiceEntity.Name = "choiceEntity";
+            choiceEntity.Size = new Size(107, 19);
+            choiceEntity.TabIndex = 1;
+            choiceEntity.Text = "Entity/Attribute";
+            choiceEntity.UseVisualStyleBackColor = true;
+            choiceEntity.CheckedChanged += choiceDisplayOrder_CheckedChanged;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -799,6 +877,11 @@
             statusStrip.PerformLayout();
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
+            domainModelLayout.ResumeLayout(false);
+            domainModelLayout.PerformLayout();
+            displayOrdergroup.ResumeLayout(false);
+            displayOrderChoiceLayout.ResumeLayout(false);
+            displayOrderChoiceLayout.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -879,5 +962,7 @@
         private ToolStripMenuItem entitiesToolStripMenuItem;
         private ToolStripMenuItem entityPropertiesToolStripMenuItem;
         private ToolStripMenuItem entityAliasToolStripMenuItem;
+        private RadioButton choiceAttribute;
+        private RadioButton choiceEntity;
     }
 }
