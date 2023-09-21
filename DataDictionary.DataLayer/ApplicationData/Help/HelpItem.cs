@@ -68,7 +68,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
             new DataColumn("HelpParentId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("HelpSubject", typeof(string)){ AllowDBNull = false},
             new DataColumn("HelpText", typeof(string)){ AllowDBNull = false},
-            new DataColumn("NameSpace", typeof(string)){ AllowDBNull = false},
+            new DataColumn("NameSpace", typeof(string)){ AllowDBNull = true},
             new DataColumn("Obsolete", typeof(bool)){ AllowDBNull = false},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
