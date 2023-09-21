@@ -277,6 +277,7 @@ namespace DataDictionary.Main
         private void peekAtClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Forms.ClipboardView()); }
 
-
+        private void textEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        { Activate(() => new ProofOfConcept.TextEditor()); }
     }
 }

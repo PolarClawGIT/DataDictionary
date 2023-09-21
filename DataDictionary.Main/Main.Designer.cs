@@ -32,15 +32,17 @@
             Panel navigationPanel;
             SplitContainer modelSpliter;
             TableLayoutPanel navigationModelLayout;
-            Splitter navigationSpliter;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             TableLayoutPanel domainModelLayout;
             GroupBox displayOrdergroup;
             TableLayoutPanel displayOrderChoiceLayout;
+            Splitter navigationSpliter;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             modelNameData = new Controls.TextBoxData();
             modelDescriptionData = new Controls.TextBoxData();
             navigationTabs = new TabControl();
             navigationDomainTab = new TabPage();
+            choiceAttribute = new RadioButton();
+            choiceEntity = new RadioButton();
             domainModelNavigation = new TreeView();
             domainModelMenu = new ContextMenuStrip(components);
             menuImportDbSchema = new ToolStripMenuItem();
@@ -111,15 +113,14 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
-            choiceAttribute = new RadioButton();
-            choiceEntity = new RadioButton();
+            textEditorToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
-            navigationSpliter = new Splitter();
             domainModelLayout = new TableLayoutPanel();
             displayOrdergroup = new GroupBox();
             displayOrderChoiceLayout = new TableLayoutPanel();
+            navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)modelSpliter).BeginInit();
             modelSpliter.Panel1.SuspendLayout();
@@ -128,14 +129,14 @@
             navigationModelLayout.SuspendLayout();
             navigationTabs.SuspendLayout();
             navigationDomainTab.SuspendLayout();
+            domainModelLayout.SuspendLayout();
+            displayOrdergroup.SuspendLayout();
+            displayOrderChoiceLayout.SuspendLayout();
             domainModelMenu.SuspendLayout();
             navigationDbSchemaTab.SuspendLayout();
             dbSchemaContextMenu.SuspendLayout();
             statusStrip.SuspendLayout();
             menuStrip.SuspendLayout();
-            domainModelLayout.SuspendLayout();
-            displayOrdergroup.SuspendLayout();
-            displayOrderChoiceLayout.SuspendLayout();
             SuspendLayout();
             // 
             // navigationPanel
@@ -228,6 +229,73 @@
             navigationDomainTab.TabIndex = 1;
             navigationDomainTab.Text = "Domain Model";
             navigationDomainTab.UseVisualStyleBackColor = true;
+            // 
+            // domainModelLayout
+            // 
+            domainModelLayout.ColumnCount = 1;
+            domainModelLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            domainModelLayout.Controls.Add(displayOrdergroup, 0, 0);
+            domainModelLayout.Controls.Add(domainModelNavigation, 0, 1);
+            domainModelLayout.Dock = DockStyle.Fill;
+            domainModelLayout.Location = new Point(3, 3);
+            domainModelLayout.Name = "domainModelLayout";
+            domainModelLayout.RowCount = 2;
+            domainModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
+            domainModelLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            domainModelLayout.Size = new Size(204, 421);
+            domainModelLayout.TabIndex = 1;
+            // 
+            // displayOrdergroup
+            // 
+            displayOrdergroup.AutoSize = true;
+            displayOrdergroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            displayOrdergroup.Controls.Add(displayOrderChoiceLayout);
+            displayOrdergroup.Dock = DockStyle.Fill;
+            displayOrdergroup.Location = new Point(3, 3);
+            displayOrdergroup.Name = "displayOrdergroup";
+            displayOrdergroup.Size = new Size(198, 74);
+            displayOrdergroup.TabIndex = 0;
+            displayOrdergroup.TabStop = false;
+            displayOrdergroup.Text = "Display Order";
+            // 
+            // displayOrderChoiceLayout
+            // 
+            displayOrderChoiceLayout.ColumnCount = 1;
+            displayOrderChoiceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            displayOrderChoiceLayout.Controls.Add(choiceAttribute, 0, 0);
+            displayOrderChoiceLayout.Controls.Add(choiceEntity, 0, 1);
+            displayOrderChoiceLayout.Dock = DockStyle.Fill;
+            displayOrderChoiceLayout.Location = new Point(3, 19);
+            displayOrderChoiceLayout.Name = "displayOrderChoiceLayout";
+            displayOrderChoiceLayout.RowCount = 2;
+            displayOrderChoiceLayout.RowStyles.Add(new RowStyle());
+            displayOrderChoiceLayout.RowStyles.Add(new RowStyle());
+            displayOrderChoiceLayout.Size = new Size(192, 52);
+            displayOrderChoiceLayout.TabIndex = 0;
+            // 
+            // choiceAttribute
+            // 
+            choiceAttribute.AutoSize = true;
+            choiceAttribute.Checked = true;
+            choiceAttribute.Location = new Point(3, 3);
+            choiceAttribute.Name = "choiceAttribute";
+            choiceAttribute.Size = new Size(107, 19);
+            choiceAttribute.TabIndex = 0;
+            choiceAttribute.TabStop = true;
+            choiceAttribute.Text = "Attribute/Entity";
+            choiceAttribute.UseVisualStyleBackColor = true;
+            choiceAttribute.CheckedChanged += choiceDisplayOrder_CheckedChanged;
+            // 
+            // choiceEntity
+            // 
+            choiceEntity.AutoSize = true;
+            choiceEntity.Location = new Point(3, 28);
+            choiceEntity.Name = "choiceEntity";
+            choiceEntity.Size = new Size(107, 19);
+            choiceEntity.TabIndex = 1;
+            choiceEntity.Text = "Entity/Attribute";
+            choiceEntity.UseVisualStyleBackColor = true;
+            choiceEntity.CheckedChanged += choiceDisplayOrder_CheckedChanged;
             // 
             // domainModelNavigation
             // 
@@ -670,13 +738,13 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(153, 22);
+            customizeToolStripMenuItem.Size = new Size(180, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(153, 22);
+            optionsToolStripMenuItem.Size = new Size(180, 22);
             optionsToolStripMenuItem.Text = "&Options";
             optionsToolStripMenuItem.Click += optionsToolStripMenuItem_Click;
             // 
@@ -684,7 +752,7 @@
             // 
             applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { propertiesToolStripMenuItem });
             applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
-            applicationToolStripMenuItem.Size = new Size(153, 22);
+            applicationToolStripMenuItem.Size = new Size(180, 22);
             applicationToolStripMenuItem.Text = "Application";
             // 
             // propertiesToolStripMenuItem
@@ -699,34 +767,34 @@
             // 
             dbSchemaToolStripMenuItem.Image = Properties.Resources.Database;
             dbSchemaToolStripMenuItem.Name = "dbSchemaToolStripMenuItem";
-            dbSchemaToolStripMenuItem.Size = new Size(153, 22);
+            dbSchemaToolStripMenuItem.Size = new Size(180, 22);
             dbSchemaToolStripMenuItem.Text = "Db &Schema";
             // 
             // domainModelToolStripMenuItem
             // 
             domainModelToolStripMenuItem.Image = Properties.Resources.Dictionary;
             domainModelToolStripMenuItem.Name = "domainModelToolStripMenuItem";
-            domainModelToolStripMenuItem.Size = new Size(153, 22);
+            domainModelToolStripMenuItem.Size = new Size(180, 22);
             domainModelToolStripMenuItem.Text = "Domain &Model";
             // 
             // unitTestingToolStripMenuItem
             // 
-            unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem, testFormToolStripMenuItem });
+            unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem, testFormToolStripMenuItem, textEditorToolStripMenuItem });
             unitTestingToolStripMenuItem.Name = "unitTestingToolStripMenuItem";
-            unitTestingToolStripMenuItem.Size = new Size(153, 22);
+            unitTestingToolStripMenuItem.Size = new Size(180, 22);
             unitTestingToolStripMenuItem.Text = "Testing";
             // 
             // gridViewToolStripMenuItem
             // 
             gridViewToolStripMenuItem.Name = "gridViewToolStripMenuItem";
-            gridViewToolStripMenuItem.Size = new Size(125, 22);
+            gridViewToolStripMenuItem.Size = new Size(180, 22);
             gridViewToolStripMenuItem.Text = "Grid View";
             gridViewToolStripMenuItem.Click += gridViewToolStripMenuItem_Click;
             // 
             // testFormToolStripMenuItem
             // 
             testFormToolStripMenuItem.Name = "testFormToolStripMenuItem";
-            testFormToolStripMenuItem.Size = new Size(125, 22);
+            testFormToolStripMenuItem.Size = new Size(180, 22);
             testFormToolStripMenuItem.Text = "Test Form";
             testFormToolStripMenuItem.Click += testFormToolStripMenuItem_Click;
             // 
@@ -770,72 +838,12 @@
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
             // 
-            // domainModelLayout
+            // textEditorToolStripMenuItem
             // 
-            domainModelLayout.ColumnCount = 1;
-            domainModelLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            domainModelLayout.Controls.Add(displayOrdergroup, 0, 0);
-            domainModelLayout.Controls.Add(domainModelNavigation, 0, 1);
-            domainModelLayout.Dock = DockStyle.Fill;
-            domainModelLayout.Location = new Point(3, 3);
-            domainModelLayout.Name = "domainModelLayout";
-            domainModelLayout.RowCount = 2;
-            domainModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
-            domainModelLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            domainModelLayout.Size = new Size(204, 421);
-            domainModelLayout.TabIndex = 1;
-            // 
-            // displayOrdergroup
-            // 
-            displayOrdergroup.AutoSize = true;
-            displayOrdergroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            displayOrdergroup.Controls.Add(displayOrderChoiceLayout);
-            displayOrdergroup.Dock = DockStyle.Fill;
-            displayOrdergroup.Location = new Point(3, 3);
-            displayOrdergroup.Name = "displayOrdergroup";
-            displayOrdergroup.Size = new Size(198, 74);
-            displayOrdergroup.TabIndex = 0;
-            displayOrdergroup.TabStop = false;
-            displayOrdergroup.Text = "Display Order";
-            // 
-            // displayOrderChoiceLayout
-            // 
-            displayOrderChoiceLayout.ColumnCount = 1;
-            displayOrderChoiceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            displayOrderChoiceLayout.Controls.Add(choiceAttribute, 0, 0);
-            displayOrderChoiceLayout.Controls.Add(choiceEntity, 0, 1);
-            displayOrderChoiceLayout.Dock = DockStyle.Fill;
-            displayOrderChoiceLayout.Location = new Point(3, 19);
-            displayOrderChoiceLayout.Name = "displayOrderChoiceLayout";
-            displayOrderChoiceLayout.RowCount = 2;
-            displayOrderChoiceLayout.RowStyles.Add(new RowStyle());
-            displayOrderChoiceLayout.RowStyles.Add(new RowStyle());
-            displayOrderChoiceLayout.Size = new Size(192, 52);
-            displayOrderChoiceLayout.TabIndex = 0;
-            // 
-            // choiceAttribute
-            // 
-            choiceAttribute.AutoSize = true;
-            choiceAttribute.Checked = true;
-            choiceAttribute.Location = new Point(3, 3);
-            choiceAttribute.Name = "choiceAttribute";
-            choiceAttribute.Size = new Size(107, 19);
-            choiceAttribute.TabIndex = 0;
-            choiceAttribute.TabStop = true;
-            choiceAttribute.Text = "Attribute/Entity";
-            choiceAttribute.UseVisualStyleBackColor = true;
-            choiceAttribute.CheckedChanged += choiceDisplayOrder_CheckedChanged;
-            // 
-            // choiceEntity
-            // 
-            choiceEntity.AutoSize = true;
-            choiceEntity.Location = new Point(3, 28);
-            choiceEntity.Name = "choiceEntity";
-            choiceEntity.Size = new Size(107, 19);
-            choiceEntity.TabIndex = 1;
-            choiceEntity.Text = "Entity/Attribute";
-            choiceEntity.UseVisualStyleBackColor = true;
-            choiceEntity.CheckedChanged += choiceDisplayOrder_CheckedChanged;
+            textEditorToolStripMenuItem.Name = "textEditorToolStripMenuItem";
+            textEditorToolStripMenuItem.Size = new Size(180, 22);
+            textEditorToolStripMenuItem.Text = "Text Editor";
+            textEditorToolStripMenuItem.Click += textEditorToolStripMenuItem_Click;
             // 
             // Main
             // 
@@ -870,6 +878,11 @@
             navigationModelLayout.PerformLayout();
             navigationTabs.ResumeLayout(false);
             navigationDomainTab.ResumeLayout(false);
+            domainModelLayout.ResumeLayout(false);
+            domainModelLayout.PerformLayout();
+            displayOrdergroup.ResumeLayout(false);
+            displayOrderChoiceLayout.ResumeLayout(false);
+            displayOrderChoiceLayout.PerformLayout();
             domainModelMenu.ResumeLayout(false);
             navigationDbSchemaTab.ResumeLayout(false);
             dbSchemaContextMenu.ResumeLayout(false);
@@ -877,11 +890,6 @@
             statusStrip.PerformLayout();
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
-            domainModelLayout.ResumeLayout(false);
-            domainModelLayout.PerformLayout();
-            displayOrdergroup.ResumeLayout(false);
-            displayOrderChoiceLayout.ResumeLayout(false);
-            displayOrderChoiceLayout.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -964,5 +972,6 @@
         private ToolStripMenuItem entityAliasToolStripMenuItem;
         private RadioButton choiceAttribute;
         private RadioButton choiceEntity;
+        private ToolStripMenuItem textEditorToolStripMenuItem;
     }
 }
