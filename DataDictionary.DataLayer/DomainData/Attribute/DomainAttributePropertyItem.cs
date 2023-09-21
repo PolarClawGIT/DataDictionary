@@ -96,10 +96,4 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         { }
         #endregion
     }
-
-    public static class DomainAttributePropertyItemExtension
-    {
-        public static IEnumerable<DomainAttributePropertyItem> GetProperties(this IEnumerable<DomainAttributePropertyItem> source, IDomainAttributeKey item)
-        { return source.Where(w => item.AttributeId == w.AttributeId); }
-    }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Interface structure for MS SQL ExtendedProperty parameters.
     /// </summary>
-    public interface IDbExtendedPropertyParameter
+    public interface IDbExtendedPropertyParameter: IDbCatalogKeyUnique
     {
         /// <summary>
         /// Level 0 (Catalog) Type parameter
@@ -57,6 +58,10 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// </summary>
     public class DbExtendedPropertyParameter : IDbExtendedPropertyParameter
     { //TODO: Switch to using the Scope enumerations.
+
+        /// <inheritdoc/>
+        public String? CatalogName { get; set; }
+
         /// <inheritdoc/>
         public string? PropertyName { get; set; } // Null will return all extended properties
 

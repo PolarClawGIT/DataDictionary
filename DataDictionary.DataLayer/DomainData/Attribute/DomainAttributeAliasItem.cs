@@ -139,10 +139,4 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         }
 
     }
-
-    public static class DomainAttributeAliasItemExtension
-    {
-        public static IEnumerable<DomainAttributeAliasItem> GetAliases(this IEnumerable<DomainAttributeAliasItem> source, IDomainAttributeKey item)
-        { return source.Where(w => item.AttributeId == w.AttributeId); }
-    }
 }

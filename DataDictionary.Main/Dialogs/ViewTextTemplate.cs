@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DataDictionary.Main.TextTemplates;
-using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.Main.Forms;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 
@@ -16,11 +15,8 @@ namespace DataDictionary.Main.Dialogs
 {
     partial class ViewTextTemplate : ApplicationBase
     {
-        class FormData
-        {
-
-            public String? TextTemplateResult { get; set; }
-        }
+        class FormData // For Data Binding
+        { public String? TextTemplateResult { get; set; } }
 
         FormData data = new FormData();
 
@@ -35,11 +31,10 @@ namespace DataDictionary.Main.Dialogs
              * Has extensibility issues. Not something I am going to try to resolve. 
              * Each template to be used would need to be pre-defined.
              * What I desired to do was put the templates in the database and be able to execute them in the application.
-             * For now probably just used a simple Text Builder to generate scripts.
+             * For now probably just use a simple Text Builder to generate scripts.
              */
 
-            IEnumerable<DbExtendedPropertyParameter> values = Program.Data.ExtendedProperties();
-            TextTemplates.CreateExtendedProperty template = new TextTemplates.CreateExtendedProperty(values);
+            TextTemplates.CreateExtendedProperty template = new TextTemplates.CreateExtendedProperty(Program.Data);
             data.TextTemplateResult = template.TransformText();
             textTemplateResult.DataBindings.Add(new Binding(nameof(textTemplateResult.Text), data, nameof(data.TextTemplateResult)));
 

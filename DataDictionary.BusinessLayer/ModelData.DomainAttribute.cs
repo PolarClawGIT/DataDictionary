@@ -1,4 +1,6 @@
-﻿using DataDictionary.DataLayer.DomainData.Attribute;
+﻿using DataDictionary.DataLayer.ApplicationData.Property;
+using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
 using System;
 using System.Collections.Generic;
@@ -31,6 +33,28 @@ namespace DataDictionary.BusinessLayer
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Gets the Attribute Properties given the key.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public IEnumerable<DomainAttributePropertyItem> GetProperties(IDomainAttributeKey source)
+        {
+            DomainAttributeKey key = new DomainAttributeKey(source);
+            return DomainAttributeProperties.Where(w => key.Equals(w)); 
+        }
+
+        /// <summary>
+        /// Gets the Attribute Aliases given the key.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public IEnumerable<DomainAttributeAliasItem> GetAliases(IDomainAttributeKey source)
+        {
+            DomainAttributeKey key = new DomainAttributeKey(source);
+            return DomainAttributeAliases.Where(w => key.Equals(w)); 
         }
     }
 }

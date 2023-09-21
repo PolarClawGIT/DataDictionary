@@ -37,23 +37,25 @@
             // textTemplateLayout
             // 
             textTemplateLayout.ColumnCount = 1;
-            textTemplateLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            textTemplateLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             textTemplateLayout.Controls.Add(textTemplateResult, 0, 1);
+            textTemplateLayout.Dock = DockStyle.Fill;
             textTemplateLayout.Location = new Point(0, 0);
             textTemplateLayout.Name = "textTemplateLayout";
             textTemplateLayout.RowCount = 2;
-            textTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            textTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            textTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            textTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             textTemplateLayout.Size = new Size(800, 450);
             textTemplateLayout.TabIndex = 0;
             // 
             // textTemplateResult
             // 
             textTemplateResult.Dock = DockStyle.Fill;
-            textTemplateResult.Location = new Point(3, 228);
+            textTemplateResult.Location = new Point(3, 23);
             textTemplateResult.Multiline = true;
             textTemplateResult.Name = "textTemplateResult";
-            textTemplateResult.Size = new Size(794, 219);
+            textTemplateResult.ScrollBars = ScrollBars.Both;
+            textTemplateResult.Size = new Size(794, 424);
             textTemplateResult.TabIndex = 0;
             // 
             // ViewTextTemplate
@@ -65,9 +67,11 @@
             Name = "ViewTextTemplate";
             Text = "ViewTextTemplate";
             Load += ViewTextTemplate_Load;
+            Controls.SetChildIndex(textTemplateLayout, 0);
             textTemplateLayout.ResumeLayout(false);
             textTemplateLayout.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
