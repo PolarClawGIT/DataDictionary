@@ -22,25 +22,16 @@ Begin Try
 	Declare @Values [App_DataDictionary].[typeDomainAttribute]
 	Insert Into @Values
 	Select	IsNull(D.[AttributeId],NewId()) As [AttributeId],
-			P.[AttributeParentId] As [AttributeParentId],
+			D.[SubjectAreaId],
 			NullIf(Trim(D.[AttributeTitle]),'') As [AttributeTitle],
 			NullIf(Trim(D.[AttributeDescription]),'') As [AttributeDescription],
 			D.[Obsolete],
 			D.[SysStart]
 	From	@Data D
-			Left Join @Data P
-			On	D.[AttributeParentId] = P.[AttributeId]
 
 	-- Validation
 	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
 	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
-
-	If Exists (
-		Select	[AttributeParentId], [AttributeTitle]
-		From	@Values
-		Group By [AttributeParentId], [AttributeTitle]
-		Having	Count(*) > 1)
-	Throw 50000, '[AttributeTitle] cannot be duplicate for the same parent attribute', 2;
 
 	If Exists (
 		Select	[AttributeId]
@@ -61,18 +52,12 @@ Begin Try
 	-- Note: Merge statement can throw errors with FK and UK constraints.
 	With [Data] As (
 		Select	D.[AttributeId],
-				R.[AttributeId] As [AttributeParentId],
 				D.[AttributeTitle],
 				D.[AttributeDescription],
 				IIF(IsNull(D.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
 		From	@Values D
-				Left Join [App_DataDictionary].[ModelAttribute] P
-				On	@ModelId = P.[ModelId] And
-					IsNull(D.[AttributeId],NewId()) = P.[AttributeId]
 				Inner Join [App_DataDictionary].[DomainAttribute] A
-				On	P.[AttributeId] = A.[AttributeId]
-				Left Join [App_DataDictionary].[ModelAttribute] R
-				On	D.[AttributeParentId] = R.[AttributeId]),
+				On	D.[AttributeId] = A.[AttributeId]),
 	[Delta] As (
 		Select	[AttributeId],
 				[AttributeTitle],
@@ -112,17 +97,17 @@ Begin Try
 	With [Data] As (
 		Select	@ModelId As [ModelId],
 				[AttributeId],
-				[AttributeParentId]
+				[SubjectAreaId]
 		From	@Values)
 	Merge [App_DataDictionary].[ModelAttribute] As T
 	Using [Data] As S
 	On	T.[ModelId] = S.[ModelId] And
 		T.[AttributeId] = S.[AttributeId]
 	When Matched Then Update Set
-		[AttributeParentId] = S.[AttributeParentId]
+		[SubjectAreaId] = S.[SubjectAreaId]
 	When Not Matched by Target Then
-		Insert ([ModelId], [AttributeId], [AttributeParentId])
-		Values ([ModelId], [AttributeId], [AttributeParentId])
+		Insert ([ModelId], [AttributeId], [SubjectAreaId])
+		Values ([ModelId], [AttributeId], [SubjectAreaId])
 	When Not Matched by Source And T.[ModelId] = @ModelId Then Delete;
 	Print FormatMessage ('Merge [App_DataDictionary].[ApplicationAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

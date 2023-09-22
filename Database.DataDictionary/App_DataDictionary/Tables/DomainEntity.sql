@@ -4,7 +4,7 @@
 	-- For this tool Entities are a catch-all item that are not a Column or Parameter.
 	-- This includes Tables, Views, Procedures Functions and User Defined Data Types.
 	-- To be implemented later.
-	[EntityId] UniqueIdentifier Not Null CONSTRAINT [DF_DomainEntityEntityId] DEFAULT (newid()),
+	[EntityId] UniqueIdentifier Not Null CONSTRAINT [DF_DomainEntityId] DEFAULT (newid()),
 	[EntityTitle] [App_DataDictionary].[typeTitle] Not Null,
 	[EntityDescription] [App_DataDictionary].[typeDescription] Null,
 	[Obsolete] As (CONVERT([bit],case when [ObsoleteDate] IS NULL then (0) else (1) end)),

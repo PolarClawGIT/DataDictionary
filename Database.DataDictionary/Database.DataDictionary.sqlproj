@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Name>DataDictionary.Database</Name>
+    <Name>Database.DataDictionary</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{6812c29c-90cd-4aa7-b362-f3cf9acf9c56}</ProjectGuid>
@@ -70,7 +70,6 @@
     <Folder Include="App_DataDictionary\Views" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DataDictionary.Database.publish.xml" />
     <None Include="Schema.scmp" />
     <None Include="dbo\Extended Property query.sql" />
     <None Include="App_DataDictionary\ExtendedProperty Data.sql" />
@@ -82,9 +81,6 @@
     <Build Include="Security\History_DataDictionary.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttribute.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttributeAlias.sql" />
-    <Build Include="dbo\Tables\SampleParent.sql" />
-    <Build Include="dbo\Tables\SampleChild.sql" />
-    <Build Include="dbo\DataDictionary.sql" />
     <Build Include="App_DataDictionary\Tables\ApplicationProperty.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttributeProperty.sql" />
     <Build Include="App_DataDictionary\Tables\SecurityPrinciple.sql" />
@@ -101,12 +97,9 @@
     <Build Include="App_DataDictionary\Tables\ModelCatalog.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseSchema.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseTableColumn.sql" />
-    <Build Include="dbo\Tables\SampleHistory.sql" />
-    <Build Include="dbo\Sequence\SampleSequence.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Tables\ApplicationHelp.sql" />
     <Build Include="Security\DataDictionaryApp.sql" />
-    <Build Include="dbo\Stored Procedures\procGetSample.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetModel.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetModel.sql" />
@@ -171,9 +164,7 @@
     <Build Include="App_DataDictionary\Stored Procedures\procDeleteDatabaseCatalogObject.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeTitle.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDescription.sql" />
-    <Build Include="dbo\Views\SampleView.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationProperty.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainSubjectArea.sql" />
     <Build Include="App_DataDictionary\Views\DomainEntityAttribute.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainEntityProperty.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainEntityAlias.sql" />
@@ -184,6 +175,10 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntity.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntityProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntityAlias.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelSubjectArea.sql" />
+    <Build Include="App_DataDictionary\Tables\LibrarySource.sql" />
+    <Build Include="App_DataDictionary\Tables\LibraryMember.sql" />
+    <Build Include="App_DataDictionary\Tables\LibraryDocument.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

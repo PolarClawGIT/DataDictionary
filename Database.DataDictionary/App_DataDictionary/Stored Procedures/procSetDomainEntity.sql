@@ -22,25 +22,16 @@ Begin Try
 	Declare @Values [App_DataDictionary].[typeDomainEntity]
 	Insert Into @Values
 	Select	IsNull(D.[EntityId],NewId()) As [EntityId],
-			P.[EntityParentId] As [EntityParentId],
+			D.[SubjectAreaId],
 			NullIf(Trim(D.[EntityTitle]),'') As [EntityTitle],
 			NullIf(Trim(D.[EntityDescription]),'') As [EntityDescription],
 			D.[Obsolete],
 			D.[SysStart]
 	From	@Data D
-			Left Join @Data P
-			On	D.[EntityParentId] = P.[EntityId]
 
 	-- Validation
 	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
 	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
-
-	If Exists (
-		Select	[EntityParentId], [EntityTitle]
-		From	@Values
-		Group By [EntityParentId], [EntityTitle]
-		Having	Count(*) > 1)
-	Throw 50000, '[EntityTitle] cannot be duplicate for the same parent Entity', 2;
 
 	If Exists (
 		Select	[EntityId]
@@ -61,18 +52,12 @@ Begin Try
 	-- Note: Merge statement can throw errors with FK and UK constraints.
 	With [Data] As (
 		Select	D.[EntityId],
-				R.[EntityId] As [EntityParentId],
 				D.[EntityTitle],
 				D.[EntityDescription],
 				IIF(IsNull(D.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
 		From	@Values D
-				Left Join [App_DataDictionary].[ModelEntity] P
-				On	@ModelId = P.[ModelId] And
-					IsNull(D.[EntityId],NewId()) = P.[EntityId]
 				Inner Join [App_DataDictionary].[DomainEntity] A
-				On	P.[EntityId] = A.[EntityId]
-				Left Join [App_DataDictionary].[ModelEntity] R
-				On	D.[EntityParentId] = R.[EntityId]),
+				On	D.[EntityId] = A.[EntityId]),
 	[Delta] As (
 		Select	[EntityId],
 				[EntityTitle],
@@ -112,17 +97,17 @@ Begin Try
 	With [Data] As (
 		Select	@ModelId As [ModelId],
 				[EntityId],
-				[EntityParentId]
+				[SubjectAreaId]
 		From	@Values)
 	Merge [App_DataDictionary].[ModelEntity] As T
 	Using [Data] As S
 	On	T.[ModelId] = S.[ModelId] And
 		T.[EntityId] = S.[EntityId]
 	When Matched Then Update Set
-		[EntityParentId] = S.[EntityParentId]
+		[SubjectAreaId] = S.[SubjectAreaId]
 	When Not Matched by Target Then
-		Insert ([ModelId], [EntityId], [EntityParentId])
-		Values ([ModelId], [EntityId], [EntityParentId])
+		Insert ([ModelId], [EntityId], [SubjectAreaId])
+		Values ([ModelId], [EntityId], [SubjectAreaId])
 	When Not Matched by Source And T.[ModelId] = @ModelId Then Delete;
 	Print FormatMessage ('Merge [App_DataDictionary].[ApplicationEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

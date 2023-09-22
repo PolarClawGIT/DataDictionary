@@ -26,7 +26,7 @@ Begin Try
 				(Select IsNull(Max([EntityAliasId]),0) From [App_DataDictionary].[DomainEntityAlias] Where [EntityId] = D.[EntityId]) +
 				Row_Number() Over (
 					Partition By D.[EntityId], C.[EntityAliasId]
-					Order By D.[CatalogName], D.[SchemaName], D.[ObjectName], D.[ElementName]))
+					Order By D.[CatalogName], D.[SchemaName], D.[ObjectName]))
 				As [EntityAliasId],
 			NullIf(Trim(D.[CatalogName]),'') As [CatalogName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],

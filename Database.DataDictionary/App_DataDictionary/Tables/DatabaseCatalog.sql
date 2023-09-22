@@ -4,7 +4,7 @@
 	-- The objects are never edited directly by the end-users. (This is not a DDL tool)
 	-- Instead the objects are used to provide a Snapshot of the Database and objects of interest.
 	-- The Object names are used as the key rather then creating a surrogate key that needs to be reconciled.
-	[CatalogId] UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseCatalogCatalogId] DEFAULT (newid()),
+	[CatalogId] UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseCatalogId] DEFAULT (newid()),
 	[CatalogName] SysName Not Null,
 	[SourceServerName] SysName Null,
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
