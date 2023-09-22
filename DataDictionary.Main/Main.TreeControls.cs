@@ -1,6 +1,8 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Attribute;
@@ -20,6 +22,7 @@ namespace DataDictionary.Main
         Dictionary<TreeNode, Object> dbDataNodes = new Dictionary<TreeNode, Object>();
         enum dbDataImageIndex
         {
+            Unknown,
             Database,
             Schema,
             Tables,
@@ -30,11 +33,19 @@ namespace DataDictionary.Main
             Column,
             ComputedColumn,
             Constraint,
-            ConstraintColumn
+            ConstraintColumn,
+            Routines,
+            Routine,
+            StoredProcedure,
+            ScalarFunction,
+            TableFunction,
+            Parameter,
+            Dependency
         }
 
         static Dictionary<dbDataImageIndex, (String imageKey, Image image)> dbDataImageItems = new Dictionary<dbDataImageIndex, (String imageKey, Image image)>()
         {
+            {dbDataImageIndex.Unknown,          ("Unknown",          Resources.QuestionMark) },
             {dbDataImageIndex.Database,         ("Database",         Resources.Database) },
             {dbDataImageIndex.Schema,           ("Schema",           Resources.Schema) },
             {dbDataImageIndex.Tables,           ("Tables",           Resources.TableGroup) },
@@ -45,7 +56,14 @@ namespace DataDictionary.Main
             {dbDataImageIndex.ComputedColumn,   ("ComputedColumn",   Resources.ComputedColumn) },
             {dbDataImageIndex.Constraint,       ("Constraint",       Resources.Key) },
             {dbDataImageIndex.ConstraintColumn, ("ConstraintColumn", Resources.KeyColumn) },
-            {dbDataImageIndex.View,             ("View",             Resources.View) }
+            {dbDataImageIndex.View,             ("View",             Resources.View) },
+            {dbDataImageIndex.Routines,         ("Routines",         Resources.MethodSet) },
+            {dbDataImageIndex.Routine,          ("Routine",          Resources.Method) },
+            {dbDataImageIndex.StoredProcedure,  ("StoredProcedure",  Resources.Procedure) },
+            {dbDataImageIndex.ScalarFunction,   ("ScalarFunction",   Resources.ScalarFunction) },
+            {dbDataImageIndex.TableFunction,    ("TableFunction",    Resources.TableFunction) },
+            {dbDataImageIndex.Parameter,        ("Parameter",        Resources.Parameter) },
+            {dbDataImageIndex.Dependency,       ("Dependency",       Resources.Dependancy) },
         };
 
         void SetImages(TreeView tree, IEnumerable<(String imageKey, Image image)> images)
@@ -80,22 +98,26 @@ namespace DataDictionary.Main
                     TreeNode tablesNode = CreateNode("Tables & Views", dbDataImageIndex.Tables, null, schemaNode);
 
                     foreach (IDbTableItem tableItem in Program.Data.DbTables.OrderBy(o => o.TableName).Where(
-                        w => w.IsSystem == false && new DbSchemaKey(w).Equals(new DbSchemaKey(schemaItem))))
+                        w => w.IsSystem == false && new DbSchemaKey(w).Equals(schemaItem)))
                     {
+                        DbTableKey tableKey = new DbTableKey(tableItem);
                         TreeNode tableNode;
                         TreeNode? tableConstraintNode = null;
-                        if (tableItem.TableType == "VIEW")
+                        if (tableItem.ObjectScope == DbObjectScope.View)
                         { tableNode = CreateNode(tableItem.TableName, dbDataImageIndex.View, tableItem, tablesNode); }
-                        else { tableNode = CreateNode(tableItem.TableName, dbDataImageIndex.Table, tableItem, tablesNode); }
+                        else if (tableItem.ObjectScope == DbObjectScope.Table)
+                        { tableNode = CreateNode(tableItem.TableName, dbDataImageIndex.Table, tableItem, tablesNode); }
+                        else { tableNode = CreateNode(tableItem.TableName, dbDataImageIndex.Unknown, tableItem, tablesNode); }
 
                         TreeNode columnsNode = CreateNode("Columns", dbDataImageIndex.Columns, null, tableNode);
 
-                        foreach (IDbTableColumnItem columnItem in Program.Data.DbTableColumns.OrderBy(o => o.OrdinalPosition).Where(
-                            w => new DbTableKey(w).Equals(new DbTableKey(tableItem))))
-                        { TreeNode columnNode = CreateNode(columnItem.ColumnName, dbDataImageIndex.Column, columnItem, columnsNode); }
+
+                        foreach (IDbTableColumnItem columnItem in Program.Data.DbTableColumns.Where(
+                            w => tableKey.Equals(w)).OrderBy(o => o.OrdinalPosition))
+                        { CreateNode(columnItem.ColumnName, dbDataImageIndex.Column, columnItem, columnsNode); }
 
                         foreach (DbConstraintItem contraintItem in Program.Data.DbConstraints.Where(
-                            w => new DbTableKey(w).Equals(new DbTableKey(tableItem))))
+                            w => tableKey.Equals(w)))
                         {
                             if (tableConstraintNode is null)
                             { tableConstraintNode = CreateNode("Constraints", dbDataImageIndex.TableKey, null, tableNode); }
@@ -104,7 +126,52 @@ namespace DataDictionary.Main
 
                             foreach (DbConstraintColumnItem contraintColumnItem in Program.Data.DbConstraintColumns.Where(
                                 w => new DbConstraintKey(w).Equals(new DbConstraintKey(contraintItem))))
-                            { TreeNode constraintColumnNode = CreateNode(contraintColumnItem.ColumnName, dbDataImageIndex.ConstraintColumn, contraintColumnItem, constraintNode); }
+                            { CreateNode(contraintColumnItem.ColumnName, dbDataImageIndex.ConstraintColumn, contraintColumnItem, constraintNode); }
+                        }
+                    }
+
+                    TreeNode? routinesNode = null;
+
+                    foreach (IDbRoutineItem routineItem in Program.Data.DbRoutines.OrderBy(o => o.RoutineName).Where(
+                        w => w.IsSystem == false && new DbSchemaKey(w).Equals(schemaItem)))
+                    {
+                        DbRoutineKey routineKey = new DbRoutineKey(routineItem);
+                        TreeNode? routineNode;
+
+                        if (routinesNode is null)
+                        { routinesNode = CreateNode("Routines", dbDataImageIndex.Routines, null, schemaNode); }
+
+                        DbRoutineParameterItem? firstParameter = Program.Data.DbRoutineParameters.OrderBy(o => o.OrdinalPosition).FirstOrDefault(w => routineKey.Equals(w));
+
+
+                        if (routineItem.ObjectScope == DbObjectScope.Procedure)
+                        { routineNode = CreateNode(routineItem.RoutineName, dbDataImageIndex.StoredProcedure, routineItem, routinesNode); }
+
+                        else if (routineItem.ObjectScope == DbObjectScope.Function && firstParameter is DbRoutineParameterItem isScalar && isScalar.OrdinalPosition == 0)
+                        { routineNode = CreateNode(routineItem.RoutineName, dbDataImageIndex.ScalarFunction, routineItem, routinesNode); }
+
+                        else if (routineItem.ObjectScope == DbObjectScope.Function && firstParameter is DbRoutineParameterItem isTable && isTable.OrdinalPosition != 0)
+                        { routineNode = CreateNode(routineItem.RoutineName, dbDataImageIndex.TableFunction, routineItem, routinesNode); }
+
+                        else
+                        { routineNode = CreateNode(routineItem.RoutineName, dbDataImageIndex.Unknown, routineItem, routinesNode); }
+
+                        foreach (DbRoutineParameterItem routineParameter in Program.Data.DbRoutineParameters.Where(
+                            w => routineKey.Equals(w)).OrderBy(o => o.OrdinalPosition))
+                        { CreateNode(routineParameter.ParameterName, dbDataImageIndex.Parameter, routineParameter, routineNode); }
+
+                        foreach (DbRoutineDependencyItem routineDependency in Program.Data.DbRoutineDependencies.Where(
+                            w => routineKey.Equals(w)))
+                        {
+                            String nameValue = String.Format("{0}", routineDependency.ReferenceSchemaName);
+
+                            if (!String.IsNullOrWhiteSpace(routineDependency.ReferenceObjectName))
+                            { nameValue = String.Format("{0}.{1}", nameValue, routineDependency.ReferenceObjectName); }
+
+                            if (!String.IsNullOrWhiteSpace(routineDependency.ReferenceColumnName))
+                            { nameValue = String.Format("{0}.{1}", nameValue, routineDependency.ReferenceColumnName); }
+
+                            CreateNode(nameValue, dbDataImageIndex.Dependency, routineDependency, routineNode);
                         }
                     }
                 }
@@ -143,6 +210,9 @@ namespace DataDictionary.Main
                 if (dataNode is IDbConstraintItem constraintItem)
                 { Activate((data) => new Forms.Database.DbConstraint(constraintItem), constraintItem); }
 
+                if(dataNode is IDbRoutineItem routineItem)
+                { Activate((data) => new Forms.Database.DbRoutine(routineItem), routineItem); }
+
             }
         }
         #endregion
@@ -175,7 +245,6 @@ namespace DataDictionary.Main
 
             foreach (IDomainAttributeItem attributeItem in
                 Program.Data.DomainAttributes.
-                Where(w => w.ParentAttributeId is null).
                 OrderBy(o => o.AttributeTitle))
             {
                 TreeNode attributeNode = CreateAttribute(attributeItem, null);

@@ -42,12 +42,9 @@ namespace DataDictionary.Main.Forms.Domain
             if (data is not null)
             {
                 this.Text = data.AttributeTitle;
-                IDomainAttributeItem? parent = Program.Data.DomainAttributes.GetParentAttribute(data);
-                if (parent is null) { parent = new DomainAttributeItem(); } //TODO: need to re-look at this.
 
                 attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), data, nameof(data.AttributeTitle)));
                 attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), data, nameof(data.AttributeDescription)));
-                attributeParentTitleData.DataBindings.Add(new Binding(nameof(attributeParentTitleData.Text), parent, nameof(parent.AttributeTitle)));
 
                 bindingProperties.DataSource =
                     new BindingView<DomainAttributePropertyItem>(

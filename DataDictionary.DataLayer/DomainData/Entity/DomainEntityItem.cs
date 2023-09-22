@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for Domain Entity Item
     /// </summary>
-    public interface IDomainEntityItem : IDomainEntityKey, IDomainEntityParentKey, IBindingTableRow
+    public interface IDomainEntityItem : IDomainEntityKey, IBindingTableRow
     {
         /// <summary>
         /// Title of the Domain Entity (aka Name of the Entity)
@@ -40,10 +40,6 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         { get { return GetValue<Guid>("EntityId"); } protected set { SetValue("EntityId", value); } }
 
         /// <inheritdoc/>
-        public Guid? ParentEntityId
-        { get { return GetValue<Guid>("EntityParentId"); } protected set { SetValue("ParenEntityParentIdtEntityId", value); } }
-
-        /// <inheritdoc/>
         public string? EntityTitle { get { return GetValue("EntityTitle"); } set { SetValue("EntityTitle", value); } }
 
         /// <inheritdoc/>
@@ -64,7 +60,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("EntityId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("EntityParentId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn("SubjectAreaId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("EntityTitle", typeof(string)){ AllowDBNull = false},
             new DataColumn("EntityDescription", typeof(string)){ AllowDBNull = true},
             new DataColumn("Obsolete", typeof(bool)){ AllowDBNull = false},

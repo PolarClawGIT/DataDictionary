@@ -220,7 +220,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Model",
-                Command = data.Models.SaveCommand
+                Command = (conn) => data.Models.SaveCommand(conn, data.Model)
             });
 
             workItems.Add(new WorkItem()

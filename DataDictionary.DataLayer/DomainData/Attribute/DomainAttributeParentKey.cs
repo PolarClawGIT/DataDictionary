@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for the Domain Attribute Parent Key.
     /// </summary>
+    [Obsolete("Not used", true)]
     public interface IDomainAttributeParentKey: IKey
     {
         /// <summary>
@@ -20,6 +21,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Implementation for the Domain Attribute Parent Key.
     /// </summary>
+    [Obsolete("Not used", true)]
     public class DomainAttributeParentKey : IDomainAttributeParentKey, IKeyEquality<IDomainAttributeParentKey>, IKeyEquality<IDomainAttributeKey>
     {
         /// <inheritdoc/>

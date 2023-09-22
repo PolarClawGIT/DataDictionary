@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Item
     /// </summary>
-    public interface IDomainAttributeItem : IDomainAttributeKey, IDomainAttributeParentKey, IBindingTableRow
+    public interface IDomainAttributeItem : IDomainAttributeKey, IBindingTableRow
     {
         /// <summary>
         /// Title of the Domain Attribute (aka Name of the Attribute)
@@ -40,10 +40,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue("AttributeId", value); } }
 
         /// <inheritdoc/>
-        public Guid? ParentAttributeId
-        { get { return GetValue<Guid>("AttributeParentId"); } protected set { SetValue("ParenAttributeParentIdtAttributeId", value); } }
-
-        /// <inheritdoc/>
         public string? AttributeTitle { get { return GetValue("AttributeTitle"); } set { SetValue("AttributeTitle", value); } }
 
         /// <inheritdoc/>
@@ -64,7 +60,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("AttributeParentId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn("SubjectAreaId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("AttributeTitle", typeof(string)){ AllowDBNull = false},
             new DataColumn("AttributeDescription", typeof(string)){ AllowDBNull = true},
             new DataColumn("Obsolete", typeof(bool)){ AllowDBNull = false},
@@ -99,9 +95,11 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         public static IDomainAttributeItem? GetAttribute(this IDomainAttributeKey item, IEnumerable<IDomainAttributeItem> source)
         { return source.FirstOrDefault(w => w.AttributeId == item.AttributeId); }
 
+        [Obsolete("Not used", true)]
         public static IDomainAttributeItem? GetParentAttribute(this IEnumerable<IDomainAttributeItem> source, IDomainAttributeParentKey item)
         { return source.FirstOrDefault(w => w.AttributeId == item.ParentAttributeId); }
 
+        [Obsolete("Not used", true)]
         public static IDomainAttributeItem? GetParentAttribute(this IDomainAttributeParentKey item, IEnumerable<IDomainAttributeItem> source)
         { return source.FirstOrDefault(w => w.AttributeId == item.ParentAttributeId); }
     }

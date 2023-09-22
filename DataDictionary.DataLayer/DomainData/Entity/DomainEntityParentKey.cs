@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for the Domain Entity Parent Key.
     /// </summary>
+    [Obsolete("Not used", true)]
     public interface IDomainEntityParentKey : IKey
     {
         /// <summary>
@@ -20,6 +21,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Implementation for the Domain Entity Parent Key.
     /// </summary>
+    [Obsolete("Not used", true)]
     public class DomainEntityParentKey : IDomainEntityParentKey, IKeyEquality<IDomainEntityParentKey>, IKeyEquality<IDomainEntityKey>
     {
         /// <inheritdoc/>

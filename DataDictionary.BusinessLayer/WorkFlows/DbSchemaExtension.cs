@@ -266,8 +266,8 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                     DbCatalogScope catalogScope = DbCatalogScope.NULL;
                     DbObjectScope objectScope = DbObjectScope.NULL;
 
-                    if(columnSource.GetSchema(data.DbSchemta) is DbSchemaItem schema) { catalogScope = schema.CatalogScope; }
-                    if(columnSource.GetTable(data.DbTables) is DbTableItem table) { objectScope = table.ObjectScope; }
+                    if (columnSource.GetSchema(data.DbSchemta) is DbSchemaItem schema) { catalogScope = schema.CatalogScope; }
+                    if (columnSource.GetTable(data.DbTables) is DbTableItem table) { objectScope = table.ObjectScope; }
 
                     data.DomainAttributeAliases.Add(
                         new DomainAttributeAliasItem(newAttribute, aliasSource)
@@ -290,6 +290,11 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                     {
                         data.DomainAttributeProperties.
                             Add(new DomainAttributePropertyItem(newAttribute, property, propertySource));
+
+                        if (property.IsExtendedProperty == true
+                            && property.ExtendedProperty == "MS_Description"
+                            && String.IsNullOrWhiteSpace(newAttribute.AttributeDescription))
+                        { newAttribute.AttributeDescription = propertySource.PropertyValue; }
                     }
                 }
             }
@@ -331,6 +336,11 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                     {
                         data.DomainEntityProperties.
                             Add(new DomainEntityPropertyItem(newEntity, property, propertySource));
+
+                        if (property.IsExtendedProperty == true
+                            && property.ExtendedProperty == "MS_Description"
+                            && String.IsNullOrWhiteSpace(newEntity.EntityDescription))
+                        { newEntity.EntityDescription = propertySource.PropertyValue; }
                     }
                 }
             }
