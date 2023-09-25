@@ -52,7 +52,7 @@ namespace DataDictionary.Main.Forms.Database
                 errorProvider.SetError(schemaNameData.ErrorControl, String.Empty);
 
                 extendedPropertiesData.AutoGenerateColumns = false;
-                extendedPropertiesData.DataSource = Program.Data.DbExtendedProperties.GetProperties(DataKey).ToList();
+                extendedPropertiesData.DataSource = Program.Data.GetExtendedProperty(DataKey).ToList();
             }
         }
 

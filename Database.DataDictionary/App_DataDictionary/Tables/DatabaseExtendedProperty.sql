@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [App_DataDictionary].[DatabaseExtendedProperty]
 (
 		[CatalogId]      UniqueIdentifier Not Null,
+		[ExtendedPropertyId] Int Not Null, -- Surrogate Key because the natural key can have Nulls
 		-- Parameters for [fn_listextendedproperty]
 		[Level0Type]     SysName Null,
 		[Level0Name]     SysName Null,
@@ -19,6 +20,7 @@
 		[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_DatabaseExtendedProperty_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    		PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 		-- Keys
+		CONSTRAINT [PK_DatabaseExtendedProperty] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [ExtendedPropertyId] ASC),
 		CONSTRAINT [FK_DatabaseExtendedPropertyCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
 )
 GO

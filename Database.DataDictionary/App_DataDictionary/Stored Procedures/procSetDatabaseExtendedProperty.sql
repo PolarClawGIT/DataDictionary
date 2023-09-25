@@ -79,6 +79,14 @@ Begin Try
 		From	[App_DataDictionary].[DatabaseExtendedProperty]),
 	[Data] As (
 		Select	V.[CatalogId],
+				IsNull(P.[ExtendedPropertyId],
+						(Select IsNull(Max([ExtendedPropertyId]),0)
+						 From [App_DataDictionary].[DatabaseExtendedProperty]
+						 Where [CatalogId] = V.[CatalogId]) +
+						Row_Number () Over (
+							Partition By V.[CatalogId], P.[ExtendedPropertyId]
+							Order By V.[Level0Name], V.[Level1Name], V.[Level2Name], V.[PropertyName]))
+						As [ExtendedPropertyId],
 				V.[Level0Type],
 				V.[Level0Name],
 				V.[Level1Type],
@@ -96,14 +104,17 @@ Begin Try
 					IsNull(V.[Level0Name],'') = IsNull(D.[Level0Name],'') And
 					IsNull(V.[Level1Name],'') = IsNull(D.[Level1Name],'') And
 					IsNull(V.[Level2Name],'') = IsNull(D.[Level2Name],'') And
+					V.[PropertyName] = D.[PropertyName]
+				Left Join [App_DataDictionary].[DatabaseExtendedProperty] P
+				On	v.[CatalogId] = P.[CatalogId] And
+					IsNull(V.[Level0Name],'') = IsNull(D.[Level0Name],'') And
+					IsNull(V.[Level1Name],'') = IsNull(D.[Level1Name],'') And
+					IsNull(V.[Level2Name],'') = IsNull(D.[Level2Name],'') And
 					V.[PropertyName] = D.[PropertyName])
 	Merge [App_DataDictionary].[DatabaseExtendedProperty] T
 	Using [Data] S
 	On	T.[CatalogId] = S.[CatalogId] And
-		IsNull(T.[Level0Name],'') = IsNull(S.[Level0Name],'') And
-		IsNull(T.[Level1Name],'') = IsNull(S.[Level1Name],'') And
-		IsNull(T.[Level2Name],'') = IsNull(S.[Level2Name],'') And
-		T.[PropertyName] = S.[PropertyName]
+		T.[ExtendedPropertyId] = s.[ExtendedPropertyId]
 	When Matched and [IsDiffrent] = 1 Then Update Set
 		[Level0Type] = S.[Level0Type],
 		[Level0Name] = S.[Level0Name],
@@ -117,6 +128,7 @@ Begin Try
 		[PropertyValue] = S.[PropertyValue]
 	When Not Matched by Target Then
 		Insert ([CatalogId],
+				[ExtendedPropertyId],
 				[Level0Type],
 				[Level0Name],
 				[Level1Type],
@@ -128,6 +140,7 @@ Begin Try
 				[PropertyName],
 				[PropertyValue])
 		Values ([CatalogId],
+				[ExtendedPropertyId],
 				[Level0Type],
 				[Level0Name],
 				[Level1Type],

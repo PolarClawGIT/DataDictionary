@@ -53,7 +53,7 @@ namespace DataDictionary.Main.Forms.Database
                 isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), data, nameof(data.IsSystem)));
 
                 extendedPropertiesData.AutoGenerateColumns = false;
-                extendedPropertiesData.DataSource = Program.Data.DbExtendedProperties.GetProperties(DataKey).ToList();
+                extendedPropertiesData.DataSource = Program.Data.GetExtendedProperty(DataKey).ToList();
 
                 tableColumnsData.AutoGenerateColumns = false;
                 tableColumnsData.DataSource = new BindingView<DbTableColumnItem>(Program.Data.DbTableColumns, w => DataKey.Equals(w));

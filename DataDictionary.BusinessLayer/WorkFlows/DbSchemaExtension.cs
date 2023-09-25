@@ -196,18 +196,39 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Target = data.DbExtendedProperties
             });
 
-            workItems.Add(new RemoveCatalog<DbTableColumnItem>()
-            {
-                WorkName = "Remove DbColumns by Catalog",
-                Catalog = new DbCatalogKeyUnique(context),
-                Target = data.DbTableColumns
-            });
-
             workItems.Add(new RemoveCatalog<DbTableItem>()
             {
                 WorkName = "Remove DbTables by Catalog",
                 Catalog = new DbCatalogKeyUnique(context),
                 Target = data.DbTables
+            });
+
+            workItems.Add(new RemoveCatalog<DbTableColumnItem>()
+            {
+                WorkName = "Remove DbTableColumns by Catalog",
+                Catalog = new DbCatalogKeyUnique(context),
+                Target = data.DbTableColumns
+            });
+
+            workItems.Add(new RemoveCatalog<DbRoutineItem>()
+            {
+                WorkName = "Remove DbRoutine by Catalog",
+                Catalog = new DbCatalogKeyUnique(context),
+                Target = data.DbRoutines
+            });
+
+            workItems.Add(new RemoveCatalog<DbRoutineParameterItem>()
+            {
+                WorkName = "Remove DbRoutine Parameters by Catalog",
+                Catalog = new DbCatalogKeyUnique(context),
+                Target = data.DbRoutineParameters
+            });
+
+            workItems.Add(new RemoveCatalog<DbRoutineDependencyItem>()
+            {
+                WorkName = "Remove DbRoutine Dependencies by Catalog",
+                Catalog = new DbCatalogKeyUnique(context),
+                Target = data.DbRoutineDependencies
             });
 
             workItems.Add(new RemoveCatalog<DbSchemaItem>()
@@ -277,7 +298,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                             ElementScope = columnSource.ElementScope
                         });
 
-                    propeties.AddRange(aliasSource.GetProperties(data.DbExtendedProperties));
+                    propeties.AddRange(data.GetExtendedProperty(aliasSource));
                 }
 
                 foreach (IGrouping<String?, IDbExtendedPropertyItem> propertyItem in propeties.GroupBy(g => g.PropertyName))
@@ -323,7 +344,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                             ObjectScope = objectScope
                         });
 
-                    propeties.AddRange(aliasSource.GetProperties(data.DbExtendedProperties));
+                    propeties.AddRange(data.GetExtendedProperty(aliasSource));
                 }
 
                 foreach (IGrouping<String?, IDbExtendedPropertyItem> propertyItem in propeties.GroupBy(g => g.PropertyName))

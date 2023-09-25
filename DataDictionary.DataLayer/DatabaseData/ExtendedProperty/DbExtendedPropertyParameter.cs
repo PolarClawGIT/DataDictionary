@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Interface structure for MS SQL ExtendedProperty parameters.
     /// </summary>
-    public interface IDbExtendedPropertyParameter: IDbCatalogKeyUnique
+    public interface IDbExtendedPropertyParameter: IDbExtendedPropertyKey 
     {
         /// <summary>
         /// Level 0 (Catalog) Type parameter
@@ -18,34 +18,14 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         string? Level0Type { get; }
 
         /// <summary>
-        /// Level 0 (Catalog) Name parameter
-        /// </summary>
-        string? Level0Name { get; }
-
-        /// <summary>
         /// Level 1 (Object) Type parameter
         /// </summary>
         string? Level1Type { get; }
 
         /// <summary>
-        /// Level 1 (Object) Name parameter
-        /// </summary>
-        string? Level1Name { get; }
-
-        /// <summary>
         /// Level 2 (Element) Type parameter
         /// </summary>
         string? Level2Type { get; }
-
-        /// <summary>
-        /// Level 2 (Element) Name parameter
-        /// </summary>
-        string? Level2Name { get; }
-
-        /// <summary>
-        /// Name of the Property.
-        /// </summary>
-        string? PropertyName { get; }
 
         /// <summary>
         /// Value of the Property.

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Routine;
+using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
@@ -31,5 +32,63 @@ namespace DataDictionary.Main.Forms.Database
 
         public Boolean IsOpenItem(Object? item)
         { return DataKey.Equals(item); }
+
+        private void DbRoutine_Load(object sender, EventArgs e)
+        { BindData(); }
+
+        void BindData()
+        {
+            this.LockForm();
+
+            if (Program.Data.DbRoutines.FirstOrDefault(w => DataKey.Equals(w)) is DbRoutineItem value)
+            {
+                this.Text = DataKey.ToString();
+
+                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), value, nameof(value.CatalogName)));
+                schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), value, nameof(value.SchemaName)));
+                routineNameData.DataBindings.Add(new Binding(nameof(routineNameData.Text), value, nameof(value.RoutineName)));
+                routineTypeData.DataBindings.Add(new Binding(nameof(routineTypeData.Text), value, nameof(value.RoutineType)));
+                isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), value, nameof(value.IsSystem)));
+
+                extendedPropertiesData.AutoGenerateColumns = false;
+                extendedPropertiesData.DataSource = Program.Data.GetExtendedProperty(DataKey);
+
+                parametersData.AutoGenerateColumns = false;
+                parametersData.DataSource = Program.Data.GetRoutineParameters(DataKey);
+
+                dependenciesData.AutoGenerateColumns = false;
+                dependenciesData.DataSource = Program.Data.GetRoutineDependencies(DataKey);
+
+                this.UnLockForm();
+            }
+            else
+            {
+                this.LockForm(false);
+                this.Text = "[Key Not Found]";
+            }
+        }
+
+        void UnBindData()
+        {
+            this.LockForm();
+
+            catalogNameData.DataBindings.Clear();
+            schemaNameData.DataBindings.Clear();
+            routineNameData.DataBindings.Clear();
+            routineTypeData.DataBindings.Clear();
+            isSystemData.DataBindings.Clear();
+
+            extendedPropertiesData.DataSource = null;
+            parametersData.DataSource = null;
+            dependenciesData.DataSource = null;
+        }
+
+        #region IColleague
+        protected override void HandleMessage(DbDataBatchStarting message)
+        { UnBindData(); }
+
+        protected override void HandleMessage(DbDataBatchCompleted message)
+        { BindData(); }
+        #endregion
     }
 }

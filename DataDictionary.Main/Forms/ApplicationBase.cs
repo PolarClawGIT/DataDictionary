@@ -429,12 +429,12 @@ namespace DataDictionary.Main.Forms
             }
         }
 
-        public static void LockForm(this ApplicationBase form)
+        public static void LockForm(this ApplicationBase form, Boolean useWaitCursor = true)
         { // This assumes that all form layouts start with a TablePanel Control. Nothing is expected outside of that control
             foreach (Control item in form.Controls.Cast<Control>().Where(w => w.HasChildren))
             {
                 item.Enabled = false;
-                item.UseWaitCursor = true;
+                item.UseWaitCursor = useWaitCursor;
             }
         }
 

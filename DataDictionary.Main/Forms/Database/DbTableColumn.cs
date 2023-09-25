@@ -73,7 +73,7 @@ namespace DataDictionary.Main.Forms.Database
                 isHiddenData.DataBindings.Add(new Binding(nameof(isHiddenData.Checked), data, nameof(data.IsHidden), true, DataSourceUpdateMode.OnValidation, false));
 
                 extendedPropertiesData.AutoGenerateColumns = false;
-                extendedPropertiesData.DataSource = Program.Data.DbExtendedProperties.GetProperties(DataKey).ToList();
+                extendedPropertiesData.DataSource = Program.Data.GetExtendedProperty(DataKey).ToList();
             }
         }
 
