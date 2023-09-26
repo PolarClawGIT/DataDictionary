@@ -34,9 +34,7 @@ namespace DataDictionary.Main.Forms.Database
 
         void BindData()
         {
-            DbTableColumnItem? data = Program.Data.DbTableColumns.FirstOrDefault(w => DataKey.Equals(w));
-
-            if (data is not null)
+            if (Program.Data.DbTableColumns.FirstOrDefault(w => DataKey.Equals(w)) is DbTableColumnItem data)
             {
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.CatalogName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));

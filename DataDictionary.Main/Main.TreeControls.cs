@@ -231,8 +231,13 @@ namespace DataDictionary.Main
                 if(dataNode is IDbRoutineItem routineItem)
                 { Activate((data) => new Forms.Database.DbRoutine(routineItem), routineItem); }
 
+                if (dataNode is DbRoutineParameterItem routineParameterItem)
+                { Activate((data) => new Forms.Database.DbRoutineParameter(routineParameterItem), routineParameterItem); }
+
                 if (dataNode is IDbDomainItem domainItem)
                 { Activate((data) => new Forms.Database.DbDomain(domainItem), domainItem); }
+
+                
 
             }
         }

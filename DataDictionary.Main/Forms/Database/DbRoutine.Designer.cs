@@ -149,9 +149,9 @@
             // routineTab
             // 
             routineLayout.SetColumnSpan(routineTab, 2);
-            routineTab.Controls.Add(extendedPropertyData);
             routineTab.Controls.Add(routineParameterData);
             routineTab.Controls.Add(routineDependencyData);
+            routineTab.Controls.Add(extendedPropertyData);
             routineTab.Dock = DockStyle.Fill;
             routineTab.Location = new Point(3, 203);
             routineTab.Name = "routineTab";

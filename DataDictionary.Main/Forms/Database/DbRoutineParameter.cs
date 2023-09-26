@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Domain;
+﻿using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
@@ -13,43 +13,40 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbDomain : ApplicationBase, IApplicationDataForm
+    partial class DbRoutineParameter : ApplicationBase, IApplicationDataForm
     {
-        public DbDomainKey DataKey { get; private set; }
+        public DbRoutineParameterKey DataKey { get; private set; }
 
-        public DbDomain()
+        public DbRoutineParameter()
         {
             InitializeComponent();
-            this.Icon = Resources.Icon_DomainType;
-            DataKey = new DbDomainKey(new DbDomainItem());
+            this.Icon = Resources.Icon_Parameter;
+            DataKey = new DbRoutineParameterKey(new DbRoutineParameterItem());
         }
 
-        public DbDomain(IDbDomainKey domainItem) : this()
+        public DbRoutineParameter(IDbRoutineParameterKey domainItem) : this()
         {
-            DataKey = new DbDomainKey(domainItem);
+            DataKey = new DbRoutineParameterKey(domainItem);
             this.Text = DataKey.ToString();
         }
 
         public Boolean IsOpenItem(Object? item)
         { return DataKey.Equals(item); }
 
-        private void DbDomain_Load(object sender, EventArgs e)
+        private void DbRoutineParameter_Load(object sender, EventArgs e)
         { BindData(); }
 
         void BindData()
         {
-            this.LockForm();
-
-            if (Program.Data.DbDomains.FirstOrDefault(w => DataKey.Equals(w)) is DbDomainItem data)
+            if (Program.Data.DbRoutineParameters.FirstOrDefault(w => DataKey.Equals(w)) is DbRoutineParameterItem data)
             {
-                this.Text = DataKey.ToString();
-
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.CatalogName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
-                domainNameData.DataBindings.Add(new Binding(nameof(domainNameData.Text), data, nameof(data.DomainName)));
-                domainDefaultData.DataBindings.Add(new Binding(nameof(domainDefaultData.Text), data, nameof(data.DomainDefault)));
+                routineNameData.DataBindings.Add(new Binding(nameof(routineNameData.Text), data, nameof(data.RoutineName)));
+                parameterNameData.DataBindings.Add(new Binding(nameof(parameterNameData.Text), data, nameof(data.ParameterName)));
+                ordinalPositionData.DataBindings.Add(new Binding(nameof(ordinalPositionData.Text), data, nameof(data.OrdinalPosition)));
 
-                dataTypeData.DataBindings.Add(new Binding(nameof(dataTypeData.Text), data, nameof(data.DataType)));
+                dataTypeData.DataBindings.Add(new Binding(nameof(parameterNameData.Text), data, nameof(data.DataType)));
                 characterMaximumLengthData.DataBindings.Add(new Binding(nameof(characterMaximumLengthData.Text), data, nameof(data.CharacterMaximumLength)));
                 characterOctetLengthData.DataBindings.Add(new Binding(nameof(characterOctetLengthData.Text), data, nameof(data.CharacterOctetLength)));
                 numericPrecisionData.DataBindings.Add(new Binding(nameof(numericPrecisionData.Text), data, nameof(data.NumericPrecision)));
@@ -65,24 +62,22 @@ namespace DataDictionary.Main.Forms.Database
                 collationSchemaData.DataBindings.Add(new Binding(nameof(collationSchemaData.Text), data, nameof(data.CollationSchema)));
                 collationNameData.DataBindings.Add(new Binding(nameof(collationNameData.Text), data, nameof(data.CollationName)));
 
+                domainCatalogData.DataBindings.Add(new Binding(nameof(domainCatalogData.Text), data, nameof(data.CollationCatalog)));
+                domainSchemaData.DataBindings.Add(new Binding(nameof(domainSchemaData.Text), data, nameof(data.DomainSchema)));
+                domainNameData.DataBindings.Add(new Binding(nameof(domainNameData.Text), data, nameof(data.DomainName)));
+
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = Program.Data.GetExtendedProperty(DataKey).ToList();
-
-                this.UnLockForm();
-            }
-            else
-            {
-                this.LockForm(false);
-                this.Text = "[Key Not Found]";
             }
         }
 
-        void UnBindData() 
+        void UnBindData()
         {
             catalogNameData.DataBindings.Clear();
             schemaNameData.DataBindings.Clear();
-            domainNameData.DataBindings.Clear();
-            domainDefaultData.DataBindings.Clear();
+            routineNameData.DataBindings.Clear();
+            parameterNameData.DataBindings.Clear();
+            ordinalPositionData.DataBindings.Clear();
 
             dataTypeData.DataBindings.Clear();
             characterMaximumLengthData.DataBindings.Clear();
@@ -100,8 +95,13 @@ namespace DataDictionary.Main.Forms.Database
             collationSchemaData.DataBindings.Clear();
             collationNameData.DataBindings.Clear();
 
+            domainCatalogData.DataBindings.Clear();
+            domainSchemaData.DataBindings.Clear();
+            domainNameData.DataBindings.Clear();
+
             extendedPropertiesData.DataSource = null;
         }
+
 
         #region IColleague
         protected override void HandleMessage(DbDataBatchStarting message)
