@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for the Database Routine Dependencies Key
     /// </summary>
-    public interface IDbRoutineDependencyKey : IKey, IDbRoutineKey, IDbTableReferenceKey
-    {
-        /// <summary>
-        /// Name of the Referenced Column.
-        /// </summary>
-        String? ReferenceColumnName { get; }
-    }
+    public interface IDbRoutineDependencyKey : IKey, IDbRoutineKey, IDbColumnReferenceKey
+    { }
 
     /// <summary>
     /// Implementation of the Database Routine Dependencies Key
@@ -54,7 +50,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public bool Equals(IDbRoutineDependencyKey? other)
         {
             return
-                other is IDbTableReferenceKey &&
+                other is IDbObjectReferenceKey &&
                 new DbCatalogKeyUnique(this).Equals(other) &&
                 !string.IsNullOrEmpty(ReferenceSchemaName) &&
                 !string.IsNullOrEmpty(other.ReferenceSchemaName) &&

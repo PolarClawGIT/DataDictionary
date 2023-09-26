@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Reference;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// Interface for a Routine Dependency Item
     /// </summary>
     /// <see href="https://learn.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-sql-expression-dependencies-transact-sql?view=sql-server-ver16"/>
-    public interface IDbRoutineDependencyItem : IDbRoutineDependencyKey, IDbCatalogKey
+    public interface IDbRoutineDependencyItem : IDbColumnReferenceKey, IDbCatalogKey
     {
         /// <summary>
         /// The Object Type of the Reference

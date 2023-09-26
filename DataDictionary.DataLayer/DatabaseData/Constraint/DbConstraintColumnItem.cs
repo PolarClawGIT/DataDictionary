@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using System;
 using System.Collections.Generic;
@@ -17,23 +18,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Constraint Column
     /// </summary>
-    public interface IDbConstraintColumnItem : IDbConstraintKey, IDbCatalogKey, IDbColumnPosition, IDbTableColumnKey, IBindingTableRow
-    {
-        /// <summary>
-        /// Reference Schema Name
-        /// </summary>
-        String? ReferenceSchemaName { get; }
-
-        /// <summary>
-        /// Reference Table Name
-        /// </summary>
-        String? ReferenceTableName { get; }
-
-        /// <summary>
-        /// Reference Column Name
-        /// </summary>
-        String? ReferenceColumnName { get; }
-    }
+    public interface IDbConstraintColumnItem : IDbConstraintKey, IDbCatalogKey, IDbColumnPosition, IDbTableColumnKey, IDbColumnReferenceKey, IBindingTableRow
+    { }
 
     /// <summary>
     /// Implantation for the Database Constraint Column
@@ -66,7 +52,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public string? ReferenceSchemaName { get { return GetValue("ReferenceSchemaName"); } }
 
         /// <inheritdoc/>
-        public string? ReferenceTableName { get { return GetValue("ReferenceTableName"); } }
+        public string? ReferenceObjectName { get { return GetValue("ReferenceTableName"); } }
 
         /// <inheritdoc/>
         public string? ReferenceColumnName { get { return GetValue("ReferenceColumnName"); } }

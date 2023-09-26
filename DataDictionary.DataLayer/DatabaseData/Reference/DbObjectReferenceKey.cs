@@ -4,41 +4,42 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Table;
 
-namespace DataDictionary.DataLayer.DatabaseData.Table
+namespace DataDictionary.DataLayer.DatabaseData.Reference
 {
     /// <summary>
     /// Interface for the Database Table Reference Key
     /// </summary>
-    public interface IDbTableReferenceKey : IKey, IDbCatalogKeyUnique
+    public interface IDbObjectReferenceKey : IKey, IDbCatalogKeyUnique
     {
         /// <summary>
         /// Name of the Database Schema being Referenced
         /// </summary>
-        String? ReferenceSchemaName { get; }
+        string? ReferenceSchemaName { get; }
 
         /// <summary>
         /// Name of the Database Object being Referenced
         /// </summary>
-        String? ReferenceObjectName { get; }
+        string? ReferenceObjectName { get; }
     }
 
     /// <summary>
     /// Implementation of the Database Table Reference Key
     /// </summary>
-    public class DbTableReferenceKey : DbCatalogKeyUnique, IDbTableReferenceKey, IKeyComparable<IDbTableReferenceKey>, IKeyEquality<IDbTableKey>
+    public class DbObjectReferenceKey : DbCatalogKeyUnique, IDbObjectReferenceKey, IKeyComparable<IDbObjectReferenceKey>, IKeyEquality<IDbTableKey>
     {
         /// <inheritdoc/>
-        public String ReferenceSchemaName { get; init; }
+        public string ReferenceSchemaName { get; init; }
 
         /// <inheritdoc/>
-        public String ReferenceObjectName { get; init; }
+        public string ReferenceObjectName { get; init; }
 
         /// <summary>
         /// Constructor for the Database Table Reference Key
         /// </summary>
         /// <param name="source"></param>
-        public DbTableReferenceKey(IDbTableReferenceKey source) : base(source)
+        public DbObjectReferenceKey(IDbObjectReferenceKey source) : base(source)
         {
             if (source.ReferenceSchemaName is string) { ReferenceSchemaName = source.ReferenceSchemaName; }
             else { ReferenceSchemaName = string.Empty; }
@@ -49,10 +50,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public bool Equals(IDbTableReferenceKey? other)
+        public bool Equals(IDbObjectReferenceKey? other)
         {
             return
-                other is IDbTableReferenceKey &&
+                other is IDbObjectReferenceKey &&
                 new DbCatalogKeyUnique(this).Equals(other) &&
                 !string.IsNullOrEmpty(ReferenceSchemaName) &&
                 !string.IsNullOrEmpty(other.ReferenceSchemaName) &&
@@ -79,12 +80,12 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            return obj is IDbTableReferenceKey value && Equals(new DbTableReferenceKey(value))
+            return obj is IDbObjectReferenceKey value && Equals(new DbObjectReferenceKey(value))
                 || obj is IDbTableKey talbeValue && Equals(new DbTableKey(talbeValue));
         }
 
         /// <inheritdoc/>
-        public int CompareTo(IDbTableReferenceKey? other)
+        public int CompareTo(IDbObjectReferenceKey? other)
         {
             if (other is null) { return 1; }
             else if (new DbCatalogKeyUnique(this).CompareTo(other) is int value && value != 0)
@@ -101,30 +102,30 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public override int CompareTo(object? obj)
-        { if (obj is IDbTableReferenceKey value) { return CompareTo(new DbTableReferenceKey(value)); } else { return 1; } }
+        { if (obj is IDbObjectReferenceKey value) { return CompareTo(new DbObjectReferenceKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static bool operator ==(DbTableReferenceKey left, DbTableReferenceKey right)
+        public static bool operator ==(DbObjectReferenceKey left, DbObjectReferenceKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(DbTableReferenceKey left, DbTableReferenceKey right)
+        public static bool operator !=(DbObjectReferenceKey left, DbObjectReferenceKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(DbTableReferenceKey left, DbTableReferenceKey right)
+        public static bool operator <(DbObjectReferenceKey left, DbObjectReferenceKey right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(DbTableReferenceKey left, DbTableReferenceKey right)
+        public static bool operator <=(DbObjectReferenceKey left, DbObjectReferenceKey right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(DbTableReferenceKey left, DbTableReferenceKey right)
+        public static bool operator >(DbObjectReferenceKey left, DbObjectReferenceKey right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(DbTableReferenceKey left, DbTableReferenceKey right)
+        public static bool operator >=(DbObjectReferenceKey left, DbObjectReferenceKey right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>
