@@ -40,15 +40,15 @@ namespace DataDictionary.Main.Forms.Database
         {
             this.LockForm();
 
-            if (Program.Data.DbRoutines.FirstOrDefault(w => DataKey.Equals(w)) is DbRoutineItem value)
+            if (Program.Data.DbRoutines.FirstOrDefault(w => DataKey.Equals(w)) is DbRoutineItem data)
             {
                 this.Text = DataKey.ToString();
 
-                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), value, nameof(value.CatalogName)));
-                schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), value, nameof(value.SchemaName)));
-                routineNameData.DataBindings.Add(new Binding(nameof(routineNameData.Text), value, nameof(value.RoutineName)));
-                routineTypeData.DataBindings.Add(new Binding(nameof(routineTypeData.Text), value, nameof(value.RoutineType)));
-                isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), value, nameof(value.IsSystem)));
+                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.CatalogName)));
+                schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
+                routineNameData.DataBindings.Add(new Binding(nameof(routineNameData.Text), data, nameof(data.RoutineName)));
+                routineTypeData.DataBindings.Add(new Binding(nameof(routineTypeData.Text), data, nameof(data.RoutineType)));
+                isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), data, nameof(data.IsSystem)));
 
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = Program.Data.GetExtendedProperty(DataKey);

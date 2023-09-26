@@ -1,6 +1,7 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
@@ -29,6 +30,8 @@ namespace DataDictionary.Main
             Table,
             TableKey,
             View,
+            Domains,
+            Domain,
             Columns,
             Column,
             ComputedColumn,
@@ -57,6 +60,8 @@ namespace DataDictionary.Main
             {dbDataImageIndex.Constraint,       ("Constraint",       Resources.Key) },
             {dbDataImageIndex.ConstraintColumn, ("ConstraintColumn", Resources.KeyColumn) },
             {dbDataImageIndex.View,             ("View",             Resources.View) },
+            {dbDataImageIndex.Domains,          ("Domains",          Resources.Type) },
+            {dbDataImageIndex.Domain,           ("Domain",           Resources.DomainType) },
             {dbDataImageIndex.Routines,         ("Routines",         Resources.MethodSet) },
             {dbDataImageIndex.Routine,          ("Routine",          Resources.Method) },
             {dbDataImageIndex.StoredProcedure,  ("StoredProcedure",  Resources.Procedure) },
@@ -84,7 +89,7 @@ namespace DataDictionary.Main
             {
                 if (String.IsNullOrWhiteSpace(catalogItem.CatalogName))
                 {
-                    //TODO: This event may fire when there is no data or the data is being changed. Cuased by the deleted row not being handled correctly.
+                    //TODO: This event may fire when there is no data or the data is being changed. Caused by the deleted row not being handled correctly.
                 }
 
                 TreeNode catalogNode = CreateNode(catalogItem.CatalogName, dbDataImageIndex.Database, catalogItem);
@@ -174,6 +179,19 @@ namespace DataDictionary.Main
                             CreateNode(nameValue, dbDataImageIndex.Dependency, routineDependency, routineNode);
                         }
                     }
+
+                    TreeNode? domainsNode = null;
+
+                    foreach (IDbDomainItem domainItem in Program.Data.DbDomains.OrderBy(o => o.DomainName).Where(
+                        w => new DbSchemaKey(w).Equals(schemaItem)))
+                    {
+                        DbDomainKey domainKey = new DbDomainKey(domainItem);
+
+                        if (domainsNode is null)
+                        { domainsNode = CreateNode("Domains", dbDataImageIndex.Domains, null, schemaNode); }
+
+                         CreateNode(domainItem.DomainName, dbDataImageIndex.Domain, domainItem, domainsNode); 
+                    }
                 }
             }
 
@@ -212,6 +230,9 @@ namespace DataDictionary.Main
 
                 if(dataNode is IDbRoutineItem routineItem)
                 { Activate((data) => new Forms.Database.DbRoutine(routineItem), routineItem); }
+
+                if (dataNode is IDbDomainItem domainItem)
+                { Activate((data) => new Forms.Database.DbDomain(domainItem), domainItem); }
 
             }
         }
