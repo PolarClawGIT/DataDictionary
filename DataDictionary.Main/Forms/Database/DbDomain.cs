@@ -47,7 +47,7 @@ namespace DataDictionary.Main.Forms.Database
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.CatalogName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
                 domainNameData.DataBindings.Add(new Binding(nameof(domainNameData.Text), data, nameof(data.DomainName)));
-                columnDefaultData.DataBindings.Add(new Binding(nameof(columnDefaultData.Text), data, nameof(data.DomainDefault)));
+                domainDefaultData.DataBindings.Add(new Binding(nameof(domainDefaultData.Text), data, nameof(data.DomainDefault)));
 
                 dataTypeData.DataBindings.Add(new Binding(nameof(dataTypeData.Text), data, nameof(data.DataType)));
                 characterMaximumLengthData.DataBindings.Add(new Binding(nameof(characterMaximumLengthData.Text), data, nameof(data.CharacterMaximumLength)));
