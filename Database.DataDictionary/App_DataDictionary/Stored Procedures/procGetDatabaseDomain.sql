@@ -27,7 +27,7 @@ Select	D.[CatalogId],
 		D.[CollationSchema],
 		D.[CollationName]
 From	[App_DataDictionary].[DatabaseDomain] D
-		Inner Join [App_DataDictionary].[ModelCatalog] A
+		Left Join [App_DataDictionary].[ModelCatalog] A
 		On	D.[CatalogId] = A.[CatalogId]
 		Inner Join [App_DataDictionary].[DatabaseCatalog] C
 		On	D.[CatalogId] = C.[CatalogId]

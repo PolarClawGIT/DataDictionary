@@ -32,7 +32,7 @@ Select	D.[CatalogId],
 		D.[DomainSchema],
 		D.[DomainName]
 From	[App_DataDictionary].[DatabaseRoutineParameter] D
-		Inner Join [App_DataDictionary].[ModelCatalog] A
+		Left Join [App_DataDictionary].[ModelCatalog] A
 		On	D.[CatalogId] = A.[CatalogId]
 		Inner Join [App_DataDictionary].[DatabaseCatalog] C
 		On	D.[CatalogId] = C.[CatalogId]

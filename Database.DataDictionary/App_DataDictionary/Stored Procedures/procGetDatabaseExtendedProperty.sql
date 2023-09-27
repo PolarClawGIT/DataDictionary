@@ -21,7 +21,7 @@ Select	C.[CatalogId],
 		D.[PropertyName],
 		D.[PropertyValue]
 From	[App_DataDictionary].[DatabaseExtendedProperty] D
-		Inner Join [App_DataDictionary].[ModelCatalog] A
+		Left Join [App_DataDictionary].[ModelCatalog] A
 		On	D.[CatalogId] = A.[CatalogId]
 		Inner Join [App_DataDictionary].[DatabaseCatalog] C
 		On	D.[CatalogId] = C.[CatalogId]

@@ -15,7 +15,7 @@ Select	D.[EntityId],
 		D.[DefinitionText],
 		D.[SysStart]
 From	[App_DataDictionary].[DomainEntityProperty] D
-		Inner Join [App_DataDictionary].[ModelEntity] A
+		Left Join [App_DataDictionary].[ModelEntity] A
 		On	D.[EntityId] = A.[EntityId]
 		Left Join [App_DataDictionary].[ApplicationProperty] P
 		On	D.[PropertyId] = P.[PropertyId]

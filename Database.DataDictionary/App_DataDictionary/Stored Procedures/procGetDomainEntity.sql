@@ -16,7 +16,7 @@ Select	D.[EntityId],
 		D.[Obsolete],
 		D.[SysStart]
 From	[App_DataDictionary].[DomainEntity] D
-		Inner Join [App_DataDictionary].[ModelEntity] A
+		Left Join [App_DataDictionary].[ModelEntity] A
 		On	D.[EntityId] = A.[EntityId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@EntityId is Null or @EntityId = D.[EntityId]) And

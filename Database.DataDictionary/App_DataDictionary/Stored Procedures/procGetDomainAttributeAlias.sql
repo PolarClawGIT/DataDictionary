@@ -20,7 +20,7 @@ Select	D.[AttributeId],
 		D.[ElementName],
 		D.[SysStart]
 From	[App_DataDictionary].[DomainAttributeAlias] D
-		Inner Join [App_DataDictionary].[ModelAttribute] A
+		Left Join [App_DataDictionary].[ModelAttribute] A
 			On	D.[AttributeId] = A.[AttributeId] And
 				D.[ModelId] = A.[ModelId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
