@@ -178,7 +178,14 @@
     <Build Include="App_DataDictionary\Tables\ModelSubjectArea.sql" />
     <Build Include="App_DataDictionary\Tables\LibrarySource.sql" />
     <Build Include="App_DataDictionary\Tables\LibraryMember.sql" />
-    <Build Include="App_DataDictionary\Tables\LibraryDocument.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeLibrarySource.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeLibraryMember.sql" />
+    <Build Include="App_DataDictionary\Tables\LibraryNameSpace.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelLibrary.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetLibrarySource.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetLibraryMember.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetLibrarySource.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetLibraryMember.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

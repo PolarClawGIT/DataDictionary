@@ -1,10 +1,10 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseCatalog]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetLibrarySource]
 		@ModelId UniqueIdentifier,
-		@Data [App_DataDictionary].[typeDatabaseCatalog] ReadOnly
+		@Data [App_DataDictionary].[typeLibrarySource] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on DatabaseCatalog.
+/* Description: Performs Set on LibrarySource.
 */
 
 -- Transaction Handling
@@ -19,98 +19,117 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDatabaseCatalog]
+	Declare @Values [App_DataDictionary].[typeLibrarySource]
 	Insert Into @Values
-	Select	Coalesce(P.[CatalogId], D.[CatalogId], NewId()) As [CatalogId],
-			NullIf(Trim(D.[CatalogName]),'') As [CatalogName],
-			NullIf(Trim(D.[SourceServerName]),'') As [SourceServerName],
+	Select	Coalesce(P.[LibraryId], D.[LibraryId], NewId()) As [LibraryId],
+			NullIf(Trim(D.[LibraryTitle]),'') As [LibraryTitle],
+			NullIf(Trim(D.[LibraryDescription]),'') As [LibraryDescription],
+			NullIf(Trim(D.[AssemblyName]),'') As [AssemblyName],
+			NullIf(Trim(D.[SourceFile]),'') As [SourceFile],
+			IsNull(D.[SourceDate],GetDate()) As [SourceDate],
 			D.[SysStart]
 	From	@Data D
-			Left Join [App_DataDictionary].[ModelCatalog] C
+			Left Join [App_DataDictionary].[ModelLibrary] C
 			On	C.[ModelId] = @ModelId
-			Left Join [App_DataDictionary].[DatabaseCatalog] P
-			On	D.[CatalogName] = P.[CatalogName]
+			Left Join [App_DataDictionary].[LibrarySource] P
+			On	C.[LibraryId] = P.[LibraryId] And
+				D.[AssemblyName] = P.[AssemblyName]
 
 	-- Validation
 	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
 	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
 
 	If Exists (
-		Select	[CatalogName]
+		Select	[AssemblyName]
 		From	@Values
-		Group By [CatalogName]
+		Group By [AssemblyName]
 		Having	Count(*) > 1)
-	Throw 50000, '[CatalogName] cannot be duplicate', 2;
+	Throw 50000, '[AssemblyName] cannot be duplicate', 2;
 
 	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
-		Select	D.[CatalogId]
+		Select	D.[LibraryId]
 		From	@Values D
 				Inner Join [App_DataDictionary].[DatabaseCatalog] A
-				On D.[CatalogId] = A.[CatalogId]
+				On D.[LibraryId] = A.[CatalogId]
 		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
 	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 3;
-	
-	-- Cascade Delete
-	Declare @Delete [App_DataDictionary].[typeDatabaseCatalogObject] 
 
-	Insert Into @Delete ([CatalogId])
-	Select	T.[CatalogId]
-	From	[App_DataDictionary].[ModelCatalog] T
+	-- Cascade Delete
+	Declare @Delete [App_DataDictionary].[typeLibrarySource] 
+
+	Insert Into @Delete ([LibraryId])
+	Select	T.[LibraryId]
+	From	[App_DataDictionary].[ModelLibrary] T
 			Left Join @Values V
-			On	V.[CatalogId] = T.[CatalogId]
-	Where	V.[CatalogId] is Null And
+			On	V.[LibraryId] = T.[LibraryId]
+	Where	V.[LibraryId] is Null And
 			T.[ModelId] = @ModelId
 
-	if Exists (Select 1 From @Delete)
-	Exec [App_DataDictionary].[procDeleteDatabaseCatalogObject] @ModelId, @Delete;
+	Delete From [App_DataDictionary].[LibraryMember]
+	Where	[LibraryId] In (Select [LibraryId] From @Delete)
+
+	Delete From [App_DataDictionary].[LibraryNameSpace]
+	Where	[LibraryId] In (Select [LibraryId] From @Delete)
 
 	-- Apply Changes
-	With [Delta] As (
-		Select	[CatalogId],
-				[CatalogName],
-				[SourceServerName]
+	;With [Delta] As (
+		Select	[LibraryId],
+				[LibraryTitle],
+				[LibraryDescription],
+				[AssemblyName],
+				[SourceFile],
+				[SourceDate]
 		From	@Values
 		Except
-		Select	[CatalogId],
-				[CatalogName],
-				[SourceServerName]
-		From	[App_DataDictionary].[DatabaseCatalog]),
+		Select	[LibraryId],
+				[LibraryTitle],
+				[LibraryDescription],
+				[AssemblyName],
+				[SourceFile],
+				[SourceDate]
+		From	[App_DataDictionary].[LibrarySource]),
 	[Data] As (
-		Select	V.[CatalogId],
-				V.[CatalogName],
-				V.[SourceServerName],
-				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
+		Select	V.[LibraryId],
+				V.[LibraryTitle],
+				V.[LibraryDescription],
+				V.[AssemblyName],
+				V.[SourceFile],
+				V.[SourceDate],
+				IIF(D.[LibraryId] is Null,1, 0) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
-				On	V.[CatalogId] = D.[CatalogId])
-	Merge [App_DataDictionary].[DatabaseCatalog] As T
+				On	V.[LibraryId] = D.[LibraryId])
+	Merge [App_DataDictionary].[LibrarySource] As T
 	Using [Data] As S
-	On	T.[CatalogId] = S.[CatalogId]
+	On	T.[LibraryId] = S.[LibraryId]
 	When Matched And S.[IsDiffrent] = 1 Then Update
-		Set	[CatalogName] = S.[CatalogName],
-			[SourceServerName] = S.[SourceServerName]
+		Set	[LibraryTitle] = S.[LibraryTitle],
+			[LibraryDescription] = S.[LibraryDescription],
+			[AssemblyName] = S.[AssemblyName],
+			[SourceFile] = S.[SourceFile],
+			[SourceDate] = S.[SourceDate]
 	When Not Matched by Target Then
-		Insert ([CatalogId], [CatalogName], [SourceServerName])
-		Values ([CatalogId], [CatalogName], [SourceServerName])
-	When Not Matched by Source And T.[CatalogId] In (
-			Select	A.[CatalogId]
-			From	[App_DataDictionary].[ModelCatalog] A
-					Left Join [App_DataDictionary].[ModelCatalog] B
-					On	A.[CatalogId] = B.[CatalogId] And
+		Insert ([LibraryId], [LibraryTitle], [LibraryDescription], [AssemblyName], [SourceFile], [SourceDate])
+		Values ([LibraryId], [LibraryTitle], [LibraryDescription], [AssemblyName], [SourceFile], [SourceDate])
+	When Not Matched by Source And T.[LibraryId] In (
+			Select	A.[LibraryId]
+			From	[App_DataDictionary].[ModelLibrary] A
+					Left Join [App_DataDictionary].[ModelLibrary] B
+					On	A.[LibraryId] = B.[LibraryId] And
 						A.[ModelId] <> B.[ModelId]
 			Where	A.[ModelId] = @ModelId And B.[ModelId] is Null) Then Delete;
 
 	With [Data] As (
 		Select	@ModelId As [ModelId],
-				[CatalogId]
+				[LibraryId]
 		From	@Values)
-	Merge [App_DataDictionary].[ModelCatalog] T
+	Merge [App_DataDictionary].[ModelLibrary] T
 	Using [Data] D
 	On	T.[ModelId] = D.[ModelId] And
-		T.[CatalogId] = D.[CatalogId]
+		T.[LibraryId] = D.[LibraryId]
 	When Not Matched by Target Then
-		Insert ([ModelId], [CatalogId])
-		Values ([ModelId], [CatalogId])
+		Insert ([ModelId], [LibraryId])
+		Values ([ModelId], [LibraryId])
 	When Not Matched by Source And T.[ModelId] = @ModelId Then Delete;
 
 	-- Commit Transaction
@@ -152,16 +171,4 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
-GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseCatalog',
-	@value = N'Performs Set on DatabaseCatalog.'
-GO
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseCatalog',
-	@level2type = N'PARAMETER', @level2name = N'@ModelId',
-	@value = N'ModelId'
 GO
