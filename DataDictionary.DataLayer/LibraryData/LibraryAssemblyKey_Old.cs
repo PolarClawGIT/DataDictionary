@@ -9,7 +9,8 @@ namespace DataDictionary.DataLayer.LibraryData
     /// <summary>
     /// Primary Key for the LibraryAssembly.
     /// </summary>
-    public interface ILibraryAssemblyKey
+    [Obsolete]
+    public interface ILibraryAssemblyKey_old
     {
         /// <summary>
         /// Assembly Id, GUID assigned by the application. This is the Primary Key.
@@ -20,7 +21,8 @@ namespace DataDictionary.DataLayer.LibraryData
     /// <summary>
     /// Implementation of the Primary Key for LibraryAssembly.
     /// </summary>
-    public class LibraryAssemblyKey : ILibraryAssemblyKey, IEquatable<LibraryAssemblyKey>
+    [Obsolete]
+    public class LibraryAssemblyKey_Old : ILibraryAssemblyKey_old, IEquatable<LibraryAssemblyKey_Old>
     {
 
         /// <inheritdoc/>
@@ -30,7 +32,7 @@ namespace DataDictionary.DataLayer.LibraryData
         /// Constructor for LibraryAssemblyKey
         /// </summary>
         /// <param name="source"></param>
-        public LibraryAssemblyKey(ILibraryAssemblyKey source) : base()
+        public LibraryAssemblyKey_Old(ILibraryAssemblyKey_old source) : base()
         {
             if (source.AssemblyId is Guid) { AssemblyId = source.AssemblyId; }
             else { AssemblyId = Guid.Empty; }
@@ -38,19 +40,19 @@ namespace DataDictionary.DataLayer.LibraryData
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public Boolean Equals(LibraryAssemblyKey? other)
-        { return other is ILibraryAssemblyKey key && EqualityComparer<Guid?>.Default.Equals(AssemblyId, key.AssemblyId); }
+        public Boolean Equals(LibraryAssemblyKey_Old? other)
+        { return other is ILibraryAssemblyKey_old key && EqualityComparer<Guid?>.Default.Equals(AssemblyId, key.AssemblyId); }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is ILibraryAssemblyKey value && this.Equals(new LibraryAssemblyKey(value)); }
+        { return obj is ILibraryAssemblyKey_old value && this.Equals(new LibraryAssemblyKey_Old(value)); }
 
         /// <inheritdoc/>
-        public static bool operator ==(LibraryAssemblyKey left, LibraryAssemblyKey right)
+        public static bool operator ==(LibraryAssemblyKey_Old left, LibraryAssemblyKey_Old right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(LibraryAssemblyKey left, LibraryAssemblyKey right)
+        public static bool operator !=(LibraryAssemblyKey_Old left, LibraryAssemblyKey_Old right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

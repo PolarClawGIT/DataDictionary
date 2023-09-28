@@ -3,7 +3,7 @@ Begin Try;
 	Set NoCount On;
 
 	Delete From [App_DataDictionary].[LibraryMember]
-	Delete From [App_DataDictionary].[LibraryMemberScope]
+	Delete From [App_DataDictionary].[LibraryNameSpace]
 	Delete From [App_DataDictionary].[LibrarySource]
 
 	Declare @ModelId UniqueIdentifier = '00000000-0000-0000-0010-000000000100'
@@ -30,8 +30,8 @@ Begin Try;
 	Exec [App_DataDictionary].[procSetLibraryMember] @ModelId, @Member
 
 
---	Exec [App_DataDictionary].[procGetLibrarySource]
---	Exec [App_DataDictionary].[procGetLibraryMember]
+	Exec [App_DataDictionary].[procGetLibrarySource]
+	Exec [App_DataDictionary].[procGetLibraryMember]
 
 
 
@@ -42,7 +42,7 @@ Begin Try;
 	From	[App_DataDictionary].[ModelLibrary]
 
 	Select	*
-	From	[App_DataDictionary].[LibraryMemberScope]
+	From	[App_DataDictionary].[LibraryNameSpace]
 
 	Select	*
 	From	[App_DataDictionary].[LibraryMember]

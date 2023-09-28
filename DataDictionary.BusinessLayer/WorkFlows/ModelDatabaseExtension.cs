@@ -200,6 +200,19 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Target = data.DomainEntityProperties
             });
 
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Load Library Sources",
+                Command = (conn) => data.LibrarySources.LoadCommand(conn, modelId),
+                Target = data.LibrarySources
+            });
+
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Load Library Members",
+                Command = (conn) => data.LibraryMembers.LoadCommand(conn, modelId),
+                Target = data.LibraryMembers
+            });
 
             return workItems.AsReadOnly();
         }
@@ -336,6 +349,18 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             {
                 WorkName = "Save Domain Entities Properties",
                 Command = (conn) => data.DomainEntityProperties.SaveCommand(conn, modelId)
+            });
+
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Save Library Sources",
+                Command = (conn) => data.LibrarySources.SaveCommand(conn, modelId)
+            });
+
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Save Library Members",
+                Command = (conn) => data.LibraryMembers.SaveCommand(conn, modelId)
             });
 
             return workItems.AsReadOnly();

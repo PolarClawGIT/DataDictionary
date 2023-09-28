@@ -9,13 +9,14 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.LibraryData
 {
-    public interface ILibraryAssemblyItem : ILibraryAssemblyKey
+    [Obsolete]
+    public interface ILibraryAssemblyItem_Old : ILibraryAssemblyKey_old
     {
         String? AssemblyName { get; }
     }
 
-    [Serializable]
-    public class LibraryAssemblyItem :BindingTableRow, ILibraryAssemblyItem, ISerializable 
+    [Serializable, Obsolete]
+    public class LibraryAssemblyItem_Old :BindingTableRow, ILibraryAssemblyItem_Old, ISerializable 
     {
         /// <inheritdoc/>
         public Nullable<Guid> AssemblyId
@@ -30,7 +31,7 @@ namespace DataDictionary.DataLayer.LibraryData
             new DataColumn("AssemblyName", typeof(String)){ AllowDBNull = true},
         };
 
-        public LibraryAssemblyItem() : base()
+        public LibraryAssemblyItem_Old() : base()
         {
             AssemblyId = Guid.NewGuid();
         }

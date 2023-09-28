@@ -63,16 +63,16 @@ namespace DataDictionary.Main.Forms.Library
                         {
                             foreach (XmlNode node in root.ChildNodes)
                             {
-                                LibraryAssemblyKey? assemblyKey = null;
+                                LibraryAssemblyKey_Old? assemblyKey = null;
 
                                 if (node.Name == "assembly")
                                 {
-                                    LibraryAssemblyItem assemblyItem = new LibraryAssemblyItem()
+                                    LibraryAssemblyItem_Old assemblyItem = new LibraryAssemblyItem_Old()
                                     { AssemblyName = node.InnerText };
 
-                                    Program.Data.LibraryAssemblies.Add(assemblyItem);
+                                    Program.Data.LibraryAssemblies_Old.Add(assemblyItem);
 
-                                    assemblyKey = new LibraryAssemblyKey(assemblyItem);
+                                    assemblyKey = new LibraryAssemblyKey_Old(assemblyItem);
                                 }
                                 else if (node.Name == "members")
                                 {
@@ -95,12 +95,12 @@ namespace DataDictionary.Main.Forms.Library
                                                 { memberSummary.AppendLine(detailNode.InnerText.Trim()); }
                                             }
 
-                                            LibraryMemberItem memberItem = new LibraryMemberItem()
+                                            LibraryMemberItem_Old memberItem = new LibraryMemberItem_Old()
                                             { MemberName = memberName.ToString(), MemberSummary = memberSummary.ToString() };
 
                                             if(assemblyKey is not null) { memberItem.AssemblyId = assemblyKey.AssemblyId; }
 
-                                            Program.Data.LibraryMembers.Add(memberItem);
+                                            Program.Data.LibraryMembers_Old.Add(memberItem);
                                         }
                                     }
                                 }
@@ -109,7 +109,7 @@ namespace DataDictionary.Main.Forms.Library
                     }
 
                     libraryMemberData.DataSource = null;
-                    libraryMemberData.DataSource = Program.Data.LibraryMembers;
+                    libraryMemberData.DataSource = Program.Data.LibraryMembers_Old;
                 }
                 catch (Exception ex)
                 { Program.ShowException(ex); }

@@ -172,10 +172,25 @@ namespace DataDictionary.BusinessLayer
         public DomainEntityPropertyList DomainEntityProperties = new DomainEntityPropertyList();
         #endregion
 
+        #region Library data
+
+        /// <summary>
+        /// List of Domain Properties for the Entities within the Model.
+        /// </summary>
+        public LibrarySourceList LibrarySources = new LibrarySourceList();
+
+        /// <summary>
+        /// List of Domain Properties for the Entities within the Model.
+        /// </summary>
+        public LibraryMemberList LibraryMembers = new LibraryMemberList();
+
+        #endregion
 
         // Library Model, POC
-        public BindingTable<LibraryAssemblyItem> LibraryAssemblies = ModelFactory.Create<LibraryAssemblyItem>();
-        public BindingTable<LibraryMemberItem> LibraryMembers = ModelFactory.Create<LibraryMemberItem>();
+        [Obsolete]
+        public BindingTable<LibraryAssemblyItem_Old> LibraryAssemblies_Old = ModelFactory.Create<LibraryAssemblyItem_Old>();
+        [Obsolete]
+        public BindingTable<LibraryMemberItem_Old> LibraryMembers_Old = ModelFactory.Create<LibraryMemberItem_Old>();
 
         #region Application data
         /// <summary>
@@ -237,6 +252,8 @@ namespace DataDictionary.BusinessLayer
             DomainEntities.Clear();
             DomainEntityAliases.Clear();
             DomainEntityProperties.Clear();
+            LibraryMembers.Clear();
+            LibrarySources.Clear();
             Models.Clear();
         }
 

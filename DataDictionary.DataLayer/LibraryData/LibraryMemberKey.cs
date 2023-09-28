@@ -7,44 +7,59 @@ using System.Threading.Tasks;
 namespace DataDictionary.DataLayer.LibraryData
 {
     /// <summary>
-    /// Primary Key for the LibraryMember.
+    /// Interface for the Library Member Key
     /// </summary>
-    public interface ILibraryMemberKey : ILibraryAssemblyKey
+    public interface ILibraryMemberKey : ILibrarySourceKey
     {
         /// <summary>
-        /// Member Id, GUID assigned by the application. This is the Primary Key.
+        /// NameSpace for the Member.
         /// </summary>
-        Nullable<Guid> MemberId { get; }
+        String? MemberNameSpace { get; }
+
+        /// <summary>
+        /// Name of the Member.
+        /// </summary>
+        String? MemberName { get; }
     }
 
     /// <summary>
-    /// Implementation of the Primary Key for LibraryMember.
+    /// Implementation of the Library Member Key
     /// </summary>
-    public class LibraryMemberKey : LibraryAssemblyKey, ILibraryMemberKey, IEquatable<LibraryMemberKey>
+    public class LibraryMemberKey : LibrarySourceKey, ILibraryMemberKey, IKeyEquality<ILibraryMemberKey>
     {
         /// <inheritdoc/>
-        public Nullable<Guid> MemberId { get; init; } = Guid.Empty;
+        public string MemberNameSpace { get; init; } = String.Empty;
+
+        /// <inheritdoc/>
+        public string MemberName { get; init; } = String.Empty;
 
         /// <summary>
-        /// Constructor for LibraryMemberKey
+        /// Constructor for the Library Member Key
         /// </summary>
         /// <param name="source"></param>
         public LibraryMemberKey(ILibraryMemberKey source) : base(source)
         {
-            if (source.MemberId is Guid) { MemberId = source.MemberId; }
-            else { MemberId = Guid.Empty; }
+            if (source.MemberNameSpace is string) { MemberNameSpace = source.MemberNameSpace; }
+            if (source.MemberName is string) { MemberName = source.MemberName; }
         }
 
-        #region IEquatable, IComparable
+        #region IEquatable
         /// <inheritdoc/>
-        public Boolean Equals(LibraryMemberKey? other)
-        { return other is ILibraryMemberKey key
-                && EqualityComparer<Guid?>.Default.Equals(AssemblyId, key.AssemblyId)
-                && EqualityComparer<Guid?>.Default.Equals(MemberId, key.MemberId); }
+        public bool Equals(ILibraryMemberKey? other)
+        {
+            return other is ILibraryMemberKey &&
+                new LibrarySourceKey(this).Equals(other) &&
+                !string.IsNullOrEmpty(MemberNameSpace) &&
+                !string.IsNullOrEmpty(other.MemberNameSpace) &&
+                !string.IsNullOrEmpty(MemberName) &&
+                !string.IsNullOrEmpty(other.MemberName) &&
+                MemberNameSpace.Equals(other.MemberNameSpace, KeyExtension.CompareString) &&
+                MemberName.Equals(other.MemberName, KeyExtension.CompareString);
+        }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is ILibraryMemberKey value && this.Equals(new LibraryMemberKey(value)); }
+        { return obj is ILibraryMemberKey value && Equals(new LibraryMemberKey(value)); }
 
         /// <inheritdoc/>
         public static bool operator ==(LibraryMemberKey left, LibraryMemberKey right)
@@ -55,15 +70,9 @@ namespace DataDictionary.DataLayer.LibraryData
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public override Int32 GetHashCode()
-        { return HashCode.Combine(MemberId); }
+        public override int GetHashCode()
+        { return HashCode.Combine(LibraryId, MemberNameSpace, MemberName); }
         #endregion
 
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            if (MemberId is Guid && MemberId.ToString() is String value) { return value; }
-            else { return String.Empty; }
-        }
     }
 }
