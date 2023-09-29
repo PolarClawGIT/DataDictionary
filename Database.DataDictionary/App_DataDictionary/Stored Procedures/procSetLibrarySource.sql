@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetLibrarySource]
-		@ModelId UniqueIdentifier,
+		@ModelId UniqueIdentifier = null,
+		@LibraryId UniqueIdentifier = null,
 		@Data [App_DataDictionary].[typeLibrarySource] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -21,7 +22,7 @@ Begin Try
 	-- Clean the Data
 	Declare @Values [App_DataDictionary].[typeLibrarySource]
 	Insert Into @Values
-	Select	Coalesce(P.[LibraryId], D.[LibraryId], NewId()) As [LibraryId],
+	Select	X.[LibraryId],
 			NullIf(Trim(D.[LibraryTitle]),'') As [LibraryTitle],
 			NullIf(Trim(D.[LibraryDescription]),'') As [LibraryDescription],
 			NullIf(Trim(D.[AssemblyName]),'') As [AssemblyName],
@@ -29,14 +30,13 @@ Begin Try
 			IsNull(D.[SourceDate],GetDate()) As [SourceDate],
 			D.[SysStart]
 	From	@Data D
-			Left Join [App_DataDictionary].[ModelLibrary] C
-			On	C.[ModelId] = @ModelId
 			Left Join [App_DataDictionary].[LibrarySource] P
-			On	C.[LibraryId] = P.[LibraryId] And
-				D.[AssemblyName] = P.[AssemblyName]
+			On	D.[AssemblyName] = P.[AssemblyName]
+			Cross Apply (Select Coalesce(P.[LibraryId], D.[LibraryId], @LibraryId, NewId()) As [LibraryId]) X
+	Where	(@LibraryId is Null Or X.[LibraryId] = @LibraryId)
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
+	If @ModelId is Not Null And Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
 	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
 
 	If Exists (
@@ -55,20 +55,35 @@ Begin Try
 	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 3;
 
 	-- Cascade Delete
-	Declare @Delete [App_DataDictionary].[typeLibrarySource] 
+	Declare @Delete Table ([LibraryId] UniqueIdentifier Not Null)
 
-	Insert Into @Delete ([LibraryId])
+	Insert Into @Delete
 	Select	T.[LibraryId]
 	From	[App_DataDictionary].[ModelLibrary] T
 			Left Join @Values V
-			On	V.[LibraryId] = T.[LibraryId]
-	Where	V.[LibraryId] is Null And
-			T.[ModelId] = @ModelId
+			On	T.[LibraryId] = V.[LibraryId]
+	Where	T.[ModelId] = @ModelId And
+			T.[LibraryId] = IsNull(@LibraryId,T.[LibraryId]) And
+			V.[LibraryId] is Null
+	Union
+	Select	T.[LibraryId]
+	From	[App_DataDictionary].[LibrarySource] T
+			Left Join @Values V
+			On	T.[LibraryId] = V.[LibraryId]
+	Where	@ModelId is Null And
+			T.[LibraryId] = @LibraryId And
+			V.[LibraryId] is Null
+
+	Delete From [App_DataDictionary].[ModelLibrary]
+	Where	[LibraryId] In (Select [LibraryId] From @Delete)
 
 	Delete From [App_DataDictionary].[LibraryMember]
 	Where	[LibraryId] In (Select [LibraryId] From @Delete)
 
 	Delete From [App_DataDictionary].[LibraryNameSpace]
+	Where	[LibraryId] In (Select [LibraryId] From @Delete)
+
+	Delete From [App_DataDictionary].[LibrarySource]
 	Where	[LibraryId] In (Select [LibraryId] From @Delete)
 
 	-- Apply Changes
@@ -110,27 +125,20 @@ Begin Try
 			[SourceDate] = S.[SourceDate]
 	When Not Matched by Target Then
 		Insert ([LibraryId], [LibraryTitle], [LibraryDescription], [AssemblyName], [SourceFile], [SourceDate])
-		Values ([LibraryId], [LibraryTitle], [LibraryDescription], [AssemblyName], [SourceFile], [SourceDate])
-	When Not Matched by Source And T.[LibraryId] In (
-			Select	A.[LibraryId]
-			From	[App_DataDictionary].[ModelLibrary] A
-					Left Join [App_DataDictionary].[ModelLibrary] B
-					On	A.[LibraryId] = B.[LibraryId] And
-						A.[ModelId] <> B.[ModelId]
-			Where	A.[ModelId] = @ModelId And B.[ModelId] is Null) Then Delete;
+		Values ([LibraryId], [LibraryTitle], [LibraryDescription], [AssemblyName], [SourceFile], [SourceDate]);;
 
 	With [Data] As (
 		Select	@ModelId As [ModelId],
 				[LibraryId]
-		From	@Values)
+		From	@Values
+		Where	@ModelId is not Null)
 	Merge [App_DataDictionary].[ModelLibrary] T
 	Using [Data] D
 	On	T.[ModelId] = D.[ModelId] And
 		T.[LibraryId] = D.[LibraryId]
 	When Not Matched by Target Then
 		Insert ([ModelId], [LibraryId])
-		Values ([ModelId], [LibraryId])
-	When Not Matched by Source And T.[ModelId] = @ModelId Then Delete;
+		Values ([ModelId], [LibraryId]);
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

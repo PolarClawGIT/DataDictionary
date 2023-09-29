@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetLibraryMember]
-		@ModelId UniqueIdentifier,
+		@ModelId UniqueIdentifier = null,
+		@LibraryId UniqueIdentifier = null,
 		@Data [App_DataDictionary].[typeLibraryMember] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -28,10 +29,20 @@ Begin Try
 			NullIf(Trim(D.[MemberType]),'') As [MemberType],
 			D.[MemberData]
 	From	@Data D
-			Left Join [App_DataDictionary].[ModelLibrary] C
-			On	C.[ModelId] = @ModelId
 			Left Join [App_DataDictionary].[LibrarySource] P
 			On	D.[AssemblyName] = P.[AssemblyName]
+	Where	(@LibraryId is Null or P.[LibraryId] = @LibraryId)
+
+	-- Validation
+	If @ModelId is Not Null And Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
+	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
+
+	If Exists (
+		Select	[LibraryId], [MemberNameSpace], [MemberName]
+		From	@Values
+		Group By [LibraryId], [MemberNameSpace], [MemberName]
+		Having	Count(*) > 1)
+	Throw 50000, '[MemberName] cannot be duplicate', 2;
 
 	-- Work out the Member NameSpace and assign ID
 	Declare @NameSpace Table (
@@ -115,6 +126,30 @@ Begin Try
 			On	M.[LibraryId] = P.[LibraryId] And
 				M.[ParentNameSpace] = P.[MemberNameSpace]
 
+	-- Cascade Delete
+	Delete From [App_DataDictionary].[LibraryMember]
+	From	[App_DataDictionary].[LibraryMember] L
+			Left Join @NameSpace N
+			On	L.[LibraryId] = N.[LibraryId] and
+				L.[NameSpaceId] = N.[NameSpaceId]
+			Left Join @Values V
+			On	N.[MemberNameSpace] = V.[MemberNameSpace] And
+				L.[MemberName] = V.[MemberName]
+			Left Join [App_DataDictionary].[ModelLibrary] M
+			On	L.[LibraryId] = M.[LibraryId]
+	Where	V.[LibraryId] is Null And
+			((@LibraryId is Null And M.[ModelId] = @ModelId) or
+			 (L.[LibraryId] = @LibraryId And M.[ModelId] is Null))
+
+	Delete From [App_DataDictionary].[LibraryNameSpace]
+	From	[App_DataDictionary].[LibraryNameSpace] L
+			Left Join @NameSpace N
+			On	L.[LibraryId] = N.[LibraryId] and
+				L.[NameSpaceId] = N.[NameSpaceId]
+	Where	L.[LibraryId] = @LibraryId And
+			N.[LibraryId] is Null;
+
+	-- Apply Changes
 	;With [Delta] As (
 		Select	[LibraryId],
 				[NameSpaceId],
@@ -139,20 +174,14 @@ Begin Try
 					V.[NameSpaceId] = D.[NameSpaceId])
 	Merge [App_DataDictionary].[LibraryNameSpace] T
 	Using [Data] S
-	On	T.[LibraryId] = S.[LibraryId]
+	On	T.[LibraryId] = S.[LibraryId] And
+		T.[NameSpaceId] = S.[NameSpaceId]
 	When Matched And S.[IsDiffrent] = 1 Then Update
 		Set	[NameSpaceParentId] = S.[ParentId],
 			[NameSpace] = S.[NameSpace]
 	When Not Matched by Target Then
 		Insert ([LibraryId], [NameSpaceId], [NameSpaceParentId], [NameSpace])
-		Values ([LibraryId], [NameSpaceId], [ParentId], [NameSpace])
-	When Not Matched by Source And T.[LibraryId] In (
-		Select	A.[LibraryId]
-		From	[App_DataDictionary].[ModelLibrary] A
-				Left Join [App_DataDictionary].[ModelLibrary] B
-				On	A.[LibraryId] = B.[LibraryId] And
-					A.[ModelId] <> B.[ModelId]
-		Where	A.[ModelId] = @ModelId And B.[ModelId] is Null) Then Delete;
+		Values ([LibraryId], [NameSpaceId], [ParentId], [NameSpace]);
 
 	;With [Values] As (
 		Select	V.[LibraryId],
@@ -214,14 +243,7 @@ Begin Try
 			[MemberData] = S.[MemberData]
 	When Not Matched by Target Then
 		Insert ([LibraryId], [NameSpaceId], [MemberId], [MemberName], [MemberType], [MemberData])
-		Values ([LibraryId], [NameSpaceId], [MemberId], [MemberName], [MemberType], [MemberData])
-	When Not Matched by Source And T.[LibraryId] In (
-		Select	A.[LibraryId]
-		From	[App_DataDictionary].[ModelLibrary] A
-				Left Join [App_DataDictionary].[ModelLibrary] B
-				On	A.[LibraryId] = B.[LibraryId] And
-					A.[ModelId] <> B.[ModelId]
-		Where	A.[ModelId] = @ModelId And B.[ModelId] is Null) Then Delete;
+		Values ([LibraryId], [NameSpaceId], [MemberId], [MemberName], [MemberType], [MemberData]);
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -262,3 +284,4 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
+GO
