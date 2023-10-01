@@ -11,13 +11,24 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.LibraryData
 {
     /// <summary>
-    /// List of Library Sources
+    /// Generic List/Collection of the Library Source Items
     /// </summary>
-    public class LibrarySourceList : BindingTable<LibrarySourceItem>, IReadData<IModelKey>, IWriteData<IModelKey>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public class LibrarySourceCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadData<ILibrarySourceKey>, IReadData, IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>
+        where TItem : LibrarySourceItem, new()
     {
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection)
+        { return LoadCommand(connection, (null, null, null)); }
+
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
         { return LoadCommand(connection, (modelId.ModelId, null, null)); }
+
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, ILibrarySourceKey library)
+        { return LoadCommand(connection, (null, library.LibraryId, null)); }
 
         Command LoadCommand(IConnection connection, (Guid? modelId, Guid? libraryId, string? assemblyName) parameters)
         {
@@ -32,11 +43,19 @@ namespace DataDictionary.DataLayer.LibraryData
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IModelKey modelId)
+        { return SaveCommand(connection, (modelId.ModelId, null)); }
+
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, ILibrarySourceKey sourceKey)
+        { return SaveCommand(connection, (null, sourceKey.LibraryId)); }
+
+        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? libraryId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetLibrarySource]";
-            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@LibraryId", parameters.libraryId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeLibrarySource]", this);
             return command;
         }

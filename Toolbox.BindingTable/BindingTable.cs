@@ -338,10 +338,8 @@ namespace Toolbox.BindingTable
         /// </summary>
         protected virtual Boolean OnListChangedEnabled { get; set; } = true;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="e"></param>
+
+        /// <inheritdoc/>
         /// <remarks>
         /// This can raise an Thread exception when a Form has a bound object, usually a DataGridView.
         /// To address this, the Form needs to disconnect from the binding source and re-connect after the operation is complete.

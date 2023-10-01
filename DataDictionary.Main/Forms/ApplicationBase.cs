@@ -366,6 +366,8 @@ namespace DataDictionary.Main.Forms
                 toolStrip.VisibleChanged -= toolStrip_VisibleChanged;
             }
         }
+
+
     }
 
     static class ApplicationFormExtension

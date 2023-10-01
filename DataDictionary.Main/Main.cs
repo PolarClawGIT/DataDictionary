@@ -45,14 +45,14 @@ namespace DataDictionary.Main
             navigationTabs.Enabled = false;
 
             // Setup Images for Tree Control
-            SetImages(dbMetaDataNavigation, dbDataImageItems.Values);
+            SetImages(dataSourceNavigation, dbDataImageItems.Values);
             SetImages(domainModelNavigation, domainModelImageItems.Values);
 
             // Setup Tabs
             navigationTabs.ImageList = new ImageList();
             foreach (navigationTabImageIndex item in Enum.GetValues(typeof(navigationTabImageIndex)))
             { navigationTabs.ImageList.Images.Add(item.ToString(), navigationTabImages[item]); }
-            navigationDbSchemaTab.ImageKey = navigationTabImageIndex.Database.ToString();
+            navigationDataSourceTab.ImageKey = navigationTabImageIndex.Database.ToString();
             navigationDomainTab.ImageKey = navigationTabImageIndex.Domain.ToString();
 
             //Hook the WorkerQueue up to this forms UI thread for events.
@@ -246,8 +246,6 @@ namespace DataDictionary.Main
         { Activate(() => new Dialogs.ApplicationOptions()); }
         #endregion
 
-
-
         #region IColleague
 
         protected override void HandleMessage(FormAddMdiChild message)
@@ -279,5 +277,8 @@ namespace DataDictionary.Main
 
         private void textEditorToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new ProofOfConcept.TextEditor()); }
+
+        private void manageLibrariesCommand_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Library.LibraryManager()); }
     }
 }

@@ -70,7 +70,7 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// The Database Context of the Application for the Model.
         /// </summary>
-        internal protected Context ModelContext { get; protected set; } = new Context();
+        internal static Context ModelContext { get; private set; } = new Context();
 
         /// <summary>
         /// The Application Server.
@@ -177,12 +177,12 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// List of Domain Properties for the Entities within the Model.
         /// </summary>
-        public LibrarySourceList LibrarySources = new LibrarySourceList();
+        public LibrarySourceCollection<LibrarySourceItem> LibrarySources = new LibrarySourceCollection<LibrarySourceItem>();
 
         /// <summary>
         /// List of Domain Properties for the Entities within the Model.
         /// </summary>
-        public LibraryMemberList LibraryMembers = new LibraryMemberList();
+        public LibraryMemberCollection<LibraryMemberItem> LibraryMembers = new LibraryMemberCollection<LibraryMemberItem>();
 
         #endregion
 

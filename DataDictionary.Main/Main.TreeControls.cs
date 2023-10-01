@@ -82,7 +82,13 @@ namespace DataDictionary.Main
 
         void BuildDbDataTree()
         {
-            dbMetaDataNavigation.Nodes.Clear();
+            List<Object> expanded = dbDataNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value).ToList();
+
+            Object? selected = null;
+            if (dataSourceNavigation.SelectedNode is not null && dbDataNodes.ContainsKey(dataSourceNavigation.SelectedNode))
+            { selected = dbDataNodes[dataSourceNavigation.SelectedNode]; }
+
+            dataSourceNavigation.Nodes.Clear();
             dbDataNodes.Clear();
 
             foreach (IDbCatalogItem catalogItem in Program.Data.DbCatalogs.OrderBy(o => o.CatalogName))
@@ -93,7 +99,7 @@ namespace DataDictionary.Main
                 }
 
                 TreeNode catalogNode = CreateNode(catalogItem.CatalogName, dbDataImageIndex.Database, catalogItem);
-                dbMetaDataNavigation.Nodes.Add(catalogNode);
+                dataSourceNavigation.Nodes.Add(catalogNode);
 
                 foreach (IDbSchemaItem schemaItem in Program.Data.DbSchemta.OrderBy(o => o.SchemaName).Where(
                     w => w.IsSystem == false &&
@@ -190,10 +196,23 @@ namespace DataDictionary.Main
                         if (domainsNode is null)
                         { domainsNode = CreateNode("Domains", dbDataImageIndex.Domains, null, schemaNode); }
 
-                         CreateNode(domainItem.DomainName, dbDataImageIndex.Domain, domainItem, domainsNode); 
+                        CreateNode(domainItem.DomainName, dbDataImageIndex.Domain, domainItem, domainsNode);
                     }
                 }
             }
+
+
+            foreach (object item in expanded)
+            {
+                if (dbDataNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
+                {
+                    node.Key.Expand();
+                    if (node.Key.Parent is TreeNode) { node.Key.Parent.Expand(); }
+                }
+            }
+
+            if (dbDataNodes.FirstOrDefault(w => ReferenceEquals(w.Value, selected)) is KeyValuePair<TreeNode, object> selectedNode)
+            { dataSourceNavigation.SelectedNode = selectedNode.Key; }
 
             TreeNode CreateNode(String? nodeText, dbDataImageIndex imageIndex, Object? source = null, TreeNode? parentNode = null)
             {
@@ -228,7 +247,7 @@ namespace DataDictionary.Main
                 if (dataNode is IDbConstraintItem constraintItem)
                 { Activate((data) => new Forms.Database.DbConstraint(constraintItem), constraintItem); }
 
-                if(dataNode is IDbRoutineItem routineItem)
+                if (dataNode is IDbRoutineItem routineItem)
                 { Activate((data) => new Forms.Database.DbRoutine(routineItem), routineItem); }
 
                 if (dataNode is DbRoutineParameterItem routineParameterItem)
@@ -237,7 +256,7 @@ namespace DataDictionary.Main
                 if (dataNode is IDbDomainItem domainItem)
                 { Activate((data) => new Forms.Database.DbDomain(domainItem), domainItem); }
 
-                
+
 
             }
         }
@@ -266,6 +285,12 @@ namespace DataDictionary.Main
 
         void BuildDomainModelTreeByAttribute()
         {
+            List<Object> expanded = domainModelNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value).ToList();
+
+            Object? selected = null;
+            if (dataSourceNavigation.SelectedNode is not null && dbDataNodes.ContainsKey(dataSourceNavigation.SelectedNode))
+            { selected = dbDataNodes[dataSourceNavigation.SelectedNode]; }
+
             domainModelNavigation.Nodes.Clear();
             domainModelNodes.Clear();
 
@@ -276,6 +301,18 @@ namespace DataDictionary.Main
                 TreeNode attributeNode = CreateAttribute(attributeItem, null);
                 domainModelNavigation.Nodes.Add(attributeNode);
             }
+
+            foreach (object item in expanded)
+            {
+                if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
+                {
+                    node.Key.Expand();
+                    if (node.Key.Parent is TreeNode) { node.Key.Parent.Expand(); }
+                }
+            }
+
+            if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, selected)) is KeyValuePair<TreeNode, object> selectedNode)
+            { domainModelNavigation.SelectedNode = selectedNode.Key; }
 
             TreeNode CreateAttribute(IDomainAttributeItem attributeItem, TreeNode? parent)
             {
@@ -326,9 +363,14 @@ namespace DataDictionary.Main
 
         void BuildDomainModelTreeByEntity()
         {
+            List<Object> expanded = domainModelNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value).ToList();
+
+            Object? selected = null;
+            if (dataSourceNavigation.SelectedNode is not null && dbDataNodes.ContainsKey(dataSourceNavigation.SelectedNode))
+            { selected = dbDataNodes[dataSourceNavigation.SelectedNode]; }
+
             domainModelNavigation.Nodes.Clear();
             domainModelNodes.Clear();
-
 
             foreach (IDomainEntityItem entityItem in
                 Program.Data.DomainEntities.
@@ -337,6 +379,18 @@ namespace DataDictionary.Main
                 TreeNode entityNode = CreateEntity(entityItem, null);
                 domainModelNavigation.Nodes.Add(entityNode);
             }
+
+            foreach (object item in expanded)
+            {
+                if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
+                {
+                    node.Key.Expand();
+                    if (node.Key.Parent is TreeNode) { node.Key.Parent.Expand(); }
+                }
+            }
+
+            if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, selected)) is KeyValuePair<TreeNode, object> selectedNode)
+            { domainModelNavigation.SelectedNode = selectedNode.Key; }
 
             TreeNode CreateEntity(IDomainEntityItem entityItem, TreeNode? parent)
             {
@@ -393,13 +447,18 @@ namespace DataDictionary.Main
                 { Activate((data) => new Forms.Domain.DomainEntity(entityItem), entityItem); }
             }
         }
-
-        private void choiceDisplayOrder_CheckedChanged(object sender, EventArgs e)
+        private void sortByAttributeEntityCommand_Click(object sender, EventArgs e)
         {
-            if (choiceAttribute.Checked)
-            { BuildDomainModelTreeByAttribute(); }
-            else if (choiceEntity.Checked)
-            { BuildDomainModelTreeByEntity(); }
+            sortByAttributeEntityCommand.Checked = true;
+            sortByEntityAttributeCommand.Checked = false;
+            BuildDomainModelTreeByAttribute();
+        }
+
+        private void sortByEntityAttributeCommand_Click(object sender, EventArgs e)
+        {
+            sortByAttributeEntityCommand.Checked = false;
+            sortByEntityAttributeCommand.Checked = true;
+            BuildDomainModelTreeByEntity();
         }
         #endregion
     }

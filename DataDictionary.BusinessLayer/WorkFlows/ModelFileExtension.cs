@@ -10,8 +10,17 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.WorkFlows
 {
+    /// <summary>
+    /// Extension to handle Load/Save of the Model to a File
+    /// </summary>
     public static class ModelFileExtension
     {
+        /// <summary>
+        /// WorkFlow to Saves the Model to the File
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public static IReadOnlyList<WorkItem> SaveModel(this ModelData data, FileInfo file)
         { //TODO: Save to File System
             data.ModelFile = file;
@@ -28,6 +37,12 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             return new List<WorkItem>().AsReadOnly();
         }
 
+        /// <summary>
+        /// WorkFlow to Loads a Model from a File
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadModel(this ModelData data, FileInfo file)
         { //TODO: Load from File System
 

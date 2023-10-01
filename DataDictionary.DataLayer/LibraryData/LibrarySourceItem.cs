@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -12,7 +13,7 @@ namespace DataDictionary.DataLayer.LibraryData
     /// <summary>
     /// Interface for the Library Source Item
     /// </summary>
-    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyUnique
+    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyUnique, INotifyPropertyChanged
     {
         /// <summary>
         /// Title for the Library
@@ -45,7 +46,7 @@ namespace DataDictionary.DataLayer.LibraryData
         public Guid? LibraryId { get { return GetValue<Guid>("LibraryId"); } protected set { SetValue("LibraryId", value); } }
 
         /// <inheritdoc/>
-        public string? AssemblyName { get { return GetValue("CatalogName"); } set { SetValue("AssemblyName", value); } }
+        public string? AssemblyName { get { return GetValue("AssemblyName"); } set { SetValue("AssemblyName", value); } }
 
         /// <inheritdoc/>
         public string? LibraryTitle { get { return GetValue("LibraryTitle"); } set { SetValue("LibraryTitle", value); } }

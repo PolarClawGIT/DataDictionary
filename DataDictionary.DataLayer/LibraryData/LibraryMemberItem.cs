@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -12,7 +13,7 @@ namespace DataDictionary.DataLayer.LibraryData
     /// <summary>
     /// Interface for the Library Member Item
     /// </summary>
-    public interface ILibraryMemberItem : ILibraryMemberKey, ILibrarySourceKeyUnique
+    public interface ILibraryMemberItem : ILibraryMemberKey, ILibrarySourceKeyUnique, INotifyPropertyChanged
     {
         /// <summary>
         /// Type of Member, such as the name of the Class, Enum, Method, Property, ...
@@ -58,10 +59,10 @@ namespace DataDictionary.DataLayer.LibraryData
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("LibraryId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("AssemblyName", typeof(String)){ AllowDBNull = true},
+            new DataColumn("LibraryId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn("AssemblyName", typeof(String)){ AllowDBNull = false},
             new DataColumn("MemberNameSpace", typeof(String)){ AllowDBNull = true},
-            new DataColumn("MemberName", typeof(String)){ AllowDBNull = true},
+            new DataColumn("MemberName", typeof(String)){ AllowDBNull = false},
             new DataColumn("MemberType", typeof(String)){ AllowDBNull = true},
             new DataColumn("MemberData", typeof(String)){ AllowDBNull = true},
         };

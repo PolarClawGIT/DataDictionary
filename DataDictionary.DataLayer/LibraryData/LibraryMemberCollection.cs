@@ -11,13 +11,20 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.LibraryData
 {
     /// <summary>
-    /// List of the Library Member Items
+    /// Generic List/Collection of the Library Member Items
     /// </summary>
-    public class LibraryMemberList : BindingTable<LibraryMemberItem>, IReadData<IModelKey>, IWriteData<IModelKey>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public class LibraryMemberCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadData<ILibrarySourceKey>, IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>
+        where TItem : LibraryMemberItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
         { return LoadCommand(connection, (modelId.ModelId, null)); }
+
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, ILibrarySourceKey library)
+        { return LoadCommand(connection, (null, library.LibraryId)); }
 
         Command LoadCommand(IConnection connection, (Guid? modelId, Guid? libraryId) parameters)
         {
@@ -31,11 +38,19 @@ namespace DataDictionary.DataLayer.LibraryData
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IModelKey modelId)
+        { return SaveCommand(connection, (modelId.ModelId, null)); }
+
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, ILibrarySourceKey sourceKey)
+        { return SaveCommand(connection, (null, sourceKey.LibraryId)); }
+
+        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? libraryId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetLibraryMember]";
-            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@LibraryId", parameters.libraryId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeLibraryMember]", this);
             return command;
         }

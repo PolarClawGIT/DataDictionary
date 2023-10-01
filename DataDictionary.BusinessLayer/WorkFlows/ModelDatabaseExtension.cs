@@ -34,7 +34,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         public static IReadOnlyList<WorkItem> LoadModelList(this ModelData data)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            OpenConnection openConnection = new OpenConnection(data.ModelContext);
+            OpenConnection openConnection = new OpenConnection(ModelData.ModelContext);
             workItems.Add(openConnection);
 
             workItems.Add(new WorkItem()
@@ -64,7 +64,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             List<WorkItem> workItems = new List<WorkItem>();
             data.ModelKey = new ModelKey(modelId);
 
-            OpenConnection openConnection = new OpenConnection(data.ModelContext);
+            OpenConnection openConnection = new OpenConnection(ModelData.ModelContext);
             workItems.Add(openConnection);
 
             workItems.Add(new WorkItem()
@@ -227,7 +227,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             List<WorkItem> workItems = new List<WorkItem>();
             IModelKey modelId = new ModelKey(data.Model);
 
-            OpenConnection openConnection = new OpenConnection(data.ModelContext);
+            OpenConnection openConnection = new OpenConnection(ModelData.ModelContext);
             workItems.Add(openConnection);
 
             workItems.Add(new ExecuteNonQuery(openConnection)
@@ -377,7 +377,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             List<WorkItem> workItems = new List<WorkItem>();
             data.NewModel();
 
-            OpenConnection openConnection = new OpenConnection(data.ModelContext);
+            OpenConnection openConnection = new OpenConnection(ModelData.ModelContext);
             workItems.Add(openConnection);
 
             workItems.Add(new ExecuteNonQuery(openConnection)
