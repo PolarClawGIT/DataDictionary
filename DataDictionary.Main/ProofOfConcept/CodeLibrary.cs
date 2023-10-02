@@ -1,4 +1,6 @@
-﻿using DataDictionary.DataLayer.LibraryData;
+﻿using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.LibraryData;
+using DataDictionary.Main.Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,8 +11,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Forms.Library
+namespace DataDictionary.Main.ProofOfConcept
 {
     /// <summary>
     /// Imports Visual Studio Documentation files.
@@ -25,6 +28,12 @@ namespace DataDictionary.Main.Forms.Library
     /// </remarks>
     partial class CodeLibrary : ApplicationBase
     {
+        [Obsolete]
+        public BindingTable<LibraryAssemblyItem_Old> LibraryAssemblies_Old = ModelFactory.Create<LibraryAssemblyItem_Old>();
+        [Obsolete]
+        public BindingTable<LibraryMemberItem_Old> LibraryMembers_Old = ModelFactory.Create<LibraryMemberItem_Old>();
+
+
         public CodeLibrary() : base()
         {
             InitializeComponent();
@@ -70,7 +79,7 @@ namespace DataDictionary.Main.Forms.Library
                                     LibraryAssemblyItem_Old assemblyItem = new LibraryAssemblyItem_Old()
                                     { AssemblyName = node.InnerText };
 
-                                    Program.Data.LibraryAssemblies_Old.Add(assemblyItem);
+                                    LibraryAssemblies_Old.Add(assemblyItem);
 
                                     assemblyKey = new LibraryAssemblyKey_Old(assemblyItem);
                                 }
@@ -100,7 +109,7 @@ namespace DataDictionary.Main.Forms.Library
 
                                             if(assemblyKey is not null) { memberItem.AssemblyId = assemblyKey.AssemblyId; }
 
-                                            Program.Data.LibraryMembers_Old.Add(memberItem);
+                                            LibraryMembers_Old.Add(memberItem);
                                         }
                                     }
                                 }
@@ -109,7 +118,7 @@ namespace DataDictionary.Main.Forms.Library
                     }
 
                     libraryMemberData.DataSource = null;
-                    libraryMemberData.DataSource = Program.Data.LibraryMembers_Old;
+                    libraryMemberData.DataSource = LibraryMembers_Old;
                 }
                 catch (Exception ex)
                 { Program.ShowException(ex); }

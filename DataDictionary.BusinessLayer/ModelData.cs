@@ -186,12 +186,6 @@ namespace DataDictionary.BusinessLayer
 
         #endregion
 
-        // Library Model, POC
-        [Obsolete]
-        public BindingTable<LibraryAssemblyItem_Old> LibraryAssemblies_Old = ModelFactory.Create<LibraryAssemblyItem_Old>();
-        [Obsolete]
-        public BindingTable<LibraryMemberItem_Old> LibraryMembers_Old = ModelFactory.Create<LibraryMemberItem_Old>();
-
         #region Application data
         /// <summary>
         /// List of Help Subjects for the Application (the help system).

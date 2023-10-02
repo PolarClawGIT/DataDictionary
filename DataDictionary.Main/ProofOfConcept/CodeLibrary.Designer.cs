@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.Forms.Library
+﻿namespace DataDictionary.Main.ProofOfConcept
 {
     partial class CodeLibrary
     {

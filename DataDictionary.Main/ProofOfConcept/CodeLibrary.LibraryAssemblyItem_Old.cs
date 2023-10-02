@@ -7,16 +7,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.LibraryData
+namespace DataDictionary.Main.ProofOfConcept
 {
     [Obsolete]
-    public interface ILibraryAssemblyItem_Old : ILibraryAssemblyKey_old
+    interface ILibraryAssemblyItem_Old : ILibraryAssemblyKey_old
     {
         String? AssemblyName { get; }
     }
 
     [Serializable, Obsolete]
-    public class LibraryAssemblyItem_Old :BindingTableRow, ILibraryAssemblyItem_Old, ISerializable 
+    class LibraryAssemblyItem_Old :BindingTableRow, ILibraryAssemblyItem_Old, ISerializable 
     {
         /// <inheritdoc/>
         public Nullable<Guid> AssemblyId

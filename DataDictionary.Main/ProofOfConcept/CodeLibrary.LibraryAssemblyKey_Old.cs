@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.LibraryData
+namespace DataDictionary.Main.ProofOfConcept
 {
     /// <summary>
     /// Primary Key for the LibraryAssembly.
     /// </summary>
     [Obsolete]
-    public interface ILibraryAssemblyKey_old
+    interface ILibraryAssemblyKey_old
     {
         /// <summary>
         /// Assembly Id, GUID assigned by the application. This is the Primary Key.
@@ -22,7 +22,7 @@ namespace DataDictionary.DataLayer.LibraryData
     /// Implementation of the Primary Key for LibraryAssembly.
     /// </summary>
     [Obsolete]
-    public class LibraryAssemblyKey_Old : ILibraryAssemblyKey_old, IEquatable<LibraryAssemblyKey_Old>
+    class LibraryAssemblyKey_Old : ILibraryAssemblyKey_old, IEquatable<LibraryAssemblyKey_Old>
     {
 
         /// <inheritdoc/>
