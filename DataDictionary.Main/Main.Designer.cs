@@ -58,9 +58,7 @@
             sortByEntityAttributeCommand = new ToolStripMenuItem();
             navigationDataSourceTab = new TabPage();
             dataSourceToolStrip = new ToolStrip();
-            manageDatabaseCommand = new ToolStripButton();
-            manageLibrariesCommand = new ToolStripButton();
-            dataSourceNavigation = new TreeView();
+            manageDatabasesCommand = new ToolStripSplitButton();
             dbSchemaContextMenu = new ContextMenuStrip(components);
             menuCatalogItem = new ToolStripMenuItem();
             menuSchemaItem = new ToolStripMenuItem();
@@ -73,6 +71,10 @@
             menuRoutineItem = new ToolStripMenuItem();
             menuRoutineParameterItem = new ToolStripMenuItem();
             menuRoutineDependencyItem = new ToolStripMenuItem();
+            manageLibrariesCommand = new ToolStripSplitButton();
+            viewLibrarySourceCommand = new ToolStripMenuItem();
+            viewLiebraryMemberCommand = new ToolStripMenuItem();
+            dataSourceNavigation = new TreeView();
             statusStrip = new StatusStrip();
             toolStripInfo = new ToolStripStatusLabel();
             toolStripWhiteSpace = new ToolStripStatusLabel();
@@ -109,7 +111,6 @@
             optionsToolStripMenuItem = new ToolStripMenuItem();
             applicationToolStripMenuItem = new ToolStripMenuItem();
             propertiesToolStripMenuItem = new ToolStripMenuItem();
-            dbSchemaToolStripMenuItem = new ToolStripMenuItem();
             domainModelToolStripMenuItem = new ToolStripMenuItem();
             unitTestingToolStripMenuItem = new ToolStripMenuItem();
             gridViewToolStripMenuItem = new ToolStripMenuItem();
@@ -347,7 +348,7 @@
             // newEntityCommand
             // 
             newEntityCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            newEntityCommand.Image = Properties.Resources.NewDiagram;
+            newEntityCommand.Image = Properties.Resources.NewRelationship;
             newEntityCommand.ImageTransparentColor = Color.Magenta;
             newEntityCommand.Name = "newEntityCommand";
             newEntityCommand.Size = new Size(23, 22);
@@ -412,53 +413,28 @@
             // 
             // dataSourceToolStrip
             // 
-            dataSourceToolStrip.Items.AddRange(new ToolStripItem[] { manageDatabaseCommand, manageLibrariesCommand });
+            dataSourceToolStrip.Items.AddRange(new ToolStripItem[] { manageDatabasesCommand, manageLibrariesCommand });
             dataSourceToolStrip.Location = new Point(0, 0);
             dataSourceToolStrip.Name = "dataSourceToolStrip";
             dataSourceToolStrip.Size = new Size(204, 25);
             dataSourceToolStrip.TabIndex = 0;
             dataSourceToolStrip.Text = "toolStrip1";
             // 
-            // manageDatabaseCommand
+            // manageDatabasesCommand
             // 
-            manageDatabaseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            manageDatabaseCommand.Image = Properties.Resources.Database;
-            manageDatabaseCommand.ImageTransparentColor = Color.Magenta;
-            manageDatabaseCommand.Name = "manageDatabaseCommand";
-            manageDatabaseCommand.Size = new Size(23, 22);
-            manageDatabaseCommand.Text = "Manage Databases";
-            // 
-            // manageLibrariesCommand
-            // 
-            manageLibrariesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            manageLibrariesCommand.Image = Properties.Resources.Library;
-            manageLibrariesCommand.ImageTransparentColor = Color.Magenta;
-            manageLibrariesCommand.Name = "manageLibrariesCommand";
-            manageLibrariesCommand.Size = new Size(23, 22);
-            manageLibrariesCommand.Text = "Manage Libraries";
-            manageLibrariesCommand.Click += manageLibrariesCommand_Click;
-            // 
-            // dataSourceNavigation
-            // 
-            dataSourceNavigation.Dock = DockStyle.Fill;
-            dataSourceNavigation.Location = new Point(3, 28);
-            dataSourceNavigation.Name = "dataSourceNavigation";
-            dataSourceNavigation.Size = new Size(198, 354);
-            dataSourceNavigation.TabIndex = 0;
-            dataSourceNavigation.NodeMouseDoubleClick += dbMetaDataNavigation_NodeMouseDoubleClick;
-            // 
-            // navigationSpliter
-            // 
-            navigationSpliter.Location = new Point(220, 49);
-            navigationSpliter.Name = "navigationSpliter";
-            navigationSpliter.Size = new Size(3, 591);
-            navigationSpliter.TabIndex = 8;
-            navigationSpliter.TabStop = false;
+            manageDatabasesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            manageDatabasesCommand.DropDown = dbSchemaContextMenu;
+            manageDatabasesCommand.Image = Properties.Resources.Database;
+            manageDatabasesCommand.ImageTransparentColor = Color.Magenta;
+            manageDatabasesCommand.Name = "manageDatabasesCommand";
+            manageDatabasesCommand.Size = new Size(32, 22);
+            manageDatabasesCommand.Text = "Manage Databases";
             // 
             // dbSchemaContextMenu
             // 
             dbSchemaContextMenu.Items.AddRange(new ToolStripItem[] { menuCatalogItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineDependencyItem });
             dbSchemaContextMenu.Name = "dbSchemacontextMenu";
+            dbSchemaContextMenu.OwnerItem = manageDatabasesCommand;
             dbSchemaContextMenu.Size = new Size(234, 246);
             // 
             // menuCatalogItem
@@ -548,6 +524,46 @@
             menuRoutineDependencyItem.Size = new Size(233, 22);
             menuRoutineDependencyItem.Text = "Browse Routine Dependencies";
             menuRoutineDependencyItem.Click += menuRoutineDependencyItem_Click;
+            // 
+            // manageLibrariesCommand
+            // 
+            manageLibrariesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            manageLibrariesCommand.DropDownItems.AddRange(new ToolStripItem[] { viewLibrarySourceCommand, viewLiebraryMemberCommand });
+            manageLibrariesCommand.Image = Properties.Resources.Library;
+            manageLibrariesCommand.ImageTransparentColor = Color.Magenta;
+            manageLibrariesCommand.Name = "manageLibrariesCommand";
+            manageLibrariesCommand.Size = new Size(32, 22);
+            manageLibrariesCommand.Text = "Manage Libraries";
+            manageLibrariesCommand.ButtonClick += manageLibrariesCommand_ButtonClick;
+            // 
+            // viewLibrarySourceCommand
+            // 
+            viewLibrarySourceCommand.Name = "viewLibrarySourceCommand";
+            viewLibrarySourceCommand.Size = new Size(190, 22);
+            viewLibrarySourceCommand.Text = "view Library Sources";
+            // 
+            // viewLiebraryMemberCommand
+            // 
+            viewLiebraryMemberCommand.Name = "viewLiebraryMemberCommand";
+            viewLiebraryMemberCommand.Size = new Size(190, 22);
+            viewLiebraryMemberCommand.Text = "view Library Members";
+            // 
+            // dataSourceNavigation
+            // 
+            dataSourceNavigation.Dock = DockStyle.Fill;
+            dataSourceNavigation.Location = new Point(3, 28);
+            dataSourceNavigation.Name = "dataSourceNavigation";
+            dataSourceNavigation.Size = new Size(198, 354);
+            dataSourceNavigation.TabIndex = 0;
+            dataSourceNavigation.NodeMouseDoubleClick += dbMetaDataNavigation_NodeMouseDoubleClick;
+            // 
+            // navigationSpliter
+            // 
+            navigationSpliter.Location = new Point(220, 49);
+            navigationSpliter.Name = "navigationSpliter";
+            navigationSpliter.Size = new Size(3, 591);
+            navigationSpliter.TabIndex = 8;
+            navigationSpliter.TabStop = false;
             // 
             // statusStrip
             // 
@@ -786,7 +802,7 @@
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem, applicationToolStripMenuItem, dbSchemaToolStripMenuItem, domainModelToolStripMenuItem, unitTestingToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem, applicationToolStripMenuItem, domainModelToolStripMenuItem, unitTestingToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(46, 20);
             toolsToolStripMenuItem.Text = "&Tools";
@@ -819,13 +835,6 @@
             propertiesToolStripMenuItem.Size = new Size(127, 22);
             propertiesToolStripMenuItem.Text = "Properties";
             propertiesToolStripMenuItem.Click += propertiesToolStripMenuItem_Click;
-            // 
-            // dbSchemaToolStripMenuItem
-            // 
-            dbSchemaToolStripMenuItem.Image = Properties.Resources.Database;
-            dbSchemaToolStripMenuItem.Name = "dbSchemaToolStripMenuItem";
-            dbSchemaToolStripMenuItem.Size = new Size(153, 22);
-            dbSchemaToolStripMenuItem.Text = "Db &Schema";
             // 
             // domainModelToolStripMenuItem
             // 
@@ -1000,7 +1009,6 @@
         private ToolStripMenuItem menuPropertyItem;
         private ToolStripMenuItem menuImportDbSchema;
         private ToolStripMenuItem menuAttributes;
-        private ToolStripMenuItem dbSchemaToolStripMenuItem;
         private ToolStripMenuItem domainModelToolStripMenuItem;
         private TabControl navigationTabs;
         private TabPage navigationDataSourceTab;
@@ -1032,13 +1040,15 @@
         private ToolStripMenuItem entityAliasToolStripMenuItem;
         private ToolStripMenuItem textEditorToolStripMenuItem;
         private ToolStrip dataSourceToolStrip;
-        private ToolStripButton manageDatabaseCommand;
-        private ToolStripButton manageLibrariesCommand;
         private ToolStrip domainModelToolStrip;
         private ToolStripButton newAttributeCommand;
         private ToolStripButton newEntityCommand;
         private ToolStripDropDownButton domainModelSortOrder;
         private ToolStripMenuItem sortByAttributeEntityCommand;
         private ToolStripMenuItem sortByEntityAttributeCommand;
+        private ToolStripSplitButton manageDatabasesCommand;
+        private ToolStripSplitButton manageLibrariesCommand;
+        private ToolStripMenuItem viewLibrarySourceCommand;
+        private ToolStripMenuItem viewLiebraryMemberCommand;
     }
 }

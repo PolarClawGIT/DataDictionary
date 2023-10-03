@@ -104,7 +104,6 @@
             libraryNavigation.RowTemplate.Height = 25;
             libraryNavigation.Size = new Size(560, 325);
             libraryNavigation.TabIndex = 0;
-            libraryNavigation.Leave += libraryNavigation_Leave;
             // 
             // libraryTitleData
             // 
@@ -198,8 +197,6 @@
             // 
             // libraryBinding
             // 
-            libraryBinding.AddingNew += librarySourceBinding_AddingNew;
-            libraryBinding.CurrentChanged += libraryBinding_CurrentChanged;
             // 
             // errorProvider
             // 

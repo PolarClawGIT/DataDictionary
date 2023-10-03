@@ -1,29 +1,23 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Property;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.DomainData.Entity;
+using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.Main
 {
     partial class Main
     {
-        #region dbMetaDataNavigation
+        #region dataSourceNavigation
         Dictionary<TreeNode, Object> dbDataNodes = new Dictionary<TreeNode, Object>();
         enum dbDataImageIndex
         {
             Unknown,
+            // Database
             Database,
             Schema,
             Tables,
@@ -43,7 +37,13 @@ namespace DataDictionary.Main
             ScalarFunction,
             TableFunction,
             Parameter,
-            Dependency
+            Dependency,
+            // Class
+            Library,
+            NameSpace,
+            Class,
+            Method,
+            Field
         }
 
         static Dictionary<dbDataImageIndex, (String imageKey, Image image)> dbDataImageItems = new Dictionary<dbDataImageIndex, (String imageKey, Image image)>()
@@ -69,6 +69,12 @@ namespace DataDictionary.Main
             {dbDataImageIndex.TableFunction,    ("TableFunction",    Resources.TableFunction) },
             {dbDataImageIndex.Parameter,        ("Parameter",        Resources.Parameter) },
             {dbDataImageIndex.Dependency,       ("Dependency",       Resources.Dependancy) },
+
+            {dbDataImageIndex.Library,          ("Library",          Resources.Library) },
+            {dbDataImageIndex.NameSpace,        ("NameSpace",        Resources.Namespace) },
+            {dbDataImageIndex.Class,            ("Class",            Resources.Class) },
+            {dbDataImageIndex.Method,           ("Method",           Resources.Method) },
+            {dbDataImageIndex.Field,            ("Field",            Resources.Field) },
         };
 
         void SetImages(TreeView tree, IEnumerable<(String imageKey, Image image)> images)
@@ -80,7 +86,7 @@ namespace DataDictionary.Main
             { tree.ImageList.Images.Add(image.imageKey, image.image); }
         }
 
-        void BuildDbDataTree()
+        void BuildDataSourcesTree()
         {
             List<Object> expanded = dbDataNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value).ToList();
 
@@ -94,9 +100,7 @@ namespace DataDictionary.Main
             foreach (IDbCatalogItem catalogItem in Program.Data.DbCatalogs.OrderBy(o => o.CatalogName))
             {
                 if (String.IsNullOrWhiteSpace(catalogItem.CatalogName))
-                {
-                    //TODO: This event may fire when there is no data or the data is being changed. Caused by the deleted row not being handled correctly.
-                }
+                { } //TODO: This event may fire when there is no data or the data is being changed. Caused by the deleted row not being handled correctly.
 
                 TreeNode catalogNode = CreateNode(catalogItem.CatalogName, dbDataImageIndex.Database, catalogItem);
                 dataSourceNavigation.Nodes.Add(catalogNode);
@@ -201,6 +205,82 @@ namespace DataDictionary.Main
                 }
             }
 
+            foreach (ILibrarySourceItem librarySourceItem in Program.Data.LibrarySources.OrderBy(o => o.LibraryTitle))
+            {
+                LibrarySourceKeyUnique sourceKey = new LibrarySourceKeyUnique(librarySourceItem);
+                TreeNode sourceNode = CreateNode(librarySourceItem.LibraryTitle, dbDataImageIndex.Library, librarySourceItem);
+                dataSourceNavigation.Nodes.Add(sourceNode);
+
+                foreach (LibraryMemberItem memberItem in Program.Data.LibraryMembers
+                    .Where(w => sourceKey.Equals(w))
+                    .OrderBy(o => o.MemberNameSpace)
+                    .ThenBy(o => o.MemberName))
+                {
+                    String nodeKey = String.Empty;
+                    TreeNode parentNode = sourceNode;
+
+                    // Create Namespace Nodes
+                    if (memberItem.MemberNameSpace is String nameSpace)
+                    {
+                        foreach (String nameSpaceElement in nameSpace.Split("."))
+                        {
+                            if (String.IsNullOrWhiteSpace(nodeKey))
+                            { nodeKey = nameSpaceElement; }
+                            else if (sourceNode.Nodes.Find(nodeKey, true).FirstOrDefault() is TreeNode foundNode)
+                            {
+                                parentNode = foundNode;
+                                nodeKey = String.Format("{0}.{1}", nodeKey, nameSpaceElement);
+                            }
+
+                            if (sourceNode.Nodes.Find(nodeKey, true).FirstOrDefault() is TreeNode exsitngNode)
+                            { } // Node Already exists by this key. Nothing to do.
+                            else
+                            { CreateNode(nameSpaceElement, dbDataImageIndex.NameSpace, null, parentNode, nodeKey); }
+                        }
+                    }
+
+                    // Create the Node Member (NameSpace node already created)
+                    if (sourceNode.Nodes.Find(memberItem.MemberNameSpace, true).FirstOrDefault() is TreeNode nameSpaceNode)
+                    {
+                        switch (memberItem.MemberItemType().type)
+                        {
+                            case LibraryMemberType.Type:
+                                CreateNode(memberItem.MemberName,
+                                    dbDataImageIndex.Class,
+                                    memberItem,
+                                    nameSpaceNode,
+                                    String.Format("{0}.{1}", nodeKey, memberItem.MemberName));
+                                break;
+                            case LibraryMemberType.Field or LibraryMemberType.Property:
+                                CreateNode(memberItem.MemberName,
+                                    dbDataImageIndex.Field,
+                                    memberItem,
+                                    nameSpaceNode);
+                                break;
+                            case LibraryMemberType.Method or LibraryMemberType.Event:
+                                CreateNode(memberItem.MemberName,
+                                    dbDataImageIndex.Method,
+                                    memberItem,
+                                    nameSpaceNode);
+                                break;
+                            default:
+                                CreateNode(memberItem.MemberName,
+                                    dbDataImageIndex.Unknown,
+                                    memberItem,
+                                    nameSpaceNode);
+                                break;
+                        }
+                    }
+                    else
+                    {// Should never happen
+                        InvalidOperationException ex = new InvalidOperationException("Parent Node could not be found");
+                        ex.Data.Add(nameof(memberItem.MemberNameSpace), memberItem.MemberNameSpace);
+                        ex.Data.Add(nameof(memberItem.MemberName), memberItem.MemberName);
+                        throw ex;
+                    }
+                }
+
+            }
 
             foreach (object item in expanded)
             {
@@ -214,15 +294,22 @@ namespace DataDictionary.Main
             if (dbDataNodes.FirstOrDefault(w => ReferenceEquals(w.Value, selected)) is KeyValuePair<TreeNode, object> selectedNode)
             { dataSourceNavigation.SelectedNode = selectedNode.Key; }
 
-            TreeNode CreateNode(String? nodeText, dbDataImageIndex imageIndex, Object? source = null, TreeNode? parentNode = null)
+            TreeNode CreateNode(String? nodeText, dbDataImageIndex imageIndex, Object? source = null, TreeNode? parentNode = null, String? key = null)
             {
                 if (String.IsNullOrWhiteSpace(nodeText)) { throw new ArgumentNullException(nameof(nodeText)); }
 
-                TreeNode result = new TreeNode(nodeText);
+                TreeNode result;
+                if (parentNode is not null)
+                {
+                    if (String.IsNullOrWhiteSpace(key))
+                    { result = parentNode.Nodes.Add(nodeText); }
+                    else { result = parentNode.Nodes.Add(key, nodeText); }
+                }
+                else { result = new TreeNode(nodeText); }
+
                 result.ImageKey = dbDataImageItems[imageIndex].imageKey;
                 result.SelectedImageKey = dbDataImageItems[imageIndex].imageKey;
 
-                if (parentNode is not null) { parentNode.Nodes.Add(result); }
                 if (source is not null) { dbDataNodes.Add(result, source); }
 
                 return result;
@@ -256,209 +343,12 @@ namespace DataDictionary.Main
                 if (dataNode is IDbDomainItem domainItem)
                 { Activate((data) => new Forms.Database.DbDomain(domainItem), domainItem); }
 
+                if (dataNode is ILibrarySourceItem sourceItem)
+                { Activate((data) => new Forms.Library.LibrarySource(sourceItem), sourceItem); }
 
-
+                if (dataNode is ILibraryMemberItem memberItem)
+                { Activate((data) => new Forms.Library.LibraryMember(memberItem), memberItem); }
             }
-        }
-        #endregion
-
-        #region domainModelNavigation
-        Dictionary<TreeNode, Object> domainModelNodes = new Dictionary<TreeNode, Object>();
-        enum domainModelImageIndex
-        {
-            Attribute,
-            Attributes,
-            Property,
-            Alias,
-            Entity
-        }
-
-        static Dictionary<domainModelImageIndex, (String imageKey, Image image)> domainModelImageItems = new Dictionary<domainModelImageIndex, (String imageKey, Image image)>()
-        {
-            {domainModelImageIndex.Attribute,    ("Attribute",   Resources.Attribute) },
-            {domainModelImageIndex.Attributes,   ("Attributes",  Resources.Parameter) },
-            {domainModelImageIndex.Property,     ("Property",    Resources.Property) },
-            {domainModelImageIndex.Alias,        ("Alias",       Resources.Synonym) },
-            {domainModelImageIndex.Entity,       ("Entity",      Resources.ClassPublic) },
-        };
-
-
-        void BuildDomainModelTreeByAttribute()
-        {
-            List<Object> expanded = domainModelNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value).ToList();
-
-            Object? selected = null;
-            if (dataSourceNavigation.SelectedNode is not null && dbDataNodes.ContainsKey(dataSourceNavigation.SelectedNode))
-            { selected = dbDataNodes[dataSourceNavigation.SelectedNode]; }
-
-            domainModelNavigation.Nodes.Clear();
-            domainModelNodes.Clear();
-
-            foreach (IDomainAttributeItem attributeItem in
-                Program.Data.DomainAttributes.
-                OrderBy(o => o.AttributeTitle))
-            {
-                TreeNode attributeNode = CreateAttribute(attributeItem, null);
-                domainModelNavigation.Nodes.Add(attributeNode);
-            }
-
-            foreach (object item in expanded)
-            {
-                if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
-                {
-                    node.Key.Expand();
-                    if (node.Key.Parent is TreeNode) { node.Key.Parent.Expand(); }
-                }
-            }
-
-            if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, selected)) is KeyValuePair<TreeNode, object> selectedNode)
-            { domainModelNavigation.SelectedNode = selectedNode.Key; }
-
-            TreeNode CreateAttribute(IDomainAttributeItem attributeItem, TreeNode? parent)
-            {
-                TreeNode attributeNode = CreateNode(attributeItem.AttributeTitle, domainModelImageIndex.Attribute, attributeItem);
-                DomainAttributeKey key = new DomainAttributeKey(attributeItem);
-
-                List<DomainAttributePropertyItem> properties = Program.Data.DomainAttributeProperties.Where(w => key.Equals(w)).ToList();
-                foreach (DomainAttributePropertyItem propertyItem in properties)
-                {
-                    String propertyTitle = String.Empty;
-                    if (Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propertyItem.PropertyId) is PropertyItem property && property.PropertyTitle is not null)
-                    { propertyTitle = property.PropertyTitle; }
-
-                    CreateNode(propertyTitle, domainModelImageIndex.Property, propertyItem, attributeNode);
-                }
-
-                List<DomainAttributeAliasItem> alias = Program.Data.DomainAttributeAliases.Where(w => key.Equals(w)).ToList();
-                foreach (DomainAttributeAliasItem aliasItem in alias)
-                { CreateNode(aliasItem.ToString(), domainModelImageIndex.Alias, aliasItem, attributeNode); }
-
-                // TODO: Children not yet supported
-                //var children = Program.Data.DomainAttributes.Where(w => w.AttributeId == attributeItem.ParentAttributeId).ToList();
-                //foreach (DomainAttributeItem childAttributeItem in Program.Data.DomainAttributes.Where(w => w.AttributeId == attributeItem.ParentAttributeId))
-                //{ attributeNode.Nodes.Add(CreateAttribute(childAttributeItem, attributeNode)); }
-
-                List<DomainEntityItem> entities = Program.Data.GetEntities(key).OrderBy(o => o.EntityTitle).ToList();
-                foreach (DomainEntityItem item in entities)
-                { CreateNode(item.EntityTitle, domainModelImageIndex.Entity, item, attributeNode); }
-
-                if (parent is not null) { parent.Nodes.Add(attributeNode); }
-                return attributeNode;
-            }
-
-            TreeNode CreateNode(String? nodeText, domainModelImageIndex imageIndex, Object? source = null, TreeNode? parentNode = null)
-            {
-                if (String.IsNullOrWhiteSpace(nodeText)) { throw new ArgumentNullException(nameof(nodeText)); }
-
-                TreeNode result = new TreeNode(nodeText);
-                result.ImageKey = domainModelImageItems[imageIndex].imageKey;
-                result.SelectedImageKey = domainModelImageItems[imageIndex].imageKey;
-
-                if (parentNode is not null) { parentNode.Nodes.Add(result); }
-                if (source is not null) { domainModelNodes.Add(result, source); }
-
-                return result;
-            }
-        }
-
-        void BuildDomainModelTreeByEntity()
-        {
-            List<Object> expanded = domainModelNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value).ToList();
-
-            Object? selected = null;
-            if (dataSourceNavigation.SelectedNode is not null && dbDataNodes.ContainsKey(dataSourceNavigation.SelectedNode))
-            { selected = dbDataNodes[dataSourceNavigation.SelectedNode]; }
-
-            domainModelNavigation.Nodes.Clear();
-            domainModelNodes.Clear();
-
-            foreach (IDomainEntityItem entityItem in
-                Program.Data.DomainEntities.
-                OrderBy(o => o.EntityTitle))
-            {
-                TreeNode entityNode = CreateEntity(entityItem, null);
-                domainModelNavigation.Nodes.Add(entityNode);
-            }
-
-            foreach (object item in expanded)
-            {
-                if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
-                {
-                    node.Key.Expand();
-                    if (node.Key.Parent is TreeNode) { node.Key.Parent.Expand(); }
-                }
-            }
-
-            if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, selected)) is KeyValuePair<TreeNode, object> selectedNode)
-            { domainModelNavigation.SelectedNode = selectedNode.Key; }
-
-            TreeNode CreateEntity(IDomainEntityItem entityItem, TreeNode? parent)
-            {
-                TreeNode entityNode = CreateNode(entityItem.EntityTitle, domainModelImageIndex.Entity, entityItem);
-                DomainEntityKey key = new DomainEntityKey(entityItem);
-
-                List<DomainEntityPropertyItem> properties = Program.Data.DomainEntityProperties.Where(w => key.Equals(w)).ToList();
-                foreach (DomainEntityPropertyItem propertyItem in properties)
-                {
-                    String propertyTitle = String.Empty;
-                    if (Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propertyItem.PropertyId) is PropertyItem property && property.PropertyTitle is not null)
-                    { propertyTitle = property.PropertyTitle; }
-
-                    CreateNode(propertyTitle, domainModelImageIndex.Property, propertyItem, entityNode);
-                }
-
-                List<DomainEntityAliasItem> alias = Program.Data.DomainEntityAliases.Where(w => key.Equals(w)).ToList();
-                foreach (DomainEntityAliasItem aliasItem in alias)
-                { CreateNode(aliasItem.ToString(), domainModelImageIndex.Alias, aliasItem, entityNode); }
-
-                List<DomainAttributeItem> attributes = Program.Data.GetAttributes(key).OrderBy(o => o.AttributeTitle).ToList();
-                foreach (DomainAttributeItem item in attributes)
-                { CreateNode(item.AttributeTitle, domainModelImageIndex.Attribute, item, entityNode); }
-
-                if (parent is not null) { parent.Nodes.Add(entityNode); }
-                return entityNode;
-            }
-
-            TreeNode CreateNode(String? nodeText, domainModelImageIndex imageIndex, Object? source = null, TreeNode? parentNode = null)
-            {
-                if (String.IsNullOrWhiteSpace(nodeText)) { throw new ArgumentNullException(nameof(nodeText)); }
-
-                TreeNode result = new TreeNode(nodeText);
-                result.ImageKey = domainModelImageItems[imageIndex].imageKey;
-                result.SelectedImageKey = domainModelImageItems[imageIndex].imageKey;
-
-                if (parentNode is not null) { parentNode.Nodes.Add(result); }
-                if (source is not null) { domainModelNodes.Add(result, source); }
-
-                return result;
-            }
-        }
-
-        private void domainModelNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            if (domainModelNodes.ContainsKey(e.Node))
-            {
-                Object dataNode = domainModelNodes[e.Node];
-
-                if (dataNode is IDomainAttributeItem attributeItem)
-                { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
-
-                if (dataNode is IDomainEntityItem entityItem)
-                { Activate((data) => new Forms.Domain.DomainEntity(entityItem), entityItem); }
-            }
-        }
-        private void sortByAttributeEntityCommand_Click(object sender, EventArgs e)
-        {
-            sortByAttributeEntityCommand.Checked = true;
-            sortByEntityAttributeCommand.Checked = false;
-            BuildDomainModelTreeByAttribute();
-        }
-
-        private void sortByEntityAttributeCommand_Click(object sender, EventArgs e)
-        {
-            sortByAttributeEntityCommand.Checked = false;
-            sortByEntityAttributeCommand.Checked = true;
-            BuildDomainModelTreeByEntity();
         }
         #endregion
     }

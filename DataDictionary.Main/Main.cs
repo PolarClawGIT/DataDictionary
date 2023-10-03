@@ -64,8 +64,6 @@ namespace DataDictionary.Main
         {
             Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
 
-            // TODO: Cannot get the Context menus to show. For now, add them to the Tools menu
-            dbSchemaToolStripMenuItem.DropDownItems.AddRange(dbSchemaContextMenu.Items);
             domainModelToolStripMenuItem.DropDownItems.AddRange(domainModelMenu.Items);
 
             if (Settings.Default.IsOnLineMode)
@@ -90,7 +88,7 @@ namespace DataDictionary.Main
             modelNameData.DataBindings.Add(new Binding(nameof(modelNameData.Text), Program.Data.Model, nameof(Program.Data.Model.ModelTitle)));
             modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), Program.Data.Model, nameof(Program.Data.Model.ModelDescription)));
 
-            BuildDbDataTree();
+            BuildDataSourcesTree();
             BuildDomainModelTreeByAttribute();
 
             menuStrip.Enabled = true;
@@ -278,7 +276,8 @@ namespace DataDictionary.Main
         private void textEditorToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new ProofOfConcept.TextEditor()); }
 
-        private void manageLibrariesCommand_Click(object sender, EventArgs e)
+ 
+        private void manageLibrariesCommand_ButtonClick(object sender, EventArgs e)
         { Activate(() => new Forms.Library.LibraryManager()); }
     }
 }

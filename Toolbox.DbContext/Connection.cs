@@ -204,6 +204,7 @@ namespace Toolbox.DbContext
 
             try
             {
+                if (DbContext.ValidateCommand) { Validate(command); }
                 Validate(command);
                 return command.BaseCommand.ExecuteReader();
             }

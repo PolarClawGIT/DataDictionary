@@ -198,6 +198,8 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
                                 if (!String.IsNullOrWhiteSpace(memberName))
                                 {
+                                    //TODO: Need to come up with a way to clean up the XML data. Remove extra returns and spacing.
+
                                     LibraryMemberItem memberItem = new LibraryMemberItem()
                                     {
                                         AssemblyName = assemblyName,
@@ -272,7 +274,6 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
             workItems.Add(openConnection);
 
-
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Library sources",
@@ -299,9 +300,6 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             List<WorkItem> workItems = new List<WorkItem>();
             LibrarySourceKey library = new LibrarySourceKey(key);
 
-            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
-            workItems.Add(openConnection);
-
             workItems.Add(new WorkItem()
             {
                 WorkName = "Remove Library",
@@ -316,7 +314,9 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 {
                     data.LibrarySources.Remove(sourceItem);
 
-                    foreach (LibraryMemberItem memberItem in data.LibraryMembers.Where(w => library.Equals(w)))
+                    List<LibraryMemberItem> toRemove = data.LibraryMembers.Where(w => library.Equals(w)).ToList();
+
+                    foreach (LibraryMemberItem memberItem in toRemove)
                     { data.LibraryMembers.Remove(memberItem); }
                 }
             }
@@ -342,7 +342,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 workItems.Add(new ExecuteNonQuery(openConnection)
                 {
                     WorkName = "Delete Library (Cascade)",
-                    Command = (conn) => data.LibraryMembers.SaveCommand(conn, library)
+                    Command = (conn) => data.LibrarySources.SaveCommand(conn, library)
                 });
             }
 

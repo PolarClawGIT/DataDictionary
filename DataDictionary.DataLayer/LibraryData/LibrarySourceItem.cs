@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.LibraryData
     /// <summary>
     /// Interface for the Library Source Item
     /// </summary>
-    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyUnique, INotifyPropertyChanged
+    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyUnique, INotifyPropertyChanged, IBindingTableRow
     {
         /// <summary>
         /// Title for the Library
@@ -72,11 +72,12 @@ namespace DataDictionary.DataLayer.LibraryData
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("LibraryId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("AssemblyName", typeof(String)){ AllowDBNull = true},
             new DataColumn("LibraryTitle", typeof(String)){ AllowDBNull = true},
             new DataColumn("LibraryDescription", typeof(String)){ AllowDBNull = true},
+            new DataColumn("AssemblyName", typeof(String)){ AllowDBNull = true},
             new DataColumn("SourceFile", typeof(String)){ AllowDBNull = true},
             new DataColumn("SourceDate", typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
 

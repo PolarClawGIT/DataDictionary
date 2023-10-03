@@ -53,8 +53,6 @@ namespace DataDictionary.Main.Forms.Library
             }
         }
 
-        private
-
         void BindData()
         {
             libraryBinding.DataSource = bindingData;
@@ -153,19 +151,87 @@ namespace DataDictionary.Main.Forms.Library
 
         private void OpenToolStripButton_Click(object? sender, EventArgs e)
         {
-            //TODO: if In database, add to Model
-        }
+            if (libraryBinding.Current is LibraryManagerItem sourceItem)
+            {
+                LibrarySourceKey key = new LibrarySourceKey(sourceItem);
+                List<WorkItem> work = new List<WorkItem>();
 
+                if (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem existing)
+                { work.AddRange(Program.Data.RemoveLibrary(key)); }
+
+                work.AddRange(Program.Data.LoadLibrary(key));
+
+                SendMessage(new Messages.DbDataBatchStarting());
+                UnBindData();
+                this.DoWork(work, onCompleting);
+            }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                bindingData.RefreshFromModel();
+                SendMessage(new Messages.DbDataBatchCompleted());
+                BindData();
+            }
+        }
 
         private void SaveToolStripButton_Click(object? sender, EventArgs e)
         {
-            //TODO: Save Data to Database
+            if (libraryBinding.Current is LibraryManagerItem sourceItem)
+            {
+                LibrarySourceKey key = new LibrarySourceKey(sourceItem);
+                List<WorkItem> work = new List<WorkItem>();
+
+                if (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem existing)
+                { work.AddRange(Program.Data.SaveLibrary(key)); }
+
+                work.AddRange(Program.Data.RemoveLibrary(key));
+                work.AddRange(Program.Data.LoadLibrary(key));
+
+                SendMessage(new Messages.DbDataBatchStarting());
+                UnBindData();
+                this.DoWork(work, onCompleting);
+            }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                bindingData.RefreshFromModel();
+                SendMessage(new Messages.DbDataBatchCompleted());
+                BindData();
+
+                if (libraryBinding.Current is LibraryManagerItem sourceItem)
+                { sourceItem.InDatabase = true; }
+            }
         }
 
         private void DeleteToolStripButton_Click(object? sender, EventArgs e)
         {
-            //TODO: If Not in Model but is in Database, remove from Database (if not attached to any Model)
-            //TODO: If in Model, remove from Model
+            if (libraryBinding.Current is LibraryManagerItem sourceItem)
+            {
+                LibrarySourceKey key = new LibrarySourceKey(sourceItem);
+                List<WorkItem> work = new List<WorkItem>();
+
+                if (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem existing)
+                { work.AddRange(Program.Data.RemoveLibrary(key)); }
+                else { work.AddRange(Program.Data.DeleteLibrary(key)); }
+
+                SendMessage(new Messages.DbDataBatchStarting());
+                UnBindData();
+                this.DoWork(work, onCompleting);
+            }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                if (libraryBinding.Current is LibraryManagerItem sourceItem && args.Error is null)
+                {
+                    if (sourceItem.InDatabase && !sourceItem.InModel) { libraryBinding.Remove(sourceItem); }
+                    else if (sourceItem.InDatabase && sourceItem.InModel) { sourceItem.InModel = false; }
+                    else if (!sourceItem.InDatabase && sourceItem.InModel) { libraryBinding.Remove(sourceItem); }
+                }
+
+                bindingData.RefreshFromModel();
+                SendMessage(new Messages.DbDataBatchCompleted());
+                BindData();
+            }
         }
 
         #region IColleague
@@ -176,20 +242,6 @@ namespace DataDictionary.Main.Forms.Library
         { BindData(); }
         #endregion
 
-        private void libraryNavigation_Leave(object sender, EventArgs e)
-        {
-            //TODO: Handle new row selected? Probably not needed for this screen.
-        }
-
-        private void librarySourceBinding_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            //TODO: Handle new Item
-        }
-
-        private void libraryBinding_CurrentChanged(object sender, EventArgs e)
-        {
-            //TODO: Set the buttons enabled/Disabled accordingly
-        }
 
         private void libraryTitleData_Validating(object sender, CancelEventArgs e)
         {

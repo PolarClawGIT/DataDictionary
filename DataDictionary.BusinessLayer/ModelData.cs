@@ -214,15 +214,7 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         /// <param name="context"></param>
         public ModelData(Context context) : this()
-        {
-            ModelContext = new Context()
-            {
-                ServerName = context.ServerName,
-                DatabaseName = context.DatabaseName,
-                ApplicationRole = context.ApplicationRole,
-                ApplicationRolePassword = context.ApplicationRolePassword
-            };
-        }
+        { ModelContext = context; }
 
         /// <summary>
         /// Clears all the Model Data.

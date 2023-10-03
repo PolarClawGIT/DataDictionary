@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.LibraryData
     /// <summary>
     /// Interface for the Library Member Item
     /// </summary>
-    public interface ILibraryMemberItem : ILibraryMemberKey, ILibrarySourceKeyUnique, INotifyPropertyChanged
+    public interface ILibraryMemberItem : ILibraryMemberKey, ILibrarySourceKeyUnique, INotifyPropertyChanged, IBindingTableRow
     {
         /// <summary>
         /// Type of Member, such as the name of the Class, Enum, Method, Property, ...
@@ -34,7 +34,7 @@ namespace DataDictionary.DataLayer.LibraryData
     public class LibraryMemberItem : BindingTableRow, ILibraryMemberItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? LibraryId { get { return GetValue<Guid>("LibraryId"); } }
+        public Guid? LibraryId { get { return GetValue<Guid>("LibraryId"); } protected set { SetValue("LibraryId", value); } }
 
         /// <inheritdoc/>
         public string? AssemblyName { get { return GetValue("AssemblyName"); } set { SetValue("AssemblyName", value); } }
@@ -55,7 +55,7 @@ namespace DataDictionary.DataLayer.LibraryData
         /// Constructor for LibraryMemberItem
         /// </summary>
         public LibraryMemberItem() : base()
-        { }
+        {   if (LibraryId is null) { LibraryId = Guid.NewGuid(); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -85,6 +85,81 @@ namespace DataDictionary.DataLayer.LibraryData
         /// <inheritdoc/>
         public override string ToString()
         { if (MemberName is not null) { return MemberName; } else { return string.Empty; } }
+    }
 
+    /// <summary>
+    /// List of Member Types
+    /// </summary>
+    public enum LibraryMemberType
+    {
+        /// <summary>
+        /// Unknown
+        /// </summary>
+        NULL,
+
+        /// <summary>
+        /// .Net NameSpace
+        /// </summary>
+        NameSpace,
+
+        /// <summary>
+        /// A type is a class, interface, struct, enum, or delegate.
+        /// </summary>
+        Type,
+
+        /// <summary>
+        /// A field.
+        /// </summary>
+        Field,
+
+        /// <summary>
+        /// A property. Includes indexers or other indexed properties.
+        /// </summary>
+        Property,
+
+        /// <summary>
+        /// A Method/Function. Includes special methods, such as constructors and operators.
+        /// </summary>
+        Method,
+
+        /// <summary>
+        /// An Event
+        /// </summary>
+        Event,
+
+        /// <summary>
+        /// An Error occurred. The rest of the string provides information about the error. 
+        /// </summary>
+        Error
+    }
+
+    /// <summary>
+    /// Extension for the LibraryMember
+    /// </summary>
+    public static class LibraryMemberExtension
+    {
+        static Dictionary<LibraryMemberType, (String code, String name)> memberTypeCrossRefrence = new Dictionary<LibraryMemberType, (String code, String name)>
+        {
+            { LibraryMemberType.NULL,      (String.Empty,String.Empty) },
+            { LibraryMemberType.NameSpace, ("N","NameSpace") },
+            { LibraryMemberType.Type,      ("T","Type") },
+            { LibraryMemberType.Field,     ("F","Field") },
+            { LibraryMemberType.Property,  ("P","Property") },
+            { LibraryMemberType.Method,    ("M","Method") },
+            { LibraryMemberType.Event,     ("E","Event") },
+            { LibraryMemberType.Error,     ("!","Error") },
+        };
+
+        /// <summary>
+        /// Given the LibraryMemberItem, return the member type enum.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static (LibraryMemberType type, String code, String name) MemberItemType(this LibraryMemberItem value)
+        {
+            if (memberTypeCrossRefrence.FirstOrDefault(w => value.MemberType == w.Value.code || value.MemberType == w.Value.name) is KeyValuePair<LibraryMemberType, (String code, String name)> result)
+            { return (result.Key,result.Value.code, result.Value.name); }
+            else { return (LibraryMemberType.NULL,memberTypeCrossRefrence[LibraryMemberType.NULL].code, memberTypeCrossRefrence[LibraryMemberType.NULL].name); }
+        }
     }
 }

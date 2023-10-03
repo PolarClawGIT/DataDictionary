@@ -123,6 +123,26 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Class {
+            get {
+                object obj = ResourceManager.GetObject("Class", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ClassCollection {
+            get {
+                object obj = ResourceManager.GetObject("ClassCollection", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ClassPublic {
             get {
                 object obj = ResourceManager.GetObject("ClassPublic", resourceCulture);
@@ -236,6 +256,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap ExtendedProperty {
             get {
                 object obj = ResourceManager.GetObject("ExtendedProperty", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Field {
+            get {
+                object obj = ResourceManager.GetObject("Field", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -383,6 +413,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_Field {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Field", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_HelpTableOfContent {
             get {
                 object obj = ResourceManager.GetObject("Icon_HelpTableOfContent", resourceCulture);
@@ -456,6 +496,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Icon Icon_Property {
             get {
                 object obj = ResourceManager.GetObject("Icon_Property", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_Relationship {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Relationship", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -583,6 +633,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Namespace {
+            get {
+                object obj = ResourceManager.GetObject("Namespace", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap NewAttribute {
             get {
                 object obj = ResourceManager.GetObject("NewAttribute", resourceCulture);
@@ -616,6 +676,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap NewDocumentCollection {
             get {
                 object obj = ResourceManager.GetObject("NewDocumentCollection", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap NewRelationship {
+            get {
+                object obj = ResourceManager.GetObject("NewRelationship", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -696,6 +766,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap Reference {
             get {
                 object obj = ResourceManager.GetObject("Reference", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Relationship {
+            get {
+                object obj = ResourceManager.GetObject("Relationship", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
