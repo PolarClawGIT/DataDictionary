@@ -31,8 +31,6 @@ namespace DataDictionary.Main
 
         void BuildDomainModelTreeByAttribute()
         {
-            List<Object> expanded = domainModelNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value).ToList();
-
             Object? selected = null;
             if (dataSourceNavigation.SelectedNode is not null && dbDataNodes.ContainsKey(dataSourceNavigation.SelectedNode))
             { selected = dbDataNodes[dataSourceNavigation.SelectedNode]; }
@@ -46,15 +44,6 @@ namespace DataDictionary.Main
             {
                 TreeNode attributeNode = CreateAttribute(attributeItem, null);
                 domainModelNavigation.Nodes.Add(attributeNode);
-            }
-
-            foreach (object item in expanded)
-            {
-                if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
-                {
-                    node.Key.Expand();
-                    if (node.Key.Parent is TreeNode) { node.Key.Parent.Expand(); }
-                }
             }
 
             if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, selected)) is KeyValuePair<TreeNode, object> selectedNode)
@@ -109,8 +98,6 @@ namespace DataDictionary.Main
 
         void BuildDomainModelTreeByEntity()
         {
-            List<Object> expanded = domainModelNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value).ToList();
-
             Object? selected = null;
             if (dataSourceNavigation.SelectedNode is not null && dbDataNodes.ContainsKey(dataSourceNavigation.SelectedNode))
             { selected = dbDataNodes[dataSourceNavigation.SelectedNode]; }
@@ -124,15 +111,6 @@ namespace DataDictionary.Main
             {
                 TreeNode entityNode = CreateEntity(entityItem, null);
                 domainModelNavigation.Nodes.Add(entityNode);
-            }
-
-            foreach (object item in expanded)
-            {
-                if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
-                {
-                    node.Key.Expand();
-                    if (node.Key.Parent is TreeNode) { node.Key.Parent.Expand(); }
-                }
             }
 
             if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, selected)) is KeyValuePair<TreeNode, object> selectedNode)

@@ -33,6 +33,10 @@
             TableLayoutPanel libraryManagerLayoutCheckBoxs;
             sourceFileDate = new Controls.TextBoxData();
             libraryNavigation = new DataGridView();
+            libraryTitleColumn = new DataGridViewTextBoxColumn();
+            libraryDescriptionColumn = new DataGridViewTextBoxColumn();
+            inModelColumn = new DataGridViewCheckBoxColumn();
+            inDatabaseColumn = new DataGridViewCheckBoxColumn();
             libraryTitleData = new Controls.TextBoxData();
             libraryDescriptionData = new Controls.TextBoxData();
             asseblyNameData = new Controls.TextBoxData();
@@ -42,10 +46,6 @@
             libraryBinding = new BindingSource(components);
             errorProvider = new ErrorProvider(components);
             openFileDialog = new OpenFileDialog();
-            libraryTitleColumn = new DataGridViewTextBoxColumn();
-            libraryDescriptionColumn = new DataGridViewTextBoxColumn();
-            inModelColumn = new DataGridViewTextBoxColumn();
-            inDatabaseColumn = new DataGridViewTextBoxColumn();
             libraryManagerLayout = new TableLayoutPanel();
             libraryManagerLayoutCheckBoxs = new TableLayoutPanel();
             libraryManagerLayout.SuspendLayout();
@@ -104,6 +104,34 @@
             libraryNavigation.RowTemplate.Height = 25;
             libraryNavigation.Size = new Size(560, 325);
             libraryNavigation.TabIndex = 0;
+            // 
+            // libraryTitleColumn
+            // 
+            libraryTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            libraryTitleColumn.DataPropertyName = "LibraryTitle";
+            libraryTitleColumn.FillWeight = 40F;
+            libraryTitleColumn.HeaderText = "Title";
+            libraryTitleColumn.Name = "libraryTitleColumn";
+            // 
+            // libraryDescriptionColumn
+            // 
+            libraryDescriptionColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            libraryDescriptionColumn.DataPropertyName = "LibraryDescription";
+            libraryDescriptionColumn.FillWeight = 60F;
+            libraryDescriptionColumn.HeaderText = "Description";
+            libraryDescriptionColumn.Name = "libraryDescriptionColumn";
+            // 
+            // inModelColumn
+            // 
+            inModelColumn.DataPropertyName = "InModel";
+            inModelColumn.HeaderText = "In Model";
+            inModelColumn.Name = "inModelColumn";
+            // 
+            // inDatabaseColumn
+            // 
+            inDatabaseColumn.DataPropertyName = "InDatabase";
+            inDatabaseColumn.HeaderText = "In Database";
+            inDatabaseColumn.Name = "inDatabaseColumn";
             // 
             // libraryTitleData
             // 
@@ -176,7 +204,6 @@
             // inModelData
             // 
             inModelData.AutoSize = true;
-            inModelData.Enabled = false;
             inModelData.Location = new Point(3, 3);
             inModelData.Name = "inModelData";
             inModelData.Size = new Size(73, 19);
@@ -187,7 +214,6 @@
             // inDatabaseData
             // 
             inDatabaseData.AutoSize = true;
-            inDatabaseData.Enabled = false;
             inDatabaseData.Location = new Point(3, 28);
             inDatabaseData.Name = "inDatabaseData";
             inDatabaseData.Size = new Size(87, 19);
@@ -197,6 +223,7 @@
             // 
             // libraryBinding
             // 
+            libraryBinding.BindingComplete += libraryBinding_BindingComplete;
             // 
             // errorProvider
             // 
@@ -205,40 +232,6 @@
             // openFileDialog
             // 
             openFileDialog.FileName = "openFileDialog";
-            // 
-            // libraryTitleColumn
-            // 
-            libraryTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            libraryTitleColumn.DataPropertyName = "LibraryTitle";
-            libraryTitleColumn.FillWeight = 40F;
-            libraryTitleColumn.HeaderText = "Title";
-            libraryTitleColumn.Name = "libraryTitleColumn";
-            // 
-            // libraryDescriptionColumn
-            // 
-            libraryDescriptionColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            libraryDescriptionColumn.DataPropertyName = "LibraryDescription";
-            libraryDescriptionColumn.FillWeight = 60F;
-            libraryDescriptionColumn.HeaderText = "Description";
-            libraryDescriptionColumn.Name = "libraryDescriptionColumn";
-            // 
-            // inModelColumn
-            // 
-            inModelColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            inModelColumn.DataPropertyName = "InModel";
-            inModelColumn.HeaderText = "In Model";
-            inModelColumn.Name = "inModelColumn";
-            inModelColumn.ReadOnly = true;
-            inModelColumn.Width = 79;
-            // 
-            // inDatabaseColumn
-            // 
-            inDatabaseColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            inDatabaseColumn.DataPropertyName = "InDatabase";
-            inDatabaseColumn.HeaderText = "In Database";
-            inDatabaseColumn.Name = "inDatabaseColumn";
-            inDatabaseColumn.ReadOnly = true;
-            inDatabaseColumn.Width = 93;
             // 
             // LibraryManager
             // 
@@ -276,7 +269,7 @@
         private OpenFileDialog openFileDialog;
         private DataGridViewTextBoxColumn libraryTitleColumn;
         private DataGridViewTextBoxColumn libraryDescriptionColumn;
-        private DataGridViewTextBoxColumn inModelColumn;
-        private DataGridViewTextBoxColumn inDatabaseColumn;
+        private DataGridViewCheckBoxColumn inModelColumn;
+        private DataGridViewCheckBoxColumn inDatabaseColumn;
     }
 }

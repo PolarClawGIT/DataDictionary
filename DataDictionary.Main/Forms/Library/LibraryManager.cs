@@ -18,37 +18,29 @@ namespace DataDictionary.Main.Forms.Library
     partial class LibraryManager : ApplicationBase
     {
 
+        LibrarySourceCollection dbData = new LibrarySourceCollection();
         LibraryManagerCollection bindingData = new LibraryManagerCollection();
 
         public LibraryManager()
         {
             InitializeComponent();
-            newToolStripButton.Enabled = true;
             openToolStripButton.Enabled = true;
-            saveToolStripButton.Enabled = true;
-            deleteToolStripButton.Enabled = true;
-            newToolStripButton.Click += NewToolStripButton_Click;
+            saveToolStripButton.Enabled = Settings.Default.IsOnLineMode;
             openToolStripButton.Click += OpenToolStripButton_Click;
             saveToolStripButton.Click += SaveToolStripButton_Click;
-            deleteToolStripButton.Click += DeleteToolStripButton_Click;
 
-            newToolStripButton.ToolTipText = "New Library from XML file";
-            openToolStripButton.ToolTipText = "Open existing Library from database and add to Model";
-            saveToolStripButton.ToolTipText = "Save the Library in the Model back to the Database";
-            deleteToolStripButton.ToolTipText = "Remove the Library from the Model or Delete the Library from the Database (if not in any Model)";
+            openToolStripButton.ToolTipText = "Open and add from ASP.Net XML Documentation file";
+            saveToolStripButton.ToolTipText = "Save the changes back to the database";
             this.Icon = Resources.Icon_Library;
         }
 
         private void LibraryManager_Load(object sender, EventArgs e)
         {
-
-            LibrarySourceCollection<LibrarySourceItem> data = new LibrarySourceCollection<LibrarySourceItem>();
-
-            this.DoWork(data.LoadLibrary(), onCompleting);
+            this.DoWork(dbData.LoadLibrary(), onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                bindingData.Build(data);
+                bindingData.Build(Program.Data.LibrarySources, dbData);
                 BindData();
             }
         }
@@ -61,18 +53,20 @@ namespace DataDictionary.Main.Forms.Library
             libraryNavigation.DataSource = libraryBinding;
 
             LibraryManagerItem nameOfValues = new LibraryManagerItem();
-            libraryTitleData.DataBindings.Add(new Binding(nameof(libraryTitleData.Text), bindingData, nameof(nameOfValues.LibraryTitle)));
-            libraryDescriptionData.DataBindings.Add(new Binding(nameof(libraryDescriptionData.Text), bindingData, nameof(nameOfValues.LibraryDescription)));
-            asseblyNameData.DataBindings.Add(new Binding(nameof(asseblyNameData.Text), bindingData, nameof(nameOfValues.AssemblyName)));
-            sourceFileNameData.DataBindings.Add(new Binding(nameof(sourceFileNameData.Text), bindingData, nameof(nameOfValues.SourceFile)));
-            sourceFileDate.DataBindings.Add(new Binding(nameof(sourceFileDate.Text), bindingData, nameof(nameOfValues.SourceDate)));
+            libraryTitleData.DataBindings.Add(new Binding(nameof(libraryTitleData.Text), libraryBinding, nameof(nameOfValues.LibraryTitle)));
+            libraryDescriptionData.DataBindings.Add(new Binding(nameof(libraryDescriptionData.Text), libraryBinding, nameof(nameOfValues.LibraryDescription)));
+            asseblyNameData.DataBindings.Add(new Binding(nameof(asseblyNameData.Text), libraryBinding, nameof(nameOfValues.AssemblyName)));
+            sourceFileNameData.DataBindings.Add(new Binding(nameof(sourceFileNameData.Text), libraryBinding, nameof(nameOfValues.SourceFile)));
+            sourceFileDate.DataBindings.Add(new Binding(nameof(sourceFileDate.Text), libraryBinding, nameof(nameOfValues.SourceDate)));
 
-            inModelData.DataBindings.Add(new Binding(nameof(inModelData.Checked), bindingData, nameof(nameOfValues.InModel), true, DataSourceUpdateMode.OnValidation, false));
-            inDatabaseData.DataBindings.Add(new Binding(nameof(inDatabaseData.Checked), bindingData, nameof(nameOfValues.InDatabase), true, DataSourceUpdateMode.OnValidation, false));
+            inModelData.DataBindings.Add(new Binding(nameof(inModelData.Checked), libraryBinding, nameof(nameOfValues.InModel), true, DataSourceUpdateMode.OnValidation, false));
+            inDatabaseData.DataBindings.Add(new Binding(nameof(inDatabaseData.Checked), libraryBinding, nameof(nameOfValues.InDatabase), true, DataSourceUpdateMode.OnValidation, false));
+            this.UnLockForm();
         }
 
         void UnBindData()
         {
+            this.LockForm();
             libraryTitleData.DataBindings.Clear();
             libraryDescriptionData.DataBindings.Clear();
             asseblyNameData.DataBindings.Clear();
@@ -85,7 +79,7 @@ namespace DataDictionary.Main.Forms.Library
             libraryBinding.DataSource = null;
         }
 
-        private void NewToolStripButton_Click(object? sender, EventArgs e)
+        private void OpenToolStripButton_Click(object? sender, EventArgs e)
         {
             openFileDialog.Filter = "XML VS Documentation|*.XML";
             openFileDialog.Multiselect = true;
@@ -143,93 +137,61 @@ namespace DataDictionary.Main.Forms.Library
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                bindingData.RefreshFromModel();
                 SendMessage(new Messages.DbDataBatchCompleted());
-                BindData();
-            }
-        }
-
-        private void OpenToolStripButton_Click(object? sender, EventArgs e)
-        {
-            if (libraryBinding.Current is LibraryManagerItem sourceItem)
-            {
-                LibrarySourceKey key = new LibrarySourceKey(sourceItem);
-                List<WorkItem> work = new List<WorkItem>();
-
-                if (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem existing)
-                { work.AddRange(Program.Data.RemoveLibrary(key)); }
-
-                work.AddRange(Program.Data.LoadLibrary(key));
-
-                SendMessage(new Messages.DbDataBatchStarting());
-                UnBindData();
-                this.DoWork(work, onCompleting);
-            }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                bindingData.RefreshFromModel();
-                SendMessage(new Messages.DbDataBatchCompleted());
+                bindingData.Build(Program.Data.LibrarySources, dbData);
                 BindData();
             }
         }
 
         private void SaveToolStripButton_Click(object? sender, EventArgs e)
         {
-            if (libraryBinding.Current is LibraryManagerItem sourceItem)
+            libraryNavigation.EndEdit();
+            List<WorkItem> work = new List<WorkItem>();
+
+            foreach (LibraryManagerItem item in bindingData.ToList())
             {
-                LibrarySourceKey key = new LibrarySourceKey(sourceItem);
-                List<WorkItem> work = new List<WorkItem>();
+                LibrarySourceKey key = new LibrarySourceKey(item);
+                Boolean inDbList = (dbData.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
+                Boolean inModelList = (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
 
-                if (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem existing)
-                { work.AddRange(Program.Data.SaveLibrary(key)); }
-
-                work.AddRange(Program.Data.RemoveLibrary(key));
-                work.AddRange(Program.Data.LoadLibrary(key));
-
-                SendMessage(new Messages.DbDataBatchStarting());
-                UnBindData();
-                this.DoWork(work, onCompleting);
-            }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                bindingData.RefreshFromModel();
-                SendMessage(new Messages.DbDataBatchCompleted());
-                BindData();
-
-                if (libraryBinding.Current is LibraryManagerItem sourceItem)
-                { sourceItem.InDatabase = true; }
-            }
-        }
-
-        private void DeleteToolStripButton_Click(object? sender, EventArgs e)
-        {
-            if (libraryBinding.Current is LibraryManagerItem sourceItem)
-            {
-                LibrarySourceKey key = new LibrarySourceKey(sourceItem);
-                List<WorkItem> work = new List<WorkItem>();
-
-                if (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem existing)
-                { work.AddRange(Program.Data.RemoveLibrary(key)); }
-                else { work.AddRange(Program.Data.DeleteLibrary(key)); }
-
-                SendMessage(new Messages.DbDataBatchStarting());
-                UnBindData();
-                this.DoWork(work, onCompleting);
-            }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                if (libraryBinding.Current is LibraryManagerItem sourceItem && args.Error is null)
+                if (item.InModel && !inDbList)
+                { work.AddRange(Program.Data.SaveLibrary(item)); }
+                else if (item.InModel && item.InDatabase && inModelList)
+                { work.AddRange(Program.Data.SaveLibrary(item)); }
+                else if (item.InModel && item.InDatabase && !inModelList)
+                { work.AddRange(Program.Data.LoadLibrary(item)); }
+                else if (!item.InModel && item.InDatabase && inModelList)
                 {
-                    if (sourceItem.InDatabase && !sourceItem.InModel) { libraryBinding.Remove(sourceItem); }
-                    else if (sourceItem.InDatabase && sourceItem.InModel) { sourceItem.InModel = false; }
-                    else if (!sourceItem.InDatabase && sourceItem.InModel) { libraryBinding.Remove(sourceItem); }
+                    work.AddRange(Program.Data.SaveLibrary(item));
+                    work.AddRange(Program.Data.RemoveLibrary(item));
                 }
+                else if (!item.InModel && !item.InDatabase && inModelList && !inDbList)
+                { work.AddRange(Program.Data.RemoveLibrary(item)); }
+                else if (!item.InModel && !item.InDatabase && inModelList && inDbList)
+                {
+                    work.AddRange(Program.Data.RemoveLibrary(item));
+                    work.AddRange(Program.Data.DeleteLibrary(item));
+                    bindingData.Remove(item);
+                }
+                else if (!item.InModel && !item.InDatabase && !inModelList && inDbList)
+                {
+                    work.AddRange(Program.Data.DeleteLibrary(item));
+                    bindingData.Remove(item);
+                }
+            }
 
-                bindingData.RefreshFromModel();
+            UnBindData();
+            SendMessage(new Messages.DbDataBatchStarting());
+
+            dbData.Clear();
+            work.AddRange(dbData.LoadLibrary());
+
+            this.DoWork(work, onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
                 SendMessage(new Messages.DbDataBatchCompleted());
+                bindingData.Build(Program.Data.LibrarySources, dbData);
                 BindData();
             }
         }
@@ -241,7 +203,6 @@ namespace DataDictionary.Main.Forms.Library
         protected override void HandleMessage(DbDataBatchCompleted message)
         { BindData(); }
         #endregion
-
 
         private void libraryTitleData_Validating(object sender, CancelEventArgs e)
         {
@@ -257,6 +218,10 @@ namespace DataDictionary.Main.Forms.Library
             else { errorProvider.SetError(asseblyNameData.ErrorControl, String.Empty); }
         }
 
-
+        private void libraryBinding_BindingComplete(object sender, BindingCompleteEventArgs e)
+        {
+            if (e.Exception is not null)
+            { }// For Debugging
+        }
     }
 }

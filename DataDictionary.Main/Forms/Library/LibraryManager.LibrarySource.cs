@@ -13,9 +13,11 @@ namespace DataDictionary.Main.Forms.Library
     {
         class LibraryManagerItem : LibrarySourceItem
         {
-            public Boolean InModel { get; set; } = false;
-            public Boolean InDatabase { get; set; } = false;
+            private bool inModel = false;
+            private bool inDatabase = false;
 
+            public Boolean InModel { get { return inModel; } set { inModel = value; OnPropertyChanged(nameof(InModel)); } }
+            public Boolean InDatabase { get { return inDatabase; } set { inDatabase = value; OnPropertyChanged(nameof(InDatabase)); } }
             public LibraryManagerItem() : base() { }
 
             public LibraryManagerItem(LibrarySourceItem source) : this()
@@ -27,70 +29,62 @@ namespace DataDictionary.Main.Forms.Library
                 this.SourceDate = source.SourceDate;
                 this.AssemblyName = source.AssemblyName;
             }
+
+
+            public LibrarySourceItem? Match(IEnumerable<LibrarySourceItem> items)
+            {
+                LibrarySourceKey key = new LibrarySourceKey(this);
+
+                return items.FirstOrDefault(w => key.Equals(w));
+            }
         }
 
         class LibraryManagerCollection : LibrarySourceCollection<LibraryManagerItem>
         {
 
-            public void Build(LibrarySourceCollection<LibrarySourceItem> data)
+            public void Build(IEnumerable<LibrarySourceItem> modelItems, IEnumerable<LibrarySourceItem> dbItems)
             {
-                this.Clear();
-
-                // List of keys in both sources
-                List<LibrarySourceKey> libraryKeys = data.Select(s => new LibrarySourceKey(s))
-                    .Union(Program.Data.LibrarySources.Select(s => new LibrarySourceKey(s)))
+                // List of keys all keys
+                List<LibrarySourceKey> libraryKeys = modelItems.Select(s => new LibrarySourceKey(s))
+                    .Union(dbItems.Select(s => new LibrarySourceKey(s)))
+                    .Union(this.Select(s => new LibrarySourceKey(s)))
                     .ToList();
 
                 foreach (LibrarySourceKey libraryKey in libraryKeys)
                 {
-                    LibraryManagerItem? newItem = null;
+                    LibraryManagerItem? item = this.FirstOrDefault(w => libraryKey.Equals(w));
+                    LibrarySourceItem? modelItem = modelItems.FirstOrDefault(w => libraryKey.Equals(w));
+                    LibrarySourceItem? dbItem = dbItems.FirstOrDefault(w => libraryKey.Equals(w));
 
-                    if (Program.Data.LibrarySources.FirstOrDefault(w => libraryKey.Equals(w)) is LibrarySourceItem source)
+                    if (item is null && dbItem is LibrarySourceItem)
                     {
-                        if (newItem is null)
-                        { newItem = new LibraryManagerItem(source); }
-
-                        newItem.InModel = true;
+                        item = new LibraryManagerItem(dbItem);
+                        this.Add(item);
                     }
 
-                    if (data.FirstOrDefault(w => libraryKey.Equals(w)) is LibrarySourceItem dbsource)
+                    if (item is null && modelItem is LibrarySourceItem)
                     {
-                        if (newItem is null)
-                        { newItem = new LibraryManagerItem(dbsource); }
-
-                        newItem.InDatabase = true;
+                        item = new LibraryManagerItem(modelItem);
+                        this.Add(item);
                     }
 
-                    if (newItem is LibraryManagerItem)
-                    { this.Add(newItem); }
+                    if (item is LibraryManagerItem)
+                    {// Should always have a item at this point.
+                        item.InModel = (modelItem is LibrarySourceItem);
+                        item.InDatabase = (dbItem is LibrarySourceItem);
+                    }
                 }
             }
 
-            public void RefreshFromModel()
+            public Boolean Remove(ILibrarySourceKey libraryItem)
             {
-                this.Clear();
-
-                List<LibrarySourceKey> libraryKeys = this.Select(s => new LibrarySourceKey(s))
-                    .Union(Program.Data.LibrarySources.Select(s => new LibrarySourceKey(s)))
-                    .ToList();
-
-                foreach (LibrarySourceKey libraryKey in libraryKeys)
-                {
-                    LibraryManagerItem? newItem = null;
-
-                    if (this.FirstOrDefault(w => libraryKey.Equals(w)) is LibrarySourceItem alreadyHere)
-                    { } // Do not think I need to do anything with it
-                    else if (Program.Data.LibrarySources.FirstOrDefault(w => libraryKey.Equals(w)) is LibrarySourceItem source)
-                    {
-                        if (newItem is null)
-                        { newItem = new LibraryManagerItem(source); }
-
-                        newItem.InModel = true;
-                        this.Add(newItem);
-                    }
-                }
+                LibrarySourceKey key = new LibrarySourceKey(libraryItem);
+                if (this.FirstOrDefault(w => key.Equals(w)) is LibraryManagerItem toRemove)
+                { return base.Remove(toRemove); }
+                else { return false; }
             }
+
+
         }
-
     }
 }

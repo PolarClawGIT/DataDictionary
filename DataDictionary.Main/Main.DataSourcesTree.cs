@@ -88,8 +88,6 @@ namespace DataDictionary.Main
 
         void BuildDataSourcesTree()
         {
-            List<Object> expanded = dbDataNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value).ToList();
-
             Object? selected = null;
             if (dataSourceNavigation.SelectedNode is not null && dbDataNodes.ContainsKey(dataSourceNavigation.SelectedNode))
             { selected = dbDataNodes[dataSourceNavigation.SelectedNode]; }
@@ -280,15 +278,6 @@ namespace DataDictionary.Main
                     }
                 }
 
-            }
-
-            foreach (object item in expanded)
-            {
-                if (dbDataNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
-                {
-                    node.Key.Expand();
-                    if (node.Key.Parent is TreeNode) { node.Key.Parent.Expand(); }
-                }
             }
 
             if (dbDataNodes.FirstOrDefault(w => ReferenceEquals(w.Value, selected)) is KeyValuePair<TreeNode, object> selectedNode)

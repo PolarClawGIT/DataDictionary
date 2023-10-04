@@ -244,7 +244,6 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
             workItems.Add(openConnection);
 
-
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Library sources",
@@ -271,20 +270,23 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             List<WorkItem> workItems = new List<WorkItem>();
             LibrarySourceKey library = new LibrarySourceKey(key);
 
-            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
-            workItems.Add(openConnection);
-
-            workItems.Add(new ExecuteNonQuery(openConnection)
+            if (data.LibrarySources.Count(w => library.Equals(w)) != 0)
             {
-                WorkName = "Save Library sources",
-                Command = (conn) => data.LibrarySources.SaveCommand(conn, library)
-            });
+                DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
+                workItems.Add(openConnection);
 
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save Library members",
-                Command = (conn) => data.LibraryMembers.SaveCommand(conn, library)
-            });
+                workItems.Add(new ExecuteNonQuery(openConnection)
+                {
+                    WorkName = "Save Library sources",
+                    Command = (conn) => data.LibrarySources.SaveCommand(conn, library)
+                });
+
+                workItems.Add(new ExecuteNonQuery(openConnection)
+                {
+                    WorkName = "Save Library members",
+                    Command = (conn) => data.LibraryMembers.SaveCommand(conn, library)
+                });
+            }
 
             return workItems;
         }
@@ -332,6 +334,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         {
             List<WorkItem> workItems = new List<WorkItem>();
             LibrarySourceKey library = new LibrarySourceKey(key);
+            LibrarySourceCollection emptyList = new LibrarySourceCollection();
 
             DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
             workItems.Add(openConnection);
@@ -342,7 +345,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 workItems.Add(new ExecuteNonQuery(openConnection)
                 {
                     WorkName = "Delete Library (Cascade)",
-                    Command = (conn) => data.LibrarySources.SaveCommand(conn, library)
+                    Command = (conn) => emptyList.SaveCommand(conn, library)
                 });
             }
 

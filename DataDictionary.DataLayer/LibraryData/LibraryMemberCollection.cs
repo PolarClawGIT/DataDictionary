@@ -55,4 +55,9 @@ namespace DataDictionary.DataLayer.LibraryData
             return command;
         }
     }
+
+    /// <summary>
+    /// Default List/Collection of the Library Member Items
+    /// </summary>
+    public class LibraryMemberCollection : LibraryMemberCollection<LibraryMemberItem> { } 
 }

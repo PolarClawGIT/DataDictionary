@@ -60,6 +60,8 @@ namespace DataDictionary.DataLayer.LibraryData
         /// <inheritdoc/>
         public DateTime? SourceDate { get { return GetValue< DateTime>("SourceDate"); } set { SetValue< DateTime>("SourceDate", value); } }
 
+        /// <inheritdoc/>
+        public DateTime? SysStart { get { return GetValue<DateTime>("SysStart"); } set { SetValue<DateTime>("SysStart", value); } }
 
         /// <summary>
         /// Constructor for LibraryMemberItem

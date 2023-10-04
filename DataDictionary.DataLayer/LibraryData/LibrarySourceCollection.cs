@@ -59,5 +59,20 @@ namespace DataDictionary.DataLayer.LibraryData
             command.AddParameter("@Data", "[App_DataDictionary].[typeLibrarySource]", this);
             return command;
         }
+
+        Command DeleteCommand(IConnection connection, ILibrarySourceKey sourceKey)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procSetLibrarySource]";
+            command.AddParameter("@LibraryId", sourceKey.LibraryId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeLibrarySource]", new LibrarySourceCollection());
+            return command;
+        }
     }
+
+    /// <summary>
+    /// Default List/Collection of the Library Source Items
+    /// </summary>
+    public class LibrarySourceCollection : LibrarySourceCollection<LibrarySourceItem> { }
 }
