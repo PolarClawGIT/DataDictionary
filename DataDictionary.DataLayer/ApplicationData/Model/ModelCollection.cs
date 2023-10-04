@@ -10,11 +10,13 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.ApplicationData.Model
 {
     /// <summary>
-    /// List of Models
+    /// Generic Base class for Models
     /// </summary>
-    public class ModelList : BindingTable<ModelItem>, IReadData, IReadData<ModelKey>, IWriteData, IValidateList<ModelItem>
-    {
-        /// <inheritdoc/>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public abstract class ModelCollection<TItem> : BindingTable<TItem>, IReadData, IReadData<ModelKey>, IWriteData, IValidateList<ModelItem>
+        where TItem : ModelItem, new()
+    {         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, ModelKey modelIdentifier)
         { return LoadCommand(connection, (modelIdentifier.ModelId, null, true)); }
 
@@ -105,4 +107,10 @@ namespace DataDictionary.DataLayer.ApplicationData.Model
             return result;
         }
     }
+
+    /// <summary>
+    /// Default List/Collection of Models
+    /// </summary>
+    public class ModelCollection: ModelCollection<ModelItem>
+    { }
 }

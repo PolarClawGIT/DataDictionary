@@ -11,9 +11,12 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.DatabaseData.Schema
 {
     /// <summary>
-    /// List of Database Schema
+    /// Generic Base class for Database Catalogs Items
     /// </summary>
-    public class DbSchemaList : BindingTable<DbSchemaItem>, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public abstract class DbSchemaCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
+        where TItem : DbSchemaItem, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection)
@@ -50,4 +53,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
             return command;
         }
     }
+
+    /// <summary>
+    /// Default List/Collection of Database Schema
+    /// </summary>
+    public class DbSchemaCollection : DbSchemaCollection<DbSchemaItem>
+    { }
 }

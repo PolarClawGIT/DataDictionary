@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.LibraryData
+namespace DataDictionary.DataLayer.LibraryData.Source
 {
     /// <summary>
     /// Interface for the Library Source Item
@@ -18,17 +18,17 @@ namespace DataDictionary.DataLayer.LibraryData
         /// <summary>
         /// Title for the Library
         /// </summary>
-        String? LibraryTitle { get; }
+        string? LibraryTitle { get; }
 
         /// <summary>
         /// Description for the Library
         /// </summary>
-        String? LibraryDescription { get; }
+        string? LibraryDescription { get; }
 
         /// <summary>
         /// File that was used to source the data for the Library
         /// </summary>
-        String? SourceFile { get; }
+        string? SourceFile { get; }
 
         /// <summary>
         /// Date that when the data was sourced for the Library
@@ -58,10 +58,10 @@ namespace DataDictionary.DataLayer.LibraryData
         public string? SourceFile { get { return GetValue("SourceFile"); } set { SetValue("SourceFile", value); } }
 
         /// <inheritdoc/>
-        public DateTime? SourceDate { get { return GetValue< DateTime>("SourceDate"); } set { SetValue< DateTime>("SourceDate", value); } }
+        public DateTime? SourceDate { get { return GetValue<DateTime>("SourceDate"); } set { SetValue("SourceDate", value); } }
 
         /// <inheritdoc/>
-        public DateTime? SysStart { get { return GetValue<DateTime>("SysStart"); } set { SetValue<DateTime>("SysStart", value); } }
+        public DateTime? SysStart { get { return GetValue<DateTime>("SysStart"); } set { SetValue("SysStart", value); } }
 
         /// <summary>
         /// Constructor for LibraryMemberItem
@@ -74,10 +74,10 @@ namespace DataDictionary.DataLayer.LibraryData
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("LibraryId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("LibraryTitle", typeof(String)){ AllowDBNull = true},
-            new DataColumn("LibraryDescription", typeof(String)){ AllowDBNull = true},
-            new DataColumn("AssemblyName", typeof(String)){ AllowDBNull = true},
-            new DataColumn("SourceFile", typeof(String)){ AllowDBNull = true},
+            new DataColumn("LibraryTitle", typeof(string)){ AllowDBNull = true},
+            new DataColumn("LibraryDescription", typeof(string)){ AllowDBNull = true},
+            new DataColumn("AssemblyName", typeof(string)){ AllowDBNull = true},
+            new DataColumn("SourceFile", typeof(string)){ AllowDBNull = true},
             new DataColumn("SourceDate", typeof(DateTime)){ AllowDBNull = true},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };

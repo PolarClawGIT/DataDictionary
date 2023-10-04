@@ -10,9 +10,12 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.ApplicationData.Property
 {
     /// <summary>
-    /// List of Property Items.
+    /// Generic Base class for Property Items.
     /// </summary>
-    public class PropertyList : BindingTable<PropertyItem>, IReadData, IWriteData, IValidateList<PropertyItem>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public abstract class PropertyCollection<TItem> : BindingTable<TItem>, IReadData, IWriteData, IValidateList<PropertyItem>
+        where TItem : PropertyItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
@@ -68,4 +71,10 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
             return result;
         }
     }
+
+    /// <summary>
+    /// Default List/Collection of Property Items.
+    /// </summary>
+    public class PropertyCollection : PropertyCollection<PropertyItem>
+    { }
 }

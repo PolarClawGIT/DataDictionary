@@ -858,14 +858,12 @@
         private Controls.TextBoxData collationSchemaData;
         private Controls.TextBoxData collationNameData;
         private TabPage defaultComputedTab;
-        private TableLayoutPanel defautComputedLayout;
         private Controls.TextBoxData columnComputedData;
         private Controls.TextBoxData columnDefaultData;
         private CheckBox isHiddenData;
         private CheckBox isIdentityData;
         private GroupBox characterGroup;
         private GroupBox numericGroup;
-        private GroupBox datetimeGroup;
         private Controls.TextBoxData dateTimePrecisionData;
         private Controls.TextBoxData characterMaximumLengthData;
         private Controls.TextBoxData characterOctetLengthData;

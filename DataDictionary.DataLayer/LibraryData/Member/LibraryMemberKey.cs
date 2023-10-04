@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataDictionary.DataLayer.LibraryData.Source;
 
-namespace DataDictionary.DataLayer.LibraryData
+namespace DataDictionary.DataLayer.LibraryData.Member
 {
     /// <summary>
     /// Interface for the Library Member Key
@@ -14,12 +15,12 @@ namespace DataDictionary.DataLayer.LibraryData
         /// <summary>
         /// NameSpace for the Member.
         /// </summary>
-        String? MemberNameSpace { get; }
+        string? MemberNameSpace { get; }
 
         /// <summary>
         /// Name of the Member.
         /// </summary>
-        String? MemberName { get; }
+        string? MemberName { get; }
     }
 
     /// <summary>
@@ -28,10 +29,10 @@ namespace DataDictionary.DataLayer.LibraryData
     public class LibraryMemberKey : LibrarySourceKey, ILibraryMemberKey, IKeyEquality<ILibraryMemberKey>
     {
         /// <inheritdoc/>
-        public string MemberNameSpace { get; init; } = String.Empty;
+        public string MemberNameSpace { get; init; } = string.Empty;
 
         /// <inheritdoc/>
-        public string MemberName { get; init; } = String.Empty;
+        public string MemberName { get; init; } = string.Empty;
 
         /// <summary>
         /// Constructor for the Library Member Key

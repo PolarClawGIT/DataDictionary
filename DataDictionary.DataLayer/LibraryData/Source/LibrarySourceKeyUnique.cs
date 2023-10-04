@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.LibraryData
+namespace DataDictionary.DataLayer.LibraryData.Source
 {
     /// <summary>
     /// Interface for the Library Source Unique Key
@@ -14,13 +14,13 @@ namespace DataDictionary.DataLayer.LibraryData
         /// <summary>
         /// Assembly Name for the Library Source
         /// </summary>
-        String? AssemblyName { get; }
+        string? AssemblyName { get; }
     }
 
     /// <summary>
     /// Implementation of the Library Source Unique Key 
     /// </summary>
-    public class LibrarySourceKeyUnique: ILibrarySourceKeyUnique, IKeyComparable<ILibrarySourceKeyUnique>
+    public class LibrarySourceKeyUnique : ILibrarySourceKeyUnique, IKeyComparable<ILibrarySourceKeyUnique>
     {
         /// <inheritdoc/>
         public string AssemblyName { get; } = string.Empty;

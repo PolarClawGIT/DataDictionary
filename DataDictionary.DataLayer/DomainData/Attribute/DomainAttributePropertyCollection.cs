@@ -11,9 +11,12 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.DomainData.Attribute
 {
     /// <summary>
-    /// List for Domain Attribute Properties
+    /// Generic Base class for Domain Attribute Properties
     /// </summary>
-    public class DomainAttributePropertyList : BindingTable<DomainAttributePropertyItem>, IReadData<IModelKey>, IWriteData<IModelKey>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public abstract class DomainAttributePropertyCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IWriteData<IModelKey>
+        where TItem : DomainAttributePropertyItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
@@ -41,4 +44,10 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             return command;
         }
     }
+
+    /// <summary>
+    /// Default List/Collection of Domain Attribute Properties
+    /// </summary>
+    public class DomainAttributePropertyCollection: DomainAttributePropertyCollection<DomainAttributePropertyItem>
+    { }
 }

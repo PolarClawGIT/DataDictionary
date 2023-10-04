@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,19 +8,22 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DatabaseData.Domain
+namespace DataDictionary.DataLayer.DatabaseData.Constraint
 {
     /// <summary>
-    /// List of Database Domain Items
+    /// Generic Base class for Database Constraint Columns
     /// </summary>
-    public class DbDomainList : BindingTable<DbDomainItem>, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public abstract class DbConstraintColumnCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
+        where TItem : DbConstraintColumnItem, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbDomainItem;
+            command.CommandText = DbScript.DbConstraintColumnItem;
             return command;
         }
 
@@ -29,15 +31,16 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         public Command LoadCommand(IConnection connection, IModelKey modelId)
         { return LoadCommand(connection, (modelId.ModelId, null, null, null)); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, string? catalogName, string? schemaName, string? domainName) parameters)
+        /// <inheritdoc/>
+        Command LoadCommand(IConnection connection, (Guid? modelId, string? catalogName, string? schemaName, string? constraintName) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDatabaseDomain]";
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseConstraintColumn]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogName", parameters.catalogName);
             command.AddParameter("@SchemaName", parameters.schemaName);
-            command.AddParameter("@DomainName", parameters.domainName);
+            command.AddParameter("@ConstraintName", parameters.constraintName);
             return command;
         }
 
@@ -46,11 +49,18 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDatabaseDomain]";
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseConstraintColumn]";
             command.AddParameter("@ModelId", modelId.ModelId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseDomain]", this);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseConstraintColumn]", this);
             return command;
         }
+    }
+
+    /// <summary>
+    /// Default List/Collection of Database Constraint Columns
+    /// </summary>
+    public class DbConstraintColumnCollection : DbConstraintColumnCollection<DbConstraintColumnItem>
+    {
 
     }
 }

@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DatabaseData.Table
+namespace DataDictionary.DataLayer.DatabaseData.Routine
 {
     /// <summary>
-    /// List of Database Tables
+    /// Default List/Collection of Database Routines
     /// </summary>
-    public class DbTableList : BindingTable<DbTableItem>, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
+    public class DbRoutineCollection : BindingTable<DbRoutineItem>, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbTableItem;
+            command.CommandText = DbScript.DbRoutineItem;
             return command;
         }
 
@@ -28,15 +28,15 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public Command LoadCommand(IConnection connection, IModelKey modelId)
         { return LoadCommand(connection, (modelId.ModelId, null, null, null)); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, string? catalogName, string? schemaName, string? tableName) parameters)
+        Command LoadCommand(IConnection connection, (Guid? modelId, string? catalogName, string? schemaName, string? routineName) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDatabaseTable]";
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseRoutine]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogName", parameters.catalogName);
             command.AddParameter("@SchemaName", parameters.schemaName);
-            command.AddParameter("@TableName", parameters.tableName);
+            command.AddParameter("@RoutineName", parameters.routineName);
             return command;
         }
 
@@ -45,10 +45,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDatabaseTable]";
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseRoutine]";
             command.AddParameter("@ModelId", modelId.ModelId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseTable]", this);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutine]", this);
             return command;
         }
+
     }
 }

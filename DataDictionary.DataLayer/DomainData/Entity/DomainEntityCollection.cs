@@ -11,11 +11,13 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.DomainData.Entity
 {
     /// <summary>
-    /// List of Domain Entity's
+    /// Generic Base class for Domain Entity's
     /// </summary>
-    public class DomainEntityList : BindingTable<DomainEntityItem>, IReadData<IModelKey>, IWriteData<IModelKey>, IDeleteData<IDomainEntityKey>, IDeleteData<IModelKey>
-    {
-        /// <inheritdoc/>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public abstract class DomainEntityCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IWriteData<IModelKey>, IDeleteData<IDomainEntityKey>, IDeleteData<IModelKey>
+        where TItem : DomainEntityItem, new()
+    {         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
         { return LoadCommand(connection, (modelId.ModelId, null, null, null)); }
 
@@ -61,4 +63,10 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             return command;
         }
     }
+
+    /// <summary>
+    /// Default List/Collection of Domain Entity's
+    /// </summary>
+    public class DomainEntityCollection : DomainEntityCollection<DomainEntityItem>
+    { }
 }

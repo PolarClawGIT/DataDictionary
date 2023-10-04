@@ -10,11 +10,13 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.ApplicationData.Help
 {
     /// <summary>
-    /// List of Help Items.
+    /// Generic Base class for Help Items.
     /// </summary>
-    public class HelpList : BindingTable<HelpItem>, IReadData, IWriteData, IValidateList<HelpItem>
-    {
-        /// <inheritdoc/>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public abstract class HelpCollection<TItem> : BindingTable<TItem>, IReadData, IWriteData, IValidateList<HelpItem>
+        where TItem : HelpItem, new()
+    {        /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
         { return LoadCommand(connection, (null, null, null, null)); }
 
@@ -70,4 +72,10 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
             return result;
         }
     }
+
+    /// <summary>
+    /// Default List/Collection of Help Items.
+    /// </summary>
+    public class HelpCollection : HelpCollection<HelpItem>
+    { }
 }

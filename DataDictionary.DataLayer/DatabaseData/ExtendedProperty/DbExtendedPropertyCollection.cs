@@ -11,9 +11,12 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 {
     /// <summary>
-    /// List of DbExtendedProperty Items.
+    /// Generic Base class for Database Extended Property Items.
     /// </summary>
-    public class DbExtendedPropertyList : BindingTable<DbExtendedPropertyItem>, IReadData<IModelKey>, IWriteData<IModelKey>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public abstract class DbExtendedPropertyCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IWriteData<IModelKey>
+        where TItem : DbExtendedPropertyItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
@@ -41,4 +44,10 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
             return command;
         }
     }
+
+    /// <summary>
+    /// List of Database Extended Property Items.
+    /// </summary>
+    public class DbExtendedPropertyCollection : DbExtendedPropertyCollection<DbExtendedPropertyItem>
+    { }
 }

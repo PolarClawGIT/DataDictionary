@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.LibraryData.Source;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,14 +9,14 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.LibraryData
+namespace DataDictionary.DataLayer.LibraryData.Member
 {
     /// <summary>
-    /// Generic List/Collection of the Library Member Items
+    /// Generic Base class for Library Member Items
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public class LibraryMemberCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadData<ILibrarySourceKey>, IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>
+    public abstract class LibraryMemberCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadData<ILibrarySourceKey>, IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>
         where TItem : LibraryMemberItem, new()
     {
         /// <inheritdoc/>
@@ -59,5 +60,5 @@ namespace DataDictionary.DataLayer.LibraryData
     /// <summary>
     /// Default List/Collection of the Library Member Items
     /// </summary>
-    public class LibraryMemberCollection : LibraryMemberCollection<LibraryMemberItem> { } 
+    public class LibraryMemberCollection : LibraryMemberCollection<LibraryMemberItem> { }
 }

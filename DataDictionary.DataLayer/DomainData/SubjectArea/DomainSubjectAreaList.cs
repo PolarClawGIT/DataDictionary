@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DomainData.SubjectArea
 {
-    internal class DomainSubjectAreaList
+    /// <summary>
+    /// Generic Base class for Domain subject Area's
+    /// </summary>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public abstract class DomainSubjectAreaCollection<TItem>
     {
     }
 }

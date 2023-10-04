@@ -9,13 +9,13 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.ProofOfConcept
 {
-    [Obsolete]
+    [Obsolete("Proof of Concept only")]
     interface ILibraryAssemblyItem_Old : ILibraryAssemblyKey_old
     {
         String? AssemblyName { get; }
     }
 
-    [Serializable, Obsolete]
+    [Serializable, Obsolete("Proof of Concept only")]
     class LibraryAssemblyItem_Old :BindingTableRow, ILibraryAssemblyItem_Old, ISerializable 
     {
         /// <inheritdoc/>

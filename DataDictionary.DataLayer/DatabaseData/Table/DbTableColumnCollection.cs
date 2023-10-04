@@ -8,35 +8,39 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.DatabaseData.Constraint
+namespace DataDictionary.DataLayer.DatabaseData.Table
 {
     /// <summary>
-    /// List of Database Constraint Items.
+    /// Generic Base class for Database Table Columns
     /// </summary>
-    public class DbConstraintList : BindingTable<DbConstraintItem>, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public abstract class DbTableColumnCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
+        where TItem : DbTableColumnItem, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbConstraintItem;
+            command.CommandText = DbScript.DbColumnItem;
             return command;
         }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
-        { return LoadCommand(connection, (modelId.ModelId, null, null, null)); }
+        { return LoadCommand(connection, (modelId.ModelId, null, null, null, null)); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, string? catalogName, string? schemaName, string? constraintName) parameters)
+        Command LoadCommand(IConnection connection, (Guid? modelId, string? catalogName, string? schemaName, string? tableName, string? columnName) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDatabaseConstraint]";
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseTableColumn]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogName", parameters.catalogName);
             command.AddParameter("@SchemaName", parameters.schemaName);
-            command.AddParameter("@ConstraintName", parameters.constraintName);
+            command.AddParameter("@TableName", parameters.tableName);
+            command.AddParameter("@ColumnName", parameters.columnName);
             return command;
         }
 
@@ -45,10 +49,16 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDatabaseConstraint]";
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseTableColumn]";
             command.AddParameter("@ModelId", modelId.ModelId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseConstraint]", this);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseTableColumn]", this);
             return command;
         }
     }
+
+    /// <summary>
+    /// Default List/Collection of Database Table Columns
+    /// </summary>
+    public class DbTableColumnCollection: DbTableColumnCollection<DbTableColumnItem>
+    { }
 }

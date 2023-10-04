@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.LibraryData
+namespace DataDictionary.DataLayer.LibraryData.Source
 {
     /// <summary>
     /// Interface for the Library Source Key

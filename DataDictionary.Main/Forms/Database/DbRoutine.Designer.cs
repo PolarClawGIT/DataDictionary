@@ -324,7 +324,6 @@
 
         #endregion
 
-        private TableLayoutPanel routineLayout;
         private Controls.TextBoxData catalogNameData;
         private Controls.TextBoxData schemaNameData;
         private Controls.TextBoxData routineNameData;

@@ -11,7 +11,8 @@ using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
-using DataDictionary.DataLayer.LibraryData;
+using DataDictionary.DataLayer.LibraryData.Member;
+using DataDictionary.DataLayer.LibraryData.Source;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -46,7 +47,7 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// List of Models from the Application Database.
         /// </summary>
-        public ModelList Models { get; } = new ModelList();
+        public ModelCollection Models { get; } = new ModelCollection();
 
         /// <summary>
         /// The current Model (by ModelKey) opened by the application
@@ -87,89 +88,89 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// List of Database Catalogs within the Model.
         /// </summary>
-        public DbCatalogList DbCatalogs { get; } = new DbCatalogList();
+        public DbCatalogCollection DbCatalogs { get; } = new DbCatalogCollection();
 
         /// <summary>
         /// List of Database Schemta within the Model.
         /// </summary>
-        public DbSchemaList DbSchemta { get; } = new DbSchemaList();
+        public DbSchemaCollection DbSchemta { get; } = new DbSchemaCollection();
 
         /// <summary>
         /// List of Database Domains (types) within the Model.
         /// </summary>
-        public DbDomainList DbDomains { get; } = new DbDomainList();
+        public DbDomainCollection DbDomains { get; } = new DbDomainCollection();
 
         /// <summary>
         /// List of Database Tables and Views within the Model.
         /// </summary>
-        public DbTableList DbTables { get; } = new DbTableList();
+        public DbTableCollection DbTables { get; } = new DbTableCollection();
 
         /// <summary>
         /// List of Database Columns for the Tables/Views within the Model.
         /// </summary>
-        public DbTableColumnList DbTableColumns { get; } = new DbTableColumnList();
+        public DbTableColumnCollection DbTableColumns { get; } = new DbTableColumnCollection();
 
         /// <summary>
         /// List of Database Extended Properties within the Model.
         /// </summary>
-        public DbExtendedPropertyList DbExtendedProperties = new DbExtendedPropertyList();
+        public DbExtendedPropertyCollection DbExtendedProperties = new DbExtendedPropertyCollection();
 
         /// <summary>
         /// List of Database Constraints (keys...) within the Model.
         /// </summary>
-        public DbConstraintList DbConstraints { get; } = new DbConstraintList();
+        public DbConstraintCollection DbConstraints { get; } = new DbConstraintCollection();
 
         /// <summary>
         /// List of Database Constraint Columns within the Model.
         /// </summary>
-        public DbConstraintColumnList DbConstraintColumns { get; } = new DbConstraintColumnList();
+        public DbConstraintColumnCollection DbConstraintColumns { get; } = new DbConstraintColumnCollection();
 
         /// <summary>
         /// List of Database Routines (procedures, functions, ...) within the Model.
         /// </summary>
-        public DbRoutineList DbRoutines { get; } = new DbRoutineList();
+        public DbRoutineCollection DbRoutines { get; } = new DbRoutineCollection();
 
         /// <summary>
         /// List of Database Parameters for the Routines within the Model.
         /// </summary>
-        public DbRoutineParameterList DbRoutineParameters { get; } = new DbRoutineParameterList();
+        public DbRoutineParameterCollection DbRoutineParameters { get; } = new DbRoutineParameterCollection();
 
         /// <summary>
         /// List of Database Dependencies for the Routines within the Model.
         /// </summary>
-        public DbRoutineDependencyList DbRoutineDependencies { get; } = new DbRoutineDependencyList();
+        public DbRoutineDependencyCollection DbRoutineDependencies { get; } = new DbRoutineDependencyCollection();
         #endregion
 
         #region Domain data
         /// <summary>
         /// List of Domain Attributes within the Model.
         /// </summary>
-        public DomainAttributeList DomainAttributes = new DomainAttributeList();
+        public DomainAttributeCollection DomainAttributes = new DomainAttributeCollection();
 
         /// <summary>
         /// List of Domain Aliases for the Attributes within the Model.
         /// </summary>
-        public DomainAttributeAliasList DomainAttributeAliases = new DomainAttributeAliasList();
+        public DomainAttributeAliasCollection DomainAttributeAliases = new DomainAttributeAliasCollection();
 
         /// <summary>
         /// List of Domain Properties for the Attributes within the Model.
         /// </summary>
-        public DomainAttributePropertyList DomainAttributeProperties = new DomainAttributePropertyList();
+        public DomainAttributePropertyCollection DomainAttributeProperties = new DomainAttributePropertyCollection();
 
         /// <summary>
         /// List of Domain Entities within the Model.
         /// </summary>
-        public DomainEntityList DomainEntities = new DomainEntityList();
+        public DomainEntityCollection DomainEntities = new DomainEntityCollection();
 
         /// <summary>
         /// List of Domain Aliases for the Entities within the Model.
         /// </summary>
-        public DomainEntityAliasList DomainEntityAliases = new DomainEntityAliasList();
+        public DomainEntityAliasCollection DomainEntityAliases = new DomainEntityAliasCollection();
 
         /// <summary>
         /// List of Domain Properties for the Entities within the Model.
         /// </summary>
-        public DomainEntityPropertyList DomainEntityProperties = new DomainEntityPropertyList();
+        public DomainEntityPropertyCollection DomainEntityProperties = new DomainEntityPropertyCollection();
         #endregion
 
         #region Library data
@@ -177,12 +178,12 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// List of Domain Properties for the Entities within the Model.
         /// </summary>
-        public LibrarySourceCollection<LibrarySourceItem> LibrarySources = new LibrarySourceCollection<LibrarySourceItem>();
+        public LibrarySourceCollection LibrarySources = new LibrarySourceCollection();
 
         /// <summary>
         /// List of Domain Properties for the Entities within the Model.
         /// </summary>
-        public LibraryMemberCollection<LibraryMemberItem> LibraryMembers = new LibraryMemberCollection<LibraryMemberItem>();
+        public LibraryMemberCollection LibraryMembers = new LibraryMemberCollection();
 
         #endregion
 
@@ -190,12 +191,12 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// List of Help Subjects for the Application (the help system).
         /// </summary>
-        public HelpList HelpSubjects { get; } = new HelpList();
+        public HelpCollection HelpSubjects { get; } = new HelpCollection();
 
         /// <summary>
         /// List Properties defined for the Application.
         /// </summary>
-        public PropertyList Properties { get; } = new PropertyList();
+        public DataLayer.ApplicationData.Property.PropertyCollection Properties { get; } = new DataLayer.ApplicationData.Property.PropertyCollection();
         #endregion
 
         // Connection Data

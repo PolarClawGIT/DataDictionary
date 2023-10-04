@@ -5,7 +5,8 @@ using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.LibraryData;
+using DataDictionary.DataLayer.LibraryData.Member;
+using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Main.Properties;
 
 namespace DataDictionary.Main

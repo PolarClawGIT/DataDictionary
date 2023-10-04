@@ -26,6 +26,7 @@ namespace DataDictionary.Main.ProofOfConcept
     /// As such inheritdoc tags are not expanded unless the developer specifically adds a cref.
     /// Example: inheritdoc cref="IDbCatalogKey.CatalogId"
     /// </remarks>
+    [Obsolete("Proof of Concept only")]
     partial class CodeLibrary : ApplicationBase
     {
         [Obsolete]

@@ -6,9 +6,10 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using DataDictionary.DataLayer.LibraryData.Source;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.LibraryData
+namespace DataDictionary.DataLayer.LibraryData.Member
 {
     /// <summary>
     /// Interface for the Library Member Item
@@ -18,13 +19,13 @@ namespace DataDictionary.DataLayer.LibraryData
         /// <summary>
         /// Type of Member, such as the name of the Class, Enum, Method, Property, ...
         /// </summary>
-        String? MemberType { get; }
+        string? MemberType { get; }
 
         /// <summary>
         /// Data for the Member.
         /// This is expected to be a XML fragment when generated from Visual studio Document.
         /// </summary>
-        String? MemberData { get; }
+        string? MemberData { get; }
     }
 
     /// <summary>
@@ -55,16 +56,16 @@ namespace DataDictionary.DataLayer.LibraryData
         /// Constructor for LibraryMemberItem
         /// </summary>
         public LibraryMemberItem() : base()
-        {   if (LibraryId is null) { LibraryId = Guid.NewGuid(); } }
+        { if (LibraryId is null) { LibraryId = Guid.NewGuid(); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("LibraryId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("AssemblyName", typeof(String)){ AllowDBNull = false},
-            new DataColumn("MemberNameSpace", typeof(String)){ AllowDBNull = true},
-            new DataColumn("MemberName", typeof(String)){ AllowDBNull = false},
-            new DataColumn("MemberType", typeof(String)){ AllowDBNull = true},
-            new DataColumn("MemberData", typeof(String)){ AllowDBNull = true},
+            new DataColumn("AssemblyName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("MemberNameSpace", typeof(string)){ AllowDBNull = true},
+            new DataColumn("MemberName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("MemberType", typeof(string)){ AllowDBNull = true},
+            new DataColumn("MemberData", typeof(string)){ AllowDBNull = true},
         };
 
 
@@ -138,9 +139,9 @@ namespace DataDictionary.DataLayer.LibraryData
     /// </summary>
     public static class LibraryMemberExtension
     {
-        static Dictionary<LibraryMemberType, (String code, String name)> memberTypeCrossRefrence = new Dictionary<LibraryMemberType, (String code, String name)>
+        static Dictionary<LibraryMemberType, (string code, string name)> memberTypeCrossRefrence = new Dictionary<LibraryMemberType, (string code, string name)>
         {
-            { LibraryMemberType.NULL,      (String.Empty,String.Empty) },
+            { LibraryMemberType.NULL,      (string.Empty,string.Empty) },
             { LibraryMemberType.NameSpace, ("N","NameSpace") },
             { LibraryMemberType.Type,      ("T","Type") },
             { LibraryMemberType.Field,     ("F","Field") },
@@ -155,11 +156,11 @@ namespace DataDictionary.DataLayer.LibraryData
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static (LibraryMemberType type, String code, String name) MemberItemType(this LibraryMemberItem value)
+        public static (LibraryMemberType type, string code, string name) MemberItemType(this LibraryMemberItem value)
         {
-            if (memberTypeCrossRefrence.FirstOrDefault(w => value.MemberType == w.Value.code || value.MemberType == w.Value.name) is KeyValuePair<LibraryMemberType, (String code, String name)> result)
-            { return (result.Key,result.Value.code, result.Value.name); }
-            else { return (LibraryMemberType.NULL,memberTypeCrossRefrence[LibraryMemberType.NULL].code, memberTypeCrossRefrence[LibraryMemberType.NULL].name); }
+            if (memberTypeCrossRefrence.FirstOrDefault(w => value.MemberType == w.Value.code || value.MemberType == w.Value.name) is KeyValuePair<LibraryMemberType, (string code, string name)> result)
+            { return (result.Key, result.Value.code, result.Value.name); }
+            else { return (LibraryMemberType.NULL, memberTypeCrossRefrence[LibraryMemberType.NULL].code, memberTypeCrossRefrence[LibraryMemberType.NULL].name); }
         }
     }
 }

@@ -630,14 +630,9 @@
         private Controls.TextBoxData numericScaleData;
         private Controls.TextBoxData numericPrecisionRadixData;
         private Controls.TextBoxData numericPrecisionData;
-        private GroupBox groupBox1;
-        private TableLayoutPanel charaterGroupLayout;
-        private GroupBox numericGroup;
-        private GroupBox dateTimeGroup;
         private Controls.TextBoxData characterMaximumLengthData;
         private Controls.TextBoxData characterOctetLengthData;
         private TableLayoutPanel tableLayoutPanel1;
-        private TableLayoutPanel dateTimeGroupLayout;
         private TabPage defaultComputedTab;
         private Controls.TextBoxData domainDefaultData;
     }

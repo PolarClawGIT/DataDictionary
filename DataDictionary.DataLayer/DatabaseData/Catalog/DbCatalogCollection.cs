@@ -12,9 +12,12 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.DatabaseData.Catalog
 {
     /// <summary>
-    /// List of Database Catalogs Items
+    /// Generic Base class for Database Catalogs Items
     /// </summary>
-    public class DbCatalogList: BindingTable<DbCatalogItem>, IReadData, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public abstract class DbCatalogCollection<TItem> : BindingTable<TItem>, IReadData, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
+        where TItem : DbCatalogItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
@@ -62,4 +65,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
             return command;
         }
     }
+
+    /// <summary>
+    /// Default List/Collection of Database Catalogs Items
+    /// </summary>
+    public class DbCatalogCollection : DbCatalogCollection<DbCatalogItem>
+    { }
 }

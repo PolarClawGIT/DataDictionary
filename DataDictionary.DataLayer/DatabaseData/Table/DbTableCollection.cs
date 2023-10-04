@@ -11,33 +11,35 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.DatabaseData.Table
 {
     /// <summary>
-    /// List of Database Table Columns
+    /// Generic Base class for Database Tables
     /// </summary>
-    public class DbTableColumnList : BindingTable<DbTableColumnItem>, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
+    /// <typeparam name="TItem"></typeparam>
+    /// <remarks>Base class, implements the Read and Write.</remarks>
+    public abstract class DbTableCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
+        where TItem : DbTableItem, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbColumnItem;
+            command.CommandText = DbScript.DbTableItem;
             return command;
         }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
-        { return LoadCommand(connection, (modelId.ModelId, null, null, null, null)); }
+        { return LoadCommand(connection, (modelId.ModelId, null, null, null)); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, string? catalogName, string? schemaName, string? tableName, string? columnName) parameters)
+        Command LoadCommand(IConnection connection, (Guid? modelId, string? catalogName, string? schemaName, string? tableName) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDatabaseTableColumn]";
+            command.CommandText = "[App_DataDictionary].[procGetDatabaseTable]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogName", parameters.catalogName);
             command.AddParameter("@SchemaName", parameters.schemaName);
             command.AddParameter("@TableName", parameters.tableName);
-            command.AddParameter("@ColumnName", parameters.columnName);
             return command;
         }
 
@@ -46,11 +48,16 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDatabaseTableColumn]";
+            command.CommandText = "[App_DataDictionary].[procSetDatabaseTable]";
             command.AddParameter("@ModelId", modelId.ModelId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseTableColumn]", this);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseTable]", this);
             return command;
         }
-
     }
+
+    /// <summary>
+    /// Default List/Collection of Database Tables
+    /// </summary>
+    public class DbTableCollection: DbTableCollection<DbTableItem>
+    { }
 }
