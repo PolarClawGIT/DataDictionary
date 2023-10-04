@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Model
     /// <summary>
     /// Interface for the Model.
     /// </summary>
-    public interface IModelItem : IModelKey, IObsolete
+    public interface IModelItem : IModelKey, IObsolete, IDataItem
     {
         /// <summary>
         /// Title for the Model.

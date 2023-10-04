@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Item
     /// </summary>
-    public interface IDomainAttributeItem : IDomainAttributeKey, IBindingTableRow
+    public interface IDomainAttributeItem : IDomainAttributeKey, IDataItem
     {
         /// <summary>
         /// Title of the Domain Attribute (aka Name of the Attribute)

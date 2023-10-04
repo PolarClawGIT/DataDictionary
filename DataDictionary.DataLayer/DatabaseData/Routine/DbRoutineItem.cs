@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for Database Routine (procedures and functions).
     /// </summary>
-    public interface IDbRoutineItem : IDbRoutineKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IBindingTableRow
+    public interface IDbRoutineItem : IDbRoutineKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IDataItem
     {
         /// <summary>
         /// Type of Routine (such as procedure or function)
@@ -29,7 +29,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// Implementation for Database Routine (procedures and functions).
     /// </summary>
     [Serializable]
-    public class DbRoutineItem : BindingTableRow, IDbRoutineItem, INotifyPropertyChanged, IDbExtendedProperty, ISerializable
+    public class DbRoutineItem : BindingTableRow, IDbRoutineItem, IDbExtendedProperty, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }

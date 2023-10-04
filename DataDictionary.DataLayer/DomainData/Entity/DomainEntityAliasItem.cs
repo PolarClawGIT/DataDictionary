@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for Domain Entity Alias Items
     /// </summary>
-    public interface IDomainEntityAliasItem : IDomainEntityAliasKey, IDomainEntityKey, IDbCatalogScope, IDbObjectScope, IBindingTableRow
+    public interface IDomainEntityAliasItem : IDomainEntityAliasKey, IDomainEntityKey, IDbCatalogScope, IDbObjectScope, IDataItem
     { }
 
     /// <summary>

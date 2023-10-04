@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Properties
     /// </summary>
-    public interface IDomainAttributePropertyItem : IDomainAttributePropertyKey, IBindingTableRow
+    public interface IDomainAttributePropertyItem : IDomainAttributePropertyKey, IDataItem
     {
         /// <summary>
         /// Property Value. Type and Format is dependent on PeropertyId.

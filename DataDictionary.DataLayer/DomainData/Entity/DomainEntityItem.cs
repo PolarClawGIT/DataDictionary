@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for Domain Entity Item
     /// </summary>
-    public interface IDomainEntityItem : IDomainEntityKey, IBindingTableRow
+    public interface IDomainEntityItem : IDomainEntityKey, IDataItem
     {
         /// <summary>
         /// Title of the Domain Entity (aka Name of the Entity)

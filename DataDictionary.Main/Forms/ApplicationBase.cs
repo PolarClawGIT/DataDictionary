@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.ApplicationData;
+﻿using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using System;
@@ -99,7 +100,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="constructor"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected virtual TForm Activate<TForm>(Func<IBindingTableRow, TForm> constructor, IBindingTableRow data)
+        protected virtual TForm Activate<TForm>(Func<IDataItem, TForm> constructor, IDataItem data)
             where TForm : ApplicationBase
         {
             Form parent = MdiParent ?? this;

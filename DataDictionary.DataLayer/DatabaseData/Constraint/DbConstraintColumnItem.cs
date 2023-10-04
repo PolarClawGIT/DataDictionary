@@ -18,14 +18,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Constraint Column
     /// </summary>
-    public interface IDbConstraintColumnItem : IDbConstraintKey, IDbCatalogKey, IDbColumnPosition, IDbTableColumnKey, IDbColumnReferenceKey, IBindingTableRow
+    public interface IDbConstraintColumnItem : IDbConstraintKey, IDbCatalogKey, IDbColumnPosition, IDbTableColumnKey, IDbColumnReferenceKey, IDataItem
     { }
 
     /// <summary>
     /// Implantation for the Database Constraint Column
     /// </summary>
     [Serializable]
-    public class DbConstraintColumnItem : BindingTableRow, IDbConstraintColumnItem, INotifyPropertyChanged, ISerializable
+    public class DbConstraintColumnItem : BindingTableRow, IDbConstraintColumnItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }

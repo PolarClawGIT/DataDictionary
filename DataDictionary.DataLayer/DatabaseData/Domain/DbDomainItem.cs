@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     /// <summary>
     /// Interface for the Database Domain Item.
     /// </summary>
-    public interface IDbDomainItem : IDbDomainKey, IDbCatalogKey, IDbObjectScope, IDbDomain, IBindingTableRow
+    public interface IDbDomainItem : IDbDomainKey, IDbCatalogKey, IDbObjectScope, IDbDomain, IDataItem
     {
         /// <summary>
         /// The Default value for the Domain
@@ -29,7 +29,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     /// Implementation for the Database Domain Item.
     /// </summary>
     [Serializable]
-    public class DbDomainItem : BindingTableRow, IDbDomainItem, INotifyPropertyChanged, IDbExtendedProperty, ISerializable
+    public class DbDomainItem : BindingTableRow, IDbDomainItem, IDbExtendedProperty, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }

@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     /// <summary>
     /// Interface for the Library Member Item
     /// </summary>
-    public interface ILibraryMemberItem : ILibraryMemberKey, ILibrarySourceKeyUnique, INotifyPropertyChanged, IBindingTableRow
+    public interface ILibraryMemberItem : ILibraryMemberKey, ILibrarySourceKeyUnique, IDataItem
     {
         /// <summary>
         /// Type of Member, such as the name of the Class, Enum, Method, Property, ...

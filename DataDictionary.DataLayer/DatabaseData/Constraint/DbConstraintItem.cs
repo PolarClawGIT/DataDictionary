@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Constraint Item.
     /// </summary>
-    public interface IDbConstraintItem : IDbConstraintKey, IDbCatalogKey, IDbElementScope, IDbTableKey, IBindingTableRow
+    public interface IDbConstraintItem : IDbConstraintKey, IDbCatalogKey, IDbElementScope, IDbTableKey, IDataItem
     {
         /// <summary>
         /// Type of the Database Constraint.
@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// Implementation for the Database Constraint Item.
     /// </summary>
     [Serializable]
-    public class DbConstraintItem : BindingTableRow, IDbConstraintItem, INotifyPropertyChanged, IDbExtendedProperty, ISerializable
+    public class DbConstraintItem : BindingTableRow, IDbConstraintItem, IDbExtendedProperty, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }

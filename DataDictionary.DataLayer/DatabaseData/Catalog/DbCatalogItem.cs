@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     /// <summary>
     /// Interface for the Database Catalog Item.
     /// </summary>
-    public interface IDbCatalogItem : IDbCatalogKeyUnique, IDbCatalogKey, IDbIsSystem, IBindingTableRow
+    public interface IDbCatalogItem : IDbCatalogKeyUnique, IDbCatalogKey, IDbIsSystem, IDataItem
     {
         /// <summary>
         /// Title given to the Catalog. Default is the Database Name.
@@ -43,7 +43,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     /// Implementation for Database Catalog Item.
     /// </summary>
     [Serializable]
-    public class DbCatalogItem : BindingTableRow, IDbCatalogItem, INotifyPropertyChanged, ISerializable
+    public class DbCatalogItem : BindingTableRow, IDbCatalogItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } protected set { SetValue("CatalogId", value); } }

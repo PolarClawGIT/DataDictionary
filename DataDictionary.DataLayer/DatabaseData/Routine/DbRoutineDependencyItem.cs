@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// Interface for a Routine Dependency Item
     /// </summary>
     /// <see href="https://learn.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-sql-expression-dependencies-transact-sql?view=sql-server-ver16"/>
-    public interface IDbRoutineDependencyItem : IDbColumnReferenceKey, IDbCatalogKey
+    public interface IDbRoutineDependencyItem : IDbColumnReferenceKey, IDbCatalogKey, IDataItem
     {
         /// <summary>
         /// The Object Type of the Reference
@@ -71,7 +71,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// Implementation of the Database Routine Dependencies Item
     /// </summary>
     [Serializable]
-    public class DbRoutineDependencyItem : BindingTableRow, IDbRoutineDependencyItem, INotifyPropertyChanged, ISerializable
+    public class DbRoutineDependencyItem : BindingTableRow, IDbRoutineDependencyItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }

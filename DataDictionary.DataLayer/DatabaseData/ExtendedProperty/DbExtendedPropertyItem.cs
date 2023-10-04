@@ -24,7 +24,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Interface for MS SQL ExtendedProperty as stored in the Application Database.
     /// </summary>
-    public interface IDbExtendedPropertyItem : IDbCatalogKeyUnique, IDbExtendedPropertyParameter, IBindingTableRow
+    public interface IDbExtendedPropertyItem : IDbCatalogKeyUnique, IDbExtendedPropertyParameter, IDataItem
     {
         /// <summary>
         /// MS SQL ExtendedProperty Level 0 Type
@@ -55,7 +55,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Implementation of MS SQL ExtendedProperty as stored in the Application Database.
     /// </summary>
-    public class DbExtendedPropertyItem : BindingTableRow, IDbExtendedPropertyItem, INotifyPropertyChanged
+    public class DbExtendedPropertyItem : BindingTableRow, IDbExtendedPropertyItem
     {
         /// <inheritdoc/>
         public string? CatalogName { get { return GetValue("CatalogName"); } }
