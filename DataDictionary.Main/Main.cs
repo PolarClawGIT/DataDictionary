@@ -277,8 +277,11 @@ namespace DataDictionary.Main
         private void textEditorToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new ProofOfConcept.TextEditor()); }
 
- 
+
         private void manageLibrariesCommand_ButtonClick(object sender, EventArgs e)
         { Activate(() => new Forms.Library.LibraryManager()); }
+
+        private void manageDatabasesCommand_ButtonClick(object sender, EventArgs e)
+        { Activate(() => new Forms.Database.DatabaseManager()); }
     }
 }

@@ -429,13 +429,14 @@
             manageDatabasesCommand.Name = "manageDatabasesCommand";
             manageDatabasesCommand.Size = new Size(32, 22);
             manageDatabasesCommand.Text = "Manage Databases";
+            manageDatabasesCommand.ButtonClick += manageDatabasesCommand_ButtonClick;
             // 
             // dbSchemaContextMenu
             // 
             dbSchemaContextMenu.Items.AddRange(new ToolStripItem[] { menuCatalogItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineDependencyItem });
             dbSchemaContextMenu.Name = "dbSchemacontextMenu";
             dbSchemaContextMenu.OwnerItem = manageDatabasesCommand;
-            dbSchemaContextMenu.Size = new Size(234, 246);
+            dbSchemaContextMenu.Size = new Size(234, 268);
             // 
             // menuCatalogItem
             // 

@@ -7,10 +7,10 @@
 	-- https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/documentation-comments
 	-- https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/
 	[LibraryId] UniqueIdentifier Not Null CONSTRAINT [DF_LibrarySourceId] DEFAULT (newid()),
-	[LibraryTitle] [App_DataDictionary].[typeTitle] Not Null,
+	[LibraryTitle] [App_DataDictionary].[typeTitle] Not Null,-- expected to be the same as [AssemblyName], but can be changed.
 	[LibraryDescription] [App_DataDictionary].[typeDescription] Null,
-	[AssemblyName] NVarChar(1023) Not Null, -- Natural Key?
-	[SourceFile] NVarChar(500) Null, 
+	[AssemblyName] NVarChar(1023) Not Null, -- Natural Key
+	[SourceFile] NVarChar(500) Not Null, 
 	[SourceDate] DateTime Not Null,
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_LibrarySource_ModfiedBy] DEFAULT (original_login()),
@@ -21,6 +21,9 @@
 	CONSTRAINT [PK_LibrarySource] PRIMARY KEY CLUSTERED ([LibraryId] ASC),
 )
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [UX_LibrarySource]
+CREATE UNIQUE NONCLUSTERED INDEX [UX_LibrarySourceAssembly]
     ON [App_DataDictionary].[LibrarySource]([AssemblyName]);
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [UX_LibrarySourceTitle]
+    ON [App_DataDictionary].[LibrarySource]([LibraryTitle]);
 GO

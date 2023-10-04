@@ -5,8 +5,12 @@
 	-- Instead the objects are used to provide a Snapshot of the Database and objects of interest.
 	-- The Object names are used as the key rather then creating a surrogate key that needs to be reconciled.
 	[CatalogId] UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseCatalogId] DEFAULT (newid()),
-	[CatalogName] SysName Not Null,
-	[SourceServerName] SysName Null,
+	[CatalogTitle] [App_DataDictionary].[typeTitle] Not Null,
+	[CatalogDescription] [App_DataDictionary].[typeDescription] Null,
+	[CatalogName] SysName Not Null, -- Natural Key, expected to be the same as [SourceDatabaseName], but can be changed.
+	[SourceServerName] SysName Not Null,
+	[SourceDatabaseName] SysName Not Null,
+	[SourceDate] DateTime Not Null,
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DatabaseCatalog_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DatabaseCatalog_SysStart] DEFAULT (sysdatetime()),
@@ -16,6 +20,9 @@
 	CONSTRAINT [PK_DatabaseCatalog] PRIMARY KEY CLUSTERED ([CatalogId] ASC),
 )
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseCatalog]
+CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseCatalogName]
     ON [App_DataDictionary].[DatabaseCatalog]([CatalogName]);
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseCatalogTitle]
+    ON [App_DataDictionary].[DatabaseCatalog]([CatalogTitle]);
 GO

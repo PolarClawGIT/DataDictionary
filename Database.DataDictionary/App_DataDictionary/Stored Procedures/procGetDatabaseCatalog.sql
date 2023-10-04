@@ -8,8 +8,12 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 /* Description: Performs Get on DatabaseCatalog.
 */
 Select	D.[CatalogId],
+		D.[CatalogTitle],
+		D.[CatalogDescription],
 		D.[CatalogName],
 		D.[SourceServerName],
+		D.[SourceDatabaseName],
+		D.[SourceDate],
 		D.[SysStart]
 From	[App_DataDictionary].[DatabaseCatalog] D
 		Left Join [App_DataDictionary].[ModelCatalog] A

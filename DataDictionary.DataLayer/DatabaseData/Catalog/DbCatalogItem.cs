@@ -14,9 +14,29 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     public interface IDbCatalogItem : IDbCatalogKeyUnique, IDbCatalogKey, IDbIsSystem, IBindingTableRow
     {
         /// <summary>
+        /// Title given to the Catalog. Default is the Database Name.
+        /// </summary>
+        string? CatalogTitle { get; }
+
+        /// <summary>
+        /// Description given to the Catalog.
+        /// </summary>
+        string? CatalogDescription { get; }
+
+        /// <summary>
         /// The SQL Server that the database was extracted from.
         /// </summary>
         string? SourceServerName { get; }
+
+        /// <summary>
+        /// The SQL Server Database that was extracted.
+        /// </summary>
+        string? SourceDatabaseName { get; }
+
+        /// <summary>
+        /// The Date that the database was extracted.
+        /// </summary>
+        DateTime? SourceDate { get; }
     }
 
     /// <summary>
@@ -29,10 +49,22 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } protected set { SetValue("CatalogId", value); } }
 
         /// <inheritdoc/>
-        public string? CatalogName { get { return GetValue("CatalogName"); } }
+        public string? CatalogName { get { return GetValue("CatalogName"); } set { SetValue("CatalogName", value); } }
 
         /// <inheritdoc/>
-        public string? SourceServerName { get { return GetValue("SourceServerName"); } }
+        public string? CatalogTitle { get { return GetValue("CatalogTitle"); } set { SetValue("CatalogTitle", value); } }
+
+        /// <inheritdoc/>
+        public string? CatalogDescription { get { return GetValue("CatalogDescription"); } set { SetValue("CatalogDescription", value); } }
+
+        /// <inheritdoc/>
+        public string? SourceServerName { get { return GetValue("SourceServerName"); } protected set { SetValue("SourceServerName", value); } }
+
+        /// <inheritdoc/>
+        public string? SourceDatabaseName { get { return GetValue("SourceDatabaseName"); } protected set { SetValue("SourceDatabaseName", value); } }
+
+        /// <inheritdoc/>
+        public DateTime? SourceDate { get { return GetValue<DateTime>("SourceDate"); } protected set { SetValue("SourceDate", value); } }
 
         /// <inheritdoc/>
         public bool IsSystem { get { return CatalogName is "tempdb" or "master" or "msdb" or "model"; } }
@@ -46,8 +78,12 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn("CatalogTitle", typeof(string)){ AllowDBNull = true},
+            new DataColumn("CatalogDescription", typeof(string)){ AllowDBNull = true}, 
             new DataColumn("CatalogName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SourceServerName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("SourceDatabaseName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("SourceDate", typeof(DateTime)){ AllowDBNull = true},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 

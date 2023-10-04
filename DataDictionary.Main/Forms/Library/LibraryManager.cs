@@ -30,7 +30,7 @@ namespace DataDictionary.Main.Forms.Library
             saveToolStripButton.Click += SaveToolStripButton_Click;
 
             openToolStripButton.ToolTipText = "Open and add from ASP.Net XML Documentation file";
-            saveToolStripButton.ToolTipText = "Save the changes back to the database";
+            saveToolStripButton.ToolTipText = "Save the changes back to the application database";
             this.Icon = Resources.Icon_Library;
         }
 
