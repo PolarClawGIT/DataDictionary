@@ -14,12 +14,51 @@ using System.Windows.Forms;
 using Toolbox.BindingTable;
 using Toolbox.Mediator;
 using Toolbox.Threading;
+using static System.Windows.Forms.Control;
 
 namespace DataDictionary.Main.Forms
 {
+    interface IApplicationBase
+    {
+        ControlCollection Controls { get; }
+
+        /// <summary>
+        /// Locks (disable) and Unlock (enable) the Form.
+        /// </summary>
+        /// <remarks>
+        /// True disables the top most controls and sets the Wait Cursor.
+        /// False enables the top most controls and clears the Wait Cursor.
+        /// </remarks>
+       Boolean IsLocked
+        {
+            get { return this.Controls.Cast<Control>().Any(w => w.HasChildren && w.Enabled); }
+            set
+            {
+                foreach (Control item in this.Controls.Cast<Control>().Where(w => w.HasChildren))
+                {
+                    item.Enabled = !value;
+                    item.UseWaitCursor = value;
+                }
+            }
+        }
 
 
-    partial class ApplicationBase : Form, IColleague
+        /// <summary>
+        /// Controls the UseWaitCursor of the top most controls.
+        /// </summary>
+        /// <remarks>This is effected by the IsLocked but allows the application to override the current state of UseWaitCursor.</remarks>
+        Boolean IsWaitCursor
+        {
+            get { return this.Controls.Cast<Control>().Any(w => w.HasChildren && w.UseWaitCursor); }
+            set
+            {
+                foreach (Control item in this.Controls.Cast<Control>().Where(w => w.HasChildren))
+                { item.UseWaitCursor = value; }
+            }
+        }
+    }
+
+    abstract partial class ApplicationBase : Form, IColleague, IApplicationBase
     {
         public ApplicationBase() : base()
         {
@@ -122,8 +161,59 @@ namespace DataDictionary.Main.Forms
                 return newForm;
             }
         }
+        #endregion
 
-        #endregion@endr
+
+        /// <summary>
+        /// Locks (disable) and Unlock (enable) the Form.
+        /// </summary>
+        /// <remarks>
+        /// True disables the top most controls and sets the Wait Cursor.
+        /// False enables the top most controls and clears the Wait Cursor.
+        /// </remarks>
+        protected virtual Boolean IsLocked
+        {
+            get { return this.Controls.Cast<Control>().Any(w => w.HasChildren && w.Enabled); }
+            set
+            {
+                foreach (Control item in this.Controls.Cast<Control>().Where(w => w.HasChildren))
+                {
+                    item.Enabled = !value;
+                    item.UseWaitCursor = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Controls the UseWaitCursor of the top most controls.
+        /// </summary>
+        /// <remarks>This is effected by the IsLocked but allows the application to override the current state of UseWaitCursor.</remarks>
+        protected virtual Boolean IsWaitCursor
+        {
+            get { return this.Controls.Cast<Control>().Any(w => w.HasChildren && w.UseWaitCursor); }
+            set
+            {
+                foreach (Control item in this.Controls.Cast<Control>().Where(w => w.HasChildren))
+                { item.UseWaitCursor = value; }
+            }
+        }
+
+        /// <summary>
+        /// Performs the list of work on a background thread.
+        /// </summary>
+        /// <param name="work"></param>
+        /// <param name="onCompleting"></param>
+        /// <remarks>The method calls LockForm and UnlockForm while work is being done.</remarks>
+        protected void DoWork(IEnumerable<WorkItem> work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
+        {
+            Program.Worker.Enqueue(work, completing);
+
+            void completing(RunWorkerCompletedEventArgs result)
+            {
+                if (result.Error is not null) { Program.ShowException(result.Error); }
+                if (onCompleting is not null) { onCompleting(result); }
+            }
+        }
 
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;
@@ -131,6 +221,11 @@ namespace DataDictionary.Main.Forms
         public virtual void ReceiveMessage(object? sender, MessageEventArgs message)
         { HandleMessage((dynamic)message); }
 
+        /// <summary>
+        /// Message of a specific class are sent to all forms (except the sending form) that handle that message.
+        /// All ApplicationBase forms have a base handler for all known message types
+        /// </summary>
+        /// <param name="message"></param>
         protected virtual void SendMessage(MessageEventArgs message)
         {
             if (OnSendMessage is EventHandler<MessageEventArgs> handler)
@@ -145,12 +240,14 @@ namespace DataDictionary.Main.Forms
         /// Override the specific method to handle the event.
         /// This is called by RecieveMessage with Dynamic typing.
         /// </remarks>
-        protected virtual void HandleMessage(MessageEventArgs message) { }
+        protected void HandleMessage(MessageEventArgs message)
+        { throw new InvalidOperationException("Base message handler was called instead of a specific override."); }
 
+        /// <summary>
+        /// Message sent by Child Forms to inform the Main Form that a child needs to be added.
+        /// </summary>
+        /// <param name="message"></param>
         protected virtual void HandleMessage(FormAddMdiChild message) { }
-
-        protected virtual void HandleMessage(DbDataBatchStarting message) { }
-        protected virtual void HandleMessage(DbDataBatchCompleted message) { }
 
         protected virtual void HandleMessage(DbApplicationBatchStarting message) { }
         protected virtual void HandleMessage(DbApplicationBatchCompleted message) { }
@@ -364,88 +461,5 @@ namespace DataDictionary.Main.Forms
                 toolStrip.VisibleChanged -= toolStrip_VisibleChanged;
             }
         }
-
-
-    }
-
-    static class ApplicationFormExtension
-    {
-        /// <summary>
-        /// Searches the control passed and all child controls for an error associated with the ErrorProvider and return the text.
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="rootControl"></param>
-        /// <returns>List of controls and the error text that goes with them.</returns>
-        /// <remarks>
-        /// The error provider does not contain this function.
-        /// Also, for some reason the Error Provider can return HasErrors = true when no control on the form has an error.
-        /// This way, I can search for controls within a specific scope looking for errors.
-        /// </remarks>
-        public static Dictionary<Control, string> GetAllErrors(this ErrorProvider provider, Control rootControl)
-        {
-            Dictionary<Control, string> errors = new Dictionary<Control, string>();
-            string errorText = provider.GetError(rootControl);
-
-            if (!string.IsNullOrWhiteSpace(errorText))
-            { errors.Add(rootControl, errorText); }
-
-            foreach (Control item in rootControl.Controls)
-            {
-                Dictionary<Control, string> child = provider.GetAllErrors(item);
-                foreach (var childItem in child)
-                { errors.Add(childItem.Key, childItem.Value); }
-            }
-
-            return errors;
-        }
-
-        public static void DoWork(this ApplicationBase form, IEnumerable<WorkItem> work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
-        {
-            form.LockForm();
-            Program.Worker.Enqueue(work, completing);
-
-            void completing(RunWorkerCompletedEventArgs result)
-            {
-                if (result.Error is not null) { Program.ShowException(result.Error); }
-                if (onCompleting is not null) { onCompleting(result); }
-
-                form.UnLockForm();
-            }
-        }
-
-        public static void DoWork(this ApplicationBase form, WorkItem work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
-        {
-            form.UseWaitCursor = true;
-            form.Enabled = false;
-            Program.Worker.Enqueue(work, completing);
-
-            void completing(RunWorkerCompletedEventArgs result)
-            {
-                if (result.Error is not null) { Program.ShowException(result.Error); }
-                if (onCompleting is not null) { onCompleting(result); }
-
-                form.UseWaitCursor = false;
-                form.Enabled = true;
-            }
-        }
-
-        public static void LockForm(this ApplicationBase form, Boolean useWaitCursor = true)
-        { // This assumes that all form layouts start with a TablePanel Control. Nothing is expected outside of that control
-            foreach (Control item in form.Controls.Cast<Control>().Where(w => w.HasChildren))
-            {
-                item.Enabled = false;
-                item.UseWaitCursor = useWaitCursor;
-            }
-        }
-
-        public static void UnLockForm(this ApplicationBase form)
-        { // This assumes that all form layouts start with a TablePanel Control. Nothing is expected outside of that control.
-            foreach (Control item in form.Controls.Cast<Control>().Where(w => w.HasChildren))
-            {
-                item.Enabled = true;
-                item.UseWaitCursor = false;
-            }
-        }
-
     }
 }

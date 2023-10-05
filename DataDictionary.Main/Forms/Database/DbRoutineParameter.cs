@@ -1,45 +1,25 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbRoutineParameter : ApplicationBase, IApplicationDataForm
+    partial class DbRoutineParameter : ApplicationBase<DbRoutineParameterKey>
     {
-        public DbRoutineParameterKey DataKey { get; private set; }
-
-        public DbRoutineParameter()
+        public DbRoutineParameter(): base()
         {
             InitializeComponent();
             this.Icon = Resources.Icon_Parameter;
-            DataKey = new DbRoutineParameterKey(new DbRoutineParameterItem());
         }
-
-        public DbRoutineParameter(IDbRoutineParameterKey domainItem) : this()
-        {
-            DataKey = new DbRoutineParameterKey(domainItem);
-            this.Text = DataKey.ToString();
-        }
-
-        public Boolean IsOpenItem(Object? item)
-        { return DataKey.Equals(item); }
 
         private void DbRoutineParameter_Load(object sender, EventArgs e)
         { BindData(); }
 
-        void BindData()
+        protected override bool BindDataCore()
         {
             if (Program.Data.DbRoutineParameters.FirstOrDefault(w => DataKey.Equals(w)) is DbRoutineParameterItem data)
             {
+                this.Text = new DbRoutineParameterKey(data).ToString();
+
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.CatalogName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
                 routineNameData.DataBindings.Add(new Binding(nameof(routineNameData.Text), data, nameof(data.RoutineName)));
@@ -68,10 +48,13 @@ namespace DataDictionary.Main.Forms.Database
 
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = Program.Data.GetExtendedProperty(DataKey).ToList();
+
+                return true;
             }
+            else { return false; }
         }
 
-        void UnBindData()
+        protected override void UnbindDataCore()
         {
             catalogNameData.DataBindings.Clear();
             schemaNameData.DataBindings.Clear();
@@ -102,13 +85,5 @@ namespace DataDictionary.Main.Forms.Database
             extendedPropertiesData.DataSource = null;
         }
 
-
-        #region IColleague
-        protected override void HandleMessage(DbDataBatchStarting message)
-        { UnBindData(); }
-
-        protected override void HandleMessage(DbDataBatchCompleted message)
-        { BindData(); }
-        #endregion
     }
 }

@@ -9,22 +9,13 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain
 {
-    partial class DomainAttribute : ApplicationBase, IApplicationDataForm
+    partial class DomainAttribute : ApplicationBase<DomainAttributeKey>
     {
-        public DomainAttributeKey DataKey { get; private set; }
-
         public DomainAttribute() : base()
         {
             InitializeComponent();
             this.Icon = Resources.Icon_Attribute;
-            DataKey = new DomainAttributeKey(new DomainAttributeItem());
         }
-
-        public DomainAttribute(IDomainAttributeKey domainAttributeItem) : this()
-        { DataKey = new DomainAttributeKey(domainAttributeItem); }
-
-        public Boolean IsOpenItem(Object? item)
-        { return DataKey.Equals(item); }
 
         private void DomainAttribute_Load(object sender, EventArgs e)
         {
@@ -35,11 +26,9 @@ namespace DataDictionary.Main.Forms.Domain
             BindData();
         }
 
-        void BindData()
+        protected override bool BindDataCore()
         {
-            DomainAttributeItem? data = Program.Data.DomainAttributes.FirstOrDefault(w => DataKey.Equals(w));
-
-            if (data is not null)
+            if (Program.Data.DomainAttributes.FirstOrDefault(w => DataKey.Equals(w)) is DomainAttributeItem data)
             {
                 this.Text = data.AttributeTitle;
 
@@ -91,10 +80,12 @@ namespace DataDictionary.Main.Forms.Domain
                 if (bindingProperties.Current is DomainAttributePropertyItem propItem
                     && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)
                 { BindChoiceData(property, propItem); }
-            }
-        }
 
-        void UnBindData()
+                return true;
+            }
+            else { return false; }
+        }
+        protected override void UnbindDataCore()
         {
             attributeTitleData.DataBindings.Clear();
             attributeDescriptionData.DataBindings.Clear();
@@ -136,14 +127,8 @@ namespace DataDictionary.Main.Forms.Domain
         }
 
         #region IColleague
-        protected override void HandleMessage(DbDataBatchStarting message)
-        { UnBindData(); }
-
-        protected override void HandleMessage(DbDataBatchCompleted message)
-        { BindData(); }
-
         protected override void HandleMessage(DbApplicationBatchStarting message)
-        { UnBindData(); }
+        { UnbindData(); }
 
         protected override void HandleMessage(DbApplicationBatchCompleted message)
         { BindData(); }

@@ -13,33 +13,19 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbDomain : ApplicationBase, IApplicationDataForm
+    partial class DbDomain : ApplicationBase<DbDomainKey>
     {
-        public DbDomainKey DataKey { get; private set; }
-
-        public DbDomain()
+        public DbDomain() : base()
         {
             InitializeComponent();
             this.Icon = Resources.Icon_DomainType;
-            DataKey = new DbDomainKey(new DbDomainItem());
         }
-
-        public DbDomain(IDbDomainKey domainItem) : this()
-        {
-            DataKey = new DbDomainKey(domainItem);
-            this.Text = DataKey.ToString();
-        }
-
-        public Boolean IsOpenItem(Object? item)
-        { return DataKey.Equals(item); }
 
         private void DbDomain_Load(object sender, EventArgs e)
         { BindData(); }
 
-        void BindData()
+        protected override bool BindDataCore()
         {
-            this.LockForm();
-
             if (Program.Data.DbDomains.FirstOrDefault(w => DataKey.Equals(w)) is DbDomainItem data)
             {
                 this.Text = DataKey.ToString();
@@ -68,16 +54,13 @@ namespace DataDictionary.Main.Forms.Database
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = Program.Data.GetExtendedProperty(DataKey).ToList();
 
-                this.UnLockForm();
+                return true;
             }
             else
-            {
-                this.LockForm(false);
-                this.Text = "[Key Not Found]";
-            }
+            { return false; }
         }
 
-        void UnBindData() 
+        protected override void UnbindDataCore()
         {
             catalogNameData.DataBindings.Clear();
             schemaNameData.DataBindings.Clear();
@@ -102,13 +85,5 @@ namespace DataDictionary.Main.Forms.Database
 
             extendedPropertiesData.DataSource = null;
         }
-
-        #region IColleague
-        protected override void HandleMessage(DbDataBatchStarting message)
-        { UnBindData(); }
-
-        protected override void HandleMessage(DbDataBatchCompleted message)
-        { BindData(); }
-        #endregion
     }
 }

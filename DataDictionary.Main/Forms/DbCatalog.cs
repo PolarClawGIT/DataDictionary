@@ -218,7 +218,7 @@ namespace DataDictionary.Main.Forms
         private void importCommand_Click(object sender, EventArgs e)
         {
             UnBindData();
-            SendMessage(new DbDataBatchStarting());
+            SendMessage(new DoUnbindData());
 
             if (data.DbContext is DbSchemaContext)
             {
@@ -245,7 +245,7 @@ namespace DataDictionary.Main.Forms
                 }
 
                 // Done
-                SendMessage(new DbDataBatchCompleted());
+                SendMessage(new DoBindData());
                 BindData();
 
                 // Because other forms can sometimes get focus during data binding
@@ -258,7 +258,7 @@ namespace DataDictionary.Main.Forms
             this.UseWaitCursor = true;
             this.Enabled = false;
             UnBindData();
-            SendMessage(new DbDataBatchStarting());
+            SendMessage(new DoUnbindData());
 
 
             if (data.DbContext is DbSchemaContext)
@@ -266,7 +266,7 @@ namespace DataDictionary.Main.Forms
 
             void onComplete(RunWorkerCompletedEventArgs result)
             {
-                SendMessage(new DbDataBatchCompleted());
+                SendMessage(new DoBindData());
                 BindData();
                 this.UseWaitCursor = false;
                 this.Enabled = true;

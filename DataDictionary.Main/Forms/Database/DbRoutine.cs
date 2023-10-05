@@ -13,33 +13,19 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbRoutine : ApplicationBase, IApplicationDataForm
+    partial class DbRoutine : ApplicationBase<DbRoutineKey>
     {
-        public DbRoutineKey DataKey { get; private set; }
-
-        public DbRoutine()
+        public DbRoutine(): base()
         {
             InitializeComponent();
             this.Icon = Resources.Icon_Procedure; //TODO: Need to change this on Binding, depending on type.
-            DataKey = new DbRoutineKey(new DbRoutineItem());
         }
-
-        public DbRoutine(IDbRoutineKey routineItem) : this()
-        {
-            DataKey = new DbRoutineKey(routineItem);
-            this.Text = DataKey.ToString();
-        }
-
-        public Boolean IsOpenItem(Object? item)
-        { return DataKey.Equals(item); }
 
         private void DbRoutine_Load(object sender, EventArgs e)
         { BindData(); }
 
-        void BindData()
+        protected override bool BindDataCore()
         {
-            this.LockForm();
-
             if (Program.Data.DbRoutines.FirstOrDefault(w => DataKey.Equals(w)) is DbRoutineItem data)
             {
                 this.Text = DataKey.ToString();
@@ -59,16 +45,13 @@ namespace DataDictionary.Main.Forms.Database
                 dependenciesData.AutoGenerateColumns = false;
                 dependenciesData.DataSource = Program.Data.GetRoutineDependencies(DataKey);
 
-                this.UnLockForm();
+                return true;
             }
             else
-            {
-                this.LockForm(false);
-                this.Text = "[Key Not Found]";
-            }
+            { return false; }
         }
 
-        void UnBindData()
+        protected override void UnbindDataCore()
         {
             catalogNameData.DataBindings.Clear();
             schemaNameData.DataBindings.Clear();
@@ -80,13 +63,5 @@ namespace DataDictionary.Main.Forms.Database
             parametersData.DataSource = null;
             dependenciesData.DataSource = null;
         }
-
-        #region IColleague
-        protected override void HandleMessage(DbDataBatchStarting message)
-        { UnBindData(); }
-
-        protected override void HandleMessage(DbDataBatchCompleted message)
-        { BindData(); }
-        #endregion
     }
 }

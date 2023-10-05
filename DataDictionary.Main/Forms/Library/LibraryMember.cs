@@ -15,28 +15,18 @@ using System.Xml.Linq;
 
 namespace DataDictionary.Main.Forms.Library
 {
-    partial class LibraryMember : ApplicationBase, IApplicationDataForm
+    partial class LibraryMember : ApplicationBase<LibraryMemberKey>
     {
-        public LibraryMemberKey DataKey { get; private set; }
-
         public LibraryMember() : base()
         {
             InitializeComponent();
             this.Icon = Resources.Icon_Class;
-            DataKey = new LibraryMemberKey(new LibraryMemberItem());
         }
-
-        public LibraryMember(ILibraryMemberKey libraryMemberItem) : this()
-        { DataKey = new LibraryMemberKey(libraryMemberItem); }
-
-        public Boolean IsOpenItem(Object? item)
-        { return DataKey.Equals(item); }
-
 
         private void LibraryMember_Load(object sender, EventArgs e)
         { BindData(); }
 
-        void BindData()
+        protected override bool BindDataCore()
         {
             if (Program.Data.LibraryMembers.FirstOrDefault(w => DataKey.Equals(w)) is LibraryMemberItem memberItem)
             {
@@ -49,7 +39,7 @@ namespace DataDictionary.Main.Forms.Library
                         this.Icon = Resources.Icon_Field;
                         break;
                     case LibraryMemberType.Method or LibraryMemberType.Event:
-                        this.Icon = Resources.Icon_Assembly; //TODO: Change to Method
+                        this.Icon = Resources.Icon_Method;
                         break;
                     default: break;
                 }
@@ -61,10 +51,13 @@ namespace DataDictionary.Main.Forms.Library
                 memberTypeData.DataBindings.Add(new Binding(nameof(memberTypeData.Text), memberItem, nameof(memberItem.MemberType)));
                 memberData.DataBindings.Add(new Binding(nameof(memberData.Text), memberItem, nameof(memberItem.MemberData)));
                 assemblyNameData.DataBindings.Add(new Binding(nameof(assemblyNameData.Text), memberItem, nameof(memberItem.AssemblyName)));
+
+                return true;
             }
+            else { return false; }
         }
 
-        void UnBindData()
+        protected override void UnbindDataCore()
         {
             memberNameSpaceData.DataBindings.Clear();
             memberNameData.DataBindings.Clear();
@@ -72,13 +65,6 @@ namespace DataDictionary.Main.Forms.Library
             memberData.DataBindings.Clear();
             assemblyNameData.DataBindings.Clear();
         }
-        #region IColleague
-        protected override void HandleMessage(DbDataBatchStarting message)
-        { UnBindData(); }
-
-        protected override void HandleMessage(DbDataBatchCompleted message)
-        { BindData(); }
-        #endregion
 
     }
 }

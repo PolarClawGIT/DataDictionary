@@ -165,10 +165,10 @@ namespace DataDictionary.Main
                 Object dataNode = domainModelNodes[e.Node];
 
                 if (dataNode is IDomainAttributeItem attributeItem)
-                { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
+                { Activate((data) => new Forms.Domain.DomainAttribute() { DataKey = new DomainAttributeKey(attributeItem)}, attributeItem); }
 
                 if (dataNode is IDomainEntityItem entityItem)
-                { Activate((data) => new Forms.Domain.DomainEntity(entityItem), entityItem); }
+                { Activate((data) => new Forms.Domain.DomainEntity() { DataKey = new DomainEntityKey(entityItem) }, entityItem); }
             }
         }
         private void sortByAttributeEntityCommand_Click(object sender, EventArgs e)

@@ -16,22 +16,13 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain
 {
-    partial class DomainEntity : ApplicationBase, IApplicationDataForm
+    partial class DomainEntity : ApplicationBase<DomainEntityKey>
     {
-        public DomainEntityKey DataKey { get; private set; }
-
         public DomainEntity() : base()
         {
             InitializeComponent();
             this.Icon = Resources.Icon_ClassPublic;
-            DataKey = new DomainEntityKey(new DomainEntityItem());
         }
-
-        public DomainEntity(IDomainEntityKey domainEntityItem) : this()
-        { DataKey = new DomainEntityKey(domainEntityItem); }
-
-        public Boolean IsOpenItem(object? item)
-        { return DataKey.Equals(item); }
 
         private void DomainEntity_Load(object sender, EventArgs e)
         {
@@ -42,11 +33,9 @@ namespace DataDictionary.Main.Forms.Domain
             BindData();
         }
 
-        void BindData()
+        protected override bool BindDataCore()
         {
-            DomainEntityItem? data = Program.Data.DomainEntities.FirstOrDefault(w => DataKey.Equals(w));
-
-            if (data is not null)
+            if (Program.Data.DomainEntities.FirstOrDefault(w => DataKey.Equals(w)) is DomainEntityItem data)
             {
                 this.Text = data.EntityTitle;
                 //IDomainEntityItem? parent = Program.Data.DomainEntities.GetParentAttribute(data);
@@ -100,10 +89,13 @@ namespace DataDictionary.Main.Forms.Domain
                 if (bindingProperties.Current is DomainEntityPropertyItem propItem
                     && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)
                 { BindChoiceData(property, propItem); }
+
+                return true;
             }
+            else { return false; }
         }
 
-        void UnBindData()
+        protected override void UnbindDataCore()
         {
             entityTitleData.DataBindings.Clear();
             entityDescriptionData.DataBindings.Clear();
@@ -145,14 +137,8 @@ namespace DataDictionary.Main.Forms.Domain
         }
 
         #region IColleague
-        protected override void HandleMessage(DbDataBatchStarting message)
-        { UnBindData(); }
-
-        protected override void HandleMessage(DbDataBatchCompleted message)
-        { BindData(); }
-
         protected override void HandleMessage(DbApplicationBatchStarting message)
-        { UnBindData(); }
+        { UnbindData(); }
 
         protected override void HandleMessage(DbApplicationBatchCompleted message)
         { BindData(); }

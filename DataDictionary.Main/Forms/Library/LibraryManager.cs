@@ -18,7 +18,6 @@ namespace DataDictionary.Main.Forms.Library
 {
     partial class LibraryManager : ApplicationBase
     {
-
         LibrarySourceCollection dbData = new LibrarySourceCollection();
         LibraryManagerCollection bindingData = new LibraryManagerCollection();
 
@@ -67,9 +66,8 @@ namespace DataDictionary.Main.Forms.Library
             inDatabaseData.DataBindings.Add(new Binding(nameof(inDatabaseData.Checked), libraryBinding, nameof(nameOfValues.InDatabase), true));
         }
 
-        void UnBindData()
+        void UnbindData()
         {
-            this.LockForm();
             libraryTitleData.DataBindings.Clear();
             libraryDescriptionData.DataBindings.Clear();
             asseblyNameData.DataBindings.Clear();
@@ -194,9 +192,8 @@ namespace DataDictionary.Main.Forms.Library
 
         private void DoLocalWork(List<WorkItem> work)
         {
-            this.LockForm();
-            UnBindData();
-            SendMessage(new Messages.DbDataBatchStarting());
+            UnbindData();
+            SendMessage(new Messages.DoUnbindData());
 
             dbData.Clear();
             work.AddRange(dbData.LoadLibrary());
@@ -205,20 +202,11 @@ namespace DataDictionary.Main.Forms.Library
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                SendMessage(new Messages.DbDataBatchCompleted());
+                SendMessage(new Messages.DoBindData());
                 bindingData.Build(Program.Data.LibrarySources, dbData);
                 BindData();
-                this.UnLockForm();
             }
         }
-
-        #region IColleague
-        protected override void HandleMessage(DbDataBatchStarting message)
-        { UnBindData(); }
-
-        protected override void HandleMessage(DbDataBatchCompleted message)
-        { BindData(); }
-        #endregion
 
         private void libraryTitleData_Validating(object sender, CancelEventArgs e)
         {

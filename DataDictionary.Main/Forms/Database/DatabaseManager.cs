@@ -29,31 +29,16 @@ namespace DataDictionary.Main.Forms.Database
 
         private void SaveToolStripButton_Click(object? sender, EventArgs e)
         {
-            
+
         }
 
         private void OpenToolStripButton_Click(object? sender, EventArgs e)
         {
-            
+
         }
 
         private void DatabaseManager_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        void BindData() { }
-
-        void UnBindData() { }
-
-        #region IColleague
-        protected override void HandleMessage(DbDataBatchStarting message)
-        { UnBindData(); }
-
-        protected override void HandleMessage(DbDataBatchCompleted message)
-        { BindData(); }
-        #endregion
-
+        {  }
 
     }
 }

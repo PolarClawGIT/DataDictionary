@@ -95,7 +95,7 @@ namespace DataDictionary.Main
             navigationTabs.Enabled = true;
         }
 
-        void UnBindData()
+        void UnbindData()
         {
             modelNameData.DataBindings.Clear();
             modelDescriptionData.DataBindings.Clear();
@@ -199,7 +199,7 @@ namespace DataDictionary.Main
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UnBindData();
+            UnbindData();
             Program.Data.Clear();
             Program.Data.NewModel();
             BindData();
@@ -207,7 +207,7 @@ namespace DataDictionary.Main
 
         private void cloneModelMenuItem_Click(object sender, EventArgs e)
         {
-            UnBindData();
+            UnbindData();
             Program.Data.NewModel();
             BindData();
         }
@@ -252,16 +252,11 @@ namespace DataDictionary.Main
             { message.ChildForm.MdiParent = this; }
         }
 
-        Form? lastActive;
-        protected override void HandleMessage(DbDataBatchStarting message)
+        protected void HandleMessage(DoUnbindData message)
         {
             this.Controls[0].Focus();
-            lastActive = ActiveMdiChild;
-            UnBindData();
+            base.HandleMessage(message);
         }
-
-        protected override void HandleMessage(DbDataBatchCompleted message)
-        { BindData(); }
         #endregion
 
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)

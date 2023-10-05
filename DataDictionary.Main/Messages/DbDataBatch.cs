@@ -9,17 +9,18 @@ using Toolbox.Mediator;
 namespace DataDictionary.Main.Messages
 {
     /// <summary>
-    /// This message should be sent any time the DbData is changed using any thread other then the Main thread.
-    /// This will allow screens that use this data to disconnect from the data.
-    /// Unbind DataGridViews specifically. They respond to a ListChanged event that will cause threading issues.
+    /// Tells all forms that they should unbind the data.
+    /// This is general done when the application data is about to be changed
+    /// and the current bindings will no longer be valid.
     /// </summary>
-    class DbDataBatchStarting: MessageEventArgs { }
+    class DoUnbindData: MessageEventArgs { }
 
     /// <summary>
-    /// This message should be sent any time the DbData is changed using any thread other then the Main thread.
-    /// This will allow screens that use this data to disconnect to the data.
+    /// Tells all forms that they should re-bind the data.
+    /// This is general done when the application data has completed its changes
+    /// and the current bindings will no longer be valid.
     /// </summary>
-    class DbDataBatchCompleted : MessageEventArgs { }
+    class DoBindData : MessageEventArgs { }
 
     class DbApplicationBatchStarting : MessageEventArgs
     {

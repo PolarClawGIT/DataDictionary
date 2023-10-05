@@ -7,32 +7,18 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbTableColumn : ApplicationBase, IApplicationDataForm
+    partial class DbTableColumn : ApplicationBase<DbTableColumnKey>
     {
-        public DbTableColumnKey DataKey { get; private set; }
-
-        public Object? OpenItem { get; }
-
         public DbTableColumn() : base()
         {
             InitializeComponent();
             this.Icon = Resources.Icon_Column;
-            DataKey = new DbTableColumnKey(new DbTableColumnItem());
         }
-
-        public DbTableColumn(IDbTableColumnItem columnItem) : this()
-        {
-            DataKey = new DbTableColumnKey(columnItem);
-            this.Text = DataKey.ToString();
-        }
-
-        public Boolean IsOpenItem(Object? item)
-        { return DataKey.Equals(item); }
 
         private void DbColumn_Load(object sender, EventArgs e)
         { BindData(); }
 
-        void BindData()
+        protected override bool BindDataCore()
         {
             if (Program.Data.DbTableColumns.FirstOrDefault(w => DataKey.Equals(w)) is DbTableColumnItem data)
             {
@@ -72,10 +58,13 @@ namespace DataDictionary.Main.Forms.Database
 
                 extendedPropertiesData.AutoGenerateColumns = false;
                 extendedPropertiesData.DataSource = Program.Data.GetExtendedProperty(DataKey).ToList();
+
+                return true;
             }
+            else { return false; }
         }
 
-        void UnBindData()
+        protected override void UnbindDataCore()
         {
             catalogNameData.DataBindings.Clear();
             schemaNameData.DataBindings.Clear();
@@ -107,12 +96,5 @@ namespace DataDictionary.Main.Forms.Database
 
             extendedPropertiesData.DataSource = null;
         }
-        #region IColleague
-        protected override void HandleMessage(DbDataBatchStarting message)
-        { UnBindData(); }
-
-        protected override void HandleMessage(DbDataBatchCompleted message)
-        { BindData(); }
-        #endregion
     }
 }

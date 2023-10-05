@@ -238,6 +238,9 @@
   <data name="Icon_Library" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Library.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon_Method" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Method.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Icon_Namespace" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Namespace.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

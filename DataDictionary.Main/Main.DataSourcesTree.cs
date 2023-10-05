@@ -313,31 +313,31 @@ namespace DataDictionary.Main
                 Object dataNode = dbDataNodes[e.Node];
 
                 if (dataNode is IDbSchemaItem schemaItem)
-                { Activate((data) => new Forms.Database.DbSchema(schemaItem), schemaItem); }
+                { Activate((data) => new Forms.Database.DbSchema() { DataKey = new DbSchemaKey(schemaItem) }, schemaItem); }
 
                 if (dataNode is IDbTableItem tableItem)
-                { Activate((data) => new Forms.Database.DbTable(tableItem), tableItem); }
+                { Activate((data) => new Forms.Database.DbTable() { DataKey = new DbTableKey(tableItem) }, tableItem); }
 
                 if (dataNode is IDbTableColumnItem columnItem)
-                { Activate((data) => new Forms.Database.DbTableColumn(columnItem), columnItem); }
+                { Activate((data) => new Forms.Database.DbTableColumn() { DataKey = new DbTableColumnKey(columnItem) }, columnItem); }
 
                 if (dataNode is IDbConstraintItem constraintItem)
-                { Activate((data) => new Forms.Database.DbConstraint(constraintItem), constraintItem); }
+                { Activate((data) => new Forms.Database.DbConstraint() { DataKey = new DbConstraintKey(constraintItem) }, constraintItem); }
 
                 if (dataNode is IDbRoutineItem routineItem)
-                { Activate((data) => new Forms.Database.DbRoutine(routineItem), routineItem); }
+                { Activate((data) => new Forms.Database.DbRoutine() { DataKey = new DbRoutineKey(routineItem) }, routineItem); }
 
                 if (dataNode is DbRoutineParameterItem routineParameterItem)
-                { Activate((data) => new Forms.Database.DbRoutineParameter(routineParameterItem), routineParameterItem); }
+                { Activate((data) => new Forms.Database.DbRoutineParameter() { DataKey = new DbRoutineParameterKey(routineParameterItem) }, routineParameterItem); }
 
                 if (dataNode is IDbDomainItem domainItem)
-                { Activate((data) => new Forms.Database.DbDomain(domainItem), domainItem); }
+                { Activate((data) => new Forms.Database.DbDomain() { DataKey = new DbDomainKey(domainItem) }, domainItem); }
 
                 if (dataNode is ILibrarySourceItem sourceItem)
-                { Activate((data) => new Forms.Library.LibrarySource(sourceItem), sourceItem); }
+                { Activate((data) => new Forms.Library.LibrarySource() { DataKey = new LibrarySourceKey(sourceItem)}, sourceItem); }
 
                 if (dataNode is ILibraryMemberItem memberItem)
-                { Activate((data) => new Forms.Library.LibraryMember(memberItem), memberItem); }
+                { Activate((data) => new Forms.Library.LibraryMember() { DataKey = new LibraryMemberKey(memberItem) }, memberItem); }
             }
         }
         #endregion

@@ -17,34 +17,20 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbTable : ApplicationBase, IApplicationDataForm
+    partial class DbTable : ApplicationBase<DbTableKey>
     {
-        public DbTableKey DataKey { get; private set; }
-
         public DbTable() : base()
         {
             InitializeComponent();
             this.Icon = Resources.Icon_Table;
-            DataKey = new DbTableKey(new DbTableItem());
         }
-
-        public DbTable(IDbTableKey tableItem) : this()
-        {
-            DataKey = new DbTableKey(tableItem);
-            this.Text = DataKey.ToString();
-        }
-
-        public Boolean IsOpenItem(Object? item)
-        { return DataKey.Equals(item); }
 
         private void DbTable_Load(object sender, EventArgs e)
         { BindData(); }
 
-        void BindData()
+        protected override bool BindDataCore()
         {
-            DbTableItem? data = Program.Data.DbTables.FirstOrDefault(w => DataKey == new DbTableKey(w));
-
-            if (data is not null)
+            if (Program.Data.DbTables.FirstOrDefault(w => DataKey == new DbTableKey(w)) is DbTableItem data)
             {
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.CatalogName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
@@ -60,10 +46,13 @@ namespace DataDictionary.Main.Forms.Database
 
                 tableConstraintData.AutoGenerateColumns = false;
                 tableConstraintData.DataSource = new BindingView<DbConstraintItem>(Program.Data.DbConstraints, w => DataKey.Equals(w));
+
+                return true;
             }
+            else { return false; }
         }
 
-        void UnBindData()
+        protected override void UnbindDataCore()
         {
             catalogNameData.DataBindings.Clear();
             schemaNameData.DataBindings.Clear();
@@ -75,18 +64,10 @@ namespace DataDictionary.Main.Forms.Database
             tableColumnsData.DataSource = null;
         }
 
-        #region IColleague
-        protected override void HandleMessage(DbDataBatchStarting message)
-        { UnBindData(); }
-
-        protected override void HandleMessage(DbDataBatchCompleted message)
-        { BindData(); }
-        #endregion
-
         private void tableColumnsData_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (tableColumnsData.Rows[e.RowIndex].DataBoundItem is DbTableColumnItem columnItem)
-            { Activate((data) => new Forms.Database.DbTableColumn(columnItem), columnItem); }
+            { Activate((data) => new Forms.Database.DbTableColumn() { DataKey = new DbTableColumnKey(columnItem) }, columnItem); }
         }
     }
 }

@@ -70,35 +70,35 @@ namespace DataDictionary.Main.Dialogs
 
         private void loadCommand_Click(object sender, EventArgs e)
         {
-            SendMessage(new DbDataBatchStarting());
+            SendMessage(new DoUnbindData());
             UnBindData();
             this.DoWork(Program.Data.LoadModel(currentKey), onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
                 BindData();
-                SendMessage(new DbDataBatchCompleted());
+                SendMessage(new DoBindData());
                 SelectionChanged(modelList, EventArgs.Empty);
             }
         }
 
         private void deleteCommand_Click(object sender, EventArgs e)
         {
-            SendMessage(new DbDataBatchStarting());
+            SendMessage(new DoUnbindData());
             UnBindData();
             this.DoWork(Program.Data.DeleteModel(currentKey), onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
                 BindData();
-                SendMessage(new DbDataBatchCompleted());
+                SendMessage(new DoBindData());
                 SelectionChanged(modelList, EventArgs.Empty);
             }
         }
 
         private void saveCommand_Click(object sender, EventArgs e)
         {
-            SendMessage(new DbDataBatchStarting());
+            SendMessage(new DoUnbindData());
             UnBindData();
             this.DoWork(Program.Data.SaveModel(), onCompleting);
 
@@ -109,11 +109,11 @@ namespace DataDictionary.Main.Dialogs
 
                 if (args.Error is null)
                 { this.DoWork(Program.Data.LoadModel(currentKey), onCompletingLoad); }
-                else { BindData(); SendMessage(new DbDataBatchCompleted()); }
+                else { BindData(); SendMessage(new DoBindData()); }
             }
 
             void onCompletingLoad(RunWorkerCompletedEventArgs args)
-            { BindData(); SendMessage(new DbDataBatchCompleted()); }
+            { BindData(); SendMessage(new DoBindData()); }
         }
 
         private void SelectionChanged(object? sender, EventArgs e)
@@ -158,10 +158,10 @@ namespace DataDictionary.Main.Dialogs
         }
 
         #region IColleague
-        protected override void HandleMessage(DbDataBatchStarting message)
+        protected void HandleMessage(DoUnbindData message)
         { UnBindData(); }
 
-        protected override void HandleMessage(DbDataBatchCompleted message)
+        protected void HandleMessage(DoBindData message)
         { BindData(); }
         #endregion
 
