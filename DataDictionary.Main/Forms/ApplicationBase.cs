@@ -17,10 +17,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms
 {
-    interface IApplicationDataForm
-    {
-        Boolean IsOpenItem(Object? Item);
-    }
+
 
     partial class ApplicationBase : Form, IColleague
     {
