@@ -42,6 +42,13 @@ namespace DataDictionary.Main.Forms.Library
                 asseblyNameData.DataBindings.Add(new Binding(nameof(asseblyNameData.Text), sourceItem, nameof(sourceItem.AssemblyName)));
                 sourceFileNameData.DataBindings.Add(new Binding(nameof(sourceFileNameData.Text), sourceItem, nameof(sourceItem.SourceFile)));
                 sourceFileDate.DataBindings.Add(new Binding(nameof(sourceFileDate.Text), sourceItem, nameof(sourceItem.SourceDate)));
+
+                this.UnLockForm();
+            }
+            else
+            {
+                this.LockForm(false);
+                this.Text = "[Key Not Found]";
             }
         }
 

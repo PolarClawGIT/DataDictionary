@@ -70,8 +70,6 @@ namespace DataDictionary.Main.Forms.Database
 
         void UnBindData()
         {
-            this.LockForm();
-
             catalogNameData.DataBindings.Clear();
             schemaNameData.DataBindings.Clear();
             routineNameData.DataBindings.Clear();

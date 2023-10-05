@@ -2,6 +2,7 @@
 using DataDictionary.DataLayer.LibraryData.Source;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,35 +12,79 @@ namespace DataDictionary.Main.Forms.Library
 {
     partial class LibraryManager
     {
-        class LibraryManagerItem : LibrarySourceItem
+        class LibraryManagerItem : ILibrarySourceItem
         {
             private bool inModel = false;
             private bool inDatabase = false;
+            private LibrarySourceItem data;
 
-            public Boolean InModel { get { return inModel; } set { inModel = value; OnPropertyChanged(nameof(InModel)); } }
-            public Boolean InDatabase { get { return inDatabase; } set { inDatabase = value; OnPropertyChanged(nameof(InDatabase)); } }
-            public LibraryManagerItem() : base() { }
+            public Guid? LibraryId
+            { get { return data.LibraryId; } }
 
-            public LibraryManagerItem(LibrarySourceItem source) : this()
+            public string? LibraryTitle
             {
-                this.LibraryId = source.LibraryId;
-                this.LibraryTitle = source.LibraryTitle;
-                this.LibraryDescription = source.LibraryDescription;
-                this.SourceFile = source.SourceFile;
-                this.SourceDate = source.SourceDate;
-                this.AssemblyName = source.AssemblyName;
+                get { return data.LibraryTitle; }
+                set { data.LibraryTitle = value; OnPropertyChanged(nameof(LibraryTitle)); }
+            }
+
+            public string? LibraryDescription
+            {
+                get { return data.LibraryDescription; }
+                set { data.LibraryDescription = value; OnPropertyChanged(nameof(LibraryDescription)); }
+            }
+
+            public string? SourceFile
+            {
+                get { return data.SourceFile; }
+                set { data.SourceFile = value; OnPropertyChanged(nameof(SourceFile)); }
+            }
+
+            public DateTime? SourceDate
+            {
+                get { return data.SourceDate; }
+                set { data.SourceDate = value; OnPropertyChanged(nameof(SourceDate)); }
+            }
+
+            public string? AssemblyName
+            {
+                get { return data.AssemblyName; }
+                set { data.AssemblyName = value; OnPropertyChanged(nameof(AssemblyName)); }
+            }
+
+            public Boolean InModel
+            {
+                get { return inModel; }
+                set { inModel = value; OnPropertyChanged(nameof(InModel)); }
+            }
+
+            public Boolean InDatabase
+            {
+                get { return inDatabase; }
+                set { inDatabase = value; OnPropertyChanged(nameof(InDatabase)); }
             }
 
 
-            public LibrarySourceItem? Match(IEnumerable<LibrarySourceItem> items)
-            {
-                LibrarySourceKey key = new LibrarySourceKey(this);
-
-                return items.FirstOrDefault(w => key.Equals(w));
+            public LibraryManagerItem(LibrarySourceItem source) : base()
+            { data = source;
+                data.PropertyChanged += Data_PropertyChanged;
             }
+
+            private void Data_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+            {
+                if (!String.IsNullOrWhiteSpace(e.PropertyName))
+                { OnPropertyChanged(e.PropertyName); }
+            }
+
+            public event PropertyChangedEventHandler? PropertyChanged;
+            public virtual void OnPropertyChanged(string propertyName)
+            {
+                if (PropertyChanged is PropertyChangedEventHandler handler)
+                { handler(this, new PropertyChangedEventArgs(propertyName)); }
+            }
+
         }
 
-        class LibraryManagerCollection : LibrarySourceCollection<LibraryManagerItem>
+        class LibraryManagerCollection : BindingList<LibraryManagerItem>
         {
 
             public void Build(IEnumerable<LibrarySourceItem> modelItems, IEnumerable<LibrarySourceItem> dbItems)
