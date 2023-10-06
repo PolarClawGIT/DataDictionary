@@ -122,6 +122,7 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
+            browseCatalogsToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
@@ -433,10 +434,9 @@
             // 
             // dbSchemaContextMenu
             // 
-            dbSchemaContextMenu.Items.AddRange(new ToolStripItem[] { menuCatalogItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineDependencyItem });
+            dbSchemaContextMenu.Items.AddRange(new ToolStripItem[] { menuCatalogItem, browseCatalogsToolStripMenuItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineDependencyItem });
             dbSchemaContextMenu.Name = "dbSchemacontextMenu";
-            dbSchemaContextMenu.OwnerItem = manageDatabasesCommand;
-            dbSchemaContextMenu.Size = new Size(234, 268);
+            dbSchemaContextMenu.Size = new Size(234, 290);
             // 
             // menuCatalogItem
             // 
@@ -556,7 +556,7 @@
             dataSourceNavigation.Name = "dataSourceNavigation";
             dataSourceNavigation.Size = new Size(198, 354);
             dataSourceNavigation.TabIndex = 0;
-            dataSourceNavigation.NodeMouseDoubleClick += dbMetaDataNavigation_NodeMouseDoubleClick;
+            dataSourceNavigation.NodeMouseDoubleClick += dataSourceNavigation_NodeMouseDoubleClick;
             // 
             // navigationSpliter
             // 
@@ -912,6 +912,14 @@
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
             // 
+            // browseCatalogsToolStripMenuItem
+            // 
+            browseCatalogsToolStripMenuItem.Image = Properties.Resources.Database;
+            browseCatalogsToolStripMenuItem.Name = "browseCatalogsToolStripMenuItem";
+            browseCatalogsToolStripMenuItem.Size = new Size(233, 22);
+            browseCatalogsToolStripMenuItem.Text = "Browse Catalogs";
+            browseCatalogsToolStripMenuItem.Click += browseCatalogsToolStripMenuItem_Click;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1051,5 +1059,6 @@
         private ToolStripSplitButton manageLibrariesCommand;
         private ToolStripMenuItem viewLibrarySourceCommand;
         private ToolStripMenuItem viewLiebraryMemberCommand;
+        private ToolStripMenuItem browseCatalogsToolStripMenuItem;
     }
 }

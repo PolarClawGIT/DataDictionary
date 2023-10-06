@@ -38,6 +38,7 @@ namespace DataDictionary.Main
             ScalarFunction,
             TableFunction,
             Parameter,
+            Dependencies,
             Dependency,
             // Class
             Library,
@@ -69,6 +70,7 @@ namespace DataDictionary.Main
             {dbDataImageIndex.ScalarFunction,   ("ScalarFunction",   Resources.ScalarFunction) },
             {dbDataImageIndex.TableFunction,    ("TableFunction",    Resources.TableFunction) },
             {dbDataImageIndex.Parameter,        ("Parameter",        Resources.Parameter) },
+            {dbDataImageIndex.Dependencies,     ("Dependencies",       Resources.Dependancy) },
             {dbDataImageIndex.Dependency,       ("Dependency",       Resources.Dependancy) },
 
             {dbDataImageIndex.Library,          ("Library",          Resources.Library) },
@@ -174,9 +176,14 @@ namespace DataDictionary.Main
                             w => routineKey.Equals(w)).OrderBy(o => o.OrdinalPosition))
                         { CreateNode(routineParameter.ParameterName, dbDataImageIndex.Parameter, routineParameter, routineNode); }
 
+                        TreeNode? routineDependenciesNode = null;
+
                         foreach (DbRoutineDependencyItem routineDependency in Program.Data.DbRoutineDependencies.Where(
                             w => routineKey.Equals(w)))
                         {
+                            if (routineDependenciesNode is null)
+                            { routineDependenciesNode = CreateNode("Dependencies", dbDataImageIndex.Dependencies, null, routinesNode); }
+
                             String nameValue = String.Format("{0}", routineDependency.ReferenceSchemaName);
 
                             if (!String.IsNullOrWhiteSpace(routineDependency.ReferenceObjectName))
@@ -185,7 +192,7 @@ namespace DataDictionary.Main
                             if (!String.IsNullOrWhiteSpace(routineDependency.ReferenceColumnName))
                             { nameValue = String.Format("{0}.{1}", nameValue, routineDependency.ReferenceColumnName); }
 
-                            CreateNode(nameValue, dbDataImageIndex.Dependency, routineDependency, routineNode);
+                            CreateNode(nameValue, dbDataImageIndex.Dependency, routineDependency, routineDependenciesNode);
                         }
                     }
 
@@ -306,11 +313,11 @@ namespace DataDictionary.Main
             }
         }
 
-        private void dbMetaDataNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void dataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (dbDataNodes.ContainsKey(e.Node))
+            if (dbDataNodes.ContainsKey(dataSourceNavigation.SelectedNode))
             {
-                Object dataNode = dbDataNodes[e.Node];
+                Object dataNode = dbDataNodes[dataSourceNavigation.SelectedNode];
 
                 if (dataNode is IDbSchemaItem schemaItem)
                 { Activate((data) => new Forms.Database.DbSchema() { DataKey = new DbSchemaKey(schemaItem) }, schemaItem); }
@@ -327,14 +334,14 @@ namespace DataDictionary.Main
                 if (dataNode is IDbRoutineItem routineItem)
                 { Activate((data) => new Forms.Database.DbRoutine() { DataKey = new DbRoutineKey(routineItem) }, routineItem); }
 
-                if (dataNode is DbRoutineParameterItem routineParameterItem)
+                if (dataNode is IDbRoutineParameterItem routineParameterItem)
                 { Activate((data) => new Forms.Database.DbRoutineParameter() { DataKey = new DbRoutineParameterKey(routineParameterItem) }, routineParameterItem); }
 
                 if (dataNode is IDbDomainItem domainItem)
                 { Activate((data) => new Forms.Database.DbDomain() { DataKey = new DbDomainKey(domainItem) }, domainItem); }
 
                 if (dataNode is ILibrarySourceItem sourceItem)
-                { Activate((data) => new Forms.Library.LibrarySource() { DataKey = new LibrarySourceKey(sourceItem)}, sourceItem); }
+                { Activate((data) => new Forms.Library.LibrarySource() { DataKey = new LibrarySourceKey(sourceItem) }, sourceItem); }
 
                 if (dataNode is ILibraryMemberItem memberItem)
                 { Activate((data) => new Forms.Library.LibraryMember() { DataKey = new LibraryMemberKey(memberItem) }, memberItem); }

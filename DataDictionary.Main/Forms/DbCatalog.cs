@@ -10,8 +10,11 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DbCatalog : ApplicationBase
+    partial class DbCatalog : ApplicationBase, IApplicationDataBind
     {
+        public bool IsOpenItem(object? item)
+        { return true; }
+
         class FormData : INotifyPropertyChanged
         {
             private string? serverName;
@@ -129,10 +132,10 @@ namespace DataDictionary.Main.Forms
 
             // Data Binding
             if (availableContexts.Count > 0) { data.DbContext = availableContexts[0]; }
-            BindData();
+            (this as IApplicationDataBind).BindData();
         }
 
-        void BindData()
+        public bool BindDataCore()
         {
             dbConnectionsData.AutoGenerateColumns = false;
             dbConnectionsData.DataSource = Program.Data.DbCatalogs;
@@ -150,9 +153,11 @@ namespace DataDictionary.Main.Forms
                 context.ServerName == data.ServerName &&
                 context.DatabaseName == data.DatabaseName).FirstOrDefault() is DataGridViewRow row)
             { row.Selected = true; }
+
+            return true;
         }
 
-        void UnBindData()
+        public void UnbindDataCore()
         {
             dbConnectionsData.DataSource = null;
 
@@ -189,7 +194,7 @@ namespace DataDictionary.Main.Forms
             BindingTable<DbDatabaseItem> databaseNames = new BindingTable<DbDatabaseItem>();
 
             if (data.DbContext is DbSchemaContext)
-            { this.DoWork(data.DbContext.GetDatabaseSchema(databaseNames), onComplete) ; }
+            { this.DoWork(data.DbContext.GetDatabaseSchema(databaseNames), onComplete); }
 
             void onComplete(RunWorkerCompletedEventArgs result)
             {
@@ -217,7 +222,7 @@ namespace DataDictionary.Main.Forms
 
         private void importCommand_Click(object sender, EventArgs e)
         {
-            UnBindData();
+            (this as IApplicationDataBind).UnbindData();
             SendMessage(new DoUnbindData());
 
             if (data.DbContext is DbSchemaContext)
@@ -246,7 +251,7 @@ namespace DataDictionary.Main.Forms
 
                 // Done
                 SendMessage(new DoBindData());
-                BindData();
+                (this as IApplicationDataBind).BindData();
 
                 // Because other forms can sometimes get focus during data binding
                 if (ParentForm is Form parent && ParentForm.ActiveMdiChild != this) { this.Activate(); }
@@ -257,7 +262,7 @@ namespace DataDictionary.Main.Forms
         {
             this.UseWaitCursor = true;
             this.Enabled = false;
-            UnBindData();
+            (this as IApplicationDataBind).UnbindData();
             SendMessage(new DoUnbindData());
 
 
@@ -267,7 +272,7 @@ namespace DataDictionary.Main.Forms
             void onComplete(RunWorkerCompletedEventArgs result)
             {
                 SendMessage(new DoBindData());
-                BindData();
+                (this as IApplicationDataBind).BindData();
                 this.UseWaitCursor = false;
                 this.Enabled = true;
             }
@@ -290,6 +295,7 @@ namespace DataDictionary.Main.Forms
                 }
             }
         }
+
 
         #region IColleague
         #endregion

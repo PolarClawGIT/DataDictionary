@@ -20,7 +20,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main
 {
-    partial class Main : ApplicationBase
+    partial class Main : ApplicationBase, IApplicationDataBind
     {
 
         #region Static Data
@@ -36,13 +36,15 @@ namespace DataDictionary.Main
         };
         #endregion
 
+        public bool IsOpenItem(object? item)
+        { return true; }
+
         public Main() : base()
         {
             InitializeComponent();
             Icon = Resources.Icon_Application;
             toolStrip.Hide(); // Hide base ToolStrip
-            menuStrip.Enabled = false;
-            navigationTabs.Enabled = false;
+            (this as IApplicationDataBind).IsLocked = true;
 
             // Setup Images for Tree Control
             SetImages(dataSourceNavigation, dbDataImageItems.Values);
@@ -79,11 +81,11 @@ namespace DataDictionary.Main
                     Settings.Default.Save();
                     this.DoWork(Program.Data.LoadApplicationData(new FileInfo(Settings.Default.AppDataFile)), OnComplete);
                 }
-                else if (args.Error is null) { BindData(); }
+                else if (args.Error is null) { (this as IApplicationDataBind).BindData(); }
             }
         }
 
-        void BindData()
+        public bool BindDataCore()
         {
             modelNameData.DataBindings.Add(new Binding(nameof(modelNameData.Text), Program.Data.Model, nameof(Program.Data.Model.ModelTitle)));
             modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), Program.Data.Model, nameof(Program.Data.Model.ModelDescription)));
@@ -91,11 +93,10 @@ namespace DataDictionary.Main
             BuildDataSourcesTree();
             BuildDomainModelTreeByAttribute();
 
-            menuStrip.Enabled = true;
-            navigationTabs.Enabled = true;
+            return true;
         }
 
-        void UnbindData()
+        public void UnbindDataCore()
         {
             modelNameData.DataBindings.Clear();
             modelDescriptionData.DataBindings.Clear();
@@ -199,17 +200,17 @@ namespace DataDictionary.Main
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UnbindData();
+            (this as IApplicationDataBind).UnbindData();
             Program.Data.Clear();
             Program.Data.NewModel();
-            BindData();
+            (this as IApplicationDataBind).BindData();
         }
 
         private void cloneModelMenuItem_Click(object sender, EventArgs e)
         {
-            UnbindData();
+            (this as IApplicationDataBind).UnbindData();
             Program.Data.NewModel();
-            BindData();
+            (this as IApplicationDataBind).BindData();
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -279,5 +280,10 @@ namespace DataDictionary.Main
 
         private void manageDatabasesCommand_ButtonClick(object sender, EventArgs e)
         { Activate(() => new Forms.Database.DatabaseManager()); }
+
+        private void browseCatalogsToolStripMenuItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Database), Program.Data.DbCatalogs); }
+
+
     }
 }

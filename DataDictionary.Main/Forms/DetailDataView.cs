@@ -2,20 +2,12 @@
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DetailDataView : ApplicationBase, IApplicationDataForm
+    partial class DetailDataView : ApplicationBase, IApplicationDataBind
     {
         public IBindingTable? bindingTableSource { get; private set; }
 
@@ -37,10 +29,11 @@ namespace DataDictionary.Main.Forms
 
         private void BindingDataView_Load(object sender, EventArgs e)
         {
-            BindData();
+            (this as IApplicationDataBind).BindData();
         }
 
-        void BindData()
+
+        public bool BindDataCore()
         {
             if (bindingTableSource is IBindingTable value)
             {
@@ -50,10 +43,12 @@ namespace DataDictionary.Main.Forms
                     data.Load(bindingTableSource.CreateDataReader());
                     dataTableValue.DataSource = data;
                 }
+                return true;
             }
+            else { return false; }
         }
 
-        void UnBindData()
+        public void UnbindDataCore()
         {
             bindingTableValue.DataSource = null;
             dataTableValue.DataSource = null;
@@ -74,5 +69,6 @@ namespace DataDictionary.Main.Forms
             { Activate((data) => new Forms.Domain.DomainAttribute() { DataKey = new DomainAttributeKey(attributeItem)}, attributeItem); }
 
         }
+
     }
 }
