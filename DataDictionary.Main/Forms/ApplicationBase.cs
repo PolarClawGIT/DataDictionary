@@ -67,23 +67,17 @@ namespace DataDictionary.Main.Forms
         {
             Form parent = MdiParent ?? this;
 
-            if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
+            if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm &&
+                existingForm is IApplicationDataForm existingData &&
+                existingData.IsOpenItem(data))
             {
-                if (existingForm is IApplicationDataForm existingData && existingData.IsOpenItem(data))
-                { existingForm.Activate(); }
-                else
-                {
-                    TForm newForm = constructor(data);
-                    newForm.MdiParent = parent;
-                    newForm.Show();
-                    return newForm;
-                }
-
+                existingForm.Activate();
                 return existingForm;
             }
             else
             {
                 TForm newForm = constructor(data);
+                newForm.MdiParent = parent;
                 newForm.Show();
                 return newForm;
             }
@@ -102,22 +96,17 @@ namespace DataDictionary.Main.Forms
         {
             Form parent = MdiParent ?? this;
 
-            if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
+            if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm &&
+                existingForm is IApplicationDataForm existingData &&
+                existingData.IsOpenItem(data))
             {
-                if (existingForm is IApplicationDataForm existingData && existingData.IsOpenItem(data))
-                { existingForm.Activate(); }
-                else
-                {
-                    TForm newForm = constructor(data);
-                    newForm.Show();
-                    return newForm;
-                }
-
-                return existingForm;
+                existingForm.Activate();
+                return existingForm; 
             }
             else
             {
                 TForm newForm = constructor(data);
+                newForm.MdiParent = parent;
                 newForm.Show();
                 return newForm;
             }

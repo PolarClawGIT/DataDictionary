@@ -182,7 +182,7 @@ namespace DataDictionary.Main
                             w => routineKey.Equals(w)))
                         {
                             if (routineDependenciesNode is null)
-                            { routineDependenciesNode = CreateNode("Dependencies", dbDataImageIndex.Dependencies, null, routinesNode); }
+                            { routineDependenciesNode = CreateNode("Dependencies", dbDataImageIndex.Dependencies, null, routineNode); }
 
                             String nameValue = String.Format("{0}", routineDependency.ReferenceSchemaName);
 
