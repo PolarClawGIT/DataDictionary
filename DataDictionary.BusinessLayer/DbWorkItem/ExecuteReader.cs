@@ -26,6 +26,11 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         }
 
         protected override void Work()
-        { Target.Load(connection.ExecuteReader(Command(connection))); }
+        {
+            base.Work();
+            Command command = Command(connection);
+            try { Target.Load(connection.ExecuteReader(command)); }
+            catch (Exception ex) { ex.Data.Add("Command", command.CommandText); throw; }
+        }
     }
 }

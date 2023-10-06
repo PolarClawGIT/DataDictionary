@@ -27,7 +27,9 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         protected override void Work()
         {
             base.Work();
-            Target.Load(Connection.GetReader(Collection));
+
+            try { Target.Load(Connection.GetReader(Collection)); }
+            catch (Exception ex) { ex.Data.Add("Schema Collection", Collection.ToString()); throw; }
         }
     }
 }

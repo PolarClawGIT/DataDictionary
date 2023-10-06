@@ -23,8 +23,13 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
 
         protected override void Work()
         {
+            base.Work();
             Command command = Command(connection);
-            connection.ExecuteNonQuery(command);
+
+            try { connection.ExecuteNonQuery(command); }
+            catch (Exception ex) { ex.Data.Add("Command", command.CommandText); throw; }
+
+
         }
     }
 }
