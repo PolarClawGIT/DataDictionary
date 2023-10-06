@@ -138,9 +138,6 @@ namespace DataDictionary.Main
             //BuildDomainModelTree();
         }
 
-        private void menuAttributes_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Attribute), Program.Data.DomainAttributes); }
-
         private void menuAttributeProperties_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), Program.Data.DomainAttributeProperties); }
 
@@ -284,6 +281,7 @@ namespace DataDictionary.Main
         private void browseCatalogsToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Database), Program.Data.DbCatalogs); }
 
-
+        private void menuAttributes_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Attribute), Program.Data.DomainAttributes); }
     }
 }

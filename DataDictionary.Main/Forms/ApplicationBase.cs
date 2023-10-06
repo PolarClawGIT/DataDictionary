@@ -67,12 +67,13 @@ namespace DataDictionary.Main.Forms
         {
             Form parent = MdiParent ?? this;
 
-            if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm &&
-                existingForm is IApplicationDataForm existingData &&
-                existingData.IsOpenItem(data))
+            if (parent.MdiChildren.FirstOrDefault(w =>
+                w is TForm targetForm &&
+                targetForm is IApplicationDataForm dataForm &&
+                dataForm.IsOpenItem(data)) is ApplicationBase existingForm)
             {
                 existingForm.Activate();
-                return existingForm;
+                return (TForm)existingForm;
             }
             else
             {
@@ -96,12 +97,13 @@ namespace DataDictionary.Main.Forms
         {
             Form parent = MdiParent ?? this;
 
-            if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm &&
-                existingForm is IApplicationDataForm existingData &&
-                existingData.IsOpenItem(data))
+            if (parent.MdiChildren.FirstOrDefault(w =>
+                w is TForm targetForm &&
+                targetForm is IApplicationDataForm dataForm &&
+                dataForm.IsOpenItem(data)) is ApplicationBase existingForm)
             {
                 existingForm.Activate();
-                return existingForm; 
+                return (TForm)existingForm;
             }
             else
             {
