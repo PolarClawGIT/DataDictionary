@@ -3,8 +3,13 @@ using DataDictionary.Main.Properties;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbRoutineParameter : ApplicationBase<DbRoutineParameterKey>
+    partial class DbRoutineParameter : ApplicationBase, IApplicationDataForm<DbRoutineParameterKey>
     {
+        public required DbRoutineParameterKey DataKey { get; init; }
+
+        public bool IsOpenItem(object? item)
+        { return DataKey.Equals(item); }
+
         public DbRoutineParameter(): base()
         {
             InitializeComponent();
@@ -12,9 +17,9 @@ namespace DataDictionary.Main.Forms.Database
         }
 
         private void DbRoutineParameter_Load(object sender, EventArgs e)
-        { BindData(); }
+        { (this as IApplicationDataBind).BindData(); }
 
-        protected override bool BindDataCore()
+        public bool BindDataCore()
         {
             if (Program.Data.DbRoutineParameters.FirstOrDefault(w => DataKey.Equals(w)) is DbRoutineParameterItem data)
             {
@@ -54,7 +59,7 @@ namespace DataDictionary.Main.Forms.Database
             else { return false; }
         }
 
-        protected override void UnbindDataCore()
+        public void UnbindDataCore()
         {
             catalogNameData.DataBindings.Clear();
             schemaNameData.DataBindings.Clear();

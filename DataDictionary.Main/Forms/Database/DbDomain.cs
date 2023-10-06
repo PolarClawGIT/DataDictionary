@@ -13,8 +13,13 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbDomain : ApplicationBase<DbDomainKey>
+    partial class DbDomain : ApplicationBase, IApplicationDataForm<DbDomainKey>
     {
+        public required DbDomainKey DataKey { get; init; }
+
+        public bool IsOpenItem(object? item)
+        { return DataKey.Equals(item); }
+
         public DbDomain() : base()
         {
             InitializeComponent();
@@ -22,9 +27,9 @@ namespace DataDictionary.Main.Forms.Database
         }
 
         private void DbDomain_Load(object sender, EventArgs e)
-        { BindData(); }
+        { (this as IApplicationDataBind).BindData(); }
 
-        protected override bool BindDataCore()
+        public bool BindDataCore()
         {
             if (Program.Data.DbDomains.FirstOrDefault(w => DataKey.Equals(w)) is DbDomainItem data)
             {
@@ -60,7 +65,7 @@ namespace DataDictionary.Main.Forms.Database
             { return false; }
         }
 
-        protected override void UnbindDataCore()
+        public void UnbindDataCore()
         {
             catalogNameData.DataBindings.Clear();
             schemaNameData.DataBindings.Clear();

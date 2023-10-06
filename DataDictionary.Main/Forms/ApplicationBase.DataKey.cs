@@ -5,43 +5,84 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.Control;
 
 namespace DataDictionary.Main.Forms
 {
+    /// <summary>
+    /// Base Interface for Application Data Forms.
+    /// </summary>
+    /// <remarks>This is a partial class that is intended to work with the ApplicationBase class.</remarks>
     interface IApplicationDataForm
     {
+        /// <summary>
+        /// Is the object passed the item the form is using for data.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         Boolean IsOpenItem(Object? item);
+
+        /// <summary>
+        ///  Collection of child controls.
+        /// </summary>
+        /// <remarks>Implemented by the Control class</remarks>
+        ControlCollection Controls { get; }
+
+        /// <summary>
+        /// Locks (disable) and Unlock (enable) the Form.
+        /// </summary>
+        /// <remarks>
+        /// True disables the top most controls and sets the Wait Cursor.
+        /// False enables the top most controls and clears the Wait Cursor.
+        /// </remarks>
+        Boolean IsLocked
+        {
+            get { return this.Controls.Cast<Control>().Any(w => w.HasChildren && w.Enabled); }
+            set
+            {
+                foreach (Control item in this.Controls.Cast<Control>().Where(w => w.HasChildren))
+                { item.Enabled = !value; }
+            }
+        }
+
+        /// <summary>
+        /// Controls the UseWaitCursor of the top most controls.
+        /// </summary>
+        /// <remarks>This is effected by the IsLocked but allows the application to override the current state of UseWaitCursor.</remarks>
+        Boolean IsWaitCursor
+        {
+            get { return this.Controls.Cast<Control>().Any(w => w.HasChildren && w.UseWaitCursor); }
+            set
+            {
+                foreach (Control item in this.Controls.Cast<Control>().Where(w => w.HasChildren))
+                { item.UseWaitCursor = value; }
+            }
+        }
+
     }
 
     /// <summary>
-    /// Application Base Class for Forms that have a DataKey.
+    /// Contains the Binding Methods
     /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    abstract class ApplicationBase<TKey>: ApplicationBase
-        where TKey: class, IKey
+    interface IApplicationDataBind: IApplicationDataForm
     {
-        public virtual required TKey DataKey { get; init; }
-
-        public virtual Boolean IsOpenItem(Object? item)
-        { return DataKey.Equals(item); }
+        /// <summary>
+        /// Perform the Binding of the Data for the form. Called by BindData.
+        /// </summary>
+        /// <returns>True if the binding was successful.</returns>
+        public Boolean BindDataCore();
 
         /// <summary>
-        /// Perform the Binding of Data. This is called by BindData();
+        /// Performs the Unbinding of the Data for the Form. Called by UnbindData.
         /// </summary>
-        /// <returns>True if the data was successfully completed data binding.</returns>
-        protected abstract Boolean BindDataCore();
-
-        /// <summary>
-        /// Perform the Unbinding of Data. This is called by UnbindData();
-        /// </summary>
-        protected abstract void UnbindDataCore();
+        public void UnbindDataCore();
 
         /// <summary>
         /// Calls BindDataCore() and locks or unlocks the form accordingly.
         /// </summary>
-        protected void BindData()
+        public void BindData()
         {
-            if (BindDataCore()) { IsLocked = false; }
+            if (BindDataCore()) { IsLocked = false; IsWaitCursor = false; }
             else
             {
                 IsLocked = true;
@@ -52,27 +93,26 @@ namespace DataDictionary.Main.Forms
         /// <summary>
         /// Class UnbindDataCore and locks the form.
         /// </summary>
-        protected void UnbindData()
+        public void UnbindData()
         {
             IsLocked = true;
+            IsWaitCursor = true;
             UnbindDataCore();
         }
 
-        /// <summary>
-        /// Message sent when all forms should call the UnBindData method.
-        /// This method call the UnbindData of all forms EXCEPT the form that sent the message.
-        /// </summary>
-        /// <param name="message"></param>
-        protected virtual void HandleMessage(DoUnbindData message)
-        { UnbindData(); }
+    }
 
+    /// <summary>
+    /// Interface for Application Data Forms.
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    interface IApplicationDataForm<TKey> : IApplicationDataBind
+        where TKey : class, IKey
+    {
         /// <summary>
-        /// Message sent when all forms should call the BindData method.
-        /// This method calls the BindData of all forms EXCEPT the form that sent the message.
+        /// Key used to get the Data for the Form.
         /// </summary>
-        /// <param name="message"></param>
-        protected virtual void HandleMessage(DoBindData message)
-        { BindData(); }
+        TKey DataKey { get; init; }
     }
 
 }

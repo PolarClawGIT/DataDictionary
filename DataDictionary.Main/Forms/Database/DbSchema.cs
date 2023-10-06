@@ -3,8 +3,13 @@ using DataDictionary.Main.Properties;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbSchema : ApplicationBase<DbSchemaKey>
+    partial class DbSchema : ApplicationBase, IApplicationDataForm<DbSchemaKey>
     {
+        public required DbSchemaKey DataKey { get; init; }
+
+        public bool IsOpenItem(object? item)
+        { return DataKey.Equals(item); }
+
         public DbSchema() : base()
         {
             InitializeComponent();
@@ -12,9 +17,9 @@ namespace DataDictionary.Main.Forms.Database
         }
 
         private void DbSchema_Load(object sender, EventArgs e)
-        { BindData(); }
+        { (this as IApplicationDataBind).BindData(); }
 
-        protected override bool BindDataCore()
+        public bool BindDataCore()
         {
             if (Program.Data.DbSchemta.FirstOrDefault(w => DataKey.Equals(w)) is DbSchemaItem data)
             {
@@ -33,7 +38,7 @@ namespace DataDictionary.Main.Forms.Database
             else { return false; }
         }
 
-        protected override void UnbindDataCore()
+        public void UnbindDataCore()
         {
             catalogNameData.DataBindings.Clear();
             schemaNameData.DataBindings.Clear();

@@ -18,47 +18,8 @@ using static System.Windows.Forms.Control;
 
 namespace DataDictionary.Main.Forms
 {
-    interface IApplicationBase
-    {
-        ControlCollection Controls { get; }
 
-        /// <summary>
-        /// Locks (disable) and Unlock (enable) the Form.
-        /// </summary>
-        /// <remarks>
-        /// True disables the top most controls and sets the Wait Cursor.
-        /// False enables the top most controls and clears the Wait Cursor.
-        /// </remarks>
-       Boolean IsLocked
-        {
-            get { return this.Controls.Cast<Control>().Any(w => w.HasChildren && w.Enabled); }
-            set
-            {
-                foreach (Control item in this.Controls.Cast<Control>().Where(w => w.HasChildren))
-                {
-                    item.Enabled = !value;
-                    item.UseWaitCursor = value;
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Controls the UseWaitCursor of the top most controls.
-        /// </summary>
-        /// <remarks>This is effected by the IsLocked but allows the application to override the current state of UseWaitCursor.</remarks>
-        Boolean IsWaitCursor
-        {
-            get { return this.Controls.Cast<Control>().Any(w => w.HasChildren && w.UseWaitCursor); }
-            set
-            {
-                foreach (Control item in this.Controls.Cast<Control>().Where(w => w.HasChildren))
-                { item.UseWaitCursor = value; }
-            }
-        }
-    }
-
-    abstract partial class ApplicationBase : Form, IColleague, IApplicationBase
+    partial class ApplicationBase : Form, IColleague
     {
         public ApplicationBase() : base()
         {
@@ -163,41 +124,6 @@ namespace DataDictionary.Main.Forms
         }
         #endregion
 
-
-        /// <summary>
-        /// Locks (disable) and Unlock (enable) the Form.
-        /// </summary>
-        /// <remarks>
-        /// True disables the top most controls and sets the Wait Cursor.
-        /// False enables the top most controls and clears the Wait Cursor.
-        /// </remarks>
-        protected virtual Boolean IsLocked
-        {
-            get { return this.Controls.Cast<Control>().Any(w => w.HasChildren && w.Enabled); }
-            set
-            {
-                foreach (Control item in this.Controls.Cast<Control>().Where(w => w.HasChildren))
-                {
-                    item.Enabled = !value;
-                    item.UseWaitCursor = value;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Controls the UseWaitCursor of the top most controls.
-        /// </summary>
-        /// <remarks>This is effected by the IsLocked but allows the application to override the current state of UseWaitCursor.</remarks>
-        protected virtual Boolean IsWaitCursor
-        {
-            get { return this.Controls.Cast<Control>().Any(w => w.HasChildren && w.UseWaitCursor); }
-            set
-            {
-                foreach (Control item in this.Controls.Cast<Control>().Where(w => w.HasChildren))
-                { item.UseWaitCursor = value; }
-            }
-        }
-
         /// <summary>
         /// Performs the list of work on a background thread.
         /// </summary>
@@ -248,6 +174,22 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         /// <param name="message"></param>
         protected virtual void HandleMessage(FormAddMdiChild message) { }
+
+        /// <summary>
+        /// Message sent when all forms should call the UnBindData method.
+        /// This method call the UnbindData of all forms EXCEPT the form that sent the message.
+        /// </summary>
+        /// <param name="message"></param>
+        protected virtual void HandleMessage(DoUnbindData message)
+        { if (this is IApplicationDataBind form) { form.UnbindData(); } }
+
+        /// <summary>
+        /// Message sent when all forms should call the BindData method.
+        /// This method calls the BindData of all forms EXCEPT the form that sent the message.
+        /// </summary>
+        /// <param name="message"></param>
+        protected virtual void HandleMessage(DoBindData message)
+        { if (this is IApplicationDataBind form) { form.BindData(); } }
 
         protected virtual void HandleMessage(DbApplicationBatchStarting message) { }
         protected virtual void HandleMessage(DbApplicationBatchCompleted message) { }

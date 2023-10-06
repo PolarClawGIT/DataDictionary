@@ -9,8 +9,13 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain
 {
-    partial class DomainAttribute : ApplicationBase<DomainAttributeKey>
+    partial class DomainAttribute : ApplicationBase, IApplicationDataForm<DomainAttributeKey>
     {
+        public required DomainAttributeKey DataKey { get; init; }
+
+        public bool IsOpenItem(object? item)
+        { return DataKey.Equals(item); }
+
         public DomainAttribute() : base()
         {
             InitializeComponent();
@@ -23,10 +28,10 @@ namespace DataDictionary.Main.Forms.Domain
             PropertyNameItem.Bind(propertyTypeData);
             PropertyNameItem.Bind(propertyTypeColumn);
 
-            BindData();
+            (this as IApplicationDataBind).BindData();
         }
 
-        protected override bool BindDataCore()
+        public bool BindDataCore()
         {
             if (Program.Data.DomainAttributes.FirstOrDefault(w => DataKey.Equals(w)) is DomainAttributeItem data)
             {
@@ -85,7 +90,7 @@ namespace DataDictionary.Main.Forms.Domain
             }
             else { return false; }
         }
-        protected override void UnbindDataCore()
+        public void UnbindDataCore()
         {
             attributeTitleData.DataBindings.Clear();
             attributeDescriptionData.DataBindings.Clear();
@@ -128,10 +133,10 @@ namespace DataDictionary.Main.Forms.Domain
 
         #region IColleague
         protected override void HandleMessage(DbApplicationBatchStarting message)
-        { UnbindData(); }
+        { (this as IApplicationDataBind).UnbindData(); }
 
         protected override void HandleMessage(DbApplicationBatchCompleted message)
-        { BindData(); }
+        { (this as IApplicationDataBind).BindData(); }
         #endregion
 
         private void catalogNameData_Validating(object sender, CancelEventArgs e)

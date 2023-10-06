@@ -9,16 +9,16 @@ using DataDictionary.DataLayer.ApplicationData.Model;
 
 namespace DataDictionary.Main.Dialogs
 {
-    partial class OpenSaveModelDatabase : ApplicationBase
+    partial class OpenSaveModelDatabase : ApplicationBase, IApplicationDataBind
     {
         ModelKey currentKey = new ModelKey(Program.Data.Model);
+        public Boolean IsOpenItem(Object? item) { return false; }
 
         public OpenSaveModelDatabase() : base()
         {
             InitializeComponent();
             this.Icon = Resources.Icon_SaveTable;
         }
-
 
         private void LoadModelFromDatabase_Load(object sender, EventArgs e)
         {
@@ -30,12 +30,12 @@ namespace DataDictionary.Main.Dialogs
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                BindData();
+                (this as IApplicationDataBind).BindData();
                 SelectionChanged(modelList, EventArgs.Empty);
             }
         }
 
-        void BindData()
+        public bool BindDataCore()
         {
             ModelItem currentModel = Program.Data.Model;
 
@@ -58,9 +58,10 @@ namespace DataDictionary.Main.Dialogs
             { currentKey = Program.Data.ModelKey; }
 
             modelList.SelectionChanged += SelectionChanged;
+            return true;
         }
 
-        void UnBindData()
+        public void UnbindDataCore()
         {
             modelTitleData.DataBindings.Clear();
             modelDescriptionData.DataBindings.Clear();
@@ -71,12 +72,12 @@ namespace DataDictionary.Main.Dialogs
         private void loadCommand_Click(object sender, EventArgs e)
         {
             SendMessage(new DoUnbindData());
-            UnBindData();
+            (this as IApplicationDataBind).UnbindData();
             this.DoWork(Program.Data.LoadModel(currentKey), onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                BindData();
+                (this as IApplicationDataBind).BindData();
                 SendMessage(new DoBindData());
                 SelectionChanged(modelList, EventArgs.Empty);
             }
@@ -85,12 +86,12 @@ namespace DataDictionary.Main.Dialogs
         private void deleteCommand_Click(object sender, EventArgs e)
         {
             SendMessage(new DoUnbindData());
-            UnBindData();
+            (this as IApplicationDataBind).UnbindData();
             this.DoWork(Program.Data.DeleteModel(currentKey), onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                BindData();
+                (this as IApplicationDataBind).BindData();
                 SendMessage(new DoBindData());
                 SelectionChanged(modelList, EventArgs.Empty);
             }
@@ -99,30 +100,29 @@ namespace DataDictionary.Main.Dialogs
         private void saveCommand_Click(object sender, EventArgs e)
         {
             SendMessage(new DoUnbindData());
-            UnBindData();
+            (this as IApplicationDataBind).UnbindData();
             this.DoWork(Program.Data.SaveModel(), onCompleting);
 
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
                 List<WorkItem> work = new List<WorkItem>();
-
                 if (args.Error is null)
                 { this.DoWork(Program.Data.LoadModel(currentKey), onCompletingLoad); }
-                else { BindData(); SendMessage(new DoBindData()); }
+                else { (this as IApplicationDataBind).BindData(); SendMessage(new DoBindData()); }
             }
 
             void onCompletingLoad(RunWorkerCompletedEventArgs args)
-            { BindData(); SendMessage(new DoBindData()); }
+            { (this as IApplicationDataBind).BindData(); SendMessage(new DoBindData()); }
         }
 
         private void SelectionChanged(object? sender, EventArgs e)
         {
             if (modelList.SelectedRows.Count > 0 && modelList.SelectedRows[0].DataBoundItem is ModelItem item)
             {
-                UnBindData();
+                (this as IApplicationDataBind).UnbindData();
                 currentKey = new ModelKey(item);
-                BindData();
+                (this as IApplicationDataBind).BindData();
             }
 
             if (currentKey == Program.Data.ModelKey)
@@ -156,15 +156,6 @@ namespace DataDictionary.Main.Dialogs
             { deleteCommand.Enabled = true; }
             else { deleteCommand.Enabled = false; }
         }
-
-        #region IColleague
-        protected void HandleMessage(DoUnbindData message)
-        { UnBindData(); }
-
-        protected void HandleMessage(DoBindData message)
-        { BindData(); }
-        #endregion
-
 
     }
 }

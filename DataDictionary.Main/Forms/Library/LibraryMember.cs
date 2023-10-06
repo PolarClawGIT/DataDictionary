@@ -15,8 +15,13 @@ using System.Xml.Linq;
 
 namespace DataDictionary.Main.Forms.Library
 {
-    partial class LibraryMember : ApplicationBase<LibraryMemberKey>
+    partial class LibraryMember : ApplicationBase, IApplicationDataForm<LibraryMemberKey>
     {
+        public required LibraryMemberKey DataKey { get; init; }
+
+        public bool IsOpenItem(object? item)
+        { return DataKey.Equals(item); }
+
         public LibraryMember() : base()
         {
             InitializeComponent();
@@ -24,9 +29,9 @@ namespace DataDictionary.Main.Forms.Library
         }
 
         private void LibraryMember_Load(object sender, EventArgs e)
-        { BindData(); }
+        { (this as IApplicationDataBind).BindData(); }
 
-        protected override bool BindDataCore()
+        public bool BindDataCore()
         {
             if (Program.Data.LibraryMembers.FirstOrDefault(w => DataKey.Equals(w)) is LibraryMemberItem memberItem)
             {
@@ -57,7 +62,7 @@ namespace DataDictionary.Main.Forms.Library
             else { return false; }
         }
 
-        protected override void UnbindDataCore()
+        public void UnbindDataCore()
         {
             memberNameSpaceData.DataBindings.Clear();
             memberNameData.DataBindings.Clear();

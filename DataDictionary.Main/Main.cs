@@ -252,8 +252,9 @@ namespace DataDictionary.Main
             { message.ChildForm.MdiParent = this; }
         }
 
-        protected void HandleMessage(DoUnbindData message)
+        protected override void HandleMessage(DoUnbindData message)
         {
+            //TODO: can a different event handle this?
             this.Controls[0].Focus();
             base.HandleMessage(message);
         }

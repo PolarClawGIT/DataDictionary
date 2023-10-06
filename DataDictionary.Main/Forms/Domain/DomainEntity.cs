@@ -16,8 +16,13 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain
 {
-    partial class DomainEntity : ApplicationBase<DomainEntityKey>
+    partial class DomainEntity : ApplicationBase, IApplicationDataForm<DomainEntityKey>
     {
+        public required DomainEntityKey DataKey { get; init; }
+
+        public bool IsOpenItem(object? item)
+        { return DataKey.Equals(item); }
+
         public DomainEntity() : base()
         {
             InitializeComponent();
@@ -30,10 +35,10 @@ namespace DataDictionary.Main.Forms.Domain
             PropertyNameItem.Bind(propertyTypeData);
             PropertyNameItem.Bind(propertyTypeColumn);
 
-            BindData();
+            (this as IApplicationDataBind).BindData();
         }
 
-        protected override bool BindDataCore()
+        public bool BindDataCore()
         {
             if (Program.Data.DomainEntities.FirstOrDefault(w => DataKey.Equals(w)) is DomainEntityItem data)
             {
@@ -95,7 +100,7 @@ namespace DataDictionary.Main.Forms.Domain
             else { return false; }
         }
 
-        protected override void UnbindDataCore()
+        public void UnbindDataCore()
         {
             entityTitleData.DataBindings.Clear();
             entityDescriptionData.DataBindings.Clear();
@@ -138,10 +143,10 @@ namespace DataDictionary.Main.Forms.Domain
 
         #region IColleague
         protected override void HandleMessage(DbApplicationBatchStarting message)
-        { UnbindData(); }
+        { (this as IApplicationDataBind).UnbindData(); }
 
         protected override void HandleMessage(DbApplicationBatchCompleted message)
-        { BindData(); }
+        { (this as IApplicationDataBind).BindData(); }
         #endregion
 
 

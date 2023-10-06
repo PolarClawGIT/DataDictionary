@@ -4,8 +4,12 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbConstraint : ApplicationBase<DbConstraintKey>
+    partial class DbConstraint : ApplicationBase, IApplicationDataForm<DbConstraintKey>
     {
+        public required DbConstraintKey DataKey { get; init; }
+
+        public bool IsOpenItem(object? item)
+        { return DataKey.Equals(item); }
 
         public DbConstraint() : base()
         {
@@ -14,9 +18,9 @@ namespace DataDictionary.Main.Forms.Database
         }
 
         private void DbConstraint_Load(object sender, EventArgs e)
-        { BindData(); }
-
-        protected override bool BindDataCore()
+        { (this as IApplicationDataBind).BindData(); }
+        
+        public Boolean BindDataCore()
         {
             if (Program.Data.DbConstraints.FirstOrDefault(w => DataKey.Equals(w)) is DbConstraintItem data)
             {
@@ -38,7 +42,7 @@ namespace DataDictionary.Main.Forms.Database
             else { return false; }
         }
 
-        protected override void UnbindDataCore()
+        public void UnbindDataCore()
         {
             catalogNameData.DataBindings.Clear();
             schemaNameData.DataBindings.Clear();
@@ -49,5 +53,7 @@ namespace DataDictionary.Main.Forms.Database
             extendedPropertiesData.DataSource = null;
             constraintColumnsData.DataSource = null;
         }
+
+
     }
 }

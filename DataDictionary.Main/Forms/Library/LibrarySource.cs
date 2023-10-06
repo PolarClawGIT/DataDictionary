@@ -4,8 +4,13 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Library
 {
-    partial class LibrarySource : ApplicationBase<LibrarySourceKey>
+    partial class LibrarySource : ApplicationBase, IApplicationDataForm<LibrarySourceKey>
     {
+        public required LibrarySourceKey DataKey { get; init; }
+
+        public bool IsOpenItem(object? item)
+        { return DataKey.Equals(item); }
+
         public LibrarySource() : base()
         {
             InitializeComponent();
@@ -13,9 +18,9 @@ namespace DataDictionary.Main.Forms.Library
         }
 
         private void LibrarySource_Load(object sender, EventArgs e)
-        { BindData(); }
+        { (this as IApplicationDataBind).BindData(); }
 
-        protected override Boolean BindDataCore()
+        public Boolean BindDataCore()
         {
             if (Program.Data.LibrarySources.FirstOrDefault(w => DataKey.Equals(w)) is LibrarySourceItem sourceItem)
             {
@@ -30,7 +35,7 @@ namespace DataDictionary.Main.Forms.Library
             else { return false; }
         }
 
-        protected override void UnbindDataCore()
+        public void UnbindDataCore()
         {
             libraryTitleData.DataBindings.Clear();
             libraryDescriptionData.DataBindings.Clear();

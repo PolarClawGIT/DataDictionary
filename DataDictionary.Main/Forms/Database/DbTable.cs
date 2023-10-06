@@ -17,8 +17,13 @@ using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbTable : ApplicationBase<DbTableKey>
+    partial class DbTable : ApplicationBase, IApplicationDataForm<DbTableKey>
     {
+        public required DbTableKey DataKey { get; init; }
+
+        public bool IsOpenItem(object? item)
+        { return DataKey.Equals(item); }
+
         public DbTable() : base()
         {
             InitializeComponent();
@@ -26,9 +31,9 @@ namespace DataDictionary.Main.Forms.Database
         }
 
         private void DbTable_Load(object sender, EventArgs e)
-        { BindData(); }
+        { (this as IApplicationDataBind).BindData(); }
 
-        protected override bool BindDataCore()
+        public bool BindDataCore()
         {
             if (Program.Data.DbTables.FirstOrDefault(w => DataKey == new DbTableKey(w)) is DbTableItem data)
             {
@@ -52,7 +57,7 @@ namespace DataDictionary.Main.Forms.Database
             else { return false; }
         }
 
-        protected override void UnbindDataCore()
+        public void UnbindDataCore()
         {
             catalogNameData.DataBindings.Clear();
             schemaNameData.DataBindings.Clear();

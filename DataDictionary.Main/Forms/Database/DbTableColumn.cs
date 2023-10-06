@@ -7,8 +7,13 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbTableColumn : ApplicationBase<DbTableColumnKey>
+    partial class DbTableColumn : ApplicationBase, IApplicationDataForm<DbTableColumnKey>
     {
+        public required DbTableColumnKey DataKey { get; init; }
+
+        public bool IsOpenItem(object? item)
+        { return DataKey.Equals(item); }
+
         public DbTableColumn() : base()
         {
             InitializeComponent();
@@ -16,9 +21,9 @@ namespace DataDictionary.Main.Forms.Database
         }
 
         private void DbColumn_Load(object sender, EventArgs e)
-        { BindData(); }
+        { (this as IApplicationDataBind).BindData(); }
 
-        protected override bool BindDataCore()
+        public bool BindDataCore()
         {
             if (Program.Data.DbTableColumns.FirstOrDefault(w => DataKey.Equals(w)) is DbTableColumnItem data)
             {
@@ -64,7 +69,7 @@ namespace DataDictionary.Main.Forms.Database
             else { return false; }
         }
 
-        protected override void UnbindDataCore()
+        public void UnbindDataCore()
         {
             catalogNameData.DataBindings.Clear();
             schemaNameData.DataBindings.Clear();
