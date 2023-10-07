@@ -49,16 +49,17 @@ namespace Toolbox.BindingTable.Tests
         }
 
         [TestMethod()]
-        public void BindingTable_CTOR_fromSource()
+        public void BindingTable_CopyData()
         {
-            BindingTable<TestItem> source = new BindingTable<TestItem>() { 
+            BindingTable<TestItem> source = new BindingTable<TestItem>() {
                 new TestItem(){ TestTitle="Test 1", TestDescription = "Test 1", IsFilter = false },
                 new TestItem(){ TestTitle="Test 2", TestDescription = "Test 2", IsFilter = true },
                 new TestItem(){ TestTitle="Test 3", TestDescription = "Test 3", IsFilter = false },
                 new TestItem(){ TestTitle="Test 4", TestDescription = "Test 4", IsFilter = true },
             };
 
-            BindingTable<TestItem> result = new BindingTable<TestItem>(source.Where(w => w.IsFilter == true));
+            BindingTable<TestItem> result = new BindingTable<TestItem>();
+            result.AddRange(source.Where(w => w.IsFilter == true));
 
             source.Clear(); // Get rid of source to show they are disconnected
 

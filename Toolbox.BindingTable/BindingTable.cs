@@ -15,6 +15,10 @@ namespace Toolbox.BindingTable
     /// The BindingTable represent a class that wrappers a DataTable and presents it as if it was a Binding List.
     /// </summary>
     /// <typeparam name="TBindingItem">the mapping class between the DataRow and the POCO like object used in code.</typeparam>
+    /// <remarks>
+    /// When an item is added to the collection, a copy of the original data row is used.
+    /// The added item then wrappers the copy of the row.
+    /// </remarks>
     public class BindingTable<TBindingItem> : BindingList<TBindingItem>, IBindingTable<TBindingItem>, IBindingList<TBindingItem>
         where TBindingItem : BindingTableRow, INotifyPropertyChanged, IBindingTableRow, new()
     {
@@ -55,23 +59,6 @@ namespace Toolbox.BindingTable
             this.AllowEdit = true;
             this.AllowNew = true;
             this.AllowRemove = true;
-        }
-
-        /// <summary>
-        /// Constructor that duplicates the source rows into a new BindingTable.
-        /// </summary>
-        /// <param name="source"></param>
-        public BindingTable(IEnumerable<TBindingItem> source) : this()
-        {
-            foreach (TBindingItem item in source)
-            {
-                DataRow row = item.GetRow();
-                TBindingItem newItem = new TBindingItem();
-                dataItems.ImportRow(row);
-                DataRow newRow = dataItems.Rows[dataItems.Rows.Count - 1];
-                newItem.SetRow(newRow);
-                Add(newItem);
-            }
         }
 
         #region DataTable Events
