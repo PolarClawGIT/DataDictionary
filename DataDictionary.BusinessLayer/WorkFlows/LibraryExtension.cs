@@ -273,19 +273,24 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
             if (data.LibrarySources.Count(w => library.Equals(w)) != 0)
             {
+                LibrarySourceCollection source = new LibrarySourceCollection();
+                LibraryMemberCollection members = new LibraryMemberCollection();
+                source.AddRange(data.LibrarySources.Where(w => library.Equals(w)));
+                members.AddRange(data.LibraryMembers.Where(w => library.Equals(w)));
+
                 DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
                 workItems.Add(openConnection);
 
                 workItems.Add(new ExecuteNonQuery(openConnection)
                 {
                     WorkName = "Save Library sources",
-                    Command = (conn) => data.LibrarySources.SaveCommand(conn, library)
+                    Command = (conn) => source.SaveCommand(conn, library)
                 });
 
                 workItems.Add(new ExecuteNonQuery(openConnection)
                 {
                     WorkName = "Save Library members",
-                    Command = (conn) => data.LibraryMembers.SaveCommand(conn, library)
+                    Command = (conn) => members.SaveCommand(conn, library)
                 });
             }
 
