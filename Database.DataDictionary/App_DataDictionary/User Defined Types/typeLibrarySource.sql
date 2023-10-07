@@ -5,6 +5,6 @@
 	[LibraryDescription]   [App_DataDictionary].[typeDescription] Null,
 	[AssemblyName]         NVarChar(1023) Null,
 	[SourceFile]           NVarChar(500) Null, 
-	[SourceDate]           DateTime Null,
-    [SysStart]             DATETIME2 (7)    NULL
+	[SourceDate]           DateTime2 (7) Null,
+    [SysStart]             DATETIME2 (7) NULL
 )

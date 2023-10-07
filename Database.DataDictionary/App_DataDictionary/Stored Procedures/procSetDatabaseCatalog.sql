@@ -22,8 +22,12 @@ Begin Try
 	Declare @Values [App_DataDictionary].[typeDatabaseCatalog]
 	Insert Into @Values
 	Select	Coalesce(P.[CatalogId], D.[CatalogId], NewId()) As [CatalogId],
+			NullIf(Trim(D.[CatalogTitle]),'') As [CatalogTitle],
+			NullIf(Trim(D.[CatalogDescription]),'') As [CatalogDescription],
 			NullIf(Trim(D.[CatalogName]),'') As [CatalogName],
 			NullIf(Trim(D.[SourceServerName]),'') As [SourceServerName],
+			NullIf(Trim(D.[SourceDatabaseName]),'') As [SourceDatabaseName],
+			D.[SourceDate],
 			D.[SysStart]
 	From	@Data D
 			Left Join [App_DataDictionary].[ModelCatalog] C
@@ -67,18 +71,30 @@ Begin Try
 	-- Apply Changes
 	With [Delta] As (
 		Select	[CatalogId],
+				[CatalogTitle],
+				[CatalogDescription],
 				[CatalogName],
-				[SourceServerName]
+				[SourceServerName],
+				[SourceDatabaseName],
+				[SourceDate]
 		From	@Values
 		Except
 		Select	[CatalogId],
+				[CatalogTitle],
+				[CatalogDescription],
 				[CatalogName],
-				[SourceServerName]
+				[SourceServerName],
+				[SourceDatabaseName],
+				[SourceDate]
 		From	[App_DataDictionary].[DatabaseCatalog]),
 	[Data] As (
 		Select	V.[CatalogId],
+				V.[CatalogTitle],
+				V.[CatalogDescription],
 				V.[CatalogName],
 				V.[SourceServerName],
+				V.[SourceDatabaseName],
+				V.[SourceDate],
 				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
@@ -87,11 +103,27 @@ Begin Try
 	Using [Data] As S
 	On	T.[CatalogId] = S.[CatalogId]
 	When Matched And S.[IsDiffrent] = 1 Then Update
-		Set	[CatalogName] = S.[CatalogName],
-			[SourceServerName] = S.[SourceServerName]
+		Set	[CatalogTitle] = S.[CatalogTitle],
+			[CatalogDescription] = S.[CatalogDescription],
+			[CatalogName] = S.[CatalogName],
+			[SourceServerName] = S.[SourceServerName],
+			[SourceDatabaseName] = S.[SourceDatabaseName],
+			[SourceDate] = S.[SourceDate]
 	When Not Matched by Target Then
-		Insert ([CatalogId], [CatalogName], [SourceServerName])
-		Values ([CatalogId], [CatalogName], [SourceServerName])
+		Insert ([CatalogId],
+				[CatalogTitle],
+				[CatalogDescription],
+				[CatalogName],
+				[SourceServerName],
+				[SourceDatabaseName],
+				[SourceDate])
+		Values ([CatalogId],
+				[CatalogTitle],
+				[CatalogDescription],
+				[CatalogName],
+				[SourceServerName],
+				[SourceDatabaseName],
+				[SourceDate])
 	When Not Matched by Source And T.[CatalogId] In (
 			Select	A.[CatalogId]
 			From	[App_DataDictionary].[ModelCatalog] A

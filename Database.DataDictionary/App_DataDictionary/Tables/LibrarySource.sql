@@ -11,7 +11,7 @@
 	[LibraryDescription] [App_DataDictionary].[typeDescription] Null,
 	[AssemblyName] NVarChar(1023) Not Null, -- Natural Key
 	[SourceFile] NVarChar(500) Not Null, 
-	[SourceDate] DateTime Not Null,
+	[SourceDate] DateTime2 (7) Not Null,
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_LibrarySource_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_LibrarySource_SysStart] DEFAULT (sysdatetime()),

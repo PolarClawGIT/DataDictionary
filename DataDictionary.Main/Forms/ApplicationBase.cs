@@ -40,10 +40,11 @@ namespace DataDictionary.Main.Forms
         {
             Form parent = MdiParent ?? this;
 
-            if (parent.MdiChildren.FirstOrDefault(w => w.GetType() == typeof(TForm)) is TForm existingForm)
+            if (parent.MdiChildren.FirstOrDefault(w =>
+                w is TForm targetForm) is ApplicationBase existingForm)
             {
                 existingForm.Activate();
-                return existingForm;
+                return (TForm)existingForm;
             }
             else
             {

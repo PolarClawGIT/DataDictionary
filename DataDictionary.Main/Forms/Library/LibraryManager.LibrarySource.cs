@@ -89,10 +89,11 @@ namespace DataDictionary.Main.Forms.Library
 
             public void Build(IEnumerable<LibrarySourceItem> modelItems, IEnumerable<LibrarySourceItem> dbItems)
             {
+                this.Clear();
+
                 // List of keys all keys
-                List<LibrarySourceKey> libraryKeys = modelItems.Select(s => new LibrarySourceKey(s))
+                List <LibrarySourceKey> libraryKeys = modelItems.Select(s => new LibrarySourceKey(s))
                     .Union(dbItems.Select(s => new LibrarySourceKey(s)))
-                    .Union(this.Select(s => new LibrarySourceKey(s)))
                     .ToList();
 
                 foreach (LibrarySourceKey libraryKey in libraryKeys)
