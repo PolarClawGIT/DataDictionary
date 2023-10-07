@@ -248,7 +248,7 @@ namespace DataDictionary.Main
                     // Create the Node Member (NameSpace node already created)
                     if (sourceNode.Nodes.Find(memberItem.MemberNameSpace, true).FirstOrDefault() is TreeNode nameSpaceNode)
                     {
-                        switch (memberItem.MemberItemType().type)
+                        switch (memberItem.ObjectType)
                         {
                             case LibraryMemberType.Type:
                                 CreateNode(memberItem.MemberName,
@@ -315,7 +315,7 @@ namespace DataDictionary.Main
 
         private void dataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (dataSourceNavigation.SelectedNode is TreeNode node && domainModelNodes.ContainsKey(node))
+            if (dataSourceNavigation.SelectedNode is TreeNode node && dbDataNodes.ContainsKey(node))
             {
                 Object dataNode = dbDataNodes[node];
 

@@ -73,7 +73,7 @@
             libraryTitleData.Name = "libraryTitleData";
             libraryTitleData.ReadOnly = false;
             libraryTitleData.Size = new Size(462, 44);
-            libraryTitleData.TabIndex = 1;
+            libraryTitleData.TabIndex = 0;
             libraryTitleData.Validating += libraryTitleData_Validating;
             // 
             // libraryDescriptionData
@@ -87,7 +87,7 @@
             libraryDescriptionData.Name = "libraryDescriptionData";
             libraryDescriptionData.ReadOnly = false;
             libraryDescriptionData.Size = new Size(462, 249);
-            libraryDescriptionData.TabIndex = 2;
+            libraryDescriptionData.TabIndex = 1;
             // 
             // asseblyNameData
             // 
@@ -100,7 +100,7 @@
             asseblyNameData.Name = "asseblyNameData";
             asseblyNameData.ReadOnly = true;
             asseblyNameData.Size = new Size(462, 44);
-            asseblyNameData.TabIndex = 3;
+            asseblyNameData.TabIndex = 2;
             asseblyNameData.Validating += asseblyNameData_Validating;
             // 
             // sourceFileNameData
@@ -113,7 +113,7 @@
             sourceFileNameData.Name = "sourceFileNameData";
             sourceFileNameData.ReadOnly = true;
             sourceFileNameData.Size = new Size(321, 44);
-            sourceFileNameData.TabIndex = 4;
+            sourceFileNameData.TabIndex = 3;
             // 
             // sourceFileDate
             // 
@@ -125,7 +125,7 @@
             sourceFileDate.Name = "sourceFileDate";
             sourceFileDate.ReadOnly = true;
             sourceFileDate.Size = new Size(135, 44);
-            sourceFileDate.TabIndex = 7;
+            sourceFileDate.TabIndex = 4;
             // 
             // errorProvider
             // 
