@@ -36,12 +36,7 @@ namespace Toolbox.BindingTable
             dataItems = new DataTable();
             dataItems.TableName = typeof(TBindingItem).Name;
             BindingName = typeof(TBindingItem).Name;
-            foreach (DataColumn item in new TBindingItem().ColumnDefinitions())
-            {
-                using (DataColumn column = new DataColumn(item.ColumnName, item.DataType)
-                { AllowDBNull = item.AllowDBNull, Caption = item.Caption, DefaultValue = item.DefaultValue, })
-                { dataItems.Columns.Add(column); }
-            }
+            dataItems.AddColumns(new TBindingItem().ColumnDefinitions());
 
             dataItems.Disposed += TableDisposed;
 
@@ -60,6 +55,23 @@ namespace Toolbox.BindingTable
             this.AllowEdit = true;
             this.AllowNew = true;
             this.AllowRemove = true;
+        }
+
+        /// <summary>
+        /// Constructor that duplicates the source rows into a new BindingTable.
+        /// </summary>
+        /// <param name="source"></param>
+        public BindingTable(IEnumerable<TBindingItem> source) : this()
+        {
+            foreach (TBindingItem item in source)
+            {
+                DataRow row = item.GetRow();
+                TBindingItem newItem = new TBindingItem();
+                dataItems.ImportRow(row);
+                DataRow newRow = dataItems.Rows[dataItems.Rows.Count - 1];
+                newItem.SetRow(newRow);
+                Add(newItem);
+            }
         }
 
         #region DataTable Events
@@ -132,7 +144,7 @@ namespace Toolbox.BindingTable
                             coloumMismatch.Data.Add(nameof(dataItems.TableName), dataItems.TableName);
                         }
 
-                        coloumMismatch.Data.Add(item, String.Format("Target- {0}, Source- {1}",dataItems.Columns.Contains(item), newData.Columns.Contains(item)));
+                        coloumMismatch.Data.Add(item, String.Format("Target- {0}, Source- {1}", dataItems.Columns.Contains(item), newData.Columns.Contains(item)));
                     }
                 }
 
@@ -155,7 +167,7 @@ namespace Toolbox.BindingTable
 
                     DataRow newRow = dataItems.Rows[(dataItems.Rows.Count - 1)]; // new rows is always added at the end
                     TBindingItem newItem = new TBindingItem();
-                    newItem.BindingTable = this;
+                    newItem.SetBindingTable(this);
                     newItem.SetRow(newRow);
                     this.Add(newItem);
                 }
@@ -279,7 +291,7 @@ namespace Toolbox.BindingTable
                 try
                 {
                     dataItems.ImportRow(addNewCoreItem.GetRow());
-                    addNewCoreItem.BindingTable = this;
+                    addNewCoreItem.SetBindingTable(this);
                     addNewCoreItem.SetRow(dataItems.Rows[dataItems.Rows.Count - 1]);
                 }
                 catch (Exception ex)
@@ -311,7 +323,7 @@ namespace Toolbox.BindingTable
                 if (!ReferenceEquals(itemRow.Table, dataItems) && !isAddNewCore)
                 {// Replace the row data with a copy that belongs to this table
                     dataItems.ImportRow(itemRow);
-                    item.BindingTable = this;
+                    item.SetBindingTable(this);
                     item.SetRow(dataItems.Rows[dataItems.Rows.Count - 1]);
                 }
             }

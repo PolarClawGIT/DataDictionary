@@ -31,5 +31,34 @@ namespace Toolbox.BindingTable
                 return data;
             }
         }
+
+
+    }
+
+    static class BindingPrivateExtension
+    {
+        /// <summary>
+        /// Adds columns to the target table, if the column does not already exist.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="columns"></param>
+        /// <param name="allowDBNull"></param>
+        public static void AddColumns(this DataTable target, IReadOnlyList<DataColumn> columns, Boolean? allowDBNull = null)
+        {
+            foreach (DataColumn item in columns)
+            {
+                using (DataColumn column = new DataColumn(item.ColumnName, item.DataType)
+                {
+                    AllowDBNull = item.AllowDBNull,
+                    Caption = item.Caption,
+                    DefaultValue = item.DefaultValue,
+                })
+                {
+                    if (allowDBNull is Boolean value) { column.AllowDBNull = value; }
+
+                    if (!target.Columns.Contains(column.ColumnName)) { target.Columns.Add(column); }
+                }
+            }
+        }
     }
 }

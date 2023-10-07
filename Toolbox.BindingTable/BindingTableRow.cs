@@ -36,10 +36,19 @@ namespace Toolbox.BindingTable
     [Serializable]
     public abstract class BindingTableRow : IBindingTableRow, ISerializable
     {
+        private IBindingTable? bindingTable;
+
         /// <summary>
         /// Reference to the Binding Table that owns this row.
         /// </summary>
-        public IBindingTable? BindingTable { get; protected internal set; }
+        protected internal IBindingTable? GetBindingTable()
+        { return bindingTable; }
+
+        /// <summary>
+        /// Reference to the Binding Table that owns this row.
+        /// </summary>
+        protected internal void SetBindingTable(IBindingTable? value)
+        { bindingTable = value; }
 
         /// <summary>
         /// A Column Definition of the underlining table.
@@ -69,12 +78,7 @@ namespace Toolbox.BindingTable
         {
             using (DataTable temp = new DataTable("Init_BindingTableRow"))
             {
-                foreach (DataColumn item in this.ColumnDefinitions())
-                {
-                    using (DataColumn column = new DataColumn(item.ColumnName, item.DataType)
-                    { AllowDBNull = true, Caption = item.Caption, DefaultValue = item.DefaultValue, })
-                    { temp.Columns.Add(column); }
-                }
+                temp.AddColumns(this.ColumnDefinitions(), true);
 
                 data = temp.NewRow();
                 temp.Rows.Add(data);
@@ -134,7 +138,7 @@ namespace Toolbox.BindingTable
             if (data is not DataRow row || row.RowState == DataRowState.Detached)
             {
                 Exception error = new InvalidOperationException("Internal DataRow is not defined");
-                if (BindingTable is not null) { error.Data.Add(nameof(BindingTable), BindingTable.BindingName); }
+                if (GetBindingTable() is not null) { error.Data.Add(nameof(GetBindingTable), GetBindingTable()); }
                 error.Data.Add(nameof(columnName), columnName);
                 throw error;
             }
@@ -163,7 +167,7 @@ namespace Toolbox.BindingTable
             if (data is not DataRow row || row.RowState == DataRowState.Detached)
             {
                 Exception error = new InvalidOperationException("Internal DataRow is not defined");
-                if (BindingTable is not null) { error.Data.Add(nameof(BindingTable), BindingTable.BindingName); }
+                if (GetBindingTable() is not null) { error.Data.Add(nameof(GetBindingTable), GetBindingTable()); }
                 error.Data.Add(nameof(columnName), columnName);
                 throw error;
             }
