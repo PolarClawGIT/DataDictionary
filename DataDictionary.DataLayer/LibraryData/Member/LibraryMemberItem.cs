@@ -35,7 +35,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     public class LibraryMemberItem : BindingTableRow, ILibraryMemberItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? LibraryId { get { return GetValue<Guid>("LibraryId"); } protected set { SetValue("LibraryId", value); } }
+        public Guid? LibraryId { get { return GetValue<Guid>("LibraryId"); } set { SetValue("LibraryId", value); } }
 
         /// <inheritdoc/>
         public string? AssemblyName { get { return GetValue("AssemblyName"); } set { SetValue("AssemblyName", value); } }

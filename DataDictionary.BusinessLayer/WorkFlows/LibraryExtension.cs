@@ -132,16 +132,16 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
                     if (xmlData.DocumentElement is XmlElement root)
                     {
-                        String assemblyName = String.Empty; // Surrogate key for Library
+                        //String assemblyName = String.Empty; // Surrogate key for Library
+                        LibrarySourceItem sourceItem; 
 
                         // Parse the Assembly Node
                         if (root.ChildNodes.Cast<XmlNode>().FirstOrDefault(w => w.Name == "assembly") is XmlNode assemblyNode)
                         {
-                            assemblyName = assemblyNode.InnerText;
-                            LibrarySourceItem sourceItem = new LibrarySourceItem()
+                            sourceItem = new LibrarySourceItem()
                             {
-                                LibraryTitle = assemblyName,
-                                AssemblyName = assemblyName,
+                                LibraryTitle = assemblyNode.InnerText,
+                                AssemblyName = assemblyNode.InnerText,
                                 SourceFile = file.Name,
                                 SourceDate = file.LastWriteTime
                             };
@@ -203,7 +203,8 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
                                     LibraryMemberItem memberItem = new LibraryMemberItem()
                                     {
-                                        AssemblyName = assemblyName,
+                                        LibraryId = sourceItem.LibraryId,
+                                        AssemblyName = sourceItem.AssemblyName,
                                         MemberName = memberName,
                                         MemberData = memberNode.InnerXml,
                                         MemberNameSpace = memberNameSpace,

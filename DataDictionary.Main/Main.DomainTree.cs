@@ -160,9 +160,9 @@ namespace DataDictionary.Main
 
         private void domainModelNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (domainModelNodes.ContainsKey(dataSourceNavigation.SelectedNode))
+            if (domainModelNavigation.SelectedNode is TreeNode node &&  domainModelNodes.ContainsKey(node))
             {
-                Object dataNode = domainModelNodes[dataSourceNavigation.SelectedNode];
+                Object dataNode = domainModelNodes[node];
 
                 if (dataNode is IDomainAttributeItem attributeItem)
                 { Activate((data) => new Forms.Domain.DomainAttribute() { DataKey = new DomainAttributeKey(attributeItem) }, attributeItem); }

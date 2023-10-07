@@ -315,9 +315,9 @@ namespace DataDictionary.Main
 
         private void dataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (dbDataNodes.ContainsKey(dataSourceNavigation.SelectedNode))
+            if (dataSourceNavigation.SelectedNode is TreeNode node && domainModelNodes.ContainsKey(node))
             {
-                Object dataNode = dbDataNodes[dataSourceNavigation.SelectedNode];
+                Object dataNode = dbDataNodes[node];
 
                 if (dataNode is IDbSchemaItem schemaItem)
                 { Activate((data) => new Forms.Database.DbSchema() { DataKey = new DbSchemaKey(schemaItem) }, schemaItem); }
