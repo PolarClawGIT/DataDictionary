@@ -39,34 +39,28 @@ namespace Database.DataDictionary.SqlUnitTest
         {
             Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction App_DataDictionary_procSetLibrarySource_Insert_TestAction;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(procSetLibrarySource));
+            Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.NotEmptyResultSetCondition notEmptyResultSetCondition2;
             Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction App_DataDictionary_procSetLibrarySource_Delete_TestAction;
             Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.NotEmptyResultSetCondition notEmptyResultSetCondition1;
             Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.EmptyResultSetCondition emptyResultSetCondition1;
-            Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.NotEmptyResultSetCondition notEmptyResultSetCondition2;
             this.App_DataDictionary_procSetLibrarySource_InsertData = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestActions();
             this.App_DataDictionary_procSetLibrarySource_DeleteData = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestActions();
             App_DataDictionary_procSetLibrarySource_Insert_TestAction = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction();
+            notEmptyResultSetCondition2 = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.NotEmptyResultSetCondition();
             App_DataDictionary_procSetLibrarySource_Delete_TestAction = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction();
             notEmptyResultSetCondition1 = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.NotEmptyResultSetCondition();
             emptyResultSetCondition1 = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.EmptyResultSetCondition();
-            notEmptyResultSetCondition2 = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.NotEmptyResultSetCondition();
-            // 
-            // App_DataDictionary_procSetLibrarySource_InsertData
-            // 
-            this.App_DataDictionary_procSetLibrarySource_InsertData.PosttestAction = null;
-            this.App_DataDictionary_procSetLibrarySource_InsertData.PretestAction = null;
-            this.App_DataDictionary_procSetLibrarySource_InsertData.TestAction = App_DataDictionary_procSetLibrarySource_Insert_TestAction;
             // 
             // App_DataDictionary_procSetLibrarySource_Insert_TestAction
             // 
             App_DataDictionary_procSetLibrarySource_Insert_TestAction.Conditions.Add(notEmptyResultSetCondition2);
             resources.ApplyResources(App_DataDictionary_procSetLibrarySource_Insert_TestAction, "App_DataDictionary_procSetLibrarySource_Insert_TestAction");
             // 
-            // App_DataDictionary_procSetLibrarySource_DeleteData
+            // notEmptyResultSetCondition2
             // 
-            this.App_DataDictionary_procSetLibrarySource_DeleteData.PosttestAction = null;
-            this.App_DataDictionary_procSetLibrarySource_DeleteData.PretestAction = null;
-            this.App_DataDictionary_procSetLibrarySource_DeleteData.TestAction = App_DataDictionary_procSetLibrarySource_Delete_TestAction;
+            notEmptyResultSetCondition2.Enabled = true;
+            notEmptyResultSetCondition2.Name = "notEmptyResultSetCondition2";
+            notEmptyResultSetCondition2.ResultSet = 1;
             // 
             // App_DataDictionary_procSetLibrarySource_Delete_TestAction
             // 
@@ -86,11 +80,17 @@ namespace Database.DataDictionary.SqlUnitTest
             emptyResultSetCondition1.Name = "emptyResultSetCondition1";
             emptyResultSetCondition1.ResultSet = 2;
             // 
-            // notEmptyResultSetCondition2
+            // App_DataDictionary_procSetLibrarySource_InsertData
             // 
-            notEmptyResultSetCondition2.Enabled = true;
-            notEmptyResultSetCondition2.Name = "notEmptyResultSetCondition2";
-            notEmptyResultSetCondition2.ResultSet = 1;
+            this.App_DataDictionary_procSetLibrarySource_InsertData.PosttestAction = null;
+            this.App_DataDictionary_procSetLibrarySource_InsertData.PretestAction = null;
+            this.App_DataDictionary_procSetLibrarySource_InsertData.TestAction = App_DataDictionary_procSetLibrarySource_Insert_TestAction;
+            // 
+            // App_DataDictionary_procSetLibrarySource_DeleteData
+            // 
+            this.App_DataDictionary_procSetLibrarySource_DeleteData.PosttestAction = null;
+            this.App_DataDictionary_procSetLibrarySource_DeleteData.PretestAction = null;
+            this.App_DataDictionary_procSetLibrarySource_DeleteData.TestAction = App_DataDictionary_procSetLibrarySource_Delete_TestAction;
         }
 
         #endregion

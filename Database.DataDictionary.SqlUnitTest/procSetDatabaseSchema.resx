@@ -117,103 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="App_DataDictionary_procSetLibraryMember_Insert_TestAction.SqlScript" xml:space="preserve">
-    <value>-- database unit test for App_DataDictionary.procSetLibraryMember
-DECLARE @ModelId AS UNIQUEIDENTIFIER,
-		@LibraryId AS UNIQUEIDENTIFIER,
-		@Data AS [App_DataDictionary].[typeLibraryMember];
+  <data name="App_DataDictionary_procSetDatabaseSchema_Insert_TestAction.SqlScript" xml:space="preserve">
+    <value>Declare @ModelId UniqueIdentifier = Null,
+		@CatalogId UniqueIdentifier = Null,
+		@Catalog [App_DataDictionary].[typeDatabaseCatalog],
+		@Schema [App_DataDictionary].[typeDatabaseSchema]
 
-Declare @AssemblyName NVarChar(1023) = 'UnitTest.Data',
-		@Source [App_DataDictionary].[typeLibrarySource]
+Set	@CatalogId = NewId()
+--Select @ModelId = [ModelId] From [App_DataDictionary].[Model]
 
-SELECT @ModelId = NULL,
-       @LibraryId = NewId();
+Insert Into @Catalog ([CatalogId], [CatalogTitle], [CatalogDescription], [SourceServerName], [SourceDatabaseName], [SourceDate])
+values (Null, 'UnitTest', Null, 'SomeServer', 'SomeDatabase', GetDate())
 
-Insert Into @Source Values
-(Null,'Test',Null, @AssemblyName, 'DataDictionary.BusinessLayer.xml', Null, Null)
-
-Insert Into @Data Values
-(Null, @AssemblyName, 'DataDictionary.BusinessLayer','DbSchemaContext','T',Null),
-(Null, @AssemblyName, 'DataDictionary.BusinessLayer.DbSchemaContext.CatalogName','CatalogName','P',Null),
-(Null, @AssemblyName, 'DataDictionary.BusinessLayer.DbWorkItem.GetInformationSchema`1','GetInformationSchema','T',Null),
-(Null, @AssemblyName, 'DataDictionary.BusinessLayer','ModelData','T',Null),
-(Null, @AssemblyName, 'DataDictionary.BusinessLayer.ModelData','ModelKey','P',Null),
-(Null, @AssemblyName, 'DataDictionary.BusinessLayer.ModelData','Models','P',Null)
+Insert Into @Schema ([CatalogId], [DatabaseName], [SchemaName])
+Values (Null, 'SomeDatabase', 'dbo')
 
 Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
-	EXECUTE [App_DataDictionary].[procSetLibrarySource] @ModelId, @LibraryId, @Source
-	EXECUTE [App_DataDictionary].[procSetLibraryMember] @ModelId, @LibraryId, @Data;
+	Exec [App_DataDictionary].[procSetDatabaseCatalog] @ModelId, @CatalogId, @Catalog
+	Exec [App_DataDictionary].[procSetDatabaseSchema]  @ModelId, @CatalogId, @Schema
 
 	Select	*
-	From	[App_DataDictionary].[LibraryMember] M
-			Inner Join [App_DataDictionary].[LibrarySource] S
-			On	M.[LibraryId] = S.[LibraryId]
-	Where	S.[AssemblyName] = @AssemblyName
-
-	Print 'Transaction Success, Rollback Issued';
-	Rollback Transaction;
-End Try
-Begin Catch
-	Print 'Rollback Issued';
-	Rollback Transaction;
-	Throw;
-End Catch;</value>
-  </data>
-  <data name="App_DataDictionary_procSetLibraryMember_Delete_TestAction.SqlScript" xml:space="preserve">
-    <value>-- database unit test for App_DataDictionary.procSetLibraryMember
-DECLARE @ModelId AS UNIQUEIDENTIFIER,
-		@LibraryId AS UNIQUEIDENTIFIER,
-		@Data AS [App_DataDictionary].[typeLibraryMember];
-
-Declare @AssemblyName NVarChar(1023) = 'UnitTest.Data',
-		@DeleteMemberName NVarChar(500) = 'DeleteMe',
-		@Source [App_DataDictionary].[typeLibrarySource]
-
-SELECT @ModelId = NULL,
-       @LibraryId = NewId();
-
-Insert Into @Source Values
-(Null,'Test',Null, @AssemblyName, 'DataDictionary.BusinessLayer.xml', Null, Null)
-
-Insert Into @Data Values
-(Null, @AssemblyName, 'DataDictionary.BusinessLayer','DbSchemaContext','T',Null),
-(Null, @AssemblyName, 'DataDictionary.BusinessLayer.DbSchemaContext.CatalogName','CatalogName','P',Null),
-(Null, @AssemblyName, 'DataDictionary.BusinessLayer.DbWorkItem.GetInformationSchema`1','GetInformationSchema','T',Null),
-(Null, @AssemblyName, 'DataDictionary.BusinessLayer','ModelData','T',Null),
-(Null, @AssemblyName, 'DataDictionary.BusinessLayer.ModelData','ModelKey','P',Null),
-(Null, @AssemblyName, 'DataDictionary.BusinessLayer.ModelData','Models','P',Null),
-(Null, @AssemblyName, 'DataDictionary.BusinessLayer.ModelData',@DeleteMemberName,'P',Null)
-
-Begin Try;
-	Begin Transaction;
-	Set NoCount On;
-
-	EXECUTE [App_DataDictionary].[procSetLibrarySource] @ModelId, @LibraryId, @Source
-	EXECUTE [App_DataDictionary].[procSetLibraryMember] @ModelId, @LibraryId, @Data;
-
-	Select	@LibraryId = [LibraryId]
-	From	[App_DataDictionary].[LibrarySource]
-	Where	[AssemblyName] = @AssemblyName
-
-	Delete From @Data Where [MemberName] = @DeleteMemberName
-
-	EXECUTE [App_DataDictionary].[procSetLibraryMember] @ModelId, @LibraryId, @Data;
-
-	Select	*
-	From	[App_DataDictionary].[LibraryMember] M
-			Inner Join [App_DataDictionary].[LibrarySource] S
-			On	M.[LibraryId] = S.[LibraryId]
-	Where	S.[AssemblyName] = @AssemblyName And
-			M.[MemberName] = @DeleteMemberName
-
-	Select	*
-	From	[App_DataDictionary].[LibraryMember] M
-			Inner Join [App_DataDictionary].[LibrarySource] S
-			On	M.[LibraryId] = S.[LibraryId]
-	Where	S.[AssemblyName] = @AssemblyName
+	From	[App_DataDictionary].[DatabaseSchema]
+	WHere	[CatalogId] = @CatalogId
 
 	Print 'Transaction Success, Rollback Issued';
 	Rollback Transaction;

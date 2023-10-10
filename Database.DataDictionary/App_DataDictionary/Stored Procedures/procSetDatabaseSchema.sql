@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseSchema]
-		@ModelId UniqueIdentifier,
+		@ModelId UniqueIdentifier = Null,
+		@CatalogId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeDatabaseSchema] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -21,26 +22,21 @@ Begin Try
 	-- Clean the Data
 	Declare @Values [App_DataDictionary].[typeDatabaseSchema]
 	Insert Into @Values
-	Select	P.[CatalogId],
-			P.[CatalogName],
+	Select	Coalesce(D.[CatalogId], M.[CatalogId], @CatalogId) As [CatalogId],
+			D.[DatabaseName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName]
 	From	@Data D
-			Left Join [App_DataDictionary].[ModelCatalog] C
-			On	C.[ModelId] = @ModelId
-			Left Join [App_DataDictionary].[DatabaseCatalog] P
-			On	C.[CatalogId] = P.[CatalogId] And
-				D.[CatalogName] = P.[CatalogName]
+			Left Join [App_DataDictionary].[ModelDatabase] M
+			On	@ModelId = M.[ModelId] And
+				D.[DatabaseName] = M.[DatabaseName]
+	Where	(@CatalogId is Null or Coalesce(D.[CatalogId], M.[CatalogId], @CatalogId)  = @CatalogId)
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
+	If @ModelId is Null and @CatalogId is Null
+	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
 
-	If Exists (
-		Select	[CatalogName], [SchemaName]
-		From	@Values
-		Group By [CatalogName], [SchemaName]
-		Having	Count(*) > 1)
-	Throw 50000, '[SchemaName] cannot be duplicate within a Catalog', 2;
+	If Exists (Select [CatalogId] From @Values Where [CatalogId] is Null)
+	Throw 50000, '[CatalogId] could not be determined.', 2;
 
 	-- Cascade Delete
 	Declare @Delete [App_DataDictionary].[typeDatabaseCatalogObject] 
@@ -49,19 +45,20 @@ Begin Try
 	Select	T.[CatalogId],
 			T.[SchemaName]
 	From	[App_DataDictionary].[DatabaseSchema] T
-			Inner Join [App_DataDictionary].[ModelCatalog] M
-			On	T.[CatalogId] = M.[CatalogId] And
-				M.[ModelId] = @ModelId
 			Left Join @Values V
 			On	T.[CatalogId] = V.[CatalogId] And
 				T.[SchemaName] = V.[SchemaName]
-	Where	V.[CatalogId] is Null;
+			Left Join [App_DataDictionary].[ModelCatalog] M
+			On	T.[CatalogId] = M.[CatalogId]
+	Where	V.[CatalogId] is Null And
+			(@CatalogId is Null or T.[CatalogId] = @CatalogId) And
+			(@ModelId is Null or M.[ModelId] = @ModelId)
 
-	if Exists (Select 1 From @Delete)
-	Exec [App_DataDictionary].[procDeleteDatabaseCatalogObject] @ModelId, @Delete;
+--	if Exists (Select 1 From @Delete)
+--	Exec [App_DataDictionary].[procDeleteDatabaseCatalogObject] @Delete;
 
 	-- Apply Changes
-	With [Delta] As (
+	;With [Delta] As (
 		Select	[CatalogId],
 				[SchemaName]
 		From	@Values
@@ -72,7 +69,7 @@ Begin Try
 	[Data] As (
 		Select	V.[CatalogId],
 				V.[SchemaName],
-				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
+				IIF(D.[CatalogId] is Null,0, 1) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
 				On	V.[CatalogId] = D.[CatalogId] And
@@ -84,7 +81,15 @@ Begin Try
 	-- When Matched and [IsDiffrent] = 1 Then Update Set -- Currently not needed
 	When Not Matched by Target Then
 		Insert ([CatalogId], [SchemaName])
-		Values ([CatalogId], [SchemaName]);
+		Values ([CatalogId], [SchemaName])
+	When Not Matched by Source And
+		(@CatalogId = T.[CatalogId] Or
+		 T.[CatalogId] In (
+			Select	[CatalogId]
+			From	[App_DataDictionary].[ModelCatalog]
+			Where	[ModelId] = @ModelId))
+		Then Delete;
+	Print FormatMessage ('Merge [App_DataDictionary].[DatabaseSchema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -126,16 +131,4 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
-GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseSchema',
-	@value = N'Performs Set on DatabaseSchema.'
-GO
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseSchema',
-	@level2type = N'PARAMETER', @level2name = N'@ModelId',
-	@value = N'ModelId'
 GO

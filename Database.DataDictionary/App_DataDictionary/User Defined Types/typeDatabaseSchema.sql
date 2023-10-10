@@ -1,6 +1,6 @@
 ﻿CREATE TYPE [App_DataDictionary].[typeDatabaseSchema] AS TABLE
 (
 	[CatalogId]              UniqueIdentifier Null,
-	[CatalogName]            SysName          Null,
+	[DatabaseName]           SysName          Null,
 	[SchemaName]             SysName          Null
 )

@@ -1,7 +1,9 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procGetDatabaseExtendedProperty]
 		@ModelId     UniqueIdentifier = Null,
-		@PropertyName SysName = Null,
-		@CatalogName SysName = Null
+		@CatalogId UniqueIdentifier = Null,
+		@DatabaseName SysName = Null,
+		@PropertyName SysName = Null
+
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -9,7 +11,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 
 Select	C.[CatalogId],
-		C.[CatalogName],
+		C.[SourceDatabaseName] As [DatabaseName],
 		D.[Level0Type],
 		D.[Level0Name],
 		D.[Level1Type],
@@ -26,6 +28,7 @@ From	[App_DataDictionary].[DatabaseExtendedProperty] D
 		Inner Join [App_DataDictionary].[DatabaseCatalog] C
 		On	D.[CatalogId] = C.[CatalogId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
-		(@PropertyName is Null or @PropertyName = D.[PropertyName]) And
-		(@CatalogName is Null or @CatalogName = C.[CatalogName])
+		(@CatalogId is Null or @CatalogId = D.[CatalogId]) And
+		(@DatabaseName is Null or @DatabaseName = C.[SourceDatabaseName]) And
+		(@PropertyName is Null or @PropertyName = D.[PropertyName])
 GO

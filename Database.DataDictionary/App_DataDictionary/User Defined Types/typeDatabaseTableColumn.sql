@@ -1,7 +1,7 @@
 ﻿CREATE TYPE [App_DataDictionary].[typeDatabaseTableColumn] AS TABLE
 (
 	[CatalogId]              UniqueIdentifier Null,
-	[CatalogName]            SysName          Null,
+	[DatabaseName]           SysName          Null,
 	[SchemaName]             SysName          Null,
 	[TableName]              SysName          Null,
 	[TableType]              NVarChar(60)     NULL,

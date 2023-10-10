@@ -276,7 +276,7 @@ namespace DataDictionary.Main
         { Activate(() => new Forms.Library.LibraryManager()); }
 
         private void manageDatabasesCommand_ButtonClick(object sender, EventArgs e)
-        { Activate(() => new Forms.Database.DatabaseManager()); }
+        { Activate(() => new Forms.Database.CatalogManager()); }
 
         private void browseCatalogsToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Database), Program.Data.DbCatalogs); }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DatabaseManager
+    partial class CatalogManager
     {
         class CatalogManagerItem : DbCatalogItem
         {

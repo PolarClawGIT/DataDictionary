@@ -1,6 +1,7 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procGetDatabaseTableColumn]
 		@ModelId UniqueIdentifier = Null,
-		@CatalogName SysName = Null,
+		@CatalogId UniqueIdentifier = Null,
+		@DatabaseName SysName = Null,
 		@SchemaName SysName = Null,
 		@TableName SysName = Null,
 		@ColumnName SysName = Null
@@ -10,7 +11,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 /* Description: Performs Get on DatabaseColumn.
 */
 Select	D.[CatalogId],
-		C.[CatalogName],
+		C.[SourceDatabaseName] As [DatabaseName],
 		D.[SchemaName],
 		D.[TableName],
 		P.[TableType],
@@ -49,7 +50,8 @@ From	[App_DataDictionary].[DatabaseTableColumn] D
 			D.[SchemaName] = P.[SchemaName] And
 			D.[TableName] = P.[TableName]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
-		(@CatalogName is Null or @CatalogName = C.[CatalogName]) And
+		(@CatalogId is Null or @CatalogId = D.[CatalogId]) And
+		(@DatabaseName is Null or @DatabaseName = C.[SourceDatabaseName]) And
 		(@SchemaName is Null or @SchemaName = D.[SchemaName]) And
 		(@TableName is Null or @TableName = D.[TableName]) And
 		(@ColumnName is Null or @ColumnName = D.[ColumnName])

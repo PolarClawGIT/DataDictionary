@@ -73,7 +73,7 @@ Begin Try
 				V.[PropertyId],
 				V.[PropertyValue],
 				V.[DefinitionText],
-				IIF(D.[EntityId] is Null,1, 0) As [IsDiffrent]
+				IIF(D.[EntityId] is Null,0, 1) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
 				On	V.[EntityId] = D.[EntityId] and

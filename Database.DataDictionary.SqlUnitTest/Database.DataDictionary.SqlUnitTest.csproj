@@ -153,6 +153,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="procSetDatabaseCatalog.cs">
+      <SubType>Designer</SubType>
+    </Compile>
+    <Compile Include="procSetDatabaseSchema.cs">
+      <SubType>Designer</SubType>
+    </Compile>
     <Compile Include="procSetLibrarySource.cs">
       <SubType>Designer</SubType>
     </Compile>
@@ -167,6 +173,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="procSetDatabaseCatalog.resx">
+      <DependentUpon>procSetDatabaseCatalog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="procSetDatabaseSchema.resx">
+      <DependentUpon>procSetDatabaseSchema.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="procSetLibraryMember.resx">
       <DependentUpon>procSetLibraryMember.cs</DependentUpon>
     </EmbeddedResource>

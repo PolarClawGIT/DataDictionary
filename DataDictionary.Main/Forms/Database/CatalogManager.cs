@@ -12,9 +12,9 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DatabaseManager : ApplicationBase
+    partial class CatalogManager : ApplicationBase
     {
-        public DatabaseManager()
+        public CatalogManager()
         {
             InitializeComponent();
             openToolStripButton.Enabled = true;
@@ -36,9 +36,5 @@ namespace DataDictionary.Main.Forms.Database
         {
 
         }
-
-        private void DatabaseManager_Load(object sender, EventArgs e)
-        {  }
-
     }
 }

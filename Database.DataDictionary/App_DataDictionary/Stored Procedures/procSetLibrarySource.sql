@@ -36,8 +36,8 @@ Begin Try
 	Where	(@LibraryId is Null Or X.[LibraryId] = @LibraryId)
 
 	-- Validation
-	If @ModelId is Not Null And Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
+	If @ModelId is Null and @LibraryId is Null
+	Throw 50000, '@ModelId or @LibraryId must be specified', 1;
 
 	If Exists (
 		Select	[AssemblyName]
@@ -74,17 +74,17 @@ Begin Try
 			T.[LibraryId] = @LibraryId And
 			V.[LibraryId] is Null
 
-	Delete From [App_DataDictionary].[ModelLibrary]
-	Where	[LibraryId] In (Select [LibraryId] From @Delete)
-
 	Delete From [App_DataDictionary].[LibraryMember]
 	Where	[LibraryId] In (Select [LibraryId] From @Delete)
+	Print FormatMessage ('Delete [App_DataDictionary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[LibraryNameSpace]
 	Where	[LibraryId] In (Select [LibraryId] From @Delete)
+	Print FormatMessage ('Delete [App_DataDictionary].[LibraryNameSpace]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[LibrarySource]
+	Delete From [App_DataDictionary].[ModelLibrary]
 	Where	[LibraryId] In (Select [LibraryId] From @Delete)
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelLibrary]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Apply Changes
 	;With [Delta] As (
@@ -110,7 +110,7 @@ Begin Try
 				V.[AssemblyName],
 				V.[SourceFile],
 				V.[SourceDate],
-				IIF(D.[LibraryId] is Null,1, 0) As [IsDiffrent]
+				IIF(D.[LibraryId] is Null,0, 1) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
 				On	V.[LibraryId] = D.[LibraryId])
@@ -125,20 +125,26 @@ Begin Try
 			[SourceDate] = S.[SourceDate]
 	When Not Matched by Target Then
 		Insert ([LibraryId], [LibraryTitle], [LibraryDescription], [AssemblyName], [SourceFile], [SourceDate])
-		Values ([LibraryId], [LibraryTitle], [LibraryDescription], [AssemblyName], [SourceFile], [SourceDate]);;
+		Values ([LibraryId], [LibraryTitle], [LibraryDescription], [AssemblyName], [SourceFile], [SourceDate])
+	When Not Matched by Source And
+		-- Only way to get rid of a Library Source is to remove it my Library Id.
+		T.[LibraryId] = @LibraryId And
+		T.[LibraryId] Not in (
+			Select	[LibraryId]
+			From	[App_DataDictionary].[ModelLibrary])
+		Then Delete;
+	Print FormatMessage ('Merge [App_DataDictionary].[LibrarySource]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	With [Data] As (
-		Select	@ModelId As [ModelId],
-				[LibraryId]
-		From	@Values
-		Where	@ModelId is not Null)
-	Merge [App_DataDictionary].[ModelLibrary] T
-	Using [Data] D
-	On	T.[ModelId] = D.[ModelId] And
-		T.[LibraryId] = D.[LibraryId]
-	When Not Matched by Target Then
-		Insert ([ModelId], [LibraryId])
-		Values ([ModelId], [LibraryId]);
+	Insert Into [App_DataDictionary].[ModelLibrary] ([ModelId], [LibraryId])
+	Select	@ModelId As [ModelId],
+			S.[LibraryId]
+	from	@Values S
+			Left Join [App_DataDictionary].[ModelLibrary] T
+			On	S.[LibraryId] = T.[LibraryId] And
+				@ModelId = T.[ModelId]
+	Where	T.[ModelId] is Null And
+			@ModelId is Not Null
+	Print FormatMessage ('Insert [App_DataDictionary].[ModelLibrary]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

@@ -34,8 +34,8 @@ Begin Try
 	Where	(@LibraryId is Null or P.[LibraryId] = @LibraryId)
 
 	-- Validation
-	If @ModelId is Not Null And Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
+	If @ModelId is Null and @LibraryId is Null
+	Throw 50000, '@ModelId or @LibraryId must be specified', 1;
 
 	If Exists (
 		Select	[LibraryId], [MemberNameSpace], [MemberName]
@@ -167,7 +167,7 @@ Begin Try
 				V.[NameSpaceId],
 				V.[ParentId],
 				V.[NameSpace],
-				IIF(D.[LibraryId] is Null,1, 0) As [IsDiffrent]
+				IIF(D.[LibraryId] is Null,0, 1) As [IsDiffrent]
 		From	@NameSpace V
 				Left Join [Delta] D
 				On	V.[LibraryId] = D.[LibraryId] And

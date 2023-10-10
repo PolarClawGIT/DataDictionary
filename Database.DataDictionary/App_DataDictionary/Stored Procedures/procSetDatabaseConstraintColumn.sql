@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseConstraintColumn]
-		@ModelId UniqueIdentifier,
+		@ModelId UniqueIdentifier = Null,
+		@CatalogId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeDatabaseConstraintColumn] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -21,8 +22,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values [App_DataDictionary].[typeDatabaseConstraintColumn]
 	Insert Into @Values
-	Select	P.[CatalogId] As [CatalogId],
-			P.[CatalogName] As [CatalogName],
+	Select	Coalesce(D.[CatalogId], @CatalogId, P.[CatalogId]) As [CatalogId],
+			NullIf(Trim(IsNull(P.[SourceDatabaseName], D.[DatabaseName])),'') As [DatabaseName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
 			NullIf(Trim(D.[ConstraintName]),'') As [ConstraintName],
 			NullIf(Trim(D.[TableName]),'') As [TableName],
@@ -32,15 +33,17 @@ Begin Try
 			NullIf(Trim(D.[ReferenceTableName]),'') As [ReferenceTableName],
 			NullIf(Trim(D.[ReferenceColumnName]),'') As [ReferenceColumnName]
 	From	@Data D
-			Left Join [App_DataDictionary].[ModelCatalog] C
-			On	C.[ModelId] = @ModelId
 			Left Join [App_DataDictionary].[DatabaseCatalog] P
-			On	C.[CatalogId] = P.[CatalogId] And
-				D.[CatalogName] = P.[CatalogName]
+			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId]
+	Where	(@CatalogId is Null or D.[CatalogId] = @CatalogId) And
+			(@ModelId is Null or @ModelId In (
+				Select	[ModelId]
+				From	[App_DataDictionary].[ModelCatalog]
+				Where	(@CatalogId is Null Or [CatalogId] = @CatalogId)))
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
+	If @ModelId is Null and @CatalogId is Null
+	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
 
 	-- Apply Changes
 	With [Delta] As (
@@ -75,7 +78,7 @@ Begin Try
 				V.[ReferenceSchemaName],
 				V.[ReferenceTableName],
 				V.[ReferenceColumnName],
-				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
+				IIF(D.[CatalogId] is Null,0, 1) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
 				On	V.[CatalogId] = D.[CatalogId] And
@@ -119,11 +122,14 @@ Begin Try
 				[ReferenceSchemaName],
 				[ReferenceTableName],
 				[ReferenceColumnName])
-	When Not Matched by Source And (T.[CatalogId] In (
-		Select	[CatalogId]
-		From	[App_DataDictionary].[ModelCatalog]
-		Where	[ModelId] = @ModelId))
+	When Not Matched by Source And
+		(@CatalogId = T.[CatalogId] Or
+		 T.[CatalogId] In (
+			Select	[CatalogId]
+			From	[App_DataDictionary].[ModelCatalog]
+			Where	[ModelId] = @ModelId))
 		Then Delete;
+	Print FormatMessage ('Merge [App_DataDictionary].[DatabaseConstraintColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

@@ -186,6 +186,7 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetLibraryMember.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetLibrarySource.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetLibraryMember.sql" />
+    <Build Include="App_DataDictionary\Views\ModelDatabase.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

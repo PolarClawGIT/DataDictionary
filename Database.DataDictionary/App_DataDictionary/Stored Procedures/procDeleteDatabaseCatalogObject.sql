@@ -1,5 +1,4 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procDeleteDatabaseCatalogObject]
-		@ModelId UniqueIdentifier,
 		@Data [App_DataDictionary].[typeDatabaseCatalogObject] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -18,37 +17,77 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
+	;With [Delete] as (
+		Select	T.[CatalogId],
+				T.[SchemaName],
+				T.[ConstraintName],
+				T.[TableName],
+				T.[ColumnName]
+		From	@Data S
+				Inner Join [App_DataDictionary].[DatabaseConstraintColumn] T
+				On	S.[CatalogId] = T.[CatalogId] And
+					IsNull(S.[SchemaName],T.[SchemaName]) = T.[SchemaName] And
+					IsNull(S.[ObjectName],T.[ConstraintName]) = T.[ConstraintName]
+		Union
+		Select	T.[CatalogId],
+				T.[SchemaName],
+				T.[ConstraintName],
+				T.[TableName],
+				T.[ColumnName]
+		From	@Data S
+				Inner Join [App_DataDictionary].[DatabaseConstraintColumn] T
+				On	S.[CatalogId] = T.[CatalogId] And
+					IsNull(S.[SchemaName],T.[SchemaName]) = T.[SchemaName] And
+					IsNull(S.[ObjectName],T.[TableName]) = T.[TableName]
+		Union
+		Select	T.[CatalogId],
+				T.[SchemaName],
+				T.[ConstraintName],
+				T.[TableName],
+				T.[ColumnName]
+		From	@Data S
+				Inner Join [App_DataDictionary].[DatabaseConstraintColumn] T
+				On	S.[CatalogId] = T.[CatalogId] And
+					IsNull(S.[SchemaName],T.[ReferenceSchemaName]) = T.[ReferenceSchemaName] And
+					IsNull(S.[ObjectName],T.[ReferenceTableName]) = T.[ReferenceTableName])
 	Delete From [App_DataDictionary].[DatabaseConstraintColumn]
-	From	@Data S
-			Inner Join [App_DataDictionary].[ModelCatalog] C
-			On	S.[CatalogId] = C.[CatalogId] And
-				C.[ModelId] = @ModelId
+	From	[Delete] S
 			Inner Join [App_DataDictionary].[DatabaseConstraintColumn] T
 			On	S.[CatalogId] = T.[CatalogId] And
-				(IsNull(S.[SchemaName],T.[SchemaName]) = T.[SchemaName] And
-				 (IsNull(S.[ObjectName],T.[ConstraintName]) = T.[ConstraintName] Or
-				  IsNull(S.[ObjectName],T.[TableName]) = T.[TableName])) Or
-				(IsNull(S.[SchemaName],T.[ReferenceSchemaName]) = T.[ReferenceSchemaName] And
-				 IsNull(S.[ObjectName],T.[ReferenceTableName]) = T.[ReferenceTableName])
+				S.[SchemaName] = T.[SchemaName] And
+				S.[ConstraintName] = T.[ConstraintName] And
+				S.[TableName] = T.[TableName] And
+				S.[ColumnName] = T.[ColumnName]
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseConstraintColumn]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
+	;With [Delete] As (
+		Select	T.[CatalogId],
+				T.[SchemaName],
+				T.[ConstraintName]
+		From	@Data S
+				Inner Join [App_DataDictionary].[DatabaseConstraint] T
+				On	S.[CatalogId] = T.[CatalogId] And
+					IsNull(S.[SchemaName],T.[SchemaName]) = T.[SchemaName] And
+					IsNull(S.[ObjectName],T.[ConstraintName]) = T.[ConstraintName]
+		Union
+		Select	T.[CatalogId],
+				T.[SchemaName],
+				T.[ConstraintName]
+		From	@Data S
+				Inner Join [App_DataDictionary].[DatabaseConstraint] T
+				On	S.[CatalogId] = T.[CatalogId] And
+					IsNull(S.[SchemaName],T.[SchemaName]) = T.[SchemaName] And
+					IsNull(S.[ObjectName],T.[TableName]) = T.[TableName])
 	Delete From [App_DataDictionary].[DatabaseConstraint]
-	From	@Data S
-			Inner Join [App_DataDictionary].[ModelCatalog] C
-			On	S.[CatalogId] = C.[CatalogId] And
-				C.[ModelId] = @ModelId
+	From	[Delete] S
 			Inner Join [App_DataDictionary].[DatabaseConstraint] T
 			On	S.[CatalogId] = T.[CatalogId] And
-				IsNull(S.[SchemaName],T.[SchemaName]) = T.[SchemaName] And
-				(IsNull(S.[ObjectName],T.[ConstraintName]) = T.[ConstraintName] Or
-				 IsNull(S.[ObjectName],T.[TableName]) = T.[TableName])
+				S.[SchemaName] = T.[SchemaName] And
+				S.[ConstraintName] = T.[ConstraintName]
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseConstraint]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[DatabaseDomain]
 	From	@Data S
-			Inner Join [App_DataDictionary].[ModelCatalog] C
-			On	S.[CatalogId] = C.[CatalogId] And
-				C.[ModelId] = @ModelId
 			Inner Join [App_DataDictionary].[DatabaseDomain] T
 			On	S.[CatalogId] = T.[CatalogId] And
 				IsNull(S.[SchemaName],T.[SchemaName]) = T.[SchemaName] And
@@ -57,9 +96,6 @@ Begin Try
 
 	Delete From [App_DataDictionary].[DatabaseRoutineDependency]
 	From	@Data S
-			Inner Join [App_DataDictionary].[ModelCatalog] C
-			On	S.[CatalogId] = C.[CatalogId] And
-				C.[ModelId] = @ModelId
 			Inner Join [App_DataDictionary].[DatabaseRoutineDependency] T
 			On	S.[CatalogId] = T.[CatalogId] And
 				IsNull(S.[SchemaName],T.[SchemaName]) = T.[SchemaName] And
@@ -68,9 +104,6 @@ Begin Try
 
 	Delete From [App_DataDictionary].[DatabaseRoutineParameter]
 	From	@Data S
-			Inner Join [App_DataDictionary].[ModelCatalog] C
-			On	S.[CatalogId] = C.[CatalogId] And
-				C.[ModelId] = @ModelId
 			Inner Join [App_DataDictionary].[DatabaseRoutineParameter] T
 			On	S.[CatalogId] = T.[CatalogId] And
 				IsNull(S.[SchemaName],T.[SchemaName]) = T.[SchemaName] And
@@ -79,9 +112,6 @@ Begin Try
 
 	Delete From [App_DataDictionary].[DatabaseRoutine]
 	From	@Data S
-			Inner Join [App_DataDictionary].[ModelCatalog] C
-			On	S.[CatalogId] = C.[CatalogId] And
-				C.[ModelId] = @ModelId
 			Inner Join [App_DataDictionary].[DatabaseRoutine] T
 			On	S.[CatalogId] = T.[CatalogId] And
 				IsNull(S.[SchemaName],T.[SchemaName]) = T.[SchemaName] And
@@ -90,9 +120,6 @@ Begin Try
 
 	Delete From [App_DataDictionary].[DatabaseTableColumn]
 	From	@Data S
-			Inner Join [App_DataDictionary].[ModelCatalog] C
-			On	S.[CatalogId] = C.[CatalogId] And
-				C.[ModelId] = @ModelId
 			Inner Join [App_DataDictionary].[DatabaseTableColumn] T
 			On	S.[CatalogId] = T.[CatalogId] And
 				IsNull(S.[SchemaName],T.[SchemaName]) = T.[SchemaName] And
@@ -101,9 +128,6 @@ Begin Try
 
 	Delete From [App_DataDictionary].[DatabaseTable]
 	From	@Data S
-			Inner Join [App_DataDictionary].[ModelCatalog] C
-			On	S.[CatalogId] = C.[CatalogId] And
-				C.[ModelId] = @ModelId
 			Inner Join [App_DataDictionary].[DatabaseTable] T
 			On	S.[CatalogId] = T.[CatalogId] And
 				IsNull(S.[SchemaName],T.[SchemaName]) = T.[SchemaName] And
@@ -112,9 +136,6 @@ Begin Try
 
 	Delete From [App_DataDictionary].[DatabaseExtendedProperty]
 	From	@Data S
-			Inner Join [App_DataDictionary].[ModelCatalog] C
-			On	S.[CatalogId] = C.[CatalogId] And
-				C.[ModelId] = @ModelId
 			Inner Join [App_DataDictionary].[DatabaseExtendedProperty] T
 			On	S.[CatalogId] = T.[CatalogId] And
 				Coalesce(S.[SchemaName],T.[Level0Name],'') = Coalesce(T.[Level0Name],'') And
@@ -124,23 +145,10 @@ Begin Try
 
 	Delete From [App_DataDictionary].[DatabaseSchema]
 	From	@Data S
-			Inner Join [App_DataDictionary].[ModelCatalog] C
-			On	S.[CatalogId] = C.[CatalogId] And
-				C.[ModelId] = @ModelId
 			Inner Join [App_DataDictionary].[DatabaseSchema] T
 			On	S.[CatalogId] = T.[CatalogId] And
-				IsNull(S.[SchemaName],T.[SchemaName]) = T.[SchemaName] And
-				S.[SchemaName] is Null
-	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseSchema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [App_DataDictionary].[DatabaseCatalog]
-	From	@Data S
-			Inner Join [App_DataDictionary].[ModelCatalog] C
-			On	S.[CatalogId] = C.[CatalogId] And
-				C.[ModelId] = @ModelId
-			Inner Join [App_DataDictionary].[DatabaseCatalog] T
-			On	S.[CatalogId] = T.[CatalogId] And
-				S.[CatalogId] is Null
+				S.[SchemaName] = T.[SchemaName]
+	Where	S.[ObjectName] is Null
 	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseSchema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction

@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseDomain]
-		@ModelId UniqueIdentifier,
+		@ModelId UniqueIdentifier = Null,
+		@CatalogId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeDatabaseDomain] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -21,8 +22,8 @@ Begin Try
 	-- Clean the Data
 	Declare @Values [App_DataDictionary].[typeDatabaseDomain]
 	Insert Into @Values
-	Select	P.[CatalogId] As [CatalogId],
-			P.[CatalogName] As [CatalogName],
+	Select	Coalesce(D.[CatalogId], @CatalogId, P.[CatalogId]) As [CatalogId],
+			NullIf(Trim(IsNull(P.[SourceDatabaseName], D.[DatabaseName])),'') As [DatabaseName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
 			NullIf(Trim(D.[DomainName]),'') As [DomainName],
 			NullIf(Trim(D.[DataType]),'') As [DataType],
@@ -40,20 +41,22 @@ Begin Try
 			NullIf(Trim(D.[CollationSchema]),'') As [CollationSchema],
 			NullIf(Trim(D.[CollationName]),'') As [CollationName]
 	From	@Data D
-			Left Join [App_DataDictionary].[ModelCatalog] C
-			On	C.[ModelId] = @ModelId
 			Left Join [App_DataDictionary].[DatabaseCatalog] P
-			On	C.[CatalogId] = P.[CatalogId] And
-				D.[CatalogName] = P.[CatalogName]
+			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId]
+	Where	(@CatalogId is Null or D.[CatalogId] = @CatalogId) And
+			(@ModelId is Null or @ModelId In (
+				Select	[ModelId]
+				From	[App_DataDictionary].[ModelCatalog]
+				Where	(@CatalogId is Null Or [CatalogId] = @CatalogId)))
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
+	If @ModelId is Null and @CatalogId is Null
+	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
 
 	If Exists (
-		Select	[CatalogName], [SchemaName], [DomainName]
+		Select	[DatabaseName], [SchemaName], [DomainName]
 		From	@Values
-		Group By [CatalogName], [SchemaName], [DomainName]
+		Group By [DatabaseName], [SchemaName], [DomainName]
 		Having	Count(*) > 1)
 	Throw 50000, '[DomainName] cannot be duplicate', 2;
 
@@ -114,7 +117,7 @@ Begin Try
 				V.[CollationCatalog],
 				V.[CollationSchema],
 				V.[CollationName],
-				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
+				IIF(D.[CatalogId] is Null,0, 1) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
 				On	V.[CatalogId] = D.[CatalogId] And
@@ -178,11 +181,14 @@ Begin Try
 				[CollationCatalog],
 				[CollationSchema],
 				[CollationName])
-	When Not Matched by Source And (T.[CatalogId] In (
-		Select	[CatalogId]
-		From	[App_DataDictionary].[ModelCatalog]
-		Where	[ModelId] = @ModelId))
+	When Not Matched by Source And
+		(@CatalogId = T.[CatalogId] Or
+		 T.[CatalogId] In (
+			Select	[CatalogId]
+			From	[App_DataDictionary].[ModelCatalog]
+			Where	[ModelId] = @ModelId))
 		Then Delete;
+	Print FormatMessage ('Merge [App_DataDictionary].[DatabaseDomain]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

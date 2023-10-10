@@ -56,23 +56,11 @@ namespace Database.DataDictionary.SqlUnitTest
             App_DataDictionary_procSetLibraryMember_Insert_TestAction.Conditions.Add(notEmptyResultSetCondition1);
             resources.ApplyResources(App_DataDictionary_procSetLibraryMember_Insert_TestAction, "App_DataDictionary_procSetLibraryMember_Insert_TestAction");
             // 
-            // App_DataDictionary_procSetLibraryMember_InsertData
-            // 
-            this.App_DataDictionary_procSetLibraryMember_InsertData.PosttestAction = null;
-            this.App_DataDictionary_procSetLibraryMember_InsertData.PretestAction = null;
-            this.App_DataDictionary_procSetLibraryMember_InsertData.TestAction = App_DataDictionary_procSetLibraryMember_Insert_TestAction;
-            // 
             // notEmptyResultSetCondition1
             // 
             notEmptyResultSetCondition1.Enabled = true;
             notEmptyResultSetCondition1.Name = "notEmptyResultSetCondition1";
             notEmptyResultSetCondition1.ResultSet = 1;
-            // 
-            // App_DataDictionary_procSetLibraryMember_DeleteData
-            // 
-            this.App_DataDictionary_procSetLibraryMember_DeleteData.PosttestAction = null;
-            this.App_DataDictionary_procSetLibraryMember_DeleteData.PretestAction = null;
-            this.App_DataDictionary_procSetLibraryMember_DeleteData.TestAction = App_DataDictionary_procSetLibraryMember_Delete_TestAction;
             // 
             // App_DataDictionary_procSetLibraryMember_Delete_TestAction
             // 
@@ -91,6 +79,18 @@ namespace Database.DataDictionary.SqlUnitTest
             notEmptyResultSetCondition2.Enabled = true;
             notEmptyResultSetCondition2.Name = "notEmptyResultSetCondition2";
             notEmptyResultSetCondition2.ResultSet = 2;
+            // 
+            // App_DataDictionary_procSetLibraryMember_InsertData
+            // 
+            this.App_DataDictionary_procSetLibraryMember_InsertData.PosttestAction = null;
+            this.App_DataDictionary_procSetLibraryMember_InsertData.PretestAction = null;
+            this.App_DataDictionary_procSetLibraryMember_InsertData.TestAction = App_DataDictionary_procSetLibraryMember_Insert_TestAction;
+            // 
+            // App_DataDictionary_procSetLibraryMember_DeleteData
+            // 
+            this.App_DataDictionary_procSetLibraryMember_DeleteData.PosttestAction = null;
+            this.App_DataDictionary_procSetLibraryMember_DeleteData.PretestAction = null;
+            this.App_DataDictionary_procSetLibraryMember_DeleteData.TestAction = App_DataDictionary_procSetLibraryMember_Delete_TestAction;
         }
 
         #endregion

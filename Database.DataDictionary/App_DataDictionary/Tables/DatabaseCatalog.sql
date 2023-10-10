@@ -7,7 +7,6 @@
 	[CatalogId] UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseCatalogId] DEFAULT (newid()),
 	[CatalogTitle] [App_DataDictionary].[typeTitle] Not Null,
 	[CatalogDescription] [App_DataDictionary].[typeDescription] Null,
-	[CatalogName] SysName Not Null, -- Natural Key, expected to be the same as [SourceDatabaseName], but can be changed.
 	[SourceServerName] SysName Not Null,
 	[SourceDatabaseName] SysName Not Null,
 	[SourceDate] DateTime Not Null,
@@ -20,8 +19,8 @@
 	CONSTRAINT [PK_DatabaseCatalog] PRIMARY KEY CLUSTERED ([CatalogId] ASC),
 )
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseCatalogName]
-    ON [App_DataDictionary].[DatabaseCatalog]([CatalogName]);
+CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseCatalog]
+    ON [App_DataDictionary].[DatabaseCatalog]([SourceServerName], [SourceDatabaseName]);
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseCatalogTitle]
     ON [App_DataDictionary].[DatabaseCatalog]([CatalogTitle]);

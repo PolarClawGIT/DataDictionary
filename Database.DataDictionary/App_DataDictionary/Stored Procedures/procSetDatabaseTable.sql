@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseTable]
-		@ModelId UniqueIdentifier,
+		@ModelId UniqueIdentifier = Null,
+		@CatalogId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeDatabaseTable] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -21,26 +22,28 @@ Begin Try
 	-- Clean the Data
 	Declare @Values [App_DataDictionary].[typeDatabaseTable]
 	Insert Into @Values
-	Select	P.[CatalogId] As [CatalogId],
-			P.[CatalogName] As [CatalogName],
+	Select	Coalesce(D.[CatalogId], @CatalogId, P.[CatalogId]) As [CatalogId],
+			NullIf(Trim(IsNull(P.[SourceDatabaseName], D.[DatabaseName])),'') As [DatabaseName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
 			NullIf(Trim(D.[TableName]),'') As [TableName],
 			NullIf(Trim(D.[TableType]),'') As [TableType]
 	From	@Data D
-			Left Join [App_DataDictionary].[ModelCatalog] C
-			On	C.[ModelId] = @ModelId
 			Left Join [App_DataDictionary].[DatabaseCatalog] P
-			On	C.[CatalogId] = P.[CatalogId] And
-				D.[CatalogName] = P.[CatalogName]
+			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId]
+	Where	(@CatalogId is Null or D.[CatalogId] = @CatalogId) And
+			(@ModelId is Null or @ModelId In (
+				Select	[ModelId]
+				From	[App_DataDictionary].[ModelCatalog]
+				Where	(@CatalogId is Null Or [CatalogId] = @CatalogId)))
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
+	If @ModelId is Null and @CatalogId is Null
+	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
 
 	If Exists (
-		Select	[CatalogName], [SchemaName], [TableName]
+		Select	[DatabaseName], [SchemaName], [TableName]
 		From	@Values
-		Group By [CatalogName], [SchemaName], [TableName]
+		Group By [DatabaseName], [SchemaName], [TableName]
 		Having	Count(*) > 1)
 	Throw 50000, '[TableName] cannot be duplicate within a Schema', 2;
 
@@ -53,8 +56,8 @@ Begin Try
 			T.[TableName]
 	From	[App_DataDictionary].[DatabaseTable] T
 			Inner Join [App_DataDictionary].[ModelCatalog] M
-			On	T.[CatalogId] = M.[CatalogId] And
-				M.[ModelId] = @ModelId
+			On	IsNull(@CatalogId, T.[CatalogId]) = M.[CatalogId] And
+				(@ModelId is Null or M.[ModelId] = @ModelId)
 			Left Join @Values V
 			On	T.[CatalogId] = V.[CatalogId] And
 				T.[SchemaName] = V.[SchemaName] And
@@ -62,10 +65,10 @@ Begin Try
 	Where	V.[CatalogId] is Null;
 
 	if Exists (Select 1 From @Delete)
-	Exec [App_DataDictionary].[procDeleteDatabaseCatalogObject] @ModelId, @Delete;
+	Exec [App_DataDictionary].[procDeleteDatabaseCatalogObject] @Delete;
 
 	-- Apply Changes
-	With [Delta] As (
+	;With [Delta] As (
 		Select	[CatalogId],
 				[SchemaName],
 				[TableName],
@@ -97,7 +100,15 @@ Begin Try
 		[TableType] = S.[TableType]
 	When Not Matched by Target Then
 		Insert ([CatalogId], [SchemaName], [TableName], [TableType])
-		Values ([CatalogId], [SchemaName], [TableName], [TableType]);
+		Values ([CatalogId], [SchemaName], [TableName], [TableType])
+	When Not Matched by Source And
+		(@CatalogId = T.[CatalogId] Or
+		 T.[CatalogId] In (
+			Select	[CatalogId]
+			From	[App_DataDictionary].[ModelCatalog]
+			Where	[ModelId] = @ModelId))
+		Then Delete;
+	Print FormatMessage ('Merge [App_DataDictionary].[DatabaseTable]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -140,15 +151,4 @@ Begin Catch
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
 GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseTable',
-	@value = N'Performs Set on DatabaseTable.'
-GO
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseTable',
-	@level2type = N'PARAMETER', @level2name = N'@ModelId',
-	@value = N'ModelId'
-GO
+

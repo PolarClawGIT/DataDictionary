@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetDatabaseCatalog]
-		@ModelId UniqueIdentifier,
+		@ModelId UniqueIdentifier = Null,
+		@CatalogId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeDatabaseCatalog] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -21,30 +22,25 @@ Begin Try
 	-- Clean the Data
 	Declare @Values [App_DataDictionary].[typeDatabaseCatalog]
 	Insert Into @Values
-	Select	Coalesce(P.[CatalogId], D.[CatalogId], NewId()) As [CatalogId],
+	Select	Coalesce(D.[CatalogId], @CatalogId, NewId()) As [CatalogId],
 			NullIf(Trim(D.[CatalogTitle]),'') As [CatalogTitle],
 			NullIf(Trim(D.[CatalogDescription]),'') As [CatalogDescription],
-			NullIf(Trim(D.[CatalogName]),'') As [CatalogName],
 			NullIf(Trim(D.[SourceServerName]),'') As [SourceServerName],
 			NullIf(Trim(D.[SourceDatabaseName]),'') As [SourceDatabaseName],
 			D.[SourceDate],
 			D.[SysStart]
 	From	@Data D
-			Left Join [App_DataDictionary].[ModelCatalog] C
-			On	C.[ModelId] = @ModelId
-			Left Join [App_DataDictionary].[DatabaseCatalog] P
-			On	D.[CatalogName] = P.[CatalogName]
+			Left Join [App_DataDictionary].[ModelDatabase] M
+			On	@ModelId = M.[ModelId] And
+				D.[SourceDatabaseName] = M.[DatabaseName]
+			Left Join [App_DataDictionary].[DatabaseCatalog] C
+			On	D.[SourceServerName] = C.[SourceServerName] And
+				D.[SourceDatabaseName] = C.[SourceDatabaseName]
+	Where	(@CatalogId is Null or Coalesce(D.[CatalogId], @CatalogId)  = @CatalogId)
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
-
-	If Exists (
-		Select	[CatalogName]
-		From	@Values
-		Group By [CatalogName]
-		Having	Count(*) > 1)
-	Throw 50000, '[CatalogName] cannot be duplicate', 2;
+	If @ModelId is Null and @CatalogId is Null
+	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
 
 	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
 		Select	D.[CatalogId]
@@ -59,21 +55,33 @@ Begin Try
 
 	Insert Into @Delete ([CatalogId])
 	Select	T.[CatalogId]
-	From	[App_DataDictionary].[ModelCatalog] T
+	From	[App_DataDictionary].[DatabaseCatalog] T
 			Left Join @Values V
-			On	V.[CatalogId] = T.[CatalogId]
+			On	T.[CatalogId] = V.[CatalogId]
+			Left Join [App_DataDictionary].[ModelCatalog] M
+			On	T.[CatalogId] = M.[CatalogId]
 	Where	V.[CatalogId] is Null And
-			T.[ModelId] = @ModelId
+			(@CatalogId is Null or T.[CatalogId] = @CatalogId) And
+			(@ModelId is Null or M.[ModelId] = @ModelId)
 
 	if Exists (Select 1 From @Delete)
-	Exec [App_DataDictionary].[procDeleteDatabaseCatalogObject] @ModelId, @Delete;
+	Exec [App_DataDictionary].[procDeleteDatabaseCatalogObject] @Delete;
 
 	-- Apply Changes
-	With [Delta] As (
+	Delete From [App_DataDictionary].[ModelCatalog]
+	From	[App_DataDictionary].[ModelCatalog] M
+			Left Join @Values S
+			On	M.[CatalogId] = S.[CatalogId] And
+				M.[ModelId] = @ModelId
+	Where	S.[CatalogId] is Null And
+			(@CatalogId is Null or M.[CatalogId] = @CatalogId) And
+			(@ModelId is Null or M.[ModelId] = @ModelId)
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelCatalog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	;With [Delta] As (
 		Select	[CatalogId],
 				[CatalogTitle],
 				[CatalogDescription],
-				[CatalogName],
 				[SourceServerName],
 				[SourceDatabaseName],
 				[SourceDate]
@@ -82,7 +90,6 @@ Begin Try
 		Select	[CatalogId],
 				[CatalogTitle],
 				[CatalogDescription],
-				[CatalogName],
 				[SourceServerName],
 				[SourceDatabaseName],
 				[SourceDate]
@@ -91,11 +98,10 @@ Begin Try
 		Select	V.[CatalogId],
 				V.[CatalogTitle],
 				V.[CatalogDescription],
-				V.[CatalogName],
 				V.[SourceServerName],
 				V.[SourceDatabaseName],
 				V.[SourceDate],
-				IIF(D.[CatalogId] is Null,1, 0) As [IsDiffrent]
+				IIF(D.[CatalogId] is Null,0, 1) As [IsDiffrent]
 		From	@Values V
 				Left Join [Delta] D
 				On	V.[CatalogId] = D.[CatalogId])
@@ -105,7 +111,6 @@ Begin Try
 	When Matched And S.[IsDiffrent] = 1 Then Update
 		Set	[CatalogTitle] = S.[CatalogTitle],
 			[CatalogDescription] = S.[CatalogDescription],
-			[CatalogName] = S.[CatalogName],
 			[SourceServerName] = S.[SourceServerName],
 			[SourceDatabaseName] = S.[SourceDatabaseName],
 			[SourceDate] = S.[SourceDate]
@@ -113,37 +118,34 @@ Begin Try
 		Insert ([CatalogId],
 				[CatalogTitle],
 				[CatalogDescription],
-				[CatalogName],
 				[SourceServerName],
 				[SourceDatabaseName],
 				[SourceDate])
 		Values ([CatalogId],
 				[CatalogTitle],
 				[CatalogDescription],
-				[CatalogName],
 				[SourceServerName],
 				[SourceDatabaseName],
 				[SourceDate])
-	When Not Matched by Source And T.[CatalogId] In (
-			Select	A.[CatalogId]
-			From	[App_DataDictionary].[ModelCatalog] A
-					Left Join [App_DataDictionary].[ModelCatalog] B
-					On	A.[CatalogId] = B.[CatalogId] And
-						A.[ModelId] <> B.[ModelId]
-			Where	A.[ModelId] = @ModelId And B.[ModelId] is Null) Then Delete;
+	When Not Matched by Source And
+		-- Only way to get rid of a Catalog is to remove it by Catalog Id.
+		T.[CatalogId] = @CatalogId And
+		T.[CatalogId] Not in (
+			Select	[CatalogId]
+			From	[App_DataDictionary].[ModelCatalog])
+		Then Delete;
+	Print FormatMessage ('Merge [App_DataDictionary].[DatabaseCatalog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	With [Data] As (
-		Select	@ModelId As [ModelId],
-				[CatalogId]
-		From	@Values)
-	Merge [App_DataDictionary].[ModelCatalog] T
-	Using [Data] D
-	On	T.[ModelId] = D.[ModelId] And
-		T.[CatalogId] = D.[CatalogId]
-	When Not Matched by Target Then
-		Insert ([ModelId], [CatalogId])
-		Values ([ModelId], [CatalogId])
-	When Not Matched by Source And T.[ModelId] = @ModelId Then Delete;
+	Insert Into [App_DataDictionary].[ModelCatalog] ([ModelId], [CatalogId])
+	Select	@ModelId As [ModelId],
+			S.[CatalogId]
+	from	@Values S
+			Left Join [App_DataDictionary].[ModelCatalog] T
+			On	S.[CatalogId] = T.[CatalogId] And
+				@ModelId = T.[ModelId]
+	Where	T.[ModelId] is Null And
+			@ModelId is Not Null
+	Print FormatMessage ('Insert [App_DataDictionary].[ModelCatalog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -184,16 +186,4 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
-GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseCatalog',
-	@value = N'Performs Set on DatabaseCatalog.'
-GO
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDatabaseCatalog',
-	@level2type = N'PARAMETER', @level2name = N'@ModelId',
-	@value = N'ModelId'
 GO
