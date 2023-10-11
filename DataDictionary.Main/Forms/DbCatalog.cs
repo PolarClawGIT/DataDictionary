@@ -106,10 +106,10 @@ namespace DataDictionary.Main.Forms
             {
                 if (availableContexts.FirstOrDefault(
                     w => w.ServerName.Equals(catalogItem.SourceServerName, StringComparison.CurrentCultureIgnoreCase) &&
-                    w.DatabaseName.Equals(catalogItem.CatalogName, StringComparison.CurrentCultureIgnoreCase)) is null &&
+                    w.DatabaseName.Equals(catalogItem.DatabaseName, StringComparison.CurrentCultureIgnoreCase)) is null &&
                     catalogItem.SourceServerName is String &&
-                    catalogItem.CatalogName is String)
-                { availableContexts.Add(new DbSchemaContext() { ServerName = catalogItem.SourceServerName, DatabaseName = catalogItem.CatalogName }); }
+                    catalogItem.DatabaseName is String)
+                { availableContexts.Add(new DbSchemaContext() { ServerName = catalogItem.SourceServerName, DatabaseName = catalogItem.DatabaseName }); }
             }
         }
 
@@ -201,18 +201,18 @@ namespace DataDictionary.Main.Forms
                 if (!result.Cancelled)
                 {
 
-                    if (databaseNames.FirstOrDefault(w => w.CatalogName == databaseNameData.Text) is DbDatabaseItem currentDb)
+                    if (databaseNames.FirstOrDefault(w => w.DatabaseName == databaseNameData.Text) is DbDatabaseItem currentDb)
                     {
                         databaseNameData.Items.Clear();
                         databaseNameData.Text = String.Empty;
-                        databaseNameData.Items.AddRange(databaseNames.Select(s => s.CatalogName).ToArray());
-                        databaseNameData.SelectedIndex = databaseNameData.Items.IndexOf(currentDb.CatalogName);
+                        databaseNameData.Items.AddRange(databaseNames.Select(s => s.DatabaseName).ToArray());
+                        databaseNameData.SelectedIndex = databaseNameData.Items.IndexOf(currentDb.DatabaseName);
                     }
                     else
                     {
                         databaseNameData.Items.Clear();
                         databaseNameData.Text = String.Empty;
-                        databaseNameData.Items.AddRange(databaseNames.Select(s => s.CatalogName).ToArray());
+                        databaseNameData.Items.AddRange(databaseNames.Select(s => s.DatabaseName).ToArray());
                         if (databaseNameData.Items.Count > 0) { databaseNameData.SelectedIndex = 0; }
                         else { databaseNameData.SelectedIndex = -1; }
                     }
@@ -285,7 +285,7 @@ namespace DataDictionary.Main.Forms
                 if (dbConnectionsData.SelectedRows[0].DataBoundItem is DbCatalogItem catalogItem &&
                     availableContexts.FirstOrDefault(
                         w => w.ServerName.Equals(catalogItem.SourceServerName, StringComparison.CurrentCultureIgnoreCase) &&
-                        w.DatabaseName.Equals(catalogItem.CatalogName, StringComparison.OrdinalIgnoreCase)) is DbSchemaContext newContext)
+                        w.DatabaseName.Equals(catalogItem.DatabaseName, StringComparison.OrdinalIgnoreCase)) is DbSchemaContext newContext)
                 { data.DbContext = newContext; }
                 else
                 { // Not suppose to happen

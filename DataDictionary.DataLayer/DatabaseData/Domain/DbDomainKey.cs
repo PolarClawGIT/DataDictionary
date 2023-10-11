@@ -90,7 +90,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(CatalogName, SchemaName, DomainName); }
+        { return HashCode.Combine(DatabaseName, SchemaName, DomainName); }
         #endregion
 
         /// <inheritdoc/>

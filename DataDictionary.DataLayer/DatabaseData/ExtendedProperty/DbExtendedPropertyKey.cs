@@ -88,7 +88,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(CatalogName, Level0Name, Level1Name, Level2Name, PropertyName); }
+        { return HashCode.Combine(DatabaseName, Level0Name, Level1Name, Level2Name, PropertyName); }
         #endregion
 
         /// <inheritdoc/>

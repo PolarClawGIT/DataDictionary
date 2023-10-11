@@ -104,7 +104,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(CatalogName, SchemaName, ObjectName, ElementName); }
+        { return HashCode.Combine(DatabaseName, SchemaName, ObjectName, ElementName); }
         #endregion
 
         /// <inheritdoc/>

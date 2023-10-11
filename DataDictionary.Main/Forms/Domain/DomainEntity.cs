@@ -76,7 +76,7 @@ namespace DataDictionary.Main.Forms.Domain
                 aliasNavigation.DataSource = bindingDatabaseAlias;
 
                 DomainEntityAliasItem aliasMembers = new DomainEntityAliasItem();
-                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.CatalogName)));
+                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.DatabaseName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.SchemaName)));
                 objectNameData.DataBindings.Add(new Binding(nameof(objectNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.ObjectName)));
 

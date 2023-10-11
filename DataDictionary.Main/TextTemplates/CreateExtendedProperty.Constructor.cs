@@ -51,7 +51,7 @@ namespace DataDictionary.Main.TextTemplates
 
                         DbExtendedPropertyParameter value = new DbExtendedPropertyParameter()
                         {
-                            CatalogName = aliasItem.CatalogName,
+                            DatabaseName = aliasItem.DatabaseName,
                             PropertyName = propertyName,
                             PropertyValue = propertyItem.PropertyValue,
                             Level0Type = aliasItem.CatalogScope.ToString(),
@@ -99,7 +99,7 @@ namespace DataDictionary.Main.TextTemplates
                     {
                         DbExtendedPropertyParameter value = new DbExtendedPropertyParameter()
                         {
-                            CatalogName = aliasItem.CatalogName,
+                            DatabaseName = aliasItem.DatabaseName,
                             PropertyName = propertyName,
                             PropertyValue = propertyItem.PropertyValue,
                             Level0Type = aliasItem.CatalogScope.ToString(),

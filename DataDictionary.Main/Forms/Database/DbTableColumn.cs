@@ -27,7 +27,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             if (Program.Data.DbTableColumns.FirstOrDefault(w => DataKey.Equals(w)) is DbTableColumnItem data)
             {
-                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.CatalogName)));
+                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.DatabaseName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
                 tableNameData.DataBindings.Add(new Binding(nameof(tableNameData.Text), data, nameof(data.TableName)));
                 columnNameData.DataBindings.Add(new Binding(nameof(columnNameData.Text), data, nameof(data.ColumnName)));

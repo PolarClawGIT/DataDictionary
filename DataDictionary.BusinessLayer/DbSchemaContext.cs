@@ -18,8 +18,5 @@ namespace DataDictionary.BusinessLayer
     /// It is expected to be used Read-Only
     /// </summary>
     public class DbSchemaContext : Toolbox.DbContext.Context, IDbCatalogKeyUnique
-    {
-        /// <inheritdoc/>
-        public String? CatalogName { get { return this.DatabaseName; } }
-    }
+    { }
 }

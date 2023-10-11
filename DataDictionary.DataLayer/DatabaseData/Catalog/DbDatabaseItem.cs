@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     public class DbDatabaseItem : BindingTableRow, IDbCatalogKeyUnique
     {
         /// <inheritdoc/>
-        public virtual string? CatalogName { get { return GetValue("database_name"); } }
+        public virtual string? DatabaseName { get { return GetValue("database_name"); } }
 
         /// <summary>
         /// Schema type to get using SqlClient GetSchema method.

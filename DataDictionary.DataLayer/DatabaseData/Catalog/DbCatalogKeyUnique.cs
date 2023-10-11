@@ -6,9 +6,9 @@
     public interface IDbCatalogKeyUnique: IKey
     {
         /// <summary>
-        /// Name of the Catalog (aka Database Name).
+        /// Name of the Database Name
         /// </summary>
-        String? CatalogName { get; }
+        String? DatabaseName { get; }
     }
 
     /// <summary>
@@ -17,7 +17,7 @@
     public class DbCatalogKeyUnique : IDbCatalogKeyUnique, IKeyComparable<IDbCatalogKeyUnique>
     {
         /// <inheritdoc/>
-        public String CatalogName { get; init; } = string.Empty;
+        public String DatabaseName { get; init; } = string.Empty;
 
         /// <summary>
         /// Constructor for the Catalog Unique Key.
@@ -25,8 +25,8 @@
         /// <param name="source"></param>
         public DbCatalogKeyUnique(IDbCatalogKeyUnique source) : base()
         {
-            if (source.CatalogName is string) { CatalogName = source.CatalogName; }
-            else { CatalogName = string.Empty; }
+            if (source.DatabaseName is string) { DatabaseName = source.DatabaseName; }
+            else { DatabaseName = string.Empty; }
         }
 
         #region IEquatable, IComparable
@@ -35,9 +35,9 @@
         {
             return 
                 other is IDbCatalogKeyUnique &&
-                !string.IsNullOrEmpty(CatalogName) &&
-                !string.IsNullOrEmpty(other.CatalogName) &&
-                CatalogName.Equals(other.CatalogName, KeyExtension.CompareString);
+                !string.IsNullOrEmpty(DatabaseName) &&
+                !string.IsNullOrEmpty(other.DatabaseName) &&
+                DatabaseName.Equals(other.DatabaseName, KeyExtension.CompareString);
         }
 
         /// <inheritdoc/>
@@ -48,7 +48,7 @@
         public virtual int CompareTo(IDbCatalogKeyUnique? other)
         {
             if (other is DbCatalogKeyUnique value)
-            { return string.Compare(CatalogName, value.CatalogName, true); }
+            { return string.Compare(DatabaseName, value.DatabaseName, true); }
             else { return 1; }
         }
 
@@ -82,13 +82,13 @@
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(CatalogName); }
+        { return HashCode.Combine(DatabaseName); }
         #endregion
 
         /// <inheritdoc/>
         public override string ToString()
         {
-            if (CatalogName is string) { return CatalogName; }
+            if (DatabaseName is string) { return DatabaseName; }
             else { return string.Empty; }
         }
     }

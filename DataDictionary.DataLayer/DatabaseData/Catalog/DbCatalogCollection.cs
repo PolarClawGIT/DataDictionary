@@ -21,13 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        {
-            Command command = connection.CreateCommand();
-            command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbCatalogItem;
-            command.Parameters.Add(new SqlParameter("@Server", SqlDbType.NVarChar) { Value = connection.ServerName });
-            return command;
-        }
+        { return LoadCommand(connection, (null, null, null)); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)

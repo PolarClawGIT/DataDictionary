@@ -34,7 +34,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         { get { return GetValue<Guid>("EntityId"); } protected set { SetValue("EntityId", value); } }
 
         /// <inheritdoc/>
-        public string? CatalogName { get { return GetValue("CatalogName"); } set { SetValue("CatalogName", value); } }
+        public string? DatabaseName { get { return GetValue("CatalogName"); } set { SetValue("CatalogName", value); } }
 
         /// <inheritdoc/>
         public string? SchemaName { get { return GetValue("SchemaName"); } set { SetValue("SchemaName", value); } }
@@ -78,7 +78,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         public DomainEntityAliasItem(IDomainEntityKey key, IDbTableItem source) : this()
         {
             EntityId = key.EntityId;
-            CatalogName = source.CatalogName;
+            DatabaseName = source.DatabaseName;
             SchemaName = source.SchemaName;
             ObjectName = source.TableName;
         }
@@ -102,7 +102,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
-            if (!string.IsNullOrWhiteSpace(CatalogName)) { result.Append(CatalogName); }
+            if (!string.IsNullOrWhiteSpace(DatabaseName)) { result.Append(DatabaseName); }
 
             if (!string.IsNullOrWhiteSpace(SchemaName)) { result.Append(SchemaName); }
             {

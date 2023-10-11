@@ -121,7 +121,6 @@
     <value>Select	@CatalogId As [CatalogId],
 	Db_Name() As [CatalogTitle],
 	Convert(NvarChar,Null) As [CatalogDescription],
-	Db_Name() As [CatalogName],
 	@Server As [SourceServerName],
 	Db_Name() As [SourceDatabaseName],
 	GetDate() As [SourceDate],
@@ -130,7 +129,7 @@
   </data>
   <data name="DbColumnItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
-	I.[TABLE_CATALOG] As [CatalogName],
+	I.[TABLE_CATALOG] As [DatabaseName],
 	I.[TABLE_SCHEMA] As [SchemaName],
 	I.[TABLE_NAME] As [TableName],
 	T.[TABLE_TYPE] As [TableType],
@@ -175,7 +174,7 @@ From	[INFORMATION_SCHEMA].[COLUMNS] I
   </data>
   <data name="DbConstraintColumnItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
-	T.[CONSTRAINT_CATALOG] As [CatalogName],
+	T.[CONSTRAINT_CATALOG] As [DatabaseName],
 	T.[CONSTRAINT_SCHEMA] As [SchemaName],
 	T.[CONSTRAINT_NAME] As [ConstraintName],
 	C.[TABLE_NAME] As [TableName],
@@ -202,7 +201,7 @@ From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
   </data>
   <data name="DbConstraintItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
-	[CONSTRAINT_CATALOG] As [CatalogName],
+	[CONSTRAINT_CATALOG] As [DatabaseName],
 	[CONSTRAINT_SCHEMA] As [SchemaName],
 	[CONSTRAINT_NAME] As [ConstraintName],
 	[TABLE_NAME] As [TableName],
@@ -212,7 +211,7 @@ From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS]</value>
   </data>
   <data name="DbDomainItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
-	[DOMAIN_CATALOG] As [CatalogName],
+	[DOMAIN_CATALOG] As [DatabaseName],
 	[DOMAIN_SCHEMA] As [SchemaName],
 	[DOMAIN_NAME] As [DomainName],
 	[DATA_TYPE] As [DataType],
@@ -234,7 +233,7 @@ From	[INFORMATION_SCHEMA].[DOMAINS]</value>
   </data>
   <data name="DbExtendedPropertyItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
-	Db_Name() [CatalogName],
+	Db_Name() [DatabaseName],
 	@Level0Type [Level0Type],
 	@Level0Name [Level0Name],
 	@Level1Type [Level1Type],
@@ -258,7 +257,7 @@ FROM [fn_listextendedproperty] (
   <data name="DbRoutineDependencyItem" xml:space="preserve">
     <value>Begin Try;
 Select	@CatalogId As [CatalogId],
-	IsNull(R.[referenced_database_name],DB_Name()) As [CatalogName],
+	IsNull(R.[referenced_database_name],DB_Name()) As [DatabaseName],
 	Object_Schema_Name(Object_id(@ObjectName)) As [SchemaName],
 	Object_Name(Object_id(@ObjectName)) As [RoutineName],
 	IsNull(R.[referenced_schema_name],'dbo') As [ReferenceSchemaName],
@@ -282,7 +281,7 @@ End Catch;</value>
   </data>
   <data name="DbRoutineItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
-	[ROUTINE_CATALOG] As [CatalogName], 
+	[ROUTINE_CATALOG] As [DatabaseName],
 	[ROUTINE_SCHEMA] As [SchemaName],
 	[ROUTINE_NAME] As [RoutineName],
 	[ROUTINE_TYPE] As [RoutineType]
@@ -291,7 +290,7 @@ From	[INFORMATION_SCHEMA].[ROUTINES]</value>
   </data>
   <data name="DbRoutineParameterItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
-	P.[SPECIFIC_CATALOG] As [CatalogName],
+	P.[SPECIFIC_CATALOG] As [DatabaseName],
 	P.[SPECIFIC_SCHEMA] As [SchemaName],
 	P.[SPECIFIC_NAME] As [RoutineName],
 	R.[ROUTINE_TYPE] As [RoutineType],
@@ -322,14 +321,14 @@ From	[INFORMATION_SCHEMA].[PARAMETERS] P
   </data>
   <data name="DbSchemaItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
-	[CATALOG_NAME] As [CatalogName],
+	[CATALOG_NAME] As [DatabaseName],
 	[SCHEMA_NAME] As [SchemaName]
 From	[INFORMATION_SCHEMA].[SCHEMATA]</value>
     <comment>SQL Script to get data for DbSchemaItem.</comment>
   </data>
   <data name="DbTableItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
-	I.[TABLE_CATALOG] As [CatalogName],
+	I.[TABLE_CATALOG] As [DatabaseName],
 	I.[TABLE_SCHEMA] As [SchemaName],
 	I.[TABLE_NAME] As [TableName],
 	Case
@@ -346,7 +345,7 @@ From	[INFORMATION_SCHEMA].[TABLES] I
 		I.[TABLE_NAME] = Object_Name(H.[history_table_id])
 UNION
 Select	@CatalogId As [CatalogId],
-	[TABLE_CATALOG] As [CatalogName],
+	[TABLE_CATALOG] As [DatabaseName],
 	[TABLE_SCHEMA] As [SchemaName],
 	[TABLE_NAME] As [TableName],
 	'VIEW' As [TableType]

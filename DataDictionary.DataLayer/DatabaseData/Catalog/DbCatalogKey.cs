@@ -34,7 +34,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         #region IEquatable
         /// <inheritdoc/>
         public virtual bool Equals(IDbCatalogKey? other)
-        { return other is DbCatalogKey && EqualityComparer<Guid?>.Default.Equals(CatalogId, other.CatalogId); }
+        { return other is IDbCatalogKey && EqualityComparer<Guid?>.Default.Equals(CatalogId, other.CatalogId); }
 
         /// <inheritdoc/>
         public override bool Equals(object? other)

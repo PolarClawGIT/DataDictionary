@@ -61,7 +61,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
 
         /// <inheritdoc/>
-        public string? CatalogName { get { return GetValue("CatalogName"); } }
+        public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
         /// <inheritdoc/>
         public string? Level0Type { get { return GetValue("Level0Type"); } }
@@ -111,7 +111,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("CatalogName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("Level0Type", typeof(string)){ AllowDBNull = true},
             new DataColumn("Level0Name", typeof(string)){ AllowDBNull = true},
             new DataColumn("Level1Type", typeof(string)){ AllowDBNull = true},

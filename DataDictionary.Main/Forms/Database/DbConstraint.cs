@@ -25,7 +25,7 @@ namespace DataDictionary.Main.Forms.Database
             if (Program.Data.DbConstraints.FirstOrDefault(w => DataKey.Equals(w)) is DbConstraintItem data)
             {
                 this.Text = new DbConstraintKey(data).ToString();
-                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.CatalogName)));
+                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.DatabaseName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
                 constraintNameData.DataBindings.Add(new Binding(nameof(constraintNameData.Text), data, nameof(data.ConstraintName)));
                 constraintTypeData.DataBindings.Add(new Binding(nameof(constraintTypeData.Text), data, nameof(data.ConstraintType)));

@@ -98,17 +98,17 @@ namespace DataDictionary.Main
             dataSourceNavigation.Nodes.Clear();
             dbDataNodes.Clear();
 
-            foreach (IDbCatalogItem catalogItem in Program.Data.DbCatalogs.OrderBy(o => o.CatalogName))
+            foreach (IDbCatalogItem catalogItem in Program.Data.DbCatalogs.OrderBy(o => o.DatabaseName))
             {
-                if (String.IsNullOrWhiteSpace(catalogItem.CatalogName))
+                if (String.IsNullOrWhiteSpace(catalogItem.DatabaseName))
                 { } //TODO: This event may fire when there is no data or the data is being changed. Caused by the deleted row not being handled correctly.
 
-                TreeNode catalogNode = CreateNode(catalogItem.CatalogName, dbDataImageIndex.Database, catalogItem);
+                TreeNode catalogNode = CreateNode(catalogItem.DatabaseName, dbDataImageIndex.Database, catalogItem);
                 dataSourceNavigation.Nodes.Add(catalogNode);
 
                 foreach (IDbSchemaItem schemaItem in Program.Data.DbSchemta.OrderBy(o => o.SchemaName).Where(
                     w => w.IsSystem == false &&
-                    w.CatalogName == catalogItem.CatalogName))
+                    w.DatabaseName == catalogItem.DatabaseName))
                 {
                     TreeNode schemaNode = CreateNode(schemaItem.SchemaName, dbDataImageIndex.Schema, schemaItem, catalogNode);
                     TreeNode tablesNode = CreateNode("Tables & Views", dbDataImageIndex.Tables, null, schemaNode);

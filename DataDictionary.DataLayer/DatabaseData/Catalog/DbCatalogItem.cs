@@ -49,7 +49,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } protected set { SetValue("CatalogId", value); } }
 
         /// <inheritdoc/>
-        public string? CatalogName { get { return GetValue("CatalogName"); } set { SetValue("CatalogName", value); } }
+        public string? DatabaseName { get { return GetValue("SourceDatabaseName"); }  }
 
         /// <inheritdoc/>
         public string? CatalogTitle { get { return GetValue("CatalogTitle"); } set { SetValue("CatalogTitle", value); } }
@@ -67,7 +67,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         public DateTime? SourceDate { get { return GetValue<DateTime>("SourceDate"); } protected set { SetValue("SourceDate", value); } }
 
         /// <inheritdoc/>
-        public bool IsSystem { get { return CatalogName is "tempdb" or "master" or "msdb" or "model"; } }
+        public bool IsSystem { get { return DatabaseName is "tempdb" or "master" or "msdb" or "model"; } }
 
         /// <summary>
         /// Constructor for DbCatalogItem.
@@ -80,7 +80,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
             new DataColumn("CatalogId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("CatalogTitle", typeof(string)){ AllowDBNull = true},
             new DataColumn("CatalogDescription", typeof(string)){ AllowDBNull = true}, 
-            new DataColumn("CatalogName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SourceServerName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SourceDatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SourceDate", typeof(DateTime)){ AllowDBNull = true},

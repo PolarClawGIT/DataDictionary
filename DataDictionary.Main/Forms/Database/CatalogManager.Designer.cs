@@ -37,9 +37,13 @@
             catalogTitleData = new Controls.TextBoxData();
             catalogDescriptionData = new Controls.TextBoxData();
             sourceDateData = new Controls.TextBoxData();
+            sourceServerNameData = new Controls.TextBoxData();
+            sourceDatabaseNameData = new Controls.TextBoxData();
             catalogBinding = new BindingSource(components);
-            comboBoxData1 = new Controls.ComboBoxData();
-            sourceDatabaseNameData = new Controls.ComboBoxData();
+            catalogTitleColumn = new DataGridViewTextBoxColumn();
+            databaseNameColumn = new DataGridViewTextBoxColumn();
+            inModelColumn = new DataGridViewCheckBoxColumn();
+            inDatabase = new DataGridViewCheckBoxColumn();
             catalogManagerLayout = new TableLayoutPanel();
             libraryManagerLayoutCheckBoxs = new TableLayoutPanel();
             catalogManagerLayout.SuspendLayout();
@@ -52,23 +56,24 @@
             // 
             catalogManagerLayout.ColumnCount = 2;
             catalogManagerLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66.6666641F));
-            catalogManagerLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            catalogManagerLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
             catalogManagerLayout.Controls.Add(libraryManagerLayoutCheckBoxs, 1, 3);
             catalogManagerLayout.Controls.Add(catalogNavigation, 0, 0);
             catalogManagerLayout.Controls.Add(catalogTitleData, 0, 1);
             catalogManagerLayout.Controls.Add(catalogDescriptionData, 0, 2);
             catalogManagerLayout.Controls.Add(sourceDateData, 1, 4);
-            catalogManagerLayout.Controls.Add(comboBoxData1, 0, 3);
+            catalogManagerLayout.Controls.Add(sourceServerNameData, 0, 3);
             catalogManagerLayout.Controls.Add(sourceDatabaseNameData, 0, 4);
-            catalogManagerLayout.Location = new Point(39, 203);
+            catalogManagerLayout.Dock = DockStyle.Fill;
+            catalogManagerLayout.Location = new Point(0, 25);
             catalogManagerLayout.Name = "catalogManagerLayout";
             catalogManagerLayout.RowCount = 5;
-            catalogManagerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            catalogManagerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            catalogManagerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            catalogManagerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            catalogManagerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            catalogManagerLayout.Size = new Size(384, 306);
+            catalogManagerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+            catalogManagerLayout.RowStyles.Add(new RowStyle());
+            catalogManagerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+            catalogManagerLayout.RowStyles.Add(new RowStyle());
+            catalogManagerLayout.RowStyles.Add(new RowStyle());
+            catalogManagerLayout.Size = new Size(462, 490);
             catalogManagerLayout.TabIndex = 1;
             // 
             // libraryManagerLayoutCheckBoxs
@@ -79,12 +84,12 @@
             libraryManagerLayoutCheckBoxs.Controls.Add(inModelData, 0, 0);
             libraryManagerLayoutCheckBoxs.Controls.Add(inDatabaseData, 0, 1);
             libraryManagerLayoutCheckBoxs.Dock = DockStyle.Fill;
-            libraryManagerLayoutCheckBoxs.Location = new Point(259, 186);
+            libraryManagerLayoutCheckBoxs.Location = new Point(310, 386);
             libraryManagerLayoutCheckBoxs.Name = "libraryManagerLayoutCheckBoxs";
             libraryManagerLayoutCheckBoxs.RowCount = 2;
             libraryManagerLayoutCheckBoxs.RowStyles.Add(new RowStyle());
             libraryManagerLayoutCheckBoxs.RowStyles.Add(new RowStyle());
-            libraryManagerLayoutCheckBoxs.Size = new Size(122, 55);
+            libraryManagerLayoutCheckBoxs.Size = new Size(149, 50);
             libraryManagerLayoutCheckBoxs.TabIndex = 9;
             // 
             // inModelData
@@ -109,13 +114,16 @@
             // 
             // catalogNavigation
             // 
+            catalogNavigation.AllowUserToAddRows = false;
+            catalogNavigation.AllowUserToDeleteRows = false;
             catalogNavigation.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            catalogNavigation.Columns.AddRange(new DataGridViewColumn[] { catalogTitleColumn, databaseNameColumn, inModelColumn, inDatabase });
             catalogManagerLayout.SetColumnSpan(catalogNavigation, 2);
             catalogNavigation.Dock = DockStyle.Fill;
             catalogNavigation.Location = new Point(3, 3);
             catalogNavigation.Name = "catalogNavigation";
             catalogNavigation.RowTemplate.Height = 25;
-            catalogNavigation.Size = new Size(378, 55);
+            catalogNavigation.Size = new Size(456, 227);
             catalogNavigation.TabIndex = 0;
             // 
             // catalogTitleData
@@ -124,11 +132,11 @@
             catalogManagerLayout.SetColumnSpan(catalogTitleData, 2);
             catalogTitleData.Dock = DockStyle.Fill;
             catalogTitleData.HeaderText = "Catalog Title";
-            catalogTitleData.Location = new Point(3, 64);
+            catalogTitleData.Location = new Point(3, 236);
             catalogTitleData.Multiline = false;
             catalogTitleData.Name = "catalogTitleData";
             catalogTitleData.ReadOnly = false;
-            catalogTitleData.Size = new Size(378, 55);
+            catalogTitleData.Size = new Size(456, 44);
             catalogTitleData.TabIndex = 1;
             // 
             // catalogDescriptionData
@@ -137,11 +145,11 @@
             catalogManagerLayout.SetColumnSpan(catalogDescriptionData, 2);
             catalogDescriptionData.Dock = DockStyle.Fill;
             catalogDescriptionData.HeaderText = "Catalog Description";
-            catalogDescriptionData.Location = new Point(3, 125);
+            catalogDescriptionData.Location = new Point(3, 286);
             catalogDescriptionData.Multiline = true;
             catalogDescriptionData.Name = "catalogDescriptionData";
             catalogDescriptionData.ReadOnly = false;
-            catalogDescriptionData.Size = new Size(378, 55);
+            catalogDescriptionData.Size = new Size(456, 94);
             catalogDescriptionData.TabIndex = 2;
             // 
             // sourceDateData
@@ -149,51 +157,77 @@
             sourceDateData.AutoSize = true;
             sourceDateData.Dock = DockStyle.Fill;
             sourceDateData.HeaderText = "Source Date";
-            sourceDateData.Location = new Point(259, 247);
+            sourceDateData.Location = new Point(310, 442);
             sourceDateData.Multiline = false;
             sourceDateData.Name = "sourceDateData";
             sourceDateData.ReadOnly = true;
-            sourceDateData.Size = new Size(122, 56);
+            sourceDateData.Size = new Size(149, 45);
             sourceDateData.TabIndex = 10;
             // 
-            // comboBoxData1
+            // sourceServerNameData
             // 
-            comboBoxData1.AutoSize = true;
-            comboBoxData1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            comboBoxData1.DataSource = null;
-            comboBoxData1.DisplayMember = "";
-            comboBoxData1.Dock = DockStyle.Fill;
-            comboBoxData1.HeaderText = "Source Server Name";
-            comboBoxData1.Location = new Point(3, 186);
-            comboBoxData1.Name = "comboBoxData1";
-            comboBoxData1.ReadOnly = false;
-            comboBoxData1.Size = new Size(250, 55);
-            comboBoxData1.TabIndex = 11;
-            comboBoxData1.ValueMember = "";
+            sourceServerNameData.AutoSize = true;
+            sourceServerNameData.Dock = DockStyle.Fill;
+            sourceServerNameData.HeaderText = "Source Server Name";
+            sourceServerNameData.Location = new Point(3, 386);
+            sourceServerNameData.Multiline = false;
+            sourceServerNameData.Name = "sourceServerNameData";
+            sourceServerNameData.ReadOnly = true;
+            sourceServerNameData.Size = new Size(301, 50);
+            sourceServerNameData.TabIndex = 11;
             // 
             // sourceDatabaseNameData
             // 
             sourceDatabaseNameData.AutoSize = true;
-            sourceDatabaseNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            sourceDatabaseNameData.DataSource = null;
-            sourceDatabaseNameData.DisplayMember = "";
             sourceDatabaseNameData.Dock = DockStyle.Fill;
             sourceDatabaseNameData.HeaderText = "Source Database Name";
-            sourceDatabaseNameData.Location = new Point(3, 247);
+            sourceDatabaseNameData.Location = new Point(3, 442);
+            sourceDatabaseNameData.Multiline = false;
             sourceDatabaseNameData.Name = "sourceDatabaseNameData";
-            sourceDatabaseNameData.ReadOnly = false;
-            sourceDatabaseNameData.Size = new Size(250, 56);
+            sourceDatabaseNameData.ReadOnly = true;
+            sourceDatabaseNameData.Size = new Size(301, 45);
             sourceDatabaseNameData.TabIndex = 12;
-            sourceDatabaseNameData.ValueMember = "";
+            // 
+            // catalogTitleColumn
+            // 
+            catalogTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            catalogTitleColumn.DataPropertyName = "CatalogTitle";
+            catalogTitleColumn.HeaderText = "Catalog Title";
+            catalogTitleColumn.Name = "catalogTitleColumn";
+            // 
+            // databaseNameColumn
+            // 
+            databaseNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            databaseNameColumn.DataPropertyName = "SourceDatabaseName";
+            databaseNameColumn.HeaderText = "Database Name";
+            databaseNameColumn.Name = "databaseNameColumn";
+            databaseNameColumn.ReadOnly = true;
+            // 
+            // inModelColumn
+            // 
+            inModelColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            inModelColumn.DataPropertyName = "InModel";
+            inModelColumn.HeaderText = "In Model";
+            inModelColumn.Name = "inModelColumn";
+            inModelColumn.Width = 60;
+            // 
+            // inDatabase
+            // 
+            inDatabase.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            inDatabase.DataPropertyName = "InDatabase";
+            inDatabase.HeaderText = "In Database";
+            inDatabase.Name = "inDatabase";
+            inDatabase.Width = 74;
             // 
             // CatalogManager
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(523, 634);
+            ClientSize = new Size(462, 515);
             Controls.Add(catalogManagerLayout);
             Name = "CatalogManager";
             Text = "Catalog Manager";
+            Load += CatalogManager_Load;
             Controls.SetChildIndex(catalogManagerLayout, 0);
             catalogManagerLayout.ResumeLayout(false);
             catalogManagerLayout.PerformLayout();
@@ -207,7 +241,6 @@
 
         #endregion
 
-        private TableLayoutPanel catalogManagerLayout;
         private DataGridView catalogNavigation;
         private BindingSource catalogBinding;
         private Controls.TextBoxData catalogTitleData;
@@ -215,7 +248,11 @@
         private CheckBox inModelData;
         private CheckBox inDatabaseData;
         private Controls.TextBoxData sourceDateData;
-        private Controls.ComboBoxData comboBoxData1;
-        private Controls.ComboBoxData sourceDatabaseNameData;
+        private Controls.TextBoxData sourceServerNameData;
+        private Controls.TextBoxData sourceDatabaseNameData;
+        private DataGridViewTextBoxColumn catalogTitleColumn;
+        private DataGridViewTextBoxColumn databaseNameColumn;
+        private DataGridViewCheckBoxColumn inModelColumn;
+        private DataGridViewCheckBoxColumn inDatabase;
     }
 }

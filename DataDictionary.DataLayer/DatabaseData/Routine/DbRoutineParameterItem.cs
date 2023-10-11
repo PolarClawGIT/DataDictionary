@@ -32,7 +32,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
 
         /// <inheritdoc/>
-        public string? CatalogName { get { return GetValue("CatalogName"); } }
+        public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
         /// <inheritdoc/>
         public string? SchemaName { get { return GetValue("SchemaName"); } }
@@ -100,7 +100,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("CatalogName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("RoutineName", typeof(string)){ AllowDBNull = false},
             new DataColumn("RoutineType", typeof(string)){ AllowDBNull = false},

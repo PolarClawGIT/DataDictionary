@@ -65,7 +65,8 @@ namespace DataDictionary.Main.Forms.Library
 
 
             public LibraryManagerItem(LibrarySourceItem source) : base()
-            { data = source;
+            {
+                data = source;
                 data.PropertyChanged += Data_PropertyChanged;
             }
 
@@ -86,13 +87,12 @@ namespace DataDictionary.Main.Forms.Library
 
         class LibraryManagerCollection : BindingList<LibraryManagerItem>
         {
-
             public void Build(IEnumerable<LibrarySourceItem> modelItems, IEnumerable<LibrarySourceItem> dbItems)
             {
                 this.Clear();
 
                 // List of keys all keys
-                List <LibrarySourceKey> libraryKeys = modelItems.Select(s => new LibrarySourceKey(s))
+                List<LibrarySourceKey> libraryKeys = modelItems.Select(s => new LibrarySourceKey(s))
                     .Union(dbItems.Select(s => new LibrarySourceKey(s)))
                     .ToList();
 
@@ -129,8 +129,6 @@ namespace DataDictionary.Main.Forms.Library
                 { return base.Remove(toRemove); }
                 else { return false; }
             }
-
-
         }
     }
 }

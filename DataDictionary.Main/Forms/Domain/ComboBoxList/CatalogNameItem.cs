@@ -12,10 +12,10 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
     record CatalogNameItem : IDbCatalogKeyUnique
     {
-        public String CatalogName { get; set; } = String.Empty;
+        public String DatabaseName { get; set; } = String.Empty;
 
         protected CatalogNameItem(IDbCatalogKeyUnique source) : base()
-        { if (source.CatalogName is String value) { CatalogName = value; } }
+        { if (source.DatabaseName is String value) { DatabaseName = value; } }
 
         public static void Bind(ComboBoxData control)
         {
@@ -26,10 +26,10 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 
             CatalogNameItem? selected = control.SelectedItem as CatalogNameItem;
             if (selected is null)
-            { selected = list.FirstOrDefault(w => control.Text.ToUpper() == w.CatalogName.ToUpper()); }
+            { selected = list.FirstOrDefault(w => control.Text.ToUpper() == w.DatabaseName.ToUpper()); }
 
             control.DataSource = list;
-            control.ValueMember = nameof(selected.CatalogName);
+            control.ValueMember = nameof(selected.DatabaseName);
 
             if (selected is not null) { control.SelectedItem = selected; }
         }

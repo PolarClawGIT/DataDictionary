@@ -40,7 +40,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     { //TODO: Switch to using the Scope enumerations.
 
         /// <inheritdoc/>
-        public String? CatalogName { get; set; }
+        public String? DatabaseName { get; set; }
 
         /// <inheritdoc/>
         public string? PropertyName { get; set; } // Null will return all extended properties

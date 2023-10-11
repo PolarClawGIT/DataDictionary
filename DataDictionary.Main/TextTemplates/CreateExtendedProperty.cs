@@ -34,7 +34,7 @@ foreach (DataDictionary.DataLayer.DatabaseData.ExtendedProperty.DbExtendedProper
             this.Write("exec ");
             
             #line 4 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.CatalogName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.DatabaseName));
             
             #line default
             #line hidden
@@ -110,7 +110,7 @@ foreach (DataDictionary.DataLayer.DatabaseData.ExtendedProperty.DbExtendedProper
             this.Write("exec ");
             
             #line 12 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.CatalogName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.DatabaseName));
             
             #line default
             #line hidden

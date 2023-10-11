@@ -66,7 +66,7 @@ namespace DataDictionary.Main.Forms.Domain
                 attributeAlaisData.DataSource = bindingDatabaseAlias;
 
                 DomainAttributeAliasItem aliasMembers = new DomainAttributeAliasItem();
-                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.CatalogName)));
+                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.DatabaseName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.SchemaName)));
                 objectNameData.DataBindings.Add(new Binding(nameof(objectNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.ObjectName)));
                 elementNameData.DataBindings.Add(new Binding(nameof(elementNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.ElementName)));

@@ -91,7 +91,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(CatalogName, SchemaName); }
+        { return HashCode.Combine(DatabaseName, SchemaName); }
         #endregion
 
         /// <inheritdoc/>

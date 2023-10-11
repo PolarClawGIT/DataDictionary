@@ -25,7 +25,7 @@ namespace DataDictionary.Main.Forms.Database
             {
                 this.Text = new DbRoutineParameterKey(data).ToString();
 
-                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.CatalogName)));
+                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.DatabaseName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
                 routineNameData.DataBindings.Add(new Binding(nameof(routineNameData.Text), data, nameof(data.RoutineName)));
                 parameterNameData.DataBindings.Add(new Binding(nameof(parameterNameData.Text), data, nameof(data.ParameterName)));

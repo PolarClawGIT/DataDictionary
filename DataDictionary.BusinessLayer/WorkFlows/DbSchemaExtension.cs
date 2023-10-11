@@ -185,6 +185,30 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         }
 
         /// <summary>
+        /// Creates work items that Loads all the Catalogs from the Database.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> LoadCatalog<T>(this T target)
+            where T : IBindingTable<DbCatalogItem>, IReadData
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+
+            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
+            workItems.Add(openConnection);
+
+            workItems.Add(new ExecuteReader(openConnection)
+            {
+                WorkName = "Load Catalogs",
+                Command = target.LoadCommand,
+                Target = target
+            });
+
+            return workItems;
+        }
+
+        /// <summary>
         /// Removes the Database Schema using the specified context from the Model (by Database Name)
         /// </summary>
         /// <param name="data"></param>
@@ -262,7 +286,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 w => w.GetTable(data.DbTables) is IDbTableItem table && !table.IsSystem && // Do not want System Tables
                 w.GetSchema(data.DbSchemta) is IDbSchemaItem schema && !schema.IsSystem && // Do not want System Schemta
                 data.DomainAttributeAliases.FirstOrDefault( // Do not want Columns already aliased to an attribute
-                    a => w.CatalogName == a.CatalogName &&
+                    a => w.DatabaseName == a.DatabaseName &&
                     w.SchemaName == a.SchemaName &&
                     w.TableName == a.ObjectName &&
                     w.ColumnName == a.ElementName)
@@ -272,7 +296,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 w => !w.IsSystem && // Do not want System Tables
                 w.GetSchema(data.DbSchemta) is IDbSchemaItem schema && !schema.IsSystem && // Do not want System Schemta
                 data.DomainEntityAliases.FirstOrDefault( // Do not want Tables already aliased to an entity
-                    a => w.CatalogName == a.CatalogName &&
+                    a => w.DatabaseName == a.DatabaseName &&
                     w.SchemaName == a.SchemaName &&
                     w.TableName == a.ObjectName)
                 is null).ToList();

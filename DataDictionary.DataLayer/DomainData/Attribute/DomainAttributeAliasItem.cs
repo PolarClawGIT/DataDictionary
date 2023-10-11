@@ -34,7 +34,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue("AttributeId", value); } }
 
         /// <inheritdoc/>
-        public string? CatalogName { get { return GetValue("CatalogName"); } set { SetValue("CatalogName", value); } }
+        public string? DatabaseName { get { return GetValue("DatabaseName"); } set { SetValue("DatabaseName", value); } }
 
         /// <inheritdoc/>
         public string? SchemaName { get { return GetValue("SchemaName"); } set { SetValue("SchemaName", value); } }
@@ -58,7 +58,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("AttributeAliasId", typeof(int)){ AllowDBNull = true},
-            new DataColumn("CatalogName", typeof(string)){ AllowDBNull = true},
+            new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = true},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = true},
             new DataColumn("ObjectName", typeof(string)){ AllowDBNull = true},
             new DataColumn("ElementName", typeof(string)){ AllowDBNull = true},
@@ -85,7 +85,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         public DomainAttributeAliasItem(IDomainAttributeKey key, IDbTableColumnItem source) : this()
         {
             AttributeId = key.AttributeId;
-            CatalogName = source.CatalogName;
+            DatabaseName = source.DatabaseName;
             SchemaName = source.SchemaName;
             ObjectName = source.TableName;
             ElementName = source.ColumnName;
@@ -112,7 +112,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
-            if (!string.IsNullOrWhiteSpace(CatalogName)) { result.Append(CatalogName); }
+            if (!string.IsNullOrWhiteSpace(DatabaseName)) { result.Append(DatabaseName); }
 
             if (!string.IsNullOrWhiteSpace(SchemaName)) { result.Append(SchemaName); }
             {

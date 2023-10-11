@@ -37,7 +37,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             if (Program.Data.DbTables.FirstOrDefault(w => DataKey == new DbTableKey(w)) is DbTableItem data)
             {
-                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.CatalogName)));
+                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.DatabaseName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
                 tableNameData.DataBindings.Add(new Binding(nameof(tableNameData.Text), data, nameof(data.TableName)));
                 tableTypeData.DataBindings.Add(new Binding(nameof(tableTypeData.Text), data, nameof(data.TableType)));
