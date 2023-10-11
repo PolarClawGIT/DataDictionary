@@ -17,15 +17,16 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DbRoutineDependencyCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbRoutineKey>, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
+    public abstract class DbRoutineDependencyCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbRoutineItem>, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
         where TItem : DbRoutineDependencyItem, new()
     {
         /// <inheritdoc/>
-        public Command SchemaCommand(IConnection connection, IDbRoutineKey key)
+        public Command SchemaCommand(IConnection connection, IDbRoutineItem key)
         {
             Command result = connection.CreateCommand();
             result.CommandType = CommandType.Text;
             result.CommandText = DbScript.DbRoutineDependencyItem;
+            result.Parameters.Add(new SqlParameter("@CatalogId", SqlDbType.UniqueIdentifier) { Value = key.CatalogId });
             result.Parameters.Add(new SqlParameter("@ObjectName", SqlDbType.VarChar, 210));
             result.Parameters["@ObjectName"].Value = string.Format("[{0}].[{1}]", key.SchemaName, key.RoutineName);
             return result;

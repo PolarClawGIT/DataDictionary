@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DbCatalogCollection<TItem> : BindingTable<TItem>, IReadData, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
+    public abstract class DbCatalogCollection<TItem> : BindingTable<TItem>, IReadData, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
         where TItem : DbCatalogItem, new()
     {
         /// <inheritdoc/>
@@ -49,12 +49,13 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         }
 
         /// <inheritdoc/>
-        public Command SchemaCommand(IConnection connection)
+        public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = DbScript.DbCatalogItem;
             command.Parameters.Add(new SqlParameter("@Server", SqlDbType.NVarChar) { Value = connection.ServerName });
+            command.Parameters.Add(new SqlParameter("@CatalogId", SqlDbType.UniqueIdentifier) { Value = catalogKey.CatalogId});
             return command;
         }
 

@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,14 +15,15 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Default List/Collection of Database Routines
     /// </summary>
-    public class DbRoutineCollection : BindingTable<DbRoutineItem>, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
+    public class DbRoutineCollection : BindingTable<DbRoutineItem>, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
     {
         /// <inheritdoc/>
-        public Command SchemaCommand(IConnection connection)
+        public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
             command.CommandText = DbScript.DbRoutineItem;
+            command.Parameters.Add(new SqlParameter("@CatalogId", SqlDbType.UniqueIdentifier) { Value = catalogKey.CatalogId });
             return command;
         }
 
