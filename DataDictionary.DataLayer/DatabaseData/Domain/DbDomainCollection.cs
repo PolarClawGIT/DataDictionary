@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DbDomainCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
+    public abstract class DbDomainCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
         where TItem : DbDomainItem, new()
     {
         /// <inheritdoc/>
@@ -30,14 +31,19 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
-        { return LoadCommand(connection, (modelId.ModelId, null, null, null)); }
+        { return LoadCommand(connection, (modelId.ModelId, null, null, null, null)); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, string? catalogName, string? schemaName, string? domainName) parameters)
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IDbCatalogKey catalogKey)
+        { return LoadCommand(connection, (null, catalogKey.CatalogId, null, null, null)); }
+
+        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, string? catalogName, string? schemaName, string? domainName) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procGetDatabaseDomain]";
             command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@CatalogId", parameters.catalogId);
             command.AddParameter("@CatalogName", parameters.catalogName);
             command.AddParameter("@SchemaName", parameters.schemaName);
             command.AddParameter("@DomainName", parameters.domainName);
@@ -46,11 +52,19 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IModelKey modelId)
+        { return SaveCommand(connection, (modelId.ModelId, null)); }
+
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, IDbCatalogKey catalogKey)
+        { return SaveCommand(connection, (null, catalogKey.CatalogId)); }
+
+        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? catalogId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetDatabaseDomain]";
-            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@CatalogId", parameters.catalogId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseDomain]", this);
             return command;
         }

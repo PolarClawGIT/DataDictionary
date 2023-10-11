@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DbCatalogCollection<TItem> : BindingTable<TItem>, IReadData, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
+    public abstract class DbCatalogCollection<TItem> : BindingTable<TItem>, IReadData, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
         where TItem : DbCatalogItem, new()
     {
         /// <inheritdoc/>
@@ -30,8 +30,12 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IModelKey modelId)
-        { return LoadCommand(connection, (modelId.ModelId, null, null)); }
+        public Command LoadCommand(IConnection connection, IModelKey modelKey)
+        { return LoadCommand(connection, (modelKey.ModelId, null, null)); }
+
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IDbCatalogKey catalogKey)
+        { return LoadCommand(connection, (null, catalogKey.CatalogId, null)); }
 
         Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, string? catalogName) parameters)
         {
@@ -55,12 +59,20 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IModelKey modelId)
+        public Command SaveCommand(IConnection connection, IModelKey modelKey)
+        { return SaveCommand(connection, (modelKey.ModelId, null)); }
+
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, IDbCatalogKey catalogKey)
+        { return SaveCommand(connection, (null, catalogKey.CatalogId)); }
+
+        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? catalogId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetDatabaseCatalog]";
-            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@CatalogId", parameters.catalogId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseCatalog]", this);
             return command;
         }

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,7 +14,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Default List/Collection of Database Routines
     /// </summary>
-    public class DbRoutineCollection : BindingTable<DbRoutineItem>, IReadData<IModelKey>, IReadSchema, IWriteData<IModelKey>
+    public class DbRoutineCollection : BindingTable<DbRoutineItem>, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection)
@@ -25,15 +26,20 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IModelKey modelId)
-        { return LoadCommand(connection, (modelId.ModelId, null, null, null)); }
+        public Command LoadCommand(IConnection connection, IModelKey modelKey)
+        { return LoadCommand(connection, (modelKey.ModelId, null, null, null, null)); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, string? catalogName, string? schemaName, string? routineName) parameters)
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IDbCatalogKey catalogKey)
+        { return LoadCommand(connection, (null, catalogKey.CatalogId, null, null, null)); }
+
+        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? catalogId, string? catalogName, string? schemaName, string? routineName) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procGetDatabaseRoutine]";
             command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@CatalogId", parameters.catalogId);
             command.AddParameter("@CatalogName", parameters.catalogName);
             command.AddParameter("@SchemaName", parameters.schemaName);
             command.AddParameter("@RoutineName", parameters.routineName);
@@ -41,12 +47,20 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IModelKey modelId)
+        public Command SaveCommand(IConnection connection, IModelKey modelKey)
+        { return SaveCommand(connection, (modelKey.ModelId, null)); }
+
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, IDbCatalogKey catalogKey)
+        { return SaveCommand(connection, (null, catalogKey.CatalogId)); }
+
+        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? catalogId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetDatabaseRoutine]";
-            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@CatalogId", parameters.catalogId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutine]", this);
             return command;
         }
