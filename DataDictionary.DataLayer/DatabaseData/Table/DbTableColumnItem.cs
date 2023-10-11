@@ -208,7 +208,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             if (GetValue("TableType") is "VIEW") { level1Type = "VIEW"; }
 
             return new DbExtendedPropertyGetCommand(connection)
-            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = TableName, Level1Type = level1Type, Level2Name = ColumnName, Level2Type = "COLUMN" }.
+            {
+                CatalogId = CatalogId,
+                Level0Name = SchemaName,
+                Level0Type = "SCHEMA",
+                Level1Name = TableName,
+                Level1Type = level1Type,
+                Level2Name = ColumnName,
+                Level2Type = "COLUMN" }.
             GetCommand();
         }
 

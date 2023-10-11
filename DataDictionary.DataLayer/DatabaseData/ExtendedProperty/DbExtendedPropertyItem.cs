@@ -58,6 +58,9 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     public class DbExtendedPropertyItem : BindingTableRow, IDbExtendedPropertyItem
     {
         /// <inheritdoc/>
+        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+
+        /// <inheritdoc/>
         public string? CatalogName { get { return GetValue("CatalogName"); } }
 
         /// <inheritdoc/>

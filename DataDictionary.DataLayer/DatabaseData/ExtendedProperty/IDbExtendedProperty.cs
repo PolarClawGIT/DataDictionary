@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -23,8 +24,11 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         Command PropertyCommand(IConnection connection);
     }
 
-    internal class DbExtendedPropertyGetCommand : DbExtendedPropertyParameter
+    internal class DbExtendedPropertyGetCommand : DbExtendedPropertyParameter, IDbCatalogKey
     {
+        /// <inheritdoc/>
+        public required Guid? CatalogId { get; init; }
+
         public DbCatalogScope CatalogScope
         {
             get { return ExtendedPropertyExtension.GetCatalogScope(Level0Type); }
@@ -69,6 +73,8 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
             command.Parameters["@Level1Name"].Value = Level1Name is null ? DBNull.Value : Level1Name;
             command.Parameters["@Level2Type"].Value = Level2Type is null ? DBNull.Value : Level2Type;
             command.Parameters["@Level2Name"].Value = Level2Name is null ? DBNull.Value : Level2Name;
+
+            command.Parameters.Add(new SqlParameter("@CatalogId", SqlDbType.UniqueIdentifier) { Value = this.CatalogId });
 
             return command;
         }

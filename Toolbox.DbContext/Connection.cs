@@ -265,8 +265,8 @@ namespace Toolbox.DbContext
                 string typeName = String.Empty;
                 if (objectName.Length > 1)
                 {
-                    schemaName = objectName[0].Replace("[",String.Empty).Replace("]",String.Empty);
-                    typeName = objectName[1].Replace("[", String.Empty).Replace("]", String.Empty); 
+                    schemaName = objectName[0].Replace("[", String.Empty).Replace("]", String.Empty);
+                    typeName = objectName[1].Replace("[", String.Empty).Replace("]", String.Empty);
                 }
                 else if (objectName.Length > 0)
                 { typeName = objectName[0].Replace("[", String.Empty).Replace("]", String.Empty); }
@@ -486,7 +486,12 @@ namespace Toolbox.DbContext
         {
             ex.Data.Add(nameof(command.CommandText), command.CommandText);
             foreach (SqlParameter item in command.Parameters)
-            { ex.Data.Add(String.Format("Parameter: {0}", item.ParameterName), item.Value.ToString()); }
+            {
+                if (item.Value is null)
+                { ex.Data.Add(String.Format("Parameter: {0}", item.ParameterName), "(null)"); }
+                else
+                { ex.Data.Add(String.Format("Parameter: {0}", item.ParameterName), item.Value.ToString()); }
+            }
         }
 
         #endregion

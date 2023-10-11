@@ -39,69 +39,73 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(context);
             workItems.Add(openConnection);
 
+            DbCatalogKey catalogKey;
+            if (data.DbCatalogs.FirstOrDefault(w => w.SourceDatabaseName == context.DatabaseName) is DbCatalogItem existing)
+            { catalogKey = new DbCatalogKey(existing); }
+            else { catalogKey = new DbCatalogKey(new DbCatalogItem()); }
+
             workItems.AddRange(data.RemoveCatalog(context));
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbCatalogs",
-                Command = data.DbCatalogs.SchemaCommand,
+                Command = (conn) => data.DbCatalogs.SchemaCommand(conn, catalogKey),
                 Target = data.DbCatalogs
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbSchemta",
-                Command = data.DbSchemta.SchemaCommand,
+                Command = (conn) => data.DbSchemta.SchemaCommand(conn, catalogKey),
                 Target = data.DbSchemta
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbDomains",
-                Command = data.DbDomains.SchemaCommand,
+                Command = (conn) => data.DbDomains.SchemaCommand(conn, catalogKey),
                 Target = data.DbDomains
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbTables",
-                Command = data.DbTables.SchemaCommand,
+                Command = (conn) => data.DbTables.SchemaCommand(conn, catalogKey),
                 Target = data.DbTables
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbColumns",
-                Command = data.DbTableColumns.SchemaCommand,
+                Command = (conn) => data.DbTableColumns.SchemaCommand(conn, catalogKey),
                 Target = data.DbTableColumns
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbConstraints",
-                Command = data.DbConstraints.SchemaCommand,
+                Command = (conn) => data.DbConstraints.SchemaCommand(conn, catalogKey),
                 Target = data.DbConstraints
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbConstraintColumns",
-                Command = data.DbConstraintColumns.SchemaCommand,
+                Command = (conn) => data.DbConstraintColumns.SchemaCommand(conn, catalogKey),
                 Target = data.DbConstraintColumns
             });
-
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbRoutines",
-                Command = data.DbRoutines.SchemaCommand,
+                Command = (conn) => data.DbRoutines.SchemaCommand(conn, catalogKey),
                 Target = data.DbRoutines
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load DbRoutineParameters",
-                Command = data.DbRoutineParameters.SchemaCommand,
+                Command = (conn) => data.DbRoutineParameters.SchemaCommand(conn, catalogKey),
                 Target = data.DbRoutineParameters
             });
 
@@ -115,7 +119,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                         data.DbRoutineDependencies.Load(
                             openConnection.Connection.ExecuteReader(
                                 data.DbRoutineDependencies.SchemaCommand(
-                                    openConnection.Connection, new DbRoutineKey(item))));
+                                    openConnection.Connection, item)));
                     }
                 },
                 IsCanceling = openConnection.IsCanceling

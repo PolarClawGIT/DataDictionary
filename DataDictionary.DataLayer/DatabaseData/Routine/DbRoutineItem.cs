@@ -97,6 +97,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         {
             return new DbExtendedPropertyGetCommand(connection)
             {
+                CatalogId = CatalogId,
                 Level0Name = SchemaName,
                 Level0Type = "SCHEMA",
                 Level1Name = RoutineName,

@@ -123,7 +123,13 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         public virtual Command PropertyCommand(IConnection connection)
         {
             return new DbExtendedPropertyGetCommand(connection)
-            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = DomainName, Level1Type = "TYPE" }.
+            {
+                CatalogId = CatalogId,
+                Level0Name = SchemaName,
+                Level0Type = "SCHEMA",
+                Level1Name = DomainName,
+                Level1Type = "TYPE"
+            }.
             GetCommand();
         }
 

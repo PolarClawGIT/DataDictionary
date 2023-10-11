@@ -139,7 +139,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
             string? level1Type = GetValue("RoutineType");
 
             return new DbExtendedPropertyGetCommand(connection)
-            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = RoutineName, Level1Type = level1Type, Level2Name = ParameterName, Level2Type = "PARAMETER" }.
+            {
+                CatalogId = CatalogId,
+                Level0Name = SchemaName,
+                Level0Type = "SCHEMA",
+                Level1Name = RoutineName,
+                Level1Type = level1Type,
+                Level2Name = ParameterName,
+                Level2Type = "PARAMETER" }.
             GetCommand();
         }
 

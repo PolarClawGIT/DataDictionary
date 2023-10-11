@@ -345,7 +345,7 @@ From	[INFORMATION_SCHEMA].[TABLES] I
 	On	I.[TABLE_SCHEMA] = Object_Schema_Name(H.[history_table_id]) And
 		I.[TABLE_NAME] = Object_Name(H.[history_table_id])
 UNION
-Select	Convert(UniqueIdentifier,Null) As [CatalogId],
+Select	@CatalogId As [CatalogId],
 	[TABLE_CATALOG] As [CatalogName],
 	[TABLE_SCHEMA] As [SchemaName],
 	[TABLE_NAME] As [TableName],

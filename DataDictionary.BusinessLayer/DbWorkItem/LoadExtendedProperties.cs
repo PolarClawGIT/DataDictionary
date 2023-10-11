@@ -34,7 +34,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             foreach (TDbItem item in Source)
             {
                 Command command = item.PropertyCommand(connection);
-                try {   Target.Load(connection.ExecuteReader(command)); }
+                try { Target.Load(connection.ExecuteReader(command)); }
                 catch (Exception ex)
                 {
                     ex.Data.Add("Command", "MSSQL Extended Property");
@@ -44,10 +44,10 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
                         { ex.Data.Add(parameter.ParameterName, parameter.Value.ToString()); }
                         else { ex.Data.Add(parameter.ParameterName, "(Null)"); }
                     }
-                    
+
                     throw;
                 }
-                
+
                 complete++;
                 Double progress = ((Double)complete / (Double)toDo) * (Double)100.0;
                 this.OnProgressChanged((Int32)progress);

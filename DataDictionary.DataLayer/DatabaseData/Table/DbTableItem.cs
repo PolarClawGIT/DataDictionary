@@ -87,7 +87,13 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public virtual Command PropertyCommand(IConnection connection)
         {
             return new DbExtendedPropertyGetCommand(connection)
-            { Level0Name = SchemaName, Level0Type = "SCHEMA", Level1Name = TableName, Level1Type = "TABLE" }.
+            {
+                CatalogId = CatalogId,
+                Level0Name = SchemaName,
+                Level0Type = "SCHEMA",
+                Level1Name = TableName,
+                Level1Type = "TABLE"
+            }.
             GetCommand();
         }
 

@@ -126,9 +126,15 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
             return
                 other is IDbExtendedPropertyKeyName &&
                 new DbCatalogKeyUnique(this).Equals(other) &&
-                Level0Name.Equals(other.Level0Name, KeyExtension.CompareString) &&
-                Level1Name.Equals(other.Level1Name, KeyExtension.CompareString) &&
-                Level2Name.Equals(other.Level2Name, KeyExtension.CompareString);
+                ((String.IsNullOrWhiteSpace(Level0Name) &&
+                  String.IsNullOrWhiteSpace(other.Level0Name)) ||
+                  Level0Name.Equals(other.Level0Name, KeyExtension.CompareString)) &&
+                ((String.IsNullOrWhiteSpace(Level1Name) &&
+                  String.IsNullOrWhiteSpace(other.Level1Name)) ||
+                  Level1Name.Equals(other.Level1Name, KeyExtension.CompareString)) &&
+                ((String.IsNullOrWhiteSpace(Level2Name) &&
+                  String.IsNullOrWhiteSpace(other.Level2Name)) ||
+                  Level2Name.Equals(other.Level2Name, KeyExtension.CompareString));
         }
 
         /// <inheritdoc/>

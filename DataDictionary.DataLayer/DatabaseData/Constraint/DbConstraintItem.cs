@@ -77,6 +77,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         {
             return new DbExtendedPropertyGetCommand(connection)
             {
+                CatalogId = CatalogId,
                 Level0Name = SchemaName, 
                 Level0Type = "SCHEMA",
                 Level1Name = TableName,
