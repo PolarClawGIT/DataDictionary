@@ -26,23 +26,27 @@ namespace DataDictionary.BusinessLayer.WorkFlows
     /// </summary>
     public static class DbSchemaExtension
     {
+
         /// <summary>
         /// Reads the Database Schema from a specified context into the data model.
         /// </summary>
         /// <param name="data"></param>
         /// <param name="context"></param>
+        /// <param name="catalogKey"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadDbSchema(this ModelData data, DbSchemaContext context)
+        public static IReadOnlyList<WorkItem> LoadDbSchema(this ModelData data, DbSchemaContext context, DbCatalogKey? catalogKey = null)
         {
             List<WorkItem> workItems = new List<WorkItem>();
 
             DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(context);
             workItems.Add(openConnection);
 
-            DbCatalogKey catalogKey;
-            if (data.DbCatalogs.FirstOrDefault(w => w.SourceDatabaseName == context.DatabaseName) is DbCatalogItem existing)
-            { catalogKey = new DbCatalogKey(existing); }
-            else { catalogKey = new DbCatalogKey(new DbCatalogItem()); }
+            if (catalogKey is null)
+            {
+                if (data.DbCatalogs.FirstOrDefault(w => w.SourceDatabaseName == context.DatabaseName) is DbCatalogItem existing)
+                { catalogKey = new DbCatalogKey(existing); }
+                else { catalogKey = new DbCatalogKey(new DbCatalogItem()); }
+            }
 
             workItems.AddRange(data.RemoveCatalog(context));
 
@@ -174,6 +178,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 Target = data.DbExtendedProperties
             });
 
+            // TODO: Make this a separate step
             workItems.Add(new WorkItem()
             {
                 WorkName = "Import Schema to Domain Model",

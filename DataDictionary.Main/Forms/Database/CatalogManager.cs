@@ -81,6 +81,77 @@ namespace DataDictionary.Main.Forms.Database
 
         private void OpenToolStripButton_Click(object? sender, EventArgs e)
         {
+            using (Dialogs.ServerConnectionDialog dialog = new Dialogs.ServerConnectionDialog())
+            {
+                if (catalogBinding.Current is CatalogManagerItem catalogItem
+                    && catalogItem.SourceServerName is String
+                    && catalogItem.SourceDatabaseName is String)
+                {
+                    dialog.ServerName = catalogItem.SourceServerName;
+                    dialog.DatabaseName = catalogItem.SourceDatabaseName;
+                }
+
+                foreach (String? item in Settings.Default.UserServers)
+                {
+                    if (String.IsNullOrEmpty(item)) { continue; }
+                    else
+                    {
+                        string[] dbServer = item.Split('.');
+
+                        if (dbServer.Length > 1 &&
+                            dbServer[0] is String serverName &&
+                            dbServer[1] is String databaseName)
+                        { dialog.Servers.Add((serverName, databaseName)); }
+                    }
+                }
+
+                dialog.OpenHelp = () => Activate(() => new Dialogs.HelpSubject(dialog));
+
+                DialogResult result = dialog.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    String newValue = String.Format("{0}.{1}", dialog.ServerName, dialog.DatabaseName);
+
+                    // Handle the User Settings
+                    if (Settings.Default.UserServers.Contains(newValue))
+                    { Settings.Default.UserServers.Remove(newValue); }
+
+                    Settings.Default.UserServers.Insert(0, newValue);
+
+                    while (Settings.Default.UserServers.Count > 10)
+                    { Settings.Default.UserServers.RemoveAt(10); }
+
+                    Settings.Default.Save();
+
+                    DbCatalogKey? catalogKey = null;
+                    if (dbData.FirstOrDefault(w =>
+                        w.SourceServerName is String serverName &&
+                        w.SourceDatabaseName is String databaseName &&
+                        serverName.Equals(dialog.ServerName, StringComparison.CurrentCultureIgnoreCase) &&
+                        databaseName.Equals(dialog.DatabaseName, StringComparison.CurrentCultureIgnoreCase))
+                        is DbCatalogItem existing)
+                    { catalogKey = new DbCatalogKey(existing); }
+
+
+                    UnbindData();
+                    SendMessage(new DoUnbindData());
+
+                    DoWork(Program.Data.LoadDbSchema(
+                        new BusinessLayer.DbSchemaContext()
+                        {
+                            ServerName = dialog.ServerName,
+                            DatabaseName = dialog.DatabaseName
+                        }, catalogKey), onCompleting);
+                }
+            }
+
+            void onCompleting(RunWorkerCompletedEventArgs result)
+            {
+                SendMessage(new DoBindData());
+                bindingData.Build(Program.Data.DbCatalogs, dbData);
+                BindData();
+            }
 
         }
 

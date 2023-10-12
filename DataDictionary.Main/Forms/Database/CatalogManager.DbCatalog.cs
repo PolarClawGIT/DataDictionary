@@ -32,10 +32,7 @@ namespace DataDictionary.Main.Forms.Database
             }
 
             public string? SourceServerName
-            {
-                get { return data.CatalogDescription; }
-                set { data.CatalogDescription = value; OnPropertyChanged(nameof(CatalogDescription)); }
-            }
+            { get { return data.SourceServerName; } }
 
             public string? SourceDatabaseName
             { get { return data.SourceDatabaseName; } }
@@ -44,9 +41,7 @@ namespace DataDictionary.Main.Forms.Database
             { get { return data.SourceDate; } }
 
             public string? DatabaseName
-            {
-                get { return data.DatabaseName; }
-            }
+            { get { return data.DatabaseName; } }
 
             public Guid? CatalogId
             { get { return data.CatalogId; } }
