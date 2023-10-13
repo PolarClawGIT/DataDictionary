@@ -93,10 +93,7 @@ namespace DataDictionary.Main.Forms.Database
                 else if (item.InModel && item.InDatabase && !inModelList)
                 { work.AddRange(Program.Data.LoadCatalog(key)); }
                 else if (!item.InModel && item.InDatabase && inModelList)
-                {
-                    work.AddRange(Program.Data.SaveCatalog(key));
-                    work.AddRange(Program.Data.RemoveCatalog(key));
-                }
+                { work.AddRange(Program.Data.RemoveCatalog(key)); }
                 else if (!item.InModel && !item.InDatabase && inModelList && !inDbList)
                 { work.AddRange(Program.Data.RemoveCatalog(key)); }
                 else if (!item.InModel && !item.InDatabase && inModelList && inDbList)

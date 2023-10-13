@@ -73,7 +73,7 @@
             catalogManagerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             catalogManagerLayout.RowStyles.Add(new RowStyle());
             catalogManagerLayout.RowStyles.Add(new RowStyle());
-            catalogManagerLayout.Size = new Size(462, 490);
+            catalogManagerLayout.Size = new Size(509, 490);
             catalogManagerLayout.TabIndex = 1;
             // 
             // libraryManagerLayoutCheckBoxs
@@ -84,12 +84,12 @@
             libraryManagerLayoutCheckBoxs.Controls.Add(inModelData, 0, 0);
             libraryManagerLayoutCheckBoxs.Controls.Add(inDatabaseData, 0, 1);
             libraryManagerLayoutCheckBoxs.Dock = DockStyle.Fill;
-            libraryManagerLayoutCheckBoxs.Location = new Point(310, 386);
+            libraryManagerLayoutCheckBoxs.Location = new Point(342, 386);
             libraryManagerLayoutCheckBoxs.Name = "libraryManagerLayoutCheckBoxs";
             libraryManagerLayoutCheckBoxs.RowCount = 2;
             libraryManagerLayoutCheckBoxs.RowStyles.Add(new RowStyle());
             libraryManagerLayoutCheckBoxs.RowStyles.Add(new RowStyle());
-            libraryManagerLayoutCheckBoxs.Size = new Size(149, 50);
+            libraryManagerLayoutCheckBoxs.Size = new Size(164, 50);
             libraryManagerLayoutCheckBoxs.TabIndex = 9;
             // 
             // inModelData
@@ -123,7 +123,7 @@
             catalogNavigation.Location = new Point(3, 3);
             catalogNavigation.Name = "catalogNavigation";
             catalogNavigation.RowTemplate.Height = 25;
-            catalogNavigation.Size = new Size(456, 227);
+            catalogNavigation.Size = new Size(503, 227);
             catalogNavigation.TabIndex = 0;
             // 
             // catalogTitleData
@@ -136,7 +136,7 @@
             catalogTitleData.Multiline = false;
             catalogTitleData.Name = "catalogTitleData";
             catalogTitleData.ReadOnly = false;
-            catalogTitleData.Size = new Size(456, 44);
+            catalogTitleData.Size = new Size(503, 44);
             catalogTitleData.TabIndex = 1;
             // 
             // catalogDescriptionData
@@ -149,7 +149,7 @@
             catalogDescriptionData.Multiline = true;
             catalogDescriptionData.Name = "catalogDescriptionData";
             catalogDescriptionData.ReadOnly = false;
-            catalogDescriptionData.Size = new Size(456, 94);
+            catalogDescriptionData.Size = new Size(503, 94);
             catalogDescriptionData.TabIndex = 2;
             // 
             // sourceDateData
@@ -157,11 +157,11 @@
             sourceDateData.AutoSize = true;
             sourceDateData.Dock = DockStyle.Fill;
             sourceDateData.HeaderText = "Source Date";
-            sourceDateData.Location = new Point(310, 442);
+            sourceDateData.Location = new Point(342, 442);
             sourceDateData.Multiline = false;
             sourceDateData.Name = "sourceDateData";
             sourceDateData.ReadOnly = true;
-            sourceDateData.Size = new Size(149, 45);
+            sourceDateData.Size = new Size(164, 45);
             sourceDateData.TabIndex = 10;
             // 
             // sourceServerNameData
@@ -173,7 +173,7 @@
             sourceServerNameData.Multiline = false;
             sourceServerNameData.Name = "sourceServerNameData";
             sourceServerNameData.ReadOnly = true;
-            sourceServerNameData.Size = new Size(301, 50);
+            sourceServerNameData.Size = new Size(333, 50);
             sourceServerNameData.TabIndex = 11;
             // 
             // sourceDatabaseNameData
@@ -185,7 +185,7 @@
             sourceDatabaseNameData.Multiline = false;
             sourceDatabaseNameData.Name = "sourceDatabaseNameData";
             sourceDatabaseNameData.ReadOnly = true;
-            sourceDatabaseNameData.Size = new Size(301, 45);
+            sourceDatabaseNameData.Size = new Size(333, 45);
             sourceDatabaseNameData.TabIndex = 12;
             // 
             // catalogTitleColumn
@@ -193,6 +193,7 @@
             catalogTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             catalogTitleColumn.DataPropertyName = "CatalogTitle";
             catalogTitleColumn.HeaderText = "Catalog Title";
+            catalogTitleColumn.MinimumWidth = 150;
             catalogTitleColumn.Name = "catalogTitleColumn";
             // 
             // databaseNameColumn
@@ -200,30 +201,27 @@
             databaseNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             databaseNameColumn.DataPropertyName = "SourceDatabaseName";
             databaseNameColumn.HeaderText = "Database Name";
+            databaseNameColumn.MinimumWidth = 150;
             databaseNameColumn.Name = "databaseNameColumn";
             databaseNameColumn.ReadOnly = true;
             // 
             // inModelColumn
             // 
-            inModelColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
             inModelColumn.DataPropertyName = "InModel";
             inModelColumn.HeaderText = "In Model";
             inModelColumn.Name = "inModelColumn";
-            inModelColumn.Width = 60;
             // 
             // inDatabase
             // 
-            inDatabase.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
             inDatabase.DataPropertyName = "InDatabase";
             inDatabase.HeaderText = "In Database";
             inDatabase.Name = "inDatabase";
-            inDatabase.Width = 74;
             // 
             // CatalogManager
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(462, 515);
+            ClientSize = new Size(509, 515);
             Controls.Add(catalogManagerLayout);
             Name = "CatalogManager";
             Text = "Catalog Manager";

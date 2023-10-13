@@ -152,10 +152,7 @@ namespace DataDictionary.Main.Forms.Library
                 else if (item.InModel && item.InDatabase && !inModelList)
                 { work.AddRange(Program.Data.LoadLibrary(key)); }
                 else if (!item.InModel && item.InDatabase && inModelList)
-                {
-                    //work.AddRange(Program.Data.SaveLibrary(key));
-                    work.AddRange(Program.Data.RemoveLibrary(key));
-                }
+                { work.AddRange(Program.Data.RemoveLibrary(key)); }
                 else if (!item.InModel && !item.InDatabase && inModelList && !inDbList)
                 { work.AddRange(Program.Data.RemoveLibrary(key)); }
                 else if (!item.InModel && !item.InDatabase && inModelList && inDbList)
@@ -175,7 +172,7 @@ namespace DataDictionary.Main.Forms.Library
 
         private void DeleteToolStripButton_Click(object? sender, EventArgs e)
         {
-            if(libraryBinding.Current is LibraryManagerItem item)
+            if (libraryBinding.Current is LibraryManagerItem item)
             {
                 LibrarySourceKey key = new LibrarySourceKey(item);
                 List<WorkItem> work = new List<WorkItem>();
@@ -199,7 +196,7 @@ namespace DataDictionary.Main.Forms.Library
             work.AddRange(dbData.LoadLibrary());
 
             var x = libraryBinding;
-            
+
 
             this.DoWork(work, onCompleting);
 

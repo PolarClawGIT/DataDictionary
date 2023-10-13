@@ -33,10 +33,6 @@
             TableLayoutPanel libraryManagerLayoutCheckBoxs;
             sourceFileDate = new Controls.TextBoxData();
             libraryNavigation = new DataGridView();
-            libraryTitleColumn = new DataGridViewTextBoxColumn();
-            libraryDescriptionColumn = new DataGridViewTextBoxColumn();
-            inModelColumn = new DataGridViewCheckBoxColumn();
-            inDatabaseColumn = new DataGridViewCheckBoxColumn();
             libraryTitleData = new Controls.TextBoxData();
             libraryDescriptionData = new Controls.TextBoxData();
             asseblyNameData = new Controls.TextBoxData();
@@ -46,6 +42,10 @@
             libraryBinding = new BindingSource(components);
             errorProvider = new ErrorProvider(components);
             openFileDialog = new OpenFileDialog();
+            libraryTitleColumn = new DataGridViewTextBoxColumn();
+            libraryDescriptionColumn = new DataGridViewTextBoxColumn();
+            inModelColumn = new DataGridViewCheckBoxColumn();
+            inDatabaseColumn = new DataGridViewCheckBoxColumn();
             libraryManagerLayout = new TableLayoutPanel();
             libraryManagerLayoutCheckBoxs = new TableLayoutPanel();
             libraryManagerLayout.SuspendLayout();
@@ -104,34 +104,6 @@
             libraryNavigation.RowTemplate.Height = 25;
             libraryNavigation.Size = new Size(560, 325);
             libraryNavigation.TabIndex = 0;
-            // 
-            // libraryTitleColumn
-            // 
-            libraryTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            libraryTitleColumn.DataPropertyName = "LibraryTitle";
-            libraryTitleColumn.FillWeight = 40F;
-            libraryTitleColumn.HeaderText = "Title";
-            libraryTitleColumn.Name = "libraryTitleColumn";
-            // 
-            // libraryDescriptionColumn
-            // 
-            libraryDescriptionColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            libraryDescriptionColumn.DataPropertyName = "LibraryDescription";
-            libraryDescriptionColumn.FillWeight = 60F;
-            libraryDescriptionColumn.HeaderText = "Description";
-            libraryDescriptionColumn.Name = "libraryDescriptionColumn";
-            // 
-            // inModelColumn
-            // 
-            inModelColumn.DataPropertyName = "InModel";
-            inModelColumn.HeaderText = "In Model";
-            inModelColumn.Name = "inModelColumn";
-            // 
-            // inDatabaseColumn
-            // 
-            inDatabaseColumn.DataPropertyName = "InDatabase";
-            inDatabaseColumn.HeaderText = "In Database";
-            inDatabaseColumn.Name = "inDatabaseColumn";
             // 
             // libraryTitleData
             // 
@@ -232,6 +204,36 @@
             // openFileDialog
             // 
             openFileDialog.FileName = "openFileDialog";
+            // 
+            // libraryTitleColumn
+            // 
+            libraryTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            libraryTitleColumn.DataPropertyName = "LibraryTitle";
+            libraryTitleColumn.FillWeight = 40F;
+            libraryTitleColumn.HeaderText = "Title";
+            libraryTitleColumn.MinimumWidth = 150;
+            libraryTitleColumn.Name = "libraryTitleColumn";
+            // 
+            // libraryDescriptionColumn
+            // 
+            libraryDescriptionColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            libraryDescriptionColumn.DataPropertyName = "LibraryDescription";
+            libraryDescriptionColumn.FillWeight = 60F;
+            libraryDescriptionColumn.HeaderText = "Description";
+            libraryDescriptionColumn.MinimumWidth = 150;
+            libraryDescriptionColumn.Name = "libraryDescriptionColumn";
+            // 
+            // inModelColumn
+            // 
+            inModelColumn.DataPropertyName = "InModel";
+            inModelColumn.HeaderText = "In Model";
+            inModelColumn.Name = "inModelColumn";
+            // 
+            // inDatabaseColumn
+            // 
+            inDatabaseColumn.DataPropertyName = "InDatabase";
+            inDatabaseColumn.HeaderText = "In Database";
+            inDatabaseColumn.Name = "inDatabaseColumn";
             // 
             // LibraryManager
             // 
