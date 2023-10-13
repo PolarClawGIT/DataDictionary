@@ -47,7 +47,12 @@
             domainModelToolStrip = new ToolStrip();
             newAttributeCommand = new ToolStripSplitButton();
             menuAttributes = new ToolStripMenuItem();
+            menuAttributeProperties = new ToolStripMenuItem();
+            menuAttributeAlaises = new ToolStripMenuItem();
             newEntityCommand = new ToolStripSplitButton();
+            entitiesToolStripMenuItem = new ToolStripMenuItem();
+            entityPropertiesToolStripMenuItem = new ToolStripMenuItem();
+            entityAliasToolStripMenuItem = new ToolStripMenuItem();
             domainModelSortOrder = new ToolStripDropDownButton();
             sortByAttributeEntityCommand = new ToolStripMenuItem();
             sortByEntityAttributeCommand = new ToolStripMenuItem();
@@ -118,11 +123,6 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
-            menuAttributeProperties = new ToolStripMenuItem();
-            menuAttributeAlaises = new ToolStripMenuItem();
-            entitiesToolStripMenuItem = new ToolStripMenuItem();
-            entityPropertiesToolStripMenuItem = new ToolStripMenuItem();
-            entityAliasToolStripMenuItem = new ToolStripMenuItem();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
@@ -307,6 +307,22 @@
             menuAttributes.Text = "browse &Attributes";
             menuAttributes.Click += menuAttributes_Click;
             // 
+            // menuAttributeProperties
+            // 
+            menuAttributeProperties.Image = Properties.Resources.Property;
+            menuAttributeProperties.Name = "menuAttributeProperties";
+            menuAttributeProperties.Size = new Size(218, 22);
+            menuAttributeProperties.Text = "browse Attribute &Properties";
+            menuAttributeProperties.Click += menuAttributeProperties_Click;
+            // 
+            // menuAttributeAlaises
+            // 
+            menuAttributeAlaises.Image = Properties.Resources.Synonym;
+            menuAttributeAlaises.Name = "menuAttributeAlaises";
+            menuAttributeAlaises.Size = new Size(218, 22);
+            menuAttributeAlaises.Text = "browse Attribute A&laises";
+            menuAttributeAlaises.Click += menuAttributeProperties_Click;
+            // 
             // newEntityCommand
             // 
             newEntityCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
@@ -316,6 +332,30 @@
             newEntityCommand.Name = "newEntityCommand";
             newEntityCommand.Size = new Size(32, 22);
             newEntityCommand.Text = "new Entity";
+            // 
+            // entitiesToolStripMenuItem
+            // 
+            entitiesToolStripMenuItem.Image = Properties.Resources.Relationship;
+            entitiesToolStripMenuItem.Name = "entitiesToolStripMenuItem";
+            entitiesToolStripMenuItem.Size = new Size(201, 22);
+            entitiesToolStripMenuItem.Text = "browse &Entities";
+            entitiesToolStripMenuItem.Click += entitiesToolStripMenuItem_Click;
+            // 
+            // entityPropertiesToolStripMenuItem
+            // 
+            entityPropertiesToolStripMenuItem.Image = Properties.Resources.Property;
+            entityPropertiesToolStripMenuItem.Name = "entityPropertiesToolStripMenuItem";
+            entityPropertiesToolStripMenuItem.Size = new Size(201, 22);
+            entityPropertiesToolStripMenuItem.Text = "browse Entity &Properties";
+            entityPropertiesToolStripMenuItem.Click += entityPropertiesToolStripMenuItem_Click;
+            // 
+            // entityAliasToolStripMenuItem
+            // 
+            entityAliasToolStripMenuItem.Image = Properties.Resources.Synonym;
+            entityAliasToolStripMenuItem.Name = "entityAliasToolStripMenuItem";
+            entityAliasToolStripMenuItem.Size = new Size(201, 22);
+            entityAliasToolStripMenuItem.Text = "browse Entity A&lias";
+            entityAliasToolStripMenuItem.Click += entityAliasToolStripMenuItem_Click;
             // 
             // domainModelSeparator1
             // 
@@ -398,8 +438,7 @@
             // 
             dbSchemaContextMenu.Items.AddRange(new ToolStripItem[] { menuCatalogItem, browseCatalogsToolStripMenuItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineDependencyItem });
             dbSchemaContextMenu.Name = "dbSchemacontextMenu";
-            dbSchemaContextMenu.OwnerItem = manageDatabasesCommand;
-            dbSchemaContextMenu.Size = new Size(234, 268);
+            dbSchemaContextMenu.Size = new Size(234, 290);
             // 
             // menuCatalogItem
             // 
@@ -415,7 +454,7 @@
             browseCatalogsToolStripMenuItem.Name = "browseCatalogsToolStripMenuItem";
             browseCatalogsToolStripMenuItem.Size = new Size(233, 22);
             browseCatalogsToolStripMenuItem.Text = "Browse Catalogs";
-            browseCatalogsToolStripMenuItem.Click += browseCatalogsToolStripMenuItem_Click;
+            browseCatalogsToolStripMenuItem.Click += menuCatalogItem_Click;
             // 
             // menuSchemaItem
             // 
@@ -882,46 +921,6 @@
             helpAboutMenuItem.Size = new Size(122, 22);
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
-            // 
-            // menuAttributeProperties
-            // 
-            menuAttributeProperties.Image = Properties.Resources.Property;
-            menuAttributeProperties.Name = "menuAttributeProperties";
-            menuAttributeProperties.Size = new Size(218, 22);
-            menuAttributeProperties.Text = "browse Attribute &Properties";
-            menuAttributeProperties.Click += menuAttributeProperties_Click;
-            // 
-            // menuAttributeAlaises
-            // 
-            menuAttributeAlaises.Image = Properties.Resources.Synonym;
-            menuAttributeAlaises.Name = "menuAttributeAlaises";
-            menuAttributeAlaises.Size = new Size(218, 22);
-            menuAttributeAlaises.Text = "browse Attribute A&laises";
-            menuAttributeAlaises.Click += menuAttributeProperties_Click;
-            // 
-            // entitiesToolStripMenuItem
-            // 
-            entitiesToolStripMenuItem.Image = Properties.Resources.Relationship;
-            entitiesToolStripMenuItem.Name = "entitiesToolStripMenuItem";
-            entitiesToolStripMenuItem.Size = new Size(201, 22);
-            entitiesToolStripMenuItem.Text = "browse &Entities";
-            entitiesToolStripMenuItem.Click += entitiesToolStripMenuItem_Click;
-            // 
-            // entityPropertiesToolStripMenuItem
-            // 
-            entityPropertiesToolStripMenuItem.Image = Properties.Resources.Property;
-            entityPropertiesToolStripMenuItem.Name = "entityPropertiesToolStripMenuItem";
-            entityPropertiesToolStripMenuItem.Size = new Size(201, 22);
-            entityPropertiesToolStripMenuItem.Text = "browse Entity &Properties";
-            entityPropertiesToolStripMenuItem.Click += entityPropertiesToolStripMenuItem_Click;
-            // 
-            // entityAliasToolStripMenuItem
-            // 
-            entityAliasToolStripMenuItem.Image = Properties.Resources.Synonym;
-            entityAliasToolStripMenuItem.Name = "entityAliasToolStripMenuItem";
-            entityAliasToolStripMenuItem.Size = new Size(201, 22);
-            entityAliasToolStripMenuItem.Text = "browse Entity A&lias";
-            entityAliasToolStripMenuItem.Click += entityAliasToolStripMenuItem_Click;
             // 
             // Main
             // 

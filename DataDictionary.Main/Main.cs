@@ -116,9 +116,6 @@ namespace DataDictionary.Main
         #endregion
 
         #region Menu Events
-        private void menuCatalogItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.DbCatalog()); }
-
         private void menuSchemaItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Schema), Program.Data.DbSchemta); }
 
@@ -278,7 +275,7 @@ namespace DataDictionary.Main
         private void manageDatabasesCommand_ButtonClick(object sender, EventArgs e)
         { Activate(() => new Forms.Database.CatalogManager()); }
 
-        private void browseCatalogsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void menuCatalogItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Database), Program.Data.DbCatalogs); }
 
         private void menuAttributes_Click(object sender, EventArgs e)

@@ -160,7 +160,7 @@ namespace DataDictionary.Main
 
         private void domainModelNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (domainModelNavigation.SelectedNode is TreeNode node &&  domainModelNodes.ContainsKey(node))
+            if (domainModelNavigation.SelectedNode is TreeNode node && domainModelNodes.ContainsKey(node))
             {
                 Object dataNode = domainModelNodes[node];
 
