@@ -15,8 +15,11 @@ namespace DataDictionary.DataLayer.LibraryData.Source
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public class LibrarySourceCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadData<ILibrarySourceKey>, IReadData, IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>
-        where TItem : LibrarySourceItem, new()
+    public class LibrarySourceCollection<TItem> : BindingTable<TItem>,
+        IReadData, IReadData<IModelKey>, IReadData<ILibrarySourceKey>, 
+        IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>,
+        IRemoveData<ILibrarySourceKey>
+        where TItem : BindingTableRow, ILibrarySourceItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
@@ -60,14 +63,13 @@ namespace DataDictionary.DataLayer.LibraryData.Source
             return command;
         }
 
-        Command DeleteCommand(IConnection connection, ILibrarySourceKey sourceKey)
+        /// <inheritdoc/>
+        public void Remove(ILibrarySourceKey libraryItem)
         {
-            Command command = connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetLibrarySource]";
-            command.AddParameter("@LibraryId", sourceKey.LibraryId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeLibrarySource]", new LibrarySourceCollection());
-            return command;
+            LibrarySourceKey key = new LibrarySourceKey(libraryItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { this.Remove(item); }
         }
     }
 

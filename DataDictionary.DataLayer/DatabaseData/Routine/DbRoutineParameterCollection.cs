@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Schema;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,15 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.DatabaseData.Routine
 {
     /// <summary>
-    /// Generic Base class for Database Catalogs Items
+    /// Generic Base class for Database Routine Parameter Items
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DbRoutineParameterCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
-        where TItem : DbRoutineParameterItem, new()
+    public abstract class DbRoutineParameterCollection<TItem> : BindingTable<TItem>,
+        IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
+        IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
+        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKey>, IRemoveData<IDbRoutineKey>, IRemoveData<IDbRoutineParameterKey>
+        where TItem : BindingTableRow, IDbRoutineParameterItem, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
@@ -69,6 +73,42 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
             command.AddParameter("@CatalogId", parameters.catalogId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutineParameter]", this);
             return command;
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDbCatalogKey catalogItem)
+        {
+            DbCatalogKey key = new DbCatalogKey(catalogItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDbRoutineKey routineItem)
+        {
+            DbRoutineKey key = new DbRoutineKey(routineItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDbRoutineParameterKey parameterItem)
+        {
+            DbRoutineParameterKey key = new DbRoutineParameterKey(parameterItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDbSchemaKey schemaItem)
+        {
+            DbSchemaKey key = new DbSchemaKey(schemaItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
         }
     }
 

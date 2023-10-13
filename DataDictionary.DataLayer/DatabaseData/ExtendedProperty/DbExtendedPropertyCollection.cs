@@ -16,8 +16,11 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DbExtendedPropertyCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
-        where TItem : DbExtendedPropertyItem, new()
+    public abstract class DbExtendedPropertyCollection<TItem> : BindingTable<TItem>,
+        IReadData<IModelKey>, IReadData<IDbCatalogKey>,
+        IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
+        IRemoveData<IDbCatalogKey>, IRemoveData<IDbExtendedPropertyKey>
+        where TItem : BindingTableRow, IDbExtendedPropertyItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
@@ -57,6 +60,24 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
             command.AddParameter("@CatalogId", parameters.catalogId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseExtendedProperty]", this);
             return command;
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDbCatalogKey catalogItem)
+        {
+            DbCatalogKey key = new DbCatalogKey(catalogItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDbExtendedPropertyKey propertyItem)
+        {
+            DbExtendedPropertyKey key = new DbExtendedPropertyKey(propertyItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
         }
     }
 

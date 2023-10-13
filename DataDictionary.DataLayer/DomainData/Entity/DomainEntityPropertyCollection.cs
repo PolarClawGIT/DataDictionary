@@ -15,8 +15,11 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DomainEntityPropertyCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IWriteData<IModelKey>
-        where TItem : DomainEntityPropertyItem, new()
+    public abstract class DomainEntityPropertyCollection<TItem> : BindingTable<TItem>,
+        IReadData<IModelKey>,
+        IWriteData<IModelKey>,
+        IRemoveData<IDomainEntityKey>
+        where TItem : BindingTableRow, IDomainEntityPropertyItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
@@ -42,6 +45,15 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             command.AddParameter("@ModelId", modelId.ModelId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeDomainEntityProperty]", this);
             return command;
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDomainEntityKey entityItem)
+        {
+            DomainEntityKey key = new DomainEntityKey(entityItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
         }
     }
 

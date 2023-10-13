@@ -16,8 +16,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DbCatalogCollection<TItem> : BindingTable<TItem>, IReadData, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
-        where TItem : DbCatalogItem, new()
+    public abstract class DbCatalogCollection<TItem> : BindingTable<TItem>,
+        IReadData, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
+        IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
+        IRemoveData<IDbCatalogKey>
+        where TItem : BindingTableRow, IDbCatalogItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
@@ -70,6 +73,15 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
             command.AddParameter("@CatalogId", parameters.catalogId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseCatalog]", this);
             return command;
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDbCatalogKey catalogItem)
+        {
+            DbCatalogKey key = new DbCatalogKey(catalogItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
         }
     }
 

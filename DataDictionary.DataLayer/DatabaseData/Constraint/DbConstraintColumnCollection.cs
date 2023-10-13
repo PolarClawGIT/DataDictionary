@@ -17,8 +17,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DbConstraintColumnCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
-        where TItem : DbConstraintColumnItem, new()
+    public abstract class DbConstraintColumnCollection<TItem> : BindingTable<TItem>,
+        IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
+        IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
+        IRemoveData<IDbCatalogKey>, IRemoveData<IDbConstraintKey>
+        where TItem : BindingTableRow, IDbConstraintColumnItem, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
@@ -70,13 +73,29 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseConstraintColumn]", this);
             return command;
         }
+
+        /// <inheritdoc/>
+        public void Remove(IDbCatalogKey catalogItem)
+        {
+            DbCatalogKey key = new DbCatalogKey(catalogItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDbConstraintKey constraintItem)
+        {
+            DbConstraintKey key = new DbConstraintKey(constraintItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
     }
 
     /// <summary>
     /// Default List/Collection of Database Constraint Columns
     /// </summary>
     public class DbConstraintColumnCollection : DbConstraintColumnCollection<DbConstraintColumnItem>
-    {
-
-    }
+    { }
 }

@@ -16,8 +16,11 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class LibraryMemberCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadData<ILibrarySourceKey>, IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>
-        where TItem : LibraryMemberItem, new()
+    public abstract class LibraryMemberCollection<TItem> : BindingTable<TItem>,
+        IReadData<IModelKey>, IReadData<ILibrarySourceKey>,
+        IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>,
+        IRemoveData<ILibrarySourceKey>
+        where TItem : BindingTableRow, ILibraryMemberItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
@@ -54,6 +57,15 @@ namespace DataDictionary.DataLayer.LibraryData.Member
             command.AddParameter("@LibraryId", parameters.libraryId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeLibraryMember]", this);
             return command;
+        }
+
+        /// <inheritdoc/>
+        public void Remove(ILibrarySourceKey libraryItem)
+        {
+            LibrarySourceKey key = new LibrarySourceKey(libraryItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { this.Remove(item); }
         }
     }
 

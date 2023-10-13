@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Schema;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -17,8 +18,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DbTableCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
-        where TItem : DbTableItem, new()
+    public abstract class DbTableCollection<TItem> : BindingTable<TItem>,
+        IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
+        IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
+        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKey>, IRemoveData<IDbTableKey>
+        where TItem : BindingTableRow, IDbTableItem, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
@@ -68,6 +72,33 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             command.AddParameter("@CatalogId", parameters.catalogId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseTable]", this);
             return command;
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDbCatalogKey catalogItem)
+        {
+            DbCatalogKey key = new DbCatalogKey(catalogItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDbSchemaKey schemaItem)
+        {
+            DbSchemaKey key = new DbSchemaKey(schemaItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDbTableKey tableItem)
+        {
+            DbTableKey key = new DbTableKey(tableItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
         }
     }
 

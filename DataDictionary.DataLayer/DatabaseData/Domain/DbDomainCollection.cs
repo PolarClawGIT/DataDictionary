@@ -18,8 +18,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DbDomainCollection<TItem> : BindingTable<TItem>, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>, IWriteData<IModelKey>, IWriteData<IDbCatalogKey>
-        where TItem : DbDomainItem, new()
+    public abstract class DbDomainCollection<TItem> : BindingTable<TItem>,
+        IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
+        IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
+        IRemoveData<IDbCatalogKey>, IRemoveData<IDbDomainKey>
+        where TItem : BindingTableRow, IDbDomainItem, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
@@ -69,6 +72,24 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
             command.AddParameter("@CatalogId", parameters.catalogId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseDomain]", this);
             return command;
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDbCatalogKey catalogItem)
+        {
+            DbCatalogKey key = new DbCatalogKey(catalogItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IDbDomainKey domainItem)
+        {
+            DbDomainKey key = new DbDomainKey(domainItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
         }
     }
 
