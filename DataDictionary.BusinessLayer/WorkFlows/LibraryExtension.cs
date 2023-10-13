@@ -47,12 +47,12 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         /// Creates work items that Load a Library by Model.
         /// </summary>
         /// <param name="data"></param>
-        /// <param name="key"></param>
+        /// <param name="modelKey"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadLibrary(this ModelData data, IModelKey key)
+        public static IReadOnlyList<WorkItem> LoadLibrary(this IModelLibrary data, IModelKey modelKey)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            ModelKey modelId = new ModelKey(key);
+            ModelKey key = new ModelKey(modelKey);
 
             DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
             workItems.Add(openConnection);
@@ -60,14 +60,14 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Library Sources",
-                Command = (conn) => data.LibrarySources.LoadCommand(conn, modelId),
+                Command = (conn) => data.LibrarySources.LoadCommand(conn, key),
                 Target = data.LibrarySources
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Library Members",
-                Command = (conn) => data.LibraryMembers.LoadCommand(conn, modelId),
+                Command = (conn) => data.LibraryMembers.LoadCommand(conn, key),
                 Target = data.LibraryMembers
             });
 
@@ -78,27 +78,27 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         /// Creates work items that Loads a Library by Library Key
         /// </summary>
         /// <param name="data"></param>
-        /// <param name="key"></param>
+        /// <param name="libraryKey"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadLibrary(this ModelData data, ILibrarySourceKey key)
+        public static IReadOnlyList<WorkItem> LoadLibrary(this IModelLibrary data, ILibrarySourceKey libraryKey)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            LibrarySourceKey library = new LibrarySourceKey(key);
+            LibrarySourceKey key = new LibrarySourceKey(libraryKey);
 
             DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
             workItems.Add(openConnection);
-
+            
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Library Sources",
-                Command = (conn) => data.LibrarySources.LoadCommand(conn, library),
+                Command = (conn) => data.LibrarySources.LoadCommand(conn, key),
                 Target = data.LibrarySources
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Library Members",
-                Command = (conn) => data.LibraryMembers.LoadCommand(conn, library),
+                Command = (conn) => data.LibraryMembers.LoadCommand(conn, key),
                 Target = data.LibraryMembers
             });
 
@@ -111,7 +111,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         /// <param name="data"></param>
         /// <param name="file"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadLibrary(this ModelData data, FileInfo file)
+        public static IReadOnlyList<WorkItem> LoadLibrary(this IModelLibrary data, FileInfo file)
         {
             List<WorkItem> workItems = new List<WorkItem>();
 
@@ -133,7 +133,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                     if (xmlData.DocumentElement is XmlElement root)
                     {
                         //String assemblyName = String.Empty; // Surrogate key for Library
-                        LibrarySourceItem sourceItem; 
+                        LibrarySourceItem sourceItem;
 
                         // Parse the Assembly Node
                         if (root.ChildNodes.Cast<XmlNode>().FirstOrDefault(w => w.Name == "assembly") is XmlNode assemblyNode)
@@ -236,12 +236,12 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         /// Creates work items that Saves the Library for the Model to the database.
         /// </summary>
         /// <param name="data"></param>
-        /// <param name="key"></param>
+        /// <param name="modelKey"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> SaveLibrary(this ModelData data, IModelKey key)
+        public static IReadOnlyList<WorkItem> SaveLibrary(this IModelLibrary data, IModelKey modelKey)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            ModelKey modelId = new ModelKey(key);
+            ModelKey key = new ModelKey(modelKey);
 
             DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
             workItems.Add(openConnection);
@@ -249,13 +249,13 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Library sources",
-                Command = (conn) => data.LibrarySources.SaveCommand(conn, modelId)
+                Command = (conn) => data.LibrarySources.SaveCommand(conn, key)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Library members",
-                Command = (conn) => data.LibraryMembers.SaveCommand(conn, modelId)
+                Command = (conn) => data.LibraryMembers.SaveCommand(conn, key)
             });
 
             return workItems;
@@ -265,19 +265,19 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         /// Creates work items that Saves the Library to the Database by Library Key.
         /// </summary>
         /// <param name="data"></param>
-        /// <param name="key"></param>
+        /// <param name="libraryKey"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> SaveLibrary(this ModelData data, ILibrarySourceKey key)
+        public static IReadOnlyList<WorkItem> SaveLibrary(this IModelLibrary data, ILibrarySourceKey libraryKey)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            LibrarySourceKey library = new LibrarySourceKey(key);
+            LibrarySourceKey key = new LibrarySourceKey(libraryKey);
 
-            if (data.LibrarySources.Count(w => library.Equals(w)) != 0)
+            if (data.LibrarySources.Count(w => key.Equals(w)) != 0)
             {
                 LibrarySourceCollection source = new LibrarySourceCollection();
                 LibraryMemberCollection members = new LibraryMemberCollection();
-                source.AddRange(data.LibrarySources.Where(w => library.Equals(w)));
-                members.AddRange(data.LibraryMembers.Where(w => library.Equals(w)));
+                source.AddRange(data.LibrarySources.Where(w => key.Equals(w)));
+                members.AddRange(data.LibraryMembers.Where(w => key.Equals(w)));
 
                 DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
                 workItems.Add(openConnection);
@@ -285,76 +285,72 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 workItems.Add(new ExecuteNonQuery(openConnection)
                 {
                     WorkName = "Save Library sources",
-                    Command = (conn) => source.SaveCommand(conn, library)
+                    Command = (conn) => source.SaveCommand(conn, key)
                 });
 
                 workItems.Add(new ExecuteNonQuery(openConnection)
                 {
                     WorkName = "Save Library members",
-                    Command = (conn) => members.SaveCommand(conn, library)
+                    Command = (conn) => members.SaveCommand(conn, key)
                 });
             }
 
             return workItems;
-        }
-
-        /// <summary>
-        /// Creates work items that Removes the Library from the Model
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public static IReadOnlyList<WorkItem> RemoveLibrary(this ModelData data, ILibrarySourceKey key)
-        {
-            List<WorkItem> workItems = new List<WorkItem>();
-            LibrarySourceKey library = new LibrarySourceKey(key);
-
-            workItems.Add(new WorkItem()
-            {
-                WorkName = "Remove Library",
-                DoWork = RemoveLibrary
-            });
-
-            return workItems;
-
-            void RemoveLibrary()
-            {
-                if (data.LibrarySources.FirstOrDefault(w => library.Equals(w)) is LibrarySourceItem sourceItem)
-                {
-                    data.LibrarySources.Remove(sourceItem);
-
-                    List<LibraryMemberItem> toRemove = data.LibraryMembers.Where(w => library.Equals(w)).ToList();
-
-                    foreach (LibraryMemberItem memberItem in toRemove)
-                    { data.LibraryMembers.Remove(memberItem); }
-                }
-            }
         }
 
         /// <summary>
         /// Creates work items that Deletes the Library from the Database.
         /// </summary>
         /// <param name="data"></param>
-        /// <param name="key"></param>
+        /// <param name="libraryKey"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> DeleteLibrary(this ModelData data, ILibrarySourceKey key)
+        /// <remarks>If the Library belongs to any Model, the delete will fail.</remarks>
+        public static IReadOnlyList<WorkItem> DeleteLibrary(this IModelLibrary data, ILibrarySourceKey libraryKey)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            LibrarySourceKey library = new LibrarySourceKey(key);
-            LibrarySourceCollection emptyList = new LibrarySourceCollection();
+            LibrarySourceKey key = new LibrarySourceKey(libraryKey);
 
             DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
             workItems.Add(openConnection);
 
-            if (data.LibrarySources.Count(w => library.Equals(w)) == 0)
+            LibrarySourceCollection empty = new LibrarySourceCollection();
+
+            // The Save performs a delta. As the collection is empty, anything matching that Library Key is deleted.
+            workItems.Add(new ExecuteNonQuery(openConnection)
             {
-                // The Save performs a delta. As the Model does not contain the Library, it will remove it from the database, if possible.
-                workItems.Add(new ExecuteNonQuery(openConnection)
-                {
-                    WorkName = "Delete Library (Cascade)",
-                    Command = (conn) => emptyList.SaveCommand(conn, library)
-                });
-            }
+                WorkName = "Delete Library (Cascade)",
+                Command = (conn) => empty.SaveCommand(conn, key)
+            });
+
+            return workItems;
+        }
+
+        /// <summary>
+        /// Removes all the Library Data
+        /// </summary>
+        /// <param name="data"></param>
+        public static IReadOnlyList<WorkItem> ClearLibrary(this IModelLibrary data)
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+
+            workItems.Add(new WorkItem() { WorkName = "Clear Libraries", DoWork = data.LibrarySources.Clear });
+            workItems.Add(new WorkItem() { WorkName = "Clear Library Members", DoWork = data.LibraryMembers.Clear });
+
+            return workItems;
+        }
+
+        /// <summary>
+        /// Removes all the Library Data for the specific key
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="libraryKey"></param>
+        public static IReadOnlyList<WorkItem> RemoveLibrary(this IModelLibrary data, ILibrarySourceKey libraryKey)
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+            LibrarySourceKey key = new LibrarySourceKey(libraryKey);
+
+            workItems.Add(new WorkItem() { WorkName = "Remove Libraries", DoWork = () => data.LibrarySources.Remove(key) });
+            workItems.Add(new WorkItem() { WorkName = "Remove Library Members", DoWork = () => data.LibraryMembers.Remove(key) });
 
             return workItems;
         }

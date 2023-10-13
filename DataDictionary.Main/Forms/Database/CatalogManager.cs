@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
@@ -76,7 +77,59 @@ namespace DataDictionary.Main.Forms.Database
 
         private void SaveToolStripButton_Click(object? sender, EventArgs e)
         {
+            catalogNavigation.EndEdit();
+            List<WorkItem> work = new List<WorkItem>();
 
+            foreach (CatalogManagerItem item in bindingData.ToList())
+            {
+                DbCatalogKey key = new DbCatalogKey(item);
+                Boolean inDbList = (dbData.FirstOrDefault(w => key.Equals(w)) is DbCatalogItem);
+                Boolean inModelList = (Program.Data.DbCatalogs.FirstOrDefault(w => key.Equals(w)) is DbCatalogItem);
+
+                if (item.InModel && !inDbList)
+                { work.AddRange(Program.Data.SaveCatalog(key)); }
+                else if (item.InModel && item.InDatabase && inModelList)
+                { work.AddRange(Program.Data.SaveCatalog(key)); }
+                else if (item.InModel && item.InDatabase && !inModelList)
+                { work.AddRange(Program.Data.LoadCatalog(key)); }
+                else if (!item.InModel && item.InDatabase && inModelList)
+                {
+                    work.AddRange(Program.Data.SaveCatalog(key));
+                    work.AddRange(Program.Data.RemoveCatalog(key));
+                }
+                else if (!item.InModel && !item.InDatabase && inModelList && !inDbList)
+                { work.AddRange(Program.Data.RemoveCatalog(key)); }
+                else if (!item.InModel && !item.InDatabase && inModelList && inDbList)
+                {
+                    bindingData.Remove(item);
+                    work.AddRange(Program.Data.RemoveCatalog(key));
+                    work.AddRange(Program.Data.DeleteCatalog(key));
+                }
+                else if (!item.InModel && !item.InDatabase && !inModelList && inDbList)
+                {
+                    bindingData.Remove(item);
+                    work.AddRange(Program.Data.DeleteCatalog(key));
+                }
+            }
+            DoLocalWork(work);
+        }
+
+        private void DoLocalWork(List<WorkItem> work)
+        {
+            UnbindData();
+            SendMessage(new Messages.DoUnbindData());
+
+            dbData.Clear();
+            work.AddRange(dbData.LoadCatalog());
+
+            this.DoWork(work, onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                SendMessage(new Messages.DoBindData());
+                bindingData.Build(Program.Data.DbCatalogs, dbData);
+                BindData();
+            }
         }
 
         private void OpenToolStripButton_Click(object? sender, EventArgs e)
@@ -154,7 +207,5 @@ namespace DataDictionary.Main.Forms.Database
             }
 
         }
-
-
     }
 }

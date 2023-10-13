@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     public abstract class LibraryMemberCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ILibrarySourceKey>,
         IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>,
-        IRemoveData<ILibrarySourceKey>, IRemoveData<ILibrarySourceKeyUnique>
+        IRemoveData<LibrarySourceKey>, IRemoveData<LibrarySourceKeyUnique>
         where TItem : BindingTableRow, ILibraryMemberItem, ILibrarySourceKey, ILibrarySourceKeyUnique, new()
     {
         /// <inheritdoc/>
@@ -60,20 +60,16 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         }
 
         /// <inheritdoc/>
-        public void Remove(ILibrarySourceKey libraryItem)
+        public void Remove(LibrarySourceKey libraryKey)
         {
-            LibrarySourceKey key = new LibrarySourceKey(libraryItem);
-
-            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            foreach (TItem item in this.Where(w => libraryKey.Equals(w)).ToList())
             { base.Remove(item); }
         }
 
         /// <inheritdoc/>
-        public void Remove(ILibrarySourceKeyUnique libraryItem)
+        public void Remove(LibrarySourceKeyUnique libraryKey)
         {
-            LibrarySourceKeyUnique key = new LibrarySourceKeyUnique(libraryItem);
-
-            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            foreach (TItem item in this.Where(w => libraryKey.Equals(w)).ToList())
             { base.Remove(item); }
         }
     }

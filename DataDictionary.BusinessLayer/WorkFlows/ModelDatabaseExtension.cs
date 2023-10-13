@@ -25,7 +25,6 @@ namespace DataDictionary.BusinessLayer.WorkFlows
     /// </summary>
     public static class ModelDatabaseExtension
     {
-
         /// <summary>
         /// Loads the List of Models from the Database.
         /// </summary>
@@ -57,12 +56,12 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         /// Loads the Model (by key) from the Database.
         /// </summary>
         /// <param name="data"></param>
-        /// <param name="modelId"></param>
+        /// <param name="modelKey"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadModel(this ModelData data, IModelKey modelId)
+        public static IReadOnlyList<WorkItem> LoadModel(this ModelData data, IModelKey modelKey)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            data.ModelKey = new ModelKey(modelId);
+            data.ModelKey = new ModelKey(modelKey);
 
             OpenConnection openConnection = new OpenConnection(ModelData.ModelContext);
             workItems.Add(openConnection);
@@ -73,144 +72,61 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 DoWork = () => { data.Clear(); }
             });
 
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Load Models",
-                Command = data.Models.LoadCommand,
-                Target = data.Models
-            });
-
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Load DbCatalogs",
-                Command = data.DbCatalogs.LoadCommand,
-                Target = data.DbCatalogs
-            });
-
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Load DbSchemta",
-                Command = (conn) => data.DbSchemta.LoadCommand(conn, modelId),
-                Target = data.DbSchemta
-            });
-
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Load DbTables",
-                Command = (conn) => data.DbTables.LoadCommand(conn, modelId),
-                Target = data.DbTables
-            });
-
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Load DbColumns",
-                Command = (conn) => data.DbTableColumns.LoadCommand(conn, modelId),
-                Target = data.DbTableColumns
-            });
-
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Load DbDomains",
-                Command = (conn) => data.DbDomains.LoadCommand(conn, modelId),
-                Target = data.DbDomains
-            });
-
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Load DbConstraints",
-                Command = (conn) => data.DbConstraints.LoadCommand(conn, modelId),
-                Target = data.DbConstraints
-            });
-
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Load DbConstraintColumns",
-                Command = (conn) => data.DbConstraintColumns.LoadCommand(conn, modelId),
-                Target = data.DbConstraintColumns
-            });
-
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Load DbRoutines",
-                Command = (conn) => data.DbRoutines.LoadCommand(conn, modelId),
-                Target = data.DbRoutines
-            });
-
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Load DbRoutineParameters",
-                Command = (conn) => data.DbRoutineParameters.LoadCommand(conn, modelId),
-                Target = data.DbRoutineParameters
-            });
-
-
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Load DbRoutineDependencies",
-                Command = (conn) => data.DbRoutineDependencies.LoadCommand(conn, modelId),
-                Target = data.DbRoutineDependencies
-            });
-
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Load Extended Properties",
-                Command = (conn) => data.DbExtendedProperties.LoadCommand(conn, modelId),
-                Target = data.DbExtendedProperties
-            });
+            workItems.AddRange(data.LoadCatalog(modelKey));
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Domain Attributes",
-                Command = (conn) => data.DomainAttributes.LoadCommand(conn, modelId),
+                Command = (conn) => data.DomainAttributes.LoadCommand(conn, modelKey),
                 Target = data.DomainAttributes
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Domain Attributes Aliases",
-                Command = (conn) => data.DomainAttributeAliases.LoadCommand(conn, modelId),
+                Command = (conn) => data.DomainAttributeAliases.LoadCommand(conn, modelKey),
                 Target = data.DomainAttributeAliases
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Domain Attributes Properties",
-                Command = (conn) => data.DomainAttributeProperties.LoadCommand(conn, modelId),
+                Command = (conn) => data.DomainAttributeProperties.LoadCommand(conn, modelKey),
                 Target = data.DomainAttributeProperties
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Domain Entities",
-                Command = (conn) => data.DomainEntities.LoadCommand(conn, modelId),
+                Command = (conn) => data.DomainEntities.LoadCommand(conn, modelKey),
                 Target = data.DomainEntities
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Domain Entities Aliases",
-                Command = (conn) => data.DomainEntityAliases.LoadCommand(conn, modelId),
+                Command = (conn) => data.DomainEntityAliases.LoadCommand(conn, modelKey),
                 Target = data.DomainEntityAliases
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Domain Entities Properties",
-                Command = (conn) => data.DomainEntityProperties.LoadCommand(conn, modelId),
+                Command = (conn) => data.DomainEntityProperties.LoadCommand(conn, modelKey),
                 Target = data.DomainEntityProperties
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Library Sources",
-                Command = (conn) => data.LibrarySources.LoadCommand(conn, modelId),
+                Command = (conn) => data.LibrarySources.LoadCommand(conn, modelKey),
                 Target = data.LibrarySources
             });
 
             workItems.Add(new ExecuteReader(openConnection)
             {
                 WorkName = "Load Library Members",
-                Command = (conn) => data.LibraryMembers.LoadCommand(conn, modelId),
+                Command = (conn) => data.LibraryMembers.LoadCommand(conn, modelKey),
                 Target = data.LibraryMembers
             });
 
@@ -247,72 +163,6 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 WorkName = "Get list of Models",
                 Command = data.Models.LoadCommand,
                 Target = data.Models
-            });
-
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save DbCatalogs",
-                Command = (conn) => data.DbCatalogs.SaveCommand(conn, modelId)
-            });
-
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save DbSchemta",
-                Command = (conn) => data.DbSchemta.SaveCommand(conn, modelId)
-            });
-
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save DbTables",
-                Command = (conn) => data.DbTables.SaveCommand(conn, modelId)
-            });
-
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save DbColumns",
-                Command = (conn) => data.DbTableColumns.SaveCommand(conn, modelId)
-            });
-
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save DbExtendedProperties",
-                Command = (conn) => data.DbExtendedProperties.SaveCommand(conn, modelId)
-            });
-
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save DbDomains",
-                Command = (conn) => data.DbDomains.SaveCommand(conn, modelId)
-            });
-
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save DbConstraints",
-                Command = (conn) => data.DbConstraints.SaveCommand(conn, modelId)
-            });
-
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save DbConstraintColumns",
-                Command = (conn) => data.DbConstraintColumns.SaveCommand(conn, modelId)
-            });
-
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save DbRoutines",
-                Command = (conn) => data.DbRoutines.SaveCommand(conn, modelId)
-            });
-
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save DbRoutineParameters",
-                Command = (conn) => data.DbRoutineParameters.SaveCommand(conn, modelId)
-            });
-
-            workItems.Add(new ExecuteNonQuery(openConnection)
-            {
-                WorkName = "Save DbRoutineDependencies",
-                Command = (conn) => data.DbRoutineDependencies.SaveCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)

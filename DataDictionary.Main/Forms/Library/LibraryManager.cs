@@ -146,28 +146,28 @@ namespace DataDictionary.Main.Forms.Library
                 Boolean inModelList = (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
 
                 if (item.InModel && !inDbList)
-                { work.AddRange(Program.Data.SaveLibrary(item)); }
+                { work.AddRange(Program.Data.SaveLibrary(key)); }
                 else if (item.InModel && item.InDatabase && inModelList)
-                { work.AddRange(Program.Data.SaveLibrary(item)); }
+                { work.AddRange(Program.Data.SaveLibrary(key)); }
                 else if (item.InModel && item.InDatabase && !inModelList)
-                { work.AddRange(Program.Data.LoadLibrary(item)); }
+                { work.AddRange(Program.Data.LoadLibrary(key)); }
                 else if (!item.InModel && item.InDatabase && inModelList)
                 {
-                    work.AddRange(Program.Data.SaveLibrary(item));
-                    work.AddRange(Program.Data.RemoveLibrary(item));
+                    //work.AddRange(Program.Data.SaveLibrary(key));
+                    work.AddRange(Program.Data.RemoveLibrary(key));
                 }
                 else if (!item.InModel && !item.InDatabase && inModelList && !inDbList)
-                { work.AddRange(Program.Data.RemoveLibrary(item)); }
+                { work.AddRange(Program.Data.RemoveLibrary(key)); }
                 else if (!item.InModel && !item.InDatabase && inModelList && inDbList)
                 {
                     bindingData.Remove(item);
-                    work.AddRange(Program.Data.RemoveLibrary(item));
-                    work.AddRange(Program.Data.DeleteLibrary(item));
+                    work.AddRange(Program.Data.RemoveLibrary(key));
+                    work.AddRange(Program.Data.DeleteLibrary(key));
                 }
                 else if (!item.InModel && !item.InDatabase && !inModelList && inDbList)
                 {
                     bindingData.Remove(item);
-                    work.AddRange(Program.Data.DeleteLibrary(item));
+                    work.AddRange(Program.Data.DeleteLibrary(key));
                 }
             }
             DoLocalWork(work);
@@ -197,6 +197,9 @@ namespace DataDictionary.Main.Forms.Library
 
             dbData.Clear();
             work.AddRange(dbData.LoadLibrary());
+
+            var x = libraryBinding;
+            
 
             this.DoWork(work, onCompleting);
 

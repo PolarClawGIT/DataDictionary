@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
     public class LibrarySourceCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>, IReadData<ILibrarySourceKey>, 
         IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>,
-        IRemoveData<ILibrarySourceKey>, IRemoveData<ILibrarySourceKeyUnique>
+        IRemoveData<LibrarySourceKey>, IRemoveData<LibrarySourceKeyUnique>
         where TItem : BindingTableRow, ILibrarySourceItem, ILibrarySourceKey, ILibrarySourceKeyUnique,  new()
     {
         /// <inheritdoc/>
@@ -64,7 +64,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
         }
 
         /// <inheritdoc/>
-        public void Remove(ILibrarySourceKey libraryItem)
+        public void Remove(LibrarySourceKey libraryItem)
         {
             LibrarySourceKey key = new LibrarySourceKey(libraryItem);
 
@@ -73,7 +73,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
         }
 
         /// <inheritdoc/>
-        public void Remove(ILibrarySourceKeyUnique libraryItem)
+        public void Remove(LibrarySourceKeyUnique libraryItem)
         {
             LibrarySourceKeyUnique key = new LibrarySourceKeyUnique(libraryItem);
 
