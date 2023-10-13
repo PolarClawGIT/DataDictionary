@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
         IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKey>
-        where TItem : BindingTableRow, IDbSchemaItem, new()
+        where TItem : BindingTableRow, IDbSchemaItem, IDbCatalogKey, IDbSchemaKey,  new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)

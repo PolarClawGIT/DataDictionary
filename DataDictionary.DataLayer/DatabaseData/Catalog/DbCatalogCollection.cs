@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         IReadData, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
         IRemoveData<IDbCatalogKey>
-        where TItem : BindingTableRow, IDbCatalogItem, new()
+        where TItem : BindingTableRow, IDbCatalogItem, IDbCatalogKey, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)

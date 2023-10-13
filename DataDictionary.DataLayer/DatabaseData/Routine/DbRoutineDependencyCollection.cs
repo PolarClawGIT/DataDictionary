@@ -22,7 +22,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbRoutineItem>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
         IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKey>, IRemoveData<IDbRoutineKey>, IRemoveData<IDbRoutineDependencyKey>
-        where TItem : BindingTableRow, IDbRoutineDependencyItem, new()
+        where TItem : BindingTableRow, IDbRoutineDependencyItem, IDbCatalogKey, IDbSchemaKey, IDbRoutineKey, IDbRoutineDependencyKey, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, IDbRoutineItem key)

@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// Interface for a Routine Dependency Item
     /// </summary>
     /// <see href="https://learn.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-sql-expression-dependencies-transact-sql?view=sql-server-ver16"/>
-    public interface IDbRoutineDependencyItem : IDbColumnReferenceKey, IDbCatalogKey, IDataItem
+    public interface IDbRoutineDependencyItem : IDbColumnReferenceKey, IDbCatalogKey, IDbRoutineDependencyKey, IDataItem
     {
         /// <summary>
         /// The Object Type of the Reference
