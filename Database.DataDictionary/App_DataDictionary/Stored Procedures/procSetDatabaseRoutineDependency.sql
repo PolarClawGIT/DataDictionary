@@ -48,8 +48,8 @@ Begin Try
 				Where	(@CatalogId is Null Or [CatalogId] = @CatalogId)))
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
+	If @ModelId is Null and @CatalogId is Null
+	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
 
 	-- Apply Changes
 	With [Delta] As (
