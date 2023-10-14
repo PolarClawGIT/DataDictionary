@@ -66,14 +66,30 @@ namespace DataDictionary.Main
         {
             Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
 
+            // Display the Splash screen (Show a minimum of 10 seconds or wait for data to Load)
+            Dialogs.AboutBox splashScreen = new Dialogs.AboutBox();
+            Boolean dataLoaded = false;
+            Boolean splashDone = false;
+
+            System.Timers.Timer splashTimer = new System.Timers.Timer();
+            splashTimer.Interval = 5000; // 5 seconds
+            splashTimer.Elapsed += MinTime_Elapsed;
+            splashTimer.AutoReset = false;
+            splashTimer.Enabled = true; // Start
+            splashScreen.Show();
+
+            // Setup the Data
             SendMessage(new DoUnbindData());
 
             if (Settings.Default.IsOnLineMode)
             { this.DoWork(Program.Data.LoadApplicationData(), OnComplete); }
             else { this.DoWork(Program.Data.LoadApplicationData(new FileInfo(Settings.Default.AppDataFile)), OnComplete); }
 
+            // Handle data load complete
             void OnComplete(RunWorkerCompletedEventArgs args)
             {
+                if (splashDone) { splashScreen.Close(); }
+
                 if (args.Error is not null && Settings.Default.IsOnLineMode)
                 { // Could not load the data from the database for whatever reason.
                   // Switch to off-line mode and load from file if possible.
@@ -85,7 +101,16 @@ namespace DataDictionary.Main
                 {
                     SendMessage(new DoBindData());
                     SendMessage(new OnlineStatusChanged());
+                    dataLoaded = true;
                 }
+            }
+
+            // Handle Splash timer timed out.
+            void MinTime_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+            {
+                if (dataLoaded) { this.Invoke(() => splashScreen.Close()); }
+                splashDone = true;
+                splashTimer.Elapsed -= MinTime_Elapsed;
             }
         }
 
@@ -164,7 +189,7 @@ namespace DataDictionary.Main
         { Activate(() => new Dialogs.HelpSubject()); }
 
         private void HelpAboutMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Dialogs.HelpSubject("About Application")); }
+        { Activate(() => new Dialogs.AboutBox()); }
 
         private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
@@ -261,7 +286,7 @@ namespace DataDictionary.Main
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             if (Settings.Default.IsOnLineMode)
-            { toolStripOnlineStatus.Text = String.Format("On-Line: {0}.{0}", Program.Data.ServerName, Program.Data.DatabaseName) ; }
+            { toolStripOnlineStatus.Text = String.Format("On-Line: {0}.{0}", Program.Data.ServerName, Program.Data.DatabaseName); }
             else { toolStripOnlineStatus.Text = "Off-Line"; }
         }
         #endregion

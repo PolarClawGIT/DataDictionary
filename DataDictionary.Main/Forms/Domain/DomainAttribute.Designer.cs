@@ -52,10 +52,6 @@
             propertyDefinitionTab = new TabPage();
             propertyDefinitionData = new Controls.RichTextBoxData();
             attributeAlaisData = new DataGridView();
-            aliasCatalogNameData = new DataGridViewTextBoxColumn();
-            aliasSchemaNameData = new DataGridViewTextBoxColumn();
-            alaisObjectNameData = new DataGridViewTextBoxColumn();
-            aliasElementNameData = new DataGridViewTextBoxColumn();
             catalogNameData = new Controls.ComboBoxData();
             schemaNameData = new Controls.ComboBoxData();
             objectNameData = new Controls.ComboBoxData();
@@ -68,6 +64,10 @@
             errorProvider = new ErrorProvider(components);
             bindingProperties = new BindingSource(components);
             bindingDatabaseAlias = new BindingSource(components);
+            aliasDatabaseNameData = new DataGridViewTextBoxColumn();
+            aliasSchemaNameData = new DataGridViewTextBoxColumn();
+            alaisObjectNameData = new DataGridViewTextBoxColumn();
+            aliasElementNameData = new DataGridViewTextBoxColumn();
             attributeLayout = new TableLayoutPanel();
             attributeTabLayout = new TabControl();
             attributePropertyTab = new TabPage();
@@ -92,11 +92,11 @@
             ((System.ComponentModel.ISupportInitialize)attributeAlaisData).BeginInit();
             libraryAliasTab.SuspendLayout();
             entityTab.SuspendLayout();
+            entityLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)entityData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDatabaseAlias).BeginInit();
-            entityLayout.SuspendLayout();
             SuspendLayout();
             // 
             // attributeLayout
@@ -368,7 +368,7 @@
             // attributeAlaisData
             // 
             attributeAlaisData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            attributeAlaisData.Columns.AddRange(new DataGridViewColumn[] { aliasCatalogNameData, aliasSchemaNameData, alaisObjectNameData, aliasElementNameData });
+            attributeAlaisData.Columns.AddRange(new DataGridViewColumn[] { aliasDatabaseNameData, aliasSchemaNameData, alaisObjectNameData, aliasElementNameData });
             attributeAlaisData.Dock = DockStyle.Fill;
             attributeAlaisData.Location = new Point(3, 3);
             attributeAlaisData.Name = "attributeAlaisData";
@@ -376,34 +376,6 @@
             attributeAlaisData.Size = new Size(503, 177);
             attributeAlaisData.TabIndex = 0;
             attributeAlaisData.Leave += attributeAlaisData_Leave;
-            // 
-            // aliasCatalogNameData
-            // 
-            aliasCatalogNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliasCatalogNameData.DataPropertyName = "CatalogName";
-            aliasCatalogNameData.HeaderText = "Catalog Name";
-            aliasCatalogNameData.Name = "aliasCatalogNameData";
-            // 
-            // aliasSchemaNameData
-            // 
-            aliasSchemaNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliasSchemaNameData.DataPropertyName = "SchemaName";
-            aliasSchemaNameData.HeaderText = "Schema Name";
-            aliasSchemaNameData.Name = "aliasSchemaNameData";
-            // 
-            // alaisObjectNameData
-            // 
-            alaisObjectNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            alaisObjectNameData.DataPropertyName = "ObjectName";
-            alaisObjectNameData.HeaderText = "Object Name";
-            alaisObjectNameData.Name = "alaisObjectNameData";
-            // 
-            // aliasElementNameData
-            // 
-            aliasElementNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliasElementNameData.DataPropertyName = "ElementName";
-            aliasElementNameData.HeaderText = "Element Name";
-            aliasElementNameData.Name = "aliasElementNameData";
             // 
             // catalogNameData
             // 
@@ -480,7 +452,7 @@
             libraryAliasTab.Location = new Point(4, 24);
             libraryAliasTab.Name = "libraryAliasTab";
             libraryAliasTab.Padding = new Padding(3);
-            libraryAliasTab.Size = new Size(515, 389);
+            libraryAliasTab.Size = new Size(192, 72);
             libraryAliasTab.TabIndex = 3;
             libraryAliasTab.Text = "Library Alais";
             // 
@@ -499,9 +471,23 @@
             entityTab.Controls.Add(entityLayout);
             entityTab.Location = new Point(4, 24);
             entityTab.Name = "entityTab";
-            entityTab.Size = new Size(515, 389);
+            entityTab.Size = new Size(192, 72);
             entityTab.TabIndex = 4;
             entityTab.Text = "Entities";
+            // 
+            // entityLayout
+            // 
+            entityLayout.ColumnCount = 1;
+            entityLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            entityLayout.Controls.Add(entityData, 0, 0);
+            entityLayout.Dock = DockStyle.Fill;
+            entityLayout.Location = new Point(0, 0);
+            entityLayout.Name = "entityLayout";
+            entityLayout.Padding = new Padding(3);
+            entityLayout.RowCount = 1;
+            entityLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            entityLayout.Size = new Size(192, 72);
+            entityLayout.TabIndex = 1;
             // 
             // entityData
             // 
@@ -514,7 +500,7 @@
             entityData.Name = "entityData";
             entityData.ReadOnly = true;
             entityData.RowTemplate.Height = 25;
-            entityData.Size = new Size(503, 377);
+            entityData.Size = new Size(180, 60);
             entityData.TabIndex = 0;
             // 
             // entityTitleColumn
@@ -551,19 +537,33 @@
             bindingDatabaseAlias.BindingComplete += BindingComplete;
             bindingDatabaseAlias.CurrentChanged += bindingDatabaseAlias_CurrentChanged;
             // 
-            // entityLayout
+            // aliasDatabaseNameData
             // 
-            entityLayout.ColumnCount = 1;
-            entityLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            entityLayout.Controls.Add(entityData, 0, 0);
-            entityLayout.Dock = DockStyle.Fill;
-            entityLayout.Location = new Point(0, 0);
-            entityLayout.Name = "entityLayout";
-            entityLayout.Padding = new Padding(3);
-            entityLayout.RowCount = 1;
-            entityLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            entityLayout.Size = new Size(515, 389);
-            entityLayout.TabIndex = 1;
+            aliasDatabaseNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliasDatabaseNameData.DataPropertyName = "DatabaseName";
+            aliasDatabaseNameData.HeaderText = "Database Name";
+            aliasDatabaseNameData.Name = "aliasDatabaseNameData";
+            // 
+            // aliasSchemaNameData
+            // 
+            aliasSchemaNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliasSchemaNameData.DataPropertyName = "SchemaName";
+            aliasSchemaNameData.HeaderText = "Schema Name";
+            aliasSchemaNameData.Name = "aliasSchemaNameData";
+            // 
+            // alaisObjectNameData
+            // 
+            alaisObjectNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            alaisObjectNameData.DataPropertyName = "ObjectName";
+            alaisObjectNameData.HeaderText = "Object Name";
+            alaisObjectNameData.Name = "alaisObjectNameData";
+            // 
+            // aliasElementNameData
+            // 
+            aliasElementNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliasElementNameData.DataPropertyName = "ElementName";
+            aliasElementNameData.HeaderText = "Element Name";
+            aliasElementNameData.Name = "aliasElementNameData";
             // 
             // DomainAttribute
             // 
@@ -594,11 +594,11 @@
             libraryAliasTab.ResumeLayout(false);
             libraryAliasTab.PerformLayout();
             entityTab.ResumeLayout(false);
+            entityLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)entityData).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDatabaseAlias).EndInit();
-            entityLayout.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -608,10 +608,6 @@
         private Controls.TextBoxData attributeTitleData;
         private Controls.TextBoxData attributeParentTitleData;
         private DataGridView attributeAlaisData;
-        private DataGridViewTextBoxColumn aliasCatalogNameData;
-        private DataGridViewTextBoxColumn aliasSchemaNameData;
-        private DataGridViewTextBoxColumn alaisObjectNameData;
-        private DataGridViewTextBoxColumn aliasElementNameData;
         private Controls.TextBoxData attributeDescriptionData;
         private ErrorProvider errorProvider;
         private DataGridView propertyNavigation;
@@ -634,5 +630,9 @@
         private DataGridViewTextBoxColumn entityTitleColumn;
         private DataGridViewTextBoxColumn entityDescriptionColumn;
         private Controls.CheckedListBoxData propertyChoiceData;
+        private DataGridViewTextBoxColumn aliasDatabaseNameData;
+        private DataGridViewTextBoxColumn aliasSchemaNameData;
+        private DataGridViewTextBoxColumn alaisObjectNameData;
+        private DataGridViewTextBoxColumn aliasElementNameData;
     }
 }

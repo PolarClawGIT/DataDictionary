@@ -50,10 +50,6 @@
             propertyDefinitionData = new Controls.RichTextBoxData();
             entityDbAliasTab = new TabPage();
             aliasNavigation = new DataGridView();
-            aliasCatalogNameData = new DataGridViewTextBoxColumn();
-            aliasSchemaNameData = new DataGridViewTextBoxColumn();
-            alaisObjectNameData = new DataGridViewTextBoxColumn();
-            aliasElementNameData = new DataGridViewTextBoxColumn();
             catalogNameData = new Controls.ComboBoxData();
             schemaNameData = new Controls.ComboBoxData();
             objectNameData = new Controls.ComboBoxData();
@@ -66,6 +62,9 @@
             errorProvider = new ErrorProvider(components);
             bindingProperties = new BindingSource(components);
             bindingDatabaseAlias = new BindingSource(components);
+            aliasDatabaseNameData = new DataGridViewTextBoxColumn();
+            aliasSchemaNameData = new DataGridViewTextBoxColumn();
+            alaisObjectNameData = new DataGridViewTextBoxColumn();
             entityLayout = new TableLayoutPanel();
             entityTabLayout = new TabControl();
             propertyLayout = new TableLayoutPanel();
@@ -330,7 +329,7 @@
             entityDbAliasTab.Location = new Point(4, 24);
             entityDbAliasTab.Name = "entityDbAliasTab";
             entityDbAliasTab.Padding = new Padding(3);
-            entityDbAliasTab.Size = new Size(192, 72);
+            entityDbAliasTab.Size = new Size(510, 348);
             entityDbAliasTab.TabIndex = 1;
             entityDbAliasTab.Text = "Db Alias";
             entityDbAliasTab.UseVisualStyleBackColor = true;
@@ -352,48 +351,20 @@
             databaseAliasLayout.RowStyles.Add(new RowStyle());
             databaseAliasLayout.RowStyles.Add(new RowStyle());
             databaseAliasLayout.RowStyles.Add(new RowStyle());
-            databaseAliasLayout.Size = new Size(186, 66);
+            databaseAliasLayout.Size = new Size(504, 342);
             databaseAliasLayout.TabIndex = 2;
             // 
             // aliasNavigation
             // 
             aliasNavigation.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            aliasNavigation.Columns.AddRange(new DataGridViewColumn[] { aliasCatalogNameData, aliasSchemaNameData, alaisObjectNameData, aliasElementNameData });
+            aliasNavigation.Columns.AddRange(new DataGridViewColumn[] { aliasDatabaseNameData, aliasSchemaNameData, alaisObjectNameData });
             aliasNavigation.Dock = DockStyle.Fill;
             aliasNavigation.Location = new Point(3, 3);
             aliasNavigation.Name = "aliasNavigation";
             aliasNavigation.RowTemplate.Height = 25;
-            aliasNavigation.Size = new Size(180, 1);
+            aliasNavigation.Size = new Size(498, 186);
             aliasNavigation.TabIndex = 0;
             aliasNavigation.Leave += aliasNavigation_Leave;
-            // 
-            // aliasCatalogNameData
-            // 
-            aliasCatalogNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliasCatalogNameData.DataPropertyName = "CatalogName";
-            aliasCatalogNameData.HeaderText = "Catalog Name";
-            aliasCatalogNameData.Name = "aliasCatalogNameData";
-            // 
-            // aliasSchemaNameData
-            // 
-            aliasSchemaNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliasSchemaNameData.DataPropertyName = "SchemaName";
-            aliasSchemaNameData.HeaderText = "Schema Name";
-            aliasSchemaNameData.Name = "aliasSchemaNameData";
-            // 
-            // alaisObjectNameData
-            // 
-            alaisObjectNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            alaisObjectNameData.DataPropertyName = "ObjectName";
-            alaisObjectNameData.HeaderText = "Object Name";
-            alaisObjectNameData.Name = "alaisObjectNameData";
-            // 
-            // aliasElementNameData
-            // 
-            aliasElementNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliasElementNameData.DataPropertyName = "ElementName";
-            aliasElementNameData.HeaderText = "Element Name";
-            aliasElementNameData.Name = "aliasElementNameData";
             // 
             // catalogNameData
             // 
@@ -403,10 +374,10 @@
             catalogNameData.DisplayMember = "";
             catalogNameData.Dock = DockStyle.Fill;
             catalogNameData.HeaderText = "Catalog Name";
-            catalogNameData.Location = new Point(3, -81);
+            catalogNameData.Location = new Point(3, 195);
             catalogNameData.Name = "catalogNameData";
             catalogNameData.ReadOnly = false;
-            catalogNameData.Size = new Size(180, 44);
+            catalogNameData.Size = new Size(498, 44);
             catalogNameData.TabIndex = 1;
             catalogNameData.ValueMember = "";
             catalogNameData.Validated += catalogNameData_Validated;
@@ -420,10 +391,10 @@
             schemaNameData.DisplayMember = "";
             schemaNameData.Dock = DockStyle.Fill;
             schemaNameData.HeaderText = "Schema Name";
-            schemaNameData.Location = new Point(3, -31);
+            schemaNameData.Location = new Point(3, 245);
             schemaNameData.Name = "schemaNameData";
             schemaNameData.ReadOnly = false;
-            schemaNameData.Size = new Size(180, 44);
+            schemaNameData.Size = new Size(498, 44);
             schemaNameData.TabIndex = 2;
             schemaNameData.ValueMember = "";
             schemaNameData.Validated += schemaNameData_Validated;
@@ -437,10 +408,10 @@
             objectNameData.DisplayMember = "";
             objectNameData.Dock = DockStyle.Fill;
             objectNameData.HeaderText = "Object Name";
-            objectNameData.Location = new Point(3, 19);
+            objectNameData.Location = new Point(3, 295);
             objectNameData.Name = "objectNameData";
             objectNameData.ReadOnly = false;
-            objectNameData.Size = new Size(180, 44);
+            objectNameData.Size = new Size(498, 44);
             objectNameData.TabIndex = 3;
             objectNameData.ValueMember = "";
             objectNameData.Validated += objectNameData_Validated;
@@ -521,6 +492,27 @@
             bindingDatabaseAlias.AddingNew += bindingDatabaseAlias_AddingNew;
             bindingDatabaseAlias.BindingComplete += BindingComplete;
             // 
+            // aliasDatabaseNameData
+            // 
+            aliasDatabaseNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliasDatabaseNameData.DataPropertyName = "DatabaseName";
+            aliasDatabaseNameData.HeaderText = "Database Name";
+            aliasDatabaseNameData.Name = "aliasDatabaseNameData";
+            // 
+            // aliasSchemaNameData
+            // 
+            aliasSchemaNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliasSchemaNameData.DataPropertyName = "SchemaName";
+            aliasSchemaNameData.HeaderText = "Schema Name";
+            aliasSchemaNameData.Name = "aliasSchemaNameData";
+            // 
+            // alaisObjectNameData
+            // 
+            alaisObjectNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            alaisObjectNameData.DataPropertyName = "ObjectName";
+            alaisObjectNameData.HeaderText = "Object Name";
+            alaisObjectNameData.Name = "alaisObjectNameData";
+            // 
             // DomainEntity
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -576,10 +568,6 @@
         private TabPage propertyDefinitionTab;
         private Controls.RichTextBoxData propertyDefinitionData;
         private DataGridView aliasNavigation;
-        private DataGridViewTextBoxColumn aliasCatalogNameData;
-        private DataGridViewTextBoxColumn aliasSchemaNameData;
-        private DataGridViewTextBoxColumn alaisObjectNameData;
-        private DataGridViewTextBoxColumn aliasElementNameData;
         private Controls.ComboBoxData catalogNameData;
         private Controls.ComboBoxData schemaNameData;
         private Controls.ComboBoxData objectNameData;
@@ -591,5 +579,8 @@
         private DataGridViewTextBoxColumn attributeTitleColumn;
         private DataGridViewTextBoxColumn attributeDescriptionTitle;
         private Controls.CheckedListBoxData propertyChoiceData;
+        private DataGridViewTextBoxColumn aliasDatabaseNameData;
+        private DataGridViewTextBoxColumn aliasSchemaNameData;
+        private DataGridViewTextBoxColumn alaisObjectNameData;
     }
 }
