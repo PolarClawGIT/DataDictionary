@@ -20,7 +20,11 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        Boolean IsOpenItem(Object? item);
+        /// <remarks>
+        /// By default the function always returns true.
+        /// Override this if the from is specific to data item.
+        /// </remarks>
+        Boolean IsOpenItem(Object? item) { return true; }
 
         /// <summary>
         ///  Collection of child controls.
@@ -77,27 +81,39 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         public void UnbindDataCore();
 
+
+    }
+
+    /// <summary>
+    /// Implementation of IApplicationDataBind.
+    /// </summary>
+    /// <remarks>
+    /// This is only because calling interface methods result in code that looks like: (this as IApplicationDataBind).BindData();
+    /// </remarks>
+    static class ApplicationDataBind
+    {
         /// <summary>
         /// Calls BindDataCore() and locks or unlocks the form accordingly.
         /// </summary>
-        public void BindData()
+        public static void BindData(this IApplicationDataBind dataForm)
         {
-            if (BindDataCore()) { IsLocked = false; IsWaitCursor = false; }
+            if (dataForm.BindDataCore()) { dataForm.IsLocked = false; dataForm.IsWaitCursor = false; }
             else
             {
-                IsLocked = true;
-                IsWaitCursor = false;
+                dataForm.IsLocked = true;
+                dataForm.IsWaitCursor = false;
             }
         }
+
 
         /// <summary>
         /// Class UnbindDataCore and locks the form.
         /// </summary>
-        public void UnbindData()
+        public static void UnbindData(this IApplicationDataBind dataForm)
         {
-            IsLocked = true;
-            IsWaitCursor = true;
-            UnbindDataCore();
+            dataForm.IsLocked = true;
+            dataForm.IsWaitCursor = true;
+            dataForm.UnbindDataCore();
         }
 
     }

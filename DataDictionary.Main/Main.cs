@@ -66,7 +66,7 @@ namespace DataDictionary.Main
         {
             Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
 
-            domainModelToolStripMenuItem.DropDownItems.AddRange(domainModelMenu.Items);
+            SendMessage(new DoUnbindData());
 
             if (Settings.Default.IsOnLineMode)
             { this.DoWork(Program.Data.LoadApplicationData(), OnComplete); }
@@ -81,7 +81,11 @@ namespace DataDictionary.Main
                     Settings.Default.Save();
                     this.DoWork(Program.Data.LoadApplicationData(new FileInfo(Settings.Default.AppDataFile)), OnComplete);
                 }
-                else if (args.Error is null) { (this as IApplicationDataBind).BindData(); }
+                else
+                {
+                    SendMessage(new DoBindData());
+                    SendMessage(new OnlineStatusChanged());
+                }
             }
         }
 
@@ -252,6 +256,13 @@ namespace DataDictionary.Main
             //TODO: can a different event handle this?
             this.Controls[0].Focus();
             base.HandleMessage(message);
+        }
+
+        protected override void HandleMessage(OnlineStatusChanged message)
+        {
+            if (Settings.Default.IsOnLineMode)
+            { toolStripOnlineStatus.Text = String.Format("On-Line: {0}.{0}", Program.Data.ServerName, Program.Data.DatabaseName) ; }
+            else { toolStripOnlineStatus.Text = "Off-Line"; }
         }
         #endregion
 

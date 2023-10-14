@@ -16,7 +16,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Library
 {
-    partial class LibraryManager : ApplicationBase
+    partial class LibraryManager : ApplicationBase, IApplicationDataBind
     {
         LibrarySourceCollection dbData = new LibrarySourceCollection();
         LibraryManagerCollection bindingData = new LibraryManagerCollection();
@@ -42,14 +42,12 @@ namespace DataDictionary.Main.Forms.Library
             this.DoWork(dbData.LoadLibrary(), onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                bindingData.Build(Program.Data.LibrarySources, dbData);
-                BindData();
-            }
+            { this.BindData(); }
         }
 
-        void BindData()
+        public Boolean BindDataCore()
         {
+            bindingData.Build(Program.Data.LibrarySources, dbData);
             libraryBinding.DataSource = bindingData;
 
             libraryNavigation.AutoGenerateColumns = false;
@@ -64,9 +62,10 @@ namespace DataDictionary.Main.Forms.Library
 
             inModelData.DataBindings.Add(new Binding(nameof(inModelData.Checked), libraryBinding, nameof(nameOfValues.InModel), true));
             inDatabaseData.DataBindings.Add(new Binding(nameof(inDatabaseData.Checked), libraryBinding, nameof(nameOfValues.InDatabase), true));
+            return true;
         }
 
-        void UnbindData()
+        public void UnbindDataCore()
         {
             libraryTitleData.DataBindings.Clear();
             libraryDescriptionData.DataBindings.Clear();
@@ -189,23 +188,15 @@ namespace DataDictionary.Main.Forms.Library
 
         private void DoLocalWork(List<WorkItem> work)
         {
-            UnbindData();
             SendMessage(new Messages.DoUnbindData());
 
             dbData.Clear();
             work.AddRange(dbData.LoadLibrary());
 
-            var x = libraryBinding;
-
-
             this.DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                SendMessage(new Messages.DoBindData());
-                bindingData.Build(Program.Data.LibrarySources, dbData);
-                BindData();
-            }
+            { SendMessage(new Messages.DoBindData()); }
         }
 
         private void libraryTitleData_Validating(object sender, CancelEventArgs e)
@@ -227,5 +218,17 @@ namespace DataDictionary.Main.Forms.Library
             if (e.Exception is not null)
             { }// For Debugging
         }
+
+        protected override void HandleMessage(OnlineStatusChanged message)
+        {
+            base.HandleMessage(message);
+            saveToolStripButton.Enabled = Settings.Default.IsOnLineMode;
+
+            this.DoWork(dbData.LoadLibrary(), onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { this.BindData(); }
+        }
+
     }
 }

@@ -47,7 +47,7 @@ namespace Toolbox.Mediator
             {
                 /* TODO: Parallel is causing cross threading issues. Could not figure out how to fix.
                  * Parallel.ForEach(colleagues.Where(sentTo => sentTo != sentBy), item =>  item.RecieveMessage(sender, message));*/
-                foreach (IColleague? item in colleagues.Where(sentTo => sentTo != sentBy))
+                foreach (IColleague? item in colleagues)
                 { item.ReceiveMessage(sender, message); }
             }
         }

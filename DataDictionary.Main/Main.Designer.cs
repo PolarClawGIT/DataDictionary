@@ -77,7 +77,7 @@
             viewLiebraryMemberCommand = new ToolStripMenuItem();
             dataSourceNavigation = new TreeView();
             statusStrip = new StatusStrip();
-            toolStripInfo = new ToolStripStatusLabel();
+            toolStripOnlineStatus = new ToolStripStatusLabel();
             toolStripWhiteSpace = new ToolStripStatusLabel();
             toolStripWorkerTask = new ToolStripStatusLabel();
             toolStripProgressBar = new ToolStripProgressBar();
@@ -438,7 +438,8 @@
             // 
             dbSchemaContextMenu.Items.AddRange(new ToolStripItem[] { menuCatalogItem, browseCatalogsToolStripMenuItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineDependencyItem });
             dbSchemaContextMenu.Name = "dbSchemacontextMenu";
-            dbSchemaContextMenu.Size = new Size(234, 290);
+            dbSchemaContextMenu.OwnerItem = manageDatabasesCommand;
+            dbSchemaContextMenu.Size = new Size(234, 268);
             // 
             // menuCatalogItem
             // 
@@ -578,23 +579,24 @@
             // 
             // statusStrip
             // 
-            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripInfo, toolStripWhiteSpace, toolStripWorkerTask, toolStripProgressBar });
+            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripOnlineStatus, toolStripWhiteSpace, toolStripWorkerTask, toolStripProgressBar });
             statusStrip.Location = new Point(0, 640);
             statusStrip.Name = "statusStrip";
             statusStrip.Size = new Size(917, 22);
             statusStrip.TabIndex = 0;
             statusStrip.Text = "statusStrip1";
             // 
-            // toolStripInfo
+            // toolStripOnlineStatus
             // 
-            toolStripInfo.Name = "toolStripInfo";
-            toolStripInfo.Size = new Size(106, 17);
-            toolStripInfo.Text = "(to be determined)";
+            toolStripOnlineStatus.Name = "toolStripOnlineStatus";
+            toolStripOnlineStatus.Size = new Size(43, 17);
+            toolStripOnlineStatus.Text = "(pending)";
+            toolStripOnlineStatus.ToolTipText = "Indicate the connection to the Application Database";
             // 
             // toolStripWhiteSpace
             // 
             toolStripWhiteSpace.Name = "toolStripWhiteSpace";
-            toolStripWhiteSpace.Size = new Size(624, 17);
+            toolStripWhiteSpace.Size = new Size(656, 17);
             toolStripWhiteSpace.Spring = true;
             // 
             // toolStripWorkerTask
@@ -1008,7 +1010,7 @@
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem helpAboutMenuItem;
         private ToolStripStatusLabel toolStripWorkerTask;
-        private ToolStripStatusLabel toolStripInfo;
+        private ToolStripStatusLabel toolStripOnlineStatus;
         private ToolStripStatusLabel toolStripWhiteSpace;
         private ToolStripProgressBar toolStripProgressBar;
         private ContextMenuStrip dbSchemaContextMenu;

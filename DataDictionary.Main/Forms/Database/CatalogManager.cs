@@ -15,7 +15,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class CatalogManager : ApplicationBase
+    partial class CatalogManager : ApplicationBase, IApplicationDataBind
     {
         DbCatalogCollection dbData = new DbCatalogCollection();
         CatalogManagerCollection bindingData = new CatalogManagerCollection();
@@ -35,17 +35,20 @@ namespace DataDictionary.Main.Forms.Database
 
         private void CatalogManager_Load(object sender, EventArgs e)
         {
-            this.DoWork(dbData.LoadCatalog(), onCompleting);
+            if (Settings.Default.IsOnLineMode)
+            { this.DoWork(dbData.LoadCatalog(), onCompleting); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
                 bindingData.Build(Program.Data.DbCatalogs, dbData);
-                BindData();
+                this.BindData();
             }
         }
 
-        void BindData()
+        public Boolean BindDataCore()
         {
+            bindingData.Build(Program.Data.DbCatalogs, dbData);
+
             catalogBinding.DataSource = bindingData;
 
             catalogNavigation.AutoGenerateColumns = false;
@@ -59,9 +62,11 @@ namespace DataDictionary.Main.Forms.Database
             sourceDateData.DataBindings.Add(new Binding(nameof(sourceDateData.Text), catalogBinding, nameof(nameOfValues.SourceDate)));
             inModelData.DataBindings.Add(new Binding(nameof(inModelData.Checked), catalogBinding, nameof(nameOfValues.InModel), true));
             inDatabaseData.DataBindings.Add(new Binding(nameof(inDatabaseData.Checked), catalogBinding, nameof(nameOfValues.InDatabase), true));
+
+            return true;
         }
 
-        void UnbindData()
+        public void UnbindDataCore()
         {
             catalogTitleData.DataBindings.Clear();
             catalogDescriptionData.DataBindings.Clear();
@@ -113,7 +118,6 @@ namespace DataDictionary.Main.Forms.Database
 
         private void DoLocalWork(List<WorkItem> work)
         {
-            UnbindData();
             SendMessage(new Messages.DoUnbindData());
 
             dbData.Clear();
@@ -122,11 +126,7 @@ namespace DataDictionary.Main.Forms.Database
             this.DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                SendMessage(new Messages.DoBindData());
-                bindingData.Build(Program.Data.DbCatalogs, dbData);
-                BindData();
-            }
+            { SendMessage(new Messages.DoBindData()); }
         }
 
         private void OpenToolStripButton_Click(object? sender, EventArgs e)
@@ -183,8 +183,6 @@ namespace DataDictionary.Main.Forms.Database
                         is DbCatalogItem existing)
                     { catalogKey = new DbCatalogKey(existing); }
 
-
-                    UnbindData();
                     SendMessage(new DoUnbindData());
 
                     DoWork(Program.Data.LoadDbSchema(
@@ -198,11 +196,15 @@ namespace DataDictionary.Main.Forms.Database
 
             void onCompleting(RunWorkerCompletedEventArgs result)
             {
-                SendMessage(new DoBindData());
                 bindingData.Build(Program.Data.DbCatalogs, dbData);
-                BindData();
+                SendMessage(new DoBindData());
             }
+        }
 
+        protected override void HandleMessage(OnlineStatusChanged message)
+        {
+            base.HandleMessage(message);
+            saveToolStripButton.Enabled = Settings.Default.IsOnLineMode;
         }
     }
 }

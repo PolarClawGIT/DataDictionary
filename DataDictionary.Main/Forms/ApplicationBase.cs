@@ -364,6 +364,8 @@ namespace DataDictionary.Main.Forms
             }
         }
 
+        protected virtual void HandleMessage(OnlineStatusChanged message) { }
+
         #endregion
 
         private void helpToolStripButton_Click(object sender, EventArgs e)

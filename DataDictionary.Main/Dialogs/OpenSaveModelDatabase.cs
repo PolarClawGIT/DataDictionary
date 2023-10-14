@@ -72,12 +72,10 @@ namespace DataDictionary.Main.Dialogs
         private void loadCommand_Click(object sender, EventArgs e)
         {
             SendMessage(new DoUnbindData());
-            (this as IApplicationDataBind).UnbindData();
             this.DoWork(Program.Data.LoadModel(currentKey), onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                (this as IApplicationDataBind).BindData();
                 SendMessage(new DoBindData());
                 SelectionChanged(modelList, EventArgs.Empty);
             }
@@ -86,12 +84,10 @@ namespace DataDictionary.Main.Dialogs
         private void deleteCommand_Click(object sender, EventArgs e)
         {
             SendMessage(new DoUnbindData());
-            (this as IApplicationDataBind).UnbindData();
             this.DoWork(Program.Data.DeleteModel(currentKey), onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                (this as IApplicationDataBind).BindData();
                 SendMessage(new DoBindData());
                 SelectionChanged(modelList, EventArgs.Empty);
             }
@@ -100,7 +96,6 @@ namespace DataDictionary.Main.Dialogs
         private void saveCommand_Click(object sender, EventArgs e)
         {
             SendMessage(new DoUnbindData());
-            (this as IApplicationDataBind).UnbindData();
             this.DoWork(Program.Data.SaveModel(), onCompleting);
 
 
@@ -109,11 +104,11 @@ namespace DataDictionary.Main.Dialogs
                 List<WorkItem> work = new List<WorkItem>();
                 if (args.Error is null)
                 { this.DoWork(Program.Data.LoadModel(currentKey), onCompletingLoad); }
-                else { (this as IApplicationDataBind).BindData(); SendMessage(new DoBindData()); }
+                else { SendMessage(new DoBindData()); }
             }
 
             void onCompletingLoad(RunWorkerCompletedEventArgs args)
-            { (this as IApplicationDataBind).BindData(); SendMessage(new DoBindData()); }
+            { SendMessage(new DoBindData()); }
         }
 
         private void SelectionChanged(object? sender, EventArgs e)

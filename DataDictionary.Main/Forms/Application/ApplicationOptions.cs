@@ -71,6 +71,7 @@ namespace DataDictionary.Main.Dialogs
         {
             Settings.Default.IsOnLineMode = defaultModeOnLine.Checked;
             Settings.Default.Save();
+            SendMessage(new OnlineStatusChanged());
         }
     }
 }
