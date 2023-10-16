@@ -2,7 +2,7 @@
     -- TIP: This matches the C# DataTable structure
     [AttributeId]          UNIQUEIDENTIFIER NULL,
     [SubjectAreaId]        UNIQUEIDENTIFIER NULL,
-    [AttributeTitle]       NVARCHAR (100)   NULL,
-    [AttributeDescription] NVARCHAR (1000)  NULL,
+    [AttributeTitle]       [App_DataDictionary].[typeTitle] Null,
+    [AttributeDescription] [App_DataDictionary].[typeDescription] Null,
     [Obsolete]             BIT              NULL,
     [SysStart]             DATETIME2 (7)    NULL);

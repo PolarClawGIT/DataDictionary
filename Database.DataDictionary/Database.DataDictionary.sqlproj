@@ -175,7 +175,7 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntity.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntityProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntityAlias.sql" />
-    <Build Include="App_DataDictionary\Tables\ModelSubjectArea.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainSubjectArea.sql" />
     <Build Include="App_DataDictionary\Tables\LibrarySource.sql" />
     <Build Include="App_DataDictionary\Tables\LibraryMember.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeLibrarySource.sql" />
@@ -187,6 +187,10 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetLibrarySource.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetLibraryMember.sql" />
     <Build Include="App_DataDictionary\Views\ModelDatabase.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainSubjectArea.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelSubjectArea.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainSubjectArea.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainSubjectArea.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

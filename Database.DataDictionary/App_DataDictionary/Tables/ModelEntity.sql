@@ -12,5 +12,5 @@
 	CONSTRAINT [PK_ModelEntity] PRIMARY KEY CLUSTERED ([ModelId] ASC, [EntityId] ASC),
 	CONSTRAINT [FK_ModelEntity_Model] FOREIGN KEY ([ModelId]) REFERENCES [App_DataDictionary].[Model] ([ModelId]),
 	CONSTRAINT [FK_ModelDomainEntity] FOREIGN KEY ([EntityId]) REFERENCES [App_DataDictionary].[DomainEntity] ([EntityId]),
-	CONSTRAINT [FK_ModelSubjectAreaEntity] FOREIGN KEY ([SubjectAreaId]) REFERENCES [App_DataDictionary].[ModelSubjectArea] ([SubjectAreaId]),
+	CONSTRAINT [FK_ModelSubjectAreaEntity] FOREIGN KEY ([ModelId], [SubjectAreaId]) REFERENCES [App_DataDictionary].[ModelSubjectArea] ([ModelId], [SubjectAreaId]),
 )
