@@ -186,11 +186,14 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetLibraryMember.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetLibrarySource.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetLibraryMember.sql" />
-    <Build Include="App_DataDictionary\Views\ModelDatabase.sql" />
+    <Build Include="App_DataDictionary\Views\ModelDatabase_AK.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainSubjectArea.sql" />
     <Build Include="App_DataDictionary\Tables\ModelSubjectArea.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainSubjectArea.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainSubjectArea.sql" />
+    <Build Include="App_DataDictionary\Views\ModelSubjectArea_AK.sql" />
+    <Build Include="App_DataDictionary\Views\ModelEntity_AK.sql" />
+    <Build Include="App_DataDictionary\Views\ModelAttribute_AK.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
