@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.DataLayer.DomainData.SubjectArea;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +17,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for Domain Entity Item
     /// </summary>
-    public interface IDomainEntityItem : IDomainEntityKey, IDataItem
+    public interface IDomainEntityItem : IDomainEntityKey, IDomainSubjectAreaKey, IDataItem
     {
         /// <summary>
         /// Title of the Domain Entity (aka Name of the Entity)
@@ -38,6 +39,10 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// <inheritdoc/>
         public Guid? EntityId
         { get { return GetValue<Guid>("EntityId"); } protected set { SetValue("EntityId", value); } }
+
+        /// <inheritdoc/>
+        public Guid? SubjectAreaId
+        { get { return GetValue<Guid>("SubjectAreaId"); } protected set { SetValue("SubjectAreaId", value); } }
 
         /// <inheritdoc/>
         public string? EntityTitle { get { return GetValue("EntityTitle"); } set { SetValue("EntityTitle", value); } }

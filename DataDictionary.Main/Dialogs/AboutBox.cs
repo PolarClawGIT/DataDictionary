@@ -52,7 +52,8 @@ namespace DataDictionary.Main.Dialogs
                         return titleAttribute.Title;
                     }
                 }
-                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+
+                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().Location);
             }
         }
 
@@ -60,7 +61,9 @@ namespace DataDictionary.Main.Dialogs
         {
             get
             {
-                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                if (Assembly.GetExecutingAssembly().GetName() is AssemblyName assembly && assembly.Version is Version value)
+                { return value.ToString(); }
+                else { return String.Empty; }
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.DataLayer.DomainData.SubjectArea;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +17,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Item
     /// </summary>
-    public interface IDomainAttributeItem : IDomainAttributeKey, IDataItem
+    public interface IDomainAttributeItem : IDomainAttributeKey, IDomainSubjectAreaKey, IDataItem
     {
         /// <summary>
         /// Title of the Domain Attribute (aka Name of the Attribute)
@@ -38,6 +39,10 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// <inheritdoc/>
         public Guid? AttributeId
         { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue("AttributeId", value); } }
+
+        /// <inheritdoc/>
+        public Guid? SubjectAreaId
+        { get { return GetValue<Guid>("SubjectAreaId"); } protected set { SetValue("SubjectAreaId", value); } }
 
         /// <inheritdoc/>
         public string? AttributeTitle { get { return GetValue("AttributeTitle"); } set { SetValue("AttributeTitle", value); } }
