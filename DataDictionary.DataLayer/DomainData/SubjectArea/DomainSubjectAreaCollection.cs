@@ -49,6 +49,21 @@ namespace DataDictionary.DataLayer.DomainData.SubjectArea
         }
 
         /// <inheritdoc/>
+        public Command DeleteCommand(IConnection connection, IModelKey parameters)
+        { return DeleteCommand(connection, (null, parameters.ModelId)); }
+
+        Command DeleteCommand(IConnection connection, (Guid? modelId, Guid? SubjectAreaId) parameters)
+        {
+            Command command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[App_DataDictionary].[procDeleteDomainSubjectArea]";
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@SubjectAreaId", parameters.SubjectAreaId);
+
+            return command;
+        }
+
+        /// <inheritdoc/>
         public void Remove(IDomainSubjectAreaKey SubjectAreaItem)
         {
             DomainSubjectAreaKey key = new DomainSubjectAreaKey(SubjectAreaItem);

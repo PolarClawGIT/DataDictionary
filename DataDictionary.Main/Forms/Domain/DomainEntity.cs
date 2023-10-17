@@ -4,6 +4,7 @@ using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -43,12 +44,12 @@ namespace DataDictionary.Main.Forms.Domain
             if (Program.Data.DomainEntities.FirstOrDefault(w => DataKey.Equals(w)) is DomainEntityItem data)
             {
                 this.Text = data.EntityTitle;
-                //IDomainEntityItem? parent = Program.Data.DomainEntities.GetParentAttribute(data);
-                //if (parent is null) { parent = new DomainAttributeItem(); } //TODO: need to re-look at this.
 
                 entityTitleData.DataBindings.Add(new Binding(nameof(entityTitleData.Text), data, nameof(data.EntityTitle)));
                 entityDescriptionData.DataBindings.Add(new Binding(nameof(entityDescriptionData.Text), data, nameof(data.EntityDescription)));
-                //attributeParentTitleData.DataBindings.Add(new Binding(nameof(attributeParentTitleData.Text), parent, nameof(parent.AttributeTitle)));
+                subjectAreaData.DataBindings.Add(new Binding(nameof(subjectAreaData.SelectedItem), data, nameof(data.SubjectAreaId)));
+                SubjectAreaNameItem.Bind(subjectAreaData);
+                subjectAreaData.ReadOnly = (subjectAreaData.DataSource is IList subjectAreaItems && subjectAreaItems.Count > 0);
 
                 bindingProperties.DataSource =
                     new BindingView<DomainEntityPropertyItem>(

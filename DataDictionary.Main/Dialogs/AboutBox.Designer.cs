@@ -56,7 +56,7 @@
             tableLayoutPanel.Controls.Add(progressLabel, 0, 6);
             tableLayoutPanel.Controls.Add(progressBar, 1, 6);
             tableLayoutPanel.Dock = DockStyle.Fill;
-            tableLayoutPanel.Location = new Point(10, 10);
+            tableLayoutPanel.Location = new Point(10, 35);
             tableLayoutPanel.Margin = new Padding(4, 3, 4, 3);
             tableLayoutPanel.Name = "tableLayoutPanel";
             tableLayoutPanel.RowCount = 7;
@@ -67,7 +67,7 @@
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tableLayoutPanel.RowStyles.Add(new RowStyle());
-            tableLayoutPanel.Size = new Size(487, 307);
+            tableLayoutPanel.Size = new Size(487, 282);
             tableLayoutPanel.TabIndex = 0;
             // 
             // logoPictureBox
@@ -77,7 +77,7 @@
             logoPictureBox.Margin = new Padding(4, 3, 4, 3);
             logoPictureBox.Name = "logoPictureBox";
             tableLayoutPanel.SetRowSpan(logoPictureBox, 6);
-            logoPictureBox.Size = new Size(152, 274);
+            logoPictureBox.Size = new Size(152, 244);
             logoPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             logoPictureBox.TabIndex = 12;
             logoPictureBox.TabStop = false;
@@ -97,7 +97,7 @@
             // labelVersion
             // 
             labelVersion.Dock = DockStyle.Fill;
-            labelVersion.Location = new Point(167, 28);
+            labelVersion.Location = new Point(167, 25);
             labelVersion.Margin = new Padding(7, 0, 4, 0);
             labelVersion.MaximumSize = new Size(0, 20);
             labelVersion.Name = "labelVersion";
@@ -109,7 +109,7 @@
             // labelCopyright
             // 
             labelCopyright.Dock = DockStyle.Fill;
-            labelCopyright.Location = new Point(167, 56);
+            labelCopyright.Location = new Point(167, 50);
             labelCopyright.Margin = new Padding(7, 0, 4, 0);
             labelCopyright.MaximumSize = new Size(0, 20);
             labelCopyright.Name = "labelCopyright";
@@ -121,7 +121,7 @@
             // labelCompanyName
             // 
             labelCompanyName.Dock = DockStyle.Fill;
-            labelCompanyName.Location = new Point(167, 84);
+            labelCompanyName.Location = new Point(167, 75);
             labelCompanyName.Margin = new Padding(7, 0, 4, 0);
             labelCompanyName.MaximumSize = new Size(0, 20);
             labelCompanyName.Name = "labelCompanyName";
@@ -133,13 +133,13 @@
             // textBoxDescription
             // 
             textBoxDescription.Dock = DockStyle.Fill;
-            textBoxDescription.Location = new Point(167, 115);
+            textBoxDescription.Location = new Point(167, 103);
             textBoxDescription.Margin = new Padding(7, 3, 4, 3);
             textBoxDescription.Multiline = true;
             textBoxDescription.Name = "textBoxDescription";
             textBoxDescription.ReadOnly = true;
             textBoxDescription.ScrollBars = ScrollBars.Both;
-            textBoxDescription.Size = new Size(316, 134);
+            textBoxDescription.Size = new Size(316, 119);
             textBoxDescription.TabIndex = 23;
             textBoxDescription.TabStop = false;
             textBoxDescription.Text = "Description";
@@ -148,10 +148,10 @@
             // 
             okButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             okButton.DialogResult = DialogResult.Cancel;
-            okButton.Location = new Point(395, 255);
+            okButton.Location = new Point(395, 228);
             okButton.Margin = new Padding(4, 3, 4, 3);
             okButton.Name = "okButton";
-            okButton.Size = new Size(88, 22);
+            okButton.Size = new Size(88, 19);
             okButton.TabIndex = 24;
             okButton.Text = "&OK";
             // 
@@ -159,7 +159,7 @@
             // 
             progressLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             progressLabel.AutoSize = true;
-            progressLabel.Location = new Point(118, 292);
+            progressLabel.Location = new Point(118, 267);
             progressLabel.Name = "progressLabel";
             progressLabel.Size = new Size(39, 15);
             progressLabel.TabIndex = 25;
@@ -168,9 +168,9 @@
             // progressBar
             // 
             progressBar.Dock = DockStyle.Fill;
-            progressBar.Location = new Point(163, 283);
+            progressBar.Location = new Point(163, 253);
             progressBar.Name = "progressBar";
-            progressBar.Size = new Size(321, 21);
+            progressBar.Size = new Size(321, 26);
             progressBar.TabIndex = 26;
             // 
             // AboutBox

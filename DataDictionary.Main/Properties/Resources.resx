@@ -220,6 +220,9 @@
   <data name="Icon_Dependancy" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Dependancy.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon_Diagram" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Diagram.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Icon_DomainType" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\DomainType.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

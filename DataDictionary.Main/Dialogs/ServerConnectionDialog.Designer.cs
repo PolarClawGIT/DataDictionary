@@ -191,6 +191,7 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "ServerConnectionDialog";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Server Connection";
             HelpButtonClicked += ServerConnectionDialog_HelpButtonClicked;
             Load += ServerConnectionDialog_Load;

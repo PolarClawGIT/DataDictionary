@@ -38,9 +38,6 @@ namespace DataDictionary.Main
             ScalarFunction,
             TableFunction,
             Parameter,
-            Dependencies,
-            Dependency,
-            // Class
             Library,
             NameSpace,
             Class,
@@ -70,8 +67,6 @@ namespace DataDictionary.Main
             {dbDataImageIndex.ScalarFunction,   ("ScalarFunction",   Resources.ScalarFunction) },
             {dbDataImageIndex.TableFunction,    ("TableFunction",    Resources.TableFunction) },
             {dbDataImageIndex.Parameter,        ("Parameter",        Resources.Parameter) },
-            {dbDataImageIndex.Dependencies,     ("Dependencies",       Resources.Dependancy) },
-            {dbDataImageIndex.Dependency,       ("Dependency",       Resources.Dependancy) },
 
             {dbDataImageIndex.Library,          ("Library",          Resources.Library) },
             {dbDataImageIndex.NameSpace,        ("NameSpace",        Resources.Namespace) },
@@ -176,24 +171,6 @@ namespace DataDictionary.Main
                             w => routineKey.Equals(w)).OrderBy(o => o.OrdinalPosition))
                         { CreateNode(routineParameter.ParameterName, dbDataImageIndex.Parameter, routineParameter, routineNode); }
 
-                        TreeNode? routineDependenciesNode = null;
-
-                        foreach (DbRoutineDependencyItem routineDependency in Program.Data.DbRoutineDependencies.Where(
-                            w => routineKey.Equals(w)))
-                        {
-                            if (routineDependenciesNode is null)
-                            { routineDependenciesNode = CreateNode("Dependencies", dbDataImageIndex.Dependencies, null, routineNode); }
-
-                            String nameValue = String.Format("{0}", routineDependency.ReferenceSchemaName);
-
-                            if (!String.IsNullOrWhiteSpace(routineDependency.ReferenceObjectName))
-                            { nameValue = String.Format("{0}.{1}", nameValue, routineDependency.ReferenceObjectName); }
-
-                            if (!String.IsNullOrWhiteSpace(routineDependency.ReferenceColumnName))
-                            { nameValue = String.Format("{0}.{1}", nameValue, routineDependency.ReferenceColumnName); }
-
-                            CreateNode(nameValue, dbDataImageIndex.Dependency, routineDependency, routineDependenciesNode);
-                        }
                     }
 
                     TreeNode? domainsNode = null;

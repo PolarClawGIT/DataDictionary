@@ -118,6 +118,13 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
             workItems.Add(new ExecuteReader(openConnection)
             {
+                WorkName = "Load Domain Subject Areas",
+                Command = (conn) => data.DomainSubjectAreas.LoadCommand(conn, modelKey),
+                Target = data.DomainSubjectAreas
+            });
+
+            workItems.Add(new ExecuteReader(openConnection)
+            {
                 WorkName = "Load Library Sources",
                 Command = (conn) => data.LibrarySources.LoadCommand(conn, modelKey),
                 Target = data.LibrarySources
@@ -203,6 +210,12 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
+                WorkName = "Save Subject Areas",
+                Command = (conn) => data.DomainSubjectAreas.SaveCommand(conn, modelId)
+            });
+
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
                 WorkName = "Save Library Sources",
                 Command = (conn) => data.LibrarySources.SaveCommand(conn, modelId)
             });
@@ -240,6 +253,12 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             {
                 WorkName = "Delete Entities",
                 Command = (conn) => data.DomainEntities.DeleteCommand(conn, modelId)
+            });
+
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Delete Subject Area",
+                Command = (conn) => data.DomainSubjectAreas.DeleteCommand(conn, modelId)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)

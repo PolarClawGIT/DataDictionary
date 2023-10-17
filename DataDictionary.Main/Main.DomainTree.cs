@@ -1,6 +1,7 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
+using DataDictionary.DataLayer.DomainData.SubjectArea;
 using DataDictionary.Main.Properties;
 
 namespace DataDictionary.Main
@@ -12,6 +13,7 @@ namespace DataDictionary.Main
         Dictionary<TreeNode, Object> domainModelNodes = new Dictionary<TreeNode, Object>();
         enum domainModelImageIndex
         {
+            SubjectArea,
             Attribute,
             Attributes,
             Property,
@@ -21,6 +23,7 @@ namespace DataDictionary.Main
 
         static Dictionary<domainModelImageIndex, (String imageKey, Image image)> domainModelImageItems = new Dictionary<domainModelImageIndex, (String imageKey, Image image)>()
         {
+            {domainModelImageIndex.SubjectArea,  ("SubjectArea", Resources.Diagram) },
             {domainModelImageIndex.Attribute,    ("Attribute",   Resources.Attribute) },
             {domainModelImageIndex.Attributes,   ("Attributes",  Resources.Parameter) },
             {domainModelImageIndex.Property,     ("Property",    Resources.Property) },
@@ -40,10 +43,26 @@ namespace DataDictionary.Main
 
             foreach (IDomainAttributeItem attributeItem in
                 Program.Data.DomainAttributes.
+                Where(w => w.SubjectAreaId is null).
                 OrderBy(o => o.AttributeTitle))
             {
                 TreeNode attributeNode = CreateAttribute(attributeItem, null);
                 domainModelNavigation.Nodes.Add(attributeNode);
+            }
+
+            foreach (DomainSubjectAreaItem subjectItem in
+                Program.Data.DomainSubjectAreas.
+                OrderBy(o => o.SubjectAreaTitle))
+            {
+                TreeNode subjectNode = CreateNode(subjectItem.SubjectAreaTitle, domainModelImageIndex.SubjectArea, subjectItem, null);
+                DomainSubjectAreaKey subjectKey = new DomainSubjectAreaKey(subjectItem);
+                domainModelNavigation.Nodes.Add(subjectNode);
+
+                foreach (IDomainAttributeItem attributeItem in
+                    Program.Data.DomainAttributes.
+                    Where(w => subjectKey.Equals(w)).
+                    OrderBy(o => o.AttributeTitle))
+                { TreeNode attributeNode = CreateAttribute(attributeItem, subjectNode); }
             }
 
             if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, selected)) is KeyValuePair<TreeNode, object> selectedNode)
@@ -63,15 +82,6 @@ namespace DataDictionary.Main
 
                     CreateNode(propertyTitle, domainModelImageIndex.Property, propertyItem, attributeNode);
                 }
-
-                List<DomainAttributeAliasItem> alias = Program.Data.DomainAttributeAliases.Where(w => key.Equals(w)).ToList();
-                foreach (DomainAttributeAliasItem aliasItem in alias)
-                { CreateNode(aliasItem.ToString(), domainModelImageIndex.Alias, aliasItem, attributeNode); }
-
-                // TODO: Children not yet supported
-                //var children = Program.Data.DomainAttributes.Where(w => w.AttributeId == attributeItem.ParentAttributeId).ToList();
-                //foreach (DomainAttributeItem childAttributeItem in Program.Data.DomainAttributes.Where(w => w.AttributeId == attributeItem.ParentAttributeId))
-                //{ attributeNode.Nodes.Add(CreateAttribute(childAttributeItem, attributeNode)); }
 
                 List<DomainEntityItem> entities = Program.Data.GetEntities(key).OrderBy(o => o.EntityTitle).ToList();
                 foreach (DomainEntityItem item in entities)
@@ -107,10 +117,29 @@ namespace DataDictionary.Main
 
             foreach (IDomainEntityItem entityItem in
                 Program.Data.DomainEntities.
+                Where(w => w.SubjectAreaId is null).
                 OrderBy(o => o.EntityTitle))
             {
                 TreeNode entityNode = CreateEntity(entityItem, null);
                 domainModelNavigation.Nodes.Add(entityNode);
+            }
+
+            foreach (DomainSubjectAreaItem subjectItem in
+                Program.Data.DomainSubjectAreas.
+                OrderBy(o => o.SubjectAreaTitle))
+            {
+                TreeNode subjectNode = CreateNode(subjectItem.SubjectAreaTitle, domainModelImageIndex.SubjectArea, subjectItem, null);
+                DomainSubjectAreaKey subjectKey = new DomainSubjectAreaKey(subjectItem);
+                domainModelNavigation.Nodes.Add(subjectNode);
+
+                foreach (IDomainEntityItem entityItem in
+                    Program.Data.DomainEntities.
+                    Where(w => subjectKey.Equals(w)).
+                    OrderBy(o => o.EntityTitle))
+                {
+                    TreeNode attributeNode = CreateEntity(entityItem, subjectNode);
+                    domainModelNavigation.Nodes.Add(attributeNode);
+                }
             }
 
             if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, selected)) is KeyValuePair<TreeNode, object> selectedNode)

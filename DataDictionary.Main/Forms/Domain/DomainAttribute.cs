@@ -4,6 +4,7 @@ using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
+using System.Collections;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 
@@ -39,6 +40,9 @@ namespace DataDictionary.Main.Forms.Domain
 
                 attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), data, nameof(data.AttributeTitle)));
                 attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), data, nameof(data.AttributeDescription)));
+                subjectAreaData.DataBindings.Add(new Binding(nameof(subjectAreaData.SelectedItem), data, nameof(data.SubjectAreaId)));
+                SubjectAreaNameItem.Bind(subjectAreaData);
+                subjectAreaData.ReadOnly = (subjectAreaData.DataSource is IList subjectAreaItems && subjectAreaItems.Count > 0);
 
                 bindingProperties.DataSource =
                     new BindingView<DomainAttributePropertyItem>(
@@ -94,7 +98,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             attributeTitleData.DataBindings.Clear();
             attributeDescriptionData.DataBindings.Clear();
-            attributeParentTitleData.DataBindings.Clear();
+            subjectAreaData.DataBindings.Clear();
 
             propertyNavigation.DataSource = null;
             propertyTypeData.DataBindings.Clear();

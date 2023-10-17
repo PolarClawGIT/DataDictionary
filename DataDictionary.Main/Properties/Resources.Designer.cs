@@ -403,6 +403,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_Diagram {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Diagram", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_DomainType {
             get {
                 object obj = ResourceManager.GetObject("Icon_DomainType", resourceCulture);

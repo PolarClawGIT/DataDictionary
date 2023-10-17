@@ -11,6 +11,7 @@ using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
+using DataDictionary.DataLayer.DomainData.SubjectArea;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using System;
@@ -114,6 +115,11 @@ namespace DataDictionary.BusinessLayer
         /// List of Domain Properties for the Entities within the Model.
         /// </summary>
         public DomainEntityPropertyCollection DomainEntityProperties = new DomainEntityPropertyCollection();
+
+        /// <summary>
+        /// List of Domain Subject Areas within the Model.
+        /// </summary>
+        public DomainSubjectAreaCollection DomainSubjectAreas = new DomainSubjectAreaCollection();
         #endregion
 
         #region Application data
@@ -168,6 +174,7 @@ namespace DataDictionary.BusinessLayer
             DomainEntities.Clear();
             DomainEntityAliases.Clear();
             DomainEntityProperties.Clear();
+            DomainSubjectAreas.Clear();
             LibraryMembers.Clear();
             LibrarySources.Clear();
             Models.Clear();

@@ -316,5 +316,8 @@ namespace DataDictionary.Main
 
         private void menuAttributes_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Attribute), Program.Data.DomainAttributes); }
+
+        private void subjectAreaToolStripMenuItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Diagram), Program.Data.DomainSubjectAreas); }
     }
 }

@@ -41,11 +41,14 @@ namespace DataDictionary.Main.Forms
         /// </remarks>
         Boolean IsLocked
         {
-            get { return this.Controls.Cast<Control>().Any(w => w.HasChildren && w.Enabled); }
+            get { return this.Controls.Cast<Control>().Any(w => w.Enabled); }
             set
             {
-                foreach (Control item in this.Controls.Cast<Control>().Where(w => w.HasChildren))
-                { item.Enabled = !value; }
+                foreach (Control item in this.Controls)
+                {
+                    if (item is MdiClient) { } // Don't touch the MdiClient control as it will cause child forms to be disabled.
+                    else { item.Enabled = !value; }
+                }
             }
         }
 
@@ -55,11 +58,14 @@ namespace DataDictionary.Main.Forms
         /// <remarks>This is effected by the IsLocked but allows the application to override the current state of UseWaitCursor.</remarks>
         Boolean IsWaitCursor
         {
-            get { return this.Controls.Cast<Control>().Any(w => w.HasChildren && w.UseWaitCursor); }
+            get { return this.Controls.Cast<Control>().Any(w => w.UseWaitCursor); }
             set
             {
-                foreach (Control item in this.Controls.Cast<Control>().Where(w => w.HasChildren))
-                { item.UseWaitCursor = value; }
+                foreach (Control item in this.Controls)
+                {
+                    if (item is MdiClient) { } // Don't touch the MdiClient control as it will cause child forms to be disabled.
+                    else { item.UseWaitCursor = value; }
+                }
             }
         }
 
@@ -68,7 +74,7 @@ namespace DataDictionary.Main.Forms
     /// <summary>
     /// Contains the Binding Methods
     /// </summary>
-    interface IApplicationDataBind: IApplicationDataForm
+    interface IApplicationDataBind : IApplicationDataForm
     {
         /// <summary>
         /// Perform the Binding of the Data for the form. Called by BindData.

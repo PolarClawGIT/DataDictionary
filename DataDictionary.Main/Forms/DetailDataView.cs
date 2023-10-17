@@ -28,9 +28,7 @@ namespace DataDictionary.Main.Forms
         { return ReferenceEquals(bindingTableSource, item); }
 
         private void BindingDataView_Load(object sender, EventArgs e)
-        {
-            (this as IApplicationDataBind).BindData();
-        }
+        { (this as IApplicationDataBind).BindData(); }
 
 
         public bool BindDataCore()
