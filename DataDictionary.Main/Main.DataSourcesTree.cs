@@ -13,7 +13,6 @@ namespace DataDictionary.Main
 {
     partial class Main
     {
-        #region dataSourceNavigation
         Dictionary<TreeNode, Object> dbDataNodes = new Dictionary<TreeNode, Object>();
         enum dbDataImageIndex
         {
@@ -84,14 +83,17 @@ namespace DataDictionary.Main
             { tree.ImageList.Images.Add(image.imageKey, image.image); }
         }
 
+        void ClearDataSourcesTree()
+        {
+            dataSourceNavigation.Nodes.Clear();
+            dbDataNodes.Clear();
+        }
+
         void BuildDataSourcesTree()
         {
             Object? selected = null;
             if (dataSourceNavigation.SelectedNode is not null && dbDataNodes.ContainsKey(dataSourceNavigation.SelectedNode))
             { selected = dbDataNodes[dataSourceNavigation.SelectedNode]; }
-
-            dataSourceNavigation.Nodes.Clear();
-            dbDataNodes.Clear();
 
             foreach (IDbCatalogItem catalogItem in Program.Data.DbCatalogs.OrderBy(o => o.DatabaseName))
             {
@@ -294,36 +296,36 @@ namespace DataDictionary.Main
         {
             if (dataSourceNavigation.SelectedNode is TreeNode node && dbDataNodes.ContainsKey(node))
             {
-                Object dataNode = dbDataNodes[node];
-
-                if (dataNode is IDbSchemaItem schemaItem)
-                { Activate((data) => new Forms.Database.DbSchema() { DataKey = new DbSchemaKey(schemaItem) }, schemaItem); }
-
-                if (dataNode is IDbTableItem tableItem)
-                { Activate((data) => new Forms.Database.DbTable() { DataKey = new DbTableKey(tableItem) }, tableItem); }
-
-                if (dataNode is IDbTableColumnItem columnItem)
-                { Activate((data) => new Forms.Database.DbTableColumn() { DataKey = new DbTableColumnKey(columnItem) }, columnItem); }
-
-                if (dataNode is IDbConstraintItem constraintItem)
-                { Activate((data) => new Forms.Database.DbConstraint() { DataKey = new DbConstraintKey(constraintItem) }, constraintItem); }
-
-                if (dataNode is IDbRoutineItem routineItem)
-                { Activate((data) => new Forms.Database.DbRoutine() { DataKey = new DbRoutineKey(routineItem) }, routineItem); }
-
-                if (dataNode is IDbRoutineParameterItem routineParameterItem)
-                { Activate((data) => new Forms.Database.DbRoutineParameter() { DataKey = new DbRoutineParameterKey(routineParameterItem) }, routineParameterItem); }
-
-                if (dataNode is IDbDomainItem domainItem)
-                { Activate((data) => new Forms.Database.DbDomain() { DataKey = new DbDomainKey(domainItem) }, domainItem); }
-
-                if (dataNode is ILibrarySourceItem sourceItem)
-                { Activate((data) => new Forms.Library.LibrarySource() { DataKey = new LibrarySourceKey(sourceItem) }, sourceItem); }
-
-                if (dataNode is ILibraryMemberItem memberItem)
-                { Activate((data) => new Forms.Library.LibraryMember() { DataKey = new LibraryMemberKey(memberItem) }, memberItem); }
+                dynamic dataNode = dbDataNodes[node];
+                Activate(dataNode);
             }
         }
-        #endregion
+
+        void Activate(DbSchemaItem schemaItem)
+        { Activate((data) => new Forms.Database.DbSchema() { DataKey = new DbSchemaKey(schemaItem) }, schemaItem); }
+
+        void Activate(DbTableItem tableItem)
+        { Activate((data) => new Forms.Database.DbTable() { DataKey = new DbTableKey(tableItem) }, tableItem); }
+
+        void Activate(DbTableColumnItem columnItem)
+        { Activate((data) => new Forms.Database.DbTableColumn() { DataKey = new DbTableColumnKey(columnItem) }, columnItem); }
+
+        void Activate(DbConstraintItem constraintItem)
+        { Activate((data) => new Forms.Database.DbConstraint() { DataKey = new DbConstraintKey(constraintItem) }, constraintItem); }
+
+        void Activate(DbRoutineItem routineItem)
+        { Activate((data) => new Forms.Database.DbRoutine() { DataKey = new DbRoutineKey(routineItem) }, routineItem); }
+
+        void Activate(DbRoutineParameterItem routineParameterItem)
+        { Activate((data) => new Forms.Database.DbRoutineParameter() { DataKey = new DbRoutineParameterKey(routineParameterItem) }, routineParameterItem); }
+
+        void Activate(DbDomainItem domainItem)
+        { Activate((data) => new Forms.Database.DbDomain() { DataKey = new DbDomainKey(domainItem) }, domainItem); }
+
+        void Activate(LibrarySourceItem sourceItem)
+        { Activate((data) => new Forms.Library.LibrarySource() { DataKey = new LibrarySourceKey(sourceItem) }, sourceItem); }
+
+        void Activate(LibraryMemberItem memberItem)
+        { Activate((data) => new Forms.Library.LibraryMember() { DataKey = new LibraryMemberKey(memberItem) }, memberItem); }
     }
 }

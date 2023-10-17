@@ -42,8 +42,6 @@
             navigationTabs = new TabControl();
             navigationDomainTab = new TabPage();
             domainModelNavigation = new TreeView();
-            domainModelMenu = new ContextMenuStrip(components);
-            menuImportDbSchema = new ToolStripMenuItem();
             domainModelToolStrip = new ToolStrip();
             newAttributeCommand = new ToolStripSplitButton();
             menuAttributes = new ToolStripMenuItem();
@@ -77,6 +75,8 @@
             viewLibrarySourceCommand = new ToolStripMenuItem();
             viewLiebraryMemberCommand = new ToolStripMenuItem();
             dataSourceNavigation = new TreeView();
+            domainModelMenu = new ContextMenuStrip(components);
+            menuImportDbSchema = new ToolStripMenuItem();
             statusStrip = new StatusStrip();
             toolStripOnlineStatus = new ToolStripStatusLabel();
             toolStripWhiteSpace = new ToolStripStatusLabel();
@@ -140,12 +140,12 @@
             navigationTabs.SuspendLayout();
             navigationDomainTab.SuspendLayout();
             domainModelLayout.SuspendLayout();
-            domainModelMenu.SuspendLayout();
             domainModelToolStrip.SuspendLayout();
             navigationDataSourceTab.SuspendLayout();
             dataSourceLayout.SuspendLayout();
             dataSourceToolStrip.SuspendLayout();
             dbSchemaContextMenu.SuspendLayout();
+            domainModelMenu.SuspendLayout();
             statusStrip.SuspendLayout();
             menuStrip.SuspendLayout();
             SuspendLayout();
@@ -259,27 +259,13 @@
             // 
             // domainModelNavigation
             // 
-            domainModelNavigation.ContextMenuStrip = domainModelMenu;
             domainModelNavigation.Dock = DockStyle.Fill;
+            domainModelNavigation.HideSelection = false;
             domainModelNavigation.Location = new Point(3, 28);
             domainModelNavigation.Name = "domainModelNavigation";
             domainModelNavigation.Size = new Size(198, 354);
             domainModelNavigation.TabIndex = 0;
             domainModelNavigation.NodeMouseDoubleClick += domainModelNavigation_NodeMouseDoubleClick;
-            // 
-            // domainModelMenu
-            // 
-            domainModelMenu.Items.AddRange(new ToolStripItem[] { menuImportDbSchema });
-            domainModelMenu.Name = "domainModelMenu";
-            domainModelMenu.Size = new Size(203, 26);
-            // 
-            // menuImportDbSchema
-            // 
-            menuImportDbSchema.Enabled = false;
-            menuImportDbSchema.Image = Properties.Resources.Dictionary;
-            menuImportDbSchema.Name = "menuImportDbSchema";
-            menuImportDbSchema.Size = new Size(202, 22);
-            menuImportDbSchema.Text = "Import from &Db Schema";
             // 
             // domainModelToolStrip
             // 
@@ -458,6 +444,7 @@
             // 
             dbSchemaContextMenu.Items.AddRange(new ToolStripItem[] { menuCatalogItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineDependencyItem });
             dbSchemaContextMenu.Name = "dbSchemacontextMenu";
+            dbSchemaContextMenu.OwnerItem = manageDatabasesCommand;
             dbSchemaContextMenu.Size = new Size(234, 246);
             // 
             // menuCatalogItem
@@ -574,6 +561,7 @@
             // dataSourceNavigation
             // 
             dataSourceNavigation.Dock = DockStyle.Fill;
+            dataSourceNavigation.HideSelection = false;
             dataSourceNavigation.Location = new Point(3, 28);
             dataSourceNavigation.Name = "dataSourceNavigation";
             dataSourceNavigation.Size = new Size(198, 354);
@@ -587,6 +575,20 @@
             navigationSpliter.Size = new Size(3, 591);
             navigationSpliter.TabIndex = 8;
             navigationSpliter.TabStop = false;
+            // 
+            // domainModelMenu
+            // 
+            domainModelMenu.Items.AddRange(new ToolStripItem[] { menuImportDbSchema });
+            domainModelMenu.Name = "domainModelMenu";
+            domainModelMenu.Size = new Size(203, 26);
+            // 
+            // menuImportDbSchema
+            // 
+            menuImportDbSchema.Enabled = false;
+            menuImportDbSchema.Image = Properties.Resources.Dictionary;
+            menuImportDbSchema.Name = "menuImportDbSchema";
+            menuImportDbSchema.Size = new Size(202, 22);
+            menuImportDbSchema.Text = "Import from &Db Schema";
             // 
             // statusStrip
             // 
@@ -953,6 +955,7 @@
             WindowState = FormWindowState.Maximized;
             FormClosed += Main_FormClosed;
             Load += Main_Load;
+            MdiChildActivate += Main_MdiChildActivate;
             HelpRequested += Main_HelpRequested;
             Controls.SetChildIndex(menuStrip, 0);
             Controls.SetChildIndex(statusStrip, 0);
@@ -970,7 +973,6 @@
             navigationDomainTab.ResumeLayout(false);
             domainModelLayout.ResumeLayout(false);
             domainModelLayout.PerformLayout();
-            domainModelMenu.ResumeLayout(false);
             domainModelToolStrip.ResumeLayout(false);
             domainModelToolStrip.PerformLayout();
             navigationDataSourceTab.ResumeLayout(false);
@@ -979,6 +981,7 @@
             dataSourceToolStrip.ResumeLayout(false);
             dataSourceToolStrip.PerformLayout();
             dbSchemaContextMenu.ResumeLayout(false);
+            domainModelMenu.ResumeLayout(false);
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
             menuStrip.ResumeLayout(false);

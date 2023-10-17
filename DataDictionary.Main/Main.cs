@@ -114,6 +114,11 @@ namespace DataDictionary.Main
             }
         }
 
+        private void Main_MdiChildActivate(object sender, EventArgs e)
+        {
+
+        }
+
         public bool BindDataCore()
         {
             modelNameData.DataBindings.Add(new Binding(nameof(modelNameData.Text), Program.Data.Model, nameof(Program.Data.Model.ModelTitle)));
@@ -129,6 +134,8 @@ namespace DataDictionary.Main
         {
             modelNameData.DataBindings.Clear();
             modelDescriptionData.DataBindings.Clear();
+            ClearDomainModelTreeByAttribute();
+            ClearDataSourcesTree();
         }
 
         private void Main_FormClosing(object? sender, FormClosingEventArgs e)
@@ -319,5 +326,7 @@ namespace DataDictionary.Main
 
         private void subjectAreaToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Diagram), Program.Data.DomainSubjectAreas); }
+
+
     }
 }
