@@ -53,6 +53,7 @@
             entityAliasToolStripMenuItem = new ToolStripMenuItem();
             newSubjectAreaCommand = new ToolStripSplitButton();
             subjectAreaToolStripMenuItem = new ToolStripMenuItem();
+            domainModelRefreshCommand = new ToolStripButton();
             domainModelSortOrder = new ToolStripDropDownButton();
             sortByAttributeEntityCommand = new ToolStripMenuItem();
             sortByEntityAttributeCommand = new ToolStripMenuItem();
@@ -269,7 +270,7 @@
             // 
             // domainModelToolStrip
             // 
-            domainModelToolStrip.Items.AddRange(new ToolStripItem[] { newAttributeCommand, newEntityCommand, newSubjectAreaCommand, domainModelSeparator1, domainModelSortOrder });
+            domainModelToolStrip.Items.AddRange(new ToolStripItem[] { newAttributeCommand, newEntityCommand, newSubjectAreaCommand, domainModelRefreshCommand, domainModelSeparator1, domainModelSortOrder });
             domainModelToolStrip.Location = new Point(0, 0);
             domainModelToolStrip.Name = "domainModelToolStrip";
             domainModelToolStrip.Size = new Size(204, 25);
@@ -362,6 +363,16 @@
             subjectAreaToolStripMenuItem.Size = new Size(186, 22);
             subjectAreaToolStripMenuItem.Text = "browse &Subject Areas";
             subjectAreaToolStripMenuItem.Click += subjectAreaToolStripMenuItem_Click;
+            // 
+            // domainModelRefreshCommand
+            // 
+            domainModelRefreshCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            domainModelRefreshCommand.Image = Properties.Resources.Refresh;
+            domainModelRefreshCommand.ImageTransparentColor = Color.Magenta;
+            domainModelRefreshCommand.Name = "domainModelRefreshCommand";
+            domainModelRefreshCommand.Size = new Size(23, 22);
+            domainModelRefreshCommand.Text = "Refresh";
+            domainModelRefreshCommand.Click += domainModelRefreshCommand_Click;
             // 
             // domainModelSeparator1
             // 
@@ -609,7 +620,7 @@
             // toolStripWhiteSpace
             // 
             toolStripWhiteSpace.Name = "toolStripWhiteSpace";
-            toolStripWhiteSpace.Size = new Size(671, 17);
+            toolStripWhiteSpace.Size = new Size(640, 17);
             toolStripWhiteSpace.Spring = true;
             // 
             // toolStripWorkerTask
@@ -1080,5 +1091,6 @@
         private ToolStripMenuItem entityAliasToolStripMenuItem;
         private ToolStripSplitButton newSubjectAreaCommand;
         private ToolStripMenuItem subjectAreaToolStripMenuItem;
+        private ToolStripButton domainModelRefreshCommand;
     }
 }

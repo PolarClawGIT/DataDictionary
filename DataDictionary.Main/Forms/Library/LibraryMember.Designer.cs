@@ -30,9 +30,6 @@
         {
             TableLayoutPanel libraryMemberLayout;
             TabControl memberTabs;
-            memberNameSpaceData = new Controls.TextBoxData();
-            memberNameData = new Controls.TextBoxData();
-            assemblyNameData = new Controls.TextBoxData();
             childMembersTab = new TabPage();
             childMemberData = new DataGridView();
             memberNameColumn = new DataGridViewTextBoxColumn();
@@ -41,6 +38,9 @@
             memberData = new Controls.TextBoxData();
             memberTypeData = new Controls.TextBoxData();
             objectTypeData = new Controls.TextBoxData();
+            assemblyNameData = new Controls.TextBoxData();
+            memberNameSpaceData = new Controls.TextBoxData();
+            memberNameData = new Controls.TextBoxData();
             libraryMemberLayout = new TableLayoutPanel();
             memberTabs = new TabControl();
             libraryMemberLayout.SuspendLayout();
@@ -55,12 +55,12 @@
             libraryMemberLayout.ColumnCount = 2;
             libraryMemberLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             libraryMemberLayout.ColumnStyles.Add(new ColumnStyle());
-            libraryMemberLayout.Controls.Add(memberNameSpaceData, 0, 2);
-            libraryMemberLayout.Controls.Add(memberNameData, 0, 0);
-            libraryMemberLayout.Controls.Add(assemblyNameData, 0, 1);
             libraryMemberLayout.Controls.Add(memberTabs, 0, 4);
             libraryMemberLayout.Controls.Add(memberTypeData, 1, 3);
             libraryMemberLayout.Controls.Add(objectTypeData, 0, 3);
+            libraryMemberLayout.Controls.Add(assemblyNameData, 0, 0);
+            libraryMemberLayout.Controls.Add(memberNameSpaceData, 0, 1);
+            libraryMemberLayout.Controls.Add(memberNameData, 0, 2);
             libraryMemberLayout.Dock = DockStyle.Fill;
             libraryMemberLayout.Location = new Point(0, 25);
             libraryMemberLayout.Name = "libraryMemberLayout";
@@ -72,45 +72,6 @@
             libraryMemberLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             libraryMemberLayout.Size = new Size(379, 466);
             libraryMemberLayout.TabIndex = 1;
-            // 
-            // memberNameSpaceData
-            // 
-            memberNameSpaceData.AutoSize = true;
-            libraryMemberLayout.SetColumnSpan(memberNameSpaceData, 2);
-            memberNameSpaceData.Dock = DockStyle.Fill;
-            memberNameSpaceData.HeaderText = "Member Name Space";
-            memberNameSpaceData.Location = new Point(3, 103);
-            memberNameSpaceData.Multiline = false;
-            memberNameSpaceData.Name = "memberNameSpaceData";
-            memberNameSpaceData.ReadOnly = true;
-            memberNameSpaceData.Size = new Size(373, 44);
-            memberNameSpaceData.TabIndex = 2;
-            // 
-            // memberNameData
-            // 
-            memberNameData.AutoSize = true;
-            libraryMemberLayout.SetColumnSpan(memberNameData, 2);
-            memberNameData.Dock = DockStyle.Fill;
-            memberNameData.HeaderText = "Member Name";
-            memberNameData.Location = new Point(3, 3);
-            memberNameData.Multiline = false;
-            memberNameData.Name = "memberNameData";
-            memberNameData.ReadOnly = true;
-            memberNameData.Size = new Size(373, 44);
-            memberNameData.TabIndex = 0;
-            // 
-            // assemblyNameData
-            // 
-            assemblyNameData.AutoSize = true;
-            libraryMemberLayout.SetColumnSpan(assemblyNameData, 2);
-            assemblyNameData.Dock = DockStyle.Fill;
-            assemblyNameData.HeaderText = "Assembly Name";
-            assemblyNameData.Location = new Point(3, 53);
-            assemblyNameData.Multiline = false;
-            assemblyNameData.Name = "assemblyNameData";
-            assemblyNameData.ReadOnly = true;
-            assemblyNameData.Size = new Size(373, 44);
-            assemblyNameData.TabIndex = 1;
             // 
             // memberTabs
             // 
@@ -210,6 +171,45 @@
             objectTypeData.ReadOnly = true;
             objectTypeData.Size = new Size(247, 44);
             objectTypeData.TabIndex = 3;
+            // 
+            // assemblyNameData
+            // 
+            assemblyNameData.AutoSize = true;
+            libraryMemberLayout.SetColumnSpan(assemblyNameData, 2);
+            assemblyNameData.Dock = DockStyle.Fill;
+            assemblyNameData.HeaderText = "Assembly Name";
+            assemblyNameData.Location = new Point(3, 3);
+            assemblyNameData.Multiline = false;
+            assemblyNameData.Name = "assemblyNameData";
+            assemblyNameData.ReadOnly = true;
+            assemblyNameData.Size = new Size(373, 44);
+            assemblyNameData.TabIndex = 0;
+            // 
+            // memberNameSpaceData
+            // 
+            memberNameSpaceData.AutoSize = true;
+            libraryMemberLayout.SetColumnSpan(memberNameSpaceData, 2);
+            memberNameSpaceData.Dock = DockStyle.Fill;
+            memberNameSpaceData.HeaderText = "Member Name Space";
+            memberNameSpaceData.Location = new Point(3, 53);
+            memberNameSpaceData.Multiline = false;
+            memberNameSpaceData.Name = "memberNameSpaceData";
+            memberNameSpaceData.ReadOnly = true;
+            memberNameSpaceData.Size = new Size(373, 44);
+            memberNameSpaceData.TabIndex = 1;
+            // 
+            // memberNameData
+            // 
+            memberNameData.AutoSize = true;
+            libraryMemberLayout.SetColumnSpan(memberNameData, 2);
+            memberNameData.Dock = DockStyle.Fill;
+            memberNameData.HeaderText = "Member Name";
+            memberNameData.Location = new Point(3, 103);
+            memberNameData.Multiline = false;
+            memberNameData.Name = "memberNameData";
+            memberNameData.ReadOnly = true;
+            memberNameData.Size = new Size(373, 44);
+            memberNameData.TabIndex = 2;
             // 
             // LibraryMember
             // 

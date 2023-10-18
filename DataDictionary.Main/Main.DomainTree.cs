@@ -222,6 +222,12 @@ namespace DataDictionary.Main
             BuildDomainModelTreeByEntity();
         }
 
+        private void domainModelRefreshCommand_Click(object sender, EventArgs e)
+        {
+            ClearDomainModelTreeByAttribute();
+            BuildDomainModelTreeByAttribute();
+        }
+
         void Activate(DomainAttributeItem attributeItem)
         { Activate((data) => new Forms.Domain.DomainAttribute() { DataKey = new DomainAttributeKey(attributeItem) }, attributeItem); }
 
@@ -232,7 +238,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Domain.DomainSubjectArea() { DataKey = new DomainSubjectAreaKey(subjectItem) }, subjectItem); }
 
         String? GetTitle(object unkown)
-        { throw new InvalidOperationException(String.Format("Could not determine dynamic type for GetTitle: {0}",unkown.GetType().Name)); }
+        { throw new InvalidOperationException(String.Format("Could not determine dynamic type for GetTitle: {0}", unkown.GetType().Name)); }
 
         String? GetTitle(DomainAttributeItem attribute)
         { return attribute.AttributeTitle; }

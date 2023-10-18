@@ -85,5 +85,6 @@ namespace DataDictionary.Main.Forms.Library
             if (childMemberData.Rows[e.RowIndex].DataBoundItem is LibraryMemberItem memberItem)
             { Activate((data) => new Forms.Library.LibraryMember() { DataKey = new LibraryMemberKey(memberItem) }, memberItem); }
         }
+
     }
 }
