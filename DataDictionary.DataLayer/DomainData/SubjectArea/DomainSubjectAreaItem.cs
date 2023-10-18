@@ -47,6 +47,7 @@ namespace DataDictionary.DataLayer.DomainData.SubjectArea
         public DomainSubjectAreaItem() : base()
         {
             if (SubjectAreaId is null) { SubjectAreaId = Guid.NewGuid(); }
+            if (String.IsNullOrWhiteSpace(SubjectAreaTitle)){ SubjectAreaTitle = "(new Subject Area)"; }
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()

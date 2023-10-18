@@ -287,6 +287,7 @@
             newAttributeCommand.Size = new Size(32, 22);
             newAttributeCommand.Text = "newAttributeCommand";
             newAttributeCommand.ToolTipText = "new Attribute";
+            newAttributeCommand.ButtonClick += newAttributeCommand_ButtonClick;
             // 
             // menuAttributes
             // 
@@ -321,6 +322,7 @@
             newEntityCommand.Name = "newEntityCommand";
             newEntityCommand.Size = new Size(32, 22);
             newEntityCommand.Text = "new Entity";
+            newEntityCommand.ButtonClick += newEntityCommand_ButtonClick;
             // 
             // entitiesToolStripMenuItem
             // 
@@ -355,6 +357,7 @@
             newSubjectAreaCommand.Name = "newSubjectAreaCommand";
             newSubjectAreaCommand.Size = new Size(32, 22);
             newSubjectAreaCommand.Text = "new Subject Area";
+            newSubjectAreaCommand.ButtonClick += newSubjectAreaCommand_ButtonClick;
             // 
             // subjectAreaToolStripMenuItem
             // 
@@ -386,7 +389,7 @@
             domainModelSortOrder.Image = (Image)resources.GetObject("domainModelSortOrder.Image");
             domainModelSortOrder.ImageTransparentColor = Color.Magenta;
             domainModelSortOrder.Name = "domainModelSortOrder";
-            domainModelSortOrder.Size = new Size(57, 22);
+            domainModelSortOrder.Size = new Size(57, 19);
             domainModelSortOrder.Text = "Sort by";
             // 
             // sortByAttributeEntityCommand
@@ -620,7 +623,7 @@
             // toolStripWhiteSpace
             // 
             toolStripWhiteSpace.Name = "toolStripWhiteSpace";
-            toolStripWhiteSpace.Size = new Size(640, 17);
+            toolStripWhiteSpace.Size = new Size(671, 17);
             toolStripWhiteSpace.Spring = true;
             // 
             // toolStripWorkerTask

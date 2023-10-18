@@ -42,7 +42,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
 
         /// <inheritdoc/>
         public Guid? SubjectAreaId
-        { get { return GetValue<Guid>("SubjectAreaId"); } protected set { SetValue("SubjectAreaId", value); } }
+        { get { return GetValue<Guid>("SubjectAreaId"); } set { SetValue("SubjectAreaId", value); } }
 
         /// <inheritdoc/>
         public string? EntityTitle { get { return GetValue("EntityTitle"); } set { SetValue("EntityTitle", value); } }
@@ -59,6 +59,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         public DomainEntityItem() : base()
         {
             if (EntityId is null) { EntityId = Guid.NewGuid(); }
+            if (String.IsNullOrWhiteSpace(EntityTitle)){ EntityTitle = "(new Entity)"; }
             if (Obsolete is null) { Obsolete = false; }
         }
 

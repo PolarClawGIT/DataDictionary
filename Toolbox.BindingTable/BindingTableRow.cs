@@ -88,8 +88,11 @@ namespace Toolbox.BindingTable
                 data.Table.RowDeleting += Table_RowDeleting;
                 data.Table.RowDeleted += Table_RowDeleted;
                 data.Table.Disposed += Table_Disposed;
+                data.Table.ColumnChanged += Table_ColumnChanged;
             }
         }
+
+
 
         /// <summary>
         /// Constructor that loaded the DataRow.
@@ -109,12 +112,14 @@ namespace Toolbox.BindingTable
             data.Table.RowDeleting -= Table_RowDeleting;
             data.Table.RowDeleted -= Table_RowDeleted;
             data.Table.Disposed -= Table_Disposed;
+            data.Table.ColumnChanged -= Table_ColumnChanged;
 
             row.Table.RowChanging += Table_RowChanging;
             row.Table.RowChanged += Table_RowChanged;
             row.Table.RowDeleting += Table_RowDeleting;
             row.Table.RowDeleted += Table_RowDeleted;
             row.Table.Disposed += Table_Disposed;
+            row.Table.ColumnChanged += Table_ColumnChanged;
             data = row;
         }
 
@@ -256,36 +261,11 @@ namespace Toolbox.BindingTable
         }
 
         #region DataRow
-        /// <summary>
-        /// Used store the list of columns that have pending changes. The "Changing" event.
-        /// The On Property Change is called after the changes are applied. The "Changed" event.
-        /// </summary>
-        List<DataColumn> pendingChanges = new List<DataColumn>();
-
         protected virtual void Table_RowChanging(object sender, DataRowChangeEventArgs e)
-        {
-            if (Object.ReferenceEquals(data, e.Row) && e.Row.HasVersion(DataRowVersion.Proposed))
-            {
-                foreach (DataColumn item in e.Row.Table.Columns)
-                {
-                    if (String.Equals(e.Row[item, DataRowVersion.Proposed].ToString(), e.Row[item].ToString(), StringComparison.Ordinal))
-                    {
-                        if (pendingChanges.Contains(item)) { pendingChanges.Remove(item); }
-                        else { pendingChanges.Add(item); }
-                    }
-                }
-            }
-        }
+        { }
 
         protected virtual void Table_RowChanged(object sender, DataRowChangeEventArgs e)
-        {
-            if (Object.ReferenceEquals(data, e.Row))
-            {
-                foreach (DataColumn item in pendingChanges)
-                { OnPropertyChanged(item.ColumnName); }
-                pendingChanges.Clear();
-            }
-        }
+        { }
 
         protected virtual void Table_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
@@ -296,6 +276,7 @@ namespace Toolbox.BindingTable
                 data.Table.RowDeleting -= Table_RowDeleting;
                 data.Table.RowDeleted -= Table_RowDeleted;
                 data.Table.Disposed -= Table_Disposed;
+                data.Table.ColumnChanged -= Table_ColumnChanged;
             }
         }
 
@@ -309,6 +290,15 @@ namespace Toolbox.BindingTable
             data.Table.RowDeleting -= Table_RowDeleting;
             data.Table.RowDeleted -= Table_RowDeleted;
             data.Table.Disposed -= Table_Disposed;
+            data.Table.ColumnChanged -= Table_ColumnChanged;
+        }
+
+        protected virtual void Table_ColumnChanged(object sender, DataColumnChangeEventArgs e)
+        { // Assumes that Attributes and the Columns have identical names. No way found to insure this.
+            if (ReferenceEquals(data, e.Row)
+                && e.Row.RowState != DataRowState.Detached
+                && e.Column is not null)
+            { OnPropertyChanged(e.Column.ColumnName); }
         }
 
         /// <inheritdoc cref="DataRow.RowState"/>
@@ -355,7 +345,15 @@ namespace Toolbox.BindingTable
         #endregion
 
         #region INotifyPropertyChanged
+        /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <inheritdoc cref="INotifyPropertyChanged.PropertyChanged"/>
+        /// <remarks>
+        /// The method assumes that the Property Name and the Column Name are identical.
+        /// The actual property changed event is raised on the Column change event, not the Set method.
+        /// This allows changes made directly to the table row to be captured.
+        /// </remarks>
         public virtual void OnPropertyChanged(string propertyName)
         {
             if (PropertyChanged is PropertyChangedEventHandler handler)

@@ -40,9 +40,10 @@ namespace DataDictionary.Main.Forms.Domain
 
                 attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), data, nameof(data.AttributeTitle)));
                 attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), data, nameof(data.AttributeDescription)));
-                subjectAreaData.DataBindings.Add(new Binding(nameof(subjectAreaData.SelectedItem), data, nameof(data.SubjectAreaId)));
+                
                 SubjectAreaNameItem.Bind(subjectAreaData);
-                subjectAreaData.ReadOnly = (subjectAreaData.DataSource is IList subjectAreaItems && subjectAreaItems.Count > 0);
+                subjectAreaData.ReadOnly = (subjectAreaData.DataSource is IList subjectAreaItems && subjectAreaItems.Count == 0);
+                subjectAreaData.DataBindings.Add(new Binding(nameof(subjectAreaData.SelectedValue), data, nameof(data.SubjectAreaId), true, DataSourceUpdateMode.OnValidation, Guid.Empty));
 
                 bindingProperties.DataSource =
                     new BindingView<DomainAttributePropertyItem>(
