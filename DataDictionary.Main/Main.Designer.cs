@@ -966,7 +966,6 @@
             WindowState = FormWindowState.Maximized;
             FormClosed += Main_FormClosed;
             Load += Main_Load;
-            MdiChildActivate += Main_MdiChildActivate;
             HelpRequested += Main_HelpRequested;
             Controls.SetChildIndex(menuStrip, 0);
             Controls.SetChildIndex(statusStrip, 0);

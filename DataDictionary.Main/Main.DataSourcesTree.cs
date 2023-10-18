@@ -91,24 +91,19 @@ namespace DataDictionary.Main
 
         void BuildDataSourcesTree()
         {
-            Object? selected = null;
-            if (dataSourceNavigation.SelectedNode is not null && dbDataNodes.ContainsKey(dataSourceNavigation.SelectedNode))
-            { selected = dbDataNodes[dataSourceNavigation.SelectedNode]; }
-
             foreach (IDbCatalogItem catalogItem in Program.Data.DbCatalogs.OrderBy(o => o.DatabaseName))
             {
                 if (String.IsNullOrWhiteSpace(catalogItem.DatabaseName))
                 { } //TODO: This event may fire when there is no data or the data is being changed. Caused by the deleted row not being handled correctly.
 
-                TreeNode catalogNode = CreateNode(catalogItem.DatabaseName, dbDataImageIndex.Database, catalogItem);
-                dataSourceNavigation.Nodes.Add(catalogNode);
+                TreeNode catalogNode = CreateNode(dataSourceNavigation.Nodes, catalogItem.DatabaseName, dbDataImageIndex.Database, catalogItem);
 
                 foreach (IDbSchemaItem schemaItem in Program.Data.DbSchemta.OrderBy(o => o.SchemaName).Where(
                     w => w.IsSystem == false &&
                     w.DatabaseName == catalogItem.DatabaseName))
                 {
-                    TreeNode schemaNode = CreateNode(schemaItem.SchemaName, dbDataImageIndex.Schema, schemaItem, catalogNode);
-                    TreeNode tablesNode = CreateNode("Tables & Views", dbDataImageIndex.Tables, null, schemaNode);
+                    TreeNode schemaNode = CreateNode(catalogNode.Nodes, schemaItem.SchemaName, dbDataImageIndex.Schema, schemaItem);
+                    TreeNode tablesNode = CreateNode(schemaNode.Nodes, "Tables & Views", dbDataImageIndex.Tables);
 
                     foreach (IDbTableItem tableItem in Program.Data.DbTables.OrderBy(o => o.TableName).Where(
                         w => w.IsSystem == false && new DbSchemaKey(w).Equals(schemaItem)))
@@ -117,29 +112,29 @@ namespace DataDictionary.Main
                         TreeNode tableNode;
                         TreeNode? tableConstraintNode = null;
                         if (tableItem.ObjectScope == DbObjectScope.View)
-                        { tableNode = CreateNode(tableItem.TableName, dbDataImageIndex.View, tableItem, tablesNode); }
+                        { tableNode = CreateNode(tablesNode.Nodes, tableItem.TableName, dbDataImageIndex.View, tableItem); }
                         else if (tableItem.ObjectScope == DbObjectScope.Table)
-                        { tableNode = CreateNode(tableItem.TableName, dbDataImageIndex.Table, tableItem, tablesNode); }
-                        else { tableNode = CreateNode(tableItem.TableName, dbDataImageIndex.Unknown, tableItem, tablesNode); }
+                        { tableNode = CreateNode(tablesNode.Nodes, tableItem.TableName, dbDataImageIndex.Table, tableItem); }
+                        else { tableNode = CreateNode(tablesNode.Nodes, tableItem.TableName, dbDataImageIndex.Unknown, tableItem); }
 
-                        TreeNode columnsNode = CreateNode("Columns", dbDataImageIndex.Columns, null, tableNode);
+                        TreeNode columnsNode = CreateNode(tableNode.Nodes, "Columns", dbDataImageIndex.Columns);
 
 
                         foreach (IDbTableColumnItem columnItem in Program.Data.DbTableColumns.Where(
                             w => tableKey.Equals(w)).OrderBy(o => o.OrdinalPosition))
-                        { CreateNode(columnItem.ColumnName, dbDataImageIndex.Column, columnItem, columnsNode); }
+                        { CreateNode(columnsNode.Nodes, columnItem.ColumnName, dbDataImageIndex.Column, columnItem); }
 
                         foreach (DbConstraintItem contraintItem in Program.Data.DbConstraints.Where(
                             w => tableKey.Equals(w)))
                         {
                             if (tableConstraintNode is null)
-                            { tableConstraintNode = CreateNode("Constraints", dbDataImageIndex.TableKey, null, tableNode); }
+                            { tableConstraintNode = CreateNode(tableNode.Nodes, "Constraints", dbDataImageIndex.TableKey); }
 
-                            TreeNode constraintNode = CreateNode(contraintItem.ConstraintName, dbDataImageIndex.Constraint, contraintItem, tableConstraintNode);
+                            TreeNode constraintNode = CreateNode(tableConstraintNode.Nodes, contraintItem.ConstraintName, dbDataImageIndex.Constraint, contraintItem);
 
                             foreach (DbConstraintColumnItem contraintColumnItem in Program.Data.DbConstraintColumns.Where(
                                 w => new DbConstraintKey(w).Equals(new DbConstraintKey(contraintItem))))
-                            { CreateNode(contraintColumnItem.ColumnName, dbDataImageIndex.ConstraintColumn, contraintColumnItem, constraintNode); }
+                            { CreateNode(constraintNode.Nodes, contraintColumnItem.ColumnName, dbDataImageIndex.ConstraintColumn, contraintColumnItem); }
                         }
                     }
 
@@ -152,26 +147,26 @@ namespace DataDictionary.Main
                         TreeNode? routineNode;
 
                         if (routinesNode is null)
-                        { routinesNode = CreateNode("Routines", dbDataImageIndex.Routines, null, schemaNode); }
+                        { routinesNode = CreateNode(schemaNode.Nodes, "Routines", dbDataImageIndex.Routines); }
 
                         DbRoutineParameterItem? firstParameter = Program.Data.DbRoutineParameters.OrderBy(o => o.OrdinalPosition).FirstOrDefault(w => routineKey.Equals(w));
 
 
                         if (routineItem.ObjectScope == DbObjectScope.Procedure)
-                        { routineNode = CreateNode(routineItem.RoutineName, dbDataImageIndex.StoredProcedure, routineItem, routinesNode); }
+                        { routineNode = CreateNode(routinesNode.Nodes, routineItem.RoutineName, dbDataImageIndex.StoredProcedure, routineItem); }
 
                         else if (routineItem.ObjectScope == DbObjectScope.Function && firstParameter is DbRoutineParameterItem isScalar && isScalar.OrdinalPosition == 0)
-                        { routineNode = CreateNode(routineItem.RoutineName, dbDataImageIndex.ScalarFunction, routineItem, routinesNode); }
+                        { routineNode = CreateNode(routinesNode.Nodes, routineItem.RoutineName, dbDataImageIndex.ScalarFunction, routineItem); }
 
                         else if (routineItem.ObjectScope == DbObjectScope.Function && firstParameter is DbRoutineParameterItem isTable && isTable.OrdinalPosition != 0)
-                        { routineNode = CreateNode(routineItem.RoutineName, dbDataImageIndex.TableFunction, routineItem, routinesNode); }
+                        { routineNode = CreateNode(routinesNode.Nodes, routineItem.RoutineName, dbDataImageIndex.TableFunction, routineItem); }
 
                         else
-                        { routineNode = CreateNode(routineItem.RoutineName, dbDataImageIndex.Unknown, routineItem, routinesNode); }
+                        { routineNode = CreateNode(routinesNode.Nodes, routineItem.RoutineName, dbDataImageIndex.Unknown, routineItem); }
 
                         foreach (DbRoutineParameterItem routineParameter in Program.Data.DbRoutineParameters.Where(
                             w => routineKey.Equals(w)).OrderBy(o => o.OrdinalPosition))
-                        { CreateNode(routineParameter.ParameterName, dbDataImageIndex.Parameter, routineParameter, routineNode); }
+                        { CreateNode(routineNode.Nodes, routineParameter.ParameterName, dbDataImageIndex.Parameter, routineParameter); }
 
                     }
 
@@ -183,9 +178,9 @@ namespace DataDictionary.Main
                         DbDomainKey domainKey = new DbDomainKey(domainItem);
 
                         if (domainsNode is null)
-                        { domainsNode = CreateNode("Domains", dbDataImageIndex.Domains, null, schemaNode); }
+                        { domainsNode = CreateNode(schemaNode.Nodes, "Domains", dbDataImageIndex.Domains, null); }
 
-                        CreateNode(domainItem.DomainName, dbDataImageIndex.Domain, domainItem, domainsNode);
+                        CreateNode(domainsNode.Nodes, domainItem.DomainName, dbDataImageIndex.Domain, domainItem);
                     }
                 }
             }
@@ -193,8 +188,7 @@ namespace DataDictionary.Main
             foreach (ILibrarySourceItem librarySourceItem in Program.Data.LibrarySources.OrderBy(o => o.LibraryTitle))
             {
                 LibrarySourceKeyUnique sourceKey = new LibrarySourceKeyUnique(librarySourceItem);
-                TreeNode sourceNode = CreateNode(librarySourceItem.LibraryTitle, dbDataImageIndex.Library, librarySourceItem);
-                dataSourceNavigation.Nodes.Add(sourceNode);
+                TreeNode sourceNode = CreateNode(dataSourceNavigation.Nodes, librarySourceItem.LibraryTitle, dbDataImageIndex.Library, librarySourceItem);
 
                 foreach (LibraryMemberItem memberItem in Program.Data.LibraryMembers
                     .Where(w => sourceKey.Equals(w))
@@ -220,7 +214,7 @@ namespace DataDictionary.Main
                             if (sourceNode.Nodes.Find(nodeKey, true).FirstOrDefault() is TreeNode exsitngNode)
                             { } // Node Already exists by this key. Nothing to do.
                             else
-                            { CreateNode(nameSpaceElement, dbDataImageIndex.NameSpace, null, parentNode, nodeKey); }
+                            { CreateNode(parentNode.Nodes, nameSpaceElement, dbDataImageIndex.NameSpace, null, nodeKey); }
                         }
                     }
 
@@ -230,29 +224,33 @@ namespace DataDictionary.Main
                         switch (memberItem.ObjectType)
                         {
                             case LibraryMemberType.Type:
-                                CreateNode(memberItem.MemberName,
+                                CreateNode(
+                                    nameSpaceNode.Nodes,
+                                    memberItem.MemberName,
                                     dbDataImageIndex.Class,
                                     memberItem,
-                                    nameSpaceNode,
                                     String.Format("{0}.{1}", nodeKey, memberItem.MemberName));
                                 break;
                             case LibraryMemberType.Field or LibraryMemberType.Property:
-                                CreateNode(memberItem.MemberName,
+                                CreateNode(
+                                    nameSpaceNode.Nodes,
+                                    memberItem.MemberName,
                                     dbDataImageIndex.Field,
-                                    memberItem,
-                                    nameSpaceNode);
+                                    memberItem);
                                 break;
                             case LibraryMemberType.Method or LibraryMemberType.Event:
-                                CreateNode(memberItem.MemberName,
+                                CreateNode(
+                                    nameSpaceNode.Nodes,
+                                    memberItem.MemberName,
                                     dbDataImageIndex.Method,
-                                    memberItem,
-                                    nameSpaceNode);
+                                    memberItem);
                                 break;
                             default:
-                                CreateNode(memberItem.MemberName,
+                                CreateNode(
+                                    nameSpaceNode.Nodes,
+                                    memberItem.MemberName,
                                     dbDataImageIndex.Unknown,
-                                    memberItem,
-                                    nameSpaceNode);
+                                    memberItem);
                                 break;
                         }
                     }
@@ -264,24 +262,17 @@ namespace DataDictionary.Main
                         throw ex;
                     }
                 }
-
             }
 
-            if (dbDataNodes.FirstOrDefault(w => ReferenceEquals(w.Value, selected)) is KeyValuePair<TreeNode, object> selectedNode)
-            { dataSourceNavigation.SelectedNode = selectedNode.Key; }
-
-            TreeNode CreateNode(String? nodeText, dbDataImageIndex imageIndex, Object? source = null, TreeNode? parentNode = null, String? key = null)
+            TreeNode CreateNode(TreeNodeCollection target, String? nodeText, dbDataImageIndex imageIndex, Object? source = null, String? key = null)
             {
                 if (String.IsNullOrWhiteSpace(nodeText)) { throw new ArgumentNullException(nameof(nodeText)); }
 
                 TreeNode result;
-                if (parentNode is not null)
-                {
-                    if (String.IsNullOrWhiteSpace(key))
-                    { result = parentNode.Nodes.Add(nodeText); }
-                    else { result = parentNode.Nodes.Add(key, nodeText); }
-                }
-                else { result = new TreeNode(nodeText); }
+
+                if (String.IsNullOrWhiteSpace(key))
+                { result = target.Add(nodeText); }
+                else { result = target.Add(key, nodeText); }
 
                 result.ImageKey = dbDataImageItems[imageIndex].imageKey;
                 result.SelectedImageKey = dbDataImageItems[imageIndex].imageKey;

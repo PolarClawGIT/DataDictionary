@@ -205,7 +205,6 @@
 
         private Controls.TextBoxData subjectAreaTitleData;
         private Controls.TextBoxData subjectAreaDescriptionData;
-        private TabControl subjectAreaTab;
         private TabPage attributeTab;
         private DataGridView attributeData;
         private TabPage entityTab;

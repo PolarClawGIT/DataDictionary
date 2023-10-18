@@ -3,6 +3,7 @@ using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.DomainData.SubjectArea;
 using DataDictionary.Main.Properties;
+using System.Collections;
 using System.ComponentModel;
 
 namespace DataDictionary.Main
@@ -14,23 +15,21 @@ namespace DataDictionary.Main
         {
             SubjectArea,
             Attribute,
-            Attributes,
+            Entity,
             Property,
-            Alias,
-            Entity
+            Alias
         }
 
         static Dictionary<domainModelImageIndex, (String imageKey, Image image)> domainModelImageItems = new Dictionary<domainModelImageIndex, (String imageKey, Image image)>()
         {
             {domainModelImageIndex.SubjectArea,  ("SubjectArea", Resources.Diagram) },
             {domainModelImageIndex.Attribute,    ("Attribute",   Resources.Attribute) },
-            {domainModelImageIndex.Attributes,   ("Attributes",  Resources.Parameter) },
+            {domainModelImageIndex.Entity,       ("Entity",      Resources.Relationship) },
             {domainModelImageIndex.Property,     ("Property",    Resources.Property) },
             {domainModelImageIndex.Alias,        ("Alias",       Resources.Synonym) },
-            {domainModelImageIndex.Entity,       ("Entity",      Resources.Relationship) },
         };
 
-        void ClearDomainModelTreeByAttribute()
+        void ClearDomainModelTree()
         {
             foreach (KeyValuePair<TreeNode, object> item in domainModelNodes)
             {
@@ -44,33 +43,33 @@ namespace DataDictionary.Main
 
         void BuildDomainModelTreeByAttribute()
         {
+            domainModelNavigation.TreeViewNodeSorter = new DomainTreeSort();
+
             foreach (DomainAttributeItem attributeItem in
                 Program.Data.DomainAttributes.
                 Where(w => w.SubjectAreaId is null))
-            {
-                TreeNode attributeNode = CreateAttribute(attributeItem, null);
-                domainModelNavigation.Nodes.Add(attributeNode);
-            }
+            { TreeNode attributeNode = CreateAttribute(domainModelNavigation.Nodes, attributeItem); }
 
             foreach (DomainSubjectAreaItem subjectItem in
                 Program.Data.DomainSubjectAreas.
                 OrderBy(o => o.SubjectAreaTitle))
             {
-                TreeNode subjectNode = CreateNode(subjectItem.SubjectAreaTitle, domainModelImageIndex.SubjectArea, subjectItem, null);
+                TreeNode subjectNode = CreateNode(domainModelNavigation.Nodes, subjectItem.SubjectAreaTitle, domainModelImageIndex.SubjectArea, subjectItem);
                 DomainSubjectAreaKey subjectKey = new DomainSubjectAreaKey(subjectItem);
                 domainModelNavigation.Nodes.Add(subjectNode);
 
                 foreach (DomainAttributeItem attributeItem in
                     Program.Data.DomainAttributes.
                     Where(w => subjectKey.Equals(w)))
-                { TreeNode attributeNode = CreateAttribute(attributeItem, subjectNode); }
+                { TreeNode attributeNode = CreateAttribute(subjectNode.Nodes, attributeItem); }
             }
 
             domainModelNavigation.Sort();
 
-            TreeNode CreateAttribute(DomainAttributeItem attributeItem, TreeNode? parent)
+            TreeNode CreateAttribute(TreeNodeCollection target, DomainAttributeItem attributeItem)
             {
-                TreeNode attributeNode = CreateNode(attributeItem.AttributeTitle, domainModelImageIndex.Attribute, attributeItem);
+                TreeNode attributeNode = CreateNode(target, attributeItem.AttributeTitle, domainModelImageIndex.Attribute, attributeItem);
+
                 DomainAttributeKey key = new DomainAttributeKey(attributeItem);
 
                 List<DomainAttributePropertyItem> properties = Program.Data.DomainAttributeProperties.Where(w => key.Equals(w)).ToList();
@@ -80,69 +79,44 @@ namespace DataDictionary.Main
                     if (Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propertyItem.PropertyId) is PropertyItem property && property.PropertyTitle is not null)
                     { propertyTitle = property.PropertyTitle; }
 
-                    CreateNode(propertyTitle, domainModelImageIndex.Property, propertyItem, attributeNode);
+                    CreateNode(attributeNode.Nodes, propertyTitle, domainModelImageIndex.Property, propertyItem);
                 }
 
                 List<DomainEntityItem> entities = Program.Data.GetEntities(key).OrderBy(o => o.EntityTitle).ToList();
                 foreach (DomainEntityItem item in entities)
-                { CreateNode(item.EntityTitle, domainModelImageIndex.Entity, item, attributeNode); }
+                { CreateNode(attributeNode.Nodes, item.EntityTitle, domainModelImageIndex.Entity, item); }
 
-                if (parent is not null) { parent.Nodes.Add(attributeNode); }
                 return attributeNode;
-            }
-
-            TreeNode CreateNode(String? nodeText, domainModelImageIndex imageIndex, Object? source = null, TreeNode? parentNode = null)
-            {
-                if (String.IsNullOrWhiteSpace(nodeText)) { throw new ArgumentNullException(nameof(nodeText)); }
-
-                TreeNode result = new TreeNode(nodeText);
-                result.ImageKey = domainModelImageItems[imageIndex].imageKey;
-                result.SelectedImageKey = domainModelImageItems[imageIndex].imageKey;
-
-                if (parentNode is not null) { parentNode.Nodes.Add(result); }
-                if (source is not null) { domainModelNodes.Add(result, source); }
-                if (source is INotifyPropertyChanged notifyPropertyChanged)
-                { notifyPropertyChanged.PropertyChanged += DomainItem_PropertyChanged; }
-
-                return result;
             }
         }
 
         void BuildDomainModelTreeByEntity()
         {
-            domainModelNavigation.Nodes.Clear();
-            domainModelNodes.Clear();
+            domainModelNavigation.TreeViewNodeSorter = new DomainTreeSort();
 
             foreach (DomainEntityItem entityItem in
                 Program.Data.DomainEntities.
                 Where(w => w.SubjectAreaId is null))
-            {
-                TreeNode entityNode = CreateEntity(entityItem, null);
-                domainModelNavigation.Nodes.Add(entityNode);
-            }
+            { TreeNode entityNode = CreateEntity(domainModelNavigation.Nodes, entityItem); }
 
             foreach (DomainSubjectAreaItem subjectItem in
                 Program.Data.DomainSubjectAreas)
             {
-                TreeNode subjectNode = CreateNode(subjectItem.SubjectAreaTitle, domainModelImageIndex.SubjectArea, subjectItem, null);
                 DomainSubjectAreaKey subjectKey = new DomainSubjectAreaKey(subjectItem);
-                domainModelNavigation.Nodes.Add(subjectNode);
+                TreeNode subjectNode = CreateNode(domainModelNavigation.Nodes, subjectItem.SubjectAreaTitle, domainModelImageIndex.SubjectArea, subjectItem);
 
                 foreach (DomainEntityItem entityItem in
                     Program.Data.DomainEntities.
                     Where(w => subjectKey.Equals(w)).
                     OrderBy(o => o.EntityTitle))
-                {
-                    TreeNode attributeNode = CreateEntity(entityItem, subjectNode);
-                    domainModelNavigation.Nodes.Add(attributeNode);
-                }
+                { CreateEntity(subjectNode.Nodes, entityItem); }
             }
 
             domainModelNavigation.Sort();
 
-            TreeNode CreateEntity(IDomainEntityItem entityItem, TreeNode? parent)
+            TreeNode CreateEntity(TreeNodeCollection target, IDomainEntityItem entityItem)
             {
-                TreeNode entityNode = CreateNode(entityItem.EntityTitle, domainModelImageIndex.Entity, entityItem);
+                TreeNode entityNode = CreateNode(target, entityItem.EntityTitle, domainModelImageIndex.Entity, entityItem);
                 DomainEntityKey key = new DomainEntityKey(entityItem);
 
                 List<DomainEntityPropertyItem> properties = Program.Data.DomainEntityProperties.Where(w => key.Equals(w)).ToList();
@@ -152,34 +126,37 @@ namespace DataDictionary.Main
                     if (Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propertyItem.PropertyId) is PropertyItem property && property.PropertyTitle is not null)
                     { propertyTitle = property.PropertyTitle; }
 
-                    CreateNode(propertyTitle, domainModelImageIndex.Property, propertyItem, entityNode);
+                    CreateNode(entityNode.Nodes, propertyTitle, domainModelImageIndex.Property, propertyItem);
                 }
 
                 List<DomainEntityAliasItem> alias = Program.Data.DomainEntityAliases.Where(w => key.Equals(w)).ToList();
                 foreach (DomainEntityAliasItem aliasItem in alias)
-                { CreateNode(aliasItem.ToString(), domainModelImageIndex.Alias, aliasItem, entityNode); }
+                { CreateNode(entityNode.Nodes, aliasItem.ToString(), domainModelImageIndex.Alias); }
 
-                List<DomainAttributeItem> attributes = Program.Data.GetAttributes(key).OrderBy(o => o.AttributeTitle).ToList();
+                List<DomainAttributeItem> attributes = Program.Data.GetAttributes(key).ToList();
                 foreach (DomainAttributeItem item in attributes)
-                { CreateNode(item.AttributeTitle, domainModelImageIndex.Attribute, item, entityNode); }
+                { CreateNode(entityNode.Nodes, item.AttributeTitle, domainModelImageIndex.Attribute, item); }
 
-                if (parent is not null) { parent.Nodes.Add(entityNode); }
                 return entityNode;
             }
 
-            TreeNode CreateNode(String? nodeText, domainModelImageIndex imageIndex, Object? source = null, TreeNode? parentNode = null)
-            {
-                if (String.IsNullOrWhiteSpace(nodeText)) { throw new ArgumentNullException(nameof(nodeText)); }
+        }
 
-                TreeNode result = new TreeNode(nodeText);
-                result.ImageKey = domainModelImageItems[imageIndex].imageKey;
-                result.SelectedImageKey = domainModelImageItems[imageIndex].imageKey;
+        TreeNode CreateNode(TreeNodeCollection target, String? nodeText, domainModelImageIndex imageIndex, Object? source = null)
+        {
+            if (String.IsNullOrWhiteSpace(nodeText)) { throw new ArgumentNullException(nameof(nodeText)); }
+            TreeNode result = new TreeNode(nodeText);
 
-                if (parentNode is not null) { parentNode.Nodes.Add(result); }
-                if (source is not null) { domainModelNodes.Add(result, source); }
+            result.ImageKey = domainModelImageItems[imageIndex].imageKey;
+            result.SelectedImageKey = domainModelImageItems[imageIndex].imageKey;
 
-                return result;
-            }
+            if (source is not null) { domainModelNodes.Add(result, source); }
+            if (source is INotifyPropertyChanged notifyPropertyChanged)
+            { notifyPropertyChanged.PropertyChanged += DomainItem_PropertyChanged; }
+
+            target.Add(result);
+
+            return result;
         }
 
         private void domainModelNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -191,12 +168,11 @@ namespace DataDictionary.Main
             }
         }
 
-
         void DomainItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (domainModelNodes.FirstOrDefault(w => w.Value == sender) is KeyValuePair<TreeNode, object> value)
             {
-                dynamic item = value.Value;
+                Object item = value.Value;
                 TreeNode node = value.Key;
 
                 if (NameOfTitle(item).Equals(e.PropertyName))
@@ -206,12 +182,42 @@ namespace DataDictionary.Main
                     domainModelNavigation.SelectedNode = node;
                 }
             }
+
+            String? GetTitle(Object item)
+            { // Overloaded local functions are not supported. This is a work-around.
+                if (item is DomainAttributeItem attribute)
+                { return attribute.AttributeTitle; }
+
+                else if (item is DomainEntityItem entity)
+                { return entity.EntityTitle; }
+
+                else if (item is DomainSubjectAreaItem subject)
+                { return subject.SubjectAreaTitle; }
+
+                else return String.Empty;
+            }
+
+            String NameOfTitle(Object item)
+            { // Overloaded local functions are not supported. This is a work-around.
+                if (item is DomainAttributeItem attribute)
+                { return nameof(attribute.AttributeTitle); }
+
+                else if (item is DomainEntityItem entity)
+                { return nameof(entity.EntityTitle); }
+
+                else if (item is DomainSubjectAreaItem subject)
+                { return nameof(subject.SubjectAreaTitle); }
+
+                else return String.Empty;
+            }
         }
 
         private void sortByAttributeEntityCommand_Click(object sender, EventArgs e)
         {
             sortByAttributeEntityCommand.Checked = true;
             sortByEntityAttributeCommand.Checked = false;
+
+            ClearDomainModelTree();
             BuildDomainModelTreeByAttribute();
         }
 
@@ -219,13 +225,16 @@ namespace DataDictionary.Main
         {
             sortByAttributeEntityCommand.Checked = false;
             sortByEntityAttributeCommand.Checked = true;
+
+            ClearDomainModelTree();
             BuildDomainModelTreeByEntity();
         }
 
         private void domainModelRefreshCommand_Click(object sender, EventArgs e)
         {
-            ClearDomainModelTreeByAttribute();
-            BuildDomainModelTreeByAttribute();
+            if (sortByAttributeEntityCommand.Checked) { sortByAttributeEntityCommand_Click(sender, e); }
+            else if (sortByEntityAttributeCommand.Checked) { sortByEntityAttributeCommand_Click(sender, e); }
+            else { return; }
         }
 
         void Activate(DomainAttributeItem attributeItem)
@@ -237,28 +246,28 @@ namespace DataDictionary.Main
         void Activate(DomainSubjectAreaItem subjectItem)
         { Activate((data) => new Forms.Domain.DomainSubjectArea() { DataKey = new DomainSubjectAreaKey(subjectItem) }, subjectItem); }
 
-        String? GetTitle(object unkown)
-        { throw new InvalidOperationException(String.Format("Could not determine dynamic type for GetTitle: {0}", unkown.GetType().Name)); }
+        /// <summary>
+        /// Used by Tree Control to do sorting
+        /// </summary>
+        class DomainTreeSort : IComparer
+        {
+            public int Compare(object? x, object? y)
+            {
+                if (x is TreeNode firstNode
+                    && y is TreeNode lastNode
+                    && domainModelImageItems.FirstOrDefault(w => firstNode.ImageKey.Equals(w.Value.imageKey)).Value.imageKey is String firstKey
+                    && domainModelImageItems.FirstOrDefault(w => lastNode.ImageKey.Equals(w.Value.imageKey)).Value.imageKey is String lastKey
+                    && Enum.TryParse(firstKey, out domainModelImageIndex firstImageIndex)
+                    && Enum.TryParse(lastKey, out domainModelImageIndex lastImageIndex)
+                    )
+                {
+                    Int32 imageCompare = firstImageIndex.CompareTo(lastImageIndex);
 
-        String? GetTitle(DomainAttributeItem attribute)
-        { return attribute.AttributeTitle; }
-
-        String? GetTitle(DomainEntityItem entity)
-        { return entity.EntityTitle; }
-
-        String? GetTitle(DomainSubjectAreaItem subject)
-        { return subject.SubjectAreaTitle; }
-
-        String NameOfTitle(object unkown)
-        { throw new InvalidOperationException(String.Format("Could not determine dynamic type for NameOfTitle: {0}", unkown.GetType().Name)); }
-
-        String NameOfTitle(DomainAttributeItem attribute)
-        { return nameof(attribute.AttributeTitle); }
-
-        String NameOfTitle(DomainEntityItem entity)
-        { return nameof(entity.EntityTitle); }
-
-        String NameOfTitle(DomainSubjectAreaItem subject)
-        { return nameof(subject.SubjectAreaTitle); }
+                    if (imageCompare == 0) { return String.Compare(firstNode.Text, lastNode.Text); }
+                    else { return imageCompare; }
+                }
+                else { return -1; }
+            }
+        }
     }
 }

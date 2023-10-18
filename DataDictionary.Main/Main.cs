@@ -114,10 +114,6 @@ namespace DataDictionary.Main
             }
         }
 
-        private void Main_MdiChildActivate(object sender, EventArgs e)
-        {
-
-        }
 
         public bool BindDataCore()
         {
@@ -134,7 +130,8 @@ namespace DataDictionary.Main
         {
             modelNameData.DataBindings.Clear();
             modelDescriptionData.DataBindings.Clear();
-            ClearDomainModelTreeByAttribute();
+
+            ClearDomainModelTree();
             ClearDataSourcesTree();
         }
 
