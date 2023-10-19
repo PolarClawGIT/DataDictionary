@@ -30,12 +30,13 @@ namespace DataDictionary.Main.Dialogs
             this.Icon = Resources.Icon_HelpTableOfContent;
 
             helpToolStripButton.Enabled = false;
-            newToolStripButton.Enabled = true;
-            newToolStripButton.Click += NewToolStripButton_Click;
-            saveToolStripButton.Enabled = true;
-            saveToolStripButton.Click += SaveToolStripButton_Click;
-            deleteToolStripButton.Enabled = true;
-            deleteToolStripButton.Click += DeleteToolStripButton_Click;
+            newItemCommand.Enabled = true;
+            newItemCommand.Click += NewItemCommand_Click;
+            newItemCommand.Image = Resources.NewStatusHelp;
+
+            deleteItemCommand.Enabled = true;
+            deleteItemCommand.Click += DeleteItemCommand_Click;
+            deleteItemCommand.Image = Resources.DeleteStatusHelp;
 
             helpKey = new HelpKey(helpItem);
             initNameSpace = new HelpKeyUnique(helpItem);
@@ -43,6 +44,7 @@ namespace DataDictionary.Main.Dialogs
             // Setup Images for Tree Control
             SetImages(helpContentNavigation, helpContentImageItems.Values);
         }
+
 
         public HelpSubject(Object targetForm) : this()
         {
@@ -57,15 +59,7 @@ namespace DataDictionary.Main.Dialogs
             helpItem.HelpSubject = targetSubject;
         }
 
-        private void SaveToolStripButton_Click(object? sender, EventArgs e)
-        {
-            UnBindData();
-            Program.Data.HelpSubjects.Add(helpItem);
-            BuildHelpContentTree();
-            BindData();
-        }
-
-        private void NewToolStripButton_Click(object? sender, EventArgs e)
+        private void NewItemCommand_Click(object? sender, EventArgs e)
         {
             UnBindData();
             helpItem = new HelpItem();
@@ -73,10 +67,9 @@ namespace DataDictionary.Main.Dialogs
             BindData();
         }
 
-        private void DeleteToolStripButton_Click(object? sender, EventArgs e)
+        private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
-            
-            if(Program.Data.HelpSubjects.FirstOrDefault(w => helpKey.Equals(w)) is HelpItem item)
+            if (Program.Data.HelpSubjects.FirstOrDefault(w => helpKey.Equals(w)) is HelpItem item)
             {
                 UnBindData();
                 Program.Data.HelpSubjects.Remove(item);

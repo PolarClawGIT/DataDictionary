@@ -28,85 +28,110 @@
         /// </summary>
         private void InitializeComponent()
         {
+            ToolStripSeparator toolStripSeparator;
+            ToolStripSeparator toolStripSeparator1;
+            ToolStripSeparator toolStripSeparator2;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationBase));
             toolStrip = new ToolStrip();
-            newToolStripButton = new ToolStripButton();
-            openToolStripButton = new ToolStripButton();
-            saveToolStripButton = new ToolStripButton();
-            deleteToolStripButton = new ToolStripButton();
-            printToolStripButton = new ToolStripButton();
-            toolStripSeparator = new ToolStripSeparator();
+            newItemCommand = new ToolStripButton();
+            deleteItemCommand = new ToolStripButton();
+            importDataCommand = new ToolStripButton();
+            openFromDatabaseCommand = new ToolStripButton();
+            saveToDatabaseCommand = new ToolStripButton();
+            deleteFromDatabaseCommand = new ToolStripButton();
             cutToolStripButton = new ToolStripButton();
             copyToolStripButton = new ToolStripButton();
             pasteToolStripButton = new ToolStripButton();
-            toolStripSeparator1 = new ToolStripSeparator();
             helpToolStripButton = new ToolStripButton();
+            toolStripSeparator = new ToolStripSeparator();
+            toolStripSeparator1 = new ToolStripSeparator();
+            toolStripSeparator2 = new ToolStripSeparator();
             toolStrip.SuspendLayout();
             SuspendLayout();
             // 
+            // toolStripSeparator
+            // 
+            toolStripSeparator.Name = "toolStripSeparator";
+            toolStripSeparator.Size = new Size(6, 25);
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(6, 25);
+            // 
+            // toolStripSeparator2
+            // 
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(6, 25);
+            // 
             // toolStrip
             // 
-            toolStrip.Items.AddRange(new ToolStripItem[] { newToolStripButton, openToolStripButton, saveToolStripButton, deleteToolStripButton, printToolStripButton, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator1, helpToolStripButton });
+            toolStrip.Items.AddRange(new ToolStripItem[] { newItemCommand, deleteItemCommand, importDataCommand, toolStripSeparator2, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator1, helpToolStripButton });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(800, 25);
             toolStrip.TabIndex = 0;
             toolStrip.VisibleChanged += toolStrip_VisibleChanged;
             // 
-            // newToolStripButton
+            // newItemCommand
             // 
-            newToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            newToolStripButton.Enabled = false;
-            newToolStripButton.Image = (Image)resources.GetObject("newToolStripButton.Image");
-            newToolStripButton.ImageTransparentColor = Color.Magenta;
-            newToolStripButton.Name = "newToolStripButton";
-            newToolStripButton.Size = new Size(23, 22);
-            newToolStripButton.Text = "&New";
+            newItemCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            newItemCommand.Enabled = false;
+            newItemCommand.Image = Properties.Resources.NewDocument;
+            newItemCommand.ImageTransparentColor = Color.Magenta;
+            newItemCommand.Name = "newItemCommand";
+            newItemCommand.Size = new Size(23, 22);
+            newItemCommand.Text = "New Item";
             // 
-            // openToolStripButton
+            // deleteItemCommand
             // 
-            openToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            openToolStripButton.Enabled = false;
-            openToolStripButton.Image = (Image)resources.GetObject("openToolStripButton.Image");
-            openToolStripButton.ImageTransparentColor = Color.Magenta;
-            openToolStripButton.Name = "openToolStripButton";
-            openToolStripButton.Size = new Size(23, 22);
-            openToolStripButton.Text = "&Open";
+            deleteItemCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            deleteItemCommand.Enabled = false;
+            deleteItemCommand.Image = Properties.Resources.DeleteDocument;
+            deleteItemCommand.ImageTransparentColor = Color.Magenta;
+            deleteItemCommand.Name = "deleteItemCommand";
+            deleteItemCommand.Size = new Size(23, 22);
+            deleteItemCommand.Text = "Delete Item";
             // 
-            // saveToolStripButton
+            // importDataCommand
             // 
-            saveToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            saveToolStripButton.Enabled = false;
-            saveToolStripButton.Image = (Image)resources.GetObject("saveToolStripButton.Image");
-            saveToolStripButton.ImageTransparentColor = Color.Magenta;
-            saveToolStripButton.Name = "saveToolStripButton";
-            saveToolStripButton.Size = new Size(23, 22);
-            saveToolStripButton.Text = "&Save";
+            importDataCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            importDataCommand.Enabled = false;
+            importDataCommand.Image = Properties.Resources.ImportCatalogPart;
+            importDataCommand.ImageTransparentColor = Color.Magenta;
+            importDataCommand.Name = "importDataCommand";
+            importDataCommand.Size = new Size(23, 22);
+            importDataCommand.Text = "&Import data";
             // 
-            // deleteToolStripButton
+            // openFromDatabaseCommand
             // 
-            deleteToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            deleteToolStripButton.Enabled = false;
-            deleteToolStripButton.Image = Properties.Resources.Delete;
-            deleteToolStripButton.ImageTransparentColor = Color.Magenta;
-            deleteToolStripButton.Name = "deleteToolStripButton";
-            deleteToolStripButton.Size = new Size(23, 22);
-            deleteToolStripButton.Text = "&Delete";
+            openFromDatabaseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            openFromDatabaseCommand.Enabled = false;
+            openFromDatabaseCommand.Image = Properties.Resources.OpenTable;
+            openFromDatabaseCommand.ImageTransparentColor = Color.Magenta;
+            openFromDatabaseCommand.Name = "openFromDatabaseCommand";
+            openFromDatabaseCommand.Size = new Size(23, 22);
+            openFromDatabaseCommand.Text = "&Open from Database";
             // 
-            // printToolStripButton
+            // saveToDatabaseCommand
             // 
-            printToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            printToolStripButton.Enabled = false;
-            printToolStripButton.Image = (Image)resources.GetObject("printToolStripButton.Image");
-            printToolStripButton.ImageTransparentColor = Color.Magenta;
-            printToolStripButton.Name = "printToolStripButton";
-            printToolStripButton.Size = new Size(23, 22);
-            printToolStripButton.Text = "&Print";
+            saveToDatabaseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            saveToDatabaseCommand.Enabled = false;
+            saveToDatabaseCommand.Image = Properties.Resources.SaveTable;
+            saveToDatabaseCommand.ImageTransparentColor = Color.Magenta;
+            saveToDatabaseCommand.Name = "saveToDatabaseCommand";
+            saveToDatabaseCommand.Size = new Size(23, 22);
+            saveToDatabaseCommand.Text = "&Save to Database";
             // 
-            // toolStripSeparator
+            // deleteFromDatabaseCommand
             // 
-            toolStripSeparator.Name = "toolStripSeparator";
-            toolStripSeparator.Size = new Size(6, 25);
+            deleteFromDatabaseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            deleteFromDatabaseCommand.Enabled = false;
+            deleteFromDatabaseCommand.Image = Properties.Resources.DeleteTable;
+            deleteFromDatabaseCommand.ImageTransparentColor = Color.Magenta;
+            deleteFromDatabaseCommand.Name = "deleteFromDatabaseCommand";
+            deleteFromDatabaseCommand.Size = new Size(23, 22);
+            deleteFromDatabaseCommand.Text = "&Delete from Database";
             // 
             // cutToolStripButton
             // 
@@ -138,11 +163,6 @@
             pasteToolStripButton.Size = new Size(23, 22);
             pasteToolStripButton.Text = "&Paste";
             // 
-            // toolStripSeparator1
-            // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(6, 25);
-            // 
             // helpToolStripButton
             // 
             helpToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
@@ -171,14 +191,15 @@
         private ToolStripSeparator toolStripSeparator;
         private ToolStripSeparator toolStripSeparator1;
         protected ToolStrip toolStrip;
-        protected ToolStripButton newToolStripButton;
-        protected ToolStripButton openToolStripButton;
-        protected ToolStripButton saveToolStripButton;
-        protected ToolStripButton printToolStripButton;
         protected ToolStripButton cutToolStripButton;
         protected ToolStripButton copyToolStripButton;
         protected ToolStripButton pasteToolStripButton;
         protected ToolStripButton helpToolStripButton;
-        protected ToolStripButton deleteToolStripButton;
+        protected ToolStripButton importDataCommand;
+        protected ToolStripButton openFromDatabaseCommand;
+        protected ToolStripButton saveToDatabaseCommand;
+        protected ToolStripButton deleteFromDatabaseCommand;
+        protected ToolStripButton newItemCommand;
+        protected ToolStripButton deleteItemCommand;
     }
 }

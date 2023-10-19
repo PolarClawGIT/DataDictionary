@@ -166,6 +166,27 @@
   <data name="Delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DeleteAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteAttribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteDatabase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteDatabase.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteDiagram" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteDiagram.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteDocument.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteLibrary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteLibrary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteStatusHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteStatusHelp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Dependancy" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Dependancy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -280,6 +301,9 @@
   <data name="Icon_TextFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\TextFile.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ImportCatalogPart" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ImportCatalogPart.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Italic" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Italic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -307,6 +331,9 @@
   <data name="NewAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewAttribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="NewDatabase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewDatabase.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="NewDiagram" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewDiagram.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -316,8 +343,20 @@
   <data name="NewDocumentCollection" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewDocumentCollection.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="NewLibrary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewLibrary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NewProperty" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewProperty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="NewRelationship" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewRelationship.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NewStatusHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewStatusHelp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NewTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="OpenFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\OpenFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -369,6 +408,9 @@
   </data>
   <data name="ServerDatabase" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ServerDatabase.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="StatusHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\StatusHelp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="StatusInformation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\StatusInformationOutline.15.15.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

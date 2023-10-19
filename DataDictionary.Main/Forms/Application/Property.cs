@@ -26,8 +26,10 @@ namespace DataDictionary.Main.Forms.Application
             this.Icon = Resources.Icon_Property;
             DataKey = new PropertyKey(new PropertyItem());
 
-            newToolStripButton.Enabled = true;
-            newToolStripButton.Click += NewToolStripButton_Click;
+            newItemCommand.Enabled = true;
+            newItemCommand.Click += NewItemCommand_Click;
+            newItemCommand.Image = Resources.NewProperty;
+
             copyToolStripButton.Enabled = true;
             copyToolStripButton.Click += CopyToolStripButton_Click;
             pasteToolStripButton.Enabled = true;
@@ -37,21 +39,16 @@ namespace DataDictionary.Main.Forms.Application
         private void ApplicationProperty_Load(object sender, EventArgs e)
         {
             BindData();
-
             this.ValidateChildren();
         }
 
 
         private void ApplicationProperty_FormClosed(object sender, FormClosedEventArgs e)
         {
-            newToolStripButton.Click -= NewToolStripButton_Click;
-            cutToolStripButton.Click -= CutToolStripButton_Click;
-            copyToolStripButton.Click -= CopyToolStripButton_Click;
-            pasteToolStripButton.Click -= PasteToolStripButton_Click;
 
         }
 
-        private void NewToolStripButton_Click(object? sender, EventArgs e)
+        private void NewItemCommand_Click(object? sender, EventArgs e)
         { NewCommand(); }
 
         private void PasteToolStripButton_Click(object? sender, EventArgs e)

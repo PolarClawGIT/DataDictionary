@@ -38,8 +38,8 @@ namespace DataDictionary.Main.ProofOfConcept
         public CodeLibrary() : base()
         {
             InitializeComponent();
-            openToolStripButton.Enabled = true;
-            openToolStripButton.Click += OpenToolStripButton_Click;
+            importDataCommand.Enabled = true;
+            importDataCommand.Click += OpenToolStripButton_Click;
         }
 
         private void OpenToolStripButton_Click(object? sender, EventArgs e)

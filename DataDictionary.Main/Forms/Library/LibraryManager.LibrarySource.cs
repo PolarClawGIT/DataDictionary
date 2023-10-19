@@ -16,7 +16,7 @@ namespace DataDictionary.Main.Forms.Library
         {
             private bool inModel = false;
             private bool inDatabase = false;
-            private LibrarySourceItem data;
+            public LibrarySourceItem data;
 
             public Guid? LibraryId
             { get { return data.LibraryId; } }
@@ -102,15 +102,15 @@ namespace DataDictionary.Main.Forms.Library
                     LibrarySourceItem? modelItem = modelItems.FirstOrDefault(w => libraryKey.Equals(w));
                     LibrarySourceItem? dbItem = dbItems.FirstOrDefault(w => libraryKey.Equals(w));
 
-                    if (item is null && dbItem is LibrarySourceItem)
-                    {
-                        item = new LibraryManagerItem(dbItem);
-                        this.Add(item);
-                    }
-
                     if (item is null && modelItem is LibrarySourceItem)
                     {
                         item = new LibraryManagerItem(modelItem);
+                        this.Add(item);
+                    }
+
+                    if (item is null && dbItem is LibrarySourceItem)
+                    {
+                        item = new LibraryManagerItem(dbItem);
                         this.Add(item);
                     }
 

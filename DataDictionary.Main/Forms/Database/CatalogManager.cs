@@ -23,15 +23,17 @@ namespace DataDictionary.Main.Forms.Database
         public CatalogManager()
         {
             InitializeComponent();
-            openToolStripButton.Enabled = true;
-            saveToolStripButton.Enabled = Settings.Default.IsOnLineMode;
-            openToolStripButton.Click += OpenToolStripButton_Click;
-            saveToolStripButton.Click += SaveToolStripButton_Click;
 
-            openToolStripButton.ToolTipText = "Open and add a Database from the Db Schema";
-            saveToolStripButton.ToolTipText = "Save the changes back to the application database";
+            importDataCommand.Enabled = true;
+            importDataCommand.Click += ImportDataCommand_Click;
+            importDataCommand.ToolTipText = "Import a Database Schema to the Model";
+
+            saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
+            saveToDatabaseCommand.Click += SaveToDatabaseCommand_Click;
+
             this.Icon = Resources.Icon_Database;
         }
+
 
         private void CatalogManager_Load(object sender, EventArgs e)
         {
@@ -80,7 +82,7 @@ namespace DataDictionary.Main.Forms.Database
             catalogBinding.DataSource = null;
         }
 
-        private void SaveToolStripButton_Click(object? sender, EventArgs e)
+        private void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
         {
             catalogNavigation.EndEdit();
             List<WorkItem> work = new List<WorkItem>();
@@ -129,7 +131,7 @@ namespace DataDictionary.Main.Forms.Database
             { SendMessage(new Messages.DoBindData()); }
         }
 
-        private void OpenToolStripButton_Click(object? sender, EventArgs e)
+        private void ImportDataCommand_Click(object? sender, EventArgs e)
         {
             using (Dialogs.ServerConnectionDialog dialog = new Dialogs.ServerConnectionDialog())
             {
@@ -204,7 +206,7 @@ namespace DataDictionary.Main.Forms.Database
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             base.HandleMessage(message);
-            saveToolStripButton.Enabled = Settings.Default.IsOnLineMode;
+            saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
         }
     }
 }

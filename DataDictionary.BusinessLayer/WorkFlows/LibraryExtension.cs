@@ -299,6 +299,29 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         }
 
         /// <summary>
+        /// Creates work items that Saves the Library to the Database by Library Key.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="libraryKey"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> SaveLibrary(this IWriteData<ILibrarySourceKey> data,ILibrarySourceKey libraryKey)
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+            LibrarySourceKey key = new LibrarySourceKey(libraryKey);
+
+            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
+            workItems.Add(openConnection);
+
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Save Library sources",
+                Command = (conn) => data.SaveCommand(conn, key)
+            });
+
+            return workItems;
+        }
+
+        /// <summary>
         /// Creates work items that Deletes the Library from the Database.
         /// </summary>
         /// <param name="data"></param>
@@ -306,6 +329,33 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         /// <returns></returns>
         /// <remarks>If the Library belongs to any Model, the delete will fail.</remarks>
         public static IReadOnlyList<WorkItem> DeleteLibrary(this IModelLibrary data, ILibrarySourceKey libraryKey)
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+            LibrarySourceKey key = new LibrarySourceKey(libraryKey);
+
+            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
+            workItems.Add(openConnection);
+
+            LibrarySourceCollection empty = new LibrarySourceCollection();
+
+            // The Save performs a delta. As the collection is empty, anything matching that Library Key is deleted.
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Delete Library (Cascade)",
+                Command = (conn) => empty.SaveCommand(conn, key)
+            });
+
+            return workItems;
+        }
+
+        /// <summary>
+        /// Creates work items that Deletes the Library from the Database.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="libraryKey"></param>
+        /// <returns></returns>
+        /// <remarks>If the Library belongs to any Model, the delete will fail.</remarks>
+        public static IReadOnlyList<WorkItem> DeleteLibrary(this IWriteData<ILibrarySourceKey> data, ILibrarySourceKey libraryKey)
         {
             List<WorkItem> workItems = new List<WorkItem>();
             LibrarySourceKey key = new LibrarySourceKey(libraryKey);
