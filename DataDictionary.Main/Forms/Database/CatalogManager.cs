@@ -20,15 +20,47 @@ namespace DataDictionary.Main.Forms.Database
         DbCatalogCollection dbData = new DbCatalogCollection();
         CatalogManagerCollection bindingData = new CatalogManagerCollection();
 
+        Boolean inModelList
+        {
+            get
+            {
+                if (catalogBinding.Current is CatalogManagerItem item)
+                {
+                    DbCatalogKey key = new DbCatalogKey(item);
+                    return (Program.Data.DbCatalogs.FirstOrDefault(w => key.Equals(w)) is DbCatalogItem);
+                }
+                else { return false; }
+            }
+        }
+
+        Boolean inDatabaseList
+        {
+            get
+            {
+                if (catalogBinding.Current is CatalogManagerItem item)
+                {
+                    DbCatalogKey key = new DbCatalogKey(item);
+                    return (dbData.FirstOrDefault(w => key.Equals(w)) is DbCatalogItem);
+                }
+                else { return false; }
+            }
+        }
+
         public CatalogManager()
         {
             InitializeComponent();
 
-            importDataCommand.Enabled = true;
-            importDataCommand.Click += ImportDataCommand_Click;
-            importDataCommand.ToolTipText = "Import a Database Schema to the Model";
+            newItemCommand.Enabled = true;
+            newItemCommand.Click += NewItemCommand_Click;
+            newItemCommand.Image = Resources.NewDatabase;
+            newItemCommand.ToolTipText = "Import a Catalog (Database Schema) into the Model";
 
-            saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
+            deleteItemCommand.Click += DeleteItemCommand_Click;
+            deleteItemCommand.Image = Resources.DeleteDatabase;
+            deleteItemCommand.ToolTipText = "Removes the Catalog from the Model";
+
+            openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click; ;
+            deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
             saveToDatabaseCommand.Click += SaveToDatabaseCommand_Click;
 
             this.Icon = Resources.Icon_Database;
@@ -62,8 +94,6 @@ namespace DataDictionary.Main.Forms.Database
             sourceServerNameData.DataBindings.Add(new Binding(nameof(sourceServerNameData.Text), catalogBinding, nameof(nameOfValues.SourceServerName)));
             sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(sourceDatabaseNameData.Text), catalogBinding, nameof(nameOfValues.SourceDatabaseName)));
             sourceDateData.DataBindings.Add(new Binding(nameof(sourceDateData.Text), catalogBinding, nameof(nameOfValues.SourceDate)));
-            inModelData.DataBindings.Add(new Binding(nameof(inModelData.Checked), catalogBinding, nameof(nameOfValues.InModel), true));
-            inDatabaseData.DataBindings.Add(new Binding(nameof(inDatabaseData.Checked), catalogBinding, nameof(nameOfValues.InDatabase), true));
 
             return true;
         }
@@ -75,47 +105,9 @@ namespace DataDictionary.Main.Forms.Database
             sourceServerNameData.DataBindings.Clear();
             sourceDatabaseNameData.DataBindings.Clear();
             sourceDateData.DataBindings.Clear();
-            inModelData.DataBindings.Clear();
-            inDatabaseData.DataBindings.Clear();
 
             catalogNavigation.DataSource = null;
             catalogBinding.DataSource = null;
-        }
-
-        private void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
-        {
-            catalogNavigation.EndEdit();
-            List<WorkItem> work = new List<WorkItem>();
-
-            foreach (CatalogManagerItem item in bindingData.ToList())
-            {
-                DbCatalogKey key = new DbCatalogKey(item);
-                Boolean inDbList = (dbData.FirstOrDefault(w => key.Equals(w)) is DbCatalogItem);
-                Boolean inModelList = (Program.Data.DbCatalogs.FirstOrDefault(w => key.Equals(w)) is DbCatalogItem);
-
-                if (item.InModel && !inDbList)
-                { work.AddRange(Program.Data.SaveCatalog(key)); }
-                else if (item.InModel && item.InDatabase && inModelList)
-                { work.AddRange(Program.Data.SaveCatalog(key)); }
-                else if (item.InModel && item.InDatabase && !inModelList)
-                { work.AddRange(Program.Data.LoadCatalog(key)); }
-                else if (!item.InModel && item.InDatabase && inModelList)
-                { work.AddRange(Program.Data.RemoveCatalog(key)); }
-                else if (!item.InModel && !item.InDatabase && inModelList && !inDbList)
-                { work.AddRange(Program.Data.RemoveCatalog(key)); }
-                else if (!item.InModel && !item.InDatabase && inModelList && inDbList)
-                {
-                    bindingData.Remove(item);
-                    work.AddRange(Program.Data.RemoveCatalog(key));
-                    work.AddRange(Program.Data.DeleteCatalog(key));
-                }
-                else if (!item.InModel && !item.InDatabase && !inModelList && inDbList)
-                {
-                    bindingData.Remove(item);
-                    work.AddRange(Program.Data.DeleteCatalog(key));
-                }
-            }
-            DoLocalWork(work);
         }
 
         private void DoLocalWork(List<WorkItem> work)
@@ -131,7 +123,7 @@ namespace DataDictionary.Main.Forms.Database
             { SendMessage(new Messages.DoBindData()); }
         }
 
-        private void ImportDataCommand_Click(object? sender, EventArgs e)
+        private void NewItemCommand_Click(object? sender, EventArgs e)
         {
             using (Dialogs.ServerConnectionDialog dialog = new Dialogs.ServerConnectionDialog())
             {
@@ -203,10 +195,76 @@ namespace DataDictionary.Main.Forms.Database
             }
         }
 
+        private void DeleteItemCommand_Click(object? sender, EventArgs e)
+        {
+            catalogNavigation.EndEdit();
+            List<WorkItem> work = new List<WorkItem>();
+
+            if (catalogBinding.Current is CatalogManagerItem item)
+            { work.AddRange(Program.Data.RemoveCatalog(item)); }
+
+            DoLocalWork(work);
+        }
+
+        private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
+        {
+            catalogNavigation.EndEdit();
+            List<WorkItem> work = new List<WorkItem>();
+
+            if (catalogBinding.Current is CatalogManagerItem item)
+            {
+                DbCatalogKey key = new DbCatalogKey(item);
+
+                if (inModelList) { work.AddRange(Program.Data.DeleteCatalog(item)); }
+                else { work.AddRange(dbData.DeleteCatalog(item)); }
+            }
+
+            DoLocalWork(work);
+        }
+
+        private void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
+        {
+            catalogNavigation.EndEdit();
+            List<WorkItem> work = new List<WorkItem>();
+
+            if (catalogBinding.Current is CatalogManagerItem item)
+            { work.AddRange(Program.Data.LoadCatalog(item)); }
+
+            DoLocalWork(work);
+        }
+
+        private void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
+        {
+            catalogNavigation.EndEdit();
+            List<WorkItem> work = new List<WorkItem>();
+
+            if (catalogBinding.Current is CatalogManagerItem item)
+            {
+                DbCatalogKey key = new DbCatalogKey(item);
+
+                if (inModelList) { work.AddRange(Program.Data.SaveCatalog(item)); }
+                else { work.AddRange(dbData.SaveCatalog(item)); }
+            }
+
+            DoLocalWork(work);
+        }
+
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             base.HandleMessage(message);
+            deleteItemCommand.Enabled = inModelList;
+            openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
+            deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
             saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
+        }
+
+        private void catalogBinding_CurrentChanged(object sender, EventArgs e)
+        {
+            deleteItemCommand.Enabled = inModelList;
+            openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
+            deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
+            saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
+
         }
     }
 }

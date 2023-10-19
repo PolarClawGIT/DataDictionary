@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using System;
@@ -426,6 +427,29 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         }
 
         /// <summary>
+        /// Creates work items that Saves the Library to the Database by Library Key.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="catalogKey"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> SaveCatalog(this IWriteData<IDbCatalogKey> data, IDbCatalogKey catalogKey)
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+            DbCatalogKey key = new DbCatalogKey(catalogKey);
+
+            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
+            workItems.Add(openConnection);
+
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Save Catalog sources",
+                Command = (conn) => data.SaveCommand(conn, key)
+            });
+
+            return workItems;
+        }
+
+        /// <summary>
         /// Creates work items that Deletes the Catalog from the Database.
         /// </summary>
         /// <param name="data"></param>
@@ -453,5 +477,31 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             return workItems;
         }
 
+        /// <summary>
+        /// Creates work items that Deletes the Library from the Database.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="catalogKey"></param>
+        /// <returns></returns>
+        /// <remarks>If the Library belongs to any Model, the delete will fail.</remarks>
+        public static IReadOnlyList<WorkItem> DeleteCatalog(this IWriteData<IDbCatalogKey> data, IDbCatalogKey catalogKey)
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+            DbCatalogKey key = new DbCatalogKey(catalogKey);
+
+            DbWorkItem.OpenConnection openConnection = new DbWorkItem.OpenConnection(ModelData.ModelContext);
+            workItems.Add(openConnection);
+
+            DbCatalogCollection empty = new DbCatalogCollection();
+
+            // The Save performs a delta. As the collection is empty, anything matching that Library Key is deleted.
+            workItems.Add(new ExecuteNonQuery(openConnection)
+            {
+                WorkName = "Delete Catalog (Cascade)",
+                Command = (conn) => empty.SaveCommand(conn, key)
+            });
+
+            return workItems;
+        }
     }
 }

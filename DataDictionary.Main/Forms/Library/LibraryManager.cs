@@ -21,6 +21,32 @@ namespace DataDictionary.Main.Forms.Library
         LibrarySourceCollection dbData = new LibrarySourceCollection();
         LibraryManagerCollection bindingData = new LibraryManagerCollection();
 
+        Boolean inModelList
+        {
+            get
+            {
+                if (libraryBinding.Current is LibraryManagerItem item)
+                {
+                    LibrarySourceKey key = new LibrarySourceKey(item);
+                    return (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
+                }
+                else { return false; }
+            }
+        }
+
+        Boolean inDatabaseList
+        {
+            get
+            {
+                if (libraryBinding.Current is LibraryManagerItem item)
+                {
+                    LibrarySourceKey key = new LibrarySourceKey(item);
+                    return (dbData.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
+                }
+                else { return false; }
+            }
+        }
+
         public LibraryManager()
         {
             InitializeComponent();
@@ -35,13 +61,8 @@ namespace DataDictionary.Main.Forms.Library
             deleteItemCommand.Image = Resources.DeleteLibrary;
             deleteItemCommand.ToolTipText = "Removes the Library from the Model";
 
-            openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
             openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click; ;
-
-            deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
             deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
-
-            saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
             saveToDatabaseCommand.Click += SaveToDatabaseCommand_Click;
 
             this.Icon = Resources.Icon_Library;
@@ -186,7 +207,6 @@ namespace DataDictionary.Main.Forms.Library
             if (libraryBinding.Current is LibraryManagerItem item)
             {
                 LibrarySourceKey key = new LibrarySourceKey(item);
-                Boolean inModelList = (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
 
                 if (inModelList) { work.AddRange(Program.Data.SaveLibrary(item)); }
                 else { work.AddRange(dbData.SaveLibrary(item)); }
@@ -234,6 +254,7 @@ namespace DataDictionary.Main.Forms.Library
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             base.HandleMessage(message);
+
             openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
             saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
             deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
@@ -244,12 +265,10 @@ namespace DataDictionary.Main.Forms.Library
             if (libraryBinding.Current is LibraryManagerItem item)
             {
                 LibrarySourceKey key = new LibrarySourceKey(item);
-                Boolean inModelList = (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
-                Boolean inDatabaseList = (dbData.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
 
                 deleteItemCommand.Enabled = inModelList;
                 openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
-                deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList; 
+                deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
                 saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
             }
         }
