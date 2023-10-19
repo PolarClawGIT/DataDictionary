@@ -140,6 +140,7 @@ Begin Try
 	Where	V.[LibraryId] is Null And
 			((@LibraryId is Null And M.[ModelId] = @ModelId) or
 			 (L.[LibraryId] = @LibraryId And M.[ModelId] is Null))
+	Print FormatMessage ('Delete [App_DataDictionary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[LibraryNameSpace]
 	From	[App_DataDictionary].[LibraryNameSpace] L
@@ -148,6 +149,7 @@ Begin Try
 				L.[NameSpaceId] = N.[NameSpaceId]
 	Where	L.[LibraryId] = @LibraryId And
 			N.[LibraryId] is Null;
+	Print FormatMessage ('Delete [App_DataDictionary].[LibraryNameSpace]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Apply Changes
 	;With [Delta] As (
@@ -182,6 +184,7 @@ Begin Try
 	When Not Matched by Target Then
 		Insert ([LibraryId], [NameSpaceId], [NameSpaceParentId], [NameSpace])
 		Values ([LibraryId], [NameSpaceId], [ParentId], [NameSpace]);
+	Print FormatMessage ('Merge [App_DataDictionary].[LibraryNameSpace]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Values] As (
 		Select	V.[LibraryId],
@@ -244,6 +247,7 @@ Begin Try
 	When Not Matched by Target Then
 		Insert ([LibraryId], [NameSpaceId], [MemberId], [MemberName], [MemberType], [MemberData])
 		Values ([LibraryId], [NameSpaceId], [MemberId], [MemberName], [MemberType], [MemberData]);
+	Print FormatMessage ('Merge [App_DataDictionary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
