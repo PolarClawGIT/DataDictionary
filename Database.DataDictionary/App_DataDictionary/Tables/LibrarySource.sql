@@ -9,7 +9,12 @@
 	[LibraryId] UniqueIdentifier Not Null CONSTRAINT [DF_LibrarySourceId] DEFAULT (newid()),
 	[LibraryTitle] [App_DataDictionary].[typeTitle] Not Null,-- expected to be the same as [AssemblyName], but can be changed.
 	[LibraryDescription] [App_DataDictionary].[typeDescription] Null,
-	[AssemblyName] NVarChar(1023) Not Null, -- Natural Key
+	-- 1023 is believed to be the maximum length of any given component of a .Net NameSpace value.
+	-- Assembly names are general the first level(s) of the NameSpace.
+	-- There is no actual total limit to the length at the coding level.
+	-- Each component is put into a separate row and the data is organized into a hierarchy.
+	-- Key size in TSQL is limited to 1700 characters. 128 is based on best practices.
+	[AssemblyName] NVarChar(128) Not Null, -- Natural Key
 	[SourceFile] NVarChar(500) Not Null, 
 	[SourceDate] DateTime2 (7) Not Null,
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?

@@ -30,17 +30,24 @@ Begin Try
 			D.[SourceDate],
 			D.[SysStart]
 	From	@Data D
-			Left Join [App_DataDictionary].[ModelDatabase] M
-			On	@ModelId = M.[ModelId] And
-				D.[SourceDatabaseName] = M.[DatabaseName]
-			Left Join [App_DataDictionary].[DatabaseCatalog] C
-			On	D.[SourceServerName] = C.[SourceServerName] And
-				D.[SourceDatabaseName] = C.[SourceDatabaseName]
 	Where	(@CatalogId is Null or Coalesce(D.[CatalogId], @CatalogId)  = @CatalogId)
 
 	-- Validation
 	If @ModelId is Null and @CatalogId is Null
 	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
+
+	If Exists (
+		Select	[SourceDatabaseName]
+		From	(Select	[SourceDatabaseName],
+						[CatalogId]
+				From	@Values
+				Union
+				Select	[SourceDatabaseName],
+						[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog]) G
+		Group By [SourceDatabaseName]
+		Having	Count(*) > 1)
+	Throw 50000, '[SourceDatabaseName] cannot be duplicate', 2;
 
 	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
 		Select	D.[CatalogId]

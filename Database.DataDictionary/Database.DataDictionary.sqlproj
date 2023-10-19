@@ -194,6 +194,7 @@
     <Build Include="App_DataDictionary\Views\ModelSubjectArea_AK.sql" />
     <Build Include="App_DataDictionary\Views\ModelEntity_AK.sql" />
     <Build Include="App_DataDictionary\Views\ModelAttribute_AK.sql" />
+    <Build Include="App_DataDictionary\Views\ModelAssembly_AK.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

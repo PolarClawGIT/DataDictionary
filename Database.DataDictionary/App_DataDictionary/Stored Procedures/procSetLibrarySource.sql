@@ -22,7 +22,7 @@ Begin Try
 	-- Clean the Data
 	Declare @Values [App_DataDictionary].[typeLibrarySource]
 	Insert Into @Values
-	Select	X.[LibraryId],
+	Select	Coalesce(D.[LibraryId], @LibraryId, NewId()) As [LibraryId],
 			NullIf(Trim(D.[LibraryTitle]),'') As [LibraryTitle],
 			NullIf(Trim(D.[LibraryDescription]),'') As [LibraryDescription],
 			NullIf(Trim(D.[AssemblyName]),'') As [AssemblyName],
@@ -30,10 +30,7 @@ Begin Try
 			IsNull(D.[SourceDate],GetDate()) As [SourceDate],
 			D.[SysStart]
 	From	@Data D
-			Left Join [App_DataDictionary].[LibrarySource] P
-			On	D.[AssemblyName] = P.[AssemblyName]
-			Cross Apply (Select Coalesce(P.[LibraryId], D.[LibraryId], @LibraryId, NewId()) As [LibraryId]) X
-	Where	(@LibraryId is Null Or X.[LibraryId] = @LibraryId)
+	Where	(@LibraryId is Null or Coalesce(D.[LibraryId], @LibraryId)  = @LibraryId)
 
 	-- Validation
 	If @ModelId is Null and @LibraryId is Null
@@ -41,7 +38,13 @@ Begin Try
 
 	If Exists (
 		Select	[AssemblyName]
-		From	@Values
+		From	(Select	[AssemblyName],
+						[LibraryId]
+				From	@Values
+				Union
+				Select	[AssemblyName],
+						[LibraryId]
+				From	[App_DataDictionary].[LibrarySource]) G
 		Group By [AssemblyName]
 		Having	Count(*) > 1)
 	Throw 50000, '[AssemblyName] cannot be duplicate', 2;

@@ -7,8 +7,8 @@
 	-- 1023 is believed to be the maximum length of any given component of a .Net NameSpace value.
 	-- There is no actual total limit to the length at the coding level.
 	-- Each component is put into a separate row and the data is organized into a hierarchy.
-	-- Key size in TSQL is limited to 1700 characters. 500 characters is a compromise.
-	[NameSpace] NVarChar(500) Not Null,
+	-- Key size in TSQL is limited to 1700 characters. 128 is based on best practices.
+	[NameSpace] NVarChar(128) Not Null,
 	CONSTRAINT [PK_LibraryNameSpace] PRIMARY KEY CLUSTERED ([LibraryId] ASC, [NameSpaceId] ASC),
 	CONSTRAINT [FK_LibraryNameSpaceParent] FOREIGN KEY ([LibraryId], [NameSpaceParentId]) REFERENCES [App_DataDictionary].[LibraryNameSpace] ([LibraryId], [NameSpaceId])
 )
