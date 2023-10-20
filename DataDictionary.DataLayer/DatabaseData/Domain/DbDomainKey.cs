@@ -40,7 +40,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         /// <inheritdoc/>
         public bool Equals(IDbDomainKey? other)
         {
-            return 
+            return
                 other is IDbSchemaKey &&
                 new DbSchemaKey(this).Equals(other) &&
                 !string.IsNullOrEmpty(DomainName) &&
@@ -88,9 +88,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         public static bool operator >=(DbDomainKey left, DbDomainKey right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
+
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(DatabaseName, SchemaName, DomainName); }
+        { return HashCode.Combine(base.GetHashCode(), DomainName.GetHashCode(KeyExtension.CompareString)); }
         #endregion
 
         /// <inheritdoc/>

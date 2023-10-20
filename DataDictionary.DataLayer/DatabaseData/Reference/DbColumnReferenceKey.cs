@@ -89,11 +89,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(DatabaseName, ReferenceSchemaName, ReferenceObjectName, ReferenceColumnName); }
-        #endregion
+        { return HashCode.Combine(base.GetHashCode(), ReferenceColumnName.GetHashCode(KeyExtension.CompareString)); }
+    #endregion
 
-        /// <inheritdoc/>
-        public override string ToString()
+    /// <inheritdoc/>
+    public override string ToString()
         {
             if (ReferenceColumnName is string)
             { return string.Format("{0}.{1}", base.ToString(), ReferenceColumnName); }

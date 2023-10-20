@@ -90,7 +90,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(DatabaseName, SchemaName, RoutineName); }
+        { return HashCode.Combine(base.GetHashCode(), RoutineName.GetHashCode(KeyExtension.CompareString)); }
         #endregion
 
         /// <inheritdoc/>

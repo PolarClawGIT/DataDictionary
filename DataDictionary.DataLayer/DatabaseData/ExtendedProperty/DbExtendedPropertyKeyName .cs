@@ -181,7 +181,12 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(DatabaseName, Level0Name, Level1Name, Level2Name); }
+        { return HashCode.Combine(
+            base.GetHashCode(),
+            Level0Name.GetHashCode(KeyExtension.CompareString),
+            Level1Name.GetHashCode(KeyExtension.CompareString),
+            Level2Name.GetHashCode(KeyExtension.CompareString));
+        }
         #endregion
 
         /// <inheritdoc/>

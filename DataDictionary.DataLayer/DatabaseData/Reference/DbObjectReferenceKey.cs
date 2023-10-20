@@ -130,7 +130,12 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(DatabaseName, ReferenceSchemaName, ReferenceObjectName); }
+        {
+            return HashCode.Combine(
+                base.GetHashCode(),
+                ReferenceSchemaName.GetHashCode(KeyExtension.CompareString),
+                ReferenceObjectName.GetHashCode(KeyExtension.CompareString));
+        }
         #endregion
 
         /// <inheritdoc/>

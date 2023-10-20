@@ -88,7 +88,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
-        { return HashCode.Combine(PropertyTitle); }
+        { return PropertyTitle.GetHashCode(KeyExtension.CompareString); }
         #endregion
 
         /// <inheritdoc/>

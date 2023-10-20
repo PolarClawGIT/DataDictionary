@@ -98,7 +98,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(NameSpace); }
+        { return NameSpace.GetHashCode(KeyExtension.CompareString); }
         #endregion
 
         /// <inheritdoc/>

@@ -126,7 +126,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(DomainCatalog, DomainSchema, DomainName); }
+        { return HashCode.Combine(base.GetHashCode(), DomainName.GetHashCode(KeyExtension.CompareString)); }
         #endregion
 
         /// <inheritdoc/>

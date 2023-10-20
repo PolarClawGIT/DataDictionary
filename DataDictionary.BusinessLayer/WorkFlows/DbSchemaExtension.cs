@@ -290,24 +290,23 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             IEnumerable<IDbTableColumnItem> newAttributes = data.DbTableColumns.Where(
                 w => w.GetTable(data.DbTables) is IDbTableItem table && !table.IsSystem && // Do not want System Tables
                 w.GetSchema(data.DbSchemta) is IDbSchemaItem schema && !schema.IsSystem && // Do not want System Schemta
-                data.DomainAttributeAliases.FirstOrDefault( // Do not want Columns already aliased to an attribute
-                    a => w.DatabaseName == a.DatabaseName &&
-                    w.SchemaName == a.SchemaName &&
-                    w.TableName == a.ObjectName &&
-                    w.ColumnName == a.ElementName)
-                is null).ToList();
+                data.DomainAttributeAliases.FirstOrDefault(a => // Do not want Columns already aliased to an attribute
+                {
+                    DomainAttributeAliasKey key = new DomainAttributeAliasKey(w);
+                    return key.Equals(a);
+                }) is null).ToList();
 
-            List<DbTableItem> newEntites = data.DbTables.Where(
+             List<DbTableItem> newEntites = data.DbTables.Where(
                 w => !w.IsSystem && // Do not want System Tables
                 w.GetSchema(data.DbSchemta) is IDbSchemaItem schema && !schema.IsSystem && // Do not want System Schemta
-                data.DomainEntityAliases.FirstOrDefault( // Do not want Tables already aliased to an entity
-                    a => w.DatabaseName == a.DatabaseName &&
-                    w.SchemaName == a.SchemaName &&
-                    w.TableName == a.ObjectName)
-                is null).ToList();
+                data.DomainEntityAliases.FirstOrDefault(a => // Do not want Tables already aliased to an entity
+                {
+                    DomainEntityAliasKey key = new DomainEntityAliasKey(w);
+                    return key.Equals(a);
+                }) is null).ToList();
 
             // Get the Column information and create Attributes
-            foreach (IGrouping<String?, IDbTableColumnItem> columnItem in newAttributes.GroupBy(g => g.ColumnName))
+            foreach (IGrouping<DomainAttributeKeyUnique, IDbTableColumnItem> columnItem in newAttributes.GroupBy(g => new DomainAttributeKeyUnique(g)))
             {
                 IDbTableColumnItem columnSource = columnItem.First();
                 DomainAttributeItem newAttribute = new DomainAttributeItem() { AttributeTitle = columnSource.ColumnName };
@@ -354,7 +353,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
             }
 
             // Get the Table Information and create Entities
-            foreach (IGrouping<String?, IDbTableItem> tableItem in newEntites.GroupBy(g => g.TableName))
+            foreach (IGrouping<DomainEntityKeyUnique, DbTableItem> tableItem in newEntites.GroupBy(g => new DomainEntityKeyUnique(g)))
             {
                 IDbTableItem tableSource = tableItem.First();
                 DomainEntityItem newEntity = new DomainEntityItem() { EntityTitle = tableSource.TableName };

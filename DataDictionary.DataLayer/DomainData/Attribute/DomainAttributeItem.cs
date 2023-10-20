@@ -17,13 +17,8 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Item
     /// </summary>
-    public interface IDomainAttributeItem : IDomainAttributeKey, IDomainSubjectAreaKey, IDataItem
+    public interface IDomainAttributeItem : IDomainAttributeKey, IDomainAttributeKeyUnique, IDomainSubjectAreaKey, IDataItem
     {
-        /// <summary>
-        /// Title of the Domain Attribute (aka Name of the Attribute)
-        /// </summary>
-        String? AttributeTitle { get; }
-
         /// <summary>
         /// Description of the Domain Attribute
         /// </summary>

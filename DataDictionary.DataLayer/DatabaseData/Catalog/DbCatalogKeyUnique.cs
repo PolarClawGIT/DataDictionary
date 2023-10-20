@@ -82,7 +82,7 @@
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(DatabaseName); }
+        { return DatabaseName.GetHashCode(KeyExtension.CompareString); }
         #endregion
 
         /// <inheritdoc/>
