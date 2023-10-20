@@ -22,7 +22,7 @@ Begin Try
 	-- Clean the Data
 	Declare @Values  [App_DataDictionary].[typeDatabaseExtendedProperty]
 	Insert Into @Values
-	Select	Coalesce(D.[CatalogId], @CatalogId, P.[CatalogId]) As [CatalogId],
+	Select	Coalesce(D.[CatalogId], @CatalogId) As [CatalogId],
 			NullIf(Trim(IsNull(P.[SourceDatabaseName], D.[DatabaseName])),'') As [DatabaseName],
 			NullIf(Trim(D.[Level0Type]),'') As [Level0Type],
 			NullIf(Trim(D.[Level0Name]),'') As [Level0Name],

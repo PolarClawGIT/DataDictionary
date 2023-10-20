@@ -22,7 +22,7 @@ Begin Try
 	-- Clean the Data
 	Declare @Values [App_DataDictionary].[typeDatabaseRoutine]
 	Insert Into @Values
-	Select	Coalesce(D.[CatalogId], @CatalogId, P.[CatalogId]) As [CatalogId],
+	Select	Coalesce(D.[CatalogId], @CatalogId) As [CatalogId],
 			NullIf(Trim(IsNull(P.[SourceDatabaseName], D.[DatabaseName])),'') As [DatabaseName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
 			NullIf(Trim(D.[RoutineName]),'') As [RoutineName],

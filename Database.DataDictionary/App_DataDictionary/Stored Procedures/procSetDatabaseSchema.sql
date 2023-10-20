@@ -22,14 +22,17 @@ Begin Try
 	-- Clean the Data
 	Declare @Values [App_DataDictionary].[typeDatabaseSchema]
 	Insert Into @Values
-	Select	Coalesce(D.[CatalogId], M.[CatalogId], @CatalogId) As [CatalogId],
+	Select	Coalesce(D.[CatalogId], @CatalogId) As [CatalogId],
 			D.[DatabaseName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName]
 	From	@Data D
-			Left Join [App_DataDictionary].[ModelDatabase] M
-			On	@ModelId = M.[ModelId] And
-				D.[DatabaseName] = M.[DatabaseName]
-	Where	(@CatalogId is Null or Coalesce(D.[CatalogId], M.[CatalogId], @CatalogId)  = @CatalogId)
+			Left Join [App_DataDictionary].[DatabaseCatalog] P
+			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId]
+	Where	(@CatalogId is Null or D.[CatalogId] = @CatalogId) And
+			(@ModelId is Null or @ModelId In (
+				Select	[ModelId]
+				From	[App_DataDictionary].[ModelCatalog]
+				Where	(@CatalogId is Null Or [CatalogId] = @CatalogId)))
 
 	-- Validation
 	If @ModelId is Null and @CatalogId is Null
