@@ -1,27 +1,8 @@
-﻿using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Help;
+﻿using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.DataLayer.ApplicationData.Model;
-using DataDictionary.DataLayer.ApplicationData.Property;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.Domain;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Schema;
-using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.DomainData.SubjectArea;
-using DataDictionary.DataLayer.LibraryData.Member;
-using DataDictionary.DataLayer.LibraryData.Source;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
 namespace DataDictionary.BusinessLayer
@@ -155,6 +136,7 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Clears all the Model Data.
         /// </summary>
+        [Obsolete("Needs to be replaced by Clear method for each area")]
         public void Clear()
         {
             DbCatalogs.Clear();

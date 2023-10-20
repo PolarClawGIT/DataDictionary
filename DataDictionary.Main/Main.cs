@@ -1,5 +1,6 @@
 using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.WorkFlows;
+using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
@@ -117,13 +118,17 @@ namespace DataDictionary.Main
 
         public bool BindDataCore()
         {
-            modelNameData.DataBindings.Add(new Binding(nameof(modelNameData.Text), Program.Data.Model, nameof(Program.Data.Model.ModelTitle)));
-            modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), Program.Data.Model, nameof(Program.Data.Model.ModelDescription)));
+            if (Program.Data.Model is ModelItem data)
+            {
+                modelNameData.DataBindings.Add(new Binding(nameof(modelNameData.Text), data, nameof(data.ModelTitle)));
+                modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), Program.Data.Model, nameof(data.ModelDescription)));
 
-            BuildDataSourcesTree();
-            BuildDomainModelTreeByAttribute();
+                BuildDataSourcesTree();
+                BuildDomainModelTreeByAttribute();
 
-            return true;
+                return true;
+            }
+            else { return false; }
         }
 
         public void UnbindDataCore()

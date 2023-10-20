@@ -76,6 +76,13 @@ namespace DataDictionary.BusinessLayer.WorkFlows
 
             workItems.Add(new ExecuteReader(openConnection)
             {
+                WorkName = "Load Models",
+                Command = (conn) => data.Models.LoadCommand(conn, modelKey),
+                Target = data.Models
+            });
+
+            workItems.Add(new ExecuteReader(openConnection)
+            {
                 WorkName = "Load Domain Attributes",
                 Command = (conn) => data.DomainAttributes.LoadCommand(conn, modelKey),
                 Target = data.DomainAttributes
@@ -148,7 +155,7 @@ namespace DataDictionary.BusinessLayer.WorkFlows
         public static IReadOnlyList<WorkItem> SaveModel(this ModelData data)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            IModelKey modelId = new ModelKey(data.Model);
+            IModelKey modelKey = new ModelKey(data.Model);
 
             OpenConnection openConnection = new OpenConnection(ModelData.ModelContext);
             workItems.Add(openConnection);
@@ -165,65 +172,60 @@ namespace DataDictionary.BusinessLayer.WorkFlows
                 DoWork = () => { data.Models.Clear(); }
             });
 
-            workItems.Add(new ExecuteReader(openConnection)
-            {
-                WorkName = "Get list of Models",
-                Command = data.Models.LoadCommand,
-                Target = data.Models
-            });
+            workItems.AddRange(data.SaveCatalog(modelKey));
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Domain Attributes",
-                Command = (conn) => data.DomainAttributes.SaveCommand(conn, modelId)
+                Command = (conn) => data.DomainAttributes.SaveCommand(conn, modelKey)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Domain Attributes Aliases",
-                Command = (conn) => data.DomainAttributeAliases.SaveCommand(conn, modelId)
+                Command = (conn) => data.DomainAttributeAliases.SaveCommand(conn, modelKey)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Domain Attributes Properties",
-                Command = (conn) => data.DomainAttributeProperties.SaveCommand(conn, modelId)
+                Command = (conn) => data.DomainAttributeProperties.SaveCommand(conn, modelKey)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Domain Entities",
-                Command = (conn) => data.DomainEntities.SaveCommand(conn, modelId)
+                Command = (conn) => data.DomainEntities.SaveCommand(conn, modelKey)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Domain Entities Aliases",
-                Command = (conn) => data.DomainEntityAliases.SaveCommand(conn, modelId)
+                Command = (conn) => data.DomainEntityAliases.SaveCommand(conn, modelKey)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Domain Entities Properties",
-                Command = (conn) => data.DomainEntityProperties.SaveCommand(conn, modelId)
+                Command = (conn) => data.DomainEntityProperties.SaveCommand(conn, modelKey)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Subject Areas",
-                Command = (conn) => data.DomainSubjectAreas.SaveCommand(conn, modelId)
+                Command = (conn) => data.DomainSubjectAreas.SaveCommand(conn, modelKey)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Library Sources",
-                Command = (conn) => data.LibrarySources.SaveCommand(conn, modelId)
+                Command = (conn) => data.LibrarySources.SaveCommand(conn, modelKey)
             });
 
             workItems.Add(new ExecuteNonQuery(openConnection)
             {
                 WorkName = "Save Library Members",
-                Command = (conn) => data.LibraryMembers.SaveCommand(conn, modelId)
+                Command = (conn) => data.LibraryMembers.SaveCommand(conn, modelKey)
             });
 
             return workItems.AsReadOnly();

@@ -14,10 +14,10 @@ namespace DataDictionary.DataLayer.ApplicationData.Model
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class ModelCollection<TItem> : BindingTable<TItem>, IReadData, IReadData<ModelKey>, IWriteData, IValidateList<ModelItem>
+    public abstract class ModelCollection<TItem> : BindingTable<TItem>, IReadData, IReadData<IModelKey>, IWriteData, IValidateList<ModelItem>
         where TItem : ModelItem, new()
     {         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, ModelKey modelIdentifier)
+        public Command LoadCommand(IConnection connection, IModelKey modelIdentifier)
         { return LoadCommand(connection, (modelIdentifier.ModelId, null, true)); }
 
         /// <summary>
