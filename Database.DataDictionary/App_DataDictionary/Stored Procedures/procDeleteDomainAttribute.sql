@@ -19,9 +19,6 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[DomainAttribute] Where [AttributeId] = @AttributeId And [Obsolete] = 1)
-	Throw 50000, '[AttributeId] could not be found or is not marked as [Obsolete]', 1;
-
 	Declare @Delete Table (
 		[AttributeId] UniqueIdentifier Not Null)
 

@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Model
     /// <summary>
     /// Interface for the Model.
     /// </summary>
-    public interface IModelItem : IModelKey, IObsolete, IDataItem
+    public interface IModelItem : IModelKey, IDataItem
     {
         /// <summary>
         /// Title for the Model.
@@ -42,9 +42,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Model
         /// <inheritdoc/>
         public string? ModelDescription { get { return GetValue("ModelDescription"); } set { SetValue("ModelDescription", value); } }
 
-        /// <inheritdoc/>
-        public bool? Obsolete { get { return GetValue<bool>("Obsolete", BindingItemParsers.BooleanTryParse); } set { SetValue("Obsolete", value); } }
-
         /// <summary>
         /// Constructor for the Model data
         /// </summary>
@@ -52,7 +49,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Model
         {
             ModelId = Guid.NewGuid();
             ModelTitle = "New Model";
-            Obsolete = false;
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
@@ -60,7 +56,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Model
             new DataColumn("ModelId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("ModelTitle", typeof(string)){ AllowDBNull = false},
             new DataColumn("ModelDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("Obsolete", typeof(bool)){ AllowDBNull = true},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 

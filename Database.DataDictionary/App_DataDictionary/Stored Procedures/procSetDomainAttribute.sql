@@ -25,7 +25,6 @@ Begin Try
 			D.[SubjectAreaId],
 			NullIf(Trim(D.[AttributeTitle]),'') As [AttributeTitle],
 			NullIf(Trim(D.[AttributeDescription]),'') As [AttributeDescription],
-			D.[Obsolete],
 			D.[SysStart]
 	From	@Data D
 
@@ -53,27 +52,23 @@ Begin Try
 	With [Data] As (
 		Select	D.[AttributeId],
 				D.[AttributeTitle],
-				D.[AttributeDescription],
-				IIF(IsNull(D.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
+				D.[AttributeDescription]
 		From	@Values D
 				Inner Join [App_DataDictionary].[DomainAttribute] A
 				On	D.[AttributeId] = A.[AttributeId]),
 	[Delta] As (
 		Select	[AttributeId],
 				[AttributeTitle],
-				[AttributeDescription],
-				[ObsoleteDate]
+				[AttributeDescription]
 		From	[Data]
 		Except
 		Select	[AttributeId],
 				[AttributeTitle],
-				[AttributeDescription],
-				[ObsoleteDate]
+				[AttributeDescription]
 		From	[App_DataDictionary].[DomainAttribute])
 	Update [App_DataDictionary].[DomainAttribute]
 	Set		[AttributeTitle] = S.[AttributeTitle],
-			[AttributeDescription] = S.[AttributeDescription],
-			[ObsoleteDate] = S.[ObsoleteDate]
+			[AttributeDescription] = S.[AttributeDescription]
 	From	[Delta] S
 			Inner Join [App_DataDictionary].[DomainAttribute] T
 			On	S.[AttributeId] = T.[AttributeId];
@@ -82,12 +77,10 @@ Begin Try
 	Insert Into [App_DataDictionary].[DomainAttribute] (
 			[AttributeId],
 			[AttributeTitle],
-			[AttributeDescription],
-			[ObsoleteDate])
+			[AttributeDescription])
 	Select	S.[AttributeId],
 			S.[AttributeTitle],
-			S.[AttributeDescription],
-			IIF(S.[Obsolete] = 0, Convert(DateTime2, Null), SysDateTime()) As [ObsoleteDate]
+			S.[AttributeDescription]
 	From	@Values S
 			Left Join [App_DataDictionary].[DomainAttribute] T
 			On	S.[AttributeId] = T.[AttributeId]

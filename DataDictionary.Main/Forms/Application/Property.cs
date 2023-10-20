@@ -115,7 +115,6 @@ namespace DataDictionary.Main.Forms.Application
                 newItem.IsFrameworkSummary = pasteItem.IsFrameworkSummary;
                 newItem.IsDefinition = pasteItem.IsDefinition;
                 newItem.IsChoice = pasteItem.IsChoice;
-                newItem.Obsolete = pasteItem.Obsolete;
                 newItem.Choices.AddRange(pasteItem.Choices);
             }
             else if (bindingSource.Current is null || propertyNavigation.CurrentRow is null)
@@ -127,7 +126,6 @@ namespace DataDictionary.Main.Forms.Application
                 newItem.IsFrameworkSummary = isFrameworkSummaryData.Checked;
                 newItem.IsDefinition = isDefinitionData.Checked;
                 newItem.IsChoice = isChoiceData.Checked;
-                newItem.Obsolete = obsoleteData.Checked;
                 newItem.Choices.AddRange(choiceData.Rows.Cast<DataGridViewRow>().Select(s => (PropertyItem.ChoiceItem)s.DataBoundItem));
             }
             else
@@ -139,7 +137,6 @@ namespace DataDictionary.Main.Forms.Application
                 newItem.IsFrameworkSummary = false;
                 newItem.IsDefinition = false;
                 newItem.IsChoice = false;
-                newItem.Obsolete = false;
                 newItem.Choices.Clear();
             }
 
@@ -262,7 +259,6 @@ namespace DataDictionary.Main.Forms.Application
             isFrameworkSummaryData.DataBindings.Add(new Binding(nameof(isExtendedPropertyData.Checked), bindingSource, nameof(propertyNameOf.IsFrameworkSummary), true));
             isDefinitionData.DataBindings.Add(new Binding(nameof(isDefinitionData.Checked), bindingSource, nameof(propertyNameOf.IsDefinition), true));
             isChoiceData.DataBindings.Add(new Binding(nameof(isChoiceData.Checked), bindingSource, nameof(propertyNameOf.IsChoice), true));
-            obsoleteData.DataBindings.Add(new Binding(nameof(obsoleteData.Checked), bindingSource, nameof(propertyNameOf.Obsolete), true));
 
             extendedPropertyData.Enabled = isExtendedPropertyData.Checked;
             choiceData.Enabled = isChoiceData.Checked;
@@ -283,7 +279,6 @@ namespace DataDictionary.Main.Forms.Application
             isFrameworkSummaryData.DataBindings.Clear();
             isDefinitionData.DataBindings.Clear();
             isChoiceData.DataBindings.Clear();
-            obsoleteData.DataBindings.Clear();
             choiceData.DataSource = null;
             bindingSource.DataSource = null;
         }

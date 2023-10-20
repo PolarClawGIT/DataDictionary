@@ -30,29 +30,21 @@
         {
             TableLayoutPanel formLayout;
             TableLayoutPanel buttonLayout;
-            TableLayoutPanel modelTitleLayout;
-            TableLayoutPanel modelFlagsLayout;
             serverNameData = new Controls.TextBoxData();
             databaseNameData = new Controls.TextBoxData();
             modelList = new DataGridView();
-            modelTitleColumn = new DataGridViewTextBoxColumn();
-            modelDescriptionColumn = new DataGridViewTextBoxColumn();
-            modelObsoleteColumn = new DataGridViewCheckBoxColumn();
-            modelTitleData = new Controls.TextBoxData();
             saveCommand = new Button();
             deleteCommand = new Button();
             loadCommand = new Button();
             modelDescriptionData = new Controls.TextBoxData();
-            modelObsoleteData = new CheckBox();
+            modelTitleData = new Controls.TextBoxData();
+            modelTitleColumn = new DataGridViewTextBoxColumn();
+            modelDescriptionColumn = new DataGridViewTextBoxColumn();
             formLayout = new TableLayoutPanel();
             buttonLayout = new TableLayoutPanel();
-            modelTitleLayout = new TableLayoutPanel();
-            modelFlagsLayout = new TableLayoutPanel();
             formLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)modelList).BeginInit();
             buttonLayout.SuspendLayout();
-            modelTitleLayout.SuspendLayout();
-            modelFlagsLayout.SuspendLayout();
             SuspendLayout();
             // 
             // formLayout
@@ -64,7 +56,7 @@
             formLayout.Controls.Add(modelList, 0, 2);
             formLayout.Controls.Add(buttonLayout, 0, 5);
             formLayout.Controls.Add(modelDescriptionData, 0, 4);
-            formLayout.Controls.Add(modelTitleLayout, 0, 3);
+            formLayout.Controls.Add(modelTitleData, 0, 3);
             formLayout.Dock = DockStyle.Fill;
             formLayout.Location = new Point(0, 0);
             formLayout.Name = "formLayout";
@@ -107,7 +99,7 @@
             modelList.AllowUserToAddRows = false;
             modelList.AllowUserToDeleteRows = false;
             modelList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            modelList.Columns.AddRange(new DataGridViewColumn[] { modelTitleColumn, modelDescriptionColumn, modelObsoleteColumn });
+            modelList.Columns.AddRange(new DataGridViewColumn[] { modelTitleColumn, modelDescriptionColumn });
             modelList.Dock = DockStyle.Fill;
             modelList.Location = new Point(3, 103);
             modelList.MultiSelect = false;
@@ -115,46 +107,8 @@
             modelList.ReadOnly = true;
             modelList.RowTemplate.Height = 25;
             modelList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            modelList.Size = new Size(357, 123);
+            modelList.Size = new Size(357, 126);
             modelList.TabIndex = 2;
-            // 
-            // modelTitleColumn
-            // 
-            modelTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            modelTitleColumn.DataPropertyName = "ModelTitle";
-            modelTitleColumn.FillWeight = 70F;
-            modelTitleColumn.HeaderText = "Model Title";
-            modelTitleColumn.Name = "modelTitleColumn";
-            modelTitleColumn.ReadOnly = true;
-            // 
-            // modelDescriptionColumn
-            // 
-            modelDescriptionColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            modelDescriptionColumn.DataPropertyName = "ModelDescription";
-            modelDescriptionColumn.HeaderText = "Description";
-            modelDescriptionColumn.Name = "modelDescriptionColumn";
-            modelDescriptionColumn.ReadOnly = true;
-            // 
-            // modelObsoleteColumn
-            // 
-            modelObsoleteColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
-            modelObsoleteColumn.DataPropertyName = "Obsolete";
-            modelObsoleteColumn.HeaderText = "Obsolete";
-            modelObsoleteColumn.Name = "modelObsoleteColumn";
-            modelObsoleteColumn.ReadOnly = true;
-            modelObsoleteColumn.Width = 60;
-            // 
-            // modelTitleData
-            // 
-            modelTitleData.AutoSize = true;
-            modelTitleData.Dock = DockStyle.Fill;
-            modelTitleData.HeaderText = "Model Title";
-            modelTitleData.Location = new Point(3, 3);
-            modelTitleData.Multiline = false;
-            modelTitleData.Name = "modelTitleData";
-            modelTitleData.ReadOnly = true;
-            modelTitleData.Size = new Size(266, 44);
-            modelTitleData.TabIndex = 3;
             // 
             // buttonLayout
             // 
@@ -212,74 +166,58 @@
             modelDescriptionData.AutoSize = true;
             modelDescriptionData.Dock = DockStyle.Fill;
             modelDescriptionData.HeaderText = "Model Desription";
-            modelDescriptionData.Location = new Point(3, 288);
+            modelDescriptionData.Location = new Point(3, 285);
             modelDescriptionData.Multiline = true;
             modelDescriptionData.Name = "modelDescriptionData";
             modelDescriptionData.ReadOnly = true;
-            modelDescriptionData.Size = new Size(357, 123);
+            modelDescriptionData.Size = new Size(357, 126);
             modelDescriptionData.TabIndex = 5;
             // 
-            // modelTitleLayout
+            // modelTitleData
             // 
-            modelTitleLayout.AutoSize = true;
-            modelTitleLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            modelTitleLayout.ColumnCount = 2;
-            modelTitleLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            modelTitleLayout.ColumnStyles.Add(new ColumnStyle());
-            modelTitleLayout.Controls.Add(modelTitleData, 0, 0);
-            modelTitleLayout.Controls.Add(modelFlagsLayout, 1, 0);
-            modelTitleLayout.Dock = DockStyle.Fill;
-            modelTitleLayout.Location = new Point(3, 232);
-            modelTitleLayout.Name = "modelTitleLayout";
-            modelTitleLayout.RowCount = 1;
-            modelTitleLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            modelTitleLayout.Size = new Size(357, 50);
-            modelTitleLayout.TabIndex = 6;
+            modelTitleData.AutoSize = true;
+            modelTitleData.Dock = DockStyle.Fill;
+            modelTitleData.HeaderText = "Model Title";
+            modelTitleData.Location = new Point(3, 235);
+            modelTitleData.Multiline = false;
+            modelTitleData.Name = "modelTitleData";
+            modelTitleData.ReadOnly = true;
+            modelTitleData.Size = new Size(357, 44);
+            modelTitleData.TabIndex = 3;
             // 
-            // modelFlagsLayout
+            // modelTitleColumn
             // 
-            modelFlagsLayout.AutoSize = true;
-            modelFlagsLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            modelFlagsLayout.ColumnCount = 1;
-            modelFlagsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            modelFlagsLayout.Controls.Add(modelObsoleteData, 0, 0);
-            modelFlagsLayout.Dock = DockStyle.Fill;
-            modelFlagsLayout.Location = new Point(275, 3);
-            modelFlagsLayout.Name = "modelFlagsLayout";
-            modelFlagsLayout.RowCount = 2;
-            modelFlagsLayout.RowStyles.Add(new RowStyle());
-            modelFlagsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            modelFlagsLayout.Size = new Size(79, 44);
-            modelFlagsLayout.TabIndex = 4;
+            modelTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            modelTitleColumn.DataPropertyName = "ModelTitle";
+            modelTitleColumn.FillWeight = 70F;
+            modelTitleColumn.HeaderText = "Model Title";
+            modelTitleColumn.Name = "modelTitleColumn";
+            modelTitleColumn.ReadOnly = true;
             // 
-            // modelObsoleteData
+            // modelDescriptionColumn
             // 
-            modelObsoleteData.AutoSize = true;
-            modelObsoleteData.Location = new Point(3, 3);
-            modelObsoleteData.Name = "modelObsoleteData";
-            modelObsoleteData.Size = new Size(73, 19);
-            modelObsoleteData.TabIndex = 2;
-            modelObsoleteData.Text = "Obsolete";
-            modelObsoleteData.UseVisualStyleBackColor = true;
+            modelDescriptionColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            modelDescriptionColumn.DataPropertyName = "ModelDescription";
+            modelDescriptionColumn.HeaderText = "Description";
+            modelDescriptionColumn.Name = "modelDescriptionColumn";
+            modelDescriptionColumn.ReadOnly = true;
             // 
-            // LoadModelFromDatabase
+            // OpenSaveModelDatabase
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(363, 450);
             Controls.Add(formLayout);
-            Name = "LoadModelFromDatabase";
+            Name = "OpenSaveModelDatabase";
             Text = "Load Model from Database";
             Load += LoadModelFromDatabase_Load;
+            Controls.SetChildIndex(formLayout, 0);
             formLayout.ResumeLayout(false);
             formLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)modelList).EndInit();
             buttonLayout.ResumeLayout(false);
-            modelTitleLayout.ResumeLayout(false);
-            modelTitleLayout.PerformLayout();
-            modelFlagsLayout.ResumeLayout(false);
-            modelFlagsLayout.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -290,11 +228,9 @@
         private Controls.TextBoxData modelTitleData;
         private Button loadCommand;
         private Button deleteCommand;
-        private DataGridViewTextBoxColumn modelTitleColumn;
-        private DataGridViewTextBoxColumn modelDescriptionColumn;
-        private DataGridViewCheckBoxColumn modelObsoleteColumn;
         private Button saveCommand;
         private Controls.TextBoxData modelDescriptionData;
-        private CheckBox modelObsoleteData;
+        private DataGridViewTextBoxColumn modelTitleColumn;
+        private DataGridViewTextBoxColumn modelDescriptionColumn;
     }
 }

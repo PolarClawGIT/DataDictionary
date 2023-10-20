@@ -45,9 +45,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// <inheritdoc/>
         public string? AttributeDescription { get { return GetValue("AttributeDescription"); } set { SetValue("AttributeDescription", value); } }
 
-        /// <inheritdoc/>
-        public bool? Obsolete { get { return GetValue<bool>("Obsolete", BindingItemParsers.BooleanTryParse); } set { SetValue("Obsolete", value); } }
-
         /// <summary>
         /// Constructor for Domain Attribute Item
         /// </summary>
@@ -55,7 +52,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             if (AttributeId is null) { AttributeId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(AttributeTitle)){  AttributeTitle = "(new Attribute)"; }
-            if (Obsolete is null) { Obsolete = false; }
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
@@ -64,7 +60,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             new DataColumn("SubjectAreaId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("AttributeTitle", typeof(string)){ AllowDBNull = false},
             new DataColumn("AttributeDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("Obsolete", typeof(bool)){ AllowDBNull = false},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 

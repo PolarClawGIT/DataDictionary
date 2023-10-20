@@ -25,7 +25,6 @@ Begin Try
 			NullIf(Trim(D.[HelpSubject]),'') As [HelpSubject],
 			NullIf(Trim(D.[HelpText]),'') As [HelpText],
 			NullIf(Trim(D.[NameSpace]),'') As [NameSpace],
-			D.[Obsolete],
 			D.[SysStart]
 	From	@Data D
 
@@ -51,8 +50,7 @@ Begin Try
 				V.[HelpParentId],
 				V.[HelpSubject],
 				V.[HelpText],
-				V.[NameSpace],
-				IIF(IsNull(V.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
+				V.[NameSpace]
 		From	@Values V
 				Left Join [App_DataDictionary].[ApplicationHelp] A
 				On	V.[HelpId] = A.[HelpId]
@@ -61,8 +59,7 @@ Begin Try
 				[HelpParentId],
 				[HelpSubject],
 				[HelpText],
-				[NameSpace],
-				[ObsoleteDate]
+				[NameSpace]
 		From	[App_DataDictionary].[ApplicationHelp])
 	Merge [App_DataDictionary].[ApplicationHelp] As T
 	Using [Delta] As S
@@ -71,11 +68,10 @@ Begin Try
 		Set	[HelpParentId] = S.[HelpParentId],
 			[HelpSubject] = S.[HelpSubject],
 			[HelpText] = S.[HelpText],
-			[NameSpace] = S.[NameSpace],
-			[ObsoleteDate] = S.[ObsoleteDate]
+			[NameSpace] = S.[NameSpace]
 	When Not Matched by Target Then
-		Insert([HelpId], [HelpParentId], [HelpSubject], [HelpText], [NameSpace], [ObsoleteDate])
-		Values ([HelpId], [HelpParentId], [HelpSubject], [HelpText], [NameSpace], [ObsoleteDate]);
+		Insert([HelpId], [HelpParentId], [HelpSubject], [HelpText], [NameSpace])
+		Values ([HelpId], [HelpParentId], [HelpSubject], [HelpText], [NameSpace]);
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

@@ -44,7 +44,6 @@ namespace DataDictionary.Main.Dialogs
 
             modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), currentModel, nameof(currentModel.ModelTitle)));
             modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), currentModel, nameof(currentModel.ModelDescription)));
-            modelObsoleteData.DataBindings.Add(new Binding(nameof(modelObsoleteData.Checked), currentModel, nameof(currentModel.Obsolete), true, DataSourceUpdateMode.OnValidation, false));
 
             modelList.SelectionChanged -= SelectionChanged; // Because setting the Data Source causes a Selection Change event to occur
 
@@ -65,7 +64,6 @@ namespace DataDictionary.Main.Dialogs
         {
             modelTitleData.DataBindings.Clear();
             modelDescriptionData.DataBindings.Clear();
-            modelObsoleteData.DataBindings.Clear();
             modelList.DataSource = null;
         }
 
@@ -128,15 +126,9 @@ namespace DataDictionary.Main.Dialogs
                 modelDescriptionData.ReadOnly = false;
 
                 if (Program.Data.Model.RowState() == System.Data.DataRowState.Added)
-                {
-                    modelObsoleteData.Enabled = false;
-                    loadCommand.Enabled = false;
-                }
+                {   loadCommand.Enabled = false; }
                 else
-                {
-                    modelObsoleteData.Enabled = true;
-                    loadCommand.Enabled = true;
-                }
+                {loadCommand.Enabled = true; }
             }
             else
             {
@@ -144,12 +136,7 @@ namespace DataDictionary.Main.Dialogs
                 loadCommand.Enabled = true;
                 modelTitleData.ReadOnly = true;
                 modelDescriptionData.ReadOnly = true;
-                modelObsoleteData.Enabled = false;
             }
-
-            if (currentKey == Program.Data.ModelKey && Program.Data.Model.Obsolete == true)
-            { deleteCommand.Enabled = true; }
-            else { deleteCommand.Enabled = false; }
         }
 
     }

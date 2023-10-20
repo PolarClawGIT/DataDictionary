@@ -4,5 +4,4 @@
     [SubjectAreaId]        UNIQUEIDENTIFIER NULL,
     [AttributeTitle]       [App_DataDictionary].[typeTitle] Null,
     [AttributeDescription] [App_DataDictionary].[typeDescription] Null,
-    [Obsolete]             BIT              NULL,
     [SysStart]             DATETIME2 (7)    NULL);

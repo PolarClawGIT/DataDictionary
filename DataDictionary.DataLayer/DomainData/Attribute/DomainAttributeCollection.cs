@@ -34,7 +34,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@AttributeId", parameters.attributeId);
             command.AddParameter("@AttributeTitle", parameters.attributeTitle);
-            command.AddParameter("@Obsolete", parameters.obsolete);
             return command;
         }
 

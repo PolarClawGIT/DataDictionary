@@ -5,6 +5,5 @@
 	[HelpSubject]   NVarChar(100)    Null,
 	[HelpText]      NVarChar(Max)    Null,
 	[NameSpace]     NVarChar(1000)   Null,
-	[Obsolete]      Bit              Null,
 	[SysStart]      DATETIME2        Null
 )

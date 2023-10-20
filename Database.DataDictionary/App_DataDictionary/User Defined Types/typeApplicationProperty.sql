@@ -9,6 +9,5 @@
 	[IsChoice]            Bit Null,
 	[ExtendedProperty]    SysName Null,
 	[ChoiceList]          NVarChar(2000) Null,
-	[Obsolete]            Bit Null,
 	[SysStart]            DATETIME2 Null
 )

@@ -50,9 +50,6 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// <inheritdoc/>
         public string? EntityDescription { get { return GetValue("EntityDescription"); } set { SetValue("EntityDescription", value); } }
 
-        /// <inheritdoc/>
-        public bool? Obsolete { get { return GetValue<bool>("Obsolete", BindingItemParsers.BooleanTryParse); } set { SetValue("Obsolete", value); } }
-
         /// <summary>
         /// Constructor for Domain Entity Item
         /// </summary>
@@ -60,7 +57,6 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         {
             if (EntityId is null) { EntityId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(EntityTitle)){ EntityTitle = "(new Entity)"; }
-            if (Obsolete is null) { Obsolete = false; }
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
@@ -69,7 +65,6 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             new DataColumn("SubjectAreaId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("EntityTitle", typeof(string)){ AllowDBNull = false},
             new DataColumn("EntityDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("Obsolete", typeof(bool)){ AllowDBNull = false},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 

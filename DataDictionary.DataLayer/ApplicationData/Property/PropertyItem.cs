@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// <summary>
     /// Interface for the Property data.
     /// </summary>
-    public interface IPropertyItem : IPropertyKey, IPropertyKeyUnique, IObsolete, IDataItem
+    public interface IPropertyItem : IPropertyKey, IPropertyKeyUnique, IDataItem
     {
         /// <summary>
         /// Description of the Property. How the property is used.
@@ -85,9 +85,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
         /// <inheritdoc/>
         protected String? ChoiceList { get { return GetValue("ChoiceList"); } set { SetValue("ChoiceList", value); } }
 
-        /// <inheritdoc/>
-        public Nullable<Boolean> Obsolete { get { return GetValue<Boolean>("Obsolete", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("Obsolete", value); } }
-
         /// <summary>
         /// The Choice Item used to present a List of Choices.
         /// </summary>
@@ -129,7 +126,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
         public PropertyItem() : base()
         {
             PropertyId = Guid.NewGuid();
-            Obsolete = false;
 
             choices.ListChanged += Choices_ListChanged;
         }
@@ -171,7 +167,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
             new DataColumn("IsChoice", typeof(Boolean)){ AllowDBNull = true},
             new DataColumn("ExtendedProperty", typeof(String)){ AllowDBNull = true},
             new DataColumn("ChoiceList", typeof(String)){ AllowDBNull = true},
-            new DataColumn("Obsolete", typeof(Boolean)){ AllowDBNull = false},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 

@@ -29,7 +29,6 @@ Begin Try
 			IsNull(D.[IsChoice], 0) As [IsChoice],
 			NullIf(Trim(D.[ExtendedProperty]),'') As [ExtendedProperty],
 			NullIf(Trim(D.[ChoiceList]),'') As [ChoiceList],
-			D.[Obsolete],
 			D.[SysStart]
 	From	@Data D
 
@@ -50,8 +49,7 @@ Begin Try
 				V.[IsDefinition],
 				V.[IsFrameworkSummary],
 				V.[ExtendedProperty],
-				V.[ChoiceList],
-				IIF(IsNull(V.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
+				V.[ChoiceList]
 		From	@Values V
 				Left Join [App_DataDictionary].[ApplicationProperty] A
 				On	V.[PropertyId] = A.[PropertyId]
@@ -62,8 +60,7 @@ Begin Try
 				[IsDefinition],
 				[IsFrameworkSummary],
 				[ExtendedProperty],
-				[ChoiceList],
-				[ObsoleteDate]
+				[ChoiceList]
 		From	[App_DataDictionary].[ApplicationProperty])
 	Merge [App_DataDictionary].[ApplicationProperty] As T
 	Using [Delta] As S
@@ -74,11 +71,10 @@ Begin Try
 			[IsDefinition] = S.[IsDefinition],
 			[IsFrameworkSummary] = S.[IsFrameworkSummary],
 			[ExtendedProperty] = S.[ExtendedProperty],
-			[ChoiceList] = S.[ChoiceList],
-			[ObsoleteDate] = S.[ObsoleteDate]
+			[ChoiceList] = S.[ChoiceList]
 	When Not Matched by Target Then
-		Insert ([PropertyId], [PropertyTitle], [PropertyDescription], [IsDefinition], [IsFrameworkSummary], [ExtendedProperty], [ChoiceList], [ObsoleteDate])
-		Values ([PropertyId], [PropertyTitle], [PropertyDescription], [IsDefinition], [IsFrameworkSummary], [ExtendedProperty], [ChoiceList], [ObsoleteDate]);
+		Insert ([PropertyId], [PropertyTitle], [PropertyDescription], [IsDefinition], [IsFrameworkSummary], [ExtendedProperty], [ChoiceList])
+		Values ([PropertyId], [PropertyTitle], [PropertyDescription], [IsDefinition], [IsFrameworkSummary], [ExtendedProperty], [ChoiceList]);
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

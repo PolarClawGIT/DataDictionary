@@ -5,9 +5,7 @@
 	[HelpSubject] NVarChar(100) Not Null,
 	[HelpText] NVarChar(Max) Not Null,
 	[NameSpace] NVarChar(1000) Null,
-	[Obsolete] As (CONVERT([bit],case when [ObsoleteDate] IS NULL then (0) else (1) end)),
 	-- TODO: Add System Version later once the schema is locked down
-	[ObsoleteDate] DATETIME2 Null, -- Used to flag an item as a candidate for being deleted. Null = active, anything else is Obsolete.
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_ApplicationHelp_ModfiedBy] DEFAULT (ORIGINAL_LOGIN()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL Constraint [DF_ApplicationHelp_SysStart] Default (sysdatetime()),
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL Constraint [DF_ApplicationHelp_SysEnd] Default ('9999-12-31 23:59:59.9999999'),

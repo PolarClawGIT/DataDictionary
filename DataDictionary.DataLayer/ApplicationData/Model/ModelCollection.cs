@@ -36,7 +36,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Model
 
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@ModelTitle", parameters.modelTitle);
-            command.AddParameter("@Obsolete", parameters.obsolete);
 
             return command;
         }

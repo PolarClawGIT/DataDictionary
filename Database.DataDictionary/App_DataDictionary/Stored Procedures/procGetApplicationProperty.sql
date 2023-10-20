@@ -15,7 +15,6 @@ Select	[PropertyId],
 		[IsChoice],
 		[ExtendedProperty],
 		[ChoiceList],
-		[Obsolete],
 		[SysStart]
 From	[App_DataDictionary].[ApplicationProperty]
 Where	(@PropertyId is Null Or @PropertyId = [PropertyId]) And

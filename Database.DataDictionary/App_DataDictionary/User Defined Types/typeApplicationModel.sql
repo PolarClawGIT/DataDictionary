@@ -3,6 +3,5 @@
 	[ModelId]              UniqueIdentifier Null,
 	[ModelTitle]           [App_DataDictionary].[typeTitle] Null,
 	[ModelDescription]     [App_DataDictionary].[typeDescription] Null,
-	[Obsolete]             Bit Null,
 	[SysStart]             DATETIME2
 )

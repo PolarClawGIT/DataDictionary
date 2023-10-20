@@ -29,7 +29,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
             command.AddParameter("@HelpId", parameters.helpId);
             command.AddParameter("@HelpSubject", parameters.helpSubject);
             command.AddParameter("@NameSpace", parameters.nameSpace);
-            command.AddParameter("@Obsolete", parameters.obsolete);
             return command;
         }
 

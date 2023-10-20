@@ -15,8 +15,6 @@
 		[ExtendedProperty]   SysName Null, -- Null do not populate an MS Extended Property. Name for the Extended property. Most interested in: MS_Description
 		[ChoiceList]         NVarChar(Max) Null, -- Null = no choices. Comma Separated List of Choices allowed (cannot not be verified)
 	-- End of Sub-Types
-	[Obsolete] As (CONVERT([bit],case when [ObsoleteDate] IS NULL then (0) else (1) end)),
-	[ObsoleteDate] DATETIME2 Null, -- Used to flag an item as a candidate for being deleted. Null = active, anything else is Obsolete.
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_ApplicationPropertyModfiedBy] DEFAULT (ORIGINAL_LOGIN()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL Constraint [DF_ApplicationProperty_SysStart] Default (sysdatetime()),

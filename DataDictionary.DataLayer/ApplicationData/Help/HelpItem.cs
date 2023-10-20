@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     /// <summary>
     /// Interface for a Help Item used for Help Text.
     /// </summary>
-    public interface IHelpItem : IHelpKey, IHelpKeyParent, IHelpKeyUnique, IObsolete, IDataItem
+    public interface IHelpItem : IHelpKey, IHelpKeyParent, IHelpKeyUnique, IDataItem
     {
         /// <summary>
         /// Title/Subject of the Help Document.
@@ -50,16 +50,12 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
         /// <inheritdoc/>
         public string? NameSpace { get { return GetValue("NameSpace"); } set { SetValue("NameSpace", value); } }
 
-        /// <inheritdoc/>
-        public bool? Obsolete { get { return GetValue<bool>("Obsolete", BindingItemParsers.BooleanTryParse); } set { SetValue("Obsolete", value); } }
-
         /// <summary>
         /// Creates an Instance of a Help Document Item.
         /// </summary>
         public HelpItem() : base()
         {
             if (HelpId is null) { HelpId = Guid.NewGuid(); }
-            if (Obsolete is null) { Obsolete = false; }
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
@@ -69,7 +65,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
             new DataColumn("HelpSubject", typeof(string)){ AllowDBNull = false},
             new DataColumn("HelpText", typeof(string)){ AllowDBNull = false},
             new DataColumn("NameSpace", typeof(string)){ AllowDBNull = true},
-            new DataColumn("Obsolete", typeof(bool)){ AllowDBNull = false},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 

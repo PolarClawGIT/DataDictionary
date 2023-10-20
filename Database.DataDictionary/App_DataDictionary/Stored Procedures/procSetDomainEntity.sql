@@ -25,7 +25,6 @@ Begin Try
 			D.[SubjectAreaId],
 			NullIf(Trim(D.[EntityTitle]),'') As [EntityTitle],
 			NullIf(Trim(D.[EntityDescription]),'') As [EntityDescription],
-			D.[Obsolete],
 			D.[SysStart]
 	From	@Data D
 
@@ -53,27 +52,23 @@ Begin Try
 	With [Data] As (
 		Select	D.[EntityId],
 				D.[EntityTitle],
-				D.[EntityDescription],
-				IIF(IsNull(D.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
+				D.[EntityDescription]
 		From	@Values D
 				Inner Join [App_DataDictionary].[DomainEntity] A
 				On	D.[EntityId] = A.[EntityId]),
 	[Delta] As (
 		Select	[EntityId],
 				[EntityTitle],
-				[EntityDescription],
-				[ObsoleteDate]
+				[EntityDescription]
 		From	[Data]
 		Except
 		Select	[EntityId],
 				[EntityTitle],
-				[EntityDescription],
-				[ObsoleteDate]
+				[EntityDescription]
 		From	[App_DataDictionary].[DomainEntity])
 	Update [App_DataDictionary].[DomainEntity]
 	Set		[EntityTitle] = S.[EntityTitle],
-			[EntityDescription] = S.[EntityDescription],
-			[ObsoleteDate] = S.[ObsoleteDate]
+			[EntityDescription] = S.[EntityDescription]
 	From	[Delta] S
 			Inner Join [App_DataDictionary].[DomainEntity] T
 			On	S.[EntityId] = T.[EntityId];
@@ -82,12 +77,10 @@ Begin Try
 	Insert Into [App_DataDictionary].[DomainEntity] (
 			[EntityId],
 			[EntityTitle],
-			[EntityDescription],
-			[ObsoleteDate])
+			[EntityDescription])
 	Select	S.[EntityId],
 			S.[EntityTitle],
-			S.[EntityDescription],
-			IIF(S.[Obsolete] = 0, Convert(DateTime2, Null), SysDateTime()) As [ObsoleteDate]
+			S.[EntityDescription]
 	From	@Values S
 			Left Join [App_DataDictionary].[DomainEntity] T
 			On	S.[EntityId] = T.[EntityId]

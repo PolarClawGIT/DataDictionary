@@ -24,7 +24,6 @@ Begin Try
 	Select	V.[ModelId],
 			NullIf(Trim([ModelTitle]),'') As [ModelTitle],
 			NullIf(Trim([ModelDescription]),'') As [ModelDescription],
-			[Obsolete],
 			[SysStart]
 	From	@Data D
 			Outer Apply (Select	IsNull([ModelId],NewId()) As [ModelId]) V
@@ -50,27 +49,24 @@ Begin Try
 	With [Delta] As (
 		Select	V.[ModelId],
 				V.[ModelTitle],
-				V.[ModelDescription],
-				IIF(IsNull(V.[Obsolete], A.[Obsolete]) = 0, Convert(DateTime2, Null), IsNull(A.[ObsoleteDate],SysDateTime())) As [ObsoleteDate]
+				V.[ModelDescription]
 		From	@Values V
 				Left Join [App_DataDictionary].[Model] A
 				On	V.[ModelId] = A.[ModelId]
 		Except
 		Select	[ModelId],
 				[ModelTitle],
-				[ModelDescription],
-				[ObsoleteDate]
+				[ModelDescription]
 		From	[App_DataDictionary].[Model])
 	Merge [App_DataDictionary].[Model] As T
 	Using [Delta] As S
 	On	T.[ModelId] = S.[ModelId]
 	When Matched Then Update
 		Set	[ModelTitle] = S.[ModelTitle],
-			[ModelDescription] = S.[ModelDescription],
-			[ObsoleteDate] = S.[ObsoleteDate]
+			[ModelDescription] = S.[ModelDescription]
 	When Not Matched by Target Then
-		Insert ([ModelId], [ModelTitle], [ModelDescription], [ObsoleteDate])
-		Values ([ModelId], [ModelTitle], [ModelDescription], [ObsoleteDate]);
+		Insert ([ModelId], [ModelTitle], [ModelDescription])
+		Values ([ModelId], [ModelTitle], [ModelDescription]);
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
