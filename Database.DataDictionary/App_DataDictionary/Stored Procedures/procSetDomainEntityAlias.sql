@@ -26,16 +26,16 @@ Begin Try
 				(Select IsNull(Max([EntityAliasId]),0) From [App_DataDictionary].[DomainEntityAlias] Where [EntityId] = D.[EntityId]) +
 				Row_Number() Over (
 					Partition By D.[EntityId], C.[EntityAliasId]
-					Order By D.[CatalogName], D.[SchemaName], D.[ObjectName]))
+					Order By D.[DatabaseName], D.[SchemaName], D.[ObjectName]))
 				As [EntityAliasId],
-			NullIf(Trim(D.[CatalogName]),'') As [CatalogName],
+			NullIf(Trim(D.[DatabaseName]),'') As [DatabaseName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
 			NullIf(Trim(D.[ObjectName]),'') As [ObjectName],
 			D.[SysStart]
 	From	@Data D
 			Left Join [App_DataDictionary].[DomainEntityAlias] C
 			On	D.[EntityId] = C.[EntityId] And
-				D.[CatalogName] = C.[CatalogName] And
+				D.[DatabaseName] = C.[DatabaseName] And
 				D.[SchemaName] = C.[SchemaName] And
 				D.[ObjectName] = C.[ObjectName]
 
@@ -56,11 +56,11 @@ Begin Try
 	Throw 50000, '[EntityId] could not be found or is not associated with Model specified', 2;
 
 	If Exists (
-		Select	[CatalogName],
+		Select	[DatabaseName],
 				[SchemaName],
 				[ObjectName]
 		From	@Values
-		Group By [CatalogName],
+		Group By [DatabaseName],
 				[SchemaName],
 				[ObjectName]
 		Having Count(*) > 1)
@@ -71,7 +71,7 @@ Begin Try
 		From	@Values D
 				Inner Join [App_DataDictionary].[DomainEntityAlias] A
 				On D.[EntityId] = A.[EntityId] And
-					D.[CatalogName] = A.[CatalogName] And
+					D.[DatabaseName] = A.[DatabaseName] And
 					D.[SchemaName] = A.[SchemaName] And
 					D.[ObjectName] = A.[ObjectName]
 		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
@@ -82,13 +82,13 @@ Begin Try
 		Select	D.[EntityId],
 				D.[EntityAliasId],
 				@ModelId As [ModelId],
-				D.[CatalogName],
+				D.[DatabaseName],
 				D.[SchemaName],
 				D.[ObjectName]
 		From	@Values D
 				Left Join [App_DataDictionary].[DomainEntityAlias] A
 				On	D.[EntityId] = A.[EntityId] And
-					D.[CatalogName] = A.[CatalogName] And
+					D.[DatabaseName] = A.[DatabaseName] And
 					D.[SchemaName] = A.[SchemaName] And
 					D.[ObjectName] = A.[ObjectName])
 	Merge [App_DataDictionary].[DomainEntityAlias] T
@@ -96,8 +96,8 @@ Begin Try
 	On	T.[EntityId] = S.[EntityId] And
 		T.[EntityAliasId] = S.[EntityAliasId]
 	When Not Matched by Target Then
-		Insert ([EntityId], [EntityAliasId], [ModelId], [CatalogName], [SchemaName], [ObjectName])
-		Values ([EntityId], [EntityAliasId], [ModelId], [CatalogName], [SchemaName], [ObjectName])
+		Insert ([EntityId], [EntityAliasId], [ModelId], [DatabaseName], [SchemaName], [ObjectName])
+		Values ([EntityId], [EntityAliasId], [ModelId], [DatabaseName], [SchemaName], [ObjectName])
 	When Not Matched by Source And (T.[EntityId] in (
 		Select	[EntityId]
 		From	[App_DataDictionary].[ModelEntity]

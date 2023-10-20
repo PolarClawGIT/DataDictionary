@@ -34,7 +34,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         { get { return GetValue<Guid>("EntityId"); } protected set { SetValue("EntityId", value); } }
 
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue("CatalogName"); } set { SetValue("CatalogName", value); } }
+        public string? DatabaseName { get { return GetValue("DatabaseName"); } set { SetValue("DatabaseName", value); } }
 
         /// <inheritdoc/>
         public string? SchemaName { get { return GetValue("SchemaName"); } set { SetValue("SchemaName", value); } }
@@ -52,7 +52,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         {
             new DataColumn("EntityId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("EntityAliasId", typeof(int)){ AllowDBNull = true},
-            new DataColumn("CatalogName", typeof(string)){ AllowDBNull = true},
+            new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = true},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = true},
             new DataColumn("ObjectName", typeof(string)){ AllowDBNull = true},
             new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},

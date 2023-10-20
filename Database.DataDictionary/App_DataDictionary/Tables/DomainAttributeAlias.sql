@@ -8,7 +8,7 @@
 	[ModelId] UniqueIdentifier NOT NULL, -- Needed to enforce Unique Key. Alias must be unique to a Model.
 	-- This is based on https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16
 	-- Not-normalized to better translate to SQL call.
-	[CatalogName] SysName Not Null, -- Database/Catalog Name
+	[DatabaseName] SysName Not Null, -- Database/Catalog Name
 	[SchemaName] SysName Not Null, -- Name of Level0. Examples is Schema, Synonym, and User Name. For attributes, this is always a SchemaName.
 	[ObjectName] SysName Not Null, -- Name of Level1. Examples are Table, View, Procedure and Function Name
 	[ElementName] SysName Not Null, -- Name of Level2. Examples are Column and Parameter Name
@@ -24,5 +24,5 @@
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DomainAttributeAliasModel]
-    ON [App_DataDictionary].[DomainAttributeAlias]([ModelId] Asc, [CatalogName] Asc, [SchemaName] ASC, [ObjectName] ASC, [ElementName] ASC);
+    ON [App_DataDictionary].[DomainAttributeAlias]([ModelId] Asc, [DatabaseName] Asc, [SchemaName] ASC, [ObjectName] ASC, [ElementName] ASC);
 GO

@@ -2,7 +2,7 @@
 	-- TIP: This matches the C# DataTable structure
     [AttributeId]          UNIQUEIDENTIFIER NULL,
 	[AttributeAliasId]     INT              NULL,
-	[CatalogName]          SYSNAME          NULL,
+	[DatabaseName]         SYSNAME          NULL,
 	[SchemaName]           SYSNAME          NULL,
 	[ObjectName]           SYSNAME          NULL,
 	[ElementName]          SYSNAME          NULL,

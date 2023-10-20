@@ -2,7 +2,7 @@
 	-- TIP: This matches the C# DataTable structure
     [EntityId]             UNIQUEIDENTIFIER NULL,
 	[EntityAliasId]        INT              NULL,
-	[CatalogName]          SYSNAME          NULL,
+	[DatabaseName]         SYSNAME          NULL,
 	[SchemaName]           SYSNAME          NULL,
 	[ObjectName]           SYSNAME          NULL,
     [SysStart]             DATETIME2 (7)    NULL);

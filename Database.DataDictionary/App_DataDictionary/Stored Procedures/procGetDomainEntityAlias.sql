@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procGetDomainEntityAlias]
 		@ModelId UniqueIdentifier = Null,
 		@EntityId UniqueIdentifier = Null,
-		@CatalogName SysName = Null,
+		@DatabaseName SysName = Null,
 		@SchemaName SysName = Null,
 		@ObjectName SysName = Null
 
@@ -13,7 +13,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 
 Select	D.[EntityId],
 		D.[EntityAliasId],
-		D.[CatalogName],
+		D.[DatabaseName],
 		D.[SchemaName],
 		D.[ObjectName],
 		D.[SysStart]
@@ -23,7 +23,7 @@ From	[App_DataDictionary].[DomainEntityAlias] D
 				D.[ModelId] = A.[ModelId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@EntityId is Null or @EntityId = D.[EntityId]) And
-		(@CatalogName is Null or @CatalogName = D.[CatalogName]) And
+		(@DatabaseName is Null or @DatabaseName = D.[DatabaseName]) And
 		(@SchemaName is Null or @SchemaName = D.[SchemaName]) And
 		(@ObjectName is Null or @ObjectName = D.[ObjectName])
 GO

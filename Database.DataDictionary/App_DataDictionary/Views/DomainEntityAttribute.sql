@@ -6,7 +6,7 @@ Select	E.[ModelId],
 From	[App_DataDictionary].[DomainEntityAlias] E
 		Inner Join [App_DataDictionary].[DomainAttributeAlias] A
 		ON	E.[ModelId] = A.[ModelId] And
-			E.[CatalogName] = A.[CatalogName] And
+			E.[DatabaseName] = A.[DatabaseName] And
 			E.[SchemaName] = A.[SchemaName] And
 			E.[ObjectName] = A.[ObjectName]
 GO

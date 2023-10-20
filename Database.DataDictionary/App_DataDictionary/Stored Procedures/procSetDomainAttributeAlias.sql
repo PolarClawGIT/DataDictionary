@@ -26,9 +26,9 @@ Begin Try
 				(Select IsNull(Max([AttributeAliasId]),0) From [App_DataDictionary].[DomainAttributeAlias] Where [AttributeId] = D.[AttributeId]) +
 				Row_Number() Over (
 					Partition By D.[AttributeId], C.[AttributeAliasId]
-					Order By D.[CatalogName], D.[SchemaName], D.[ObjectName], D.[ElementName]))
+					Order By D.[DatabaseName], D.[SchemaName], D.[ObjectName], D.[ElementName]))
 				As [AttributeAliasId],
-			NullIf(Trim(D.[CatalogName]),'') As [CatalogName],
+			NullIf(Trim(D.[DatabaseName]),'') As [DatabaseName],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
 			NullIf(Trim(D.[ObjectName]),'') As [ObjectName],
 			NullIf(Trim(D.[ElementName]),'') As [ElementName],
@@ -36,7 +36,7 @@ Begin Try
 	From	@Data D
 			Left Join [App_DataDictionary].[DomainAttributeAlias] C
 			On	D.[AttributeId] = C.[AttributeId] And
-				D.[CatalogName] = C.[CatalogName] And
+				D.[DatabaseName] = C.[DatabaseName] And
 				D.[SchemaName] = C.[SchemaName] And
 				D.[ObjectName] = C.[ObjectName] And
 				D.[ElementName] = C.[ElementName]
@@ -58,12 +58,12 @@ Begin Try
 	Throw 50000, '[AttributeId] could not be found or is not associated with Model specified', 2;
 
 	If Exists (
-		Select	[CatalogName],
+		Select	[DatabaseName],
 				[SchemaName],
 				[ObjectName],
 				[ElementName]
 		From	@Values
-		Group By [CatalogName],
+		Group By [DatabaseName],
 				[SchemaName],
 				[ObjectName],
 				[ElementName]
@@ -75,7 +75,7 @@ Begin Try
 		From	@Values D
 				Inner Join [App_DataDictionary].[DomainAttributeAlias] A
 				On D.[AttributeId] = A.[AttributeId] And
-					D.[CatalogName] = A.[CatalogName] And
+					D.[DatabaseName] = A.[DatabaseName] And
 					D.[SchemaName] = A.[SchemaName] And
 					D.[ObjectName] = A.[ObjectName] And
 					D.[ElementName] = A.[ElementName]
@@ -87,14 +87,14 @@ Begin Try
 		Select	D.[AttributeId],
 				D.[AttributeAliasId],
 				@ModelId As [ModelId],
-				D.[CatalogName],
+				D.[DatabaseName],
 				D.[SchemaName],
 				D.[ObjectName],
 				D.[ElementName]
 		From	@Values D
 				Left Join [App_DataDictionary].[DomainAttributeAlias] A
 				On	D.[AttributeId] = A.[AttributeId] And
-					D.[CatalogName] = A.[CatalogName] And
+					D.[DatabaseName] = A.[DatabaseName] And
 					D.[SchemaName] = A.[SchemaName] And
 					D.[ObjectName] = A.[ObjectName] And
 					D.[ElementName] = A.[ElementName])
@@ -103,8 +103,8 @@ Begin Try
 	On	T.[AttributeId] = S.[AttributeId] And
 		T.[AttributeAliasId] = S.[AttributeAliasId]
 	When Not Matched by Target Then
-		Insert ([AttributeId], [AttributeAliasId], [ModelId], [CatalogName], [SchemaName], [ObjectName], [ElementName])
-		Values ([AttributeId], [AttributeAliasId], [ModelId], [CatalogName], [SchemaName], [ObjectName], [ElementName])
+		Insert ([AttributeId], [AttributeAliasId], [ModelId], [DatabaseName], [SchemaName], [ObjectName], [ElementName])
+		Values ([AttributeId], [AttributeAliasId], [ModelId], [DatabaseName], [SchemaName], [ObjectName], [ElementName])
 	When Not Matched by Source And (T.[AttributeId] in (
 		Select	[AttributeId]
 		From	[App_DataDictionary].[ModelAttribute]
