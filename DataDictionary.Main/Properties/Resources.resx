@@ -337,6 +337,9 @@
   <data name="NewDiagram" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewDiagram.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="NewDictionary" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewDictionary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="NewDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewDocument.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

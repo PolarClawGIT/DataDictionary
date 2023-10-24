@@ -793,6 +793,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap NewDictionary {
+            get {
+                object obj = ResourceManager.GetObject("NewDictionary", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap NewDocument {
             get {
                 object obj = ResourceManager.GetObject("NewDocument", resourceCulture);

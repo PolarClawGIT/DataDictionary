@@ -1,9 +1,13 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Help;
+﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.DomainData.SubjectArea;
+using Toolbox.BindingTable;
 using Toolbox.DbContext;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer
 {
@@ -66,57 +70,6 @@ namespace DataDictionary.BusinessLayer
         public String DatabaseName { get { return ModelContext.DatabaseName; } }
         #endregion
 
-        #region Domain data
-        /// <summary>
-        /// List of Domain Attributes within the Model.
-        /// </summary>
-        public DomainAttributeCollection DomainAttributes = new DomainAttributeCollection();
-
-        /// <summary>
-        /// List of Domain Aliases for the Attributes within the Model.
-        /// </summary>
-        public DomainAttributeAliasCollection DomainAttributeAliases = new DomainAttributeAliasCollection();
-
-        /// <summary>
-        /// List of Domain Properties for the Attributes within the Model.
-        /// </summary>
-        public DomainAttributePropertyCollection DomainAttributeProperties = new DomainAttributePropertyCollection();
-
-        /// <summary>
-        /// List of Domain Entities within the Model.
-        /// </summary>
-        public DomainEntityCollection DomainEntities = new DomainEntityCollection();
-
-        /// <summary>
-        /// List of Domain Aliases for the Entities within the Model.
-        /// </summary>
-        public DomainEntityAliasCollection DomainEntityAliases = new DomainEntityAliasCollection();
-
-        /// <summary>
-        /// List of Domain Properties for the Entities within the Model.
-        /// </summary>
-        public DomainEntityPropertyCollection DomainEntityProperties = new DomainEntityPropertyCollection();
-
-        /// <summary>
-        /// List of Domain Subject Areas within the Model.
-        /// </summary>
-        public DomainSubjectAreaCollection DomainSubjectAreas = new DomainSubjectAreaCollection();
-        #endregion
-
-        #region Application data
-        /// <summary>
-        /// List of Help Subjects for the Application (the help system).
-        /// </summary>
-        public HelpCollection HelpSubjects { get; } = new HelpCollection();
-
-        /// <summary>
-        /// List Properties defined for the Application.
-        /// </summary>
-        public DataLayer.ApplicationData.Property.PropertyCollection Properties { get; } = new DataLayer.ApplicationData.Property.PropertyCollection();
-        #endregion
-
-        // Connection Data
-
         /// <summary>
         /// Constructor for the Model Data
         /// </summary>
@@ -124,6 +77,7 @@ namespace DataDictionary.BusinessLayer
         {
             defaultModel = new ModelItem();
             modelKey = new ModelKey(defaultModel);
+            Models.Add(defaultModel);
         }
 
         /// <summary>
@@ -134,41 +88,148 @@ namespace DataDictionary.BusinessLayer
         { ModelContext = context; }
 
         /// <summary>
-        /// Clears all the Model Data.
-        /// </summary>
-        [Obsolete("Needs to be replaced by Clear method for each area")]
-        public void Clear()
-        {
-            DbCatalogs.Clear();
-            DbSchemta.Clear();
-            DbTables.Clear();
-            DbTableColumns.Clear();
-            DbDomains.Clear();
-            DbConstraints.Clear();
-            DbConstraintColumns.Clear();
-            DbRoutines.Clear();
-            DbRoutineParameters.Clear();
-            DbRoutineDependencies.Clear();
-            DbExtendedProperties.Clear();
-            DomainAttributes.Clear();
-            DomainAttributeAliases.Clear();
-            DomainAttributeProperties.Clear();
-            DomainEntities.Clear();
-            DomainEntityAliases.Clear();
-            DomainEntityProperties.Clear();
-            DomainSubjectAreas.Clear();
-            LibraryMembers.Clear();
-            LibrarySources.Clear();
-            Models.Clear();
-        }
-
-        /// <summary>
         /// Initializes a New Model (does not clear the data).
         /// </summary>
         public void NewModel()
         {
+            Models.Clear();
             defaultModel = new ModelItem();
-            ModelKey = new ModelKey(defaultModel);
+            modelKey = new ModelKey(defaultModel);
+            Models.Add(defaultModel);
+        }
+
+        /// <summary>
+        /// Creates Work Items Loads the Model by Key from the Application Database
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="modelKey"></param>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> LoadModel(IDatabaseWork factory, IModelKey modelKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            ModelKey key = new ModelKey(modelKey);
+
+            work.Add(factory.CreateWork(
+                workName: "Load Models",
+                target: this.Models,
+                command: (conn) => this.Models.LoadCommand(conn, key)));
+
+            work.AddRange(this.LoadDomain(factory, modelKey));
+            work.AddRange(this.LoadCatalog(factory, modelKey));
+            work.AddRange(this.LoadLibrary(factory, modelKey));
+
+            return work;
+        }
+
+
+
+        /// <summary>
+        /// Creates Work Items that Save the Model to the Application Database
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> SaveModel(IDatabaseWork factory)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(factory.CreateWork(
+                workName: "Save Models",
+                command: this.Models.SaveCommand));
+
+            work.AddRange(this.SaveDomain(factory, modelKey));
+            work.AddRange(this.SaveCatalog(factory, modelKey));
+            work.AddRange(this.SaveLibrary(factory, modelKey));
+
+            return work;
+        }
+
+        /// <summary>
+        /// Creates Work Items that Remove the Model (Clear).
+        /// </summary>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> RemoveModel()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem() { WorkName = "Clear Model", DoWork = this.Models.Clear });
+            work.AddRange(this.RemoveDomain());
+            work.AddRange(this.RemoveCatalog());
+            work.AddRange(this.RemoveLibrary());
+
+            return work;
+        }
+
+        /// <summary>
+        /// Creates Work Items that Delete the Model
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="modelKey"></param>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> DeleteModel(IDatabaseWork factory, IModelKey modelKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            ModelKey key = new ModelKey(modelKey);
+
+            work.Add(factory.CreateWork(
+                workName: "Delete Model",
+                command: (conn) => this.Models.DeleteCommand(conn, key)));
+
+            work.Add(new WorkItem() { WorkName = "Clear Models", DoWork = this.Models.Clear });
+            work.AddRange(this.RemoveDomain());
+            work.AddRange(this.RemoveCatalog());
+            work.AddRange(this.RemoveLibrary());
+
+            return work;
+        }
+
+    }
+
+    /// <summary>
+    /// Extension Method for the Model Data.
+    /// </summary>
+    public static class ModelDataExtension
+    {
+        /// <summary>
+        /// Creates Work Items Loads the Models the Application Database
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="factory"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> LoadModel<T>(this T target, IDatabaseWork factory)
+            where T : IBindingTable<ModelItem>, IReadData
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(factory.CreateWork(
+                workName: "Load Models",
+                target: target,
+                command: (conn) => target.LoadCommand(conn)));
+
+            return work;
+        }
+
+        /// <summary>
+        /// Creates Work Items that Delete a Model in the Application Database
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="factory"></param>
+        /// <param name="modelKey"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> DeleteModel(this IDeleteData<IModelKey> data, IDatabaseWork factory, IModelKey modelKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            ModelKey key = new ModelKey(modelKey);
+
+            ModelCollection empty = new ModelCollection();
+
+            work.Add(factory.CreateWork(
+                workName: "Delete Model",
+                command: (conn) => empty.DeleteCommand(conn, key)));
+
+            return work;
         }
     }
+
+
 }

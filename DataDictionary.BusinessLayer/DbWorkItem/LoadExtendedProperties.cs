@@ -12,46 +12,46 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
-    class LoadExtendedProperties<TDbItem> : WorkItem, IDbWorkItem
+    class LoadExtendedProperties<TDbItem> : WorkItem
         where TDbItem : class, IBindingTableRow, IDbExtendedProperty
     {
         public required BindingTable<DbExtendedPropertyItem> Target { get; init; }
         public required IBindingTable<TDbItem> Source { get; init; }
-        readonly IConnection connection;
+        public required IConnection Connection { get; init; }
 
-        public LoadExtendedProperties(OpenConnection conn) : base()
-        {
-            this.connection = conn.Connection;
-            conn.Dependency(this);
-        }
+        public LoadExtendedProperties() : base()
+        { DoWork = Work; }
 
-        protected override void Work()
+        protected void Work()
         {
-            base.Work();
             Int32 toDo = Source.Count();
             Int32 complete = 0;
 
-            foreach (TDbItem item in Source)
+            if (Connection is IConnection)
             {
-                Command command = item.PropertyCommand(connection);
-                try { Target.Load(connection.ExecuteReader(command)); }
-                catch (Exception ex)
+                foreach (TDbItem item in Source)
                 {
-                    ex.Data.Add("Command", "MSSQL Extended Property");
-                    foreach (DbParameter parameter in command.Parameters)
+                    Command command = item.PropertyCommand(Connection);
+                    try { Target.Load(Connection.ExecuteReader(command)); }
+                    catch (Exception ex)
                     {
-                        if (parameter.Value is not null)
-                        { ex.Data.Add(parameter.ParameterName, parameter.Value.ToString()); }
-                        else { ex.Data.Add(parameter.ParameterName, "(Null)"); }
+                        ex.Data.Add("Command", "MSSQL Extended Property");
+                        foreach (DbParameter parameter in command.Parameters)
+                        {
+                            if (parameter.Value is not null)
+                            { ex.Data.Add(parameter.ParameterName, parameter.Value.ToString()); }
+                            else { ex.Data.Add(parameter.ParameterName, "(Null)"); }
+                        }
+
+                        throw;
                     }
 
-                    throw;
+                    complete++;
+                    Double progress = ((Double)complete / (Double)toDo) * (Double)100.0;
+                    this.OnProgressChanged((Int32)progress);
                 }
-
-                complete++;
-                Double progress = ((Double)complete / (Double)toDo) * (Double)100.0;
-                this.OnProgressChanged((Int32)progress);
             }
+            else { throw new ArgumentNullException(nameof(Connection)); }
         }
     }
 }

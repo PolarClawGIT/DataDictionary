@@ -29,6 +29,14 @@ namespace DataDictionary.Main.Forms
         }
 
         #region Open Form
+        
+        /// <summary>
+        /// Default Activate, does not open any forms.
+        /// </summary>
+        /// <param name="data"></param>
+        protected void Activate(Object data)
+        { }
+
         /// <summary>
         /// Looks for the Target Form already open. If it is open, just activate it. Otherwise, show/activate the form.
         /// </summary>

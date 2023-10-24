@@ -10,7 +10,25 @@ namespace Toolbox.Threading
 {
     public interface IWorkItem
     {
-        String WorkName { get; }
+        /// <summary>
+        /// Name for the unit of work.
+        /// </summary>
+        String WorkName { get; init; }
+
+        /// <summary>
+        /// Function to return if this work item should be canceled.
+        /// </summary>
+        /// <remarks>
+        /// The intent here is to have a way of having one WorkItem fail and
+        /// cancel all the dependent WorkItems. When this evaluates true,
+        /// the DoWork is not executed and the Completing is marked as canceled.
+        /// By default, the function always returns false.
+        /// </remarks>
+        Func<Boolean> IsCanceling { get; init; }
+
+        /// <summary>
+        /// This triggers after the DoWork method is complete.
+        /// </summary>
         event EventHandler<RunWorkerCompletedEventArgs>? Completing;
     }
 
@@ -23,31 +41,19 @@ namespace Toolbox.Threading
     /// </remarks>
     public class WorkItem : IWorkItem
     {
-        /// <summary>
-        /// Name for the unit of work.
-        /// </summary>
+        /// <inheritdoc/>
         public virtual String WorkName { get; init; } = "Work Item";
 
         /// <summary>
         /// The action/Work to be performed.
         /// </summary>
-        public virtual Action DoWork { get; init; }
+        public virtual Action DoWork { get; init; } = () => { };
 
-        /// <summary>
-        /// Function to return if this work item should be canceled.
-        /// </summary>
-        /// <remarks>
-        /// The intent here is to have a way of having one WorkItem fail and
-        /// cancel all the dependent WorkItems. When this evaluates true,
-        /// the DoWork is not executed and the Completing is marked as canceled.
-        /// By default, the function always returns false.
-        /// </remarks>
+        /// <inheritdoc/>
         public virtual Func<Boolean> IsCanceling { get; init; } = () => false;
 
         public WorkItem() : base()
-        { DoWork = Work; }
-
-        protected virtual void Work() { }
+        { }
 
         /// <summary>
         /// This triggers after the DoWork method is complete.

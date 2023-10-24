@@ -1,4 +1,5 @@
 using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.ApplicationData.Property;
@@ -83,7 +84,13 @@ namespace DataDictionary.Main
             SendMessage(new DoUnbindData());
 
             if (Settings.Default.IsOnLineMode)
-            { this.DoWork(Program.Data.LoadApplicationData(), OnComplete); }
+            {
+                List<WorkItem> work = new List<WorkItem>();
+                DatabaseWork factory = new DatabaseWork();
+                work.Add(factory.OpenConnection());
+                work.AddRange(Program.Data.LoadApplicationData(factory));
+                this.DoWork(work, OnComplete);
+            }
             else { this.DoWork(Program.Data.LoadApplicationData(new FileInfo(Settings.Default.AppDataFile)), OnComplete); }
 
             // Handle data load complete
@@ -207,7 +214,7 @@ namespace DataDictionary.Main
         }
 
         private void openSaveModelDatabaseMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Dialogs.OpenSaveModelDatabase()); }
+        { Activate(() => new Forms.Model.ModelManager()); }
 
         private void menuConstraintItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Key), Program.Data.DbConstraints); }
@@ -227,16 +234,22 @@ namespace DataDictionary.Main
         private void menuRoutineDependencyItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Dependancy), Program.Data.DbRoutineDependencies); }
 
-        private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void browsePropertiesCommand_Click(object sender, EventArgs e)
         { Activate(() => new Forms.Application.Property()); }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             (this as IApplicationDataBind).UnbindData();
-            Program.Data.Clear();
-            Program.Data.NewModel();
-            (this as IApplicationDataBind).BindData();
+
+            DoWork(Program.Data.RemoveModel(), onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                Program.Data.NewModel();
+                (this as IApplicationDataBind).BindData();
+            }
         }
+
 
         private void cloneModelMenuItem_Click(object sender, EventArgs e)
         {
@@ -329,6 +342,13 @@ namespace DataDictionary.Main
         private void subjectAreaToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Diagram), Program.Data.DomainSubjectAreas); }
 
+        private void browseHelpCommand_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_HelpTableOfContent), Program.Data.HelpSubjects); }
 
+        private void viewLibrarySourceCommand_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Library), Program.Data.LibrarySources); }
+
+        private void viewLibraryMemberCommand_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Class), Program.Data.LibraryMembers); }
     }
 }

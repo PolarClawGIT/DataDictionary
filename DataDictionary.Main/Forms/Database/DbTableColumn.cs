@@ -1,9 +1,6 @@
-﻿using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+﻿using DataDictionary.BusinessLayer;
 using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
-using System.ComponentModel;
-using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Database
 {

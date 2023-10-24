@@ -1,19 +1,8 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
-using Toolbox.Mediator;
 
 namespace DataDictionary.Main.Forms.Database
 {

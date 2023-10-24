@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Property;
+﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.DomainData.SubjectArea;
@@ -189,6 +190,7 @@ namespace DataDictionary.Main
             foreach (DomainEntityAliasItem aliasItem in alias)
             { CreateTreeNode(entityNode.Nodes, domainModelImageIndex.Alias, aliasItem.ToString()); }
 
+
             List<DomainAttributeItem> attributes = Program.Data.GetAttributes(key).ToList();
             foreach (DomainAttributeItem item in attributes)
             { CreateTreeNode(entityNode.Nodes, domainModelImageIndex.Attribute, item.AttributeTitle, item); }
@@ -233,7 +235,7 @@ namespace DataDictionary.Main
 
         void DomainItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if(sender is null) { sender = domainModelNavigation; }
+            if (sender is null) { sender = domainModelNavigation; }
 
             if (domainModelNodes.FirstOrDefault(w => w.Value == sender) is KeyValuePair<TreeNode, object> value)
             {
@@ -248,7 +250,7 @@ namespace DataDictionary.Main
                 }
 
                 if (item is IDomainSubjectAreaKey subject && nameof(subject.SubjectAreaId).Equals(e.PropertyName))
-                {   domainModelRefreshCommand_Click(sender, EventArgs.Empty); }
+                { domainModelRefreshCommand_Click(sender, EventArgs.Empty); }
             }
 
             String? GetTitle(Object item)

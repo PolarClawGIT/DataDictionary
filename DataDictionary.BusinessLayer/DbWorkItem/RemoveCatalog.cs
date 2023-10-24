@@ -9,17 +9,18 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
+    [Obsolete("Replace with Remove by CatalogKey", true)]
     class RemoveCatalog<TDbItem> : WorkItem
         where TDbItem : class, IDbCatalogKeyUnique, IBindingTableRow
     {
         public required DbCatalogKeyUnique Catalog { get; set; }
         public required IBindingTable<TDbItem> Target { get; set; }
 
-        public RemoveCatalog() : base() { }
+        public RemoveCatalog() : base() 
+        {   DoWork = Work; }
 
-        protected override void Work()
+        void Work()
         {
-            base.Work();
             IEnumerable<TDbItem> toRemove = Target.Where(w => Catalog == new DbCatalogKeyUnique(w)).ToList();
 
             foreach (TDbItem item in toRemove)

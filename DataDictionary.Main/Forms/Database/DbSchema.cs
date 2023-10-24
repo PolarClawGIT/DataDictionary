@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.Main.Properties;
 
 namespace DataDictionary.Main.Forms.Database

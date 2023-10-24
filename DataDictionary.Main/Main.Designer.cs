@@ -74,7 +74,7 @@
             menuRoutineDependencyItem = new ToolStripMenuItem();
             manageLibrariesCommand = new ToolStripSplitButton();
             viewLibrarySourceCommand = new ToolStripMenuItem();
-            viewLiebraryMemberCommand = new ToolStripMenuItem();
+            viewLibraryMemberCommand = new ToolStripMenuItem();
             dataSourceNavigation = new TreeView();
             domainModelMenu = new ContextMenuStrip(components);
             menuImportDbSchema = new ToolStripMenuItem();
@@ -113,8 +113,8 @@
             customizeToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
             applicationToolStripMenuItem = new ToolStripMenuItem();
-            propertiesToolStripMenuItem = new ToolStripMenuItem();
-            domainModelToolStripMenuItem = new ToolStripMenuItem();
+            browsePropertiesCommand = new ToolStripMenuItem();
+            browseHelpCommand = new ToolStripMenuItem();
             unitTestingToolStripMenuItem = new ToolStripMenuItem();
             gridViewToolStripMenuItem = new ToolStripMenuItem();
             testFormToolStripMenuItem = new ToolStripMenuItem();
@@ -389,7 +389,7 @@
             domainModelSortOrder.Image = (Image)resources.GetObject("domainModelSortOrder.Image");
             domainModelSortOrder.ImageTransparentColor = Color.Magenta;
             domainModelSortOrder.Name = "domainModelSortOrder";
-            domainModelSortOrder.Size = new Size(57, 19);
+            domainModelSortOrder.Size = new Size(57, 22);
             domainModelSortOrder.Text = "Sort by";
             // 
             // sortByAttributeEntityCommand
@@ -552,7 +552,7 @@
             // manageLibrariesCommand
             // 
             manageLibrariesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            manageLibrariesCommand.DropDownItems.AddRange(new ToolStripItem[] { viewLibrarySourceCommand, viewLiebraryMemberCommand });
+            manageLibrariesCommand.DropDownItems.AddRange(new ToolStripItem[] { viewLibrarySourceCommand, viewLibraryMemberCommand });
             manageLibrariesCommand.Image = Properties.Resources.Library;
             manageLibrariesCommand.ImageTransparentColor = Color.Magenta;
             manageLibrariesCommand.Name = "manageLibrariesCommand";
@@ -565,12 +565,14 @@
             viewLibrarySourceCommand.Name = "viewLibrarySourceCommand";
             viewLibrarySourceCommand.Size = new Size(190, 22);
             viewLibrarySourceCommand.Text = "view Library Sources";
+            viewLibrarySourceCommand.Click += viewLibrarySourceCommand_Click;
             // 
-            // viewLiebraryMemberCommand
+            // viewLibraryMemberCommand
             // 
-            viewLiebraryMemberCommand.Name = "viewLiebraryMemberCommand";
-            viewLiebraryMemberCommand.Size = new Size(190, 22);
-            viewLiebraryMemberCommand.Text = "view Library Members";
+            viewLibraryMemberCommand.Name = "viewLibraryMemberCommand";
+            viewLibraryMemberCommand.Size = new Size(190, 22);
+            viewLibraryMemberCommand.Text = "view Library Members";
+            viewLibraryMemberCommand.Click += viewLibraryMemberCommand_Click;
             // 
             // dataSourceNavigation
             // 
@@ -842,7 +844,7 @@
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem, applicationToolStripMenuItem, domainModelToolStripMenuItem, unitTestingToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem, applicationToolStripMenuItem, unitTestingToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(46, 20);
             toolsToolStripMenuItem.Text = "&Tools";
@@ -851,43 +853,44 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(153, 22);
+            customizeToolStripMenuItem.Size = new Size(135, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(153, 22);
+            optionsToolStripMenuItem.Size = new Size(135, 22);
             optionsToolStripMenuItem.Text = "&Options";
             optionsToolStripMenuItem.Click += optionsToolStripMenuItem_Click;
             // 
             // applicationToolStripMenuItem
             // 
-            applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { propertiesToolStripMenuItem });
+            applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { browsePropertiesCommand, browseHelpCommand });
             applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
-            applicationToolStripMenuItem.Size = new Size(153, 22);
+            applicationToolStripMenuItem.Size = new Size(135, 22);
             applicationToolStripMenuItem.Text = "Application";
             // 
-            // propertiesToolStripMenuItem
+            // browsePropertiesCommand
             // 
-            propertiesToolStripMenuItem.Image = Properties.Resources.Property;
-            propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
-            propertiesToolStripMenuItem.Size = new Size(127, 22);
-            propertiesToolStripMenuItem.Text = "Properties";
-            propertiesToolStripMenuItem.Click += propertiesToolStripMenuItem_Click;
+            browsePropertiesCommand.Image = Properties.Resources.Property;
+            browsePropertiesCommand.Name = "browsePropertiesCommand";
+            browsePropertiesCommand.Size = new Size(187, 22);
+            browsePropertiesCommand.Text = "browse Properties";
+            browsePropertiesCommand.Click += browsePropertiesCommand_Click;
             // 
-            // domainModelToolStripMenuItem
+            // browseHelpCommand
             // 
-            domainModelToolStripMenuItem.Image = Properties.Resources.Dictionary;
-            domainModelToolStripMenuItem.Name = "domainModelToolStripMenuItem";
-            domainModelToolStripMenuItem.Size = new Size(153, 22);
-            domainModelToolStripMenuItem.Text = "Domain &Model";
+            browseHelpCommand.Image = Properties.Resources.StatusHelp;
+            browseHelpCommand.Name = "browseHelpCommand";
+            browseHelpCommand.Size = new Size(187, 22);
+            browseHelpCommand.Text = "browse Help Subjects";
+            browseHelpCommand.Click += browseHelpCommand_Click;
             // 
             // unitTestingToolStripMenuItem
             // 
             unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem, testFormToolStripMenuItem, textEditorToolStripMenuItem });
             unitTestingToolStripMenuItem.Name = "unitTestingToolStripMenuItem";
-            unitTestingToolStripMenuItem.Size = new Size(153, 22);
+            unitTestingToolStripMenuItem.Size = new Size(135, 22);
             unitTestingToolStripMenuItem.Text = "Testing";
             // 
             // gridViewToolStripMenuItem
@@ -1048,7 +1051,6 @@
         private ToolStripMenuItem menuTableColumnItem;
         private ToolStripMenuItem menuPropertyItem;
         private ToolStripMenuItem menuImportDbSchema;
-        private ToolStripMenuItem domainModelToolStripMenuItem;
         private TabControl navigationTabs;
         private TabPage navigationDataSourceTab;
         private TreeView dataSourceNavigation;
@@ -1069,7 +1071,7 @@
         private ToolStripMenuItem scriptMenuItem;
         private ToolStripMenuItem extendedPropertiesToolStripMenuItem;
         private ToolStripMenuItem applicationToolStripMenuItem;
-        private ToolStripMenuItem propertiesToolStripMenuItem;
+        private ToolStripMenuItem browsePropertiesCommand;
         private ToolStripMenuItem testFormToolStripMenuItem;
         private ToolStripMenuItem peekAtClipboardToolStripMenuItem;
         private ToolStripMenuItem textEditorToolStripMenuItem;
@@ -1081,7 +1083,7 @@
         private ToolStripSplitButton manageDatabasesCommand;
         private ToolStripSplitButton manageLibrariesCommand;
         private ToolStripMenuItem viewLibrarySourceCommand;
-        private ToolStripMenuItem viewLiebraryMemberCommand;
+        private ToolStripMenuItem viewLibraryMemberCommand;
         private ToolStripMenuItem browseCatalogsToolStripMenuItem;
         private ToolStripSplitButton newAttributeCommand;
         private ToolStripSplitButton newEntityCommand;
@@ -1094,5 +1096,6 @@
         private ToolStripSplitButton newSubjectAreaCommand;
         private ToolStripMenuItem subjectAreaToolStripMenuItem;
         private ToolStripButton domainModelRefreshCommand;
+        private ToolStripMenuItem browseHelpCommand;
     }
 }

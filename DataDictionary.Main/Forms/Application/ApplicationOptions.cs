@@ -11,6 +11,9 @@ using System.Windows.Forms;
 using DataDictionary.Main.Properties;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Forms;
+using Toolbox.Threading;
+using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer;
 
 namespace DataDictionary.Main.Dialogs
 {
@@ -34,7 +37,11 @@ namespace DataDictionary.Main.Dialogs
 
         private void commandSaveToDatabase_Click(object sender, EventArgs e)
         {
-            this.DoWork(Program.Data.SaveApplicationData(), OnComplete);
+            List<WorkItem> work = new List<WorkItem>();
+            DatabaseWork factory = new DatabaseWork();
+            work.Add(factory.OpenConnection());
+            work.AddRange(Program.Data.SaveApplicationData(factory));
+            this.DoWork(work, OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             { } // Nothing to do at this point
@@ -43,7 +50,12 @@ namespace DataDictionary.Main.Dialogs
         private void commandLoadFromDatabase_Click(object sender, EventArgs e)
         {
             SendMessage(new DbApplicationBatchStarting());
-            this.DoWork(Program.Data.LoadApplicationData(), OnComplete);
+
+            List<WorkItem> work = new List<WorkItem>();
+            DatabaseWork factory = new DatabaseWork();
+            work.Add(factory.OpenConnection());
+            work.AddRange(Program.Data.LoadApplicationData(factory));
+            this.DoWork(work, OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             { SendMessage(new DbApplicationBatchCompleted()); } 

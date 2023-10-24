@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.WorkFlows;
+﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -71,7 +73,13 @@ namespace DataDictionary.Main.Forms.Library
         private void LibraryManager_Load(object sender, EventArgs e)
         {
             if (Settings.Default.IsOnLineMode)
-            { this.DoWork(dbData.LoadLibrary(), onCompleting); }
+            {
+                List<WorkItem> work = new List<WorkItem>();
+                DatabaseWork factory = new DatabaseWork();
+                work.Add(factory.OpenConnection());
+                work.AddRange(LoadLocalData(factory));
+                this.DoWork(work, onCompleting);
+            }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { this.BindData(); }
@@ -163,67 +171,93 @@ namespace DataDictionary.Main.Forms.Library
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
             libraryNavigation.EndEdit();
-            List<WorkItem> work = new List<WorkItem>();
 
             if (libraryBinding.Current is LibraryManagerItem item)
-            { work.AddRange(Program.Data.RemoveLibrary(item)); }
+            {
+                List<WorkItem> work = new List<WorkItem>();
+                LibrarySourceKey key = new LibrarySourceKey(item);
+                work.AddRange(Program.Data.RemoveLibrary(key));
+                DoLocalWork(work);
+            }
 
-            DoLocalWork(work);
+            
         }
 
         private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
             libraryNavigation.EndEdit();
-            List<WorkItem> work = new List<WorkItem>();
 
             if (libraryBinding.Current is LibraryManagerItem item)
             {
+                List<WorkItem> work = new List<WorkItem>();
+                DatabaseWork factory = new DatabaseWork();
+
                 LibrarySourceKey key = new LibrarySourceKey(item);
+                work.Add(factory.OpenConnection());
                 Boolean inModelList = (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
 
-                if (inModelList) { work.AddRange(Program.Data.DeleteLibrary(item)); }
-                else { work.AddRange(dbData.DeleteLibrary(item)); }
-            }
+                if (inModelList) { work.AddRange(Program.Data.DeleteLibrary(factory, key)); }
+                else { work.AddRange(dbData.DeleteLibrary(factory, key)); }
 
-            DoLocalWork(work);
+                work.AddRange(LoadLocalData(factory));
+                DoLocalWork(work);
+            }
         }
 
         private void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
             libraryNavigation.EndEdit();
-            List<WorkItem> work = new List<WorkItem>();
 
             if (libraryBinding.Current is LibraryManagerItem item)
-            { work.AddRange(Program.Data.LoadLibrary(item)); }
+            {
+                List<WorkItem> work = new List<WorkItem>();
+                DatabaseWork factory = new DatabaseWork();
+                work.Add(factory.OpenConnection());
 
-            DoLocalWork(work);
+                LibrarySourceKey key = new LibrarySourceKey(item);
+                work.AddRange(Program.Data.LoadLibrary(factory, key));
+                work.AddRange(LoadLocalData(factory));
+
+                DoLocalWork(work);
+            }
+
+
         }
 
         private void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
         {
             libraryNavigation.EndEdit();
-            List<WorkItem> work = new List<WorkItem>();
 
             if (libraryBinding.Current is LibraryManagerItem item)
             {
+                List<WorkItem> work = new List<WorkItem>();
+                DatabaseWork factory = new DatabaseWork();
                 LibrarySourceKey key = new LibrarySourceKey(item);
+                work.Add(factory.OpenConnection());
 
-                if (inModelList) { work.AddRange(Program.Data.SaveLibrary(item)); }
-                else { work.AddRange(dbData.SaveLibrary(item)); }
+                if (inModelList) { work.AddRange(Program.Data.SaveLibrary(factory, key)); }
+                else { work.AddRange(dbData.SaveLibrary(factory, key)); }
+
+                work.AddRange(LoadLocalData(factory));
+
+                DoLocalWork(work);
             }
 
-            DoLocalWork(work);
+            
+        }
+
+        private IReadOnlyList<WorkItem> LoadLocalData(IDatabaseWork factory)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem() { WorkName = "Clear local data", DoWork = dbData.Clear });
+            work.AddRange(dbData.LoadLibrary(factory));
+
+            return work;
         }
 
         private void DoLocalWork(List<WorkItem> work)
         {
             SendMessage(new Messages.DoUnbindData());
-
-            if (Settings.Default.IsOnLineMode)
-            {
-                work.Add(new WorkItem() { WorkName = "Clear form data", DoWork = dbData.Clear });
-                work.AddRange(dbData.LoadLibrary());
-            }
 
             this.DoWork(work, onCompleting);
 
