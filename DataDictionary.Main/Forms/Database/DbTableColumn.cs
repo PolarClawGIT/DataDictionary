@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.Main.Properties;
+using System.ComponentModel;
+using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
@@ -15,6 +17,10 @@ namespace DataDictionary.Main.Forms.Database
         {
             InitializeComponent();
             this.Icon = Resources.Icon_Column;
+
+            importDataCommand.Enabled = true;
+            importDataCommand.Click += ImportDataCommand_Click;
+            importDataCommand.ToolTipText = "Import the Table/View Column to the Domain Model";
         }
 
         private void DbColumn_Load(object sender, EventArgs e)
@@ -97,6 +103,22 @@ namespace DataDictionary.Main.Forms.Database
             isHiddenData.DataBindings.Clear();
 
             extendedPropertiesData.DataSource = null;
+        }
+
+        private void ImportDataCommand_Click(object? sender, EventArgs e)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            if (Program.Data.DbTableColumns.FirstOrDefault(w => DataKey.Equals(w)) is DbTableColumnItem data)
+            {
+                work.AddRange(Program.Data.ImportAttribute(data));
+
+                SendMessage(new Messages.DoUnbindData());
+                this.DoWork(work, onCompleting);
+            }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { SendMessage(new Messages.DoBindData()); }
         }
     }
 }

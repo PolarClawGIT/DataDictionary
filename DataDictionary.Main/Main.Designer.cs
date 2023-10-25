@@ -1084,7 +1084,6 @@
         private ToolStripSplitButton manageLibrariesCommand;
         private ToolStripMenuItem viewLibrarySourceCommand;
         private ToolStripMenuItem viewLibraryMemberCommand;
-        private ToolStripMenuItem browseCatalogsToolStripMenuItem;
         private ToolStripSplitButton newAttributeCommand;
         private ToolStripSplitButton newEntityCommand;
         private ToolStripMenuItem menuAttributes;

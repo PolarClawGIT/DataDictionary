@@ -11,10 +11,11 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.ApplicationData.Property
 {
+
     /// <summary>
     /// Interface for the Property data.
     /// </summary>
-    public interface IPropertyItem : IPropertyKey, IPropertyKeyUnique, IDataItem
+    public interface IPropertyItem : IPropertyKey, IPropertyKeyExtended, IPropertyKeyUnique, IDataItem
     {
         /// <summary>
         /// Description of the Property. How the property is used.
@@ -41,10 +42,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
         /// </summary>
         Nullable<Boolean> IsChoice { get; }
 
-        /// <summary>
-        /// The name of the MS SQL Extended Property to be populated.
-        /// </summary>
-        String? ExtendedProperty { get; }
 
         /// <summary>
         /// List of Possible Choices to be presented.
@@ -187,8 +184,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
 
             return result;
         }
-
-
 
         #region ISerializable
         /// <summary>

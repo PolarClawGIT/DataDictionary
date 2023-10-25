@@ -1,16 +1,10 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
@@ -21,10 +15,14 @@ namespace DataDictionary.Main.Forms.Database
         public bool IsOpenItem(object? item)
         { return DataKey.Equals(item); }
 
-        public DbRoutine(): base()
+        public DbRoutine() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.Icon_Procedure; //TODO: Need to change this on Binding, depending on type.
+            // Icon set in Binding
+
+            importDataCommand.Enabled = true;
+            importDataCommand.Click += ImportDataCommand_Click;
+            importDataCommand.ToolTipText = "Import the Routine to the Domain Model";
         }
 
         private void DbRoutine_Load(object sender, EventArgs e)
@@ -35,6 +33,15 @@ namespace DataDictionary.Main.Forms.Database
             if (Program.Data.DbRoutines.FirstOrDefault(w => DataKey.Equals(w)) is DbRoutineItem data)
             {
                 this.Text = DataKey.ToString();
+                DbRoutineParameterItem? firstParameter = Program.Data.DbRoutineParameters.OrderBy(o => o.OrdinalPosition).FirstOrDefault(w => DataKey.Equals(w));
+
+                if (data.ObjectScope == DbObjectScope.Procedure)
+                { this.Icon = Resources.Icon_Procedure; }
+                else if (data.ObjectScope == DbObjectScope.Function && firstParameter is DbRoutineParameterItem isScalar && isScalar.OrdinalPosition == 0)
+                { this.Icon = Resources.Icon_ScalarFunction; }
+
+                else if (data.ObjectScope == DbObjectScope.Function && firstParameter is DbRoutineParameterItem isTable && isTable.OrdinalPosition != 0)
+                { this.Icon = Resources.Icon_TableFunction; }
 
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.DatabaseName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
@@ -68,6 +75,23 @@ namespace DataDictionary.Main.Forms.Database
             extendedPropertiesData.DataSource = null;
             parametersData.DataSource = null;
             dependenciesData.DataSource = null;
+        }
+
+        private void ImportDataCommand_Click(object? sender, EventArgs e)
+        {
+
+            List<WorkItem> work = new List<WorkItem>();
+
+            if (Program.Data.DbRoutines.FirstOrDefault(w => DataKey.Equals(w)) is DbRoutineItem data)
+            {
+                work.AddRange(Program.Data.ImportAttribute(data));
+
+                SendMessage(new Messages.DoUnbindData());
+                this.DoWork(work, onCompleting);
+            }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { SendMessage(new Messages.DoBindData()); }
         }
     }
 }

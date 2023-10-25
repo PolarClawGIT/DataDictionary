@@ -154,7 +154,6 @@
         #endregion
 
         private BindingSource modelBinding;
-        private TableLayoutPanel modelManagerLayout;
         private DataGridView modelNavigation;
         private Controls.TextBoxData modelTitleData;
         private Controls.TextBoxData modelDescriptionData;

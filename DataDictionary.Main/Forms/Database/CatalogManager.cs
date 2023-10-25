@@ -61,9 +61,6 @@ namespace DataDictionary.Main.Forms.Database
             deleteItemCommand.Image = Resources.DeleteDatabase;
             deleteItemCommand.ToolTipText = "Removes the Catalog from the Model";
 
-            importDataCommand.Click += ImportDataCommand_Click;
-            importDataCommand.ToolTipText = "Import the Databases to the Domain Model";
-
             openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click;
             deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
             saveToDatabaseCommand.Click += SaveToDatabaseCommand_Click;
@@ -284,7 +281,6 @@ namespace DataDictionary.Main.Forms.Database
         {
             base.HandleMessage(message);
             deleteItemCommand.Enabled = inModelList;
-            importDataCommand.Enabled = inModelList;
             openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList && !inModelList;
             deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
             saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
@@ -293,7 +289,6 @@ namespace DataDictionary.Main.Forms.Database
         private void catalogBinding_CurrentChanged(object sender, EventArgs e)
         {
             deleteItemCommand.Enabled = inModelList;
-            importDataCommand.Enabled = inModelList;
             openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList && !inModelList;
             deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
             saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;

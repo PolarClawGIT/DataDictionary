@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Implementation for Database Routine Parameter Key
     /// </summary>
-    public class DbRoutineParameterKey : DbRoutineKey, IDbRoutineParameterKey, IKeyComparable<DbRoutineParameterKey>
+    public class DbRoutineParameterKey : DbRoutineKey, IDbRoutineParameterKey, IKeyComparable<IDbRoutineParameterKey>
     {
         /// <inheritdoc/>
         public String ParameterName { get; set; } = string.Empty;
@@ -38,13 +38,13 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public bool Equals(DbRoutineParameterKey? other)
+        public bool Equals(IDbRoutineParameterKey? other)
         {
             return 
                 other is IDbRoutineKey &&
-                new DbSchemaKey(this).Equals(other) &&
-                !string.IsNullOrEmpty(RoutineName) &&
-                !string.IsNullOrEmpty(other.RoutineName) &&
+                new DbRoutineKey(this).Equals(other) &&
+                !string.IsNullOrEmpty(ParameterName) &&
+                !string.IsNullOrEmpty(other.ParameterName) &&
                 ParameterName.Equals(other.ParameterName, KeyExtension.CompareString);
         }
 
@@ -53,7 +53,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         { return obj is IDbRoutineParameterKey value && Equals(new DbRoutineParameterKey(value)); }
 
         /// <inheritdoc/>
-        public int CompareTo(DbRoutineParameterKey? other)
+        public int CompareTo(IDbRoutineParameterKey? other)
         {
             if (other is null) { return 1; }
             else if (new DbRoutineKey(this).CompareTo(other) is int value && value != 0) { return value; }

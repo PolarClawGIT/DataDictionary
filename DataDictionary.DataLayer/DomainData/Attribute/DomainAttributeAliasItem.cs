@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using System;
 using System.Collections.Generic;
@@ -89,6 +90,22 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             SchemaName = source.SchemaName;
             ObjectName = source.TableName;
             ElementName = source.ColumnName;
+
+            ElementScope = source.ElementScope;
+        }
+
+        /// <summary>
+        /// Constructor for Domain Attribute Alias Items
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="source"></param>
+        public DomainAttributeAliasItem(IDomainAttributeKey key, IDbRoutineParameterItem source) : this()
+        {
+            AttributeId = key.AttributeId;
+            DatabaseName = source.DatabaseName;
+            SchemaName = source.SchemaName;
+            ObjectName = source.RoutineName;
+            ElementName = source.ParameterName;
 
             ElementScope = source.ElementScope;
         }

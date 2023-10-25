@@ -143,9 +143,9 @@
             // 
             // progressLabel
             // 
-            progressLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            progressLabel.Anchor = AnchorStyles.Right;
             progressLabel.AutoSize = true;
-            progressLabel.Location = new Point(87, 220);
+            progressLabel.Location = new Point(87, 226);
             progressLabel.Name = "progressLabel";
             progressLabel.Size = new Size(70, 15);
             progressLabel.TabIndex = 25;

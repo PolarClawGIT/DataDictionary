@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.DataLayer.DatabaseData.Routine;
+using DataDictionary.DataLayer.DatabaseData.Table;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,6 +45,16 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         public DomainAttributeKeyUnique(IDbTableColumnKey source) : base()
         {
             if (source.ColumnName is string) { AttributeTitle = source.ColumnName; }
+            else { AttributeTitle = string.Empty; }
+        }
+
+        /// <summary>
+        /// Constructor for the Attribute Unique Key.
+        /// </summary>
+        /// <param name="source"></param>
+        public DomainAttributeKeyUnique(IDbRoutineParameterKey source) : base()
+        {
+            if (source.ParameterName is string) { AttributeTitle = source.ParameterName.Replace("@",""); }
             else { AttributeTitle = string.Empty; }
         }
 

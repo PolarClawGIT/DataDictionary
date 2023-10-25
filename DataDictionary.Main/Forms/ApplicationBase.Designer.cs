@@ -97,7 +97,7 @@
             // 
             importDataCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             importDataCommand.Enabled = false;
-            importDataCommand.Image = Properties.Resources.ImportCatalogPart;
+            importDataCommand.Image = Properties.Resources.Import;
             importDataCommand.ImageTransparentColor = Color.Magenta;
             importDataCommand.Name = "importDataCommand";
             importDataCommand.Size = new Size(23, 22);

@@ -29,7 +29,7 @@ namespace DataDictionary.Main.Forms
         }
 
         #region Open Form
-        
+
         /// <summary>
         /// Default Activate, does not open any forms.
         /// </summary>
