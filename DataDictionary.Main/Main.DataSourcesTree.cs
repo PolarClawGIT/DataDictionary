@@ -7,6 +7,7 @@ using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Properties;
 
 namespace DataDictionary.Main
@@ -83,14 +84,19 @@ namespace DataDictionary.Main
             { tree.ImageList.Images.Add(image.imageKey, image.image); }
         }
 
+        List<Object> expandedDbNode = new List<object>();
         void ClearDataSourcesTree()
         {
+            expandedDbNode.AddRange(dbDataNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value));
+
             dataSourceNavigation.Nodes.Clear();
             dbDataNodes.Clear();
         }
 
         void BuildDataSourcesTree()
         {
+            dataSourceNavigation.BeginUpdate();
+
             foreach (IDbCatalogItem catalogItem in Program.Data.DbCatalogs.OrderBy(o => o.DatabaseName))
             {
                 if (String.IsNullOrWhiteSpace(catalogItem.DatabaseName))
@@ -263,6 +269,12 @@ namespace DataDictionary.Main
                     }
                 }
             }
+
+            foreach (TreeNode item in dbDataNodes.Where(w => expandedDbNode.Contains(w.Value)).Select(s => s.Key).ToList())
+            { item.ExpandParent(); }
+            expandedDbNode.Clear();
+
+            dataSourceNavigation.EndUpdate();
 
             TreeNode CreateNode(TreeNodeCollection target, String? nodeText, dbDataImageIndex imageIndex, Object? source = null, String? key = null)
             {

@@ -31,8 +31,11 @@ namespace DataDictionary.Main
             {domainModelImageIndex.Alias,        ("Alias",       Resources.Synonym) },
         };
 
+        List<Object> expandedDomanNode = new List<object>();
         void ClearDomainModelTree()
         {
+            expandedDomanNode.AddRange(dbDataNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value));
+
             foreach (KeyValuePair<TreeNode, object> item in domainModelNodes)
             {
                 if (item.Value is INotifyPropertyChanged notifyPropertyChanged)
@@ -45,6 +48,7 @@ namespace DataDictionary.Main
 
         void BuildDomainModelTreeByAttribute()
         {
+            dataSourceNavigation.BeginUpdate();
             domainModelNavigation.TreeViewNodeSorter = new DomainTreeSort();
 
             foreach (DomainAttributeItem attributeItem in
@@ -87,10 +91,16 @@ namespace DataDictionary.Main
 
             domainModelNavigation.Sort();
 
+            foreach (TreeNode item in dbDataNodes.Where(w => expandedDbNode.Contains(w.Value)).Select(s => s.Key).ToList())
+            { item.ExpandParent(); }
+            expandedDbNode.Clear();
+
+            dataSourceNavigation.EndUpdate();
         }
 
         void BuildDomainModelTreeByEntity()
         {
+            dataSourceNavigation.BeginUpdate();
             domainModelNavigation.TreeViewNodeSorter = new DomainTreeSort();
 
             foreach (DomainEntityItem entityItem in
@@ -133,7 +143,11 @@ namespace DataDictionary.Main
 
             domainModelNavigation.Sort();
 
+            foreach (TreeNode item in dbDataNodes.Where(w => expandedDbNode.Contains(w.Value)).Select(s => s.Key).ToList())
+            { item.ExpandParent(); }
+            expandedDbNode.Clear();
 
+            dataSourceNavigation.EndUpdate();
         }
 
         /// <summary>
