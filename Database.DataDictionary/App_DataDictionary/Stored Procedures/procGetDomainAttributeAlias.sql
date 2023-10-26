@@ -21,8 +21,7 @@ Select	D.[AttributeId],
 		D.[SysStart]
 From	[App_DataDictionary].[DomainAttributeAlias] D
 		Left Join [App_DataDictionary].[ModelAttribute] A
-			On	D.[AttributeId] = A.[AttributeId] And
-				D.[ModelId] = A.[ModelId]
+			On	D.[AttributeId] = A.[AttributeId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@AttributeId is Null or @AttributeId = D.[AttributeId]) And
 		(@DatabaseName is Null or @DatabaseName = D.[DatabaseName]) And

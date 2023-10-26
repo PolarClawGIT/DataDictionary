@@ -86,7 +86,6 @@ Begin Try
 	With [Data] As (
 		Select	D.[AttributeId],
 				D.[AttributeAliasId],
-				@ModelId As [ModelId],
 				D.[DatabaseName],
 				D.[SchemaName],
 				D.[ObjectName],
@@ -103,8 +102,8 @@ Begin Try
 	On	T.[AttributeId] = S.[AttributeId] And
 		T.[AttributeAliasId] = S.[AttributeAliasId]
 	When Not Matched by Target Then
-		Insert ([AttributeId], [AttributeAliasId], [ModelId], [DatabaseName], [SchemaName], [ObjectName], [ElementName])
-		Values ([AttributeId], [AttributeAliasId], [ModelId], [DatabaseName], [SchemaName], [ObjectName], [ElementName])
+		Insert ([AttributeId], [AttributeAliasId], [DatabaseName], [SchemaName], [ObjectName], [ElementName])
+		Values ([AttributeId], [AttributeAliasId], [DatabaseName], [SchemaName], [ObjectName], [ElementName])
 	When Not Matched by Source And (T.[AttributeId] in (
 		Select	[AttributeId]
 		From	[App_DataDictionary].[ModelAttribute]

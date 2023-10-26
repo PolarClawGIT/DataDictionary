@@ -81,7 +81,6 @@ Begin Try
 	With [Data] As (
 		Select	D.[EntityId],
 				D.[EntityAliasId],
-				@ModelId As [ModelId],
 				D.[DatabaseName],
 				D.[SchemaName],
 				D.[ObjectName]
@@ -96,8 +95,8 @@ Begin Try
 	On	T.[EntityId] = S.[EntityId] And
 		T.[EntityAliasId] = S.[EntityAliasId]
 	When Not Matched by Target Then
-		Insert ([EntityId], [EntityAliasId], [ModelId], [DatabaseName], [SchemaName], [ObjectName])
-		Values ([EntityId], [EntityAliasId], [ModelId], [DatabaseName], [SchemaName], [ObjectName])
+		Insert ([EntityId], [EntityAliasId], [DatabaseName], [SchemaName], [ObjectName])
+		Values ([EntityId], [EntityAliasId], [DatabaseName], [SchemaName], [ObjectName])
 	When Not Matched by Source And (T.[EntityId] in (
 		Select	[EntityId]
 		From	[App_DataDictionary].[ModelEntity]

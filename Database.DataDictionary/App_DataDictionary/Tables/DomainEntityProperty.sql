@@ -1,6 +1,5 @@
 ﻿CREATE TABLE [App_DataDictionary].[DomainEntityProperty]
 (
-	-- To be implemented later.
 	[EntityId]			UniqueIdentifier Not Null,
 	[PropertyId]		UniqueIdentifier NOT Null,
 	[PropertyValue]		NVarChar(4000) Null, -- The Value for the Property. (Summary Text, Extended Property, Choice)

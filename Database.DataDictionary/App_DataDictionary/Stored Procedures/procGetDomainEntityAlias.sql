@@ -19,8 +19,7 @@ Select	D.[EntityId],
 		D.[SysStart]
 From	[App_DataDictionary].[DomainEntityAlias] D
 		Left Join [App_DataDictionary].[ModelEntity] A
-			On	D.[EntityId] = A.[EntityId] And
-				D.[ModelId] = A.[ModelId]
+			On	D.[EntityId] = A.[EntityId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@EntityId is Null or @EntityId = D.[EntityId]) And
 		(@DatabaseName is Null or @DatabaseName = D.[DatabaseName]) And
