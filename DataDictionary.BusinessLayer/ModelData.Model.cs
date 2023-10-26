@@ -271,7 +271,6 @@ namespace DataDictionary.BusinessLayer
         /// <returns></returns>
         public IReadOnlyList<WorkItem> ImportAttribute(IDbTableColumnKey columnKey)
         {
-
             List<WorkItem> work = new List<WorkItem>();
             work.Add(new WorkItem()
             {
@@ -364,15 +363,116 @@ namespace DataDictionary.BusinessLayer
             return work;
         }
 
-        void CreateEntity(IDbTableKey tableKey) { }
+        void CreateEntity(IDbTableKey tableKey)
+        {
+            DbTableKey key = new DbTableKey(tableKey);
+            DomainEntityKeyUnique entityKeyUnique = new DomainEntityKeyUnique(tableKey);
+            DomainEntityAliasKey aliasKey = new DomainEntityAliasKey(tableKey);
 
-        void CreateEntity(IDbRoutineKey routineKey) { }
+            if (this.DbTables.FirstOrDefault(w => key.Equals(w)) is DbTableItem tableItem)
+            {
+                DomainEntityItem? entityItem = this.DomainEntities.FirstOrDefault(w => entityKeyUnique.Equals(w));
+                DomainEntityAliasItem? aliasItem = this.DomainEntityAliases.FirstOrDefault(w => aliasKey.Equals(w));
+                DomainEntityKey entityKey;
+
+                if (entityItem is null && aliasItem is not null)
+                {
+                    entityKey = new DomainEntityKey(aliasItem);
+                    entityItem = this.DomainEntities.FirstOrDefault(w => entityKey.Equals(w));
+                }
+
+                if (entityItem is null)
+                {
+                    entityItem = new DomainEntityItem() { EntityTitle = tableItem.TableName };
+                    this.DomainEntities.Add(entityItem);
+                }
+
+                entityKey = new DomainEntityKey(entityItem);
+
+                if (aliasItem is null)
+                {
+                    aliasItem = new DomainEntityAliasItem(entityKey, tableItem);
+                    this.DomainEntityAliases.Add(aliasItem);
+                }
+
+                foreach (DbExtendedPropertyItem propertyItem in this.GetExtendedProperty(tableItem))
+                {
+                    PropertyKeyExtended propertyByName = new PropertyKeyExtended(propertyItem);
+
+                    if (this.Properties.FirstOrDefault(w => propertyByName.Equals(w)) is PropertyItem property)
+                    {
+                        PropertyKey propertyKey = new PropertyKey(property);
+                        DomainEntityPropertyItem? entityProperty = this.DomainEntityProperties.FirstOrDefault(w => entityKey.Equals(w) && propertyByName.Equals(w));
+
+                        // Special Handling, I want to copy the MS_Description to the Attribute Description if there is none.
+                        if (String.IsNullOrWhiteSpace(entityItem.EntityDescription) && propertyByName.ExtendedProperty == "MS_Description")
+                        { entityItem.EntityDescription = propertyItem.PropertyValue; }
+
+                        if (entityProperty is null)
+                        {
+                            entityProperty = new DomainEntityPropertyItem(entityItem, propertyKey, propertyItem);
+                            this.DomainEntityProperties.Add(entityProperty);
+                        }
+                    }
+                }
+            }
+        }
 
         void CreateEntity(IDbSchemaKey schemaKey) { }
 
         void CreateEntity(IDbDomainKey domainKey) { }
 
         void CreateEntity(ILibraryMemberKey memberKey) { }
+
+        void CreateProcess(IDbRoutineKey routineKey) { }
+
+        void CreateProcess(ILibraryMemberKey memberKey) { }
+
+        /// <summary>
+        /// Imports the Entity for a given Database Table
+        /// </summary>
+        /// <param name="tableKey"></param>
+        public IReadOnlyList<WorkItem> ImportEntity(IDbTableKey tableKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem()
+            {
+                WorkName = String.Format("Import {0}", tableKey.ToString()),
+                DoWork = () => CreateEntity(tableKey)
+            });
+
+            return work;
+        }
+
+        /// <summary>
+        /// Imports all the Entities for a given Database Schema
+        /// </summary>
+        /// <param name="schemaKey"></param>
+        public IReadOnlyList<WorkItem> ImportEntity(IDbSchemaKey schemaKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            DbSchemaKey key = new DbSchemaKey(schemaKey);
+            foreach (DbTableItem item in this.DbTables.Where(w => key.Equals(w) && w.IsSystem == false))
+            { work.AddRange(ImportEntity(item)); }
+
+            return work;
+        }
+
+        /// <summary>
+        /// Imports all the Entities for a given Database Schema
+        /// </summary>
+        /// <param name="catalogKey"></param>
+        public IReadOnlyList<WorkItem> ImportEntity(IDbCatalogKeyUnique catalogKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            DbCatalogKeyUnique key = new DbCatalogKeyUnique(catalogKey);
+
+            foreach (DbSchemaItem item in this.DbSchemta.Where(w => key.Equals(w) && w.IsSystem == false))
+            { work.AddRange(ImportEntity(item)); }
+
+            return work;
+        }
     }
 }
 

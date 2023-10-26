@@ -78,6 +78,7 @@ namespace DataDictionary.Main.Forms.Database
             if (Program.Data.DbTables.FirstOrDefault(w => DataKey.Equals(w)) is DbTableItem data)
             {
                 work.AddRange(Program.Data.ImportAttribute(data));
+                work.AddRange(Program.Data.ImportEntity(data));
 
                 SendMessage(new Messages.DoUnbindData());
                 this.DoWork(work, onCompleting);
