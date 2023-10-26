@@ -28,14 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel catalogManagerLayout;
             catalogTitleData = new Controls.TextBoxData();
             catalogDescriptionData = new Controls.TextBoxData();
             sourceServerNameData = new Controls.TextBoxData();
             sourceDatabaseNameData = new Controls.TextBoxData();
             sourceDateData = new Controls.TextBoxData();
+            importOptions = new ContextMenuStrip(components);
+            importOptionEntity = new ToolStripMenuItem();
+            importOptionAttribute = new ToolStripMenuItem();
+            importOptionProcesses = new ToolStripMenuItem();
             catalogManagerLayout = new TableLayoutPanel();
             catalogManagerLayout.SuspendLayout();
+            importOptions.SuspendLayout();
             SuspendLayout();
             // 
             // catalogManagerLayout
@@ -121,6 +127,38 @@
             sourceDateData.Size = new Size(146, 44);
             sourceDateData.TabIndex = 10;
             // 
+            // importOptions
+            // 
+            importOptions.Items.AddRange(new ToolStripItem[] { importOptionEntity, importOptionAttribute, importOptionProcesses });
+            importOptions.Name = "contextMenuStrip1";
+            importOptions.Size = new Size(181, 92);
+            // 
+            // importOptionEntity
+            // 
+            importOptionEntity.Checked = true;
+            importOptionEntity.CheckOnClick = true;
+            importOptionEntity.CheckState = CheckState.Checked;
+            importOptionEntity.Name = "importOptionEntity";
+            importOptionEntity.Size = new Size(180, 22);
+            importOptionEntity.Text = "Import Entities";
+            // 
+            // importOptionAttribute
+            // 
+            importOptionAttribute.Checked = true;
+            importOptionAttribute.CheckOnClick = true;
+            importOptionAttribute.CheckState = CheckState.Checked;
+            importOptionAttribute.Name = "importOptionAttribute";
+            importOptionAttribute.Size = new Size(180, 22);
+            importOptionAttribute.Text = "Import Attributes";
+            // 
+            // importOptionProcesses
+            // 
+            importOptionProcesses.CheckOnClick = true;
+            importOptionProcesses.Enabled = false;
+            importOptionProcesses.Name = "importOptionProcesses";
+            importOptionProcesses.Size = new Size(180, 22);
+            importOptionProcesses.Text = "Import Processes";
+            // 
             // DbCatalog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -133,6 +171,7 @@
             Controls.SetChildIndex(catalogManagerLayout, 0);
             catalogManagerLayout.ResumeLayout(false);
             catalogManagerLayout.PerformLayout();
+            importOptions.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -144,5 +183,9 @@
         private Controls.TextBoxData sourceServerNameData;
         private Controls.TextBoxData sourceDatabaseNameData;
         private Controls.TextBoxData sourceDateData;
+        private ContextMenuStrip importOptions;
+        private ToolStripMenuItem importOptionEntity;
+        private ToolStripMenuItem importOptionAttribute;
+        private ToolStripMenuItem importOptionProcesses;
     }
 }

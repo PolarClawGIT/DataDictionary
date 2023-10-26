@@ -17,9 +17,10 @@ namespace DataDictionary.Main.Forms.Database
             InitializeComponent();
             this.Icon = Resources.Icon_Database;
 
+            importDataCommand.DropDown = importOptions;
             importDataCommand.Enabled = true;
-            importDataCommand.Click += ImportDataCommand_Click;
-            importDataCommand.ToolTipText = "Import the Databases to the Domain Model";
+            importDataCommand.ButtonClick += ImportDataCommand_Click;
+            importDataCommand.ToolTipText = "Import the Database to the Domain Model";
         }
 
         private void DbCatalog_Load(object sender, EventArgs e)
@@ -58,8 +59,8 @@ namespace DataDictionary.Main.Forms.Database
 
             if (Program.Data.DbCatalogs.FirstOrDefault(w => DataKey.Equals(w)) is DbCatalogItem data)
             {
-                work.AddRange(Program.Data.ImportAttribute(data));
-                work.AddRange(Program.Data.ImportEntity(data));
+                if (importOptionEntity.Checked) { work.AddRange(Program.Data.ImportEntity(data)); }
+                if (importOptionAttribute.Checked) { work.AddRange(Program.Data.ImportAttribute(data)); }
 
                 SendMessage(new Messages.DoUnbindData());
                 this.DoWork(work, onCompleting);

@@ -20,8 +20,9 @@ namespace DataDictionary.Main.Forms.Database
             InitializeComponent();
             this.Icon = Resources.Icon_Table;
 
+            importDataCommand.DropDown = importOptions;
             importDataCommand.Enabled = true;
-            importDataCommand.Click += ImportDataCommand_Click;
+            importDataCommand.ButtonClick += ImportDataCommand_Click;
             importDataCommand.ToolTipText = "Import the Table/View to the Domain Model";
         }
 
@@ -77,8 +78,8 @@ namespace DataDictionary.Main.Forms.Database
 
             if (Program.Data.DbTables.FirstOrDefault(w => DataKey.Equals(w)) is DbTableItem data)
             {
-                work.AddRange(Program.Data.ImportAttribute(data));
-                work.AddRange(Program.Data.ImportEntity(data));
+                if (importOptionEntity.Checked) { work.AddRange(Program.Data.ImportEntity(data)); }
+                if (importOptionAttribute.Checked) { work.AddRange(Program.Data.ImportAttribute(data)); }
 
                 SendMessage(new Messages.DoUnbindData());
                 this.DoWork(work, onCompleting);

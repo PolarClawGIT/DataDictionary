@@ -35,7 +35,7 @@
             toolStrip = new ToolStrip();
             newItemCommand = new ToolStripButton();
             deleteItemCommand = new ToolStripButton();
-            importDataCommand = new ToolStripButton();
+            importDataCommand = new ToolStripSplitButton();
             openFromDatabaseCommand = new ToolStripButton();
             saveToDatabaseCommand = new ToolStripButton();
             deleteFromDatabaseCommand = new ToolStripButton();
@@ -100,8 +100,8 @@
             importDataCommand.Image = Properties.Resources.Import;
             importDataCommand.ImageTransparentColor = Color.Magenta;
             importDataCommand.Name = "importDataCommand";
-            importDataCommand.Size = new Size(23, 22);
-            importDataCommand.Text = "&Import data";
+            importDataCommand.Size = new Size(32, 22);
+            importDataCommand.Text = "Import Data";
             // 
             // openFromDatabaseCommand
             // 
@@ -195,11 +195,11 @@
         protected ToolStripButton copyToolStripButton;
         protected ToolStripButton pasteToolStripButton;
         protected ToolStripButton helpToolStripButton;
-        protected ToolStripButton importDataCommand;
         protected ToolStripButton openFromDatabaseCommand;
         protected ToolStripButton saveToDatabaseCommand;
         protected ToolStripButton deleteFromDatabaseCommand;
         protected ToolStripButton newItemCommand;
         protected ToolStripButton deleteItemCommand;
+        protected ToolStripSplitButton importDataCommand;
     }
 }

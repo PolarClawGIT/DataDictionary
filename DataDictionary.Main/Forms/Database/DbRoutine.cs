@@ -19,10 +19,6 @@ namespace DataDictionary.Main.Forms.Database
         {
             InitializeComponent();
             // Icon set in Binding
-
-            importDataCommand.Enabled = true;
-            importDataCommand.Click += ImportDataCommand_Click;
-            importDataCommand.ToolTipText = "Import the Routine to the Domain Model";
         }
 
         private void DbRoutine_Load(object sender, EventArgs e)
@@ -75,23 +71,6 @@ namespace DataDictionary.Main.Forms.Database
             extendedPropertiesData.DataSource = null;
             parametersData.DataSource = null;
             dependenciesData.DataSource = null;
-        }
-
-        private void ImportDataCommand_Click(object? sender, EventArgs e)
-        {
-
-            List<WorkItem> work = new List<WorkItem>();
-
-            if (Program.Data.DbRoutines.FirstOrDefault(w => DataKey.Equals(w)) is DbRoutineItem data)
-            {
-                work.AddRange(Program.Data.ImportAttribute(data));
-
-                SendMessage(new Messages.DoUnbindData());
-                this.DoWork(work, onCompleting);
-            }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
         }
     }
 }
