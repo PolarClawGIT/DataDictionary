@@ -23,7 +23,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
         protected ElementNameItem(IDbTableColumnKey source) : base(source)
         { if (source.ColumnName is string value) { ElementName = value; } }
 
-        public static void Bind(ComboBoxData control, IDomainEntityAliasKey key)
+        public static void Load(ComboBoxData control, IDomainEntityAliasKey key)
         {
             DbTableKey currentKey = new DbTableKey(key);
             BindingList<ElementNameItem> list = new BindingList<ElementNameItem>();

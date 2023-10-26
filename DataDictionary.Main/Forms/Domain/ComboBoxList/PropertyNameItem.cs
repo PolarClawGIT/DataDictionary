@@ -14,7 +14,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
         public Guid PropertyId { get; set; } = Guid.Empty;
         public String PropertyTitle { get; set; } = String.Empty;
 
-        public static void Bind(ComboBoxData control)
+        public static void Load(ComboBoxData control)
         {
             PropertyNameItem propertyNameDataItem = new PropertyNameItem();
             BindingList<PropertyNameItem> list = new BindingList<PropertyNameItem>();
@@ -31,7 +31,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             control.DisplayMember = nameof(propertyNameDataItem.PropertyTitle);
         }
 
-        public static void Bind(DataGridViewComboBoxColumn control)
+        public static void Load(DataGridViewComboBoxColumn control)
         {
             PropertyNameItem propertyNameDataItem = new PropertyNameItem();
             BindingList<PropertyNameItem> list = new BindingList<PropertyNameItem>();

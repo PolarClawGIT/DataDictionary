@@ -22,7 +22,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
         protected ObjectNameItem(IDbTableKey source) : base(source)
         { if (source.TableName is String value) { ObjectName = value; } }
 
-        public static void Bind(ComboBoxData control, IDbSchemaKey key)
+        public static void Load(ComboBoxData control, IDbSchemaKey key)
         {
             DbSchemaKey currentKey = new DbSchemaKey(key);
             BindingList<ObjectNameItem> list = new BindingList<ObjectNameItem>();

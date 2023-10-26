@@ -14,7 +14,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
         public Guid SubjectAreaId { get; set; } = Guid.Empty;
         public String SubjectAreaTitle { get; set; } = String.Empty;
 
-        public static void Bind(ComboBoxData control)
+        public static void Load(ComboBoxData control)
         {
             SubjectAreaNameItem nameOf;
 

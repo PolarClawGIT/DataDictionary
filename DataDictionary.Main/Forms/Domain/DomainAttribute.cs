@@ -27,8 +27,8 @@ namespace DataDictionary.Main.Forms.Domain
         private void DomainAttribute_Load(object sender, EventArgs e)
         {
             // one time bindings
-            PropertyNameItem.Bind(propertyTypeData);
-            PropertyNameItem.Bind(propertyTypeColumn);
+            PropertyNameItem.Load(propertyTypeData);
+            PropertyNameItem.Load(propertyTypeColumn);
 
             (this as IApplicationDataBind).BindData();
         }
@@ -42,7 +42,7 @@ namespace DataDictionary.Main.Forms.Domain
                 attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), data, nameof(data.AttributeTitle)));
                 attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), data, nameof(data.AttributeDescription)));
                 
-                SubjectAreaNameItem.Bind(subjectAreaData);
+                SubjectAreaNameItem.Load(subjectAreaData);
                 subjectAreaData.ReadOnly = (subjectAreaData.DataSource is IList subjectAreaItems && subjectAreaItems.Count == 0);
                 subjectAreaData.DataBindings.Add(new Binding(nameof(subjectAreaData.SelectedValue), data, nameof(data.SubjectAreaId), true, DataSourceUpdateMode.OnValidation, Guid.Empty));
 
@@ -79,10 +79,10 @@ namespace DataDictionary.Main.Forms.Domain
 
                 if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
                 {
-                    CatalogNameItem.Bind(catalogNameData);
-                    SchemaNameItem.Bind(schemaNameData, aliasItem);
-                    ObjectNameItem.Bind(objectNameData, aliasItem);
-                    ElementNameItem.Bind(elementNameData, aliasItem);
+                    CatalogNameItem.Load(catalogNameData);
+                    SchemaNameItem.Load(schemaNameData, aliasItem);
+                    ObjectNameItem.Load(objectNameData, aliasItem);
+                    ElementNameItem.Load(elementNameData, aliasItem);
                 }
 
                 entityData.AutoGenerateColumns = false;
@@ -156,9 +156,9 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
             {
-                SchemaNameItem.Bind(schemaNameData, aliasItem);
-                ObjectNameItem.Bind(objectNameData, aliasItem);
-                ElementNameItem.Bind(elementNameData, aliasItem);
+                SchemaNameItem.Load(schemaNameData, aliasItem);
+                ObjectNameItem.Load(objectNameData, aliasItem);
+                ElementNameItem.Load(elementNameData, aliasItem);
             }
         }
 
@@ -174,8 +174,8 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
             {
-                ObjectNameItem.Bind(objectNameData, aliasItem);
-                ElementNameItem.Bind(elementNameData, aliasItem);
+                ObjectNameItem.Load(objectNameData, aliasItem);
+                ElementNameItem.Load(elementNameData, aliasItem);
             }
         }
 
@@ -191,7 +191,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
             {
-                ElementNameItem.Bind(elementNameData, aliasItem);
+                ElementNameItem.Load(elementNameData, aliasItem);
             }
         }
 

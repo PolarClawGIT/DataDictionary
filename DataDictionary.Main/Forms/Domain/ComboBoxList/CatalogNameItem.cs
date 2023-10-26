@@ -17,7 +17,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
         protected CatalogNameItem(IDbCatalogKeyUnique source) : base()
         { if (source.DatabaseName is String value) { DatabaseName = value; } }
 
-        public static void Bind(ComboBoxData control)
+        public static void Load(ComboBoxData control)
         {
             BindingList<CatalogNameItem> list = new BindingList<CatalogNameItem>();
             list.AddRange(Program.Data.DbCatalogs.

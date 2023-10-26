@@ -18,7 +18,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
         protected SchemaNameItem(IDbSchemaKey source) : base(source)
         { if (source.SchemaName is String value) { SchemaName = value; } }
 
-        public static void Bind(ComboBoxData control, IDbCatalogKeyUnique key)
+        public static void Load(ComboBoxData control, IDbCatalogKeyUnique key)
         {
             DbCatalogKeyUnique currentKey = new DbCatalogKeyUnique(key);
             BindingList<SchemaNameItem> list = new BindingList<SchemaNameItem>();

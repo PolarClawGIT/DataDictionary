@@ -34,8 +34,8 @@ namespace DataDictionary.Main.Forms.Domain
         private void DomainEntity_Load(object sender, EventArgs e)
         {
             // one time bindings
-            PropertyNameItem.Bind(propertyTypeData);
-            PropertyNameItem.Bind(propertyTypeColumn);
+            PropertyNameItem.Load(propertyTypeData);
+            PropertyNameItem.Load(propertyTypeColumn);
 
             (this as IApplicationDataBind).BindData();
         }
@@ -49,7 +49,7 @@ namespace DataDictionary.Main.Forms.Domain
                 entityTitleData.DataBindings.Add(new Binding(nameof(entityTitleData.Text), data, nameof(data.EntityTitle)));
                 entityDescriptionData.DataBindings.Add(new Binding(nameof(entityDescriptionData.Text), data, nameof(data.EntityDescription)));
 
-                SubjectAreaNameItem.Bind(subjectAreaData);
+                SubjectAreaNameItem.Load(subjectAreaData);
                 subjectAreaData.ReadOnly = (subjectAreaData.DataSource is IList subjectAreaItems && subjectAreaItems.Count == 0);
                 subjectAreaData.DataBindings.Add(new Binding(nameof(subjectAreaData.SelectedValue), data, nameof(data.SubjectAreaId), true, DataSourceUpdateMode.OnValidation, Guid.Empty));
 
@@ -86,9 +86,9 @@ namespace DataDictionary.Main.Forms.Domain
 
                 if (bindingDatabaseAlias.Current is DomainEntityAliasItem aliasItem)
                 {
-                    CatalogNameItem.Bind(catalogNameData);
-                    SchemaNameItem.Bind(schemaNameData, aliasItem);
-                    ObjectNameItem.Bind(objectNameData, aliasItem);
+                    CatalogNameItem.Load(catalogNameData);
+                    SchemaNameItem.Load(schemaNameData, aliasItem);
+                    ObjectNameItem.Load(objectNameData, aliasItem);
                 }
 
                 attributeData.AutoGenerateColumns = false;
@@ -107,7 +107,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             entityTitleData.DataBindings.Clear();
             entityDescriptionData.DataBindings.Clear();
-            //entityParentTitleData.DataBindings.Clear();
+            subjectAreaData.DataBindings.Clear();
 
             propertyNavigation.DataSource = null;
             propertyTypeData.DataBindings.Clear();
@@ -164,8 +164,8 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingDatabaseAlias.Current is DomainEntityAliasItem aliasItem)
             {
-                SchemaNameItem.Bind(schemaNameData, aliasItem);
-                ObjectNameItem.Bind(objectNameData, aliasItem);
+                SchemaNameItem.Load(schemaNameData, aliasItem);
+                ObjectNameItem.Load(objectNameData, aliasItem);
             }
         }
 
@@ -181,7 +181,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingDatabaseAlias.Current is DomainEntityAliasItem aliasItem)
             {
-                ObjectNameItem.Bind(objectNameData, aliasItem);
+                ObjectNameItem.Load(objectNameData, aliasItem);
             }
         }
 
