@@ -157,7 +157,6 @@ namespace DataDictionary.BusinessLayer
                                     parseString = parseString.Substring(memberType.Length + 1);
                                 }
 
-
                                 String memberNameSpace = String.Empty;
 
                                 while (
@@ -177,29 +176,61 @@ namespace DataDictionary.BusinessLayer
                                 }
 
                                 // What is left must be the Member Name?
-                                String memberName = parseString;
+                                //String memberName = parseString;
 
-                                if (!String.IsNullOrWhiteSpace(memberName))
+                                if (!String.IsNullOrWhiteSpace(parseString))
                                 {
-                                    //TODO: Need to come up with a way to clean up the XML data. Remove extra returns and spacing.
+                                    Int32 parametersStart = parseString.IndexOf("(");
+                                    Int32 parametersEnd = parseString.LastIndexOf(")");
 
-                                    LibraryMemberItem memberItem = new LibraryMemberItem()
+                                    if (parametersStart <= 0) // No Parameters
                                     {
-                                        LibraryId = sourceItem.LibraryId,
-                                        AssemblyName = sourceItem.AssemblyName,
-                                        MemberName = memberName,
-                                        MemberData = memberNode.InnerXml,
-                                        MemberNameSpace = memberNameSpace,
-                                        MemberType = memberType
-                                    };
+                                        LibraryMemberItem memberItem = new LibraryMemberItem()
+                                        {
+                                            LibraryId = sourceItem.LibraryId,
+                                            AssemblyName = sourceItem.AssemblyName,
+                                            MemberName = parseString,
+                                            MemberData = memberNode.InnerXml,
+                                            MemberNameSpace = memberNameSpace,
+                                            MemberType = memberType
+                                        };
 
-                                    LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
+                                        LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
 
-                                    if (data.LibraryMembers.FirstOrDefault(w => memberKey.Equals(w)) is LibraryMemberItem existingMember)
-                                    {
-                                        existingMember.MemberData = memberNode.InnerXml;
+                                        data.LibraryMembers.Add(memberItem);
                                     }
-                                    else { data.LibraryMembers.Add(memberItem); }
+                                    else if (parametersStart > 0 && parametersEnd > 0 && parametersStart < parametersEnd)
+                                    {
+                                        List<String> parameterList = parseString.Substring(parametersStart + 1, parametersEnd - parametersStart - 1).Split(",").ToList();
+
+                                        LibraryMemberItem memberItem = new LibraryMemberItem()
+                                        {
+                                            LibraryId = sourceItem.LibraryId,
+                                            AssemblyName = sourceItem.AssemblyName,
+                                            MemberName = parseString.Substring(0, parametersStart),
+                                            MemberData = memberNode.InnerXml,
+                                            MemberNameSpace = memberNameSpace,
+                                            MemberType = memberType
+                                        };
+
+                                        data.LibraryMembers.Add(memberItem);
+
+                                        foreach (String paramter in parameterList)
+                                        {
+                                            LibraryMemberItem parmaterItem = new LibraryMemberItem()
+                                            {
+                                                LibraryId = sourceItem.LibraryId,
+                                                AssemblyName = sourceItem.AssemblyName,
+                                                MemberName = paramter,
+                                                //MemberData = memberNode.InnerXml,
+                                                MemberNameSpace = String.Format("{0}.{1}",memberNameSpace , parseString.Substring(0, parametersStart)),
+                                                //MemberType = memberType
+                                            };
+
+                                            data.LibraryMembers.Add(parmaterItem);
+                                        }
+
+                                    }
                                 }
                             }
                         }
@@ -296,7 +327,7 @@ namespace DataDictionary.BusinessLayer
             work.Add(factory.CreateWork(
                 workName: "Save LibrarySources",
                 command: (conn) => data.SaveCommand(conn, key)));
- 
+
             return work;
         }
 
