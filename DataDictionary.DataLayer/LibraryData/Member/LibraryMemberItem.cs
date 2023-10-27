@@ -14,8 +14,13 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     /// <summary>
     /// Interface for the Library Member Item
     /// </summary>
-    public interface ILibraryMemberItem : ILibraryMemberKey, ILibrarySourceKeyUnique, ILibraryNameSpaceKey, IDataItem
+    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibrarySourceKeyUnique, IDataItem
     {
+        /// <summary>
+        /// Name of the Member.
+        /// </summary>
+        string? MemberName { get; }
+
         /// <summary>
         /// Type of Member, such as the name of the Class, Enum, Method, Property, ...
         /// </summary>
@@ -43,6 +48,12 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         public Guid? LibraryId { get { return GetValue<Guid>("LibraryId"); } set { SetValue("LibraryId", value); } }
 
         /// <inheritdoc/>
+        public Guid? MemberId { get { return GetValue<Guid>("MemberId"); } set { SetValue("MemberId", value); } }
+
+        /// <inheritdoc/>
+        public Guid? ParentMemberId { get { return GetValue<Guid>("ParentMemberId"); } set { SetValue("ParentMemberId", value); } }
+
+        /// <inheritdoc/>
         public string? AssemblyName { get { return GetValue("AssemblyName"); } set { SetValue("AssemblyName", value); } }
 
         /// <inheritdoc/>
@@ -64,11 +75,13 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// Constructor for LibraryMemberItem
         /// </summary>
         public LibraryMemberItem() : base()
-        { if (LibraryId is null) { LibraryId = Guid.NewGuid(); } }
+        { if (MemberId is null) { MemberId = Guid.NewGuid(); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("LibraryId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn("MemberId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn("ParentMemberId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("AssemblyName", typeof(string)){ AllowDBNull = false},
             new DataColumn("MemberNameSpace", typeof(string)){ AllowDBNull = true},
             new DataColumn("MemberName", typeof(string)){ AllowDBNull = false},

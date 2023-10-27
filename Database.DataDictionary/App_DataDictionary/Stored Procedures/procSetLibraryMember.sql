@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetLibraryMember]
+﻿alter PROCEDURE [App_DataDictionary].[procSetLibraryMember]
 		@ModelId UniqueIdentifier = null,
 		@LibraryId UniqueIdentifier = null,
 		@Data [App_DataDictionary].[typeLibraryMember] ReadOnly
@@ -23,8 +23,10 @@ Begin Try
 	Declare @Values [App_DataDictionary].[typeLibraryMember]
 	Insert Into @Values
 	Select	P.[LibraryId],
+			D.[MemberId],
+			D.[ParentMemberId],
 			P.[AssemblyName],
-			NullIf(Trim(D.[MemberNameSpace]),'') As [MemberNameSpace],
+			NullIf(Trim(D.[NameSpace]),'') As [NameSpace],
 			NullIf(Trim(D.[MemberName]),'') As [MemberName],
 			NullIf(Trim(D.[MemberType]),'') As [MemberType],
 			D.[MemberData]
@@ -37,17 +39,41 @@ Begin Try
 	If @ModelId is Null and @LibraryId is Null
 	Throw 50000, '@ModelId or @LibraryId must be specified', 1;
 
-	If Exists (
-		Select	[LibraryId], [MemberNameSpace], [MemberName]
-		From	@Values
-		Group By [LibraryId], [MemberNameSpace], [MemberName]
-		Having	Count(*) > 1)
-	Throw 50000, '[MemberName] cannot be duplicate', 2;
+Select	'Debug', *,
+		IIF(CharIndex('.',[NameSpace]) > 0,
+					Left([NameSpace],Len([NameSpace]) - CharIndex('.',Reverse([NameSpace]))),
+					Null)
+					As [NameSpace]
+From	@Values
 
+	;With [Data] As (
+		Select	[LibraryId],
+				[MemberId],
+				[ParentMemberId],
+				IIF(CharIndex('.',[NameSpace]) > 0,
+					Left([NameSpace],Len([NameSpace]) - CharIndex('.',Reverse([NameSpace]))),
+					Null)
+					As [NameSpace],
+
+		From	@Values
+		Union All
+		Select	[LibraryId],
+				[MemberId],
+				[ParentMemberId],
+				IIF(CharIndex('.',[NameSpace]) > 0,
+					Left([NameSpace],Len([NameSpace]) - CharIndex('.',Reverse([NameSpace]))),
+					Null)
+					As[NameSpace]
+		From	[Data]
+		Where	[NameSpace] is Null)
+Select	'Debug xx',
+		*
+From	[Data]
+
+/*
 	-- Work out the Member NameSpace and assign ID
 	Declare @NameSpace Table (
 			[LibraryId] UniqueIdentifier Not Null,
-			[NameSpaceId] Int Not Null,
 			[ParentId] Int Null,
 			[NameSpace] NVarChar(500) Not Null,
 			[MemberNameSpace] NVarChar(Max) Not Null,
@@ -248,7 +274,7 @@ Begin Try
 		Insert ([LibraryId], [NameSpaceId], [MemberId], [MemberName], [MemberType], [MemberData])
 		Values ([LibraryId], [NameSpaceId], [MemberId], [MemberName], [MemberType], [MemberData]);
 	Print FormatMessage ('Merge [App_DataDictionary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
+*/
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, commit it

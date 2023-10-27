@@ -13,14 +13,9 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     public interface ILibraryMemberKey : ILibrarySourceKey
     {
         /// <summary>
-        /// NameSpace for the Member.
+        /// Member Id for the Library Member
         /// </summary>
-        string? MemberNameSpace { get; }
-
-        /// <summary>
-        /// Name of the Member.
-        /// </summary>
-        string? MemberName { get; }
+        Guid? MemberId { get; }
     }
 
     /// <summary>
@@ -29,10 +24,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     public class LibraryMemberKey : LibrarySourceKey, ILibraryMemberKey, IKeyEquality<ILibraryMemberKey>
     {
         /// <inheritdoc/>
-        public string MemberNameSpace { get; init; } = string.Empty;
-
-        /// <inheritdoc/>
-        public string MemberName { get; init; } = string.Empty;
+        public Guid? MemberId { get; init; } = Guid.Empty;
 
         /// <summary>
         /// Constructor for the Library Member Key
@@ -40,8 +32,8 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// <param name="source"></param>
         public LibraryMemberKey(ILibraryMemberKey source) : base(source)
         {
-            if (source.MemberNameSpace is string) { MemberNameSpace = source.MemberNameSpace; }
-            if (source.MemberName is string) { MemberName = source.MemberName; }
+            if (source.MemberId is Guid) { MemberId = source.MemberId; }
+            else { MemberId = Guid.Empty; }
         }
 
         #region IEquatable
@@ -50,12 +42,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         {
             return other is ILibraryMemberKey &&
                 new LibrarySourceKey(this).Equals(other) &&
-                !string.IsNullOrEmpty(MemberNameSpace) &&
-                !string.IsNullOrEmpty(other.MemberNameSpace) &&
-                !string.IsNullOrEmpty(MemberName) &&
-                !string.IsNullOrEmpty(other.MemberName) &&
-                MemberNameSpace.Equals(other.MemberNameSpace, KeyExtension.CompareString) &&
-                MemberName.Equals(other.MemberName, KeyExtension.CompareString);
+                EqualityComparer<Guid?>.Default.Equals(MemberId, other.MemberId);
         }
 
         /// <inheritdoc/>
@@ -72,7 +59,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(LibraryId, MemberNameSpace, MemberName); }
+        { return HashCode.Combine(LibraryId, MemberId); }
         #endregion
 
     }

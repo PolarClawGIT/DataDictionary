@@ -39,17 +39,6 @@ namespace DataDictionary.DataLayer.LibraryData.Member
             if (source.MemberNameSpace is string) { MemberNameSpace = source.MemberNameSpace; }
         }
 
-        /// <summary>
-        /// Constructor for the Library NameSpace Key
-        /// </summary>
-        /// <param name="source"></param>
-        public LibraryNameSpaceKey(ILibraryMemberKey source)
-        {
-            if (source.LibraryId is Guid) { LibraryId = source.LibraryId; }
-            if (source.MemberNameSpace is string) { MemberNameSpace = source.MemberNameSpace; }
-            if (source.MemberName is string) { MemberNameSpace = String.Format("{0}.{1}", MemberNameSpace, source.MemberName); }
-        }
-
         #region IEquatable
         /// <inheritdoc/>
         public bool Equals(ILibraryNameSpaceKey? other)

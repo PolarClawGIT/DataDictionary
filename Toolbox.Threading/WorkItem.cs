@@ -94,10 +94,29 @@ namespace Toolbox.Threading
         /// Overall progress is computed by WorkerQueue.ProgressChanged
         /// </remarks>
         public event EventHandler<ProgressChangedEventArgs>? ProgressChanged;
+
+        /// <summary>
+        /// Standard OnProgressChanged method
+        /// </summary>
+        /// <param name="progress"></param>
         public virtual void OnProgressChanged(Int32 progress)
         {
             if (ProgressChanged is EventHandler<ProgressChangedEventArgs> handler)
             { handler(this, new ProgressChangedEventArgs(progress, null)); }
+        }
+
+        /// <summary>
+        /// OnProgressChanged that accepts two integers and converts it to a standard call.
+        /// </summary>
+        /// <param name="itemsComplete"></param>
+        /// <param name="totalItems"></param>
+        public virtual void OnProgressChanged(Int32 itemsComplete, Int32 totalItems)
+        {
+            if (totalItems > 0 && itemsComplete >= 0)
+            {
+                Double progress = (((Double)itemsComplete / (Double)totalItems)) * 100.0D;
+                OnProgressChanged(Convert.ToInt32(progress));
+            }
         }
 
     }

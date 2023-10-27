@@ -204,6 +204,7 @@
     <Build Include="App_DataDictionary\Views\DomainProcessAttribute.sql" />
     <Build Include="App_DataDictionary\Views\DomainProcessEntity.sql" />
     <Build Include="App_DataDictionary\Tables\ModelProcess.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeNameSpaceElement.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

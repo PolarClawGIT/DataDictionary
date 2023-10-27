@@ -8,36 +8,38 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 ;With [Data] As (
 	Select	[LibraryId],
-			[NameSpaceId],
-			[NameSpaceParentId],
-			Convert(NVarChar(Max),[NameSpace]) As [MemberNameSpace],
-			Convert(Int,1) As [Level]
-	From	[App_DataDictionary].[LibraryNameSpace]
-	Where	[NameSpaceParentId] is Null
+			[MemberId],
+			[ParentMemberId],
+			[MemberName],
+			Convert(NVarChar(Max),[MemberName]) As [NameSpace]
+	From	[App_DataDictionary].[LibraryMember]
+	Where	[ParentMemberId] is Null
 	Union All
 	Select	C.[LibraryId],
-			C.[NameSpaceId],
-			C.[NameSpaceParentId],
-			Convert(NVarChar(Max),FormatMessage('%s.%s',P.[MemberNameSpace],C.[NameSpace])) As [MemberNameSpace],
-			P.[Level] + 1 As [Level]
-	From	[App_DataDictionary].[LibraryNameSpace] C
-			Inner Join [Data] P
-			On	C.[LibraryId] = P.[LibraryId] And
-				C.[NameSpaceParentId] = P.[NameSpaceId])
+			C.[MemberId],
+			C.[ParentMemberId],
+			C.[MemberName],
+			Convert(NVarChar(Max), FormatMessage('%s.%s',P.[NameSpace],C.[MemberName])) As [NameSpace]
+	From	[Data] P
+			Inner Join [App_DataDictionary].[LibraryMember] C
+			On	P.[LibraryId] = C.[LibraryId] And
+				P.[MemberId] = C.[ParentMemberId])
 Select	D.[LibraryId],
+		D.[MemberId],
+		D.[ParentMemberId],
 		L.[AssemblyName],
-		B.[MemberNameSpace],
+		B.[NameSpace],
 		D.[MemberName],
 		D.[MemberType],
 		D.[MemberData]
 From	[App_DataDictionary].[LibraryMember] D
-		Left Join [App_DataDictionary].[ModelLibrary] A
-		On	D.[LibraryId] = A.[LibraryId]
 		Inner Join [App_DataDictionary].[LibrarySource] L
 		On	D.[LibraryId] = L.[LibraryId]
 		Left Join [Data] B
 		On	D.[LibraryId] = B.[LibraryId] And
-			D.[NameSpaceId] = B.[NameSpaceId]
+			D.[MemberId] = B.[MemberId]
+		Left Join [App_DataDictionary].[ModelLibrary] A
+		On	D.[LibraryId] = A.[LibraryId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@LibraryId is Null or @LibraryId = D.[LibraryId])
 GO

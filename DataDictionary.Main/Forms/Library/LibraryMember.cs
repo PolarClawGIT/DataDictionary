@@ -59,8 +59,8 @@ namespace DataDictionary.Main.Forms.Library
                 memberData.DataBindings.Add(new Binding(nameof(memberData.Text), memberItem, nameof(memberItem.MemberData)));
                 assemblyNameData.DataBindings.Add(new Binding(nameof(assemblyNameData.Text), memberItem, nameof(memberItem.AssemblyName)));
 
-                LibraryNameSpaceKey nameSpaceKey = new LibraryNameSpaceKey(memberItem);
-                BindingView<LibraryMemberItem> childMembers = new BindingView<LibraryMemberItem>(Program.Data.LibraryMembers, w => nameSpaceKey.Equals(w));
+                LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
+                BindingView<LibraryMemberItem> childMembers = new BindingView<LibraryMemberItem>(Program.Data.LibraryMembers, w =>  new LibraryMemberKeyParent(w).Equals(memberKey));
 
                 childMemberData.AutoGenerateColumns = false;
                 childMemberData.DataSource = childMembers;

@@ -81,10 +81,6 @@ Begin Try
 	Where	[LibraryId] In (Select [LibraryId] From @Delete)
 	Print FormatMessage ('Delete [App_DataDictionary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[LibraryNameSpace]
-	Where	[LibraryId] In (Select [LibraryId] From @Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[LibraryNameSpace]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
 	Delete From [App_DataDictionary].[ModelLibrary]
 	Where	[LibraryId] In (Select [LibraryId] From @Delete)
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelLibrary]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
