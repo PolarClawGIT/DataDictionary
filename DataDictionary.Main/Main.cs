@@ -131,7 +131,9 @@ namespace DataDictionary.Main
                 modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), Program.Data.Model, nameof(data.ModelDescription)));
 
                 BuildDataSourcesTree();
-                BuildDomainModelTreeByAttribute();
+
+                if (sortByAttributeEntityCommand.Checked) { BuildDomainModelTreeByAttribute(); }
+                else { BuildDomainModelTreeByEntity(); }
 
                 return true;
             }
