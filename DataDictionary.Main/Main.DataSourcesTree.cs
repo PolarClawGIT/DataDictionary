@@ -9,6 +9,8 @@ using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Properties;
+using System.ComponentModel;
+using Toolbox.Threading;
 
 namespace DataDictionary.Main
 {
@@ -96,42 +98,68 @@ namespace DataDictionary.Main
         void BuildDataSourcesTree()
         {
             dataSourceNavigation.BeginUpdate();
-            LoadDatabaseTree();
-            LoadLibraryTree();
+            dataSourceNavigation.UseWaitCursor = true;
+            dataSourceNavigation.Enabled = false;
 
-            foreach (TreeNode item in dbDataNodes.Where(w => expandedDbNode.Contains(w.Value)).Select(s => s.Key).ToList())
-            { item.ExpandParent(); }
-            expandedDbNode.Clear();
+            List<WorkItem> work = new List<WorkItem>();
+            Action<Int32, Int32> databaseProgress = (x, y) => { };
+            Action<Int32, Int32> libraryProgress = (x, y) => { };
 
-            dataSourceNavigation.EndUpdate();
+            WorkItem databaseWork = new WorkItem()
+            { WorkName = "Load Database Tree", DoWork = LoadDatabaseTree };
+            databaseProgress = databaseWork.OnProgressChanged;
+            work.Add(databaseWork);
+
+            WorkItem libraryWork = new WorkItem()
+            { WorkName = "Load LibraryTree", DoWork = LoadLibraryTree };
+            libraryProgress = libraryWork.OnProgressChanged;
+            work.Add(libraryWork);
+
+            DoWork(work, onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                foreach (TreeNode item in dbDataNodes.Where(w => expandedDbNode.Contains(w.Value)).Select(s => s.Key).ToList())
+                { item.ExpandParent(); }
+                expandedDbNode.Clear();
+
+                dataSourceNavigation.UseWaitCursor = false;
+                dataSourceNavigation.Enabled = true;
+                dataSourceNavigation.EndUpdate();
+            }
 
             TreeNode CreateNode(TreeNodeCollection target, String? nodeText, dbDataImageIndex imageIndex, Object? source = null, String? key = null)
             {
                 if (String.IsNullOrWhiteSpace(nodeText)) { throw new ArgumentNullException(nameof(nodeText)); }
 
-                TreeNode result;
-                
-                if (String.IsNullOrWhiteSpace(key))
-                { result = target.Add(nodeText); }
-                else { result = target.Add(key, nodeText); }
+                TreeNode result = dataSourceNavigation.Invoke<TreeNode>(() =>
+                {
+                    TreeNode newNode;
+                    if (String.IsNullOrWhiteSpace(key))
+                    { newNode = target.Add(nodeText); }
+                    else { newNode = target.Add(key, nodeText); }
 
-                result.ImageKey = dbDataImageItems[imageIndex].imageKey;
-                result.SelectedImageKey = dbDataImageItems[imageIndex].imageKey;
+                    newNode.ImageKey = dbDataImageItems[imageIndex].imageKey;
+                    newNode.SelectedImageKey = dbDataImageItems[imageIndex].imageKey;
 
-                if (source is not null) { dbDataNodes.Add(result, source); }
+                    if (source is not null) { dbDataNodes.Add(newNode, source); }
+                    return newNode;
+                });
 
                 return result;
             }
 
             void LoadLibraryTree()
             { //TODO: This can take a while but it is a foreground control. Can it be loaded in a background task?
+                Int32 workToDo = Program.Data.LibraryMembers.Count();
+                Int32 workDone = 0;
 
                 foreach (ILibrarySourceItem librarySourceItem in Program.Data.LibrarySources.OrderBy(o => o.LibraryTitle))
                 {
                     LibrarySourceKeyUnique sourceKey = new LibrarySourceKeyUnique(librarySourceItem);
                     TreeNode sourceNode = CreateNode(dataSourceNavigation.Nodes, librarySourceItem.LibraryTitle, dbDataImageIndex.Library, librarySourceItem);
 
-                    foreach (LibraryMemberItem memberItem in 
+                    foreach (LibraryMemberItem memberItem in
                         Program.Data.LibraryMembers.
                         Where(w => sourceKey.Equals(w) && w.ParentMemberId is null).
                         OrderBy(o => o.ObjectType).
@@ -179,6 +207,8 @@ namespace DataDictionary.Main
                                     memberItem);
                                 break;
                         }
+                        workDone = workDone + 1;
+                        libraryProgress(workDone, workToDo);
 
                         ChildNodes(memberKey, memberNode);
                     }
@@ -186,7 +216,7 @@ namespace DataDictionary.Main
 
                 void ChildNodes(LibraryMemberKey key, TreeNode parent)
                 {
-                    foreach (LibraryMemberItem memberItem in 
+                    foreach (LibraryMemberItem memberItem in
                         Program.Data.LibraryMembers.
                         Where(w => new LibraryMemberKeyParent(w).Equals(key)).
                         OrderBy(o => o.ObjectType).
@@ -241,6 +271,9 @@ namespace DataDictionary.Main
                                 break;
                         }
 
+                        workDone = workDone + 1;
+                        libraryProgress(workDone, workToDo);
+
                         ChildNodes(memberKey, memberNode);
                     }
                 }
@@ -248,6 +281,9 @@ namespace DataDictionary.Main
 
             void LoadDatabaseTree()
             {
+                Int32 workToDo = Program.Data.DbCatalogs.Count() + Program.Data.DbSchemta.Count() + Program.Data.DbTables.Count() + Program.Data.DbRoutines.Count() + +Program.Data.DbDomains.Count();
+                Int32 workDone = 0;
+
                 foreach (IDbCatalogItem catalogItem in Program.Data.DbCatalogs.OrderBy(o => o.DatabaseName))
                 {
                     if (String.IsNullOrWhiteSpace(catalogItem.DatabaseName))
@@ -293,6 +329,9 @@ namespace DataDictionary.Main
                                     w => new DbConstraintKey(w).Equals(new DbConstraintKey(contraintItem))))
                                 { CreateNode(constraintNode.Nodes, contraintColumnItem.ColumnName, dbDataImageIndex.ConstraintColumn, contraintColumnItem); }
                             }
+
+                            workDone = workDone + 1;
+                            databaseProgress(workDone, workToDo);
                         }
 
                         TreeNode? routinesNode = null;
@@ -325,6 +364,8 @@ namespace DataDictionary.Main
                                 w => routineKey.Equals(w)).OrderBy(o => o.OrdinalPosition))
                             { CreateNode(routineNode.Nodes, routineParameter.ParameterName, dbDataImageIndex.Parameter, routineParameter); }
 
+                            workDone = workDone + 1;
+                            databaseProgress(workDone, workToDo);
                         }
 
                         TreeNode? domainsNode = null;
@@ -338,7 +379,13 @@ namespace DataDictionary.Main
                             { domainsNode = CreateNode(schemaNode.Nodes, "Domains", dbDataImageIndex.Domains, null); }
 
                             CreateNode(domainsNode.Nodes, domainItem.DomainName, dbDataImageIndex.Domain, domainItem);
+
+                            workDone = workDone + 1;
+                            databaseProgress(workDone, workToDo);
                         }
+
+                        workDone = workDone + 1;
+                        databaseProgress(workDone, workToDo);
                     }
                 }
             }
