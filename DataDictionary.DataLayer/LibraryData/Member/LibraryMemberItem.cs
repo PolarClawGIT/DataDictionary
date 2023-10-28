@@ -22,6 +22,11 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         string? MemberName { get; }
 
         /// <summary>
+        /// NameSpace that the Member is within
+        /// </summary>
+        string? NameSpace { get; }
+
+        /// <summary>
         /// Type of Member, such as the name of the Class, Enum, Method, Property, ...
         /// </summary>
         string? MemberType { get; }
@@ -57,7 +62,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         public string? AssemblyName { get { return GetValue("AssemblyName"); } set { SetValue("AssemblyName", value); } }
 
         /// <inheritdoc/>
-        public string? MemberNameSpace { get { return GetValue("MemberNameSpace"); } set { SetValue("MemberNameSpace", value); } }
+        public string? NameSpace { get { return GetValue("NameSpace"); } set { SetValue("NameSpace", value); } }
 
         /// <inheritdoc/>
         public string? MemberName { get { return GetValue("MemberName"); } set { SetValue("MemberName", value); } }
@@ -83,7 +88,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
             new DataColumn("MemberId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("ParentMemberId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("AssemblyName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("MemberNameSpace", typeof(string)){ AllowDBNull = true},
+            new DataColumn("NameSpace", typeof(string)){ AllowDBNull = true},
             new DataColumn("MemberName", typeof(string)){ AllowDBNull = false},
             new DataColumn("MemberType", typeof(string)){ AllowDBNull = true},
             new DataColumn("MemberData", typeof(string)){ AllowDBNull = true},
@@ -152,7 +157,12 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// <summary>
         /// An Error occurred. The rest of the string provides information about the error. 
         /// </summary>
-        Error
+        Error,
+
+        /// <summary>
+        /// A Parameter of a Method/Function.
+        /// </summary>
+        Parameter
     }
 
     /// <summary>
@@ -170,6 +180,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
             { LibraryMemberType.Method,    ("M","Method") },
             { LibraryMemberType.Event,     ("E","Event") },
             { LibraryMemberType.Error,     ("!","Error") },
+            { LibraryMemberType.Parameter, ("Parameter","Parameter") },
         };
 
         /// <summary>

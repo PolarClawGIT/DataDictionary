@@ -178,7 +178,7 @@ namespace DataDictionary.BusinessLayer
                                 {
                                     if (String.IsNullOrWhiteSpace(memberNameSpace))
                                     {
-                                        if (data.LibraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && String.IsNullOrWhiteSpace(w.MemberNameSpace) && w.MemberName == parseString.Substring(0, nextPeriod)) is LibraryMemberItem existing)
+                                        if (data.LibraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && String.IsNullOrWhiteSpace(w.NameSpace) && w.MemberName == parseString.Substring(0, nextPeriod)) is LibraryMemberItem existing)
                                         { nameSpaceItem = existing; }
                                         else
                                         {
@@ -187,7 +187,7 @@ namespace DataDictionary.BusinessLayer
                                                 LibraryId = sourceItem.LibraryId,
                                                 AssemblyName = sourceItem.AssemblyName,
                                                 MemberName = parseString.Substring(0, nextPeriod),
-                                                MemberNameSpace = string.Empty,
+                                                NameSpace = string.Empty,
                                                 MemberType = "N"
                                             };
 
@@ -198,9 +198,9 @@ namespace DataDictionary.BusinessLayer
                                     }
                                     else
                                     {
-                                        var x = data.LibraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && w.MemberNameSpace == memberNameSpace && w.MemberName == parseString.Substring(0, nextPeriod));
+                                        var x = data.LibraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && w.NameSpace == memberNameSpace && w.MemberName == parseString.Substring(0, nextPeriod));
 
-                                        if (data.LibraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && w.MemberNameSpace == memberNameSpace && w.MemberName == parseString.Substring(0, nextPeriod)) is LibraryMemberItem existing)
+                                        if (data.LibraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && w.NameSpace == memberNameSpace && w.MemberName == parseString.Substring(0, nextPeriod)) is LibraryMemberItem existing)
                                         { nameSpaceItem = existing; }
                                         else
                                         {
@@ -210,7 +210,7 @@ namespace DataDictionary.BusinessLayer
                                                 ParentMemberId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
                                                 AssemblyName = sourceItem.AssemblyName,
                                                 MemberName = parseString.Substring(0, nextPeriod),
-                                                MemberNameSpace = memberNameSpace,
+                                                NameSpace = memberNameSpace,
                                                 MemberType = "N"
                                             };
 
@@ -237,7 +237,7 @@ namespace DataDictionary.BusinessLayer
                                             AssemblyName = sourceItem.AssemblyName,
                                             MemberName = parseString,
                                             MemberData = memberNode.InnerXml,
-                                            MemberNameSpace = memberNameSpace,
+                                            NameSpace = memberNameSpace,
                                             MemberType = memberType
                                         };
 
@@ -256,7 +256,7 @@ namespace DataDictionary.BusinessLayer
                                             AssemblyName = sourceItem.AssemblyName,
                                             MemberName = parseString.Substring(0, parametersStart),
                                             MemberData = memberNode.InnerXml,
-                                            MemberNameSpace = memberNameSpace,
+                                            NameSpace = memberNameSpace,
                                             MemberType = memberType
                                         };
 
@@ -305,8 +305,8 @@ namespace DataDictionary.BusinessLayer
                                                 AssemblyName = sourceItem.AssemblyName,
                                                 MemberName = memberName,
                                                 //MemberData = memberNode.InnerXml,
-                                                MemberNameSpace = String.Format("{0}.{1}", memberNameSpace, parseString.Substring(0, parametersStart)),
-                                                MemberType = "parameter"
+                                                NameSpace = String.Format("{0}.{1}", memberNameSpace, parseString.Substring(0, parametersStart)),
+                                                MemberType = LibraryMemberType.Parameter.ToString()
                                             };
 
                                             data.LibraryMembers.Add(parmaterItem);

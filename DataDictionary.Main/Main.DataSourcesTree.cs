@@ -97,9 +97,7 @@ namespace DataDictionary.Main
         {
             dataSourceNavigation.BeginUpdate();
             LoadDatabaseTree();
-
             LoadLibraryTree();
-            //LoadLibraryTree_Orginal();
 
             foreach (TreeNode item in dbDataNodes.Where(w => expandedDbNode.Contains(w.Value)).Select(s => s.Key).ToList())
             { item.ExpandParent(); }
@@ -112,7 +110,7 @@ namespace DataDictionary.Main
                 if (String.IsNullOrWhiteSpace(nodeText)) { throw new ArgumentNullException(nameof(nodeText)); }
 
                 TreeNode result;
-
+                
                 if (String.IsNullOrWhiteSpace(key))
                 { result = target.Add(nodeText); }
                 else { result = target.Add(key, nodeText); }
@@ -226,6 +224,13 @@ namespace DataDictionary.Main
                                      memberItem.MemberName,
                                      dbDataImageIndex.NameSpace,
                                      memberItem);
+                                break;
+                            case LibraryMemberType.Parameter:
+                                memberNode = CreateNode(
+                                    parent.Nodes,
+                                    memberItem.MemberName,
+                                    dbDataImageIndex.Parameter,
+                                    memberItem);
                                 break;
                             default:
                                 memberNode = CreateNode(

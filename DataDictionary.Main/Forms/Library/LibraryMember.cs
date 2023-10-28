@@ -26,7 +26,6 @@ namespace DataDictionary.Main.Forms.Library
         public LibraryMember() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.Icon_Class;
         }
 
         private void LibraryMember_Load(object sender, EventArgs e)
@@ -47,12 +46,18 @@ namespace DataDictionary.Main.Forms.Library
                     case LibraryMemberType.Method or LibraryMemberType.Event:
                         this.Icon = Resources.Icon_Method;
                         break;
+                    case LibraryMemberType.Parameter:
+                        this.Icon = Resources.Icon_Parameter;
+                        break;
+                    case LibraryMemberType.NameSpace:
+                        this.Icon = Resources.Icon_Namespace;
+                        break;
                     default: break;
                 }
 
                 this.Text = memberItem.MemberName;
 
-                memberNameSpaceData.DataBindings.Add(new Binding(nameof(memberNameSpaceData.Text), memberItem, nameof(memberItem.MemberNameSpace)));
+                memberNameSpaceData.DataBindings.Add(new Binding(nameof(memberNameSpaceData.Text), memberItem, nameof(memberItem.NameSpace)));
                 memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), memberItem, nameof(memberItem.MemberName)));
                 objectTypeData.DataBindings.Add(new Binding(nameof(objectTypeData.Text), memberItem, nameof(memberItem.ObjectType)));
                 memberTypeData.DataBindings.Add(new Binding(nameof(memberTypeData.Text), memberItem, nameof(memberItem.MemberType)));
