@@ -243,21 +243,10 @@ namespace DataDictionary.Main
         {
             (this as IApplicationDataBind).UnbindData();
 
-            DoWork(Program.Data.RemoveModel(), onCompleting);
+            DoWork(Program.Data.NewModel(), onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                Program.Data.NewModel();
-                (this as IApplicationDataBind).BindData();
-            }
-        }
-
-
-        private void cloneModelMenuItem_Click(object sender, EventArgs e)
-        {
-            (this as IApplicationDataBind).UnbindData();
-            Program.Data.NewModel();
-            (this as IApplicationDataBind).BindData();
+            { (this as IApplicationDataBind).BindData(); }
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)

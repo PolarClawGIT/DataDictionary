@@ -90,12 +90,24 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Initializes a New Model (does not clear the data).
         /// </summary>
-        public void NewModel()
+        public IReadOnlyList<WorkItem> NewModel()
         {
-            Models.Clear();
-            defaultModel = new ModelItem();
-            modelKey = new ModelKey(defaultModel);
-            Models.Add(defaultModel);
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(this.RemoveModel());
+
+            work.Add(new WorkItem()
+            {
+                WorkName = "New Model",
+                DoWork = () =>
+                {
+                    defaultModel = new ModelItem();
+                    ModelKey = new ModelKey(defaultModel);
+                    Models.Add(defaultModel);
+                }
+            });
+
+            return work;
         }
 
         /// <summary>
@@ -109,18 +121,21 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
             ModelKey key = new ModelKey(modelKey);
 
+            work.AddRange(this.RemoveModel());
             work.Add(factory.CreateWork(
                 workName: "Load Models",
                 target: this.Models,
-                command: (conn) => this.Models.LoadCommand(conn, key)));
-
+                command: (conn) =>
+                {
+                    this.ModelKey = key;
+                    return this.Models.LoadCommand(conn, key);
+                }));
             work.AddRange(this.LoadDomain(factory, modelKey));
             work.AddRange(this.LoadCatalog(factory, modelKey));
             work.AddRange(this.LoadLibrary(factory, modelKey));
 
             return work;
         }
-
 
 
         /// <summary>

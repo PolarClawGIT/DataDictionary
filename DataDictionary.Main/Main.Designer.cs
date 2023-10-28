@@ -86,7 +86,6 @@
             menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             newEmptyModelMenuItem = new ToolStripMenuItem();
-            newCloneModelMenuItem = new ToolStripMenuItem();
             manageModelDatabaseMenuItem = new ToolStripMenuItem();
             openToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator = new ToolStripSeparator();
@@ -650,7 +649,7 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newEmptyModelMenuItem, newCloneModelMenuItem, manageModelDatabaseMenuItem, openToolStripMenuItem, toolStripSeparator, saveToolStripMenuItem, saveAsToolStripMenuItem, toolStripSeparator1, printToolStripMenuItem, printPreviewToolStripMenuItem, toolStripSeparator2, exitToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newEmptyModelMenuItem, manageModelDatabaseMenuItem, openToolStripMenuItem, toolStripSeparator, saveToolStripMenuItem, saveAsToolStripMenuItem, toolStripSeparator1, printToolStripMenuItem, printPreviewToolStripMenuItem, toolStripSeparator2, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(37, 20);
             fileToolStripMenuItem.Text = "&File";
@@ -661,26 +660,17 @@
             newEmptyModelMenuItem.ImageTransparentColor = Color.Magenta;
             newEmptyModelMenuItem.Name = "newEmptyModelMenuItem";
             newEmptyModelMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            newEmptyModelMenuItem.Size = new Size(178, 22);
+            newEmptyModelMenuItem.Size = new Size(194, 22);
             newEmptyModelMenuItem.Text = "&New Model";
             newEmptyModelMenuItem.ToolTipText = "Creates a New Empty Model";
             newEmptyModelMenuItem.Click += newToolStripMenuItem_Click;
-            // 
-            // newCloneModelMenuItem
-            // 
-            newCloneModelMenuItem.Image = Properties.Resources.TableClone;
-            newCloneModelMenuItem.Name = "newCloneModelMenuItem";
-            newCloneModelMenuItem.Size = new Size(178, 22);
-            newCloneModelMenuItem.Text = "New Model Clone";
-            newCloneModelMenuItem.ToolTipText = "Clone the Existing Model to create a New Model";
-            newCloneModelMenuItem.Click += cloneModelMenuItem_Click;
             // 
             // manageModelDatabaseMenuItem
             // 
             manageModelDatabaseMenuItem.Image = Properties.Resources.SaveTable;
             manageModelDatabaseMenuItem.Name = "manageModelDatabaseMenuItem";
-            manageModelDatabaseMenuItem.Size = new Size(178, 22);
-            manageModelDatabaseMenuItem.Text = "Model Database";
+            manageModelDatabaseMenuItem.Size = new Size(194, 22);
+            manageModelDatabaseMenuItem.Text = "Open Model, Database";
             manageModelDatabaseMenuItem.ToolTipText = "Opens a Model from the Application Database";
             manageModelDatabaseMenuItem.Click += openSaveModelDatabaseMenuItem_Click;
             // 
@@ -691,13 +681,13 @@
             openToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             openToolStripMenuItem.Name = "openToolStripMenuItem";
             openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
-            openToolStripMenuItem.Size = new Size(178, 22);
+            openToolStripMenuItem.Size = new Size(194, 22);
             openToolStripMenuItem.Text = "&Open";
             // 
             // toolStripSeparator
             // 
             toolStripSeparator.Name = "toolStripSeparator";
-            toolStripSeparator.Size = new Size(175, 6);
+            toolStripSeparator.Size = new Size(191, 6);
             // 
             // saveToolStripMenuItem
             // 
@@ -706,7 +696,7 @@
             saveToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            saveToolStripMenuItem.Size = new Size(178, 22);
+            saveToolStripMenuItem.Size = new Size(194, 22);
             saveToolStripMenuItem.Text = "&Save";
             // 
             // saveAsToolStripMenuItem
@@ -714,13 +704,13 @@
             saveAsToolStripMenuItem.Enabled = false;
             saveAsToolStripMenuItem.Image = Properties.Resources.SaveAs;
             saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            saveAsToolStripMenuItem.Size = new Size(178, 22);
+            saveAsToolStripMenuItem.Size = new Size(194, 22);
             saveAsToolStripMenuItem.Text = "Save &As";
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(175, 6);
+            toolStripSeparator1.Size = new Size(191, 6);
             // 
             // printToolStripMenuItem
             // 
@@ -729,7 +719,7 @@
             printToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             printToolStripMenuItem.Name = "printToolStripMenuItem";
             printToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.P;
-            printToolStripMenuItem.Size = new Size(178, 22);
+            printToolStripMenuItem.Size = new Size(194, 22);
             printToolStripMenuItem.Text = "&Print";
             // 
             // printPreviewToolStripMenuItem
@@ -738,18 +728,18 @@
             printPreviewToolStripMenuItem.Image = (Image)resources.GetObject("printPreviewToolStripMenuItem.Image");
             printPreviewToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
-            printPreviewToolStripMenuItem.Size = new Size(178, 22);
+            printPreviewToolStripMenuItem.Size = new Size(194, 22);
             printPreviewToolStripMenuItem.Text = "Print Pre&view";
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(175, 6);
+            toolStripSeparator2.Size = new Size(191, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(178, 22);
+            exitToolStripMenuItem.Size = new Size(194, 22);
             exitToolStripMenuItem.Text = "E&xit";
             // 
             // editToolStripMenuItem
@@ -1067,7 +1057,6 @@
         private ToolStripMenuItem menuRoutineParameterItem;
         private ToolStripMenuItem menuRoutineDependencyItem;
         private ToolStripMenuItem manageModelDatabaseMenuItem;
-        private ToolStripMenuItem newCloneModelMenuItem;
         private ToolStripMenuItem scriptMenuItem;
         private ToolStripMenuItem extendedPropertiesToolStripMenuItem;
         private ToolStripMenuItem applicationToolStripMenuItem;

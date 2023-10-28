@@ -106,8 +106,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(Program.Data.RemoveModel());
-            work.Add(new WorkItem() { WorkName = "New Model", DoWork = Program.Data.NewModel });
+            work.AddRange(Program.Data.NewModel());
 
             DoLocalWork(work);
         }
