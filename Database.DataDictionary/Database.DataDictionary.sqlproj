@@ -139,7 +139,6 @@
     <Build Include="App_DataDictionary\Tables\DatabaseDomain.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationProperty.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeApplicationProperty.sql" />
-    <Build Include="App_DataDictionary\Tables\ApplicationPropertyScope.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseDomain.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraint.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraintColumn.sql" />
@@ -178,7 +177,6 @@
     <Build Include="App_DataDictionary\Tables\LibraryMember.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeLibrarySource.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeLibraryMember.sql" />
-    <Build Include="App_DataDictionary\Tables\LibraryNameSpace.sql" />
     <Build Include="App_DataDictionary\Tables\ModelLibrary.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetLibrarySource.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetLibraryMember.sql" />
