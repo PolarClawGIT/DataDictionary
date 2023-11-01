@@ -65,15 +65,14 @@
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\Sequence" />
     <Folder Include="App_DataDictionary\User Defined Types\" />
-    <Folder Include="App_DataDictionary\Unit Test scripts" />
     <Folder Include="dbo\Views" />
     <Folder Include="App_DataDictionary\Views" />
+    <Folder Include="App_DataDictionary\Functions\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
     <None Include="dbo\Extended Property query.sql" />
     <None Include="App_DataDictionary\ExtendedProperty Data.sql" />
-    <None Include="App_DataDictionary\Unit Test scripts\DomainAttribute tests.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Security\App_DataDictionary.sql" />
@@ -165,7 +164,6 @@
     <Build Include="App_DataDictionary\User Defined Types\typeTitle.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDescription.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationProperty.sql" />
-    <Build Include="App_DataDictionary\Views\DomainEntityAttribute.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainEntityProperty.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainEntityAlias.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainEntity.sql" />
@@ -199,12 +197,13 @@
     <Build Include="App_DataDictionary\Tables\DomainProcessAlias.sql" />
     <Build Include="App_DataDictionary\Tables\DomainProcessProperty.sql" />
     <Build Include="App_DataDictionary\Tables\DomainProcessDependency.sql" />
-    <Build Include="App_DataDictionary\Views\ModelEntityAlias_AK.sql" />
-    <Build Include="App_DataDictionary\Views\ModelAttributeAlias_AK.sql" />
-    <Build Include="App_DataDictionary\Views\DomainProcessAttribute.sql" />
-    <Build Include="App_DataDictionary\Views\DomainProcessEntity.sql" />
     <Build Include="App_DataDictionary\Tables\ModelProcess.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpaceElement.sql" />
+    <Build Include="App_DataDictionary\Tables\ApplicationScope.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainAlias.sql" />
+    <Build Include="App_DataDictionary\Views\DomainNameSpace.sql" />
+    <Build Include="App_DataDictionary\Views\DomainScope.sql" />
+    <Build Include="App_DataDictionary\Functions\funcSplitNameSpace.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

@@ -2,7 +2,7 @@
 (
 	[LibraryId] UniqueIdentifier Null,
 	[MemberId] UniqueIdentifier Null,
-	[ParentMemberId] UniqueIdentifier Null,
+	[MemberParentId] UniqueIdentifier Null,
 	[AssemblyName] NVarChar(1023) Null,
 	[NameSpace] NVarChar(Max) Null,
 	[MemberName] [App_DataDictionary].[typeNameSpaceElement] Not Null,

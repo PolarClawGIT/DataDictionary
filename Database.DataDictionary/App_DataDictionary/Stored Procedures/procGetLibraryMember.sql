@@ -9,24 +9,24 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 ;With [Data] As (
 	Select	[LibraryId],
 			[MemberId],
-			[ParentMemberId],
+			[MemberParentId],
 			[MemberName],
 			Convert(NVarChar(Max),[MemberName]) As [NameSpace]
 	From	[App_DataDictionary].[LibraryMember]
-	Where	[ParentMemberId] is Null
+	Where	[MemberParentId] is Null
 	Union All
 	Select	C.[LibraryId],
 			C.[MemberId],
-			C.[ParentMemberId],
+			C.[MemberParentId],
 			C.[MemberName],
 			Convert(NVarChar(Max), FormatMessage('%s.%s',P.[NameSpace],C.[MemberName])) As [NameSpace]
 	From	[Data] P
 			Inner Join [App_DataDictionary].[LibraryMember] C
 			On	P.[LibraryId] = C.[LibraryId] And
-				P.[MemberId] = C.[ParentMemberId])
+				P.[MemberId] = C.[MemberParentId])
 Select	D.[LibraryId],
 		D.[MemberId],
-		D.[ParentMemberId],
+		D.[MemberParentId],
 		L.[AssemblyName],
 		B.[NameSpace],
 		D.[MemberName],

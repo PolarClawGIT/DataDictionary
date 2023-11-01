@@ -336,4 +336,39 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[NameSpaceId]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="a4d74629-12d2-43d1-8c41-b40422bc5c3a" ChangeDateTime="10/30/2023 13:52:31">
+    <Property Name="ElementName" Value="[App_DataDictionary].[LibraryMember].[ParentMemberId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[LibraryMember]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[MemberParentId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e0f4a043-9214-4f9c-9605-c33f60888b92" ChangeDateTime="10/30/2023 14:33:22">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DomainAlias]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[ApplicationAlias]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="413206ce-2aee-4805-9a72-818181fde6fc" ChangeDateTime="10/30/2023 14:34:29">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ApplicationAlias]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[DomainAlias]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c5ec328f-3ff5-4e4c-942a-c19510c2d799" ChangeDateTime="10/31/2023 14:43:12">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DomainAlias].[AliasNameElement]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DomainAlias]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[AliasElementName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6282e72e-2a70-48b0-b390-ffbbed357079" ChangeDateTime="11/01/2023 14:04:22">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DomainAliasNameSpace]" />
+    <Property Name="ElementType" Value="SqlView" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[DomainNameSpace]" />
+  </Operation>
 </Operations>

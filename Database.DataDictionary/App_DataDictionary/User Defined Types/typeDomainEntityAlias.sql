@@ -1,8 +1,5 @@
 ﻿CREATE TYPE [App_DataDictionary].[typeDomainEntityAlias] AS TABLE (
 	-- TIP: This matches the C# DataTable structure
     [EntityId]             UNIQUEIDENTIFIER NULL,
-	[EntityAliasId]        INT              NULL,
-	[DatabaseName]         SYSNAME          NULL,
-	[SchemaName]           SYSNAME          NULL,
-	[ObjectName]           SYSNAME          NULL,
-    [SysStart]             DATETIME2 (7)    NULL);
+    [AliasName]            NVarChar(Max) Null,
+    [ScopeName]            NVarChar(Max) Null);

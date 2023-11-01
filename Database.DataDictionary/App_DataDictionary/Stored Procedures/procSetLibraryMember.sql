@@ -24,7 +24,7 @@ Begin Try
 	Insert Into @Values
 	Select	P.[LibraryId],
 			D.[MemberId],
-			D.[ParentMemberId],
+			D.[MemberParentId],
 			P.[AssemblyName],
 			null As [NameSpace], -- Not used. ParentMemberId determines NameSpace.
 			NullIf(Trim(D.[MemberName]),'') As [MemberName],
@@ -46,7 +46,7 @@ Begin Try
 	;With [Delta] As (
 		Select	[LibraryId],
 				[MemberId],
-				[ParentMemberId],
+				[MemberParentId],
 				[MemberName],
 				[MemberType],
 				Convert(NVarChar(Max),[MemberData]) As [MemberData]
@@ -54,7 +54,7 @@ Begin Try
 		Except
 		Select	[LibraryId],
 				[MemberId],
-				[ParentMemberId],
+				[MemberParentId],
 				[MemberName],
 				[MemberType],
 				Convert(NVarChar(Max),[MemberData]) As [MemberData]
@@ -62,7 +62,7 @@ Begin Try
 	[Data] As (
 		Select	V.[LibraryId],
 				V.[MemberId],
-				V.[ParentMemberId],
+				V.[MemberParentId],
 				V.[MemberName],
 				V.[MemberType],
 				V.[MemberData],
@@ -76,13 +76,13 @@ Begin Try
 	On	T.[LibraryId] = S.[LibraryId] And
 		T.[MemberId] = S.[MemberId]
 	When Matched and [IsDiffrent] = 1 Then Update Set
-		[ParentMemberId] = S.[ParentMemberId],
+		[MemberParentId] = S.[MemberParentId],
 		[MemberName] = S.[MemberName],
 		[MemberType] = S.[MemberType],
 		[MemberData] = S.[MemberData]
 	When Not Matched by Target Then
-		Insert ([LibraryId], [MemberId], [ParentMemberId], [MemberName], [MemberType], [MemberData])
-		Values ([LibraryId], [MemberId], [ParentMemberId], [MemberName], [MemberType], [MemberData])
+		Insert ([LibraryId], [MemberId], [MemberParentId], [MemberName], [MemberType], [MemberData])
+		Values ([LibraryId], [MemberId], [MemberParentId], [MemberName], [MemberType], [MemberData])
 	When Not Matched by Source And
 		(@LibraryId = T.[LibraryId] Or
 		 T.[LibraryId] In (
