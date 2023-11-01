@@ -12,8 +12,7 @@ Select	D.[LibraryId],
 		D.[LibraryDescription],
 		D.[AssemblyName],
 		D.[SourceFile],
-		D.[SourceDate],
-		D.[SysStart]
+		D.[SourceDate]
 From	[App_DataDictionary].[LibrarySource] D
 		Left Join [App_DataDictionary].[ModelLibrary] A
 		On	D.[LibraryId] = A.[LibraryId]

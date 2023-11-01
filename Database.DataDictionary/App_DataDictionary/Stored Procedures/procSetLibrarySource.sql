@@ -27,8 +27,7 @@ Begin Try
 			NullIf(Trim(D.[LibraryDescription]),'') As [LibraryDescription],
 			NullIf(Trim(D.[AssemblyName]),'') As [AssemblyName],
 			NullIf(Trim(D.[SourceFile]),'') As [SourceFile],
-			IsNull(D.[SourceDate],GetDate()) As [SourceDate],
-			D.[SysStart]
+			IsNull(D.[SourceDate],GetDate()) As [SourceDate]
 	From	@Data D
 	Where	(@LibraryId is Null or Coalesce(D.[LibraryId], @LibraryId)  = @LibraryId)
 
@@ -48,14 +47,6 @@ Begin Try
 		Group By [AssemblyName]
 		Having	Count(*) > 1)
 	Throw 50000, '[AssemblyName] cannot be duplicate', 2;
-
-	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
-		Select	D.[LibraryId]
-		From	@Values D
-				Inner Join [App_DataDictionary].[DatabaseCatalog] A
-				On D.[LibraryId] = A.[CatalogId]
-		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
-	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 3;
 
 	-- Cascade Delete
 	Declare @Delete Table ([LibraryId] UniqueIdentifier Not Null)

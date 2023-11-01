@@ -12,8 +12,7 @@ Select	[HelpId],
 		[HelpParentId],
 		[HelpSubject],
 		[HelpText],
-		[NameSpace],
-		[SysStart]
+		[NameSpace]
 From	[App_DataDictionary].[ApplicationHelp]
 Where	(@HelpId is Null or @HelpId = [HelpId]) And
 		(@HelpSubject is Null or @HelpSubject = [HelpSubject]) And

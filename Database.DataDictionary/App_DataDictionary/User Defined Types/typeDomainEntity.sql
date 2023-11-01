@@ -3,5 +3,5 @@
     [EntityId]             UNIQUEIDENTIFIER NULL,
     [SubjectAreaId]        UNIQUEIDENTIFIER NULL,
     [EntityTitle]          [App_DataDictionary].[typeTitle] Null,
-    [EntityDescription]    [App_DataDictionary].[typeDescription] Null,
-    [SysStart]             DATETIME2 (7)    NULL);
+    [EntityDescription]    [App_DataDictionary].[typeDescription] Null
+    );

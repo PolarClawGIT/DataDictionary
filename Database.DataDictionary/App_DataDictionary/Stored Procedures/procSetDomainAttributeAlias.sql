@@ -71,7 +71,7 @@ Begin Try
 				Left Join [App_DataDictionary].[DomainNameSpace] D
 				On	A.[AliasName] = D.[AliasName])
 	-- This is necessary to create a concert GUID that does not change.
-	-- Otherwise, the GUID is not concret until after the statement executes. 
+	-- Otherwise, the GUID is not concert until after the statement executes. 
 	-- Not as expected.
 	Insert Into @Merge
 	Select	[AliasId],

@@ -27,8 +27,7 @@ Begin Try
 			NullIf(Trim(D.[CatalogDescription]),'') As [CatalogDescription],
 			NullIf(Trim(D.[SourceServerName]),'') As [SourceServerName],
 			NullIf(Trim(D.[SourceDatabaseName]),'') As [SourceDatabaseName],
-			D.[SourceDate],
-			D.[SysStart]
+			D.[SourceDate]
 	From	@Data D
 	Where	(@CatalogId is Null or Coalesce(D.[CatalogId], @CatalogId)  = @CatalogId)
 
@@ -49,14 +48,6 @@ Begin Try
 		Having	Count(*) > 1)
 	Throw 50000, '[SourceDatabaseName] cannot be duplicate', 2;
 
-	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
-		Select	D.[CatalogId]
-		From	@Values D
-				Inner Join [App_DataDictionary].[DatabaseCatalog] A
-				On D.[CatalogId] = A.[CatalogId]
-		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
-	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 3;
-	
 	-- Cascade Delete
 	Declare @Delete [App_DataDictionary].[typeDatabaseCatalogObject] 
 

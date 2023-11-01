@@ -24,8 +24,7 @@ Begin Try
 	Select	D.[AttributeId],
 			P.[PropertyId],
 			NullIf(Trim(D.[PropertyValue]),'') As [PropertyValue],
-			NullIf(Trim(D.[DefinitionText]),'') As [DefinitionText],
-			D.[SysStart]
+			NullIf(Trim(D.[DefinitionText]),'') As [DefinitionText]
 	From	@Data D
 			Inner Join [App_DataDictionary].[ApplicationProperty] P
 			On	D.[PropertyId] = P.[PropertyId]
@@ -45,15 +44,6 @@ Begin Try
 		Where	A.[AttributeId] is Null Or
 				P.[AttributeId] is Null)
 	Throw 50000, '[AttributeId] could not be found or is not associated with Model specified', 2;
-
-	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
-		Select	D.[AttributeId]
-		From	@Values D
-				Inner Join [App_DataDictionary].[DomainAttributeProperty] A
-				On D.[AttributeId] = A.[AttributeId] And
-					D.[PropertyId] = A.[PropertyId]
-		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
-	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 4;
 
 	-- Apply Changes
 	With [Delta] As (

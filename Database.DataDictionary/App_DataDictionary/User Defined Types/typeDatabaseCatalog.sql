@@ -5,6 +5,5 @@
 	[CatalogDescription]   [App_DataDictionary].[typeDescription] Null,
 	[SourceServerName]     SysName          Null,
 	[SourceDatabaseName]   SysName          Null,
-	[SourceDate]           DateTime         Null,
-    [SysStart]             DATETIME2 (7)    NULL
+	[SourceDate]           DateTime         Null
 );

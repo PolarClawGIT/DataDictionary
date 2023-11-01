@@ -28,21 +28,13 @@ Begin Try
 			IsNull(D.[IsFrameworkSummary],0) As [IsFrameworkSummary],
 			IsNull(D.[IsChoice], 0) As [IsChoice],
 			NullIf(Trim(D.[ExtendedProperty]),'') As [ExtendedProperty],
-			NullIf(Trim(D.[ChoiceList]),'') As [ChoiceList],
-			D.[SysStart]
+			NullIf(Trim(D.[ChoiceList]),'') As [ChoiceList]
 	From	@Data D
 
 	-- Validation
-	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
-		Select	D.[PropertyId]
-		From	@Values D
-				Inner Join [App_DataDictionary].[ApplicationProperty] A
-				On D.[PropertyId] = A.[PropertyId]
-		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
-	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 4;
 
 	-- Apply Changes
-	With [Delta] As (
+	;With [Delta] As (
 		Select	V.[PropertyId],
 				V.[PropertyTitle],
 				V.[PropertyDescription],

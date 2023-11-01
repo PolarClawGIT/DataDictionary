@@ -12,8 +12,7 @@ Select	D.[CatalogId],
 		D.[CatalogDescription],
 		D.[SourceServerName],
 		D.[SourceDatabaseName],
-		D.[SourceDate],
-		D.[SysStart]
+		D.[SourceDate]
 From	[App_DataDictionary].[DatabaseCatalog] D
 		Left Join [App_DataDictionary].[ModelCatalog] A
 		On	D.[CatalogId] = A.[CatalogId]

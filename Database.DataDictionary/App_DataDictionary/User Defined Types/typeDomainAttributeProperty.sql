@@ -3,5 +3,5 @@
     [AttributeId]           UNIQUEIDENTIFIER NULL,
 	[PropertyId]            UNIQUEIDENTIFIER NULL,
 	[PropertyValue]         NVarChar(4000)  NULL,
-	[DefinitionText]        NVarChar(Max) Null,
-    [SysStart]              DATETIME2 (7) NULL);
+	[DefinitionText]        NVarChar(Max) Null
+	);

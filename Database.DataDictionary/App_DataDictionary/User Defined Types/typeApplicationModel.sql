@@ -2,6 +2,5 @@
 (    -- TIP: This matches the C# DataTable structure
 	[ModelId]              UniqueIdentifier Null,
 	[ModelTitle]           [App_DataDictionary].[typeTitle] Null,
-	[ModelDescription]     [App_DataDictionary].[typeDescription] Null,
-	[SysStart]             DATETIME2
+	[ModelDescription]     [App_DataDictionary].[typeDescription] Null
 )

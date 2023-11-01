@@ -100,8 +100,8 @@
     <Build Include="App_DataDictionary\Tables\ApplicationHelp.sql" />
     <Build Include="Security\DataDictionaryApp.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAttribute.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetModel.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetModel.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationModel.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationModel.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procDeleteDomainAttribute.sql" />
