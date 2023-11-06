@@ -100,8 +100,8 @@
     <Build Include="App_DataDictionary\Tables\ApplicationHelp.sql" />
     <Build Include="Security\DataDictionaryApp.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAttribute.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationModel.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationModel.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetModel.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetModel.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procDeleteDomainAttribute.sql" />
@@ -130,7 +130,7 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procDeleteModel.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeApplicationModel.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeModel.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseConstraint.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseConstraintColumn.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseRoutine.sql" />
@@ -213,6 +213,9 @@
     <Build Include="App_DataDictionary\Views\DatabaseDomain_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseConstraint_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseConstraintColumn_AK.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeApplicationScope.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationScope.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationScope.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

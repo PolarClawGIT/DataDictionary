@@ -174,7 +174,7 @@ Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
-	EXECUTE [App_DataDictionary].[procSetApplicationModel] @ModelId, @Model
+	EXECUTE [App_DataDictionary].[procSetModel] @ModelId, @Model
 
 	EXECUTE [App_DataDictionary].[procSetLibrarySource] @ModelId, @LibraryId, @Source
 

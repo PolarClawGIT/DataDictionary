@@ -8,8 +8,6 @@
 	[ScopeParentId]       Int Null,
 	[ScopedElementName]   [App_DataDictionary].[typeNameSpaceElement] Not Null,
 	[ScopeDescription]    [App_DataDictionary].[typeDescription] Null,
-	[IsDatabaseScope]     Bit Not Null, -- Helper flag. Indicates that this is for Databases.
-	[IsLibraryScope]      Bit Not Null, -- Helper Flag. Indicates that this is for Library (.Net code).
 	-- Keys
 	CONSTRAINT [PK_ApplicationScope] PRIMARY KEY CLUSTERED ([ScopeId] ASC),
 	CONSTRAINT [FK_ApplicationScopeParent] FOREIGN KEY ([ScopeParentId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),

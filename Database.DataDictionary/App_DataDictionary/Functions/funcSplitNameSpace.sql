@@ -22,6 +22,14 @@ AS RETURN (
 								Null) As [NameSpace]
 							) N
 		Where	NullIf(N.[NameSpace],'') is Not Null)
-		Select	[NameSpace]
+		Select	[NameSpace],
+				IIF(CharIndex(@Delimiter, [NameSpace])>0,
+					Left([NameSpace], Len([NameSpace]) - CharIndex(@Delimiter, Reverse([NameSpace]))),
+					Null)
+					As [ParentNameSpace],
+				IIF(CharIndex(@Delimiter, [NameSpace])>0,
+					Right([NameSpace], CharIndex(@Delimiter, Reverse([NameSpace])) -1),
+					[NameSpace])
+					As [ElementName]
 		From	[Parse])
 GO

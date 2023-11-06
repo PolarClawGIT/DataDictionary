@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procGetApplicationModel]
+﻿CREATE PROCEDURE [App_DataDictionary].[procGetModel]
 		@ModelId UniqueIdentifier = Null,
 		@ModelTitle NVarChar(100) = Null
 As

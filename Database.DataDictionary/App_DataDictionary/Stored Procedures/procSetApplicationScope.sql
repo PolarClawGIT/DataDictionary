@@ -1,14 +1,14 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetApplicationModel]
-		@ModelId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeModel] ReadOnly
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetApplicationScope]
+		@Data [App_DataDictionary].[typeApplicationScope] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on ApplicationModel.
+/* Description: Performs Set on ApplicationScope.
 */
 
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
+Declare @Delimiter NVarChar(10) = '.'
 
 Begin Try
 	-- Begin Transaction
@@ -18,46 +18,69 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeModel]
-	Insert Into @Values
-	Select	V.[ModelId],
-			NullIf(Trim([ModelTitle]),'') As [ModelTitle],
-			NullIf(Trim([ModelDescription]),'') As [ModelDescription]
-	From	@Data D
-			Outer Apply (Select	IsNull([ModelId],NewId()) As [ModelId]) V
-	Where	(@ModelId is Null or @ModelId = V.[ModelId])
-
-	-- Validation
-	If Exists (
-		Select	[ModelTitle]
-		From	@Values
-		Group By [ModelTitle]
-		Having	Count(*) > 1)
-	Throw 50000, '[ModelTitle] cannot be duplicate', 2;
-
-	-- Apply Changes
-	With [Delta] As (
-		Select	V.[ModelId],
-				V.[ModelTitle],
-				V.[ModelDescription]
-		From	@Values V
-				Left Join [App_DataDictionary].[Model] A
-				On	V.[ModelId] = A.[ModelId]
+	;With [NameSpace] As (
+		Select	Distinct 
+				[NameSpace],
+				[ParentNameSpace],
+				[ElementName]
+		From	@Data S
+				Outer Apply [App_DataDictionary].[funcSplitNameSpace](S.[ScopedName], @Delimiter)),
+	[Scope] As (
+		Select	IsNull(M.[ScopeId],
+					(Select	IsNull(Max([ScopeId]),0) From [App_DataDictionary].[ApplicationScope]) +
+					Row_Number() Over (
+						Partition By (M.[ScopeId])
+						Order By (N.[NameSpace])))
+						As [ScopeId],
+				N.[NameSpace],
+				N.[ParentNameSpace],
+				N.[ElementName]
+		From	[NameSpace] N
+				Left Join [App_DataDictionary].[ModelScope] M
+				On	N.[NameSpace] = M.[ScopeName]),
+	[Values] As (
+		Select	C.[ScopeId],
+				P.[ScopeId] As [ScopeParentId],
+				C.[ElementName] As [ScopedElementName],
+				D.[ScopeDescription]
+		From @Data D
+				Left Join [Scope] C
+				On	D.[ScopedName] = C.[NameSpace]
+				Left Join [Scope] P
+				On	C.[ParentNameSpace] = P.[NameSpace]),
+	[Delta] As (
+		Select	[ScopeId],
+				[ScopeParentId],
+				[ScopedElementName],
+				[ScopeDescription]
+		From	[Values]
 		Except
-		Select	[ModelId],
-				[ModelTitle],
-				[ModelDescription]
-		From	[App_DataDictionary].[Model])
-	Merge [App_DataDictionary].[Model] As T
-	Using [Delta] As S
-	On	T.[ModelId] = S.[ModelId]
-	When Matched Then Update
-		Set	[ModelTitle] = S.[ModelTitle],
-			[ModelDescription] = S.[ModelDescription]
+		Select	[ScopeId],
+				[ScopeParentId],
+				[ScopedElementName],
+				[ScopeDescription]
+		From	[App_DataDictionary].[ApplicationScope]),
+	[Data] As (
+		Select	V.[ScopeId],
+				V.[ScopeParentId],
+				V.[ScopedElementName],
+				V.[ScopeDescription],
+				IIF(D.[ScopeId] is Null,0,1) As [IsDiffrent]
+		From	[Values] V
+				Left Join [Delta] D
+				On	V.[ScopeId] = D.[ScopeId])
+	Merge [App_DataDictionary].[ApplicationScope] T
+	Using [Data] S
+	On	T.[ScopeId] = S.[ScopeId]
+	When Matched And S.[IsDiffrent] = 1 Then Update
+	Set	[ScopeParentId] = S.[ScopeParentId],
+		[ScopedElementName] = S.[ScopedElementName],
+		[ScopeDescription] = S.[ScopeDescription]
 	When Not Matched by Target Then
-		Insert ([ModelId], [ModelTitle], [ModelDescription])
-		Values ([ModelId], [ModelTitle], [ModelDescription]);
+		Insert ([ScopeId], [ScopeParentId], [ScopedElementName], [ScopeDescription])
+		Values ([ScopeId], [ScopeParentId], [ScopedElementName], [ScopeDescription])
+	When Not Matched by Source Then Delete;
+	Print FormatMessage ('Merge [App_DataDictionary].[ApplicationScope]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -98,10 +121,4 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
-GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetApplicationModel',
-	@value = N'Performs Set on ApplicationModel.'
 GO

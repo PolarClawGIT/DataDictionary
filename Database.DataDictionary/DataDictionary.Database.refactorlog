@@ -399,4 +399,18 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[ModelScope]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="d1d5e3ee-3529-4618-bb1e-2e7fc9930d7c" ChangeDateTime="11/06/2023 15:59:58">
+    <Property Name="ElementName" Value="[App_DataDictionary].[procSetApplicationModel]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procSetModel]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1b399b85-8231-4d88-92dd-2ad40027218d" ChangeDateTime="11/06/2023 16:00:40">
+    <Property Name="ElementName" Value="[App_DataDictionary].[procGetApplicationModel]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procGetModel]" />
+  </Operation>
 </Operations>
