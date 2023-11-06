@@ -156,6 +156,27 @@
     <Compile Include="procSetDatabaseCatalog.cs">
       <SubType>Designer</SubType>
     </Compile>
+    <Compile Include="procSetDatabaseConstraint.cs">
+      <SubType>Designer</SubType>
+    </Compile>
+    <Compile Include="procSetDatabaseConstraintColumn.cs">
+      <SubType>Designer</SubType>
+    </Compile>
+    <Compile Include="procSetDatabaseRoutineParameter.cs">
+      <SubType>Designer</SubType>
+    </Compile>
+    <Compile Include="procSetDatabaseRoutine.cs">
+      <SubType>Designer</SubType>
+    </Compile>
+    <Compile Include="procSetDatabaseTableColumn.cs">
+      <SubType>Designer</SubType>
+    </Compile>
+    <Compile Include="procSetDatabaseTable.cs">
+      <SubType>Designer</SubType>
+    </Compile>
+    <Compile Include="procSetDatabaseDomain.cs">
+      <SubType>Designer</SubType>
+    </Compile>
     <Compile Include="procSetDatabaseSchema.cs">
       <SubType>Designer</SubType>
     </Compile>
@@ -175,6 +196,27 @@
   <ItemGroup>
     <EmbeddedResource Include="procSetDatabaseCatalog.resx">
       <DependentUpon>procSetDatabaseCatalog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="procSetDatabaseConstraint.resx">
+      <DependentUpon>procSetDatabaseConstraint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="procSetDatabaseConstraintColumn.resx">
+      <DependentUpon>procSetDatabaseConstraintColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="procSetDatabaseRoutineParameter.resx">
+      <DependentUpon>procSetDatabaseRoutineParameter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="procSetDatabaseRoutine.resx">
+      <DependentUpon>procSetDatabaseRoutine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="procSetDatabaseTableColumn.resx">
+      <DependentUpon>procSetDatabaseTableColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="procSetDatabaseTable.resx">
+      <DependentUpon>procSetDatabaseTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="procSetDatabaseDomain.resx">
+      <DependentUpon>procSetDatabaseDomain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="procSetDatabaseSchema.resx">
       <DependentUpon>procSetDatabaseSchema.cs</DependentUpon>

@@ -19,80 +19,100 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDatabaseSchema]
-	Insert Into @Values
-	Select	Coalesce(D.[CatalogId], @CatalogId) As [CatalogId],
-			D.[DatabaseName],
-			NullIf(Trim(D.[SchemaName]),'') As [SchemaName]
-	From	@Data D
-			Left Join [App_DataDictionary].[DatabaseCatalog] P
-			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId]
-	Where	(@CatalogId is Null or D.[CatalogId] = @CatalogId) And
-			(@ModelId is Null or @ModelId In (
-				Select	[ModelId]
-				From	[App_DataDictionary].[ModelCatalog]
-				Where	(@CatalogId is Null Or [CatalogId] = @CatalogId)))
-
 	-- Validation
 	If @ModelId is Null and @CatalogId is Null
 	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
 
-	If Exists (Select [CatalogId] From @Values Where [CatalogId] is Null)
-	Throw 50000, '[CatalogId] could not be determined.', 2;
+	IF Exists (
+		Select	1
+		From	@Data D
+				Left Join [App_DataDictionary].[DatabaseCatalog_AK] P
+				On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
+					NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName]
+		Where	P.[CatalogId] is Null)
+	Throw 50000, '[DatabaseName] does not match existing data', 2;
 
-	-- Cascade Delete
-	Declare @Delete [App_DataDictionary].[typeDatabaseCatalogObject] 
+	-- Clean the Data, helps performance
+	Declare @Values Table (
+		[SchemaId]   UniqueIdentifier Not Null,
+		[CatalogId]  UniqueIdentifier Not Null,
+		[SchemaName] SysName Not Null,
+		[ScopeId]    Int Not Null,
+		Primary Key ([SchemaId]))
 
-	Insert Into @Delete ([CatalogId], [SchemaName])
-	Select	T.[CatalogId],
-			T.[SchemaName]
-	From	[App_DataDictionary].[DatabaseSchema] T
-			Left Join @Values V
-			On	T.[CatalogId] = V.[CatalogId] And
-				T.[SchemaName] = V.[SchemaName]
-			Left Join [App_DataDictionary].[ModelCatalog] M
-			On	T.[CatalogId] = M.[CatalogId]
-	Where	V.[CatalogId] is Null And
-			(@CatalogId is Null or T.[CatalogId] = @CatalogId) And
-			(@ModelId is Null or M.[ModelId] = @ModelId)
-
---	if Exists (Select 1 From @Delete)
---	Exec [App_DataDictionary].[procDeleteDatabaseCatalogObject] @Delete;
+	Insert Into @Values
+	Select	Coalesce(A.[SchemaId], NewId()) As [SchemaId],
+			P.[CatalogId],
+			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
+			S.[ScopeId]
+	From	@Data D
+			Left Join [App_DataDictionary].[DatabaseCatalog_AK] P
+			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
+				NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName]
+			Left Join [App_DataDictionary].[ModelScope] S
+			On	D.[ScopeName] = S.[ScopeName]
+			Left Join [App_DataDictionary].[DatabaseSchema_AK] A
+			On	P.[CatalogId] = A.[CatalogId] And
+				NullIf(Trim(D.[SchemaName]),'') = A.[SchemaName]
+	Where	P.[CatalogId] is Null Or
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
+	Delete From [App_DataDictionary].[DatabaseSchema]
+	From	[App_DataDictionary].[DatabaseSchema] T
+			Left Join @Values S
+			On	T.[SchemaId] = S.[SchemaId]
+	Where	S.[SchemaId] is Null And
+			T.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseSchema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	;With [Delta] As (
-		Select	[CatalogId],
-				[SchemaName]
+		Select	[SchemaId],
+				[CatalogId],
+				[SchemaName],
+				[ScopeId]
 		From	@Values
 		Except
-		Select	[CatalogId],
-				[SchemaName]
-		From	[App_DataDictionary].[DatabaseSchema]),
-	[Data] As (
-		Select	V.[CatalogId],
-				V.[SchemaName],
-				IIF(D.[CatalogId] is Null,0, 1) As [IsDiffrent]
-		From	@Values V
-				Left Join [Delta] D
-				On	V.[CatalogId] = D.[CatalogId] And
-					V.[SchemaName] = D.[SchemaName])
-	Merge [App_DataDictionary].[DatabaseSchema] As T
-	Using [Data] As S
-	On	T.[CatalogId] = S.[CatalogId] And
-		T.[SchemaName] = S.[SchemaName]
-	-- When Matched and [IsDiffrent] = 1 Then Update Set -- Currently not needed
-	When Not Matched by Target Then
-		Insert ([CatalogId], [SchemaName])
-		Values ([CatalogId], [SchemaName])
-	When Not Matched by Source And
-		(@CatalogId = T.[CatalogId] Or
-		 T.[CatalogId] In (
-			Select	[CatalogId]
-			From	[App_DataDictionary].[ModelCatalog]
-			Where	[ModelId] = @ModelId))
-		Then Delete;
-	Print FormatMessage ('Merge [App_DataDictionary].[DatabaseSchema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+		Select	[SchemaId],
+				[CatalogId],
+				[SchemaName],
+				[ScopeId]
+		From	[App_DataDictionary].[DatabaseSchema])
+	Update [App_DataDictionary].[DatabaseSchema]
+	Set		[CatalogId] = S.[CatalogId],
+			[SchemaName] = S.[SchemaName],
+			[ScopeId] = S.[ScopeId]
+	From	[Delta] S
+			Inner Join [App_DataDictionary].[DatabaseSchema] T
+			On	S.[SchemaId] = T.[SchemaId]
+	Print FormatMessage ('Update [App_DataDictionary].[DatabaseSchema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[DatabaseSchema] (
+			[SchemaId],
+			[CatalogId],
+			[SchemaName],
+			[ScopeId])
+	Select	S.[SchemaId],
+			S.[CatalogId],
+			S.[SchemaName],
+			S.[ScopeId]
+	From	@Values S
+			Left Join [App_DataDictionary].[DatabaseSchema] T
+			On	S.[SchemaId] = T.[SchemaId]
+	Where	T.[SchemaId] is Null
+	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseSchema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

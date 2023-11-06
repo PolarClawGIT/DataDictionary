@@ -159,7 +159,6 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseRoutineDependency.sql" />
     <Build Include="App_DataDictionary\Tables\ModelProperty.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseCatalogObject.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procDeleteDatabaseCatalogObject.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeTitle.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDescription.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationProperty.sql" />
@@ -199,9 +198,21 @@
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpaceElement.sql" />
     <Build Include="App_DataDictionary\Tables\ApplicationScope.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAlias.sql" />
-    <Build Include="App_DataDictionary\Views\DomainNameSpace.sql" />
-    <Build Include="App_DataDictionary\Views\DomainScope.sql" />
+    <Build Include="App_DataDictionary\Views\ModelNameSpace.sql" />
+    <Build Include="App_DataDictionary\Views\ModelScope.sql" />
     <Build Include="App_DataDictionary\Functions\funcSplitNameSpace.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseSchema_AK.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseTable_AK.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseRoutine_AK.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeNameSpace.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeScopeName.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procCascadeDeleteCatalog.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseTableColumn_AK.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseRoutineParameter_AK.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseCatalog_AK.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseDomain_AK.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseConstraint_AK.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseConstraintColumn_AK.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

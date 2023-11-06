@@ -40,7 +40,7 @@ Begin Try;
 	--(0214,0110,'XML SCHEMA COLLECTION',Null,1,0),
 	-- Level 2, Selected Object only
 	(0301,0210,'Column',Null,1,0),
-	(0302,0210,'Constraimt',Null,1,0),
+	(0302,0210,'Constraint',Null,1,0),
 	(0304,0210,'Index',Null,1,0),
 	(0305,0213,'Column',Null,1,0),
 	(0306,0213,'Index',Null,1,0),

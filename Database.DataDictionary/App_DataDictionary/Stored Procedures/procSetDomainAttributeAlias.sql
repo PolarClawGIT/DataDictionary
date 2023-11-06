@@ -68,7 +68,7 @@ Begin Try
 								Left([NameSpace],Len([NameSpace]) - CharIndex(@Delimiter,Reverse([NameSpace]))),
 								Null)
 								As [AliasParentName]) A
-				Left Join [App_DataDictionary].[DomainNameSpace] D
+				Left Join [App_DataDictionary].[ModelNameSpace] D
 				On	A.[AliasName] = D.[AliasName])
 	-- This is necessary to create a concert GUID that does not change.
 	-- Otherwise, the GUID is not concert until after the statement executes. 
@@ -113,9 +113,9 @@ Print FormatMessage ('Delete [App_DataDictionary].[DomainAlias]: %i, %s',@@RowCo
 				N.[AliasId],
 				S.[ScopeId]
 		From	@Values V
-				Inner Join [App_DataDictionary].[DomainNameSpace] N
+				Inner Join [App_DataDictionary].[ModelNameSpace] N
 				On	V.[AliasName] = N.[AliasName]
-				Inner Join [App_DataDictionary].[DomainScope] S
+				Inner Join [App_DataDictionary].[ModelScope] S
 				On	V.[ScopeName] = S.[ScopeName]),
 	[Delta] As (
 		Select	[AttributeId],

@@ -2,9 +2,10 @@
 (
 	-- Domain is a synonym for user defined type.
 	-- ER Diagrams tools also refer to Domains with a similar definition.
-	[CatalogId]             UniqueIdentifier Not Null,
-	[SchemaName]            SysName Not Null,
+	[DomainId]              UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseDomainId] DEFAULT (newid()),
+	[SchemaId]              UniqueIdentifier Not Null,
 	[DomainName]            SysName Not Null,
+	[ScopeId]               Int Not Null,
 	[DataType]              SysName Null, -- Can be a system defined data type or "table type"
 	[DomainDefault]         NVarChar(Max) Null,
 	[CharacterMaximumLength] Int Null,
@@ -25,7 +26,11 @@
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_DatabaseDomain_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
-	CONSTRAINT [PK_DatabaseDomain] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [DomainName] ASC),
-	CONSTRAINT [FK_DatabaseDomainSchema] FOREIGN KEY ([CatalogId], [SchemaName]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([CatalogId], [SchemaName]),
-
+	CONSTRAINT [PK_DatabaseDomain] PRIMARY KEY CLUSTERED ([DomainId]),
+	CONSTRAINT [FK_DatabaseDomainSchema] FOREIGN KEY ([SchemaId]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([SchemaId]),
+	CONSTRAINT [FK_DatabaseDomainScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
 )
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseDomain]
+    ON [App_DataDictionary].[DatabaseDomain]([DomainName], [SchemaId]);
+GO

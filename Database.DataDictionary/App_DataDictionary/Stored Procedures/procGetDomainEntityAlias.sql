@@ -10,9 +10,9 @@ Select	D.[EntityId],
 		N.[AliasName],
 		S.[ScopeName]
 From	[App_DataDictionary].[DomainEntityAlias] D
-		Inner Join [App_DataDictionary].[DomainNameSpace] N
+		Inner Join [App_DataDictionary].[ModelNameSpace] N
 		On	D.[AliasId] = N.[AliasId]
-		Left Join [App_DataDictionary].[DomainScope] S
+		Left Join [App_DataDictionary].[ModelScope] S
 		On	D.[ScopeId] = S.[ScopeId]
 		Left Join [App_DataDictionary].[ModelEntity] A
 		On	D.[EntityId] = A.[EntityId]

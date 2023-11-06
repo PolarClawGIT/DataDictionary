@@ -118,30 +118,37 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="App_DataDictionary_procSetDatabaseSchema_Insert_TestAction.SqlScript" xml:space="preserve">
-    <value>Declare @ModelId UniqueIdentifier = Null,
-		@CatalogId UniqueIdentifier = Null,
+    <value>Declare @CatalogId UniqueIdentifier = NewId(),
+		@Server SysName = @@ServerName,
 		@Catalog [App_DataDictionary].[typeDatabaseCatalog],
 		@Schema [App_DataDictionary].[typeDatabaseSchema]
 
-Set	@CatalogId = NewId()
---Select @ModelId = [ModelId] From [App_DataDictionary].[Model]
+Insert Into @Catalog 
+Select	@CatalogId As [CatalogId],
+	Db_Name() As [CatalogTitle],
+	Convert(NvarChar,Null) As [CatalogDescription],
+	'Database' As [ScopeName],
+	@Server As [SourceServerName],
+	Db_Name() As [SourceDatabaseName],
+	GetDate() As [SourceDate]
 
-Insert Into @Catalog ([CatalogId], [CatalogTitle], [CatalogDescription], [SourceServerName], [SourceDatabaseName], [SourceDate])
-values (Null, 'UnitTest', Null, 'SomeServer', 'SomeDatabase', GetDate())
-
-Insert Into @Schema ([CatalogId], [DatabaseName], [SchemaName])
-Values (Null, 'SomeDatabase', 'dbo')
+Insert Into @Schema
+Select	@CatalogId As [CatalogId],
+	[CATALOG_NAME] As [DatabaseName],
+	[SCHEMA_NAME] As [SchemaName],
+	'Database.Schema' As [ScopeName]
+From [INFORMATION_SCHEMA].[SCHEMATA]
 
 Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
-	Exec [App_DataDictionary].[procSetDatabaseCatalog] @ModelId, @CatalogId, @Catalog
-	Exec [App_DataDictionary].[procSetDatabaseSchema]  @ModelId, @CatalogId, @Schema
+	Exec [App_DataDictionary].[procSetDatabaseCatalog] Null, @CatalogId, @Catalog
+	Exec [App_DataDictionary].[procSetDatabaseSchema]  Null, @CatalogId, @Schema
 
 	Select	*
 	From	[App_DataDictionary].[DatabaseSchema]
-	WHere	[CatalogId] = @CatalogId
+	Where	[CatalogId] = @CatalogId
 
 	Print 'Transaction Success, Rollback Issued';
 	Rollback Transaction;

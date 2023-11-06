@@ -10,11 +10,10 @@ Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
 /* Description: Performs Get on DatabaseColumn.
 */
-Select	D.[CatalogId],
-		C.[SourceDatabaseName] As [DatabaseName],
-		D.[SchemaName],
-		D.[TableName],
-		P.[TableType],
+Select	T.[CatalogId],
+		T.[DatabaseName],
+		T.[SchemaName],
+		T.[TableName],
 		D.[ColumnName],
 		D.[OrdinalPosition],
 		D.[ColumnDefault],
@@ -41,18 +40,15 @@ Select	D.[CatalogId],
 		D.[ComputedDefinition],
 		D.[GeneratedAlwayType]
 From	[App_DataDictionary].[DatabaseTableColumn] D
+		Inner Join [App_DataDictionary].[DatabaseTable_AK] T
+		On	D.[TableId] = T.[TableId]
 		Left Join [App_DataDictionary].[ModelCatalog] A
-		On	D.[CatalogId] = A.[CatalogId]
-		Inner Join [App_DataDictionary].[DatabaseCatalog] C
-		On	D.[CatalogId] = C.[CatalogId]
-		Inner Join [App_DataDictionary].[DatabaseTable] P
-		On	D.[CatalogId] = P.[CatalogId] And
-			D.[SchemaName] = P.[SchemaName] And
-			D.[TableName] = P.[TableName]
+		On	T.[CatalogId] = A.[CatalogId]
+		
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
-		(@CatalogId is Null or @CatalogId = D.[CatalogId]) And
-		(@DatabaseName is Null or @DatabaseName = C.[SourceDatabaseName]) And
-		(@SchemaName is Null or @SchemaName = D.[SchemaName]) And
-		(@TableName is Null or @TableName = D.[TableName]) And
+		(@CatalogId is Null or @CatalogId = T.[CatalogId]) And
+		(@DatabaseName is Null or @DatabaseName = T.[DatabaseName]) And
+		(@SchemaName is Null or @SchemaName = T.[SchemaName]) And
+		(@TableName is Null or @TableName = T.[TableName]) And
 		(@ColumnName is Null or @ColumnName = D.[ColumnName])
 GO

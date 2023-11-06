@@ -44,12 +44,6 @@ namespace Database.DataDictionary.SqlUnitTest
             App_DataDictionary_procSetDatabaseSchema_Insert_TestAction = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction();
             notEmptyResultSetCondition1 = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.NotEmptyResultSetCondition();
             // 
-            // App_DataDictionary_procSetDatabaseSchema_InsertData
-            // 
-            this.App_DataDictionary_procSetDatabaseSchema_InsertData.PosttestAction = null;
-            this.App_DataDictionary_procSetDatabaseSchema_InsertData.PretestAction = null;
-            this.App_DataDictionary_procSetDatabaseSchema_InsertData.TestAction = App_DataDictionary_procSetDatabaseSchema_Insert_TestAction;
-            // 
             // App_DataDictionary_procSetDatabaseSchema_Insert_TestAction
             // 
             App_DataDictionary_procSetDatabaseSchema_Insert_TestAction.Conditions.Add(notEmptyResultSetCondition1);
@@ -60,6 +54,12 @@ namespace Database.DataDictionary.SqlUnitTest
             notEmptyResultSetCondition1.Enabled = true;
             notEmptyResultSetCondition1.Name = "notEmptyResultSetCondition1";
             notEmptyResultSetCondition1.ResultSet = 1;
+            // 
+            // App_DataDictionary_procSetDatabaseSchema_InsertData
+            // 
+            this.App_DataDictionary_procSetDatabaseSchema_InsertData.PosttestAction = null;
+            this.App_DataDictionary_procSetDatabaseSchema_InsertData.PretestAction = null;
+            this.App_DataDictionary_procSetDatabaseSchema_InsertData.TestAction = App_DataDictionary_procSetDatabaseSchema_Insert_TestAction;
         }
 
         #endregion

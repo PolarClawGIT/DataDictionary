@@ -1,4 +1,4 @@
-﻿CREATE VIEW [App_DataDictionary].[DomainNameSpace] AS
+﻿CREATE VIEW [App_DataDictionary].[ModelNameSpace] AS
 With [Data] As (
 	Select	[AliasId],
 			[AliasElementName],

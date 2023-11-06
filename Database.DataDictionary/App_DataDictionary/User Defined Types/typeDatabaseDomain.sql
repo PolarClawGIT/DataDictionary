@@ -4,6 +4,7 @@
 	[DatabaseName]           SysName Null,
 	[SchemaName]             SysName Null,
 	[DomainName]             SysName Null,
+	[ScopeName]              [App_DataDictionary].[typeScopeName] Null,
 	[DataType]               SysName Null,
 	[DomainDefault]          NVarChar(Max) Null,
 	[CharacterMaximumLength]  Int Null,

@@ -1,0 +1,284 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="App_DataDictionary_procSetDatabaseConstraintColumn_Insert_TestAction.SqlScript" xml:space="preserve">
+    <value>Declare @CatalogId UniqueIdentifier = NewId(),
+		@ModelId UniqueIdentifier = null,
+		@Server SysName = @@ServerName,
+		@Catalog [App_DataDictionary].[typeDatabaseCatalog],
+		@Schema [App_DataDictionary].[typeDatabaseSchema],
+		@Domain [App_DataDictionary].[typeDatabaseDomain],
+		@Table [App_DataDictionary].[typeDatabaseTable],
+		@Column [App_DataDictionary].[typeDatabaseTableColumn],
+		@Constraint [App_DataDictionary].[typeDatabaseConstraint],
+		@ConstraintColumn [App_DataDictionary].[typeDatabaseConstraintColumn]
+
+Insert Into @Catalog 
+Select	@CatalogId As [CatalogId],
+	Db_Name() As [CatalogTitle],
+	Convert(NvarChar,Null) As [CatalogDescription],
+	'Database' As [ScopeName],
+	@Server As [SourceServerName],
+	Db_Name() As [SourceDatabaseName],
+	GetDate() As [SourceDate]
+
+Insert Into @Schema
+Select	@CatalogId As [CatalogId],
+	[CATALOG_NAME] As [DatabaseName],
+	[SCHEMA_NAME] As [SchemaName],
+	'Database.Schema' As [ScopeName]
+From [INFORMATION_SCHEMA].[SCHEMATA]
+
+Insert Into @Table
+Select	@CatalogId As [CatalogId],
+	I.[TABLE_CATALOG] As [DatabaseName],
+	I.[TABLE_SCHEMA] As [SchemaName],
+	I.[TABLE_NAME] As [TableName],
+	Case 
+	When I.[TABLE_TYPE] In ('BASE TABLE') Then 'Database.Schema.Table'
+	When I.[TABLE_TYPE] In ('VIEW') Then 'Database.Schema.View'
+	Else 'ERROR' End [ScopeName],
+	Case
+	When H.[object_id] is Not Null Then 'HISTORY TABLE'
+	When T.[history_table_id] is Not Null Then 'TEMPORAL TABLE'
+	Else I.[TABLE_TYPE]
+	End As [TableType]
+From	[INFORMATION_SCHEMA].[TABLES] I
+	Left Join [sys].[Tables] T
+	On	I.[TABLE_SCHEMA] = Object_Schema_Name(T.[object_id]) And
+		I.[TABLE_NAME] = Object_Name(T.[object_id])
+	Left Join [sys].[Tables] H
+	On	I.[TABLE_SCHEMA] = Object_Schema_Name(H.[history_table_id]) And
+		I.[TABLE_NAME] = Object_Name(H.[history_table_id])
+
+Insert Into @Column
+Select	@CatalogId As [CatalogId],
+	I.[TABLE_CATALOG] As [DatabaseName],
+	I.[TABLE_SCHEMA] As [SchemaName],
+	I.[TABLE_NAME] As [TableName],
+	I.[COLUMN_NAME] As [ColumnName],
+	Case 
+	When T.[TABLE_TYPE] In ('BASE TABLE') Then 'Database.Schema.Table.Column'
+	When T.[TABLE_TYPE] In ('VIEW') Then 'Database.Schema.View.Column'
+	Else 'ERROR' End [ScopeName],
+	I.[ORDINAL_POSITION] As [OrdinalPosition],
+	iif(I.[IS_NULLABLE] In ('YES','TRUE','1'),1,0) As [IsNullable],
+	I.[DATA_TYPE] As [DataType],
+	I.[COLUMN_DEFAULT] As [ColumnDefault],
+	I.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
+	I.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength],
+	I.[NUMERIC_PRECISION] As [NumericPrecision],
+	I.[NUMERIC_PRECISION_RADIX] As [NumericPrecisionRadix],
+	I.[NUMERIC_SCALE] As [NumericScale],
+	I.[DATETIME_PRECISION] As [DateTimePrecision],
+	I.[CHARACTER_SET_CATALOG] As [CharacterSetCatalog],
+	I.[CHARACTER_SET_SCHEMA] As [CharacterSetSchema],
+	I.[CHARACTER_SET_NAME] As [CharacterSetName],
+	I.[COLLATION_CATALOG] As [CollationCatalog],
+	I.[COLLATION_SCHEMA] As [CollationSchema],
+	I.[COLLATION_NAME] As [CollationName],
+	I.[DOMAIN_CATALOG] As [DomainCatalog],
+	I.[DOMAIN_SCHEMA] As [DomainSchema],
+	I.[DOMAIN_NAME] As [DomainName],
+	C.[is_identity] As [IsIdentity],
+	C.[is_hidden] As [IsHidden],
+	C.[is_computed] As [IsComputed],
+	P.[definition] As [ComputedDefinition],
+	NullIf(C.[generated_always_type_desc],'NOT_APPLICABLE') As [GeneratedAlwayType]
+From	[INFORMATION_SCHEMA].[COLUMNS] I
+	Left Join [INFORMATION_SCHEMA].[TABLES] T
+	On	I.[TABLE_CATALOG] = T.[TABLE_CATALOG] And
+		I.[TABLE_SCHEMA] = T.[TABLE_SCHEMA] And
+		I.[TABLE_NAME] = T.[TABLE_NAME]
+	Left Join [sys].[Columns] C
+	On	I.[TABLE_SCHEMA] = Object_Schema_Name(C.[object_id]) And
+		I.[TABLE_NAME] = Object_Name(C.[object_id]) And
+		I.[COLUMN_NAME] = C.[name]
+	Left Join [sys].[computed_columns] P
+	On	C.[object_id] = P.[object_id] And
+		C.[column_id] = P.[column_id]
+
+Insert Into @Constraint
+Select	@CatalogId As [CatalogId],
+	[CONSTRAINT_CATALOG] As [DatabaseName],
+	[CONSTRAINT_SCHEMA] As [SchemaName],
+	[CONSTRAINT_NAME] As [ConstraintName],
+	[TABLE_NAME] As [TableName],
+	'Database.Schema.Table.Constraint' As [ScopeName],
+	[CONSTRAINT_TYPE] As [ConstraintType]
+From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS]
+
+Insert Into @ConstraintColumn
+Select	@CatalogId As [CatalogId],
+	T.[CONSTRAINT_CATALOG] As [DatabaseName],
+	T.[CONSTRAINT_SCHEMA] As [SchemaName],
+	T.[CONSTRAINT_NAME] As [ConstraintName],
+	C.[TABLE_NAME] As [TableName],
+	C.[COLUMN_NAME] As [ColumnName],
+	C.[ORDINAL_POSITION] As [OrdinalPosition],
+	F.[TABLE_SCHEMA] As [ReferenceSchemaName],
+	F.[TABLE_NAME] As [ReferenceTableName],
+	F.[COLUMN_NAME] As [ReferenceColumnName]
+From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
+	Inner Join [INFORMATION_SCHEMA].[KEY_COLUMN_USAGE] C
+	On T.[CONSTRAINT_CATALOG] = C.[CONSTRAINT_CATALOG] And
+	T.[CONSTRAINT_SCHEMA] = C.[CONSTRAINT_SCHEMA] And
+	T.[CONSTRAINT_NAME] = C.[CONSTRAINT_NAME]
+	Left Join [INFORMATION_SCHEMA].[REFERENTIAL_CONSTRAINTS] R
+	On T.[CONSTRAINT_CATALOG] = R.[CONSTRAINT_CATALOG] And
+	T.[CONSTRAINT_SCHEMA] = R.[CONSTRAINT_SCHEMA] And
+	T.[CONSTRAINT_NAME] = R.[CONSTRAINT_NAME]
+	Left Join [INFORMATION_SCHEMA].[KEY_COLUMN_USAGE] F
+	On R.[UNIQUE_CONSTRAINT_CATALOG] = F.[CONSTRAINT_CATALOG] And
+	R.[UNIQUE_CONSTRAINT_SCHEMA] = F.[CONSTRAINT_SCHEMA] And
+	R.[UNIQUE_CONSTRAINT_NAME] = F.[CONSTRAINT_NAME] And
+	C.[ORDINAL_POSITION] = F.[ORDINAL_POSITION]
+
+Begin Try;
+	Begin Transaction;
+	Set NoCount On;
+
+	Exec [App_DataDictionary].[procSetDatabaseCatalog] @ModelId, @CatalogId, @Catalog
+	Exec [App_DataDictionary].[procSetDatabaseSchema]  @ModelId, @CatalogId, @Schema
+	Exec [App_DataDictionary].[procSetDatabaseTable]  @ModelId, @CatalogId, @Table
+	Exec [App_DataDictionary].[procSetDatabaseTableColumn]  @ModelId, @CatalogId, @Column
+	Exec [App_DataDictionary].[procSetDatabaseConstraint]  @ModelId, @CatalogId, @Constraint
+	Exec [App_DataDictionary].[procSetDatabaseConstraintColumn] @ModelId, @CatalogId, @ConstraintColumn
+
+	Select	P.*, D.*
+	From	[App_DataDictionary].[DatabaseConstraintColumn] D
+			Inner Join [App_DataDictionary].[DatabaseConstraint] P
+			On	D.[ConstraintId] = P.[ConstraintId]
+			Inner Join [App_DataDictionary].[DatabaseConstraintColumn_AK] A
+			On	D.[ConstraintColumnId] = A.[ConstraintColumnId]
+	Where	A.[CatalogId] = @CatalogId
+
+	Print 'Transaction Success, Rollback Issued';
+	Rollback Transaction;
+End Try
+Begin Catch
+	Print 'Rollback Issued';
+	Rollback Transaction;
+	Throw;
+End Catch;</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+</root>

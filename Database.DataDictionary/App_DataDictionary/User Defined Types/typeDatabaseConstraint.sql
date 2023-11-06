@@ -5,5 +5,6 @@
 	[SchemaName]             SysName Null,
 	[ConstraintName]         SysName Null,
 	[TableName]              SysName Null,
+	[ScopeName]              [App_DataDictionary].[typeScopeName] Null,
 	[ConstraintType]         NVarChar(60) Null
 )

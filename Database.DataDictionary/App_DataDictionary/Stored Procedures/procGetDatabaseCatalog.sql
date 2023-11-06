@@ -16,6 +16,8 @@ Select	D.[CatalogId],
 From	[App_DataDictionary].[DatabaseCatalog] D
 		Left Join [App_DataDictionary].[ModelCatalog] A
 		On	D.[CatalogId] = A.[CatalogId]
+		Inner Join [App_DataDictionary].[ModelScope] P
+		On	D.[ScopeId] = P.[ScopeId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@CatalogId is Null or @CatalogId = D.[CatalogId]) And
 		(@DatabaseName is Null or @DatabaseName = D.[SourceDatabaseName])

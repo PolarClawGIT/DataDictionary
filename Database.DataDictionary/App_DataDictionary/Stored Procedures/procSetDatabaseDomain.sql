@@ -19,13 +19,47 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDatabaseDomain]
+	-- Validation
+	If @ModelId is Null and @CatalogId is Null
+	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
+
+	IF Exists (
+		Select	1
+		From	@Data D
+				Left Join [App_DataDictionary].[DatabaseSchema_AK] P
+				On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
+					NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
+					NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName]
+		Where	P.[CatalogId] is Null)
+	Throw 50000, '[DatabaseName] or [SchemaName] does not match existing data', 2;
+
+	-- Clean the Data, helps performance
+	Declare @Values Table (
+		[DomainId]              UniqueIdentifier Not Null,
+		[SchemaId]              UniqueIdentifier Not Null,
+		[DomainName]            SysName Not Null,
+		[ScopeId]               Int Not Null,
+		[DataType]              SysName Null,
+		[DomainDefault]         NVarChar(Max) Null,
+		[CharacterMaximumLength] Int Null,
+		[CharacterOctetLength]  Int Null,
+		[NumericPrecision]      TinyInt Null,
+		[NumericPrecisionRadix] SmallInt Null,
+		[NumericScale]          Int Null,
+		[DateTimePrecision]     SmallInt Null,
+		[CharacterSetCatalog]   SysName Null,
+		[CharacterSetSchema]    SysName Null,
+		[CharacterSetName]      SysName Null,
+		[CollationCatalog]      SysName Null,
+		[CollationSchema]       SysName Null,
+		[CollationName]         SysName Null,
+		Primary Key ([DomainId]))
+
 	Insert Into @Values
-	Select	Coalesce(D.[CatalogId], @CatalogId) As [CatalogId],
-			NullIf(Trim(IsNull(P.[SourceDatabaseName], D.[DatabaseName])),'') As [DatabaseName],
-			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
+	Select	Coalesce(A.[DomainId], NewId()) As [DomainId],
+			P.[SchemaId],
 			NullIf(Trim(D.[DomainName]),'') As [DomainName],
+			S.[ScopeId],
 			NullIf(Trim(D.[DataType]),'') As [DataType],
 			NullIf(Trim(D.[DomainDefault]),'') As [DomainDefault],
 			D.[CharacterMaximumLength],
@@ -41,30 +75,47 @@ Begin Try
 			NullIf(Trim(D.[CollationSchema]),'') As [CollationSchema],
 			NullIf(Trim(D.[CollationName]),'') As [CollationName]
 	From	@Data D
-			Left Join [App_DataDictionary].[DatabaseCatalog] P
-			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId]
-	Where	(@CatalogId is Null or D.[CatalogId] = @CatalogId) And
-			(@ModelId is Null or @ModelId In (
-				Select	[ModelId]
-				From	[App_DataDictionary].[ModelCatalog]
-				Where	(@CatalogId is Null Or [CatalogId] = @CatalogId)))
-
-	-- Validation
-	If @ModelId is Null and @CatalogId is Null
-	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
-
-	If Exists (
-		Select	[DatabaseName], [SchemaName], [DomainName]
-		From	@Values
-		Group By [DatabaseName], [SchemaName], [DomainName]
-		Having	Count(*) > 1)
-	Throw 50000, '[DomainName] cannot be duplicate', 2;
+			Left Join [App_DataDictionary].[DatabaseSchema_AK] P
+			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
+				NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
+				NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName]
+			Left Join [App_DataDictionary].[ModelScope] S
+			On	D.[ScopeName] = S.[ScopeName]
+			Left Join [App_DataDictionary].[DatabaseDomain_AK] A
+			On	P.[CatalogId] = A.[CatalogId] And
+				P.[SchemaId] = A.[SchemaId] and
+				NullIf(Trim(D.[DomainName]),'') = A.[DomainName]
+	Where	P.[CatalogId] is Null Or
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
-	With [Delta] As (
-		Select	[CatalogId],
-				[SchemaName],
+	Delete From [App_DataDictionary].[DatabaseDomain]
+	From	[App_DataDictionary].[DatabaseDomain] T
+			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
+			On	T.[SchemaId] = P.[SchemaId]
+			Left Join @Values S
+			On	T.[DomainId] = S.[DomainId]
+	Where	S.[DomainId] is Null And
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseDomain]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	;With [Delta] As (
+		Select	[DomainId],
+				[SchemaId],
 				[DomainName],
+				[ScopeId],
 				[DataType],
 				[DomainDefault],
 				[CharacterMaximumLength],
@@ -80,10 +131,11 @@ Begin Try
 				[CollationSchema],
 				[CollationName]
 		From	@Values
-		Except
-		Select	[CatalogId],
-				[SchemaName],
+	Except
+		Select	[DomainId],
+				[SchemaId],
 				[DomainName],
+				[ScopeId],
 				[DataType],
 				[DomainDefault],
 				[CharacterMaximumLength],
@@ -98,97 +150,72 @@ Begin Try
 				[CollationCatalog],
 				[CollationSchema],
 				[CollationName]
-		From	[App_DataDictionary].[DatabaseDomain]),
-	[Data] As (
-		Select	V.[CatalogId],
-				V.[SchemaName],
-				V.[DomainName],
-				V.[DataType],
-				V.[DomainDefault],
-				V.[CharacterMaximumLength],
-				V.[CharacterOctetLength],
-				V.[NumericPrecision],
-				V.[NumericPrecisionRadix],
-				V.[NumericScale],
-				V.[DateTimePrecision],
-				V.[CharacterSetCatalog],
-				V.[CharacterSetSchema],
-				V.[CharacterSetName],
-				V.[CollationCatalog],
-				V.[CollationSchema],
-				V.[CollationName],
-				IIF(D.[CatalogId] is Null,0, 1) As [IsDiffrent]
-		From	@Values V
-				Left Join [Delta] D
-				On	V.[CatalogId] = D.[CatalogId] And
-					V.[SchemaName] = D.[SchemaName] And
-					V.[DomainName] = D.[DomainName])
-	Merge [App_DataDictionary].[DatabaseDomain] As T
-	Using [Data] As S
-	On	T.[CatalogId] = S.[CatalogId] And
-		T.[SchemaName] = S.[SchemaName] And
-		T.[DomainName] = S.[DomainName]
-	When Matched and [IsDiffrent] = 1 Then Update Set
-		[CatalogId] = S.[CatalogId],
-		[SchemaName] = S.[SchemaName],
-		[DomainName] = S.[DomainName],
-		[DataType] = S.[DataType],
-		[DomainDefault] = S.[DomainDefault],
-		[CharacterMaximumLength] = S.[CharacterMaximumLength],
-		[CharacterOctetLength] = S.[CharacterOctetLength],
-		[NumericPrecision] = S.[NumericPrecision],
-		[NumericPrecisionRadix] = S.[NumericPrecisionRadix],
-		[NumericScale] = S.[NumericScale],
-		[DateTimePrecision] = S.[DateTimePrecision],
-		[CharacterSetCatalog] = S.[CharacterSetCatalog],
-		[CharacterSetSchema] = S.[CharacterSetSchema],
-		[CharacterSetName] = S.[CharacterSetName],
-		[CollationCatalog] = S.[CollationCatalog],
-		[CollationSchema] = S.[CollationSchema],
-		[CollationName] = S.[CollationName]
-	When Not Matched by Target Then
-		Insert ([CatalogId],
-				[SchemaName],
-				[DomainName],
-				[DataType],
-				[DomainDefault],
-				[CharacterMaximumLength],
-				[CharacterOctetLength],
-				[NumericPrecision],
-				[NumericPrecisionRadix],
-				[NumericScale],
-				[DateTimePrecision],
-				[CharacterSetCatalog],
-				[CharacterSetSchema],
-				[CharacterSetName],
-				[CollationCatalog],
-				[CollationSchema],
-				[CollationName])
-		Values ([CatalogId],
-				[SchemaName],
-				[DomainName],
-				[DataType],
-				[DomainDefault],
-				[CharacterMaximumLength],
-				[CharacterOctetLength],
-				[NumericPrecision],
-				[NumericPrecisionRadix],
-				[NumericScale],
-				[DateTimePrecision],
-				[CharacterSetCatalog],
-				[CharacterSetSchema],
-				[CharacterSetName],
-				[CollationCatalog],
-				[CollationSchema],
-				[CollationName])
-	When Not Matched by Source And
-		(@CatalogId = T.[CatalogId] Or
-		 T.[CatalogId] In (
-			Select	[CatalogId]
-			From	[App_DataDictionary].[ModelCatalog]
-			Where	[ModelId] = @ModelId))
-		Then Delete;
-	Print FormatMessage ('Merge [App_DataDictionary].[DatabaseDomain]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+		From	[App_DataDictionary].[DatabaseDomain])
+	Update [App_DataDictionary].[DatabaseDomain]
+	Set		[SchemaId] = S.[SchemaId],
+			[DomainName] = S.[DomainName],
+			[ScopeId] = S.[ScopeId],
+			[DataType] = S.[DataType],
+			[DomainDefault] = S.[DomainDefault],
+			[CharacterMaximumLength] = S.[CharacterMaximumLength],
+			[CharacterOctetLength] = S.[CharacterOctetLength],
+			[NumericPrecision] = S.[NumericPrecision],
+			[NumericPrecisionRadix] = S.[NumericPrecisionRadix],
+			[NumericScale] = S.[NumericScale],
+			[DateTimePrecision] = S.[DateTimePrecision],
+			[CharacterSetCatalog] = S.[CharacterSetCatalog],
+			[CharacterSetSchema] = S.[CharacterSetSchema],
+			[CharacterSetName] = S.[CharacterSetName],
+			[CollationCatalog] = S.[CollationCatalog],
+			[CollationSchema] = S.[CollationSchema],
+			[CollationName] = S.[CollationName]
+	From	[App_DataDictionary].[DatabaseDomain] T
+			Inner Join [Delta] S
+			On	T.[DomainId] = S.[DomainId]
+	Print FormatMessage ('Update [App_DataDictionary].[DatabaseDomain]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[DatabaseDomain] (
+			[DomainId],
+			[SchemaId],
+			[DomainName],
+			[ScopeId],
+			[DataType],
+			[DomainDefault],
+			[CharacterMaximumLength],
+			[CharacterOctetLength],
+			[NumericPrecision],
+			[NumericPrecisionRadix],
+			[NumericScale],
+			[DateTimePrecision],
+			[CharacterSetCatalog],
+			[CharacterSetSchema],
+			[CharacterSetName],
+			[CollationCatalog],
+			[CollationSchema],
+			[CollationName])
+	Select	S.[DomainId],
+			S.[SchemaId],
+			S.[DomainName],
+			S.[ScopeId],
+			S.[DataType],
+			S.[DomainDefault],
+			S.[CharacterMaximumLength],
+			S.[CharacterOctetLength],
+			S.[NumericPrecision],
+			S.[NumericPrecisionRadix],
+			S.[NumericScale],
+			S.[DateTimePrecision],
+			S.[CharacterSetCatalog],
+			S.[CharacterSetSchema],
+			S.[CharacterSetName],
+			S.[CollationCatalog],
+			S.[CollationSchema],
+			S.[CollationName]
+	From	@Values S
+			Left Join [App_DataDictionary].[DatabaseDomain] T
+			On	S.[DomainId] = T.[DomainId]
+	Where	T.[DomainId] is Null
+	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseDomain]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

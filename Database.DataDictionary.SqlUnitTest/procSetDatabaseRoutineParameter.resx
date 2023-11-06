@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="App_DataDictionary_procSetDatabaseRoutineParameter_Insert_TestAction.SqlScript" xml:space="preserve">
+    <value>Declare @CatalogId UniqueIdentifier = NewId(),
+		@ModelId UniqueIdentifier = null,
+		@Server SysName = @@ServerName,
+		@Catalog [App_DataDictionary].[typeDatabaseCatalog],
+		@Schema [App_DataDictionary].[typeDatabaseSchema],
+		@Routine [App_DataDictionary].[typeDatabaseRoutine],
+		@RoutineParamter [App_DataDictionary].[typeDatabaseRoutineParameter]
+
+Insert Into @Catalog 
+Select	@CatalogId As [CatalogId],
+	Db_Name() As [CatalogTitle],
+	Convert(NvarChar,Null) As [CatalogDescription],
+	'Database' As [ScopeName],
+	@Server As [SourceServerName],
+	Db_Name() As [SourceDatabaseName],
+	GetDate() As [SourceDate]
+
+Insert Into @Schema
+Select	@CatalogId As [CatalogId],
+	[CATALOG_NAME] As [DatabaseName],
+	[SCHEMA_NAME] As [SchemaName],
+	'Database.Schema' As [ScopeName]
+From [INFORMATION_SCHEMA].[SCHEMATA]
+
+Insert Into @Routine
+Select	@CatalogId As [CatalogId],
+	[ROUTINE_CATALOG] As [DatabaseName],
+	[ROUTINE_SCHEMA] As [SchemaName],
+	[ROUTINE_NAME] As [RoutineName],
+	Case
+	When [ROUTINE_TYPE] In ('PROCEDURE') Then 'Database.Schema.Procedure'
+	When [ROUTINE_TYPE] In ('FUNCTION') Then 'Database.Schema.Function'
+	Else 'Error' End As [ScopeName],
+	[ROUTINE_TYPE] As [RoutineType]
+From	[INFORMATION_SCHEMA].[ROUTINES]
+
+Insert Into @RoutineParamter
+Select	@CatalogId As [CatalogId],
+	P.[SPECIFIC_CATALOG] As [DatabaseName],
+	P.[SPECIFIC_SCHEMA] As [SchemaName],
+	P.[SPECIFIC_NAME] As [RoutineName],
+	IIF(R.[ROUTINE_TYPE] IN ('FUNCTION') AND P.[ORDINAL_POSITION] = 0,'RETURN',P.[PARAMETER_NAME]) As [ParameterName],
+	Case
+	When R.[ROUTINE_TYPE] In ('PROCEDURE') Then 'Database.Schema.Procedure.Parameter'
+	When R.[ROUTINE_TYPE] In ('FUNCTION') Then 'Database.Schema.Function.Parameter'
+	Else 'Error' End As [ScopeName],
+	P.[ORDINAL_POSITION] As [OrdinalPosition],
+	P.[DATA_TYPE] As [DataType],
+	P.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
+	P.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength],
+	P.[NUMERIC_PRECISION] As [NumericPrecision],
+	P.[NUMERIC_PRECISION_RADIX] As [NumericPrecisionRadix],
+	P.[NUMERIC_SCALE] As [NumericScale],
+	P.[DATETIME_PRECISION] As [DateTimePrecision],
+	P.[CHARACTER_SET_CATALOG] As [CharacterSetCatalog],
+	P.[CHARACTER_SET_SCHEMA] As [CharacterSetSchema],
+	P.[CHARACTER_SET_NAME] As [CharacterSetName],
+	P.[COLLATION_CATALOG] As [CollationCatalog],
+	P.[COLLATION_SCHEMA] As [CollationSchema],
+	P.[COLLATION_NAME] As [CollationName],
+	P.[USER_DEFINED_TYPE_CATALOG] As [DomainCatalog],
+	P.[USER_DEFINED_TYPE_SCHEMA] As [DomainSchema],
+	P.[USER_DEFINED_TYPE_NAME] As [DomainName]
+From	[INFORMATION_SCHEMA].[PARAMETERS] P
+	Inner Join [INFORMATION_SCHEMA].[ROUTINES] R
+	On	P.[SPECIFIC_CATALOG] = R.[SPECIFIC_CATALOG] And
+		P.[SPECIFIC_SCHEMA] = R.[SPECIFIC_SCHEMA] And
+		P.[SPECIFIC_NAME] = R.[SPECIFIC_NAME]
+
+Begin Try;
+	Begin Transaction;
+	Set NoCount On;
+
+	Exec [App_DataDictionary].[procSetDatabaseCatalog] @ModelId, @CatalogId, @Catalog
+	Exec [App_DataDictionary].[procSetDatabaseSchema]  @ModelId, @CatalogId, @Schema
+	Exec [App_DataDictionary].[procSetDatabaseRoutine]  @ModelId, @CatalogId, @Routine
+	Exec [App_DataDictionary].[procSetDatabaseRoutineParameter] @ModelId, @CatalogId, @RoutineParamter
+
+	Select	D.*
+	From	[App_DataDictionary].[DatabaseCatalog] D
+			Inner Join [App_DataDictionary].[DatabaseCatalog_AK] A
+			On	D.[CatalogId] = A.[CatalogId]
+	Where	A.[CatalogId] = @CatalogId
+
+	Select	D.*
+	From	[App_DataDictionary].[DatabaseSchema] D
+			Inner Join [App_DataDictionary].[DatabaseSchema_AK] A
+			On	D.[SchemaId] = A.[SchemaId]
+	Where	A.[CatalogId] = @CatalogId
+
+	Select	D.*
+	From	[App_DataDictionary].[DatabaseRoutineParameter] D
+			Inner Join [App_DataDictionary].[DatabaseRoutineParameter_AK] A
+			On	D.[ParameterId] = A.[ParameterId]
+	Where	A.[CatalogId] = @CatalogId
+
+
+	Print 'Transaction Success, Rollback Issued';
+	Rollback Transaction;
+End Try
+Begin Catch
+	Print 'Rollback Issued';
+	Rollback Transaction;
+	Throw;
+End Catch;</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+</root>

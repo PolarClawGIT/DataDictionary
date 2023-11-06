@@ -19,99 +19,112 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDatabaseRoutine]
-	Insert Into @Values
-	Select	Coalesce(D.[CatalogId], @CatalogId) As [CatalogId],
-			NullIf(Trim(IsNull(P.[SourceDatabaseName], D.[DatabaseName])),'') As [DatabaseName],
-			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
-			NullIf(Trim(D.[RoutineName]),'') As [RoutineName],
-			NullIf(Trim(D.[RoutineType]),'') As [RoutineType]
-	From	@Data D
-			Left Join [App_DataDictionary].[DatabaseCatalog] P
-			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId]
-	Where	(@CatalogId is Null or D.[CatalogId] = @CatalogId) And
-			(@ModelId is Null or @ModelId In (
-				Select	[ModelId]
-				From	[App_DataDictionary].[ModelCatalog]
-				Where	(@CatalogId is Null Or [CatalogId] = @CatalogId)))
-
 	-- Validation
 	If @ModelId is Null and @CatalogId is Null
 	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
 
-	If Exists (
-		Select	[DatabaseName], [SchemaName], [RoutineName]
-		From	@Values
-		Group By [DatabaseName], [SchemaName], [RoutineName]
-		Having	Count(*) > 1)
-	Throw 50000, '[RoutineName] cannot be duplicate', 2;
+	IF Exists (
+		Select	1
+		From	@Data D
+				Left Join [App_DataDictionary].[DatabaseSchema_AK] P
+				On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
+					NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
+					NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName]
+		Where	P.[CatalogId] is Null)
+	Throw 50000, '[DatabaseName] or [SchemaName] does not match existing data', 2;
 
-	-- Cascade Delete
-	Declare @Delete [App_DataDictionary].[typeDatabaseCatalogObject] 
+	-- Clean the Data
+	Declare @Values Table (
+		[RoutineId]          UniqueIdentifier Not Null,
+		[SchemaId]           UniqueIdentifier Not Null,
+		[RoutineName]        SysName Not Null,
+		[ScopeId]            Int Not Null,
+		[RoutineType]        NVarChar(60) Null,
+		Primary Key ([RoutineId]))
 
-	Insert Into @Delete ([CatalogId], [SchemaName], [ObjectName])
-	Select	T.[CatalogId],
-			T.[SchemaName],
-			T.[RoutineName]
-	From	[App_DataDictionary].[DatabaseRoutine] T
-			Inner Join [App_DataDictionary].[ModelCatalog] M
-			On	IsNull(@CatalogId, T.[CatalogId]) = M.[CatalogId] And
-				(@ModelId is Null or M.[ModelId] = @ModelId)
-			Left Join @Values V
-			On	T.[CatalogId] = V.[CatalogId] And
-				T.[SchemaName] = V.[SchemaName] And
-				T.[RoutineName] = V.[RoutineName]
-	Where	V.[CatalogId] is Null;
-
-	if Exists (Select 1 From @Delete)
-	Exec [App_DataDictionary].[procDeleteDatabaseCatalogObject] @ModelId, @Delete;
+	Insert Into @Values
+	Select	Coalesce(A.[RoutineId], NewId()) As [RoutineId],  
+			P.[SchemaId],
+			NullIf(Trim(D.[RoutineName]),'') As [RoutineName],
+			S.[ScopeId],
+			NullIf(Trim(D.[RoutineType]),'') As [RoutineType]
+	From	@Data D
+			Left Join [App_DataDictionary].[DatabaseSchema_AK] P
+			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
+				NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
+				NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName]
+			Left Join [App_DataDictionary].[ModelScope] S
+			On	D.[ScopeName] = S.[ScopeName]
+			Left Join [App_DataDictionary].[DatabaseRoutine_AK] A
+			On	P.[CatalogId] = A.[CatalogId] And
+				P.[SchemaId] = A.[SchemaId] and
+				NullIf(Trim(D.[RoutineName]),'') = A.[RoutineName]
+	Where	P.[CatalogId] is Null Or
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))	
 
 	-- Apply Changes
-	With [Delta] As (
-		Select	[CatalogId],
-				[SchemaName],
+	Delete From [App_DataDictionary].[DatabaseRoutine]
+	From	[App_DataDictionary].[DatabaseRoutine] T
+			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
+			On	T.[SchemaId] = P.[SchemaId]
+			Left Join @Values S
+			On	T.[RoutineId] = S.[RoutineId]
+	Where	S.[RoutineId] is Null And
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseRoutine]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	;With [Delta] As (
+		Select	[RoutineId],
+				[SchemaId],
 				[RoutineName],
+				[ScopeId],
 				[RoutineType]
 		From	@Values
 		Except
-		Select	[CatalogId],
-				[SchemaName],
+		Select	[RoutineId],
+				[SchemaId],
 				[RoutineName],
+				[ScopeId],
 				[RoutineType]
-		From	[App_DataDictionary].[DatabaseRoutine]),
-	[Data] As (
-		Select	V.[CatalogId],
-				V.[SchemaName],
-				V.[RoutineName],
-				V.[RoutineType],
-				IIF(D.[CatalogId] is Null,0, 1) As [IsDiffrent]
-		From	@Values V
-				Left Join [Delta] D
-				On	V.[CatalogId] = D.[CatalogId] And
-					V.[SchemaName] = D.[SchemaName] And
-					V.[RoutineName] = D.[RoutineName])
-	Merge [App_DataDictionary].[DatabaseRoutine] As T
-	Using [Data] As S
-	On	T.[CatalogId] = S.[CatalogId] And
-		T.[SchemaName] = S.[SchemaName] And
-		T.[RoutineName] = S.[RoutineName]
-	When Matched and [IsDiffrent] = 1 Then Update Set
-		[CatalogId] = S.[CatalogId],
-		[SchemaName] = S.[SchemaName],
-		[RoutineName] = S.[RoutineName],
-		[RoutineType] = S.[RoutineType]
-	When Not Matched by Target Then
-		Insert ([CatalogId], [SchemaName], [RoutineName], [RoutineType])
-		Values ([CatalogId], [SchemaName], [RoutineName], [RoutineType])
-	When Not Matched by Source And
-		(@CatalogId = T.[CatalogId] Or
-		 T.[CatalogId] In (
-			Select	[CatalogId]
-			From	[App_DataDictionary].[ModelCatalog]
-			Where	[ModelId] = @ModelId))
-		Then Delete;
-	Print FormatMessage ('Merge [App_DataDictionary].[DatabaseRoutine]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+		From	[App_DataDictionary].[DatabaseRoutine])
+	Update [App_DataDictionary].[DatabaseRoutine]
+	Set		[SchemaId] = S.[SchemaId],
+			[RoutineName] = S.[RoutineName],
+			[ScopeId] = S.[ScopeId],
+			[RoutineType] = S.[RoutineType]
+	From	[App_DataDictionary].[DatabaseRoutine] T
+			Inner Join [Delta] S
+			On	T.[RoutineId] = S.[RoutineId]
+	Print FormatMessage ('Update [App_DataDictionary].[DatabaseRoutine]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[DatabaseRoutine] (
+		[RoutineId],
+		[SchemaId],
+		[RoutineName],
+		[ScopeId],
+		[RoutineType])
+	Select	S.[RoutineId],
+			S.[SchemaId],
+			S.[RoutineName],
+			S.[ScopeId],
+			S.[RoutineType]
+	From	@Values S
+			Left Join [App_DataDictionary].[DatabaseRoutine] T
+			On	S.[RoutineId] = T.[RoutineId]
+	Where	T.[RoutineId] is Null
+	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseRoutine]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
