@@ -208,6 +208,7 @@ From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
 	[CONSTRAINT_SCHEMA] As [SchemaName],
 	[CONSTRAINT_NAME] As [ConstraintName],
 	[TABLE_NAME] As [TableName],
+	'Database.Schema.Table.Constraint' As [ScopeName],
 	[CONSTRAINT_TYPE] As [ConstraintType]
 From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS]</value>
     <comment>SQL Script to get data for DbConstraintItem.</comment>
@@ -334,8 +335,9 @@ From	[INFORMATION_SCHEMA].[PARAMETERS] P
   <data name="DbSchemaItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
 	[CATALOG_NAME] As [DatabaseName],
-	[SCHEMA_NAME] As [SchemaName]
-From	[INFORMATION_SCHEMA].[SCHEMATA]</value>
+	[SCHEMA_NAME] As [SchemaName],
+	'Database.Schema' As [ScopeName]
+From [INFORMATION_SCHEMA].[SCHEMATA]</value>
     <comment>SQL Script to get data for DbSchemaItem.</comment>
   </data>
   <data name="DbTableItem" xml:space="preserve">

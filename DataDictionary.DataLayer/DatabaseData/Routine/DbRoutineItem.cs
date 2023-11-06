@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for Database Routine (procedures and functions).
     /// </summary>
-    public interface IDbRoutineItem : IDbRoutineKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IDataItem
+    public interface IDbRoutineItem : IDbRoutineKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IDbScopeName, IDataItem
     {
         /// <summary>
         /// Type of Routine (such as procedure or function)
@@ -42,6 +42,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         /// <inheritdoc/>
         public string? RoutineName { get { return GetValue("RoutineName"); } }
+
+        /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } }
 
         /// <inheritdoc/>
         public string? RoutineType { get { return GetValue("RoutineType"); } }
@@ -80,6 +83,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("RoutineName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("RoutineType", typeof(string)){ AllowDBNull = false},
         };
 

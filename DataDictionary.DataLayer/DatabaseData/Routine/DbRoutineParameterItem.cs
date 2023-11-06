@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for the Database Routine Parameter
     /// </summary>
-    public interface IDbRoutineParameterItem : IDbRoutineParameterKey, IDbDomainReferenceKey, IDbElementScope, IDbColumn, IDbCatalogKey, IDataItem
+    public interface IDbRoutineParameterItem : IDbRoutineParameterKey, IDbDomainReferenceKey, IDbElementScope, IDbColumn, IDbCatalogKey, IDbScopeName, IDataItem
     { }
 
     /// <summary>
@@ -42,6 +42,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         /// <inheritdoc/>
         public string? ParameterName { get { return GetValue("ParameterName"); } }
+
+        /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } }
 
         /// <inheritdoc/>
         public int? OrdinalPosition { get { return GetValue<int>("OrdinalPosition"); } }
@@ -105,6 +108,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
             new DataColumn("RoutineName", typeof(string)){ AllowDBNull = false},
             new DataColumn("RoutineType", typeof(string)){ AllowDBNull = false},
             new DataColumn("ParameterName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("OrdinalPosition", typeof(int)){ AllowDBNull = true},
             new DataColumn("DataType", typeof(string)){ AllowDBNull = true},
             new DataColumn("CharacterMaximumLength", typeof(int)){ AllowDBNull = true},

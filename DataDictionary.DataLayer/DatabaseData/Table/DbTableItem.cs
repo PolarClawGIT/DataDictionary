@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for Database Column Item
     /// </summary>
-    public interface IDbTableItem : IDbTableKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IDataItem
+    public interface IDbTableItem : IDbTableKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IDbScopeName, IDataItem
     {
         /// <summary>
         /// Type of Table Object (Table, View, ...)
@@ -47,6 +47,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public string? TableName { get { return GetValue("TableName"); } }
 
         /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } }
+
+        /// <inheritdoc/>
         public string? TableType { get { return GetValue("TableType"); } }
 
         /// <inheritdoc/>
@@ -70,6 +73,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("TableName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("TableType", typeof(string)){ AllowDBNull = false},
         };
 

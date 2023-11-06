@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Constraint Item.
     /// </summary>
-    public interface IDbConstraintItem : IDbConstraintKey, IDbCatalogKey, IDbElementScope, IDbTableKey, IDataItem
+    public interface IDbConstraintItem : IDbConstraintKey, IDbCatalogKey, IDbElementScope, IDbTableKey, IDbScopeName, IDataItem
     {
         /// <summary>
         /// Type of the Database Constraint.
@@ -45,6 +45,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public string? ConstraintName { get { return GetValue("ConstraintName"); } }
 
         /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } }
+
+        /// <inheritdoc/>
         public string? TableName { get { return GetValue("TableName"); } }
 
         /// <inheritdoc/>
@@ -60,6 +63,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("ConstraintName", typeof(string)){ AllowDBNull = false},
             new DataColumn("TableName", typeof(string)){ AllowDBNull = true},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("ConstraintType", typeof(string)){ AllowDBNull = false},
         };
 

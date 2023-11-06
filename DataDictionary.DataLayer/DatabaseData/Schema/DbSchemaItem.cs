@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
     /// <summary>
     /// Interface for the Database Schema Item
     /// </summary>
-    public interface IDbSchemaItem : IDbSchemaKey, IDbCatalogKey, IDbCatalogScope, IDbIsSystem, IDataItem
+    public interface IDbSchemaItem : IDbSchemaKey, IDbCatalogKey, IDbCatalogScope, IDbIsSystem, IDbScopeName, IDataItem
     { }
 
     /// <summary>
@@ -36,6 +36,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
 
         /// <inheritdoc/>
         public string? SchemaName { get { return GetValue("SchemaName"); } }
+
+        /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } }
 
         /// <inheritdoc/>
         public bool IsSystem
@@ -65,6 +68,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
         };
 
         /// <summary>

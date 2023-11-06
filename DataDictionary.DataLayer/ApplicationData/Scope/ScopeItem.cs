@@ -35,6 +35,11 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <inheritdoc/>
         public string? ScopeDescription { get { return GetValue("ScopeDescription"); } set { SetValue("ScopeDescription", value); } }
 
+        /// <summary>
+        /// Constructor for the Scope Data.
+        /// </summary>
+        public ScopeItem() : base() { }
+
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("ScopeId", typeof(Int32)){ AllowDBNull = false},
@@ -45,5 +50,15 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        #region ISerializable
+        /// <summary>
+        /// Serialization Constructor for the Database Table Column
+        /// </summary>
+        /// <param name="serializationInfo"></param>
+        /// <param name="streamingContext"></param>
+        protected ScopeItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
     }
 }

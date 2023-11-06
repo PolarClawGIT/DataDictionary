@@ -11,6 +11,7 @@ Select	D.[CatalogId],
 		D.[CatalogTitle],
 		D.[CatalogDescription],
 		D.[SourceServerName],
+		P.[ScopeName],
 		D.[SourceDatabaseName],
 		D.[SourceDate]
 From	[App_DataDictionary].[DatabaseCatalog] D

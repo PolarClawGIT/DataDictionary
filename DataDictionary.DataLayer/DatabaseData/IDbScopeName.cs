@@ -14,6 +14,6 @@ namespace DataDictionary.DataLayer.DatabaseData
         /// <summary>
         /// The Database Scope Name. This describes the Scope/Level of an Object within a NameSpace.
         /// </summary>
-        String ScopeName { get; }
+        String? ScopeName { get; }
     }
 }

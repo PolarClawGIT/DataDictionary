@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     /// <summary>
     /// Interface for the Database Catalog Item.
     /// </summary>
-    public interface IDbCatalogItem : IDbCatalogKeyUnique, IDbCatalogKey, IDbIsSystem, IDataItem
+    public interface IDbCatalogItem : IDbCatalogKeyUnique, IDbCatalogKey, IDbIsSystem, IDbScopeName, IDataItem
     {
         /// <summary>
         /// Title given to the Catalog. Default is the Database Name.
@@ -55,6 +55,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         public string? CatalogTitle { get { return GetValue("CatalogTitle"); } set { SetValue("CatalogTitle", value); } }
 
         /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } }
+
+        /// <inheritdoc/>
         public string? CatalogDescription { get { return GetValue("CatalogDescription"); } set { SetValue("CatalogDescription", value); } }
 
         /// <inheritdoc/>
@@ -79,11 +82,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         {
             new DataColumn("CatalogId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("CatalogTitle", typeof(string)){ AllowDBNull = true},
-            new DataColumn("CatalogDescription", typeof(string)){ AllowDBNull = true}, 
+            new DataColumn("CatalogDescription", typeof(string)){ AllowDBNull = true},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = true},
             new DataColumn("SourceServerName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SourceDatabaseName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("SourceDate", typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn("SourceDate", typeof(DateTime)){ AllowDBNull = true}
         };
 
         /// <inheritdoc/>

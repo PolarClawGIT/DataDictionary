@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     /// <summary>
     /// Interface for the Database Domain Item.
     /// </summary>
-    public interface IDbDomainItem : IDbDomainKey, IDbCatalogKey, IDbObjectScope, IDbDomain, IDataItem
+    public interface IDbDomainItem : IDbDomainKey, IDbCatalogKey, IDbObjectScope, IDbDomain, IDbScopeName, IDataItem
     {
         /// <summary>
         /// The Default value for the Domain
@@ -42,6 +42,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
 
         /// <inheritdoc/>
         public string? DomainName { get { return GetValue("DomainName"); } }
+
+        /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } }
 
         /// <inheritdoc/>
         public string? DataType { get { return GetValue("DataType"); } }
@@ -94,6 +97,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("DomainName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("DataType", typeof(string)){ AllowDBNull = true},
             new DataColumn("DomainDefault", typeof(string)){ AllowDBNull = true},
             new DataColumn("CharacterMaximumLength", typeof(int)){ AllowDBNull = true},

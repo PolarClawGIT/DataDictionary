@@ -24,7 +24,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for the Database Table Column
     /// </summary>
-    public interface IDbTableColumnItem : IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbElementScope, IDbColumn, IDataItem
+    public interface IDbTableColumnItem : IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbElementScope, IDbColumn, IDbScopeName, IDataItem
     {
         /// <summary>
         /// Is the Column Nullable
@@ -82,6 +82,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public string? ColumnName { get { return GetValue("ColumnName"); } }
+
+        /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } }
 
         /// <inheritdoc/>
         public int? OrdinalPosition { get { return GetValue<int>("OrdinalPosition"); } }
@@ -164,8 +167,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("TableName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("TableType", typeof(string)){ AllowDBNull = false},
             new DataColumn("ColumnName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("OrdinalPosition", typeof(int)){ AllowDBNull = false},
             new DataColumn("IsNullable", typeof(bool)){ AllowDBNull = true},
             new DataColumn("DataType", typeof(string)){ AllowDBNull = true},
@@ -205,7 +208,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public virtual Command PropertyCommand(IConnection connection)
         {
             string level1Type = "TABLE";
-            if (GetValue("TableType") is "VIEW") { level1Type = "VIEW"; }
+            if(ScopeName is String &&  ScopeName.StartsWith("Database.Schema.View", KeyExtension.CompareString))
+            { level1Type = "VIEW"; }
 
             return new DbExtendedPropertyGetCommand(connection)
             {
