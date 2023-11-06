@@ -341,5 +341,8 @@ namespace DataDictionary.Main
 
         private void viewLibraryMemberCommand_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Class), Program.Data.LibraryMembers); }
+
+        private void browseScopeCommand_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Application.Scope()); }
     }
 }

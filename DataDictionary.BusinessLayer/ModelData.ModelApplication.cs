@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.DataLayer.ApplicationData.Property;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,8 @@ namespace DataDictionary.BusinessLayer
 
         /// <inheritdoc/>
         public PropertyCollection Properties { get; } = new PropertyCollection();
+
+        /// <inheritdoc/>
+        public ScopeCollection Scopes { get; } = new ScopeCollection();
     }
 }

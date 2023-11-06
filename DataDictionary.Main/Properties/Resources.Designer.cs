@@ -643,6 +643,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_Scope {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Scope", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_ServerDatabase {
             get {
                 object obj = ResourceManager.GetObject("Icon_ServerDatabase", resourceCulture);
@@ -1056,6 +1066,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap Schema {
             get {
                 object obj = ResourceManager.GetObject("Schema", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Scope {
+            get {
+                object obj = ResourceManager.GetObject("Scope", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
