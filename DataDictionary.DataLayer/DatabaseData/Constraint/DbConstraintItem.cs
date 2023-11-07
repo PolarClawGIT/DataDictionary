@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Table;
@@ -18,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Constraint Item.
     /// </summary>
-    public interface IDbConstraintItem : IDbConstraintKey, IDbCatalogKey, IDbElementScope, IDbTableKey, IDbScopeName, IDataItem
+    public interface IDbConstraintItem : IDbConstraintKey, IDbCatalogKey, IDbElementScope, IDbTableKey, IDbScopeType, IDataItem
     {
         /// <summary>
         /// Type of the Database Constraint.

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using Microsoft.Data.SqlClient;
 using System.ComponentModel;
 using System.Data;
@@ -11,7 +12,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     /// <summary>
     /// Interface for the Database Catalog Item.
     /// </summary>
-    public interface IDbCatalogItem : IDbCatalogKeyUnique, IDbCatalogKey, IDbIsSystem, IDbScopeName, IDataItem
+    public interface IDbCatalogItem : IDbCatalogKeyUnique, IDbCatalogKey, IDbIsSystem, IDbScopeType, IDataItem
     {
         /// <summary>
         /// Title given to the Catalog. Default is the Database Name.

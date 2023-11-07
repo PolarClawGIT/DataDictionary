@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using System;
@@ -37,6 +39,9 @@ namespace DataDictionary.BusinessLayer
     /// <remarks>When combined with the Extension class, this implements multi-inheritance.</remarks>
     public static class ModelLibrary
     {
+        class LibraryMemberCode : ILibraryScopeType
+        { public string? MemberType { get; init; } }
+
         /// <summary>
         /// Creates the work items to Load the Model Library using the Model key passed.
         /// </summary>
@@ -96,7 +101,7 @@ namespace DataDictionary.BusinessLayer
         public static IReadOnlyList<WorkItem> LoadLibrary(this IModelLibrary data, FileInfo file)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            Action<Int32,Int32> progress = (x, y) => { };
+            Action<Int32, Int32> progress = (x, y) => { };
 
             WorkItem work = new WorkItem()
             {
@@ -188,7 +193,7 @@ namespace DataDictionary.BusinessLayer
                                                 AssemblyName = sourceItem.AssemblyName,
                                                 MemberName = parseString.Substring(0, nextPeriod),
                                                 NameSpace = string.Empty,
-                                                MemberType = "N"
+                                                MemberType = ScopeType.LibraryNameSpace.ToScopeName()
                                             };
 
                                             data.LibraryMembers.Add(nameSpaceItem);
@@ -198,8 +203,6 @@ namespace DataDictionary.BusinessLayer
                                     }
                                     else
                                     {
-                                        var x = data.LibraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && w.NameSpace == memberNameSpace && w.MemberName == parseString.Substring(0, nextPeriod));
-
                                         if (data.LibraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && w.NameSpace == memberNameSpace && w.MemberName == parseString.Substring(0, nextPeriod)) is LibraryMemberItem existing)
                                         { nameSpaceItem = existing; }
                                         else
@@ -207,11 +210,11 @@ namespace DataDictionary.BusinessLayer
                                             nameSpaceItem = new LibraryMemberItem()
                                             {
                                                 LibraryId = sourceItem.LibraryId,
-                                                ParentMemberId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
+                                                MemberParentId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
                                                 AssemblyName = sourceItem.AssemblyName,
                                                 MemberName = parseString.Substring(0, nextPeriod),
                                                 NameSpace = memberNameSpace,
-                                                MemberType = "N"
+                                                MemberType = ScopeType.LibraryNameSpace.ToScopeName()
                                             };
 
                                             data.LibraryMembers.Add(nameSpaceItem);
@@ -233,12 +236,12 @@ namespace DataDictionary.BusinessLayer
                                         LibraryMemberItem memberItem = new LibraryMemberItem()
                                         {
                                             LibraryId = sourceItem.LibraryId,
-                                            ParentMemberId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
+                                            MemberParentId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
                                             AssemblyName = sourceItem.AssemblyName,
                                             MemberName = parseString,
                                             MemberData = memberNode.InnerXml,
                                             NameSpace = memberNameSpace,
-                                            MemberType = memberType
+                                            MemberType = new LibraryMemberCode() { MemberType = memberType }.FromMemberCode().ToScopeName()
                                         };
 
                                         LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
@@ -252,12 +255,12 @@ namespace DataDictionary.BusinessLayer
                                         LibraryMemberItem memberItem = new LibraryMemberItem()
                                         {
                                             LibraryId = sourceItem.LibraryId,
-                                            ParentMemberId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
+                                            MemberParentId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
                                             AssemblyName = sourceItem.AssemblyName,
                                             MemberName = parseString.Substring(0, parametersStart),
                                             MemberData = memberNode.InnerXml,
                                             NameSpace = memberNameSpace,
-                                            MemberType = memberType
+                                            MemberType = new LibraryMemberCode() { MemberType = memberType }.FromMemberCode().ToScopeName()
                                         };
 
                                         data.LibraryMembers.Add(memberItem);
@@ -301,12 +304,12 @@ namespace DataDictionary.BusinessLayer
                                             LibraryMemberItem parmaterItem = new LibraryMemberItem()
                                             {
                                                 LibraryId = sourceItem.LibraryId,
-                                                ParentMemberId = memberItem.MemberId,
+                                                MemberParentId = memberItem.MemberId,
                                                 AssemblyName = sourceItem.AssemblyName,
                                                 MemberName = memberName,
                                                 //MemberData = memberNode.InnerXml,
                                                 NameSpace = String.Format("{0}.{1}", memberNameSpace, parseString.Substring(0, parametersStart)),
-                                                MemberType = LibraryMemberType.Parameter.ToString()
+                                                MemberType = ScopeType.LibraryParameter.ToScopeName()
                                             };
 
                                             data.LibraryMembers.Add(parmaterItem);
@@ -328,6 +331,7 @@ namespace DataDictionary.BusinessLayer
                 }
             }
         }
+
 
         /// <summary>
         /// Creates the work items to Load the Library's from the Applications Database.

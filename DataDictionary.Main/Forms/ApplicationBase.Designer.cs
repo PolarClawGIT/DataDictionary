@@ -188,7 +188,6 @@
         }
 
         #endregion
-        private ToolStripSeparator toolStripSeparator;
         private ToolStripSeparator toolStripSeparator1;
         protected ToolStrip toolStrip;
         protected ToolStripButton cutToolStripButton;

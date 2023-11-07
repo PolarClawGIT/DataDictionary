@@ -13,6 +13,7 @@ Begin Try;
 		(Null, 'Library.Method', 'Includes special methods, such as constructors and operators'),
 		(Null, 'Library.NameSpace', NULL),
 		(Null, 'Library.Property', 'Includes indexers or other indexed properties'),
+		(Null, 'Library.Parameter', NULL),
 		(Null, 'Library.Type', 'A type is a class, interface, struct, enum, or delegate'),
 		(Null, 'Database.Schema', NULL),
 		(Null, 'Database.Schema.Aggregate', NULL),

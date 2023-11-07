@@ -1,10 +1,12 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Main.Controls;
@@ -161,38 +163,38 @@ namespace DataDictionary.Main
 
                     foreach (LibraryMemberItem memberItem in
                         Program.Data.LibraryMembers.
-                        Where(w => sourceKey.Equals(w) && w.ParentMemberId is null).
-                        OrderBy(o => o.ObjectType).
+                        Where(w => sourceKey.Equals(w) && w.MemberParentId is null).
+                        OrderBy(o => o.ToScopeType()).
                         ThenBy(o => o.MemberName))
                     {
                         LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
 
                         TreeNode memberNode;
 
-                        switch (memberItem.ObjectType)
+                        switch (memberItem.ToScopeType())
                         {
-                            case LibraryMemberType.Type:
+                            case ScopeType.LibraryType:
                                 memberNode = CreateNode(
                                     sourceNode.Nodes,
                                     memberItem.MemberName,
                                     dbDataImageIndex.Class,
                                     memberItem);
                                 break;
-                            case LibraryMemberType.Field or LibraryMemberType.Property:
+                            case ScopeType.LibraryField or ScopeType.LibraryProperty:
                                 memberNode = CreateNode(
                                     sourceNode.Nodes,
                                     memberItem.MemberName,
                                     dbDataImageIndex.Field,
                                     memberItem);
                                 break;
-                            case LibraryMemberType.Method or LibraryMemberType.Event:
+                            case ScopeType.LibraryMethod or ScopeType.LibraryEvent:
                                 memberNode = CreateNode(
                                     sourceNode.Nodes,
                                     memberItem.MemberName,
                                     dbDataImageIndex.Method,
                                     memberItem);
                                 break;
-                            case LibraryMemberType.NameSpace:
+                            case ScopeType.LibraryNameSpace:
                                 memberNode = CreateNode(
                                      sourceNode.Nodes,
                                      memberItem.MemberName,
@@ -219,43 +221,43 @@ namespace DataDictionary.Main
                     foreach (LibraryMemberItem memberItem in
                         Program.Data.LibraryMembers.
                         Where(w => new LibraryMemberKeyParent(w).Equals(key)).
-                        OrderBy(o => o.ObjectType).
+                        OrderBy(o => o.ToScopeType()).
                         ThenBy(o => o.MemberName))
                     {
                         LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
                         TreeNode memberNode;
 
-                        switch (memberItem.ObjectType)
+                        switch (memberItem.ToScopeType())
                         {
-                            case LibraryMemberType.Type:
+                            case ScopeType.LibraryType:
                                 memberNode = CreateNode(
                                     parent.Nodes,
                                     memberItem.MemberName,
                                     dbDataImageIndex.Class,
                                     memberItem);
                                 break;
-                            case LibraryMemberType.Field or LibraryMemberType.Property:
+                            case ScopeType.LibraryField or ScopeType.LibraryProperty:
                                 memberNode = CreateNode(
                                     parent.Nodes,
                                     memberItem.MemberName,
                                     dbDataImageIndex.Field,
                                     memberItem);
                                 break;
-                            case LibraryMemberType.Method or LibraryMemberType.Event:
+                            case ScopeType.LibraryMethod or ScopeType.LibraryEvent:
                                 memberNode = CreateNode(
                                     parent.Nodes,
                                     memberItem.MemberName,
                                     dbDataImageIndex.Method,
                                     memberItem);
                                 break;
-                            case LibraryMemberType.NameSpace:
+                            case ScopeType.LibraryNameSpace:
                                 memberNode = CreateNode(
                                      parent.Nodes,
                                      memberItem.MemberName,
                                      dbDataImageIndex.NameSpace,
                                      memberItem);
                                 break;
-                            case LibraryMemberType.Parameter:
+                            case ScopeType.LibraryParameter:
                                 memberNode = CreateNode(
                                     parent.Nodes,
                                     memberItem.MemberName,

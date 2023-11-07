@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// <summary>
     /// Interface for the Unique Scope Key
     /// </summary>
-    public interface IScopeKeyUnique :IKey
+    public interface IScopeKeyUnique : IKey
     {
         /// <summary>
         /// Name of the Scoped (period delimited full name, like a NameSpace)
@@ -20,13 +20,18 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// <summary>
     /// Implementation for the Unique Scope Key
     /// </summary>
-    public class ScopeKeyUnique: IScopeKeyUnique, IKeyComparable<IScopeKeyUnique>
+    public class ScopeKeyUnique : IScopeKeyUnique, IKeyComparable<IScopeKeyUnique>
     {
         /// <inheritdoc/>
         public String ScopeName { get; init; } = string.Empty;
 
         /// <summary>
-        /// Constructor for the Catalog Unique Key.
+        /// Internal Constructor needed by ScopeType
+        /// </summary>
+        internal ScopeKeyUnique() : base() { }
+
+        /// <summary>
+        /// Constructor for the Scope Unique Key.
         /// </summary>
         /// <param name="source"></param>
         public ScopeKeyUnique(IScopeKeyUnique source) : base()

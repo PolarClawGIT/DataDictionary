@@ -60,10 +60,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
         /// <inheritdoc/>
         public DateTime? SourceDate { get { return GetValue<DateTime>("SourceDate"); } set { SetValue("SourceDate", value); } }
 
-        /// <inheritdoc/>
-        public DateTime? SysStart { get { return GetValue<DateTime>("SysStart"); } set { SetValue("SysStart", value); } }
-
-        /// <summary>
+         /// <summary>
         /// Constructor for LibraryMemberItem
         /// </summary>
         public LibrarySourceItem() : base()
@@ -79,7 +76,6 @@ namespace DataDictionary.DataLayer.LibraryData.Source
             new DataColumn("AssemblyName", typeof(string)){ AllowDBNull = true},
             new DataColumn("SourceFile", typeof(string)){ AllowDBNull = true},
             new DataColumn("SourceDate", typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
 

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData;
@@ -19,7 +20,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
     /// <summary>
     /// Interface for the Database Schema Item
     /// </summary>
-    public interface IDbSchemaItem : IDbSchemaKey, IDbCatalogKey, IDbCatalogScope, IDbIsSystem, IDbScopeName, IDataItem
+    public interface IDbSchemaItem : IDbSchemaKey, IDbCatalogKey, IDbCatalogScope, IDbIsSystem, IDbScopeType, IDataItem
     { }
 
     /// <summary>

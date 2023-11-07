@@ -37,7 +37,6 @@
             memberDataTab = new TabPage();
             memberData = new Controls.TextBoxData();
             memberTypeData = new Controls.TextBoxData();
-            objectTypeData = new Controls.TextBoxData();
             assemblyNameData = new Controls.TextBoxData();
             memberNameSpaceData = new Controls.TextBoxData();
             memberNameData = new Controls.TextBoxData();
@@ -52,15 +51,14 @@
             // 
             // libraryMemberLayout
             // 
-            libraryMemberLayout.ColumnCount = 2;
+            libraryMemberLayout.ColumnCount = 1;
             libraryMemberLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            libraryMemberLayout.ColumnStyles.Add(new ColumnStyle());
+            libraryMemberLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             libraryMemberLayout.Controls.Add(memberTabs, 0, 4);
-            libraryMemberLayout.Controls.Add(memberTypeData, 1, 3);
-            libraryMemberLayout.Controls.Add(objectTypeData, 0, 3);
             libraryMemberLayout.Controls.Add(assemblyNameData, 0, 0);
             libraryMemberLayout.Controls.Add(memberNameSpaceData, 0, 1);
             libraryMemberLayout.Controls.Add(memberNameData, 0, 2);
+            libraryMemberLayout.Controls.Add(memberTypeData, 0, 3);
             libraryMemberLayout.Dock = DockStyle.Fill;
             libraryMemberLayout.Location = new Point(0, 25);
             libraryMemberLayout.Name = "libraryMemberLayout";
@@ -75,7 +73,6 @@
             // 
             // memberTabs
             // 
-            libraryMemberLayout.SetColumnSpan(memberTabs, 2);
             memberTabs.Controls.Add(childMembersTab);
             memberTabs.Controls.Add(memberDataTab);
             memberTabs.Dock = DockStyle.Fill;
@@ -152,30 +149,18 @@
             // memberTypeData
             // 
             memberTypeData.AutoSize = true;
+            memberTypeData.Dock = DockStyle.Fill;
             memberTypeData.HeaderText = "Member Type";
-            memberTypeData.Location = new Point(256, 153);
+            memberTypeData.Location = new Point(3, 153);
             memberTypeData.Multiline = false;
             memberTypeData.Name = "memberTypeData";
             memberTypeData.ReadOnly = true;
-            memberTypeData.Size = new Size(120, 44);
+            memberTypeData.Size = new Size(373, 44);
             memberTypeData.TabIndex = 4;
-            // 
-            // objectTypeData
-            // 
-            objectTypeData.AutoSize = true;
-            objectTypeData.Dock = DockStyle.Fill;
-            objectTypeData.HeaderText = "Object Type";
-            objectTypeData.Location = new Point(3, 153);
-            objectTypeData.Multiline = false;
-            objectTypeData.Name = "objectTypeData";
-            objectTypeData.ReadOnly = true;
-            objectTypeData.Size = new Size(247, 44);
-            objectTypeData.TabIndex = 3;
             // 
             // assemblyNameData
             // 
             assemblyNameData.AutoSize = true;
-            libraryMemberLayout.SetColumnSpan(assemblyNameData, 2);
             assemblyNameData.Dock = DockStyle.Fill;
             assemblyNameData.HeaderText = "Assembly Name";
             assemblyNameData.Location = new Point(3, 3);
@@ -188,7 +173,6 @@
             // memberNameSpaceData
             // 
             memberNameSpaceData.AutoSize = true;
-            libraryMemberLayout.SetColumnSpan(memberNameSpaceData, 2);
             memberNameSpaceData.Dock = DockStyle.Fill;
             memberNameSpaceData.HeaderText = "Member Name Space";
             memberNameSpaceData.Location = new Point(3, 53);
@@ -201,7 +185,6 @@
             // memberNameData
             // 
             memberNameData.AutoSize = true;
-            libraryMemberLayout.SetColumnSpan(memberNameData, 2);
             memberNameData.Dock = DockStyle.Fill;
             memberNameData.HeaderText = "Member Name";
             memberNameData.Location = new Point(3, 103);
@@ -244,6 +227,5 @@
         private DataGridView childMemberData;
         private DataGridViewTextBoxColumn memberNameColumn;
         private DataGridViewTextBoxColumn ObjectTypeColumn;
-        private Controls.TextBoxData objectTypeData;
     }
 }

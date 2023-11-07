@@ -137,7 +137,6 @@
 
         private ErrorProvider errorProvider;
         private BindingSource bindingSource;
-        private TableLayoutPanel scopeLayout;
         private DataGridView scopeNavigation;
         private Controls.TextBoxData scopeNameData;
         private Controls.TextBoxData scopeDescriptionData;
