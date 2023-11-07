@@ -106,7 +106,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("RoutineName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("RoutineType", typeof(string)){ AllowDBNull = false},
             new DataColumn("ParameterName", typeof(string)){ AllowDBNull = false},
             new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("OrdinalPosition", typeof(int)){ AllowDBNull = true},
@@ -140,7 +139,21 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            string? level1Type = GetValue("RoutineType");
+            string level1Type;
+            if (ScopeName is String && ScopeName.StartsWith("Database.Schema.Procedure", KeyExtension.CompareString))
+            { level1Type = "PROCEDURE"; }
+            else if (ScopeName is String && ScopeName.StartsWith("Database.Schema.Function", KeyExtension.CompareString))
+            { level1Type = "FUNCTION"; }
+            else
+            {
+                Exception ex = new InvalidOperationException("Could not determine Level1Type");
+                ex.Data.Add(nameof(ScopeName), ScopeName);
+                ex.Data.Add(nameof(DatabaseName), DatabaseName);
+                ex.Data.Add(nameof(SchemaName), SchemaName);
+                ex.Data.Add(nameof(RoutineName), RoutineName);
+                ex.Data.Add(nameof(ParameterName), ParameterName);
+                throw ex;
+            }
 
             return new DbExtendedPropertyGetCommand(connection)
             {
@@ -150,8 +163,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
                 Level1Name = RoutineName,
                 Level1Type = level1Type,
                 Level2Name = ParameterName,
-                Level2Type = "PARAMETER" }.
-            GetCommand();
+                Level2Type = "PARAMETER"
+            }.GetCommand();
         }
 
 

@@ -302,12 +302,11 @@ From	[INFORMATION_SCHEMA].[ROUTINES]</value>
 	P.[SPECIFIC_CATALOG] As [DatabaseName],
 	P.[SPECIFIC_SCHEMA] As [SchemaName],
 	P.[SPECIFIC_NAME] As [RoutineName],
-	Case
-	When R.[ROUTINE_TYPE] In ('PROCEDURE') Then 'Database.Schema.Procedure'
-	When R.[ROUTINE_TYPE] In ('FUNCTION') Then 'Database.Schema.Function'
-	Else 'Error' End As [ScopeName],
-	R.[ROUTINE_TYPE] As [RoutineType],
 	IIF(R.[ROUTINE_TYPE] IN ('FUNCTION') AND P.[ORDINAL_POSITION] = 0,'RETURN',P.[PARAMETER_NAME]) As [ParameterName],
+	Case
+	When R.[ROUTINE_TYPE] In ('PROCEDURE') Then 'Database.Schema.Procedure.Parameter'
+	When R.[ROUTINE_TYPE] In ('FUNCTION') Then 'Database.Schema.Function.Parameter'
+	Else 'Error' End As [ScopeName],
 	P.[ORDINAL_POSITION] As [OrdinalPosition],
 	P.[DATA_TYPE] As [DataType],
 	P.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],

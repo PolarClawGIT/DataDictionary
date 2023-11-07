@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// Is the Column Nullable
         /// </summary>
         Boolean? IsNullable { get; }
-        
+
         /// <summary>
         /// Column Default value
         /// </summary>
@@ -207,9 +207,21 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            string level1Type = "TABLE";
-            if(ScopeName is String &&  ScopeName.StartsWith("Database.Schema.View", KeyExtension.CompareString))
+            string level1Type;
+            if (ScopeName is String && ScopeName.StartsWith("Database.Schema.View", KeyExtension.CompareString))
+            { level1Type = "TABLE"; }
+            else if (ScopeName is String && ScopeName.StartsWith("Database.Schema.View", KeyExtension.CompareString))
             { level1Type = "VIEW"; }
+            else
+            {
+                Exception ex = new InvalidOperationException("Could not determine Level1Type");
+                ex.Data.Add(nameof(ScopeName), ScopeName);
+                ex.Data.Add(nameof(DatabaseName), DatabaseName);
+                ex.Data.Add(nameof(SchemaName), SchemaName);
+                ex.Data.Add(nameof(TableName), TableName);
+                ex.Data.Add(nameof(ColumnName), ColumnName);
+                throw ex;
+            }
 
             return new DbExtendedPropertyGetCommand(connection)
             {
@@ -219,8 +231,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
                 Level1Name = TableName,
                 Level1Type = level1Type,
                 Level2Name = ColumnName,
-                Level2Type = "COLUMN" }.
-            GetCommand();
+                Level2Type = "COLUMN"
+            }.GetCommand();
         }
 
         #region ISerializable

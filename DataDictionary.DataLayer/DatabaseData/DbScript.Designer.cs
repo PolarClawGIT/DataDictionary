@@ -223,13 +223,12 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	P.[SPECIFIC_CATALOG] As [DatabaseName],
         ///	P.[SPECIFIC_SCHEMA] As [SchemaName],
         ///	P.[SPECIFIC_NAME] As [RoutineName],
-        ///	Case
-        ///	When R.[ROUTINE_TYPE] In (&apos;PROCEDURE&apos;) Then &apos;Database.Schema.Procedure&apos;
-        ///	When R.[ROUTINE_TYPE] In (&apos;FUNCTION&apos;) Then &apos;Database.Schema.Function&apos;
-        ///	Else &apos;Error&apos; End As [ScopeName],
-        ///	R.[ROUTINE_TYPE] As [RoutineType],
         ///	IIF(R.[ROUTINE_TYPE] IN (&apos;FUNCTION&apos;) AND P.[ORDINAL_POSITION] = 0,&apos;RETURN&apos;,P.[PARAMETER_NAME]) As [ParameterName],
-        ///	P.[ORDINAL_POSI [rest of string was truncated]&quot;;.
+        ///	Case
+        ///	When R.[ROUTINE_TYPE] In (&apos;PROCEDURE&apos;) Then &apos;Database.Schema.Procedure.Parameter&apos;
+        ///	When R.[ROUTINE_TYPE] In (&apos;FUNCTION&apos;) Then &apos;Database.Schema.Function.Parameter&apos;
+        ///	Else &apos;Error&apos; End As [ScopeName],
+        ///	P.[ORDINAL_POSITION] As [Ordinal [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbRoutineParameterItem {
             get {
