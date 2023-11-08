@@ -198,7 +198,6 @@
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpaceElement.sql" />
     <Build Include="App_DataDictionary\Tables\ApplicationScope.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAlias.sql" />
-    <Build Include="App_DataDictionary\Views\ModelNameSpace.sql" />
     <Build Include="App_DataDictionary\Views\ModelScope.sql" />
     <Build Include="App_DataDictionary\Functions\funcSplitNameSpace.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseSchema_AK.sql" />
