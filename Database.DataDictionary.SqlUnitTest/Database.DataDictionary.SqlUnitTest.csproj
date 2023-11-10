@@ -162,6 +162,9 @@
     <Compile Include="procSetDatabaseConstraintColumn.cs">
       <SubType>Designer</SubType>
     </Compile>
+    <Compile Include="procSetDomainAlias.cs">
+      <SubType>Designer</SubType>
+    </Compile>
     <Compile Include="procSetDatabaseRoutineParameter.cs">
       <SubType>Designer</SubType>
     </Compile>
@@ -202,6 +205,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="procSetDatabaseConstraintColumn.resx">
       <DependentUpon>procSetDatabaseConstraintColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="procSetDomainAlias.resx">
+      <DependentUpon>procSetDomainAlias.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="procSetDatabaseRoutineParameter.resx">
       <DependentUpon>procSetDatabaseRoutineParameter.cs</DependentUpon>

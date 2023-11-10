@@ -215,6 +215,8 @@
     <Build Include="App_DataDictionary\User Defined Types\typeApplicationScope.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationScope.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationScope.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAlias.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
