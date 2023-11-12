@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [App_DataDictionary].[LibraryMember]
-(	[LibraryId] UniqueIdentifier Not Null,
-	[MemberId] UniqueIdentifier Not Null CONSTRAINT [DF_LibraryMemberId] DEFAULT (newid()),
+(	[MemberId] UniqueIdentifier Not Null CONSTRAINT [DF_LibraryMemberId] DEFAULT (newid()),
+	[LibraryId] UniqueIdentifier Not Null,
 	[MemberParentId] UniqueIdentifier Null,
 	[MemberName] [App_DataDictionary].[typeNameSpaceElement] Not Null,
 	[MemberType] NVarChar(50) Null, -- .Net Documents produce a letter that is converted to a Member type. There may not be one.

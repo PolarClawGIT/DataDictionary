@@ -67,7 +67,7 @@ Print FormatMessage ('Debug- Start %i, %s',@@RowCount, Convert(VarChar,GetDate()
 
 Print FormatMessage ('Debug- Insert @Parse: %i, %s',@@RowCount, Convert(VarChar,GetDate(),121));
 
-	Declare @Format Table (-- Work Table to address peformance issues
+	Declare @Format Table (-- Work Table to address performance issues
 		[FormatId] Int Not Null IDentity,		
 		[AliasParentName] [App_DataDictionary].[typeNameSpace] Null,
 		[AliasChildName] [App_DataDictionary].[typeNameSpace] Null,

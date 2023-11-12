@@ -1,5 +1,8 @@
-﻿-- 1023 is believed to be the maximum length of any given component of a .Net NameSpace value.
--- There is no actual total limit to the length at the coding level.
--- Each component is put into a separate row and the data is organized into a hierarchy.
--- Key size in TSQL is limited to 1700 characters. 128 characters is a compromise and matches SysName size.
-CREATE TYPE [App_DataDictionary].[typeNameSpaceElement] FROM NVarChar(128) NOT NULL
+﻿-- A NameSpace Element is one segment of the NameSpace name.
+-- In SQL Db examples are: Database Name, Schema Name, Object Name or Column Name.
+-- The maximum length is 128 characters (256 bytes)
+-- In .Net examples are: single part of a NameSpace, Class Name, Property Name, Field Name or Method Name.
+-- The maximum length is set to 1023 (2046 bytes) based on VB.Net definitions.
+-- Fields of this type exceed the limits of a SQL Index (900 bytes for Clustered, 1700 bytes for non-clustered).
+-- A workaround is to create a Binary CheckSum on the value and index that with a unique part of the table.
+CREATE TYPE [App_DataDictionary].[typeNameSpaceElement] FROM NVarChar(1023) NOT NULL

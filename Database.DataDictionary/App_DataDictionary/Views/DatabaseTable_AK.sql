@@ -7,12 +7,14 @@ Select	C.[CatalogId],
 		T.[TableId],
 		C.[SourceDatabaseName] As [DatabaseName],
 		S.[SchemaName],
-		T.[TableName]
+		T.[TableName],
+		FormatMessage('[%s].[%s].[%s]', C.[SourceDatabaseName], S.[SchemaName], T.[TableName]) As [AliasName]
 From	[App_DataDictionary].[DatabaseCatalog] C
 		Inner Join [App_DataDictionary].[DatabaseSchema] S
 		On	C.[CatalogId] = S.[CatalogId]
 		Inner Join [App_DataDictionary].[DatabaseTable] T
 		On	S.[SchemaId] = T.[SchemaId]
+
 GO
 CREATE UNIQUE CLUSTERED INDEX [PK_DatabaseTable]
     ON [App_DataDictionary].[DatabaseTable_AK]([TableId])
