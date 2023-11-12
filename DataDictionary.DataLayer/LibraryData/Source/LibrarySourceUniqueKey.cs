@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
     /// <summary>
     /// Interface for the Library Source Unique Key
     /// </summary>
-    public interface ILibrarySourceKeyUnique : IKey
+    public interface ILibrarySourceUniqueKey : IKey
     {
         /// <summary>
         /// Assembly Name for the Library Source
@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
     /// <summary>
     /// Implementation of the Library Source Unique Key 
     /// </summary>
-    public class LibrarySourceKeyUnique : ILibrarySourceKeyUnique, IKeyComparable<ILibrarySourceKeyUnique>
+    public class LibrarySourceUniqueKey : ILibrarySourceUniqueKey, IKeyComparable<ILibrarySourceUniqueKey>
     {
         /// <inheritdoc/>
         public string AssemblyName { get; } = string.Empty;
@@ -29,15 +29,15 @@ namespace DataDictionary.DataLayer.LibraryData.Source
         /// Constructor for the Domain Attribute Alias
         /// </summary>
         /// <param name="source"></param>
-        public LibrarySourceKeyUnique(ILibrarySourceKeyUnique source) : base()
+        public LibrarySourceUniqueKey(ILibrarySourceUniqueKey source) : base()
         { if (source.AssemblyName is string) { AssemblyName = source.AssemblyName; } }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public bool Equals(ILibrarySourceKeyUnique? other)
+        public bool Equals(ILibrarySourceUniqueKey? other)
         {
             return
-                other is ILibrarySourceKeyUnique &&
+                other is ILibrarySourceUniqueKey &&
                 !string.IsNullOrEmpty(AssemblyName) &&
                 !string.IsNullOrEmpty(other.AssemblyName) &&
                 AssemblyName.Equals(other.AssemblyName, KeyExtension.CompareString);
@@ -45,10 +45,10 @@ namespace DataDictionary.DataLayer.LibraryData.Source
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is ILibrarySourceKeyUnique value && Equals(new LibrarySourceKeyUnique(value)); }
+        { return obj is ILibrarySourceUniqueKey value && Equals(new LibrarySourceUniqueKey(value)); }
 
         /// <inheritdoc/>
-        public int CompareTo(ILibrarySourceKeyUnique? other)
+        public int CompareTo(ILibrarySourceUniqueKey? other)
         {
             if (other is null) { return 1; }
             else { return string.Compare(AssemblyName, other.AssemblyName, true); }
@@ -56,30 +56,30 @@ namespace DataDictionary.DataLayer.LibraryData.Source
 
         /// <inheritdoc/>
         public int CompareTo(object? obj)
-        { if (obj is ILibrarySourceKeyUnique value) { return CompareTo(new LibrarySourceKeyUnique(value)); } else { return 1; } }
+        { if (obj is ILibrarySourceUniqueKey value) { return CompareTo(new LibrarySourceUniqueKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static bool operator ==(LibrarySourceKeyUnique left, LibrarySourceKeyUnique right)
+        public static bool operator ==(LibrarySourceUniqueKey left, LibrarySourceUniqueKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(LibrarySourceKeyUnique left, LibrarySourceKeyUnique right)
+        public static bool operator !=(LibrarySourceUniqueKey left, LibrarySourceUniqueKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(LibrarySourceKeyUnique left, LibrarySourceKeyUnique right)
+        public static bool operator <(LibrarySourceUniqueKey left, LibrarySourceUniqueKey right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(LibrarySourceKeyUnique left, LibrarySourceKeyUnique right)
+        public static bool operator <=(LibrarySourceUniqueKey left, LibrarySourceUniqueKey right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(LibrarySourceKeyUnique left, LibrarySourceKeyUnique right)
+        public static bool operator >(LibrarySourceUniqueKey left, LibrarySourceUniqueKey right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(LibrarySourceKeyUnique left, LibrarySourceKeyUnique right)
+        public static bool operator >=(LibrarySourceUniqueKey left, LibrarySourceUniqueKey right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>

@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// <summary>
     /// Interface for the Scope data.
     /// </summary>
-    public interface IScopeItem : IScopeKey, IScopeKeyUnique, IDataItem
+    public interface IScopeItem : IScopeKey, IScopeUniqueKey, IDataItem
     {
         /// <summary>
         /// Description of the Scope

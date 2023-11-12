@@ -208,7 +208,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static ScopeType ToScopeType(this IScopeKeyUnique value)
+        public static ScopeType ToScopeType(this IScopeUniqueKey value)
         {
             if (scopeTypeToDatabaseScope.FirstOrDefault(w => w.Value.Equals(value.ScopeName, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> dbScope)
             { return dbScope.Key; }

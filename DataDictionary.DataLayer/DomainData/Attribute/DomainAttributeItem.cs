@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Item
     /// </summary>
-    public interface IDomainAttributeItem : IDomainAttributeKey, IDomainAttributeKeyUnique, IDomainSubjectAreaKey, IDataItem
+    public interface IDomainAttributeItem : IDomainAttributeKey, IDomainAttributeUniqueKey, IDomainSubjectAreaKey, IDataItem
     {
         /// <summary>
         /// Description of the Domain Attribute
@@ -60,7 +60,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             new DataColumn("SubjectAreaId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("AttributeTitle", typeof(string)){ AllowDBNull = false},
             new DataColumn("AttributeDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

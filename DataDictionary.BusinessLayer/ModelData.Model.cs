@@ -50,7 +50,7 @@ namespace DataDictionary.BusinessLayer
                }) is null).ToList();
 
             // Get the Column information and create Attributes
-            foreach (IGrouping<DomainAttributeKeyUnique, IDbTableColumnItem> columnItem in newAttributes.GroupBy(g => new DomainAttributeKeyUnique(g)))
+            foreach (IGrouping<DomainAttributeUniqueKey, IDbTableColumnItem> columnItem in newAttributes.GroupBy(g => new DomainAttributeUniqueKey(g)))
             {
                 IDbTableColumnItem columnSource = columnItem.First();
                 DomainAttributeItem newAttribute = new DomainAttributeItem() { AttributeTitle = columnSource.ColumnName };
@@ -97,7 +97,7 @@ namespace DataDictionary.BusinessLayer
             }
 
             // Get the Table Information and create Entities
-            foreach (IGrouping<DomainEntityKeyUnique, DbTableItem> tableItem in newEntites.GroupBy(g => new DomainEntityKeyUnique(g)))
+            foreach (IGrouping<DomainEntityUniqueKey, DbTableItem> tableItem in newEntites.GroupBy(g => new DomainEntityUniqueKey(g)))
             {
                 IDbTableItem tableSource = tableItem.First();
                 DomainEntityItem newEntity = new DomainEntityItem() { EntityTitle = tableSource.TableName };
@@ -146,7 +146,7 @@ namespace DataDictionary.BusinessLayer
         void CreateAttribute(IDbTableColumnKey columnKey)
         {
             DbTableColumnKey key = new DbTableColumnKey(columnKey);
-            DomainAttributeKeyUnique attributeKeyUnique = new DomainAttributeKeyUnique(columnKey);
+            DomainAttributeUniqueKey attributeKeyUnique = new DomainAttributeUniqueKey(columnKey);
             DomainAttributeAliasKey aliasKey = new DomainAttributeAliasKey(columnKey);
 
             if (this.DbTableColumns.FirstOrDefault(w => key.Equals(w)) is DbTableColumnItem columnItem)
@@ -201,7 +201,7 @@ namespace DataDictionary.BusinessLayer
         void CreateAttribute(IDbRoutineParameterKey parameterKey)
         {
             DbRoutineParameterKey key = new DbRoutineParameterKey(parameterKey);
-            DomainAttributeKeyUnique attributeKeyUnique = new DomainAttributeKeyUnique(parameterKey);
+            DomainAttributeUniqueKey attributeKeyUnique = new DomainAttributeUniqueKey(parameterKey);
             DomainAttributeAliasKey aliasKey = new DomainAttributeAliasKey(parameterKey);
 
             if (this.DbRoutineParameters.FirstOrDefault(w => key.Equals(w)) is DbRoutineParameterItem parameterItem)
@@ -366,7 +366,7 @@ namespace DataDictionary.BusinessLayer
         void CreateEntity(IDbTableKey tableKey)
         {
             DbTableKey key = new DbTableKey(tableKey);
-            DomainEntityKeyUnique entityKeyUnique = new DomainEntityKeyUnique(tableKey);
+            DomainEntityUniqueKey entityKeyUnique = new DomainEntityUniqueKey(tableKey);
             DomainEntityAliasKey aliasKey = new DomainEntityAliasKey(tableKey);
 
             if (this.DbTables.FirstOrDefault(w => key.Equals(w)) is DbTableItem tableItem)

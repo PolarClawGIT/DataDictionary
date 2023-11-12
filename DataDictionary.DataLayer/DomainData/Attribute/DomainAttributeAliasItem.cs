@@ -1,27 +1,17 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Model;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.DataLayer.DatabaseData.Routine;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Table;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+using DataDictionary.DataLayer.DomainData.Alias;
+using DataDictionary.DataLayer.LibraryData.Member;
 using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Reflection.Metadata;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
-using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DomainData.Attribute
 {
     /// <summary>
     /// Interface for Domain Attribute Alias Items
     /// </summary>
-    public interface IDomainAttributeAliasItem : IDomainAttributeAliasKey, IDomainAttributeKey, IDbCatalogScope, IDbObjectScope, IDbElementScope, IDataItem
+    public interface IDomainAttributeAliasItem : IDomainAttributeKey, IDomainAliasUniqueKey, IScopeUniqueKey, IDataItem
     { }
 
     /// <summary>
@@ -30,40 +20,22 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     [Serializable]
     public class DomainAttributeAliasItem : BindingTableRow, IDomainAttributeAliasItem
     {
+
         /// <inheritdoc/>
         public Guid? AttributeId
         { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue("AttributeId", value); } }
 
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue("DatabaseName"); } set { SetValue("DatabaseName", value); } }
+        public string? AliasName { get { return GetValue("AliasName"); } protected set { SetValue("AliasName", value); } }
 
         /// <inheritdoc/>
-        public string? SchemaName { get { return GetValue("SchemaName"); } set { SetValue("SchemaName", value); } }
-
-        /// <inheritdoc/>
-        public string? ObjectName { get { return GetValue("ObjectName"); } set { SetValue("ObjectName", value); } }
-
-        /// <inheritdoc/>
-        public string? ElementName { get { return GetValue("ElementName"); } set { SetValue("ElementName", value); } }
-
-        /// <inheritdoc/>
-        public DbCatalogScope CatalogScope { get; set; } = DbCatalogScope.NULL;
-
-        /// <inheritdoc/>
-        public DbObjectScope ObjectScope { get; set; } = DbObjectScope.NULL;
-
-        /// <inheritdoc/>
-        public DbElementScope ElementScope { get; set; } = DbElementScope.NULL;
+        public string? ScopeName { get { return GetValue("ScopeName"); } protected set { SetValue("ScopeName", value); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("AttributeAliasId", typeof(int)){ AllowDBNull = true},
-            new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SchemaName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ObjectName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ElementName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn("AliasName", typeof(string)){ AllowDBNull = true},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = true},
         };
 
         /// <summary>
@@ -86,12 +58,8 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         public DomainAttributeAliasItem(IDomainAttributeKey key, IDbTableColumnItem source) : this()
         {
             AttributeId = key.AttributeId;
-            DatabaseName = source.DatabaseName;
-            SchemaName = source.SchemaName;
-            ObjectName = source.TableName;
-            ElementName = source.ColumnName;
-
-            ElementScope = source.ElementScope;
+            AliasName = String.Format("[{0}].[{1}].[{2}].[{3}]",source.DatabaseName, source.SchemaName, source.TableName, source.ColumnName);
+            ScopeName = source.ToScopeType().ToScopeName();
         }
 
         /// <summary>
@@ -99,15 +67,11 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// </summary>
         /// <param name="key"></param>
         /// <param name="source"></param>
-        public DomainAttributeAliasItem(IDomainAttributeKey key, IDbRoutineParameterItem source) : this()
+        public DomainAttributeAliasItem(IDomainAttributeKey key, ILibraryMemberItem source) : this()
         {
             AttributeId = key.AttributeId;
-            DatabaseName = source.DatabaseName;
-            SchemaName = source.SchemaName;
-            ObjectName = source.RoutineName;
-            ElementName = source.ParameterName;
-
-            ElementScope = source.ElementScope;
+            AliasName = String.Format("{0}.{1}", source.NameSpace, source.MemberName);
+            ScopeName = source.ToScopeType().ToScopeName();
         }
 
         /// <inheritdoc/>
@@ -128,31 +92,8 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// <inheritdoc/>
         public override string ToString()
         {
-            StringBuilder result = new StringBuilder();
-            if (!string.IsNullOrWhiteSpace(DatabaseName)) { result.Append(DatabaseName); }
-
-            if (!string.IsNullOrWhiteSpace(SchemaName)) { result.Append(SchemaName); }
-            {
-                if (!string.IsNullOrWhiteSpace(result.ToString()))
-                { result.Append(string.Format(".{0}", SchemaName)); }
-                else { result.Append(SchemaName); }
-            }
-
-            if (!string.IsNullOrWhiteSpace(ObjectName))
-            {
-                if (!string.IsNullOrWhiteSpace(result.ToString()))
-                { result.Append(string.Format(".{0}", ObjectName)); }
-                else { result.Append(ObjectName); }
-            }
-
-            if (!string.IsNullOrWhiteSpace(ElementName))
-            {
-                if (!string.IsNullOrWhiteSpace(result.ToString()))
-                { result.Append(string.Format(".{0}", ElementName)); }
-                else { result.Append(ElementName); }
-            }
-
-            return result.ToString();
+            if(AliasName is String) { return AliasName; }
+            else { return String.Empty; }
         }
 
     }

@@ -19,8 +19,8 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     public abstract class LibraryMemberCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ILibrarySourceKey>,
         IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>,
-        IRemoveData<LibrarySourceKey>, IRemoveData<LibrarySourceKeyUnique>
-        where TItem : BindingTableRow, ILibraryMemberItem, ILibrarySourceKey, ILibrarySourceKeyUnique, new()
+        IRemoveData<LibrarySourceKey>, IRemoveData<LibrarySourceUniqueKey>
+        where TItem : BindingTableRow, ILibraryMemberItem, ILibrarySourceKey, ILibrarySourceUniqueKey, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
@@ -67,7 +67,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         }
 
         /// <inheritdoc/>
-        public void Remove(LibrarySourceKeyUnique libraryKey)
+        public void Remove(LibrarySourceUniqueKey libraryKey)
         {
             foreach (TItem item in this.Where(w => libraryKey.Equals(w)).ToList())
             { base.Remove(item); }

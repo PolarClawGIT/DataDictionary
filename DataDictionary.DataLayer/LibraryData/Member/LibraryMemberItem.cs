@@ -14,18 +14,8 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     /// <summary>
     /// Interface for the Library Member Item
     /// </summary>
-    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibrarySourceKeyUnique, ILibraryScopeType, IDataItem
+    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberParentKey, ILibraryMemberAlternateKey, ILibrarySourceUniqueKey, ILibraryScopeType, IDataItem
     {
-        /// <summary>
-        /// Name of the Member.
-        /// </summary>
-        string? MemberName { get; }
-
-        /// <summary>
-        /// NameSpace that the Member is within
-        /// </summary>
-        string? NameSpace { get; }
-
         /// <summary>
         /// Data for the Member.
         /// This is expected to be a XML fragment when generated from Visual studio Document.
