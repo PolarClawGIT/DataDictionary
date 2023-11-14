@@ -66,6 +66,11 @@ Begin Try
 		[GeneratedAlwayType]    NVarChar(60) Null,
 		Primary Key ([ColumnId]))
 
+	;With [Scope] As (
+		Select	S.[ScopeId],
+				F.[ScopeName]
+		From	[App_DataDictionary].[AliasScope] S
+				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	Coalesce(A.[ColumnId], NewId()) As [ColumnId],
 			P.[TableId],
@@ -101,7 +106,7 @@ Begin Try
 				NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
 				NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName] And
 				NullIf(Trim(D.[TableName]),'') = P.[TableName]
-			Left Join [App_DataDictionary].[ModelScope] S
+			Left Join [Scope] S
 			On	D.[ScopeName] = S.[ScopeName]
 			Left Join [App_DataDictionary].[DatabaseTableColumn_AK] A
 			On	P.[CatalogId] = A.[CatalogId] And

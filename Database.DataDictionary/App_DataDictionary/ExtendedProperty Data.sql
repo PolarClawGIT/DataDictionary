@@ -15,28 +15,28 @@
 		'00000000-0000-0000-0010-000000000010',
 		'Business Definition',
 		'Definition of the item in Business Terms.',
-		1,0,0,0,null,null,0,null)
+		1,0,0,0,null,null)
 	Insert Into @Data Values (
 		'00000000-0000-0000-0020-000000000010',
 		'Technical Definition',
 		'Definition of the item in Technical Terms.',
-		1,0,0,0,null,null,0,null)
+		1,0,0,0,null,null)
 	Insert Into @Data Values (
 		'00000000-0000-0000-0010-000000000020',
 		'MS Description',
 		'Commonly used by Microsoft tools to store the user defined Description of the element.',
-		0,1,0,0,'MS_Description',null,0,null)
+		0,1,0,0,'MS_Description',null)
 	Insert Into @Data Values (
 		'00000000-0000-0000-0010-000000000030',
 		'.Net Summary',
 		'Summary Documentation block for .Net Framework Code',
-		0,0,1,0,null,null,0,null)
+		0,0,1,0,null,null)
 
 	Insert Into @Data Values (
 		'00000000-0000-0000-0020-000000000030',
 		'.Net System Type',
 		'The types for .Net Framework Code. (SQL Supported types only, https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/sql-server-data-type-mappings)',
-		0,0,0,1,null,'Boolean, Byte , Byte[], Char[], DateTime, DateTimeOffset, Decimal, Double, Guid, Int16, Int32, Int64, Single, String, TimeSpan, Xml, Object',0,null)
+		0,0,0,1,null,'Boolean, Byte , Byte[], Char[], DateTime, DateTimeOffset, Decimal, Double, Guid, Int16, Int32, Int64, Single, String, TimeSpan, Xml, Object')
 
 	Select	*
 	From	@Data
@@ -47,7 +47,7 @@
 	From	[App_DataDictionary].[ApplicationProperty]
 
 	-- By default, throw and error and exit without committing
---;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
+;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
 	
 	Commit Transaction;
 	Print 'Commit Issued';

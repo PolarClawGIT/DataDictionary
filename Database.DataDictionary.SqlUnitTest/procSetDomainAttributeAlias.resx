@@ -117,72 +117,66 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="App_DataDictionary_procSetDatabaseDomain_Insert_TestAction.SqlScript" xml:space="preserve">
-    <value>Declare @CatalogId UniqueIdentifier = NewId(),
-		@Server SysName = @@ServerName,
-		@Catalog [App_DataDictionary].[typeDatabaseCatalog],
-		@Schema [App_DataDictionary].[typeDatabaseSchema],
-		@Domain [App_DataDictionary].[typeDatabaseDomain]
-
-Insert Into @Catalog 
-Select	@CatalogId As [CatalogId],
-	Db_Name() As [CatalogTitle],
-	Convert(NvarChar,Null) As [CatalogDescription],
-	'Database' As [ScopeName],
-	@Server As [SourceServerName],
-	Db_Name() As [SourceDatabaseName],
-	GetDate() As [SourceDate]
-
-Insert Into @Schema
-Select	@CatalogId As [CatalogId],
-	[CATALOG_NAME] As [DatabaseName],
-	[SCHEMA_NAME] As [SchemaName],
-	'Database.Schema' As [ScopeName]
-From [INFORMATION_SCHEMA].[SCHEMATA]
-
-Insert Into @Domain
-Select	@CatalogId As [CatalogId],
-	[DOMAIN_CATALOG] As [DatabaseName],
-	[DOMAIN_SCHEMA] As [SchemaName],
-	[DOMAIN_NAME] As [DomainName],
-	'Database.Schema.Type' As [ScopeName],
-	[DATA_TYPE] As [DataType],
-	[DOMAIN_DEFAULT] As [DomainDefault],
-	[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
-	[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength],
-	[NUMERIC_PRECISION] As [NumericPrecision],
-	[NUMERIC_PRECISION_RADIX] As [NumericPrecisionRadix],
-	[NUMERIC_SCALE] As [NumericScale],
-	[DATETIME_PRECISION] As [DateTimePrecision],
-	[CHARACTER_SET_CATALOG] As [CharacterSetCatalog],
-	[CHARACTER_SET_SCHEMA] As [CharacterSetSchema],
-	[CHARACTER_SET_NAME] As [CharacterSetName],
-	[COLLATION_CATALOG] As [CollationCatalog],
-	[COLLATION_SCHEMA] As [CollationSchema], 
-	[COLLATION_NAME] As [CollationName]
-From	[INFORMATION_SCHEMA].[DOMAINS]
-
-Begin Try;
+  <data name="App_DataDictionary_procSetDomainAttributeAlias_Insert_TestAction.SqlScript" xml:space="preserve">
+    <value>Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
-	Exec [App_DataDictionary].[procSetDatabaseCatalog] Null, @CatalogId, @Catalog
-	Exec [App_DataDictionary].[procSetDatabaseSchema]  Null, @CatalogId, @Schema
-	Exec [App_DataDictionary].[procSetDatabaseDomain]  Null, @CatalogId, @Domain
+	Declare @AttributeId UNIQUEIDENTIFIER = newId(),
+			@ModelId     UNIQUEIDENTIFIER = newId()
+	Declare @Model [App_DataDictionary].[typeModel]
+	Declare @Attribute [App_DataDictionary].[typeDomainAttribute]
+	
+	Insert Into @Model Values (@ModelId, 'Unit Test', Null)
+	Exec [App_DataDictionary].[procSetModel] @ModelId, @Model
 
-	Select	D.*
-	From	[App_DataDictionary].[DatabaseDomain] D
-			Inner Join [App_DataDictionary].[DatabaseSchema_AK] A
-			On	D.[SchemaId] = A.[SchemaId]
-	Where	A.[CatalogId] = @CatalogId
+	Insert Into @Attribute Values (@AttributeId, Null, 'UnitTest', Null)
+	Exec [App_DataDictionary].[procSetDomainAttribute] @ModelId, @Attribute
 
-	Print 'Transaction Success, Rollback Issued';
-	Rollback Transaction;
+	Insert Into [App_DataDictionary].[AliasSource] ([AliasSourceId], [AliasSourceTitle], [DatabaseName], [IsCaseSensitive])
+	Select	NewId(), 'UnitTest', Db_Name(), 0
+
+	Declare @Alias [App_DataDictionary].[typeDomainAttributeAlias]
+	Insert Into @Alias
+	Select	@AttributeId As [AttributeId],
+			Db_Name() As [SourceName],
+			FormatMessage('%s.%s.[%s].[%s]', Db_Name(), Object_Schema_Name(object_Id), Object_Name(object_id), name) As [AliasName],
+			'Database.Schema.Table.Column' As [ScopeName]
+	From	Sys.Columns
+	Where	Object_Schema_Name(object_id) = 'App_DataDictionary'
+
+	Exec [App_DataDictionary].[procSetDomainAttributeAlias] @ModelId, @AttributeId, @Alias
+
+	Select	*
+	From	[App_DataDictionary].[AliasDomain] A
+			Cross Apply [App_DataDictionary].[funcGetAliasName](A.[AliasId]) F
+	Where	[AttributeId] = @AttributeId
+
+	-- By default, throw and error and exit without committing
+;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
+	
+	Commit Transaction;
+	Print 'Commit Issued';
 End Try
 Begin Catch
+	Print FormatMessage ('*** Error Report: %s ***', Object_Name(@@ProcID));
+	Print FormatMessage (' Message- %s', ERROR_MESSAGE());
+	Print FormatMessage (' Number- %i', ERROR_NUMBER());
+	Print FormatMessage (' Severity- %i', ERROR_SEVERITY());
+	Print FormatMessage (' State- %i', ERROR_STATE());
+	Print FormatMessage (' Procedure- %s', ERROR_PROCEDURE());
+	Print FormatMessage (' Line- %i', ERROR_LINE());
+	Print FormatMessage (' @@TranCount - %i', @@TranCount);
+	Print FormatMessage (' @@NestLevel - %i', @@NestLevel);
+	Print FormatMessage (' Original_Login - %s', Original_Login());
+	Print FormatMessage (' Current_User - %s', Current_User);
+	Print FormatMessage (' XAct_State - %i', XAct_State());
+	Print '--- Debug Data ---';
+
+	-- Rollback Transaction
 	Print 'Rollback Issued';
 	Rollback Transaction;
-	Throw;
+	--Throw;
 End Catch;</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

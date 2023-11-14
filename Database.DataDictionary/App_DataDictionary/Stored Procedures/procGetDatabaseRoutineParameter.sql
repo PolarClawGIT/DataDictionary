@@ -14,6 +14,7 @@ Select	R.[CatalogId],
 		R.[SchemaName],
 		R.[RoutineName],
 		D.[ParameterName],
+		C.[ScopeName],
 		D.[OrdinalPosition],
 		D.[DataType],
 		D.[CharacterMaximumLength],
@@ -36,6 +37,7 @@ From	[App_DataDictionary].[DatabaseRoutineParameter] D
 		On	D.[RoutineId] = R.[RoutineId]
 		Left Join [App_DataDictionary].[ModelCatalog] A
 		On	R.[CatalogId] = A.[CatalogId]
+		Outer Apply [App_DataDictionary].[funcGetScopeName](D.[ScopeId]) C
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@CatalogId is Null or @CatalogId = R.[CatalogId]) And
 		(@DatabaseName is Null or @DatabaseName = R.[DatabaseName]) And

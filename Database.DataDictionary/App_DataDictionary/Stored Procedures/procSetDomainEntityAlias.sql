@@ -11,8 +11,6 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
 
-Declare @Delimiter NVarChar(10) = '.'
-
 Begin Try
 	-- Begin Transaction
 	If @@TranCount = 0
@@ -21,138 +19,93 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDomainEntityAlias]
-	Insert Into @Values
-	Select	Coalesce(D.[EntityId], @EntityId) As [EntityId],
-			NullIf(Trim(D.[AliasName]),'') As [AliasName],
-			NullIf(Trim(D.[ScopeName]),'') As [ScopeName]
-	From	@Data D
-	Where	(@EntityId is Null or D.[EntityId] = @EntityId) And
-			(@ModelId is Null or @ModelId In (
-				Select	[ModelId]
-				From	[App_DataDictionary].[ModelEntity]
-				Where	(@EntityId is Null Or [EntityId] = @EntityId)))
+	-- Insert any missing Alias Refrences
+	Declare @Alias [App_DataDictionary].[typeAlias]	
+	Insert Into @Alias
+	Select	[SourceName],
+			[AliasName]
+	From	@Data
+	Group By [SourceName],
+			[AliasName]
 
-	-- Validation
---	If @ModelId is Null and @EntityId is Null
---	Throw 50000, '@ModelId or @EntityId must be specified', 1;
+	Exec [App_DataDictionary].[procInsertAlias] @Alias
 
-	Declare @Merge Table (
-		[AliasId] UniqueIdentifier Not Null,
-		[AliasElementName] [App_DataDictionary].[typeNameSpaceElement] Not Null,
-		[AliasName] NVarChar(Max) Not Null,
-		[AliasParentName] NVarChar(Max) Null
-		Primary Key ([AliasId]))
+	-- Clean Data
+	Declare @Values Table (
+		[AliasId]           UniqueIdentifier Not Null,
+		[ScopeId]           Int NOT Null,
+		[EntityId]          UniqueIdentifier Not Null, 
+		Primary Key ([EntityId], [AliasId] ))
 
-	;With [Parse] As (
-		-- Create NameSpaces for each level
-		Select	N.[NameSpace]
-		From	@Values V
-				Outer Apply [App_DataDictionary].[funcSplitNameSpace](V.[AliasName],@Delimiter) N
-		Group By N.[NameSpace]),
+	;With [Scope] As (
+		Select	S.[ScopeId],
+				F.[ScopeName]
+		From	[App_DataDictionary].[AliasScope] S
+				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F),
 	[Alias] As (
-		Select	Coalesce(D.[AliasId], NewId()) As [AliasId],
-				A.[AliasElementName],
-				A.[AliasName],
-				A.[AliasParentName],
-				Binary_CheckSum(IsNull(Upper(A.[AliasParentName]), '<ROOT>')) As [AliasCheckSum]
-		From	[Parse] P
-				Outer Apply (
-					Select	IIF(CharIndex(@Delimiter,[NameSpace]) > 0,
-								Right([NameSpace], CharIndex(@Delimiter,Reverse([NameSpace])) -1),
-								[NameSpace])
-								As [AliasElementName],
-							[NameSpace] As [AliasName],
-							IIF(CharIndex(@Delimiter,[NameSpace]) > 0,
-								Left([NameSpace],Len([NameSpace]) - CharIndex(@Delimiter,Reverse([NameSpace]))),
-								Null)
-								As [AliasParentName]) A
-				Left Join [App_DataDictionary].[ModelNameSpace] D
-				On	A.[AliasName] = D.[AliasName])
-	-- This is necessary to create a concert GUID that does not change.
-	-- Otherwise, the GUID is not concert until after the statement executes. 
-	-- Not as expected.
-	Insert Into @Merge
-	Select	[AliasId],
-			[AliasElementName],
-			[AliasName],
-			[AliasParentName]
-	From	[Alias]
+		Select	I.[AliasId],
+				S.[SourceName],
+				F.[AliasName]
+		From	[App_DataDictionary].[AliasItem] I
+				Inner Join [App_DataDictionary].[AliasSource] S
+				On	I.[AliasSourceId] = S.[AliasSourceId]
+				Cross Apply [App_DataDictionary].[funcGetAliasName](I.[AliasId]) F)
+	Insert Into @Values
+	Select	A.[AliasId],
+			S.[ScopeId],
+			IsNull(D.[EntityId],@EntityId) As [EntityId]
+	From	@Data D
+			Cross Apply [App_DataDictionary].[funcSplitAliasName](D.[AliasName]) N
+			Left Join [Scope] S
+			On	D.[ScopeName] = S.[ScopeName]
+			Left Join [Alias] A
+			On	D.[SourceName] = A.[SourceName] And
+				N.[AliasName] = A.[AliasName]
+	Where	N.[IsBase] = 1
 
-	;With [Value] As (
-		Select	A.[AliasId],
-				P.[AliasId] As [AliasParentId],
-				A.[AliasElementName]
-		From	@Merge A
-				Left Join @Merge P
-				On	A.[AliasParentName] = P.[AliasName]),
-	[Delta] As (
-		Select	[AliasId],
-				[AliasParentId],
-				[AliasElementName]
-		From	[Value]
-		Except
-		Select	[AliasId],
-				[AliasParentId],
-				[AliasElementName]
-		From	[App_DataDictionary].[DomainAlias])
-	Merge [App_DataDictionary].[DomainAlias] T
-	Using [Delta] S
-	On	T.[AliasId] = S.[AliasId]
-	When Matched Then Update Set
-		[AliasParentId] = S.[AliasParentId],
-		[AliasElementName] = S.[AliasElementName]
-	When Not Matched by Target Then
-		Insert ([AliasId], [AliasParentId], [AliasElementName])
-		Values ([AliasId], [AliasParentId], [AliasElementName]);
-Print FormatMessage ('Delete [App_DataDictionary].[DomainAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	-- Apply Changes
+	Declare @Deleted Table ([AliasId] UniqueIdentifier Not Null)
+	
+	Delete From [App_DataDictionary].[AliasDomain]
+	Output [deleted].[AliasId] Into @Deleted
+	From	[App_DataDictionary].[AliasDomain] T
+			Left Join @Values V
+			On	T.[AliasId] = V.[AliasId] And
+				T.[EntityId] = V.[EntityId]
+			Left Join [App_DataDictionary].[AliasItem] I
+			On	T.[AliasId] = I.[ParentAliasId]
+	Where	V.[AliasId] is Null And
+			I.[AliasId] is Null And
+			T.[EntityId] In (
+				Select	A.[EntityId]
+				From	[App_DataDictionary].[DomainEntity] A
+						Left Join [App_DataDictionary].[ModelEntity] M
+						On	A.[EntityId] = M.[EntityId]
+				Where	(@EntityId is Null Or @EntityId = A.[EntityId]) And
+						(@ModelId is Null Or @ModelId = M.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[AliasDomain] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	;With [Values] As (
-		Select	V.[EntityId],
-				N.[AliasId],
-				S.[ScopeId]
-		From	@Values V
-				Inner Join [App_DataDictionary].[ModelNameSpace] N
-				On	V.[AliasName] = N.[AliasName]
-				Inner Join [App_DataDictionary].[ModelScope] S
-				On	V.[ScopeName] = S.[ScopeName]),
-	[Delta] As (
-		Select	[EntityId],
-				[AliasId],
-				[ScopeId]
-		From	[Values]
-		Except
-		Select	[EntityId],
-				[AliasId],
-				[ScopeId]
-		From	[App_DataDictionary].[DomainEntityAlias]),
-	[Data] As (
-		Select	V.[EntityId],
-				V.[AliasId],
-				V.[ScopeId],
-				IIF(D.[EntityId] is Null,0, 1) As [IsDiffrent]
-		From	[Values] V
-				Left Join [Delta] D
-				On	V.[EntityId] = D.[EntityId] And
-					V.[AliasId] = D.[AliasId])
-	Merge [App_DataDictionary].[DomainEntityAlias] T
-	Using [Data] S
-	On	T.[EntityId] = T.[EntityId] And
-		T.[AliasId] = T.[AliasId]
-	When Matched and [IsDiffrent] = 1 Then Update Set
-		[ScopeId] = S.[ScopeId]
-	When Not Matched by Target Then
-		Insert ([EntityId], [AliasId], [ScopeId])
-		Values ([EntityId], [AliasId], [ScopeId])
-	When Not Matched by Source And
-		(@EntityId = T.[EntityId] Or
-		 T.[EntityId] In (
-			Select	[EntityId]
-			From	[App_DataDictionary].[ModelEntity]
-			Where	[ModelId] = @ModelId))
-		Then Delete;
-	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Delete From [App_DataDictionary].[AliasItem]
+	From	@Deleted D
+			Inner Join [App_DataDictionary].[AliasItem] T
+			On	D.[AliasId] = T.[AliasId]
+			Left Join [App_DataDictionary].[AliasDomain] C
+			On	D.[AliasId] = C.[AliasId]
+	Where	C.[AliasId] is Null
+	Print FormatMessage ('Delete [App_DataDictionary].[AliasItem] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[AliasDomain] (
+			[AliasId],
+			[ScopeId],
+			[EntityId])
+	Select	V.[AliasId],
+			V.[ScopeId],
+			V.[EntityId]
+	From	@Values V
+			Left Join [App_DataDictionary].[AliasDomain] T
+			On	V.[AliasId] = T.[AliasId]
+	Where	T.[AliasId] is Null
+	Print FormatMessage ('Insert [App_DataDictionary].[AliasDomain] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

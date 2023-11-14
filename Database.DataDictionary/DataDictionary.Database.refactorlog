@@ -413,4 +413,39 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[procGetModel]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="79323831-b2ae-481a-8e18-82d411988503" ChangeDateTime="11/12/2023 21:41:49">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ApplicationScope]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[AliasScope]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="623d79fb-d0c6-46dc-994c-378ad1233144" ChangeDateTime="11/13/2023 17:09:32">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeNameSpace]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeAliasName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a9603731-75d5-4fda-b22d-83ed21ad041e" ChangeDateTime="11/13/2023 17:10:32">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeNameSpaceElement]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeAliasElement]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0245a22b-d6d7-4048-be13-881c64df989f" ChangeDateTime="11/13/2023 17:40:06">
+    <Property Name="ElementName" Value="[App_DataDictionary].[funcBuildScopeName]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcGetScopeName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e76adb9e-8e62-45ed-bcd7-bdc44f372f33" ChangeDateTime="11/13/2023 17:40:52">
+    <Property Name="ElementName" Value="[App_DataDictionary].[funcBuildAliasName]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcGetAliasName]" />
+  </Operation>
 </Operations>

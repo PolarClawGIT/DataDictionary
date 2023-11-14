@@ -15,6 +15,7 @@ Select	T.[CatalogId],
 		T.[SchemaName],
 		T.[TableName],
 		D.[ColumnName],
+		C.[ScopeName],
 		D.[OrdinalPosition],
 		D.[ColumnDefault],
 		D.[IsNullable],
@@ -44,7 +45,7 @@ From	[App_DataDictionary].[DatabaseTableColumn] D
 		On	D.[TableId] = T.[TableId]
 		Left Join [App_DataDictionary].[ModelCatalog] A
 		On	T.[CatalogId] = A.[CatalogId]
-		
+		Outer Apply [App_DataDictionary].[funcGetScopeName](D.[ScopeId]) C
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@CatalogId is Null or @CatalogId = T.[CatalogId]) And
 		(@DatabaseName is Null or @DatabaseName = T.[DatabaseName]) And

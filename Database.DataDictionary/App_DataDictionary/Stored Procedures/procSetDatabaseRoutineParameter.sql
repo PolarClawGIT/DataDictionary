@@ -59,6 +59,11 @@ Begin Try
 		[DomainName]             SysName Null,
 		Primary Key ([ParameterId]))
 
+	;With [Scope] As (
+		Select	S.[ScopeId],
+				F.[ScopeName]
+		From	[App_DataDictionary].[AliasScope] S
+				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	Coalesce(A.[ParameterId], NewId()) As [ParameterId],
 			P.[RoutineId],
@@ -87,7 +92,7 @@ Begin Try
 				NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
 				NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName] And
 				NullIf(Trim(D.[RoutineName]),'') = P.[RoutineName]
-			Left Join [App_DataDictionary].[ModelScope] S
+			Left Join [Scope] S
 			On	D.[ScopeName] = S.[ScopeName]
 			Left Join [App_DataDictionary].[DatabaseRoutineParameter_AK] A
 			On	P.[CatalogId] = A.[CatalogId] And

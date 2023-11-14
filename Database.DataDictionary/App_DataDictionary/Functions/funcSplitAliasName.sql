@@ -9,7 +9,7 @@
 -- Columns:
 --   [AliasName]      : Fully Qualified AliasName formated like SQL Qualified Object Names. Includes the Element Name.
 --   [ParentAliasName]: Fully Qualified AliasNamed formated like SQL Qualified Object Names without the Element Name.
---   [ElementName]    : Element of the AliasName without formating.
+--   [AliasElement]   : Element of the AliasName without formating.
 --   [IsBase]         : This row is the AliasName passed to the function (not a parent row).
 --
 -- In: [DatabaseName].[SchemaName].[TableName].[ColumnName] or
@@ -55,21 +55,23 @@ RETURNS TABLE AS RETURN (
 						[AliasNameChild],
 						Right([AliasNameChild],Len([AliasNameChild]) - Len([AliasNameParent]) -1)),
 					'[',''),']','')
-					As [ElementName]
+					As [AliasElement]
 		From	[Parse]
 		Where	[AliasNameChild] is Not Null),
 	[Tree] As (
-		Select	[ElementName],
+		Select	[AliasElement],
 				[AliasNameParent],
 				[AliasNameChild],
-				FormatMessage('[%s]',[ElementName]) As [AliasName]
+				FormatMessage('[%s]',[AliasElement]) As [AliasName],
+				Convert(Int,1) As [Level]
 		From	[Format]
 		Where	[AliasNameParent] is Null
 		Union All
-		Select	F.[ElementName],
+		Select	F.[AliasElement],
 				F.[AliasNameParent],
 				F.[AliasNameChild],
-				FormatMessage('%s.[%s]',T.[AliasName],F.[ElementName]) As [AliasName]
+				FormatMessage('%s.[%s]',T.[AliasName],F.[AliasElement]) As [AliasName],
+				T.[Level] + 1 As [Level]
 		From	[Tree] T
 				Inner Join [Format] F
 				On	T.[AliasNameChild] = F.[AliasNameParent])
@@ -78,7 +80,8 @@ Select	[AliasName],
 			Null,
 			Left([AliasName], Len([AliasName]) - CharIndex('[.',Reverse([AliasName])) -1))
 			As [ParentAliasName],
-		[ElementName],
+		[AliasElement],
+		[Level],
 		IIF(Row_Number() Over (Order By [AliasName] Desc) = 1,1,0) As [IsBase]
 From	[Tree])
 GO

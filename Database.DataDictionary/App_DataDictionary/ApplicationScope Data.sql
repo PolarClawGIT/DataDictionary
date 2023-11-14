@@ -2,9 +2,9 @@ Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
-	Delete From [App_DataDictionary].[ApplicationScope]
+	Delete From [App_DataDictionary].[AliasScope]
 
-	Declare @Scope [App_DataDictionary].[typeApplicationScope] 
+	Declare @Scope [App_DataDictionary].[typeAliasScope] 
 	Insert Into @Scope Values 
 		(Null, 'Database', 'MS SQL Database, Root Node'),
 		(Null, 'Library', '.Net Class Library or Assembly, Root Node'),
@@ -31,7 +31,10 @@ Begin Try;
 		(Null, 'Database.Schema.Procedure.Parameter', NULL),
 		(Null, 'Database.Schema.Function.Parameter', NULL)
 
-	Exec [App_DataDictionary].[procSetApplicationScope] @Scope
+	Exec [App_DataDictionary].[procSetAliasScope] @Scope
+
+	Select	*
+	From	[App_DataDictionary].[AliasScope]
 
 	-- By default, throw and error and exit without committing
 --;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;

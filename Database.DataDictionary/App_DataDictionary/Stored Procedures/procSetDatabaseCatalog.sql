@@ -32,6 +32,11 @@ Begin Try
 		[SourceDate] DateTime Not Null,
 		Primary Key ([CatalogId]))
 	
+	;With [Scope] As (
+		Select	S.[ScopeId],
+				F.[ScopeName]
+		From	[App_DataDictionary].[AliasScope] S
+				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	Coalesce(D.[CatalogId], @CatalogId, NewId()) As [CatalogId],
 			NullIf(Trim(IsNull(D.[CatalogTitle], D.[SourceDatabaseName])),'') As [CatalogTitle],
@@ -41,7 +46,7 @@ Begin Try
 			NullIf(Trim(D.[SourceDatabaseName]), '') As [SourceDatabaseName],
 			IsNull(D.[SourceDate],GetDate()) As [SourceDate]
 	From	@Data D
-			Left Join [App_DataDictionary].[ModelScope] S
+			Left Join [Scope] S
 			On	D.[ScopeName] = S.[ScopeName]
 	Where	@CatalogId is Null or
 			Coalesce(D.[CatalogId], @CatalogId) = @CatalogId or

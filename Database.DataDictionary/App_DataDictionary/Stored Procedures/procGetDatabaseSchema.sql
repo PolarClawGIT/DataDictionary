@@ -10,12 +10,14 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Select	S.[CatalogId],
 		S.[DatabaseName],
-		D.[SchemaName]
+		D.[SchemaName],
+		C.[ScopeName]
 From	[App_DataDictionary].[DatabaseSchema] D
 		Inner Join [App_DataDictionary].[DatabaseSchema_AK] S
 		On	D.[SchemaId] = S.[SchemaId]
 		Left Join [App_DataDictionary].[ModelCatalog] A
 		On	D.[CatalogId] = A.[CatalogId]
+		Outer Apply [App_DataDictionary].[funcGetScopeName](D.[ScopeId]) C
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@CatalogId is Null or @CatalogId = S.[CatalogId]) And
 		(@DatabaseName is Null or @DatabaseName = S.[DatabaseName]) And

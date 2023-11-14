@@ -1,14 +1,13 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetApplicationScope]
-		@Data [App_DataDictionary].[typeApplicationScope] ReadOnly
+﻿CREATE PROCEDURE [App_DataDictionary].[procInsertAlias]
+		@Data [App_DataDictionary].[typeAlias] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on ApplicationScope.
+/* Description: Performs Set on Alias.
 */
 
 -- Transaction Handling
 Declare	@TRN_IsNewTran Bit = 0 -- Indicates that the stored procedure started the transaction. Used to handle nested Transactions
-Declare @Delimiter NVarChar(10) = '.'
 
 Begin Try
 	-- Begin Transaction
@@ -18,69 +17,74 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	;With [NameSpace] As (
-		Select	Distinct 
-				[NameSpace],
-				[ParentNameSpace],
-				[ElementName]
-		From	@Data S
-				Outer Apply [App_DataDictionary].[funcSplitNameSpace](S.[ScopedName], @Delimiter)),
-	[Scope] As (
-		Select	IsNull(M.[ScopeId],
-					(Select	IsNull(Max([ScopeId]),0) From [App_DataDictionary].[ApplicationScope]) +
-					Row_Number() Over (
-						Partition By (M.[ScopeId])
-						Order By (N.[NameSpace])))
-						As [ScopeId],
-				N.[NameSpace],
-				N.[ParentNameSpace],
-				N.[ElementName]
-		From	[NameSpace] N
-				Left Join [App_DataDictionary].[ModelScope] M
-				On	N.[NameSpace] = M.[ScopeName]),
-	[Values] As (
-		Select	C.[ScopeId],
-				P.[ScopeId] As [ScopeParentId],
-				C.[ElementName] As [ScopedElementName],
-				D.[ScopeDescription]
-		From @Data D
-				Left Join [Scope] C
-				On	D.[ScopedName] = C.[NameSpace]
-				Left Join [Scope] P
-				On	C.[ParentNameSpace] = P.[NameSpace]),
-	[Delta] As (
-		Select	[ScopeId],
-				[ScopeParentId],
-				[ScopedElementName],
-				[ScopeDescription]
-		From	[Values]
-		Except
-		Select	[ScopeId],
-				[ScopeParentId],
-				[ScopedElementName],
-				[ScopeDescription]
-		From	[App_DataDictionary].[ApplicationScope]),
-	[Data] As (
-		Select	V.[ScopeId],
-				V.[ScopeParentId],
-				V.[ScopedElementName],
-				V.[ScopeDescription],
-				IIF(D.[ScopeId] is Null,0,1) As [IsDiffrent]
-		From	[Values] V
-				Left Join [Delta] D
-				On	V.[ScopeId] = D.[ScopeId])
-	Merge [App_DataDictionary].[ApplicationScope] T
-	Using [Data] S
-	On	T.[ScopeId] = S.[ScopeId]
-	When Matched And S.[IsDiffrent] = 1 Then Update
-	Set	[ScopeParentId] = S.[ScopeParentId],
-		[ScopedElementName] = S.[ScopedElementName],
-		[ScopeDescription] = S.[ScopeDescription]
-	When Not Matched by Target Then
-		Insert ([ScopeId], [ScopeParentId], [ScopedElementName], [ScopeDescription])
-		Values ([ScopeId], [ScopeParentId], [ScopedElementName], [ScopeDescription])
-	When Not Matched by Source Then Delete;
-	Print FormatMessage ('Merge [App_DataDictionary].[ApplicationScope]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Declare @Alias Table (
+		[AliasId] UniqueIdentifier Not Null,
+		[AliasName] [App_DataDictionary].[typeAliasName] Not Null,
+		[SourceName] NVarChar(128) Not Null,
+		[IsCaseSensitive] Bit Not Null,
+		Primary Key ([SourceName], [AliasId]))
+
+	Declare @Values Table (
+		[AliasId] UniqueIdentifier Not Null,
+		[SourceName] NVarChar(128) Not Null,
+		[AliasName] [App_DataDictionary].[typeAliasName] Not Null,
+		[ParentAliasName] [App_DataDictionary].[typeAliasName] Null,
+		[AliasElement] [App_DataDictionary].[typeAliasElement] Not Null,
+		Primary Key ([SourceName], [AliasId]))
+
+	Insert Into @Alias
+	Select	I.[AliasId],
+			F.[AliasName],
+			S.[SourceName],
+			S.[IsCaseSensitive]
+	From	[App_DataDictionary].[AliasItem] I
+			Inner Join [App_DataDictionary].[AliasSource] S
+			On	I.[AliasSourceId] = S.[AliasSourceId]
+			Cross Apply [App_DataDictionary].[funcGetAliasName](I.[AliasId]) F
+	Print FormatMessage ('Insert @Alias: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	;With [Values] As (
+		Select	Distinct
+				D.[SourceName],
+				P.[AliasName],
+				P.[ParentAliasName],
+				P.[AliasElement]
+		From	@Data D
+				Cross Apply [App_DataDictionary].[funcSplitAliasName] (D.[AliasName]) P)
+	Insert Into @Values
+	Select	IsNull(A.[AliasId], NewId()) As [AliasId],
+			V.[SourceName],
+			V.[AliasName],
+			V.[ParentAliasName],
+			V.[AliasElement]
+	From	[Values] V
+			Left Join @Alias A
+			On	V.[AliasName] = A.[AliasName] And
+				V.[SourceName] = A.[SourceName]
+	Print FormatMessage ('Insert @Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[AliasItem] (
+			[AliasId],
+			[ParentAliasId],
+			[AliasSourceId],
+			[AliasElement])
+	Select	V.[AliasId],
+			IsNull(A.[AliasId],P.[AliasId]) As [ParentAliasId],
+			S.[AliasSourceId],
+			V.[AliasElement]
+	From	@Values V
+			Left Join @Values P
+			On	V.[SourceName] = P.[SourceName] And
+				V.[ParentAliasName] = P.[AliasName]
+			Left Join @Alias A
+			On	V.[SourceName] = A.[SourceName] And
+				V.[ParentAliasName] = A.[AliasName]
+			Left Join [App_DataDictionary].[AliasSource] S
+			On	V.[SourceName] = S.[SourceName]
+			Left Join [App_DataDictionary].[AliasItem] T
+			On	V.[AliasId] = T.[AliasId]
+	Where	T.[AliasId] is Null
+	Print FormatMessage ('Insert [App_DataDictionary].[Alias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

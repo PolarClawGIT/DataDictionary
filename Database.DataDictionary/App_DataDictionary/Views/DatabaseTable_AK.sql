@@ -7,8 +7,7 @@ Select	C.[CatalogId],
 		T.[TableId],
 		C.[SourceDatabaseName] As [DatabaseName],
 		S.[SchemaName],
-		T.[TableName],
-		FormatMessage('[%s].[%s].[%s]', C.[SourceDatabaseName], S.[SchemaName], T.[TableName]) As [AliasName]
+		T.[TableName]
 From	[App_DataDictionary].[DatabaseCatalog] C
 		Inner Join [App_DataDictionary].[DatabaseSchema] S
 		On	C.[CatalogId] = S.[CatalogId]

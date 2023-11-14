@@ -43,6 +43,11 @@ Begin Try
 		[ConstraintType]      NVarChar(60) Null,
 		Primary Key ([ConstraintId]))
 
+	;With [Scope] As (
+		Select	S.[ScopeId],
+				F.[ScopeName]
+		From	[App_DataDictionary].[AliasScope] S
+				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	Coalesce(A.[ConstraintId], NewId()) As [ConstraintId],
 			P.[SchemaId],
@@ -55,7 +60,7 @@ Begin Try
 			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
 				NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
 				NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName]
-			Left Join [App_DataDictionary].[ModelScope] S
+			Left Join [Scope] S
 			On	D.[ScopeName] = S.[ScopeName]
 			Left Join [App_DataDictionary].[DatabaseConstraint_AK] A
 			On	P.[CatalogId] = A.[CatalogId] And

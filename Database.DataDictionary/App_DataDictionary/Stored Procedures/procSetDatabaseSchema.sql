@@ -40,6 +40,11 @@ Begin Try
 		[ScopeId]    Int Not Null,
 		Primary Key ([SchemaId]))
 
+	;With [Scope] As (
+		Select	S.[ScopeId],
+				F.[ScopeName]
+		From	[App_DataDictionary].[AliasScope] S
+				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	Coalesce(A.[SchemaId], NewId()) As [SchemaId],
 			P.[CatalogId],
@@ -49,7 +54,7 @@ Begin Try
 			Left Join [App_DataDictionary].[DatabaseCatalog_AK] P
 			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
 				NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName]
-			Left Join [App_DataDictionary].[ModelScope] S
+			Left Join [Scope] S
 			On	D.[ScopeName] = S.[ScopeName]
 			Left Join [App_DataDictionary].[DatabaseSchema_AK] A
 			On	P.[CatalogId] = A.[CatalogId] And

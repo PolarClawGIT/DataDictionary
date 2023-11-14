@@ -19,18 +19,11 @@ Begin Try
 
 	-- Validation
 
-	-- Cascade Delete
-	Declare @Delete [App_DataDictionary].[typeDatabaseCatalogObject] 
-
-	Insert Into @Delete ([CatalogId])
-	Select	T.[CatalogId]
-	From	[App_DataDictionary].[ModelCatalog] T
-	Where	T.[ModelId] = @ModelId
-
-	if Exists (Select 1 From @Delete)
-	Exec [App_DataDictionary].[procDeleteDatabaseCatalogObject] @ModelId, @Delete;
-
 	-- Delete Model
+	Delete From [App_DataDictionary].[ModelProcess]
+	Where	[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelProcess]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	Delete From [App_DataDictionary].[ModelAttribute]
 	Where	[ModelId] = @ModelId
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

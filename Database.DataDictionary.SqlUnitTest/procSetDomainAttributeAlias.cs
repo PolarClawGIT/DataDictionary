@@ -10,10 +10,10 @@ using System.Text;
 namespace Database.DataDictionary.SqlUnitTest
 {
     [TestClass()]
-    public class procSetDomainAlias : SqlDatabaseTestClass
+    public class procSetDomainAttributeAlias : SqlDatabaseTestClass
     {
 
-        public procSetDomainAlias()
+        public procSetDomainAttributeAlias()
         {
             InitializeComponent();
         }
@@ -37,17 +37,17 @@ namespace Database.DataDictionary.SqlUnitTest
         /// </summary>
         private void InitializeComponent()
         {
-            Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction App_DataDictionary_procSetDomainAlias_Insert_TestAction;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(procSetDomainAlias));
+            Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction App_DataDictionary_procSetDomainAttributeAlias_Insert_TestAction;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(procSetDomainAttributeAlias));
             Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.NotEmptyResultSetCondition notEmptyResultSetCondition1;
-            this.App_DataDictionary_procSetDomainAlias_InsertData = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestActions();
-            App_DataDictionary_procSetDomainAlias_Insert_TestAction = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction();
+            this.App_DataDictionary_procSetDomainAttributeAlias_InsertData = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestActions();
+            App_DataDictionary_procSetDomainAttributeAlias_Insert_TestAction = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction();
             notEmptyResultSetCondition1 = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.NotEmptyResultSetCondition();
             // 
-            // App_DataDictionary_procSetDomainAlias_Insert_TestAction
+            // App_DataDictionary_procSetDomainAttributeAlias_Insert_TestAction
             // 
-            App_DataDictionary_procSetDomainAlias_Insert_TestAction.Conditions.Add(notEmptyResultSetCondition1);
-            resources.ApplyResources(App_DataDictionary_procSetDomainAlias_Insert_TestAction, "App_DataDictionary_procSetDomainAlias_Insert_TestAction");
+            App_DataDictionary_procSetDomainAttributeAlias_Insert_TestAction.Conditions.Add(notEmptyResultSetCondition1);
+            resources.ApplyResources(App_DataDictionary_procSetDomainAttributeAlias_Insert_TestAction, "App_DataDictionary_procSetDomainAttributeAlias_Insert_TestAction");
             // 
             // notEmptyResultSetCondition1
             // 
@@ -55,11 +55,11 @@ namespace Database.DataDictionary.SqlUnitTest
             notEmptyResultSetCondition1.Name = "notEmptyResultSetCondition1";
             notEmptyResultSetCondition1.ResultSet = 1;
             // 
-            // App_DataDictionary_procSetDomainAlias_InsertData
+            // App_DataDictionary_procSetDomainAttributeAlias_InsertData
             // 
-            this.App_DataDictionary_procSetDomainAlias_InsertData.PosttestAction = null;
-            this.App_DataDictionary_procSetDomainAlias_InsertData.PretestAction = null;
-            this.App_DataDictionary_procSetDomainAlias_InsertData.TestAction = App_DataDictionary_procSetDomainAlias_Insert_TestAction;
+            this.App_DataDictionary_procSetDomainAttributeAlias_InsertData.PosttestAction = null;
+            this.App_DataDictionary_procSetDomainAttributeAlias_InsertData.PretestAction = null;
+            this.App_DataDictionary_procSetDomainAttributeAlias_InsertData.TestAction = App_DataDictionary_procSetDomainAttributeAlias_Insert_TestAction;
         }
 
         #endregion
@@ -80,9 +80,9 @@ namespace Database.DataDictionary.SqlUnitTest
         #endregion
 
         [TestMethod()]
-        public void App_DataDictionary_procSetDomainAlias_Insert()
+        public void App_DataDictionary_procSetDomainAttributeAlias_Insert()
         {
-            SqlDatabaseTestActions testActions = this.App_DataDictionary_procSetDomainAlias_InsertData;
+            SqlDatabaseTestActions testActions = this.App_DataDictionary_procSetDomainAttributeAlias_InsertData;
             // Execute the pre-test script
             // 
             System.Diagnostics.Trace.WriteLineIf((testActions.PretestAction != null), "Executing pre-test script...");
@@ -102,6 +102,6 @@ namespace Database.DataDictionary.SqlUnitTest
                 SqlExecutionResult[] posttestResults = TestService.Execute(this.PrivilegedContext, this.PrivilegedContext, testActions.PosttestAction);
             }
         }
-        private SqlDatabaseTestActions App_DataDictionary_procSetDomainAlias_InsertData;
+        private SqlDatabaseTestActions App_DataDictionary_procSetDomainAttributeAlias_InsertData;
     }
 }

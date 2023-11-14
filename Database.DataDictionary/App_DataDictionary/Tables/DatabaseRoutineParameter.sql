@@ -29,7 +29,7 @@
 	-- Keys
 	CONSTRAINT [PK_DatabaseRoutineParameter] PRIMARY KEY CLUSTERED ([ParameterId] ASC),
 	CONSTRAINT [FK_DatabaseRoutineParameterRoutine] FOREIGN KEY ([RoutineId]) REFERENCES [App_DataDictionary].[DatabaseRoutine] ([RoutineId]),
-	CONSTRAINT [FK_DatabaseRoutineParameterScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
+	CONSTRAINT [FK_DatabaseRoutineParameterScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[AliasScope] ([ScopeId]),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseRoutineParameter]

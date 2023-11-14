@@ -18,7 +18,7 @@
 	CONSTRAINT [PK_DatabaseConstraint] PRIMARY KEY CLUSTERED ([ConstraintId] ASC),
 	CONSTRAINT [FK_DatabaseConstraintSchema] FOREIGN KEY ([SchemaId]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([SchemaId]),
 	CONSTRAINT [FK_DatabaseConstraintTable] FOREIGN KEY ([ParentTableId]) REFERENCES [App_DataDictionary].[DatabaseTable] ([TableId]),
-	CONSTRAINT [FK_DatabaseConstraintScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
+	CONSTRAINT [FK_DatabaseConstraintScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[AliasScope] ([ScopeId]),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseConstraint]

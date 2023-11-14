@@ -11,14 +11,13 @@ Select	D.[CatalogId],
 		D.[CatalogTitle],
 		D.[CatalogDescription],
 		D.[SourceServerName],
-		P.[ScopeName],
+		S.[ScopeName],
 		D.[SourceDatabaseName],
 		D.[SourceDate]
 From	[App_DataDictionary].[DatabaseCatalog] D
 		Left Join [App_DataDictionary].[ModelCatalog] A
 		On	D.[CatalogId] = A.[CatalogId]
-		Inner Join [App_DataDictionary].[ModelScope] P
-		On	D.[ScopeId] = P.[ScopeId]
+		Outer Apply [App_DataDictionary].[funcGetScopeName](D.[ScopeId]) S
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@CatalogId is Null or @CatalogId = D.[CatalogId]) And
 		(@DatabaseName is Null or @DatabaseName = D.[SourceDatabaseName])
