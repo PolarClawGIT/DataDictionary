@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetAliasScope]
-		@Data [App_DataDictionary].[typeAliasScope] ReadOnly
+		@Data [App_DataDictionary].[typeApplicationScope] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -70,17 +70,17 @@ Begin Try
 	[Target] As (
 		Select	[ScopeId],
 				Convert(NVarChar(Max),[ScopeElement]) As [ScopedName]
-		From	[App_DataDictionary].[AliasScope]
+		From	[App_DataDictionary].[ApplicationScope]
 		Union All
 		Select	S.[ScopeId],
 				Convert(NVarChar(Max), FormatMessage('%s.%s',T.[ScopedName],S.[ScopeElement])) As [ScopedName]
 		From	[Target] T
-				Inner Join [App_DataDictionary].[AliasScope] S
+				Inner Join [App_DataDictionary].[ApplicationScope] S
 				On	T.[ScopeId] = S.[ScopeParentId]),
 	[RowId] As (
 		Select	IsNull(A.[ScopeId],
 					Row_Number() Over (Partition By A.[ScopeId] Order By T.[ScopeChildName]) +
-					(Select IsNull(Max([ScopeId]),0) From [App_DataDictionary].[AliasScope]))
+					(Select IsNull(Max([ScopeId]),0) From [App_DataDictionary].[ApplicationScope]))
 					As [ScopeId],
 				T.[ScopeParentName],
 				T.[ScopeChildName],
@@ -110,7 +110,7 @@ Begin Try
 				[ScopeParentId],
 				[ScopeElement],
 				[ScopeDescription]
-		From	[App_DataDictionary].[AliasScope]),
+		From	[App_DataDictionary].[ApplicationScope]),
 	[Data] As (
 		Select	V.[ScopeId],
 				V.[ScopeParentId],
@@ -120,7 +120,7 @@ Begin Try
 		From	[Values] V
 				Left Join [Delta] D
 				On	V.[ScopeId] = D.[ScopeId])
-	Merge [App_DataDictionary].[AliasScope] T
+	Merge [App_DataDictionary].[ApplicationScope] T
 	Using [Data] S
 	On	T.[ScopeId] = S.[ScopeId]
 	When Matched And S.[IsDiffrent] = 1 Then Update

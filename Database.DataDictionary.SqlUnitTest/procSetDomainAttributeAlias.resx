@@ -133,7 +133,7 @@
 	Insert Into @Attribute Values (@AttributeId, Null, 'UnitTest', Null)
 	Exec [App_DataDictionary].[procSetDomainAttribute] @ModelId, @Attribute
 
-	Insert Into [App_DataDictionary].[AliasSource] ([AliasSourceId], [AliasSourceTitle], [DatabaseName], [IsCaseSensitive])
+	Insert Into [App_DataDictionary].[DomainSource] ([SourceId], [SourceTitle], [DatabaseName], [IsCaseSensitive])
 	Select	NewId(), 'UnitTest', Db_Name(), 0
 
 	Declare @Alias [App_DataDictionary].[typeDomainAttributeAlias]
@@ -148,7 +148,7 @@
 	Exec [App_DataDictionary].[procSetDomainAttributeAlias] @ModelId, @AttributeId, @Alias
 
 	Select	*
-	From	[App_DataDictionary].[AliasDomain] A
+	From	[App_DataDictionary].[DomainAliasItem] A
 			Cross Apply [App_DataDictionary].[funcGetAliasName](A.[AliasId]) F
 	Where	[AttributeId] = @AttributeId
 

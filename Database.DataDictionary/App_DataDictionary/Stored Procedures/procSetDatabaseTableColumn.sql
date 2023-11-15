@@ -69,7 +69,7 @@ Begin Try
 	;With [Scope] As (
 		Select	S.[ScopeId],
 				F.[ScopeName]
-		From	[App_DataDictionary].[AliasScope] S
+		From	[App_DataDictionary].[ApplicationScope] S
 				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	Coalesce(A.[ColumnId], NewId()) As [ColumnId],

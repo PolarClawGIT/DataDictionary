@@ -18,7 +18,7 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_DatabaseCatalog] PRIMARY KEY CLUSTERED ([CatalogId] ASC),
-	CONSTRAINT [FK_DatabaseCatalogScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[AliasScope] ([ScopeId]),
+	CONSTRAINT [FK_DatabaseCatalogScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseCatalogTitle]

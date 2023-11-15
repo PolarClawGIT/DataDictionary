@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procInsertAlias]
-		@Data [App_DataDictionary].[typeAlias] ReadOnly
+		@Data [App_DataDictionary].[typeDomainAlias] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -37,9 +37,9 @@ Begin Try
 			F.[AliasName],
 			S.[SourceName],
 			S.[IsCaseSensitive]
-	From	[App_DataDictionary].[AliasItem] I
-			Inner Join [App_DataDictionary].[AliasSource] S
-			On	I.[AliasSourceId] = S.[AliasSourceId]
+	From	[App_DataDictionary].[DomainAlias] I
+			Inner Join [App_DataDictionary].[DomainSource] S
+			On	I.[AliasSourceId] = S.[SourceId]
 			Cross Apply [App_DataDictionary].[funcGetAliasName](I.[AliasId]) F
 	Print FormatMessage ('Insert @Alias: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
@@ -63,14 +63,14 @@ Begin Try
 				V.[SourceName] = A.[SourceName]
 	Print FormatMessage ('Insert @Values: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[AliasItem] (
+	Insert Into [App_DataDictionary].[DomainAlias] (
 			[AliasId],
 			[ParentAliasId],
 			[AliasSourceId],
 			[AliasElement])
 	Select	V.[AliasId],
 			IsNull(A.[AliasId],P.[AliasId]) As [ParentAliasId],
-			S.[AliasSourceId],
+			S.[SourceId],
 			V.[AliasElement]
 	From	@Values V
 			Left Join @Values P
@@ -79,9 +79,9 @@ Begin Try
 			Left Join @Alias A
 			On	V.[SourceName] = A.[SourceName] And
 				V.[ParentAliasName] = A.[AliasName]
-			Left Join [App_DataDictionary].[AliasSource] S
+			Left Join [App_DataDictionary].[DomainSource] S
 			On	V.[SourceName] = S.[SourceName]
-			Left Join [App_DataDictionary].[AliasItem] T
+			Left Join [App_DataDictionary].[DomainAlias] T
 			On	V.[AliasId] = T.[AliasId]
 	Where	T.[AliasId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[Alias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));

@@ -9,7 +9,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 Select	T.[AttributeId],
 		A.[AliasName],
 		S.[ScopeName]
-From	[App_DataDictionary].[AliasDomain] D
+From	[App_DataDictionary].[DomainAliasItem] D
 		Inner Join [App_DataDictionary].[DomainAttribute] T
 		On	D.[AttributeId] = T.[AttributeId]
 		Left Join [App_DataDictionary].[ModelAttribute] M

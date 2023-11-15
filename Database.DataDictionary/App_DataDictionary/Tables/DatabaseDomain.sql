@@ -28,7 +28,7 @@
 	-- Keys
 	CONSTRAINT [PK_DatabaseDomain] PRIMARY KEY CLUSTERED ([DomainId]),
 	CONSTRAINT [FK_DatabaseDomainSchema] FOREIGN KEY ([SchemaId]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([SchemaId]),
-	CONSTRAINT [FK_DatabaseDomainScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[AliasScope] ([ScopeId]),
+	CONSTRAINT [FK_DatabaseDomainScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseDomain]

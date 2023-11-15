@@ -20,7 +20,7 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Insert any missing Alias Refrences
-	Declare @Alias [App_DataDictionary].[typeAlias]	
+	Declare @Alias [App_DataDictionary].[typeDomainAlias]	
 	Insert Into @Alias
 	Select	[SourceName],
 			[AliasName]
@@ -40,15 +40,15 @@ Begin Try
 	;With [Scope] As (
 		Select	S.[ScopeId],
 				F.[ScopeName]
-		From	[App_DataDictionary].[AliasScope] S
+		From	[App_DataDictionary].[ApplicationScope] S
 				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F),
 	[Alias] As (
 		Select	I.[AliasId],
 				S.[SourceName],
 				F.[AliasName]
-		From	[App_DataDictionary].[AliasItem] I
-				Inner Join [App_DataDictionary].[AliasSource] S
-				On	I.[AliasSourceId] = S.[AliasSourceId]
+		From	[App_DataDictionary].[DomainAlias] I
+				Inner Join [App_DataDictionary].[DomainSource] S
+				On	I.[AliasSourceId] = S.[SourceId]
 				Cross Apply [App_DataDictionary].[funcGetAliasName](I.[AliasId]) F)
 	Insert Into @Values
 	Select	A.[AliasId],
@@ -66,13 +66,13 @@ Begin Try
 	-- Apply Changes
 	Declare @Deleted Table ([AliasId] UniqueIdentifier Not Null)
 	
-	Delete From [App_DataDictionary].[AliasDomain]
+	Delete From [App_DataDictionary].[DomainAliasItem]
 	Output [deleted].[AliasId] Into @Deleted
-	From	[App_DataDictionary].[AliasDomain] T
+	From	[App_DataDictionary].[DomainAliasItem] T
 			Left Join @Values V
 			On	T.[AliasId] = V.[AliasId] And
 				T.[EntityId] = V.[EntityId]
-			Left Join [App_DataDictionary].[AliasItem] I
+			Left Join [App_DataDictionary].[DomainAlias] I
 			On	T.[AliasId] = I.[ParentAliasId]
 	Where	V.[AliasId] is Null And
 			I.[AliasId] is Null And
@@ -85,16 +85,16 @@ Begin Try
 						(@ModelId is Null Or @ModelId = M.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[AliasDomain] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[AliasItem]
+	Delete From [App_DataDictionary].[DomainAlias]
 	From	@Deleted D
-			Inner Join [App_DataDictionary].[AliasItem] T
+			Inner Join [App_DataDictionary].[DomainAlias] T
 			On	D.[AliasId] = T.[AliasId]
-			Left Join [App_DataDictionary].[AliasDomain] C
+			Left Join [App_DataDictionary].[DomainAliasItem] C
 			On	D.[AliasId] = C.[AliasId]
 	Where	C.[AliasId] is Null
 	Print FormatMessage ('Delete [App_DataDictionary].[AliasItem] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[AliasDomain] (
+	Insert Into [App_DataDictionary].[DomainAliasItem] (
 			[AliasId],
 			[ScopeId],
 			[EntityId])
@@ -102,7 +102,7 @@ Begin Try
 			V.[ScopeId],
 			V.[EntityId]
 	From	@Values V
-			Left Join [App_DataDictionary].[AliasDomain] T
+			Left Join [App_DataDictionary].[DomainAliasItem] T
 			On	V.[AliasId] = T.[AliasId]
 	Where	T.[AliasId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[AliasDomain] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));

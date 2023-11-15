@@ -10,7 +10,7 @@ With [Data] As (
 				FormatMessage('[%s]',[AliasElement])) As [AliasName],
 			Convert(NVarChar(Max), Null) As [ParentAliasName],
 			[AliasElement]
-	From	[App_DataDictionary].[AliasItem]
+	From	[App_DataDictionary].[DomainAlias]
 	Where	[AliasId] = @AliasId
 	Union All
 	Select	D.[AliasId],
@@ -24,7 +24,7 @@ With [Data] As (
 				As [ParentAliasName],
 			D.[AliasElement]
 	From	[Data] D
-			Inner Join [App_DataDictionary].[AliasItem] P
+			Inner Join [App_DataDictionary].[DomainAlias] P
 			On	D.[ParentAliasId] = P.[AliasId])
 Select	[AliasId],
 		[AliasName],

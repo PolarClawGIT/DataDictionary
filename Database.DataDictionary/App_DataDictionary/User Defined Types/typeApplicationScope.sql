@@ -1,4 +1,4 @@
-﻿CREATE TYPE [App_DataDictionary].[typeAliasScope] AS TABLE
+﻿CREATE TYPE [App_DataDictionary].[typeApplicationScope] AS TABLE
 (
     -- TIP: This matches the C# DataTable structure
 	[ScopeId]          Int Null,
