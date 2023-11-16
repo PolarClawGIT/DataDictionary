@@ -75,25 +75,6 @@ namespace DataDictionary.Main.Forms.Domain
                         Program.Data.DomainEntityAliases,
                         w => DataKey.Equals(w));
 
-                aliasNavigation.AutoGenerateColumns = false;
-                aliasNavigation.DataSource = bindingDatabaseAlias;
-
-                DomainEntityAliasItem aliasMembers = new DomainEntityAliasItem();
-                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.DatabaseName)));
-                schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.SchemaName)));
-                objectNameData.DataBindings.Add(new Binding(nameof(objectNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.ObjectName)));
-
-
-                if (bindingDatabaseAlias.Current is DomainEntityAliasItem aliasItem)
-                {
-                    CatalogNameItem.Load(catalogNameData);
-                    SchemaNameItem.Load(schemaNameData, aliasItem);
-                    ObjectNameItem.Load(objectNameData, aliasItem);
-                }
-
-                attributeData.AutoGenerateColumns = false;
-                attributeData.DataSource = Program.Data.GetAttributes(data).OrderBy(o => o.AttributeTitle).ToList();
-
                 if (bindingProperties.Current is DomainEntityPropertyItem propItem
                     && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)
                 { BindChoiceData(property, propItem); }
@@ -114,12 +95,6 @@ namespace DataDictionary.Main.Forms.Domain
             propertyValueData.DataBindings.Clear();
             propertyDefinitionData.DataBindings.Clear();
 
-            aliasNavigation.DataSource = null;
-            catalogNameData.DataBindings.Clear();
-            schemaNameData.DataBindings.Clear();
-            objectNameData.DataBindings.Clear();
-
-            attributeData.DataSource = null;
         }
 
         void BindChoiceData(PropertyItem property, DomainEntityPropertyItem data)
@@ -153,51 +128,6 @@ namespace DataDictionary.Main.Forms.Domain
         #endregion
 
 
-        private void catalogNameData_Validating(object sender, CancelEventArgs e)
-        {
-            if (String.IsNullOrEmpty(catalogNameData.Text))
-            { errorProvider.SetError(catalogNameData.ErrorControl, "Catalog Name is required"); }
-            else { errorProvider.SetError(catalogNameData.ErrorControl, String.Empty); }
-        }
-
-        private void catalogNameData_Validated(object sender, EventArgs e)
-        {
-            if (bindingDatabaseAlias.Current is DomainEntityAliasItem aliasItem)
-            {
-                SchemaNameItem.Load(schemaNameData, aliasItem);
-                ObjectNameItem.Load(objectNameData, aliasItem);
-            }
-        }
-
-        private void schemaNameData_Validating(object sender, CancelEventArgs e)
-        {
-            if (String.IsNullOrEmpty(schemaNameData.Text))
-            { errorProvider.SetError(schemaNameData.ErrorControl, "Schema Name is required"); }
-            else
-            { errorProvider.SetError(schemaNameData.ErrorControl, String.Empty); }
-        }
-
-        private void schemaNameData_Validated(object sender, EventArgs e)
-        {
-            if (bindingDatabaseAlias.Current is DomainEntityAliasItem aliasItem)
-            {
-                ObjectNameItem.Load(objectNameData, aliasItem);
-            }
-        }
-
-        private void objectNameData_Validating(object sender, CancelEventArgs e)
-        {
-            if (String.IsNullOrEmpty(objectNameData.Text))
-            { errorProvider.SetError(objectNameData.ErrorControl, "Object Name is required"); }
-            else
-            { errorProvider.SetError(objectNameData.ErrorControl, String.Empty); }
-        }
-
-        private void objectNameData_Validated(object sender, EventArgs e)
-        {
-            if (bindingDatabaseAlias.Current is DomainEntityAliasItem aliasItem)
-            { }
-        }
 
         private void BindingComplete(object sender, BindingCompleteEventArgs e)
         { // Helps with debugging code.
@@ -225,15 +155,6 @@ namespace DataDictionary.Main.Forms.Domain
             DomainEntityAliasItem newItem = new DomainEntityAliasItem(DataKey);
 
             e.NewObject = newItem;
-        }
-
-        private void aliasNavigation_Leave(object sender, EventArgs e)
-        {
-            if (aliasNavigation.CurrentRow is not null && aliasNavigation.CurrentRow.IsNewRow)
-            {
-                aliasNavigation.NotifyCurrentCellDirty(true); // Marks the row as dirty so when end-edit the row is retained.
-                aliasNavigation.EndEdit(); // Completes the edit so a binding error does not occur when focus changes.
-            }
         }
 
         private void propertyNavigation_Leave(object sender, EventArgs e)

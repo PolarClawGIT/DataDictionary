@@ -81,21 +81,4 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         public override string ToString()
         { if (AttributeTitle is not null) { return AttributeTitle; } else { return string.Empty; } }
     }
-
-    public static class DomainAttributeItemExtension
-    {
-        public static IDomainAttributeItem? GetAttribute(this IEnumerable<IDomainAttributeItem> source, IDomainAttributeKey item)
-        { return source.FirstOrDefault(w => w.AttributeId == item.AttributeId); }
-
-        public static IDomainAttributeItem? GetAttribute(this IDomainAttributeKey item, IEnumerable<IDomainAttributeItem> source)
-        { return source.FirstOrDefault(w => w.AttributeId == item.AttributeId); }
-
-        [Obsolete("Not used", true)]
-        public static IDomainAttributeItem? GetParentAttribute(this IEnumerable<IDomainAttributeItem> source, IDomainAttributeParentKey item)
-        { return source.FirstOrDefault(w => w.AttributeId == item.ParentAttributeId); }
-
-        [Obsolete("Not used", true)]
-        public static IDomainAttributeItem? GetParentAttribute(this IDomainAttributeParentKey item, IEnumerable<IDomainAttributeItem> source)
-        { return source.FirstOrDefault(w => w.AttributeId == item.ParentAttributeId); }
-    }
 }

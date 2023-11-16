@@ -727,5 +727,114 @@ namespace DataDictionary.BusinessLayer
             DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
             return data.DbExtendedProperties.Where(w => key.Equals(w));
         }
+
+        /// <summary>
+        /// Gets a column given the key.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static DbTableColumnItem? GetColumn(this IEnumerable<DbTableColumnItem> source, IDbTableColumnKey item)
+        { return source.FirstOrDefault(w => new DbTableColumnKey(item) == new DbTableColumnKey(w)); }
+
+        /// <summary>
+        /// Gets a column given the key.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static DbTableColumnItem? GetColumn(this IDbTableColumnKey item, IEnumerable<DbTableColumnItem> source)
+        { return source.FirstOrDefault(w => new DbTableColumnKey(item) == new DbTableColumnKey(w)); }
+
+        /// <summary>
+        /// Gets a List of Columns given a Key
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static IEnumerable<DbTableColumnItem> GetColumns(this IEnumerable<DbTableColumnItem> source, IDbTableKey item)
+        { return source.Where(w => new DbTableKey(item) == new DbTableKey(w)); }
+
+        /// <summary>
+        /// Gets a List of Columns given a Key
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IEnumerable<DbTableColumnItem> GetColumns(this IDbTableKey item, IEnumerable<DbTableColumnItem> source)
+        { return source.Where(w => new DbTableKey(item) == new DbTableKey(w)); }
+
+        /// <summary>
+        /// Gets a Schema given a Key
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static DbSchemaItem? GetSchema(this IEnumerable<DbSchemaItem> source, IDbSchemaKey item)
+        { return source.FirstOrDefault(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
+
+        /// <summary>
+        /// Gets a Schema given a Key
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static DbSchemaItem? GetSchema(this IDbSchemaKey item, IEnumerable<DbSchemaItem> source)
+        { return source.FirstOrDefault(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
+
+        /// <summary>
+        /// Gets a Table Given a Key
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static DbTableItem? GetTable(this IEnumerable<DbTableItem> source, IDbTableKey item)
+        { return source.FirstOrDefault(w => new DbTableKey(item) == new DbTableKey(w)); }
+
+        /// <summary>
+        /// Gets a Table Given a Key
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static DbTableItem? GetTable(this IDbTableKey item, IEnumerable<DbTableItem> source)
+        { return source.FirstOrDefault(w => new DbTableKey(item) == new DbTableKey(w)); }
+
+        /// <summary>
+        /// Gets a Table Given a Key
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static IEnumerable<DbTableItem> GetTables(this IEnumerable<DbTableItem> source, IDbSchemaKey item)
+        { return source.Where(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
+
+        /// <summary>
+        /// Gets a list of Tables Given a Key
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IEnumerable<DbTableItem> GetTables(this IDbSchemaKey item, IEnumerable<DbTableItem> source)
+        { return source.Where(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
+
+        /// <summary>
+        /// Gets a list of Tables Given a Key
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static IEnumerable<DbTableItem> GetTables(this IEnumerable<DbTableItem> source, IDbCatalogKeyUnique item)
+        { return source.Where(w => new DbCatalogKeyUnique(item) == new DbCatalogKeyUnique(w)); }
+
+        /// <summary>
+        /// Gets a list of Tables Given a Key
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IEnumerable<DbTableItem> GetTables(this IDbCatalogKeyUnique item, IEnumerable<DbTableItem> source)
+        { return source.Where(w => new DbCatalogKeyUnique(item) == new DbCatalogKeyUnique(w)); }
+
     }
 }

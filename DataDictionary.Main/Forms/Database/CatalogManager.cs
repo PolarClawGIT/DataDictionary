@@ -212,13 +212,6 @@ namespace DataDictionary.Main.Forms.Database
             DoLocalWork(work);
         }
 
-        private void ImportDataCommand_Click(object? sender, EventArgs e)
-        {
-            SendMessage(new Messages.DoUnbindData());
-            Program.Data.ImportDbSchemaToDomain();
-            SendMessage(new Messages.DoBindData());
-        }
-
         private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
             catalogNavigation.EndEdit();

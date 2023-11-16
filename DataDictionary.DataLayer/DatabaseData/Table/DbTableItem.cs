@@ -116,26 +116,4 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public override string ToString()
         { return new DbTableKey(this).ToString(); }
     }
-
-    public static class DbTableItemExtension
-    {
-
-        public static DbTableItem? GetTable(this IEnumerable<DbTableItem> source, IDbTableKey item)
-        { return source.FirstOrDefault(w => new DbTableKey(item) == new DbTableKey(w)); }
-
-        public static DbTableItem? GetTable(this IDbTableKey item, IEnumerable<DbTableItem> source)
-        { return source.FirstOrDefault(w => new DbTableKey(item) == new DbTableKey(w)); }
-
-        public static IEnumerable<DbTableItem> GetTables(this IEnumerable<DbTableItem> source, IDbSchemaKey item)
-        { return source.Where(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
-
-        public static IEnumerable<DbTableItem> GetTables(this IDbSchemaKey item, IEnumerable<DbTableItem> source)
-        { return source.Where(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
-
-        public static IEnumerable<DbTableItem> GetTables(this IEnumerable<DbTableItem> source, IDbCatalogKeyUnique item)
-        { return source.Where(w => new DbCatalogKeyUnique(item) == new DbCatalogKeyUnique(w)); }
-
-        public static IEnumerable<DbTableItem> GetTables(this IDbCatalogKeyUnique item, IEnumerable<DbTableItem> source)
-        { return source.Where(w => new DbCatalogKeyUnique(item) == new DbCatalogKeyUnique(w)); }
-    }
 }

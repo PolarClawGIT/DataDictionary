@@ -34,13 +34,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public DbTableColumnKey(IDbTableColumnKey source) : base(source)
         { if (source.ColumnName is string) { ColumnName = source.ColumnName; } }
 
-        /// <summary>
-        /// Constructor for the Database Column Key
-        /// </summary>
-        /// <param name="source"></param>
-        public DbTableColumnKey(IDomainAttributeAliasKey source) : base(source)
-        { if (source.ElementName is string) { ColumnName = source.ElementName; } }
-
         #region IEquatable, IComparable
         /// <inheritdoc/>
         public bool Equals(IDbTableColumnKey? other)

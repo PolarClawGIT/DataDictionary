@@ -168,7 +168,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.DatabaseSchemaFunctionParameter,"Database.Schema.Function.Parameter" },
         };
 
-
         /// <summary>
         /// Translates a Database Scope to a ScopeType
         /// </summary>

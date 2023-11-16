@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DataDictionary.DataLayer.DomainData.Alias.Tests
 {
     [TestClass()]
-    public class DomainAliasCollectionTests
+    public class DomainAliasTests
     {
         List<String> testData = new List<String>()
             {
@@ -41,13 +41,13 @@ namespace DataDictionary.DataLayer.DomainData.Alias.Tests
         };
 
         [TestMethod()]
-        public void ParseAliasNameTest()
+        public void ParseNameTest()
         {
-            DomainAliasCollection domainAliases = new DomainAliasCollection();
+            List<String> domainAliases = new List<String>();
 
-            List<String> result = new List<string>();
+            List <String> result = new List<string>();
             foreach (string item in testData)
-            { result = result.Union(domainAliases.ParseAliasName(item)).ToList(); }
+            { result = result.Union(DomainAlias.ParseName(item)).ToList(); }
 
             result.Sort();
             Assert.IsTrue(result.Except(expectedData).Count() == 0);

@@ -34,13 +34,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public DbTableKey(IDbTableKey source) : base(source)
         { if (source.TableName is string) { TableName = source.TableName; } }
 
-        /// <summary>
-        /// Constructor for the Database Table Key
-        /// </summary>
-        /// <param name="source"></param>
-        public DbTableKey(IDomainEntityAliasKey source) : base(source)
-        { if (source.ObjectName is string) { TableName = source.ObjectName; } }
-
         #region IEquatable, IComparable
         /// <inheritdoc/>
         public bool Equals(IDbTableKey? other)

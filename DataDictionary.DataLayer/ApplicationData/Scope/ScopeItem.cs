@@ -27,7 +27,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     public class ScopeItem : BindingTableRow, IScopeItem, ISerializable
     {
         /// <inheritdoc/>
-        public int? ScopeId => throw new NotImplementedException();
+        public int? ScopeId { get { return GetValue<Int32>("ScopeId"); } }
 
         /// <inheritdoc/>
         public string? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }

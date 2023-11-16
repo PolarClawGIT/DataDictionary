@@ -119,6 +119,5 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             if (EntityTitle is string) { return EntityTitle; }
             else { return string.Empty; }
         }
-
     }
 }

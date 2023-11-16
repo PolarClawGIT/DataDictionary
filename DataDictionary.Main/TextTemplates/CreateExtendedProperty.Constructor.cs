@@ -28,6 +28,7 @@ namespace DataDictionary.Main.TextTemplates
         /// <returns></returns>
         IEnumerable<DbExtendedPropertyParameter> GetAttributeDescriptions(ModelData data)
         {
+            throw new NotImplementedException("This needs to be re-factored");
             List<DbExtendedPropertyParameter> result = new List<DbExtendedPropertyParameter>();
 
             foreach (DomainAttributeItem attributeItem in data.DomainAttributes)
@@ -51,15 +52,15 @@ namespace DataDictionary.Main.TextTemplates
 
                         DbExtendedPropertyParameter value = new DbExtendedPropertyParameter()
                         {
-                            DatabaseName = aliasItem.DatabaseName,
-                            PropertyName = propertyName,
-                            PropertyValue = propertyItem.PropertyValue,
-                            Level0Type = aliasItem.CatalogScope.ToString(),
-                            Level0Name = aliasItem.SchemaName,
-                            Level1Type = aliasItem.ObjectScope.ToString(),
-                            Level1Name = aliasItem.ObjectName,
-                            Level2Type = aliasItem.ElementScope.ToString(),
-                            Level2Name = aliasItem.ElementName
+                            //DatabaseName = aliasItem.DatabaseName,
+                            //PropertyName = propertyName,
+                            //PropertyValue = propertyItem.PropertyValue,
+                            //Level0Type = aliasItem.CatalogScope.ToString(),
+                            //Level0Name = aliasItem.SchemaName,
+                            //Level1Type = aliasItem.ObjectScope.ToString(),
+                            //Level1Name = aliasItem.ObjectName,
+                            //Level2Type = aliasItem.ElementScope.ToString(),
+                            //Level2Name = aliasItem.ElementName
                         };
 
                         result.Add(value);
@@ -76,6 +77,7 @@ namespace DataDictionary.Main.TextTemplates
         /// <returns></returns>
         IEnumerable<DbExtendedPropertyParameter> GetEntityDescriptions(ModelData data)
         {
+            throw new NotImplementedException("This needs to be re-factored");
             List<DbExtendedPropertyParameter> result = new List<DbExtendedPropertyParameter>();
 
             foreach (DomainEntityItem entityItem in data.DomainEntities)
@@ -99,13 +101,13 @@ namespace DataDictionary.Main.TextTemplates
                     {
                         DbExtendedPropertyParameter value = new DbExtendedPropertyParameter()
                         {
-                            DatabaseName = aliasItem.DatabaseName,
-                            PropertyName = propertyName,
-                            PropertyValue = propertyItem.PropertyValue,
-                            Level0Type = aliasItem.CatalogScope.ToString(),
-                            Level0Name = aliasItem.SchemaName,
-                            Level1Type = aliasItem.ObjectScope.ToString(),
-                            Level1Name = aliasItem.ObjectName,
+                            //DatabaseName = aliasItem.DatabaseName,
+                            //PropertyName = propertyName,
+                            //PropertyValue = propertyItem.PropertyValue,
+                            //Level0Type = aliasItem.CatalogScope.ToString(),
+                            //Level0Name = aliasItem.SchemaName,
+                            //Level1Type = aliasItem.ObjectScope.ToString(),
+                            //Level1Name = aliasItem.ObjectName,
                         };
 
                         result.Add(value);

@@ -1,9 +1,9 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetAliasScope]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetApplicationScope]
 		@Data [App_DataDictionary].[typeApplicationScope] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on AliasScope.
+/* Description: Performs Set on ApplicationScope.
 */
 
 -- Transaction Handling
@@ -24,7 +24,7 @@ Begin Try
 	-- Binary_CheckSum can be used to improve performance of the indexes.
 	-- Another approach is to create a function that parses exactly one ScopeName and returns the parent/child names.
 	;With [Parse] As (
-		Select	Convert(NVarChar(Max), [ScopedName]) As [ScopeParentName],
+		Select	Convert(NVarChar(Max), [ScopeName]) As [ScopeParentName],
 				Convert(NVarChar(Max), Null) As [ScopeChildName]
 		From	@Data
 		Union All
@@ -69,11 +69,11 @@ Begin Try
 				On	T.[ScopeChildName] = F.[ScopeParentName]),
 	[Target] As (
 		Select	[ScopeId],
-				Convert(NVarChar(Max),[ScopeElement]) As [ScopedName]
+				Convert(NVarChar(Max),[ScopeElement]) As [ScopeName]
 		From	[App_DataDictionary].[ApplicationScope]
 		Union All
 		Select	S.[ScopeId],
-				Convert(NVarChar(Max), FormatMessage('%s.%s',T.[ScopedName],S.[ScopeElement])) As [ScopedName]
+				Convert(NVarChar(Max), FormatMessage('%s.%s',T.[ScopeName],S.[ScopeElement])) As [ScopeName]
 		From	[Target] T
 				Inner Join [App_DataDictionary].[ApplicationScope] S
 				On	T.[ScopeId] = S.[ScopeParentId]),
@@ -88,9 +88,9 @@ Begin Try
 				D.[ScopeDescription]
 		From	[Tree] T
 				Left Join [Target] A
-				On	T.[ScopeChildName] = A.[ScopedName]
+				On	T.[ScopeChildName] = A.[ScopeName]
 				Left Join @Data D
-				On	T.[ScopeChildName] = D.[ScopedName]),
+				On	T.[ScopeChildName] = D.[ScopeName]),
 	[Values] As (
 		Select	C.[ScopeId],
 				P.[ScopeId] As [ScopeParentId],

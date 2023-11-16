@@ -6,6 +6,7 @@ using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.LibraryData.Member;
@@ -20,136 +21,15 @@ namespace DataDictionary.BusinessLayer
 {
     partial class ModelData
     {
-
-        /// <summary>
-        /// Default method to import a Database Schema into the Attributes/Entities of the Model.
-        /// </summary>
-        public void ImportDbSchemaToDomain()
-        {
-            //TODO: This needs to be broken down and geared to run as a background task.
-            //Be able to call by CatalogKey, SchemaKey, Table/View Key, RoutineKey, ColumnKey, LibrarySourceKey, LibraryMemberKey
-
-            ModelData data = this;
-
-            IEnumerable<IDbTableColumnItem> newAttributes = data.DbTableColumns.Where(
-                w => w.GetTable(data.DbTables) is IDbTableItem table && !table.IsSystem && // Do not want System Tables
-                w.GetSchema(data.DbSchemta) is IDbSchemaItem schema && !schema.IsSystem && // Do not want System Schemta
-                data.DomainAttributeAliases.FirstOrDefault(a => // Do not want Columns already aliased to an attribute
-                {
-                    DomainAttributeAliasKey key = new DomainAttributeAliasKey(w);
-                    return key.Equals(a);
-                }) is null).ToList();
-
-            List<DbTableItem> newEntites = data.DbTables.Where(
-               w => !w.IsSystem && // Do not want System Tables
-               w.GetSchema(data.DbSchemta) is IDbSchemaItem schema && !schema.IsSystem && // Do not want System Schemta
-               data.DomainEntityAliases.FirstOrDefault(a => // Do not want Tables already aliased to an entity
-               {
-                   DomainEntityAliasKey key = new DomainEntityAliasKey(w);
-                   return key.Equals(a);
-               }) is null).ToList();
-
-            // Get the Column information and create Attributes
-            foreach (IGrouping<DomainAttributeUniqueKey, IDbTableColumnItem> columnItem in newAttributes.GroupBy(g => new DomainAttributeUniqueKey(g)))
-            {
-                IDbTableColumnItem columnSource = columnItem.First();
-                DomainAttributeItem newAttribute = new DomainAttributeItem() { AttributeTitle = columnSource.ColumnName };
-                List<IDbExtendedPropertyItem> propeties = new List<IDbExtendedPropertyItem>();
-
-                data.DomainAttributes.Add(newAttribute);
-
-                foreach (IDbTableColumnItem aliasSource in columnItem)
-                {
-                    DbCatalogScope catalogScope = DbCatalogScope.NULL;
-                    DbObjectScope objectScope = DbObjectScope.NULL;
-
-                    if (columnSource.GetSchema(data.DbSchemta) is DbSchemaItem schema) { catalogScope = schema.CatalogScope; }
-                    if (columnSource.GetTable(data.DbTables) is DbTableItem table) { objectScope = table.ObjectScope; }
-
-                    data.DomainAttributeAliases.Add(
-                        new DomainAttributeAliasItem(newAttribute, aliasSource)
-                        {
-                            CatalogScope = catalogScope,
-                            ObjectScope = objectScope,
-                            ElementScope = columnSource.ElementScope
-                        });
-
-                    propeties.AddRange(data.GetExtendedProperty(aliasSource));
-                }
-
-                foreach (IGrouping<String?, IDbExtendedPropertyItem> propertyItem in propeties.GroupBy(g => g.PropertyName))
-                {
-                    IDbExtendedPropertyItem propertySource = propertyItem.First();
-
-                    if (data.Properties.FirstOrDefault(w =>
-                            w.ExtendedProperty is not null &&
-                            w.ExtendedProperty.Equals(propertySource.PropertyName, KeyExtension.CompareString)) is IPropertyItem property)
-                    {
-                        data.DomainAttributeProperties.
-                            Add(new DomainAttributePropertyItem(newAttribute, property, propertySource));
-
-                        if (property.IsExtendedProperty == true
-                            && property.ExtendedProperty == "MS_Description"
-                            && String.IsNullOrWhiteSpace(newAttribute.AttributeDescription))
-                        { newAttribute.AttributeDescription = propertySource.PropertyValue; }
-                    }
-                }
-            }
-
-            // Get the Table Information and create Entities
-            foreach (IGrouping<DomainEntityUniqueKey, DbTableItem> tableItem in newEntites.GroupBy(g => new DomainEntityUniqueKey(g)))
-            {
-                IDbTableItem tableSource = tableItem.First();
-                DomainEntityItem newEntity = new DomainEntityItem() { EntityTitle = tableSource.TableName };
-                List<IDbExtendedPropertyItem> propeties = new List<IDbExtendedPropertyItem>();
-
-                data.DomainEntities.Add(newEntity);
-
-                foreach (IDbTableItem aliasSource in tableItem)
-                {
-                    DbCatalogScope catalogScope = DbCatalogScope.NULL;
-                    DbObjectScope objectScope = DbObjectScope.NULL;
-
-                    if (tableSource.GetSchema(data.DbSchemta) is DbSchemaItem schema) { catalogScope = schema.CatalogScope; }
-                    if (tableSource.GetTable(data.DbTables) is DbTableItem table) { objectScope = table.ObjectScope; }
-
-                    data.DomainEntityAliases.Add(
-                        new DomainEntityAliasItem(newEntity, aliasSource)
-                        {
-                            CatalogScope = catalogScope,
-                            ObjectScope = objectScope
-                        });
-
-                    propeties.AddRange(data.GetExtendedProperty(aliasSource));
-                }
-
-                foreach (IGrouping<String?, IDbExtendedPropertyItem> propertyItem in propeties.GroupBy(g => g.PropertyName))
-                {
-                    IDbExtendedPropertyItem propertySource = propertyItem.First();
-
-                    if (data.Properties.FirstOrDefault(w =>
-                            w.ExtendedProperty is not null &&
-                            w.ExtendedProperty.Equals(propertySource.PropertyName, KeyExtension.CompareString)) is IPropertyItem property)
-                    {
-                        data.DomainEntityProperties.
-                            Add(new DomainEntityPropertyItem(newEntity, property, propertySource));
-
-                        if (property.IsExtendedProperty == true
-                            && property.ExtendedProperty == "MS_Description"
-                            && String.IsNullOrWhiteSpace(newEntity.EntityDescription))
-                        { newEntity.EntityDescription = propertySource.PropertyValue; }
-                    }
-                }
-            }
-        }
-
         void CreateAttribute(IDbTableColumnKey columnKey)
         {
             DbTableColumnKey key = new DbTableColumnKey(columnKey);
             DomainAttributeUniqueKey attributeKeyUnique = new DomainAttributeUniqueKey(columnKey);
-            DomainAttributeAliasKey aliasKey = new DomainAttributeAliasKey(columnKey);
+            DomainAliasNameKey aliasKey = new DomainAliasNameKey(columnKey);
 
-            if (this.DbTableColumns.FirstOrDefault(w => key.Equals(w)) is DbTableColumnItem columnItem)
+            if (this.DbTableColumns.FirstOrDefault(w => key.Equals(w)) is DbTableColumnItem columnItem
+                && this.DbCatalogs.FirstOrDefault(w => new DbCatalogKey(columnItem).Equals(w)) is DbCatalogItem catalogItem
+                )
             {
                 DomainAttributeItem? attributeItem = this.DomainAttributes.FirstOrDefault(w => attributeKeyUnique.Equals(w));
                 DomainAttributeAliasItem? aliasItem = this.DomainAttributeAliases.FirstOrDefault(w => aliasKey.Equals(w));
@@ -171,7 +51,12 @@ namespace DataDictionary.BusinessLayer
 
                 if (aliasItem is null)
                 {
-                    aliasItem = new DomainAttributeAliasItem(attributeKey, columnItem);
+                    aliasItem = new DomainAttributeAliasItem(attributeKey)
+                    {
+                        SourceName = catalogItem.DatabaseName,
+                        AliasName = columnItem.AliasName(),
+                        ScopeName = columnItem.ScopeName
+                    };
                     this.DomainAttributeAliases.Add(aliasItem);
                 }
 
@@ -198,66 +83,6 @@ namespace DataDictionary.BusinessLayer
             }
         }
 
-        void CreateAttribute(IDbRoutineParameterKey parameterKey)
-        {
-            DbRoutineParameterKey key = new DbRoutineParameterKey(parameterKey);
-            DomainAttributeUniqueKey attributeKeyUnique = new DomainAttributeUniqueKey(parameterKey);
-            DomainAttributeAliasKey aliasKey = new DomainAttributeAliasKey(parameterKey);
-
-            if (this.DbRoutineParameters.FirstOrDefault(w => key.Equals(w)) is DbRoutineParameterItem parameterItem)
-            {
-                DomainAttributeItem? attributeItem = this.DomainAttributes.FirstOrDefault(w => attributeKeyUnique.Equals(w));
-                DomainAttributeAliasItem? aliasItem = this.DomainAttributeAliases.FirstOrDefault(w => aliasKey.Equals(w));
-                DomainAttributeKey attributeKey;
-
-                if (attributeItem is null && aliasItem is not null)
-                {
-                    attributeKey = new DomainAttributeKey(aliasItem);
-                    attributeItem = this.DomainAttributes.FirstOrDefault(w => attributeKey.Equals(w));
-                }
-
-                if (attributeItem is null
-                    && !String.IsNullOrWhiteSpace(parameterItem.ParameterName)
-                    && parameterItem.ParameterName is not "@Return")
-                {
-                    attributeItem = new DomainAttributeItem() { AttributeTitle = parameterItem.ParameterName.Replace("@", "") };
-                    this.DomainAttributes.Add(attributeItem);
-                }
-
-                if (attributeItem is not null)
-                {
-                    attributeKey = new DomainAttributeKey(attributeItem);
-
-                    if (aliasItem is null)
-                    {
-                        aliasItem = new DomainAttributeAliasItem(attributeKey, parameterItem);
-                        this.DomainAttributeAliases.Add(aliasItem);
-                    }
-
-                    foreach (DbExtendedPropertyItem propertyItem in this.GetExtendedProperty(parameterItem))
-                    {
-                        PropertyKeyExtended propertyByName = new PropertyKeyExtended(propertyItem);
-
-                        if (this.Properties.FirstOrDefault(w => propertyByName.Equals(w)) is PropertyItem property)
-                        {
-                            PropertyKey propertyKey = new PropertyKey(property);
-                            DomainAttributePropertyItem? attributeProperty = this.DomainAttributeProperties.FirstOrDefault(w => attributeKey.Equals(w) && propertyByName.Equals(w));
-
-                            // Special Handling, I want to copy the MS_Description to the Attribute Description if there is none.
-                            if (String.IsNullOrWhiteSpace(attributeItem.AttributeDescription) && propertyByName.ExtendedProperty == "MS_Description")
-                            { attributeItem.AttributeDescription = propertyItem.PropertyValue; }
-
-                            if (attributeProperty is null)
-                            {
-                                attributeProperty = new DomainAttributePropertyItem(attributeItem, propertyKey, propertyItem);
-                                this.DomainAttributeProperties.Add(attributeProperty);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         void CreateAttribute(ILibraryMemberKey memberKey)
         {
             LibraryMemberKey key = new LibraryMemberKey(memberKey);
@@ -276,24 +101,6 @@ namespace DataDictionary.BusinessLayer
             {
                 WorkName = String.Format("Import {0}", columnKey.ToString()),
                 DoWork = () => CreateAttribute(columnKey)
-            });
-
-            return work;
-        }
-
-        /// <summary>
-        /// Creates the Work Items to import a Database Parameter into an Attribute
-        /// </summary>
-        /// <param name="parameterKey"></param>
-        /// <returns></returns>
-        public IReadOnlyList<WorkItem> ImportAttribute(IDbRoutineParameterKey parameterKey)
-        {
-
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem()
-            {
-                WorkName = String.Format("Import {0}", parameterKey.ToString()),
-                DoWork = () => CreateAttribute(parameterKey)
             });
 
             return work;
@@ -367,9 +174,10 @@ namespace DataDictionary.BusinessLayer
         {
             DbTableKey key = new DbTableKey(tableKey);
             DomainEntityUniqueKey entityKeyUnique = new DomainEntityUniqueKey(tableKey);
-            DomainEntityAliasKey aliasKey = new DomainEntityAliasKey(tableKey);
+            DomainAliasNameKey aliasKey = new DomainAliasNameKey(tableKey);
 
-            if (this.DbTables.FirstOrDefault(w => key.Equals(w)) is DbTableItem tableItem)
+            if (this.DbTables.FirstOrDefault(w => key.Equals(w)) is DbTableItem tableItem
+                && this.DbCatalogs.FirstOrDefault(w => new DbCatalogKey(tableItem).Equals(w)) is DbCatalogItem catalogItem)
             {
                 DomainEntityItem? entityItem = this.DomainEntities.FirstOrDefault(w => entityKeyUnique.Equals(w));
                 DomainEntityAliasItem? aliasItem = this.DomainEntityAliases.FirstOrDefault(w => aliasKey.Equals(w));
@@ -391,7 +199,12 @@ namespace DataDictionary.BusinessLayer
 
                 if (aliasItem is null)
                 {
-                    aliasItem = new DomainEntityAliasItem(entityKey, tableItem);
+                    aliasItem = new DomainEntityAliasItem(entityKey)
+                    {
+                        SourceName = catalogItem.DatabaseName,
+                        AliasName = tableItem.AliasName(),
+                        ScopeName = tableItem.ScopeName
+                    };
                     this.DomainEntityAliases.Add(aliasItem);
                 }
 
@@ -418,15 +231,7 @@ namespace DataDictionary.BusinessLayer
             }
         }
 
-        void CreateEntity(IDbSchemaKey schemaKey) { }
-
-        void CreateEntity(IDbDomainKey domainKey) { }
-
         void CreateEntity(ILibraryMemberKey memberKey) { }
-
-        void CreateProcess(IDbRoutineKey routineKey) { }
-
-        void CreateProcess(ILibraryMemberKey memberKey) { }
 
         /// <summary>
         /// Imports the Entity for a given Database Table

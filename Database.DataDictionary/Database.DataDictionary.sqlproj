@@ -213,10 +213,11 @@
     <Build Include="App_DataDictionary\Tables\DomainAlias.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAliasItem.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeScopeElement.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetAliasScope.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationScope.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procInsertAlias.sql" />
     <None Include="App_DataDictionary\ApplicationScope Data.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationScope.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

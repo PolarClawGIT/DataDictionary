@@ -250,19 +250,4 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public override string ToString()
         { return new DbTableColumnKey(this).ToString(); }
     }
-
-    public static class DbColumnItemExtension
-    {
-        public static DbTableColumnItem? GetColumn(this IEnumerable<DbTableColumnItem> source, IDbTableColumnKey item)
-        { return source.FirstOrDefault(w => new DbTableColumnKey(item) == new DbTableColumnKey(w)); }
-
-        public static DbTableColumnItem? GetColumn(this IDbTableColumnKey item, IEnumerable<DbTableColumnItem> source)
-        { return source.FirstOrDefault(w => new DbTableColumnKey(item) == new DbTableColumnKey(w)); }
-
-        public static IEnumerable<DbTableColumnItem> GetColumns(this IEnumerable<DbTableColumnItem> source, IDbTableKey item)
-        { return source.Where(w => new DbTableKey(item) == new DbTableKey(w)); }
-
-        public static IEnumerable<DbTableColumnItem> GetColumns(this IDbTableKey item, IEnumerable<DbTableColumnItem> source)
-        { return source.Where(w => new DbTableKey(item) == new DbTableKey(w)); }
-    }
 }

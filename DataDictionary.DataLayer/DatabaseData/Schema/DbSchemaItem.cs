@@ -108,13 +108,4 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
         public override string ToString()
         { return new DbSchemaKey(this).ToString(); }
     }
-
-    public static class DbSchemaItemExtension
-    {
-        public static DbSchemaItem? GetSchema(this IEnumerable<DbSchemaItem> source, IDbSchemaKey item)
-        { return source.FirstOrDefault(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
-
-        public static DbSchemaItem? GetSchema(this IDbSchemaKey item, IEnumerable<DbSchemaItem> source)
-        { return source.FirstOrDefault(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
-    }
 }
