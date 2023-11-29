@@ -65,7 +65,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// <param name="source"></param>
         /// <returns></returns>
         public static String AliasName(this IDbTableKey source)
-        { return FormatName(String.Format("[{0}].[{1}].[{2]]", source.DatabaseName, source.SchemaName, source.TableName)); }
+        { return FormatName(String.Format("[{0}].[{1}].[{2}]", source.DatabaseName, source.SchemaName, source.TableName)); }
 
         /// <summary>
         /// Crates an Alias Name from a Db Table Column

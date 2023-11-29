@@ -195,24 +195,8 @@ namespace DataDictionary.Main.Forms.Application
             { if (!row.Selected) { propertyNavigation.ClearSelection(); row.Selected = true; } }
         }
 
-        private void BindingSource_BindingComplete(object sender, BindingCompleteEventArgs e)
-        { // This is to help detecting binding errors and provide something meaningful.
-            Control? rootUserControl = null; // If this is a User Control, what is the control.
-
-            if (e.Binding is not null)
-            { rootUserControl = e.Binding.Control.FindUserControl(); }
-
-            if (e.Exception is not null)
-            {
-                if (e.Binding is not null)
-                {
-                    e.Exception.Data.Add(nameof(e.Binding.Control), e.Binding.Control.GetType().Name);
-                    if (rootUserControl is not null) { e.Exception.Data.Add(nameof(rootUserControl), rootUserControl.Name); }
-                }
-
-                Program.ShowException(e.Exception);
-            }
-        }
+        private void BindingComplete(object sender, BindingCompleteEventArgs e)
+        { if (sender is BindingSource binding) { binding.BindComplete(sender, e); } }
 
         private void IsExtendedPropertyData_CheckedChanged(object sender, EventArgs e)
         { extendedPropertyData.Enabled = isExtendedPropertyData.Checked; }

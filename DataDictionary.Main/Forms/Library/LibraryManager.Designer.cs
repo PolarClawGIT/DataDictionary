@@ -185,7 +185,7 @@
             // 
             // libraryBinding
             // 
-            libraryBinding.BindingComplete += libraryBinding_BindingComplete;
+            libraryBinding.BindingComplete += BindingComplete;
             libraryBinding.CurrentChanged += libraryBinding_CurrentChanged;
             // 
             // errorProvider

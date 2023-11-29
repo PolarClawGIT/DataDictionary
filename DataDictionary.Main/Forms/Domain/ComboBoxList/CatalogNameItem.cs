@@ -10,6 +10,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
+    [Obsolete()]
     record CatalogNameItem : IDbCatalogKeyUnique
     {
         public String DatabaseName { get; set; } = String.Empty;

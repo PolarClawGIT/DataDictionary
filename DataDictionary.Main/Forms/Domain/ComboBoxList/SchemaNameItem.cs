@@ -11,6 +11,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
+    [Obsolete()]
     record SchemaNameItem : CatalogNameItem, IDbSchemaKey
     {
         public String SchemaName { get; set; } = String.Empty;

@@ -100,7 +100,7 @@
             // 
             // modelBinding
             // 
-            modelBinding.BindingComplete += modelBinding_BindingComplete;
+            modelBinding.BindingComplete += BindingComplete;
             modelBinding.CurrentChanged += modelBinding_CurrentChanged;
             // 
             // modelTitlecolumn

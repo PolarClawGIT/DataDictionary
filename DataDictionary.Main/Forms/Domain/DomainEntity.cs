@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DomainData.Entity;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -29,7 +30,14 @@ namespace DataDictionary.Main.Forms.Domain
         {
             InitializeComponent();
             this.Icon = Resources.Icon_ClassPublic;
+
+            newItemCommand.Enabled = true;
+            newItemCommand.Image = Resources.NewProperty;
+            newItemCommand.ToolTipText = "add Property";
+            newItemCommand.Click += NewItemCommand_Click;
         }
+
+
 
         private void DomainEntity_Load(object sender, EventArgs e)
         {
@@ -60,24 +68,34 @@ namespace DataDictionary.Main.Forms.Domain
                 propertyNavigation.AutoGenerateColumns = false;
                 propertyNavigation.DataSource = bindingProperties;
 
-                DomainEntityPropertyItem propertyMembers = new DomainEntityPropertyItem();
-                propertyTypeData.DataBindings.Add(new Binding(nameof(propertyTypeData.SelectedValue), bindingProperties, nameof(propertyMembers.PropertyId), true));
-                propertyValueData.DataBindings.Add(new Binding(nameof(propertyValueData.Text), bindingProperties, nameof(propertyMembers.PropertyValue), true));
+                DomainEntityPropertyItem propertyNameOf;
+                propertyTypeData.DataBindings.Add(new Binding(nameof(propertyTypeData.SelectedValue), bindingProperties, nameof(propertyNameOf.PropertyId), true));
+                propertyValueData.DataBindings.Add(new Binding(nameof(propertyValueData.Text), bindingProperties, nameof(propertyNameOf.PropertyValue), true));
                 //propertyChoiceData.DataBindings.Add(new Binding(nameof(propertyChoiceData.SelectedValue, bindingProperties, nameof(propertyNames.))));
-                propertyDefinitionData.DataBindings.Add(new Binding(nameof(propertyDefinitionData.Rtf), bindingProperties, nameof(propertyMembers.DefinitionText), true));
+                propertyDefinitionData.DataBindings.Add(new Binding(nameof(propertyDefinitionData.Rtf), bindingProperties, nameof(propertyNameOf.DefinitionText), true));
 
                 propertyChoiceData.Enabled = false;
                 propertyValueData.Enabled = false;
                 propertyDefinitionData.Enabled = false;
 
-                bindingDatabaseAlias.DataSource =
-                    new BindingView<DomainEntityAliasItem>(
-                        Program.Data.DomainEntityAliases,
-                        w => DataKey.Equals(w));
-
                 if (bindingProperties.Current is DomainEntityPropertyItem propItem
                     && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)
                 { BindChoiceData(property, propItem); }
+
+                bindingAlias.DataSource = new BindingView<DomainEntityAliasItem>(Program.Data.DomainEntityAliases, w => DataKey.Equals(w));
+                entityAliasData.AutoGenerateColumns = false;
+                entityAliasData.DataSource = bindingAlias;
+
+                SourceNameItem.Load(sourceNameData);
+                ScopeNameItem.LoadEntity(scopeNameData);
+
+                DomainEntityAliasItem alaisNameOf;
+                sourceNameData.DataBindings.Add(new Binding(nameof(sourceNameData.SelectedValue), bindingAlias, nameof(alaisNameOf.SourceName), true, DataSourceUpdateMode.OnPropertyChanged, SourceNameItem.Empty));
+                scopeNameData.DataBindings.Add(new Binding(nameof(scopeNameData.SelectedValue), bindingAlias, nameof(alaisNameOf.ScopeName), true, DataSourceUpdateMode.OnPropertyChanged, ScopeNameItem.Empty));
+                aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.SelectedValue), bindingAlias, nameof(alaisNameOf.AliasName), true, DataSourceUpdateMode.OnPropertyChanged, AliasNameItem.Empty));
+                sourceNameData.Enabled = false;
+                scopeNameData.Enabled = false;
+                aliasNameData.Enabled = false;
 
                 return true;
             }
@@ -95,6 +113,11 @@ namespace DataDictionary.Main.Forms.Domain
             propertyValueData.DataBindings.Clear();
             propertyDefinitionData.DataBindings.Clear();
 
+            sourceNameData.DataBindings.Clear();
+            scopeNameData.DataBindings.Clear();
+            aliasNameData.DataBindings.Clear();
+            entityAliasData.DataSource = null;
+            bindingAlias.DataSource = null;
         }
 
         void BindChoiceData(PropertyItem property, DomainEntityPropertyItem data)
@@ -128,14 +151,8 @@ namespace DataDictionary.Main.Forms.Domain
         #endregion
 
 
-
         private void BindingComplete(object sender, BindingCompleteEventArgs e)
-        { // Helps with debugging code.
-            if (e.Exception is not null)
-            {
-
-            }
-        }
+        { if (sender is BindingSource binding) { binding.BindComplete(sender, e); } }
 
         private void bindingProperties_AddingNew(object sender, AddingNewEventArgs e)
         {
@@ -150,11 +167,23 @@ namespace DataDictionary.Main.Forms.Domain
             e.NewObject = newItem;
         }
 
-        private void bindingDatabaseAlias_AddingNew(object sender, AddingNewEventArgs e)
+
+        private void bindingAlias_AddingNew(object sender, AddingNewEventArgs e)
         {
             DomainEntityAliasItem newItem = new DomainEntityAliasItem(DataKey);
 
             e.NewObject = newItem;
+        }
+
+        private void bindingAlias_CurrentChanged(object sender, EventArgs e)
+        {
+            sourceNameData.Enabled = true;
+            scopeNameData.Enabled = true;
+            aliasNameData.Enabled = true;
+
+            if (sourceNameData.SelectedItem is SourceNameItem source &&
+                scopeNameData.SelectedItem is ScopeNameItem scope)
+            { AliasNameItem.LoadEntity(aliasNameData, source, scope); }
         }
 
         private void propertyNavigation_Leave(object sender, EventArgs e)
@@ -236,12 +265,55 @@ namespace DataDictionary.Main.Forms.Domain
             { current.PropertyValue = value.Trim(); }
         }
 
-        private void entityTitleData_Validating(object sender, CancelEventArgs e)
+        private void EntityTitleData_Validating(object sender, CancelEventArgs e)
         {
             if (String.IsNullOrEmpty(entityTitleData.Text))
             { errorProvider.SetError(entityTitleData.ErrorControl, "Entity Title is required"); }
             else
             { errorProvider.SetError(entityTitleData.ErrorControl, String.Empty); }
         }
+
+        private void EntityTabLayout_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (entityTabLayout.SelectedIndex == 0)
+            {
+                newItemCommand.Enabled = true;
+                newItemCommand.Image = Resources.NewProperty;
+                newItemCommand.ToolTipText = "add Property";
+            }
+            else if (entityTabLayout.SelectedIndex == 1)
+            {
+                newItemCommand.Enabled = true;
+                newItemCommand.Image = Resources.NewSynonym;
+                newItemCommand.ToolTipText = "add Alias";
+            }
+            else
+            {
+                newItemCommand.Enabled = false;
+                newItemCommand.Image = Resources.NewDocument;
+            }
+        }
+
+        private void NewItemCommand_Click(object? sender, EventArgs e)
+        {
+            if (entityTabLayout.SelectedIndex == 0) { bindingProperties.AddNew(); }
+            else if (entityTabLayout.SelectedIndex == 1) { bindingAlias.AddNew(); }
+            else { }
+        }
+
+        private void SourceNameData_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (sourceNameData.SelectedItem is SourceNameItem source &&
+                scopeNameData.SelectedItem is ScopeNameItem scope)
+            { AliasNameItem.LoadEntity(aliasNameData, source, scope); }
+        }
+
+        private void ScopeNameData_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (sourceNameData.SelectedItem is SourceNameItem source &&
+                scopeNameData.SelectedItem is ScopeNameItem scope)
+            { AliasNameItem.LoadEntity(aliasNameData, source, scope); }
+        }
+
     }
 }

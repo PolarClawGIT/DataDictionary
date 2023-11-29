@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.LibraryData.Source;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
@@ -279,11 +280,8 @@ namespace DataDictionary.Main.Forms.Library
             else { errorProvider.SetError(asseblyNameData.ErrorControl, String.Empty); }
         }
 
-        private void libraryBinding_BindingComplete(object sender, BindingCompleteEventArgs e)
-        {
-            if (e.Exception is not null)
-            { }// For Debugging
-        }
+        private void BindingComplete(object sender, BindingCompleteEventArgs e)
+        { if (sender is BindingSource binding) { binding.BindComplete(sender, e); } }
 
         protected override void HandleMessage(OnlineStatusChanged message)
         {

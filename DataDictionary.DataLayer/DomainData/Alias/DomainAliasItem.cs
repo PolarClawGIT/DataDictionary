@@ -10,12 +10,6 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     /// <summary>
     /// Interface for common Domain Alias properties
     /// </summary>
-    public interface IDomainAliasItem: IDomainAliasNameKey, IScopeUniqueKey
-    {
-        /// <summary>
-        /// Name of the Source of the Alias.
-        /// Name of Database or Assembly.
-        /// </summary>
-        String? SourceName { get; }
-    }
+    public interface IDomainAliasItem: IDomainAliasNameKey, IScopeUniqueKey, IDomainAliasSourceKey
+    { }
 }

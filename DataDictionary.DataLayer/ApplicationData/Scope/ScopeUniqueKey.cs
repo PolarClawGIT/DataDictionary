@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.DatabaseData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,13 +10,8 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// <summary>
     /// Interface for the Unique Scope Key
     /// </summary>
-    public interface IScopeUniqueKey : IKey
-    {
-        /// <summary>
-        /// Name of the Scoped (period delimited full name, like a NameSpace)
-        /// </summary>
-        String? ScopeName { get; }
-    }
+    public interface IScopeUniqueKey : IKey, IDbScopeType
+    { }
 
     /// <summary>
     /// Implementation for the Unique Scope Key

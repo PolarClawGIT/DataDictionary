@@ -247,7 +247,7 @@
             // bindingSource
             // 
             bindingSource.AddingNew += bindingSource_AddingNew;
-            bindingSource.BindingComplete += BindingSource_BindingComplete;
+            bindingSource.BindingComplete += BindingComplete;
             // 
             // choiceColumn
             // 
