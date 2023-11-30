@@ -1,20 +1,11 @@
-﻿using DataDictionary.BusinessLayer;
-using DataDictionary.DataLayer.ApplicationData.Property;
+﻿using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain
@@ -44,6 +35,8 @@ namespace DataDictionary.Main.Forms.Domain
             // one time bindings
             PropertyNameItem.Load(propertyTypeData);
             PropertyNameItem.Load(propertyTypeColumn);
+
+            AlaisDataSetup();
 
             (this as IApplicationDataBind).BindData();
         }
@@ -86,17 +79,6 @@ namespace DataDictionary.Main.Forms.Domain
                 entityAliasData.AutoGenerateColumns = false;
                 entityAliasData.DataSource = bindingAlias;
 
-                SourceNameItem.Load(sourceNameData);
-                ScopeNameItem.LoadEntity(scopeNameData);
-
-                DomainEntityAliasItem alaisNameOf;
-                sourceNameData.DataBindings.Add(new Binding(nameof(sourceNameData.SelectedValue), bindingAlias, nameof(alaisNameOf.SourceName), true, DataSourceUpdateMode.OnPropertyChanged, SourceNameItem.Empty));
-                scopeNameData.DataBindings.Add(new Binding(nameof(scopeNameData.SelectedValue), bindingAlias, nameof(alaisNameOf.ScopeName), true, DataSourceUpdateMode.OnPropertyChanged, ScopeNameItem.Empty));
-                aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.SelectedValue), bindingAlias, nameof(alaisNameOf.AliasName), true, DataSourceUpdateMode.OnPropertyChanged, AliasNameItem.Empty));
-                sourceNameData.Enabled = false;
-                scopeNameData.Enabled = false;
-                aliasNameData.Enabled = false;
-
                 return true;
             }
             else { return false; }
@@ -112,10 +94,8 @@ namespace DataDictionary.Main.Forms.Domain
             propertyTypeData.DataBindings.Clear();
             propertyValueData.DataBindings.Clear();
             propertyDefinitionData.DataBindings.Clear();
+            alaisData.Clear();
 
-            sourceNameData.DataBindings.Clear();
-            scopeNameData.DataBindings.Clear();
-            aliasNameData.DataBindings.Clear();
             entityAliasData.DataSource = null;
             bindingAlias.DataSource = null;
         }
@@ -175,16 +155,6 @@ namespace DataDictionary.Main.Forms.Domain
             e.NewObject = newItem;
         }
 
-        private void bindingAlias_CurrentChanged(object sender, EventArgs e)
-        {
-            sourceNameData.Enabled = true;
-            scopeNameData.Enabled = true;
-            aliasNameData.Enabled = true;
-
-            if (sourceNameData.SelectedItem is SourceNameItem source &&
-                scopeNameData.SelectedItem is ScopeNameItem scope)
-            { AliasNameItem.LoadEntity(aliasNameData, source, scope); }
-        }
 
         private void propertyNavigation_Leave(object sender, EventArgs e)
         {
@@ -301,19 +271,6 @@ namespace DataDictionary.Main.Forms.Domain
             else { }
         }
 
-        private void SourceNameData_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (sourceNameData.SelectedItem is SourceNameItem source &&
-                scopeNameData.SelectedItem is ScopeNameItem scope)
-            { AliasNameItem.LoadEntity(aliasNameData, source, scope); }
-        }
-
-        private void ScopeNameData_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (sourceNameData.SelectedItem is SourceNameItem source &&
-                scopeNameData.SelectedItem is ScopeNameItem scope)
-            { AliasNameItem.LoadEntity(aliasNameData, source, scope); }
-        }
 
     }
 }

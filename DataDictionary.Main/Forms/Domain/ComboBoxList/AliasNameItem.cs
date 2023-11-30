@@ -2,6 +2,7 @@
 using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DomainData.Alias;
+using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Main.Controls;
 using System;
@@ -48,7 +49,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
                 list.AddRange(Program.Data.LibraryMembers.Where(
                 w => w.ToScopeType() == scope.ToScopeType() &&
                     key.Equals(w)).
-                    Select(s => new AliasNameItem() { AliasName = s.AliasName() }).
+                    Select(s => new AliasNameItem() { AliasName = new LibrarySourceUniqueKey(s).AliasName() }).
                     OrderBy(o => o.AliasName));
             }
 
@@ -85,7 +86,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
                 list.AddRange(Program.Data.LibraryMembers.Where(
                 w => w.ToScopeType() == scope.ToScopeType() &&
                     key.Equals(w)).
-                    Select(s => new AliasNameItem() { AliasName = s.AliasName() }
+                    Select(s => new AliasNameItem() { AliasName = new LibraryMemberAlternateKey(s).AliasName() }
                 ));
             }
 

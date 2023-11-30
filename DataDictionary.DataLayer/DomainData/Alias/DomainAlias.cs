@@ -1,5 +1,8 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.LibraryData.Member;
+using DataDictionary.DataLayer.LibraryData.Source;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,12 +63,28 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         }
 
         /// <summary>
+        /// Crates an Alias Name from a Db Catalog
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static String AliasName(this IDbCatalogKeyUnique source)
+        { return FormatName(String.Format("[{0}]", source.DatabaseName)); }
+
+        /// <summary>
+        /// Crates an Alias Name from a Db Schema
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static String AliasName(this IDbSchemaKey source)
+        { return FormatName(String.Format("{0}.[{1}]", new DbCatalogKeyUnique(source).AliasName(), source.SchemaName)); }
+
+        /// <summary>
         /// Crates an Alias Name from a Db Table
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
         public static String AliasName(this IDbTableKey source)
-        { return FormatName(String.Format("[{0}].[{1}].[{2}]", source.DatabaseName, source.SchemaName, source.TableName)); }
+        { return FormatName(String.Format("{0}.[{1}]", new DbSchemaKey(source).AliasName(), source.TableName)); }
 
         /// <summary>
         /// Crates an Alias Name from a Db Table Column
@@ -73,7 +92,15 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// <param name="source"></param>
         /// <returns></returns>
         public static String AliasName(this IDbTableColumnKey source)
-        { return FormatName(String.Format("[{0}].[{1}].[{2]].[{3}]", source.DatabaseName, source.SchemaName, source.TableName, source.ColumnName)); }
+        { return FormatName(String.Format("{0}.[{1}]", new DbTableKey(source).AliasName(), source.ColumnName)); }
+
+        /// <summary>
+        /// Crates an Alias Name from a Library Source
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static String AliasName(this ILibrarySourceUniqueKey source)
+        { return FormatName(String.Format("{0}", FormatName(source.AssemblyName))); }
 
         /// <summary>
         /// Crates an Alias Name from a Library Item
