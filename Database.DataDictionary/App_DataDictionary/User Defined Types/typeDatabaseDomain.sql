@@ -1,6 +1,8 @@
 ﻿CREATE TYPE [App_DataDictionary].[typeDatabaseDomain] AS TABLE
 (
 	[CatalogId]              UniqueIdentifier Null,
+	[SchemaId]               UniqueIdentifier Null,
+	[DomainId]               UniqueIdentifier Null,
 	[DatabaseName]           SysName Null,
 	[SchemaName]             SysName Null,
 	[DomainName]             SysName Null,

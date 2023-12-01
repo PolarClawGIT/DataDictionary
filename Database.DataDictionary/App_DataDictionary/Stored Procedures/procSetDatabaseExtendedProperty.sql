@@ -20,10 +20,20 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare @Values  [App_DataDictionary].[typeDatabaseExtendedProperty]
+	Declare @Values Table (
+		[CatalogId]      UniqueIdentifier Not Null,
+		[Level0Type]     SysName Null,
+		[Level0Name]     SysName Null,
+		[Level1Type]     SysName Null,
+		[Level1Name]     SysName Null,
+		[Level2Type]     SysName Null,
+		[Level2Name]     SysName Null,
+		[ObjType]        SysName Not Null,
+		[ObjName]        SysName Not Null,
+		[PropertyName]   SysName Not Null,
+		[PropertyValue]  NVarChar(Max) Null)
 	Insert Into @Values
 	Select	Coalesce(D.[CatalogId], @CatalogId) As [CatalogId],
-			NullIf(Trim(IsNull(P.[SourceDatabaseName], D.[DatabaseName])),'') As [DatabaseName],
 			NullIf(Trim(D.[Level0Type]),'') As [Level0Type],
 			NullIf(Trim(D.[Level0Name]),'') As [Level0Name],
 			NullIf(Trim(D.[Level1Type]),'') As [Level1Type],
@@ -35,8 +45,6 @@ Begin Try
 			NullIf(Trim(D.[PropertyName]),'') As [PropertyName],
 			NullIf(D.[PropertyValue],'') As [PropertyValue]
 	From	@Data D
-			Left Join [App_DataDictionary].[DatabaseCatalog] P
-			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId]
 	Where	(@CatalogId is Null or D.[CatalogId] = @CatalogId) And
 			(@ModelId is Null or @ModelId In (
 				Select	[ModelId]

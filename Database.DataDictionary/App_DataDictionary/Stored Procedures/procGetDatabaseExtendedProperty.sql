@@ -11,6 +11,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 
 Select	C.[CatalogId],
+		D.[ExtendedPropertyId],
 		C.[SourceDatabaseName] As [DatabaseName],
 		D.[Level0Type],
 		D.[Level0Name],

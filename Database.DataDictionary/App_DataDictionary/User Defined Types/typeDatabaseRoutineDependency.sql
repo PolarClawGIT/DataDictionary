@@ -1,6 +1,9 @@
 ﻿CREATE TYPE [App_DataDictionary].[typeDatabaseRoutineDependency] AS TABLE
 (
 	[CatalogId]              UniqueIdentifier Null,
+	[SchemaId]               UniqueIdentifier Null,
+	[RoutineId]              UniqueIdentifier Null,
+	[DependencyId]           UniqueIdentifier Null,
 	[DatabaseName]           SysName Null,
 	[SchemaName]             SysName Null,
 	[RoutineName]            SysName Null,
