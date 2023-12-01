@@ -67,7 +67,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static String AliasName(this IDbCatalogKeyUnique source)
+        public static String ToAliasName(this IDbCatalogKeyUnique source)
         { return FormatName(String.Format("[{0}]", source.DatabaseName)); }
 
         /// <summary>
@@ -75,31 +75,31 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static String AliasName(this IDbSchemaKey source)
-        { return FormatName(String.Format("{0}.[{1}]", new DbCatalogKeyUnique(source).AliasName(), source.SchemaName)); }
+        public static String ToAliasName(this IDbSchemaKey source)
+        { return FormatName(String.Format("{0}.[{1}]", new DbCatalogKeyUnique(source).ToAliasName(), source.SchemaName)); }
 
         /// <summary>
         /// Crates an Alias Name from a Db Table
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static String AliasName(this IDbTableKey source)
-        { return FormatName(String.Format("{0}.[{1}]", new DbSchemaKey(source).AliasName(), source.TableName)); }
+        public static String ToAliasName(this IDbTableKey source)
+        { return FormatName(String.Format("{0}.[{1}]", new DbSchemaKey(source).ToAliasName(), source.TableName)); }
 
         /// <summary>
         /// Crates an Alias Name from a Db Table Column
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static String AliasName(this IDbTableColumnKey source)
-        { return FormatName(String.Format("{0}.[{1}]", new DbTableKey(source).AliasName(), source.ColumnName)); }
+        public static String ToAliasName(this IDbTableColumnKey source)
+        { return FormatName(String.Format("{0}.[{1}]", new DbTableKey(source).ToAliasName(), source.ColumnName)); }
 
         /// <summary>
         /// Crates an Alias Name from a Library Source
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static String AliasName(this ILibrarySourceUniqueKey source)
+        public static String ToAliasName(this ILibrarySourceUniqueKey source)
         { return FormatName(String.Format("{0}", FormatName(source.AssemblyName))); }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static String AliasName(this ILibraryMemberAlternateKey source)
+        public static String ToAliasName(this ILibraryMemberAlternateKey source)
         { return FormatName(String.Format("{0}.[{1}]", FormatName(source.NameSpace), source.MemberName)); }
 
         static List<String> NameParts(String aliasName)

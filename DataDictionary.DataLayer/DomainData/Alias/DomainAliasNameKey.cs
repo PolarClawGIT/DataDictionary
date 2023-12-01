@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.LibraryData.Member;
 using System;
@@ -44,25 +45,39 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         }
 
         /// <summary>
-        /// Constructor for the Domain Alias Key
+        /// Constructor for the Database Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public DomainAliasNameKey(IDbTableColumnKey source) : this()
-        { AliasName = source.AliasName(); }
+        public DomainAliasNameKey(IDbCatalogKeyUnique source) : this()
+        { AliasName = source.ToAliasName(); }
 
         /// <summary>
-        /// Constructor for the Domain Alias Key
+        /// Constructor for the Schema Alias Key
+        /// </summary>
+        /// <param name="source"></param>
+        public DomainAliasNameKey(IDbSchemaKey source) : this()
+        { AliasName = source.ToAliasName(); }
+
+        /// <summary>
+        /// Constructor for the Table Alias Key
         /// </summary>
         /// <param name="source"></param>
         public DomainAliasNameKey(IDbTableKey source) : this()
-        { AliasName = source.AliasName(); }
+        { AliasName = source.ToAliasName(); }
+
+        /// <summary>
+        /// Constructor for the Table Column Alias Key
+        /// </summary>
+        /// <param name="source"></param>
+        public DomainAliasNameKey(IDbTableColumnKey source) : this()
+        { AliasName = source.ToAliasName(); }
 
         /// <summary>
         /// Constructor for the Domain Alias Key
         /// </summary>
         /// <param name="source"></param>
         public DomainAliasNameKey(ILibraryMemberAlternateKey source) : this()
-        { AliasName = source.AliasName(); }
+        { AliasName = source.ToAliasName(); }
 
         /// <summary>
         /// Returns the Parent Alias Key, if any

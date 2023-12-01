@@ -21,6 +21,11 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     public enum ScopeType
     {
         /// <summary>
+        /// Represents the undefined Scope.
+        /// </summary>
+        Null,
+
+        /// <summary>
         /// .Net Library
         /// </summary>
         Library,
@@ -214,11 +219,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             else if (scopeTypeToDatabaseScope.FirstOrDefault(w => w.Value.Equals(value.ScopeName, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> libraryScope)
             { return libraryScope.Key; }
             else
-            {
-                Exception ex = new ArgumentOutOfRangeException(nameof(value));
-                ex.Data.Add(nameof(value.ScopeName), value.ScopeName);
-                throw ex;
-            }
+            { return ScopeType.Null; }
         }
 
         /// <summary>
@@ -232,6 +233,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             { return scopeTypeToLibraryScope[value]; }
             else if (scopeTypeToDatabaseScope.ContainsKey(value))
             { return scopeTypeToDatabaseScope[value]; }
+            else if (value == ScopeType.Null) { return String.Empty; }
             else
             {
                 Exception ex = new ArgumentOutOfRangeException(nameof(value));

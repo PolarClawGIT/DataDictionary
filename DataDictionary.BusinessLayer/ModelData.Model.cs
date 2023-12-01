@@ -54,7 +54,7 @@ namespace DataDictionary.BusinessLayer
                     aliasItem = new DomainAttributeAliasItem(attributeKey)
                     {
                         SourceName = catalogItem.DatabaseName,
-                        AliasName = columnItem.AliasName(),
+                        AliasName = columnItem.ToAliasName(),
                         ScopeName = columnItem.ScopeName
                     };
                     this.DomainAttributeAliases.Add(aliasItem);
@@ -202,7 +202,7 @@ namespace DataDictionary.BusinessLayer
                     aliasItem = new DomainEntityAliasItem(entityKey)
                     {
                         SourceName = catalogItem.DatabaseName,
-                        AliasName = tableItem.AliasName(),
+                        AliasName = tableItem.ToAliasName(),
                         ScopeName = tableItem.ScopeName
                     };
                     this.DomainEntityAliases.Add(aliasItem);

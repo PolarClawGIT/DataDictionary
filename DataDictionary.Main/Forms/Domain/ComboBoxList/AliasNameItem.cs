@@ -38,7 +38,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
                 list.AddRange(Program.Data.DbTables.Where(
                 w => w.ToScopeType() == scope.ToScopeType() &&
                     key.Equals(w)).
-                    Select(s => new AliasNameItem() { AliasName = s.AliasName() }).
+                    Select(s => new AliasNameItem() { AliasName = s.ToAliasName() }).
                     OrderBy(o => o.AliasName));
             }
 
@@ -49,7 +49,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
                 list.AddRange(Program.Data.LibraryMembers.Where(
                 w => w.ToScopeType() == scope.ToScopeType() &&
                     key.Equals(w)).
-                    Select(s => new AliasNameItem() { AliasName = new LibrarySourceUniqueKey(s).AliasName() }).
+                    Select(s => new AliasNameItem() { AliasName = new LibrarySourceUniqueKey(s).ToAliasName() }).
                     OrderBy(o => o.AliasName));
             }
 
@@ -75,7 +75,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
                 list.AddRange(Program.Data.DbTableColumns.Where(
                 w => w.ToScopeType() == scope.ToScopeType() &&
                     key.Equals(w)).
-                    Select(s => new AliasNameItem() { AliasName = s.AliasName() }
+                    Select(s => new AliasNameItem() { AliasName = s.ToAliasName() }
                 ));
             }
 
@@ -86,7 +86,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
                 list.AddRange(Program.Data.LibraryMembers.Where(
                 w => w.ToScopeType() == scope.ToScopeType() &&
                     key.Equals(w)).
-                    Select(s => new AliasNameItem() { AliasName = new LibraryMemberAlternateKey(s).AliasName() }
+                    Select(s => new AliasNameItem() { AliasName = new LibraryMemberAlternateKey(s).ToAliasName() }
                 ));
             }
 
