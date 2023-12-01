@@ -1,9 +1,6 @@
 ﻿CREATE TYPE [App_DataDictionary].[typeDatabaseConstraintColumn] AS TABLE
 (
 	[CatalogId]              UniqueIdentifier Null,
-	[SchemaId]               UniqueIdentifier Null,
-	[ConstraintId]           UniqueIdentifier Null,
-	[ConstraintColumnId]     UniqueIdentifier Null,
 	[DatabaseName]           SysName Null,
 	[SchemaName]             SysName Null,
 	[ConstraintName]         SysName Null,

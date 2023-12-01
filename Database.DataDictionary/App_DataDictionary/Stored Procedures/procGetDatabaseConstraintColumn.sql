@@ -10,9 +10,6 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 /* Description: Performs Get on DatabaseConstraintColumn.
 */
 Select	T.[CatalogId],
-		T.[SchemaId],
-		T.[ConstraintId],
-		D.[ConstraintColumnId],
 		T.[DatabaseName],
 		T.[SchemaName],
 		T.[TableName],
