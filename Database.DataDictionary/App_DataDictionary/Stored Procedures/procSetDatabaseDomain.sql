@@ -61,7 +61,7 @@ Begin Try
 		From	[App_DataDictionary].[ApplicationScope] S
 				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
-	Select	Coalesce(A.[DomainId], NewId()) As [DomainId],
+	Select	Coalesce(A.[DomainId], D.[DomainId], NewId()) As [DomainId],
 			P.[SchemaId],
 			NullIf(Trim(D.[DomainName]),'') As [DomainName],
 			S.[ScopeId],

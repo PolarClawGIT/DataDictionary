@@ -8,9 +8,9 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbTable : ApplicationBase, IApplicationDataForm<DbTableKey>
+    partial class DbTable : ApplicationBase, IApplicationDataForm<DbTableKeyName>
     {
-        public required DbTableKey DataKey { get; init; }
+        public required DbTableKeyName DataKey { get; init; }
 
         public bool IsOpenItem(object? item)
         { return DataKey.Equals(item); }
@@ -31,7 +31,7 @@ namespace DataDictionary.Main.Forms.Database
 
         public bool BindDataCore()
         {
-            if (Program.Data.DbTables.FirstOrDefault(w => DataKey == new DbTableKey(w)) is DbTableItem data)
+            if (Program.Data.DbTables.FirstOrDefault(w => DataKey == new DbTableKeyName(w)) is DbTableItem data)
             {
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.DatabaseName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
@@ -68,7 +68,7 @@ namespace DataDictionary.Main.Forms.Database
         private void tableColumnsData_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (tableColumnsData.Rows[e.RowIndex].DataBoundItem is DbTableColumnItem columnItem)
-            { Activate((data) => new Forms.Database.DbTableColumn() { DataKey = new DbTableColumnKey(columnItem) }, columnItem); }
+            { Activate((data) => new Forms.Database.DbTableColumn() { DataKey = new DbTableColumnKeyName(columnItem) }, columnItem); }
         }
 
         private void ImportDataCommand_Click(object? sender, EventArgs e)

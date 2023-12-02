@@ -11,11 +11,11 @@ using Toolbox.BindingTable;
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
     [Obsolete()]
-    record CatalogNameItem : IDbCatalogKeyUnique
+    record CatalogNameItem : IDbCatalogKeyName
     {
         public String DatabaseName { get; set; } = String.Empty;
 
-        protected CatalogNameItem(IDbCatalogKeyUnique source) : base()
+        protected CatalogNameItem(IDbCatalogKeyName source) : base()
         { if (source.DatabaseName is String value) { DatabaseName = value; } }
 
         public static void Load(ComboBoxData control)

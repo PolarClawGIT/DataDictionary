@@ -21,8 +21,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     public abstract class DbTableCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKey>, IRemoveData<IDbTableKey>
-        where TItem : BindingTableRow, IDbTableItem, IDbCatalogKey, IDbSchemaKey, IDbTableKey, new()
+        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKeyName>, IRemoveData<IDbTableKeyName>
+        where TItem : BindingTableRow, IDbTableItem, IDbCatalogKey, IDbSchemaKeyName, IDbTableKeyName, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
@@ -84,18 +84,18 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbSchemaKey schemaItem)
+        public void Remove(IDbSchemaKeyName schemaItem)
         {
-            DbSchemaKey key = new DbSchemaKey(schemaItem);
+            DbSchemaKeyName key = new DbSchemaKeyName(schemaItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbTableKey tableItem)
+        public void Remove(IDbTableKeyName tableItem)
         {
-            DbTableKey key = new DbTableKey(tableItem);
+            DbTableKeyName key = new DbTableKeyName(tableItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

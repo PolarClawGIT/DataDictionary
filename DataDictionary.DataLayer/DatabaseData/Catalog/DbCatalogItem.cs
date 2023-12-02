@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     /// <summary>
     /// Interface for the Database Catalog Item.
     /// </summary>
-    public interface IDbCatalogItem : IDbCatalogKeyUnique, IDbCatalogKey, IDbIsSystem, IDbScopeType, IDataItem
+    public interface IDbCatalogItem : IDbCatalogKeyName, IDbCatalogKey, IDbIsSystem, IDbScopeType, IDataItem
     {
         /// <summary>
         /// Title given to the Catalog. Default is the Database Name.
@@ -106,7 +106,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbCatalogKeyUnique(this).ToString(); }
+        { return new DbCatalogKeyName(this).ToString(); }
     }
 
 }

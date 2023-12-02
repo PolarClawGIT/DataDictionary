@@ -54,7 +54,7 @@ Begin Try
 			Primary Key ([DependencyId]))
 
 	Insert Into @Values
-	Select	Coalesce(A.[DependencyId], NewId()) As [DependencyId],
+	Select	Coalesce(A.[DependencyId], D.[DependencyId], NewId()) As [DependencyId],
 			P.[RoutineId],       
 			NullIf(Trim(D.[ReferenceSchemaName]),'') As [ReferenceSchemaName],
 			NullIf(Trim(D.[ReferenceObjectName]),'') As [ReferenceObjectName],

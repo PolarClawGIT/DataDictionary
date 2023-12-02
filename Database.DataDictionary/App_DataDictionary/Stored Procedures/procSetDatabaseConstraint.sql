@@ -49,7 +49,7 @@ Begin Try
 		From	[App_DataDictionary].[ApplicationScope] S
 				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
-	Select	Coalesce(A.[ConstraintId], NewId()) As [ConstraintId],
+	Select	Coalesce(A.[ConstraintId], D.[ConstraintId], NewId()) As [ConstraintId],
 			P.[SchemaId],
 			NullIf(Trim(D.[ConstraintName]),'') As [ConstraintName],
 			S.[ScopeId],

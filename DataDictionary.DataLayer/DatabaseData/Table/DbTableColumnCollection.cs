@@ -21,15 +21,15 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     public abstract class DbTableColumnCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKey>, IRemoveData<IDbTableKey>, IRemoveData<IDbTableColumnKey>
-        where TItem : BindingTableRow, IDbTableColumnItem, IDbCatalogKey, IDbSchemaKey, IDbTableKey, IDbTableColumnKey, new()
+        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKeyName>, IRemoveData<IDbTableKeyName>, IRemoveData<IDbTableColumnKeyName>
+        where TItem : BindingTableRow, IDbTableColumnItem, IDbCatalogKey, IDbSchemaKeyName, IDbTableKeyName, IDbTableColumnKeyName, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.Text;
-            command.CommandText = DbScript.DbColumnItem;
+            command.CommandText = DbScript.DbTableColumnItem;
             command.Parameters.Add(new SqlParameter("@CatalogId", SqlDbType.UniqueIdentifier) { Value = catalogKey.CatalogId });
             return command;
         }
@@ -85,27 +85,27 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbSchemaKey schemaItem)
+        public void Remove(IDbSchemaKeyName schemaItem)
         {
-            DbSchemaKey key = new DbSchemaKey(schemaItem);
+            DbSchemaKeyName key = new DbSchemaKeyName(schemaItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbTableKey tableItem)
+        public void Remove(IDbTableKeyName tableItem)
         {
-            DbTableKey key = new DbTableKey(tableItem);
+            DbTableKeyName key = new DbTableKeyName(tableItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbTableColumnKey columnItem)
+        public void Remove(IDbTableColumnKeyName columnItem)
         {
-            DbTableColumnKey key = new DbTableColumnKey(columnItem);
+            DbTableColumnKeyName key = new DbTableColumnKeyName(columnItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

@@ -67,7 +67,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static String ToAliasName(this IDbCatalogKeyUnique source)
+        public static String ToAliasName(this IDbCatalogKeyName source)
         { return FormatName(String.Format("[{0}]", source.DatabaseName)); }
 
         /// <summary>
@@ -75,24 +75,24 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static String ToAliasName(this IDbSchemaKey source)
-        { return FormatName(String.Format("{0}.[{1}]", new DbCatalogKeyUnique(source).ToAliasName(), source.SchemaName)); }
+        public static String ToAliasName(this IDbSchemaKeyName source)
+        { return FormatName(String.Format("{0}.[{1}]", new DbCatalogKeyName(source).ToAliasName(), source.SchemaName)); }
 
         /// <summary>
         /// Crates an Alias Name from a Db Table
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static String ToAliasName(this IDbTableKey source)
-        { return FormatName(String.Format("{0}.[{1}]", new DbSchemaKey(source).ToAliasName(), source.TableName)); }
+        public static String ToAliasName(this IDbTableKeyName source)
+        { return FormatName(String.Format("{0}.[{1}]", new DbSchemaKeyName(source).ToAliasName(), source.TableName)); }
 
         /// <summary>
         /// Crates an Alias Name from a Db Table Column
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static String ToAliasName(this IDbTableColumnKey source)
-        { return FormatName(String.Format("{0}.[{1}]", new DbTableKey(source).ToAliasName(), source.ColumnName)); }
+        public static String ToAliasName(this IDbTableColumnKeyName source)
+        { return FormatName(String.Format("{0}.[{1}]", new DbTableKeyName(source).ToAliasName(), source.ColumnName)); }
 
         /// <summary>
         /// Crates an Alias Name from a Library Source

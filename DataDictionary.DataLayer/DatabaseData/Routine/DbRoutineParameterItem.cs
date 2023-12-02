@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for the Database Routine Parameter
     /// </summary>
-    public interface IDbRoutineParameterItem : IDbRoutineParameterKey, IDbDomainReferenceKey, IDbElementScope, IDbColumn, IDbCatalogKey, IDbScopeType, IDataItem
+    public interface IDbRoutineParameterItem : IDbRoutineParameterKeyName, IDbRoutineParameterKey, IDbDomainReferenceKey, IDbElementScope, IDbColumn, IDbCatalogKey, IDbScopeType, IDataItem
     { }
 
     /// <summary>
@@ -32,6 +32,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
 
+        /// <inheritdoc/>
+        public Guid? ParameterId { get { return GetValue<Guid>("ParameterId"); } }
+        
         /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
@@ -104,6 +107,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
+            new DataColumn("ParameterId", typeof(string)){ AllowDBNull = true},
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("RoutineName", typeof(string)){ AllowDBNull = false},
@@ -181,6 +185,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbRoutineParameterKey(this).ToString(); }
+        { return new DbRoutineParameterKeyName(this).ToString(); }
     }
 }

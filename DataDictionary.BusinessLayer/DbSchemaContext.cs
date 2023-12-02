@@ -17,6 +17,6 @@ namespace DataDictionary.BusinessLayer
     /// This Database Context is used to get Schema information from the database. 
     /// It is expected to be used Read-Only
     /// </summary>
-    public class DbSchemaContext : Toolbox.DbContext.Context, IDbCatalogKeyUnique
+    public class DbSchemaContext : Toolbox.DbContext.Context, IDbCatalogKeyName
     { }
 }

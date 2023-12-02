@@ -21,8 +21,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     public abstract class DbRoutineParameterCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKey>, IRemoveData<IDbRoutineKey>, IRemoveData<IDbRoutineParameterKey>
-        where TItem : BindingTableRow, IDbRoutineParameterItem, IDbCatalogKey, IDbSchemaKey, IDbRoutineKey, IDbRoutineParameterKey, new()
+        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKeyName>, IRemoveData<IDbRoutineKeyName>, IRemoveData<IDbRoutineParameterKeyName>
+        where TItem : BindingTableRow, IDbRoutineParameterItem, IDbCatalogKey, IDbSchemaKeyName, IDbRoutineKeyName, IDbRoutineParameterKeyName, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
@@ -85,27 +85,27 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbRoutineKey routineItem)
+        public void Remove(IDbRoutineKeyName routineItem)
         {
-            DbRoutineKey key = new DbRoutineKey(routineItem);
+            DbRoutineKeyName key = new DbRoutineKeyName(routineItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbRoutineParameterKey parameterItem)
+        public void Remove(IDbRoutineParameterKeyName parameterItem)
         {
-            DbRoutineParameterKey key = new DbRoutineParameterKey(parameterItem);
+            DbRoutineParameterKeyName key = new DbRoutineParameterKeyName(parameterItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbSchemaKey schemaItem)
+        public void Remove(IDbSchemaKeyName schemaItem)
         {
-            DbSchemaKey key = new DbSchemaKey(schemaItem);
+            DbSchemaKeyName key = new DbSchemaKeyName(schemaItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

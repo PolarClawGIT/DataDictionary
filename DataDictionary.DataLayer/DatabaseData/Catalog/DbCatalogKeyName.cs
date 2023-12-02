@@ -3,7 +3,7 @@
     /// <summary>
     /// Interface for the unique Name of a Catalog.
     /// </summary>
-    public interface IDbCatalogKeyUnique: IKey
+    public interface IDbCatalogKeyName: IKey
     {
         /// <summary>
         /// Name of the Database Name
@@ -14,7 +14,7 @@
     /// <summary>
     /// Implementation for the unique Name of a Catalog.
     /// </summary>
-    public class DbCatalogKeyUnique : IDbCatalogKeyUnique, IKeyComparable<IDbCatalogKeyUnique>
+    public class DbCatalogKeyName : IDbCatalogKeyName, IKeyComparable<IDbCatalogKeyName>
     {
         /// <inheritdoc/>
         public String DatabaseName { get; init; } = string.Empty;
@@ -23,7 +23,7 @@
         /// Constructor for the Catalog Unique Key.
         /// </summary>
         /// <param name="source"></param>
-        public DbCatalogKeyUnique(IDbCatalogKeyUnique source) : base()
+        public DbCatalogKeyName(IDbCatalogKeyName source) : base()
         {
             if (source.DatabaseName is string) { DatabaseName = source.DatabaseName; }
             else { DatabaseName = string.Empty; }
@@ -31,10 +31,10 @@
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public virtual bool Equals(IDbCatalogKeyUnique? other)
+        public virtual bool Equals(IDbCatalogKeyName? other)
         {
             return 
-                other is IDbCatalogKeyUnique &&
+                other is IDbCatalogKeyName &&
                 !string.IsNullOrEmpty(DatabaseName) &&
                 !string.IsNullOrEmpty(other.DatabaseName) &&
                 DatabaseName.Equals(other.DatabaseName, KeyExtension.CompareString);
@@ -42,42 +42,42 @@
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IDbCatalogKeyUnique value && Equals(new DbCatalogKeyUnique(value)); }
+        { return obj is IDbCatalogKeyName value && Equals(new DbCatalogKeyName(value)); }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(IDbCatalogKeyUnique? other)
+        public virtual int CompareTo(IDbCatalogKeyName? other)
         {
-            if (other is DbCatalogKeyUnique value)
+            if (other is DbCatalogKeyName value)
             { return string.Compare(DatabaseName, value.DatabaseName, true); }
             else { return 1; }
         }
 
         /// <inheritdoc/>
         public virtual int CompareTo(object? obj)
-        { if (obj is IDbCatalogKeyUnique value) { return CompareTo(new DbCatalogKeyUnique(value)); } else { return 1; } }
+        { if (obj is IDbCatalogKeyName value) { return CompareTo(new DbCatalogKeyName(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static bool operator ==(DbCatalogKeyUnique left, DbCatalogKeyUnique right)
+        public static bool operator ==(DbCatalogKeyName left, DbCatalogKeyName right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(DbCatalogKeyUnique left, DbCatalogKeyUnique right)
+        public static bool operator !=(DbCatalogKeyName left, DbCatalogKeyName right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(DbCatalogKeyUnique left, DbCatalogKeyUnique right)
+        public static bool operator <(DbCatalogKeyName left, DbCatalogKeyName right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(DbCatalogKeyUnique left, DbCatalogKeyUnique right)
+        public static bool operator <=(DbCatalogKeyName left, DbCatalogKeyName right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(DbCatalogKeyUnique left, DbCatalogKeyUnique right)
+        public static bool operator >(DbCatalogKeyName left, DbCatalogKeyName right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(DbCatalogKeyUnique left, DbCatalogKeyUnique right)
+        public static bool operator >=(DbCatalogKeyName left, DbCatalogKeyName right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>

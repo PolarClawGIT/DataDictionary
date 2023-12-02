@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     /// <summary>
     /// Interface for the Database Domain Item.
     /// </summary>
-    public interface IDbDomainItem : IDbDomainKey, IDbCatalogKey, IDbObjectScope, IDbDomain, IDbScopeType, IDataItem
+    public interface IDbDomainItem : IDbDomainKeyName, IDbDomainKey, IDbCatalogKey, IDbObjectScope, IDbDomain, IDbScopeType, IDataItem
     {
         /// <summary>
         /// The Default value for the Domain
@@ -34,6 +34,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     {
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+
+        /// <inheritdoc/>
+        public Guid? DomainId { get { return GetValue<Guid>("DomainId"); } }
 
         /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue("DatabaseName"); } }
@@ -95,6 +98,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
+            new DataColumn("DomainId", typeof(string)){ AllowDBNull = true},
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("DomainName", typeof(string)){ AllowDBNull = false},
@@ -150,6 +154,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbDomainKey(this).ToString(); }
+        { return new DbDomainKeyName(this).ToString(); }
     }
 }

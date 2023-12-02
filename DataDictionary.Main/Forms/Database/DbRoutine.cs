@@ -8,9 +8,9 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbRoutine : ApplicationBase, IApplicationDataForm<DbRoutineKey>
+    partial class DbRoutine : ApplicationBase, IApplicationDataForm<DbRoutineKeyName>
     {
-        public required DbRoutineKey DataKey { get; init; }
+        public required DbRoutineKeyName DataKey { get; init; }
 
         public bool IsOpenItem(object? item)
         { return DataKey.Equals(item); }

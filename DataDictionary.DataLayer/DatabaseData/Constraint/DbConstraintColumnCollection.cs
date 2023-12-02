@@ -20,8 +20,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     public abstract class DbConstraintColumnCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbConstraintKey>
-        where TItem : BindingTableRow, IDbConstraintColumnItem, IDbCatalogKey, IDbConstraintKey, new()
+        IRemoveData<IDbCatalogKey>, IRemoveData<IDbConstraintKeyName>
+        where TItem : BindingTableRow, IDbConstraintColumnItem, IDbCatalogKey, IDbConstraintKeyName, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
@@ -84,9 +84,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbConstraintKey constraintItem)
+        public void Remove(IDbConstraintKeyName constraintItem)
         {
-            DbConstraintKey key = new DbConstraintKey(constraintItem);
+            DbConstraintKeyName key = new DbConstraintKeyName(constraintItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

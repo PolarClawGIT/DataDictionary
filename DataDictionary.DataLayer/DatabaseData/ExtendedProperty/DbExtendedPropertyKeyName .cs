@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Interface for the Database Extended Property Name Key
     /// </summary>
-    public interface IDbExtendedPropertyKeyName : IKey, IDbCatalogKeyUnique
+    public interface IDbExtendedPropertyKeyName : IKey, IDbCatalogKeyName
     {
         /// <summary>
         /// Level 0 (Catalog) Name parameter
@@ -36,7 +36,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Implementation for the Database Extended Property Name Key
     /// </summary>
-    public class DbExtendedPropertyKeyName : DbCatalogKeyUnique, IDbExtendedPropertyKeyName, IKeyComparable<IDbExtendedPropertyKeyName>
+    public class DbExtendedPropertyKeyName : DbCatalogKeyName, IDbExtendedPropertyKeyName, IKeyComparable<IDbExtendedPropertyKeyName>
     {
         /// <inheritdoc/>
         public String Level0Name { get; init; } = string.Empty;
@@ -62,7 +62,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public DbExtendedPropertyKeyName(IDbTableKey source) : base(source)
+        public DbExtendedPropertyKeyName(IDbTableKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.TableName is String) { Level1Name = source.TableName; }
@@ -72,7 +72,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public DbExtendedPropertyKeyName(IDbTableColumnKey source) : base(source)
+        public DbExtendedPropertyKeyName(IDbTableColumnKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.TableName is String) { Level1Name = source.TableName; }
@@ -83,7 +83,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public DbExtendedPropertyKeyName(IDbRoutineKey source) : base(source)
+        public DbExtendedPropertyKeyName(IDbRoutineKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.RoutineName is String) { Level1Name = source.RoutineName; }
@@ -93,7 +93,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public DbExtendedPropertyKeyName(IDbRoutineParameterKey source) : base(source)
+        public DbExtendedPropertyKeyName(IDbRoutineParameterKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.RoutineName is String) { Level1Name = source.RoutineName; }
@@ -104,7 +104,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public DbExtendedPropertyKeyName(IDbConstraintKey source) : base(source)
+        public DbExtendedPropertyKeyName(IDbConstraintKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
             if (source.ConstraintName is String) { Level1Name = source.ConstraintName; }
@@ -114,7 +114,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// Constructor for the Database Extended Property Name Key
         /// </summary>
         /// <param name="source"></param>
-        public DbExtendedPropertyKeyName(IDbSchemaKey source) : base(source)
+        public DbExtendedPropertyKeyName(IDbSchemaKeyName source) : base(source)
         {
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
         }
@@ -125,7 +125,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         {
             return
                 other is IDbExtendedPropertyKeyName &&
-                new DbCatalogKeyUnique(this).Equals(other) &&
+                new DbCatalogKeyName(this).Equals(other) &&
                 ((String.IsNullOrWhiteSpace(Level0Name) &&
                   String.IsNullOrWhiteSpace(other.Level0Name)) ||
                   Level0Name.Equals(other.Level0Name, KeyExtension.CompareString)) &&
@@ -145,7 +145,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         public int CompareTo(IDbExtendedPropertyKeyName? other)
         {
             if (other is null) { return 1; }
-            else if (new DbCatalogKeyUnique(this).CompareTo(other) is int value && value != 0) { return value; }
+            else if (new DbCatalogKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
             else if (string.Compare(Level0Name, other.Level0Name, true) is int level0 && level0 != 0) { return level0; }
             else if (string.Compare(Level1Name, other.Level1Name, true) is int level1 && level0 != 0) { return level1; }
             { return string.Compare(Level2Name, other.Level2Name, true); }

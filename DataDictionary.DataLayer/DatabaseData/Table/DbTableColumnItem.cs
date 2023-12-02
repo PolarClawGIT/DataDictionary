@@ -25,7 +25,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for the Database Table Column
     /// </summary>
-    public interface IDbTableColumnItem : IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbElementScope, IDbColumn, IDbScopeType, IDataItem
+    public interface IDbTableColumnItem : IDbTableColumnKeyName, IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbElementScope, IDbColumn, IDbScopeType, IDataItem
     {
         /// <summary>
         /// Is the Column Nullable
@@ -72,6 +72,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
 
+        /// <inheritdoc/>
+        public Guid? ColumnId { get { return GetValue<Guid>("ColumnId"); } }
+        
         /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
@@ -165,6 +168,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
+            new DataColumn("ColumnId", typeof(string)){ AllowDBNull = true},
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("TableName", typeof(string)){ AllowDBNull = false},
@@ -248,6 +252,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbTableColumnKey(this).ToString(); }
+        { return new DbTableColumnKeyName(this).ToString(); }
     }
 }

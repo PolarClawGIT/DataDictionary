@@ -453,7 +453,6 @@
         private BindingSource bindingProperties;
         private Controls.CheckedListBoxData propertyChoiceData;
         private Controls.ComboBoxData subjectAreaData;
-        private TableLayoutPanel alaisLayout;
         private DataGridView entityAliasData;
         private BindingSource bindingAlias;
         private TabControl entityTabLayout;

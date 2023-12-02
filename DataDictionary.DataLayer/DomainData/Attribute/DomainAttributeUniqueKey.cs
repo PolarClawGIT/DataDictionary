@@ -42,7 +42,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// Constructor for the Attribute Unique Key.
         /// </summary>
         /// <param name="source"></param>
-        public DomainAttributeUniqueKey(IDbTableColumnKey source) : base()
+        public DomainAttributeUniqueKey(IDbTableColumnKeyName source) : base()
         {
             if (source.ColumnName is string) { AttributeTitle = source.ColumnName; }
             else { AttributeTitle = string.Empty; }
@@ -52,7 +52,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// Constructor for the Attribute Unique Key.
         /// </summary>
         /// <param name="source"></param>
-        public DomainAttributeUniqueKey(IDbRoutineParameterKey source) : base()
+        public DomainAttributeUniqueKey(IDbRoutineParameterKeyName source) : base()
         {
             if (source.ParameterName is string) { AttributeTitle = source.ParameterName.Replace("@",""); }
             else { AttributeTitle = string.Empty; }

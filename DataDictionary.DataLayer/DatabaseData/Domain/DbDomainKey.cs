@@ -3,66 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataDictionary.DataLayer.DatabaseData.Schema;
 
 namespace DataDictionary.DataLayer.DatabaseData.Domain
 {
     /// <summary>
-    /// Interface for the Database Domain (Type) Key
+    /// Interface for the Database Domain Key.
     /// </summary>
-    public interface IDbDomainKey : IKey, IDbSchemaKey
+    public interface IDbDomainKey : IKey
     {
         /// <summary>
-        /// Name of the Database Domain (Type)
+        /// Application ID for the Domain.
         /// </summary>
-        String? DomainName { get; }
+        Guid? DomainId { get; }
     }
 
     /// <summary>
-    /// Implementation of the Database DomainKey
+    /// Implementation for the Database Domain Key.
     /// </summary>
-    public class DbDomainKey : DbSchemaKey, IDbDomainKey, IKeyComparable<IDbDomainKey>
+    public class DbDomainKey : IDbDomainKey, IKeyEquality<IDbDomainKey>
     {
         /// <inheritdoc/>
-        public String DomainName { get; init; } = string.Empty;
+        public Guid? DomainId { get; init; } = Guid.Empty;
 
         /// <summary>
-        /// Constructor for the Database Domain Key
+        /// Constructor for the Domain Key.
         /// </summary>
         /// <param name="source"></param>
-        public DbDomainKey(IDbDomainKey source) : base(source)
+        public DbDomainKey(IDbDomainKey source) : base()
         {
-            if (source.DomainName is string) { DomainName = source.DomainName; }
-            else { DomainName = string.Empty; }
+            if (source.DomainId is Guid value) { DomainId = value; }
+            else { DomainId = Guid.Empty; }
         }
 
-        #region IEquatable, IComparable
+        #region IEquatable
         /// <inheritdoc/>
-        public bool Equals(IDbDomainKey? other)
-        {
-            return
-                other is IDbSchemaKey &&
-                new DbSchemaKey(this).Equals(other) &&
-                !string.IsNullOrEmpty(DomainName) &&
-                !string.IsNullOrEmpty(other.DomainName) &&
-                DomainName.Equals(other.DomainName, KeyExtension.CompareString);
-        }
+        public virtual bool Equals(IDbDomainKey? other)
+        { return other is IDbDomainKey && EqualityComparer<Guid?>.Default.Equals(DomainId, other.DomainId); }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj)
-        { return obj is IDbDomainKey value && Equals(new DbDomainKey(value)); }
-
-        /// <inheritdoc/>
-        public int CompareTo(IDbDomainKey? other)
-        {
-            if (other is null) { return 1; }
-            else if (new DbSchemaKey(this).CompareTo(other) is int value && value != 0) { return value; }
-            else { return string.Compare(DomainName, other.DomainName, true); }
-        }
-
-        /// <inheritdoc/>
-        public override int CompareTo(object? obj)
-        { if (obj is IDbDomainKey value) { return CompareTo(new DbDomainKey(value)); } else { return 1; } }
+        public override bool Equals(object? other)
+        { return other is IDbDomainKey value && Equals(new DbDomainKey(value)); }
 
         /// <inheritdoc/>
         public static bool operator ==(DbDomainKey left, DbDomainKey right)
@@ -73,33 +53,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(DbDomainKey left, DbDomainKey right)
-        { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
-
-        /// <inheritdoc/>
-        public static bool operator <=(DbDomainKey left, DbDomainKey right)
-        { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
-
-        /// <inheritdoc/>
-        public static bool operator >(DbDomainKey left, DbDomainKey right)
-        { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
-
-        /// <inheritdoc/>
-        public static bool operator >=(DbDomainKey left, DbDomainKey right)
-        { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
-
-
-        /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(base.GetHashCode(), DomainName.GetHashCode(KeyExtension.CompareString)); }
+        { return HashCode.Combine(DomainId); }
         #endregion
-
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            if (DomainName is string)
-            { return string.Format("{0}.{1}", base.ToString(), DomainName); }
-            else { return string.Empty; }
-        }
     }
 }

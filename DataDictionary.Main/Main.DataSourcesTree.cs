@@ -301,9 +301,9 @@ namespace DataDictionary.Main
                         TreeNode tablesNode = CreateNode(schemaNode.Nodes, "Tables & Views", dbDataImageIndex.Tables);
 
                         foreach (IDbTableItem tableItem in Program.Data.DbTables.OrderBy(o => o.TableName).Where(
-                            w => w.IsSystem == false && new DbSchemaKey(w).Equals(schemaItem)))
+                            w => w.IsSystem == false && new DbSchemaKeyName(w).Equals(schemaItem)))
                         {
-                            DbTableKey tableKey = new DbTableKey(tableItem);
+                            DbTableKeyName tableKey = new DbTableKeyName(tableItem);
                             TreeNode tableNode;
                             TreeNode? tableConstraintNode = null;
                             if (tableItem.ObjectScope == DbObjectScope.View)
@@ -328,7 +328,7 @@ namespace DataDictionary.Main
                                 TreeNode constraintNode = CreateNode(tableConstraintNode.Nodes, contraintItem.ConstraintName, dbDataImageIndex.Constraint, contraintItem);
 
                                 foreach (DbConstraintColumnItem contraintColumnItem in Program.Data.DbConstraintColumns.Where(
-                                    w => new DbConstraintKey(w).Equals(new DbConstraintKey(contraintItem))))
+                                    w => new DbConstraintKeyName(w).Equals(new DbConstraintKeyName(contraintItem))))
                                 { CreateNode(constraintNode.Nodes, contraintColumnItem.ColumnName, dbDataImageIndex.ConstraintColumn, contraintColumnItem); }
                             }
 
@@ -339,9 +339,9 @@ namespace DataDictionary.Main
                         TreeNode? routinesNode = null;
 
                         foreach (IDbRoutineItem routineItem in Program.Data.DbRoutines.OrderBy(o => o.RoutineName).Where(
-                            w => w.IsSystem == false && new DbSchemaKey(w).Equals(schemaItem)))
+                            w => w.IsSystem == false && new DbSchemaKeyName(w).Equals(schemaItem)))
                         {
-                            DbRoutineKey routineKey = new DbRoutineKey(routineItem);
+                            DbRoutineKeyName routineKey = new DbRoutineKeyName(routineItem);
                             TreeNode? routineNode;
 
                             if (routinesNode is null)
@@ -373,9 +373,9 @@ namespace DataDictionary.Main
                         TreeNode? domainsNode = null;
 
                         foreach (IDbDomainItem domainItem in Program.Data.DbDomains.OrderBy(o => o.DomainName).Where(
-                            w => new DbSchemaKey(w).Equals(schemaItem)))
+                            w => new DbSchemaKeyName(w).Equals(schemaItem)))
                         {
-                            DbDomainKey domainKey = new DbDomainKey(domainItem);
+                            DbDomainKeyName domainKey = new DbDomainKeyName(domainItem);
 
                             if (domainsNode is null)
                             { domainsNode = CreateNode(schemaNode.Nodes, "Domains", dbDataImageIndex.Domains, null); }
@@ -406,25 +406,25 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Database.DbCatalog() { DataKey = new DbCatalogKey(catalogItem) }, catalogItem); }
 
         void Activate(DbSchemaItem schemaItem)
-        { Activate((data) => new Forms.Database.DbSchema() { DataKey = new DbSchemaKey(schemaItem) }, schemaItem); }
+        { Activate((data) => new Forms.Database.DbSchema() { DataKey = new DbSchemaKeyName(schemaItem) }, schemaItem); }
 
         void Activate(DbTableItem tableItem)
-        { Activate((data) => new Forms.Database.DbTable() { DataKey = new DbTableKey(tableItem) }, tableItem); }
+        { Activate((data) => new Forms.Database.DbTable() { DataKey = new DbTableKeyName(tableItem) }, tableItem); }
 
         void Activate(DbTableColumnItem columnItem)
-        { Activate((data) => new Forms.Database.DbTableColumn() { DataKey = new DbTableColumnKey(columnItem) }, columnItem); }
+        { Activate((data) => new Forms.Database.DbTableColumn() { DataKey = new DbTableColumnKeyName(columnItem) }, columnItem); }
 
         void Activate(DbConstraintItem constraintItem)
-        { Activate((data) => new Forms.Database.DbConstraint() { DataKey = new DbConstraintKey(constraintItem) }, constraintItem); }
+        { Activate((data) => new Forms.Database.DbConstraint() { DataKey = new DbConstraintKeyName(constraintItem) }, constraintItem); }
 
         void Activate(DbRoutineItem routineItem)
-        { Activate((data) => new Forms.Database.DbRoutine() { DataKey = new DbRoutineKey(routineItem) }, routineItem); }
+        { Activate((data) => new Forms.Database.DbRoutine() { DataKey = new DbRoutineKeyName(routineItem) }, routineItem); }
 
         void Activate(DbRoutineParameterItem routineParameterItem)
-        { Activate((data) => new Forms.Database.DbRoutineParameter() { DataKey = new DbRoutineParameterKey(routineParameterItem) }, routineParameterItem); }
+        { Activate((data) => new Forms.Database.DbRoutineParameter() { DataKey = new DbRoutineParameterKeyName(routineParameterItem) }, routineParameterItem); }
 
         void Activate(DbDomainItem domainItem)
-        { Activate((data) => new Forms.Database.DbDomain() { DataKey = new DbDomainKey(domainItem) }, domainItem); }
+        { Activate((data) => new Forms.Database.DbDomain() { DataKey = new DbDomainKeyName(domainItem) }, domainItem); }
 
         void Activate(LibrarySourceItem sourceItem)
         { Activate((data) => new Forms.Library.LibrarySource() { DataKey = new LibrarySourceKey(sourceItem) }, sourceItem); }

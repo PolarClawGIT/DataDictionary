@@ -21,9 +21,9 @@ namespace DataDictionary.BusinessLayer
 {
     partial class ModelData
     {
-        void CreateAttribute(IDbTableColumnKey columnKey)
+        void CreateAttribute(IDbTableColumnKeyName columnKey)
         {
-            DbTableColumnKey key = new DbTableColumnKey(columnKey);
+            DbTableColumnKeyName key = new DbTableColumnKeyName(columnKey);
             DomainAttributeUniqueKey attributeKeyUnique = new DomainAttributeUniqueKey(columnKey);
             DomainAliasNameKey aliasKey = new DomainAliasNameKey(columnKey);
 
@@ -94,7 +94,7 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         /// <param name="columnKey"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> ImportAttribute(IDbTableColumnKey columnKey)
+        public IReadOnlyList<WorkItem> ImportAttribute(IDbTableColumnKeyName columnKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.Add(new WorkItem()
@@ -110,11 +110,11 @@ namespace DataDictionary.BusinessLayer
         /// Imports all the Attributes for a given Database Table
         /// </summary>
         /// <param name="tableKey"></param>
-        public IReadOnlyList<WorkItem> ImportAttribute(IDbTableKey tableKey)
+        public IReadOnlyList<WorkItem> ImportAttribute(IDbTableKeyName tableKey)
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            DbTableKey key = new DbTableKey(tableKey);
+            DbTableKeyName key = new DbTableKeyName(tableKey);
             foreach (DbTableColumnItem item in this.DbTableColumns.Where(w => key.Equals(w)))
             { work.AddRange(ImportAttribute(item)); }
 
@@ -126,11 +126,11 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         /// <param name="routineKey"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> ImportAttribute(IDbRoutineKey routineKey)
+        public IReadOnlyList<WorkItem> ImportAttribute(IDbRoutineKeyName routineKey)
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            DbRoutineKey key = new DbRoutineKey(routineKey);
+            DbRoutineKeyName key = new DbRoutineKeyName(routineKey);
             foreach (DbRoutineParameterItem item in this.DbRoutineParameters.Where(w => key.Equals(w)))
             { work.AddRange(ImportAttribute(item)); }
 
@@ -141,11 +141,11 @@ namespace DataDictionary.BusinessLayer
         /// Imports all the Attributes for a given Database Schema
         /// </summary>
         /// <param name="schemaKey"></param>
-        public IReadOnlyList<WorkItem> ImportAttribute(IDbSchemaKey schemaKey)
+        public IReadOnlyList<WorkItem> ImportAttribute(IDbSchemaKeyName schemaKey)
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            DbSchemaKey key = new DbSchemaKey(schemaKey);
+            DbSchemaKeyName key = new DbSchemaKeyName(schemaKey);
             foreach (DbTableItem item in this.DbTables.Where(w => key.Equals(w) && w.IsSystem == false))
             { work.AddRange(ImportAttribute(item)); }
 
@@ -159,10 +159,10 @@ namespace DataDictionary.BusinessLayer
         /// Imports all the Attributes for a given Database Schema
         /// </summary>
         /// <param name="catalogKey"></param>
-        public IReadOnlyList<WorkItem> ImportAttribute(IDbCatalogKeyUnique catalogKey)
+        public IReadOnlyList<WorkItem> ImportAttribute(IDbCatalogKeyName catalogKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            DbCatalogKeyUnique key = new DbCatalogKeyUnique(catalogKey);
+            DbCatalogKeyName key = new DbCatalogKeyName(catalogKey);
 
             foreach (DbSchemaItem item in this.DbSchemta.Where(w => key.Equals(w) && w.IsSystem == false))
             { work.AddRange(ImportAttribute(item)); }
@@ -170,9 +170,9 @@ namespace DataDictionary.BusinessLayer
             return work;
         }
 
-        void CreateEntity(IDbTableKey tableKey)
+        void CreateEntity(IDbTableKeyName tableKey)
         {
-            DbTableKey key = new DbTableKey(tableKey);
+            DbTableKeyName key = new DbTableKeyName(tableKey);
             DomainEntityUniqueKey entityKeyUnique = new DomainEntityUniqueKey(tableKey);
             DomainAliasNameKey aliasKey = new DomainAliasNameKey(tableKey);
 
@@ -237,7 +237,7 @@ namespace DataDictionary.BusinessLayer
         /// Imports the Entity for a given Database Table
         /// </summary>
         /// <param name="tableKey"></param>
-        public IReadOnlyList<WorkItem> ImportEntity(IDbTableKey tableKey)
+        public IReadOnlyList<WorkItem> ImportEntity(IDbTableKeyName tableKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.Add(new WorkItem()
@@ -253,11 +253,11 @@ namespace DataDictionary.BusinessLayer
         /// Imports all the Entities for a given Database Schema
         /// </summary>
         /// <param name="schemaKey"></param>
-        public IReadOnlyList<WorkItem> ImportEntity(IDbSchemaKey schemaKey)
+        public IReadOnlyList<WorkItem> ImportEntity(IDbSchemaKeyName schemaKey)
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            DbSchemaKey key = new DbSchemaKey(schemaKey);
+            DbSchemaKeyName key = new DbSchemaKeyName(schemaKey);
             foreach (DbTableItem item in this.DbTables.Where(w => key.Equals(w) && w.IsSystem == false))
             { work.AddRange(ImportEntity(item)); }
 
@@ -268,10 +268,10 @@ namespace DataDictionary.BusinessLayer
         /// Imports all the Entities for a given Database Schema
         /// </summary>
         /// <param name="catalogKey"></param>
-        public IReadOnlyList<WorkItem> ImportEntity(IDbCatalogKeyUnique catalogKey)
+        public IReadOnlyList<WorkItem> ImportEntity(IDbCatalogKeyName catalogKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            DbCatalogKeyUnique key = new DbCatalogKeyUnique(catalogKey);
+            DbCatalogKeyName key = new DbCatalogKeyName(catalogKey);
 
             foreach (DbSchemaItem item in this.DbSchemta.Where(w => key.Equals(w) && w.IsSystem == false))
             { work.AddRange(ImportEntity(item)); }

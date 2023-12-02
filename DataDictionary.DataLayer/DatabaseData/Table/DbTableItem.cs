@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for Database Column Item
     /// </summary>
-    public interface IDbTableItem : IDbTableKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IDbScopeType, IDataItem
+    public interface IDbTableItem : IDbTableKeyName, IDbTableKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IDbScopeType, IDataItem
     {
         /// <summary>
         /// Type of Table Object (Table, View, ...)
@@ -38,6 +38,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
 
+        /// <inheritdoc/>
+        public Guid? TableId { get { return GetValue<Guid>("TableId"); } }
+        
         /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
@@ -71,6 +74,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
+            new DataColumn("TableId", typeof(string)){ AllowDBNull = true},
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("TableName", typeof(string)){ AllowDBNull = false},
@@ -114,6 +118,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbTableKey(this).ToString(); }
+        { return new DbTableKeyName(this).ToString(); }
     }
 }

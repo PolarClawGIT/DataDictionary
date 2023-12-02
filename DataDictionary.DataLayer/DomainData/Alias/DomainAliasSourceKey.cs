@@ -49,7 +49,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// Constructor for the Domain Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public DomainAliasSourceKey(IDbCatalogKeyUnique source) : this()
+        public DomainAliasSourceKey(IDbCatalogKeyName source) : this()
         {
             if (source.DatabaseName is string) { SourceName = source.DatabaseName; }
             else { SourceName = string.Empty; }

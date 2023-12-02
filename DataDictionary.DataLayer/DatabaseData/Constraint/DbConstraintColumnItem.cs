@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Constraint Column
     /// </summary>
-    public interface IDbConstraintColumnItem : IDbConstraintKey, IDbCatalogKey, IDbColumnPosition, IDbTableColumnKey, IDbColumnReferenceKey, IDataItem
+    public interface IDbConstraintColumnItem : IDbConstraintKeyName, IDbCatalogKey, IDbColumnPosition, IDbTableColumnKeyName, IDbColumnReferenceKey, IDataItem
     { }
 
     /// <summary>
@@ -30,6 +30,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         /// <inheritdoc/>
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
 
+        /// <inheritdoc/>
+        public Guid? ConstraintColumnId { get { return GetValue<Guid>("ConstraintColumnId"); } }
+        
         /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
@@ -60,6 +63,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
+            new DataColumn("ConstraintColumnId", typeof(string)){ AllowDBNull = true},
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("ConstraintName", typeof(string)){ AllowDBNull = false},

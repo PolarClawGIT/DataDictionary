@@ -5,9 +5,9 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbConstraint : ApplicationBase, IApplicationDataForm<DbConstraintKey>
+    partial class DbConstraint : ApplicationBase, IApplicationDataForm<DbConstraintKeyName>
     {
-        public required DbConstraintKey DataKey { get; init; }
+        public required DbConstraintKeyName DataKey { get; init; }
 
         public bool IsOpenItem(object? item)
         { return DataKey.Equals(item); }
@@ -25,7 +25,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             if (Program.Data.DbConstraints.FirstOrDefault(w => DataKey.Equals(w)) is DbConstraintItem data)
             {
-                this.Text = new DbConstraintKey(data).ToString();
+                this.Text = new DbConstraintKeyName(data).ToString();
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.DatabaseName)));
                 schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
                 constraintNameData.DataBindings.Add(new Binding(nameof(constraintNameData.Text), data, nameof(data.ConstraintName)));

@@ -41,7 +41,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// Constructor for the Entity Unique Key.
         /// </summary>
         /// <param name="source"></param>
-        public DomainEntityUniqueKey(IDbTableKey source) : base()
+        public DomainEntityUniqueKey(IDbTableKeyName source) : base()
         {
             if (source.TableName is string) { EntityTitle = source.TableName; }
             else { EntityTitle = string.Empty; }
@@ -51,7 +51,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// Constructor for the Entity Unique Key.
         /// </summary>
         /// <param name="source"></param>
-        public DomainEntityUniqueKey(IDbRoutineKey source) : base()
+        public DomainEntityUniqueKey(IDbRoutineKeyName source) : base()
         {
             if (source.RoutineName is string) { EntityTitle = source.RoutineName; }
             else { EntityTitle = string.Empty; }

@@ -48,7 +48,7 @@ Begin Try
 		From	[App_DataDictionary].[ApplicationScope] S
 				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
-	Select	Coalesce(A.[TableId], NewId()) As [TableId],
+	Select	Coalesce(A.[TableId], D.[TableId], NewId()) As [TableId],
 			P.[SchemaId],
 			NullIf(Trim(D.[TableName]),'') As [TableName],
 			S.[ScopeId],

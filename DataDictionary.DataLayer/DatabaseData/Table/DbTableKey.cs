@@ -1,6 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Schema;
-using DataDictionary.DataLayer.DomainData.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,58 +7,42 @@ using System.Threading.Tasks;
 namespace DataDictionary.DataLayer.DatabaseData.Table
 {
     /// <summary>
-    /// Interface for the Database Table Key
+    /// Interface for the Database Table Key.
     /// </summary>
-    public interface IDbTableKey : IKey, IDbSchemaKey
+    public interface IDbTableKey : IKey
     {
         /// <summary>
-        /// Name of the Database Table (or View)
+        /// Application ID for the Table.
         /// </summary>
-        String? TableName { get; }
+        Guid? TableId { get; }
     }
 
     /// <summary>
-    /// Implementation for the Database Table Key
+    /// Implementation for the Database Table Key.
     /// </summary>
-    public class DbTableKey : DbSchemaKey, IDbTableKey, IKeyComparable<IDbTableKey>
+    public class DbTableKey : IDbTableKey, IKeyEquality<IDbTableKey>
     {
         /// <inheritdoc/>
-        public String TableName { get; init; } = string.Empty;
+        public Guid? TableId { get; init; } = Guid.Empty;
 
         /// <summary>
-        /// Constructor for the Database Table Key
+        /// Constructor for the Table Key.
         /// </summary>
         /// <param name="source"></param>
-        public DbTableKey(IDbTableKey source) : base(source)
-        { if (source.TableName is string) { TableName = source.TableName; } }
-
-        #region IEquatable, IComparable
-        /// <inheritdoc/>
-        public bool Equals(IDbTableKey? other)
+        public DbTableKey(IDbTableKey source) : base()
         {
-            return 
-                other is IDbSchemaKey &&
-                new DbSchemaKey(this).Equals(other) &&
-                !string.IsNullOrEmpty(TableName) &&
-                !string.IsNullOrEmpty(other.TableName) &&
-                TableName.Equals(other.TableName, KeyExtension.CompareString);
+            if (source.TableId is Guid value) { TableId = value; }
+            else { TableId = Guid.Empty; }
         }
 
+        #region IEquatable
         /// <inheritdoc/>
-        public override bool Equals(object? obj)
-        { return obj is IDbTableKey value && Equals(new DbTableKey(value)); }
+        public virtual bool Equals(IDbTableKey? other)
+        { return other is IDbTableKey && EqualityComparer<Guid?>.Default.Equals(TableId, other.TableId); }
 
         /// <inheritdoc/>
-        public int CompareTo(IDbTableKey? other)
-        {
-            if (other is null) { return 1; }
-            else if (new DbSchemaKey(this).CompareTo(other) is int value && value != 0) { return value; }
-            else { return string.Compare(TableName, other.TableName, true); }
-        }
-
-        /// <inheritdoc/>
-        public override int CompareTo(object? obj)
-        { if (obj is IDbTableKey value) { return CompareTo(new DbTableKey(value)); } else { return 1; } }
+        public override bool Equals(object? other)
+        { return other is IDbTableKey value && Equals(new DbTableKey(value)); }
 
         /// <inheritdoc/>
         public static bool operator ==(DbTableKey left, DbTableKey right)
@@ -71,33 +53,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(DbTableKey left, DbTableKey right)
-        { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
-
-        /// <inheritdoc/>
-        public static bool operator <=(DbTableKey left, DbTableKey right)
-        { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
-
-        /// <inheritdoc/>
-        public static bool operator >(DbTableKey left, DbTableKey right)
-        { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
-
-        /// <inheritdoc/>
-        public static bool operator >=(DbTableKey left, DbTableKey right)
-        { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
-
-        /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(base.GetHashCode(), TableName.GetHashCode(KeyExtension.CompareString)); }
+        { return HashCode.Combine(TableId); }
         #endregion
-
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            if (TableName is string)
-            { return string.Format("{0}.{1}", base.ToString(), TableName); }
-            else { return string.Empty; }
-        }
-
     }
 }

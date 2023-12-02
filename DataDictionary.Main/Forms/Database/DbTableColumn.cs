@@ -6,9 +6,9 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbTableColumn : ApplicationBase, IApplicationDataForm<DbTableColumnKey>
+    partial class DbTableColumn : ApplicationBase, IApplicationDataForm<DbTableColumnKeyName>
     {
-        public required DbTableColumnKey DataKey { get; init; }
+        public required DbTableColumnKeyName DataKey { get; init; }
 
         public bool IsOpenItem(object? item)
         { return DataKey.Equals(item); }

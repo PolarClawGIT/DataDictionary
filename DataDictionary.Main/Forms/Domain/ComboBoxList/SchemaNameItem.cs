@@ -12,16 +12,16 @@ using Toolbox.BindingTable;
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
     [Obsolete()]
-    record SchemaNameItem : CatalogNameItem, IDbSchemaKey
+    record SchemaNameItem : CatalogNameItem, IDbSchemaKeyName
     {
         public String SchemaName { get; set; } = String.Empty;
 
-        protected SchemaNameItem(IDbSchemaKey source) : base(source)
+        protected SchemaNameItem(IDbSchemaKeyName source) : base(source)
         { if (source.SchemaName is String value) { SchemaName = value; } }
 
-        public static void Load(ComboBoxData control, IDbCatalogKeyUnique key)
+        public static void Load(ComboBoxData control, IDbCatalogKeyName key)
         {
-            DbCatalogKeyUnique currentKey = new DbCatalogKeyUnique(key);
+            DbCatalogKeyName currentKey = new DbCatalogKeyName(key);
             BindingList<SchemaNameItem> list = new BindingList<SchemaNameItem>();
 
             list.AddRange(Program.Data.DbSchemta.

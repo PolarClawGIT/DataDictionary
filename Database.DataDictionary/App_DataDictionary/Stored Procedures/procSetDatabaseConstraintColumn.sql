@@ -57,7 +57,7 @@ Begin Try
 		Primary Key ([ConstraintColumnId]))
 
 	Insert Into @Values
-	Select	Coalesce(A.[ConstraintColumnId], NewId()) As[ConstraintColumnId],
+	Select	Coalesce(A.[ConstraintColumnId], D.[ConstraintColumnId], NewId()) As[ConstraintColumnId],
 			P.[ConstraintId],
 			R.[ColumnId] As [ParentColumnId],
 			D.[OrdinalPosition],

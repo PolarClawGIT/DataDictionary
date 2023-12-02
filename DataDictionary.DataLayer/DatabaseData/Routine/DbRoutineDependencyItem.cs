@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// Interface for a Routine Dependency Item
     /// </summary>
     /// <see href="https://learn.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-sql-expression-dependencies-transact-sql?view=sql-server-ver16"/>
-    public interface IDbRoutineDependencyItem : IDbColumnReferenceKey, IDbCatalogKey, IDbRoutineDependencyKey, IDataItem
+    public interface IDbRoutineDependencyItem : IDbColumnReferenceKey, IDbCatalogKey, IDbRoutineDependencyKeyName, IDbRoutineDependencyKey, IDataItem
     {
         /// <summary>
         /// The Object Type of the Reference
@@ -77,6 +77,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
 
         /// <inheritdoc/>
+        public Guid? DependencyId { get { return GetValue<Guid>("DependencyId"); } }
+
+        /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
         /// <inheritdoc/>
@@ -124,6 +127,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
+            new DataColumn("DependencyId", typeof(string)){ AllowDBNull = true},
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("RoutineName", typeof(string)){ AllowDBNull = false},

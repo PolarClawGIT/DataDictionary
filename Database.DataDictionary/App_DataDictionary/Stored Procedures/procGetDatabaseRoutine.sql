@@ -10,6 +10,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 /* Description: Performs Get on DatabaseRoutine.
 */
 Select	S.[CatalogId],
+		D.[RoutineId],
 		S.[DatabaseName],
 		S.[SchemaName],
 		D.[RoutineName],

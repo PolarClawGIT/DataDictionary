@@ -77,27 +77,7 @@ namespace DataDictionary.DataLayer.DatabaseData {
         
         /// <summary>
         ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
-        ///	I.[TABLE_CATALOG] As [DatabaseName],
-        ///	I.[TABLE_SCHEMA] As [SchemaName],
-        ///	I.[TABLE_NAME] As [TableName],
-        ///	I.[COLUMN_NAME] As [ColumnName],
-        ///	Case 
-        ///	When T.[TABLE_TYPE] In (&apos;BASE TABLE&apos;) Then &apos;Database.Schema.Table.Column&apos;
-        ///	When T.[TABLE_TYPE] In (&apos;VIEW&apos;) Then &apos;Database.Schema.View.Column&apos;
-        ///	Else &apos;ERROR&apos; End [ScopeName],
-        ///	I.[ORDINAL_POSITION] As [OrdinalPosition],
-        ///	iif(I.[IS_NULLABLE] In (&apos;YES&apos;,&apos;TRUE&apos;,&apos;1&apos;),1,0) As [IsNullable],
-        ///	I.[DATA_TYPE] As [DataType],
-        ///	I.[COL [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string DbColumnItem {
-            get {
-                return ResourceManager.GetString("DbColumnItem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
+        ///	NewId() As [ConstraintColumnId],
         ///	T.[CONSTRAINT_CATALOG] As [DatabaseName],
         ///	T.[CONSTRAINT_SCHEMA] As [SchemaName],
         ///	T.[CONSTRAINT_NAME] As [ConstraintName],
@@ -108,8 +88,7 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	F.[TABLE_NAME] As [ReferenceTableName],
         ///	F.[COLUMN_NAME] As [ReferenceColumnName]
         ///From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
-        ///	Inner Join [INFORMATION_SCHEMA].[KEY_COLUMN_USAGE] C
-        ///	O [rest of string was truncated]&quot;;.
+        ///	Inner Join [INFORMATI [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbConstraintColumnItem {
             get {
@@ -119,6 +98,7 @@ namespace DataDictionary.DataLayer.DatabaseData {
         
         /// <summary>
         ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
+        ///	NewId() As [ConstraintId],
         ///	[CONSTRAINT_CATALOG] As [DatabaseName],
         ///	[CONSTRAINT_SCHEMA] As [SchemaName],
         ///	[CONSTRAINT_NAME] As [ConstraintName],
@@ -135,6 +115,7 @@ namespace DataDictionary.DataLayer.DatabaseData {
         
         /// <summary>
         ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
+        ///	NewId() As [DomainId],
         ///	[DOMAIN_CATALOG] As [DatabaseName],
         ///	[DOMAIN_SCHEMA] As [SchemaName],
         ///	[DOMAIN_NAME] As [DomainName],
@@ -145,8 +126,7 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength],
         ///	[NUMERIC_PRECISION] As [NumericPrecision],
         ///	[NUMERIC_PRECISION_RADIX] As [NumericPrecisionRadix],
-        ///	[NUMERIC_SCALE] As [NumericScale],
-        ///	[DATETIME_P [rest of string was truncated]&quot;;.
+        ///	[NUMERIC_SCALE] As [Num [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbDomainItem {
             get {
@@ -185,6 +165,7 @@ namespace DataDictionary.DataLayer.DatabaseData {
         /// <summary>
         ///   Looks up a localized string similar to Begin Try;
         ///Select	@CatalogId As [CatalogId],
+        ///	NewId() As [DependencyId],
         ///	IsNull(R.[referenced_database_name],DB_Name()) As [DatabaseName],
         ///	Object_Schema_Name(Object_id(@ObjectName)) As [SchemaName],
         ///	Object_Name(Object_id(@ObjectName)) As [RoutineName],
@@ -192,7 +173,7 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	R.[referenced_entity_name] As [ReferenceObjectName],
         ///	R.[referenced_class_desc] As [ReferenceObjectType],
         ///	R.referenced_minor_name As [ReferenceColumnName],
-        ///	R.[is_caller_dependent] As [IsCallerDependent],        /// [rest of string was truncated]&quot;;.
+        ///	R.[is_caller_depend [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbRoutineDependencyItem {
             get {
@@ -202,6 +183,7 @@ namespace DataDictionary.DataLayer.DatabaseData {
         
         /// <summary>
         ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
+        ///	NewId() As [RoutineId],
         ///	[ROUTINE_CATALOG] As [DatabaseName],
         ///	[ROUTINE_SCHEMA] As [SchemaName],
         ///	[ROUTINE_NAME] As [RoutineName],
@@ -220,6 +202,7 @@ namespace DataDictionary.DataLayer.DatabaseData {
         
         /// <summary>
         ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
+        ///	NewId() As [ParameterId],
         ///	P.[SPECIFIC_CATALOG] As [DatabaseName],
         ///	P.[SPECIFIC_SCHEMA] As [SchemaName],
         ///	P.[SPECIFIC_NAME] As [RoutineName],
@@ -228,7 +211,7 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	When R.[ROUTINE_TYPE] In (&apos;PROCEDURE&apos;) Then &apos;Database.Schema.Procedure.Parameter&apos;
         ///	When R.[ROUTINE_TYPE] In (&apos;FUNCTION&apos;) Then &apos;Database.Schema.Function.Parameter&apos;
         ///	Else &apos;Error&apos; End As [ScopeName],
-        ///	P.[ORDINAL_POSITION] As [Ordinal [rest of string was truncated]&quot;;.
+        ///	P.[O [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbRoutineParameterItem {
             get {
@@ -238,6 +221,7 @@ namespace DataDictionary.DataLayer.DatabaseData {
         
         /// <summary>
         ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
+        ///	NewId() As [SchemaId],
         ///	[CATALOG_NAME] As [DatabaseName],
         ///	[SCHEMA_NAME] As [SchemaName],
         ///	&apos;Database.Schema&apos; As [ScopeName]
@@ -251,6 +235,28 @@ namespace DataDictionary.DataLayer.DatabaseData {
         
         /// <summary>
         ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
+        ///	NewId() As [ColumnId],
+        ///	I.[TABLE_CATALOG] As [DatabaseName],
+        ///	I.[TABLE_SCHEMA] As [SchemaName],
+        ///	I.[TABLE_NAME] As [TableName],
+        ///	I.[COLUMN_NAME] As [ColumnName],
+        ///	Case 
+        ///	When T.[TABLE_TYPE] In (&apos;BASE TABLE&apos;) Then &apos;Database.Schema.Table.Column&apos;
+        ///	When T.[TABLE_TYPE] In (&apos;VIEW&apos;) Then &apos;Database.Schema.View.Column&apos;
+        ///	Else &apos;ERROR&apos; End [ScopeName],
+        ///	I.[ORDINAL_POSITION] As [OrdinalPosition],
+        ///	iif(I.[IS_NULLABLE] In (&apos;YES&apos;,&apos;TRUE&apos;,&apos;1&apos;),1,0) As [IsNullable],
+        ///	I.[DATA_TYPE [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DbTableColumnItem {
+            get {
+                return ResourceManager.GetString("DbTableColumnItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
+        ///	NewId() As [TableId],
         ///	I.[TABLE_CATALOG] As [DatabaseName],
         ///	I.[TABLE_SCHEMA] As [SchemaName],
         ///	I.[TABLE_NAME] As [TableName],
@@ -263,7 +269,7 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	When T.[history_table_id] is Not Null Then &apos;TEMPORAL TABLE&apos;
         ///	Else I.[TABLE_TYPE]
         ///	End As [TableType]
-        ///From	[INFORMATION_SCHEMA].[TABLE [rest of string was truncated]&quot;;.
+        ///From	[IN [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbTableItem {
             get {

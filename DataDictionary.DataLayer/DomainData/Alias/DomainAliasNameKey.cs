@@ -48,28 +48,28 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// Constructor for the Database Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public DomainAliasNameKey(IDbCatalogKeyUnique source) : this()
+        public DomainAliasNameKey(IDbCatalogKeyName source) : this()
         { AliasName = source.ToAliasName(); }
 
         /// <summary>
         /// Constructor for the Schema Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public DomainAliasNameKey(IDbSchemaKey source) : this()
+        public DomainAliasNameKey(IDbSchemaKeyName source) : this()
         { AliasName = source.ToAliasName(); }
 
         /// <summary>
         /// Constructor for the Table Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public DomainAliasNameKey(IDbTableKey source) : this()
+        public DomainAliasNameKey(IDbTableKeyName source) : this()
         { AliasName = source.ToAliasName(); }
 
         /// <summary>
         /// Constructor for the Table Column Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public DomainAliasNameKey(IDbTableColumnKey source) : this()
+        public DomainAliasNameKey(IDbTableColumnKeyName source) : this()
         { AliasName = source.ToAliasName(); }
 
         /// <summary>

@@ -3,66 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataDictionary.DataLayer.DatabaseData.Schema;
 
 namespace DataDictionary.DataLayer.DatabaseData.Routine
 {
     /// <summary>
-    /// Interface for the Database Routine Key
+    /// Interface for the Database Routine Key.
     /// </summary>
-    public interface IDbRoutineKey : IKey, IDbSchemaKey
+    public interface IDbRoutineKey : IKey
     {
         /// <summary>
-        /// Name of the Database Routine (Procedure or Function)
+        /// Application ID for the Routine.
         /// </summary>
-        String? RoutineName { get; }
+        Guid? RoutineId { get; }
     }
 
     /// <summary>
-    /// Implementation of the Database Routine Key
+    /// Implementation for the Database Routine Key.
     /// </summary>
-    public class DbRoutineKey : DbSchemaKey, IDbRoutineKey, IKeyComparable<IDbRoutineKey>
+    public class DbRoutineKey : IDbRoutineKey, IKeyEquality<IDbRoutineKey>
     {
         /// <inheritdoc/>
-        public String RoutineName { get; set; } = string.Empty;
+        public Guid? RoutineId { get; init; } = Guid.Empty;
 
         /// <summary>
-        /// Constructor for the Database Routine Key
+        /// Constructor for the Routine Key.
         /// </summary>
         /// <param name="source"></param>
-        public DbRoutineKey(IDbRoutineKey source) : base(source)
+        public DbRoutineKey(IDbRoutineKey source) : base()
         {
-            if (source.RoutineName is string) { RoutineName = source.RoutineName; }
-            else { RoutineName = string.Empty; }
+            if (source.RoutineId is Guid value) { RoutineId = value; }
+            else { RoutineId = Guid.Empty; }
         }
 
-        #region IEquatable, IComparable
+        #region IEquatable
         /// <inheritdoc/>
-        public bool Equals(IDbRoutineKey? other)
-        {
-            return 
-                other is IDbSchemaKey &&
-                new DbSchemaKey(this).Equals(other) &&
-                !string.IsNullOrEmpty(RoutineName) &&
-                !string.IsNullOrEmpty(other.RoutineName) &&
-                RoutineName.Equals(other.RoutineName, KeyExtension.CompareString);
-        }
+        public virtual bool Equals(IDbRoutineKey? other)
+        { return other is IDbRoutineKey && EqualityComparer<Guid?>.Default.Equals(RoutineId, other.RoutineId); }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj)
-        { return obj is IDbRoutineKey value && Equals(new DbRoutineKey(value)); }
-
-        /// <inheritdoc/>
-        public int CompareTo(IDbRoutineKey? other)
-        {
-            if (other is null) { return 1; }
-            else if (new DbSchemaKey(this).CompareTo(other) is int value && value != 0) { return value; }
-            else { return string.Compare(RoutineName, other.RoutineName, true); }
-        }
-
-        /// <inheritdoc/>
-        public override int CompareTo(object? obj)
-        { if (obj is IDbRoutineKey value) { return CompareTo(new DbRoutineKey(value)); } else { return 1; } }
+        public override bool Equals(object? other)
+        { return other is IDbRoutineKey value && Equals(new DbRoutineKey(value)); }
 
         /// <inheritdoc/>
         public static bool operator ==(DbRoutineKey left, DbRoutineKey right)
@@ -73,32 +53,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(DbRoutineKey left, DbRoutineKey right)
-        { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
-
-        /// <inheritdoc/>
-        public static bool operator <=(DbRoutineKey left, DbRoutineKey right)
-        { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
-
-        /// <inheritdoc/>
-        public static bool operator >(DbRoutineKey left, DbRoutineKey right)
-        { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
-
-        /// <inheritdoc/>
-        public static bool operator >=(DbRoutineKey left, DbRoutineKey right)
-        { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
-
-        /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(base.GetHashCode(), RoutineName.GetHashCode(KeyExtension.CompareString)); }
+        { return HashCode.Combine(RoutineId); }
         #endregion
-
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            if (RoutineName is string)
-            { return string.Format("{0}.{1}", base.ToString(), RoutineName); }
-            else { return string.Empty; }
-        }
     }
 }
