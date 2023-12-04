@@ -22,204 +22,58 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     public class ModelAliasCollection : SortedList<ModelAliasKey, ModelAliasItem>
     {
         /// <summary>
-        /// Adds Database Catalogs to collection
+        /// Adds Database Catalog to collection
         /// </summary>
         /// <param name="data"></param>
-        public void Add(IEnumerable<IDbCatalogItem> data)
+        public void Add(IDbCatalogItem data)
         {
-            foreach (IDbCatalogItem item in data)
-            {
-                this.Add(
-                    new ModelAliasKey(item),
-                    new ModelAliasItem<IDbCatalogItem>()
-                    {
-                        AliasName = item.ToAliasName(),
-                        ScopeId = item.ToScopeType(),
-                        Source = item,
-                        SystemSourceId = item.CatalogId ?? Guid.Empty
-                    });
-            }
+            this.Add(
+                new ModelAliasKey(data),
+                new ModelAliasItem<IDbCatalogItem>()
+                {
+                    AliasName = data.ToAliasName(),
+                    ScopeId = data.ToScopeType(),
+                    Source = data,
+                    SystemSourceId = data.CatalogId ?? Guid.Empty
+                });
         }
 
         /// <summary>
         /// Adds Database Schema to collection
         /// </summary>
         /// <param name="data"></param>
-        public void Add(IEnumerable<IDbSchemaItem> data)
+        /// <param name="parent"></param>
+        public void Add(IDbCatalogKey parent, IDbSchemaItem data)
         {
-            foreach (IDbSchemaItem item in data)
-            {
-                this.Add(
-                    new ModelAliasKey(item),
-                    new ModelAliasItem<IDbSchemaItem>()
-                    {
-                        AliasName = item.ToAliasName(),
-                        ScopeId = item.ToScopeType(),
-                        Source = item,
-                        SystemSourceId = item.SchemaId ?? Guid.Empty
-                    });
-            }
+            this.Add(
+                new ModelAliasKey(parent, data),
+                new ModelAliasItem<IDbSchemaItem>()
+                {
+                    AliasName = data.ToAliasName(),
+                    ScopeId = data.ToScopeType(),
+                    Source = data,
+                    SystemSourceId = data.SchemaId ?? Guid.Empty
+                });
         }
 
         /// <summary>
         /// Adds Database Table to collection
         /// </summary>
         /// <param name="data"></param>
-        public void Add(IEnumerable<IDbTableItem> data)
+        /// <param name="parent"></param>
+        public void Add(IDbSchemaKey parent, IDbTableItem data)
         {
-            foreach (IDbTableItem item in data)
-            {
-                this.Add(
-                    new ModelAliasKey(item),
-                    new ModelAliasItem<IDbTableItem>()
-                    {
-                        AliasName = item.ToAliasName(),
-                        ScopeId = item.ToScopeType(),
-                        Source = item,
-                        SystemSourceId = item.TableId ?? Guid.Empty
-                    });
-            }
+            this.Add(
+                new ModelAliasKey(parent, data),
+                new ModelAliasItem<IDbTableItem>()
+                {
+                    AliasName = data.ToAliasName(),
+                    ScopeId = data.ToScopeType(),
+                    Source = data,
+                    SystemSourceId = data.TableId ?? Guid.Empty
+                });
         }
 
-        /// <summary>
-        /// Adds Database Table Column to collection
-        /// </summary>
-        /// <param name="data"></param>
-        public void Add(IEnumerable<IDbTableColumnItem> data)
-        {
-            foreach (IDbTableColumnItem item in data)
-            {
-                this.Add(
-                    new ModelAliasKey(item),
-                    new ModelAliasItem<IDbTableColumnItem>()
-                    {
-                        AliasName = item.ToAliasName(),
-                        ScopeId = item.ToScopeType(),
-                        Source = item,
-                        SystemSourceId = item.ColumnId ?? Guid.Empty
-                    });
-            }
-        }
-
-        /// <summary>
-        /// Adds Database Table Column to collection
-        /// </summary>
-        /// <param name="data"></param>
-        public void Add(IEnumerable<IDbDomainItem> data)
-        {
-            foreach (IDbDomainItem item in data)
-            {
-                this.Add(
-                    new ModelAliasKey(item),
-                    new ModelAliasItem<IDbDomainItem>()
-                    {
-                        AliasName = item.ToAliasName(),
-                        ScopeId = item.ToScopeType(),
-                        Source = item,
-                        SystemSourceId = item.DomainId ?? Guid.Empty
-                    });
-            }
-        }
-
-        /// <summary>
-        /// Adds Database Constraints to collection
-        /// </summary>
-        /// <param name="data"></param>
-        public void Add(IEnumerable<IDbConstraintItem> data)
-        {
-            foreach (IDbConstraintItem item in data)
-            {
-                this.Add(
-                    new ModelAliasKey(item),
-                    new ModelAliasItem<IDbConstraintItem>()
-                    {
-                        AliasName = DbConstraintKeyNameExtension.ToAliasName(item),
-                        ScopeId = item.ToScopeType(),
-                        Source = item,
-                        SystemSourceId = item.ConstraintId ?? Guid.Empty
-                    });
-            }
-        }
-
-        /// <summary>
-        /// Adds Database Routine to collection
-        /// </summary>
-        /// <param name="data"></param>
-        public void Add(IEnumerable<IDbRoutineItem> data)
-        {
-            foreach (IDbRoutineItem item in data)
-            {
-                this.Add(
-                    new ModelAliasKey(item),
-                    new ModelAliasItem<IDbRoutineItem>()
-                    {
-                        AliasName = item.ToAliasName(),
-                        ScopeId = item.ToScopeType(),
-                        Source = item,
-                        SystemSourceId = item.RoutineId ?? Guid.Empty
-                    });
-            }
-        }
-
-        /// <summary>
-        /// Adds Database Routine Parameter to collection
-        /// </summary>
-        /// <param name="data"></param>
-        public void Add(IEnumerable<IDbRoutineParameterItem> data)
-        {
-            foreach (IDbRoutineParameterItem item in data)
-            {
-                this.Add(
-                    new ModelAliasKey(item),
-                    new ModelAliasItem<IDbRoutineParameterItem>()
-                    {
-                        AliasName = item.ToAliasName(),
-                        ScopeId = item.ToScopeType(),
-                        Source = item,
-                        SystemSourceId = item.ParameterId ?? Guid.Empty
-                    });
-            }
-        }
-
-        /// <summary>
-        /// Adds Library Source to collection
-        /// </summary>
-        /// <param name="data"></param>
-        public void Add(IEnumerable<ILibrarySourceItem> data)
-        {
-            foreach (ILibrarySourceItem item in data)
-            {
-                this.Add(
-                    new ModelAliasKey(item),
-                    new ModelAliasItem<ILibrarySourceItem>()
-                    {
-                        AliasName = item.ToAliasName(),
-                        ScopeId = item.ToScopeType(),
-                        Source = item,
-                        SystemSourceId = item.LibraryId ?? Guid.Empty
-                    });
-            }
-        }
-
-        /// <summary>
-        /// Adds Library Source to collection
-        /// </summary>
-        /// <param name="data"></param>
-        public void Add(IEnumerable<ILibraryMemberItem> data)
-        {
-            foreach (ILibraryMemberItem item in data)
-            {
-                this.Add(
-                    new ModelAliasKey(item),
-                    new ModelAliasItem<ILibraryMemberItem>()
-                    {
-                        AliasName = LibraryMemberKeyNameExtension.ToAliasName(item),
-                        ScopeId = item.ToScopeType(),
-                        Source = item,
-                        SystemSourceId = item.LibraryId ?? Guid.Empty
-                    });
-            }
-        }
 
     }
 }

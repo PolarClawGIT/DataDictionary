@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer
     /// Interface component for the Model Library
     /// </summary>
     /// <remarks>When combined with the Extension class, this implements multi-inheritance.</remarks>
-    public interface IModelLibrary
+    public interface IModelLibrary: IModelAlias
     {
         /// <summary>
         /// List of Domain Properties for the Entities within the Model.

@@ -195,6 +195,7 @@ namespace DataDictionary.Main.Forms.Database
                     };
 
                     work.AddRange(Program.Data.LoadCatalog(source));
+                    work.AddRange(Program.Data.LoadAlias());
 
                     DoLocalWork(work);
                 }
