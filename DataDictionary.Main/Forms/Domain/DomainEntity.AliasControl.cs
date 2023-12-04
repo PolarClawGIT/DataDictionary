@@ -36,7 +36,7 @@ namespace DataDictionary.Main.Forms.Domain
             alaisData.HeaderStyle = ColumnHeaderStyle.None;
             alaisData.Columns.Add("Alias", alaisData.Width - SystemInformation.VerticalScrollBarWidth);
 
-
+            var x = Program.Data.DbTables.FirstOrDefault().ToAliasName();
         }
 
         private void alaisData_ItemActivate(object sender, EventArgs e)

@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     /// <summary>
     /// Extension Class used with Domain Aliases
     /// </summary>
-    public static class DomainAlias
+    static class AliasExtension
     {
         /// <summary>
         /// Parses a AlaisName (qualified DB object Name or .Net NameSpace)
@@ -63,52 +63,25 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         }
 
         /// <summary>
-        /// Crates an Alias Name from a Db Catalog
+        /// Formats the Alias Name into a period delimited string with each element delimited by square brackets.
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="aliasName"></param>
         /// <returns></returns>
-        public static String ToAliasName(this IDbCatalogKeyName source)
-        { return FormatName(String.Format("[{0}]", source.DatabaseName)); }
+        public static String FormatName(params String?[] aliasName)
+        {
+            String result = String.Empty;
 
-        /// <summary>
-        /// Crates an Alias Name from a Db Schema
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public static String ToAliasName(this IDbSchemaKeyName source)
-        { return FormatName(String.Format("{0}.[{1}]", new DbCatalogKeyName(source).ToAliasName(), source.SchemaName)); }
+            // Build name
+            foreach (String? item in aliasName)
+            {
+                if (String.IsNullOrWhiteSpace(item)) { break; }
 
-        /// <summary>
-        /// Crates an Alias Name from a Db Table
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public static String ToAliasName(this IDbTableKeyName source)
-        { return FormatName(String.Format("{0}.[{1}]", new DbSchemaKeyName(source).ToAliasName(), source.TableName)); }
+                if (String.IsNullOrWhiteSpace(result)) { result = String.Format("[{0}]", item); }
+                else { result = String.Format("{0}.[{1}]", result, item); }
+            }
 
-        /// <summary>
-        /// Crates an Alias Name from a Db Table Column
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public static String ToAliasName(this IDbTableColumnKeyName source)
-        { return FormatName(String.Format("{0}.[{1}]", new DbTableKeyName(source).ToAliasName(), source.ColumnName)); }
-
-        /// <summary>
-        /// Crates an Alias Name from a Library Source
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public static String ToAliasName(this ILibrarySourceUniqueKey source)
-        { return FormatName(String.Format("{0}", FormatName(source.AssemblyName))); }
-
-        /// <summary>
-        /// Crates an Alias Name from a Library Item
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public static String ToAliasName(this ILibraryMemberAlternateKey source)
-        { return FormatName(String.Format("{0}.[{1}]", FormatName(source.NameSpace), source.MemberName)); }
+            return result;
+        }
 
         static List<String> NameParts(String aliasName)
         {

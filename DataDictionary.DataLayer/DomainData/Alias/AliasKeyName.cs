@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     /// <summary>
     /// Interface for the Domain Alias Key
     /// </summary>
-    public interface IDomainAliasNameKey : IKey
+    public interface IAliasKeyName : IKey
     {
         /// <summary>
         /// Name of the Alias.
@@ -24,7 +24,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     /// <summary>
     /// Implementation for the Domain Alias Key
     /// </summary>
-    public class DomainAliasNameKey : IDomainAliasNameKey, IKeyComparable<IDomainAliasNameKey>
+    public class AliasKeyName : IAliasKeyName, IKeyComparable<IAliasKeyName>
     {
         /// <inheritdoc/>
         public String AliasName { get; init; } = string.Empty;
@@ -32,13 +32,13 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// <summary>
         /// Constructor for the Domain Alias Key
         /// </summary>
-        protected DomainAliasNameKey () : base() { }
+        protected AliasKeyName () : base() { }
 
         /// <summary>
         /// Constructor for the Domain Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public DomainAliasNameKey(IDomainAliasNameKey source): this()
+        public AliasKeyName(IAliasKeyName source): this()
         {
             if (source.AliasName is string) { AliasName = source.AliasName; }
             else { AliasName = string.Empty; }
@@ -48,42 +48,42 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// Constructor for the Database Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public DomainAliasNameKey(IDbCatalogKeyName source) : this()
+        public AliasKeyName(IDbCatalogKeyName source) : this()
         { AliasName = source.ToAliasName(); }
 
         /// <summary>
         /// Constructor for the Schema Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public DomainAliasNameKey(IDbSchemaKeyName source) : this()
+        public AliasKeyName(IDbSchemaKeyName source) : this()
         { AliasName = source.ToAliasName(); }
 
         /// <summary>
         /// Constructor for the Table Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public DomainAliasNameKey(IDbTableKeyName source) : this()
+        public AliasKeyName(IDbTableKeyName source) : this()
         { AliasName = source.ToAliasName(); }
 
         /// <summary>
         /// Constructor for the Table Column Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public DomainAliasNameKey(IDbTableColumnKeyName source) : this()
+        public AliasKeyName(IDbTableColumnKeyName source) : this()
         { AliasName = source.ToAliasName(); }
 
         /// <summary>
-        /// Constructor for the Domain Alias Key
+        /// Constructor for the Library Member Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public DomainAliasNameKey(ILibraryMemberAlternateKey source) : this()
+        public AliasKeyName(ILibraryMemberKeyName source) : this()
         { AliasName = source.ToAliasName(); }
 
         /// <summary>
         /// Returns the Parent Alias Key, if any
         /// </summary>
         /// <returns></returns>
-        public DomainAliasNameKey Parent()
+        public AliasKeyName Parent()
         {
             if (this.AliasName.Contains(".["))
             {
@@ -91,17 +91,17 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 Int32 index = reverse.IndexOf("[.");
                 String value = this.AliasName.Substring(0, this.AliasName.Length - index - 1);
 
-                return new DomainAliasNameKey(this) { AliasName = value };
+                return new AliasKeyName(this) { AliasName = value };
             }
-            else { return new DomainAliasNameKey(); }
+            else { return new AliasKeyName(); }
         }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public virtual bool Equals(IDomainAliasNameKey? other)
+        public virtual bool Equals(IAliasKeyName? other)
         {
             return
-                other is IDomainAliasNameKey &&
+                other is IAliasKeyName &&
                 !string.IsNullOrEmpty(AliasName) &&
                 !string.IsNullOrEmpty(other.AliasName) &&
                 AliasName.Equals(other.AliasName, KeyExtension.CompareString);
@@ -109,10 +109,10 @@ namespace DataDictionary.DataLayer.DomainData.Alias
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IDomainAliasNameKey value && Equals(new DomainAliasNameKey(value)); }
+        { return obj is IAliasKeyName value && Equals(new AliasKeyName(value)); }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(IDomainAliasNameKey? other)
+        public virtual int CompareTo(IAliasKeyName? other)
         {
             if (other is null) { return 1; }
             else { return string.Compare(AliasName, other.AliasName, true); }
@@ -120,30 +120,30 @@ namespace DataDictionary.DataLayer.DomainData.Alias
 
         /// <inheritdoc/>
         public virtual int CompareTo(object? obj)
-        { if (obj is IDomainAliasNameKey value) { return CompareTo(new DomainAliasNameKey(value)); } else { return 1; } }
+        { if (obj is IAliasKeyName value) { return CompareTo(new AliasKeyName(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static bool operator ==(DomainAliasNameKey left, DomainAliasNameKey right)
+        public static bool operator ==(AliasKeyName left, AliasKeyName right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(DomainAliasNameKey left, DomainAliasNameKey right)
+        public static bool operator !=(AliasKeyName left, AliasKeyName right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(DomainAliasNameKey left, DomainAliasNameKey right)
+        public static bool operator <(AliasKeyName left, AliasKeyName right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(DomainAliasNameKey left, DomainAliasNameKey right)
+        public static bool operator <=(AliasKeyName left, AliasKeyName right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(DomainAliasNameKey left, DomainAliasNameKey right)
+        public static bool operator >(AliasKeyName left, AliasKeyName right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(DomainAliasNameKey left, DomainAliasNameKey right)
+        public static bool operator >=(AliasKeyName left, AliasKeyName right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>

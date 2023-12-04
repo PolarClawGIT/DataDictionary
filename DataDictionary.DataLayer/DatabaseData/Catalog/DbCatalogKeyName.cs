@@ -1,14 +1,29 @@
-﻿namespace DataDictionary.DataLayer.DatabaseData.Catalog
+﻿using DataDictionary.DataLayer.DomainData.Alias;
+
+namespace DataDictionary.DataLayer.DatabaseData.Catalog
 {
     /// <summary>
     /// Interface for the unique Name of a Catalog.
     /// </summary>
-    public interface IDbCatalogKeyName: IKey
+    public interface IDbCatalogKeyName : IKey, IToAliasName
     {
         /// <summary>
         /// Name of the Database Name
         /// </summary>
         String? DatabaseName { get; }
+    }
+
+    /// <summary>
+    /// Implementation for IDbCatalogKeyName
+    /// </summary>
+    public static class DbCatalogKeyNameExtension
+    {
+        /// <summary>
+        /// Gets the Alias Name for the Database Catalog.
+        /// </summary>
+        /// <returns></returns>
+        public static String ToAliasName(this IDbCatalogKeyName source)
+        { return AliasExtension.FormatName(source.DatabaseName); }
     }
 
     /// <summary>
@@ -33,7 +48,7 @@
         /// <inheritdoc/>
         public virtual bool Equals(IDbCatalogKeyName? other)
         {
-            return 
+            return
                 other is IDbCatalogKeyName &&
                 !string.IsNullOrEmpty(DatabaseName) &&
                 !string.IsNullOrEmpty(other.DatabaseName) &&
@@ -87,9 +102,6 @@
 
         /// <inheritdoc/>
         public override string ToString()
-        {
-            if (DatabaseName is string) { return DatabaseName; }
-            else { return string.Empty; }
-        }
+        { return this.ToAliasName(); }
     }
 }

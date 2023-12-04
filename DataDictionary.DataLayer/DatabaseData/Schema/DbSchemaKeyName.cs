@@ -5,18 +5,32 @@ using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DomainData.Alias;
 
 namespace DataDictionary.DataLayer.DatabaseData.Schema
 {
     /// <summary>
     /// Interface for the Database Schema Key
     /// </summary>
-    public interface IDbSchemaKeyName : IKey, IDbCatalogKeyName
+    public interface IDbSchemaKeyName : IKey, IDbCatalogKeyName, IToAliasName
     {
         /// <summary>
         /// Name of the Database Schema
         /// </summary>
         String? SchemaName { get; }
+    }
+
+    /// <summary>
+    /// Implementation for IDbSchemaKeyName
+    /// </summary>
+    public static class DbSchemaKeyNameExtension
+    {
+        /// <summary>
+        /// Gets the Alias Name for the Database Schema.
+        /// </summary>
+        /// <returns></returns>
+        public static String ToAliasName(this IDbSchemaKeyName source)
+        { return AliasExtension.FormatName(source.DatabaseName, source.SchemaName); }
     }
 
     /// <summary>
@@ -96,10 +110,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
 
         /// <inheritdoc/>
         public override string ToString()
-        {
-            if (SchemaName is string)
-            { return string.Format("{0}.{1}", base.ToString(), SchemaName); }
-            else { return string.Empty; }
-        }
+        { return this.ToAliasName(); }
+
+
     }
 }

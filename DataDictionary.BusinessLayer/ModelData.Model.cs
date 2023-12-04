@@ -25,7 +25,7 @@ namespace DataDictionary.BusinessLayer
         {
             DbTableColumnKeyName key = new DbTableColumnKeyName(columnKey);
             DomainAttributeUniqueKey attributeKeyUnique = new DomainAttributeUniqueKey(columnKey);
-            DomainAliasNameKey aliasKey = new DomainAliasNameKey(columnKey);
+            AliasKeyName aliasKey = new AliasKeyName(columnKey);
 
             if (this.DbTableColumns.FirstOrDefault(w => key.Equals(w)) is DbTableColumnItem columnItem
                 && this.DbCatalogs.FirstOrDefault(w => new DbCatalogKey(columnItem).Equals(w)) is DbCatalogItem catalogItem
@@ -174,7 +174,7 @@ namespace DataDictionary.BusinessLayer
         {
             DbTableKeyName key = new DbTableKeyName(tableKey);
             DomainEntityUniqueKey entityKeyUnique = new DomainEntityUniqueKey(tableKey);
-            DomainAliasNameKey aliasKey = new DomainAliasNameKey(tableKey);
+            AliasKeyName aliasKey = new AliasKeyName(tableKey);
 
             if (this.DbTables.FirstOrDefault(w => key.Equals(w)) is DbTableItem tableItem
                 && this.DbCatalogs.FirstOrDefault(w => new DbCatalogKey(tableItem).Equals(w)) is DbCatalogItem catalogItem)

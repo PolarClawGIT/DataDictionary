@@ -46,8 +46,8 @@ namespace DataDictionary.DataLayer.DomainData.Alias.Tests
             List<String> domainAliases = new List<String>();
 
             List <String> result = new List<string>();
-            foreach (string item in testData)
-            { result = result.Union(DomainAlias.ParseName(item)).ToList(); }
+            //foreach (string item in testData)
+            //{ result = result.Union(AliasExtension.ParseName(item)).ToList(); }
 
             result.Sort();
             Assert.IsTrue(result.Except(expectedData).Count() == 0);

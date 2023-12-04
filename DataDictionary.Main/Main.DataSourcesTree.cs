@@ -158,7 +158,7 @@ namespace DataDictionary.Main
 
                 foreach (ILibrarySourceItem librarySourceItem in Program.Data.LibrarySources.OrderBy(o => o.LibraryTitle))
                 {
-                    LibrarySourceUniqueKey sourceKey = new LibrarySourceUniqueKey(librarySourceItem);
+                    LibrarySourceKeyName sourceKey = new LibrarySourceKeyName(librarySourceItem);
                     TreeNode sourceNode = CreateNode(dataSourceNavigation.Nodes, librarySourceItem.LibraryTitle, dbDataImageIndex.Library, librarySourceItem);
 
                     foreach (LibraryMemberItem memberItem in
@@ -220,7 +220,7 @@ namespace DataDictionary.Main
                 {
                     foreach (LibraryMemberItem memberItem in
                         Program.Data.LibraryMembers.
-                        Where(w => new LibraryMemberParentKey(w).Equals(key)).
+                        Where(w => new LibraryMemberKeyParent(w).Equals(key)).
                         OrderBy(o => o.ToScopeType()).
                         ThenBy(o => o.MemberName))
                     {

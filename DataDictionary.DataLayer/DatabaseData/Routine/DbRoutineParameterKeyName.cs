@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.DomainData.Alias;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,26 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for the Database Routine Parameter Key
     /// </summary>
-    public interface IDbRoutineParameterKeyName : IKey, IDbRoutineKeyName
+    public interface IDbRoutineParameterKeyName : IKey, IDbRoutineKeyName, IToAliasName
     {
         /// <summary>
         /// Name of the Database Parameter
         /// </summary>
         String? ParameterName { get; }
+    }
+
+
+    /// <summary>
+    /// Implementation for IDbRoutineParameterKeyName
+    /// </summary>
+    public static class DbRoutineParameterKeyNameExtension
+    {
+        /// <summary>
+        /// Gets the Alias Name for the Database Routine Parameter.
+        /// </summary>
+        /// <returns></returns>
+        public static String ToAliasName(this IDbRoutineParameterKeyName source)
+        { return AliasExtension.FormatName(source.DatabaseName, source.SchemaName, source.RoutineName, source.ParameterName); }
     }
 
     /// <summary>
@@ -95,11 +110,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         /// <inheritdoc/>
         public override string ToString()
-        {
-            if (ParameterName is string)
-            { return string.Format("{0}.{1}", base.ToString(), ParameterName); }
-            else { return string.Empty; }
-        }
-
+        { return this.ToAliasName(); }
     }
 }

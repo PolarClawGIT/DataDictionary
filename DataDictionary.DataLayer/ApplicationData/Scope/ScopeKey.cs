@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <summary>
         /// Primary Key ID for the Scope
         /// </summary>
-        Int32? ScopeId { get; }
+        ScopeType ScopeId { get; }
     }
 
     /// <summary>
@@ -23,7 +23,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     public class ScopeKey : IScopeKey, IKeyEquality<IScopeKey>
     {
         /// <inheritdoc/>
-        public Int32? ScopeId { get; init; } = 0;
+        public ScopeType ScopeId { get; init; } = ScopeType.Null;
 
         /// <summary>
         /// Constructor for the Primary Key of the Property.
@@ -38,7 +38,10 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(IScopeKey? other)
-        { return other is IScopeKey && this.ScopeId.HasValue && other.ScopeId.HasValue && EqualityComparer<Int32?>.Default.Equals(this.ScopeId, other.ScopeId); }
+        { return other is IScopeKey
+                && this.ScopeId !=  ScopeType.Null
+                && other.ScopeId != ScopeType.Null
+                && this.ScopeId.Equals(other.ScopeId); }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)

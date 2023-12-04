@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,7 +14,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
     /// <summary>
     /// Interface for the Library Source Item
     /// </summary>
-    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceUniqueKey, IDataItem
+    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyName, ILibraryScopeType, IDataItem
     {
         /// <summary>
         /// Title for the Library
@@ -60,7 +61,10 @@ namespace DataDictionary.DataLayer.LibraryData.Source
         /// <inheritdoc/>
         public DateTime? SourceDate { get { return GetValue<DateTime>("SourceDate"); } set { SetValue("SourceDate", value); } }
 
-         /// <summary>
+        /// <inheritdoc/>
+        public String? MemberType { get { return ScopeType.Library.ToScopeName(); } }
+
+        /// <summary>
         /// Constructor for LibraryMemberItem
         /// </summary>
         public LibrarySourceItem() : base()

@@ -185,7 +185,7 @@ namespace DataDictionary.BusinessLayer
             DomainAttributeKey key = new DomainAttributeKey(source);
             List<DomainEntityItem> result = new List<DomainEntityItem>();
 
-            foreach (DomainAliasNameKey attributeAliases in data.DomainAttributeAliases.Where(w => key.Equals(w)).Select(s => new DomainAliasNameKey(s).Parent()))
+            foreach (AliasKeyName attributeAliases in data.DomainAttributeAliases.Where(w => key.Equals(w)).Select(s => new AliasKeyName(s).Parent()))
             {
                 foreach (DomainEntityKey entityAliases in data.DomainEntityAliases.Where(w => attributeAliases.Equals(w)).Select(s => new DomainEntityKey(s)))
                 {
@@ -232,9 +232,9 @@ namespace DataDictionary.BusinessLayer
             DomainEntityKey key = new DomainEntityKey(source);
             List<DomainAttributeItem> result = new List<DomainAttributeItem>();
 
-            foreach (DomainAliasNameKey entityAliases in data.DomainEntityAliases.Where(w => key.Equals(w)).Select(s => new DomainAliasNameKey(s)))
+            foreach (AliasKeyName entityAliases in data.DomainEntityAliases.Where(w => key.Equals(w)).Select(s => new AliasKeyName(s)))
             {
-                foreach (DomainAttributeKey attributeAliases in data.DomainAttributeAliases.Where(w => entityAliases.Equals(new DomainAliasNameKey(w).Parent())).Select(s => new DomainAttributeKey(s)))
+                foreach (DomainAttributeKey attributeAliases in data.DomainAttributeAliases.Where(w => entityAliases.Equals(new AliasKeyName(w).Parent())).Select(s => new DomainAttributeKey(s)))
                 {
                     if (data.DomainAttributes.FirstOrDefault(w => attributeAliases.Equals(w)) is DomainAttributeItem item)
                     { result.Add(item); }

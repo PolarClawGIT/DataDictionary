@@ -120,7 +120,7 @@ namespace DataDictionary.BusinessLayer
                 { // Parse the XML file and load to data objects
                     XmlDocument xmlData = new XmlDocument();
                     xmlData.Load(file.FullName);
-                    LibrarySourceUniqueKey sourceKey;
+                    LibrarySourceKeyName sourceKey;
 
                     if (xmlData.DocumentElement is XmlElement root)
                     {
@@ -138,7 +138,7 @@ namespace DataDictionary.BusinessLayer
                                 SourceDate = file.LastWriteTime
                             };
 
-                            sourceKey = new LibrarySourceUniqueKey(sourceItem);
+                            sourceKey = new LibrarySourceKeyName(sourceItem);
 
                             if (data.LibrarySources.FirstOrDefault(w => sourceKey.Equals(w)) is LibrarySourceItem alreadyExists)
                             {

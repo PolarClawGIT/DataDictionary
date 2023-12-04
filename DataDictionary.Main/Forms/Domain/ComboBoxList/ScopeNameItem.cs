@@ -23,6 +23,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
         public ScopeNameItem(IDbScopeType source) : base()
         { if (source.ScopeName is String value) { ScopeName = value; } }
 
+        /*
         public static void LoadEntity(ComboBoxData control)
         {
             BindingList<IDbScopeType> list = new BindingList<IDbScopeType>();
@@ -67,6 +68,6 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 
             if (selected is not null) { control.SelectedItem = selected; }
 
-        }
+        }*/
     }
 }

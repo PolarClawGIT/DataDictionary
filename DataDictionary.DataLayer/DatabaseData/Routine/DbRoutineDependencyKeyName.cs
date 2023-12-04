@@ -150,7 +150,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public override string ToString()
         {
             if (ReferenceSchemaName is string && ReferenceObjectName is string && ReferenceColumnName is string)
-            { return string.Format("{0}.{1}.{2}.{3}", base.ToString(), ReferenceSchemaName, ReferenceObjectName, ReferenceColumnName); }
+            { return string.Format("[{0}].[{1}].[{2}].[{3}]", base.ToString(), ReferenceSchemaName, ReferenceObjectName, ReferenceColumnName); }
             else { return string.Empty; }
         }
     }

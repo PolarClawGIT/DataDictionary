@@ -66,7 +66,7 @@ namespace DataDictionary.Main.Forms.Library
                 assemblyNameData.DataBindings.Add(new Binding(nameof(assemblyNameData.Text), memberItem, nameof(memberItem.AssemblyName)));
 
                 LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
-                BindingView<LibraryMemberItem> childMembers = new BindingView<LibraryMemberItem>(Program.Data.LibraryMembers, w => new LibraryMemberParentKey(w).Equals(memberKey));
+                BindingView<LibraryMemberItem> childMembers = new BindingView<LibraryMemberItem>(Program.Data.LibraryMembers, w => new LibraryMemberKeyParent(w).Equals(memberKey));
 
                 childMemberData.AutoGenerateColumns = false;
                 childMemberData.DataSource = childMembers;

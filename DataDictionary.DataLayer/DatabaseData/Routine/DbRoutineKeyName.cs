@@ -4,18 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.DomainData.Alias;
 
 namespace DataDictionary.DataLayer.DatabaseData.Routine
 {
     /// <summary>
     /// Interface for the Database Routine Key
     /// </summary>
-    public interface IDbRoutineKeyName : IKey, IDbSchemaKeyName
+    public interface IDbRoutineKeyName : IKey, IDbSchemaKeyName, IToAliasName
     {
         /// <summary>
         /// Name of the Database Routine (Procedure or Function)
         /// </summary>
         String? RoutineName { get; }
+    }
+
+    /// <summary>
+    /// Implementation for IDbRoutineKeyName
+    /// </summary>
+    public static class DbRoutineKeyNameExtension
+    {
+        /// <summary>
+        /// Gets the Alias Name for the Database Routine.
+        /// </summary>
+        /// <returns></returns>
+        public static String ToAliasName(this IDbRoutineKeyName source)
+        { return AliasExtension.FormatName(source.DatabaseName, source.SchemaName, source.RoutineName); }
     }
 
     /// <summary>
@@ -95,10 +109,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         /// <inheritdoc/>
         public override string ToString()
-        {
-            if (RoutineName is string)
-            { return string.Format("{0}.{1}", base.ToString(), RoutineName); }
-            else { return string.Empty; }
-        }
+        { return this.ToAliasName(); }
     }
 }

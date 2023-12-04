@@ -11,7 +11,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
-    record SourceNameItem : IDomainAliasSourceKey
+    record SourceNameItem : IAliasKeySource
     {
         public String SourceName { get; init; } = String.Empty;
 
@@ -21,7 +21,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 
         public static void Load(ComboBoxData control)
         {
-            BindingList<IDomainAliasSourceKey> list = new BindingList<IDomainAliasSourceKey>();
+            BindingList<IAliasKeySource> list = new BindingList<IAliasKeySource>();
             list.Add(Empty);
 
             list.AddRange(
@@ -32,7 +32,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
                 Program.Data.LibrarySources.
                 Select(s => new SourceNameItem() { SourceName = s.AssemblyName ?? String.Empty }));
 
-            IDomainAliasSourceKey? selected = control.SelectedItem as IDomainAliasSourceKey;
+            IAliasKeySource? selected = control.SelectedItem as IAliasKeySource;
             if (selected is null)
             { selected = list.FirstOrDefault(w => w.SourceName is String value && control.Text.ToUpper() == value.ToUpper()); }
 

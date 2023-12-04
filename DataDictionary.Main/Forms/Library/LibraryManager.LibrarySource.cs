@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.DataLayer.LibraryData.Source;
 using System;
 using System.Collections.Generic;
@@ -63,6 +64,7 @@ namespace DataDictionary.Main.Forms.Library
                 set { inDatabase = value; OnPropertyChanged(nameof(InDatabase)); }
             }
 
+            public string? MemberType { get { return data.MemberType; } }
 
             public LibraryManagerItem(LibrarySourceItem source) : base()
             {

@@ -1,6 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.LibraryData;
-using DataDictionary.DataLayer.LibraryData.Member;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -178,33 +177,13 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static ScopeType ToScopeType(this IDbScopeType value)
+        internal static ScopeType ToScopeType(String? value)
         {
-            if (scopeTypeToDatabaseScope.FirstOrDefault(w => w.Value.Equals(value.ScopeName, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> item)
-            { return item.Key; }
-            else
-            {
-                Exception ex = new ArgumentOutOfRangeException(nameof(value));
-                ex.Data.Add(nameof(value.ScopeName), value.ScopeName);
-                throw ex;
-            }
-        }
-
-        /// <summary>
-        /// Translates a LibraryMemberType to a ScopeType
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static ScopeType ToScopeType(this ILibraryScopeType value)
-        {
-            if (scopeTypeToLibraryScope.FirstOrDefault(w => w.Value.Equals(value.MemberType, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> item)
-            { return item.Key; }
-            else
-            {
-                Exception ex = new ArgumentOutOfRangeException(nameof(value));
-                ex.Data.Add(nameof(value.MemberType), value.MemberType);
-                throw ex;
-            }
+            if (scopeTypeToDatabaseScope.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> dbItem)
+            { return dbItem.Key; }
+            else if (scopeTypeToLibraryScope.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> libraryItem)
+            { return libraryItem.Key; }
+            else {return ScopeType.Null; }
         }
 
         /// <summary>
@@ -212,7 +191,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static ScopeType ToScopeType(this IScopeUniqueKey value)
+        public static ScopeType ToScopeType(this IScopeKeyName value)
         {
             if (scopeTypeToDatabaseScope.FirstOrDefault(w => w.Value.Equals(value.ScopeName, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> dbScope)
             { return dbScope.Key; }

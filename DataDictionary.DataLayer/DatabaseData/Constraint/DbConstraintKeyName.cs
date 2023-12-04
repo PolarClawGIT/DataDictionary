@@ -4,18 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.DomainData.Alias;
 
 namespace DataDictionary.DataLayer.DatabaseData.Constraint
 {
     /// <summary>
     /// Interface for the Database Constraint Key.
     /// </summary>
-    public interface IDbConstraintKeyName : IDbSchemaKeyName, IKey
+    public interface IDbConstraintKeyName : IKey, IDbSchemaKeyName, IToAliasName
     {
         /// <summary>
         /// Name of the Database Constraint
         /// </summary>
         String? ConstraintName { get; }
+    }
+
+    /// <summary>
+    /// Implementation for IDbConstraintKeyName
+    /// </summary>
+    public static class DbConstraintKeyNameExtension
+    {
+        /// <summary>
+        /// Gets the Alias Name for the Database Constraint.
+        /// </summary>
+        /// <returns></returns>
+        public static String ToAliasName(this IDbConstraintKeyName source)
+        { return AliasExtension.FormatName(source.DatabaseName, source.SchemaName, source.ConstraintName); }
     }
 
     /// <summary>
@@ -95,11 +109,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
 
         /// <inheritdoc/>
         public override string ToString()
-        {
-            if (ConstraintName is string)
-            { return string.Format("{0}.{1}", base.ToString(), ConstraintName); }
-            else { return string.Empty; }
-        }
-
+        { return this.ToAliasName(); }
     }
 }

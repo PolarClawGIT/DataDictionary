@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     /// <summary>
     /// Interface for the Library Parent Member Key
     /// </summary>
-    public interface ILibraryMemberParentKey : ILibrarySourceKey
+    public interface ILibraryMemberKeyParent : ILibrarySourceKey
     {
         /// <summary>
         /// Parent Member Id for the Library Member
@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     /// <summary>
     /// Implementation for the Library Parent Member Key
     /// </summary>
-    public class LibraryMemberParentKey : LibrarySourceKey, ILibraryMemberParentKey, IKeyEquality<ILibraryMemberParentKey>, IKeyEquality<ILibraryMemberKey>
+    public class LibraryMemberKeyParent : LibrarySourceKey, ILibraryMemberKeyParent, IKeyEquality<ILibraryMemberKeyParent>, IKeyEquality<ILibraryMemberKey>
     {
         /// <inheritdoc/>
         public Guid? MemberParentId { get; init; } = Guid.Empty;
@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// Constructor for the Library Member Key
         /// </summary>
         /// <param name="source"></param>
-        public LibraryMemberParentKey(ILibraryMemberParentKey source) : base(source)
+        public LibraryMemberKeyParent(ILibraryMemberKeyParent source) : base(source)
         {
             if (source.MemberParentId is Guid) { MemberParentId = source.MemberParentId; }
             else { MemberParentId = Guid.Empty; }
@@ -38,7 +38,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
 
         #region IEquatable
         /// <inheritdoc/>
-        public bool Equals(ILibraryMemberParentKey? other)
+        public bool Equals(ILibraryMemberKeyParent? other)
         {
             return other is ILibraryMemberKey &&
                 new LibrarySourceKey(this).Equals(other) &&
@@ -55,14 +55,14 @@ namespace DataDictionary.DataLayer.LibraryData.Member
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is ILibraryMemberParentKey value && Equals(new LibraryMemberParentKey(value)); }
+        { return obj is ILibraryMemberKeyParent value && Equals(new LibraryMemberKeyParent(value)); }
 
         /// <inheritdoc/>
-        public static bool operator ==(LibraryMemberParentKey left, LibraryMemberParentKey right)
+        public static bool operator ==(LibraryMemberKeyParent left, LibraryMemberKeyParent right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(LibraryMemberParentKey left, LibraryMemberParentKey right)
+        public static bool operator !=(LibraryMemberKeyParent left, LibraryMemberKeyParent right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

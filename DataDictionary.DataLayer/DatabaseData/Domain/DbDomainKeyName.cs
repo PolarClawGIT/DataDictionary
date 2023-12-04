@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.DomainData.Alias;
 
 namespace DataDictionary.DataLayer.DatabaseData.Domain
 {
@@ -16,6 +17,19 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         /// Name of the Database Domain (Type)
         /// </summary>
         String? DomainName { get; }
+    }
+
+    /// <summary>
+    /// Implementation for IDbDomainKeyName
+    /// </summary>
+    public static class DbDomainKeyNameExtension
+    {
+        /// <summary>
+        /// Gets the Alias Name for the Database Domain.
+        /// </summary>
+        /// <returns></returns>
+        public static String ToAliasName(this IDbDomainKeyName source)
+        { return AliasExtension.FormatName(source.DatabaseName, source.SchemaName, source.DomainName); }
     }
 
     /// <summary>
@@ -96,10 +110,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
 
         /// <inheritdoc/>
         public override string ToString()
-        {
-            if (DomainName is string)
-            { return string.Format("{0}.{1}", base.ToString(), DomainName); }
-            else { return string.Empty; }
-        }
+        { return this.ToAliasName(); }
+
     }
 }

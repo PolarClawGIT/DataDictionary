@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     /// <summary>
     /// Interface for the Library Member Item
     /// </summary>
-    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberParentKey, ILibraryMemberAlternateKey, ILibrarySourceUniqueKey, ILibraryScopeType, IDataItem
+    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, ILibraryScopeType, IDataItem
     {
         /// <summary>
         /// Data for the Member.

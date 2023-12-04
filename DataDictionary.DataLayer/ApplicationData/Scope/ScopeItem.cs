@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// <summary>
     /// Interface for the Scope data.
     /// </summary>
-    public interface IScopeItem : IScopeKey, IScopeUniqueKey, IDataItem
+    public interface IScopeItem : IScopeKey, IScopeKeyName, IDataItem
     {
         /// <summary>
         /// Description of the Scope
@@ -27,7 +27,16 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     public class ScopeItem : BindingTableRow, IScopeItem, ISerializable
     {
         /// <inheritdoc/>
-        public int? ScopeId { get { return GetValue<Int32>("ScopeId"); } }
+        public ScopeType ScopeId
+        {
+            get
+            {
+                if(GetValue<Int32>("ScopeId") is Int32 asInt
+                    && Enum.IsDefined(typeof(ScopeType), asInt))
+                { return (ScopeType)asInt; }
+                else { return ScopeType.Null; }
+            }
+        }
 
         /// <inheritdoc/>
         public string? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }

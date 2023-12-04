@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,25 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for the Database Table Column Key
     /// </summary>
-    public interface IDbTableColumnKeyName : IKey, IDbTableKeyName
+    public interface IDbTableColumnKeyName : IKey, IDbTableKeyName, IToAliasName
     {
         /// <summary>
         /// Name of the Database Column
         /// </summary>
         String? ColumnName { get; }
+    }
+
+    /// <summary>
+    /// Implementation for IDbTableColumnKeyName
+    /// </summary>
+    public static class DbTableColumnKeyNameExtension
+    {
+        /// <summary>
+        /// Gets the Alias Name for the Database Table Column.
+        /// </summary>
+        /// <returns></returns>
+        public static String ToAliasName(this IDbTableColumnKeyName source)
+        { return AliasExtension.FormatName(source.DatabaseName, source.SchemaName, source.TableName, source.ColumnName); }
     }
 
     /// <summary>
@@ -93,10 +107,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public override string ToString()
-        {
-            if (ColumnName is string)
-            { return string.Format("{0}.{1}", base.ToString(), ColumnName); }
-            else { return string.Empty; }
-        }
+        { return this.ToAliasName(); }
+
     }
 }
