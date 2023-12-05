@@ -20,11 +20,6 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     public interface IModelAliasKey : IKey
     {
         /// <summary>
-        /// Parent System Id of the Model Alias item.
-        /// </summary>
-        public Guid? SystemParentId { get; }
-
-        /// <summary>
         /// System Id of the Model Alias item.
         /// </summary>
         public Guid SystemId { get; }
@@ -36,142 +31,86 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     public class ModelAliasKey : IModelAliasKey, IKeyComparable<IModelAliasKey>
     {
         /// <inheritdoc/>
-        public Guid? SystemParentId { get; init; }
-
-        /// <inheritdoc/>
         public Guid SystemId { get; init; } = Guid.Empty;
 
         internal ModelAliasKey() : base() { }
 
-        /*
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
         /// <param name="source"></param>
         public ModelAliasKey(IModelAliasKey source) : this()
-        {
-            SystemParentId = source.SystemParentId;
-            SystemId = source.SystemId;
-        }
+        { SystemId = source.SystemId; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
         /// <param name="source"></param>
         public ModelAliasKey(IDbCatalogKey source) : this()
-        {
-            SystemParentId = null;
-            SystemId = source.CatalogId??Guid.Empty;
-        }
+        { SystemId = source.CatalogId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="child"></param>
-        public ModelAliasKey(IDbCatalogKey parent, IDbSchemaKey child) : this()
-        {
-            SystemParentId = parent.CatalogId;
-            SystemId = child.SchemaId ?? Guid.Empty;
-        }
+        /// <param name="source"></param>
+        public ModelAliasKey(IDbSchemaKey source) : this()
+        { SystemId = source.SchemaId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="child"></param>
-        public ModelAliasKey(IDbSchemaKey parent, IDbTableKey child) : this()
-        {
-            SystemParentId = parent.SchemaId;
-            SystemId = child.TableId ?? Guid.Empty;
-        }
+        /// <param name="source"></param>
+        public ModelAliasKey(IDbTableKey source) : this()
+        {SystemId = source.TableId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="child"></param>
-        public ModelAliasKey(IDbTableKey parent, IDbTableColumnKey child) : this()
-        {
-            SystemParentId = parent.TableId;
-            SystemId = child.ColumnId ?? Guid.Empty;
-        }
+        /// <param name="source"></param>
+        public ModelAliasKey(IDbTableColumnKey source) : this()
+        {SystemId = source.ColumnId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="child"></param>
-        public ModelAliasKey(IDbSchemaKey parent, IDbDomainKey child) : this()
-        {
-            SystemParentId = parent.SchemaId;
-            SystemId = child.DomainId ?? Guid.Empty;
-        }
+        /// <param name="source"></param>
+        public ModelAliasKey(IDbDomainKey source) : this()
+        {SystemId = source.DomainId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="child"></param>
-        public ModelAliasKey(IDbSchemaKey parent, IDbRoutineKey child) : this()
-        {
-            SystemParentId = parent.SchemaId;
-            SystemId = child.RoutineId ?? Guid.Empty;
-        }
+        /// <param name="source"></param>
+        public ModelAliasKey(IDbRoutineKey source) : this()
+        {SystemId = source.RoutineId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="child"></param>
-        public ModelAliasKey(IDbRoutineKey parent, IDbRoutineParameterKey child) : this()
-        {
-            SystemParentId = parent.RoutineId;
-            SystemId = child.ParameterId ?? Guid.Empty;
-        }
+        /// <param name="source"></param>
+        public ModelAliasKey(IDbRoutineParameterKey source) : this()
+        {SystemId = source.ParameterId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="child"></param>
-        public ModelAliasKey(IDbSchemaKey parent, IDbConstraintKey child) : this()
-        {
-            SystemParentId = parent.SchemaId;
-            SystemId = child.ConstraintId ?? Guid.Empty;
-        }
+        /// <param name="source"></param>
+        public ModelAliasKey(IDbConstraintKey source) : this()
+        {SystemId = source.ConstraintId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
         /// <param name="source"></param>
         public ModelAliasKey(ILibrarySourceKey source) : this()
-        {
-            SystemParentId = null;
-            SystemId = source.LibraryId ?? Guid.Empty;
-        }
+        {SystemId = source.LibraryId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="child"></param>
-        public ModelAliasKey(ILibrarySourceKey parent, ILibraryMemberKey child) : this()
-        {
-            SystemParentId = parent.LibraryId;
-            SystemId = child.MemberId ?? Guid.Empty;
-        }
-
-        /// <summary>
-        /// Constructor for the Model Alias Key
-        /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="child"></param>
-        public ModelAliasKey(ILibraryMemberKey parent, ILibraryMemberKey child) : this()
-        {
-            SystemParentId = parent.MemberId;
-            SystemId = child.MemberId ?? Guid.Empty;
-        }*/
+        /// <param name="source"></param>
+        public ModelAliasKey(ILibraryMemberKey source) : this()
+        {SystemId = source.MemberId ?? Guid.Empty; }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
@@ -179,9 +118,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         {
             return
                 other is IModelAliasKey &&
-                ((SystemParentId is null && other.SystemParentId is null) ||
-                  SystemParentId.Equals(other.SystemParentId)) &&
-                SystemId.Equals(other.SystemId) ;
+                SystemId.Equals(other.SystemId);
         }
 
         /// <inheritdoc/>
@@ -192,9 +129,6 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         public virtual int CompareTo(IModelAliasKey? other)
         {
             if (other is null) { return 1; }
-            else if (SystemParentId is not null && other.SystemParentId is null) { return 1; }
-            else if (SystemParentId is null && other.SystemParentId is not null) { return -1; }
-            else if (SystemParentId is Guid parentGuid && parentGuid.CompareTo(other.SystemParentId) is Int32 parentValue && parentValue !=0) { return parentValue; }
             else { return SystemId.CompareTo(other.SystemId); }
         }
 
@@ -230,9 +164,8 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         public override int GetHashCode()
         {
             return HashCode.Combine(
-            base.GetHashCode(),
-            SystemParentId.GetHashCode(),
-            SystemId.GetHashCode());
+                base.GetHashCode(),
+                SystemId.GetHashCode());
         }
         #endregion
     }

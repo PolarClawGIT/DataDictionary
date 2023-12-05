@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     /// <summary>
     /// Interface for a Model Alias Item.
     /// </summary>
-    public interface IModelAliasItem : IAliasKeyName, IScopeKey
+    public interface IModelAliasItem : IAliasKeyName, IModelAliasKey, IScopeKey
     { }
 
     /// <summary>
@@ -25,15 +25,18 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// <inheritdoc/>
         public virtual ScopeType ScopeId { get; init; } = ScopeType.Null;
 
-        /// <summary>
-        /// System Source Id of the Model Alias item.
-        /// </summary>
-        public virtual Guid SystemSourceId { get; init; } = Guid.Empty;
+        /// <inheritdoc/>
+        public virtual Guid SystemId { get; init; } = Guid.Empty;
 
         /// <summary>
         /// List of keys that are the children of this record.
         /// </summary>
         public virtual List<ModelAliasKey> Children { get; } = new List<ModelAliasKey>();
+
+        /// <summary>
+        /// Source of the Model Alias
+        /// </summary>
+        public virtual Object? Source { get; init; }
     }
 
     /// <summary>
@@ -41,11 +44,11 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class ModelAliasItem<T> : ModelAliasItem
-        where T : class, IToScopeType, IToAliasName
+        where T : class//, IToScopeType, IToAliasName
     {
         /// <summary>
         /// Source of the Model Alias
         /// </summary>
-        public virtual T? Source { get; init; }
+        public new T? Source { get { return base.Source as T; } init { base.Source = value; } }
     }
 }

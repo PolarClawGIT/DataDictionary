@@ -1,5 +1,9 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Property;
+using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Entity;
+using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Messages;
@@ -35,8 +39,6 @@ namespace DataDictionary.Main.Forms.Domain
             // one time bindings
             PropertyNameItem.Load(propertyTypeData);
             PropertyNameItem.Load(propertyTypeColumn);
-
-            AlaisDataSetup();
 
             (this as IApplicationDataBind).BindData();
         }
@@ -94,7 +96,6 @@ namespace DataDictionary.Main.Forms.Domain
             propertyTypeData.DataBindings.Clear();
             propertyValueData.DataBindings.Clear();
             propertyDefinitionData.DataBindings.Clear();
-            alaisData.Clear();
 
             entityAliasData.DataSource = null;
             bindingAlias.DataSource = null;
@@ -147,14 +148,27 @@ namespace DataDictionary.Main.Forms.Domain
             e.NewObject = newItem;
         }
 
-
         private void bindingAlias_AddingNew(object sender, AddingNewEventArgs e)
         {
-            DomainEntityAliasItem newItem = new DomainEntityAliasItem(DataKey);
+            if (modelAliasNavigation.SelectedAlias is ModelAliasItem selected)
+            {
+                DomainEntityAliasItem newItem = new DomainEntityAliasItem(DataKey);
+                newItem.AliasName = modelAliasNavigation.SelectedAlias.AliasName;
+                newItem.ScopeName = modelAliasNavigation.SelectedAlias.ScopeId.ToScopeName();
 
-            e.NewObject = newItem;
+                if (Program.Data.ModelAlias.ContainsKey(new ModelAliasKey(selected)))
+                {
+                    ModelAliasItem item = Program.Data.ModelAlias[new ModelAliasKey(selected)];
+
+                    if (item.Source is IDbCatalogKey catalogKey && Program.Data.DbCatalogs.FirstOrDefault(w => new DbCatalogKey(catalogKey).Equals(w)) is IDbCatalogItem catalogItem)
+                    { newItem.SourceName = catalogItem.ToAliasName(); }
+                    else if (item.Source is ILibrarySourceKey libraryKey && Program.Data.LibrarySources.FirstOrDefault(w => new LibrarySourceKey(libraryKey).Equals(w)) is ILibrarySourceItem librarySource)
+                    { newItem.SourceName = librarySource.ToAliasName(); }
+                }
+
+                e.NewObject = newItem;
+            }
         }
-
 
         private void propertyNavigation_Leave(object sender, EventArgs e)
         {

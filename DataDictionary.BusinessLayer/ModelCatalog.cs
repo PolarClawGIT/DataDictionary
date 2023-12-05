@@ -25,7 +25,7 @@ namespace DataDictionary.BusinessLayer
     /// Interface component for the Model Catalog
     /// </summary>
     /// <remarks>When combined with the Extension class, this approximates multi-inheritance.</remarks>
-    public interface IModelCatalog: IModelAlias
+    public interface IModelCatalog
     {
         /// <summary>
         /// List of Database Catalogs within the Model.

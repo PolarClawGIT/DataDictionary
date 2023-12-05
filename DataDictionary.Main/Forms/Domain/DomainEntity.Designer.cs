@@ -53,10 +53,10 @@
             sourceNameColumn = new DataGridViewTextBoxColumn();
             scopeNameColumn = new DataGridViewTextBoxColumn();
             aliasNameColumn = new DataGridViewTextBoxColumn();
-            alaisData = new ListView();
             errorProvider = new ErrorProvider(components);
             bindingProperties = new BindingSource(components);
             bindingAlias = new BindingSource(components);
+            modelAliasNavigation = new Controls.ModelAliasNavigation();
             entityLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
             propertyTabLayout = new TabControl();
@@ -95,7 +95,7 @@
             entityLayout.RowStyles.Add(new RowStyle());
             entityLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
             entityLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
-            entityLayout.Size = new Size(524, 577);
+            entityLayout.Size = new Size(524, 610);
             entityLayout.TabIndex = 1;
             // 
             // entityTitleData
@@ -120,7 +120,7 @@
             entityDescriptionData.Multiline = true;
             entityDescriptionData.Name = "entityDescriptionData";
             entityDescriptionData.ReadOnly = false;
-            entityDescriptionData.Size = new Size(518, 89);
+            entityDescriptionData.Size = new Size(518, 96);
             entityDescriptionData.TabIndex = 2;
             // 
             // subjectAreaData
@@ -141,10 +141,10 @@
             entityTabLayout.Controls.Add(entityPropertyTab);
             entityTabLayout.Controls.Add(entityAlias);
             entityTabLayout.Dock = DockStyle.Fill;
-            entityTabLayout.Location = new Point(3, 198);
+            entityTabLayout.Location = new Point(3, 205);
             entityTabLayout.Name = "entityTabLayout";
             entityTabLayout.SelectedIndex = 0;
-            entityTabLayout.Size = new Size(518, 376);
+            entityTabLayout.Size = new Size(518, 402);
             entityTabLayout.TabIndex = 3;
             entityTabLayout.SelectedIndexChanged += EntityTabLayout_SelectedIndexChanged;
             // 
@@ -316,7 +316,7 @@
             entityAlias.Controls.Add(alaisLayout);
             entityAlias.Location = new Point(4, 24);
             entityAlias.Name = "entityAlias";
-            entityAlias.Size = new Size(510, 348);
+            entityAlias.Size = new Size(510, 374);
             entityAlias.TabIndex = 2;
             entityAlias.Text = "Alias";
             // 
@@ -325,17 +325,15 @@
             alaisLayout.ColumnCount = 1;
             alaisLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             alaisLayout.Controls.Add(entityAliasData, 0, 0);
-            alaisLayout.Controls.Add(alaisData, 0, 3);
+            alaisLayout.Controls.Add(modelAliasNavigation, 0, 1);
             alaisLayout.Dock = DockStyle.Fill;
             alaisLayout.Location = new Point(0, 0);
             alaisLayout.Name = "alaisLayout";
             alaisLayout.Padding = new Padding(3);
-            alaisLayout.RowCount = 4;
-            alaisLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 66.6666641F));
-            alaisLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            alaisLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            alaisLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            alaisLayout.Size = new Size(510, 348);
+            alaisLayout.RowCount = 2;
+            alaisLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+            alaisLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+            alaisLayout.Size = new Size(510, 374);
             alaisLayout.TabIndex = 0;
             // 
             // entityAliasData
@@ -349,7 +347,7 @@
             entityAliasData.Name = "entityAliasData";
             entityAliasData.ReadOnly = true;
             entityAliasData.RowTemplate.Height = 25;
-            entityAliasData.Size = new Size(498, 195);
+            entityAliasData.Size = new Size(498, 104);
             entityAliasData.TabIndex = 0;
             // 
             // sourceNameColumn
@@ -379,16 +377,6 @@
             aliasNameColumn.Name = "aliasNameColumn";
             aliasNameColumn.ReadOnly = true;
             // 
-            // alaisData
-            // 
-            alaisData.Dock = DockStyle.Fill;
-            alaisData.Location = new Point(6, 247);
-            alaisData.Name = "alaisData";
-            alaisData.Size = new Size(498, 95);
-            alaisData.TabIndex = 1;
-            alaisData.UseCompatibleStateImageBehavior = false;
-            alaisData.ItemActivate += alaisData_ItemActivate;
-            // 
             // errorProvider
             // 
             errorProvider.ContainerControl = this;
@@ -403,11 +391,19 @@
             bindingAlias.AddingNew += bindingAlias_AddingNew;
             bindingAlias.BindingComplete += BindingComplete;
             // 
+            // modelAliasNavigation
+            // 
+            modelAliasNavigation.Dock = DockStyle.Fill;
+            modelAliasNavigation.Location = new Point(6, 116);
+            modelAliasNavigation.Name = "modelAliasNavigation";
+            modelAliasNavigation.Size = new Size(498, 252);
+            modelAliasNavigation.TabIndex = 1;
+            // 
             // DomainEntity
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(524, 602);
+            ClientSize = new Size(524, 635);
             Controls.Add(entityLayout);
             Name = "DomainEntity";
             Text = "DomainEntity";
@@ -459,6 +455,6 @@
         private DataGridViewTextBoxColumn sourceNameColumn;
         private DataGridViewTextBoxColumn scopeNameColumn;
         private DataGridViewTextBoxColumn aliasNameColumn;
-        private ListView alaisData;
+        private Controls.ModelAliasNavigation modelAliasNavigation;
     }
 }

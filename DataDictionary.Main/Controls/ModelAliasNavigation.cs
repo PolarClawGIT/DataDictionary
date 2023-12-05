@@ -16,12 +16,16 @@ namespace DataDictionary.Main.Controls
     {
         Dictionary<ListViewItem, ModelAliasKey> alaisViewItems = new Dictionary<ListViewItem, ModelAliasKey>();
         Stack<ModelAliasKey> navigationStack = new Stack<ModelAliasKey>();
-        public ModelAliasKey? SelectedItem { get; private set; }
+
+        /// <summary>
+        /// The current Alias Item selected
+        /// </summary>
+        public ModelAliasItem? SelectedAlias { get; private set; }
 
         public ModelAliasNavigation()
         {
             InitializeComponent();
-            aliasList.Columns.Add("Alias", aliasList.Width - SystemInformation.VerticalScrollBarWidth);
+            aliasList.Columns.Add("Alias");
         }
 
         private void ModelAliasNavigation_Load(object sender, EventArgs e)
@@ -42,22 +46,31 @@ namespace DataDictionary.Main.Controls
             aliasList.Items.Clear();
             alaisViewItems.Clear();
 
-            List<KeyValuePair<ModelAliasKey, ModelAliasItem>> viewItemList = new List<KeyValuePair<ModelAliasKey, ModelAliasItem>>();
+            ModelAliasItem parent = Program.Data.ModelAlias.RootItem;
+            ModelAliasKey? parentKey = null;
 
-            if (navigationStack.TryPeek(out ModelAliasKey? parentKey) && parentKey is ModelAliasKey)
-            {
-                viewItemList.Add(new KeyValuePair<ModelAliasKey, ModelAliasItem>(parentKey, Program.Data.ModelAlias[parentKey]));
-                viewItemList.AddRange(Program.Data.ModelAlias.Where(w => w.Key.SystemParentId == parentKey.SystemId));
-            }
-            else
-            { viewItemList.AddRange(Program.Data.ModelAlias.Where(w => w.Key.SystemParentId is null)); }
+            if (navigationStack.TryPeek(out parentKey) && parentKey is ModelAliasKey)
+            { parent = Program.Data.ModelAlias[parentKey]; }
 
-            foreach (KeyValuePair<ModelAliasKey, ModelAliasItem> item in viewItemList)
+            foreach (ModelAliasKey childKey in parent.Children)
             {
-                ListViewItem childItem = new ListViewItem(item.Value.AliasName, item.Value.ScopeId.ToScopeName());
-                alaisViewItems.Add(childItem, item.Key);
+                ModelAliasItem child = Program.Data.ModelAlias[childKey];
+                ListViewItem childItem = new ListViewItem(child.AliasName, child.ScopeId.ToScopeName());
+
+                alaisViewItems.Add(childItem, childKey);
                 aliasList.Items.Add(childItem);
             }
+            aliasList.Sorting = SortOrder.Ascending;
+            aliasList.Sort();
+
+            if (parentKey is ModelAliasKey)
+            {
+                ListViewItem parentItem = new ListViewItem(parent.AliasName, parent.ScopeId.ToScopeName());
+                alaisViewItems.Add(parentItem, parentKey);
+                aliasList.Items.Insert(0, parentItem);
+            }
+
+            aliasList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
         private void AliasList_SelectedIndexChanged(object sender, EventArgs e)
@@ -65,20 +78,24 @@ namespace DataDictionary.Main.Controls
             if (aliasList.SelectedItems.Count > 0
                && alaisViewItems.ContainsKey(aliasList.SelectedItems[0]))
             {
-                SelectedItem = alaisViewItems[aliasList.SelectedItems[0]];
+                ModelAliasKey selectedKey = alaisViewItems[aliasList.SelectedItems[0]];
 
                 if (navigationStack.TryPeek(out ModelAliasKey? parentKey)
-                    && SelectedItem.Equals(parentKey))
-                { navigationStack.Pop(); }
-
-                else if (Program.Data.ModelAlias.Count(w => w.Key.SystemParentId == SelectedItem.SystemId) > 0)
+                    && selectedKey.Equals(parentKey))
                 {
-                    navigationStack.Push(SelectedItem);
+                    navigationStack.Pop();
                     AliasListLoad();
                 }
 
-                aliasNameData.Text = Program.Data.ModelAlias[SelectedItem].AliasName;
-                aliasScopeData.Text = Program.Data.ModelAlias[SelectedItem].ScopeId.ToScopeName();
+                else if (Program.Data.ModelAlias[selectedKey].Children.Count > 0)
+                {
+                    navigationStack.Push(selectedKey);
+                    AliasListLoad();
+                }
+
+                aliasNameData.Text = Program.Data.ModelAlias[selectedKey].AliasName;
+                aliasScopeData.Text = Program.Data.ModelAlias[selectedKey].ScopeId.ToScopeName();
+                SelectedAlias = Program.Data.ModelAlias[selectedKey];
 
                 AliasSelectedItemChanged(this, EventArgs.Empty);
             }
