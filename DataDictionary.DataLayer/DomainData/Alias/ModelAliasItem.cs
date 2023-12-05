@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     /// <summary>
     /// Implementation for Model Alias Item.
     /// </summary>
-    public abstract class ModelAliasItem : IModelAliasItem
+    public class ModelAliasItem : IModelAliasItem
     {
         /// <inheritdoc/>
         public virtual String AliasName { get; init; } = String.Empty;
@@ -29,6 +29,11 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// System Source Id of the Model Alias item.
         /// </summary>
         public virtual Guid SystemSourceId { get; init; } = Guid.Empty;
+
+        /// <summary>
+        /// List of keys that are the children of this record.
+        /// </summary>
+        public virtual List<ModelAliasKey> Children { get; } = new List<ModelAliasKey>();
     }
 
     /// <summary>

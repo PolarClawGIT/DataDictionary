@@ -41,11 +41,14 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// <inheritdoc/>
         public Guid SystemId { get; init; } = Guid.Empty;
 
+        internal ModelAliasKey() : base() { }
+
+        /*
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public ModelAliasKey(IModelAliasKey source) : base()
+        public ModelAliasKey(IModelAliasKey source) : this()
         {
             SystemParentId = source.SystemParentId;
             SystemId = source.SystemId;
@@ -55,7 +58,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// Constructor for the Model Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public ModelAliasKey(IDbCatalogKey source) : base()
+        public ModelAliasKey(IDbCatalogKey source) : this()
         {
             SystemParentId = null;
             SystemId = source.CatalogId??Guid.Empty;
@@ -66,7 +69,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="child"></param>
-        public ModelAliasKey(IDbCatalogKey parent, IDbSchemaKey child) : base()
+        public ModelAliasKey(IDbCatalogKey parent, IDbSchemaKey child) : this()
         {
             SystemParentId = parent.CatalogId;
             SystemId = child.SchemaId ?? Guid.Empty;
@@ -77,7 +80,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="child"></param>
-        public ModelAliasKey(IDbSchemaKey parent, IDbTableKey child) : base()
+        public ModelAliasKey(IDbSchemaKey parent, IDbTableKey child) : this()
         {
             SystemParentId = parent.SchemaId;
             SystemId = child.TableId ?? Guid.Empty;
@@ -88,7 +91,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="child"></param>
-        public ModelAliasKey(IDbTableKey parent, IDbTableColumnKey child) : base()
+        public ModelAliasKey(IDbTableKey parent, IDbTableColumnKey child) : this()
         {
             SystemParentId = parent.TableId;
             SystemId = child.ColumnId ?? Guid.Empty;
@@ -99,7 +102,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="child"></param>
-        public ModelAliasKey(IDbSchemaKey parent, IDbDomainKey child) : base()
+        public ModelAliasKey(IDbSchemaKey parent, IDbDomainKey child) : this()
         {
             SystemParentId = parent.SchemaId;
             SystemId = child.DomainId ?? Guid.Empty;
@@ -110,7 +113,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="child"></param>
-        public ModelAliasKey(IDbSchemaKey parent, IDbRoutineKey child) : base()
+        public ModelAliasKey(IDbSchemaKey parent, IDbRoutineKey child) : this()
         {
             SystemParentId = parent.SchemaId;
             SystemId = child.RoutineId ?? Guid.Empty;
@@ -121,7 +124,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="child"></param>
-        public ModelAliasKey(IDbRoutineKey parent, IDbRoutineParameterKey child) : base()
+        public ModelAliasKey(IDbRoutineKey parent, IDbRoutineParameterKey child) : this()
         {
             SystemParentId = parent.RoutineId;
             SystemId = child.ParameterId ?? Guid.Empty;
@@ -132,7 +135,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="child"></param>
-        public ModelAliasKey(IDbSchemaKey parent, IDbConstraintKey child) : base()
+        public ModelAliasKey(IDbSchemaKey parent, IDbConstraintKey child) : this()
         {
             SystemParentId = parent.SchemaId;
             SystemId = child.ConstraintId ?? Guid.Empty;
@@ -142,7 +145,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// Constructor for the Model Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public ModelAliasKey(ILibrarySourceKey source) : base()
+        public ModelAliasKey(ILibrarySourceKey source) : this()
         {
             SystemParentId = null;
             SystemId = source.LibraryId ?? Guid.Empty;
@@ -153,7 +156,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="child"></param>
-        public ModelAliasKey(ILibrarySourceKey parent, ILibraryMemberKey child) : base()
+        public ModelAliasKey(ILibrarySourceKey parent, ILibraryMemberKey child) : this()
         {
             SystemParentId = parent.LibraryId;
             SystemId = child.MemberId ?? Guid.Empty;
@@ -164,11 +167,11 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="child"></param>
-        public ModelAliasKey(ILibraryMemberKey parent, ILibraryMemberKey child) : base()
+        public ModelAliasKey(ILibraryMemberKey parent, ILibraryMemberKey child) : this()
         {
             SystemParentId = parent.MemberId;
             SystemId = child.MemberId ?? Guid.Empty;
-        }
+        }*/
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
