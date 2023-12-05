@@ -333,6 +333,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Event {
+            get {
+                object obj = ResourceManager.GetObject("Event", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ExtendedProperty {
             get {
                 object obj = ResourceManager.GetObject("ExtendedProperty", resourceCulture);
@@ -1256,6 +1266,26 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap Underline {
             get {
                 object obj = ResourceManager.GetObject("Underline", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap UnknownApplication {
+            get {
+                object obj = ResourceManager.GetObject("UnknownApplication", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap UnknownMember {
+            get {
+                object obj = ResourceManager.GetObject("UnknownMember", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
