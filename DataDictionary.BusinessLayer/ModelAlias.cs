@@ -6,6 +6,8 @@ using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Alias;
+using DataDictionary.DataLayer.LibraryData.Member;
+using DataDictionary.DataLayer.LibraryData.Source;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,97 +35,349 @@ namespace DataDictionary.BusinessLayer
     /// <remarks>When combined with the Extension class, this implements multi-inheritance.</remarks>
     public static class ModelAlias
     {
-        
+
         /// <summary>
-        /// Create a Work Item that loads the Model Alias data
+        /// Load Alias Data from a Catalog
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data)
-            where T : IModelCatalog, IModelLibrary, IModelAlias
+        public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, IDbCatalogKeyName key)
+            where T : IModelCatalog, IModelAlias
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
+
             WorkItem loadWork = new WorkItem()
             {
-                WorkName = "Load aliases",
-                DoWork = AliasWork
+                WorkName = "Load Catalog Aliases",
+                DoWork = ThreadWork
             };
             progress = loadWork.OnProgressChanged;
 
             work.Add(loadWork);
+
             return work;
 
-            void AliasWork()
+            void ThreadWork()
             {
-                Int32 totalWork =
-                    data.DbCatalogs.Count +
-                    data.DbSchemta.Count +
-                    data.DbTables.Count +
-                    data.DbTableColumns.Count +
-                    data.DbConstraints.Count +
-                    data.DbRoutines.Count +
-                    data.DbRoutineParameters.Count;
-                Int32 completedWork = 0;
-
-                foreach (DbCatalogItem catalogItem in data.DbCatalogs.Where(w => w.IsSystem == false))
+                DbCatalogKeyName nameKey = new DbCatalogKeyName(key);
+                foreach (DbCatalogItem? item in data.DbCatalogs.Where(w => nameKey.Equals(w)))
                 {
-                    DbCatalogKey catalogKey = new DbCatalogKey(catalogItem);
-                    DbCatalogKeyName catalogName = new DbCatalogKeyName(catalogItem);
-                    data.ModelAlias.Add(catalogItem);
+                    DbCatalogKey catalogKey = new DbCatalogKey(item);
+                    LoadAliasCore(data, catalogKey, progress);
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Load Alias Data from a Catalog
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, IDbCatalogKey key)
+            where T : IModelCatalog, IModelAlias
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            Action<Int32, Int32> progress = (x, y) => { };
+
+            WorkItem loadWork = new WorkItem()
+            {
+                WorkName = "Load Catalog Aliases",
+                DoWork = ThreadWork
+            };
+            progress = loadWork.OnProgressChanged;
+
+            work.Add(loadWork);
+
+            return work;
+
+            void ThreadWork()
+            { LoadAliasCore(data, key, progress); }
+        }
+
+        private static void LoadAliasCore<T>(T data, IDbCatalogKey key, Action<Int32, Int32> progress)
+            where T : IModelCatalog, IModelAlias
+        {
+            DbCatalogKey catalogKey = new DbCatalogKey(key);
+            List<DbCatalogItem> catalogs = data.DbCatalogs.Where(w => catalogKey.Equals(w) && w.IsSystem == false).ToList();
+            Int32 totalWork = catalogs.Count;
+            Int32 completedWork = 0;
+
+            foreach (DbCatalogItem catalogItem in catalogs) // Expect zero or one
+            {
+                // This improve performance as it is working off of a fixed sub-set of data.
+                List<DbSchemaItem> schemta = data.DbSchemta.Where(w => catalogKey.Equals(w) && w.IsSystem == false).ToList();
+                List<DbTableItem> tables = data.DbTables.Where(w => catalogKey.Equals(w) && w.IsSystem == false).ToList();
+                List<DbTableColumnItem> tableColumns = data.DbTableColumns.Where(w => catalogKey.Equals(w)).ToList();
+                List<DbConstraintItem> constraints = data.DbConstraints.Where(w => catalogKey.Equals(w)).ToList();
+                List<DbRoutineItem> routines = data.DbRoutines.Where(w => catalogKey.Equals(w) && w.IsSystem == false).ToList();
+                List<DbRoutineParameterItem> routineParameters = data.DbRoutineParameters.Where(w => catalogKey.Equals(w)).ToList();
+
+                totalWork = totalWork +
+                    schemta.Count +
+                    tables.Count +
+                    tableColumns.Count +
+                    constraints.Count +
+                    routines.Count +
+                    routineParameters.Count;
+
+                DbCatalogKeyName catalogName = new DbCatalogKeyName(catalogItem);
+                data.ModelAlias.Add(catalogItem);
+                progress(completedWork++, totalWork);
+
+                foreach (DbSchemaItem schemaItem in schemta)
+                {
+                    DbSchemaKey schemaKey = new DbSchemaKey(schemaItem);
+                    DbSchemaKeyName schemaName = new DbSchemaKeyName(schemaItem);
+                    data.ModelAlias.Add(catalogKey, schemaItem);
                     progress(completedWork++, totalWork);
 
-                    foreach (DbSchemaItem schemaItem in
-                        data.DbSchemta.Where(w => catalogName.Equals(w) && w.IsSystem == false))
+                    foreach (DbTableItem tableItem in tables.Where(w => schemaName.Equals(w)))
                     {
-                        DbSchemaKey schemaKey = new DbSchemaKey(schemaItem);
-                        DbSchemaKeyName schemaName = new DbSchemaKeyName(schemaItem);
-                        data.ModelAlias.Add(catalogKey, schemaItem);
+                        DbTableKey tableKey = new DbTableKey(tableItem);
+                        DbTableKeyName tableName = new DbTableKeyName(tableItem);
+                        data.ModelAlias.Add(schemaKey, tableItem);
                         progress(completedWork++, totalWork);
 
-                        foreach (DbTableItem tableItem in
-                            data.DbTables.Where(w => schemaName.Equals(w) && w.IsSystem == false))
+                        foreach (DbTableColumnItem columnItem in tableColumns.Where(w => tableName.Equals(w)))
                         {
-                            DbTableKey tableKey = new DbTableKey(tableItem);
-                            DbTableKeyName tableName = new DbTableKeyName(tableItem);
-                            data.ModelAlias.Add(schemaKey, tableItem);
+                            data.ModelAlias.Add(tableKey, columnItem);
                             progress(completedWork++, totalWork);
-
-                            foreach (DbTableColumnItem columnItem in
-                                data.DbTableColumns.Where(w => tableName.Equals(w)))
-                            {
-                                data.ModelAlias.Add(tableKey, columnItem);
-                                progress(completedWork++, totalWork);
-                            }
-
-                            foreach (DbConstraintItem constraintItem in
-                                data.DbConstraints.Where(w => tableName.Equals(w)))
-                            {
-                                data.ModelAlias.Add(tableKey, constraintItem);
-                                progress(completedWork++, totalWork);
-                            }
                         }
 
-                        foreach (DbRoutineItem routineItem in
-                            data.DbRoutines.Where(w=> schemaName.Equals(w) && w.IsSystem == false))
+                        foreach (DbConstraintItem constraintItem in constraints.Where(w => tableName.Equals(w)))
                         {
-                            DbRoutineKey routineKey = new DbRoutineKey(routineItem);
-                            DbRoutineKeyName routineName = new DbRoutineKeyName(routineItem);
-                            data.ModelAlias.Add(schemaKey, routineItem);
+                            data.ModelAlias.Add(tableKey, constraintItem);
                             progress(completedWork++, totalWork);
+                        }
+                    }
 
-                            foreach (DbRoutineParameterItem parameterItem in
-                                data.DbRoutineParameters.Where(w => routineName.Equals(w)))
-                            {
-                                data.ModelAlias.Add(routineKey, parameterItem);
-                                progress(completedWork++, totalWork);
-                            }
+                    foreach (DbRoutineItem routineItem in routines.Where(w => schemaName.Equals(w)))
+                    {
+                        DbRoutineKey routineKey = new DbRoutineKey(routineItem);
+                        DbRoutineKeyName routineName = new DbRoutineKeyName(routineItem);
+                        data.ModelAlias.Add(schemaKey, routineItem);
+                        progress(completedWork++, totalWork);
+
+                        foreach (DbRoutineParameterItem parameterItem in routineParameters.Where(w => routineName.Equals(w)))
+                        {
+                            data.ModelAlias.Add(routineKey, parameterItem);
+                            progress(completedWork++, totalWork);
                         }
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Load Alias Data from a Library
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, FileInfo key)
+            where T : IModelLibrary, IModelAlias
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            Action<Int32, Int32> progress = (x, y) => { };
 
+            WorkItem loadWork = new WorkItem()
+            {
+                WorkName = "Load Library Aliases",
+                DoWork = ThreadWork
+            };
+            progress = loadWork.OnProgressChanged;
+
+            work.Add(loadWork);
+
+            return work;
+
+            void ThreadWork()
+            {
+                foreach (LibrarySourceItem? item in data.LibrarySources.Where(w => String.Equals(w.SourceFile, key.Name, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    LibrarySourceKey sourceKey = new LibrarySourceKey(item);
+                    LoadAliasCore(data, sourceKey, progress);
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Load Alias Data from a Library
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, ILibrarySourceKeyName key)
+            where T : IModelLibrary, IModelAlias
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            Action<Int32, Int32> progress = (x, y) => { };
+
+            WorkItem loadWork = new WorkItem()
+            {
+                WorkName = "Load Library Aliases",
+                DoWork = ThreadWork
+            };
+            progress = loadWork.OnProgressChanged;
+
+            work.Add(loadWork);
+
+            return work;
+
+            void ThreadWork()
+            {
+                LibrarySourceKeyName nameKey = new LibrarySourceKeyName(key);
+                foreach (LibrarySourceItem? item in data.LibrarySources.Where(w => nameKey.Equals(w)))
+                {
+                    LibrarySourceKey sourceKey = new LibrarySourceKey(item);
+                    LoadAliasCore(data, sourceKey, progress);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Load Alias Data from a Library
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, ILibrarySourceKey key)
+            where T : IModelLibrary, IModelAlias
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            Action<Int32, Int32> progress = (x, y) => { };
+
+            WorkItem loadWork = new WorkItem()
+            {
+                WorkName = "Load Library Aliases",
+                DoWork = ThreadWork
+            };
+            progress = loadWork.OnProgressChanged;
+
+            work.Add(loadWork);
+
+            return work;
+
+            void ThreadWork()
+            { LoadAliasCore(data, key, progress); }
+        }
+
+        private static void LoadAliasCore<T>(T data, ILibrarySourceKey key, Action<int, int> progress)
+            where T : IModelLibrary, IModelAlias
+        {
+            LibrarySourceKey libraryKey = new LibrarySourceKey(key);
+            List<LibrarySourceItem> libraries = data.LibrarySources.Where(w => libraryKey.Equals(w)).ToList();
+            Int32 totalWork = libraries.Count;
+            Int32 completedWork = 0;
+
+            foreach (LibrarySourceItem libraryitem in libraries)
+            {
+                List<LibraryMemberItem> members = data.LibraryMembers.Where(w => libraryKey.Equals(w)).ToList();
+                totalWork = totalWork + members.Count;
+
+                data.ModelAlias.Add(libraryitem);
+                progress(completedWork++, totalWork);
+
+                foreach (LibraryMemberItem memberItem in members.
+                    Where(w => w.MemberParentId is null))
+                {
+                    LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
+                    data.ModelAlias.Add(libraryKey, memberItem);
+                    progress(completedWork++, totalWork);
+
+                    AddChildMember(libraryKey, memberKey);
+                }
+
+                void AddChildMember(LibrarySourceKey sourceKey, LibraryMemberKey memberKey)
+                {
+                    foreach (LibraryMemberItem memberItem in members.Where(w => new LibraryMemberKeyParent(w).Equals(memberKey)))
+                    {
+                        LibraryMemberKey childKey = new LibraryMemberKey(memberItem);
+                        data.ModelAlias.Add(memberKey, memberItem);
+                        progress(completedWork++, totalWork);
+
+                        AddChildMember(sourceKey, childKey);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Deletes Alias Data for a Catalog
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> DeleteAlias<T>(this T data, IDbCatalogKey key)
+            where T : IModelCatalog, IModelAlias
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            WorkItem deleteWork = new WorkItem()
+            {
+                WorkName = "Delete Catalog aliases",
+                DoWork = ThreadWork
+            };
+
+            work.Add(deleteWork);
+            return work;
+
+            void ThreadWork()
+            {
+                DbCatalogKey catalogKey = new DbCatalogKey(key);
+
+                // Expect zero or one
+                foreach (DbCatalogItem catalogItem in data.DbCatalogs.Where(w => catalogKey.Equals(w)))
+                {
+                    ModelAliasKey removeKey = new ModelAliasKey(catalogItem);
+                    data.ModelAlias.Remove(removeKey);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Deletes Alias Data for a Library
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> DeleteAlias<T>(this T data, ILibrarySourceKey key)
+            where T : IModelLibrary, IModelAlias
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            WorkItem deleteWork = new WorkItem()
+            {
+                WorkName = "Delete Library aliases",
+                DoWork = ThreadWork
+            };
+
+            work.Add(deleteWork);
+            return work;
+
+            void ThreadWork()
+            {
+                LibrarySourceKey libraryKey = new LibrarySourceKey(key);
+
+                // Expect zero or one
+                foreach (LibrarySourceItem libraryItem in data.LibrarySources.Where(w => libraryKey.Equals(w)))
+                {
+                    ModelAliasKey removeKey = new ModelAliasKey(libraryItem);
+                    data.ModelAlias.Remove(removeKey);
+                }
+            }
+        }
     }
 }

@@ -12,7 +12,18 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     /// Interface for a Model Alias Item.
     /// </summary>
     public interface IModelAliasItem : IAliasKeyName, IModelAliasKey, IScopeKey
-    { }
+    {
+        /// <summary>
+        /// Name of the item (short).
+        /// </summary>
+        String ItemName { get; }
+
+        /// <summary>
+        /// Parent System Id
+        /// </summary>
+        Guid SystemParentId { get; }
+
+    }
 
     /// <summary>
     /// Implementation for Model Alias Item.
@@ -28,15 +39,37 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// <inheritdoc/>
         public virtual Guid SystemId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public virtual Guid SystemParentId { get; init; } = Guid.Empty;
+
+        /// <inheritdoc/>
+        public virtual String ItemName { get; init; } = String.Empty;
+
         /// <summary>
         /// List of keys that are the children of this record.
         /// </summary>
         public virtual List<ModelAliasKey> Children { get; } = new List<ModelAliasKey>();
 
         /// <summary>
-        /// Source of the Model Alias
+        /// Source of the Model Alias.
+        /// TODO: Is this required?
         /// </summary>
         public virtual Object? Source { get; init; }
+
+        internal ModelAliasItem() : base() { }
+
+        /// <summary>
+        /// Constructor for a ModelAliasItem
+        /// </summary>
+        /// <param name="source"></param>
+        public ModelAliasItem(IModelAliasItem source) : this()
+        {
+            if (!String.IsNullOrWhiteSpace(source.AliasName)) { AliasName = source.AliasName; }
+            ScopeId = source.ScopeId;
+            SystemId = source.SystemId;
+            SystemParentId = source.SystemParentId;
+            if (!String.IsNullOrWhiteSpace(source.AliasName)) { ItemName = source.ItemName; }
+        }
     }
 
     /// <summary>
@@ -50,5 +83,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// Source of the Model Alias
         /// </summary>
         public new T? Source { get { return base.Source as T; } init { base.Source = value; } }
+
+        internal ModelAliasItem() :base() { }
     }
 }

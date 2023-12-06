@@ -163,6 +163,7 @@ namespace DataDictionary.Main.Forms.Library
                 {
                     FileInfo fileInfo = new FileInfo(file);
                     work.AddRange(Program.Data.LoadLibrary(fileInfo));
+                    work.AddRange(Program.Data.LoadAlias(fileInfo));
                 }
 
                 DoLocalWork(work);
@@ -181,7 +182,7 @@ namespace DataDictionary.Main.Forms.Library
                 DoLocalWork(work);
             }
 
-            
+
         }
 
         private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
@@ -197,7 +198,11 @@ namespace DataDictionary.Main.Forms.Library
                 work.Add(factory.OpenConnection());
                 Boolean inModelList = (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
 
-                if (inModelList) { work.AddRange(Program.Data.DeleteLibrary(factory, key)); }
+                if (inModelList)
+                {
+                    work.AddRange(Program.Data.DeleteLibrary(factory, key));
+                    work.AddRange(Program.Data.DeleteAlias(key));
+                }
                 else { work.AddRange(dbData.DeleteLibrary(factory, key)); }
 
                 work.AddRange(LoadLocalData(factory));
@@ -217,6 +222,7 @@ namespace DataDictionary.Main.Forms.Library
 
                 LibrarySourceKey key = new LibrarySourceKey(item);
                 work.AddRange(Program.Data.LoadLibrary(factory, key));
+                work.AddRange(Program.Data.LoadAlias(key));
                 work.AddRange(LoadLocalData(factory));
 
                 DoLocalWork(work);
@@ -244,7 +250,7 @@ namespace DataDictionary.Main.Forms.Library
                 DoLocalWork(work);
             }
 
-            
+
         }
 
         private IReadOnlyList<WorkItem> LoadLocalData(IDatabaseWork factory)

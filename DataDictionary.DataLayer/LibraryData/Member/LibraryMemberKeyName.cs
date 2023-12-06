@@ -33,7 +33,12 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// </summary>
         /// <returns></returns>
         public static String ToAliasName(this ILibraryMemberKeyName source)
-        { return AliasExtension.FormatName(AliasExtension.FormatName(source.NameSpace), source.MemberName); }
+        {
+            if (String.IsNullOrWhiteSpace(source.NameSpace))
+            { return AliasExtension.FormatName(source.MemberName); }
+            else
+            { return AliasExtension.FormatName(String.Format("{0}.{1}", source.NameSpace, source.MemberName)); }
+        }
     }
 
     /// <summary>

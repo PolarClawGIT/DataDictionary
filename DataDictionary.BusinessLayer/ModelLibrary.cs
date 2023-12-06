@@ -271,35 +271,42 @@ namespace DataDictionary.BusinessLayer
                                         {
                                             Int32 nextSeperator = parameters.IndexOf(",");
                                             Int32 nextSubItem = parameters.IndexOf("{");
-                                            String memberName = String.Empty;
+                                            String patameterType = String.Empty;
+                                            String memberName = "@parameter";
 
                                             if (nextSeperator < 0 && nextSubItem < 0)
                                             {
-                                                memberName = parameters;
+                                                patameterType = parameters;
                                                 parameters = String.Empty;
                                             }
                                             else if (nextSeperator < 0 && nextSubItem > 0)
                                             {
-                                                memberName = parameters;
+                                                patameterType = parameters;
                                                 parameters = String.Empty;
                                             }
                                             else if (nextSeperator > 0 && nextSubItem < 0)
                                             {
-                                                memberName = parameters.Substring(0, nextSeperator);
+                                                patameterType = parameters.Substring(0, nextSeperator);
                                                 parameters = parameters.Substring(nextSeperator + 1);
                                             }
                                             else if (nextSeperator < nextSubItem)
                                             {
-                                                memberName = parameters.Substring(0, nextSeperator);
+                                                patameterType = parameters.Substring(0, nextSeperator);
                                                 parameters = parameters.Substring(nextSeperator + 1);
                                             }
                                             else if (nextSeperator > nextSubItem)
                                             {
-                                                memberName = parameters.Substring(0, parameters.IndexOf("}") + 1);
+                                                patameterType = parameters.Substring(0, parameters.IndexOf("}") + 1);
                                                 parameters = parameters.Substring(nextSeperator + 1);
                                             }
                                             // Can only occur if the two values are equal and not zero. This should not be possible.
                                             else { throw new InvalidOperationException("Condition parsing parameters reached a condition that should not be possible."); }
+
+                                            //TODO: What to do with Parameters. The data provided has only data type. Not name or
+                                            if (patameterType.Contains("[]"))
+                                            {
+                                                //TODO: how to handle arrays?
+                                            }
 
                                             LibraryMemberItem parmaterItem = new LibraryMemberItem()
                                             {
@@ -307,8 +314,8 @@ namespace DataDictionary.BusinessLayer
                                                 MemberParentId = memberItem.MemberId,
                                                 AssemblyName = sourceItem.AssemblyName,
                                                 MemberName = memberName,
-                                                //MemberData = memberNode.InnerXml,
-                                                NameSpace = String.Format("{0}.{1}", memberNameSpace, parseString.Substring(0, parametersStart)),
+                                                MemberData = patameterType, // Parameters return the type not the name
+                                                NameSpace = parseString.Substring(0, parametersStart),
                                                 MemberType = ScopeType.LibraryParameter.ToScopeName()
                                             };
 

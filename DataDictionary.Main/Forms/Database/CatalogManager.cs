@@ -195,7 +195,7 @@ namespace DataDictionary.Main.Forms.Database
                     };
 
                     work.AddRange(Program.Data.LoadCatalog(source));
-                    work.AddRange(Program.Data.LoadAlias());
+                    work.AddRange(Program.Data.LoadAlias(source));
 
                     DoLocalWork(work);
                 }
@@ -225,7 +225,11 @@ namespace DataDictionary.Main.Forms.Database
 
                 work.Add(factory.OpenConnection());
 
-                if (inModelList) { work.AddRange(Program.Data.DeleteCatalog(factory, key)); }
+                if (inModelList)
+                {
+                    work.AddRange(Program.Data.DeleteAlias(key));
+                    work.AddRange(Program.Data.DeleteCatalog(factory, key));
+                }
                 else { work.AddRange(dbData.DeleteCatalog(factory, key)); }
 
                 work.AddRange(LoadLocalData(factory));

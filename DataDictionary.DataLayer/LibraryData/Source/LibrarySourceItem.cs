@@ -68,9 +68,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
         /// Constructor for LibraryMemberItem
         /// </summary>
         public LibrarySourceItem() : base()
-        {
-            LibraryId = Guid.NewGuid();
-        }
+        { if (LibraryId is null) { LibraryId = Guid.NewGuid(); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

@@ -30,14 +30,16 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// <param name="parentKey"></param>
         /// <param name="newAliasKey"></param>
         /// <param name="toAliasName"></param>
+        /// <param name="toItemName"></param>
         /// <param name="toScopeType"></param>
         protected void Add<T>(
             T data,
             ModelAliasKey parentKey,
             Func<T, ModelAliasKey> newAliasKey,
             Func<T, String> toAliasName,
+            Func<T, String> toItemName,
             Func<T, ScopeType> toScopeType)
-            where T: class, IToAliasName, IToScopeType
+            where T : class, IToAliasName, IToScopeType
         {
             if (this.TryGetValue(parentKey, out ModelAliasItem? parentItem))
             {
@@ -46,9 +48,11 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 ModelAliasItem newItem = new ModelAliasItem<T>()
                 {
                     AliasName = toAliasName(data),
+                    ItemName = toItemName(data),
                     ScopeId = toScopeType(data),
                     Source = data,
-                    SystemId = newKey.SystemId
+                    SystemId = newKey.SystemId,
+                    SystemParentId = parentKey.SystemId
                 };
 
                 if (this.ContainsKey(newKey))
@@ -79,6 +83,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 parentKey: new ModelAliasKey(RootItem),
                 newAliasKey: (T) => new ModelAliasKey((IDbCatalogKey)data),
                 toAliasName: (T) => ((IDbCatalogKeyName)data).ToAliasName(),
+                toItemName: (T) => { return data.DatabaseName ?? String.Empty; },
                 toScopeType: (T) => data.ToScopeType());
         }
 
@@ -91,9 +96,10 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         {
             Add(data: data,
                 parentKey: new ModelAliasKey(parent),
-                newAliasKey : (T) => new ModelAliasKey((IDbSchemaKey)data),
-                toAliasName : (T) => ((IDbSchemaKeyName)data).ToAliasName(),
-                toScopeType : (T) => data.ToScopeType());
+                newAliasKey: (T) => new ModelAliasKey((IDbSchemaKey)data),
+                toAliasName: (T) => ((IDbSchemaKeyName)data).ToAliasName(),
+                toItemName: (T) => { return data.SchemaName ?? String.Empty; },
+                toScopeType: (T) => data.ToScopeType());
         }
 
         /// <summary>
@@ -107,6 +113,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 parentKey: new ModelAliasKey(parent),
                 newAliasKey: (T) => new ModelAliasKey((IDbTableKey)data),
                 toAliasName: (T) => ((IDbTableKeyName)data).ToAliasName(),
+                toItemName: (T) => { return data.TableName ?? String.Empty; },
                 toScopeType: (T) => data.ToScopeType());
         }
 
@@ -121,6 +128,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 parentKey: new ModelAliasKey(parent),
                 newAliasKey: (T) => new ModelAliasKey((IDbTableColumnKey)data),
                 toAliasName: (T) => ((IDbTableColumnKeyName)data).ToAliasName(),
+                toItemName: (T) => { return data.ColumnName ?? String.Empty; },
                 toScopeType: (T) => data.ToScopeType());
         }
 
@@ -135,6 +143,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 parentKey: new ModelAliasKey(parent),
                 newAliasKey: (T) => new ModelAliasKey((IDbRoutineKey)data),
                 toAliasName: (T) => ((IDbRoutineKeyName)data).ToAliasName(),
+                toItemName: (T) => { return data.RoutineName ?? String.Empty; },
                 toScopeType: (T) => data.ToScopeType());
         }
 
@@ -149,6 +158,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 parentKey: new ModelAliasKey(parent),
                 newAliasKey: (T) => new ModelAliasKey((IDbRoutineParameterKey)data),
                 toAliasName: (T) => ((IDbRoutineParameterKeyName)data).ToAliasName(),
+                toItemName: (T) => { return data.ParameterName ?? String.Empty; },
                 toScopeType: (T) => data.ToScopeType());
         }
 
@@ -163,6 +173,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 parentKey: new ModelAliasKey(parent),
                 newAliasKey: (T) => new ModelAliasKey((IDbDomainKey)data),
                 toAliasName: (T) => ((IDbDomainKeyName)data).ToAliasName(),
+                toItemName: (T) => { return data.DomainName ?? String.Empty; },
                 toScopeType: (T) => data.ToScopeType());
         }
 
@@ -177,6 +188,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 parentKey: new ModelAliasKey(parent),
                 newAliasKey: (T) => new ModelAliasKey((IDbConstraintKey)data),
                 toAliasName: (T) => ((IDbConstraintKeyName)data).ToAliasName(),
+                toItemName: (T) => { return data.ConstraintName ?? String.Empty; },
                 toScopeType: (T) => data.ToScopeType());
         }
 
@@ -190,6 +202,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 parentKey: new ModelAliasKey(RootItem),
                 newAliasKey: (T) => new ModelAliasKey((ILibrarySourceKey)data),
                 toAliasName: (T) => ((ILibrarySourceKeyName)data).ToAliasName(),
+                toItemName: (T) => { return data.AssemblyName ?? String.Empty; },
                 toScopeType: (T) => data.ToScopeType());
         }
 
@@ -204,6 +217,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 parentKey: new ModelAliasKey(parent),
                 newAliasKey: (T) => new ModelAliasKey((ILibraryMemberKey)data),
                 toAliasName: (T) => ((ILibraryMemberKeyName)data).ToAliasName(),
+                toItemName: (T) => { return data.MemberName ?? String.Empty; },
                 toScopeType: (T) => data.ToScopeType());
         }
 
@@ -218,7 +232,24 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 parentKey: new ModelAliasKey(parent),
                 newAliasKey: (T) => new ModelAliasKey((ILibraryMemberKey)data),
                 toAliasName: (T) => ((ILibraryMemberKeyName)data).ToAliasName(),
+                toItemName: (T) => { return data.MemberName ?? String.Empty; },
                 toScopeType: (T) => data.ToScopeType());
+        }
+
+        /// <summary>
+        /// Removes an item and the children of that item.
+        /// </summary>
+        /// <param name="key"></param>
+        public void Remove(IModelAliasKey key)
+        {
+            ModelAliasKey removeKey = new ModelAliasKey(key);
+            if (this.ContainsKey(removeKey) && this[removeKey] is ModelAliasItem removeItem)
+            {
+                foreach (ModelAliasKey childKey in removeItem.Children)
+                { Remove(childKey); }
+
+                base.Remove(removeKey);
+            }
         }
 
         /// <summary>
