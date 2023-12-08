@@ -58,13 +58,17 @@ namespace DataDictionary.Main.Forms.Library
                 set { inModel = value; OnPropertyChanged(nameof(InModel)); }
             }
 
+            public String? ScopeName
+            {
+                get { return data.ScopeName; }
+                set { data.ScopeName = value; OnPropertyChanged(nameof(ScopeName)); }
+            }
+
             public Boolean InDatabase
             {
                 get { return inDatabase; }
                 set { inDatabase = value; OnPropertyChanged(nameof(InDatabase)); }
             }
-
-            public string? MemberType { get { return data.MemberType; } }
 
             public LibraryManagerItem(LibrarySourceItem source) : base()
             {

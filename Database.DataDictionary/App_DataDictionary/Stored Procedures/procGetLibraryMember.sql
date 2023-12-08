@@ -30,6 +30,7 @@ Select	D.[LibraryId],
 		L.[AssemblyName],
 		B.[NameSpace],
 		D.[MemberName],
+		C.[ScopeName],
 		D.[MemberType],
 		D.[MemberData]
 From	[App_DataDictionary].[LibraryMember] D
@@ -40,6 +41,7 @@ From	[App_DataDictionary].[LibraryMember] D
 			D.[MemberId] = B.[MemberId]
 		Left Join [App_DataDictionary].[ModelLibrary] A
 		On	D.[LibraryId] = A.[LibraryId]
+		Outer Apply [App_DataDictionary].[funcGetScopeName](D.[ScopeId]) C
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@LibraryId is Null or @LibraryId = D.[LibraryId])
 GO

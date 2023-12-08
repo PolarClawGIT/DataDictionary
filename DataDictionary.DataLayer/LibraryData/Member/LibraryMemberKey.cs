@@ -61,6 +61,5 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         public override int GetHashCode()
         { return HashCode.Combine(LibraryId, MemberId); }
         #endregion
-
     }
 }

@@ -70,6 +70,13 @@ namespace DataDictionary.DataLayer.DomainData.Alias
             SystemParentId = source.SystemParentId;
             if (!String.IsNullOrWhiteSpace(source.AliasName)) { ItemName = source.ItemName; }
         }
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns></returns>
+        public override String? ToString()
+        { return AliasName; }
     }
 
     /// <summary>
@@ -84,6 +91,6 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         public new T? Source { get { return base.Source as T; } init { base.Source = value; } }
 
-        internal ModelAliasItem() :base() { }
+        internal ModelAliasItem() : base() { }
     }
 }

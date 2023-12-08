@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.LibraryData;
+using DataDictionary.DataLayer.LibraryData.Member;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -179,11 +180,11 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <returns></returns>
         internal static ScopeType ToScopeType(String? value)
         {
-            if (scopeTypeToDatabaseScope.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> dbItem)
+            if (scopeTypeToDatabaseScope.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> dbItem && dbItem.Key != ScopeType.Null)
             { return dbItem.Key; }
-            else if (scopeTypeToLibraryScope.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> libraryItem)
+            else if (scopeTypeToLibraryScope.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> libraryItem && libraryItem.Key != ScopeType.Null)
             { return libraryItem.Key; }
-            else {return ScopeType.Null; }
+            else { return ScopeType.Null; }
         }
 
         /// <summary>
@@ -193,12 +194,11 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <returns></returns>
         public static ScopeType ToScopeType(this IScopeKeyName value)
         {
-            if (scopeTypeToDatabaseScope.FirstOrDefault(w => w.Value.Equals(value.ScopeName, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> dbScope)
+            if (scopeTypeToDatabaseScope.FirstOrDefault(w => w.Value.Equals(value.ScopeName, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> dbScope && dbScope.Key != ScopeType.Null)
             { return dbScope.Key; }
-            else if (scopeTypeToDatabaseScope.FirstOrDefault(w => w.Value.Equals(value.ScopeName, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> libraryScope)
+            else if (scopeTypeToDatabaseScope.FirstOrDefault(w => w.Value.Equals(value.ScopeName, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> libraryScope && libraryScope.Key != ScopeType.Null)
             { return libraryScope.Key; }
-            else
-            { return ScopeType.Null; }
+            else { return ScopeType.Null; }
         }
 
         /// <summary>
@@ -222,22 +222,16 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         }
 
         /// <summary>
-        /// Translates a Library member Type Code (.Net Documentation) to a Scope Type
+        /// Coverts the Member Type to a Scope Type for a Library Member.
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="item"></param>
         /// <returns></returns>
-        public static ScopeType FromMemberCode(this ILibraryScopeType value)
+        public static ScopeType ToScopeType(this ILibraryMemberItem item)
         {
-            if (scopeTypeToNetCoding.FirstOrDefault(w => w.Value.Equals(value.MemberType, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> item)
-            { return item.Key; }
-
+            if (scopeTypeToNetCoding.FirstOrDefault(w => w.Value.Equals(item.MemberType, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> memberScope)
+            { return memberScope.Key; }
             else
-            {
-                Exception ex = new ArgumentOutOfRangeException(nameof(value));
-                ex.Data.Add(nameof(value), value);
-                throw ex;
-            }
-
+            { return ScopeType.Null; }
         }
     }
 }

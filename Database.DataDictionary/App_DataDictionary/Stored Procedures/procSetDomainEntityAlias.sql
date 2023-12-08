@@ -19,7 +19,7 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Insert any missing Alias Refrences
+	-- Insert any missing Alias References
 	Declare @Alias [App_DataDictionary].[typeDomainAlias]	
 	Insert Into @Alias
 	Select	[SourceName],

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.LibraryData.Source;
 using Toolbox.BindingTable;
 
@@ -14,13 +15,18 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     /// <summary>
     /// Interface for the Library Member Item
     /// </summary>
-    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, ILibraryScopeType, IDataItem
+    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, IDbScopeType, IDataItem
     {
+        /// <summary>
+        /// Member Type code found in the XML
+        /// </summary>
+        String? MemberType { get; }
+
         /// <summary>
         /// Data for the Member.
         /// This is expected to be a XML fragment when generated from Visual studio Document.
         /// </summary>
-        string? MemberData { get; }
+        string? MemberData { get; }   
     }
 
     /// <summary>
@@ -48,6 +54,9 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         public string? MemberName { get { return GetValue("MemberName"); } set { SetValue("MemberName", value); } }
 
         /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }
+
+        /// <inheritdoc/>
         public string? MemberType { get { return GetValue("MemberType"); } set { SetValue("MemberType", value); } }
 
         /// <inheritdoc/>
@@ -67,6 +76,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
             new DataColumn("AssemblyName", typeof(string)){ AllowDBNull = false},
             new DataColumn("NameSpace", typeof(string)){ AllowDBNull = true},
             new DataColumn("MemberName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("MemberType", typeof(string)){ AllowDBNull = true},
             new DataColumn("MemberData", typeof(string)){ AllowDBNull = true},
         };

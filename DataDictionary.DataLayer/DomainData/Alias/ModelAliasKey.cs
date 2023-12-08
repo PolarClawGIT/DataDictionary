@@ -168,5 +168,15 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 SystemId.GetHashCode());
         }
         #endregion
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns></returns>
+        public override String? ToString()
+        {
+            if (SystemId is Guid value) { return value.ToString(); }
+            else { return base.ToString(); }
+        }
     }
 }
