@@ -44,5 +44,15 @@ namespace DataDictionary.Main.Controls
             else
             { return images[ScopeType.Null]; }
         }
+
+        public static ImageList ToImageList()
+        {
+            ImageList result = new ImageList();
+
+            foreach (KeyValuePair<ScopeType, Image> item in images)
+            { result.Images.Add(item.Key.ToScopeName(), item.Value); }
+
+            return result;
+        }
     }
 }

@@ -39,8 +39,22 @@ namespace DataDictionary.BusinessLayer
     /// <remarks>When combined with the Extension class, this implements multi-inheritance.</remarks>
     public static class ModelLibrary
     {
-        class LibraryMemberCode : ILibraryScopeType
-        { public string? MemberType { get; init; } }
+        static Dictionary<ScopeType, String> scopeTypeToNetCoding = new Dictionary<ScopeType, String>
+        {
+            { ScopeType.LibraryNameSpace, "N"},
+            { ScopeType.LibraryType,      "T"},
+            { ScopeType.LibraryField,     "F"},
+            { ScopeType.LibraryProperty,  "P"},
+            { ScopeType.LibraryMethod,    "M"},
+            { ScopeType.LibraryEvent,     "E"},
+        };
+
+        static ScopeType ToScopeType(String? value)
+        {
+            if (scopeTypeToNetCoding.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> keyValue && keyValue.Key != ScopeType.Null)
+            { return keyValue.Key; }
+            else { return ScopeType.Null; }
+        }
 
         /// <summary>
         /// Creates the work items to Load the Model Library using the Model key passed.
@@ -242,9 +256,9 @@ namespace DataDictionary.BusinessLayer
                                             MemberName = parseString,
                                             MemberData = memberNode.InnerXml,
                                             NameSpace = memberNameSpace,
-                                            MemberType = memberType
+                                            MemberType = memberType,
+                                            ScopeName = ToScopeType(memberType).ToScopeName()
                                         };
-                                        memberItem.ScopeName = memberItem.ToScopeType().ToScopeName();
 
                                         LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
 
@@ -262,9 +276,9 @@ namespace DataDictionary.BusinessLayer
                                             MemberName = parseString.Substring(0, parametersStart),
                                             MemberData = memberNode.InnerXml,
                                             NameSpace = memberNameSpace,
-                                            MemberType = memberType
+                                            MemberType = memberType,
+                                            ScopeName = ToScopeType(memberType).ToScopeName()
                                         };
-                                        memberItem.ScopeName = memberItem.ToScopeType().ToScopeName();
 
                                         data.LibraryMembers.Add(memberItem);
 

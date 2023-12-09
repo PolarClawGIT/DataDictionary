@@ -62,6 +62,7 @@ namespace DataDictionary.Main.Controls
             }
             aliasList.Sorting = SortOrder.Ascending;
             aliasList.Sort();
+            aliasList.Sorting = SortOrder.None;
 
             if (parentKey is ModelAliasKey)
             {

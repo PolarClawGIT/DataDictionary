@@ -147,16 +147,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.LibraryType,"Library.Type" },
         };
 
-        static Dictionary<ScopeType, String> scopeTypeToNetCoding = new Dictionary<ScopeType, String>
-        {
-            { ScopeType.LibraryNameSpace, "N"},
-            { ScopeType.LibraryType,      "T"},
-            { ScopeType.LibraryField,     "F"},
-            { ScopeType.LibraryProperty,  "P"},
-            { ScopeType.LibraryMethod,    "M"},
-            { ScopeType.LibraryEvent,     "E"},
-        };
-
         static Dictionary<ScopeType, String> scopeTypeToDatabaseScope = new Dictionary<ScopeType, String>()
         {
             {ScopeType.Database,"Database" },
@@ -228,7 +218,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <returns></returns>
         public static ScopeType ToScopeType(this ILibraryMemberItem item)
         {
-            if (scopeTypeToNetCoding.FirstOrDefault(w => w.Value.Equals(item.MemberType, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> memberScope)
+            if (scopeTypeToLibraryScope.FirstOrDefault(w => w.Value.Equals(item.ScopeName, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> memberScope && memberScope.Key != ScopeType.Null)
             { return memberScope.Key; }
             else
             { return ScopeType.Null; }
