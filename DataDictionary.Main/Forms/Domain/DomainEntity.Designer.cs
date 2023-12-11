@@ -53,10 +53,10 @@
             sourceNameColumn = new DataGridViewTextBoxColumn();
             scopeNameColumn = new DataGridViewTextBoxColumn();
             aliasNameColumn = new DataGridViewTextBoxColumn();
+            modelAliasNavigation = new Controls.ModelAliasNavigation();
             errorProvider = new ErrorProvider(components);
             bindingProperties = new BindingSource(components);
             bindingAlias = new BindingSource(components);
-            modelAliasNavigation = new Controls.ModelAliasNavigation();
             entityLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
             propertyTabLayout = new TabControl();
@@ -154,7 +154,7 @@
             entityPropertyTab.Location = new Point(4, 24);
             entityPropertyTab.Name = "entityPropertyTab";
             entityPropertyTab.Padding = new Padding(3);
-            entityPropertyTab.Size = new Size(510, 348);
+            entityPropertyTab.Size = new Size(510, 374);
             entityPropertyTab.TabIndex = 0;
             entityPropertyTab.Text = "Properties";
             entityPropertyTab.UseVisualStyleBackColor = true;
@@ -172,7 +172,7 @@
             propertyLayout.RowCount = 2;
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            propertyLayout.Size = new Size(504, 342);
+            propertyLayout.Size = new Size(504, 368);
             propertyLayout.TabIndex = 1;
             // 
             // propertyNavigation
@@ -184,7 +184,7 @@
             propertyNavigation.Location = new Point(3, 3);
             propertyNavigation.Name = "propertyNavigation";
             propertyNavigation.RowTemplate.Height = 25;
-            propertyNavigation.Size = new Size(498, 130);
+            propertyNavigation.Size = new Size(498, 141);
             propertyNavigation.TabIndex = 0;
             propertyNavigation.Leave += propertyNavigation_Leave;
             // 
@@ -210,10 +210,10 @@
             propertyTabLayout.Controls.Add(propertyValueTab);
             propertyTabLayout.Controls.Add(propertyDefinitionTab);
             propertyTabLayout.Dock = DockStyle.Fill;
-            propertyTabLayout.Location = new Point(3, 139);
+            propertyTabLayout.Location = new Point(3, 150);
             propertyTabLayout.Name = "propertyTabLayout";
             propertyTabLayout.SelectedIndex = 0;
-            propertyTabLayout.Size = new Size(498, 200);
+            propertyTabLayout.Size = new Size(498, 215);
             propertyTabLayout.TabIndex = 1;
             // 
             // propertyValueTab
@@ -223,7 +223,7 @@
             propertyValueTab.Location = new Point(4, 24);
             propertyValueTab.Name = "propertyValueTab";
             propertyValueTab.Padding = new Padding(3);
-            propertyValueTab.Size = new Size(490, 172);
+            propertyValueTab.Size = new Size(490, 187);
             propertyValueTab.TabIndex = 0;
             propertyValueTab.Text = "Value";
             // 
@@ -241,7 +241,7 @@
             propertyValueLayout.RowCount = 2;
             propertyValueLayout.RowStyles.Add(new RowStyle());
             propertyValueLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            propertyValueLayout.Size = new Size(484, 166);
+            propertyValueLayout.Size = new Size(484, 181);
             propertyValueLayout.TabIndex = 0;
             // 
             // propertyTypeData
@@ -267,7 +267,7 @@
             propertyValueData.Multiline = true;
             propertyValueData.Name = "propertyValueData";
             propertyValueData.ReadOnly = false;
-            propertyValueData.Size = new Size(236, 110);
+            propertyValueData.Size = new Size(236, 125);
             propertyValueData.TabIndex = 1;
             // 
             // propertyChoiceData
@@ -282,7 +282,7 @@
             propertyChoiceData.Location = new Point(245, 3);
             propertyChoiceData.Name = "propertyChoiceData";
             propertyValueLayout.SetRowSpan(propertyChoiceData, 2);
-            propertyChoiceData.Size = new Size(236, 160);
+            propertyChoiceData.Size = new Size(236, 175);
             propertyChoiceData.TabIndex = 2;
             propertyChoiceData.ItemCheck += propertyChoiceData_ItemCheck;
             // 
@@ -377,6 +377,14 @@
             aliasNameColumn.Name = "aliasNameColumn";
             aliasNameColumn.ReadOnly = true;
             // 
+            // modelAliasNavigation
+            // 
+            modelAliasNavigation.Dock = DockStyle.Fill;
+            modelAliasNavigation.Location = new Point(6, 116);
+            modelAliasNavigation.Name = "modelAliasNavigation";
+            modelAliasNavigation.Size = new Size(498, 252);
+            modelAliasNavigation.TabIndex = 1;
+            // 
             // errorProvider
             // 
             errorProvider.ContainerControl = this;
@@ -390,14 +398,6 @@
             // 
             bindingAlias.AddingNew += bindingAlias_AddingNew;
             bindingAlias.BindingComplete += BindingComplete;
-            // 
-            // modelAliasNavigation
-            // 
-            modelAliasNavigation.Dock = DockStyle.Fill;
-            modelAliasNavigation.Location = new Point(6, 116);
-            modelAliasNavigation.Name = "modelAliasNavigation";
-            modelAliasNavigation.Size = new Size(498, 252);
-            modelAliasNavigation.TabIndex = 1;
             // 
             // DomainEntity
             // 

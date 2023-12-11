@@ -1,6 +1,10 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.DataLayer.ApplicationData.Property;
+using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Messages;
@@ -22,7 +26,14 @@ namespace DataDictionary.Main.Forms.Domain
         {
             InitializeComponent();
             this.Icon = Resources.Icon_Attribute;
+
+            newItemCommand.Enabled = true;
+            newItemCommand.Image = Resources.NewProperty;
+            newItemCommand.ToolTipText = "add Property";
+            newItemCommand.Click += NewItemCommand_Click;
         }
+
+
 
         private void DomainAttribute_Load(object sender, EventArgs e)
         {
@@ -66,6 +77,10 @@ namespace DataDictionary.Main.Forms.Domain
                 if (bindingProperties.Current is DomainAttributePropertyItem propItem
                     && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)
                 { BindChoiceData(property, propItem); }
+
+                bindingAlias.DataSource = new BindingView<DomainAttributeAliasItem>(Program.Data.DomainAttributeAliases, w => DataKey.Equals(w));
+                entityAliasData.AutoGenerateColumns = false;
+                entityAliasData.DataSource = bindingAlias;
 
                 return true;
             }
@@ -126,12 +141,6 @@ namespace DataDictionary.Main.Forms.Domain
             e.NewObject = newItem;
         }
 
-        private void bindingDatabaseAlias_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            DomainAttributeAliasItem newItem = new DomainAttributeAliasItem(DataKey);
-
-            e.NewObject = newItem;
-        }
 
         private void BindingComplete(object sender, BindingCompleteEventArgs e)
         { // Helps with debugging code.
@@ -232,6 +241,56 @@ namespace DataDictionary.Main.Forms.Domain
             { errorProvider.SetError(attributeTitleData.ErrorControl, "Attribute Title is required"); }
             else
             { errorProvider.SetError(attributeTitleData.ErrorControl, String.Empty); }
+        }
+
+        private void NewItemCommand_Click(object? sender, EventArgs e)
+        {
+            if (attributeTabLayout.SelectedIndex == 0) { bindingProperties.AddNew(); }
+            else if (attributeTabLayout.SelectedIndex == 1) { bindingAlias.AddNew(); }
+            else { }
+        }
+
+        private void bindingAlias_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (modelAliasNavigation.SelectedAlias is ModelAliasItem selected)
+            {
+                DomainAttributeAliasItem newItem = new DomainAttributeAliasItem(DataKey);
+                newItem.AliasName = modelAliasNavigation.SelectedAlias.AliasName;
+                newItem.ScopeName = modelAliasNavigation.SelectedAlias.ScopeId.ToScopeName();
+
+                if (Program.Data.ModelAlias.ContainsKey(new ModelAliasKey(selected)))
+                {
+                    ModelAliasItem item = Program.Data.ModelAlias[new ModelAliasKey(selected)];
+
+                    if (item.Source is IDbCatalogKey catalogKey && Program.Data.DbCatalogs.FirstOrDefault(w => new DbCatalogKey(catalogKey).Equals(w)) is IDbCatalogItem catalogItem)
+                    { newItem.SourceName = catalogItem.ToAliasName(); }
+                    else if (item.Source is ILibrarySourceKey libraryKey && Program.Data.LibrarySources.FirstOrDefault(w => new LibrarySourceKey(libraryKey).Equals(w)) is ILibrarySourceItem librarySource)
+                    { newItem.SourceName = librarySource.ToAliasName(); }
+                }
+
+                e.NewObject = newItem;
+            }
+        }
+
+        private void attributeTabLayout_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (attributeTabLayout.SelectedIndex == 0)
+            {
+                newItemCommand.Enabled = true;
+                newItemCommand.Image = Resources.NewProperty;
+                newItemCommand.ToolTipText = "add Property";
+            }
+            else if (attributeTabLayout.SelectedIndex == 1)
+            {
+                newItemCommand.Enabled = true;
+                newItemCommand.Image = Resources.NewSynonym;
+                newItemCommand.ToolTipText = "add Alias";
+            }
+            else
+            {
+                newItemCommand.Enabled = false;
+                newItemCommand.Image = Resources.NewDocument;
+            }
         }
     }
 }
