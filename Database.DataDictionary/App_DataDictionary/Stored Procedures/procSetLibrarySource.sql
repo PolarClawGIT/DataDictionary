@@ -54,6 +54,12 @@ Begin Try
 			On	D.[AssemblyName] = A.[AssemblyName]
 
 	-- Apply Changes
+	If @LibraryId is Not Null And Not Exists (
+		Select	[LibraryId]
+		From	@Values V
+		Where [LibraryId] = @LibraryId)
+		Exec [App_DataDictionary].[procSetLibraryMember] @LibraryId = @LibraryId -- Cascades Delete
+
 	Delete From [App_DataDictionary].[ModelLibrary]
 	From	[App_DataDictionary].[ModelLibrary] M
 			Left Join @Values S
