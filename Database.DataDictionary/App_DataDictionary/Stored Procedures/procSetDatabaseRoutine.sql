@@ -74,6 +74,17 @@ Begin Try
 						(@ModelId is Null Or @ModelId = C.[ModelId]))	
 
 	-- Apply Changes
+		If @CatalogId is Not Null And Not Exists (
+		Select	[CatalogId]
+		From	@Values V
+				Inner Join [App_DataDictionary].[DatabaseRoutine_AK] A
+				On V.[RoutineId] = A.[RoutineId]
+		Where [CatalogId] = @CatalogId)
+	Begin -- Cascades Delete
+		Exec [App_DataDictionary].[procSetDatabaseRoutineParameter] @CatalogId = @CatalogId
+		Exec [App_DataDictionary].[procSetDatabaseRoutineDependency] @CatalogId = @CatalogId
+	End
+
 	Delete From [App_DataDictionary].[DatabaseRoutine]
 	From	[App_DataDictionary].[DatabaseRoutine] T
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P

@@ -16,14 +16,10 @@ Select	T.[CatalogId],
 		T.[TableName],
 		D.[ConstraintName],
 		C.[ScopeName],
-		D.[ConstraintType],
-		R.[SchemaName] As [ReferenceSchemaName],
-		R.[TableName] As [ReferenceTableName]
+		D.[ConstraintType]
 From	[App_DataDictionary].[DatabaseConstraint] D
 		Inner Join [App_DataDictionary].[DatabaseConstraint_AK] T
 		On	D.[ConstraintId] = T.[ConstraintId]
-		Left Join [App_DataDictionary].[DatabaseTable_AK] R
-		On	D.[ParentTableId] = R.[TableId]
 		Left Join [App_DataDictionary].[ModelCatalog] A
 		On	T.[CatalogId] = A.[CatalogId]
 		Outer Apply [App_DataDictionary].[funcGetScopeName](D.[ScopeId]) C

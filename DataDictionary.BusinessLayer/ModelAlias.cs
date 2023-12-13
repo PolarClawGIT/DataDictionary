@@ -314,72 +314,45 @@ namespace DataDictionary.BusinessLayer
             }
         }
 
+
         /// <summary>
-        /// Deletes Alias Data for a Catalog
+        /// Remove Alias Data for a Catalog
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> DeleteAlias<T>(this T data, IDbCatalogKey key)
-            where T : IModelCatalog, IModelAlias
+        public static IReadOnlyList<WorkItem> RemoveAlias(this IModelAlias data, IDbCatalogKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             WorkItem deleteWork = new WorkItem()
             {
-                WorkName = "Delete Catalog aliases",
-                DoWork = ThreadWork
+                WorkName = "Remove Catalog aliases",
+                DoWork = () => data.ModelAlias.Remove(key),
             };
 
             work.Add(deleteWork);
             return work;
-
-            void ThreadWork()
-            {
-                DbCatalogKey catalogKey = new DbCatalogKey(key);
-
-                // Expect zero or one
-                foreach (DbCatalogItem catalogItem in data.DbCatalogs.Where(w => catalogKey.Equals(w)))
-                {
-                    ModelAliasKey removeKey = new ModelAliasKey(catalogItem);
-                    data.ModelAlias.Remove(removeKey);
-                }
-            }
         }
 
         /// <summary>
-        /// Deletes Alias Data for a Library
+        /// Remove Alias Data for a Library
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> DeleteAlias<T>(this T data, ILibrarySourceKey key)
-            where T : IModelLibrary, IModelAlias
+        public static IReadOnlyList<WorkItem> RemoveAlias(this IModelAlias data, ILibrarySourceKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             WorkItem deleteWork = new WorkItem()
             {
-                WorkName = "Delete Library aliases",
-                DoWork = ThreadWork
+                WorkName = "Remove Library aliases",
+                DoWork = () => data.ModelAlias.Remove(key)
             };
 
             work.Add(deleteWork);
             return work;
-
-            void ThreadWork()
-            {
-                LibrarySourceKey libraryKey = new LibrarySourceKey(key);
-
-                // Expect zero or one
-                foreach (LibrarySourceItem libraryItem in data.LibrarySources.Where(w => libraryKey.Equals(w)))
-                {
-                    ModelAliasKey removeKey = new ModelAliasKey(libraryItem);
-                    data.ModelAlias.Remove(removeKey);
-                }
-            }
         }
     }
 }

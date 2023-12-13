@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
@@ -202,13 +203,17 @@ namespace DataDictionary.Main.Forms.Database
             }
         }
 
+
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
             catalogNavigation.EndEdit();
             List<WorkItem> work = new List<WorkItem>();
 
             if (catalogBinding.Current is CatalogManagerItem item)
-            { work.AddRange(Program.Data.RemoveCatalog(item)); }
+            {
+                work.AddRange(Program.Data.RemoveAlias(item));
+                work.AddRange(Program.Data.RemoveCatalog(item));
+            }
 
             DoLocalWork(work);
         }
@@ -226,10 +231,7 @@ namespace DataDictionary.Main.Forms.Database
                 work.Add(factory.OpenConnection());
 
                 if (inModelList)
-                {
-                    work.AddRange(Program.Data.DeleteAlias(key));
-                    work.AddRange(Program.Data.DeleteCatalog(factory, key));
-                }
+                { work.AddRange(Program.Data.DeleteCatalog(factory, key)); }
                 else { work.AddRange(dbData.DeleteCatalog(factory, key)); }
 
                 work.AddRange(LoadLocalData(factory));
@@ -249,6 +251,7 @@ namespace DataDictionary.Main.Forms.Database
                 DbCatalogKey key = new DbCatalogKey(item);
                 work.Add(factory.OpenConnection());
                 work.AddRange(Program.Data.LoadCatalog(factory, key));
+                work.AddRange(Program.Data.LoadAlias(key));
 
                 DoLocalWork(work);
             }

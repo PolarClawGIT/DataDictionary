@@ -69,6 +69,16 @@ Begin Try
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
+	If @CatalogId is Not Null And Not Exists (Select [CatalogId] From @Values Where [CatalogId] = @CatalogId)
+	Begin -- Cascades Delete
+		Exec [App_DataDictionary].[procSetDatabaseConstraint] @CatalogId = @CatalogId
+		Exec [App_DataDictionary].[procSetDatabaseDomain] @CatalogId = @CatalogId
+		Exec [App_DataDictionary].[procSetDatabaseTable] @CatalogId = @CatalogId
+		Exec [App_DataDictionary].[procSetDatabaseRoutine] @CatalogId = @CatalogId
+		
+		Exec [App_DataDictionary].[procSetDatabaseExtendedProperty] @CatalogId = @CatalogId
+	End
+
 	Delete From [App_DataDictionary].[DatabaseSchema]
 	From	[App_DataDictionary].[DatabaseSchema] T
 			Left Join @Values S

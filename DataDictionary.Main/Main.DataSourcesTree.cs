@@ -63,26 +63,30 @@ namespace DataDictionary.Main
                 Int32 completeWork = 0;
                 progress(completeWork, totalWork);
 
-                CreateNodes(dataSourceNavigation.Nodes, Program.Data.ModelAlias.RootItem.Children);
+                CreateNodes(
+                    dataSourceNavigation.Nodes,
+                    Program.Data.ModelAlias.RootItem.Children.Select(s => Program.Data.ModelAlias[s]));
 
-                void CreateNodes(TreeNodeCollection target, IEnumerable<ModelAliasKey> items)
+                void CreateNodes(TreeNodeCollection target, IEnumerable<ModelAliasItem> items)
                 {
-                    foreach (ModelAliasKey item in items)
+                    foreach (ModelAliasItem item in items.OrderBy(o => o.ItemName))
                     {
-                        ModelAliasItem aliasItem = Program.Data.ModelAlias[item];
-
                         TreeNode node = dataSourceNavigation.Invoke<TreeNode>(() =>
                         {
-                            TreeNode newNode = target.Add(aliasItem.ItemName);
-                            newNode.ImageKey = aliasItem.ScopeId.ToScopeName();
-                            newNode.SelectedImageKey = aliasItem.ScopeId.ToScopeName();
-                            if (aliasItem.Source is object sourceItem) { dbDataNodes.Add(newNode, sourceItem); }
+                            TreeNode newNode = target.Add(item.ItemName);
+                            newNode.ImageKey = item.ScopeId.ToScopeName();
+                            newNode.SelectedImageKey = item.ScopeId.ToScopeName();
+                            if (item.Source is object sourceItem) { dbDataNodes.Add(newNode, sourceItem); }
 
                             return newNode;
                         });
 
-                        if (aliasItem.Children.Count > 0)
-                        { CreateNodes(node.Nodes, aliasItem.Children); }
+                        if (item.Children.Count > 0)
+                        { 
+                            CreateNodes(
+                                node.Nodes,
+                                item.Children.Select(s => Program.Data.ModelAlias[s])); 
+                        }
 
                         progress(completeWork++, totalWork);
                     }

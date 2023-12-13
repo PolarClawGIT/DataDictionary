@@ -1,11 +1,9 @@
-﻿CREATE TYPE [App_DataDictionary].[typeDatabaseConstraint] AS TABLE
-(
-	[CatalogId]              UniqueIdentifier Null,
-	[ConstraintId]           UniqueIdentifier Null,
-	[DatabaseName]           SysName Null,
-	[SchemaName]             SysName Null,
-	[ConstraintName]         SysName Null,
-	[TableName]              SysName Null,
-	[ScopeName]              [App_DataDictionary].[typeScopeName] Null,
-	[ConstraintType]         NVarChar(60) Null
-)
+﻿CREATE TYPE [App_DataDictionary].[typeDatabaseConstraint] AS TABLE (
+    [CatalogId]            UNIQUEIDENTIFIER                     NULL,
+    [ConstraintId]         UNIQUEIDENTIFIER                     NULL,
+    [DatabaseName]         [sysname]                            NULL,
+    [SchemaName]           [sysname]                            NULL,
+    [ConstraintName]       [sysname]                            NULL,
+    [TableName]            [sysname]                            NULL,
+    [ScopeName]            [App_DataDictionary].[typeScopeName] NULL,
+    [ConstraintType]       NVARCHAR (60)                        NULL);

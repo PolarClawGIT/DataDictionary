@@ -41,7 +41,14 @@ namespace DataDictionary.DataLayer.DomainData.Alias
             Func<T, ScopeType> toScopeType)
             where T : class, IToAliasName, IToScopeType
         {
-            if (this.TryGetValue(parentKey, out ModelAliasItem? parentItem))
+            ModelAliasItem? parentItem;
+
+            if (parentKey.Equals(this.RootItem))
+            { parentItem = this.RootItem; }
+            else if (this.TryGetValue(parentKey, out parentItem))
+            { } // parentItem is already assigned
+
+            if (parentItem is ModelAliasItem)
             {
                 ModelAliasKey newKey = newAliasKey(data);
 
@@ -237,19 +244,54 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         }
 
         /// <summary>
-        /// Removes an item and the children of that item.
+        /// Removes an item and the children of that items.
         /// </summary>
         /// <param name="key"></param>
+        /// <remarks>
+        /// This method is expected to catch any call to the Base.Remove.
+        /// </remarks>
         public void Remove(IModelAliasKey key)
         {
             ModelAliasKey removeKey = new ModelAliasKey(key);
             if (this.ContainsKey(removeKey) && this[removeKey] is ModelAliasItem removeItem)
             {
-                foreach (ModelAliasKey childKey in removeItem.Children)
-                { Remove(childKey); }
+                List<ModelAliasKey> children = removeItem.Children.ToList();
 
-                base.Remove(removeKey);
+                foreach (ModelAliasKey childKey in children)
+                { this.Remove(childKey); }
+
+                if (this.RootItem.Children.FirstOrDefault(w => removeKey.Equals(w)) is ModelAliasKey rootChild)
+                { this.RootItem.Children.Remove(rootChild); }
+
+                if (this.ContainsKey(removeKey))
+                { base.Remove(removeKey); }
             }
+        }
+
+        /// <summary>
+        /// Removes a Catalog and the children.
+        /// </summary>
+        /// <param name="key"></param>
+        public void Remove(IDbCatalogKey key)
+        {
+            DbCatalogKey catalogKey = new DbCatalogKey(key);
+            List<ModelAliasKey> catalogs = this.Where(w => w.Value.Source is IDbCatalogItem && catalogKey.Equals(w.Value.Source)).Select(s => s.Key).ToList();
+
+            foreach (ModelAliasKey item in catalogs)
+            { this.Remove(item); }
+        }
+
+        /// <summary>
+        /// Removes a Library and the children.
+        /// </summary>
+        /// <param name="key"></param>
+        public void Remove(ILibrarySourceKey key)
+        {
+            LibrarySourceKey libraryKey = new LibrarySourceKey(key);
+            List<ModelAliasKey> Libraries = this.Where(w => w.Value.Source is ILibrarySourceItem && libraryKey.Equals(w.Value.Source)).Select(s => s.Key).ToList();
+
+            foreach (ModelAliasKey item in Libraries)
+            { this.Remove(item); }
         }
 
         /// <summary>
@@ -262,11 +304,14 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         public ModelAliasCollection() : base()
         {
-            ModelAliasKey rootKey = new ModelAliasKey() { SystemId = Guid.Empty };
-            ModelAliasItem rootItem = new ModelAliasItem() { AliasName = String.Empty, ScopeId = ScopeType.Null, SystemId = Guid.Empty };
+            ModelAliasItem rootItem = new ModelAliasItem()
+            {
+                AliasName = String.Empty,
+                ScopeId = ScopeType.Null,
+                SystemId = Guid.Empty
+            };
 
             RootItem = rootItem;
-            this.Add(rootKey, rootItem);
         }
     }
 }

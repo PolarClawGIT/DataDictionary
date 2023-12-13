@@ -74,6 +74,14 @@ Begin Try
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
+	If @CatalogId is Not Null And Not Exists (
+		Select	[CatalogId]
+		From	@Values V
+				Inner Join [App_DataDictionary].[DatabaseTable_AK] A
+				On V.[TableId] = A.[TableId]
+		Where [CatalogId] = @CatalogId)
+	Exec [App_DataDictionary].[procSetDatabaseTableColumn] @CatalogId = @CatalogId -- Cascades Delete
+
 	Delete From [App_DataDictionary].[DatabaseTable]
 	From	[App_DataDictionary].[DatabaseTable] T
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P

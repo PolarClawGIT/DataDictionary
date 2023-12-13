@@ -199,7 +199,6 @@
     <Build Include="App_DataDictionary\Views\DatabaseRoutine_AK.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeAliasName.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeScopeName.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procCascadeDeleteCatalog.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseTableColumn_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseRoutineParameter_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseCatalog_AK.sql" />

@@ -2,7 +2,7 @@ Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
-	Delete From [App_DataDictionary].[ApplicationScope]
+	--Delete From [App_DataDictionary].[ApplicationScope]
 
 	Declare @Scope [App_DataDictionary].[typeApplicationScope] 
 	Insert Into @Scope Values 
@@ -35,6 +35,11 @@ Begin Try;
 
 	Select	*
 	From	[App_DataDictionary].[ApplicationScope]
+
+	Select	S.[ScopeId],
+			F.[ScopeName]
+	From	[App_DataDictionary].[ApplicationScope] S
+			Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F
 
 	-- By default, throw and error and exit without committing
 --;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;

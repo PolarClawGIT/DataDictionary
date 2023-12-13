@@ -81,6 +81,14 @@ Begin Try
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
+	If @CatalogId is Not Null And Not Exists (
+		Select	[CatalogId]
+		From	@Values V
+				Inner Join [App_DataDictionary].[DatabaseConstraint_AK] A
+				On V.[ConstraintId] = A.[ConstraintId]
+		Where [CatalogId] = @CatalogId)
+	Exec [App_DataDictionary].[procSetDatabaseConstraintColumn] @CatalogId = @CatalogId -- Cascades Delete
+
 	Delete From [App_DataDictionary].[DatabaseConstraint]
 	From	[App_DataDictionary].[DatabaseConstraint] T
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P

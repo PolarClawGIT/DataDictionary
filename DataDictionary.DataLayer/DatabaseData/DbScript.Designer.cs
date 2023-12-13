@@ -99,13 +99,16 @@ namespace DataDictionary.DataLayer.DatabaseData {
         /// <summary>
         ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
         ///	NewId() As [ConstraintId],
-        ///	[CONSTRAINT_CATALOG] As [DatabaseName],
-        ///	[CONSTRAINT_SCHEMA] As [SchemaName],
-        ///	[CONSTRAINT_NAME] As [ConstraintName],
-        ///	[TABLE_NAME] As [TableName],
+        ///	C.[CONSTRAINT_CATALOG] As [DatabaseName],
+        ///	C.[CONSTRAINT_SCHEMA] As [SchemaName],
+        ///	C.[CONSTRAINT_NAME] As [ConstraintName],
+        ///	C.[TABLE_NAME] As [TableName],
         ///	&apos;Database.Schema.Table.Constraint&apos; As [ScopeName],
-        ///	[CONSTRAINT_TYPE] As [ConstraintType]
-        ///From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS].
+        ///	C.[CONSTRAINT_TYPE] As [ConstraintType],
+        ///	P.[CONSTRAINT_SCHEMA] As [ReferenceSchemaName],
+        ///	P.[TABLE_NAME] As [ReferenceTableName]
+        ///From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] C
+        ///	Left Join [INFORMATION_SCHEMA].[REFERENTIAL_CONSTR [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbConstraintItem {
             get {
