@@ -38,77 +38,77 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="source" >A ModelAlias</param>
         public ModelAliasKey(IModelAliasKey source) : this()
         { SystemId = source.SystemId; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="source">A Database Catalog</param>
         public ModelAliasKey(IDbCatalogKey source) : this()
         { SystemId = source.CatalogId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="source">A Database Schema</param>
         public ModelAliasKey(IDbSchemaKey source) : this()
         { SystemId = source.SchemaId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="source">A Database Table</param>
         public ModelAliasKey(IDbTableKey source) : this()
         {SystemId = source.TableId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="source">A Database Table Column</param>
         public ModelAliasKey(IDbTableColumnKey source) : this()
         {SystemId = source.ColumnId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="source">A Database Domain</param>
         public ModelAliasKey(IDbDomainKey source) : this()
         {SystemId = source.DomainId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="source">A Database Routine</param>
         public ModelAliasKey(IDbRoutineKey source) : this()
         {SystemId = source.RoutineId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="source">A Database Routine Parameter</param>
         public ModelAliasKey(IDbRoutineParameterKey source) : this()
         {SystemId = source.ParameterId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="source">A Database Constraint</param>
         public ModelAliasKey(IDbConstraintKey source) : this()
         {SystemId = source.ConstraintId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="source">A Library Source</param>
         public ModelAliasKey(ILibrarySourceKey source) : this()
         {SystemId = source.LibraryId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model Alias Key
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="source">A Library Member</param>
         public ModelAliasKey(ILibraryMemberKey source) : this()
         {SystemId = source.MemberId ?? Guid.Empty; }
 

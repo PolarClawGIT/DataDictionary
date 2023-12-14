@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -282,13 +283,15 @@ namespace DataDictionary.BusinessLayer
 
                                         String parameters = parseString.Substring(parametersStart + 1, parametersEnd - parametersStart - 1);
                                         Int32 paramterCount = 0;
+                                        List<XmlNode>? paramterNodes = memberNode.ChildNodes.Cast<XmlNode>().Where(w => w.Name == "param").ToList();
 
                                         while (parameters.Length > 0)
                                         {
                                             Int32 nextSeperator = parameters.IndexOf(",");
                                             Int32 nextSubItem = parameters.IndexOf("{");
                                             String paramterType = String.Empty;
-                                            String memberName = String.Format("@parameter{0:00}", paramterCount);
+                                            String memberName = String.Format("@parameter{0:00}", paramterCount); // Default name if none are provided
+                                            XElement memberData = new XElement("param"); // Used to construct an XML data fragment.
 
                                             if (nextSeperator < 0 && nextSubItem < 0)
                                             {
@@ -325,6 +328,27 @@ namespace DataDictionary.BusinessLayer
                                                 //Currently parameters are generically named and type is dumped into the MemberData.
                                             }
 
+                                            if (paramterNodes is not null
+                                                && paramterNodes.Count > paramterCount
+                                                && paramterNodes[paramterCount] is XmlNode paramterNode
+                                                && paramterNode.Attributes is not null
+                                                && paramterNode.Attributes.
+                                                    Cast<XmlAttribute>().
+                                                    FirstOrDefault(w => w.Name == "name") is XmlAttribute parameterAttribute)
+                                            { // There are Parameter Nodes. A parameter name and description are available
+                                                memberName = parameterAttribute.InnerText;
+
+                                                memberData = new XElement("param",
+                                                        new XAttribute("name", parameterAttribute.InnerText),
+                                                        new XAttribute("type", paramterType),
+                                                        paramterNode.InnerText);
+                                            }
+                                            else
+                                            { // Only the Type can be determined based on NameSpace
+                                                memberData = new XElement("param",
+                                                    new XAttribute("type", paramterType));
+                                            }
+
                                             LibraryMemberItem parmaterItem = new LibraryMemberItem()
                                             {
                                                 LibraryId = sourceItem.LibraryId,
@@ -332,7 +356,7 @@ namespace DataDictionary.BusinessLayer
                                                 AssemblyName = sourceItem.AssemblyName,
                                                 MemberName = memberName,
                                                 ScopeName = ScopeType.LibraryParameter.ToScopeName(),
-                                                MemberData = String.Format("<ParamterType>{0}</ParamterType>", paramterType),
+                                                MemberData = memberData.ToString(),
                                                 NameSpace = parseString.Substring(0, parametersStart)
                                             };
 
