@@ -121,7 +121,6 @@
         #endregion
 
         private GroupBox modelAliasGroup;
-        private TableLayoutPanel modelAlaisLayout;
         private TextBoxData aliasNameData;
         private ComboBoxData aliasScopeData;
         private ListView aliasList;

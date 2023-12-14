@@ -194,8 +194,6 @@ namespace Toolbox.Threading
                     if (WorkAdded == 0) { progress = 0; }
                     else { progress = ((Double)WorkComplete * 100.0 + (Double)e.ProgressPercentage) / ((Double)WorkAdded * 100); }
 
-                    var x = InvokeUsing.Target;
-
                     if (InvokeUsing is not null)
                     { InvokeUsing(() => handler(sender, new WorkerProgressChangedEventArgs(workItem.WorkName, (int)(progress * 100.0)))); }
                     else { handler(sender, new WorkerProgressChangedEventArgs(workItem.WorkName, (int)(progress * 100.0))); }

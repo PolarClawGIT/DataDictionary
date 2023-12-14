@@ -450,7 +450,6 @@
         private DataGridViewTextBoxColumn propertyValueColumn;
         private Controls.CheckedListBoxData propertyChoiceData;
         private Controls.ComboBoxData subjectAreaData;
-        private TableLayoutPanel alaisLayout;
         private DataGridView entityAliasData;
         private DataGridViewTextBoxColumn sourceNameColumn;
         private DataGridViewTextBoxColumn scopeNameColumn;
