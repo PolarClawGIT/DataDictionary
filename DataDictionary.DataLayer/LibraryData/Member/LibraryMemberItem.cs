@@ -18,11 +18,6 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, IDbScopeType, IDataItem
     {
         /// <summary>
-        /// Member Type code found in the XML
-        /// </summary>
-        String? MemberType { get; }
-
-        /// <summary>
         /// Data for the Member.
         /// This is expected to be a XML fragment when generated from Visual studio Document.
         /// </summary>
@@ -55,9 +50,6 @@ namespace DataDictionary.DataLayer.LibraryData.Member
 
         /// <inheritdoc/>
         public string? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }
-
-        /// <inheritdoc/>
-        public string? MemberType { get { return GetValue("MemberType"); } set { SetValue("MemberType", value); } }
 
         /// <inheritdoc/>
         public string? MemberData { get { return GetValue("MemberData"); } set { SetValue("MemberData", value); } }

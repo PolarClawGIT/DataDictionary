@@ -256,7 +256,6 @@ namespace DataDictionary.BusinessLayer
                                             MemberName = parseString,
                                             MemberData = memberNode.InnerXml,
                                             NameSpace = memberNameSpace,
-                                            MemberType = memberType,
                                             ScopeName = ToScopeType(memberType).ToScopeName()
                                         };
 
@@ -276,20 +275,20 @@ namespace DataDictionary.BusinessLayer
                                             MemberName = parseString.Substring(0, parametersStart),
                                             MemberData = memberNode.InnerXml,
                                             NameSpace = memberNameSpace,
-                                            MemberType = memberType,
                                             ScopeName = ToScopeType(memberType).ToScopeName()
                                         };
 
                                         data.LibraryMembers.Add(memberItem);
 
                                         String parameters = parseString.Substring(parametersStart + 1, parametersEnd - parametersStart - 1);
+                                        Int32 paramterCount = 0;
 
                                         while (parameters.Length > 0)
                                         {
                                             Int32 nextSeperator = parameters.IndexOf(",");
                                             Int32 nextSubItem = parameters.IndexOf("{");
                                             String paramterType = String.Empty;
-                                            String memberName = "@parameter";
+                                            String memberName = String.Format("@parameter{0:00}", paramterCount);
 
                                             if (nextSeperator < 0 && nextSubItem < 0)
                                             {
@@ -338,6 +337,7 @@ namespace DataDictionary.BusinessLayer
                                             };
 
                                             data.LibraryMembers.Add(parmaterItem);
+                                            paramterCount = paramterCount + 1;
                                         }
                                     }
                                 }

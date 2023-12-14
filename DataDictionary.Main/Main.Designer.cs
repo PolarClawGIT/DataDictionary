@@ -113,6 +113,7 @@
             optionsToolStripMenuItem = new ToolStripMenuItem();
             applicationToolStripMenuItem = new ToolStripMenuItem();
             browsePropertiesCommand = new ToolStripMenuItem();
+            browseScopeCommand = new ToolStripMenuItem();
             browseHelpCommand = new ToolStripMenuItem();
             unitTestingToolStripMenuItem = new ToolStripMenuItem();
             gridViewToolStripMenuItem = new ToolStripMenuItem();
@@ -124,7 +125,6 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             helpAboutMenuItem = new ToolStripMenuItem();
-            browseScopeCommand = new ToolStripMenuItem();
             navigationPanel = new Panel();
             modelSpliter = new SplitContainer();
             navigationModelLayout = new TableLayoutPanel();
@@ -157,7 +157,7 @@
             navigationPanel.Dock = DockStyle.Left;
             navigationPanel.Location = new Point(0, 49);
             navigationPanel.Name = "navigationPanel";
-            navigationPanel.Size = new Size(220, 591);
+            navigationPanel.Size = new Size(300, 591);
             navigationPanel.TabIndex = 6;
             // 
             // modelSpliter
@@ -176,8 +176,8 @@
             // modelSpliter.Panel2
             // 
             modelSpliter.Panel2.Controls.Add(navigationTabs);
-            modelSpliter.Size = new Size(220, 591);
-            modelSpliter.SplitterDistance = 166;
+            modelSpliter.Size = new Size(300, 591);
+            modelSpliter.SplitterDistance = 200;
             modelSpliter.TabIndex = 2;
             // 
             // navigationModelLayout
@@ -194,7 +194,7 @@
             navigationModelLayout.RowStyles.Add(new RowStyle());
             navigationModelLayout.RowStyles.Add(new RowStyle());
             navigationModelLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            navigationModelLayout.Size = new Size(218, 164);
+            navigationModelLayout.Size = new Size(298, 198);
             navigationModelLayout.TabIndex = 2;
             // 
             // modelNameData
@@ -206,7 +206,7 @@
             modelNameData.Multiline = false;
             modelNameData.Name = "modelNameData";
             modelNameData.ReadOnly = false;
-            modelNameData.Size = new Size(212, 44);
+            modelNameData.Size = new Size(292, 44);
             modelNameData.TabIndex = 2;
             // 
             // modelDescriptionData
@@ -218,7 +218,7 @@
             modelDescriptionData.Multiline = true;
             modelDescriptionData.Name = "modelDescriptionData";
             modelDescriptionData.ReadOnly = false;
-            modelDescriptionData.Size = new Size(212, 108);
+            modelDescriptionData.Size = new Size(292, 142);
             modelDescriptionData.TabIndex = 3;
             // 
             // navigationTabs
@@ -229,7 +229,7 @@
             navigationTabs.Location = new Point(0, 0);
             navigationTabs.Name = "navigationTabs";
             navigationTabs.SelectedIndex = 0;
-            navigationTabs.Size = new Size(218, 419);
+            navigationTabs.Size = new Size(298, 385);
             navigationTabs.TabIndex = 1;
             // 
             // navigationDomainTab
@@ -239,7 +239,7 @@
             navigationDomainTab.Location = new Point(4, 24);
             navigationDomainTab.Name = "navigationDomainTab";
             navigationDomainTab.Padding = new Padding(3);
-            navigationDomainTab.Size = new Size(210, 391);
+            navigationDomainTab.Size = new Size(290, 357);
             navigationDomainTab.TabIndex = 1;
             navigationDomainTab.Text = "Domain Model";
             // 
@@ -255,7 +255,7 @@
             domainModelLayout.RowCount = 2;
             domainModelLayout.RowStyles.Add(new RowStyle());
             domainModelLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 66.6666641F));
-            domainModelLayout.Size = new Size(204, 385);
+            domainModelLayout.Size = new Size(284, 351);
             domainModelLayout.TabIndex = 1;
             // 
             // domainModelNavigation
@@ -264,7 +264,7 @@
             domainModelNavigation.HideSelection = false;
             domainModelNavigation.Location = new Point(3, 28);
             domainModelNavigation.Name = "domainModelNavigation";
-            domainModelNavigation.Size = new Size(198, 354);
+            domainModelNavigation.Size = new Size(278, 320);
             domainModelNavigation.TabIndex = 0;
             domainModelNavigation.NodeMouseDoubleClick += domainModelNavigation_NodeMouseDoubleClick;
             // 
@@ -273,7 +273,7 @@
             domainModelToolStrip.Items.AddRange(new ToolStripItem[] { newAttributeCommand, newEntityCommand, newSubjectAreaCommand, domainModelRefreshCommand, domainModelSeparator1, domainModelSortOrder });
             domainModelToolStrip.Location = new Point(0, 0);
             domainModelToolStrip.Name = "domainModelToolStrip";
-            domainModelToolStrip.Size = new Size(204, 25);
+            domainModelToolStrip.Size = new Size(284, 25);
             domainModelToolStrip.TabIndex = 1;
             domainModelToolStrip.Text = "domainModelToolStrip";
             // 
@@ -586,7 +586,7 @@
             // 
             // navigationSpliter
             // 
-            navigationSpliter.Location = new Point(220, 49);
+            navigationSpliter.Location = new Point(300, 49);
             navigationSpliter.Name = "navigationSpliter";
             navigationSpliter.Size = new Size(3, 591);
             navigationSpliter.TabIndex = 8;
@@ -844,13 +844,13 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(180, 22);
+            customizeToolStripMenuItem.Size = new Size(135, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(180, 22);
+            optionsToolStripMenuItem.Size = new Size(135, 22);
             optionsToolStripMenuItem.Text = "&Options";
             optionsToolStripMenuItem.Click += optionsToolStripMenuItem_Click;
             // 
@@ -858,7 +858,7 @@
             // 
             applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { browsePropertiesCommand, browseScopeCommand, browseHelpCommand });
             applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
-            applicationToolStripMenuItem.Size = new Size(180, 22);
+            applicationToolStripMenuItem.Size = new Size(135, 22);
             applicationToolStripMenuItem.Text = "Application";
             // 
             // browsePropertiesCommand
@@ -868,6 +868,14 @@
             browsePropertiesCommand.Size = new Size(187, 22);
             browsePropertiesCommand.Text = "browse Properties";
             browsePropertiesCommand.Click += browsePropertiesCommand_Click;
+            // 
+            // browseScopeCommand
+            // 
+            browseScopeCommand.Image = Properties.Resources.Scope;
+            browseScopeCommand.Name = "browseScopeCommand";
+            browseScopeCommand.Size = new Size(187, 22);
+            browseScopeCommand.Text = "browse Scope";
+            browseScopeCommand.Click += browseScopeCommand_Click;
             // 
             // browseHelpCommand
             // 
@@ -881,7 +889,7 @@
             // 
             unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem, testFormToolStripMenuItem, textEditorToolStripMenuItem });
             unitTestingToolStripMenuItem.Name = "unitTestingToolStripMenuItem";
-            unitTestingToolStripMenuItem.Size = new Size(180, 22);
+            unitTestingToolStripMenuItem.Size = new Size(135, 22);
             unitTestingToolStripMenuItem.Text = "Testing";
             // 
             // gridViewToolStripMenuItem
@@ -944,14 +952,6 @@
             helpAboutMenuItem.Size = new Size(122, 22);
             helpAboutMenuItem.Text = "&About...";
             helpAboutMenuItem.Click += HelpAboutMenuItem_Click;
-            // 
-            // browseScopeCommand
-            // 
-            browseScopeCommand.Image = Properties.Resources.Scope;
-            browseScopeCommand.Name = "browseScopeCommand";
-            browseScopeCommand.Size = new Size(187, 22);
-            browseScopeCommand.Text = "browse Scope";
-            browseScopeCommand.Click += browseScopeCommand_Click;
             // 
             // Main
             // 

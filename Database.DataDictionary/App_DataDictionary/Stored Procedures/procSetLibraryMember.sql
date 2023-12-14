@@ -123,11 +123,12 @@ Begin Try
 								When A.[MemberId] is Not Null Then 2
 								Else 255 End)
 					As [RankIndex]
-		From	[NameSpace] N
-				Full Outer Join [Alias] A
-				On	N.[LibraryId] = A.[LibraryId] And
-					N.[NameSpace] = A.[NameSpace] And
-					N.[MemberName] = A.[MemberName] And
+		From	[Alias] A
+				--Full Outer Join [NameSpace] N
+				Left Join [NameSpace] N
+				On	A.[LibraryId] = N.[LibraryId] And
+					A.[NameSpace] = N.[NameSpace] And
+					A.[MemberName] = N.[MemberName] And
 					A.[RankIndex] = 1
 					)
 	Insert Into @NameSpace
@@ -177,7 +178,7 @@ Begin Try
 	Insert Into @Values
 	Select	N.[MemberId],
 			N.[LibraryId],
-			Coalesce(N.[MemberParentId], P.[MemberId]) As [MemberParentId],
+			P.[MemberId] As [MemberParentId],
 			N.[MemberName],
 			N.[ScopeId],
 			Null As [MemberData]
@@ -406,6 +407,7 @@ exec [App_DataDictionary].[procGetLibraryMember]
 Select	'Result', *
 From	@Result
 
+exec [App_DataDictionary].[procSetLibrarySource] @LibraryId='2C10EC5D-8E42-4170-89C5-EB2216EF864A'
 
 	-- By default, throw and error and exit without committing
 --;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;

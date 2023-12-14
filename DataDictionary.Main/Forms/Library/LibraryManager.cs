@@ -178,11 +178,10 @@ namespace DataDictionary.Main.Forms.Library
             {
                 List<WorkItem> work = new List<WorkItem>();
                 LibrarySourceKey key = new LibrarySourceKey(item);
+                work.AddRange(Program.Data.RemoveAlias(key));
                 work.AddRange(Program.Data.RemoveLibrary(key));
                 DoLocalWork(work);
             }
-
-
         }
 
         private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
@@ -199,10 +198,7 @@ namespace DataDictionary.Main.Forms.Library
                 Boolean inModelList = (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
 
                 if (inModelList)
-                {
-                    work.AddRange(Program.Data.DeleteLibrary(factory, key));
-                    work.AddRange(Program.Data.DeleteAlias(key));
-                }
+                {   work.AddRange(Program.Data.DeleteLibrary(factory, key)); }
                 else { work.AddRange(dbData.DeleteLibrary(factory, key)); }
 
                 work.AddRange(LoadLocalData(factory));

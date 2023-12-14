@@ -74,7 +74,7 @@ Begin Try
 						(@ModelId is Null Or @ModelId = C.[ModelId]))	
 
 	-- Apply Changes
-		If @CatalogId is Not Null And Not Exists (
+	If @CatalogId is Not Null And Not Exists (
 		Select	[CatalogId]
 		From	@Values V
 				Inner Join [App_DataDictionary].[DatabaseRoutine_AK] A

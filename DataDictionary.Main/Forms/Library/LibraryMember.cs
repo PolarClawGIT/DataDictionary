@@ -61,7 +61,7 @@ namespace DataDictionary.Main.Forms.Library
 
                 memberNameSpaceData.DataBindings.Add(new Binding(nameof(memberNameSpaceData.Text), memberItem, nameof(memberItem.NameSpace)));
                 memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), memberItem, nameof(memberItem.MemberName)));
-                memberTypeData.DataBindings.Add(new Binding(nameof(memberTypeData.Text), memberItem, nameof(memberItem.MemberType)));
+                scopeData.DataBindings.Add(new Binding(nameof(scopeData.Text), memberItem, nameof(memberItem.ScopeName)));
                 memberData.DataBindings.Add(new Binding(nameof(memberData.Text), memberItem, nameof(memberItem.MemberData)));
                 assemblyNameData.DataBindings.Add(new Binding(nameof(assemblyNameData.Text), memberItem, nameof(memberItem.AssemblyName)));
 
@@ -80,7 +80,6 @@ namespace DataDictionary.Main.Forms.Library
         {
             memberNameSpaceData.DataBindings.Clear();
             memberNameData.DataBindings.Clear();
-            memberTypeData.DataBindings.Clear();
             memberData.DataBindings.Clear();
             assemblyNameData.DataBindings.Clear();
         }

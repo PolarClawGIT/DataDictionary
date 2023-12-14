@@ -82,10 +82,10 @@ namespace DataDictionary.Main
                         });
 
                         if (item.Children.Count > 0)
-                        { 
+                        {
                             CreateNodes(
                                 node.Nodes,
-                                item.Children.Select(s => Program.Data.ModelAlias[s])); 
+                                item.Children.Select(s => Program.Data.ModelAlias[s]));
                         }
 
                         progress(completeWork++, totalWork);
