@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
     /// <summary>
     /// Interface for the Database Schema Item
     /// </summary>
-    public interface IDbSchemaItem : IDbSchemaKeyName, IDbSchemaKey, IDbCatalogKey, IDbCatalogScope, IDbIsSystem, IDbScopeType, IDataItem
+    public interface IDbSchemaItem : IDbSchemaKeyName, IDbSchemaKey, IDbCatalogKey, IDbCatalogScopeKey, IDbIsSystem, IDbScopeType, IDataItem
     { }
 
     /// <summary>

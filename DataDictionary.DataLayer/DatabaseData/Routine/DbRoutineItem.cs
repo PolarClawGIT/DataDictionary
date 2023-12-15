@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for Database Routine (procedures and functions).
     /// </summary>
-    public interface IDbRoutineItem : IDbRoutineKeyName, IDbRoutineKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IDbScopeType, IDataItem
+    public interface IDbRoutineItem : IDbRoutineKeyName, IDbRoutineKey, IDbCatalogKey, IDbIsSystem, IDbScopeType, IDataItem
     {
         /// <summary>
         /// Type of Routine (such as procedure or function)
@@ -71,15 +71,15 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public DbObjectScope ObjectScope
-        {
-            get
-            {
-                if (Enum.TryParse(RoutineType, true, out DbObjectScope value))
-                { return value; }
-                else { return DbObjectScope.NULL; }
-            }
-        }
+        //public DbObjectScope ObjectScope
+        //{
+        //    get
+        //    {
+        //        if (Enum.TryParse(RoutineType, true, out DbObjectScope value))
+        //        { return value; }
+        //        else { return DbObjectScope.NULL; }
+        //    }
+        //}
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

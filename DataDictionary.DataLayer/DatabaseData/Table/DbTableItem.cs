@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for Database Column Item
     /// </summary>
-    public interface IDbTableItem : IDbTableKeyName, IDbTableKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IDbScopeType, IDataItem
+    public interface IDbTableItem : IDbTableKeyName, IDbTableKey, IDbCatalogKey, IDbIsSystem, IDbScopeType, IDataItem
     {
         /// <summary>
         /// Type of Table Object (Table, View, ...)
@@ -60,16 +60,16 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public bool IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
 
         /// <inheritdoc/>
-        public DbObjectScope ObjectScope
-        {
-            get
-            {
-                if (Enum.TryParse(TableType, true, out DbObjectScope value))
-                { return value; }
-                else if (TableType is "BASE TABLE" or "HISTORY TABLE" or "TEMPORAL TABLE") { return DbObjectScope.Table; }
-                else { return DbObjectScope.NULL; }
-            }
-        }
+        //public DbObjectScope ObjectScope
+        //{
+        //    get
+        //    {
+        //        if (Enum.TryParse(TableType, true, out DbObjectScope value))
+        //        { return value; }
+        //        else if (TableType is "BASE TABLE" or "HISTORY TABLE" or "TEMPORAL TABLE") { return DbObjectScope.Table; }
+        //        else { return DbObjectScope.NULL; }
+        //    }
+        //}
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

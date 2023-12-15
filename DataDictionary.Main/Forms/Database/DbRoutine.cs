@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.Main.Properties;
@@ -31,12 +32,11 @@ namespace DataDictionary.Main.Forms.Database
                 this.Text = DataKey.ToString();
                 DbRoutineParameterItem? firstParameter = Program.Data.DbRoutineParameters.OrderBy(o => o.OrdinalPosition).FirstOrDefault(w => DataKey.Equals(w));
 
-                if (data.ObjectScope == DbObjectScope.Procedure)
+                if (data.ToScopeType() == ScopeType.DatabaseSchemaProcedure)
                 { this.Icon = Resources.Icon_Procedure; }
-                else if (data.ObjectScope == DbObjectScope.Function && firstParameter is DbRoutineParameterItem isScalar && isScalar.OrdinalPosition == 0)
+                else if (data.ToScopeType() == ScopeType.DatabaseSchemaFunction && firstParameter is DbRoutineParameterItem isScalar && isScalar.OrdinalPosition == 0)
                 { this.Icon = Resources.Icon_ScalarFunction; }
-
-                else if (data.ObjectScope == DbObjectScope.Function && firstParameter is DbRoutineParameterItem isTable && isTable.OrdinalPosition != 0)
+                else if (data.ToScopeType() == ScopeType.DatabaseSchemaFunction && firstParameter is DbRoutineParameterItem isTable && isTable.OrdinalPosition != 0)
                 { this.Icon = Resources.Icon_TableFunction; }
 
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.DatabaseName)));

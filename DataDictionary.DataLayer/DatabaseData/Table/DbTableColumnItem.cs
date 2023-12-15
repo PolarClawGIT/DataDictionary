@@ -25,7 +25,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for the Database Table Column
     /// </summary>
-    public interface IDbTableColumnItem : IDbTableColumnKeyName, IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbElementScope, IDbColumn, IDbScopeType, IDataItem
+    public interface IDbTableColumnItem : IDbTableColumnKeyName, IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbColumn, IDbScopeType, IDataItem
     {
         /// <summary>
         /// Is the Column Nullable
@@ -163,7 +163,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public string? GeneratedAlwayType { get { return GetValue("GeneratedAlwayType"); } }
 
         /// <inheritdoc/>
-        public DbElementScope ElementScope { get; } = DbElementScope.Column;
+        //public DbElementScope ElementScope { get; } = DbElementScope.Column;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

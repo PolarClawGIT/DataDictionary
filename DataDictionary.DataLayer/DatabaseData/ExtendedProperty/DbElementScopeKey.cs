@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -57,7 +58,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Interface for Level2 MS Extended Property Type.
     /// </summary>
-    public interface IDbElementScope
+    public interface IDbElementScopeKey: IDbObjectScopeKey
     {
         /// <summary>
         /// Level2 MS Extended Property Type.
@@ -71,9 +72,50 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <remarks>
     /// Currently not used.
     /// </remarks>
-    public class DbElementScopeKey : DbObjectScopeKey, IDbElementScope
+    public class DbElementScopeKey : DbObjectScopeKey, IDbElementScopeKey, IKeyEquality<IDbElementScopeKey>
     {
         /// <inheritdoc/>
         public DbElementScope ElementScope { get; init; } = DbElementScope.NULL;
+
+        /// <summary>
+        /// Constructor for a Element Scope.
+        /// </summary>
+        internal protected DbElementScopeKey() : base() { }
+
+        /// <summary>
+        /// Constructor for a Element Scope.
+        /// </summary>
+        public DbElementScopeKey(IDbElementScopeKey source) : base(source)
+        { ElementScope = source.ElementScope; }
+
+        #region IEquatable
+        /// <inheritdoc/>
+        public virtual bool Equals(IDbElementScopeKey? other)
+        {
+            return
+                other is IDbObjectScopeKey
+                && new DbObjectScopeKey(this).Equals(other)
+                && ObjectScope != DbObjectScope.NULL
+                && other.ObjectScope != DbObjectScope.NULL
+                && ObjectScope == other.ObjectScope;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object? other)
+        { return other is IDbElementScopeKey value && Equals(new DbElementScopeKey(value)); }
+
+        /// <inheritdoc/>
+        public static bool operator ==(DbElementScopeKey left, DbElementScopeKey right)
+        { return left.Equals(right); }
+
+        /// <inheritdoc/>
+        public static bool operator !=(DbElementScopeKey left, DbElementScopeKey right)
+        { return !left.Equals(right); }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        { return HashCode.Combine(base.GetHashCode(), ElementScope); }
+        #endregion
+
     }
 }

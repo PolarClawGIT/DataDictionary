@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Constraint Item.
     /// </summary>
-    public interface IDbConstraintItem : IDbConstraintKeyName, IDbConstraintKey, IDbCatalogKey,  IDbElementScope, IDbTableKeyName, IDbScopeType, IDataItem
+    public interface IDbConstraintItem : IDbConstraintKeyName, IDbConstraintKey, IDbCatalogKey,  IDbTableKeyName, IDbScopeType, IDataItem
     {
         /// <summary>
         /// Type of the Database Constraint.
@@ -58,7 +58,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public string? ConstraintType { get { return GetValue("ConstraintType"); } }
 
         /// <inheritdoc/>
-        public DbElementScope ElementScope { get; } = DbElementScope.Constraint;
+        //public DbElementScope ElementScope { get; } = DbElementScope.Constraint;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DomainData.Alias;
 
@@ -41,6 +42,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public String RoutineName { get; set; } = string.Empty;
 
         /// <summary>
+        /// Constructor for a blank Database Routine Key
+        /// </summary>
+        protected internal DbRoutineKeyName() : base() { }
+
+        /// <summary>
         /// Constructor for the Database Routine Key
         /// </summary>
         /// <param name="source"></param>
@@ -48,6 +54,30 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         {
             if (source.RoutineName is string) { RoutineName = source.RoutineName; }
             else { RoutineName = string.Empty; }
+        }
+
+        /// <summary>
+        /// Try to Create a Database Routine Key from the Alias.
+        /// </summary>
+        /// <param name="source">A four part Alias name with a Scope of a Function or Procedure.</param>
+        /// <returns>A Table Key or Null if a key could not be constructed.</returns>
+        public static DbRoutineKeyName? TryCreate(IDomainAliasItem source)
+        {
+            if (source.AliasName is null) { return null; }
+
+            List<String> parsed = AliasExtension.ParseName(source.AliasName);
+            if (parsed.Count != 3) { return null; }
+
+            if (source.ToScopeType() is ScopeType.DatabaseSchemaFunction or ScopeType.DatabaseSchemaProcedure)
+            {
+                return new DbRoutineKeyName()
+                {
+                    DatabaseName = parsed[0],
+                    SchemaName = parsed[1],
+                    RoutineName = parsed[2]
+                };
+            }
+            else { return null; }
         }
 
         #region IEquatable, IComparable

@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Entity;
 using System;
@@ -31,7 +32,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <returns></returns>
         public static String ToAliasName(this IDbTableKeyName source)
         { return AliasExtension.FormatName(source.DatabaseName, source.SchemaName, source.TableName); }
-    }
+
+   }
 
     /// <summary>
     /// Implementation for the Database Table Key
@@ -42,11 +44,40 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public String TableName { get; init; } = string.Empty;
 
         /// <summary>
+        /// Constructor for a blank Database Table Key
+        /// </summary>
+        protected internal DbTableKeyName() : base() { }
+
+        /// <summary>
         /// Constructor for the Database Table Key
         /// </summary>
         /// <param name="source"></param>
         public DbTableKeyName(IDbTableKeyName source) : base(source)
         { if (source.TableName is string) { TableName = source.TableName; } }
+
+        /// <summary>
+        /// Try to Create a Database Table Key from the Alias.
+        /// </summary>
+        /// <param name="source">A four part Alias name with a Scope of a Table or View.</param>
+        /// <returns>A Table Key or Null if a key could not be constructed.</returns>
+        public static DbTableKeyName? TryCreate(IDomainAliasItem source)
+        {
+            if (source.AliasName is null) { return null; }
+
+            List<String> parsed = AliasExtension.ParseName(source.AliasName);
+            if (parsed.Count != 3) { return null; }
+
+            if (source.ToScopeType() is ScopeType.DatabaseSchemaTableColumn or ScopeType.DatabaseSchemaViewColumn)
+            {
+                return new DbTableKeyName()
+                {
+                    DatabaseName = parsed[0],
+                    SchemaName = parsed[1],
+                    TableName = parsed[2]
+                };
+            }
+            else { return null; }
+        }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>

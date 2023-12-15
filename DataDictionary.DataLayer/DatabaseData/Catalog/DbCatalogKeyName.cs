@@ -35,6 +35,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         public String DatabaseName { get; init; } = string.Empty;
 
         /// <summary>
+        /// Constructor for a blank Catalog Key
+        /// </summary>
+        protected internal DbCatalogKeyName() : base() { }
+
+        /// <summary>
         /// Constructor for the Catalog Unique Key.
         /// </summary>
         /// <param name="source"></param>

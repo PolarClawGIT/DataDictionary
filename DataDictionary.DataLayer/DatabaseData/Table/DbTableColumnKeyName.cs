@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using System;
@@ -42,11 +43,41 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public string ColumnName { get; init; } = string.Empty;
 
         /// <summary>
+        /// Constructor for a blank Database Column Key
+        /// </summary>
+        protected internal DbTableColumnKeyName() : base() { }
+
+        /// <summary>
         /// Constructor for the Database Column Key
         /// </summary>
         /// <param name="source"></param>
         public DbTableColumnKeyName(IDbTableColumnKeyName source) : base(source)
         { if (source.ColumnName is string) { ColumnName = source.ColumnName; } }
+
+        /// <summary>
+        /// Try to Create a Database Column Key from the Alias.
+        /// </summary>
+        /// <param name="source">A four part Alias name with a Scope of a Table/View Column.</param>
+        /// <returns>A Column Key or Null if a key could not be constructed.</returns>
+        public static new DbTableColumnKeyName? TryCreate(IDomainAliasItem source)
+        {
+            if (source.AliasName is null) { return null; }
+
+            List<String> parsed = AliasExtension.ParseName(source.AliasName);
+            if (parsed.Count != 4) { return null; }
+
+            if (source.ToScopeType() is ScopeType.DatabaseSchemaTableColumn or ScopeType.DatabaseSchemaViewColumn)
+            {
+                return new DbTableColumnKeyName()
+                {
+                    DatabaseName = parsed[0],
+                    SchemaName = parsed[1],
+                    TableName = parsed[2],
+                    ColumnName = parsed[3]
+                };
+            }
+            else { return null; }
+        }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>

@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DomainData.Alias;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public String ParameterName { get; set; } = string.Empty;
 
         /// <summary>
+        /// Constructor for a blank Database Routine Parameter Key
+        /// </summary>
+        protected internal DbRoutineParameterKeyName() : base() { }
+
+        /// <summary>
         /// Constructor for Database Routine Parameter Key
         /// </summary>
         /// <param name="source"></param>
@@ -49,6 +55,31 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         {
             if (source.ParameterName is string) { ParameterName = source.ParameterName; }
             else { ParameterName = string.Empty; }
+        }
+
+        /// <summary>
+        /// Try to Create a Database Parameter Key from the Alias.
+        /// </summary>
+        /// <param name="source">A four part Alias name with a Scope of a Procedure/Function Parameter.</param>
+        /// <returns>A Column Key or Null if a key could not be constructed.</returns>
+        public static new DbRoutineParameterKeyName? TryCreate(IDomainAliasItem source)
+        {
+            if (source.AliasName is null) { return null; }
+
+            List<String> parsed = AliasExtension.ParseName(source.AliasName);
+            if (parsed.Count != 4) { return null; }
+
+            if (source.ToScopeType() is ScopeType.DatabaseSchemaProcedureParameter or ScopeType.DatabaseSchemaFunctionParameter)
+            {
+                return new DbRoutineParameterKeyName()
+                {
+                    DatabaseName = parsed[0],
+                    SchemaName = parsed[1],
+                    RoutineName = parsed[2],
+                    ParameterName = parsed[3]
+                };
+            }
+            else { return null; }
         }
 
         #region IEquatable, IComparable

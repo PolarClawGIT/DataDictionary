@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for the Database Routine Parameter
     /// </summary>
-    public interface IDbRoutineParameterItem : IDbRoutineParameterKeyName, IDbRoutineParameterKey, IDbDomainReferenceKey, IDbElementScope, IDbColumn, IDbCatalogKey, IDbScopeType, IDataItem
+    public interface IDbRoutineParameterItem : IDbRoutineParameterKeyName, IDbRoutineParameterKey, IDbDomainReferenceKey, IDbColumn, IDbCatalogKey, IDbScopeType, IDataItem
     { }
 
     /// <summary>
@@ -102,7 +102,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public string? DomainName { get { return GetValue("DomainName"); } }
 
         /// <inheritdoc/>
-        public DbElementScope ElementScope { get; } = DbElementScope.Parameter;
+        //public DbElementScope ElementScope { get; } = DbElementScope.Parameter;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

@@ -42,6 +42,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
         public string SchemaName { get; init; } = string.Empty;
 
         /// <summary>
+        /// Constructor for a blank Database Scheme Key
+        /// </summary>
+        protected internal DbSchemaKeyName() : base() { }
+
+        /// <summary>
         /// Constructor for the Database Scheme Key
         /// </summary>
         /// <param name="source"></param>

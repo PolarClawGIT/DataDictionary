@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     /// <summary>
     /// Interface for the Database Domain Item.
     /// </summary>
-    public interface IDbDomainItem : IDbDomainKeyName, IDbDomainKey, IDbCatalogKey, IDbObjectScope, IDbDomain, IDbScopeType, IDataItem
+    public interface IDbDomainItem : IDbDomainKeyName, IDbDomainKey, IDbCatalogKey, IDbDomain, IDbScopeType, IDataItem
     {
         /// <summary>
         /// The Default value for the Domain
@@ -93,7 +93,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         public string? CollationName { get { return GetValue("CollationName"); } }
 
         /// <inheritdoc/>
-        public DbObjectScope ObjectScope { get; } = DbObjectScope.Type;
+        //public DbObjectScope ObjectScope { get; } = DbObjectScope.Type;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

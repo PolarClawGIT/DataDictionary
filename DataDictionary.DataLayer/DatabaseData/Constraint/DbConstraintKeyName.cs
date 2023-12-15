@@ -41,6 +41,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public String ConstraintName { get; init; } = string.Empty;
 
         /// <summary>
+        /// Constructor for a blank Database Constraint Key
+        /// </summary>
+        protected internal DbConstraintKeyName() : base() { }
+
+        /// <summary>
         /// Constructor for the Database Constraint Key.
         /// </summary>
         /// <param name="source"></param>

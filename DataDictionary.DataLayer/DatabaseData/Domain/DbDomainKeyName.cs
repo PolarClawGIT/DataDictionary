@@ -41,6 +41,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         public String DomainName { get; init; } = string.Empty;
 
         /// <summary>
+        /// Constructor for a blank Database Domain Key
+        /// </summary>
+        protected internal DbDomainKeyName() : base() { }
+
+        /// <summary>
         /// Constructor for the Database Domain Key
         /// </summary>
         /// <param name="source"></param>
