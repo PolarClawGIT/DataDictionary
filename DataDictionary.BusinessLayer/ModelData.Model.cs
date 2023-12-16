@@ -122,22 +122,6 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <summary>
-        /// Imports all the Attributes for a given Database Routine
-        /// </summary>
-        /// <param name="routineKey"></param>
-        /// <returns></returns>
-        public IReadOnlyList<WorkItem> ImportAttribute(IDbRoutineKeyName routineKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            DbRoutineKeyName key = new DbRoutineKeyName(routineKey);
-            foreach (DbRoutineParameterItem item in this.DbRoutineParameters.Where(w => key.Equals(w)))
-            { work.AddRange(ImportAttribute(item)); }
-
-            return work;
-        }
-
-        /// <summary>
         /// Imports all the Attributes for a given Database Schema
         /// </summary>
         /// <param name="schemaKey"></param>
@@ -147,9 +131,6 @@ namespace DataDictionary.BusinessLayer
 
             DbSchemaKeyName key = new DbSchemaKeyName(schemaKey);
             foreach (DbTableItem item in this.DbTables.Where(w => key.Equals(w) && w.IsSystem == false))
-            { work.AddRange(ImportAttribute(item)); }
-
-            foreach (DbRoutineItem item in this.DbRoutines.Where(w => key.Equals(w) && w.IsSystem == false))
             { work.AddRange(ImportAttribute(item)); }
 
             return work;

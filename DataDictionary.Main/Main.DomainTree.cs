@@ -209,11 +209,6 @@ namespace DataDictionary.Main
                 CreateTreeNode(entityNode.Nodes, domainModelImageIndex.Property, propertyTitle, propertyItem);
             }
 
-            List<DomainEntityAliasItem> alias = Program.Data.DomainEntityAliases.Where(w => key.Equals(w)).ToList();
-            foreach (DomainEntityAliasItem aliasItem in alias)
-            { CreateTreeNode(entityNode.Nodes, domainModelImageIndex.Alias, aliasItem.ToString()); }
-
-
             List<DomainAttributeItem> attributes = Program.Data.GetAttributes(key).ToList();
             foreach (DomainAttributeItem item in attributes)
             { CreateTreeNode(entityNode.Nodes, domainModelImageIndex.Attribute, item.AttributeTitle, item); }
