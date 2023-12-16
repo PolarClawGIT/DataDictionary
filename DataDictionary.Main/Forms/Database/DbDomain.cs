@@ -14,9 +14,9 @@ using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbDomain : ApplicationBase, IApplicationDataForm<DbDomainKey>
+    partial class DbDomain : ApplicationBase, IApplicationDataForm<DbDomainKeyName>
     {
-        public required DbDomainKey DataKey { get; init; }
+        public required DbDomainKeyName DataKey { get; init; }
 
         public bool IsOpenItem(object? item)
         { return DataKey.Equals(item); }

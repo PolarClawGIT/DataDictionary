@@ -3,5 +3,5 @@
     [AttributeId]          UNIQUEIDENTIFIER NULL,
     [SubjectAreaId]        UNIQUEIDENTIFIER NULL,
     [AttributeTitle]       [App_DataDictionary].[typeTitle] Null,
-    [AttributeDescription] [App_DataDictionary].[typeDescription] Null,
-    [SysStart]             DATETIME2 (7)    NULL);
+    [AttributeDescription] [App_DataDictionary].[typeDescription] Null
+    )

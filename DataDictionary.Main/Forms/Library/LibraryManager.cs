@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.LibraryData.Source;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
@@ -162,6 +163,7 @@ namespace DataDictionary.Main.Forms.Library
                 {
                     FileInfo fileInfo = new FileInfo(file);
                     work.AddRange(Program.Data.LoadLibrary(fileInfo));
+                    work.AddRange(Program.Data.LoadAlias(fileInfo));
                 }
 
                 DoLocalWork(work);
@@ -176,11 +178,10 @@ namespace DataDictionary.Main.Forms.Library
             {
                 List<WorkItem> work = new List<WorkItem>();
                 LibrarySourceKey key = new LibrarySourceKey(item);
+                work.AddRange(Program.Data.RemoveAlias(key));
                 work.AddRange(Program.Data.RemoveLibrary(key));
                 DoLocalWork(work);
             }
-
-            
         }
 
         private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
@@ -196,7 +197,8 @@ namespace DataDictionary.Main.Forms.Library
                 work.Add(factory.OpenConnection());
                 Boolean inModelList = (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
 
-                if (inModelList) { work.AddRange(Program.Data.DeleteLibrary(factory, key)); }
+                if (inModelList)
+                {   work.AddRange(Program.Data.DeleteLibrary(factory, key)); }
                 else { work.AddRange(dbData.DeleteLibrary(factory, key)); }
 
                 work.AddRange(LoadLocalData(factory));
@@ -216,6 +218,7 @@ namespace DataDictionary.Main.Forms.Library
 
                 LibrarySourceKey key = new LibrarySourceKey(item);
                 work.AddRange(Program.Data.LoadLibrary(factory, key));
+                work.AddRange(Program.Data.LoadAlias(key));
                 work.AddRange(LoadLocalData(factory));
 
                 DoLocalWork(work);
@@ -243,7 +246,7 @@ namespace DataDictionary.Main.Forms.Library
                 DoLocalWork(work);
             }
 
-            
+
         }
 
         private IReadOnlyList<WorkItem> LoadLocalData(IDatabaseWork factory)
@@ -279,11 +282,8 @@ namespace DataDictionary.Main.Forms.Library
             else { errorProvider.SetError(asseblyNameData.ErrorControl, String.Empty); }
         }
 
-        private void libraryBinding_BindingComplete(object sender, BindingCompleteEventArgs e)
-        {
-            if (e.Exception is not null)
-            { }// For Debugging
-        }
+        private void BindingComplete(object sender, BindingCompleteEventArgs e)
+        { if (sender is BindingSource binding) { binding.BindComplete(sender, e); } }
 
         protected override void HandleMessage(OnlineStatusChanged message)
         {

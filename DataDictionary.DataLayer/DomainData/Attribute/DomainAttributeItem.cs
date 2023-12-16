@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Item
     /// </summary>
-    public interface IDomainAttributeItem : IDomainAttributeKey, IDomainAttributeKeyUnique, IDomainSubjectAreaKey, IDataItem
+    public interface IDomainAttributeItem : IDomainAttributeKey, IDomainAttributeUniqueKey, IDomainSubjectAreaKey, IDataItem
     {
         /// <summary>
         /// Description of the Domain Attribute
@@ -60,7 +60,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             new DataColumn("SubjectAreaId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("AttributeTitle", typeof(string)){ AllowDBNull = false},
             new DataColumn("AttributeDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>
@@ -81,22 +80,5 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// <inheritdoc/>
         public override string ToString()
         { if (AttributeTitle is not null) { return AttributeTitle; } else { return string.Empty; } }
-    }
-
-    public static class DomainAttributeItemExtension
-    {
-        public static IDomainAttributeItem? GetAttribute(this IEnumerable<IDomainAttributeItem> source, IDomainAttributeKey item)
-        { return source.FirstOrDefault(w => w.AttributeId == item.AttributeId); }
-
-        public static IDomainAttributeItem? GetAttribute(this IDomainAttributeKey item, IEnumerable<IDomainAttributeItem> source)
-        { return source.FirstOrDefault(w => w.AttributeId == item.AttributeId); }
-
-        [Obsolete("Not used", true)]
-        public static IDomainAttributeItem? GetParentAttribute(this IEnumerable<IDomainAttributeItem> source, IDomainAttributeParentKey item)
-        { return source.FirstOrDefault(w => w.AttributeId == item.ParentAttributeId); }
-
-        [Obsolete("Not used", true)]
-        public static IDomainAttributeItem? GetParentAttribute(this IDomainAttributeParentKey item, IEnumerable<IDomainAttributeItem> source)
-        { return source.FirstOrDefault(w => w.AttributeId == item.ParentAttributeId); }
     }
 }

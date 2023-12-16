@@ -20,8 +20,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
     public abstract class DbSchemaCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKey>
-        where TItem : BindingTableRow, IDbSchemaItem, IDbCatalogKey, IDbSchemaKey,  new()
+        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKeyName>
+        where TItem : BindingTableRow, IDbSchemaItem, IDbCatalogKey, IDbSchemaKeyName,  new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
@@ -83,9 +83,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbSchemaKey schemaItem)
+        public void Remove(IDbSchemaKeyName schemaItem)
         {
-            DbSchemaKey key = new DbSchemaKey(schemaItem);
+            DbSchemaKeyName key = new DbSchemaKeyName(schemaItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

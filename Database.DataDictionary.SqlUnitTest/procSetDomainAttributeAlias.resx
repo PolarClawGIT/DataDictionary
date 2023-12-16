@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="App_DataDictionary_procSetDomainAttributeAlias_Insert_TestAction.SqlScript" xml:space="preserve">
+    <value>Begin Try;
+	Begin Transaction;
+	Set NoCount On;
+
+	Declare @AttributeId UNIQUEIDENTIFIER = newId(),
+			@ModelId     UNIQUEIDENTIFIER = newId()
+	Declare @Model [App_DataDictionary].[typeModel]
+	Declare @Attribute [App_DataDictionary].[typeDomainAttribute]
+	
+	Insert Into @Model Values (@ModelId, 'Unit Test', Null)
+	Exec [App_DataDictionary].[procSetModel] @ModelId, @Model
+
+	Insert Into @Attribute Values (@AttributeId, Null, 'UnitTest', Null)
+	Exec [App_DataDictionary].[procSetDomainAttribute] @ModelId, @Attribute
+
+	Insert Into [App_DataDictionary].[DomainSource] ([SourceId], [SourceTitle], [DatabaseName], [IsCaseSensitive])
+	Select	NewId(), 'UnitTest', Db_Name(), 0
+
+	Declare @Alias [App_DataDictionary].[typeDomainAttributeAlias]
+	Insert Into @Alias
+	Select	@AttributeId As [AttributeId],
+			Db_Name() As [SourceName],
+			FormatMessage('%s.%s.[%s].[%s]', Db_Name(), Object_Schema_Name(object_Id), Object_Name(object_id), name) As [AliasName],
+			'Database.Schema.Table.Column' As [ScopeName]
+	From	Sys.Columns
+	Where	Object_Schema_Name(object_id) = 'App_DataDictionary'
+
+	Exec [App_DataDictionary].[procSetDomainAttributeAlias] @ModelId, @AttributeId, @Alias
+
+	Select	*
+	From	[App_DataDictionary].[DomainAliasItem] A
+			Cross Apply [App_DataDictionary].[funcGetAliasName](A.[AliasId]) F
+	Where	[AttributeId] = @AttributeId
+
+	-- By default, throw and error and exit without committing
+;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
+	
+	Commit Transaction;
+	Print 'Commit Issued';
+End Try
+Begin Catch
+	Print FormatMessage ('*** Error Report: %s ***', Object_Name(@@ProcID));
+	Print FormatMessage (' Message- %s', ERROR_MESSAGE());
+	Print FormatMessage (' Number- %i', ERROR_NUMBER());
+	Print FormatMessage (' Severity- %i', ERROR_SEVERITY());
+	Print FormatMessage (' State- %i', ERROR_STATE());
+	Print FormatMessage (' Procedure- %s', ERROR_PROCEDURE());
+	Print FormatMessage (' Line- %i', ERROR_LINE());
+	Print FormatMessage (' @@TranCount - %i', @@TranCount);
+	Print FormatMessage (' @@NestLevel - %i', @@NestLevel);
+	Print FormatMessage (' Original_Login - %s', Original_Login());
+	Print FormatMessage (' Current_User - %s', Current_User);
+	Print FormatMessage (' XAct_State - %i', XAct_State());
+	Print '--- Debug Data ---';
+
+	-- Rollback Transaction
+	Print 'Rollback Issued';
+	Rollback Transaction;
+	--Throw;
+End Catch;</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+</root>

@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Nullable
 
 using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
@@ -24,13 +25,13 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for the Database Table Column
     /// </summary>
-    public interface IDbTableColumnItem : IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbElementScope, IDbColumn, IDataItem
+    public interface IDbTableColumnItem : IDbTableColumnKeyName, IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbColumn, IDbScopeType, IDataItem
     {
         /// <summary>
         /// Is the Column Nullable
         /// </summary>
         Boolean? IsNullable { get; }
-        
+
         /// <summary>
         /// Column Default value
         /// </summary>
@@ -72,6 +73,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
 
         /// <inheritdoc/>
+        public Guid? ColumnId { get { return GetValue<Guid>("ColumnId"); } }
+        
+        /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
         /// <inheritdoc/>
@@ -82,6 +86,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public string? ColumnName { get { return GetValue("ColumnName"); } }
+
+        /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } }
 
         /// <inheritdoc/>
         public int? OrdinalPosition { get { return GetValue<int>("OrdinalPosition"); } }
@@ -156,16 +163,17 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public string? GeneratedAlwayType { get { return GetValue("GeneratedAlwayType"); } }
 
         /// <inheritdoc/>
-        public DbElementScope ElementScope { get; } = DbElementScope.Column;
+        //public DbElementScope ElementScope { get; } = DbElementScope.Column;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
+            new DataColumn("ColumnId", typeof(string)){ AllowDBNull = true},
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("TableName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("TableType", typeof(string)){ AllowDBNull = false},
             new DataColumn("ColumnName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("OrdinalPosition", typeof(int)){ AllowDBNull = false},
             new DataColumn("IsNullable", typeof(bool)){ AllowDBNull = true},
             new DataColumn("DataType", typeof(string)){ AllowDBNull = true},
@@ -204,8 +212,21 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            string level1Type = "TABLE";
-            if (GetValue("TableType") is "VIEW") { level1Type = "VIEW"; }
+            string level1Type;
+            if (ScopeName is String && ScopeName.StartsWith("Database.Schema.View", KeyExtension.CompareString))
+            { level1Type = "TABLE"; }
+            else if (ScopeName is String && ScopeName.StartsWith("Database.Schema.View", KeyExtension.CompareString))
+            { level1Type = "VIEW"; }
+            else
+            {
+                Exception ex = new InvalidOperationException("Could not determine Level1Type");
+                ex.Data.Add(nameof(ScopeName), ScopeName);
+                ex.Data.Add(nameof(DatabaseName), DatabaseName);
+                ex.Data.Add(nameof(SchemaName), SchemaName);
+                ex.Data.Add(nameof(TableName), TableName);
+                ex.Data.Add(nameof(ColumnName), ColumnName);
+                throw ex;
+            }
 
             return new DbExtendedPropertyGetCommand(connection)
             {
@@ -215,8 +236,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
                 Level1Name = TableName,
                 Level1Type = level1Type,
                 Level2Name = ColumnName,
-                Level2Type = "COLUMN" }.
-            GetCommand();
+                Level2Type = "COLUMN"
+            }.GetCommand();
         }
 
         #region ISerializable
@@ -231,21 +252,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbTableColumnKey(this).ToString(); }
-    }
-
-    public static class DbColumnItemExtension
-    {
-        public static DbTableColumnItem? GetColumn(this IEnumerable<DbTableColumnItem> source, IDbTableColumnKey item)
-        { return source.FirstOrDefault(w => new DbTableColumnKey(item) == new DbTableColumnKey(w)); }
-
-        public static DbTableColumnItem? GetColumn(this IDbTableColumnKey item, IEnumerable<DbTableColumnItem> source)
-        { return source.FirstOrDefault(w => new DbTableColumnKey(item) == new DbTableColumnKey(w)); }
-
-        public static IEnumerable<DbTableColumnItem> GetColumns(this IEnumerable<DbTableColumnItem> source, IDbTableKey item)
-        { return source.Where(w => new DbTableKey(item) == new DbTableKey(w)); }
-
-        public static IEnumerable<DbTableColumnItem> GetColumns(this IDbTableKey item, IEnumerable<DbTableColumnItem> source)
-        { return source.Where(w => new DbTableKey(item) == new DbTableKey(w)); }
+        { return new DbTableColumnKeyName(this).ToString(); }
     }
 }

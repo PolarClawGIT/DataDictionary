@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.DatabaseData;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,7 +15,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
     /// <summary>
     /// Interface for the Library Source Item
     /// </summary>
-    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyUnique, IDataItem
+    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyName, IDbScopeType, IDataItem
     {
         /// <summary>
         /// Title for the Library
@@ -55,21 +57,19 @@ namespace DataDictionary.DataLayer.LibraryData.Source
         public string? LibraryDescription { get { return GetValue("LibraryDescription"); } set { SetValue("LibraryDescription", value); } }
 
         /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }
+
+        /// <inheritdoc/>
         public string? SourceFile { get { return GetValue("SourceFile"); } set { SetValue("SourceFile", value); } }
 
         /// <inheritdoc/>
         public DateTime? SourceDate { get { return GetValue<DateTime>("SourceDate"); } set { SetValue("SourceDate", value); } }
 
-        /// <inheritdoc/>
-        public DateTime? SysStart { get { return GetValue<DateTime>("SysStart"); } set { SetValue("SysStart", value); } }
-
         /// <summary>
         /// Constructor for LibraryMemberItem
         /// </summary>
         public LibrarySourceItem() : base()
-        {
-            LibraryId = Guid.NewGuid();
-        }
+        { if (LibraryId is null) { LibraryId = Guid.NewGuid(); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -77,9 +77,9 @@ namespace DataDictionary.DataLayer.LibraryData.Source
             new DataColumn("LibraryTitle", typeof(string)){ AllowDBNull = true},
             new DataColumn("LibraryDescription", typeof(string)){ AllowDBNull = true},
             new DataColumn("AssemblyName", typeof(string)){ AllowDBNull = true},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = true},
             new DataColumn("SourceFile", typeof(string)){ AllowDBNull = true},
             new DataColumn("SourceDate", typeof(DateTime)){ AllowDBNull = true},
-            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
 

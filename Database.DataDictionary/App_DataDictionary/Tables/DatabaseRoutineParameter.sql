@@ -1,10 +1,9 @@
 ﻿CREATE TABLE [App_DataDictionary].[DatabaseRoutineParameter]
 (
-	[CatalogId]              UniqueIdentifier Not Null,
-	[SchemaName]             SysName Not Null,
-	[RoutineName]            SysName Not Null,
-	[RoutineType]            NVarChar(60) Null,
+	[ParameterId]            UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseRoutineParameterId] DEFAULT (newid()),
+	[RoutineId]              UniqueIdentifier Not Null,
 	[ParameterName]          SysName Not Null,
+	[ScopeId]                Int Not Null,
 	[OrdinalPosition]        Int Not Null,
 	[DataType]               SysName Null,
 	[CharacterMaximumLength]  Int Null,
@@ -28,7 +27,11 @@
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_DatabaseRoutineParameter_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
-	CONSTRAINT [PK_DatabaseParameter] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [RoutineName] ASC, [ParameterName] ASC),
-	--CONSTRAINT [FK_DatabaseParameterCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
-	CONSTRAINT [FK_DatabaseRoutineParameterRoutine] FOREIGN KEY ([CatalogId], [SchemaName], [RoutineName]) REFERENCES [App_DataDictionary].[DatabaseRoutine] ([CatalogId], [SchemaName], [RoutineName]),
+	CONSTRAINT [PK_DatabaseRoutineParameter] PRIMARY KEY CLUSTERED ([ParameterId] ASC),
+	CONSTRAINT [FK_DatabaseRoutineParameterRoutine] FOREIGN KEY ([RoutineId]) REFERENCES [App_DataDictionary].[DatabaseRoutine] ([RoutineId]),
+	CONSTRAINT [FK_DatabaseRoutineParameterScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
 )
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseRoutineParameter]
+    ON [App_DataDictionary].[DatabaseRoutineParameter]([ParameterName], [RoutineId]);
+GO

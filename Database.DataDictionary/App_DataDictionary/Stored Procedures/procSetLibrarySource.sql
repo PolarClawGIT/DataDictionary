@@ -19,120 +19,121 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeLibrarySource]
-	Insert Into @Values
-	Select	Coalesce(D.[LibraryId], @LibraryId, NewId()) As [LibraryId],
-			NullIf(Trim(D.[LibraryTitle]),'') As [LibraryTitle],
-			NullIf(Trim(D.[LibraryDescription]),'') As [LibraryDescription],
-			NullIf(Trim(D.[AssemblyName]),'') As [AssemblyName],
-			NullIf(Trim(D.[SourceFile]),'') As [SourceFile],
-			IsNull(D.[SourceDate],GetDate()) As [SourceDate],
-			D.[SysStart]
-	From	@Data D
-	Where	(@LibraryId is Null or Coalesce(D.[LibraryId], @LibraryId)  = @LibraryId)
-
 	-- Validation
 	If @ModelId is Null and @LibraryId is Null
 	Throw 50000, '@ModelId or @LibraryId must be specified', 1;
 
-	If Exists (
-		Select	[AssemblyName]
-		From	(Select	[AssemblyName],
-						[LibraryId]
-				From	@Values
-				Union
-				Select	[AssemblyName],
-						[LibraryId]
-				From	[App_DataDictionary].[LibrarySource]) G
-		Group By [AssemblyName]
-		Having	Count(*) > 1)
-	Throw 50000, '[AssemblyName] cannot be duplicate', 2;
+	-- Clean the Data, helps performance
+	Declare @Values Table (
+		[LibraryId]             UniqueIdentifier Not Null,
+		[LibraryTitle]          [App_DataDictionary].[typeTitle] Not Null,
+		[LibraryDescription]    [App_DataDictionary].[typeDescription] Null,
+		[AssemblyName]          NVarChar(128) Not Null, -- Natural Key
+		[ScopeId]               Int Not Null,
+		[SourceFile]            NVarChar(500) Not Null, 
+		[SourceDate]            DateTime2 (7) Not Null,
+	Primary Key ([LibraryId]))
 
-	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
-		Select	D.[LibraryId]
-		From	@Values D
-				Inner Join [App_DataDictionary].[DatabaseCatalog] A
-				On D.[LibraryId] = A.[CatalogId]
-		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
-	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 3;
-
-	-- Cascade Delete
-	Declare @Delete Table ([LibraryId] UniqueIdentifier Not Null)
-
-	Insert Into @Delete
-	Select	T.[LibraryId]
-	From	[App_DataDictionary].[ModelLibrary] T
-			Left Join @Values V
-			On	T.[LibraryId] = V.[LibraryId]
-	Where	T.[ModelId] = @ModelId And
-			T.[LibraryId] = IsNull(@LibraryId,T.[LibraryId]) And
-			V.[LibraryId] is Null
-	Union
-	Select	T.[LibraryId]
-	From	[App_DataDictionary].[LibrarySource] T
-			Left Join @Values V
-			On	T.[LibraryId] = V.[LibraryId]
-	Where	@ModelId is Null And
-			T.[LibraryId] = @LibraryId And
-			V.[LibraryId] is Null
-
-	Delete From [App_DataDictionary].[LibraryMember]
-	Where	[LibraryId] In (Select [LibraryId] From @Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [App_DataDictionary].[ModelLibrary]
-	Where	[LibraryId] In (Select [LibraryId] From @Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelLibrary]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	;With [Scope] As (
+		Select	S.[ScopeId],
+				F.[ScopeName]
+		From	[App_DataDictionary].[ApplicationScope] S
+				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
+	Insert Into @Values
+	Select	Coalesce(A.[LibraryId], D.[LibraryId], @LibraryId, NewId()) As [LibraryId],
+			NullIf(Trim(D.[LibraryTitle]),'') As [LibraryTitle],
+			NullIf(Trim(D.[LibraryDescription]),'') As [LibraryDescription],
+			NullIf(Trim(D.[AssemblyName]),'') As [AssemblyName],
+			S.[ScopeId],
+			NullIf(Trim(D.[SourceFile]),'') As [SourceFile],
+			D.[SourceDate]
+	From	@Data D
+			Left Join [Scope] S
+			On	D.[ScopeName] = S.[ScopeName]
+			Left Join [App_DataDictionary].[LibrarySource] A
+			On	D.[AssemblyName] = A.[AssemblyName]
 
 	-- Apply Changes
+	If @LibraryId is Not Null And Not Exists (
+		Select	[LibraryId]
+		From	@Values V
+		Where [LibraryId] = @LibraryId)
+		Exec [App_DataDictionary].[procSetLibraryMember] @LibraryId = @LibraryId -- Cascades Delete
+
+	Delete From [App_DataDictionary].[ModelLibrary]
+	From	[App_DataDictionary].[ModelLibrary] M
+			Left Join @Values S
+			On	M.[LibraryId] = S.[LibraryId] And
+				M.[ModelId] = @ModelId
+	Where	S.[LibraryId] is Null And
+			(@LibraryId is Null or M.[LibraryId] = @LibraryId) And
+			(@ModelId is Null or M.[ModelId] = @ModelId)
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelLibrary]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[LibrarySource]
+	From	[App_DataDictionary].[LibrarySource] T
+			Left Join @Values S
+			On	T.[LibraryId] = S.[LibraryId]
+	Where	S.[LibraryId] is Null And
+			T.[LibraryId] In (
+			Select	A.[LibraryId]
+			From	[App_DataDictionary].[LibrarySource] A
+					Left Join [App_DataDictionary].[ModelLibrary] C
+					On	A.[LibraryId] = C.[LibraryId]
+			Where	(@LibraryId is Null Or @LibraryId = A.[LibraryId]) And
+					(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[LibrarySource]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	;With [Delta] As (
-		Select	[LibraryId],
+		Select	[LibraryId],   
 				[LibraryTitle],
 				[LibraryDescription],
 				[AssemblyName],
+				[ScopeId],
 				[SourceFile],
 				[SourceDate]
 		From	@Values
 		Except
-		Select	[LibraryId],
+		Select	[LibraryId],   
 				[LibraryTitle],
 				[LibraryDescription],
 				[AssemblyName],
+				[ScopeId],
 				[SourceFile],
 				[SourceDate]
-		From	[App_DataDictionary].[LibrarySource]),
-	[Data] As (
-		Select	V.[LibraryId],
-				V.[LibraryTitle],
-				V.[LibraryDescription],
-				V.[AssemblyName],
-				V.[SourceFile],
-				V.[SourceDate],
-				IIF(D.[LibraryId] is Null,0, 1) As [IsDiffrent]
-		From	@Values V
-				Left Join [Delta] D
-				On	V.[LibraryId] = D.[LibraryId])
-	Merge [App_DataDictionary].[LibrarySource] As T
-	Using [Data] As S
-	On	T.[LibraryId] = S.[LibraryId]
-	When Matched And S.[IsDiffrent] = 1 Then Update
-		Set	[LibraryTitle] = S.[LibraryTitle],
+		From	[App_DataDictionary].[LibrarySource])
+	Update [App_DataDictionary].[LibrarySource]
+	Set		[LibraryTitle] = S.[LibraryTitle],
 			[LibraryDescription] = S.[LibraryDescription],
 			[AssemblyName] = S.[AssemblyName],
+			[ScopeId] = S.[ScopeId],
 			[SourceFile] = S.[SourceFile],
 			[SourceDate] = S.[SourceDate]
-	When Not Matched by Target Then
-		Insert ([LibraryId], [LibraryTitle], [LibraryDescription], [AssemblyName], [SourceFile], [SourceDate])
-		Values ([LibraryId], [LibraryTitle], [LibraryDescription], [AssemblyName], [SourceFile], [SourceDate])
-	When Not Matched by Source And
-		-- Only way to get rid of a Library Source is to remove it my Library Id.
-		T.[LibraryId] = @LibraryId And
-		T.[LibraryId] Not in (
-			Select	[LibraryId]
-			From	[App_DataDictionary].[ModelLibrary])
-		Then Delete;
-	Print FormatMessage ('Merge [App_DataDictionary].[LibrarySource]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	From	[App_DataDictionary].[LibrarySource] T
+			Inner Join [Delta] S
+			On	T.[LibraryId] = S.[LibraryId]
+	Print FormatMessage ('Update [App_DataDictionary].[LibrarySource]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[LibrarySource] (
+			[LibraryId],   
+			[LibraryTitle],
+			[LibraryDescription],
+			[AssemblyName],
+			[ScopeId],
+			[SourceFile],
+			[SourceDate])
+	Select	S.[LibraryId],   
+			S.[LibraryTitle],
+			S.[LibraryDescription],
+			S.[AssemblyName],
+			S.[ScopeId],
+			S.[SourceFile],
+			S.[SourceDate]
+	From	@Values S
+			Left Join [App_DataDictionary].[LibrarySource] T
+			On	S.[LibraryId] = T.[LibraryId]
+	Where	T.[LibraryId] is Null
+	Print FormatMessage ('Insert [App_DataDictionary].[LibrarySource]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [App_DataDictionary].[ModelLibrary] ([ModelId], [LibraryId])
 	Select	@ModelId As [ModelId],

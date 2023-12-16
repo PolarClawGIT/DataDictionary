@@ -28,6 +28,10 @@ namespace DataDictionary.Main.Controls
 
         // Expose Control Properties
         public Boolean ReadOnly { get { return !comboBox.Enabled; } set { comboBox.Enabled = !value; } }
+        public ComboBoxStyle DropDownStyle { get { return comboBox.DropDownStyle; } set { comboBox.DropDownStyle = value; } }
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Object DataSource { get { return comboBox.DataSource; } set { comboBox.DataSource = value; } }
 
         [Browsable(false)]
@@ -42,8 +46,16 @@ namespace DataDictionary.Main.Controls
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Int32 SelectedIndex { get { return comboBox.SelectedIndex; } set { comboBox.SelectedIndex = value; } }
 
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ComboBox.ObjectCollection Items { get { return comboBox.Items; } }
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public String ValueMember { get { return comboBox.ValueMember; } set { comboBox.ValueMember = value; } }
+
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public String DisplayMember { get { return comboBox.DisplayMember; } set { comboBox.DisplayMember = value; } }
 
         /// <summary>

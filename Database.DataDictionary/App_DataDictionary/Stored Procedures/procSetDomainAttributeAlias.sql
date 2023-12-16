@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainAttributeAlias]
-		@ModelId UniqueIdentifier,
+		@ModelId UniqueIdentifier = Null,
+		@AttributeId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeDomainAttributeAlias] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -18,97 +19,93 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDomainAttributeAlias]
+	-- Insert any missing Alias Refrences
+	Declare @Alias [App_DataDictionary].[typeDomainAlias]	
+	Insert Into @Alias
+	Select	[SourceName],
+			[AliasName]
+	From	@Data
+	Group By [SourceName],
+			[AliasName]
+
+	Exec [App_DataDictionary].[procInsertAlias] @Alias
+
+	-- Clean Data
+	Declare @Values Table (
+		[AliasId]           UniqueIdentifier Not Null,
+		[ScopeId]           Int NOT Null,
+		[AttributeId]       UniqueIdentifier Not Null, 
+		Primary Key ([AttributeId], [AliasId] ))
+
+	;With [Scope] As (
+		Select	S.[ScopeId],
+				F.[ScopeName]
+		From	[App_DataDictionary].[ApplicationScope] S
+				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F),
+	[Alias] As (
+		Select	I.[AliasId],
+				S.[SourceName],
+				F.[AliasName]
+		From	[App_DataDictionary].[DomainAlias] I
+				Inner Join [App_DataDictionary].[DomainSource] S
+				On	I.[AliasSourceId] = S.[SourceId]
+				Cross Apply [App_DataDictionary].[funcGetAliasName](I.[AliasId]) F)
 	Insert Into @Values
-	Select	D.[AttributeId],
-			IsNull(C.[AttributeAliasId],
-				(Select IsNull(Max([AttributeAliasId]),0) From [App_DataDictionary].[DomainAttributeAlias] Where [AttributeId] = D.[AttributeId]) +
-				Row_Number() Over (
-					Partition By D.[AttributeId], C.[AttributeAliasId]
-					Order By D.[DatabaseName], D.[SchemaName], D.[ObjectName], D.[ElementName]))
-				As [AttributeAliasId],
-			NullIf(Trim(D.[DatabaseName]),'') As [DatabaseName],
-			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
-			NullIf(Trim(D.[ObjectName]),'') As [ObjectName],
-			NullIf(Trim(D.[ElementName]),'') As [ElementName],
-			D.[SysStart]
+	Select	A.[AliasId],
+			S.[ScopeId],
+			IsNull(D.[AttributeId],@AttributeId) As [AttributeId]
 	From	@Data D
-			Left Join [App_DataDictionary].[DomainAttributeAlias] C
-			On	D.[AttributeId] = C.[AttributeId] And
-				D.[DatabaseName] = C.[DatabaseName] And
-				D.[SchemaName] = C.[SchemaName] And
-				D.[ObjectName] = C.[ObjectName] And
-				D.[ElementName] = C.[ElementName]
-
-	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
-
-	If Exists (
-		Select	V.[AttributeId]
-		From	@Values V
-				Left Join [App_DataDictionary].[DomainAttribute] A
-				On	V.[AttributeId] = A.[AttributeId]
-				Left Join [App_DataDictionary].[ModelAttribute] P
-				On	V.[AttributeId] = P.[AttributeId] And
-					P.[ModelId] = @ModelId
-		Where	A.[AttributeId] is Null Or
-				P.[AttributeId] is Null)
-	Throw 50000, '[AttributeId] could not be found or is not associated with Model specified', 2;
-
-	If Exists (
-		Select	[DatabaseName],
-				[SchemaName],
-				[ObjectName],
-				[ElementName]
-		From	@Values
-		Group By [DatabaseName],
-				[SchemaName],
-				[ObjectName],
-				[ElementName]
-		Having Count(*) > 1)
-		Throw 50000, '[AttributeId] Aliases can only be associated with a single attribute', 3;
-
-	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
-		Select	D.[AttributeId]
-		From	@Values D
-				Inner Join [App_DataDictionary].[DomainAttributeAlias] A
-				On D.[AttributeId] = A.[AttributeId] And
-					D.[DatabaseName] = A.[DatabaseName] And
-					D.[SchemaName] = A.[SchemaName] And
-					D.[ObjectName] = A.[ObjectName] And
-					D.[ElementName] = A.[ElementName]
-		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
-	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 4;
+			Cross Apply [App_DataDictionary].[funcSplitAliasName](D.[AliasName]) N
+			Left Join [Scope] S
+			On	D.[ScopeName] = S.[ScopeName]
+			Left Join [Alias] A
+			On	D.[SourceName] = A.[SourceName] And
+				N.[AliasName] = A.[AliasName]
+	Where	N.[IsBase] = 1
 
 	-- Apply Changes
-	With [Data] As (
-		Select	D.[AttributeId],
-				D.[AttributeAliasId],
-				D.[DatabaseName],
-				D.[SchemaName],
-				D.[ObjectName],
-				D.[ElementName]
-		From	@Values D
-				Left Join [App_DataDictionary].[DomainAttributeAlias] A
-				On	D.[AttributeId] = A.[AttributeId] And
-					D.[DatabaseName] = A.[DatabaseName] And
-					D.[SchemaName] = A.[SchemaName] And
-					D.[ObjectName] = A.[ObjectName] And
-					D.[ElementName] = A.[ElementName])
-	Merge [App_DataDictionary].[DomainAttributeAlias] T
-	Using [Data] S
-	On	T.[AttributeId] = S.[AttributeId] And
-		T.[AttributeAliasId] = S.[AttributeAliasId]
-	When Not Matched by Target Then
-		Insert ([AttributeId], [AttributeAliasId], [DatabaseName], [SchemaName], [ObjectName], [ElementName])
-		Values ([AttributeId], [AttributeAliasId], [DatabaseName], [SchemaName], [ObjectName], [ElementName])
-	When Not Matched by Source And (T.[AttributeId] in (
-		Select	[AttributeId]
-		From	[App_DataDictionary].[ModelAttribute]
-		Where	[ModelId] = @ModelId))
-		Then Delete;
+	Declare @Deleted Table ([AliasId] UniqueIdentifier Not Null)
+	
+	Delete From [App_DataDictionary].[DomainAliasItem]
+	Output [deleted].[AliasId] Into @Deleted
+	From	[App_DataDictionary].[DomainAliasItem] T
+			Left Join @Values V
+			On	T.[AliasId] = V.[AliasId] And
+				T.[AttributeId] = V.[AttributeId]
+			Left Join [App_DataDictionary].[DomainAlias] I
+			On	T.[AliasId] = I.[ParentAliasId]
+	Where	V.[AliasId] is Null And
+			I.[AliasId] is Null And
+			T.[AttributeId] In (
+				Select	A.[AttributeId]
+				From	[App_DataDictionary].[DomainAttribute] A
+						Left Join [App_DataDictionary].[ModelAttribute] M
+						On	A.[AttributeId] = M.[AttributeId]
+				Where	(@AttributeId is Null Or @AttributeId = A.[AttributeId]) And
+						(@ModelId is Null Or @ModelId = M.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[AliasDomain] (Attribute): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[DomainAlias]
+	From	@Deleted D
+			Inner Join [App_DataDictionary].[DomainAlias] T
+			On	D.[AliasId] = T.[AliasId]
+			Left Join [App_DataDictionary].[DomainAliasItem] C
+			On	D.[AliasId] = C.[AliasId]
+	Where	C.[AliasId] is Null
+	Print FormatMessage ('Delete [App_DataDictionary].[AliasItem] (Attribute): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[DomainAliasItem] (
+			[AliasId],
+			[ScopeId],
+			[AttributeId])
+	Select	V.[AliasId],
+			V.[ScopeId],
+			V.[AttributeId]
+	From	@Values V
+			Left Join [App_DataDictionary].[DomainAliasItem] T
+			On	V.[AliasId] = T.[AliasId]
+	Where	T.[AliasId] is Null
+	Print FormatMessage ('Insert [App_DataDictionary].[AliasDomain] (Attribute): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -149,10 +146,4 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
-GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDomainAttributeAlias',
-	@value = N'Performs Set on DomainAttributeAlias.'
 GO

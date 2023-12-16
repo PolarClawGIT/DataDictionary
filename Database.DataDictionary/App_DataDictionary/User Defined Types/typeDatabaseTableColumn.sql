@@ -1,11 +1,12 @@
 ﻿CREATE TYPE [App_DataDictionary].[typeDatabaseTableColumn] AS TABLE
 (
 	[CatalogId]              UniqueIdentifier Null,
+	[ColumnId]               UniqueIdentifier Null,
 	[DatabaseName]           SysName          Null,
 	[SchemaName]             SysName          Null,
 	[TableName]              SysName          Null,
-	[TableType]              NVarChar(60)     NULL,
 	[ColumnName]             SysName          Null,
+	[ScopeName]              [App_DataDictionary].[typeScopeName] Null,
     [OrdinalPosition]        Int              Null,
 	[IsNullable]             Bit              Null,
 	[DataType]               SysName          Null,

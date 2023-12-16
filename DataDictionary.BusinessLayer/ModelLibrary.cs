@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using System;
@@ -9,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -37,6 +40,23 @@ namespace DataDictionary.BusinessLayer
     /// <remarks>When combined with the Extension class, this implements multi-inheritance.</remarks>
     public static class ModelLibrary
     {
+        static Dictionary<ScopeType, String> scopeTypeToNetCoding = new Dictionary<ScopeType, String>
+        {
+            { ScopeType.LibraryNameSpace, "N"},
+            { ScopeType.LibraryType,      "T"},
+            { ScopeType.LibraryField,     "F"},
+            { ScopeType.LibraryProperty,  "P"},
+            { ScopeType.LibraryMethod,    "M"},
+            { ScopeType.LibraryEvent,     "E"},
+        };
+
+        static ScopeType ToScopeType(String? value)
+        {
+            if (scopeTypeToNetCoding.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> keyValue && keyValue.Key != ScopeType.Null)
+            { return keyValue.Key; }
+            else { return ScopeType.Null; }
+        }
+
         /// <summary>
         /// Creates the work items to Load the Model Library using the Model key passed.
         /// </summary>
@@ -96,7 +116,7 @@ namespace DataDictionary.BusinessLayer
         public static IReadOnlyList<WorkItem> LoadLibrary(this IModelLibrary data, FileInfo file)
         {
             List<WorkItem> workItems = new List<WorkItem>();
-            Action<Int32,Int32> progress = (x, y) => { };
+            Action<Int32, Int32> progress = (x, y) => { };
 
             WorkItem work = new WorkItem()
             {
@@ -115,7 +135,7 @@ namespace DataDictionary.BusinessLayer
                 { // Parse the XML file and load to data objects
                     XmlDocument xmlData = new XmlDocument();
                     xmlData.Load(file.FullName);
-                    LibrarySourceKeyUnique sourceKey;
+                    LibrarySourceKeyName sourceKey;
 
                     if (xmlData.DocumentElement is XmlElement root)
                     {
@@ -130,10 +150,11 @@ namespace DataDictionary.BusinessLayer
                                 LibraryTitle = assemblyNode.InnerText,
                                 AssemblyName = assemblyNode.InnerText,
                                 SourceFile = file.Name,
-                                SourceDate = file.LastWriteTime
+                                SourceDate = file.LastWriteTime,
+                                ScopeName = ScopeType.Library.ToScopeName()
                             };
 
-                            sourceKey = new LibrarySourceKeyUnique(sourceItem);
+                            sourceKey = new LibrarySourceKeyName(sourceItem);
 
                             if (data.LibrarySources.FirstOrDefault(w => sourceKey.Equals(w)) is LibrarySourceItem alreadyExists)
                             {
@@ -188,7 +209,7 @@ namespace DataDictionary.BusinessLayer
                                                 AssemblyName = sourceItem.AssemblyName,
                                                 MemberName = parseString.Substring(0, nextPeriod),
                                                 NameSpace = string.Empty,
-                                                MemberType = "N"
+                                                ScopeName = ScopeType.LibraryNameSpace.ToScopeName()
                                             };
 
                                             data.LibraryMembers.Add(nameSpaceItem);
@@ -198,8 +219,6 @@ namespace DataDictionary.BusinessLayer
                                     }
                                     else
                                     {
-                                        var x = data.LibraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && w.NameSpace == memberNameSpace && w.MemberName == parseString.Substring(0, nextPeriod));
-
                                         if (data.LibraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && w.NameSpace == memberNameSpace && w.MemberName == parseString.Substring(0, nextPeriod)) is LibraryMemberItem existing)
                                         { nameSpaceItem = existing; }
                                         else
@@ -207,11 +226,11 @@ namespace DataDictionary.BusinessLayer
                                             nameSpaceItem = new LibraryMemberItem()
                                             {
                                                 LibraryId = sourceItem.LibraryId,
-                                                ParentMemberId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
+                                                MemberParentId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
                                                 AssemblyName = sourceItem.AssemblyName,
                                                 MemberName = parseString.Substring(0, nextPeriod),
                                                 NameSpace = memberNameSpace,
-                                                MemberType = "N"
+                                                ScopeName = ScopeType.LibraryNameSpace.ToScopeName()
                                             };
 
                                             data.LibraryMembers.Add(nameSpaceItem);
@@ -233,12 +252,12 @@ namespace DataDictionary.BusinessLayer
                                         LibraryMemberItem memberItem = new LibraryMemberItem()
                                         {
                                             LibraryId = sourceItem.LibraryId,
-                                            ParentMemberId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
+                                            MemberParentId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
                                             AssemblyName = sourceItem.AssemblyName,
                                             MemberName = parseString,
                                             MemberData = memberNode.InnerXml,
                                             NameSpace = memberNameSpace,
-                                            MemberType = memberType
+                                            ScopeName = ToScopeType(memberType).ToScopeName()
                                         };
 
                                         LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
@@ -252,64 +271,97 @@ namespace DataDictionary.BusinessLayer
                                         LibraryMemberItem memberItem = new LibraryMemberItem()
                                         {
                                             LibraryId = sourceItem.LibraryId,
-                                            ParentMemberId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
+                                            MemberParentId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
                                             AssemblyName = sourceItem.AssemblyName,
                                             MemberName = parseString.Substring(0, parametersStart),
                                             MemberData = memberNode.InnerXml,
                                             NameSpace = memberNameSpace,
-                                            MemberType = memberType
+                                            ScopeName = ToScopeType(memberType).ToScopeName()
                                         };
 
                                         data.LibraryMembers.Add(memberItem);
 
                                         String parameters = parseString.Substring(parametersStart + 1, parametersEnd - parametersStart - 1);
+                                        Int32 paramterCount = 0;
+                                        List<XmlNode>? paramterNodes = memberNode.ChildNodes.Cast<XmlNode>().Where(w => w.Name == "param").ToList();
 
                                         while (parameters.Length > 0)
                                         {
                                             Int32 nextSeperator = parameters.IndexOf(",");
                                             Int32 nextSubItem = parameters.IndexOf("{");
-                                            String memberName = String.Empty;
+                                            String paramterType = String.Empty;
+                                            String memberName = String.Format("@parameter{0:00}", paramterCount); // Default name if none are provided
+                                            XElement memberData = new XElement("param"); // Used to construct an XML data fragment.
 
                                             if (nextSeperator < 0 && nextSubItem < 0)
                                             {
-                                                memberName = parameters;
+                                                paramterType = parameters;
                                                 parameters = String.Empty;
                                             }
                                             else if (nextSeperator < 0 && nextSubItem > 0)
                                             {
-                                                memberName = parameters;
+                                                paramterType = parameters;
                                                 parameters = String.Empty;
                                             }
                                             else if (nextSeperator > 0 && nextSubItem < 0)
                                             {
-                                                memberName = parameters.Substring(0, nextSeperator);
+                                                paramterType = parameters.Substring(0, nextSeperator);
                                                 parameters = parameters.Substring(nextSeperator + 1);
                                             }
                                             else if (nextSeperator < nextSubItem)
                                             {
-                                                memberName = parameters.Substring(0, nextSeperator);
+                                                paramterType = parameters.Substring(0, nextSeperator);
                                                 parameters = parameters.Substring(nextSeperator + 1);
                                             }
                                             else if (nextSeperator > nextSubItem)
                                             {
-                                                memberName = parameters.Substring(0, parameters.IndexOf("}") + 1);
+                                                paramterType = parameters.Substring(0, parameters.IndexOf("}") + 1);
                                                 parameters = parameters.Substring(nextSeperator + 1);
                                             }
                                             // Can only occur if the two values are equal and not zero. This should not be possible.
                                             else { throw new InvalidOperationException("Condition parsing parameters reached a condition that should not be possible."); }
 
+                                            if (paramterType.Contains("[]"))
+                                            {
+                                                //TODO: What to do with Parameters. The data provided has only data type.
+                                                //TODO: how to handle arrays?
+                                                //Currently parameters are generically named and type is dumped into the MemberData.
+                                            }
+
+                                            if (paramterNodes is not null
+                                                && paramterNodes.Count > paramterCount
+                                                && paramterNodes[paramterCount] is XmlNode paramterNode
+                                                && paramterNode.Attributes is not null
+                                                && paramterNode.Attributes.
+                                                    Cast<XmlAttribute>().
+                                                    FirstOrDefault(w => w.Name == "name") is XmlAttribute parameterAttribute)
+                                            { // There are Parameter Nodes. A parameter name and description are available
+                                                memberName = parameterAttribute.InnerText;
+
+                                                memberData = new XElement("param",
+                                                        new XAttribute("name", parameterAttribute.InnerText),
+                                                        new XAttribute("type", paramterType),
+                                                        paramterNode.InnerText);
+                                            }
+                                            else
+                                            { // Only the Type can be determined based on NameSpace
+                                                memberData = new XElement("param",
+                                                    new XAttribute("type", paramterType));
+                                            }
+
                                             LibraryMemberItem parmaterItem = new LibraryMemberItem()
                                             {
                                                 LibraryId = sourceItem.LibraryId,
-                                                ParentMemberId = memberItem.MemberId,
+                                                MemberParentId = memberItem.MemberId,
                                                 AssemblyName = sourceItem.AssemblyName,
                                                 MemberName = memberName,
-                                                //MemberData = memberNode.InnerXml,
-                                                NameSpace = String.Format("{0}.{1}", memberNameSpace, parseString.Substring(0, parametersStart)),
-                                                MemberType = LibraryMemberType.Parameter.ToString()
+                                                ScopeName = ScopeType.LibraryParameter.ToScopeName(),
+                                                MemberData = memberData.ToString(),
+                                                NameSpace = parseString.Substring(0, parametersStart)
                                             };
 
                                             data.LibraryMembers.Add(parmaterItem);
+                                            paramterCount = paramterCount + 1;
                                         }
                                     }
                                 }
@@ -328,6 +380,7 @@ namespace DataDictionary.BusinessLayer
                 }
             }
         }
+
 
         /// <summary>
         /// Creates the work items to Load the Library's from the Applications Database.

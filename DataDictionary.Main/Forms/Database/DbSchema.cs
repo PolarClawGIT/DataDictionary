@@ -4,9 +4,9 @@ using DataDictionary.Main.Properties;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbSchema : ApplicationBase, IApplicationDataForm<DbSchemaKey>
+    partial class DbSchema : ApplicationBase, IApplicationDataForm<DbSchemaKeyName>
     {
-        public required DbSchemaKey DataKey { get; init; }
+        public required DbSchemaKeyName DataKey { get; init; }
 
         public bool IsOpenItem(object? item)
         { return DataKey.Equals(item); }

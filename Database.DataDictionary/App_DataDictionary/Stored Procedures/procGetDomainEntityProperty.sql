@@ -12,8 +12,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 Select	D.[EntityId],
 		D.[PropertyId],
 		D.[PropertyValue],
-		D.[DefinitionText],
-		D.[SysStart]
+		D.[DefinitionText]
 From	[App_DataDictionary].[DomainEntityProperty] D
 		Left Join [App_DataDictionary].[ModelEntity] A
 		On	D.[EntityId] = A.[EntityId]

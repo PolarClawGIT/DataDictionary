@@ -5,9 +5,9 @@
 	-- This is not a function that is 100% accurate.
 	-- Simple routines return good information but the more complex the routine the less reliable the values are.
 	-- The system function will also return exceptions for routines not specifically called for.
-	[CatalogId]           UniqueIdentifier Not Null,
-	[SchemaName]          SysName Not Null,
-	[RoutineName]         SysName Not Null,
+	[DependencyId]        UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseRoutineDependencyId] DEFAULT (newid()),
+	[RoutineId]           UniqueIdentifier Not Null,
+	-- Source has Reference objects as null-able and may not be up to date.
 	[ReferenceSchemaName] SysName Null,
 	[ReferenceObjectName] SysName Null,
 	[ReferenceObjectType] NVarChar(60) Null,
@@ -27,11 +27,11 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	-- Because sys.dm_sql_referenced_entities can return Null for References Objects, a natural PK cannot be defined. Instead a Unique Key is used.
-	--CONSTRAINT [PK_DatabaseRoutineColumn] PRIMARY KEY CLUSTERED ([CatalogId] ASC, [SchemaName] ASC, [RoutineName] ASC, [RefrenceSchemaName] ASC, [RefrenceTableName] ASC, [RefrenceColumnName] ASC),
---	CONSTRAINT [FK_DatabaseRoutineColumnCatalog] FOREIGN KEY ([CatalogId]) REFERENCES [App_DataDictionary].[DatabaseCatalog] ([CatalogId]),
-	CONSTRAINT [FK_DatabaseRoutineDependencyRoutine] FOREIGN KEY ([CatalogId], [SchemaName], [RoutineName]) REFERENCES [App_DataDictionary].[DatabaseRoutine] ([CatalogId], [SchemaName], [RoutineName]),
+	CONSTRAINT [PK_DatabaseRoutineColumn] PRIMARY KEY CLUSTERED ([DependencyId] ASC),
+	CONSTRAINT [FK_DatabaseRoutineDependencyRoutine] FOREIGN KEY ([RoutineId]) REFERENCES [App_DataDictionary].[DatabaseRoutine] ([RoutineId]),
 )
 GO
-CREATE UNIQUE CLUSTERED INDEX [PK_DatabaseRoutineDependency]
-    ON [App_DataDictionary].[DatabaseRoutineDependency] ([CatalogId] ASC, [SchemaName] ASC, [RoutineName] ASC, [ReferenceSchemaName] ASC, [ReferenceObjectName] ASC, [ReferenceColumnName] ASC);
+-- Nulls are possible for references. 
+CREATE UNIQUE INDEX [UK_DatabaseRoutineDependency]
+    ON [App_DataDictionary].[DatabaseRoutineDependency] ([ReferenceSchemaName] ASC, [ReferenceObjectName] ASC, [ReferenceColumnName] ASC, [RoutineId] ASC);
 GO

@@ -40,19 +40,16 @@ namespace Database.DataDictionary.SqlUnitTest
             Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction App_DataDictionary_procSetDatabaseCatalog_Insert_TestAction;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(procSetDatabaseCatalog));
             Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.NotEmptyResultSetCondition notEmptyResultSetCondition1;
-            Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction App_DataDictionary_procSetDatabaseCatalog_Update_TestAction;
-            Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.NotEmptyResultSetCondition notEmptyResultSetCondition2;
             Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction App_DataDictionary_procSetDatabaseCatalog_Delete_TestAction;
             Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.EmptyResultSetCondition emptyResultSetCondition1;
+            Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction testInitializeAction;
             this.App_DataDictionary_procSetDatabaseCatalog_InsertData = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestActions();
-            this.App_DataDictionary_procSetDatabaseCatalog_UpdateData = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestActions();
             this.App_DataDictionary_procSetDatabaseCatalog_DeleteData = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestActions();
             App_DataDictionary_procSetDatabaseCatalog_Insert_TestAction = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction();
             notEmptyResultSetCondition1 = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.NotEmptyResultSetCondition();
-            App_DataDictionary_procSetDatabaseCatalog_Update_TestAction = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction();
-            notEmptyResultSetCondition2 = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.NotEmptyResultSetCondition();
             App_DataDictionary_procSetDatabaseCatalog_Delete_TestAction = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction();
             emptyResultSetCondition1 = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.Conditions.EmptyResultSetCondition();
+            testInitializeAction = new Microsoft.Data.Tools.Schema.Sql.UnitTesting.SqlDatabaseTestAction();
             // 
             // App_DataDictionary_procSetDatabaseCatalog_Insert_TestAction
             // 
@@ -65,17 +62,6 @@ namespace Database.DataDictionary.SqlUnitTest
             notEmptyResultSetCondition1.Name = "notEmptyResultSetCondition1";
             notEmptyResultSetCondition1.ResultSet = 1;
             // 
-            // App_DataDictionary_procSetDatabaseCatalog_Update_TestAction
-            // 
-            App_DataDictionary_procSetDatabaseCatalog_Update_TestAction.Conditions.Add(notEmptyResultSetCondition2);
-            resources.ApplyResources(App_DataDictionary_procSetDatabaseCatalog_Update_TestAction, "App_DataDictionary_procSetDatabaseCatalog_Update_TestAction");
-            // 
-            // notEmptyResultSetCondition2
-            // 
-            notEmptyResultSetCondition2.Enabled = true;
-            notEmptyResultSetCondition2.Name = "notEmptyResultSetCondition2";
-            notEmptyResultSetCondition2.ResultSet = 1;
-            // 
             // App_DataDictionary_procSetDatabaseCatalog_Delete_TestAction
             // 
             App_DataDictionary_procSetDatabaseCatalog_Delete_TestAction.Conditions.Add(emptyResultSetCondition1);
@@ -87,23 +73,25 @@ namespace Database.DataDictionary.SqlUnitTest
             emptyResultSetCondition1.Name = "emptyResultSetCondition1";
             emptyResultSetCondition1.ResultSet = 1;
             // 
+            // testInitializeAction
+            // 
+            resources.ApplyResources(testInitializeAction, "testInitializeAction");
+            // 
             // App_DataDictionary_procSetDatabaseCatalog_InsertData
             // 
             this.App_DataDictionary_procSetDatabaseCatalog_InsertData.PosttestAction = null;
             this.App_DataDictionary_procSetDatabaseCatalog_InsertData.PretestAction = null;
             this.App_DataDictionary_procSetDatabaseCatalog_InsertData.TestAction = App_DataDictionary_procSetDatabaseCatalog_Insert_TestAction;
             // 
-            // App_DataDictionary_procSetDatabaseCatalog_UpdateData
-            // 
-            this.App_DataDictionary_procSetDatabaseCatalog_UpdateData.PosttestAction = null;
-            this.App_DataDictionary_procSetDatabaseCatalog_UpdateData.PretestAction = null;
-            this.App_DataDictionary_procSetDatabaseCatalog_UpdateData.TestAction = App_DataDictionary_procSetDatabaseCatalog_Update_TestAction;
-            // 
             // App_DataDictionary_procSetDatabaseCatalog_DeleteData
             // 
             this.App_DataDictionary_procSetDatabaseCatalog_DeleteData.PosttestAction = null;
             this.App_DataDictionary_procSetDatabaseCatalog_DeleteData.PretestAction = null;
             this.App_DataDictionary_procSetDatabaseCatalog_DeleteData.TestAction = App_DataDictionary_procSetDatabaseCatalog_Delete_TestAction;
+            // 
+            // procSetDatabaseCatalog
+            // 
+            this.TestInitializeAction = testInitializeAction;
         }
 
         #endregion
@@ -127,29 +115,6 @@ namespace Database.DataDictionary.SqlUnitTest
         public void App_DataDictionary_procSetDatabaseCatalog_Insert()
         {
             SqlDatabaseTestActions testActions = this.App_DataDictionary_procSetDatabaseCatalog_InsertData;
-            // Execute the pre-test script
-            // 
-            System.Diagnostics.Trace.WriteLineIf((testActions.PretestAction != null), "Executing pre-test script...");
-            SqlExecutionResult[] pretestResults = TestService.Execute(this.PrivilegedContext, this.PrivilegedContext, testActions.PretestAction);
-            try
-            {
-                // Execute the test script
-                // 
-                System.Diagnostics.Trace.WriteLineIf((testActions.TestAction != null), "Executing test script...");
-                SqlExecutionResult[] testResults = TestService.Execute(this.ExecutionContext, this.PrivilegedContext, testActions.TestAction);
-            }
-            finally
-            {
-                // Execute the post-test script
-                // 
-                System.Diagnostics.Trace.WriteLineIf((testActions.PosttestAction != null), "Executing post-test script...");
-                SqlExecutionResult[] posttestResults = TestService.Execute(this.PrivilegedContext, this.PrivilegedContext, testActions.PosttestAction);
-            }
-        }
-        [TestMethod()]
-        public void App_DataDictionary_procSetDatabaseCatalog_Update()
-        {
-            SqlDatabaseTestActions testActions = this.App_DataDictionary_procSetDatabaseCatalog_UpdateData;
             // Execute the pre-test script
             // 
             System.Diagnostics.Trace.WriteLineIf((testActions.PretestAction != null), "Executing pre-test script...");
@@ -195,7 +160,6 @@ namespace Database.DataDictionary.SqlUnitTest
 
 
         private SqlDatabaseTestActions App_DataDictionary_procSetDatabaseCatalog_InsertData;
-        private SqlDatabaseTestActions App_DataDictionary_procSetDatabaseCatalog_UpdateData;
         private SqlDatabaseTestActions App_DataDictionary_procSetDatabaseCatalog_DeleteData;
     }
 }

@@ -8,6 +8,5 @@
 	[IsFrameworkSummary]  Bit Null,
 	[IsChoice]            Bit Null,
 	[ExtendedProperty]    SysName Null,
-	[ChoiceList]          NVarChar(2000) Null,
-	[SysStart]            DATETIME2 Null
+	[ChoiceList]          NVarChar(2000) Null
 )

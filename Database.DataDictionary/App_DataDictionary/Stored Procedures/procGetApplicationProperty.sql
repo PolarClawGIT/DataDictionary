@@ -14,8 +14,7 @@ Select	[PropertyId],
 		[IsFrameworkSummary],
 		[IsChoice],
 		[ExtendedProperty],
-		[ChoiceList],
-		[SysStart]
+		[ChoiceList]
 From	[App_DataDictionary].[ApplicationProperty]
 Where	(@PropertyId is Null Or @PropertyId = [PropertyId]) And
 		(@PropertyTitle is Null Or @PropertyTitle = [PropertyTitle])

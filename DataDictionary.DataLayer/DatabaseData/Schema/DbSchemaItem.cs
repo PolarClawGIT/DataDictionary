@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData;
@@ -19,7 +20,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
     /// <summary>
     /// Interface for the Database Schema Item
     /// </summary>
-    public interface IDbSchemaItem : IDbSchemaKey, IDbCatalogKey, IDbCatalogScope, IDbIsSystem, IDataItem
+    public interface IDbSchemaItem : IDbSchemaKeyName, IDbSchemaKey, IDbCatalogKey, IDbCatalogScopeKey, IDbIsSystem, IDbScopeType, IDataItem
     { }
 
     /// <summary>
@@ -32,10 +33,16 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
 
         /// <inheritdoc/>
+        public Guid? SchemaId { get { return GetValue<Guid>("SchemaId"); } }
+
+        /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
         /// <inheritdoc/>
         public string? SchemaName { get { return GetValue("SchemaName"); } }
+
+        /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } }
 
         /// <inheritdoc/>
         public bool IsSystem
@@ -63,8 +70,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
+            new DataColumn("SchemaId", typeof(string)){ AllowDBNull = true},
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
         };
 
         /// <summary>
@@ -101,15 +110,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbSchemaKey(this).ToString(); }
-    }
-
-    public static class DbSchemaItemExtension
-    {
-        public static DbSchemaItem? GetSchema(this IEnumerable<DbSchemaItem> source, IDbSchemaKey item)
-        { return source.FirstOrDefault(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
-
-        public static DbSchemaItem? GetSchema(this IDbSchemaKey item, IEnumerable<DbSchemaItem> source)
-        { return source.FirstOrDefault(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
+        { return new DbSchemaKeyName(this).ToString(); }
     }
 }

@@ -21,8 +21,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     public abstract class DbDomainCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbDomainKey>
-        where TItem : BindingTableRow, IDbDomainItem, IDbCatalogKey, IDbDomainKey, new()
+        IRemoveData<IDbCatalogKey>, IRemoveData<IDbDomainKeyName>
+        where TItem : BindingTableRow, IDbDomainItem, IDbCatalogKey, IDbDomainKeyName, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
@@ -84,9 +84,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbDomainKey domainItem)
+        public void Remove(IDbDomainKeyName domainItem)
         {
-            DbDomainKey key = new DbDomainKey(domainItem);
+            DbDomainKeyName key = new DbDomainKeyName(domainItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

@@ -79,7 +79,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("PropertyValue", typeof(string)){ AllowDBNull = true},
             new DataColumn("DefinitionText", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using System;
@@ -17,7 +18,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     /// <summary>
     /// Interface for the Database Domain Item.
     /// </summary>
-    public interface IDbDomainItem : IDbDomainKey, IDbCatalogKey, IDbObjectScope, IDbDomain, IDataItem
+    public interface IDbDomainItem : IDbDomainKeyName, IDbDomainKey, IDbCatalogKey, IDbDomain, IDbScopeType, IDataItem
     {
         /// <summary>
         /// The Default value for the Domain
@@ -35,6 +36,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
 
         /// <inheritdoc/>
+        public Guid? DomainId { get { return GetValue<Guid>("DomainId"); } }
+
+        /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
         /// <inheritdoc/>
@@ -42,6 +46,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
 
         /// <inheritdoc/>
         public string? DomainName { get { return GetValue("DomainName"); } }
+
+        /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } }
 
         /// <inheritdoc/>
         public string? DataType { get { return GetValue("DataType"); } }
@@ -86,14 +93,16 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         public string? CollationName { get { return GetValue("CollationName"); } }
 
         /// <inheritdoc/>
-        public DbObjectScope ObjectScope { get; } = DbObjectScope.Type;
+        //public DbObjectScope ObjectScope { get; } = DbObjectScope.Type;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
+            new DataColumn("DomainId", typeof(string)){ AllowDBNull = true},
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("DomainName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("DataType", typeof(string)){ AllowDBNull = true},
             new DataColumn("DomainDefault", typeof(string)){ AllowDBNull = true},
             new DataColumn("CharacterMaximumLength", typeof(int)){ AllowDBNull = true},
@@ -145,6 +154,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbDomainKey(this).ToString(); }
+        { return new DbDomainKeyName(this).ToString(); }
     }
 }

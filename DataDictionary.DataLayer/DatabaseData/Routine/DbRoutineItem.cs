@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using System;
@@ -17,7 +18,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for Database Routine (procedures and functions).
     /// </summary>
-    public interface IDbRoutineItem : IDbRoutineKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IDataItem
+    public interface IDbRoutineItem : IDbRoutineKeyName, IDbRoutineKey, IDbCatalogKey, IDbIsSystem, IDbScopeType, IDataItem
     {
         /// <summary>
         /// Type of Routine (such as procedure or function)
@@ -35,6 +36,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
 
         /// <inheritdoc/>
+        public Guid? RoutineId { get { return GetValue<Guid>("RoutineId"); } }
+        
+        /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
         /// <inheritdoc/>
@@ -42,6 +46,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         /// <inheritdoc/>
         public string? RoutineName { get { return GetValue("RoutineName"); } }
+
+        /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } }
 
         /// <inheritdoc/>
         public string? RoutineType { get { return GetValue("RoutineType"); } }
@@ -64,22 +71,24 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public DbObjectScope ObjectScope
-        {
-            get
-            {
-                if (Enum.TryParse(RoutineType, true, out DbObjectScope value))
-                { return value; }
-                else { return DbObjectScope.NULL; }
-            }
-        }
+        //public DbObjectScope ObjectScope
+        //{
+        //    get
+        //    {
+        //        if (Enum.TryParse(RoutineType, true, out DbObjectScope value))
+        //        { return value; }
+        //        else { return DbObjectScope.NULL; }
+        //    }
+        //}
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
+            new DataColumn("RoutineId", typeof(string)){ AllowDBNull = true},
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("RoutineName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("RoutineType", typeof(string)){ AllowDBNull = false},
         };
 
@@ -117,6 +126,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbRoutineKey(this).ToString(); }
+        { return new DbRoutineKeyName(this).ToString(); }
     }
 }

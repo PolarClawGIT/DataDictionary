@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Schema;
@@ -20,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for Database Column Item
     /// </summary>
-    public interface IDbTableItem : IDbTableKey, IDbCatalogKey, IDbObjectScope, IDbIsSystem, IDataItem
+    public interface IDbTableItem : IDbTableKeyName, IDbTableKey, IDbCatalogKey, IDbIsSystem, IDbScopeType, IDataItem
     {
         /// <summary>
         /// Type of Table Object (Table, View, ...)
@@ -38,6 +39,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
 
         /// <inheritdoc/>
+        public Guid? TableId { get { return GetValue<Guid>("TableId"); } }
+        
+        /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
         /// <inheritdoc/>
@@ -47,29 +51,34 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public string? TableName { get { return GetValue("TableName"); } }
 
         /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } }
+
+        /// <inheritdoc/>
         public string? TableType { get { return GetValue("TableType"); } }
 
         /// <inheritdoc/>
         public bool IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
 
         /// <inheritdoc/>
-        public DbObjectScope ObjectScope
-        {
-            get
-            {
-                if (Enum.TryParse(TableType, true, out DbObjectScope value))
-                { return value; }
-                else if (TableType is "BASE TABLE" or "HISTORY TABLE" or "TEMPORAL TABLE") { return DbObjectScope.Table; }
-                else { return DbObjectScope.NULL; }
-            }
-        }
+        //public DbObjectScope ObjectScope
+        //{
+        //    get
+        //    {
+        //        if (Enum.TryParse(TableType, true, out DbObjectScope value))
+        //        { return value; }
+        //        else if (TableType is "BASE TABLE" or "HISTORY TABLE" or "TEMPORAL TABLE") { return DbObjectScope.Table; }
+        //        else { return DbObjectScope.NULL; }
+        //    }
+        //}
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
+            new DataColumn("TableId", typeof(string)){ AllowDBNull = true},
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("TableName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("TableType", typeof(string)){ AllowDBNull = false},
         };
 
@@ -109,28 +118,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbTableKey(this).ToString(); }
-    }
-
-    public static class DbTableItemExtension
-    {
-
-        public static DbTableItem? GetTable(this IEnumerable<DbTableItem> source, IDbTableKey item)
-        { return source.FirstOrDefault(w => new DbTableKey(item) == new DbTableKey(w)); }
-
-        public static DbTableItem? GetTable(this IDbTableKey item, IEnumerable<DbTableItem> source)
-        { return source.FirstOrDefault(w => new DbTableKey(item) == new DbTableKey(w)); }
-
-        public static IEnumerable<DbTableItem> GetTables(this IEnumerable<DbTableItem> source, IDbSchemaKey item)
-        { return source.Where(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
-
-        public static IEnumerable<DbTableItem> GetTables(this IDbSchemaKey item, IEnumerable<DbTableItem> source)
-        { return source.Where(w => new DbSchemaKey(item) == new DbSchemaKey(w)); }
-
-        public static IEnumerable<DbTableItem> GetTables(this IEnumerable<DbTableItem> source, IDbCatalogKeyUnique item)
-        { return source.Where(w => new DbCatalogKeyUnique(item) == new DbCatalogKeyUnique(w)); }
-
-        public static IEnumerable<DbTableItem> GetTables(this IDbCatalogKeyUnique item, IEnumerable<DbTableItem> source)
-        { return source.Where(w => new DbCatalogKeyUnique(item) == new DbCatalogKeyUnique(w)); }
+        { return new DbTableKeyName(this).ToString(); }
     }
 }

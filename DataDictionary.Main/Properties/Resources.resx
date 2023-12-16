@@ -199,6 +199,9 @@
   <data name="DomainType" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DomainType.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Event" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Event.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="ExtendedProperty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ExtendedProperty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -292,6 +295,9 @@
   <data name="Icon_Schema" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Schema.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon_Scope" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Scope.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Icon_ServerDatabase" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\ServerDatabase.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -367,6 +373,9 @@
   <data name="NewStatusHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewStatusHelp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="NewSynonym" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewSynonym.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="NewTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -418,6 +427,9 @@
   <data name="Schema" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Schema.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Scope" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Scope.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="ServerDatabase" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ServerDatabase.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -468,6 +480,12 @@
   </data>
   <data name="Underline" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Underline.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="UnknownApplication" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\UnknownApplication.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="UnknownMember" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\UnknownMember.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="View" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\View.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

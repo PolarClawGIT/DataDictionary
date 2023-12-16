@@ -21,8 +21,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     public abstract class DbRoutineDependencyCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbRoutineItem>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKey>, IRemoveData<IDbRoutineKey>, IRemoveData<IDbRoutineDependencyKey>
-        where TItem : BindingTableRow, IDbRoutineDependencyItem, IDbCatalogKey, IDbSchemaKey, IDbRoutineKey, IDbRoutineDependencyKey, new()
+        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKeyName>, IRemoveData<IDbRoutineKeyName>, IRemoveData<IDbRoutineDependencyKeyName>
+        where TItem : BindingTableRow, IDbRoutineDependencyItem, IDbCatalogKey, IDbSchemaKeyName, IDbRoutineKeyName, IDbRoutineDependencyKeyName, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, IDbRoutineItem key)
@@ -87,27 +87,27 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbSchemaKey schemaItem)
+        public void Remove(IDbSchemaKeyName schemaItem)
         {
-            DbSchemaKey key = new DbSchemaKey(schemaItem);
+            DbSchemaKeyName key = new DbSchemaKeyName(schemaItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbRoutineKey routineItem)
+        public void Remove(IDbRoutineKeyName routineItem)
         {
-            DbRoutineKey key = new DbRoutineKey(routineItem);
+            DbRoutineKeyName key = new DbRoutineKeyName(routineItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbRoutineDependencyKey dependencyItem)
+        public void Remove(IDbRoutineDependencyKeyName dependencyItem)
         {
-            DbRoutineDependencyKey key = new DbRoutineDependencyKey(dependencyItem);
+            DbRoutineDependencyKeyName key = new DbRoutineDependencyKeyName(dependencyItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

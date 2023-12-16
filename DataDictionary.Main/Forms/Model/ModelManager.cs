@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
@@ -201,10 +202,8 @@ namespace DataDictionary.Main.Forms.Model
             saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inModelList;
         }
 
-        private void modelBinding_BindingComplete(object sender, BindingCompleteEventArgs e)
-        {
-
-        }
+        private void BindingComplete(object sender, BindingCompleteEventArgs e)
+        { if (sender is BindingSource binding) { binding.BindComplete(sender, e); } }
 
 
     }

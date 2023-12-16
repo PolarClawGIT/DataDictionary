@@ -23,8 +23,7 @@ Begin Try
 	Insert Into @Values
 	Select	IsNull(D.[SubjectAreaId],NewId()) As [SubjectAreaId],
 			NullIf(Trim(D.[SubjectAreaTitle]),'') As [SubjectAreaTitle],
-			NullIf(Trim(D.[SubjectAreaDescription]),'') As [SubjectAreaDescription],
-			D.[SysStart]
+			NullIf(Trim(D.[SubjectAreaDescription]),'') As [SubjectAreaDescription]
 	From	@Data D
 
 	-- Validation

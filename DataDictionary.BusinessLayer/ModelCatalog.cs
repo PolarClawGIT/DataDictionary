@@ -626,9 +626,9 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static BindingView<DbRoutineParameterItem> GetRoutineParameters(this IModelCatalog data, IDbRoutineKey source)
+        public static BindingView<DbRoutineParameterItem> GetRoutineParameters(this IModelCatalog data, IDbRoutineKeyName source)
         {
-            DbRoutineKey key = new DbRoutineKey(source);
+            DbRoutineKeyName key = new DbRoutineKeyName(source);
             return new BindingView<DbRoutineParameterItem>(data.DbRoutineParameters, w => key.Equals(w));
         }
 
@@ -638,9 +638,9 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static BindingView<DbRoutineDependencyItem> GetRoutineDependencies(this IModelCatalog data, IDbRoutineKey source)
+        public static BindingView<DbRoutineDependencyItem> GetRoutineDependencies(this IModelCatalog data, IDbRoutineKeyName source)
         {
-            DbRoutineKey key = new DbRoutineKey(source);
+            DbRoutineKeyName key = new DbRoutineKeyName(source);
             return new BindingView<DbRoutineDependencyItem>(data.DbRoutineDependencies, w => key.Equals(w));
         }
 
@@ -662,7 +662,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(this IModelCatalog data, IDbTableColumnKey source)
+        public static IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(this IModelCatalog data, IDbTableColumnKeyName source)
         {
             DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
             return data.DbExtendedProperties.Where(w => key.Equals(w));
@@ -674,7 +674,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(this IModelCatalog data, IDbTableKey source)
+        public static IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(this IModelCatalog data, IDbTableKeyName source)
         {
             DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
             return data.DbExtendedProperties.Where(w => key.Equals(w));
@@ -686,7 +686,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static BindingView<DbExtendedPropertyItem> GetExtendedProperty(this IModelCatalog data, IDbRoutineKey source)
+        public static BindingView<DbExtendedPropertyItem> GetExtendedProperty(this IModelCatalog data, IDbRoutineKeyName source)
         {
             DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
             return new BindingView<DbExtendedPropertyItem>(data.DbExtendedProperties, w => key.Equals(w));
@@ -698,7 +698,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="source"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(this IModelCatalog data, IDbRoutineParameterKey source)
+        public static IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(this IModelCatalog data, IDbRoutineParameterKeyName source)
         {
             DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
             return data.DbExtendedProperties.Where(w => key.Equals(w));
@@ -710,7 +710,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(this IModelCatalog data, IDbConstraintKey source)
+        public static IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(this IModelCatalog data, IDbConstraintKeyName source)
         {
             DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
             return data.DbExtendedProperties.Where(w => key.Equals(w));
@@ -722,10 +722,119 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(this IModelCatalog data, IDbSchemaKey source)
+        public static IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(this IModelCatalog data, IDbSchemaKeyName source)
         {
             DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
             return data.DbExtendedProperties.Where(w => key.Equals(w));
         }
+
+        /// <summary>
+        /// Gets a column given the key.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static DbTableColumnItem? GetColumn(this IEnumerable<DbTableColumnItem> source, IDbTableColumnKeyName item)
+        { return source.FirstOrDefault(w => new DbTableColumnKeyName(item) == new DbTableColumnKeyName(w)); }
+
+        /// <summary>
+        /// Gets a column given the key.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static DbTableColumnItem? GetColumn(this IDbTableColumnKeyName item, IEnumerable<DbTableColumnItem> source)
+        { return source.FirstOrDefault(w => new DbTableColumnKeyName(item) == new DbTableColumnKeyName(w)); }
+
+        /// <summary>
+        /// Gets a List of Columns given a Key
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static IEnumerable<DbTableColumnItem> GetColumns(this IEnumerable<DbTableColumnItem> source, IDbTableKeyName item)
+        { return source.Where(w => new DbTableKeyName(item) == new DbTableKeyName(w)); }
+
+        /// <summary>
+        /// Gets a List of Columns given a Key
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IEnumerable<DbTableColumnItem> GetColumns(this IDbTableKeyName item, IEnumerable<DbTableColumnItem> source)
+        { return source.Where(w => new DbTableKeyName(item) == new DbTableKeyName(w)); }
+
+        /// <summary>
+        /// Gets a Schema given a Key
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static DbSchemaItem? GetSchema(this IEnumerable<DbSchemaItem> source, IDbSchemaKeyName item)
+        { return source.FirstOrDefault(w => new DbSchemaKeyName(item) == new DbSchemaKeyName(w)); }
+
+        /// <summary>
+        /// Gets a Schema given a Key
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static DbSchemaItem? GetSchema(this IDbSchemaKeyName item, IEnumerable<DbSchemaItem> source)
+        { return source.FirstOrDefault(w => new DbSchemaKeyName(item) == new DbSchemaKeyName(w)); }
+
+        /// <summary>
+        /// Gets a Table Given a Key
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static DbTableItem? GetTable(this IEnumerable<DbTableItem> source, IDbTableKeyName item)
+        { return source.FirstOrDefault(w => new DbTableKeyName(item) == new DbTableKeyName(w)); }
+
+        /// <summary>
+        /// Gets a Table Given a Key
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static DbTableItem? GetTable(this IDbTableKeyName item, IEnumerable<DbTableItem> source)
+        { return source.FirstOrDefault(w => new DbTableKeyName(item) == new DbTableKeyName(w)); }
+
+        /// <summary>
+        /// Gets a Table Given a Key
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static IEnumerable<DbTableItem> GetTables(this IEnumerable<DbTableItem> source, IDbSchemaKeyName item)
+        { return source.Where(w => new DbSchemaKeyName(item) == new DbSchemaKeyName(w)); }
+
+        /// <summary>
+        /// Gets a list of Tables Given a Key
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IEnumerable<DbTableItem> GetTables(this IDbSchemaKeyName item, IEnumerable<DbTableItem> source)
+        { return source.Where(w => new DbSchemaKeyName(item) == new DbSchemaKeyName(w)); }
+
+        /// <summary>
+        /// Gets a list of Tables Given a Key
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static IEnumerable<DbTableItem> GetTables(this IEnumerable<DbTableItem> source, IDbCatalogKeyName item)
+        { return source.Where(w => new DbCatalogKeyName(item) == new DbCatalogKeyName(w)); }
+
+        /// <summary>
+        /// Gets a list of Tables Given a Key
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IEnumerable<DbTableItem> GetTables(this IDbCatalogKeyName item, IEnumerable<DbTableItem> source)
+        { return source.Where(w => new DbCatalogKeyName(item) == new DbCatalogKeyName(w)); }
+
     }
 }

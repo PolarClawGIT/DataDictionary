@@ -164,7 +164,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
             new DataColumn("IsChoice", typeof(Boolean)){ AllowDBNull = true},
             new DataColumn("ExtendedProperty", typeof(String)){ AllowDBNull = true},
             new DataColumn("ChoiceList", typeof(String)){ AllowDBNull = true},
-            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

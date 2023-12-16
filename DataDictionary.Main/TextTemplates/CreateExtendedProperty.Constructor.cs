@@ -1,6 +1,8 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.DataLayer.ApplicationData.Property;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
 using System;
@@ -48,21 +50,22 @@ namespace DataDictionary.Main.TextTemplates
 
                     foreach (DomainAttributeAliasItem aliasItem in data.GetAliases(attributeKey))
                     {
-
-                        DbExtendedPropertyParameter value = new DbExtendedPropertyParameter()
+                        if (aliasItem.TryScope() is IDbElementScopeKey scopeKey &&
+                            DbTableColumnKeyName.TryCreate(aliasItem) is DbTableColumnKeyName columnKey)
                         {
-                            DatabaseName = aliasItem.DatabaseName,
-                            PropertyName = propertyName,
-                            PropertyValue = propertyItem.PropertyValue,
-                            Level0Type = aliasItem.CatalogScope.ToString(),
-                            Level0Name = aliasItem.SchemaName,
-                            Level1Type = aliasItem.ObjectScope.ToString(),
-                            Level1Name = aliasItem.ObjectName,
-                            Level2Type = aliasItem.ElementScope.ToString(),
-                            Level2Name = aliasItem.ElementName
-                        };
-
-                        result.Add(value);
+                            result.Add(new DbExtendedPropertyParameter()
+                            {
+                                DatabaseName = columnKey.DatabaseName,
+                                PropertyName = propertyName,
+                                PropertyValue = propertyItem.PropertyValue,
+                                Level0Type = scopeKey.CatalogScope.ToString(),
+                                Level0Name = columnKey.SchemaName,
+                                Level1Type = scopeKey.ObjectScope.ToString(),
+                                Level1Name = columnKey.TableName,
+                                Level2Type = scopeKey.ElementScope.ToString(),
+                                Level2Name = columnKey.ColumnName
+                            }) ;
+                        }
                     }
                 }
             }
@@ -85,30 +88,33 @@ namespace DataDictionary.Main.TextTemplates
                 foreach (DomainEntityPropertyItem propertyItem in data.GetProperties(entityKey))
                 {
                     PropertyKey propertyKey = new PropertyKey(propertyItem);
-                    String propertyName = String.Empty ;
-
+                    String propertyName = string.Empty;
                     PropertyItem? propertypeType = data.Properties.FirstOrDefault(
-                         w => propertyKey.Equals(w)
-                         && w.IsExtendedProperty == true
-                         && !String.IsNullOrWhiteSpace(w.ExtendedProperty));
+                        w => propertyKey.Equals(w)
+                        && w.IsExtendedProperty == true
+                        && !String.IsNullOrWhiteSpace(w.ExtendedProperty));
 
                     if (propertypeType is not null && propertypeType.ExtendedProperty is String)
                     { propertyName = propertypeType.ExtendedProperty; }
 
                     foreach (DomainEntityAliasItem aliasItem in data.GetAliases(entityKey))
                     {
-                        DbExtendedPropertyParameter value = new DbExtendedPropertyParameter()
+                        if (aliasItem.TryScope() is IDbObjectScopeKey scopeKey &&
+                            DbTableKeyName.TryCreate(aliasItem) is DbTableKeyName tableKey)
                         {
-                            DatabaseName = aliasItem.DatabaseName,
-                            PropertyName = propertyName,
-                            PropertyValue = propertyItem.PropertyValue,
-                            Level0Type = aliasItem.CatalogScope.ToString(),
-                            Level0Name = aliasItem.SchemaName,
-                            Level1Type = aliasItem.ObjectScope.ToString(),
-                            Level1Name = aliasItem.ObjectName,
-                        };
-
-                        result.Add(value);
+                            result.Add(new DbExtendedPropertyParameter()
+                            {
+                                DatabaseName = tableKey.DatabaseName,
+                                PropertyName = propertyName,
+                                PropertyValue = propertyItem.PropertyValue,
+                                Level0Type = scopeKey.CatalogScope.ToString(),
+                                Level0Name = tableKey.SchemaName,
+                                Level1Type = scopeKey.ObjectScope.ToString(),
+                                Level1Name = tableKey.TableName,
+                                Level2Type = String.Empty,
+                                Level2Name = String.Empty
+                            });
+                        }
                     }
                 }
             }

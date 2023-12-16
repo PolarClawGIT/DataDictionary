@@ -19,43 +19,96 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
+	-- Validation
+	If @ModelId is Null and @CatalogId is Null
+	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
+
+	IF Exists (
+		Select	1
+		From	@Data D
+				Left Join [App_DataDictionary].[DatabaseRoutine_AK] P
+				On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
+					NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
+					NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName] And
+					NullIf(Trim(D.[RoutineName]),'') = P.[RoutineName]
+		Where	P.[CatalogId] is Null)
+	Throw 50000, '[DatabaseName], [SchemaName] or [RoutineName] does not match existing data', 2;
+
 	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDatabaseRoutineDependency]
+	Declare @Values Table (
+			[DependencyId]        UniqueIdentifier Not Null,
+			[RoutineId]           UniqueIdentifier Not Null,
+			-- Source has Reference objects as null-able and may not be up to date.
+			[ReferenceSchemaName] SysName Null,
+			[ReferenceObjectName] SysName Null,
+			[ReferenceObjectType] NVarChar(60) Null,
+			[ReferenceColumnName] SysName Null,
+			[IsCallerDependent]   Bit Null,
+			[IsAmbiguous]         Bit Null,
+			[IsSelected]          Bit Null,
+			[IsUpdated]           Bit Null,
+			[IsSelectAll]         Bit Null,
+			[IsAllColumnsFound]   Bit Null,
+			[IsInsertAll]         BIT Null,
+			[IsIncomplete]        BIT NULL,
+			Primary Key ([DependencyId]))
+
 	Insert Into @Values
-	Select	Coalesce(D.[CatalogId], @CatalogId) As [CatalogId],
-			NullIf(Trim(IsNull(P.[SourceDatabaseName], D.[DatabaseName])),'') As [DatabaseName],
-			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
-			NullIf(Trim(D.[RoutineName]),'') As [RoutineName],
+	Select	Coalesce(A.[DependencyId], D.[DependencyId], NewId()) As [DependencyId],
+			P.[RoutineId],       
 			NullIf(Trim(D.[ReferenceSchemaName]),'') As [ReferenceSchemaName],
 			NullIf(Trim(D.[ReferenceObjectName]),'') As [ReferenceObjectName],
 			NullIf(Trim(D.[ReferenceObjectType]),'') As [ReferenceObjectType],
 			NullIf(Trim(D.[ReferenceColumnName]),'') As [ReferenceColumnName],
 			D.[IsCallerDependent],
-			D.[IsAmbiguous],
+			D.[IsAmbiguous],  
 			D.[IsSelected],
 			D.[IsUpdated],
 			D.[IsSelectAll],
 			D.[IsAllColumnsFound],
-			D.[IsInsertAll],
+			D.[IsInsertAll],  
 			D.[IsIncomplete]
 	From	@Data D
-			Left Join [App_DataDictionary].[DatabaseCatalog] P
-			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId]
-	Where	(@CatalogId is Null or D.[CatalogId] = @CatalogId) And
-			(@ModelId is Null or @ModelId In (
-				Select	[ModelId]
-				From	[App_DataDictionary].[ModelCatalog]
-				Where	(@CatalogId is Null Or [CatalogId] = @CatalogId)))
+			Left Join [App_DataDictionary].[DatabaseRoutine_AK] P
+			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
+				NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
+				NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName] And
+				NullIf(Trim(D.[RoutineName]),'') = P.[RoutineName]
+			Left Join [App_DataDictionary].[DatabaseRoutineDependency] A
+			On	P.[RoutineId] = A.[RoutineId] and
+				IsNull(Trim(D.[ReferenceSchemaName]),'') = IsNull(A.[ReferenceSchemaName],'') And
+				IsNull(Trim(D.[ReferenceObjectName]),'') = IsNull(A.[ReferenceObjectName],'') And
+				IsNull(Trim(D.[ReferenceColumnName]),'') = IsNull(A.[ReferenceColumnName],'')
+	Where	P.[CatalogId] is Null Or
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
 
-	-- Validation
-	If @ModelId is Null and @CatalogId is Null
-	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
 
 	-- Apply Changes
-	With [Delta] As (
-		Select	[CatalogId],
-				[SchemaName],
-				[RoutineName],
+	Delete From [App_DataDictionary].[DatabaseRoutineDependency]
+	From	[App_DataDictionary].[DatabaseRoutineDependency] T
+			Inner Join [App_DataDictionary].[DatabaseRoutine_AK] P
+			On	T.[RoutineId] = P.[RoutineId]
+			Left Join @Values S
+			On	T.[DependencyId] = S.[DependencyId]
+	Where	S.[DependencyId] is Null And
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseRoutineDependency]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	;With [Delta] As (
+		Select	[DependencyId],
+				[RoutineId],
 				[ReferenceSchemaName],
 				[ReferenceObjectName],
 				[ReferenceObjectType],
@@ -70,9 +123,8 @@ Begin Try
 				[IsIncomplete]
 		From	@Values
 		Except
-		Select	[CatalogId],
-				[SchemaName],
-				[RoutineName],
+		Select	[DependencyId],
+				[RoutineId],
 				[ReferenceSchemaName],
 				[ReferenceObjectName],
 				[ReferenceObjectType],
@@ -85,95 +137,60 @@ Begin Try
 				[IsAllColumnsFound],
 				[IsInsertAll],
 				[IsIncomplete]
-		From	[App_DataDictionary].[DatabaseRoutineDependency]),
-	[Data] As (
-		Select	V.[CatalogId],
-				V.[SchemaName],
-				V.[RoutineName],
-				V.[ReferenceSchemaName],
-				V.[ReferenceObjectName],
-				V.[ReferenceObjectType],
-				V.[ReferenceColumnName],
-				V.[IsCallerDependent],
-				V.[IsAmbiguous],
-				V.[IsSelected],
-				V.[IsUpdated],
-				V.[IsSelectAll],
-				V.[IsAllColumnsFound],
-				V.[IsInsertAll],
-				V.[IsIncomplete],
-				IIF(D.[CatalogId] is Null,0, 1) As [IsDiffrent]
-		From	@Values V
-				Left Join [Delta] D
-				On	V.[CatalogId] = D.[CatalogId] And
-					V.[SchemaName] = D.[SchemaName] And
-					V.[RoutineName] = D.[RoutineName] And
-					IsNull(V.[ReferenceSchemaName],'') = IsNull(D.[ReferenceSchemaName],'') And
-					IsNull(V.[ReferenceObjectName],'') = IsNull(D.[ReferenceObjectName],'') And
-					IsNull(V.[ReferenceColumnName],'') = IsNull(D.[ReferenceColumnName],''))
-	Merge [App_DataDictionary].[DatabaseRoutineDependency] As T
-	Using [Data] As S
-	On	T.[CatalogId] = S.[CatalogId] And
-		T.[SchemaName] = S.[SchemaName] And
-		T.[RoutineName] = S.[RoutineName] And
-		IsNull(T.[ReferenceSchemaName],'') = IsNull(S.[ReferenceSchemaName],'') And
-		IsNull(T.[ReferenceObjectName],'') = IsNull(S.[ReferenceObjectName],'') And
-		IsNull(T.[ReferenceColumnName],'') = IsNull(S.[ReferenceColumnName],'')
-	When Matched and [IsDiffrent] = 1 Then Update Set
-		[CatalogId] = S.[CatalogId],
-		[SchemaName] = S.[SchemaName],
-		[RoutineName] = S.[RoutineName],
-		[ReferenceSchemaName] = S.[ReferenceSchemaName],
-		[ReferenceObjectName] = S.[ReferenceObjectName],
-		[ReferenceObjectType] = S.[ReferenceObjectType],
-		[ReferenceColumnName] = S.[ReferenceColumnName],
-		[IsCallerDependent] = S.[IsCallerDependent],
-		[IsAmbiguous] = S.[IsAmbiguous],
-		[IsSelected] = S.[IsSelected],
-		[IsUpdated] = S.[IsUpdated],
-		[IsSelectAll] = S.[IsSelectAll],
-		[IsAllColumnsFound] = S.[IsAllColumnsFound],
-		[IsInsertAll] = S.[IsInsertAll],
-		[IsIncomplete] = S.[IsIncomplete]
-	When Not Matched by Target Then
-		Insert ([CatalogId],
-				[SchemaName],
-				[RoutineName],
-				[ReferenceSchemaName],
-				[ReferenceObjectName],
-				[ReferenceObjectType],
-				[ReferenceColumnName],
-				[IsCallerDependent],
-				[IsAmbiguous],
-				[IsSelected],
-				[IsUpdated],
-				[IsSelectAll],
-				[IsAllColumnsFound],
-				[IsInsertAll],
-				[IsIncomplete])
-		Values ([CatalogId],
-				[SchemaName],
-				[RoutineName],
-				[ReferenceSchemaName],
-				[ReferenceObjectName],
-				[ReferenceObjectType],
-				[ReferenceColumnName],
-				[IsCallerDependent],
-				[IsAmbiguous],
-				[IsSelected],
-				[IsUpdated],
-				[IsSelectAll],
-				[IsAllColumnsFound],
-				[IsInsertAll],
-				[IsIncomplete])
-	When Not Matched by Source And
-		(@CatalogId = T.[CatalogId] Or
-		 T.[CatalogId] In (
-			Select	[CatalogId]
-			From	[App_DataDictionary].[ModelCatalog]
-			Where	[ModelId] = @ModelId))
-		Then Delete;
-	Print FormatMessage ('Merge [App_DataDictionary].[DatabaseRoutineDependency]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+		From	[App_DataDictionary].[DatabaseRoutineDependency])
+	Update [App_DataDictionary].[DatabaseRoutineDependency]
+	Set		[RoutineId] = S.[RoutineId],
+			[ReferenceSchemaName] = S.[ReferenceSchemaName],
+			[ReferenceObjectName] = S.[ReferenceObjectName],
+			[ReferenceObjectType] = S.[ReferenceObjectType],
+			[ReferenceColumnName] = S.[ReferenceColumnName],
+			[IsCallerDependent] = S.[IsCallerDependent],
+			[IsAmbiguous] = S.[IsAmbiguous],
+			[IsSelected] = S.[IsSelected],
+			[IsUpdated] = S.[IsUpdated],
+			[IsSelectAll] = S.[IsSelectAll],
+			[IsAllColumnsFound] = S.[IsAllColumnsFound],
+			[IsInsertAll] = S.[IsInsertAll],
+			[IsIncomplete] = S.[IsIncomplete]
+	From	[App_DataDictionary].[DatabaseRoutineDependency] T
+			Inner Join [Delta] S
+			On	T.[DependencyId] = S.[DependencyId]
+	Print FormatMessage ('Update [App_DataDictionary].[DatabaseRoutineDependency]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[DatabaseRoutineDependency] (
+			[DependencyId],
+			[RoutineId],
+			[ReferenceSchemaName],
+			[ReferenceObjectName],
+			[ReferenceObjectType],
+			[ReferenceColumnName],
+			[IsCallerDependent],
+			[IsAmbiguous],
+			[IsSelected],
+			[IsUpdated],
+			[IsSelectAll],
+			[IsAllColumnsFound],
+			[IsInsertAll],
+			[IsIncomplete])
+	Select	S.[DependencyId],
+			S.[RoutineId],
+			S.[ReferenceSchemaName],
+			S.[ReferenceObjectName],
+			S.[ReferenceObjectType],
+			S.[ReferenceColumnName],
+			S.[IsCallerDependent],
+			S.[IsAmbiguous],
+			S.[IsSelected],
+			S.[IsUpdated],
+			S.[IsSelectAll],
+			S.[IsAllColumnsFound],
+			S.[IsInsertAll],
+			S.[IsIncomplete]
+	From	@Values S
+			Left Join [App_DataDictionary].[DatabaseRoutineDependency] T
+			On	S.[DependencyId] = T.[DependencyId]
+	Where	T.[DependencyId] is Null
+	Print FormatMessage ('Insert [App_DataDictionary].[DatabaseRoutineDependency]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

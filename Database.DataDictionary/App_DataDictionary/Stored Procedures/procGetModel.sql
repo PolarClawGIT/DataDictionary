@@ -9,8 +9,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 
 Select	[ModelId],
 		[ModelTitle],
-		[ModelDescription],
-		[SysStart]
+		[ModelDescription]
 From	[App_DataDictionary].[Model]
 Where	(@ModelId is Null or @ModelId = [ModelId]) And
 		(@ModelTitle is Null or @ModelTitle = [ModelTitle])

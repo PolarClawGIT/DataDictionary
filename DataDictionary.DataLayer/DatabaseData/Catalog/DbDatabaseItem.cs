@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     /// This represents a list of Database on the Server.
     /// This is used when filling a list of Catalogs for the User Interface.
     /// </summary>
-    public class DbDatabaseItem : BindingTableRow, IDbCatalogKeyUnique
+    public class DbDatabaseItem : BindingTableRow, IDbCatalogKeyName
     {
         /// <inheritdoc/>
         public virtual string? DatabaseName { get { return GetValue("database_name"); } }

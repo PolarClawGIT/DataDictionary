@@ -65,7 +65,6 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             new DataColumn("SubjectAreaId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("EntityTitle", typeof(string)){ AllowDBNull = false},
             new DataColumn("EntityDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

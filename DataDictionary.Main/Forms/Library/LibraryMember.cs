@@ -1,4 +1,6 @@
-﻿using DataDictionary.DataLayer.LibraryData.Member;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.LibraryData;
+using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
@@ -35,21 +37,21 @@ namespace DataDictionary.Main.Forms.Library
         {
             if (Program.Data.LibraryMembers.FirstOrDefault(w => DataKey.Equals(w)) is LibraryMemberItem memberItem)
             {
-                switch (memberItem.MemberItemType().type)
+                switch (memberItem.ToScopeType())
                 {
-                    case LibraryMemberType.Type:
+                    case ScopeType.LibraryType:
                         this.Icon = Resources.Icon_Class;
                         break;
-                    case LibraryMemberType.Field or LibraryMemberType.Property:
+                    case ScopeType.LibraryField or ScopeType.LibraryProperty:
                         this.Icon = Resources.Icon_Field;
                         break;
-                    case LibraryMemberType.Method or LibraryMemberType.Event:
+                    case ScopeType.LibraryMethod or ScopeType.LibraryEvent:
                         this.Icon = Resources.Icon_Method;
                         break;
-                    case LibraryMemberType.Parameter:
+                    case ScopeType.LibraryParameter:
                         this.Icon = Resources.Icon_Parameter;
                         break;
-                    case LibraryMemberType.NameSpace:
+                    case ScopeType.LibraryNameSpace:
                         this.Icon = Resources.Icon_Namespace;
                         break;
                     default: break;
@@ -59,13 +61,12 @@ namespace DataDictionary.Main.Forms.Library
 
                 memberNameSpaceData.DataBindings.Add(new Binding(nameof(memberNameSpaceData.Text), memberItem, nameof(memberItem.NameSpace)));
                 memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), memberItem, nameof(memberItem.MemberName)));
-                objectTypeData.DataBindings.Add(new Binding(nameof(objectTypeData.Text), memberItem, nameof(memberItem.ObjectType)));
-                memberTypeData.DataBindings.Add(new Binding(nameof(memberTypeData.Text), memberItem, nameof(memberItem.MemberType)));
+                scopeData.DataBindings.Add(new Binding(nameof(scopeData.Text), memberItem, nameof(memberItem.ScopeName)));
                 memberData.DataBindings.Add(new Binding(nameof(memberData.Text), memberItem, nameof(memberItem.MemberData)));
                 assemblyNameData.DataBindings.Add(new Binding(nameof(assemblyNameData.Text), memberItem, nameof(memberItem.AssemblyName)));
 
                 LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
-                BindingView<LibraryMemberItem> childMembers = new BindingView<LibraryMemberItem>(Program.Data.LibraryMembers, w =>  new LibraryMemberKeyParent(w).Equals(memberKey));
+                BindingView<LibraryMemberItem> childMembers = new BindingView<LibraryMemberItem>(Program.Data.LibraryMembers, w => new LibraryMemberKeyParent(w).Equals(memberKey));
 
                 childMemberData.AutoGenerateColumns = false;
                 childMemberData.DataSource = childMembers;
@@ -79,8 +80,6 @@ namespace DataDictionary.Main.Forms.Library
         {
             memberNameSpaceData.DataBindings.Clear();
             memberNameData.DataBindings.Clear();
-            objectTypeData.DataBindings.Clear();
-            memberTypeData.DataBindings.Clear();
             memberData.DataBindings.Clear();
             assemblyNameData.DataBindings.Clear();
         }

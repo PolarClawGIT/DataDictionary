@@ -1,9 +1,7 @@
-﻿CREATE TYPE [App_DataDictionary].[typeDomainAttributeAlias] AS TABLE (
-	-- TIP: This matches the C# DataTable structure
+﻿CREATE TYPE [App_DataDictionary].[typeDomainAttributeAlias] AS TABLE 
+(    -- TIP: This matches the C# DataTable structure and GET procedure
     [AttributeId]          UNIQUEIDENTIFIER NULL,
-	[AttributeAliasId]     INT              NULL,
-	[DatabaseName]         SYSNAME          NULL,
-	[SchemaName]           SYSNAME          NULL,
-	[ObjectName]           SYSNAME          NULL,
-	[ElementName]          SYSNAME          NULL,
-    [SysStart]             DATETIME2 (7)    NULL);
+    [SourceName]           NVarChar(128) Null,
+    [AliasName]            [App_DataDictionary].[typeAliasName] Null,
+	[ScopeName]            [App_DataDictionary].[typeScopeName] Null
+)

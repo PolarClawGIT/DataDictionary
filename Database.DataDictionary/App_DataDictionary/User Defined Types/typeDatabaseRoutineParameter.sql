@@ -1,11 +1,12 @@
 ﻿CREATE TYPE [App_DataDictionary].[typeDatabaseRoutineParameter] AS TABLE
 (
 	[CatalogId]              UniqueIdentifier Null,
+	[ParameterId]            UniqueIdentifier Null,
 	[DatabaseName]           SysName Null,
 	[SchemaName]             SysName Null,
 	[RoutineName]            SysName Null,
-	[RoutineType]            NVarChar(60) Null,
 	[ParameterName]          SysName Null,
+	[ScopeName]              [App_DataDictionary].[typeScopeName] Null,
 	[OrdinalPosition]        Int Null,
 	[DataType]               SysName Null,
 	[CharacterMaximumLength]  Int Null,

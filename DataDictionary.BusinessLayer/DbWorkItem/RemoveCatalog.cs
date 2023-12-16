@@ -11,9 +11,9 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
 {
     [Obsolete("Replace with Remove by CatalogKey", true)]
     class RemoveCatalog<TDbItem> : WorkItem
-        where TDbItem : class, IDbCatalogKeyUnique, IBindingTableRow
+        where TDbItem : class, IDbCatalogKeyName, IBindingTableRow
     {
-        public required DbCatalogKeyUnique Catalog { get; set; }
+        public required DbCatalogKeyName Catalog { get; set; }
         public required IBindingTable<TDbItem> Target { get; set; }
 
         public RemoveCatalog() : base() 
@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
 
         void Work()
         {
-            IEnumerable<TDbItem> toRemove = Target.Where(w => Catalog == new DbCatalogKeyUnique(w)).ToList();
+            IEnumerable<TDbItem> toRemove = Target.Where(w => Catalog == new DbCatalogKeyName(w)).ToList();
 
             foreach (TDbItem item in toRemove)
             { Target.Remove(item); }

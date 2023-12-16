@@ -11,8 +11,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 Select	D.[AttributeId],
 		A.[SubjectAreaId],
 		D.[AttributeTitle],
-		D.[AttributeDescription],
-		D.[SysStart]
+		D.[AttributeDescription]
 From	[App_DataDictionary].[DomainAttribute] D
 		Left Join [App_DataDictionary].[ModelAttribute] A
 		On	D.[AttributeId] = A.[AttributeId]

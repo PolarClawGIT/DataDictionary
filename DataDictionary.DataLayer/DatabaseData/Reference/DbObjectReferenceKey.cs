@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
     /// <summary>
     /// Interface for the Database Table Reference Key
     /// </summary>
-    public interface IDbObjectReferenceKey : IKey, IDbCatalogKeyUnique
+    public interface IDbObjectReferenceKey : IKey, IDbCatalogKeyName
     {
         /// <summary>
         /// Name of the Database Schema being Referenced
@@ -27,7 +27,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
     /// <summary>
     /// Implementation of the Database Table Reference Key
     /// </summary>
-    public class DbObjectReferenceKey : DbCatalogKeyUnique, IDbObjectReferenceKey, IKeyComparable<IDbObjectReferenceKey>, IKeyEquality<IDbTableKey>
+    public class DbObjectReferenceKey : DbCatalogKeyName, IDbObjectReferenceKey, IKeyComparable<IDbObjectReferenceKey>, IKeyEquality<IDbTableKeyName>
     {
         /// <inheritdoc/>
         public string ReferenceSchemaName { get; init; }
@@ -54,7 +54,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         {
             return
                 other is IDbObjectReferenceKey &&
-                new DbCatalogKeyUnique(this).Equals(other) &&
+                new DbCatalogKeyName(this).Equals(other) &&
                 !string.IsNullOrEmpty(ReferenceSchemaName) &&
                 !string.IsNullOrEmpty(other.ReferenceSchemaName) &&
                 !string.IsNullOrEmpty(ReferenceObjectName) &&
@@ -64,11 +64,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         }
 
         /// <inheritdoc/>
-        public bool Equals(IDbTableKey? other)
+        public bool Equals(IDbTableKeyName? other)
         {
             return
-                other is IDbTableKey &&
-                new DbCatalogKeyUnique(this).Equals(other) &&
+                other is IDbTableKeyName &&
+                new DbCatalogKeyName(this).Equals(other) &&
                 !string.IsNullOrEmpty(ReferenceSchemaName) &&
                 !string.IsNullOrEmpty(other.SchemaName) &&
                 !string.IsNullOrEmpty(ReferenceObjectName) &&
@@ -81,14 +81,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Reference
         public override bool Equals(object? obj)
         {
             return obj is IDbObjectReferenceKey value && Equals(new DbObjectReferenceKey(value))
-                || obj is IDbTableKey talbeValue && Equals(new DbTableKey(talbeValue));
+                || obj is IDbTableKeyName talbeValue && Equals(new DbTableKeyName(talbeValue));
         }
 
         /// <inheritdoc/>
         public int CompareTo(IDbObjectReferenceKey? other)
         {
             if (other is null) { return 1; }
-            else if (new DbCatalogKeyUnique(this).CompareTo(other) is int value && value != 0)
+            else if (new DbCatalogKeyName(this).CompareTo(other) is int value && value != 0)
             { return value; }
             else
             {

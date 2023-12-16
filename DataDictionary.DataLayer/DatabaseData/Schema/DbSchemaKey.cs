@@ -1,69 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
 
 namespace DataDictionary.DataLayer.DatabaseData.Schema
 {
     /// <summary>
-    /// Interface for the Database Schema Key
+    /// Interface for the Database Schema Key.
     /// </summary>
-    public interface IDbSchemaKey : IKey, IDbCatalogKeyUnique
+    public interface IDbSchemaKey : IKey
     {
         /// <summary>
-        /// Name of the Database Schema
+        /// Application ID for the Schema.
         /// </summary>
-        String? SchemaName { get; }
+        Guid? SchemaId { get; }
     }
 
     /// <summary>
-    /// Implementation of the Database Schema Key
+    /// Implementation for the Database Schema Key.
     /// </summary>
-    public class DbSchemaKey : DbCatalogKeyUnique, IDbSchemaKey, IKeyComparable<IDbSchemaKey>
+    public class DbSchemaKey : IDbSchemaKey, IKeyEquality<IDbSchemaKey>
     {
         /// <inheritdoc/>
-        public string SchemaName { get; init; } = string.Empty;
+        public Guid? SchemaId { get; init; } = Guid.Empty;
 
         /// <summary>
-        /// Constructor for the Database Scheme Key
+        /// Constructor for the Schema Key.
         /// </summary>
         /// <param name="source"></param>
-        public DbSchemaKey(IDbSchemaKey source) : base(source)
+        public DbSchemaKey(IDbSchemaKey source) : base()
         {
-            if (source.SchemaName is string) { SchemaName = source.SchemaName; }
-            else { SchemaName = string.Empty; }
+            if (source.SchemaId is Guid value) { SchemaId = value; }
+            else { SchemaId = Guid.Empty; }
         }
 
-        #region IEquatable, IComparable
+        #region IEquatable
         /// <inheritdoc/>
-        public bool Equals(IDbSchemaKey? other)
-        {
-            return 
-                other is IDbSchemaKey &&
-                new DbCatalogKeyUnique(this).Equals(other) &&
-                !string.IsNullOrEmpty(SchemaName) &&
-                !string.IsNullOrEmpty(other.SchemaName) &&
-                SchemaName.Equals(other.SchemaName, KeyExtension.CompareString);
-        }
+        public virtual bool Equals(IDbSchemaKey? other)
+        { return other is IDbSchemaKey && EqualityComparer<Guid?>.Default.Equals(SchemaId, other.SchemaId); }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj)
-        { return obj is IDbSchemaKey value && Equals(new DbSchemaKey(value)); }
-
-        /// <inheritdoc/>
-        public int CompareTo(IDbSchemaKey? other)
-        {
-            if (other is null) { return 1; }
-            else if (new DbCatalogKeyUnique(this).CompareTo(other) is int value && value != 0) { return value; }
-            else { return string.Compare(SchemaName, other.SchemaName, true); }
-        }
-
-        /// <inheritdoc/>
-        public override int CompareTo(object? obj)
-        { if (obj is IDbSchemaKey value) { return CompareTo(new DbSchemaKey(value)); } else { return 1; } }
+        public override bool Equals(object? other)
+        { return other is IDbSchemaKey value && Equals(new DbSchemaKey(value)); }
 
         /// <inheritdoc/>
         public static bool operator ==(DbSchemaKey left, DbSchemaKey right)
@@ -74,32 +53,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(DbSchemaKey left, DbSchemaKey right)
-        { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
-
-        /// <inheritdoc/>
-        public static bool operator <=(DbSchemaKey left, DbSchemaKey right)
-        { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
-
-        /// <inheritdoc/>
-        public static bool operator >(DbSchemaKey left, DbSchemaKey right)
-        { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
-
-        /// <inheritdoc/>
-        public static bool operator >=(DbSchemaKey left, DbSchemaKey right)
-        { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
-
-        /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(base.GetHashCode(), SchemaName.GetHashCode(KeyExtension.CompareString)); }
+        { return HashCode.Combine(SchemaId); }
         #endregion
-
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            if (SchemaName is string)
-            { return string.Format("{0}.{1}", base.ToString(), SchemaName); }
-            else { return string.Empty; }
-        }
     }
 }

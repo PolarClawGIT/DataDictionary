@@ -121,59 +121,15 @@
     <value>Select	@CatalogId As [CatalogId],
 	Db_Name() As [CatalogTitle],
 	Convert(NvarChar,Null) As [CatalogDescription],
+	'Database' As [ScopeName],
 	@Server As [SourceServerName],
 	Db_Name() As [SourceDatabaseName],
-	GetDate() As [SourceDate],
-	Convert(DateTime2, Null) As [SysStart]</value>
+	GetDate() As [SourceDate]</value>
     <comment>SQL Script to get data for DbCatalogItem.</comment>
-  </data>
-  <data name="DbColumnItem" xml:space="preserve">
-    <value>Select	@CatalogId As [CatalogId],
-	I.[TABLE_CATALOG] As [DatabaseName],
-	I.[TABLE_SCHEMA] As [SchemaName],
-	I.[TABLE_NAME] As [TableName],
-	T.[TABLE_TYPE] As [TableType],
-	I.[COLUMN_NAME] As [ColumnName],
-	I.[ORDINAL_POSITION] As [OrdinalPosition],
-	I.[COLUMN_DEFAULT] As [ColumnDefault],
-	iif(I.[IS_NULLABLE] In ('YES','TRUE','1'),1,0) As [IsNullable],
-	I.[DATA_TYPE] As [DataType],
-	P.[definition] As [ComputedDefinition],
-	I.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
-	I.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength],
-	I.[NUMERIC_PRECISION] As [NumericPrecision],
-	I.[NUMERIC_PRECISION_RADIX] As [NumericPrecisionRadix],
-	I.[NUMERIC_SCALE] As [NumericScale],
-	I.[DATETIME_PRECISION] As [DateTimePrecision],
-	I.[CHARACTER_SET_CATALOG] As [CharacterSetCatalog],
-	I.[CHARACTER_SET_SCHEMA] As [CharacterSetSchema],
-	I.[CHARACTER_SET_NAME] As [CharacterSetName],
-	I.[COLLATION_CATALOG] As [CollationCatalog],
-	I.[COLLATION_SCHEMA] As [CollationSchema],
-	I.[COLLATION_NAME] As [CollationName],
-	I.[DOMAIN_CATALOG] As [DomainCatalog],
-	I.[DOMAIN_SCHEMA] As [DomainSchema],
-	I.[DOMAIN_NAME] As [DomainName],
-	C.[is_identity] As [IsIdentity],
-	C.[is_hidden] As [IsHidden],
-	C.[is_computed] As [IsComputed],
-	NullIf(C.[generated_always_type_desc],'NOT_APPLICABLE') As [GeneratedAlwayType]
-From	[INFORMATION_SCHEMA].[COLUMNS] I
-	Left Join [INFORMATION_SCHEMA].[TABLES] T
-	On	I.[TABLE_CATALOG] = T.[TABLE_CATALOG] And
-		I.[TABLE_SCHEMA] = T.[TABLE_SCHEMA] And
-		I.[TABLE_NAME] = T.[TABLE_NAME]
-	Left Join [sys].[Columns] C
-	On	I.[TABLE_SCHEMA] = Object_Schema_Name(C.[object_id]) And
-		I.[TABLE_NAME] = Object_Name(C.[object_id]) And
-		I.[COLUMN_NAME] = C.[name]
-	Left Join [sys].[computed_columns] P
-	On	C.[object_id] = P.[object_id] And
-		C.[column_id] = P.[column_id]</value>
-    <comment>SQL Script to get data for DbColumnItem.</comment>
   </data>
   <data name="DbConstraintColumnItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
+	NewId() As [ConstraintColumnId],
 	T.[CONSTRAINT_CATALOG] As [DatabaseName],
 	T.[CONSTRAINT_SCHEMA] As [SchemaName],
 	T.[CONSTRAINT_NAME] As [ConstraintName],
@@ -201,19 +157,23 @@ From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
   </data>
   <data name="DbConstraintItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
+	NewId() As [ConstraintId],
 	[CONSTRAINT_CATALOG] As [DatabaseName],
 	[CONSTRAINT_SCHEMA] As [SchemaName],
 	[CONSTRAINT_NAME] As [ConstraintName],
 	[TABLE_NAME] As [TableName],
+	'Database.Schema.Table.Constraint' As [ScopeName],
 	[CONSTRAINT_TYPE] As [ConstraintType]
 From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS]</value>
     <comment>SQL Script to get data for DbConstraintItem.</comment>
   </data>
   <data name="DbDomainItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
+	NewId() As [DomainId],
 	[DOMAIN_CATALOG] As [DatabaseName],
 	[DOMAIN_SCHEMA] As [SchemaName],
 	[DOMAIN_NAME] As [DomainName],
+	'Database.Schema.Type' As [ScopeName],
 	[DATA_TYPE] As [DataType],
 	[DOMAIN_DEFAULT] As [DomainDefault],
 	[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
@@ -257,6 +217,7 @@ FROM [fn_listextendedproperty] (
   <data name="DbRoutineDependencyItem" xml:space="preserve">
     <value>Begin Try;
 Select	@CatalogId As [CatalogId],
+	NewId() As [DependencyId],
 	IsNull(R.[referenced_database_name],DB_Name()) As [DatabaseName],
 	Object_Schema_Name(Object_id(@ObjectName)) As [SchemaName],
 	Object_Name(Object_id(@ObjectName)) As [RoutineName],
@@ -281,20 +242,29 @@ End Catch;</value>
   </data>
   <data name="DbRoutineItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
+	NewId() As [RoutineId],
 	[ROUTINE_CATALOG] As [DatabaseName],
 	[ROUTINE_SCHEMA] As [SchemaName],
 	[ROUTINE_NAME] As [RoutineName],
+	Case
+	When [ROUTINE_TYPE] In ('PROCEDURE') Then 'Database.Schema.Procedure'
+	When [ROUTINE_TYPE] In ('FUNCTION') Then 'Database.Schema.Function'
+	Else 'Error' End As [ScopeName],
 	[ROUTINE_TYPE] As [RoutineType]
 From	[INFORMATION_SCHEMA].[ROUTINES]</value>
     <comment>SQL Script to get data for DbRoutineItem.</comment>
   </data>
   <data name="DbRoutineParameterItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
+	NewId() As [ParameterId],
 	P.[SPECIFIC_CATALOG] As [DatabaseName],
 	P.[SPECIFIC_SCHEMA] As [SchemaName],
 	P.[SPECIFIC_NAME] As [RoutineName],
-	R.[ROUTINE_TYPE] As [RoutineType],
 	IIF(R.[ROUTINE_TYPE] IN ('FUNCTION') AND P.[ORDINAL_POSITION] = 0,'RETURN',P.[PARAMETER_NAME]) As [ParameterName],
+	Case
+	When R.[ROUTINE_TYPE] In ('PROCEDURE') Then 'Database.Schema.Procedure.Parameter'
+	When R.[ROUTINE_TYPE] In ('FUNCTION') Then 'Database.Schema.Function.Parameter'
+	Else 'Error' End As [ScopeName],
 	P.[ORDINAL_POSITION] As [OrdinalPosition],
 	P.[DATA_TYPE] As [DataType],
 	P.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
@@ -321,16 +291,72 @@ From	[INFORMATION_SCHEMA].[PARAMETERS] P
   </data>
   <data name="DbSchemaItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
+	NewId() As [SchemaId],
 	[CATALOG_NAME] As [DatabaseName],
-	[SCHEMA_NAME] As [SchemaName]
-From	[INFORMATION_SCHEMA].[SCHEMATA]</value>
+	[SCHEMA_NAME] As [SchemaName],
+	'Database.Schema' As [ScopeName]
+From [INFORMATION_SCHEMA].[SCHEMATA]</value>
     <comment>SQL Script to get data for DbSchemaItem.</comment>
   </data>
-  <data name="DbTableItem" xml:space="preserve">
+  <data name="DbTableColumnItem" xml:space="preserve">
     <value>Select	@CatalogId As [CatalogId],
+	NewId() As [ColumnId],
 	I.[TABLE_CATALOG] As [DatabaseName],
 	I.[TABLE_SCHEMA] As [SchemaName],
 	I.[TABLE_NAME] As [TableName],
+	I.[COLUMN_NAME] As [ColumnName],
+	Case 
+	When T.[TABLE_TYPE] In ('BASE TABLE') Then 'Database.Schema.Table.Column'
+	When T.[TABLE_TYPE] In ('VIEW') Then 'Database.Schema.View.Column'
+	Else 'ERROR' End [ScopeName],
+	I.[ORDINAL_POSITION] As [OrdinalPosition],
+	iif(I.[IS_NULLABLE] In ('YES','TRUE','1'),1,0) As [IsNullable],
+	I.[DATA_TYPE] As [DataType],
+	I.[COLUMN_DEFAULT] As [ColumnDefault],
+	I.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
+	I.[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength],
+	I.[NUMERIC_PRECISION] As [NumericPrecision],
+	I.[NUMERIC_PRECISION_RADIX] As [NumericPrecisionRadix],
+	I.[NUMERIC_SCALE] As [NumericScale],
+	I.[DATETIME_PRECISION] As [DateTimePrecision],
+	I.[CHARACTER_SET_CATALOG] As [CharacterSetCatalog],
+	I.[CHARACTER_SET_SCHEMA] As [CharacterSetSchema],
+	I.[CHARACTER_SET_NAME] As [CharacterSetName],
+	I.[COLLATION_CATALOG] As [CollationCatalog],
+	I.[COLLATION_SCHEMA] As [CollationSchema],
+	I.[COLLATION_NAME] As [CollationName],
+	I.[DOMAIN_CATALOG] As [DomainCatalog],
+	I.[DOMAIN_SCHEMA] As [DomainSchema],
+	I.[DOMAIN_NAME] As [DomainName],
+	C.[is_identity] As [IsIdentity],
+	C.[is_hidden] As [IsHidden],
+	C.[is_computed] As [IsComputed],
+	P.[definition] As [ComputedDefinition],
+	NullIf(C.[generated_always_type_desc],'NOT_APPLICABLE') As [GeneratedAlwayType]
+From	[INFORMATION_SCHEMA].[COLUMNS] I
+	Left Join [INFORMATION_SCHEMA].[TABLES] T
+	On	I.[TABLE_CATALOG] = T.[TABLE_CATALOG] And
+		I.[TABLE_SCHEMA] = T.[TABLE_SCHEMA] And
+		I.[TABLE_NAME] = T.[TABLE_NAME]
+	Left Join [sys].[Columns] C
+	On	I.[TABLE_SCHEMA] = Object_Schema_Name(C.[object_id]) And
+		I.[TABLE_NAME] = Object_Name(C.[object_id]) And
+		I.[COLUMN_NAME] = C.[name]
+	Left Join [sys].[computed_columns] P
+	On	C.[object_id] = P.[object_id] And
+		C.[column_id] = P.[column_id]</value>
+    <comment>SQL Script to get data for DbTableColumnItem.</comment>
+  </data>
+  <data name="DbTableItem" xml:space="preserve">
+    <value>Select	@CatalogId As [CatalogId],
+	NewId() As [TableId],
+	I.[TABLE_CATALOG] As [DatabaseName],
+	I.[TABLE_SCHEMA] As [SchemaName],
+	I.[TABLE_NAME] As [TableName],
+	Case 
+	When I.[TABLE_TYPE] In ('BASE TABLE') Then 'Database.Schema.Table'
+	When I.[TABLE_TYPE] In ('VIEW') Then 'Database.Schema.View'
+	Else 'ERROR' End [ScopeName],
 	Case
 	When H.[object_id] is Not Null Then 'HISTORY TABLE'
 	When T.[history_table_id] is Not Null Then 'TEMPORAL TABLE'
@@ -342,14 +368,7 @@ From	[INFORMATION_SCHEMA].[TABLES] I
 		I.[TABLE_NAME] = Object_Name(T.[object_id])
 	Left Join [sys].[Tables] H
 	On	I.[TABLE_SCHEMA] = Object_Schema_Name(H.[history_table_id]) And
-		I.[TABLE_NAME] = Object_Name(H.[history_table_id])
-UNION
-Select	@CatalogId As [CatalogId],
-	[TABLE_CATALOG] As [DatabaseName],
-	[TABLE_SCHEMA] As [SchemaName],
-	[TABLE_NAME] As [TableName],
-	'VIEW' As [TableType]
-From	[INFORMATION_SCHEMA].[VIEWS]</value>
+		I.[TABLE_NAME] = Object_Name(H.[history_table_id])</value>
     <comment>SQL Script to get data for DbTableItem.</comment>
   </data>
 </root>

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Table;
@@ -18,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Constraint Item.
     /// </summary>
-    public interface IDbConstraintItem : IDbConstraintKey, IDbCatalogKey, IDbElementScope, IDbTableKey, IDataItem
+    public interface IDbConstraintItem : IDbConstraintKeyName, IDbConstraintKey, IDbCatalogKey,  IDbTableKeyName, IDbScopeType, IDataItem
     {
         /// <summary>
         /// Type of the Database Constraint.
@@ -36,6 +37,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
 
         /// <inheritdoc/>
+        public Guid? ConstraintId { get { return GetValue<Guid>("ConstraintId"); } }
+
+        /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
         /// <inheritdoc/>
@@ -45,21 +49,26 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public string? ConstraintName { get { return GetValue("ConstraintName"); } }
 
         /// <inheritdoc/>
+        public string? ScopeName { get { return GetValue("ScopeName"); } }
+
+        /// <inheritdoc/>
         public string? TableName { get { return GetValue("TableName"); } }
 
         /// <inheritdoc/>
         public string? ConstraintType { get { return GetValue("ConstraintType"); } }
 
         /// <inheritdoc/>
-        public DbElementScope ElementScope { get; } = DbElementScope.Constraint;
+        //public DbElementScope ElementScope { get; } = DbElementScope.Constraint;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
+            new DataColumn("ConstraintId", typeof(string)){ AllowDBNull = true},
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("ConstraintName", typeof(string)){ AllowDBNull = false},
             new DataColumn("TableName", typeof(string)){ AllowDBNull = true},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("ConstraintType", typeof(string)){ AllowDBNull = false},
         };
 
@@ -99,6 +108,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
 
         /// <inheritdoc/>
         public override string ToString()
-        { return new DbConstraintKey(this).ToString(); }
+        { return new DbConstraintKeyName(this).ToString(); }
     }
 }

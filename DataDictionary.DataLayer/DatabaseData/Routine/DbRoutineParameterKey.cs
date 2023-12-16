@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Schema;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,61 +7,42 @@ using System.Threading.Tasks;
 namespace DataDictionary.DataLayer.DatabaseData.Routine
 {
     /// <summary>
-    /// Interface for the Database Routine Parameter Key
+    /// Interface for the Database Routine Parameter Key.
     /// </summary>
-    public interface IDbRoutineParameterKey : IKey, IDbRoutineKey
+    public interface IDbRoutineParameterKey : IKey
     {
         /// <summary>
-        /// Name of the Database Parameter
+        /// Application ID for the Routine Parameter.
         /// </summary>
-        String? ParameterName { get; }
+        Guid? ParameterId { get; }
     }
 
     /// <summary>
-    /// Implementation for Database Routine Parameter Key
+    /// Implementation for the Database Routine Parameter Key.
     /// </summary>
-    public class DbRoutineParameterKey : DbRoutineKey, IDbRoutineParameterKey, IKeyComparable<IDbRoutineParameterKey>
+    public class DbRoutineParameterKey : IDbRoutineParameterKey, IKeyEquality<IDbRoutineParameterKey>
     {
         /// <inheritdoc/>
-        public String ParameterName { get; set; } = string.Empty;
+        public Guid? ParameterId { get; init; } = Guid.Empty;
 
         /// <summary>
-        /// Constructor for Database Routine Parameter Key
+        /// Constructor for the RoutineParameter Key.
         /// </summary>
         /// <param name="source"></param>
-        public DbRoutineParameterKey(IDbRoutineParameterKey source) : base(source)
+        public DbRoutineParameterKey(IDbRoutineParameterKey source) : base()
         {
-            if (source.ParameterName is string) { ParameterName = source.ParameterName; }
-            else { ParameterName = string.Empty; }
+            if (source.ParameterId is Guid value) { ParameterId = value; }
+            else { ParameterId = Guid.Empty; }
         }
 
-        #region IEquatable, IComparable
+        #region IEquatable
         /// <inheritdoc/>
-        public bool Equals(IDbRoutineParameterKey? other)
-        {
-            return 
-                other is IDbRoutineKey &&
-                new DbRoutineKey(this).Equals(other) &&
-                !string.IsNullOrEmpty(ParameterName) &&
-                !string.IsNullOrEmpty(other.ParameterName) &&
-                ParameterName.Equals(other.ParameterName, KeyExtension.CompareString);
-        }
+        public virtual bool Equals(IDbRoutineParameterKey? other)
+        { return other is IDbRoutineParameterKey && EqualityComparer<Guid?>.Default.Equals(ParameterId, other.ParameterId); }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj)
-        { return obj is IDbRoutineParameterKey value && Equals(new DbRoutineParameterKey(value)); }
-
-        /// <inheritdoc/>
-        public int CompareTo(IDbRoutineParameterKey? other)
-        {
-            if (other is null) { return 1; }
-            else if (new DbRoutineKey(this).CompareTo(other) is int value && value != 0) { return value; }
-            else { return string.Compare(ParameterName, other.ParameterName, true); }
-        }
-
-        /// <inheritdoc/>
-        public override int CompareTo(object? obj)
-        { if (obj is IDbRoutineParameterKey value) { return CompareTo(new DbRoutineParameterKey(value)); } else { return 1; } }
+        public override bool Equals(object? other)
+        { return other is IDbRoutineParameterKey value && Equals(new DbRoutineParameterKey(value)); }
 
         /// <inheritdoc/>
         public static bool operator ==(DbRoutineParameterKey left, DbRoutineParameterKey right)
@@ -73,33 +53,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(DbRoutineParameterKey left, DbRoutineParameterKey right)
-        { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
-
-        /// <inheritdoc/>
-        public static bool operator <=(DbRoutineParameterKey left, DbRoutineParameterKey right)
-        { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
-
-        /// <inheritdoc/>
-        public static bool operator >(DbRoutineParameterKey left, DbRoutineParameterKey right)
-        { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
-
-        /// <inheritdoc/>
-        public static bool operator >=(DbRoutineParameterKey left, DbRoutineParameterKey right)
-        { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
-
-        /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(base.GetHashCode(), ParameterName.GetHashCode(KeyExtension.CompareString)); }
+        { return HashCode.Combine(ParameterId); }
         #endregion
-
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            if (ParameterName is string)
-            { return string.Format("{0}.{1}", base.ToString(), ParameterName); }
-            else { return string.Empty; }
-        }
-
     }
 }

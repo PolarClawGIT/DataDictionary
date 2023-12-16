@@ -10,6 +10,7 @@ using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -49,7 +50,7 @@ namespace DataDictionary.Main
             (this as IApplicationDataBind).IsLocked = true;
 
             // Setup Images for Tree Control
-            SetImages(dataSourceNavigation, dbDataImageItems.Values);
+            dataSourceNavigation.ImageList = ModelScopeExtension.ToImageList();
             SetImages(domainModelNavigation, domainModelImageItems.Values);
 
             // Setup Tabs
@@ -341,5 +342,8 @@ namespace DataDictionary.Main
 
         private void viewLibraryMemberCommand_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Class), Program.Data.LibraryMembers); }
+
+        private void browseScopeCommand_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Application.Scope()); }
     }
 }

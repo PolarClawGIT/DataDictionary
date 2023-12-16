@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.LibraryData.Source;
 using Toolbox.BindingTable;
 
@@ -14,33 +15,13 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     /// <summary>
     /// Interface for the Library Member Item
     /// </summary>
-    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibrarySourceKeyUnique, IDataItem
+    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, IDbScopeType, IDataItem
     {
-        /// <summary>
-        /// Name of the Member.
-        /// </summary>
-        string? MemberName { get; }
-
-        /// <summary>
-        /// NameSpace that the Member is within
-        /// </summary>
-        string? NameSpace { get; }
-
-        /// <summary>
-        /// Type of Member, such as the name of the Class, Enum, Method, Property, ...
-        /// </summary>
-        string? MemberType { get; }
-
-        /// <summary>
-        /// The Member Type converted to the Enum that represent the same type.
-        /// </summary>
-        LibraryMemberType ObjectType { get; }
-
         /// <summary>
         /// Data for the Member.
         /// This is expected to be a XML fragment when generated from Visual studio Document.
         /// </summary>
-        string? MemberData { get; }
+        string? MemberData { get; }   
     }
 
     /// <summary>
@@ -56,7 +37,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         public Guid? MemberId { get { return GetValue<Guid>("MemberId"); } set { SetValue("MemberId", value); } }
 
         /// <inheritdoc/>
-        public Guid? ParentMemberId { get { return GetValue<Guid>("ParentMemberId"); } set { SetValue("ParentMemberId", value); } }
+        public Guid? MemberParentId { get { return GetValue<Guid>("MemberParentId"); } set { SetValue("MemberParentId", value); } }
 
         /// <inheritdoc/>
         public string? AssemblyName { get { return GetValue("AssemblyName"); } set { SetValue("AssemblyName", value); } }
@@ -68,13 +49,10 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         public string? MemberName { get { return GetValue("MemberName"); } set { SetValue("MemberName", value); } }
 
         /// <inheritdoc/>
-        public string? MemberType { get { return GetValue("MemberType"); } set { SetValue("MemberType", value); } }
+        public string? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }
 
         /// <inheritdoc/>
         public string? MemberData { get { return GetValue("MemberData"); } set { SetValue("MemberData", value); } }
-
-        /// <inheritdoc/>
-        public LibraryMemberType ObjectType { get { return this.MemberItemType().type; } }
 
         /// <summary>
         /// Constructor for LibraryMemberItem
@@ -86,10 +64,11 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         {
             new DataColumn("LibraryId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("MemberId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("ParentMemberId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn("MemberParentId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("AssemblyName", typeof(string)){ AllowDBNull = false},
             new DataColumn("NameSpace", typeof(string)){ AllowDBNull = true},
             new DataColumn("MemberName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("MemberType", typeof(string)){ AllowDBNull = true},
             new DataColumn("MemberData", typeof(string)){ AllowDBNull = true},
         };
@@ -114,85 +93,5 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         { if (MemberName is not null) { return MemberName; } else { return string.Empty; } }
     }
 
-    /// <summary>
-    /// List of Member Types
-    /// </summary>
-    public enum LibraryMemberType
-    {
-        /// <summary>
-        /// Unknown
-        /// </summary>
-        NULL,
-
-        /// <summary>
-        /// .Net NameSpace
-        /// </summary>
-        NameSpace,
-
-        /// <summary>
-        /// A type is a class, interface, struct, enum, or delegate.
-        /// </summary>
-        Type,
-
-        /// <summary>
-        /// A field.
-        /// </summary>
-        Field,
-
-        /// <summary>
-        /// A property. Includes indexers or other indexed properties.
-        /// </summary>
-        Property,
-
-        /// <summary>
-        /// A Method/Function. Includes special methods, such as constructors and operators.
-        /// </summary>
-        Method,
-
-        /// <summary>
-        /// An Event
-        /// </summary>
-        Event,
-
-        /// <summary>
-        /// An Error occurred. The rest of the string provides information about the error. 
-        /// </summary>
-        Error,
-
-        /// <summary>
-        /// A Parameter of a Method/Function.
-        /// </summary>
-        Parameter
-    }
-
-    /// <summary>
-    /// Extension for the LibraryMember
-    /// </summary>
-    public static class LibraryMemberExtension
-    {
-        static Dictionary<LibraryMemberType, (string code, string name)> memberTypeCrossRefrence = new Dictionary<LibraryMemberType, (string code, string name)>
-        {
-            { LibraryMemberType.NULL,      (string.Empty,string.Empty) },
-            { LibraryMemberType.NameSpace, ("N","NameSpace") },
-            { LibraryMemberType.Type,      ("T","Type") },
-            { LibraryMemberType.Field,     ("F","Field") },
-            { LibraryMemberType.Property,  ("P","Property") },
-            { LibraryMemberType.Method,    ("M","Method") },
-            { LibraryMemberType.Event,     ("E","Event") },
-            { LibraryMemberType.Error,     ("!","Error") },
-            { LibraryMemberType.Parameter, ("Parameter","Parameter") },
-        };
-
-        /// <summary>
-        /// Given the LibraryMemberItem, return the member type enum.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static (LibraryMemberType type, string code, string name) MemberItemType(this LibraryMemberItem value)
-        {
-            if (memberTypeCrossRefrence.FirstOrDefault(w => value.MemberType == w.Value.code || value.MemberType == w.Value.name) is KeyValuePair<LibraryMemberType, (string code, string name)> result)
-            { return (result.Key, result.Value.code, result.Value.name); }
-            else { return (LibraryMemberType.NULL, memberTypeCrossRefrence[LibraryMemberType.NULL].code, memberTypeCrossRefrence[LibraryMemberType.NULL].name); }
-        }
-    }
+    
 }

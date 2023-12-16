@@ -65,22 +65,20 @@
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\Sequence" />
     <Folder Include="App_DataDictionary\User Defined Types\" />
-    <Folder Include="App_DataDictionary\Unit Test scripts" />
     <Folder Include="dbo\Views" />
     <Folder Include="App_DataDictionary\Views" />
+    <Folder Include="App_DataDictionary\Functions\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
     <None Include="dbo\Extended Property query.sql" />
     <None Include="App_DataDictionary\ExtendedProperty Data.sql" />
-    <None Include="App_DataDictionary\Unit Test scripts\DomainAttribute tests.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Security\App_DataDictionary.sql" />
     <Build Include="Security\Permissions.sql" />
     <Build Include="Security\History_DataDictionary.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttribute.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainAttributeAlias.sql" />
     <Build Include="App_DataDictionary\Tables\ApplicationProperty.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttributeProperty.sql" />
     <Build Include="App_DataDictionary\Tables\SecurityPrinciple.sql" />
@@ -89,7 +87,6 @@
     <Build Include="App_DataDictionary\Tables\Model.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntity.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntityProperty.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainEntityAlias.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseTable.sql" />
     <Build Include="App_DataDictionary\Tables\ModelAttribute.sql" />
     <Build Include="App_DataDictionary\Tables\ModelEntity.sql" />
@@ -105,7 +102,6 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetModel.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttribute.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procDeleteDomainAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttributeAlias.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAttributeAlias.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAttributeProperty.sql" />
@@ -131,7 +127,7 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseExtendedProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procDeleteModel.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeApplicationModel.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeModel.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseConstraint.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseConstraintColumn.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseRoutine.sql" />
@@ -140,7 +136,6 @@
     <Build Include="App_DataDictionary\Tables\DatabaseDomain.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationProperty.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeApplicationProperty.sql" />
-    <Build Include="App_DataDictionary\Tables\ApplicationPropertyScope.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseDomain.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraint.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraintColumn.sql" />
@@ -161,11 +156,9 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseRoutineDependency.sql" />
     <Build Include="App_DataDictionary\Tables\ModelProperty.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseCatalogObject.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procDeleteDatabaseCatalogObject.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeTitle.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDescription.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationProperty.sql" />
-    <Build Include="App_DataDictionary\Views\DomainEntityAttribute.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainEntityProperty.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainEntityAlias.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainEntity.sql" />
@@ -180,7 +173,6 @@
     <Build Include="App_DataDictionary\Tables\LibraryMember.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeLibrarySource.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeLibraryMember.sql" />
-    <Build Include="App_DataDictionary\Tables\LibraryNameSpace.sql" />
     <Build Include="App_DataDictionary\Tables\ModelLibrary.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetLibrarySource.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetLibraryMember.sql" />
@@ -196,15 +188,35 @@
     <Build Include="App_DataDictionary\Views\ModelAttribute_AK.sql" />
     <Build Include="App_DataDictionary\Views\ModelAssembly_AK.sql" />
     <Build Include="App_DataDictionary\Tables\DomainProcess.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainProcessAlias.sql" />
     <Build Include="App_DataDictionary\Tables\DomainProcessProperty.sql" />
     <Build Include="App_DataDictionary\Tables\DomainProcessDependency.sql" />
-    <Build Include="App_DataDictionary\Views\ModelEntityAlias_AK.sql" />
-    <Build Include="App_DataDictionary\Views\ModelAttributeAlias_AK.sql" />
-    <Build Include="App_DataDictionary\Views\DomainProcessAttribute.sql" />
-    <Build Include="App_DataDictionary\Views\DomainProcessEntity.sql" />
     <Build Include="App_DataDictionary\Tables\ModelProcess.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeNameSpaceElement.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeAliasElement.sql" />
+    <Build Include="App_DataDictionary\Tables\ApplicationScope.sql" />
+    <Build Include="App_DataDictionary\Functions\funcSplitAliasName.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseSchema_AK.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseTable_AK.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseRoutine_AK.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeAliasName.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeScopeName.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseTableColumn_AK.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseRoutineParameter_AK.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseCatalog_AK.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseDomain_AK.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseConstraint_AK.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseConstraintColumn_AK.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeApplicationScope.sql" />
+    <Build Include="App_DataDictionary\Functions\funcGetAliasName.sql" />
+    <Build Include="App_DataDictionary\Functions\funcGetScopeName.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainSource.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainAlias.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainAliasItem.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeScopeElement.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationScope.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procInsertAlias.sql" />
+    <None Include="App_DataDictionary\ApplicationScope Data.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationScope.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

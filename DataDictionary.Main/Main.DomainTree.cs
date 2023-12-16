@@ -31,6 +31,15 @@ namespace DataDictionary.Main
             {domainModelImageIndex.Alias,        ("Alias",       Resources.Synonym) },
         };
 
+        void SetImages(TreeView tree, IEnumerable<(String imageKey, Image image)> images)
+        {
+            if (tree.ImageList is null)
+            { tree.ImageList = new ImageList(); }
+
+            foreach ((string imageKey, Image image) image in images.Where(w => !tree.ImageList.Images.ContainsKey(w.imageKey)))
+            { tree.ImageList.Images.Add(image.imageKey, image.image); }
+        }
+
         List<Object> expandedDomanNode = new List<object>();
         void ClearDomainModelTree()
         {
@@ -199,11 +208,6 @@ namespace DataDictionary.Main
 
                 CreateTreeNode(entityNode.Nodes, domainModelImageIndex.Property, propertyTitle, propertyItem);
             }
-
-            List<DomainEntityAliasItem> alias = Program.Data.DomainEntityAliases.Where(w => key.Equals(w)).ToList();
-            foreach (DomainEntityAliasItem aliasItem in alias)
-            { CreateTreeNode(entityNode.Nodes, domainModelImageIndex.Alias, aliasItem.ToString()); }
-
 
             List<DomainAttributeItem> attributes = Program.Data.GetAttributes(key).ToList();
             foreach (DomainAttributeItem item in attributes)

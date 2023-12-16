@@ -1,6 +1,10 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.DataLayer.ApplicationData.Property;
+using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Messages;
@@ -22,7 +26,14 @@ namespace DataDictionary.Main.Forms.Domain
         {
             InitializeComponent();
             this.Icon = Resources.Icon_Attribute;
+
+            newItemCommand.Enabled = true;
+            newItemCommand.Image = Resources.NewProperty;
+            newItemCommand.ToolTipText = "add Property";
+            newItemCommand.Click += NewItemCommand_Click;
         }
+
+
 
         private void DomainAttribute_Load(object sender, EventArgs e)
         {
@@ -41,7 +52,7 @@ namespace DataDictionary.Main.Forms.Domain
 
                 attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), data, nameof(data.AttributeTitle)));
                 attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), data, nameof(data.AttributeDescription)));
-                
+
                 SubjectAreaNameItem.Load(subjectAreaData);
                 subjectAreaData.ReadOnly = (subjectAreaData.DataSource is IList subjectAreaItems && subjectAreaItems.Count == 0);
                 subjectAreaData.DataBindings.Add(new Binding(nameof(subjectAreaData.SelectedValue), data, nameof(data.SubjectAreaId), true, DataSourceUpdateMode.OnValidation, Guid.Empty));
@@ -63,34 +74,13 @@ namespace DataDictionary.Main.Forms.Domain
                 propertyValueData.Enabled = false;
                 propertyDefinitionData.Enabled = false;
 
-                bindingDatabaseAlias.DataSource =
-                    new BindingView<DomainAttributeAliasItem>(
-                        Program.Data.DomainAttributeAliases,
-                        w => DataKey.Equals(w));
-
-                attributeAlaisData.AutoGenerateColumns = false;
-                attributeAlaisData.DataSource = bindingDatabaseAlias;
-
-                DomainAttributeAliasItem aliasMembers = new DomainAttributeAliasItem();
-                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.DatabaseName)));
-                schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.SchemaName)));
-                objectNameData.DataBindings.Add(new Binding(nameof(objectNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.ObjectName)));
-                elementNameData.DataBindings.Add(new Binding(nameof(elementNameData.Text), bindingDatabaseAlias, nameof(aliasMembers.ElementName)));
-
-                if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
-                {
-                    CatalogNameItem.Load(catalogNameData);
-                    SchemaNameItem.Load(schemaNameData, aliasItem);
-                    ObjectNameItem.Load(objectNameData, aliasItem);
-                    ElementNameItem.Load(elementNameData, aliasItem);
-                }
-
-                entityData.AutoGenerateColumns = false;
-                entityData.DataSource = Program.Data.GetEntities(data).OrderBy(o => o.EntityTitle).ToList();
-
                 if (bindingProperties.Current is DomainAttributePropertyItem propItem
                     && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)
                 { BindChoiceData(property, propItem); }
+
+                bindingAlias.DataSource = new BindingView<DomainAttributeAliasItem>(Program.Data.DomainAttributeAliases, w => DataKey.Equals(w));
+                entityAliasData.AutoGenerateColumns = false;
+                entityAliasData.DataSource = bindingAlias;
 
                 return true;
             }
@@ -106,13 +96,6 @@ namespace DataDictionary.Main.Forms.Domain
             propertyTypeData.DataBindings.Clear();
             propertyValueData.DataBindings.Clear();
             propertyDefinitionData.DataBindings.Clear();
-
-            attributeAlaisData.DataSource = null;
-            catalogNameData.DataBindings.Clear();
-            schemaNameData.DataBindings.Clear();
-            objectNameData.DataBindings.Clear();
-
-            entityData.DataSource = null;
         }
 
         void BindChoiceData(PropertyItem property, DomainAttributePropertyItem data)
@@ -145,70 +128,6 @@ namespace DataDictionary.Main.Forms.Domain
         { (this as IApplicationDataBind).BindData(); }
         #endregion
 
-        private void catalogNameData_Validating(object sender, CancelEventArgs e)
-        {
-            if (String.IsNullOrEmpty(catalogNameData.Text))
-            { errorProvider.SetError(catalogNameData.ErrorControl, "Catalog Name is required"); }
-            else { errorProvider.SetError(catalogNameData.ErrorControl, String.Empty); }
-        }
-
-        private void catalogNameData_Validated(object sender, EventArgs e)
-        {
-            if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
-            {
-                SchemaNameItem.Load(schemaNameData, aliasItem);
-                ObjectNameItem.Load(objectNameData, aliasItem);
-                ElementNameItem.Load(elementNameData, aliasItem);
-            }
-        }
-
-        private void schemaNameData_Validating(object sender, CancelEventArgs e)
-        {
-            if (String.IsNullOrEmpty(schemaNameData.Text))
-            { errorProvider.SetError(schemaNameData.ErrorControl, "Schema Name is required"); }
-            else
-            { errorProvider.SetError(schemaNameData.ErrorControl, String.Empty); }
-        }
-
-        private void schemaNameData_Validated(object sender, EventArgs e)
-        {
-            if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
-            {
-                ObjectNameItem.Load(objectNameData, aliasItem);
-                ElementNameItem.Load(elementNameData, aliasItem);
-            }
-        }
-
-        private void objectNameData_Validating(object sender, CancelEventArgs e)
-        {
-            if (String.IsNullOrEmpty(objectNameData.Text))
-            { errorProvider.SetError(objectNameData.ErrorControl, "Object Name is required"); }
-            else
-            { errorProvider.SetError(objectNameData.ErrorControl, String.Empty); }
-        }
-
-        private void objectNameData_Validated(object sender, EventArgs e)
-        {
-            if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
-            {
-                ElementNameItem.Load(elementNameData, aliasItem);
-            }
-        }
-
-        private void elementNameData_Validating(object sender, CancelEventArgs e)
-        {
-            if (String.IsNullOrEmpty(elementNameData.Text))
-            { errorProvider.SetError(elementNameData.ErrorControl, "Element Name is required"); }
-            else
-            { errorProvider.SetError(elementNameData.ErrorControl, String.Empty); }
-        }
-
-        private void elementNameData_Validated(object sender, EventArgs e)
-        {
-            if (bindingDatabaseAlias.Current is DomainAttributeAliasItem aliasItem)
-            { }
-        }
-
         private void bindingProperties_AddingNew(object sender, AddingNewEventArgs e)
         {
             DomainAttributePropertyItem newItem = new DomainAttributePropertyItem(DataKey);
@@ -222,12 +141,6 @@ namespace DataDictionary.Main.Forms.Domain
             e.NewObject = newItem;
         }
 
-        private void bindingDatabaseAlias_AddingNew(object sender, AddingNewEventArgs e)
-        {
-            DomainAttributeAliasItem newItem = new DomainAttributeAliasItem(DataKey);
-
-            e.NewObject = newItem;
-        }
 
         private void BindingComplete(object sender, BindingCompleteEventArgs e)
         { // Helps with debugging code.
@@ -243,15 +156,6 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 propertyNavigation.NotifyCurrentCellDirty(true); // Marks the row as dirty so when end-edit the row is retained.
                 propertyNavigation.EndEdit(); // Completes the edit so a binding error does not occur when focus changes.
-            }
-        }
-
-        private void attributeAlaisData_Leave(object sender, EventArgs e)
-        {
-            if (attributeAlaisData.CurrentRow is not null && attributeAlaisData.CurrentRow.IsNewRow)
-            {
-                attributeAlaisData.NotifyCurrentCellDirty(true); // Marks the row as dirty so when end-edit the row is retained.
-                attributeAlaisData.EndEdit(); // Completes the edit so a binding error does not occur when focus changes.
             }
         }
 
@@ -337,6 +241,56 @@ namespace DataDictionary.Main.Forms.Domain
             { errorProvider.SetError(attributeTitleData.ErrorControl, "Attribute Title is required"); }
             else
             { errorProvider.SetError(attributeTitleData.ErrorControl, String.Empty); }
+        }
+
+        private void NewItemCommand_Click(object? sender, EventArgs e)
+        {
+            if (attributeTabLayout.SelectedIndex == 0) { bindingProperties.AddNew(); }
+            else if (attributeTabLayout.SelectedIndex == 1) { bindingAlias.AddNew(); }
+            else { }
+        }
+
+        private void bindingAlias_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (modelAliasNavigation.SelectedAlias is ModelAliasItem selected)
+            {
+                DomainAttributeAliasItem newItem = new DomainAttributeAliasItem(DataKey);
+                newItem.AliasName = modelAliasNavigation.SelectedAlias.AliasName;
+                newItem.ScopeName = modelAliasNavigation.SelectedAlias.ScopeId.ToScopeName();
+
+                if (Program.Data.ModelAlias.ContainsKey(new ModelAliasKey(selected)))
+                {
+                    ModelAliasItem item = Program.Data.ModelAlias[new ModelAliasKey(selected)];
+
+                    if (item.Source is IDbCatalogKey catalogKey && Program.Data.DbCatalogs.FirstOrDefault(w => new DbCatalogKey(catalogKey).Equals(w)) is IDbCatalogItem catalogItem)
+                    { newItem.SourceName = catalogItem.ToAliasName(); }
+                    else if (item.Source is ILibrarySourceKey libraryKey && Program.Data.LibrarySources.FirstOrDefault(w => new LibrarySourceKey(libraryKey).Equals(w)) is ILibrarySourceItem librarySource)
+                    { newItem.SourceName = librarySource.ToAliasName(); }
+                }
+
+                e.NewObject = newItem;
+            }
+        }
+
+        private void attributeTabLayout_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (attributeTabLayout.SelectedIndex == 0)
+            {
+                newItemCommand.Enabled = true;
+                newItemCommand.Image = Resources.NewProperty;
+                newItemCommand.ToolTipText = "add Property";
+            }
+            else if (attributeTabLayout.SelectedIndex == 1)
+            {
+                newItemCommand.Enabled = true;
+                newItemCommand.Image = Resources.NewSynonym;
+                newItemCommand.ToolTipText = "add Alias";
+            }
+            else
+            {
+                newItemCommand.Enabled = false;
+                newItemCommand.Image = Resources.NewDocument;
+            }
         }
     }
 }

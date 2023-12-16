@@ -49,6 +49,9 @@ namespace DataDictionary.Main.Forms.Database
             public bool IsSystem
             { get { return data.IsSystem; } }
 
+            public string? ScopeName
+            { get { return data.ScopeName; } }
+
             public CatalogManagerItem(DbCatalogItem source) : base()
             {
                 data = source;

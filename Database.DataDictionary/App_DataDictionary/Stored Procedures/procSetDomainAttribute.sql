@@ -24,8 +24,7 @@ Begin Try
 	Select	IsNull(D.[AttributeId],NewId()) As [AttributeId],
 			D.[SubjectAreaId],
 			NullIf(Trim(D.[AttributeTitle]),'') As [AttributeTitle],
-			NullIf(Trim(D.[AttributeDescription]),'') As [AttributeDescription],
-			D.[SysStart]
+			NullIf(Trim(D.[AttributeDescription]),'') As [AttributeDescription]
 	From	@Data D
 
 	-- Validation
@@ -38,14 +37,6 @@ Begin Try
 		Group By [AttributeId]
 		Having Count(*) > 1)
 	Throw 50000, '[AttributeId] cannot be duplicate', 3;
-
-	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
-		Select	D.[AttributeId]
-		From	@Values D
-				Inner Join [App_DataDictionary].[DomainAttribute] A
-				On D.[AttributeId] = A.[AttributeId]
-		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
-	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 4;
 
 	-- Apply Changes
 	-- Note: Merge statement can throw errors with FK and UK constraints.

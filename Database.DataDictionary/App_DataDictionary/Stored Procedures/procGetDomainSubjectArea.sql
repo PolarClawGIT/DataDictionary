@@ -9,8 +9,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Select	D.[SubjectAreaId],
 		D.[SubjectAreaTitle],
-		D.[SubjectAreaDescription],
-		D.[SysStart]
+		D.[SubjectAreaDescription]
 From	[App_DataDictionary].[DomainSubjectArea] D
 		Left Join [App_DataDictionary].[ModelSubjectArea] A
 		On	D.[SubjectAreaId] = A.[SubjectAreaId]

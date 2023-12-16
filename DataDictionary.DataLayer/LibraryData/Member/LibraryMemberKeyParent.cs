@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// <summary>
         /// Parent Member Id for the Library Member
         /// </summary>
-        public Guid? ParentMemberId { get; }
+        public Guid? MemberParentId { get; }
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     public class LibraryMemberKeyParent : LibrarySourceKey, ILibraryMemberKeyParent, IKeyEquality<ILibraryMemberKeyParent>, IKeyEquality<ILibraryMemberKey>
     {
         /// <inheritdoc/>
-        public Guid? ParentMemberId { get; init; } = Guid.Empty;
+        public Guid? MemberParentId { get; init; } = Guid.Empty;
 
         /// <summary>
         /// Constructor for the Library Member Key
@@ -32,8 +32,8 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// <param name="source"></param>
         public LibraryMemberKeyParent(ILibraryMemberKeyParent source) : base(source)
         {
-            if (source.ParentMemberId is Guid) { ParentMemberId = source.ParentMemberId; }
-            else { ParentMemberId = Guid.Empty; }
+            if (source.MemberParentId is Guid) { MemberParentId = source.MemberParentId; }
+            else { MemberParentId = Guid.Empty; }
         }
 
         #region IEquatable
@@ -42,7 +42,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         {
             return other is ILibraryMemberKey &&
                 new LibrarySourceKey(this).Equals(other) &&
-                EqualityComparer<Guid?>.Default.Equals(ParentMemberId, other.ParentMemberId);
+                EqualityComparer<Guid?>.Default.Equals(MemberParentId, other.MemberParentId);
         }
 
         /// <inheritdoc/>
@@ -50,7 +50,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         {
             return other is ILibraryMemberKey &&
                 new LibrarySourceKey(this).Equals(other) &&
-                EqualityComparer<Guid?>.Default.Equals(ParentMemberId, other.MemberId);
+                EqualityComparer<Guid?>.Default.Equals(MemberParentId, other.MemberId);
         }
 
         /// <inheritdoc/>
@@ -67,7 +67,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(LibraryId, ParentMemberId); }
+        { return HashCode.Combine(LibraryId, MemberParentId); }
         #endregion
 
     }

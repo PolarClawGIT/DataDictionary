@@ -21,8 +21,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     public abstract class DbRoutineCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKey>, IRemoveData<IDbRoutineKey>
-        where TItem : BindingTableRow, IDbRoutineItem, IDbCatalogKey, IDbSchemaKey, IDbRoutineKey, new()
+        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKeyName>, IRemoveData<IDbRoutineKeyName>
+        where TItem : BindingTableRow, IDbRoutineItem, IDbCatalogKey, IDbSchemaKeyName, IDbRoutineKeyName, new()
     {
         /// <inheritdoc/>
         public Command SchemaCommand(IConnection connection, IDbCatalogKey catalogKey)
@@ -84,18 +84,18 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbSchemaKey schemaItem)
+        public void Remove(IDbSchemaKeyName schemaItem)
         {
-            DbSchemaKey key = new DbSchemaKey(schemaItem);
+            DbSchemaKeyName key = new DbSchemaKeyName(schemaItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbRoutineKey routineItem)
+        public void Remove(IDbRoutineKeyName routineItem)
         {
-            DbRoutineKey key = new DbRoutineKey(routineItem);
+            DbRoutineKeyName key = new DbRoutineKeyName(routineItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

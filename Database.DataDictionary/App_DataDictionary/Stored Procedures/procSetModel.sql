@@ -23,8 +23,7 @@ Begin Try
 	Insert Into @Values
 	Select	V.[ModelId],
 			NullIf(Trim([ModelTitle]),'') As [ModelTitle],
-			NullIf(Trim([ModelDescription]),'') As [ModelDescription],
-			[SysStart]
+			NullIf(Trim([ModelDescription]),'') As [ModelDescription]
 	From	@Data D
 			Outer Apply (Select	IsNull([ModelId],NewId()) As [ModelId]) V
 	Where	(@ModelId is Null or @ModelId = V.[ModelId])
@@ -36,14 +35,6 @@ Begin Try
 		Group By [ModelTitle]
 		Having	Count(*) > 1)
 	Throw 50000, '[ModelTitle] cannot be duplicate', 2;
-
-	If Exists ( -- Set [SysStart] to Null in parameter data to bypass this check
-		Select	D.[ModelId]
-		From	@Values D
-				Inner Join [App_DataDictionary].[Model] A
-				On D.[ModelId] = A.[ModelId]
-		Where	IsNull(D.[SysStart],A.[SysStart]) <> A.[SysStart])
-	Throw 50000, '[SysStart] indicates that the Database Row may have changed since the source Row was originally extracted', 4;
 
 	-- Apply Changes
 	With [Delta] As (

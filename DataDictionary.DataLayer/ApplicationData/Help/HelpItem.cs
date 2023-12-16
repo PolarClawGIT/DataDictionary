@@ -65,7 +65,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
             new DataColumn("HelpSubject", typeof(string)){ AllowDBNull = false},
             new DataColumn("HelpText", typeof(string)){ AllowDBNull = false},
             new DataColumn("NameSpace", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>
