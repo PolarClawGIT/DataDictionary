@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
     /// <summary>
     /// Interface for the Library Source Item
     /// </summary>
-    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyName, IDbScopeType, IDataItem
+    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyName, IScopeKeyName, IDataItem
     {
         /// <summary>
         /// Title for the Library

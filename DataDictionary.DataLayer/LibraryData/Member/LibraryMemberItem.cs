@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.LibraryData.Source;
 using Toolbox.BindingTable;
@@ -15,7 +16,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     /// <summary>
     /// Interface for the Library Member Item
     /// </summary>
-    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, IDbScopeType, IDataItem
+    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, IScopeKeyName, IDataItem
     {
         /// <summary>
         /// Data for the Member.

@@ -23,31 +23,31 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 
         protected AliasNameItem() : base() { }
 
-        public static void LoadEntity(ComboBoxData control, IAliasKeySource source, IDbScopeType scope)
+        public static void LoadEntity(ComboBoxData control, IAliasKeySource source, ScopeType scope)
         {
             BindingList<IAliasKeyName> list = new BindingList<IAliasKeyName>();
             list.Add(Empty);
 
             var x = control.SelectedItem;
             var y = control.SelectedValue;
-            
-            if(Program.Data.DbCatalogs.FirstOrDefault(w => new AliasKeySource(w).Equals(source)) is DbCatalogItem catalogItem)
+
+            if (Program.Data.DbCatalogs.FirstOrDefault(w => new AliasKeySource(w).Equals(source)) is DbCatalogItem catalogItem)
             {
                 DbCatalogKey key = new DbCatalogKey(catalogItem);
 
                 list.AddRange(Program.Data.DbTables.Where(
-                w => w.ToScopeType() == scope.ToScopeType() &&
+                w => new ScopeKey(w).Equals(scope) &&
                     key.Equals(w)).
                     Select(s => new AliasNameItem() { AliasName = s.ToAliasName() }).
                     OrderBy(o => o.AliasName));
             }
 
-            if(Program.Data.LibrarySources.FirstOrDefault(w => new AliasKeySource(w).Equals(source)) is LibrarySourceItem libraryItem)
+            if (Program.Data.LibrarySources.FirstOrDefault(w => new AliasKeySource(w).Equals(source)) is LibrarySourceItem libraryItem)
             {
                 LibrarySourceKey key = new LibrarySourceKey(libraryItem);
 
                 list.AddRange(Program.Data.LibraryMembers.Where(
-                w => w.ToScopeType() == scope.ToScopeType() &&
+                w => new ScopeKey(w).Equals(scope) &&
                     key.Equals(w)).
                     Select(s => new AliasNameItem() { AliasName = new LibrarySourceKeyName(s).ToAliasName() }).
                     OrderBy(o => o.AliasName));
@@ -63,7 +63,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             if (selected is not null) { control.SelectedItem = selected; }
         }
 
-        public static void LoadAttribute(ComboBoxData control, IAliasKeySource source, IDbScopeType scope)
+        public static void LoadAttribute(ComboBoxData control, IAliasKeySource source, ScopeType scope)
         {
             BindingList<IAliasKeyName> list = new BindingList<IAliasKeyName>();
             list.Add(Empty);
@@ -73,7 +73,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
                 DbCatalogKey key = new DbCatalogKey(catalogItem);
 
                 list.AddRange(Program.Data.DbTableColumns.Where(
-                w => w.ToScopeType() == scope.ToScopeType() &&
+                w => new ScopeKey(w).Equals(scope) &&
                     key.Equals(w)).
                     Select(s => new AliasNameItem() { AliasName = s.ToAliasName() }
                 ));
@@ -84,7 +84,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
                 LibrarySourceKey key = new LibrarySourceKey(libraryItem);
 
                 list.AddRange(Program.Data.LibraryMembers.Where(
-                w => w.ToScopeType() == scope.ToScopeType() &&
+                w => new ScopeKey(w).Equals(scope) &&
                     key.Equals(w)).
                     Select(s => new AliasNameItem() { AliasName = new LibraryMemberKeyName(s).ToAliasName() }
                 ));

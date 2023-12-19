@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Constraint Item.
     /// </summary>
-    public interface IDbConstraintItem : IDbConstraintKeyName, IDbConstraintKey, IDbCatalogKey,  IDbTableKeyName, IDbScopeType, IDataItem
+    public interface IDbConstraintItem : IDbConstraintKeyName, IDbConstraintKey, IDbCatalogKey,  IDbTableKeyName, IScopeKeyName, IDataItem
     {
         /// <summary>
         /// Type of the Database Constraint.
@@ -85,7 +85,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public virtual Command PropertyCommand(IConnection connection)
         {
             {
-                if (this.ToScopeType().TryScope() is IDbElementScopeKey scopeKey)
+                if (new ScopeKey(this).TryScope() is IDbElementScopeKey scopeKey)
                 {
                     return new DbExtendedPropertyGetCommand(connection)
                     {

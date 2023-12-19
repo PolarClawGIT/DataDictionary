@@ -25,7 +25,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for the Database Table Column
     /// </summary>
-    public interface IDbTableColumnItem : IDbTableColumnKeyName, IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbColumn, IDbScopeType, IDataItem
+    public interface IDbTableColumnItem : IDbTableColumnKeyName, IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbColumn, IScopeKeyName, IDataItem
     {
         /// <summary>
         /// Is the Column Nullable
@@ -209,7 +209,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            if (this.ToScopeType().TryScope() is IDbElementScopeKey scopeKey)
+            if (new ScopeKey(this).TryScope() is IDbElementScopeKey scopeKey)
             {
                 return new DbExtendedPropertyGetCommand(connection)
                 {

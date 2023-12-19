@@ -66,7 +66,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             List<String> parsed = AliasExtension.NameParts(source.AliasName);
             if (parsed.Count != 4) { return null; }
 
-            if (source.ToScopeType() is ScopeType.DatabaseSchemaTableColumn or ScopeType.DatabaseSchemaViewColumn)
+            if (new ScopeKey(source).ScopeId is ScopeType.DatabaseSchemaTableColumn or ScopeType.DatabaseSchemaViewColumn)
             {
                 return new DbTableColumnKeyName()
                 {

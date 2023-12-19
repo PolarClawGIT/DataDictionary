@@ -32,11 +32,11 @@ namespace DataDictionary.Main.Forms.Database
                 this.Text = DataKey.ToString();
                 DbRoutineParameterItem? firstParameter = Program.Data.DbRoutineParameters.OrderBy(o => o.OrdinalPosition).FirstOrDefault(w => DataKey.Equals(w));
 
-                if (data.ToScopeType() == ScopeType.DatabaseSchemaProcedure)
+                if (new ScopeKey(data).Equals(ScopeType.DatabaseSchemaProcedure))
                 { this.Icon = Resources.Icon_Procedure; }
-                else if (data.ToScopeType() == ScopeType.DatabaseSchemaFunction && firstParameter is DbRoutineParameterItem isScalar && isScalar.OrdinalPosition == 0)
+                else if (new ScopeKey(data).Equals(ScopeType.DatabaseSchemaFunction) && firstParameter is DbRoutineParameterItem isScalar && isScalar.OrdinalPosition == 0)
                 { this.Icon = Resources.Icon_ScalarFunction; }
-                else if (data.ToScopeType() == ScopeType.DatabaseSchemaFunction && firstParameter is DbRoutineParameterItem isTable && isTable.OrdinalPosition != 0)
+                else if (new ScopeKey(data).Equals(ScopeType.DatabaseSchemaFunction) && firstParameter is DbRoutineParameterItem isTable && isTable.OrdinalPosition != 0)
                 { this.Icon = Resources.Icon_TableFunction; }
 
                 catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.DatabaseName)));

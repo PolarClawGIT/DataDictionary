@@ -35,10 +35,20 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// Constructor for the Scope Unique Key.
         /// </summary>
         /// <param name="source"></param>
-        public ScopeKeyName(IScopeKeyName source) : base()
+        public ScopeKeyName(IScopeKeyName source) : this()
         {
             if (source.ScopeName is string) { ScopeName = source.ScopeName; }
             else { ScopeName = string.Empty; }
+        }
+
+        /// <summary>
+        /// Constructor for the Scope Unique Key
+        /// </summary>
+        /// <param name="source"></param>
+        public ScopeKeyName(IScopeKey source) : this()
+        {
+            ScopeKey key = new ScopeKey(source);
+            ScopeName = key.ToString();
         }
 
         #region IEquatable, IComparable

@@ -37,7 +37,7 @@ namespace DataDictionary.Main.Forms.Library
         {
             if (Program.Data.LibraryMembers.FirstOrDefault(w => DataKey.Equals(w)) is LibraryMemberItem memberItem)
             {
-                switch (memberItem.ToScopeType())
+                switch (new ScopeKey(memberItem).ScopeId)
                 {
                     case ScopeType.LibraryType:
                         this.Icon = Resources.Icon_Class;

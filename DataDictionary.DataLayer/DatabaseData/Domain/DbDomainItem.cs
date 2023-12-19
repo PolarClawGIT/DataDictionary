@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     /// <summary>
     /// Interface for the Database Domain Item.
     /// </summary>
-    public interface IDbDomainItem : IDbDomainKeyName, IDbDomainKey, IDbCatalogKey, IDbDomain, IDbScopeType, IDataItem
+    public interface IDbDomainItem : IDbDomainKeyName, IDbDomainKey, IDbCatalogKey, IDbDomain, IScopeKeyName, IDataItem
     {
         /// <summary>
         /// The Default value for the Domain
@@ -131,7 +131,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            if (this.ToScopeType().TryScope() is IDbObjectScopeKey scopeKey)
+            if (new ScopeKey(this).TryScope() is IDbObjectScopeKey scopeKey)
             {
                 return new DbExtendedPropertyGetCommand(connection)
                 {

@@ -107,8 +107,8 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// <returns></returns>
         public static IDbScopeKey? TryScope(this IScopeKeyName source)
         {
-            if (scopeCrossWalk.ContainsKey(source.ToScopeType()))
-            { return scopeCrossWalk[source.ToScopeType()]; }
+            if (scopeCrossWalk.ContainsKey(new ScopeKey(source).ScopeId))
+            { return scopeCrossWalk[new ScopeKey(source).ScopeId]; }
             else { return null; }
         }
     }

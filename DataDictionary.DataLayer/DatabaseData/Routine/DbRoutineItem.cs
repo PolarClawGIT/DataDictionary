@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for Database Routine (procedures and functions).
     /// </summary>
-    public interface IDbRoutineItem : IDbRoutineKeyName, IDbRoutineKey, IDbCatalogKey, IDbIsSystem, IDbScopeType, IDataItem
+    public interface IDbRoutineItem : IDbRoutineKeyName, IDbRoutineKey, IDbCatalogKey, IDbIsSystem, IScopeKeyName, IDataItem
     {
         /// <summary>
         /// Type of Routine (such as procedure or function)
@@ -104,7 +104,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            if (this.ToScopeType().TryScope() is IDbObjectScopeKey scopeKey)
+            if (new ScopeKey(this).TryScope() is IDbObjectScopeKey scopeKey)
             {
                 return new DbExtendedPropertyGetCommand(connection)
                 {

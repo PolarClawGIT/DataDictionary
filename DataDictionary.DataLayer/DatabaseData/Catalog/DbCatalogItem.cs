@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     /// <summary>
     /// Interface for the Database Catalog Item.
     /// </summary>
-    public interface IDbCatalogItem : IDbCatalogKeyName, IDbCatalogKey, IDbIsSystem, IDbScopeType, IDataItem
+    public interface IDbCatalogItem : IDbCatalogKeyName, IDbCatalogKey, IDbIsSystem, IScopeKeyName, IDataItem
     {
         /// <summary>
         /// Title given to the Catalog. Default is the Database Name.

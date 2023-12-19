@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for Database Column Item
     /// </summary>
-    public interface IDbTableItem : IDbTableKeyName, IDbTableKey, IDbCatalogKey, IDbIsSystem, IDbScopeType, IDataItem
+    public interface IDbTableItem : IDbTableKeyName, IDbTableKey, IDbCatalogKey, IDbIsSystem, IScopeKeyName, IDataItem
     {
         /// <summary>
         /// Type of Table Object (Table, View, ...)
@@ -83,7 +83,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            if (this.ToScopeType().TryScope() is IDbObjectScopeKey scopeKey)
+            if (new ScopeKey(this).TryScope() is IDbObjectScopeKey scopeKey)
             {
                 return new DbExtendedPropertyGetCommand(connection)
                 {

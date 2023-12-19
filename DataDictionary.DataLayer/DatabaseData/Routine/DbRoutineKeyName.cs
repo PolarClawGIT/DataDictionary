@@ -68,7 +68,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
             List<String> parsed = AliasExtension.NameParts(source.AliasName);
             if (parsed.Count != 3) { return null; }
 
-            if (source.ToScopeType() is ScopeType.DatabaseSchemaFunction or ScopeType.DatabaseSchemaProcedure)
+            if (new ScopeKey(source).ScopeId is ScopeType.DatabaseSchemaFunction or ScopeType.DatabaseSchemaProcedure)
             {
                 return new DbRoutineKeyName()
                 {

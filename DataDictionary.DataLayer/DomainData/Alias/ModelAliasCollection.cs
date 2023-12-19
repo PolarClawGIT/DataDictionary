@@ -91,7 +91,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 newAliasKey: (T) => new ModelAliasKey((IDbCatalogKey)data),
                 toAliasName: (T) => ((IDbCatalogKeyName)data).ToAliasName(),
                 toItemName: (T) => { return data.DatabaseName ?? String.Empty; },
-                toScopeType: (T) => data.ToScopeType());
+                toScopeType: (T) => new ScopeKey(data).ScopeId);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 newAliasKey: (T) => new ModelAliasKey((IDbSchemaKey)data),
                 toAliasName: (T) => ((IDbSchemaKeyName)data).ToAliasName(),
                 toItemName: (T) => { return data.SchemaName ?? String.Empty; },
-                toScopeType: (T) => data.ToScopeType());
+                toScopeType: (T) => new ScopeKey(data).ScopeId);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 newAliasKey: (T) => new ModelAliasKey((IDbTableKey)data),
                 toAliasName: (T) => ((IDbTableKeyName)data).ToAliasName(),
                 toItemName: (T) => { return data.TableName ?? String.Empty; },
-                toScopeType: (T) => data.ToScopeType());
+                toScopeType: (T) => new ScopeKey(data).ScopeId);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 newAliasKey: (T) => new ModelAliasKey((IDbTableColumnKey)data),
                 toAliasName: (T) => ((IDbTableColumnKeyName)data).ToAliasName(),
                 toItemName: (T) => { return data.ColumnName ?? String.Empty; },
-                toScopeType: (T) => data.ToScopeType());
+                toScopeType: (T) => new ScopeKey(data).ScopeId);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 newAliasKey: (T) => new ModelAliasKey((IDbRoutineKey)data),
                 toAliasName: (T) => ((IDbRoutineKeyName)data).ToAliasName(),
                 toItemName: (T) => { return data.RoutineName ?? String.Empty; },
-                toScopeType: (T) => data.ToScopeType());
+                toScopeType: (T) => new ScopeKey(data).ScopeId);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 newAliasKey: (T) => new ModelAliasKey((IDbRoutineParameterKey)data),
                 toAliasName: (T) => ((IDbRoutineParameterKeyName)data).ToAliasName(),
                 toItemName: (T) => { return data.ParameterName ?? String.Empty; },
-                toScopeType: (T) => data.ToScopeType());
+                toScopeType: (T) => new ScopeKey(data).ScopeId);
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 newAliasKey: (T) => new ModelAliasKey((IDbDomainKey)data),
                 toAliasName: (T) => ((IDbDomainKeyName)data).ToAliasName(),
                 toItemName: (T) => { return data.DomainName ?? String.Empty; },
-                toScopeType: (T) => data.ToScopeType());
+                toScopeType: (T) => new ScopeKey(data).ScopeId);
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 newAliasKey: (T) => new ModelAliasKey((IDbConstraintKey)data),
                 toAliasName: (T) => ((IDbConstraintKeyName)data).ToAliasName(),
                 toItemName: (T) => { return data.ConstraintName ?? String.Empty; },
-                toScopeType: (T) => data.ToScopeType());
+                toScopeType: (T) => new ScopeKey(data).ScopeId);
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 newAliasKey: (T) => new ModelAliasKey((ILibrarySourceKey)data),
                 toAliasName: (T) => ((ILibrarySourceKeyName)data).ToAliasName(),
                 toItemName: (T) => { return data.AssemblyName ?? String.Empty; },
-                toScopeType: (T) => data.ToScopeType());
+                toScopeType: (T) => new ScopeKey(data).ScopeId);
         }
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 newAliasKey: (T) => new ModelAliasKey((ILibraryMemberKey)data),
                 toAliasName: (T) => ((ILibraryMemberKeyName)data).ToAliasName(),
                 toItemName: (T) => { return data.MemberName ?? String.Empty; },
-                toScopeType: (T) => data.ToScopeType());
+                toScopeType: (T) => new ScopeKey(data).ScopeId);
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 newAliasKey: (T) => new ModelAliasKey((ILibraryMemberKey)data),
                 toAliasName: (T) => ((ILibraryMemberKeyName)data).ToAliasName(),
                 toItemName: (T) => { return data.MemberName ?? String.Empty; },
-                toScopeType: (T) => data.ToScopeType());
+                toScopeType: (T) => new ScopeKey(data).ScopeId);
         }
 
         /// <summary>
