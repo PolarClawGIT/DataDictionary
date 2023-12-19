@@ -255,7 +255,7 @@ namespace DataDictionary.BusinessLayer
                                             MemberParentId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
                                             AssemblyName = sourceItem.AssemblyName,
                                             MemberName = parseString,
-                                            MemberData = memberNode.InnerXml,
+                                            MemberData = memberNode.OuterXml,
                                             NameSpace = memberNameSpace,
                                             ScopeName = ToScopeType(memberType).ToScopeName()
                                         };
@@ -274,7 +274,7 @@ namespace DataDictionary.BusinessLayer
                                             MemberParentId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
                                             AssemblyName = sourceItem.AssemblyName,
                                             MemberName = parseString.Substring(0, parametersStart),
-                                            MemberData = memberNode.InnerXml,
+                                            MemberData = memberNode.OuterXml,
                                             NameSpace = memberNameSpace,
                                             ScopeName = ToScopeType(memberType).ToScopeName()
                                         };
@@ -290,7 +290,7 @@ namespace DataDictionary.BusinessLayer
                                             Int32 nextSeperator = parameters.IndexOf(",");
                                             Int32 nextSubItem = parameters.IndexOf("{");
                                             String paramterType = String.Empty;
-                                            String memberName = String.Format("@parameter{0:00}", paramterCount); // Default name if none are provided
+                                            String memberName = String.Format("parameter{0:00}", paramterCount); // Default name if none are provided
                                             XElement memberData = new XElement("param"); // Used to construct an XML data fragment.
 
                                             if (nextSeperator < 0 && nextSubItem < 0)
@@ -321,13 +321,6 @@ namespace DataDictionary.BusinessLayer
                                             // Can only occur if the two values are equal and not zero. This should not be possible.
                                             else { throw new InvalidOperationException("Condition parsing parameters reached a condition that should not be possible."); }
 
-                                            if (paramterType.Contains("[]"))
-                                            {
-                                                //TODO: What to do with Parameters. The data provided has only data type.
-                                                //TODO: how to handle arrays?
-                                                //Currently parameters are generically named and type is dumped into the MemberData.
-                                            }
-
                                             if (paramterNodes is not null
                                                 && paramterNodes.Count > paramterCount
                                                 && paramterNodes[paramterCount] is XmlNode paramterNode
@@ -335,7 +328,7 @@ namespace DataDictionary.BusinessLayer
                                                 && paramterNode.Attributes.
                                                     Cast<XmlAttribute>().
                                                     FirstOrDefault(w => w.Name == "name") is XmlAttribute parameterAttribute)
-                                            { // There are Parameter Nodes. A parameter name and description are available
+                                            { // There are Parameter Node. A parameter name and description are available
                                                 memberName = parameterAttribute.InnerText;
 
                                                 memberData = new XElement("param",
@@ -344,7 +337,7 @@ namespace DataDictionary.BusinessLayer
                                                         paramterNode.InnerText);
                                             }
                                             else
-                                            { // Only the Type can be determined based on NameSpace
+                                            { //No Parameter Node, only the Type can be determined based on NameSpace
                                                 memberData = new XElement("param",
                                                     new XAttribute("type", paramterType));
                                             }
