@@ -59,18 +59,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public bool IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
 
-        /// <inheritdoc/>
-        //public DbObjectScope ObjectScope
-        //{
-        //    get
-        //    {
-        //        if (Enum.TryParse(TableType, true, out DbObjectScope value))
-        //        { return value; }
-        //        else if (TableType is "BASE TABLE" or "HISTORY TABLE" or "TEMPORAL TABLE") { return DbObjectScope.Table; }
-        //        else { return DbObjectScope.NULL; }
-        //    }
-        //}
-
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
@@ -95,15 +83,28 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            return new DbExtendedPropertyGetCommand(connection)
+            if (this.ToScopeType().TryScope() is IDbObjectScopeKey scopeKey)
             {
-                CatalogId = CatalogId,
-                Level0Name = SchemaName,
-                Level0Type = "SCHEMA",
-                Level1Name = TableName,
-                Level1Type = "TABLE"
-            }.
-            GetCommand();
+                return new DbExtendedPropertyGetCommand(connection)
+                {
+                    CatalogId = CatalogId,
+                    Level0Name = SchemaName,
+                    Level0Type = scopeKey.CatalogScope.ToString(),
+                    Level1Name = TableName,
+                    Level1Type = scopeKey.ObjectScope.ToString(),
+                    Level2Name = String.Empty,
+                    Level2Type = String.Empty,
+                }.GetCommand();
+            }
+            else
+            {
+                Exception ex = new InvalidOperationException("Could not determine LevelType");
+                ex.Data.Add(nameof(ScopeName), ScopeName);
+                ex.Data.Add(nameof(DatabaseName), DatabaseName);
+                ex.Data.Add(nameof(SchemaName), SchemaName);
+                ex.Data.Add(nameof(TableName), TableName);
+                throw ex;
+            }
         }
 
         #region ISerializable

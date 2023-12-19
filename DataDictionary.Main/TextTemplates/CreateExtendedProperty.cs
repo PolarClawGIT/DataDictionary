@@ -27,18 +27,18 @@ namespace DataDictionary.Main.TextTemplates
         {
             
             #line 3 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
-foreach (DataDictionary.DataLayer.DatabaseData.ExtendedProperty.DbExtendedPropertyParameter item in this.attributeData) {
+foreach (DataDictionary.DataLayer.DatabaseData.ExtendedProperty.DbExtendedPropertyParameter item in this.GetAttributeDescriptions()) {
             
             #line default
             #line hidden
-            this.Write("exec ");
+            this.Write("EXEC [");
             
             #line 4 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(item.DatabaseName));
             
             #line default
             #line hidden
-            this.Write("..sp_addextendedproperty\r\n\t@name = \'");
+            this.Write("]..[sp_addextendedproperty]\r\n\t@name = \'");
             
             #line 5 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(item.PropertyName));
@@ -103,18 +103,18 @@ foreach (DataDictionary.DataLayer.DatabaseData.ExtendedProperty.DbExtendedProper
             #line hidden
             
             #line 11 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
-foreach (DataDictionary.DataLayer.DatabaseData.ExtendedProperty.DbExtendedPropertyParameter item in this.entityData) {
+foreach (DataDictionary.DataLayer.DatabaseData.ExtendedProperty.DbExtendedPropertyParameter item in this.GetEntityDescriptions()) {
             
             #line default
             #line hidden
-            this.Write("exec ");
+            this.Write("EXEC [");
             
             #line 12 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(item.DatabaseName));
             
             #line default
             #line hidden
-            this.Write("..sp_addextendedproperty\r\n\t@name = \'");
+            this.Write("]..[sp_addextendedproperty]\r\n\t@name = \'");
             
             #line 13 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(item.PropertyName));
@@ -159,6 +159,68 @@ foreach (DataDictionary.DataLayer.DatabaseData.ExtendedProperty.DbExtendedProper
             this.Write("\';\r\nGO\t\r\n");
             
             #line 17 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+}
+            
+            #line default
+            #line hidden
+            
+            #line 18 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+foreach (DataDictionary.DataLayer.DatabaseData.ExtendedProperty.DbExtendedPropertyParameter item in this.GetProcessDescriptions()) {
+            
+            #line default
+            #line hidden
+            this.Write("EXEC [");
+            
+            #line 19 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.DatabaseName));
+            
+            #line default
+            #line hidden
+            this.Write("]..[sp_addextendedproperty]\r\n\t@name = \'");
+            
+            #line 20 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PropertyName));
+            
+            #line default
+            #line hidden
+            this.Write("\', @value = \'");
+            
+            #line 20 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PropertyValue));
+            
+            #line default
+            #line hidden
+            this.Write("\',\r\n\t@level0type = \'");
+            
+            #line 21 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.Level0Type));
+            
+            #line default
+            #line hidden
+            this.Write("\', @level0name = \'");
+            
+            #line 21 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.Level0Name));
+            
+            #line default
+            #line hidden
+            this.Write("\',\r\n\t@level1type = \'");
+            
+            #line 22 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.Level1Type));
+            
+            #line default
+            #line hidden
+            this.Write("\', @level1name = \'");
+            
+            #line 22 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.Level1Name));
+            
+            #line default
+            #line hidden
+            this.Write("\';\r\nGO\t\r\n");
+            
+            #line 24 "C:\Users\Billy\source\repos\DataDictionary\DataDictionary.Main\TextTemplates\CreateExtendedProperty.tt"
 }
             
             #line default

@@ -63,7 +63,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         {
             if (source.AliasName is null) { return null; }
 
-            List<String> parsed = AliasExtension.ParseName(source.AliasName);
+            List<String> parsed = AliasExtension.NameParts(source.AliasName);
             if (parsed.Count != 4) { return null; }
 
             if (source.ToScopeType() is ScopeType.DatabaseSchemaTableColumn or ScopeType.DatabaseSchemaViewColumn)

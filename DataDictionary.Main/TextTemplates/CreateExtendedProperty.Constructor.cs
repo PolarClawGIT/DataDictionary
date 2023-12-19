@@ -15,20 +15,16 @@ namespace DataDictionary.Main.TextTemplates
 {
     partial class CreateExtendedProperty
     {
-        IEnumerable<DbExtendedPropertyParameter> attributeData;
-        IEnumerable<DbExtendedPropertyParameter> entityData;
+        ModelData data;
 
         internal CreateExtendedProperty(ModelData data)
-        {
-            attributeData = GetAttributeDescriptions(data);
-            entityData = GetEntityDescriptions(data);
-        }
+        { this.data = data; }
 
         /// <summary>
         /// Gets the MS Description Extended Properties for Attributes
         /// </summary>
         /// <returns></returns>
-        IEnumerable<DbExtendedPropertyParameter> GetAttributeDescriptions(ModelData data)
+        IEnumerable<DbExtendedPropertyParameter> GetAttributeDescriptions()
         {
             List<DbExtendedPropertyParameter> result = new List<DbExtendedPropertyParameter>();
 
@@ -64,7 +60,7 @@ namespace DataDictionary.Main.TextTemplates
                                 Level1Name = columnKey.TableName,
                                 Level2Type = scopeKey.ElementScope.ToString(),
                                 Level2Name = columnKey.ColumnName
-                            }) ;
+                            });
                         }
                     }
                 }
@@ -77,7 +73,7 @@ namespace DataDictionary.Main.TextTemplates
         /// Gets the MS Description Extended Properties for Entities
         /// </summary>
         /// <returns></returns>
-        IEnumerable<DbExtendedPropertyParameter> GetEntityDescriptions(ModelData data)
+        IEnumerable<DbExtendedPropertyParameter> GetEntityDescriptions()
         {
             List<DbExtendedPropertyParameter> result = new List<DbExtendedPropertyParameter>();
 
@@ -118,6 +114,15 @@ namespace DataDictionary.Main.TextTemplates
                     }
                 }
             }
+
+            return result;
+        }
+
+        IEnumerable<DbExtendedPropertyParameter> GetProcessDescriptions()
+        {
+            List<DbExtendedPropertyParameter> result = new List<DbExtendedPropertyParameter>();
+
+            //TODO: Add code to generate Stored Procedures, Functions, and Parameters.
 
             return result;
         }

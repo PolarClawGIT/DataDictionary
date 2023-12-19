@@ -65,7 +65,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         {
             if (source.AliasName is null) { return null; }
 
-            List<String> parsed = AliasExtension.ParseName(source.AliasName);
+            List<String> parsed = AliasExtension.NameParts(source.AliasName);
             if (parsed.Count != 3) { return null; }
 
             if (source.ToScopeType() is ScopeType.DatabaseSchemaFunction or ScopeType.DatabaseSchemaProcedure)

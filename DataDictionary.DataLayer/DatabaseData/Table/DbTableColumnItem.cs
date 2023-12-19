@@ -162,9 +162,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public string? GeneratedAlwayType { get { return GetValue("GeneratedAlwayType"); } }
 
-        /// <inheritdoc/>
-        //public DbElementScope ElementScope { get; } = DbElementScope.Column;
-
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
@@ -212,14 +209,22 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            string level1Type;
-            if (ScopeName is String && ScopeName.StartsWith("Database.Schema.View", KeyExtension.CompareString))
-            { level1Type = "TABLE"; }
-            else if (ScopeName is String && ScopeName.StartsWith("Database.Schema.View", KeyExtension.CompareString))
-            { level1Type = "VIEW"; }
+            if (this.ToScopeType().TryScope() is IDbElementScopeKey scopeKey)
+            {
+                return new DbExtendedPropertyGetCommand(connection)
+                {
+                    CatalogId = CatalogId,
+                    Level0Name = SchemaName,
+                    Level0Type = scopeKey.CatalogScope.ToString(),
+                    Level1Name = TableName,
+                    Level1Type = scopeKey.ObjectScope.ToString(),
+                    Level2Name = ColumnName,
+                    Level2Type = scopeKey.ElementScope.ToString(),
+                }.GetCommand();
+            }
             else
             {
-                Exception ex = new InvalidOperationException("Could not determine Level1Type");
+                Exception ex = new InvalidOperationException("Could not determine LevelType");
                 ex.Data.Add(nameof(ScopeName), ScopeName);
                 ex.Data.Add(nameof(DatabaseName), DatabaseName);
                 ex.Data.Add(nameof(SchemaName), SchemaName);
@@ -227,17 +232,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
                 ex.Data.Add(nameof(ColumnName), ColumnName);
                 throw ex;
             }
-
-            return new DbExtendedPropertyGetCommand(connection)
-            {
-                CatalogId = CatalogId,
-                Level0Name = SchemaName,
-                Level0Type = "SCHEMA",
-                Level1Name = TableName,
-                Level1Type = level1Type,
-                Level2Name = ColumnName,
-                Level2Type = "COLUMN"
-            }.GetCommand();
         }
 
         #region ISerializable

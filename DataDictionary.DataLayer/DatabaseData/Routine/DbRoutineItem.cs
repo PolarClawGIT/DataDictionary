@@ -104,14 +104,28 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            return new DbExtendedPropertyGetCommand(connection)
+            if (this.ToScopeType().TryScope() is IDbObjectScopeKey scopeKey)
             {
-                CatalogId = CatalogId,
-                Level0Name = SchemaName,
-                Level0Type = "SCHEMA",
-                Level1Name = RoutineName,
-                Level1Type = RoutineType
-            }.GetCommand();
+                return new DbExtendedPropertyGetCommand(connection)
+                {
+                    CatalogId = CatalogId,
+                    Level0Name = SchemaName,
+                    Level0Type = scopeKey.CatalogScope.ToString(),
+                    Level1Name = RoutineName,
+                    Level1Type = scopeKey.ObjectScope.ToString(),
+                    Level2Name = String.Empty,
+                    Level2Type = String.Empty,
+                }.GetCommand();
+            }
+            else
+            {
+                Exception ex = new InvalidOperationException("Could not determine LevelType");
+                ex.Data.Add(nameof(ScopeName), ScopeName);
+                ex.Data.Add(nameof(DatabaseName), DatabaseName);
+                ex.Data.Add(nameof(SchemaName), SchemaName);
+                ex.Data.Add(nameof(RoutineName), RoutineName);
+                throw ex;
+            }
         }
 
         #region ISerializable

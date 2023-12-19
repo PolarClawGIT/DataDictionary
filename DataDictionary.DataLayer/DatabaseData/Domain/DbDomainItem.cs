@@ -131,15 +131,28 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            return new DbExtendedPropertyGetCommand(connection)
+            if (this.ToScopeType().TryScope() is IDbObjectScopeKey scopeKey)
             {
-                CatalogId = CatalogId,
-                Level0Name = SchemaName,
-                Level0Type = "SCHEMA",
-                Level1Name = DomainName,
-                Level1Type = "TYPE"
-            }.
-            GetCommand();
+                return new DbExtendedPropertyGetCommand(connection)
+                {
+                    CatalogId = CatalogId,
+                    Level0Name = SchemaName,
+                    Level0Type = scopeKey.CatalogScope.ToString(),
+                    Level1Name = DomainName,
+                    Level1Type = scopeKey.ObjectScope.ToString(),
+                    Level2Name = String.Empty,
+                    Level2Type = String.Empty,
+                }.GetCommand();
+            }
+            else
+            {
+                Exception ex = new InvalidOperationException("Could not determine LevelType");
+                ex.Data.Add(nameof(ScopeName), ScopeName);
+                ex.Data.Add(nameof(DatabaseName), DatabaseName);
+                ex.Data.Add(nameof(SchemaName), SchemaName);
+                ex.Data.Add(nameof(DomainName), DomainName);
+                throw ex;
+            }
         }
 
         #region ISerializable

@@ -304,70 +304,40 @@ namespace DataDictionary.BusinessLayer
                 IsCanceling = () => factory.IsCanceling
             });
 
-            work.Add(new LoadExtendedProperties<DbSchemaItem>()
-            {
-                Connection = factory.Connection,
-                WorkName = "Load DbExtendedProperties, DbSchemta",
-                Source = data.DbSchemta,
-                Target = data.DbExtendedProperties,
-                IsCanceling = () => factory.IsCanceling
-            });
+            work.Add(factory.CreateWork(
+                workName: "Load DbExtendedProperties, DbSchemta",
+                source: data.DbSchemta,
+                target: data.DbExtendedProperties));
 
-            work.Add(new LoadExtendedProperties<DbTableItem>()
-            {
-                Connection = factory.Connection,
-                WorkName = "Load DbExtendedProperties, DbTables",
-                Source = data.DbTables,
-                Target = data.DbExtendedProperties,
-                IsCanceling = () => factory.IsCanceling
-            });
+            work.Add(factory.CreateWork(
+                workName: "Load DbExtendedProperties, DbTables",
+                source: data.DbTables,
+                target: data.DbExtendedProperties));
 
+            work.Add(factory.CreateWork(
+                workName: "Load DbExtendedProperties, DbTableColumns",
+                source: data.DbTableColumns,
+                target: data.DbExtendedProperties));
 
-            work.Add(new LoadExtendedProperties<DbTableColumnItem>()
-            {
-                Connection = factory.Connection,
-                WorkName = "Load DbExtendedProperties, DbTableColumns",
-                Source = data.DbTableColumns,
-                Target = data.DbExtendedProperties,
-                IsCanceling = () => factory.IsCanceling
-            });
+            work.Add(factory.CreateWork(
+                workName: "Load DbExtendedProperties, DbConstraints",
+                source: data.DbConstraints,
+                target: data.DbExtendedProperties));
 
-            work.Add(new LoadExtendedProperties<DbConstraintItem>()
-            {
-                Connection = factory.Connection,
-                WorkName = "Load DbExtendedProperties, DbConstraints",
-                Source = data.DbConstraints,
-                Target = data.DbExtendedProperties,
-                IsCanceling = () => factory.IsCanceling
-            });
+            work.Add(factory.CreateWork(
+                workName: "Load DbExtendedProperties, DbDomains",
+                source: data.DbDomains,
+                target: data.DbExtendedProperties));
 
-            work.Add(new LoadExtendedProperties<DbDomainItem>()
-            {
-                Connection = factory.Connection,
-                WorkName = "Load DbExtendedProperties, DbDomains",
-                Source = data.DbDomains,
-                Target = data.DbExtendedProperties,
-                IsCanceling = () => factory.IsCanceling
-            });
+            work.Add(factory.CreateWork(
+                workName: "Load DbExtendedProperties, DbRoutines",
+                source: data.DbRoutines,
+                target: data.DbExtendedProperties));
 
-            work.Add(new LoadExtendedProperties<DbRoutineItem>()
-            {
-                Connection = factory.Connection,
-                WorkName = "Load DbExtendedProperties, DbRoutines",
-                Source = data.DbRoutines,
-                Target = data.DbExtendedProperties,
-                IsCanceling = () => factory.IsCanceling
-            });
-
-            work.Add(new LoadExtendedProperties<DbRoutineParameterItem>()
-            {
-                Connection = factory.Connection,
-                WorkName = "Load DbExtendedProperties, DbRoutineParameters",
-                Source = data.DbRoutineParameters,
-                Target = data.DbExtendedProperties,
-                IsCanceling = () => factory.IsCanceling
-            });
-
+            work.Add(factory.CreateWork(
+                workName: "Load DbExtendedProperties, DbRoutineParameters",
+                source: data.DbRoutineParameters,
+                target: data.DbExtendedProperties));
             return work;
         }
 

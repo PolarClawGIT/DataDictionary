@@ -88,13 +88,27 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            return new DbExtendedPropertyGetCommand(connection)
+            if (this.ToScopeType().TryScope() is IDbCatalogScopeKey scopeKey)
             {
-                CatalogId = CatalogId,
-                Level0Name = SchemaName,
-                Level0Type = "SCHEMA"
-            }.
-            GetCommand();
+                return new DbExtendedPropertyGetCommand(connection)
+                {
+                    CatalogId = CatalogId,
+                    Level0Name = SchemaName,
+                    Level0Type = scopeKey.CatalogScope.ToString(),
+                    Level1Name = String.Empty,
+                    Level1Type = String.Empty,
+                    Level2Name = String.Empty,
+                    Level2Type = String.Empty,
+                }.GetCommand();
+            }
+            else
+            {
+                Exception ex = new InvalidOperationException("Could not determine LevelType");
+                ex.Data.Add(nameof(ScopeName), ScopeName);
+                ex.Data.Add(nameof(DatabaseName), DatabaseName);
+                ex.Data.Add(nameof(SchemaName), SchemaName);
+                throw ex;
+            }
         }
 
 

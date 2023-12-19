@@ -17,30 +17,6 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     static class AliasExtension
     {
         /// <summary>
-        /// Parses a AlaisName (qualified DB object Name or .Net NameSpace)
-        /// and returns a formated version of the name as well as all the parents of that name.
-        /// </summary>
-        /// <param name="aliasName"></param>
-        /// <returns></returns>
-        public static List<String> ParseName(String aliasName)
-        {
-            List<String> result = new List<String>();
-            List<String> elements = NameParts(aliasName);
-            String newItem = String.Empty;
-
-            // Build list of name and parents.
-            foreach (String item in elements)
-            {
-                if (String.IsNullOrWhiteSpace(newItem)) { newItem = item; }
-                else { newItem = String.Format("{0}.{1}", newItem, item); }
-
-                result.Add(newItem);
-            }
-
-            return result;
-        }
-
-        /// <summary>
         /// Formats the Alias Name into a period delimited string with each element delimited by square brackets.
         /// </summary>
         /// <param name="aliasName"></param>
@@ -55,8 +31,8 @@ namespace DataDictionary.DataLayer.DomainData.Alias
             // Build name
             foreach (String item in elements)
             {
-                if (String.IsNullOrWhiteSpace(result)) { result = item; }
-                else { result = String.Format("{0}.{1}", result, item); }
+                if (String.IsNullOrWhiteSpace(result)) { result = String.Format("[{0}]", item); }
+                else { result = String.Format("{0}.[{1}]", result, item); }
             }
 
             return result;
@@ -83,7 +59,12 @@ namespace DataDictionary.DataLayer.DomainData.Alias
             return result;
         }
 
-        static List<String> NameParts(String aliasName)
+        /// <summary>
+        /// Returns the name parts of an Alias Name.
+        /// </summary>
+        /// <param name="aliasName">A period delimited and/or square brackets qualified string</param>
+        /// <returns>Each part of the Alias Name</returns>
+        public static List<String> NameParts(String aliasName)
         {
             List<String> elements = new List<String>();
             String parse = aliasName;
@@ -97,14 +78,15 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                     && !parse.Contains("[")
                     && !parse.Contains("]"))
                 {
-                    elements.Add(String.Format("[{0}]", parse));
+                    elements.Add(String.Format("{0}", parse));
                     parse = String.Empty;
                 }
                 else if (!parse.Contains(".")
                     && parse.StartsWith("[")
                     && parse.EndsWith("]"))
                 {
-                    elements.Add(parse);
+                    String value = parse.Substring(1, parse.Length - 2);
+                    elements.Add(value);
                     parse = String.Empty;
                 }
                 else if (parse.Contains(".")
@@ -113,14 +95,14 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 {
                     Int32 index = reverse.IndexOf(".");
                     String value = parse.Substring(parse.Length - index);
-                    elements.Add(String.Format("[{0}]", value));
+                    elements.Add(String.Format("{0}", value));
                     parse = parse.Substring(0, parse.Length - index - 1);
                 }
                 else if (parse.Contains(".[")
                     && parse.EndsWith("]"))
                 {
                     Int32 index = reverse.IndexOf("[.");
-                    String value = parse.Substring(parse.Length - index - 1);
+                    String value = parse.Substring(parse.Length - index, index - 1);
                     elements.Add(String.Format("{0}", value));
                     parse = parse.Substring(0, parse.Length - index - 2);
                 }
@@ -130,7 +112,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                 {
                     Int32 index = reverse.IndexOf(".");
                     String value = parse.Substring(parse.Length - index);
-                    elements.Add(String.Format("[{0}]", value));
+                    elements.Add(String.Format("{0}", value));
                     parse = parse.Substring(0, parse.Length - index - 1);
                 }
                 else

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +34,17 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="command">the function that returns the command to execute</param>
         /// <returns>WorkItem with the database connection handing wired up</returns>
         WorkItem CreateWork(String workName, IBindingTable target, Func<IConnection, Command> command);
+
+        /// <summary>
+        /// Creates a WorkItem for Loading Extended Properties
+        /// </summary>
+        /// <typeparam name="TDbItem"></typeparam>
+        /// <param name="workName"></param>
+        /// <param name="target"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        WorkItem CreateWork<TDbItem>(String workName, IBindingTable<DbExtendedPropertyItem> target, IBindingTable<TDbItem> source)
+            where TDbItem : class, IBindingTableRow, IDbExtendedProperty;
 
         /// <summary>
         /// Creates the WorkItem that opens the Connection to the Database.
@@ -78,7 +91,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         { Connection = context.CreateConnection(); }
 
         /// <inheritdoc/>
-        public Boolean IsCanceling { get { return !Connection.HasException; } }
+        public Boolean IsCanceling { get { return Connection.HasException; } }
 
         /// <inheritdoc/>
         public WorkItem CreateWork(String workName, Func<IConnection, Command> command)
@@ -125,6 +138,57 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
 
                 try { target.Load(Connection.ExecuteReader(execute)); }
                 catch (Exception ex) { ex.Data.Add("Command", execute.CommandText); throw; }
+            }
+        }
+
+        /// <inheritdoc/>
+        public WorkItem CreateWork<TDbItem>(String workName, IBindingTable<DbExtendedPropertyItem> target, IBindingTable<TDbItem> source)
+            where TDbItem : class, IBindingTableRow, IDbExtendedProperty
+        {
+            Action<int, int> progress = (x,y) => { };
+
+            WorkItem result = new WorkItem()
+            {
+                WorkName = workName,
+                DoWork = Work,
+                IsCanceling = () => Connection.HasException
+            };
+            progress = result.OnProgressChanged;
+
+            workItems.Add(result, new WorkState() { IsComplete = false, Ex = null }); ;
+            result.Completing += WorkItem_Completing;
+
+            return result;
+
+            void Work()
+            {
+                Int32 toDo = source.Count();
+                Int32 complete = 0;
+
+                if (Connection is IConnection)
+                {
+                    foreach (TDbItem item in source)
+                    {
+                        Command command = item.PropertyCommand(Connection);
+                        try { target.Load(Connection.ExecuteReader(command)); }
+                        catch (Exception ex)
+                        {
+                            ex.Data.Add("Command", "MSSQL Extended Property");
+                            foreach (DbParameter parameter in command.Parameters)
+                            {
+                                if (parameter.Value is not null)
+                                { ex.Data.Add(parameter.ParameterName, parameter.Value.ToString()); }
+                                else { ex.Data.Add(parameter.ParameterName, "(Null)"); }
+                            }
+
+                            throw;
+                        }
+
+                        complete++;
+                        progress(complete, toDo);
+                    }
+                }
+                else { throw new ArgumentNullException(nameof(Connection)); }
             }
         }
 
