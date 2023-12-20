@@ -56,7 +56,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Model
             new DataColumn("ModelId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("ModelTitle", typeof(string)){ AllowDBNull = false},
             new DataColumn("ModelDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>
