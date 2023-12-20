@@ -20,62 +20,62 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         NULL,
 
         /// <summary>
-        /// MS SQL Aggregate type.
+        /// MS SQL Aggregate.
         /// </summary>
         Aggregate,
 
         /// <summary>
-        /// MS SQL Default type. Application Supported?
+        /// MS SQL Default.
         /// </summary>
         Default,
 
         /// <summary>
-        /// MS SQL Function type. Application Supported.
+        /// MS SQL Function. Application Supported.
         /// </summary>
         Function,
 
         /// <summary>
-        /// MS SQL LogicalFileName type.
+        /// MS SQL LogicalFileName.
         /// </summary>
         LogicalFileName,
 
         /// <summary>
-        /// MS SQL Procedure type. Application Supported.
+        /// MS SQL Procedure. Application Supported.
         /// </summary>
         Procedure,
 
         /// <summary>
-        /// MS SQL Queue type.
+        /// MS SQL Queue.
         /// </summary>
         Queue,
 
         /// <summary>
-        /// MS SQL Rule type.
+        /// MS SQL Rule.
         /// </summary>
         Rule,
 
         /// <summary>
-        /// MS SQL Synonym type.
+        /// MS SQL Synonym.
         /// </summary>
         Synonym,
 
         /// <summary>
-        /// MS SQL Table type. Application Supported.
+        /// MS SQL Table. Application Supported.
         /// </summary>
         Table,
 
         /// <summary>
-        /// MS SQL Type type. Application Supported.
+        /// MS SQL Type. Application Supported.
         /// </summary>
         Type,
 
         /// <summary>
-        /// MS SQL View type. Application Supported.
+        /// MS SQL View. Application Supported.
         /// </summary>
         View,
 
         /// <summary>
-        /// MS SQL XmlSchemaCollection type.
+        /// MS SQL XmlSchemaCollection.
         /// </summary>
         XmlSchemaCollection,
     }

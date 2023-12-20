@@ -20,72 +20,72 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         NULL,
 
         /// <summary>
-        /// MS SQL Assembly type.
+        /// MS SQL Assembly.
         /// </summary>
         Assembly,
 
         /// <summary>
-        /// MS SQL Contract type.
+        /// MS SQL Contract.
         /// </summary>
         Contract,
 
         /// <summary>
-        /// MS SQL EventNotification type.
+        /// MS SQL EventNotification.
         /// </summary>
         EventNotification,
 
         /// <summary>
-        /// MS SQL FileGroup type.
+        /// MS SQL FileGroup.
         /// </summary>
         Filegroup,
 
         /// <summary>
-        /// MS SQL MessageType type.
+        /// MS SQL MessageType.
         /// </summary>
         MessageType,
 
         /// <summary>
-        /// MS SQL PartitionFunction type.
+        /// MS SQL PartitionFunction.
         /// </summary>
         PartitionFunction,
 
         /// <summary>
-        /// MS SQL PartitionScheme type.
+        /// MS SQL PartitionScheme
         /// </summary>
         PartitionScheme,
 
         /// <summary>
-        /// MS SQL RemoteServiceBinding type.
+        /// MS SQL RemoteServiceBinding.
         /// </summary>
         RemoteServiceBinding,
 
         /// <summary>
-        /// MS SQL Route type.
+        /// MS SQL Route.
         /// </summary>
         Route,
 
         /// <summary>
-        /// MS SQL Schema type. Application Supported.
+        /// MS SQL Schema. Application Supported.
         /// </summary>
         Schema,
 
         /// <summary>
-        /// MS SQL Service type.
+        /// MS SQL Service.
         /// </summary>
         Service,
 
         /// <summary>
-        /// MS SQL Trigger type.
+        /// MS SQL Trigger.
         /// </summary>
         Trigger,
 
         /// <summary>
-        /// MS SQL Type type.
+        /// MS SQL Type.
         /// </summary>
         Type,
 
         /// <summary>
-        /// MS SQL User type.
+        /// MS SQL User.
         /// </summary>
         User,
     }

@@ -20,37 +20,37 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         NULL,
 
         /// <summary>
-        /// MS SQL Default type.
+        /// MS SQL Default.
         /// </summary>
         Default,
 
         /// <summary>
-        /// MS SQL Column type. Application Supported.
+        /// MS SQL Column. Application Supported.
         /// </summary>
         Column,
 
         /// <summary>
-        /// MS SQL Constraint type.
+        /// MS SQL Constraint.
         /// </summary>
         Constraint,
 
         /// <summary>
-        /// MS SQL EventNotification type.
+        /// MS SQL EventNotification.
         /// </summary>
         EventNotification,
 
         /// <summary>
-        /// MS SQL Index type.
+        /// MS SQL Index.
         /// </summary>
         Index,
 
         /// <summary>
-        /// MS SQL Parameter type. Application Supported.
+        /// MS SQL Parameter. Application Supported.
         /// </summary>
         Parameter,
 
         /// <summary>
-        /// MS SQL Trigger type.
+        /// MS SQL Trigger.
         /// </summary>
         Trigger,
     }
