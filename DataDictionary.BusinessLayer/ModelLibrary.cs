@@ -208,7 +208,7 @@ namespace DataDictionary.BusinessLayer
                                                 LibraryId = sourceItem.LibraryId,
                                                 AssemblyName = sourceItem.AssemblyName,
                                                 MemberName = parseString.Substring(0, nextPeriod),
-                                                NameSpace = string.Empty,
+                                                NameSpace = String.Empty,
                                                 ScopeName = ScopeType.LibraryNameSpace.ToScopeName()
                                             };
 

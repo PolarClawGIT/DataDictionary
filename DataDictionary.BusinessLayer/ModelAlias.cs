@@ -340,8 +340,6 @@ namespace DataDictionary.BusinessLayer
 
                 void AddChildMember(LibrarySourceKey sourceKey, LibraryMemberKey memberKey)
                 {
-                    var x = data.ModelAlias;
-
                     foreach (LibraryMemberItem memberItem in members.Where(w => new LibraryMemberKeyParent(w).Equals(memberKey)))
                     {
                         LibraryMemberKey childKey = new LibraryMemberKey(memberItem);

@@ -11,7 +11,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 			[MemberId],
 			[MemberParentId],
 			[MemberName],
-			Convert(NVarChar(Max),[MemberName]) As [NameSpace]
+			Convert(NVarChar(Max), Null) As [NameSpace]
 	From	[App_DataDictionary].[LibraryMember]
 	Where	[MemberParentId] is Null
 	Union All
@@ -19,7 +19,10 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 			C.[MemberId],
 			C.[MemberParentId],
 			C.[MemberName],
-			Convert(NVarChar(Max), FormatMessage('%s.%s',P.[NameSpace],C.[MemberName])) As [NameSpace]
+			IIf(P.[NameSpace] is Null,
+				Convert(NVarChar(Max), P.[MemberName]),
+				Convert(NVarChar(Max), FormatMessage('%s.%s', P.[NameSpace], P.[MemberName])))
+				As [NameSpace]
 	From	[Data] P
 			Inner Join [App_DataDictionary].[LibraryMember] C
 			On	P.[LibraryId] = C.[LibraryId] And
@@ -44,4 +47,5 @@ From	[App_DataDictionary].[LibraryMember] D
 		Outer Apply [App_DataDictionary].[funcGetScopeName](D.[ScopeId]) C
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@LibraryId is Null or @LibraryId = D.[LibraryId])
+Order By B.[NameSpace]
 GO
