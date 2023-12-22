@@ -145,6 +145,7 @@ namespace DataDictionary.Main.Forms.Model
                 ModelKey key = new ModelKey(item);
                 work.Add(factory.OpenConnection());
                 work.AddRange(Program.Data.LoadModel(factory, key));
+                work.AddRange(Program.Data.LoadAlias());
 
                 DoLocalWork(work);
             }

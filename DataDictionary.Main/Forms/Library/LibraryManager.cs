@@ -245,8 +245,6 @@ namespace DataDictionary.Main.Forms.Library
 
                 DoLocalWork(work);
             }
-
-
         }
 
         private IReadOnlyList<WorkItem> LoadLocalData(IDatabaseWork factory)

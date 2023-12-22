@@ -35,6 +35,47 @@ namespace DataDictionary.BusinessLayer
     /// <remarks>When combined with the Extension class, this implements multi-inheritance.</remarks>
     public static class ModelAlias
     {
+        /// <summary>
+        /// Load Alias Data for the Model.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data)
+            where T : IModelCatalog, IModelLibrary, IModelAlias
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            Action<Int32, Int32> progress = (x, y) => { };
+
+            WorkItem loadWork = new WorkItem()
+            {
+                WorkName = "Load Catalog Aliases",
+                DoWork = ThreadWork
+            };
+            progress = loadWork.OnProgressChanged;
+
+            work.Add(loadWork);
+
+            return work;
+
+            void ThreadWork()
+            {
+                data.ModelAlias.Clear();
+
+                foreach (DbCatalogItem? item in data.DbCatalogs)
+                {
+                    DbCatalogKey catalogKey = new DbCatalogKey(item);
+                    LoadAliasCore(data, catalogKey, progress);
+                }
+
+                foreach (LibrarySourceItem? item in data.LibrarySources)
+                {
+                    LibrarySourceKey sourceKey = new LibrarySourceKey(item);
+                    LoadAliasCore(data, sourceKey, progress);
+                }
+            }
+        }
+
 
         /// <summary>
         /// Load Alias Data from a Catalog
@@ -68,7 +109,6 @@ namespace DataDictionary.BusinessLayer
                     DbCatalogKey catalogKey = new DbCatalogKey(item);
                     LoadAliasCore(data, catalogKey, progress);
                 }
-
             }
         }
 
@@ -313,7 +353,6 @@ namespace DataDictionary.BusinessLayer
                 }
             }
         }
-
 
         /// <summary>
         /// Remove Alias Data for a Catalog
