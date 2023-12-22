@@ -56,6 +56,7 @@ namespace DataDictionary.Main.Controls
             {
                 ModelAliasItem child = Program.Data.ModelAlias[childKey];
                 ListViewItem childItem = new ListViewItem(child.AliasName, child.ScopeId.ToScopeName());
+                childItem.ToolTipText = child.ItemName;
 
                 alaisViewItems.Add(childItem, childKey);
                 aliasList.Items.Add(childItem);
@@ -67,6 +68,9 @@ namespace DataDictionary.Main.Controls
             if (parentKey is ModelAliasKey)
             {
                 ListViewItem parentItem = new ListViewItem(parent.AliasName, parent.ScopeId.ToScopeName());
+                parentItem.Font = new Font(parentItem.Font, FontStyle.Underline);
+                parentItem.ToolTipText = "navigate to Parent";
+
                 alaisViewItems.Add(parentItem, parentKey);
                 aliasList.Items.Insert(0, parentItem);
             }
