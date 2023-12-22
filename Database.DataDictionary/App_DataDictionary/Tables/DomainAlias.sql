@@ -1,8 +1,9 @@
 ﻿CREATE TABLE [App_DataDictionary].[DomainAlias]
 (
+	-- Domain Alias contains only the name structure.
+	-- Multiple items may have the same Alias Name but refer to different objects.
 	[AliasId]           UniqueIdentifier NOT NULL CONSTRAINT [DF_DomainAliasId] DEFAULT (newid()),
 	[ParentAliasId]     UniqueIdentifier NULL,
-	[AliasSourceId]     UniqueIdentifier NOT NULL,
 	[AliasElement]      [App_DataDictionary].[typeAliasElement] Not Null, -- Cannot enforce unique value because of Index limits.
 	--[AliasCheckSum]     As (Binary_CheckSum([AliasNameElement])), -- Used for case Sensitive and indexing
 	-- TODO: Add System Version later once the schema is locked down
@@ -12,5 +13,4 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_DomainAlias] PRIMARY KEY CLUSTERED ([AliasId] ASC),
 	CONSTRAINT [FK_DomainAliasParent] FOREIGN KEY ([ParentAliasId]) REFERENCES [App_DataDictionary].[DomainAlias] ([AliasId]),
-	CONSTRAINT [FK_DomainAliasSource] FOREIGN KEY ([AliasSourceId]) REFERENCES [App_DataDictionary].[DomainSource] ([SourceId]),
 )

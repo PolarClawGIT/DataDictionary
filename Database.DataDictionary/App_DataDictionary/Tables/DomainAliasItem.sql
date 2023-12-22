@@ -1,4 +1,5 @@
-﻿CREATE TABLE [App_DataDictionary].[DomainAliasItem]
+﻿/* Does not Work the way intended
+CREATE TABLE [App_DataDictionary].[DomainAliasItem]
 (
 	[AliasId]           UniqueIdentifier Not Null,
 	[DomainItemId]      As (Coalesce([AttributeId], [EntityId], [ProcessId])) PERSISTED,
@@ -27,3 +28,4 @@ GO
 CREATE UNIQUE CLUSTERED INDEX [PK_DomainAliasItem]
     ON [App_DataDictionary].[DomainAliasItem]([AliasId] ASC, [DomainItemId] Asc);
 GO
+*/

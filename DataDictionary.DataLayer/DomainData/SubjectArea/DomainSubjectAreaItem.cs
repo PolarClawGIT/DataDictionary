@@ -55,7 +55,6 @@ namespace DataDictionary.DataLayer.DomainData.SubjectArea
             new DataColumn("SubjectAreaId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("SubjectAreaTitle", typeof(string)){ AllowDBNull = false},
             new DataColumn("SubjectAreaDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SysStart", typeof(DateTime)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

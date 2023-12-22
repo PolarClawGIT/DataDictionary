@@ -65,11 +65,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <param name="source"></param>
         public static implicit operator ScopeKey(ScopeType source) { return new ScopeKey(source); }
 
-        /// <summary>
-        /// Converts a ScopeType into a ScopeKey.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <remarks>This cannot be done because it creates an ambiguous reference.</remarks>
+        // This cannot be done because it creates an ambiguous reference.
         //public static implicit operator ScopeType (ScopeKey source) { return source.ScopeId; }
 
         #region IEquatable

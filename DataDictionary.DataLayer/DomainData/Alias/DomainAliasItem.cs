@@ -10,6 +10,6 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     /// <summary>
     /// Interface for common Domain Alias properties
     /// </summary>
-    public interface IDomainAliasItem: IAliasKeyName, IScopeKeyName, IAliasKeySource
+    public interface IDomainAliasItem: IAliasKeyName, IScopeKeyName
     { }
 }

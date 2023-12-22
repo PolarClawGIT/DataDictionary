@@ -214,9 +214,10 @@
     <Build Include="App_DataDictionary\User Defined Types\typeScopeElement.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationScope.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procInsertAlias.sql" />
     <None Include="App_DataDictionary\ApplicationScope Data.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationScope.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainEntityAlias.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainAttributeAlias.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

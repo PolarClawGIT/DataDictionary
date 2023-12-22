@@ -50,13 +50,12 @@
             propertyDefinitionData = new Controls.RichTextBoxData();
             entityAlias = new TabPage();
             entityAliasData = new DataGridView();
-            sourceNameColumn = new DataGridViewTextBoxColumn();
-            scopeNameColumn = new DataGridViewTextBoxColumn();
-            aliasNameColumn = new DataGridViewTextBoxColumn();
             modelAliasNavigation = new Controls.ModelAliasNavigation();
             errorProvider = new ErrorProvider(components);
             bindingProperties = new BindingSource(components);
             bindingAlias = new BindingSource(components);
+            scopeNameColumn = new DataGridViewTextBoxColumn();
+            aliasNameColumn = new DataGridViewTextBoxColumn();
             entityLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
             propertyTabLayout = new TabControl();
@@ -340,7 +339,7 @@
             // 
             entityAliasData.AllowUserToAddRows = false;
             entityAliasData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            entityAliasData.Columns.AddRange(new DataGridViewColumn[] { sourceNameColumn, scopeNameColumn, aliasNameColumn });
+            entityAliasData.Columns.AddRange(new DataGridViewColumn[] { scopeNameColumn, aliasNameColumn });
             entityAliasData.Dock = DockStyle.Fill;
             entityAliasData.Location = new Point(6, 6);
             entityAliasData.MultiSelect = false;
@@ -349,33 +348,6 @@
             entityAliasData.RowTemplate.Height = 25;
             entityAliasData.Size = new Size(498, 104);
             entityAliasData.TabIndex = 0;
-            // 
-            // sourceNameColumn
-            // 
-            sourceNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            sourceNameColumn.DataPropertyName = "SourceName";
-            sourceNameColumn.HeaderText = "Source";
-            sourceNameColumn.MinimumWidth = 100;
-            sourceNameColumn.Name = "sourceNameColumn";
-            sourceNameColumn.ReadOnly = true;
-            // 
-            // scopeNameColumn
-            // 
-            scopeNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            scopeNameColumn.DataPropertyName = "ScopeName";
-            scopeNameColumn.HeaderText = "Scope";
-            scopeNameColumn.MinimumWidth = 100;
-            scopeNameColumn.Name = "scopeNameColumn";
-            scopeNameColumn.ReadOnly = true;
-            // 
-            // aliasNameColumn
-            // 
-            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliasNameColumn.DataPropertyName = "AliasName";
-            aliasNameColumn.HeaderText = "Alias";
-            aliasNameColumn.MinimumWidth = 250;
-            aliasNameColumn.Name = "aliasNameColumn";
-            aliasNameColumn.ReadOnly = true;
             // 
             // modelAliasNavigation
             // 
@@ -398,6 +370,26 @@
             // 
             bindingAlias.AddingNew += bindingAlias_AddingNew;
             bindingAlias.BindingComplete += BindingComplete;
+            // 
+            // scopeNameColumn
+            // 
+            scopeNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            scopeNameColumn.DataPropertyName = "ScopeName";
+            scopeNameColumn.FillWeight = 30F;
+            scopeNameColumn.HeaderText = "Scope";
+            scopeNameColumn.MinimumWidth = 100;
+            scopeNameColumn.Name = "scopeNameColumn";
+            scopeNameColumn.ReadOnly = true;
+            // 
+            // aliasNameColumn
+            // 
+            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliasNameColumn.DataPropertyName = "AliasName";
+            aliasNameColumn.FillWeight = 70F;
+            aliasNameColumn.HeaderText = "Alias";
+            aliasNameColumn.MinimumWidth = 250;
+            aliasNameColumn.Name = "aliasNameColumn";
+            aliasNameColumn.ReadOnly = true;
             // 
             // DomainEntity
             // 
@@ -452,9 +444,8 @@
         private DataGridView entityAliasData;
         private BindingSource bindingAlias;
         private TabControl entityTabLayout;
-        private DataGridViewTextBoxColumn sourceNameColumn;
+        private Controls.ModelAliasNavigation modelAliasNavigation;
         private DataGridViewTextBoxColumn scopeNameColumn;
         private DataGridViewTextBoxColumn aliasNameColumn;
-        private Controls.ModelAliasNavigation modelAliasNavigation;
     }
 }

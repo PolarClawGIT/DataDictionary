@@ -156,16 +156,6 @@ namespace DataDictionary.Main.Forms.Domain
                 newItem.AliasName = modelAliasNavigation.SelectedAlias.AliasName;
                 newItem.ScopeName = modelAliasNavigation.SelectedAlias.ScopeId.ToScopeName();
 
-                if (Program.Data.ModelAlias.ContainsKey(new ModelAliasKey(selected)))
-                {
-                    ModelAliasItem item = Program.Data.ModelAlias[new ModelAliasKey(selected)];
-
-                    if (item.Source is IDbCatalogKey catalogKey && Program.Data.DbCatalogs.FirstOrDefault(w => new DbCatalogKey(catalogKey).Equals(w)) is IDbCatalogItem catalogItem)
-                    { newItem.SourceName = catalogItem.ToAliasName(); }
-                    else if (item.Source is ILibrarySourceKey libraryKey && Program.Data.LibrarySources.FirstOrDefault(w => new LibrarySourceKey(libraryKey).Equals(w)) is ILibrarySourceItem librarySource)
-                    { newItem.SourceName = librarySource.ToAliasName(); }
-                }
-
                 e.NewObject = newItem;
             }
         }

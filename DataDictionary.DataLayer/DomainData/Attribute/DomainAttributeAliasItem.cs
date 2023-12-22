@@ -26,9 +26,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue("AttributeId", value); } }
 
         /// <inheritdoc/>
-        public string? SourceName { get { return GetValue("SourceName"); } set { SetValue("SourceName", value); } }
-
-        /// <inheritdoc/>
         public string? AliasName { get { return GetValue("AliasName"); } set { SetValue("AliasName", value); } }
 
         /// <inheritdoc/>
@@ -37,7 +34,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("SourceName", typeof(string)){ AllowDBNull = true},
             new DataColumn("AliasName", typeof(string)){ AllowDBNull = true},
             new DataColumn("ScopeName", typeof(string)){ AllowDBNull = true},
         };

@@ -1,4 +1,5 @@
-﻿CREATE TABLE [App_DataDictionary].[DomainSource]
+﻿/* Does not work as intended
+CREATE TABLE [App_DataDictionary].[DomainSource]
 (
 	[SourceId]                  UniqueIdentifier NOT NULL CONSTRAINT [DF_DomainSourceId] DEFAULT (newid()),
 	[SourceTitle]               [App_DataDictionary].[typeTitle] Not Null,
@@ -25,3 +26,4 @@ GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DomainSourceName]
     ON [App_DataDictionary].[DomainSource]([SourceName]);
 GO
+*/
