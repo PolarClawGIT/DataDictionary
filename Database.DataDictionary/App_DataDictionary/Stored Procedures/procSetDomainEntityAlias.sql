@@ -21,47 +21,75 @@ Begin Try
 
 	-- Clean Data
 	Declare @Values Table (
-		[EntityId]          UniqueIdentifier Not Null,
+		[EntityId]       UniqueIdentifier Not Null,
 		[AliasId]           UniqueIdentifier Not Null,
 		[ScopeId]           Int Not Null,
 		[AliasElement]		[App_DataDictionary].[typeAliasElement] Not Null,
 		[AliasName]			[App_DataDictionary].[typeAliasName] Not Null,
+		[ParentAliasName]	[App_DataDictionary].[typeAliasElement] Null
+		Primary Key ([EntityId], [AliasId]))
+
+	Declare @Alias Table (
+		[AliasId]           UniqueIdentifier Not Null,
+		[AliasElement]		[App_DataDictionary].[typeAliasElement] Not Null,
+		[AliasName]			[App_DataDictionary].[typeAliasName] Not Null,
 		[ParentAliasName]	[App_DataDictionary].[typeAliasElement] Null,
-		[IsBase]            Bit Not Null,
-		Primary Key ([EntityId], [AliasId] ))
+		Primary Key ([AliasId]))
+
+
+	;With [Alias] As (
+		Select	I.[AliasId],
+				I.[AliasElement],
+				F.[AliasName],
+				F.[ParentAliasName]
+		From	[App_DataDictionary].[DomainAlias] I
+				Cross Apply [App_DataDictionary].[funcGetAliasName](I.[AliasId]) F),
+	[Data] As (	
+		Select	Coalesce(A.[AliasId],NewId()) As [AliasId],
+				N.[AliasElement],
+				N.[AliasName],
+				N.[ParentAliasName],
+				Row_Number() Over (
+					Partition By A.[AliasId], N.[AliasName]
+					Order By N.[AliasName])
+					As [RankIndex]
+		From	@Data D
+				Cross Apply [App_DataDictionary].[funcSplitAliasName](D.[AliasName]) N
+				Left Join [Alias] A
+				On	N.[AliasName] = A.[AliasName])
+	Insert Into @Alias
+	Select	[AliasId],
+			[AliasElement],
+			[AliasName],
+			[ParentAliasName]
+	From	[Data]
+	Where	[RankIndex] = 1
 
 	;With [Scope] As (
 		Select	S.[ScopeId],
 				F.[ScopeName]
 		From	[App_DataDictionary].[ApplicationScope] S
-				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F),
-	[Alias] As (
-		Select	I.[AliasId],
-				F.[AliasName]
-		From	[App_DataDictionary].[DomainAlias] I
-				Cross Apply [App_DataDictionary].[funcGetAliasName](I.[AliasId]) F)
+				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	Coalesce(D.[EntityId], @EntityId) As [EntityId],
-			Coalesce(A.[AliasId], NewId()) As [AliasId],
+			A.[AliasId],
 			S.[ScopeId],
-			N.[AliasElement],
-			N.[AliasName],
-			N.[ParentAliasName],
-			N.[IsBase]
+			A.[AliasElement],
+			A.[AliasName],
+			A.[ParentAliasName]
 	From	@Data D
-			Cross Apply [App_DataDictionary].[funcSplitAliasName](D.[AliasName]) N
 			Left Join [Scope] S
 			On	D.[ScopeName] = S.[ScopeName]
-			Left Join [Alias] A
-			On	N.[AliasName] = A.[AliasName]
+			Left Join @Alias A
+			On	D.[AliasName] = A.[AliasName]
 
 	-- Apply Changes
 	Insert Into [App_DataDictionary].[DomainAlias] ([AliasId], [ParentAliasId], [AliasElement])
 	Select	V.[AliasId],
 			P.[AliasId] As [ParentAliasId],
 			V.[AliasElement]
-	From	@Values V
-			Left Join @Values P
+	From	@Alias V
+			Left Join @Alias P
 			On	V.[ParentAliasName] = P.[AliasName]
 			Left Join [App_DataDictionary].[DomainAlias] T
 			On	V.[AliasId] = T.[AliasId]
@@ -88,7 +116,6 @@ Begin Try
 				[AliasId],
 				[ScopeId]
 		From	@Values
-		Where	[IsBase] = 1
 		Except
 		Select	[EntityId],
 				[AliasId],
@@ -110,8 +137,7 @@ Begin Try
 			Left Join [App_DataDictionary].[DomainEntityAlias] T
 			On	V.[EntityId] = T.[EntityId] And
 				V.[AliasId] = T.[AliasId]
-	Where	T.[EntityId] is Null And
-			V.[IsBase] = 1
+	Where	T.[EntityId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainEntityAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
