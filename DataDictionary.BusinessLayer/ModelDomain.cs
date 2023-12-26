@@ -125,6 +125,10 @@ namespace DataDictionary.BusinessLayer
             ModelKey key = new ModelKey(modelKey);
 
             work.Add(factory.CreateWork(
+                workName: "Save DomainSubjectAreas",
+                command: (conn) => data.DomainSubjectAreas.SaveCommand(conn, key)));
+
+            work.Add(factory.CreateWork(
                 workName: "Save DomainAttributes",
                 command: (conn) => data.DomainAttributes.SaveCommand(conn, key)));
 
@@ -147,10 +151,6 @@ namespace DataDictionary.BusinessLayer
             work.Add(factory.CreateWork(
                 workName: "Save DomainEntityProperties",
                 command: (conn) => data.DomainEntityProperties.SaveCommand(conn, key)));
-
-            work.Add(factory.CreateWork(
-                workName: "Save DomainSubjectAreas",
-                command: (conn) => data.DomainSubjectAreas.SaveCommand(conn, key)));
 
             return work;
         }

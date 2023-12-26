@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainSubjectArea]
-		@ModelId UniqueIdentifier,
+		@ModelId UniqueIdentifier = Null,
+		@SubjectAreaId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeDomainSubjectArea] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -18,40 +19,69 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDomainSubjectArea]
+	If @ModelId is Null and @SubjectAreaId is Null
+	Throw 50000, '@ModelId or @SubjectAreaId must be specified', 1;
+
+	-- Clean the Data, helps performance
+	Declare @Values Table (
+		[SubjectAreaId] UniqueIdentifier Not Null,
+		[SubjectAreaTitle] [App_DataDictionary].[typeTitle] Not Null,
+		[SubjectAreaDescription] [App_DataDictionary].[typeDescription] Null,
+		Primary Key ([SubjectAreaId]))
+
 	Insert Into @Values
-	Select	IsNull(D.[SubjectAreaId],NewId()) As [SubjectAreaId],
+	Select	Coalesce(A.[SubjectAreaId], D.[SubjectAreaId], @SubjectAreaId, NewId()) As [SubjectAreaId],
 			NullIf(Trim(D.[SubjectAreaTitle]),'') As [SubjectAreaTitle],
 			NullIf(Trim(D.[SubjectAreaDescription]),'') As [SubjectAreaDescription]
 	From	@Data D
-
-	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
-
-	If Exists (
-		Select	[SubjectAreaId]
-		From	@Values
-		Group By [SubjectAreaId]
-		Having Count(*) > 1)
-	Throw 50000, '[SubjectAreaId] cannot be duplicate', 3;
+			Left Join [App_DataDictionary].[ModelSubjectArea_AK] A
+			On	@ModelId = A.[ModelId] And
+				NullIf(Trim(D.[SubjectAreaTitle]),'') = A.[SubjectAreaTitle]
 
 	-- Apply Changes
-	-- Note: Merge statement can throw errors with FK and UK constraints.
-	With [Data] As (
-		Select	D.[SubjectAreaId],
-				D.[SubjectAreaTitle],
-				D.[SubjectAreaDescription]
-		From	@Values D
-				Inner Join [App_DataDictionary].[DomainSubjectArea] A
-				On	D.[SubjectAreaId] = A.[SubjectAreaId]),
-	[Delta] As (
+	Update [App_DataDictionary].[ModelAttribute]
+	Set		[SubjectAreaId] = Null
+	From	[App_DataDictionary].[ModelAttribute] T
+			Left Join @Values S
+			On	T.[SubjectAreaId] = S.[SubjectAreaId]
+	Where	S.[SubjectAreaId] is Null And
+			(@SubjectAreaId is Null or T.[SubjectAreaId] = @SubjectAreaId) And
+			(@ModelId is Null or T.[ModelId] = @ModelId)
+	Print FormatMessage ('Update [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Update [App_DataDictionary].[ModelEntity]
+	Set		[SubjectAreaId] = Null
+	From	[App_DataDictionary].[ModelEntity] T
+			Left Join @Values S
+			On	T.[SubjectAreaId] = S.[SubjectAreaId]
+	Where	S.[SubjectAreaId] is Null And
+			(@SubjectAreaId is Null or T.[SubjectAreaId] = @SubjectAreaId) And
+			(@ModelId is Null or T.[ModelId] = @ModelId)
+	Print FormatMessage ('Update [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[ModelSubjectArea]
+	From	[App_DataDictionary].[ModelSubjectArea] T
+			Left Join @Values S
+			On	T.[SubjectAreaId] = S.[SubjectAreaId]
+	Where	S.[SubjectAreaId] is Null And
+			(@SubjectAreaId is Null or T.[SubjectAreaId] = @SubjectAreaId) And
+			(@ModelId is Null or T.[ModelId] = @ModelId)
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[DomainSubjectArea]
+	From	[App_DataDictionary].[DomainSubjectArea] T
+			Left Join @Values S
+			On	T.[SubjectAreaId] = S.[SubjectAreaId]
+	Where	S.[SubjectAreaId] is Null And
+			(@SubjectAreaId is Null or T.[SubjectAreaId] = @SubjectAreaId)
+	Print FormatMessage ('Delete [App_DataDictionary].[DomainSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	;With [Delta] As (
 		Select	[SubjectAreaId],
 				[SubjectAreaTitle],
 				[SubjectAreaDescription]
-		From	[Data]
-		Except
+		From	@Values
+		Except 
 		Select	[SubjectAreaId],
 				[SubjectAreaTitle],
 				[SubjectAreaDescription]
@@ -59,37 +89,35 @@ Begin Try
 	Update [App_DataDictionary].[DomainSubjectArea]
 	Set		[SubjectAreaTitle] = S.[SubjectAreaTitle],
 			[SubjectAreaDescription] = S.[SubjectAreaDescription]
-	From	[Delta] S
-			Inner Join [App_DataDictionary].[DomainSubjectArea] T
-			On	S.[SubjectAreaId] = T.[SubjectAreaId];
+	From	[App_DataDictionary].[DomainSubjectArea] T
+			Inner Join [Delta] S
+			On	T.[SubjectAreaId] = S.[SubjectAreaId]
 	Print FormatMessage ('Update [App_DataDictionary].[DomainSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [App_DataDictionary].[DomainSubjectArea] (
-			[SubjectAreaId],
-			[SubjectAreaTitle],
-			[SubjectAreaDescription])
+				[SubjectAreaId],
+				[SubjectAreaTitle],
+				[SubjectAreaDescription])
 	Select	S.[SubjectAreaId],
 			S.[SubjectAreaTitle],
 			S.[SubjectAreaDescription]
 	From	@Values S
 			Left Join [App_DataDictionary].[DomainSubjectArea] T
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]
-	Where	T.[SubjectAreaId] is Null;
+	Where	T.[SubjectAreaId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	With [Data] As (
-		Select	@ModelId As [ModelId],
-				[SubjectAreaId]
-		From	@Values)
-	Merge [App_DataDictionary].[ModelSubjectArea] As T
-	Using [Data] As S
-	On	T.[ModelId] = S.[ModelId] And
-		T.[SubjectAreaId] = S.[SubjectAreaId]
-	When Not Matched by Target Then
-		Insert ([ModelId], [SubjectAreaId])
-		Values ([ModelId], [SubjectAreaId])
-	When Not Matched by Source And T.[ModelId] = @ModelId Then Delete;
-	Print FormatMessage ('Merge [App_DataDictionary].[ApplicationSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Insert Into [App_DataDictionary].[ModelSubjectArea] (
+			[ModelId],
+			[SubjectAreaId])
+	Select	@ModelId As [ModelId],
+			S.[SubjectAreaId]
+	From	@Values S
+			Left Join [App_DataDictionary].[ModelSubjectArea] T
+			On	@ModelId = T.[ModelId] And
+				S.[SubjectAreaId] = T.[SubjectAreaId]
+	Where	T.[SubjectAreaId] is Null
+	Print FormatMessage ('Insert [App_DataDictionary].[ModelSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
