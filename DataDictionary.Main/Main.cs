@@ -47,7 +47,7 @@ namespace DataDictionary.Main
             InitializeComponent();
             Icon = Resources.Icon_Application;
             toolStrip.Hide(); // Hide base ToolStrip
-            (this as IApplicationDataBind).IsLocked = true;
+            this.IsLocked(true);
 
             // Setup Images for Tree Control
             dataSourceNavigation.ImageList = ModelScopeExtension.ToImageList();
@@ -190,7 +190,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), Program.Data.DomainAttributeAliases); }
 
         private void entitiesToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_ClassPublic), Program.Data.DomainEntities); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Entities), Program.Data.DomainEntities); }
 
         private void entityPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), Program.Data.DomainEntityProperties); }

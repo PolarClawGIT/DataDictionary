@@ -7,6 +7,7 @@ using DataDictionary.Main.Controls;
 using DataDictionary.Main.Properties;
 using System.Collections;
 using System.ComponentModel;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main
 {
@@ -26,7 +27,7 @@ namespace DataDictionary.Main
         {
             {domainModelImageIndex.SubjectArea,  ("SubjectArea", Resources.Diagram) },
             {domainModelImageIndex.Attribute,    ("Attribute",   Resources.Attribute) },
-            {domainModelImageIndex.Entity,       ("Entity",      Resources.Relationship) },
+            {domainModelImageIndex.Entity,       ("Entity",      Resources.Entity) },
             {domainModelImageIndex.Property,     ("Property",    Resources.Property) },
             {domainModelImageIndex.Alias,        ("Alias",       Resources.Synonym) },
         };
@@ -48,8 +49,12 @@ namespace DataDictionary.Main
             foreach (KeyValuePair<TreeNode, object> item in domainModelNodes)
             {
                 if (item.Value is INotifyPropertyChanged notifyPropertyChanged)
-                { notifyPropertyChanged.PropertyChanged -= DomainItem_PropertyChanged; }
+                {   notifyPropertyChanged.PropertyChanged -= DomainItem_PropertyChanged; }
             }
+
+            Program.Data.DomainAttributes.ListChanged -= BindingTable_ListChanged;
+            Program.Data.DomainEntities.ListChanged -= BindingTable_ListChanged;
+            Program.Data.DomainSubjectAreas.ListChanged -= BindingTable_ListChanged;
 
             domainModelNavigation.Nodes.Clear();
             domainModelNodes.Clear();
@@ -97,6 +102,10 @@ namespace DataDictionary.Main
                     && domainModelNodes.Count(c => entityKey.Equals(c.Value)) == 0;
                 }))
             { CreateTreeNode(domainModelNavigation.Nodes, entityItem); }
+
+            Program.Data.DomainAttributes.ListChanged += BindingTable_ListChanged;
+            Program.Data.DomainEntities.ListChanged += BindingTable_ListChanged;
+            Program.Data.DomainSubjectAreas.ListChanged += BindingTable_ListChanged;
 
             domainModelNavigation.Sort();
 
@@ -149,6 +158,10 @@ namespace DataDictionary.Main
                         && domainModelNodes.Count(c => attributeKey.Equals(c.Value)) == 0;
                     }))
             { CreateTreeNode(domainModelNavigation.Nodes, attributeItem); }
+
+            Program.Data.DomainAttributes.ListChanged += BindingTable_ListChanged;
+            Program.Data.DomainEntities.ListChanged += BindingTable_ListChanged;
+            Program.Data.DomainSubjectAreas.ListChanged += BindingTable_ListChanged;
 
             domainModelNavigation.Sort();
 
@@ -242,6 +255,15 @@ namespace DataDictionary.Main
             return result;
         }
 
+        private void BindingTable_ListChanged(object? sender, ListChangedEventArgs e)
+        {
+            ClearDomainModelTree();
+
+            if (sortByAttributeEntityCommand.Checked) { BuildDomainModelTreeByAttribute(); }
+            else if (sortByEntityAttributeCommand.Checked) { BuildDomainModelTreeByEntity(); }
+            else { return; }
+        }
+
         private void domainModelNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (domainModelNavigation.SelectedNode is TreeNode node && domainModelNodes.ContainsKey(node))
@@ -322,8 +344,8 @@ namespace DataDictionary.Main
         {
             ClearDomainModelTree();
 
-            if (sortByAttributeEntityCommand.Checked) { sortByAttributeEntityCommand_Click(sender, e); }
-            else if (sortByEntityAttributeCommand.Checked) { sortByEntityAttributeCommand_Click(sender, e); }
+            if (sortByAttributeEntityCommand.Checked) { BuildDomainModelTreeByAttribute(); }
+            else if (sortByEntityAttributeCommand.Checked) { BuildDomainModelTreeByEntity(); }
             else { return; }
         }
 

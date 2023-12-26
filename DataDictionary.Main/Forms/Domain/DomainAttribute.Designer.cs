@@ -48,14 +48,14 @@
             propertyChoiceData = new Controls.CheckedListBoxData();
             propertyDefinitionTab = new TabPage();
             propertyDefinitionData = new Controls.RichTextBoxData();
-            entityAliasData = new DataGridView();
+            aliasData = new DataGridView();
+            scopeNameColumn = new DataGridViewTextBoxColumn();
+            aliasNameColumn = new DataGridViewTextBoxColumn();
             modelAliasNavigation = new Controls.ModelAliasNavigation();
             subjectAreaData = new Controls.ComboBoxData();
             errorProvider = new ErrorProvider(components);
             bindingProperties = new BindingSource(components);
             bindingAlias = new BindingSource(components);
-            scopeNameColumn = new DataGridViewTextBoxColumn();
-            aliasNameColumn = new DataGridViewTextBoxColumn();
             attributeLayout = new TableLayoutPanel();
             attributePropertyTab = new TabPage();
             propertyLayout = new TableLayoutPanel();
@@ -74,7 +74,7 @@
             propertyDefinitionTab.SuspendLayout();
             aliasTab.SuspendLayout();
             alaisLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)entityAliasData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)aliasData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
@@ -314,7 +314,7 @@
             // 
             alaisLayout.ColumnCount = 1;
             alaisLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            alaisLayout.Controls.Add(entityAliasData, 0, 0);
+            alaisLayout.Controls.Add(aliasData, 0, 0);
             alaisLayout.Controls.Add(modelAliasNavigation, 0, 1);
             alaisLayout.Dock = DockStyle.Fill;
             alaisLayout.Location = new Point(3, 3);
@@ -325,19 +325,39 @@
             alaisLayout.Size = new Size(509, 378);
             alaisLayout.TabIndex = 0;
             // 
-            // entityAliasData
+            // aliasData
             // 
-            entityAliasData.AllowUserToAddRows = false;
-            entityAliasData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            entityAliasData.Columns.AddRange(new DataGridViewColumn[] { scopeNameColumn, aliasNameColumn });
-            entityAliasData.Dock = DockStyle.Fill;
-            entityAliasData.Location = new Point(3, 3);
-            entityAliasData.MultiSelect = false;
-            entityAliasData.Name = "entityAliasData";
-            entityAliasData.ReadOnly = true;
-            entityAliasData.RowTemplate.Height = 25;
-            entityAliasData.Size = new Size(503, 107);
-            entityAliasData.TabIndex = 1;
+            aliasData.AllowUserToAddRows = false;
+            aliasData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            aliasData.Columns.AddRange(new DataGridViewColumn[] { scopeNameColumn, aliasNameColumn });
+            aliasData.Dock = DockStyle.Fill;
+            aliasData.Location = new Point(3, 3);
+            aliasData.MultiSelect = false;
+            aliasData.Name = "aliasData";
+            aliasData.ReadOnly = true;
+            aliasData.RowTemplate.Height = 25;
+            aliasData.Size = new Size(503, 107);
+            aliasData.TabIndex = 1;
+            // 
+            // scopeNameColumn
+            // 
+            scopeNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            scopeNameColumn.DataPropertyName = "ScopeName";
+            scopeNameColumn.FillWeight = 30F;
+            scopeNameColumn.HeaderText = "Scope";
+            scopeNameColumn.MinimumWidth = 100;
+            scopeNameColumn.Name = "scopeNameColumn";
+            scopeNameColumn.ReadOnly = true;
+            // 
+            // aliasNameColumn
+            // 
+            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliasNameColumn.DataPropertyName = "AliasName";
+            aliasNameColumn.FillWeight = 70F;
+            aliasNameColumn.HeaderText = "Alias";
+            aliasNameColumn.MinimumWidth = 250;
+            aliasNameColumn.Name = "aliasNameColumn";
+            aliasNameColumn.ReadOnly = true;
             // 
             // modelAliasNavigation
             // 
@@ -374,26 +394,6 @@
             // 
             bindingAlias.AddingNew += bindingAlias_AddingNew;
             // 
-            // scopeNameColumn
-            // 
-            scopeNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            scopeNameColumn.DataPropertyName = "ScopeName";
-            scopeNameColumn.FillWeight = 30F;
-            scopeNameColumn.HeaderText = "Scope";
-            scopeNameColumn.MinimumWidth = 100;
-            scopeNameColumn.Name = "scopeNameColumn";
-            scopeNameColumn.ReadOnly = true;
-            // 
-            // aliasNameColumn
-            // 
-            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliasNameColumn.DataPropertyName = "AliasName";
-            aliasNameColumn.FillWeight = 70F;
-            aliasNameColumn.HeaderText = "Alias";
-            aliasNameColumn.MinimumWidth = 250;
-            aliasNameColumn.Name = "aliasNameColumn";
-            aliasNameColumn.ReadOnly = true;
-            // 
             // DomainAttribute
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -418,7 +418,7 @@
             propertyDefinitionTab.PerformLayout();
             aliasTab.ResumeLayout(false);
             alaisLayout.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)entityAliasData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)aliasData).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
@@ -442,7 +442,7 @@
         private DataGridViewTextBoxColumn propertyValueColumn;
         private Controls.CheckedListBoxData propertyChoiceData;
         private Controls.ComboBoxData subjectAreaData;
-        private DataGridView entityAliasData;
+        private DataGridView aliasData;
         private Controls.ModelAliasNavigation modelAliasNavigation;
         private BindingSource bindingAlias;
         private TabControl attributeTabLayout;

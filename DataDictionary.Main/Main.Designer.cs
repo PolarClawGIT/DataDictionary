@@ -317,7 +317,7 @@
             // 
             newEntityCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             newEntityCommand.DropDownItems.AddRange(new ToolStripItem[] { entitiesToolStripMenuItem, entityPropertiesToolStripMenuItem, entityAliasToolStripMenuItem });
-            newEntityCommand.Image = Properties.Resources.NewRelationship;
+            newEntityCommand.Image = Properties.Resources.NewEntity;
             newEntityCommand.ImageTransparentColor = Color.Magenta;
             newEntityCommand.Name = "newEntityCommand";
             newEntityCommand.Size = new Size(32, 22);
@@ -326,7 +326,7 @@
             // 
             // entitiesToolStripMenuItem
             // 
-            entitiesToolStripMenuItem.Image = Properties.Resources.Relationship;
+            entitiesToolStripMenuItem.Image = Properties.Resources.Entity;
             entitiesToolStripMenuItem.Name = "entitiesToolStripMenuItem";
             entitiesToolStripMenuItem.Size = new Size(201, 22);
             entitiesToolStripMenuItem.Text = "browse &Entities";

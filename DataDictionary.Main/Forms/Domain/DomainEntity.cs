@@ -24,15 +24,17 @@ namespace DataDictionary.Main.Forms.Domain
         public DomainEntity() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.Icon_ClassPublic;
+            this.Icon = Resources.Icon_Entities;
 
             newItemCommand.Enabled = true;
             newItemCommand.Image = Resources.NewProperty;
             newItemCommand.ToolTipText = "add Property";
             newItemCommand.Click += NewItemCommand_Click;
+
+            deleteItemCommand.Click += DeleteItemCommand_Click;
+            deleteItemCommand.Image = Resources.DeleteEntity;
+            deleteItemCommand.ToolTipText = "Remove the Entity";
         }
-
-
 
         private void DomainEntity_Load(object sender, EventArgs e)
         {
@@ -78,12 +80,17 @@ namespace DataDictionary.Main.Forms.Domain
                 { BindChoiceData(property, propItem); }
 
                 bindingAlias.DataSource = new BindingView<DomainEntityAliasItem>(Program.Data.DomainEntityAliases, w => DataKey.Equals(w));
-                entityAliasData.AutoGenerateColumns = false;
-                entityAliasData.DataSource = bindingAlias;
+                aliasData.AutoGenerateColumns = false;
+                aliasData.DataSource = bindingAlias;
 
+                deleteItemCommand.Enabled = true;
                 return true;
             }
-            else { return false; }
+            else
+            {
+                deleteItemCommand.Enabled = false;
+                return false;
+            }
         }
 
         public void UnbindDataCore()
@@ -97,7 +104,7 @@ namespace DataDictionary.Main.Forms.Domain
             propertyValueData.DataBindings.Clear();
             propertyDefinitionData.DataBindings.Clear();
 
-            entityAliasData.DataSource = null;
+            aliasData.DataSource = null;
             bindingAlias.DataSource = null;
         }
 
@@ -275,6 +282,19 @@ namespace DataDictionary.Main.Forms.Domain
             else { }
         }
 
+        private void DeleteItemCommand_Click(object? sender, EventArgs e)
+        {
+            if (Program.Data.DomainEntities.FirstOrDefault(w => DataKey.Equals(w)) is DomainEntityItem data)
+            {
+                DomainEntityKey key = new DomainEntityKey(data);
+                this.UnbindData();
+                this.IsLocked(true);
+
+                Program.Data.DomainEntityProperties.Remove(key);
+                Program.Data.DomainEntityAliases.Remove(key);
+                Program.Data.DomainEntities.Remove(data);
+            }
+        }
 
     }
 }

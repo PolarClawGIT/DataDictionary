@@ -23,6 +23,10 @@ namespace DataDictionary.Main.Forms.Domain
         {
             InitializeComponent();
             this.Icon = Resources.Icon_Diagram;
+
+            deleteItemCommand.Click += DeleteItemCommand_Click;
+            deleteItemCommand.Image = Resources.DeleteDiagram;
+            deleteItemCommand.ToolTipText = "Remove the Subject Area";
         }
 
         private void DomainSubjectArea_Load(object sender, EventArgs e)
@@ -42,9 +46,15 @@ namespace DataDictionary.Main.Forms.Domain
 
                 entityData.AutoGenerateColumns = false;
                 entityData.DataSource = new BindingView<DomainEntityItem>(Program.Data.DomainEntities, w => DataKey.Equals(w));
+
+                deleteItemCommand.Enabled = true;
                 return true;
             }
-            else { return false; }
+            else
+            {
+                deleteItemCommand.Enabled = false;
+                return false;
+            }
         }
 
         public void UnbindDataCore()
@@ -55,6 +65,22 @@ namespace DataDictionary.Main.Forms.Domain
             entityData.DataSource = null;
         }
 
+        private void DeleteItemCommand_Click(object? sender, EventArgs e)
+        {
+            if (Program.Data.DomainSubjectAreas.FirstOrDefault(w => DataKey.Equals(w)) is DomainSubjectAreaItem data)
+            {
+                DomainSubjectAreaKey key = new DomainSubjectAreaKey(data);
+                this.UnbindData();
+                this.IsLocked(true);
 
+                foreach (DomainAttributeItem item in Program.Data.DomainAttributes.Where(w => key.Equals(w)).ToList())
+                { item.SubjectAreaId = null; }
+
+                foreach (DomainEntityItem item in Program.Data.DomainEntities.Where(w => key.Equals(w)).ToList())
+                { item.SubjectAreaId = null; }
+
+                Program.Data.DomainSubjectAreas.Remove(data);
+            }
+        }
     }
 }

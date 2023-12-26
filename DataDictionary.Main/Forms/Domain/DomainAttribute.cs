@@ -31,9 +31,11 @@ namespace DataDictionary.Main.Forms.Domain
             newItemCommand.Image = Resources.NewProperty;
             newItemCommand.ToolTipText = "add Property";
             newItemCommand.Click += NewItemCommand_Click;
+
+            deleteItemCommand.Click += DeleteItemCommand_Click;
+            deleteItemCommand.Image = Resources.DeleteAttribute;
+            deleteItemCommand.ToolTipText = "Remove the Attribute";
         }
-
-
 
         private void DomainAttribute_Load(object sender, EventArgs e)
         {
@@ -79,12 +81,17 @@ namespace DataDictionary.Main.Forms.Domain
                 { BindChoiceData(property, propItem); }
 
                 bindingAlias.DataSource = new BindingView<DomainAttributeAliasItem>(Program.Data.DomainAttributeAliases, w => DataKey.Equals(w));
-                entityAliasData.AutoGenerateColumns = false;
-                entityAliasData.DataSource = bindingAlias;
+                aliasData.AutoGenerateColumns = false;
+                aliasData.DataSource = bindingAlias;
 
+                deleteItemCommand.Enabled = true;
                 return true;
             }
-            else { return false; }
+            else
+            {
+                deleteItemCommand.Enabled = false;
+                return false;
+            }
         }
         public void UnbindDataCore()
         {
@@ -96,6 +103,9 @@ namespace DataDictionary.Main.Forms.Domain
             propertyTypeData.DataBindings.Clear();
             propertyValueData.DataBindings.Clear();
             propertyDefinitionData.DataBindings.Clear();
+
+            aliasData.DataSource = null;
+            bindingAlias.DataSource = null;
         }
 
         void BindChoiceData(PropertyItem property, DomainAttributePropertyItem data)
@@ -140,7 +150,6 @@ namespace DataDictionary.Main.Forms.Domain
 
             e.NewObject = newItem;
         }
-
 
         private void BindingComplete(object sender, BindingCompleteEventArgs e)
         { // Helps with debugging code.
@@ -280,6 +289,20 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 newItemCommand.Enabled = false;
                 newItemCommand.Image = Resources.NewDocument;
+            }
+        }
+
+        private void DeleteItemCommand_Click(object? sender, EventArgs e)
+        {
+            if (Program.Data.DomainAttributes.FirstOrDefault(w => DataKey.Equals(w)) is DomainAttributeItem data)
+            {
+                DomainAttributeKey key = new DomainAttributeKey(data);
+                this.UnbindData();
+                this.IsLocked(true);
+
+                Program.Data.DomainAttributeAliases.Remove(key);
+                Program.Data.DomainAttributeProperties.Remove(key);
+                Program.Data.DomainAttributes.Remove(data);
             }
         }
     }
