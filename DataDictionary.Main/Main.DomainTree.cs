@@ -44,6 +44,7 @@ namespace DataDictionary.Main
         List<Object> expandedDomanNode = new List<object>();
         void ClearDomainModelTree()
         {
+            expandedDomanNode.Clear();
             expandedDomanNode.AddRange(dbDataNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value));
 
             foreach (KeyValuePair<TreeNode, object> item in domainModelNodes)
@@ -109,9 +110,8 @@ namespace DataDictionary.Main
 
             domainModelNavigation.Sort();
 
-            foreach (TreeNode item in dbDataNodes.Where(w => expandedDbNode.Contains(w.Value)).Select(s => s.Key).ToList())
+            foreach (TreeNode item in dbDataNodes.Where(w => expandedDomanNode.Contains(w.Value)).Select(s => s.Key).ToList())
             { item.ExpandParent(); }
-            expandedDbNode.Clear();
 
             dataSourceNavigation.EndUpdate();
         }
@@ -165,9 +165,8 @@ namespace DataDictionary.Main
 
             domainModelNavigation.Sort();
 
-            foreach (TreeNode item in dbDataNodes.Where(w => expandedDbNode.Contains(w.Value)).Select(s => s.Key).ToList())
+            foreach (TreeNode item in dbDataNodes.Where(w => expandedDomanNode.Contains(w.Value)).Select(s => s.Key).ToList())
             { item.ExpandParent(); }
-            expandedDbNode.Clear();
 
             dataSourceNavigation.EndUpdate();
         }

@@ -24,6 +24,7 @@ namespace DataDictionary.Main
         List<Object> expandedDbNode = new List<object>();
         void ClearDataSourcesTree()
         {
+            expandedDbNode.Clear();
             expandedDbNode.AddRange(dbDataNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value));
 
             dataSourceNavigation.Nodes.Clear();
@@ -50,7 +51,6 @@ namespace DataDictionary.Main
             {
                 foreach (TreeNode item in dbDataNodes.Where(w => expandedDbNode.Contains(w.Value)).Select(s => s.Key).ToList())
                 { item.ExpandParent(); }
-                expandedDbNode.Clear();
 
                 dataSourceNavigation.UseWaitCursor = false;
                 dataSourceNavigation.Enabled = true;
@@ -97,7 +97,6 @@ namespace DataDictionary.Main
                 }
             }
         }
-
 
         private void dataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
