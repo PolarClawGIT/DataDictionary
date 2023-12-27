@@ -69,7 +69,11 @@ namespace DataDictionary.Main
 
                 void CreateNodes(TreeNodeCollection target, IEnumerable<ModelAliasItem> items)
                 {
-                    foreach (ModelAliasItem item in items.OrderBy(o => o.ItemName))
+                    foreach (ModelAliasItem item in items
+                        .OrderBy(o => o.OrdinalPosition)
+                        .ThenBy(o => o.ItemName)
+                        .GroupBy(g => g.TryScope())
+                        .SelectMany(s => s))
                     {
                         TreeNode node = dataSourceNavigation.Invoke<TreeNode>(() =>
                         {

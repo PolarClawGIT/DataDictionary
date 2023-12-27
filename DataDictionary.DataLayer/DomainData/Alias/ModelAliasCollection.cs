@@ -52,6 +52,10 @@ namespace DataDictionary.DataLayer.DomainData.Alias
             {
                 ModelAliasKey newKey = newAliasKey(data);
 
+                Int32 ordinalPosition = Int32.MaxValue;
+                if (data is IDbColumnPosition pos && pos.OrdinalPosition is Int32 posValue)
+                { ordinalPosition = posValue; }
+
                 ModelAliasItem newItem = new ModelAliasItem<T>()
                 {
                     AliasName = toAliasName(data),
@@ -59,8 +63,11 @@ namespace DataDictionary.DataLayer.DomainData.Alias
                     ScopeId = toScopeType(data),
                     Source = data,
                     SystemId = newKey.SystemId,
-                    SystemParentId = parentKey.SystemId
+                    SystemParentId = parentKey.SystemId,
+                    OrdinalPosition = ordinalPosition
                 };
+
+
 
                 if (this.ContainsKey(newKey))
                 {

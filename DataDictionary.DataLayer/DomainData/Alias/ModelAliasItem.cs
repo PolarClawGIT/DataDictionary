@@ -23,6 +23,10 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         Guid SystemParentId { get; }
 
+        /// <summary>
+        /// The Position/Order of the Item within Like Items
+        /// </summary>
+        Int32 OrdinalPosition { get; }
     }
 
     /// <summary>
@@ -44,6 +48,9 @@ namespace DataDictionary.DataLayer.DomainData.Alias
 
         /// <inheritdoc/>
         public virtual String ItemName { get; init; } = String.Empty;
+
+        /// <inheritdoc/>
+        public virtual Int32 OrdinalPosition { get; init; } = Int32.MaxValue;
 
         /// <summary>
         /// List of keys that are the children of this record.

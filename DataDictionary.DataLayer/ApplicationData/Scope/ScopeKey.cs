@@ -25,7 +25,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// This is a wrapper around the ScopeType enum.
     /// Gives me better control and more consistent syntax then implementation with extension methods.
     /// </remarks>
-    public class ScopeKey : IScopeKey, IKeyEquality<IScopeKey>, IEquatable<ScopeType>, IParsable<ScopeKey>
+    public class ScopeKey : IScopeKey, IKeyComparable<IScopeKey>, IEquatable<ScopeType>, IParsable<ScopeKey>
     {
         /// <inheritdoc/>
         public ScopeType ScopeId { get; init; } = ScopeType.Null;
@@ -87,6 +87,18 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         }
 
         /// <inheritdoc/>
+        public virtual int CompareTo(IScopeKey? other)
+        {
+            if (other is ScopeKey value)
+            { return string.Compare(this.ToString(), value.ToString(), true); }
+            else { return 1; }
+        }
+
+        /// <inheritdoc/>
+        public virtual int CompareTo(object? obj)
+        { if (obj is IScopeKey value) { return CompareTo(new ScopeKey(value)); } else { return 1; } }
+
+        /// <inheritdoc/>
         public override bool Equals(object? obj)
         { return obj is IScopeKey value && this.Equals(new ScopeKey(value)); }
 
@@ -97,6 +109,22 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <inheritdoc/>
         public static bool operator !=(ScopeKey left, ScopeKey right)
         { return !left.Equals(right); }
+
+        /// <inheritdoc/>
+        public static bool operator <(ScopeKey left, ScopeKey right)
+        { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
+
+        /// <inheritdoc/>
+        public static bool operator <=(ScopeKey left, ScopeKey right)
+        { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
+
+        /// <inheritdoc/>
+        public static bool operator >(ScopeKey left, ScopeKey right)
+        { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
+
+        /// <inheritdoc/>
+        public static bool operator >=(ScopeKey left, ScopeKey right)
+        { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
