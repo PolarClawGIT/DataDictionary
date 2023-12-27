@@ -234,6 +234,7 @@ Select	@CatalogId As [CatalogId],
 	R.[is_insert_all] As [IsInsertAll],
 	R.[is_incomplete] As [IsIncomplete]
 From	[sys].[dm_sql_referenced_entities] (@ObjectName, 'OBJECT') R
+Where	R.[is_ambiguous] = 0 -- These cannot be determined except at runtime
 End Try
 Begin Catch
 	Throw; -- Try/Catch is needed Because [sys].[dm_sql_referenced_entities] can generate error msg 2020 that the Try/Catch does not trap (be design).
