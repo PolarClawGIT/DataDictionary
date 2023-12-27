@@ -10,6 +10,6 @@ namespace DataDictionary.BusinessLayer
     public partial class ModelData: IModelAlias
     {
         /// <inheritdoc/>
-        public ModelAliasCollection ModelAlias { get; } = new ModelAliasCollection();
+        public ModelAliasDictionary ModelAlias { get; } = new ModelAliasDictionary();
     }
 }

@@ -20,8 +20,40 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     /// <summary>
     /// Collection of Model Alias Items with hierarchy support.
     /// </summary>
-    public class ModelAliasCollection : SortedList<ModelAliasKey, ModelAliasItem>
+    /// <remarks>
+    /// SortedDictionary was chosen over Dictionary or a SortedList.
+    /// The application needs to be able to load the structure then be able to 
+    /// lookup any given node in the tree by Key.
+    /// The SortedDictionary and SortedList both provided a high performance lookup.
+    /// The functionality of both are identical for the purpose of this application.
+    /// A Dictionary, by contrast, provided to be a slower because of a lack of a B-Tree lookup.
+    /// For effective use of this structure, get the element by Key not any type of ForEach including LINQ.
+    /// 
+    /// Important: The Key is a GUID. As such, the order is not reflective of how the structure is displayed.
+    /// The actual order is not important. Only that the structure uses an internal B-Tree lookup to speed process up.
+    /// </remarks>
+    public class ModelAliasDictionary : SortedDictionary<ModelAliasKey, ModelAliasItem>
     {
+        /// <summary>
+        /// Root key for the hierarchy.
+        /// </summary>
+        public ModelAliasItem RootItem { get; private set; }
+
+        /// <summary>
+        /// Constructor for ModelAliasCollection
+        /// </summary>
+        public ModelAliasDictionary() : base()
+        {
+            ModelAliasItem rootItem = new ModelAliasItem()
+            {
+                AliasName = String.Empty,
+                ScopeId = ScopeType.Null,
+                SystemId = Guid.Empty
+            };
+
+            RootItem = rootItem;
+        }
+        
         /// <summary>
         /// Generic Add of a new Item to the Collection
         /// </summary>
@@ -301,24 +333,6 @@ namespace DataDictionary.DataLayer.DomainData.Alias
             { this.Remove(item); }
         }
 
-        /// <summary>
-        /// Root key for the hierarchy.
-        /// </summary>
-        public ModelAliasItem RootItem { get; private set; }
 
-        /// <summary>
-        /// Constructor for ModelAliasCollection
-        /// </summary>
-        public ModelAliasCollection() : base()
-        {
-            ModelAliasItem rootItem = new ModelAliasItem()
-            {
-                AliasName = String.Empty,
-                ScopeId = ScopeType.Null,
-                SystemId = Guid.Empty
-            };
-
-            RootItem = rootItem;
-        }
     }
 }

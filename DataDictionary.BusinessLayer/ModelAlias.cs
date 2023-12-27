@@ -26,7 +26,7 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// List of available Model Alias Items from Catalogs and Libraries.
         /// </summary>
-        ModelAliasCollection ModelAlias { get; }
+        ModelAliasDictionary ModelAlias { get; }
     }
 
     /// <summary>
