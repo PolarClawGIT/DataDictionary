@@ -49,7 +49,7 @@ namespace DataDictionary.Main
             foreach (KeyValuePair<TreeNode, object> item in domainModelNodes)
             {
                 if (item.Value is INotifyPropertyChanged notifyPropertyChanged)
-                {   notifyPropertyChanged.PropertyChanged -= DomainItem_PropertyChanged; }
+                { notifyPropertyChanged.PropertyChanged -= DomainItem_PropertyChanged; }
             }
 
             Program.Data.DomainAttributes.ListChanged -= BindingTable_ListChanged;

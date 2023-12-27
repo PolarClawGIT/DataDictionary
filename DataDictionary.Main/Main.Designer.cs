@@ -311,7 +311,7 @@
             menuAttributeAlaises.Name = "menuAttributeAlaises";
             menuAttributeAlaises.Size = new Size(218, 22);
             menuAttributeAlaises.Text = "browse Attribute A&laises";
-            menuAttributeAlaises.Click += menuAttributeProperties_Click;
+            menuAttributeAlaises.Click += menuAttributeAlaises_Click;
             // 
             // newEntityCommand
             // 
@@ -415,7 +415,7 @@
             navigationDataSourceTab.Location = new Point(4, 24);
             navigationDataSourceTab.Name = "navigationDataSourceTab";
             navigationDataSourceTab.Padding = new Padding(3);
-            navigationDataSourceTab.Size = new Size(210, 391);
+            navigationDataSourceTab.Size = new Size(290, 357);
             navigationDataSourceTab.TabIndex = 0;
             navigationDataSourceTab.Text = "Data Sources";
             // 
@@ -431,7 +431,7 @@
             dataSourceLayout.RowCount = 2;
             dataSourceLayout.RowStyles.Add(new RowStyle());
             dataSourceLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            dataSourceLayout.Size = new Size(204, 385);
+            dataSourceLayout.Size = new Size(284, 351);
             dataSourceLayout.TabIndex = 1;
             // 
             // dataSourceToolStrip
@@ -439,7 +439,7 @@
             dataSourceToolStrip.Items.AddRange(new ToolStripItem[] { manageDatabasesCommand, manageLibrariesCommand });
             dataSourceToolStrip.Location = new Point(0, 0);
             dataSourceToolStrip.Name = "dataSourceToolStrip";
-            dataSourceToolStrip.Size = new Size(204, 25);
+            dataSourceToolStrip.Size = new Size(284, 25);
             dataSourceToolStrip.TabIndex = 0;
             dataSourceToolStrip.Text = "toolStrip1";
             // 
@@ -580,7 +580,7 @@
             dataSourceNavigation.HideSelection = false;
             dataSourceNavigation.Location = new Point(3, 28);
             dataSourceNavigation.Name = "dataSourceNavigation";
-            dataSourceNavigation.Size = new Size(198, 354);
+            dataSourceNavigation.Size = new Size(278, 320);
             dataSourceNavigation.TabIndex = 0;
             dataSourceNavigation.NodeMouseDoubleClick += dataSourceNavigation_NodeMouseDoubleClick;
             // 
