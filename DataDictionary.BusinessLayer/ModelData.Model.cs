@@ -66,7 +66,7 @@ namespace DataDictionary.BusinessLayer
                     if (this.Properties.FirstOrDefault(w => propertyByName.Equals(w)) is PropertyItem property)
                     {
                         PropertyKey propertyKey = new PropertyKey(property);
-                        DomainAttributePropertyItem? attributeProperty = this.DomainAttributeProperties.FirstOrDefault(w => attributeKey.Equals(w) && propertyByName.Equals(w));
+                        DomainAttributePropertyItem? attributeProperty = this.DomainAttributeProperties.FirstOrDefault(w => attributeKey.Equals(w) && propertyKey.Equals(w));
 
                         // Special Handling, I want to copy the MS_Description to the Attribute Description if there is none.
                         if (String.IsNullOrWhiteSpace(attributeItem.AttributeDescription) && propertyByName.ExtendedProperty == "MS_Description")
@@ -77,6 +77,7 @@ namespace DataDictionary.BusinessLayer
                             attributeProperty = new DomainAttributePropertyItem(attributeItem, propertyKey, propertyItem);
                             this.DomainAttributeProperties.Add(attributeProperty);
                         }
+
                     }
                 }
             }
