@@ -30,14 +30,13 @@
         {
             components = new System.ComponentModel.Container();
             SplitContainer helpSplitLayout;
-            TableLayoutPanel helpDetailLayout;
             helpContentNavigation = new TreeView();
+            helpDetailLayout = new TableLayoutPanel();
             helpSubjectData = new Controls.TextBoxData();
             helpNameSpaceData = new Controls.TextBoxData();
             helpTextData = new Controls.RichTextBoxData();
             errorProvider = new ErrorProvider(components);
             helpSplitLayout = new SplitContainer();
-            helpDetailLayout = new TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)helpSplitLayout).BeginInit();
             helpSplitLayout.Panel1.SuspendLayout();
             helpSplitLayout.Panel2.SuspendLayout();
@@ -50,7 +49,7 @@
             // 
             helpSplitLayout.BorderStyle = BorderStyle.FixedSingle;
             helpSplitLayout.Dock = DockStyle.Fill;
-            helpSplitLayout.Location = new Point(0, 0);
+            helpSplitLayout.Location = new Point(0, 25);
             helpSplitLayout.Name = "helpSplitLayout";
             // 
             // helpSplitLayout.Panel1
@@ -60,7 +59,7 @@
             // helpSplitLayout.Panel2
             // 
             helpSplitLayout.Panel2.Controls.Add(helpDetailLayout);
-            helpSplitLayout.Size = new Size(736, 596);
+            helpSplitLayout.Size = new Size(736, 571);
             helpSplitLayout.SplitterDistance = 153;
             helpSplitLayout.TabIndex = 0;
             // 
@@ -69,7 +68,7 @@
             helpContentNavigation.Dock = DockStyle.Fill;
             helpContentNavigation.Location = new Point(0, 0);
             helpContentNavigation.Name = "helpContentNavigation";
-            helpContentNavigation.Size = new Size(151, 594);
+            helpContentNavigation.Size = new Size(151, 569);
             helpContentNavigation.TabIndex = 0;
             helpContentNavigation.NodeMouseDoubleClick += helpContentNavigation_NodeMouseDoubleClick;
             // 
@@ -88,7 +87,7 @@
             helpDetailLayout.RowStyles.Add(new RowStyle());
             helpDetailLayout.RowStyles.Add(new RowStyle());
             helpDetailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            helpDetailLayout.Size = new Size(577, 594);
+            helpDetailLayout.Size = new Size(577, 569);
             helpDetailLayout.TabIndex = 0;
             // 
             // helpSubjectData
@@ -126,7 +125,7 @@
             helpTextData.Name = "helpTextData";
             helpTextData.ReadOnly = false;
             helpTextData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
-            helpTextData.Size = new Size(571, 488);
+            helpTextData.Size = new Size(571, 463);
             helpTextData.TabIndex = 2;
             helpTextData.Validated += helpTextData_Validated;
             helpTextData.Validating += helpTextData_Validating;
@@ -164,5 +163,6 @@
         private Controls.RichTextBoxData helpTextData;
         private Controls.TextBoxData helpSubjectData;
         private ErrorProvider errorProvider;
+        private TableLayoutPanel helpDetailLayout;
     }
 }

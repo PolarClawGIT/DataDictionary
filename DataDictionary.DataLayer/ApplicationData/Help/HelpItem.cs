@@ -63,7 +63,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
             new DataColumn("HelpId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("HelpParentId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("HelpSubject", typeof(string)){ AllowDBNull = false},
-            new DataColumn("HelpText", typeof(string)){ AllowDBNull = false},
+            new DataColumn("HelpText", typeof(string)){ AllowDBNull = true},
             new DataColumn("NameSpace", typeof(string)){ AllowDBNull = true},
         };
 

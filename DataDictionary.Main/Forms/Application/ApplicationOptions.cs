@@ -63,8 +63,8 @@ namespace DataDictionary.Main.Dialogs
 
         private void commandSaveToFile_Click(object sender, EventArgs e)
         {
-
-            this.DoWork(Program.Data.SaveApplicationData(new FileInfo(Settings.Default.AppDataFile)), OnComplete);
+            FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
+            this.DoWork(Program.Data.SaveApplicationData(appDataFile), OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             { } // Nothing to do at this point
@@ -73,7 +73,9 @@ namespace DataDictionary.Main.Dialogs
         private void commandLoadFromFile_Click(object sender, EventArgs e)
         {
             SendMessage(new DbApplicationBatchStarting());
-            this.DoWork(Program.Data.LoadApplicationData(new FileInfo(Settings.Default.AppDataFile)), OnComplete);
+
+            FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
+            this.DoWork(Program.Data.LoadApplicationData(appDataFile), OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             { SendMessage(new DbApplicationBatchCompleted()); }

@@ -19,10 +19,16 @@ namespace DataDictionary.Main.Dialogs
 {
     partial class HelpSubject : ApplicationBase
     {
-        HelpItem helpItem = new HelpItem();
-        HelpKey helpKey;
-        HelpKeyUnique initNameSpace;
+        HelpItem? helpItem = null;
+        HelpKey? helpKey;
+        HelpKeyUnique? initNameSpace;
         String initHelpSubject = String.Empty;
+
+        Boolean IsLocked
+        {
+            get { return !helpDetailLayout.Enabled; }
+            set { helpDetailLayout.Enabled = !value; }
+        }
 
         public HelpSubject() : base()
         {
@@ -38,38 +44,30 @@ namespace DataDictionary.Main.Dialogs
             deleteItemCommand.Click += DeleteItemCommand_Click;
             deleteItemCommand.Image = Resources.DeleteStatusHelp;
 
-            helpKey = new HelpKey(helpItem);
-            initNameSpace = new HelpKeyUnique(helpItem);
-
             // Setup Images for Tree Control
             SetImages(helpContentNavigation, helpContentImageItems.Values);
         }
 
 
         public HelpSubject(Object targetForm) : this()
-        {
-            initNameSpace = new HelpKeyUnique(targetForm);
-            helpItem.NameSpace = initNameSpace.NameSpace;
-            helpItem.HelpSubject = targetForm.GetType().Name;
-        }
+        { initNameSpace = new HelpKeyUnique(targetForm); }
 
         public HelpSubject(String targetSubject) : this()
-        {
-            initHelpSubject = targetSubject;
-            helpItem.HelpSubject = targetSubject;
-        }
+        { initHelpSubject = targetSubject; }
 
         private void NewItemCommand_Click(object? sender, EventArgs e)
         {
             UnBindData();
-            helpItem = new HelpItem();
+            helpItem = new HelpItem() { HelpSubject = "(new Subject)" };
             helpKey = new HelpKey(helpItem);
+            Program.Data.HelpSubjects.Add(helpItem);
+            BuildHelpContentTree();
             BindData();
         }
 
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
-            if (Program.Data.HelpSubjects.FirstOrDefault(w => helpKey.Equals(w)) is HelpItem item)
+            if (Program.Data.HelpSubjects.FirstOrDefault(w => helpKey is not null && helpKey.Equals(w)) is HelpItem item)
             {
                 UnBindData();
                 Program.Data.HelpSubjects.Remove(item);
@@ -91,15 +89,19 @@ namespace DataDictionary.Main.Dialogs
         {
             errorProvider.Clear();
 
-            if (Program.Data.HelpSubjects.FirstOrDefault(w => helpKey.Equals(w)) is HelpItem byKey)
-            { helpItem = byKey; }
-            else if (Program.Data.HelpSubjects.FirstOrDefault(w => initNameSpace.Equals(w)) is HelpItem byNameSpace)
-            { helpItem = byNameSpace; helpKey = new HelpKey(byNameSpace); }
+            if (helpKey is null && initNameSpace is null)
+            { IsLocked = true; }
+            else if (helpKey is not null && Program.Data.HelpSubjects.FirstOrDefault(w => helpKey.Equals(w)) is HelpItem byKey)
+            { helpItem = byKey; IsLocked = false; }
+            else if (initNameSpace is not null && Program.Data.HelpSubjects.FirstOrDefault(w => initNameSpace.Equals(w)) is HelpItem byNameSpace)
+            { helpItem = byNameSpace; helpKey = new HelpKey(byNameSpace); IsLocked = false; }
             else if (Program.Data.HelpSubjects.FirstOrDefault(w => String.Equals(w.HelpSubject, initHelpSubject, StringComparison.OrdinalIgnoreCase)) is HelpItem bySubject)
-            { helpItem = bySubject; helpKey = new HelpKey(bySubject); }
+            { helpItem = bySubject; helpKey = new HelpKey(bySubject); IsLocked = false; }
 
             if (helpItem is not null)
             {
+                var x = helpItem.RowState();
+
                 helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpItem, nameof(helpItem.HelpSubject)));
                 helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpItem, nameof(helpItem.NameSpace)));
                 helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpItem, nameof(helpItem.HelpText)));
@@ -136,7 +138,7 @@ namespace DataDictionary.Main.Dialogs
                 TreeNode subjectNode = CreateNode(item, helpContentImageIndex.HelpPage, null);
                 helpContentNavigation.Nodes.Add(subjectNode);
 
-                if (helpKey.Equals(item)) { helpContentNavigation.SelectedNode = subjectNode; }
+                if (helpKey is not null && helpKey.Equals(item)) { helpContentNavigation.SelectedNode = subjectNode; }
             }
 
             TreeNode CreateNode(HelpItem source, helpContentImageIndex imageIndex, TreeNode? parentNode = null)
@@ -178,14 +180,6 @@ namespace DataDictionary.Main.Dialogs
         }
         #endregion
 
-        private void newToolStripButton_Click(object sender, EventArgs e)
-        {
-            UnBindData();
-            helpItem = new HelpItem();
-            helpKey = new HelpKey(helpItem);
-            BindData();
-        }
-
         private void helpSubjectData_Validating(object sender, CancelEventArgs e)
         {
             if (String.IsNullOrWhiteSpace(helpSubjectData.Text))
@@ -224,7 +218,7 @@ namespace DataDictionary.Main.Dialogs
         { UnBindData(); }
 
         protected override void HandleMessage(DbApplicationBatchCompleted message)
-        { BuildHelpContentTree(); BindData();  }
+        { BuildHelpContentTree(); BindData(); }
         #endregion
     }
 }

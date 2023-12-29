@@ -73,6 +73,8 @@ namespace DataDictionary.Main
             Dialogs.AboutBox splashScreen = new Dialogs.AboutBox();
             Boolean dataLoaded = false;
             Boolean splashDone = false;
+            FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
+            FileInfo appInstallFile = new FileInfo(Settings.Default.AppDataFile);
 
             System.Timers.Timer splashTimer = new System.Timers.Timer();
             splashTimer.Interval = 5000; // 5 seconds
@@ -90,9 +92,29 @@ namespace DataDictionary.Main
                 DatabaseWork factory = new DatabaseWork();
                 work.Add(factory.OpenConnection());
                 work.AddRange(Program.Data.LoadApplicationData(factory));
+
+                if(!appDataFile.Exists)
+                { work.AddRange(Program.Data.SaveApplicationData(appDataFile)); }
+                
                 this.DoWork(work, OnComplete);
             }
-            else { this.DoWork(Program.Data.LoadApplicationData(new FileInfo(Settings.Default.AppDataFile)), OnComplete); }
+            else
+            { FileLoad(); }
+
+            // Handles the Application Data File
+            void FileLoad()
+            {
+
+                List<WorkItem> work = new List<WorkItem>();
+                if (appDataFile.Exists) // AppData already contains the Application Data File
+                { work.AddRange(Program.Data.LoadApplicationData(appDataFile)); }
+                else if (appInstallFile.Exists)
+                { // AppData does not contain file but the install folder does (Copy it)
+                    work.AddRange(Program.Data.LoadApplicationData(appInstallFile));
+                    work.AddRange(Program.Data.SaveApplicationData(appDataFile));
+                }
+                this.DoWork(work, OnComplete);
+            }
 
             // Handle data load complete
             void OnComplete(RunWorkerCompletedEventArgs args)
@@ -104,7 +126,8 @@ namespace DataDictionary.Main
                   // Switch to off-line mode and load from file if possible.
                     Settings.Default.IsOnLineMode = false;
                     Settings.Default.Save();
-                    this.DoWork(Program.Data.LoadApplicationData(new FileInfo(Settings.Default.AppDataFile)), OnComplete);
+
+                    FileLoad();
                 }
                 else
                 {
@@ -121,6 +144,8 @@ namespace DataDictionary.Main
                 splashDone = true;
                 splashTimer.Elapsed -= MinTime_Elapsed;
             }
+
+
         }
 
 
@@ -202,6 +227,7 @@ namespace DataDictionary.Main
         {
             if (ActiveMdiChild is Form currentForm)
             { Activate(() => new Dialogs.HelpSubject(currentForm)); }
+            else { Activate(() => new Dialogs.HelpSubject()); }
         }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
