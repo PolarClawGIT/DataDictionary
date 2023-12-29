@@ -345,5 +345,80 @@ namespace DataDictionary.Main
 
         private void browseScopeCommand_Click(object sender, EventArgs e)
         { Activate(() => new Forms.Application.Scope()); }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog.Filter = "XML Data Dictionary|*.XML";
+
+            if (Program.Data.ModelFile is FileInfo file)
+            {
+                openFileDialog.InitialDirectory = file.DirectoryName;
+                openFileDialog.FileName = file.Name;
+            }
+            else
+            {
+                openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                openFileDialog.FileName = Program.Data.Model.ModelTitle;
+            }
+
+            DialogResult dialogResult = openFileDialog.ShowDialog();
+
+            if (dialogResult is DialogResult.OK)
+            {
+                FileInfo openFile = new FileInfo(openFileDialog.FileName);
+
+                SendMessage(new Messages.DoUnbindData());
+                DoWork(Program.Data.LoadModel(openFile), onCompleting);
+            }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { SendMessage(new Messages.DoBindData()); }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Program.Data.ModelFile is FileInfo file)
+            {
+                SendMessage(new Messages.DoUnbindData());
+                DoWork(Program.Data.SaveModel(Program.Data.ModelFile), onCompleting);
+            }
+            else
+            { saveAsToolStripMenuItem_Click(sender, e); }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { SendMessage(new Messages.DoBindData()); }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFileDialog.Filter = "XML Data Dictionary|*.XML";
+
+            if (Program.Data.ModelFile is FileInfo file)
+            {
+                saveFileDialog.InitialDirectory = file.DirectoryName;
+                saveFileDialog.FileName = file.Name;
+            }
+            else
+            {
+                saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                saveFileDialog.FileName = Program.Data.Model.ModelTitle;
+            }
+
+            DialogResult dialogResult = saveFileDialog.ShowDialog();
+
+            if (dialogResult is DialogResult.OK)
+            {
+                FileInfo openFile = new FileInfo(saveFileDialog.FileName);
+                Program.Data.ModelFile = openFile;
+                saveToolStripMenuItem.Enabled = true;
+
+                SendMessage(new Messages.DoUnbindData());
+                DoWork(Program.Data.SaveModel(openFile), onCompleting);
+            }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            { SendMessage(new Messages.DoBindData()); }
+
+        }
     }
 }

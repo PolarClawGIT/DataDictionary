@@ -51,7 +51,7 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// The File Object the Model was read from.
         /// </summary>
-        public FileInfo? ModelFile { get; internal set; } //TODO implement Model Save to files system.
+        public FileInfo? ModelFile { get; set; }
 
         #region Application Connection
         /// <summary>

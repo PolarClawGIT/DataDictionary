@@ -102,26 +102,9 @@ namespace DataDictionary.BusinessLayer
                 {
                     workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
 
-                    if (workSet.Tables.Contains(data.HelpSubjects.BindingName) &&
-                        workSet.Tables[data.HelpSubjects.BindingName] is System.Data.DataTable helpData)
-                    {
-                        data.HelpSubjects.Clear();
-                        data.HelpSubjects.Load(helpData.CreateDataReader());
-                    }
-
-                    if (workSet.Tables.Contains(data.Properties.BindingName) &&
-                        workSet.Tables[data.Properties.BindingName] is System.Data.DataTable propertiesData)
-                    {
-                        data.Properties.Clear();
-                        data.Properties.Load(propertiesData.CreateDataReader());
-                    }
-
-                    if (workSet.Tables.Contains(data.Scopes.BindingName) &&
-                        workSet.Tables[data.Scopes.BindingName] is System.Data.DataTable scopesData)
-                    {
-                        data.Scopes.Clear();
-                        data.Scopes.Load(scopesData.CreateDataReader());
-                    }
+                    LoadTable(workSet, data.HelpSubjects);
+                    LoadTable(workSet, data.Properties);
+                    LoadTable(workSet, data.Scopes);
                 }
             }
         }
@@ -175,6 +158,127 @@ namespace DataDictionary.BusinessLayer
 
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Saves the Model to a file.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> SaveModel<T>(this T data, FileInfo file)
+            where T : IModelCatalog, IModelLibrary, IModelDomain
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+
+            workItems.Add(new WorkItem() { WorkName = "Save Model Data", DoWork = DoWork });
+
+            return workItems.AsReadOnly();
+
+            void DoWork()
+            {
+                using (System.Data.DataSet workSet = new System.Data.DataSet())
+                {
+                    // IModelCatalog
+                    workSet.Tables.Add(data.DbCatalogs.ToDataTable());
+                    workSet.Tables.Add(data.DbSchemta.ToDataTable());
+                    workSet.Tables.Add(data.DbDomains.ToDataTable());
+                    workSet.Tables.Add(data.DbTables.ToDataTable());
+                    workSet.Tables.Add(data.DbTableColumns.ToDataTable());
+                    workSet.Tables.Add(data.DbExtendedProperties.ToDataTable());
+                    workSet.Tables.Add(data.DbConstraints.ToDataTable());
+                    workSet.Tables.Add(data.DbConstraintColumns.ToDataTable());
+                    workSet.Tables.Add(data.DbRoutines.ToDataTable());
+                    workSet.Tables.Add(data.DbRoutineParameters.ToDataTable());
+                    workSet.Tables.Add(data.DbRoutineDependencies.ToDataTable());
+
+                    //IModelLibrary
+                    workSet.Tables.Add(data.LibrarySources.ToDataTable());
+                    workSet.Tables.Add(data.LibraryMembers.ToDataTable());
+
+                    //IModelDomain
+                    workSet.Tables.Add(data.DomainAttributes.ToDataTable());
+                    workSet.Tables.Add(data.DomainAttributeAliases.ToDataTable());
+                    workSet.Tables.Add(data.DomainAttributeProperties.ToDataTable());
+                    workSet.Tables.Add(data.DomainEntities.ToDataTable());
+                    workSet.Tables.Add(data.DomainEntityAliases.ToDataTable());
+                    workSet.Tables.Add(data.DomainEntityProperties.ToDataTable());
+                    workSet.Tables.Add(data.DomainSubjectAreas.ToDataTable());
+
+                    // Write the Data
+                    workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Loads the Model from a File.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> LoadModel<T>(this T data, FileInfo file)
+            where T : IModelCatalog, IModelLibrary, IModelDomain
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+
+            workItems.AddRange(data.RemoveCatalog());
+            workItems.AddRange(data.RemoveLibrary());
+            workItems.AddRange(data.RemoveDomain());
+            workItems.Add(new WorkItem() { WorkName = "Load Model Data", DoWork = DoWork });
+
+            return workItems.AsReadOnly();
+
+            void DoWork()
+            {
+                using (System.Data.DataSet workSet = new System.Data.DataSet())
+                {
+                    workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
+
+                    // IModelCatalog
+                    LoadTable(workSet, data.DbCatalogs);
+                    LoadTable(workSet, data.DbSchemta);
+                    LoadTable(workSet, data.DbDomains);
+                    LoadTable(workSet, data.DbTables);
+                    LoadTable(workSet, data.DbTableColumns);
+                    LoadTable(workSet, data.DbExtendedProperties);
+                    LoadTable(workSet, data.DbConstraints);
+                    LoadTable(workSet, data.DbConstraintColumns);
+                    LoadTable(workSet, data.DbRoutines);
+                    LoadTable(workSet, data.DbRoutineParameters);
+                    LoadTable(workSet, data.DbRoutineDependencies);
+
+                    //IModelLibrary
+                    LoadTable(workSet, data.LibrarySources);
+                    LoadTable(workSet, data.LibraryMembers);
+
+                    //IModelDomain
+                    LoadTable(workSet, data.DomainAttributes);
+                    LoadTable(workSet, data.DomainAttributeAliases);
+                    LoadTable(workSet, data.DomainAttributeProperties);
+                    LoadTable(workSet, data.DomainEntities);
+                    LoadTable(workSet, data.DomainEntityAliases);
+                    LoadTable(workSet, data.DomainEntityProperties);
+                    LoadTable(workSet, data.DomainSubjectAreas);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Loads a Single Table from a DataSet.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        static void LoadTable(System.Data.DataSet source, IBindingTable target)
+        {
+            if (source.Tables.Contains(target.BindingName) &&
+                source.Tables[target.BindingName] is System.Data.DataTable helpData)
+            {
+                target.Clear();
+                target.Load(helpData.CreateDataReader());
             }
         }
     }
