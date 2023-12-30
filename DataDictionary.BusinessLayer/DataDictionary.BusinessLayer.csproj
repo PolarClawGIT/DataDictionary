@@ -6,12 +6,34 @@
     <Nullable>enable</Nullable>
     <Copyright>© 2023 William Howard, All Rights Reserved</Copyright>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Authors>William Howard</Authors>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="VersionNumber.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>VersionNumber.tt</DependentUpon>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DataDictionary.DataLayer\DataDictionary.DataLayer.csproj" />
     <ProjectReference Include="..\Toolbox.DbContext\Toolbox.DbContext.csproj" />
     <ProjectReference Include="..\Toolbox.Threading\Toolbox.Threading.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="VersionNumber.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>VersionNumber.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>
