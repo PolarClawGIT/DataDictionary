@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainAttribute]
-		@ModelId UniqueIdentifier,
+		@ModelId UniqueIdentifier = Null,
+		@AttributeId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeDomainAttribute] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -18,40 +19,75 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDomainAttribute]
+	-- Validation
+	If @ModelId is Null and @AttributeId is Null
+	Throw 50000, '@ModelId or @AttributeId must be specified', 1;
+
+	-- Clean the Data, helps performance
+	Declare @Values Table (
+		[AttributeId] UniqueIdentifier Not Null,
+		[SubjectAreaId] UniqueIdentifier Null,
+		[AttributeTitle] [App_DataDictionary].[typeTitle] Not Null,
+		[AttributeDescription] [App_DataDictionary].[typeDescription] Null,
+		Primary Key ([AttributeId]))
+
+	Declare @Delete Table (
+		[AttributeId] UniqueIdentifier Not Null,
+		Primary Key ([AttributeId]))
+
 	Insert Into @Values
-	Select	IsNull(D.[AttributeId],NewId()) As [AttributeId],
+	Select	Coalesce(T.[AttributeId], D.[AttributeId], NewId()) As [AttributeId],
 			D.[SubjectAreaId],
 			NullIf(Trim(D.[AttributeTitle]),'') As [AttributeTitle],
 			NullIf(Trim(D.[AttributeDescription]),'') As [AttributeDescription]
 	From	@Data D
+			Left Join [App_DataDictionary].[DomainAttribute] T
+			On	Coalesce(D.[AttributeId], @AttributeId) = T.[AttributeId]
 
-	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
-
-	If Exists (
-		Select	[AttributeId]
-		From	@Values
-		Group By [AttributeId]
-		Having Count(*) > 1)
-	Throw 50000, '[AttributeId] cannot be duplicate', 3;
+	Insert Into @Delete
+	Select	T.[AttributeId]
+	From	[App_DataDictionary].[DomainAttribute] T
+			Left Join @Values S
+			On	T.[AttributeId] = S.[AttributeId]
+	Where	S.[AttributeId] is Null And
+			T.[AttributeId] In (
+			Select	A.[AttributeId]
+			From	[App_DataDictionary].[DomainAttribute] A
+					Left Join [App_DataDictionary].[ModelAttribute] C
+					On	A.[AttributeId] = C.[AttributeId]
+			Where	(@AttributeId is Null Or @AttributeId = A.[AttributeId]) And
+					(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
-	-- Note: Merge statement can throw errors with FK and UK constraints.
-	With [Data] As (
-		Select	D.[AttributeId],
-				D.[AttributeTitle],
-				D.[AttributeDescription]
-		From	@Values D
-				Inner Join [App_DataDictionary].[DomainAttribute] A
-				On	D.[AttributeId] = A.[AttributeId]),
-	[Delta] As (
+	Delete From [App_DataDictionary].[DomainAttributeProperty]
+	From	[App_DataDictionary].[DomainAttributeProperty] T
+			Inner Join @Delete S
+			On	T.[AttributeId] = S.[AttributeId]
+	Print FormatMessage ('Delete [App_DataDictionary].[DomainAttributeProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[DomainAttributeAlias]
+	From	[App_DataDictionary].[DomainAttributeAlias] T
+			Inner Join @Delete S
+			On	T.[AttributeId] = S.[AttributeId]
+	Print FormatMessage ('Delete [App_DataDictionary].[DomainAttributeAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[ModelAttribute]
+	From	[App_DataDictionary].[ModelAttribute] T
+			Inner Join @Delete S
+			On	T.[AttributeId] = S.[AttributeId]
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[DomainAttribute]
+	From	[App_DataDictionary].[DomainAttribute] T
+			Inner Join @Delete S
+			On	T.[AttributeId] = S.[AttributeId]
+	Print FormatMessage ('Delete [App_DataDictionary].[DomainAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	;With [Delta] As (
 		Select	[AttributeId],
 				[AttributeTitle],
 				[AttributeDescription]
-		From	[Data]
+		From	@Values
 		Except
 		Select	[AttributeId],
 				[AttributeTitle],
@@ -60,10 +96,28 @@ Begin Try
 	Update [App_DataDictionary].[DomainAttribute]
 	Set		[AttributeTitle] = S.[AttributeTitle],
 			[AttributeDescription] = S.[AttributeDescription]
-	From	[Delta] S
-			Inner Join [App_DataDictionary].[DomainAttribute] T
-			On	S.[AttributeId] = T.[AttributeId];
+	From	[App_DataDictionary].[DomainAttribute] T
+			Inner Join [Delta] S
+			On	T.[AttributeId] = S.[AttributeId]
 	Print FormatMessage ('Update [App_DataDictionary].[DomainAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	;With [Delta] As (
+		Select	@ModelId As [ModelId],
+				[AttributeId],
+				[SubjectAreaId]
+		From	@Values
+		Except
+		Select	[ModelId],
+				[AttributeId],
+				[SubjectAreaId]
+		From	[App_DataDictionary].[ModelAttribute])
+	Update [App_DataDictionary].[ModelAttribute]
+	Set		[SubjectAreaId] = S.[SubjectAreaId]
+	From	[App_DataDictionary].[ModelAttribute] T
+			Inner Join [Delta] S
+			On	T.[ModelId] = S.[ModelId] And
+				T.[AttributeId] = S.[AttributeId]
+	Print FormatMessage ('Update [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [App_DataDictionary].[DomainAttribute] (
 			[AttributeId],
@@ -75,25 +129,22 @@ Begin Try
 	From	@Values S
 			Left Join [App_DataDictionary].[DomainAttribute] T
 			On	S.[AttributeId] = T.[AttributeId]
-	Where	T.[AttributeId] is Null;
+	Where	T.[AttributeId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	With [Data] As (
-		Select	@ModelId As [ModelId],
-				[AttributeId],
-				[SubjectAreaId]
-		From	@Values)
-	Merge [App_DataDictionary].[ModelAttribute] As T
-	Using [Data] As S
-	On	T.[ModelId] = S.[ModelId] And
-		T.[AttributeId] = S.[AttributeId]
-	When Matched Then Update Set
-		[SubjectAreaId] = S.[SubjectAreaId]
-	When Not Matched by Target Then
-		Insert ([ModelId], [AttributeId], [SubjectAreaId])
-		Values ([ModelId], [AttributeId], [SubjectAreaId])
-	When Not Matched by Source And T.[ModelId] = @ModelId Then Delete;
-	Print FormatMessage ('Merge [App_DataDictionary].[ApplicationAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Insert Into [App_DataDictionary].[ModelAttribute] (
+			[ModelId],
+			[AttributeId],
+			[SubjectAreaId])
+	Select	@ModelId As [ModelId],
+			S.[AttributeId],
+			S.[SubjectAreaId]
+	From	@Values S
+			Left Join [App_DataDictionary].[ModelAttribute] T
+			On	S.[AttributeId] = T.[AttributeId] And
+				@ModelId = T.[ModelId]
+	Where	T.[AttributeId] Is Null
+	Print FormatMessage ('Insert [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -136,8 +187,3 @@ Begin Catch
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
 GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetDomainAttribute',
-	@value = N'Performs Set on DomainAttribute.'

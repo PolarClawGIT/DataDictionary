@@ -16,37 +16,45 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class DomainAttributeAliasCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>,
-        IWriteData<IModelKey>,
+        IReadData<IModelKey>, IReadData<IDomainAttributeKey>,
+        IWriteData<IModelKey>, IWriteData<IDomainAttributeKey>,
         IRemoveData<IDomainAttributeKey>
         where TItem : BindingTableRow, IDomainAttributeAliasItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
-        { return LoadCommand(connection, (modelId.ModelId, null, null, null, null, null)); }
+        { return LoadCommand(connection, (modelId.ModelId, null)); }
 
         /// <inheritdoc/>
-        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? attributeId, string? catalogName, string? schemaName, string? objectName, string? elementName) parameters)
+        public Command LoadCommand(IConnection connection, IDomainAttributeKey attributeKey)
+        { return LoadCommand(connection, (null, attributeKey.AttributeId)); }
+
+        /// <inheritdoc/>
+        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? attributeId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procGetDomainAttributeAlias]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@AttributeId", parameters.attributeId);
-            command.AddParameter("@CatalogName", parameters.catalogName);
-            command.AddParameter("@SchemaName", parameters.schemaName);
-            command.AddParameter("@ObjectName", parameters.objectName);
-            command.AddParameter("@ElementName", parameters.elementName);
             return command;
         }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IModelKey modelId)
+        { return SaveCommand(connection, (modelId.ModelId, null)); }
+
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, IDomainAttributeKey attributeKey)
+        { return SaveCommand(connection, (null, attributeKey.AttributeId)); }
+
+        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? attributeId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetDomainAttributeAlias]";
-            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@AttributeId", parameters.attributeId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttributeAlias]", this);
             return command;
         }

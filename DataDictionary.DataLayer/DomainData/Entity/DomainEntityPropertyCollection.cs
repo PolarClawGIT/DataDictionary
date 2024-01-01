@@ -16,17 +16,20 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class DomainEntityPropertyCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>,
-        IWriteData<IModelKey>,
+        IReadData<IModelKey>, IReadData<IDomainEntityKey>,
+        IWriteData<IModelKey>, IWriteData<IDomainEntityKey>,
         IRemoveData<IDomainEntityKey>
         where TItem : BindingTableRow, IDomainEntityPropertyItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
-        { return LoadCommand(connection, (modelId.ModelId, null, null)); }
+        { return LoadCommand(connection, (modelId.ModelId, null)); }
 
         /// <inheritdoc/>
-        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? EntityId, string? propertyName) parameters)
+        public Command LoadCommand(IConnection connection, IDomainEntityKey entityKey)
+        { return LoadCommand(connection, (null, entityKey.EntityId)); }
+
+        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? EntityId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
@@ -38,11 +41,19 @@ namespace DataDictionary.DataLayer.DomainData.Entity
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IModelKey modelId)
+        { return SaveCommand(connection, (modelId.ModelId, null)); }
+
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, IDomainEntityKey entityKey)
+        { return SaveCommand(connection, (null, entityKey.EntityId)); }
+
+        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? EntityId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetDomainEntityProperty]";
-            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@EntityId", parameters.EntityId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeDomainEntityProperty]", this);
             return command;
         }
