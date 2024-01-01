@@ -30,6 +30,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="VersionNumber.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>VersionNumber.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="VersionNumber.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VersionNumber.cs</LastGenOutput>
