@@ -136,7 +136,7 @@ namespace Toolbox.BindingTable
         /// <typeparam name="T"></typeparam>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        /// <remarks>Many data types have there onw TryParse functions. These can be handled genericly.</remarks>
+        /// <remarks>Many data types have there own TryParse functions. These can be handled generically.</remarks>
         protected virtual Nullable<T> GetValue<T>(String columnName)
             where T : struct, IParsable<T>
         {
@@ -151,7 +151,15 @@ namespace Toolbox.BindingTable
             if (!row.Table.Columns.Contains(columnName))
             { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
 
-            if (row[columnName] == DBNull.Value) { return new Nullable<T>(); }
+            Object? baseValue = null;
+            if (data.RowState == DataRowState.Deleted)
+            { baseValue = row[columnName, DataRowVersion.Original]; }
+            else { baseValue = row[columnName]; }
+
+            if(baseValue == DBNull.Value) { return new Nullable<T>(); }
+
+            if (String.IsNullOrWhiteSpace(baseValue.ToString()))
+            { return new Nullable<T>(); }
 
             // Generic handling
             if (T.TryParse(row[columnName].ToString(), null, out T value))
@@ -166,7 +174,7 @@ namespace Toolbox.BindingTable
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        /// <remarks>String are a Microsoft special class and needs diffrent handling</remarks>
+        /// <remarks>String are a Microsoft special class and needs different handling</remarks>
         protected virtual String? GetValue(String columnName)
         {
             if (data is not DataRow row || row.RowState == DataRowState.Detached)
@@ -180,9 +188,14 @@ namespace Toolbox.BindingTable
             if (!row.Table.Columns.Contains(columnName))
             { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
 
-            if (row[columnName] == DBNull.Value) { return null; }
+            Object? baseValue = null;
+            if (data.RowState == DataRowState.Deleted)
+            { baseValue = row[columnName, DataRowVersion.Original]; }
+            else { baseValue = row[columnName]; }
 
-            if (row[columnName] is String stringValue)
+            if (baseValue == DBNull.Value) { return null; }
+
+            if (baseValue is String stringValue)
             {
                 if (string.IsNullOrEmpty(stringValue)) { return null; }
                 else { return stringValue; }
@@ -209,7 +222,7 @@ namespace Toolbox.BindingTable
         /// <param name="parseFunction"></param>
         /// <returns></returns>
         /// <remarks>
-        /// Some data types do not implment IParsable (like Boolean) or a specialzied version of TryParse is needed.
+        /// Some data types do not implement IParsable (like Boolean) or a specialized version of TryParse is needed.
         /// This allows a TryParse function to be passed in.
         /// </remarks>
         protected virtual Nullable<T> GetValue<T>(String columnName, tryParseDelegate<T> parseFunction)
@@ -220,9 +233,14 @@ namespace Toolbox.BindingTable
             if (data is not DataRow row) { throw new InvalidOperationException("Internal DataRow is not defined"); }
             if (!row.Table.Columns.Contains(columnName)) { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
 
-            if (row[columnName] == DBNull.Value) { return new Nullable<T>(); }
+            Object? baseValue = null;
+            if (data.RowState == DataRowState.Deleted)
+            { baseValue = row[columnName, DataRowVersion.Original]; }
+            else { baseValue = row[columnName]; }
 
-            if (row[columnName].ToString() is String stringValue &&
+            if (baseValue == DBNull.Value) { return new Nullable<T>(); }
+
+            if (baseValue.ToString() is String stringValue &&
                 parseFunction(stringValue, out T result))
             { return new Nullable<T>(result); }
 
@@ -239,7 +257,9 @@ namespace Toolbox.BindingTable
         protected virtual void SetValue<T>(String columnName, Nullable<T> value)
             where T : struct
         {
-            if (data is DataRow row && row.Table.Columns.Contains(columnName))
+            if (data is DataRow row
+                && row.Table.Columns.Contains(columnName)
+                && data.RowState is DataRowState.Added or DataRowState.Unchanged or DataRowState.Modified)
             {
                 if (value is null) { row[columnName] = DBNull.Value; }
                 else { row[columnName] = value.Value; }
@@ -253,7 +273,9 @@ namespace Toolbox.BindingTable
         /// <param name="value"></param>
         protected virtual void SetValue(String columnName, String? value)
         {
-            if (data is DataRow row && row.Table.Columns.Contains(columnName))
+            if (data is DataRow row
+                && row.Table.Columns.Contains(columnName)
+                && data.RowState is DataRowState.Added or DataRowState.Unchanged or DataRowState.Modified)
             {
                 if (String.IsNullOrWhiteSpace(value)) { row[columnName] = DBNull.Value; }
                 else { row[columnName] = value; }
@@ -303,7 +325,18 @@ namespace Toolbox.BindingTable
 
         /// <inheritdoc cref="DataRow.RowState"/>
         public virtual DataRowState RowState()
-        { if (data is DataRow row) { return row.RowState; } else { return DataRowState.Detached; } }
+        {
+            if (data is DataRow row)
+            {
+                // For whatever reason, the row state can be unchanged but their is a Proposed row.
+                if (data.HasVersion(DataRowVersion.Proposed) && row.RowState == DataRowState.Unchanged)
+                { return DataRowState.Modified; }
+
+                return row.RowState;
+
+            }
+            else { return DataRowState.Detached; }
+        }
 
         /// <inheritdoc cref="DataRow.RowError"/>
         public virtual String GetRowError()
