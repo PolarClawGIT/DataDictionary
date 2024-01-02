@@ -56,6 +56,7 @@
             errorProvider = new ErrorProvider(components);
             bindingProperties = new BindingSource(components);
             bindingAlias = new BindingSource(components);
+            bindingAttribute = new BindingSource(components);
             attributeLayout = new TableLayoutPanel();
             attributePropertyTab = new TabPage();
             propertyLayout = new TableLayoutPanel();
@@ -78,6 +79,7 @@
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
             SuspendLayout();
             // 
             // attributeLayout
@@ -306,7 +308,7 @@
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(515, 384);
+            aliasTab.Size = new Size(192, 72);
             aliasTab.TabIndex = 3;
             aliasTab.Text = "Alias";
             // 
@@ -322,7 +324,7 @@
             alaisLayout.RowCount = 2;
             alaisLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             alaisLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            alaisLayout.Size = new Size(509, 378);
+            alaisLayout.Size = new Size(186, 66);
             alaisLayout.TabIndex = 0;
             // 
             // aliasData
@@ -336,7 +338,7 @@
             aliasData.Name = "aliasData";
             aliasData.ReadOnly = true;
             aliasData.RowTemplate.Height = 25;
-            aliasData.Size = new Size(503, 107);
+            aliasData.Size = new Size(180, 13);
             aliasData.TabIndex = 1;
             // 
             // scopeNameColumn
@@ -362,9 +364,9 @@
             // modelAliasNavigation
             // 
             modelAliasNavigation.Dock = DockStyle.Fill;
-            modelAliasNavigation.Location = new Point(3, 116);
+            modelAliasNavigation.Location = new Point(3, 22);
             modelAliasNavigation.Name = "modelAliasNavigation";
-            modelAliasNavigation.Size = new Size(503, 259);
+            modelAliasNavigation.Size = new Size(180, 41);
             modelAliasNavigation.TabIndex = 2;
             // 
             // subjectAreaData
@@ -422,6 +424,7 @@
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -448,5 +451,6 @@
         private TabControl attributeTabLayout;
         private DataGridViewTextBoxColumn scopeNameColumn;
         private DataGridViewTextBoxColumn aliasNameColumn;
+        private BindingSource bindingAttribute;
     }
 }

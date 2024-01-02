@@ -10,6 +10,7 @@ using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.Collections;
 using System.ComponentModel;
+using System.Data;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain
@@ -34,6 +35,12 @@ namespace DataDictionary.Main.Forms.Domain
             deleteItemCommand.Click += DeleteItemCommand_Click;
             deleteItemCommand.Image = Resources.DeleteEntity;
             deleteItemCommand.ToolTipText = "Remove the Entity";
+
+            rowStateAcceptChangesCommand.Enabled = true;
+            rowStateAcceptChangesCommand.Click += RowStateAcceptChangesCommand_Click;
+
+            rowStateRejectChangesCommand.Enabled = true;
+            rowStateRejectChangesCommand.Click += RowStateRejectChangesCommand_Click;
         }
 
         private void DomainEntity_Load(object sender, EventArgs e)
@@ -47,7 +54,11 @@ namespace DataDictionary.Main.Forms.Domain
 
         public bool BindDataCore()
         {
-            if (Program.Data.DomainEntities.FirstOrDefault(w => DataKey.Equals(w)) is DomainEntityItem data)
+            bindingEntity.DataSource = new BindingView<DomainEntityItem>(Program.Data.DomainEntities, w => DataKey.Equals(w));
+            bindingEntity.Position = 0;
+            bindingEntity.CurrentItemChanged += DataChanged;
+
+            if (bindingEntity.Current is DomainEntityItem data)
             {
                 this.Text = data.EntityTitle;
 
@@ -84,6 +95,8 @@ namespace DataDictionary.Main.Forms.Domain
                 aliasData.DataSource = bindingAlias;
 
                 deleteItemCommand.Enabled = true;
+
+                UpdateRowState();
                 return true;
             }
             else
@@ -93,8 +106,16 @@ namespace DataDictionary.Main.Forms.Domain
             }
         }
 
+        private void DataChanged(object? sender, EventArgs e)
+        {
+            if (bindingEntity.Current is DomainEntityItem data)
+            { UpdateRowState(); }
+        }
+
         public void UnbindDataCore()
         {
+            bindingEntity.DataMemberChanged -= DataChanged;
+
             entityTitleData.DataBindings.Clear();
             entityDescriptionData.DataBindings.Clear();
             subjectAreaData.DataBindings.Clear();
@@ -106,6 +127,7 @@ namespace DataDictionary.Main.Forms.Domain
 
             aliasData.DataSource = null;
             bindingAlias.DataSource = null;
+            bindingEntity.DataSource = null;
         }
 
         void BindChoiceData(PropertyItem property, DomainEntityPropertyItem data)
@@ -284,11 +306,10 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
-            if (Program.Data.DomainEntities.FirstOrDefault(w => DataKey.Equals(w)) is DomainEntityItem data)
+            if (bindingEntity.Current is DomainEntityItem data)
             {
-                DomainEntityKey key = new DomainEntityKey(data);
-                this.UnbindData();
                 this.IsLocked(true);
+                DomainEntityKey key = new DomainEntityKey(data);
 
                 Program.Data.DomainEntityProperties.Remove(key);
                 Program.Data.DomainEntityAliases.Remove(key);
@@ -296,5 +317,74 @@ namespace DataDictionary.Main.Forms.Domain
             }
         }
 
+        private void RowStateRejectChangesCommand_Click(object? sender, EventArgs e)
+        {
+            if (bindingEntity.Current is DomainEntityItem data)
+            {
+                if (bindingProperties.DataSource is IEnumerable<DomainEntityPropertyItem> properties)
+                {
+                    foreach (DomainEntityPropertyItem item in properties)
+                    { item.RejectChanges(); }
+
+                    bindingProperties.ResetBindings(false);
+                }
+
+                if (bindingAlias.DataSource is IEnumerable<DomainEntityAliasItem> alias)
+                {
+                    foreach (DomainEntityAliasItem item in alias)
+                    { item.RejectChanges(); }
+
+                    bindingAlias.ResetBindings(false);
+                }
+
+                data.RejectChanges();
+                bindingEntity.ResetBindings(false);
+                UpdateRowState();
+            }
+        }
+
+        private void RowStateAcceptChangesCommand_Click(object? sender, EventArgs e)
+        {
+            if (bindingEntity.Current is DomainEntityItem data)
+            {
+                if (bindingProperties.DataSource is IEnumerable<DomainEntityPropertyItem> properties)
+                {
+                    foreach (DomainEntityPropertyItem item in properties)
+                    { item.AcceptChanges(); }
+
+                    bindingProperties.ResetBindings(false);
+                }
+
+                if (bindingAlias.DataSource is IEnumerable<DomainEntityAliasItem> alias)
+                {
+                    foreach (DomainEntityAliasItem item in alias)
+                    { item.AcceptChanges(); }
+
+                    bindingAlias.ResetBindings(false);
+                }
+
+                data.AcceptChanges();
+                bindingEntity.ResetBindings(false);
+                UpdateRowState();
+            }
+        }
+
+        void UpdateRowState()
+        {
+            if (bindingEntity.Current is DomainEntityItem data)
+            {
+                RowState = data.RowState();
+
+                if (RowState == DataRowState.Unchanged
+                    && bindingProperties.DataSource is IEnumerable<DomainEntityPropertyItem> properties
+                    && properties.Count(w => w.RowState() != DataRowState.Unchanged) > 0)
+                { RowState = DataRowState.Modified; }
+
+                if (RowState == DataRowState.Unchanged
+                    && bindingAlias.DataSource is IEnumerable<DomainEntityAliasItem> alias
+                    && alias.Count(w => w.RowState() != DataRowState.Unchanged) > 0)
+                { RowState = DataRowState.Modified; }
+            }
+        }
     }
 }

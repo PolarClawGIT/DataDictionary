@@ -15,10 +15,9 @@ namespace DataDictionary.BusinessLayer
 {
 
     /// <summary>
-    /// Interface component for the Model Domain (Attribute, Entity and Subject Area)
+    /// Interface component for the Model Attribute
     /// </summary>
-    /// <remarks>When combined with the Extension class, this approximates multi-inheritance.</remarks>
-    public interface IModelDomain
+    public interface IModelAttribute
     {
         /// <summary>
         /// List of Domain Attributes within the Model.
@@ -34,7 +33,13 @@ namespace DataDictionary.BusinessLayer
         /// List of Domain Properties for the Attributes within the Model.
         /// </summary>
         DomainAttributePropertyCollection DomainAttributeProperties { get; }
+    }
 
+    /// <summary>
+    /// Interface component for the Model Entity
+    /// </summary>
+    public interface IModelEntity
+    {
         /// <summary>
         /// List of Domain Entities within the Model.
         /// </summary>
@@ -49,7 +54,14 @@ namespace DataDictionary.BusinessLayer
         /// List of Domain Properties for the Entities within the Model.
         /// </summary>
         DomainEntityPropertyCollection DomainEntityProperties { get; }
+    }
 
+    /// <summary>
+    /// Interface component for the Model Domain (Attribute, Entity and Subject Area)
+    /// </summary>
+    /// <remarks>When combined with the Extension class, this approximates multi-inheritance.</remarks>
+    public interface IModelDomain : IModelAttribute, IModelEntity
+    {
         /// <summary>
         /// List of Domain Subject Areas within the Model.
         /// </summary>

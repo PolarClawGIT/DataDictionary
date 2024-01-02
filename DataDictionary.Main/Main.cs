@@ -93,9 +93,9 @@ namespace DataDictionary.Main
                 work.Add(factory.OpenConnection());
                 work.AddRange(Program.Data.LoadApplicationData(factory));
 
-                if(!appDataFile.Exists)
+                if (!appDataFile.Exists)
                 { work.AddRange(Program.Data.SaveApplicationData(appDataFile)); }
-                
+
                 this.DoWork(work, OnComplete);
             }
             else

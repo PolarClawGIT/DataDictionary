@@ -2,6 +2,7 @@
 using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
+using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,10 +22,45 @@ namespace DataDictionary.Main.Forms
 
     partial class ApplicationBase : Form, IColleague
     {
+        Dictionary<DataRowState, (Image icon, String tooltip)> rowStateSettings = new Dictionary<DataRowState, (Image icon, string tooltip)>()
+        {
+            { DataRowState.Added, new (Resources.RowAdded, "Added")},
+            { DataRowState.Deleted, new (Resources.RowDeleted, "Deleted")},
+            { DataRowState.Detached, new (Resources.RowDetached, "Detached")},
+            { DataRowState.Modified, new (Resources.RowModified, "Modified")},
+            { DataRowState.Unchanged, new (Resources.Row, "Unchanged")},
+        };
+
+        private DataRowState? rowState;
+        public DataRowState? RowState
+        {
+            get { return rowState; }
+            set
+            {
+                if (value is DataRowState state)
+                {
+                    rowStateCommand.Enabled = true;
+                    rowStateCommand.Visible = true;
+                    rowStateCommand.Image = rowStateSettings[state].icon;
+                    rowStateCommand.ToolTipText = rowStateSettings[state].tooltip;
+                }
+                else
+                {
+                    rowStateCommand.Enabled = false;
+                    rowStateCommand.Visible = false;
+                }
+
+                rowState = value;
+            }
+        }
+
         public ApplicationBase() : base()
         {
             InitializeComponent();
             Program.Messenger.AddColleague(this);
+
+            RowState = null;
+
             SendMessage(new FormAddMdiChild() { ChildForm = this });
         }
 

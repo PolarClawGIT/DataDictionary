@@ -11,6 +11,7 @@ using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.Collections;
 using System.ComponentModel;
+using System.Data;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain
@@ -35,6 +36,12 @@ namespace DataDictionary.Main.Forms.Domain
             deleteItemCommand.Click += DeleteItemCommand_Click;
             deleteItemCommand.Image = Resources.DeleteAttribute;
             deleteItemCommand.ToolTipText = "Remove the Attribute";
+
+            rowStateAcceptChangesCommand.Enabled = true;
+            rowStateAcceptChangesCommand.Click += RowStateAcceptChangesCommand_Click;
+
+            rowStateRejectChangesCommand.Enabled = true;
+            rowStateRejectChangesCommand.Click += RowStateRejectChangesCommand_Click;
         }
 
         private void DomainAttribute_Load(object sender, EventArgs e)
@@ -48,16 +55,20 @@ namespace DataDictionary.Main.Forms.Domain
 
         public bool BindDataCore()
         {
-            if (Program.Data.DomainAttributes.FirstOrDefault(w => DataKey.Equals(w)) is DomainAttributeItem data)
-            {
-                this.Text = data.AttributeTitle;
+            bindingAttribute.DataSource = new BindingView<DomainAttributeItem>(Program.Data.DomainAttributes, w => DataKey.Equals(w));
+            bindingAttribute.Position = 0;
+            bindingAttribute.CurrentItemChanged += DataChanged;
 
-                attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), data, nameof(data.AttributeTitle)));
-                attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), data, nameof(data.AttributeDescription)));
+            if (bindingAttribute.Current is DomainAttributeItem data)
+            {
+                this.DataBindings.Add(new Binding(nameof(this.Text), bindingAttribute, nameof(data.AttributeTitle)));
+
+                attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttribute, nameof(data.AttributeTitle)));
+                attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), bindingAttribute, nameof(data.AttributeDescription)));
 
                 SubjectAreaNameItem.Load(subjectAreaData);
                 subjectAreaData.ReadOnly = (subjectAreaData.DataSource is IList subjectAreaItems && subjectAreaItems.Count == 0);
-                subjectAreaData.DataBindings.Add(new Binding(nameof(subjectAreaData.SelectedValue), data, nameof(data.SubjectAreaId), true, DataSourceUpdateMode.OnValidation, Guid.Empty));
+                subjectAreaData.DataBindings.Add(new Binding(nameof(subjectAreaData.SelectedValue), bindingAttribute, nameof(data.SubjectAreaId), true, DataSourceUpdateMode.OnValidation, Guid.Empty));
 
                 bindingProperties.DataSource =
                     new BindingView<DomainAttributePropertyItem>(
@@ -65,6 +76,7 @@ namespace DataDictionary.Main.Forms.Domain
                         w => DataKey.Equals(w));
                 propertyNavigation.AutoGenerateColumns = false;
                 propertyNavigation.DataSource = bindingProperties;
+                bindingProperties.CurrentItemChanged += DataChanged;
 
                 DomainAttributePropertyItem propertyMembers = new DomainAttributePropertyItem();
                 propertyTypeData.DataBindings.Add(new Binding(nameof(propertyTypeData.SelectedValue), bindingProperties, nameof(propertyMembers.PropertyId), true));
@@ -80,11 +92,17 @@ namespace DataDictionary.Main.Forms.Domain
                     && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)
                 { BindChoiceData(property, propItem); }
 
-                bindingAlias.DataSource = new BindingView<DomainAttributeAliasItem>(Program.Data.DomainAttributeAliases, w => DataKey.Equals(w));
+                bindingAlias.DataSource =
+                    new BindingView<DomainAttributeAliasItem>(
+                        Program.Data.DomainAttributeAliases,
+                        w => DataKey.Equals(w));
                 aliasData.AutoGenerateColumns = false;
                 aliasData.DataSource = bindingAlias;
+                bindingAlias.CurrentItemChanged += DataChanged;
 
                 deleteItemCommand.Enabled = true;
+
+                UpdateRowState();
                 return true;
             }
             else
@@ -93,8 +111,18 @@ namespace DataDictionary.Main.Forms.Domain
                 return false;
             }
         }
+
+        private void DataChanged(object? sender, EventArgs e)
+        {
+            if (bindingAttribute.Current is DomainAttributeItem data)
+            { UpdateRowState(); }
+        }
+
         public void UnbindDataCore()
         {
+            bindingAttribute.DataMemberChanged -= DataChanged;
+
+            this.DataBindings.Clear();
             attributeTitleData.DataBindings.Clear();
             attributeDescriptionData.DataBindings.Clear();
             subjectAreaData.DataBindings.Clear();
@@ -106,6 +134,7 @@ namespace DataDictionary.Main.Forms.Domain
 
             aliasData.DataSource = null;
             bindingAlias.DataSource = null;
+            bindingAttribute.DataSource = null;
         }
 
         void BindChoiceData(PropertyItem property, DomainAttributePropertyItem data)
@@ -294,15 +323,85 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
-            if (Program.Data.DomainAttributes.FirstOrDefault(w => DataKey.Equals(w)) is DomainAttributeItem data)
+            if (bindingAttribute.Current is DomainAttributeItem data)
             {
-                DomainAttributeKey key = new DomainAttributeKey(data);
-                this.UnbindData();
                 this.IsLocked(true);
+                DomainAttributeKey key = new DomainAttributeKey(data);
 
                 Program.Data.DomainAttributeAliases.Remove(key);
                 Program.Data.DomainAttributeProperties.Remove(key);
                 Program.Data.DomainAttributes.Remove(data);
+                UpdateRowState();
+            }
+        }
+
+        private void RowStateRejectChangesCommand_Click(object? sender, EventArgs e)
+        {
+            if (bindingAttribute.Current is DomainAttributeItem data)
+            {
+                if (bindingProperties.DataSource is IEnumerable<DomainAttributePropertyItem> properties)
+                {
+                    foreach (DomainAttributePropertyItem item in properties)
+                    { item.RejectChanges(); }
+
+                    bindingProperties.ResetBindings(false);
+                }
+
+                if (bindingAlias.DataSource is IEnumerable<DomainAttributeAliasItem> alias)
+                {
+                    foreach (DomainAttributeAliasItem item in alias)
+                    { item.RejectChanges(); }
+
+                    bindingAlias.ResetBindings(false);
+                }
+
+                data.RejectChanges();
+                bindingAttribute.ResetBindings(false);
+                UpdateRowState();
+            }
+        }
+
+        private void RowStateAcceptChangesCommand_Click(object? sender, EventArgs e)
+        {
+            if (bindingAttribute.Current is DomainAttributeItem data)
+            {
+                if (bindingProperties.DataSource is IEnumerable<DomainAttributePropertyItem> properties)
+                {
+                    foreach (DomainAttributePropertyItem item in properties)
+                    { item.AcceptChanges(); }
+
+                    bindingProperties.ResetBindings(false);
+                }
+
+                if (bindingAlias.DataSource is IEnumerable<DomainAttributeAliasItem> alias)
+                {
+                    foreach (DomainAttributeAliasItem item in alias)
+                    { item.AcceptChanges(); }
+
+                    bindingAlias.ResetBindings(false);
+                }
+
+                data.AcceptChanges();
+                bindingAttribute.ResetBindings(false);
+                UpdateRowState();
+            }
+        }
+
+        void UpdateRowState()
+        {
+            if (bindingAttribute.Current is DomainAttributeItem data)
+            {
+                RowState = data.RowState();
+
+                if (RowState == DataRowState.Unchanged
+                    && bindingProperties.DataSource is IEnumerable<DomainAttributePropertyItem> properties
+                    && properties.Count(w => w.RowState() != DataRowState.Unchanged) > 0)
+                {   RowState = DataRowState.Modified; }
+
+                if (RowState == DataRowState.Unchanged
+                    && bindingAlias.DataSource is IEnumerable<DomainAttributeAliasItem> alias
+                    && alias.Count(w => w.RowState() != DataRowState.Unchanged) > 0)
+                { RowState = DataRowState.Modified; }
             }
         }
     }

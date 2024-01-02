@@ -43,6 +43,9 @@
             copyToolStripButton = new ToolStripButton();
             pasteToolStripButton = new ToolStripButton();
             helpToolStripButton = new ToolStripButton();
+            rowStateCommand = new ToolStripSplitButton();
+            rowStateAcceptChangesCommand = new ToolStripMenuItem();
+            rowStateRejectChangesCommand = new ToolStripMenuItem();
             toolStripSeparator = new ToolStripSeparator();
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripSeparator2 = new ToolStripSeparator();
@@ -66,7 +69,7 @@
             // 
             // toolStrip
             // 
-            toolStrip.Items.AddRange(new ToolStripItem[] { newItemCommand, deleteItemCommand, importDataCommand, toolStripSeparator2, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator1, helpToolStripButton });
+            toolStrip.Items.AddRange(new ToolStripItem[] { newItemCommand, deleteItemCommand, importDataCommand, toolStripSeparator2, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator1, helpToolStripButton, rowStateCommand });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(800, 25);
@@ -165,6 +168,7 @@
             // 
             // helpToolStripButton
             // 
+            helpToolStripButton.Alignment = ToolStripItemAlignment.Right;
             helpToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
             helpToolStripButton.Image = (Image)resources.GetObject("helpToolStripButton.Image");
             helpToolStripButton.ImageTransparentColor = Color.Magenta;
@@ -172,6 +176,32 @@
             helpToolStripButton.Size = new Size(23, 22);
             helpToolStripButton.Text = "He&lp";
             helpToolStripButton.Click += helpToolStripButton_Click;
+            // 
+            // rowStateCommand
+            // 
+            rowStateCommand.Alignment = ToolStripItemAlignment.Right;
+            rowStateCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            rowStateCommand.DropDownItems.AddRange(new ToolStripItem[] { rowStateAcceptChangesCommand, rowStateRejectChangesCommand });
+            rowStateCommand.Image = (Image)resources.GetObject("rowStateCommand.Image");
+            rowStateCommand.ImageTransparentColor = Color.Magenta;
+            rowStateCommand.Name = "rowStateCommand";
+            rowStateCommand.Size = new Size(32, 22);
+            rowStateCommand.Text = "Row State";
+            rowStateCommand.ToolTipText = "Row State";
+            // 
+            // rowStateAcceptChangesCommand
+            // 
+            rowStateAcceptChangesCommand.Enabled = false;
+            rowStateAcceptChangesCommand.Name = "rowStateAcceptChangesCommand";
+            rowStateAcceptChangesCommand.Size = new Size(180, 22);
+            rowStateAcceptChangesCommand.Text = "Accept Changes";
+            // 
+            // rowStateRejectChangesCommand
+            // 
+            rowStateRejectChangesCommand.Enabled = false;
+            rowStateRejectChangesCommand.Name = "rowStateRejectChangesCommand";
+            rowStateRejectChangesCommand.Size = new Size(180, 22);
+            rowStateRejectChangesCommand.Text = "Reject Changes";
             // 
             // ApplicationBase
             // 
@@ -199,5 +229,8 @@
         protected ToolStripButton newItemCommand;
         protected ToolStripButton deleteItemCommand;
         protected ToolStripSplitButton importDataCommand;
+        private ToolStripSplitButton rowStateCommand;
+        protected ToolStripMenuItem rowStateAcceptChangesCommand;
+        protected ToolStripMenuItem rowStateRejectChangesCommand;
     }
 }

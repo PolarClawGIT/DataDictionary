@@ -23,6 +23,8 @@ namespace Toolbox.BindingTable
         void OnPropertyChanged(string propertyName);
         void SetRowError(string value);
         void SetColumnError(String columnName, String? error);
+        void AcceptChanges();
+        void RejectChanges();
         String? GetColumnError(String columnName);
         String[] GetColumnsInError();
         IReadOnlyList<DataColumn> ColumnDefinitions();
@@ -156,7 +158,7 @@ namespace Toolbox.BindingTable
             { baseValue = row[columnName, DataRowVersion.Original]; }
             else { baseValue = row[columnName]; }
 
-            if(baseValue == DBNull.Value) { return new Nullable<T>(); }
+            if (baseValue == DBNull.Value) { return new Nullable<T>(); }
 
             if (String.IsNullOrWhiteSpace(baseValue.ToString()))
             { return new Nullable<T>(); }
@@ -375,6 +377,20 @@ namespace Toolbox.BindingTable
         /// <inheritdoc cref="DataRow.HasVersion"/>
         public virtual Boolean HasRowVersion(DataRowVersion version)
         { if (data is DataRow row) { return row.HasVersion(version); } else { return false; } }
+
+        /// <inheritdoc cref="DataRow.AcceptChanges"/>
+        public virtual void AcceptChanges()
+        {
+            if (data is DataRow row)
+            { row.AcceptChanges(); }
+        }
+
+        /// <inheritdoc cref="DataRow.RejectChanges"/>
+        public virtual void RejectChanges()
+        {
+            if (data is DataRow row)
+            { row.RejectChanges(); }
+        }
         #endregion
 
         #region INotifyPropertyChanged

@@ -627,7 +627,7 @@
             // toolStripWhiteSpace
             // 
             toolStripWhiteSpace.Name = "toolStripWhiteSpace";
-            toolStripWhiteSpace.Size = new Size(671, 17);
+            toolStripWhiteSpace.Size = new Size(640, 17);
             toolStripWhiteSpace.Spring = true;
             // 
             // toolStripWorkerTask
