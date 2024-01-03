@@ -29,7 +29,25 @@ Begin Try;
 		(Null, 'Database.Schema.Table.Constraint', NULL),
 		(Null, 'Database.Schema.Table.Index', NULL),
 		(Null, 'Database.Schema.Procedure.Parameter', NULL),
-		(Null, 'Database.Schema.Function.Parameter', NULL)
+		(Null, 'Database.Schema.Function.Parameter', NULL),
+		(Null, 'Model', 'Application Data Model, Root Node'),
+		(Null, 'Model.Entity', Null),
+		(Null, 'Model.Entity.Alias', NULL),
+		(Null, 'Model.Entity.Property', NULL),
+		(Null, 'Model.Attribute', NULL),
+		(Null, 'Model.Attribute.Alias', NULL),
+		(Null, 'Model.Attribute.Property', NULL),
+		(Null, 'Model.Relationship', NULL),
+		(Null, 'Model.Relationship.Alias', NULL),
+		(Null, 'Model.Relationship.Property', NULL),
+		(Null, 'Model.Relationship.Entity', NULL),
+		(Null, 'Model.Relationship.Attribute', NULL),
+		(Null, 'Model.Process', NULL),
+		(Null, 'Model.Process.Alias', NULL),
+		(Null, 'Model.Process.Property', NULL),
+		(Null, 'Model.Process.Flow', NULL),
+		(Null, 'Model.Process.Flow.Inflow', NULL),
+		(Null, 'Model.Process.Flow.OutFlow', NULL)
 
 	Exec [App_DataDictionary].[procSetApplicationScope] @Scope
 

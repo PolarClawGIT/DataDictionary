@@ -4,7 +4,7 @@
 	[SecurityPermissionId]  UniqueIdentifier Not Null CONSTRAINT [DF_SecurityPermissionId] DEFAULT (newsequentialid()),
 	[SecurityRoleId] Int Not Null,
 	-- Items that can have Security.
-	-- This is a Sub-Type denormalization.
+	-- This is a Sub-Type demoralization.
 	-- RI is not enforced at this point.
 	[ModelId] UniqueIdentifier Null,
 	[SubjectAreaId] UniqueIdentifier Null,

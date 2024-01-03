@@ -189,7 +189,6 @@
     <Build Include="App_DataDictionary\Views\ModelAssembly_AK.sql" />
     <Build Include="App_DataDictionary\Tables\DomainProcess.sql" />
     <Build Include="App_DataDictionary\Tables\DomainProcessProperty.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainProcessDependency.sql" />
     <Build Include="App_DataDictionary\Tables\ModelProcess.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeAliasElement.sql" />
     <Build Include="App_DataDictionary\Tables\ApplicationScope.sql" />
@@ -208,7 +207,6 @@
     <Build Include="App_DataDictionary\User Defined Types\typeApplicationScope.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetAliasName.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetScopeName.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainSource.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAlias.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAliasItem.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeScopeElement.sql" />
@@ -218,6 +216,15 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationScope.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntityAlias.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttributeAlias.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainProcessAlias.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainRelationship.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainRelationshipAlias.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainRelationshipAttribute.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainRelationshipEntity.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainProcessFlow.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainEntityAttribute.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelRelationship.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainRelationshipProperty.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
