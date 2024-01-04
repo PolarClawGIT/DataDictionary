@@ -1,13 +1,12 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
-using DataDictionary.DataLayer.DomainData.SubjectArea;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Properties;
 using System.Collections;
 using System.ComponentModel;
-using Toolbox.BindingTable;
 
 namespace DataDictionary.Main
 {
@@ -55,7 +54,7 @@ namespace DataDictionary.Main
 
             Program.Data.DomainAttributes.ListChanged -= BindingTable_ListChanged;
             Program.Data.DomainEntities.ListChanged -= BindingTable_ListChanged;
-            Program.Data.DomainSubjectAreas.ListChanged -= BindingTable_ListChanged;
+            Program.Data.ModelSubjectAreas.ListChanged -= BindingTable_ListChanged;
 
             domainModelNavigation.Nodes.Clear();
             domainModelNodes.Clear();
@@ -71,12 +70,12 @@ namespace DataDictionary.Main
                 Where(w => w.SubjectAreaId is null))
             { TreeNode attributeNode = CreateTreeNode(domainModelNavigation.Nodes, attributeItem); }
 
-            foreach (DomainSubjectAreaItem subjectItem in
-                Program.Data.DomainSubjectAreas.
+            foreach (ModelSubjectAreaItem subjectItem in
+                Program.Data.ModelSubjectAreas.
                 OrderBy(o => o.SubjectAreaTitle))
             {
                 TreeNode subjectNode = CreateTreeNode(domainModelNavigation.Nodes, domainModelImageIndex.SubjectArea, subjectItem.SubjectAreaTitle, subjectItem);
-                DomainSubjectAreaKey subjectKey = new DomainSubjectAreaKey(subjectItem);
+                ModelSubjectAreaKey subjectKey = new ModelSubjectAreaKey(subjectItem);
 
                 foreach (DomainAttributeItem attributeItem in
                     Program.Data.DomainAttributes.
@@ -106,7 +105,7 @@ namespace DataDictionary.Main
 
             Program.Data.DomainAttributes.ListChanged += BindingTable_ListChanged;
             Program.Data.DomainEntities.ListChanged += BindingTable_ListChanged;
-            Program.Data.DomainSubjectAreas.ListChanged += BindingTable_ListChanged;
+            Program.Data.ModelSubjectAreas.ListChanged += BindingTable_ListChanged;
 
             domainModelNavigation.Sort();
 
@@ -126,10 +125,10 @@ namespace DataDictionary.Main
                 Where(w => w.SubjectAreaId is null))
             { TreeNode entityNode = CreateTreeNode(domainModelNavigation.Nodes, entityItem); }
 
-            foreach (DomainSubjectAreaItem subjectItem in
-                Program.Data.DomainSubjectAreas)
+            foreach (ModelSubjectAreaItem subjectItem in
+                Program.Data.ModelSubjectAreas)
             {
-                DomainSubjectAreaKey subjectKey = new DomainSubjectAreaKey(subjectItem);
+                ModelSubjectAreaKey subjectKey = new ModelSubjectAreaKey(subjectItem);
                 TreeNode subjectNode = CreateTreeNode(domainModelNavigation.Nodes, domainModelImageIndex.SubjectArea, subjectItem.SubjectAreaTitle, subjectItem);
 
                 foreach (DomainEntityItem entityItem in
@@ -161,7 +160,7 @@ namespace DataDictionary.Main
 
             Program.Data.DomainAttributes.ListChanged += BindingTable_ListChanged;
             Program.Data.DomainEntities.ListChanged += BindingTable_ListChanged;
-            Program.Data.DomainSubjectAreas.ListChanged += BindingTable_ListChanged;
+            Program.Data.ModelSubjectAreas.ListChanged += BindingTable_ListChanged;
 
             domainModelNavigation.Sort();
 
@@ -288,7 +287,7 @@ namespace DataDictionary.Main
                     domainModelNavigation.SelectedNode = node;
                 }
 
-                if (item is IDomainSubjectAreaKey subject && nameof(subject.SubjectAreaId).Equals(e.PropertyName))
+                if (item is IModelSubjectAreaKey subject && nameof(subject.SubjectAreaId).Equals(e.PropertyName))
                 { domainModelRefreshCommand_Click(sender, EventArgs.Empty); }
             }
 
@@ -300,7 +299,7 @@ namespace DataDictionary.Main
                 else if (item is DomainEntityItem entity)
                 { return entity.EntityTitle; }
 
-                else if (item is DomainSubjectAreaItem subject)
+                else if (item is ModelSubjectAreaItem subject)
                 { return subject.SubjectAreaTitle; }
 
                 else return String.Empty;
@@ -314,7 +313,7 @@ namespace DataDictionary.Main
                 else if (item is DomainEntityItem entity)
                 { return nameof(entity.EntityTitle); }
 
-                else if (item is DomainSubjectAreaItem subject)
+                else if (item is ModelSubjectAreaItem subject)
                 { return nameof(subject.SubjectAreaTitle); }
 
                 else return String.Empty;
@@ -355,7 +354,7 @@ namespace DataDictionary.Main
 
             if (domainModelNavigation.SelectedNode is not null
                 && domainModelNodes.ContainsKey(domainModelNavigation.SelectedNode)
-                && domainModelNodes[domainModelNavigation.SelectedNode] is DomainSubjectAreaItem subject
+                && domainModelNodes[domainModelNavigation.SelectedNode] is ModelSubjectAreaItem subject
                 && subject.SubjectAreaId is Guid subjectId)
             {
                 item.SubjectAreaId = subjectId;
@@ -378,7 +377,7 @@ namespace DataDictionary.Main
 
             if (domainModelNavigation.SelectedNode is not null
                 && domainModelNodes.ContainsKey(domainModelNavigation.SelectedNode)
-                && domainModelNodes[domainModelNavigation.SelectedNode] is DomainSubjectAreaItem subject
+                && domainModelNodes[domainModelNavigation.SelectedNode] is ModelSubjectAreaItem subject
                 && subject.SubjectAreaId is Guid subjectId)
             {
                 item.SubjectAreaId = subjectId;
@@ -396,8 +395,8 @@ namespace DataDictionary.Main
 
         private void newSubjectAreaCommand_ButtonClick(object sender, EventArgs e)
         {
-            DomainSubjectAreaItem item = new DomainSubjectAreaItem();
-            Program.Data.DomainSubjectAreas.Add(item);
+            ModelSubjectAreaItem item = new ModelSubjectAreaItem();
+            Program.Data.ModelSubjectAreas.Add(item);
 
             TreeNode newNode = CreateTreeNode(domainModelNavigation.Nodes, domainModelImageIndex.SubjectArea, item.SubjectAreaTitle, item);
             domainModelNavigation.SelectedNode = newNode;
@@ -411,8 +410,8 @@ namespace DataDictionary.Main
         void Activate(DomainEntityItem entityItem)
         { Activate((data) => new Forms.Domain.DomainEntity() { DataKey = new DomainEntityKey(entityItem) }, entityItem); }
 
-        void Activate(DomainSubjectAreaItem subjectItem)
-        { Activate((data) => new Forms.Domain.DomainSubjectArea() { DataKey = new DomainSubjectAreaKey(subjectItem) }, subjectItem); }
+        void Activate(ModelSubjectAreaItem subjectItem)
+        { Activate((data) => new Forms.Domain.ModelSubjectArea() { DataKey = new ModelSubjectAreaKey(subjectItem) }, subjectItem); }
 
         /// <summary>
         /// Used by Tree Control to do sorting

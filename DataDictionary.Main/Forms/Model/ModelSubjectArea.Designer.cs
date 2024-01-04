@@ -1,6 +1,6 @@
 ﻿namespace DataDictionary.Main.Forms.Domain
 {
-    partial class DomainSubjectArea
+    partial class ModelSubjectArea
     {
         /// <summary>
         /// Required designer variable.

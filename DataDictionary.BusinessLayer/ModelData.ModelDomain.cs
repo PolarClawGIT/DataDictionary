@@ -1,11 +1,6 @@
-﻿using DataDictionary.DataLayer.DomainData.Attribute;
+﻿using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
+using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
-using DataDictionary.DataLayer.DomainData.SubjectArea;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer
 {
@@ -30,6 +25,6 @@ namespace DataDictionary.BusinessLayer
         public DomainEntityPropertyCollection DomainEntityProperties { get; } = new DomainEntityPropertyCollection();
 
         /// <inheritdoc/>
-        public DomainSubjectAreaCollection DomainSubjectAreas { get; } = new DomainSubjectAreaCollection();
+        public ModelSubjectAreaCollection ModelSubjectAreas { get; } = new ModelSubjectAreaCollection();
     }
 }

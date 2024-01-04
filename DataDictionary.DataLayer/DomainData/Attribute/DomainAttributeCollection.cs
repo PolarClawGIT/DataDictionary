@@ -72,7 +72,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procDeleteDomainAttribute]";
+            command.CommandText = "[App_DataDictionary].[procSetDomainAttribute]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@AttributeId", parameters.attributeId);
 

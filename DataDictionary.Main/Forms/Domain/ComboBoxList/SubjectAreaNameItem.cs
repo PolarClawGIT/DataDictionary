@@ -1,11 +1,6 @@
-﻿using DataDictionary.DataLayer.DomainData.SubjectArea;
+﻿using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
 using DataDictionary.Main.Controls;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
@@ -21,7 +16,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             BindingList<SubjectAreaNameItem> list = new BindingList<SubjectAreaNameItem>();
             list.Add(new SubjectAreaNameItem() { SubjectAreaId = Guid.Empty, SubjectAreaTitle = "(not assigned)" });
 
-            foreach (DomainSubjectAreaItem item in Program.Data.DomainSubjectAreas)
+            foreach (ModelSubjectAreaItem item in Program.Data.ModelSubjectAreas)
             {
                 if (item.SubjectAreaId is Guid subjectAreaId && item.SubjectAreaTitle is String subjectAreaTitle)
                 { list.Add(new SubjectAreaNameItem() { SubjectAreaId = subjectAreaId, SubjectAreaTitle = subjectAreaTitle }); }

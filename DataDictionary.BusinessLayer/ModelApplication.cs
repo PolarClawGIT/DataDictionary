@@ -205,7 +205,7 @@ namespace DataDictionary.BusinessLayer
                     workSet.Tables.Add(data.DomainEntities.ToDataTable());
                     workSet.Tables.Add(data.DomainEntityAliases.ToDataTable());
                     workSet.Tables.Add(data.DomainEntityProperties.ToDataTable());
-                    workSet.Tables.Add(data.DomainSubjectAreas.ToDataTable());
+                    workSet.Tables.Add(data.ModelSubjectAreas.ToDataTable());
 
                     // Write the Data
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
@@ -262,7 +262,7 @@ namespace DataDictionary.BusinessLayer
                     LoadTable(workSet, data.DomainEntities);
                     LoadTable(workSet, data.DomainEntityAliases);
                     LoadTable(workSet, data.DomainEntityProperties);
-                    LoadTable(workSet, data.DomainSubjectAreas);
+                    LoadTable(workSet, data.ModelSubjectAreas);
                 }
             }
         }

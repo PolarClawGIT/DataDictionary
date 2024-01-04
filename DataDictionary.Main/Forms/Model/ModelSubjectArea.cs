@@ -1,25 +1,17 @@
-﻿using DataDictionary.DataLayer.DomainData.Attribute;
+﻿using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
+using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
-using DataDictionary.DataLayer.DomainData.SubjectArea;
 using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain
 {
-    partial class DomainSubjectArea : ApplicationBase, IApplicationDataForm<DomainSubjectAreaKey>
+    partial class ModelSubjectArea : ApplicationBase, IApplicationDataForm<ModelSubjectAreaKey>
     {
-        public required DomainSubjectAreaKey DataKey { get; init; }
+        public required ModelSubjectAreaKey DataKey { get; init; }
 
-        public DomainSubjectArea() : base()
+        public ModelSubjectArea() : base()
         {
             InitializeComponent();
             this.Icon = Resources.Icon_Diagram;
@@ -42,11 +34,11 @@ namespace DataDictionary.Main.Forms.Domain
 
         public Boolean BindDataCore()
         {
-            bindingSubject.DataSource = new BindingView<DomainSubjectAreaItem>(Program.Data.DomainSubjectAreas, w => DataKey.Equals(w));
+            bindingSubject.DataSource = new BindingView<ModelSubjectAreaItem>(Program.Data.ModelSubjectAreas, w => DataKey.Equals(w));
             bindingSubject.Position = 0;
             bindingSubject.CurrentItemChanged += DataChanged;
 
-            if (Program.Data.DomainSubjectAreas.FirstOrDefault(w => DataKey.Equals(w)) is DomainSubjectAreaItem data)
+            if (Program.Data.ModelSubjectAreas.FirstOrDefault(w => DataKey.Equals(w)) is ModelSubjectAreaItem data)
             {
                 subjectAreaTitleData.DataBindings.Add(new Binding(nameof(subjectAreaTitleData.Text), data, nameof(data.SubjectAreaTitle)));
                 subjectAreaDescriptionData.DataBindings.Add(new Binding(nameof(subjectAreaDescriptionData.Text), data, nameof(data.SubjectAreaDescription)));
@@ -71,7 +63,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void DataChanged(object? sender, EventArgs e)
         {
-            if (bindingSubject.Current is DomainSubjectAreaItem data)
+            if (bindingSubject.Current is ModelSubjectAreaItem data)
             { RowState = data.RowState(); }
         }
 
@@ -88,10 +80,10 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
-            if (bindingSubject.Current is DomainSubjectAreaItem data)
+            if (bindingSubject.Current is ModelSubjectAreaItem data)
             {
                 this.IsLocked(true);
-                DomainSubjectAreaKey key = new DomainSubjectAreaKey(data);
+                ModelSubjectAreaKey key = new ModelSubjectAreaKey(data);
 
                 foreach (DomainAttributeItem item in Program.Data.DomainAttributes.Where(w => key.Equals(w)).ToList())
                 { item.SubjectAreaId = null; }
@@ -99,7 +91,7 @@ namespace DataDictionary.Main.Forms.Domain
                 foreach (DomainEntityItem item in Program.Data.DomainEntities.Where(w => key.Equals(w)).ToList())
                 { item.SubjectAreaId = null; }
 
-                Program.Data.DomainSubjectAreas.Remove(data);
+                Program.Data.ModelSubjectAreas.Remove(data);
                 RowState = data.RowState();
             }
         }

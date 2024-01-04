@@ -9,9 +9,9 @@
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_ModelRelationship_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
-	CONSTRAINT [PK_ModelRelationship] PRIMARY KEY CLUSTERED ([ModelId] ASC, [RelationshipId] ASC),
+	CONSTRAINT [PK_ModelRelationship] UNIQUE CLUSTERED ([ModelId] ASC, [RelationshipId] ASC, [SubjectAreaId] ASC),
 	CONSTRAINT [FK_ModelRelationship_Model] FOREIGN KEY ([ModelId]) REFERENCES [App_DataDictionary].[Model] ([ModelId]),
 	CONSTRAINT [FK_ModelRelationship_Relationship] FOREIGN KEY ([RelationshipId]) REFERENCES [App_DataDictionary].[DomainRelationship] ([RelationshipId]),
-	CONSTRAINT [FK_ModelSubjectAreaRelationship] FOREIGN KEY ([ModelId], [SubjectAreaId]) REFERENCES [App_DataDictionary].[ModelSubjectArea] ([ModelId], [SubjectAreaId]),
-
+	CONSTRAINT [FK_ModelRelationshipSubjectArea] FOREIGN KEY ([ModelId], [SubjectAreaId]) REFERENCES [App_DataDictionary].[ModelSubjectArea] ([ModelId], [SubjectAreaId]),
 )
+GO

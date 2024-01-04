@@ -1,23 +1,14 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Model;
-using DataDictionary.DataLayer.DatabaseData;
-using DataDictionary.DataLayer.DomainData.SubjectArea;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
 using System.Data;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
-using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DomainData.Entity
 {
     /// <summary>
     /// Interface for Domain Entity Item
     /// </summary>
-    public interface IDomainEntityItem : IDomainEntityKey, IDomainSubjectAreaKey, IDataItem
+    public interface IDomainEntityItem : IDomainEntityKey, IModelSubjectAreaKey, IDataItem
     {
         /// <summary>
         /// Title of the Domain Entity (aka Name of the Entity)

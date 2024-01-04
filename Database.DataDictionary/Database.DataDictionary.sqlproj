@@ -154,7 +154,6 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseRoutineParameter.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDatabaseRoutineDependency.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDatabaseRoutineDependency.sql" />
-    <Build Include="App_DataDictionary\Tables\ModelProperty.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseCatalogObject.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeTitle.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDescription.sql" />
@@ -168,7 +167,6 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntity.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntityProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntityAlias.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainSubjectArea.sql" />
     <Build Include="App_DataDictionary\Tables\LibrarySource.sql" />
     <Build Include="App_DataDictionary\Tables\LibraryMember.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeLibrarySource.sql" />
@@ -179,11 +177,7 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetLibrarySource.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetLibraryMember.sql" />
     <Build Include="App_DataDictionary\Views\ModelDatabase_AK.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeDomainSubjectArea.sql" />
     <Build Include="App_DataDictionary\Tables\ModelSubjectArea.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainSubjectArea.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainSubjectArea.sql" />
-    <Build Include="App_DataDictionary\Views\ModelSubjectArea_AK.sql" />
     <Build Include="App_DataDictionary\Views\ModelEntity_AK.sql" />
     <Build Include="App_DataDictionary\Views\ModelAttribute_AK.sql" />
     <Build Include="App_DataDictionary\Views\ModelAssembly_AK.sql" />
@@ -225,6 +219,9 @@
     <Build Include="App_DataDictionary\Tables\DomainEntityAttribute.sql" />
     <Build Include="App_DataDictionary\Tables\ModelRelationship.sql" />
     <Build Include="App_DataDictionary\Tables\DomainRelationshipProperty.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeModelSubjectArea.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetModelSubjectArea.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetModelSubjectArea.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
