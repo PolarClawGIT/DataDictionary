@@ -350,22 +350,18 @@ namespace DataDictionary.Main
         private void newAttributeCommand_ButtonClick(object sender, EventArgs e)
         {
             DomainAttributeItem item = new DomainAttributeItem();
-            Program.Data.DomainAttributes.Add(item);
+
 
             if (domainModelNavigation.SelectedNode is not null
                 && domainModelNodes.ContainsKey(domainModelNavigation.SelectedNode)
                 && domainModelNodes[domainModelNavigation.SelectedNode] is ModelSubjectAreaItem subject
                 && subject.SubjectAreaId is Guid subjectId)
-            {
-                item.SubjectAreaId = subjectId;
-                TreeNode newNode = CreateTreeNode(domainModelNavigation.SelectedNode.Nodes, domainModelImageIndex.Attribute, item.AttributeTitle, item);
-                domainModelNavigation.SelectedNode = newNode;
-            }
-            else
-            {
-                TreeNode newNode = CreateTreeNode(domainModelNavigation.Nodes, domainModelImageIndex.Attribute, item.AttributeTitle, item);
-                domainModelNavigation.SelectedNode = newNode;
-            }
+            { item.SubjectAreaId = subjectId; }
+
+            Program.Data.DomainAttributes.Add(item);
+
+            if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
+            { domainModelNavigation.SelectedNode = node.Key; } // Already added by ListChange event
 
             Activate(item);
         }
@@ -373,22 +369,17 @@ namespace DataDictionary.Main
         private void newEntityCommand_ButtonClick(object sender, EventArgs e)
         {
             DomainEntityItem item = new DomainEntityItem();
-            Program.Data.DomainEntities.Add(item);
 
             if (domainModelNavigation.SelectedNode is not null
                 && domainModelNodes.ContainsKey(domainModelNavigation.SelectedNode)
                 && domainModelNodes[domainModelNavigation.SelectedNode] is ModelSubjectAreaItem subject
                 && subject.SubjectAreaId is Guid subjectId)
-            {
-                item.SubjectAreaId = subjectId;
-                TreeNode newNode = CreateTreeNode(domainModelNavigation.SelectedNode.Nodes, domainModelImageIndex.Entity, item.EntityTitle, item);
-                domainModelNavigation.SelectedNode = newNode;
-            }
-            else
-            {
-                TreeNode newNode = CreateTreeNode(domainModelNavigation.Nodes, domainModelImageIndex.Entity, item.EntityTitle, item);
-                domainModelNavigation.SelectedNode = newNode;
-            }
+            { item.SubjectAreaId = subjectId; }
+
+            Program.Data.DomainEntities.Add(item);
+
+            if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
+            { domainModelNavigation.SelectedNode = node.Key; } // Already added by ListChange event
 
             Activate(item);
         }
@@ -396,10 +387,10 @@ namespace DataDictionary.Main
         private void newSubjectAreaCommand_ButtonClick(object sender, EventArgs e)
         {
             ModelSubjectAreaItem item = new ModelSubjectAreaItem();
-            Program.Data.ModelSubjectAreas.Add(item);
+            Program.Data.ModelSubjectAreas.Add(item); // Causes the item to be added to the tree?
 
-            TreeNode newNode = CreateTreeNode(domainModelNavigation.Nodes, domainModelImageIndex.SubjectArea, item.SubjectAreaTitle, item);
-            domainModelNavigation.SelectedNode = newNode;
+            if (domainModelNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
+            { domainModelNavigation.SelectedNode = node.Key; } // Already added by ListChange event
 
             Activate(item);
         }
