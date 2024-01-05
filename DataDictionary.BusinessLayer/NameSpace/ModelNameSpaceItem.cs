@@ -1,17 +1,12 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DatabaseData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DataDictionary.DataLayer.DomainData.Alias;
 
-namespace DataDictionary.DataLayer.DomainData.Alias
+namespace DataDictionary.BusinessLayer.NameSpace
 {
     /// <summary>
-    /// Interface for a Model Alias Item.
+    /// Interface for a Model NameSpace Item.
     /// </summary>
-    public interface IModelAliasItem : IAliasKeyName, IModelAliasKey, IScopeKey
+    public interface IModelNameSpaceItem : IAliasKeyName, IModelNameSpaceKey, IScopeKey
     {
         /// <summary>
         /// Name of the item (short).
@@ -30,9 +25,9 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     }
 
     /// <summary>
-    /// Implementation for Model Alias Item.
+    /// Implementation for Model NameSpace Item.
     /// </summary>
-    public class ModelAliasItem : IModelAliasItem
+    public class ModelNameSpaceItem : IModelNameSpaceItem
     {
         /// <inheritdoc/>
         public virtual String AliasName { get; init; } = String.Empty;
@@ -55,7 +50,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// <summary>
         /// List of keys that are the children of this record.
         /// </summary>
-        public virtual List<ModelAliasKey> Children { get; } = new List<ModelAliasKey>();
+        public virtual List<ModelNameSpaceKey> Children { get; } = new List<ModelNameSpaceKey>();
 
         /// <summary>
         /// Source of the Model Alias.
@@ -63,13 +58,13 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// </summary>
         public virtual Object? Source { get; init; }
 
-        internal ModelAliasItem() : base() { }
+        internal ModelNameSpaceItem() : base() { }
 
         /// <summary>
         /// Constructor for a ModelAliasItem
         /// </summary>
         /// <param name="source"></param>
-        public ModelAliasItem(IModelAliasItem source) : this()
+        public ModelNameSpaceItem(IModelNameSpaceItem source) : this()
         {
             if (!String.IsNullOrWhiteSpace(source.AliasName)) { AliasName = source.AliasName; }
             ScopeId = source.ScopeId;
@@ -90,7 +85,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     /// Implementation for Model Alias Item.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ModelAliasItem<T> : ModelAliasItem
+    public class ModelAliasItem<T> : ModelNameSpaceItem
         where T : class//, IToScopeType, IToAliasName
     {
         /// <summary>

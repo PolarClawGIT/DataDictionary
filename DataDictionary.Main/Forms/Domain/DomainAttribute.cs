@@ -1,10 +1,7 @@
-﻿using DataDictionary.BusinessLayer;
+﻿using DataDictionary.BusinessLayer.NameSpace;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Messages;
@@ -290,7 +287,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void bindingAlias_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (modelAliasNavigation.SelectedAlias is ModelAliasItem selected)
+            if (modelAliasNavigation.SelectedAlias is ModelNameSpaceItem selected)
             {
                 DomainAttributeAliasItem newItem = new DomainAttributeAliasItem(DataKey);
                 newItem.AliasName = modelAliasNavigation.SelectedAlias.AliasName;

@@ -1,18 +1,11 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.ApplicationData.Scope;
+﻿using DataDictionary.BusinessLayer.NameSpace;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer
@@ -21,19 +14,19 @@ namespace DataDictionary.BusinessLayer
     /// Interface component for the Model Alias
     /// </summary>
     /// <remarks>When combined with the Extension class, this approximates multi-inheritance.</remarks>
-    public interface IModelAlias
+    public interface IModelNamespace
     {
         /// <summary>
         /// List of available Model Alias Items from Catalogs and Libraries.
         /// </summary>
-        ModelAliasDictionary ModelAlias { get; }
+        ModelNameSpaceDictionary ModelNamespace { get; }
     }
 
     /// <summary>
     /// Implementation component for the Model Alias data
     /// </summary>
     /// <remarks>When combined with the Extension class, this implements multi-inheritance.</remarks>
-    public static class ModelAlias
+    public static class ModelNamespace
     {
         /// <summary>
         /// Load Alias Data for the Model.
@@ -42,7 +35,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data)
-            where T : IModelCatalog, IModelLibrary, IModelAlias
+            where T : IModelCatalog, IModelLibrary, IModelNamespace
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -60,7 +53,7 @@ namespace DataDictionary.BusinessLayer
 
             void ThreadWork()
             {
-                data.ModelAlias.Clear();
+                data.ModelNamespace.Clear();
 
                 foreach (DbCatalogItem? item in data.DbCatalogs)
                 {
@@ -85,7 +78,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="key"></param>
         /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, IDbCatalogKeyName key)
-            where T : IModelCatalog, IModelAlias
+            where T : IModelCatalog, IModelNamespace
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -120,7 +113,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="key"></param>
         /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, IDbCatalogKey key)
-            where T : IModelCatalog, IModelAlias
+            where T : IModelCatalog, IModelNamespace
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -141,7 +134,7 @@ namespace DataDictionary.BusinessLayer
         }
 
         private static void LoadAliasCore<T>(T data, IDbCatalogKey key, Action<Int32, Int32> progress)
-            where T : IModelCatalog, IModelAlias
+            where T : IModelCatalog, IModelNamespace
         {
             DbCatalogKey catalogKey = new DbCatalogKey(key);
             List<DbCatalogItem> catalogs = data.DbCatalogs.Where(w => catalogKey.Equals(w) && w.IsSystem == false).ToList();
@@ -167,32 +160,32 @@ namespace DataDictionary.BusinessLayer
                     routineParameters.Count;
 
                 DbCatalogKeyName catalogName = new DbCatalogKeyName(catalogItem);
-                data.ModelAlias.Add(catalogItem);
+                data.ModelNamespace.Add(catalogItem);
                 progress(completedWork++, totalWork);
 
                 foreach (DbSchemaItem schemaItem in schemta)
                 {
                     DbSchemaKey schemaKey = new DbSchemaKey(schemaItem);
                     DbSchemaKeyName schemaName = new DbSchemaKeyName(schemaItem);
-                    data.ModelAlias.Add(catalogKey, schemaItem);
+                    data.ModelNamespace.Add(catalogKey, schemaItem);
                     progress(completedWork++, totalWork);
 
                     foreach (DbTableItem tableItem in tables.Where(w => schemaName.Equals(w)))
                     {
                         DbTableKey tableKey = new DbTableKey(tableItem);
                         DbTableKeyName tableName = new DbTableKeyName(tableItem);
-                        data.ModelAlias.Add(schemaKey, tableItem);
+                        data.ModelNamespace.Add(schemaKey, tableItem);
                         progress(completedWork++, totalWork);
 
                         foreach (DbTableColumnItem columnItem in tableColumns.Where(w => tableName.Equals(w)))
                         {
-                            data.ModelAlias.Add(tableKey, columnItem);
+                            data.ModelNamespace.Add(tableKey, columnItem);
                             progress(completedWork++, totalWork);
                         }
 
                         foreach (DbConstraintItem constraintItem in constraints.Where(w => tableName.Equals(w)))
                         {
-                            data.ModelAlias.Add(tableKey, constraintItem);
+                            data.ModelNamespace.Add(tableKey, constraintItem);
                             progress(completedWork++, totalWork);
                         }
                     }
@@ -201,12 +194,12 @@ namespace DataDictionary.BusinessLayer
                     {
                         DbRoutineKey routineKey = new DbRoutineKey(routineItem);
                         DbRoutineKeyName routineName = new DbRoutineKeyName(routineItem);
-                        data.ModelAlias.Add(schemaKey, routineItem);
+                        data.ModelNamespace.Add(schemaKey, routineItem);
                         progress(completedWork++, totalWork);
 
                         foreach (DbRoutineParameterItem parameterItem in routineParameters.Where(w => routineName.Equals(w)))
                         {
-                            data.ModelAlias.Add(routineKey, parameterItem);
+                            data.ModelNamespace.Add(routineKey, parameterItem);
                             progress(completedWork++, totalWork);
                         }
                     }
@@ -222,7 +215,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="key"></param>
         /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, FileInfo key)
-            where T : IModelLibrary, IModelAlias
+            where T : IModelLibrary, IModelNamespace
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -257,7 +250,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="key"></param>
         /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, ILibrarySourceKeyName key)
-            where T : IModelLibrary, IModelAlias
+            where T : IModelLibrary, IModelNamespace
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -292,7 +285,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="key"></param>
         /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, ILibrarySourceKey key)
-            where T : IModelLibrary, IModelAlias
+            where T : IModelLibrary, IModelNamespace
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -313,7 +306,7 @@ namespace DataDictionary.BusinessLayer
         }
 
         private static void LoadAliasCore<T>(T data, ILibrarySourceKey key, Action<int, int> progress)
-            where T : IModelLibrary, IModelAlias
+            where T : IModelLibrary, IModelNamespace
         {
             LibrarySourceKey libraryKey = new LibrarySourceKey(key);
             List<LibrarySourceItem> libraries = data.LibrarySources.Where(w => libraryKey.Equals(w)).ToList();
@@ -325,14 +318,14 @@ namespace DataDictionary.BusinessLayer
                 List<LibraryMemberItem> members = data.LibraryMembers.Where(w => libraryKey.Equals(w)).ToList();
                 totalWork = totalWork + members.Count;
 
-                data.ModelAlias.Add(libraryitem);
+                data.ModelNamespace.Add(libraryitem);
                 progress(completedWork++, totalWork);
 
                 foreach (LibraryMemberItem memberItem in members.
                     Where(w => w.MemberParentId is null))
                 {
                     LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
-                    data.ModelAlias.Add(libraryKey, memberItem);
+                    data.ModelNamespace.Add(libraryKey, memberItem);
                     progress(completedWork++, totalWork);
 
                     AddChildMember(libraryKey, memberKey);
@@ -343,7 +336,7 @@ namespace DataDictionary.BusinessLayer
                     foreach (LibraryMemberItem memberItem in members.Where(w => new LibraryMemberKeyParent(w).Equals(memberKey)))
                     {
                         LibraryMemberKey childKey = new LibraryMemberKey(memberItem);
-                        data.ModelAlias.Add(memberKey, memberItem);
+                        data.ModelNamespace.Add(memberKey, memberItem);
                         progress(completedWork++, totalWork);
 
                         AddChildMember(sourceKey, childKey);
@@ -358,14 +351,14 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> RemoveAlias(this IModelAlias data, IDbCatalogKey key)
+        public static IReadOnlyList<WorkItem> RemoveAlias(this IModelNamespace data, IDbCatalogKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             WorkItem deleteWork = new WorkItem()
             {
                 WorkName = "Remove Catalog aliases",
-                DoWork = () => data.ModelAlias.Remove(key),
+                DoWork = () => data.ModelNamespace.Remove(key),
             };
 
             work.Add(deleteWork);
@@ -378,14 +371,14 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> RemoveAlias(this IModelAlias data, ILibrarySourceKey key)
+        public static IReadOnlyList<WorkItem> RemoveAlias(this IModelNamespace data, ILibrarySourceKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             WorkItem deleteWork = new WorkItem()
             {
                 WorkName = "Remove Library aliases",
-                DoWork = () => data.ModelAlias.Remove(key)
+                DoWork = () => data.ModelNamespace.Remove(key)
             };
 
             work.Add(deleteWork);

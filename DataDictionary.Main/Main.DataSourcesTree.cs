@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+﻿using DataDictionary.BusinessLayer.NameSpace;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;
@@ -59,17 +60,17 @@ namespace DataDictionary.Main
 
             void LoadTree()
             {
-                Int32 totalWork = Program.Data.ModelAlias.Count;
+                Int32 totalWork = Program.Data.ModelNamespace.Count;
                 Int32 completeWork = 0;
                 progress(completeWork, totalWork);
 
                 CreateNodes(
                     dataSourceNavigation.Nodes,
-                    Program.Data.ModelAlias.RootItem.Children.Select(s => Program.Data.ModelAlias[s]));
+                    Program.Data.ModelNamespace.RootItem.Children.Select(s => Program.Data.ModelNamespace[s]));
 
-                void CreateNodes(TreeNodeCollection target, IEnumerable<ModelAliasItem> items)
+                void CreateNodes(TreeNodeCollection target, IEnumerable<ModelNameSpaceItem> items)
                 {
-                    foreach (ModelAliasItem item in items
+                    foreach (ModelNameSpaceItem item in items
                         .OrderBy(o => o.OrdinalPosition)
                         .ThenBy(o => o.ItemName)
                         .GroupBy(g => g.TryScope())
@@ -89,7 +90,7 @@ namespace DataDictionary.Main
                         {
                             CreateNodes(
                                 node.Nodes,
-                                item.Children.Select(s => Program.Data.ModelAlias[s]));
+                                item.Children.Select(s => Program.Data.ModelNamespace[s]));
                         }
 
                         progress(completeWork++, totalWork);
