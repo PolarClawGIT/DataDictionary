@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for Domain Entity Alias Items
     /// </summary>
-    public interface IDomainEntityAliasItem : IDomainEntityKey, IDomainAliasItem, IDataItem
+    public interface IDomainEntityAliasItem : IDomainEntityKey, IAliasKeyName, IScopeKeyName, IDataItem
     { }
 
     /// <summary>

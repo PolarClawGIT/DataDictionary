@@ -179,6 +179,24 @@ namespace Toolbox.BindingTable
         /// <remarks>String are a Microsoft special class and needs different handling</remarks>
         protected virtual String? GetValue(String columnName)
         {
+
+            // Debug logic. Can data be returned if the row is detached or deleted?
+            if (data.RowState is DataRowState.Deleted or DataRowState.Detached)
+            {
+                Object x;
+                if (data.HasVersion(DataRowVersion.Current))
+                { x = data[columnName, DataRowVersion.Current]; }
+
+                if (data.HasVersion(DataRowVersion.Proposed))
+                { x = data[columnName, DataRowVersion.Proposed]; }
+
+                if (data.HasVersion(DataRowVersion.Original))
+                { x = data[columnName, DataRowVersion.Original]; }
+
+                x = data[columnName];
+            }
+
+
             if (data is not DataRow row || row.RowState == DataRowState.Detached)
             {
                 Exception error = new InvalidOperationException("Internal DataRow is not defined");
@@ -191,7 +209,7 @@ namespace Toolbox.BindingTable
             { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
 
             Object? baseValue = null;
-            if (data.RowState == DataRowState.Deleted)
+            if (data.RowState == DataRowState.Deleted && data.HasVersion(DataRowVersion.Original))
             { baseValue = row[columnName, DataRowVersion.Original]; }
             else { baseValue = row[columnName]; }
 

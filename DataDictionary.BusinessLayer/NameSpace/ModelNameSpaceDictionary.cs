@@ -39,33 +39,27 @@ namespace DataDictionary.BusinessLayer.NameSpace
         public ModelNameSpaceDictionary() : base()
         {
             ModelNameSpaceItem rootItem = new ModelNameSpaceItem()
-            {
-                AliasName = String.Empty,
-                ScopeId = ScopeType.Null,
-                SystemId = Guid.Empty
-            };
+            { SystemId = Guid.Empty };
 
             RootItem = rootItem;
         }
-        
+
         /// <summary>
         /// Generic Add of a new Item to the Collection
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="parentKey"></param>
-        /// <param name="newAliasKey"></param>
-        /// <param name="toAliasName"></param>
-        /// <param name="toItemName"></param>
-        /// <param name="toScopeType"></param>
+        /// <param name="toKey"></param>
+        /// <param name="toName"></param>
+        /// <param name="toScope"></param>
         protected void Add<T>(
             T data,
             ModelNameSpaceKey parentKey,
-            Func<T, ModelNameSpaceKey> newAliasKey,
-            Func<T, String> toAliasName,
-            Func<T, String> toItemName,
-            Func<T, ScopeType> toScopeType)
-            where T : class, IToAliasName, IToScopeType
+            Func<T, ModelNameSpaceKey> toKey,
+            Func<T, ModelNameSpaceKeyMember> toName,
+            Func<T, ScopeKey> toScope)
+            where T : class
         {
             ModelNameSpaceItem? parentItem;
 
@@ -76,23 +70,21 @@ namespace DataDictionary.BusinessLayer.NameSpace
 
             if (parentItem is ModelNameSpaceItem)
             {
-                ModelNameSpaceKey newKey = newAliasKey(data);
+                ModelNameSpaceKey newKey = toKey(data);
 
                 Int32 ordinalPosition = Int32.MaxValue;
                 if (data is IDbColumnPosition pos && pos.OrdinalPosition is Int32 posValue)
                 { ordinalPosition = posValue; }
 
-                ModelNameSpaceItem newItem = new ModelAliasItem<T>()
+                ModelNameSpaceItem newItem = new ModelNameSpaceItem()
                 {
-                    AliasName = toAliasName(data),
-                    ItemName = toItemName(data),
-                    ScopeId = toScopeType(data),
+                    MemberNameKey = toName(data),
+                    MemberScopeKey = toScope(data),
+                    SystemId = toKey(data).SystemId,
                     Source = data,
-                    SystemId = newKey.SystemId,
                     SystemParentId = parentKey.SystemId,
                     OrdinalPosition = ordinalPosition
                 };
-
 
 
                 if (this.ContainsKey(newKey))
@@ -121,10 +113,9 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             Add(data: data,
                 parentKey: new ModelNameSpaceKey(RootItem),
-                newAliasKey: (T) => new ModelNameSpaceKey((IDbCatalogKey)data),
-                toAliasName: (T) => ((IDbCatalogKeyName)data).ToAliasName(),
-                toItemName: (T) => { return data.DatabaseName ?? String.Empty; },
-                toScopeType: (T) => new ScopeKey(data).ScopeId);
+                toKey: (T) => new ModelNameSpaceKey((IDbCatalogKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((IDbCatalogKeyName)data),
+                toScope: (T) => new ScopeKey(data));
         }
 
         /// <summary>
@@ -136,10 +127,9 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             Add(data: data,
                 parentKey: new ModelNameSpaceKey(parent),
-                newAliasKey: (T) => new ModelNameSpaceKey((IDbSchemaKey)data),
-                toAliasName: (T) => ((IDbSchemaKeyName)data).ToAliasName(),
-                toItemName: (T) => { return data.SchemaName ?? String.Empty; },
-                toScopeType: (T) => new ScopeKey(data).ScopeId);
+                toKey: (T) => new ModelNameSpaceKey((IDbSchemaKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((IDbSchemaKeyName)data),
+                toScope: (T) => new ScopeKey(data));
         }
 
         /// <summary>
@@ -151,10 +141,9 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             Add(data: data,
                 parentKey: new ModelNameSpaceKey(parent),
-                newAliasKey: (T) => new ModelNameSpaceKey((IDbTableKey)data),
-                toAliasName: (T) => ((IDbTableKeyName)data).ToAliasName(),
-                toItemName: (T) => { return data.TableName ?? String.Empty; },
-                toScopeType: (T) => new ScopeKey(data).ScopeId);
+                toKey: (T) => new ModelNameSpaceKey((IDbTableKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((IDbTableKeyName)data),
+                toScope: (T) => new ScopeKey(data));
         }
 
         /// <summary>
@@ -166,10 +155,9 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             Add(data: data,
                 parentKey: new ModelNameSpaceKey(parent),
-                newAliasKey: (T) => new ModelNameSpaceKey((IDbTableColumnKey)data),
-                toAliasName: (T) => ((IDbTableColumnKeyName)data).ToAliasName(),
-                toItemName: (T) => { return data.ColumnName ?? String.Empty; },
-                toScopeType: (T) => new ScopeKey(data).ScopeId);
+                toKey: (T) => new ModelNameSpaceKey((IDbTableColumnKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((IDbTableColumnKeyName)data),
+                toScope: (T) => new ScopeKey(data));
         }
 
         /// <summary>
@@ -181,10 +169,9 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             Add(data: data,
                 parentKey: new ModelNameSpaceKey(parent),
-                newAliasKey: (T) => new ModelNameSpaceKey((IDbRoutineKey)data),
-                toAliasName: (T) => ((IDbRoutineKeyName)data).ToAliasName(),
-                toItemName: (T) => { return data.RoutineName ?? String.Empty; },
-                toScopeType: (T) => new ScopeKey(data).ScopeId);
+                toKey: (T) => new ModelNameSpaceKey((IDbRoutineKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((IDbRoutineKeyName)data),
+                toScope: (T) => new ScopeKey(data));
         }
 
         /// <summary>
@@ -196,10 +183,9 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             Add(data: data,
                 parentKey: new ModelNameSpaceKey(parent),
-                newAliasKey: (T) => new ModelNameSpaceKey((IDbRoutineParameterKey)data),
-                toAliasName: (T) => ((IDbRoutineParameterKeyName)data).ToAliasName(),
-                toItemName: (T) => { return data.ParameterName ?? String.Empty; },
-                toScopeType: (T) => new ScopeKey(data).ScopeId);
+                toKey: (T) => new ModelNameSpaceKey((IDbRoutineParameterKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((IDbRoutineParameterKeyName)data),
+                toScope: (T) => new ScopeKey(data));
         }
 
         /// <summary>
@@ -209,12 +195,12 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// <param name="parent"></param>
         public void Add(IDbSchemaKey parent, IDbDomainItem data)
         {
+
             Add(data: data,
                 parentKey: new ModelNameSpaceKey(parent),
-                newAliasKey: (T) => new ModelNameSpaceKey((IDbDomainKey)data),
-                toAliasName: (T) => ((IDbDomainKeyName)data).ToAliasName(),
-                toItemName: (T) => { return data.DomainName ?? String.Empty; },
-                toScopeType: (T) => new ScopeKey(data).ScopeId);
+                toKey: (T) => new ModelNameSpaceKey((IDbDomainKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((IDbDomainKeyName)data),
+                toScope: (T) => new ScopeKey(data));
         }
 
         /// <summary>
@@ -226,10 +212,9 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             Add(data: data,
                 parentKey: new ModelNameSpaceKey(parent),
-                newAliasKey: (T) => new ModelNameSpaceKey((IDbConstraintKey)data),
-                toAliasName: (T) => ((IDbConstraintKeyName)data).ToAliasName(),
-                toItemName: (T) => { return data.ConstraintName ?? String.Empty; },
-                toScopeType: (T) => new ScopeKey(data).ScopeId);
+                toKey: (T) => new ModelNameSpaceKey((IDbConstraintKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((IDbConstraintKeyName)data),
+                toScope: (T) => new ScopeKey(data));
         }
 
         /// <summary>
@@ -240,10 +225,9 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             Add(data: data,
                 parentKey: new ModelNameSpaceKey(RootItem),
-                newAliasKey: (T) => new ModelNameSpaceKey((ILibrarySourceKey)data),
-                toAliasName: (T) => ((ILibrarySourceKeyName)data).ToAliasName(),
-                toItemName: (T) => { return data.AssemblyName ?? String.Empty; },
-                toScopeType: (T) => new ScopeKey(data).ScopeId);
+                toKey: (T) => new ModelNameSpaceKey((ILibrarySourceKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((ILibrarySourceKeyName)data),
+                toScope: (T) => new ScopeKey(data));
         }
 
         /// <summary>
@@ -255,10 +239,9 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             Add(data: data,
                 parentKey: new ModelNameSpaceKey(parent),
-                newAliasKey: (T) => new ModelNameSpaceKey((ILibraryMemberKey)data),
-                toAliasName: (T) => ((ILibraryMemberKeyName)data).ToAliasName(),
-                toItemName: (T) => { return data.MemberName ?? String.Empty; },
-                toScopeType: (T) => new ScopeKey(data).ScopeId);
+                toKey: (T) => new ModelNameSpaceKey((ILibraryMemberKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((ILibraryMemberKeyName)data),
+                toScope: (T) => new ScopeKey(data));
         }
 
         /// <summary>
@@ -270,10 +253,9 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             Add(data: data,
                 parentKey: new ModelNameSpaceKey(parent),
-                newAliasKey: (T) => new ModelNameSpaceKey((ILibraryMemberKey)data),
-                toAliasName: (T) => ((ILibraryMemberKeyName)data).ToAliasName(),
-                toItemName: (T) => { return data.MemberName ?? String.Empty; },
-                toScopeType: (T) => new ScopeKey(data).ScopeId);
+                toKey: (T) => new ModelNameSpaceKey((ILibraryMemberKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((ILibraryMemberKeyName)data),
+                toScope: (T) => new ScopeKey(data));
         }
 
         /// <summary>

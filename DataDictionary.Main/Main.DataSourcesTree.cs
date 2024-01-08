@@ -72,13 +72,13 @@ namespace DataDictionary.Main
                 {
                     foreach (ModelNameSpaceItem item in items
                         .OrderBy(o => o.OrdinalPosition)
-                        .ThenBy(o => o.ItemName)
+                        .ThenBy(o => o.MemberName)
                         .GroupBy(g => g.TryScope())
                         .SelectMany(s => s))
                     {
                         TreeNode node = dataSourceNavigation.Invoke<TreeNode>(() =>
                         {
-                            TreeNode newNode = target.Add(item.ItemName);
+                            TreeNode newNode = target.Add(item.MemberName);
                             newNode.ImageKey = item.ScopeId.ToScopeName();
                             newNode.SelectedImageKey = item.ScopeId.ToScopeName();
                             if (item.Source is object sourceItem) { dbDataNodes.Add(newNode, sourceItem); }

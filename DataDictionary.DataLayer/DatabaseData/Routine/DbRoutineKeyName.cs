@@ -59,9 +59,11 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// <summary>
         /// Try to Create a Database Routine Key from the Alias.
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="source">A four part Alias name with a Scope of a Function or Procedure.</param>
         /// <returns>A Table Key or Null if a key could not be constructed.</returns>
-        public static DbRoutineKeyName? TryCreate(IDomainAliasItem source)
+        public static DbRoutineKeyName? TryCreate<T>(T source)
+            where T : IAliasKeyName, IScopeKeyName
         {
             if (source.AliasName is null) { return null; }
 

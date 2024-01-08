@@ -44,70 +44,70 @@ namespace DataDictionary.BusinessLayer.NameSpace
         { SystemId = source.SystemId; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key
+        /// Constructor for the Model Alias Key, Catalog
         /// </summary>
         /// <param name="source">A Database Catalog</param>
         public ModelNameSpaceKey(IDbCatalogKey source) : this()
         { SystemId = source.CatalogId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key
+        /// Constructor for the Model Alias Key, Schema
         /// </summary>
         /// <param name="source">A Database Schema</param>
         public ModelNameSpaceKey(IDbSchemaKey source) : this()
         { SystemId = source.SchemaId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key
+        /// Constructor for the Model Alias Key, Table
         /// </summary>
         /// <param name="source">A Database Table</param>
         public ModelNameSpaceKey(IDbTableKey source) : this()
         {SystemId = source.TableId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key
+        /// Constructor for the Model Alias Key, Column
         /// </summary>
         /// <param name="source">A Database Table Column</param>
         public ModelNameSpaceKey(IDbTableColumnKey source) : this()
         {SystemId = source.ColumnId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key
+        /// Constructor for the Model Alias Key, Domain
         /// </summary>
         /// <param name="source">A Database Domain</param>
         public ModelNameSpaceKey(IDbDomainKey source) : this()
         {SystemId = source.DomainId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key
+        /// Constructor for the Model Alias Key, Routine
         /// </summary>
         /// <param name="source">A Database Routine</param>
         public ModelNameSpaceKey(IDbRoutineKey source) : this()
         {SystemId = source.RoutineId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key
+        /// Constructor for the Model Alias Key, Parameter
         /// </summary>
         /// <param name="source">A Database Routine Parameter</param>
         public ModelNameSpaceKey(IDbRoutineParameterKey source) : this()
         {SystemId = source.ParameterId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key
+        /// Constructor for the Model Alias Key, Constraint
         /// </summary>
         /// <param name="source">A Database Constraint</param>
         public ModelNameSpaceKey(IDbConstraintKey source) : this()
         {SystemId = source.ConstraintId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key
+        /// Constructor for the Model Alias Key, Library
         /// </summary>
         /// <param name="source">A Library Source</param>
         public ModelNameSpaceKey(ILibrarySourceKey source) : this()
         {SystemId = source.LibraryId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key
+        /// Constructor for the Model Alias Key, Library Member
         /// </summary>
         /// <param name="source">A Library Member</param>
         public ModelNameSpaceKey(ILibraryMemberKey source) : this()

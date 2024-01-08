@@ -6,13 +6,8 @@ namespace DataDictionary.BusinessLayer.NameSpace
     /// <summary>
     /// Interface for a Model NameSpace Item.
     /// </summary>
-    public interface IModelNameSpaceItem : IAliasKeyName, IModelNameSpaceKey, IScopeKey
+    public interface IModelNameSpaceItem : IModelNameSpaceKeyMember, IModelNameSpaceKey, IScopeKey
     {
-        /// <summary>
-        /// Name of the item (short).
-        /// </summary>
-        String ItemName { get; }
-
         /// <summary>
         /// Parent System Id
         /// </summary>
@@ -30,10 +25,16 @@ namespace DataDictionary.BusinessLayer.NameSpace
     public class ModelNameSpaceItem : IModelNameSpaceItem
     {
         /// <inheritdoc/>
-        public virtual String AliasName { get; init; } = String.Empty;
+        public virtual String MemberName { get { return MemberNameKey.MemberName; } }
 
         /// <inheritdoc/>
-        public virtual ScopeType ScopeId { get; init; } = ScopeType.Null;
+        public virtual String MemberPath { get { return MemberNameKey.MemberPath; } }
+
+        /// <inheritdoc/>
+        public virtual String MemberFullName { get { return MemberNameKey.MemberFullName; } }
+
+        /// <inheritdoc/>
+        public virtual ScopeType ScopeId { get { return MemberScopeKey.ScopeId; } }
 
         /// <inheritdoc/>
         public virtual Guid SystemId { get; init; } = Guid.Empty;
@@ -42,10 +43,17 @@ namespace DataDictionary.BusinessLayer.NameSpace
         public virtual Guid SystemParentId { get; init; } = Guid.Empty;
 
         /// <inheritdoc/>
-        public virtual String ItemName { get; init; } = String.Empty;
-
-        /// <inheritdoc/>
         public virtual Int32 OrdinalPosition { get; init; } = Int32.MaxValue;
+
+        /// <summary>
+        /// Scope Key for the Member
+        /// </summary>
+        public virtual ScopeKey MemberScopeKey {get; init;} = new ScopeKey(ScopeType.Null);
+
+        /// <summary>
+        /// Name Key for the Member
+        /// </summary>
+        public virtual ModelNameSpaceKeyMember MemberNameKey { get; init; } = new ModelNameSpaceKeyMember(String.Empty);
 
         /// <summary>
         /// List of keys that are the children of this record.
@@ -53,46 +61,37 @@ namespace DataDictionary.BusinessLayer.NameSpace
         public virtual List<ModelNameSpaceKey> Children { get; } = new List<ModelNameSpaceKey>();
 
         /// <summary>
-        /// Source of the Model Alias.
-        /// TODO: Is this required?
+        /// Source of the Model NameSpace Item.
         /// </summary>
-        public virtual Object? Source { get; init; }
-
-        internal ModelNameSpaceItem() : base() { }
+        public virtual Object? Source { get; init; } = null;
 
         /// <summary>
-        /// Constructor for a ModelAliasItem
+        /// Constructor for a ModelNameSpaceItem
+        /// </summary>
+        protected internal ModelNameSpaceItem() : base() { }
+
+        /// <summary>
+        /// Constructor for a ModelNameSpaceItem
         /// </summary>
         /// <param name="source"></param>
-        public ModelNameSpaceItem(IModelNameSpaceItem source) : this()
+        protected internal ModelNameSpaceItem(IModelNameSpaceItem source) : this()
         {
-            if (!String.IsNullOrWhiteSpace(source.AliasName)) { AliasName = source.AliasName; }
-            ScopeId = source.ScopeId;
             SystemId = source.SystemId;
             SystemParentId = source.SystemParentId;
-            if (!String.IsNullOrWhiteSpace(source.AliasName)) { ItemName = source.ItemName; }
+            OrdinalPosition = source.OrdinalPosition;
+            MemberNameKey = new ModelNameSpaceKeyMember(source);
+            MemberScopeKey = new ScopeKey(source);
+            Source = source;
         }
+
+
 
         /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
         /// <returns></returns>
         public override String? ToString()
-        { return AliasName; }
+        { return MemberFullName; }
     }
 
-    /// <summary>
-    /// Implementation for Model Alias Item.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class ModelAliasItem<T> : ModelNameSpaceItem
-        where T : class//, IToScopeType, IToAliasName
-    {
-        /// <summary>
-        /// Source of the Model Alias
-        /// </summary>
-        public new T? Source { get { return base.Source as T; } init { base.Source = value; } }
-
-        internal ModelAliasItem() : base() { }
-    }
 }

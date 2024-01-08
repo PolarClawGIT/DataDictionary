@@ -290,7 +290,7 @@ namespace DataDictionary.Main.Forms.Domain
             if (modelAliasNavigation.SelectedAlias is ModelNameSpaceItem selected)
             {
                 DomainAttributeAliasItem newItem = new DomainAttributeAliasItem(DataKey);
-                newItem.AliasName = modelAliasNavigation.SelectedAlias.AliasName;
+                newItem.AliasName = modelAliasNavigation.SelectedAlias.MemberFullName;
                 newItem.ScopeName = modelAliasNavigation.SelectedAlias.ScopeId.ToScopeName();
 
                 e.NewObject = newItem;
