@@ -12,15 +12,15 @@ namespace DataDictionary.Main.Controls
     {
         static Dictionary<ScopeType, Image> images = new Dictionary<ScopeType, Image>()
         {
-            {ScopeType.Null,              Resources.UnknownMember },
-            {ScopeType.Library,           Resources.Library },
-            {ScopeType.LibraryEvent,      Resources.Event },
-            {ScopeType.LibraryField,      Resources.Field },
-            {ScopeType.LibraryMethod,     Resources.Method },
-            {ScopeType.LibraryNameSpace,  Resources.Namespace },
-            {ScopeType.LibraryProperty,   Resources.Property },
-            {ScopeType.LibraryParameter,  Resources.Parameter },
-            {ScopeType.LibraryType,       Resources.Class },
+            {ScopeType.Null,                             Resources.UnknownMember },
+            {ScopeType.Library,                          Resources.Library },
+            {ScopeType.LibraryEvent,                     Resources.Event },
+            {ScopeType.LibraryField,                     Resources.Field },
+            {ScopeType.LibraryMethod,                    Resources.Method },
+            {ScopeType.LibraryNameSpace,                 Resources.Namespace },
+            {ScopeType.LibraryProperty,                  Resources.Property },
+            {ScopeType.LibraryParameter,                 Resources.Parameter },
+            {ScopeType.LibraryType,                      Resources.Class },
 
             {ScopeType.Database,                         Resources.Database },
             {ScopeType.DatabaseSchema,                   Resources.Schema },
@@ -34,6 +34,11 @@ namespace DataDictionary.Main.Controls
             {ScopeType.DatabaseSchemaTableConstraint,    Resources.Key},
             {ScopeType.DatabaseSchemaProcedureParameter, Resources.Parameter },
             {ScopeType.DatabaseSchemaFunctionParameter,  Resources.Parameter },
+
+            {ScopeType.Model,                            Resources.SaveTable },
+            {ScopeType.ModelSubjectArea,                 Resources.Diagram },
+            {ScopeType.ModelAttribute,                   Resources.Attribute },
+            {ScopeType.ModelEntity,                      Resources.Entity },
 
         };
 

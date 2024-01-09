@@ -1,10 +1,14 @@
 ﻿using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using System;
@@ -21,7 +25,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
     public interface IModelNameSpaceKey : IKey
     {
         /// <summary>
-        /// System Id of the Model Alias item.
+        /// System Id of the Model NameSpace item.
         /// </summary>
         public Guid SystemId { get; }
     }
@@ -37,81 +41,109 @@ namespace DataDictionary.BusinessLayer.NameSpace
         internal ModelNameSpaceKey() : base() { }
 
         /// <summary>
-        /// Constructor for the Model Alias Key
+        /// Constructor for the Model NameSpace Key
         /// </summary>
-        /// <param name="source" >A ModelAlias</param>
+        /// <param name="source" >A ModelNameSpace</param>
         public ModelNameSpaceKey(IModelNameSpaceKey source) : this()
         { SystemId = source.SystemId; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key, Catalog
+        /// Constructor for the Model NameSpace Key, Catalog
         /// </summary>
         /// <param name="source">A Database Catalog</param>
         public ModelNameSpaceKey(IDbCatalogKey source) : this()
         { SystemId = source.CatalogId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key, Schema
+        /// Constructor for the Model NameSpace Key, Schema
         /// </summary>
         /// <param name="source">A Database Schema</param>
         public ModelNameSpaceKey(IDbSchemaKey source) : this()
         { SystemId = source.SchemaId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key, Table
+        /// Constructor for the Model NameSpace Key, Table
         /// </summary>
         /// <param name="source">A Database Table</param>
         public ModelNameSpaceKey(IDbTableKey source) : this()
         {SystemId = source.TableId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key, Column
+        /// Constructor for the Model NameSpace Key, Column
         /// </summary>
         /// <param name="source">A Database Table Column</param>
         public ModelNameSpaceKey(IDbTableColumnKey source) : this()
         {SystemId = source.ColumnId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key, Domain
+        /// Constructor for the Model NameSpace Key, Domain
         /// </summary>
         /// <param name="source">A Database Domain</param>
         public ModelNameSpaceKey(IDbDomainKey source) : this()
         {SystemId = source.DomainId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key, Routine
+        /// Constructor for the Model NameSpace Key, Routine
         /// </summary>
         /// <param name="source">A Database Routine</param>
         public ModelNameSpaceKey(IDbRoutineKey source) : this()
         {SystemId = source.RoutineId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key, Parameter
+        /// Constructor for the Model NameSpace Key, Parameter
         /// </summary>
         /// <param name="source">A Database Routine Parameter</param>
         public ModelNameSpaceKey(IDbRoutineParameterKey source) : this()
         {SystemId = source.ParameterId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key, Constraint
+        /// Constructor for the Model NameSpace Key, Constraint
         /// </summary>
         /// <param name="source">A Database Constraint</param>
         public ModelNameSpaceKey(IDbConstraintKey source) : this()
         {SystemId = source.ConstraintId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key, Library
+        /// Constructor for the Model NameSpace Key, Library
         /// </summary>
         /// <param name="source">A Library Source</param>
         public ModelNameSpaceKey(ILibrarySourceKey source) : this()
         {SystemId = source.LibraryId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Model Alias Key, Library Member
+        /// Constructor for the Model NameSpace Key, Library Member
         /// </summary>
         /// <param name="source">A Library Member</param>
         public ModelNameSpaceKey(ILibraryMemberKey source) : this()
         {SystemId = source.MemberId ?? Guid.Empty; }
+
+        /// <summary>
+        /// Constructor for the Model NameSpace Key, Model
+        /// </summary>
+        /// <param name="source">A Library Member</param>
+        public ModelNameSpaceKey(IModelKey source) : this()
+        { SystemId = source.ModelId ?? Guid.Empty; }
+
+        /// <summary>
+        /// Constructor for the Model NameSpace Key, Subject Area
+        /// </summary>
+        /// <param name="source">A Library Member</param>
+        public ModelNameSpaceKey(IModelSubjectAreaKey source) : this()
+        { SystemId = source.SubjectAreaId ?? Guid.Empty; }
+
+        /// <summary>
+        /// Constructor for the Model NameSpace Key, Attribute
+        /// </summary>
+        /// <param name="source">A Library Member</param>
+        public ModelNameSpaceKey(IDomainAttributeKey source) : this()
+        { SystemId = source.AttributeId ?? Guid.Empty; }
+
+        /// <summary>
+        /// Constructor for the Model NameSpace Key, Entity
+        /// </summary>
+        /// <param name="source">A Library Member</param>
+        public ModelNameSpaceKey(IDomainEntityKey source) : this()
+        { SystemId = source.EntityId ?? Guid.Empty; }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>

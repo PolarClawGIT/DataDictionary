@@ -26,6 +26,26 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         Null,
 
         /// <summary>
+        /// Application Model
+        /// </summary>
+        Model,
+
+        /// <summary>
+        /// Application Model Subject Area
+        /// </summary>
+        ModelSubjectArea,
+
+        /// <summary>
+        /// Application Model Attribute
+        /// </summary>
+        ModelAttribute,
+
+        /// <summary>
+        /// Application Model Entity
+        /// </summary>
+        ModelEntity,
+
+        /// <summary>
         /// .Net Library
         /// </summary>
         Library,
@@ -76,6 +96,11 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         DatabaseSchema,
 
         /// <summary>
+        /// SQL Table
+        /// </summary>
+        DatabaseSchemaTable,
+
+        /// <summary>
         /// SQL Function
         /// </summary>
         DatabaseSchemaFunction,
@@ -84,11 +109,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// SQL Procedure
         /// </summary>
         DatabaseSchemaProcedure,
-
-        /// <summary>
-        /// SQL Table
-        /// </summary>
-        DatabaseSchemaTable,
 
         /// <summary>
         /// SQL Type/Domain
@@ -128,6 +148,8 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// SQL Function Parameter
         /// </summary>
         DatabaseSchemaFunctionParameter,
+
+
     }
 
     /// <summary>

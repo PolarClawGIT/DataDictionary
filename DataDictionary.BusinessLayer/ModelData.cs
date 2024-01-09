@@ -8,6 +8,22 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer
 {
     /// <summary>
+    /// Model part of the 
+    /// </summary>
+    public interface IModel
+    {
+        /// <summary>
+        /// The Key of the Model that is currently opened by the application.
+        /// </summary>
+        ModelKey ModelKey { get; }
+
+        /// <summary>
+        /// List of Models from the Application Database.
+        /// </summary>
+        ModelCollection Models { get; }
+    }
+
+    /// <summary>
     /// Represents the main data object used by the application.
     /// </summary>
     /// <remarks>
@@ -15,20 +31,16 @@ namespace DataDictionary.BusinessLayer
     /// Forms need to connect to the Key for the data object they are presenting.
     /// If the data should change, the Forms need to reset the bindings and get new data from this object.
     /// </remarks>
-    public partial class ModelData
+    public partial class ModelData: IModel
     {
         // Model
         ModelItem defaultModel;
         ModelKey modelKey;
 
-        /// <summary>
-        /// The Key of the Model that is currently opened by the application.
-        /// </summary>
+        /// <inheritdoc/>
         public ModelKey ModelKey { get { return modelKey; } internal set { modelKey = new ModelKey(value); } }
 
-        /// <summary>
-        /// List of Models from the Application Database.
-        /// </summary>
+        /// <inheritdoc/>
         public ModelCollection Models { get; } = new ModelCollection();
 
         /// <summary>

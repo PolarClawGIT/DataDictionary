@@ -70,31 +70,47 @@ namespace DataDictionary.Main
 
                 void CreateNodes(TreeNodeCollection target, IEnumerable<ModelNameSpaceItem> items)
                 {
-                    foreach (ModelNameSpaceItem item in items
-                        .OrderBy(o => o.OrdinalPosition)
-                        .ThenBy(o => o.MemberName)
-                        .GroupBy(g => g.TryScope())
-                        .SelectMany(s => s))
+
+                    foreach (IGrouping<ScopeType, ModelNameSpaceItem>? scopeGroup in items.GroupBy(g => g.ScopeId).OrderBy(o => o.Key))
                     {
-                        TreeNode node = dataSourceNavigation.Invoke<TreeNode>(() =>
-                        {
-                            TreeNode newNode = target.Add(item.MemberName);
-                            newNode.ImageKey = item.ScopeId.ToScopeName();
-                            newNode.SelectedImageKey = item.ScopeId.ToScopeName();
-                            if (item.Source is object sourceItem) { dbDataNodes.Add(newNode, sourceItem); }
+                        TreeNodeCollection nodes = target;
 
-                            return newNode;
-                        });
-
-                        if (item.Children.Count > 0)
+                        if(scopeGroup.Count() > 1)
                         {
-                            CreateNodes(
-                                node.Nodes,
-                                item.Children.Select(s => Program.Data.ModelNamespace[s]));
+                            TreeNode scopeNode = dataSourceNavigation.Invoke<TreeNode>(() =>
+                            {
+                                TreeNode newNode = target.Add(scopeGroup.Key.ToScopeName().Split(".").Last());
+                                newNode.ImageKey = scopeGroup.Key.ToScopeName();
+                                newNode.SelectedImageKey = scopeGroup.Key.ToScopeName();
+
+                                nodes = newNode.Nodes;
+                                return newNode;
+                            });
                         }
 
-                        progress(completeWork++, totalWork);
+                        foreach (ModelNameSpaceItem item in scopeGroup.OrderBy(o => o.OrdinalPosition).ThenBy(o => o.MemberName))
+                        {
+                            TreeNode node = dataSourceNavigation.Invoke<TreeNode>(() =>
+                            {
+                                TreeNode newNode = nodes.Add(item.MemberName);
+                                newNode.ImageKey = item.ScopeId.ToScopeName();
+                                newNode.SelectedImageKey = item.ScopeId.ToScopeName();
+                                if (item.Source is object sourceItem) { dbDataNodes.Add(newNode, sourceItem); }
+
+                                return newNode;
+                            });
+
+                            if (item.Children.Count > 0)
+                            {
+                                CreateNodes(
+                                    node.Nodes,
+                                    item.Children.Select(s => Program.Data.ModelNamespace[s]));
+                            }
+
+                            progress(completeWork++, totalWork);
+                        }
                     }
+
                 }
             }
         }

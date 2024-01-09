@@ -228,6 +228,7 @@ namespace DataDictionary.BusinessLayer
             workItems.AddRange(data.RemoveCatalog());
             workItems.AddRange(data.RemoveLibrary());
             workItems.AddRange(data.RemoveDomain());
+
             workItems.Add(new WorkItem() { WorkName = "Load Model Data", DoWork = DoWork });
 
             return workItems.AsReadOnly();

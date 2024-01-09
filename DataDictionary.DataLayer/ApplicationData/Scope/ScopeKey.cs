@@ -160,6 +160,14 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.DatabaseSchemaFunctionParameter,"Database.Schema.Function.Parameter" },
         };
 
+        static Dictionary<ScopeType, String> scopeTypeToModel = new Dictionary<ScopeType, String>()
+        {
+            {ScopeType.Model,"Model" },
+            {ScopeType.ModelAttribute,"Model.Attribute" },
+            {ScopeType.ModelEntity,"Model.Entity" },
+            {ScopeType.ModelSubjectArea,"Model.SubjectArea" },
+        };
+
         /// <inheritdoc/>
         public static ScopeKey Parse(String source, IFormatProvider? provider)
         {
@@ -182,6 +190,8 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             if (scopeTypeToDatabaseScope.FirstOrDefault(w => w.Value.Equals(source, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> dbItem && dbItem.Key != ScopeType.Null)
             { result = new ScopeKey() { ScopeId = dbItem.Key }; return true; }
             else if (scopeTypeToLibraryScope.FirstOrDefault(w => w.Value.Equals(source, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> libraryItem && libraryItem.Key != ScopeType.Null)
+            { result = new ScopeKey() { ScopeId = libraryItem.Key }; return true; }
+            else if (scopeTypeToModel.FirstOrDefault(w => w.Value.Equals(source, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> modelItem && modelItem.Key != ScopeType.Null)
             { result = new ScopeKey() { ScopeId = libraryItem.Key }; return true; }
             else { result = null; return false; }
         }

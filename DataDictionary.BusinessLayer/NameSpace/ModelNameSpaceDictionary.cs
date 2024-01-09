@@ -1,4 +1,6 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+﻿using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;
@@ -6,6 +8,8 @@ using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Alias;
+using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 
@@ -256,6 +260,103 @@ namespace DataDictionary.BusinessLayer.NameSpace
                 toKey: (T) => new ModelNameSpaceKey((ILibraryMemberKey)data),
                 toName: (T) => new ModelNameSpaceKeyMember((ILibraryMemberKeyName)data),
                 toScope: (T) => new ScopeKey(data));
+        }
+
+        /// <summary>
+        /// Adds the Model (top level) to collection 
+        /// </summary>
+        /// <param name="data"></param>
+        public void Add(IModelItem data)
+        {
+            Add(data: data,
+                parentKey: new ModelNameSpaceKey(RootItem),
+                toKey: (T) => new ModelNameSpaceKey((IModelKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((IModelItem)data),
+                toScope: (T) => ScopeType.Model);
+        }
+
+        /// <summary>
+        /// Adds the Model Subject Area to collection 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="parent"></param>
+        public void Add(IModelItem parent, IModelSubjectAreaItem data)
+        {
+            Add(data: data,
+                parentKey: new ModelNameSpaceKey(parent),
+                toKey: (T) => new ModelNameSpaceKey((IModelSubjectAreaKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((IModelSubjectAreaItem)data),
+                toScope: (T) => ScopeType.ModelSubjectArea);
+        }
+
+        /// <summary>
+        /// Adds the Model Subject Area to collection 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="parent"></param>
+        public void Add(IModelSubjectAreaItem parent, IModelSubjectAreaItem data)
+        {
+            Add(data: data,
+                parentKey: new ModelNameSpaceKey(parent),
+                toKey: (T) => new ModelNameSpaceKey((IModelSubjectAreaKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((IModelSubjectAreaItem)data),
+                toScope: (T) => ScopeType.ModelSubjectArea);
+        }
+
+        /// <summary>
+        /// Adds the Model Attribute to collection 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="parent"></param>
+        public void Add(IModelItem parent, IDomainAttributeItem data)
+        {
+            Add(data: data,
+                parentKey: new ModelNameSpaceKey(parent),
+                toKey: (T) => new ModelNameSpaceKey((IDomainAttributeKey) data),
+                toName: (T) => new ModelNameSpaceKeyMember((IDomainAttributeItem)data),
+                toScope: (T) => ScopeType.ModelAttribute);
+        }
+
+        /// <summary>
+        /// Adds the Model Attribute to collection 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="parent"></param>
+        public void Add(IModelSubjectAreaItem parent, IDomainAttributeItem data)
+        {
+            Add(data: data,
+                parentKey: new ModelNameSpaceKey(parent),
+                toKey: (T) => new ModelNameSpaceKey((IDomainAttributeKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((IDomainAttributeItem)data),
+                toScope: (T) => ScopeType.ModelAttribute);
+        }
+
+        /// <summary>
+        /// Adds the Model Entity to collection 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="parent"></param>
+        public void Add(IModelItem parent, IDomainEntityItem data)
+        {
+            Add(data: data,
+                parentKey: new ModelNameSpaceKey(parent),
+                toKey: (T) => new ModelNameSpaceKey((IDomainEntityKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((IDomainEntityItem)data),
+                toScope: (T) => ScopeType.ModelEntity);
+        }
+
+        /// <summary>
+        /// Adds the Model Entity to collection 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="parent"></param>
+        public void Add(IModelSubjectAreaItem parent, IDomainEntityItem data)
+        {
+            Add(data: data,
+                parentKey: new ModelNameSpaceKey(parent),
+                toKey: (T) => new ModelNameSpaceKey((IDomainEntityKey)data),
+                toName: (T) => new ModelNameSpaceKeyMember((IDomainEntityItem)data),
+                toScope: (T) => ScopeType.ModelEntity);
         }
 
         /// <summary>

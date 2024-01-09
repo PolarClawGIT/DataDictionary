@@ -1,10 +1,14 @@
 ﻿using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using System;
@@ -193,7 +197,46 @@ namespace DataDictionary.BusinessLayer.NameSpace
             { memberParts.Add(source.MemberName); }
         }
 
-        
+        /// <summary>
+        /// Constructor for Model NameSpace Key Member Name, Model
+        /// </summary>
+        /// <param name="source"></param>
+        public ModelNameSpaceKeyMember(IModelItem source) : base()
+        {
+            if (source.ModelTitle is String)
+            { memberParts.Add(source.ModelTitle); }
+        }
+
+        /// <summary>
+        /// Constructor for Model NameSpace Key Member Name, Subject Area
+        /// </summary>
+        /// <param name="source"></param>
+        public ModelNameSpaceKeyMember(IModelSubjectAreaItem source) : base()
+        {
+            if (source.SubjectAreaTitle is String)
+            { memberParts.Add(source.SubjectAreaTitle); }
+        }
+
+        /// <summary>
+        /// Constructor for Model NameSpace Key Member Name, Attribute
+        /// </summary>
+        /// <param name="source"></param>
+        public ModelNameSpaceKeyMember(IDomainAttributeItem source) : base()
+        {
+            if (source.AttributeTitle is String)
+            { memberParts.Add(source.AttributeTitle); }
+        }
+
+        /// <summary>
+        /// Constructor for Model NameSpace Key Member Name, Entity
+        /// </summary>
+        /// <param name="source"></param>
+        public ModelNameSpaceKeyMember(IDomainEntityItem source) : base()
+        {
+            if (source.EntityTitle is String)
+            { memberParts.Add(source.EntityTitle); }
+        }
+
 
         /// <summary>
         /// Parses a String into Name Parts per the rules of a Model NameSpace Member.

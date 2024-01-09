@@ -1,9 +1,13 @@
 ﻿using DataDictionary.BusinessLayer.NameSpace;
+using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using Toolbox.Threading;
@@ -29,20 +33,20 @@ namespace DataDictionary.BusinessLayer
     public static class ModelNamespace
     {
         /// <summary>
-        /// Load Alias Data for the Model.
+        /// Load NameSpace Data for the Model.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data)
-            where T : IModelCatalog, IModelLibrary, IModelNamespace
+        public static IReadOnlyList<WorkItem> LoadNameSpace<T>(this T data)
+            where T : IModelCatalog, IModelLibrary, IModel, IModelDomain, IModelNamespace
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
 
             WorkItem loadWork = new WorkItem()
             {
-                WorkName = "Load Catalog Aliases",
+                WorkName = "Load NameSpace",
                 DoWork = ThreadWork
             };
             progress = loadWork.OnProgressChanged;
@@ -55,29 +59,34 @@ namespace DataDictionary.BusinessLayer
             {
                 data.ModelNamespace.Clear();
 
-                foreach (DbCatalogItem? item in data.DbCatalogs)
+                foreach (DbCatalogItem item in data.DbCatalogs)
                 {
                     DbCatalogKey catalogKey = new DbCatalogKey(item);
-                    LoadAliasCore(data, catalogKey, progress);
+                    LoadNameSpaceCore(data, catalogKey, progress);
                 }
 
-                foreach (LibrarySourceItem? item in data.LibrarySources)
+                foreach (LibrarySourceItem item in data.LibrarySources)
                 {
                     LibrarySourceKey sourceKey = new LibrarySourceKey(item);
-                    LoadAliasCore(data, sourceKey, progress);
+                    LoadNameSpaceCore(data, sourceKey, progress);
+                }
+
+                foreach (ModelItem item in data.Models)
+                {
+                    ModelKey key = new ModelKey(item);
+                    LoadNameSpaceCore(data, key, progress);
                 }
             }
         }
 
-
         /// <summary>
-        /// Load Alias Data from a Catalog
+        /// Load NameSpace Data from a Catalog
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, IDbCatalogKeyName key)
+        public static IReadOnlyList<WorkItem> LoadNameSpace<T>(this T data, IDbCatalogKeyName key)
             where T : IModelCatalog, IModelNamespace
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -85,7 +94,7 @@ namespace DataDictionary.BusinessLayer
 
             WorkItem loadWork = new WorkItem()
             {
-                WorkName = "Load Catalog Aliases",
+                WorkName = "Load Catalog NameSpace",
                 DoWork = ThreadWork
             };
             progress = loadWork.OnProgressChanged;
@@ -100,19 +109,19 @@ namespace DataDictionary.BusinessLayer
                 foreach (DbCatalogItem? item in data.DbCatalogs.Where(w => nameKey.Equals(w)))
                 {
                     DbCatalogKey catalogKey = new DbCatalogKey(item);
-                    LoadAliasCore(data, catalogKey, progress);
+                    LoadNameSpaceCore(data, catalogKey, progress);
                 }
             }
         }
 
         /// <summary>
-        /// Load Alias Data from a Catalog
+        /// Load NameSpace Data from a Catalog
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, IDbCatalogKey key)
+        public static IReadOnlyList<WorkItem> LoadNameSpace<T>(this T data, IDbCatalogKey key)
             where T : IModelCatalog, IModelNamespace
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -120,7 +129,7 @@ namespace DataDictionary.BusinessLayer
 
             WorkItem loadWork = new WorkItem()
             {
-                WorkName = "Load Catalog Aliases",
+                WorkName = "Load Catalog NameSpace",
                 DoWork = ThreadWork
             };
             progress = loadWork.OnProgressChanged;
@@ -130,10 +139,10 @@ namespace DataDictionary.BusinessLayer
             return work;
 
             void ThreadWork()
-            { LoadAliasCore(data, key, progress); }
+            { LoadNameSpaceCore(data, key, progress); }
         }
 
-        private static void LoadAliasCore<T>(T data, IDbCatalogKey key, Action<Int32, Int32> progress)
+        private static void LoadNameSpaceCore<T>(T data, IDbCatalogKey key, Action<Int32, Int32> progress)
             where T : IModelCatalog, IModelNamespace
         {
             DbCatalogKey catalogKey = new DbCatalogKey(key);
@@ -208,13 +217,13 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <summary>
-        /// Load Alias Data from a Library
+        /// Load NameSpace Data from a Library
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, FileInfo key)
+        public static IReadOnlyList<WorkItem> LoadNameSpace<T>(this T data, FileInfo key)
             where T : IModelLibrary, IModelNamespace
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -222,7 +231,7 @@ namespace DataDictionary.BusinessLayer
 
             WorkItem loadWork = new WorkItem()
             {
-                WorkName = "Load Library Aliases",
+                WorkName = "Load Library NameSpace",
                 DoWork = ThreadWork
             };
             progress = loadWork.OnProgressChanged;
@@ -236,20 +245,20 @@ namespace DataDictionary.BusinessLayer
                 foreach (LibrarySourceItem? item in data.LibrarySources.Where(w => String.Equals(w.SourceFile, key.Name, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     LibrarySourceKey sourceKey = new LibrarySourceKey(item);
-                    LoadAliasCore(data, sourceKey, progress);
+                    LoadNameSpaceCore(data, sourceKey, progress);
                 }
             }
 
         }
 
         /// <summary>
-        /// Load Alias Data from a Library
+        /// Load NameSpace Data from a Library
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, ILibrarySourceKeyName key)
+        public static IReadOnlyList<WorkItem> LoadNameSpace<T>(this T data, ILibrarySourceKeyName key)
             where T : IModelLibrary, IModelNamespace
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -257,7 +266,7 @@ namespace DataDictionary.BusinessLayer
 
             WorkItem loadWork = new WorkItem()
             {
-                WorkName = "Load Library Aliases",
+                WorkName = "Load Library NameSpace",
                 DoWork = ThreadWork
             };
             progress = loadWork.OnProgressChanged;
@@ -272,19 +281,19 @@ namespace DataDictionary.BusinessLayer
                 foreach (LibrarySourceItem? item in data.LibrarySources.Where(w => nameKey.Equals(w)))
                 {
                     LibrarySourceKey sourceKey = new LibrarySourceKey(item);
-                    LoadAliasCore(data, sourceKey, progress);
+                    LoadNameSpaceCore(data, sourceKey, progress);
                 }
             }
         }
 
         /// <summary>
-        /// Load Alias Data from a Library
+        /// Load NameSpace Data from a Library
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadAlias<T>(this T data, ILibrarySourceKey key)
+        public static IReadOnlyList<WorkItem> LoadNameSpace<T>(this T data, ILibrarySourceKey key)
             where T : IModelLibrary, IModelNamespace
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -292,7 +301,7 @@ namespace DataDictionary.BusinessLayer
 
             WorkItem loadWork = new WorkItem()
             {
-                WorkName = "Load Library Aliases",
+                WorkName = "Load Library NameSpace",
                 DoWork = ThreadWork
             };
             progress = loadWork.OnProgressChanged;
@@ -302,10 +311,10 @@ namespace DataDictionary.BusinessLayer
             return work;
 
             void ThreadWork()
-            { LoadAliasCore(data, key, progress); }
+            { LoadNameSpaceCore(data, key, progress); }
         }
 
-        private static void LoadAliasCore<T>(T data, ILibrarySourceKey key, Action<int, int> progress)
+        private static void LoadNameSpaceCore<T>(T data, ILibrarySourceKey key, Action<int, int> progress)
             where T : IModelLibrary, IModelNamespace
         {
             LibrarySourceKey libraryKey = new LibrarySourceKey(key);
@@ -346,18 +355,114 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <summary>
-        /// Remove Alias Data for a Catalog
+        /// Load NameSpace Data from a Model
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> LoadNameSpace<T>(this T data, IModelKey key)
+            where T : IModel, IModelDomain, IModelNamespace
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            Action<Int32, Int32> progress = (x, y) => { };
+
+            WorkItem loadWork = new WorkItem()
+            {
+                WorkName = "Load Domain NameSpace",
+                DoWork = ThreadWork
+            };
+            progress = loadWork.OnProgressChanged;
+
+            work.Add(loadWork);
+
+            return work;
+
+            void ThreadWork()
+            { LoadNameSpaceCore(data, key, progress); }
+        }
+
+        private static void LoadNameSpaceCore<T>(T data, IModelKey key, Action<int, int> progress)
+            where T : IModel, IModelDomain, IModelNamespace
+        {
+            ModelKey modelKey = new ModelKey(key);
+            List<ModelItem> models = data.Models.Where(w => modelKey.Equals(w)).ToList();
+
+            Int32 totalWork = models.Count;
+            Int32 completedWork = 0;
+
+            foreach (ModelItem modelItem in models) // There is only One, coded if future can support many
+            {
+                // This improve performance as it is working off of a fixed sub-set of data.
+                List<ModelSubjectAreaItem> subjectAreas = data.ModelSubjectAreas.ToList();
+                List<DomainEntityItem> entities = data.DomainEntities.ToList();
+                List<DomainAttributeItem> attributes = data.DomainAttributes.ToList();
+
+                List<DomainEntityItem> missingEntities = data.DomainEntities.ToList();
+                List<DomainAttributeItem> missingAttributes = data.DomainAttributes.ToList();
+
+                totalWork = totalWork +
+                    attributes.Count +
+                    entities.Count;
+
+                data.ModelNamespace.Add(modelItem);
+                progress(completedWork++, totalWork);
+
+                foreach (ModelSubjectAreaItem subjectItem in subjectAreas)
+                {
+                    ModelSubjectAreaKey subjectKey = new ModelSubjectAreaKey(subjectItem);
+                    data.ModelNamespace.Add(modelItem, subjectItem);
+                    progress(completedWork++, totalWork);
+
+
+                    //TODO: Hierarchy of Subject areas (Db Change)
+
+                    foreach (DomainEntityItem entityItem in entities.Where(w => subjectKey.Equals(w)))
+                    {
+                        if(missingEntities.Contains(entityItem)) { missingEntities.Remove(entityItem); }
+
+                        data.ModelNamespace.Add(subjectItem, entityItem);
+                        progress(completedWork++, totalWork);
+                    }
+
+                    foreach (DomainAttributeItem attributeItem in attributes.Where(w => subjectKey.Equals(w)))
+                    {
+                        if (missingAttributes.Contains(attributeItem)) { missingAttributes.Remove(attributeItem); }
+
+                        data.ModelNamespace.Add(subjectItem, attributeItem);
+                        progress(completedWork++, totalWork);
+                    }
+                }
+
+                // Handle items not in a Subject Area scoped to the Model
+                foreach (DomainEntityItem entityItem in missingEntities)
+                {
+                    data.ModelNamespace.Add(modelItem, entityItem);
+                    progress(completedWork++, totalWork);
+                }
+
+                foreach (DomainAttributeItem attributeItem in missingAttributes)
+                {
+                    data.ModelNamespace.Add(modelItem, attributeItem);
+                    progress(completedWork++, totalWork);
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Remove NameSpace Data for a Catalog
         /// </summary>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> RemoveAlias(this IModelNamespace data, IDbCatalogKey key)
+        public static IReadOnlyList<WorkItem> RemoveNameSpace(this IModelNamespace data, IDbCatalogKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             WorkItem deleteWork = new WorkItem()
             {
-                WorkName = "Remove Catalog aliases",
+                WorkName = "Remove Catalog NameSpace",
                 DoWork = () => data.ModelNamespace.Remove(key),
             };
 
@@ -366,18 +471,18 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <summary>
-        /// Remove Alias Data for a Library
+        /// Remove NameSpace Data for a Library
         /// </summary>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> RemoveAlias(this IModelNamespace data, ILibrarySourceKey key)
+        public static IReadOnlyList<WorkItem> RemoveNameSpace(this IModelNamespace data, ILibrarySourceKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             WorkItem deleteWork = new WorkItem()
             {
-                WorkName = "Remove Library aliases",
+                WorkName = "Remove Library NameSpace",
                 DoWork = () => data.ModelNamespace.Remove(key)
             };
 
