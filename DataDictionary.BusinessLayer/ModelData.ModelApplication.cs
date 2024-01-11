@@ -17,7 +17,5 @@ namespace DataDictionary.BusinessLayer
         /// <inheritdoc/>
         public PropertyCollection Properties { get; } = new PropertyCollection();
 
-        /// <inheritdoc/>
-        public ScopeCollection Scopes { get; } = new ScopeCollection();
     }
 }

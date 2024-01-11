@@ -75,7 +75,7 @@ namespace DataDictionary.Main
                     {
                         TreeNodeCollection nodes = target;
 
-                        if(scopeGroup.Count() > 1)
+                        if (scopeGroup.Count() > 1)
                         {
                             TreeNode scopeNode = dataSourceNavigation.Invoke<TreeNode>(() =>
                             {

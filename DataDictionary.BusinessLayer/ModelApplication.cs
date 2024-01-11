@@ -27,12 +27,6 @@ namespace DataDictionary.BusinessLayer
         /// List Properties defined for the Application.
         /// </summary>
         PropertyCollection Properties { get; }
-
-        /// <summary>
-        /// List of Scopes defined for the Application.
-        /// </summary>
-        ScopeCollection Scopes { get; }
-
     }
 
     /// <summary>
@@ -73,11 +67,6 @@ namespace DataDictionary.BusinessLayer
                 target: data.Properties,
                 command: data.Properties.LoadCommand));
 
-            work.Add(factory.CreateWork(
-                workName: "Load Scopes",
-                target: data.Scopes,
-                command: data.Scopes.LoadCommand));
-
             return work;
         }
 
@@ -104,7 +93,6 @@ namespace DataDictionary.BusinessLayer
 
                     LoadTable(workSet, data.HelpSubjects);
                     LoadTable(workSet, data.Properties);
-                    LoadTable(workSet, data.Scopes);
                 }
             }
         }
@@ -126,10 +114,6 @@ namespace DataDictionary.BusinessLayer
             work.Add(factory.CreateWork(
                 workName: "Save Properties",
                 command: data.Properties.SaveCommand));
-
-            work.Add(factory.CreateWork(
-                workName: "Save Scopes",
-                command: data.Scopes.SaveCommand));
 
             return work;
         }
@@ -154,7 +138,6 @@ namespace DataDictionary.BusinessLayer
                 {
                     workSet.Tables.Add(data.HelpSubjects.ToDataTable());
                     workSet.Tables.Add(data.Properties.ToDataTable());
-                    workSet.Tables.Add(data.Scopes.ToDataTable());
 
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }
@@ -205,6 +188,8 @@ namespace DataDictionary.BusinessLayer
                     workSet.Tables.Add(data.DomainEntities.ToDataTable());
                     workSet.Tables.Add(data.DomainEntityAliases.ToDataTable());
                     workSet.Tables.Add(data.DomainEntityProperties.ToDataTable());
+
+                    //IModel
                     workSet.Tables.Add(data.ModelSubjectAreas.ToDataTable());
 
                     // Write the Data
@@ -263,6 +248,8 @@ namespace DataDictionary.BusinessLayer
                     LoadTable(workSet, data.DomainEntities);
                     LoadTable(workSet, data.DomainEntityAliases);
                     LoadTable(workSet, data.DomainEntityProperties);
+
+                    //IModel
                     LoadTable(workSet, data.ModelSubjectAreas);
                 }
             }
