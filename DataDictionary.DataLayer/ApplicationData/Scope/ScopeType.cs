@@ -16,8 +16,10 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// Library NameSpaces are defined by the namespace or type and the element of the namespace or type.
     /// </summary>
     /// <remarks>
-    /// This list matches to the database view [App_DataDictionary].[ModelScope]
+    /// This list mimics what is in the database but the Value (Int32) does not match.
+    /// Each Database Entry, is expected to have an entry here.
     /// </remarks>
+    /// <see cref="ScopeKey"/>
     public enum ScopeType
     {
         /// <summary>
@@ -98,56 +100,56 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <summary>
         /// SQL Table
         /// </summary>
-        DatabaseSchemaTable,
+        DatabaseTable,
 
         /// <summary>
         /// SQL Function
         /// </summary>
-        DatabaseSchemaFunction,
+        DatabaseFunction,
 
         /// <summary>
         /// SQL Procedure
         /// </summary>
-        DatabaseSchemaProcedure,
+        DatabaseProcedure,
 
         /// <summary>
         /// SQL Type/Domain
         /// </summary>
-        DatabaseSchemaType,
+        DatabaseType,
 
         /// <summary>
         /// SQL View
         /// </summary>
-        DatabaseSchemaView,
+        DatabaseView,
 
         /// <summary>
         /// SQL View Column
         /// </summary>
-        DatabaseSchemaViewColumn,
+        DatabaseViewColumn,
 
         //DatabaseSchemaViewIndex,
 
         /// <summary>
         /// SQL Table Column
         /// </summary>
-        DatabaseSchemaTableColumn,
+        DatabaseTableColumn,
 
         /// <summary>
         /// SQL Table Constraint
         /// </summary>
-        DatabaseSchemaTableConstraint,
+        DatabaseTableConstraint,
 
         //DatabaseSchemaTableIndex,
 
         /// <summary>
         /// SQL Procedure Parameter
         /// </summary>
-        DatabaseSchemaProcedureParameter,
+        DatabaseProcedureParameter,
 
         /// <summary>
         /// SQL Function Parameter
         /// </summary>
-        DatabaseSchemaFunctionParameter,
+        DatabaseFunctionParameter,
 
 
     }

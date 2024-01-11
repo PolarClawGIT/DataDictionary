@@ -10,6 +10,11 @@ namespace DataDictionary.Main.Controls
 {
     static class ModelScopeExtension
     {
+        /// <summary>
+        /// This associates a Image to a Model Scope. ScopeType must be defined. ScopeKey defines the text.
+        /// </summary>
+        /// <see cref="DataDictionary.DataLayer.ApplicationData.Scope.ScopeType"/>
+        /// <see cref="DataDictionary.DataLayer.ApplicationData.Scope.ScopeKey"/>
         static Dictionary<ScopeType, Image> images = new Dictionary<ScopeType, Image>()
         {
             {ScopeType.Null,                             Resources.UnknownMember },
@@ -24,16 +29,16 @@ namespace DataDictionary.Main.Controls
 
             {ScopeType.Database,                         Resources.Database },
             {ScopeType.DatabaseSchema,                   Resources.Schema },
-            {ScopeType.DatabaseSchemaFunction,           Resources.ScalarFunction },
-            {ScopeType.DatabaseSchemaProcedure,          Resources.Procedure },
-            {ScopeType.DatabaseSchemaTable,              Resources.Table },
-            {ScopeType.DatabaseSchemaType,               Resources.Type },
-            {ScopeType.DatabaseSchemaView,               Resources.View },
-            {ScopeType.DatabaseSchemaViewColumn,         Resources.Column },
-            {ScopeType.DatabaseSchemaTableColumn,        Resources.Column },
-            {ScopeType.DatabaseSchemaTableConstraint,    Resources.Key},
-            {ScopeType.DatabaseSchemaProcedureParameter, Resources.Parameter },
-            {ScopeType.DatabaseSchemaFunctionParameter,  Resources.Parameter },
+            {ScopeType.DatabaseFunction,                 Resources.ScalarFunction },
+            {ScopeType.DatabaseProcedure,                Resources.Procedure },
+            {ScopeType.DatabaseTable,                    Resources.Table },
+            {ScopeType.DatabaseType,                     Resources.Type },
+            {ScopeType.DatabaseView,                     Resources.View },
+            {ScopeType.DatabaseViewColumn,               Resources.Column },
+            {ScopeType.DatabaseTableColumn,              Resources.Column },
+            {ScopeType.DatabaseTableConstraint,          Resources.Key},
+            {ScopeType.DatabaseProcedureParameter,       Resources.Parameter },
+            {ScopeType.DatabaseFunctionParameter,        Resources.Parameter },
 
             {ScopeType.Model,                            Resources.SoftwareDefinitionModel },
             {ScopeType.ModelSubjectArea,                 Resources.Diagram },
