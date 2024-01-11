@@ -30,9 +30,9 @@
         {
             components = new System.ComponentModel.Container();
             Panel navigationPanel;
-            TableLayoutPanel dataSourceLayout;
             Splitter navigationSpliter;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+            nameSpaceLayout = new TableLayoutPanel();
             dataSourceToolStrip = new ToolStrip();
             newAttributeCommand = new ToolStripSplitButton();
             menuAttributes = new ToolStripMenuItem();
@@ -49,7 +49,7 @@
             viewLibrarySourceCommand = new ToolStripMenuItem();
             viewLibraryMemberCommand = new ToolStripMenuItem();
             manageDatabasesCommand = new ToolStripSplitButton();
-            dbSchemaContextMenu = new ContextMenuStrip(components);
+            catalogContextMenu = new ContextMenuStrip(components);
             menuCatalogItem = new ToolStripMenuItem();
             menuSchemaItem = new ToolStripMenuItem();
             menuTableItem = new ToolStripMenuItem();
@@ -64,8 +64,6 @@
             toolStripSeparator7 = new ToolStripSeparator();
             refreshCommand = new ToolStripButton();
             nameSpaceNavigation = new TreeView();
-            domainModelMenu = new ContextMenuStrip(components);
-            menuImportDbSchema = new ToolStripMenuItem();
             statusStrip = new StatusStrip();
             toolStripOnlineStatus = new ToolStripStatusLabel();
             toolStripWhiteSpace = new ToolStripStatusLabel();
@@ -74,7 +72,6 @@
             menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             newEmptyModelMenuItem = new ToolStripMenuItem();
-            manageModelDatabaseMenuItem = new ToolStripMenuItem();
             openToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator = new ToolStripSeparator();
             saveToolStripMenuItem = new ToolStripMenuItem();
@@ -115,44 +112,42 @@
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
             navigationPanel = new Panel();
-            dataSourceLayout = new TableLayoutPanel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
-            dataSourceLayout.SuspendLayout();
+            nameSpaceLayout.SuspendLayout();
             dataSourceToolStrip.SuspendLayout();
-            dbSchemaContextMenu.SuspendLayout();
-            domainModelMenu.SuspendLayout();
+            catalogContextMenu.SuspendLayout();
             statusStrip.SuspendLayout();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // navigationPanel
             // 
-            navigationPanel.Controls.Add(dataSourceLayout);
+            navigationPanel.Controls.Add(nameSpaceLayout);
             navigationPanel.Dock = DockStyle.Left;
             navigationPanel.Location = new Point(0, 49);
             navigationPanel.Name = "navigationPanel";
             navigationPanel.Size = new Size(300, 591);
             navigationPanel.TabIndex = 6;
             // 
-            // dataSourceLayout
+            // nameSpaceLayout
             // 
-            dataSourceLayout.ColumnCount = 1;
-            dataSourceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            dataSourceLayout.Controls.Add(dataSourceToolStrip, 0, 0);
-            dataSourceLayout.Controls.Add(nameSpaceNavigation, 0, 1);
-            dataSourceLayout.Dock = DockStyle.Fill;
-            dataSourceLayout.Location = new Point(0, 0);
-            dataSourceLayout.Name = "dataSourceLayout";
-            dataSourceLayout.RowCount = 2;
-            dataSourceLayout.RowStyles.Add(new RowStyle());
-            dataSourceLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            dataSourceLayout.Size = new Size(300, 591);
-            dataSourceLayout.TabIndex = 2;
+            nameSpaceLayout.ColumnCount = 1;
+            nameSpaceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            nameSpaceLayout.Controls.Add(dataSourceToolStrip, 0, 0);
+            nameSpaceLayout.Controls.Add(nameSpaceNavigation, 0, 1);
+            nameSpaceLayout.Dock = DockStyle.Fill;
+            nameSpaceLayout.Location = new Point(0, 0);
+            nameSpaceLayout.Name = "nameSpaceLayout";
+            nameSpaceLayout.RowCount = 2;
+            nameSpaceLayout.RowStyles.Add(new RowStyle());
+            nameSpaceLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            nameSpaceLayout.Size = new Size(300, 591);
+            nameSpaceLayout.TabIndex = 2;
             // 
             // dataSourceToolStrip
             // 
-            dataSourceToolStrip.Items.AddRange(new ToolStripItem[] { newAttributeCommand, newEntityCommand, newSubjectAreaCommand, toolStripSeparator6, manageLibrariesCommand, manageDatabasesCommand, toolStripSeparator7, refreshCommand });
+            dataSourceToolStrip.Items.AddRange(new ToolStripItem[] { newAttributeCommand, newEntityCommand, newSubjectAreaCommand, toolStripSeparator6, manageDatabasesCommand, manageLibrariesCommand, toolStripSeparator7, refreshCommand });
             dataSourceToolStrip.Location = new Point(0, 0);
             dataSourceToolStrip.Name = "dataSourceToolStrip";
             dataSourceToolStrip.Size = new Size(300, 25);
@@ -269,17 +264,19 @@
             viewLibrarySourceCommand.Name = "viewLibrarySourceCommand";
             viewLibrarySourceCommand.Size = new Size(190, 22);
             viewLibrarySourceCommand.Text = "view Library Sources";
+            viewLibrarySourceCommand.Click += viewLibrarySourceCommand_Click;
             // 
             // viewLibraryMemberCommand
             // 
             viewLibraryMemberCommand.Name = "viewLibraryMemberCommand";
             viewLibraryMemberCommand.Size = new Size(190, 22);
             viewLibraryMemberCommand.Text = "view Library Members";
+            viewLibraryMemberCommand.Click += viewLibraryMemberCommand_Click;
             // 
             // manageDatabasesCommand
             // 
             manageDatabasesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            manageDatabasesCommand.DropDown = dbSchemaContextMenu;
+            manageDatabasesCommand.DropDown = catalogContextMenu;
             manageDatabasesCommand.Image = Properties.Resources.Database;
             manageDatabasesCommand.ImageTransparentColor = Color.Magenta;
             manageDatabasesCommand.Name = "manageDatabasesCommand";
@@ -287,19 +284,18 @@
             manageDatabasesCommand.Text = "Manage Databases";
             manageDatabasesCommand.ButtonClick += manageDatabasesCommand_ButtonClick;
             // 
-            // dbSchemaContextMenu
+            // catalogContextMenu
             // 
-            dbSchemaContextMenu.Items.AddRange(new ToolStripItem[] { menuCatalogItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineDependencyItem });
-            dbSchemaContextMenu.Name = "dbSchemacontextMenu";
-            dbSchemaContextMenu.OwnerItem = manageDatabasesCommand;
-            dbSchemaContextMenu.Size = new Size(234, 246);
+            catalogContextMenu.Items.AddRange(new ToolStripItem[] { menuCatalogItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineDependencyItem });
+            catalogContextMenu.Name = "dbSchemacontextMenu";
+            catalogContextMenu.Size = new Size(234, 246);
             // 
             // menuCatalogItem
             // 
             menuCatalogItem.Image = Properties.Resources.Database;
             menuCatalogItem.Name = "menuCatalogItem";
             menuCatalogItem.Size = new Size(233, 22);
-            menuCatalogItem.Text = "Browse Catalogs";
+            menuCatalogItem.Text = "browse Catalogs";
             menuCatalogItem.Click += menuCatalogItem_Click;
             // 
             // menuSchemaItem
@@ -307,7 +303,7 @@
             menuSchemaItem.Image = Properties.Resources.Schema;
             menuSchemaItem.Name = "menuSchemaItem";
             menuSchemaItem.Size = new Size(233, 22);
-            menuSchemaItem.Text = "Browse &Schemas";
+            menuSchemaItem.Text = "browse Schemas";
             menuSchemaItem.Click += menuSchemaItem_Click;
             // 
             // menuTableItem
@@ -315,7 +311,7 @@
             menuTableItem.Image = Properties.Resources.Table;
             menuTableItem.Name = "menuTableItem";
             menuTableItem.Size = new Size(233, 22);
-            menuTableItem.Text = "Browse &Tables";
+            menuTableItem.Text = "browse Tables";
             menuTableItem.Click += menuTableItem_Click;
             // 
             // menuTableColumnItem
@@ -323,7 +319,7 @@
             menuTableColumnItem.Image = Properties.Resources.Column;
             menuTableColumnItem.Name = "menuTableColumnItem";
             menuTableColumnItem.Size = new Size(233, 22);
-            menuTableColumnItem.Text = "Browse Table Columns";
+            menuTableColumnItem.Text = "browse Table Columns";
             menuTableColumnItem.Click += menuColumnItem_Click;
             // 
             // menuPropertyItem
@@ -331,7 +327,7 @@
             menuPropertyItem.Image = Properties.Resources.ExtendedProperty;
             menuPropertyItem.Name = "menuPropertyItem";
             menuPropertyItem.Size = new Size(233, 22);
-            menuPropertyItem.Text = "Browse &Properties";
+            menuPropertyItem.Text = "browse Properties";
             menuPropertyItem.Click += menuPropertyItem_Click;
             // 
             // menuConstraintItem
@@ -339,7 +335,7 @@
             menuConstraintItem.Image = Properties.Resources.Key;
             menuConstraintItem.Name = "menuConstraintItem";
             menuConstraintItem.Size = new Size(233, 22);
-            menuConstraintItem.Text = "Browse Constraints";
+            menuConstraintItem.Text = "browse Constraints";
             menuConstraintItem.Click += menuConstraintItem_Click;
             // 
             // menuConstraintColumnItem
@@ -347,7 +343,7 @@
             menuConstraintColumnItem.Image = Properties.Resources.KeyColumn;
             menuConstraintColumnItem.Name = "menuConstraintColumnItem";
             menuConstraintColumnItem.Size = new Size(233, 22);
-            menuConstraintColumnItem.Text = "Browse Constraint Columns";
+            menuConstraintColumnItem.Text = "browse Constraint Columns";
             menuConstraintColumnItem.Click += menuConstraintColumnItem_Click;
             // 
             // menuDataTypeItem
@@ -355,7 +351,7 @@
             menuDataTypeItem.Image = Properties.Resources.DomainType;
             menuDataTypeItem.Name = "menuDataTypeItem";
             menuDataTypeItem.Size = new Size(233, 22);
-            menuDataTypeItem.Text = "Browse Data Types";
+            menuDataTypeItem.Text = "browse Data Types";
             menuDataTypeItem.Click += menuDataTypeItem_Click;
             // 
             // menuRoutineItem
@@ -363,7 +359,7 @@
             menuRoutineItem.Image = Properties.Resources.Procedure;
             menuRoutineItem.Name = "menuRoutineItem";
             menuRoutineItem.Size = new Size(233, 22);
-            menuRoutineItem.Text = "Browse Routines";
+            menuRoutineItem.Text = "browse Routines";
             menuRoutineItem.Click += menuRoutineItem_Click;
             // 
             // menuRoutineParameterItem
@@ -371,7 +367,7 @@
             menuRoutineParameterItem.Image = Properties.Resources.Parameter;
             menuRoutineParameterItem.Name = "menuRoutineParameterItem";
             menuRoutineParameterItem.Size = new Size(233, 22);
-            menuRoutineParameterItem.Text = "Browse Routine Parameters";
+            menuRoutineParameterItem.Text = "browse Routine Parameters";
             menuRoutineParameterItem.Click += menuRoutineParameterItem_Click;
             // 
             // menuRoutineDependencyItem
@@ -379,7 +375,7 @@
             menuRoutineDependencyItem.Image = Properties.Resources.Dependancy;
             menuRoutineDependencyItem.Name = "menuRoutineDependencyItem";
             menuRoutineDependencyItem.Size = new Size(233, 22);
-            menuRoutineDependencyItem.Text = "Browse Routine Dependencies";
+            menuRoutineDependencyItem.Text = "browse Routine Dependencies";
             menuRoutineDependencyItem.Click += menuRoutineDependencyItem_Click;
             // 
             // toolStripSeparator7
@@ -414,20 +410,6 @@
             navigationSpliter.Size = new Size(3, 591);
             navigationSpliter.TabIndex = 8;
             navigationSpliter.TabStop = false;
-            // 
-            // domainModelMenu
-            // 
-            domainModelMenu.Items.AddRange(new ToolStripItem[] { menuImportDbSchema });
-            domainModelMenu.Name = "domainModelMenu";
-            domainModelMenu.Size = new Size(203, 26);
-            // 
-            // menuImportDbSchema
-            // 
-            menuImportDbSchema.Enabled = false;
-            menuImportDbSchema.Image = Properties.Resources.Dictionary;
-            menuImportDbSchema.Name = "menuImportDbSchema";
-            menuImportDbSchema.Size = new Size(202, 22);
-            menuImportDbSchema.Text = "Import from &Db Schema";
             // 
             // statusStrip
             // 
@@ -473,7 +455,7 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newEmptyModelMenuItem, manageModelDatabaseMenuItem, openToolStripMenuItem, toolStripSeparator, saveToolStripMenuItem, saveAsToolStripMenuItem, toolStripSeparator1, printToolStripMenuItem, printPreviewToolStripMenuItem, toolStripSeparator2, exitToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newEmptyModelMenuItem, openToolStripMenuItem, toolStripSeparator, saveToolStripMenuItem, saveAsToolStripMenuItem, toolStripSeparator1, printToolStripMenuItem, printPreviewToolStripMenuItem, toolStripSeparator2, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(37, 20);
             fileToolStripMenuItem.Text = "&File";
@@ -484,19 +466,10 @@
             newEmptyModelMenuItem.ImageTransparentColor = Color.Magenta;
             newEmptyModelMenuItem.Name = "newEmptyModelMenuItem";
             newEmptyModelMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            newEmptyModelMenuItem.Size = new Size(194, 22);
+            newEmptyModelMenuItem.Size = new Size(178, 22);
             newEmptyModelMenuItem.Text = "&New Model";
             newEmptyModelMenuItem.ToolTipText = "Creates a New Empty Model";
             newEmptyModelMenuItem.Click += newToolStripMenuItem_Click;
-            // 
-            // manageModelDatabaseMenuItem
-            // 
-            manageModelDatabaseMenuItem.Image = Properties.Resources.SaveTable;
-            manageModelDatabaseMenuItem.Name = "manageModelDatabaseMenuItem";
-            manageModelDatabaseMenuItem.Size = new Size(194, 22);
-            manageModelDatabaseMenuItem.Text = "Open Model, Database";
-            manageModelDatabaseMenuItem.ToolTipText = "Opens a Model from the Application Database";
-            manageModelDatabaseMenuItem.Click += openSaveModelDatabaseMenuItem_Click;
             // 
             // openToolStripMenuItem
             // 
@@ -504,14 +477,14 @@
             openToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             openToolStripMenuItem.Name = "openToolStripMenuItem";
             openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
-            openToolStripMenuItem.Size = new Size(194, 22);
+            openToolStripMenuItem.Size = new Size(178, 22);
             openToolStripMenuItem.Text = "&Open";
             openToolStripMenuItem.Click += openToolStripMenuItem_Click;
             // 
             // toolStripSeparator
             // 
             toolStripSeparator.Name = "toolStripSeparator";
-            toolStripSeparator.Size = new Size(191, 6);
+            toolStripSeparator.Size = new Size(175, 6);
             // 
             // saveToolStripMenuItem
             // 
@@ -520,7 +493,7 @@
             saveToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            saveToolStripMenuItem.Size = new Size(194, 22);
+            saveToolStripMenuItem.Size = new Size(178, 22);
             saveToolStripMenuItem.Text = "&Save";
             saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
             // 
@@ -528,14 +501,14 @@
             // 
             saveAsToolStripMenuItem.Image = Properties.Resources.SaveAs;
             saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            saveAsToolStripMenuItem.Size = new Size(194, 22);
+            saveAsToolStripMenuItem.Size = new Size(178, 22);
             saveAsToolStripMenuItem.Text = "Save &As";
             saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(191, 6);
+            toolStripSeparator1.Size = new Size(175, 6);
             // 
             // printToolStripMenuItem
             // 
@@ -544,7 +517,7 @@
             printToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             printToolStripMenuItem.Name = "printToolStripMenuItem";
             printToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.P;
-            printToolStripMenuItem.Size = new Size(194, 22);
+            printToolStripMenuItem.Size = new Size(178, 22);
             printToolStripMenuItem.Text = "&Print";
             // 
             // printPreviewToolStripMenuItem
@@ -553,18 +526,18 @@
             printPreviewToolStripMenuItem.Image = (Image)resources.GetObject("printPreviewToolStripMenuItem.Image");
             printPreviewToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
-            printPreviewToolStripMenuItem.Size = new Size(194, 22);
+            printPreviewToolStripMenuItem.Size = new Size(178, 22);
             printPreviewToolStripMenuItem.Text = "Print Pre&view";
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(191, 6);
+            toolStripSeparator2.Size = new Size(175, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(194, 22);
+            exitToolStripMenuItem.Size = new Size(178, 22);
             exitToolStripMenuItem.Text = "E&xit";
             // 
             // editToolStripMenuItem
@@ -797,12 +770,11 @@
             Controls.SetChildIndex(navigationPanel, 0);
             Controls.SetChildIndex(navigationSpliter, 0);
             navigationPanel.ResumeLayout(false);
-            dataSourceLayout.ResumeLayout(false);
-            dataSourceLayout.PerformLayout();
+            nameSpaceLayout.ResumeLayout(false);
+            nameSpaceLayout.PerformLayout();
             dataSourceToolStrip.ResumeLayout(false);
             dataSourceToolStrip.PerformLayout();
-            dbSchemaContextMenu.ResumeLayout(false);
-            domainModelMenu.ResumeLayout(false);
+            catalogContextMenu.ResumeLayout(false);
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
             menuStrip.ResumeLayout(false);
@@ -848,14 +820,12 @@
         private ToolStripStatusLabel toolStripOnlineStatus;
         private ToolStripStatusLabel toolStripWhiteSpace;
         private ToolStripProgressBar toolStripProgressBar;
-        private ContextMenuStrip dbSchemaContextMenu;
-        private ContextMenuStrip domainModelMenu;
+        private ContextMenuStrip catalogContextMenu;
         private ToolStripMenuItem menuCatalogItem;
         private ToolStripMenuItem menuSchemaItem;
         private ToolStripMenuItem menuTableItem;
         private ToolStripMenuItem menuTableColumnItem;
         private ToolStripMenuItem menuPropertyItem;
-        private ToolStripMenuItem menuImportDbSchema;
         private ToolStripMenuItem unitTestingToolStripMenuItem;
         private ToolStripMenuItem gridViewToolStripMenuItem;
         private ToolStripMenuItem menuConstraintItem;
@@ -864,7 +834,6 @@
         private ToolStripMenuItem menuRoutineItem;
         private ToolStripMenuItem menuRoutineParameterItem;
         private ToolStripMenuItem menuRoutineDependencyItem;
-        private ToolStripMenuItem manageModelDatabaseMenuItem;
         private ToolStripMenuItem scriptMenuItem;
         private ToolStripMenuItem extendedPropertiesToolStripMenuItem;
         private ToolStripMenuItem applicationToolStripMenuItem;
@@ -894,5 +863,6 @@
         private ToolStripButton refreshCommand;
         private TreeView nameSpaceNavigation;
         private ToolStripSeparator toolStripSeparator7;
+        private TableLayoutPanel nameSpaceLayout;
     }
 }

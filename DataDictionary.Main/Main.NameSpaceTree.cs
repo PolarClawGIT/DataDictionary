@@ -14,6 +14,7 @@ using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using Toolbox.Threading;
 
@@ -36,8 +37,8 @@ namespace DataDictionary.Main
         void BuildNameSpaceTree()
         {
             nameSpaceNavigation.BeginUpdate();
-            nameSpaceNavigation.UseWaitCursor = true;
-            nameSpaceNavigation.Enabled = false;
+            nameSpaceLayout.UseWaitCursor = true;
+            nameSpaceLayout.Enabled = false;
 
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -54,8 +55,8 @@ namespace DataDictionary.Main
                 foreach (TreeNode item in nameSpaceNodes.Where(w => expandedNameSpaceNodes.Contains(w.Value)).Select(s => s.Key).ToList())
                 { item.ExpandParent(); }
 
-                nameSpaceNavigation.UseWaitCursor = false;
-                nameSpaceNavigation.Enabled = true;
+                nameSpaceLayout.UseWaitCursor = false;
+                nameSpaceLayout.Enabled = true;
                 nameSpaceNavigation.EndUpdate();
             }
 
@@ -184,6 +185,7 @@ namespace DataDictionary.Main
             }
         }
 
+
         void Activate(DbCatalogItem catalogItem)
         { Activate((data) => new Forms.Database.DbCatalog() { DataKey = new DbCatalogKey(catalogItem) }, catalogItem); }
 
@@ -225,6 +227,78 @@ namespace DataDictionary.Main
 
         void Activate(ModelItem modelItem)
         { Activate(() => new Forms.Model.ModelManager()); }
+
+        #region ToolStrip Items
+        private void manageLibrariesCommand_ButtonClick(object sender, EventArgs e)
+        { Activate(() => new Forms.Library.LibraryManager()); }
+
+        private void manageDatabasesCommand_ButtonClick(object sender, EventArgs e)
+        { Activate(() => new Forms.Database.CatalogManager()); }
+
+        private void menuCatalogItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Database), Program.Data.DbCatalogs); }
+
+        private void menuAttributes_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Attribute), Program.Data.DomainAttributes); }
+
+        private void subjectAreaToolStripMenuItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Diagram), Program.Data.ModelSubjectAreas); }
+
+        private void browseHelpCommand_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_HelpTableOfContent), Program.Data.HelpSubjects); }
+
+        private void viewLibrarySourceCommand_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Library), Program.Data.LibrarySources); }
+
+        private void viewLibraryMemberCommand_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Class), Program.Data.LibraryMembers); }
+
+        private void menuConstraintItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Key), Program.Data.DbConstraints); }
+
+        private void menuConstraintColumnItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_KeyColumn), Program.Data.DbConstraintColumns); }
+
+        private void menuDataTypeItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_DomainType), Program.Data.DbDomains); }
+
+        private void menuRoutineItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Procedure), Program.Data.DbRoutines); }
+
+        private void menuRoutineParameterItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Parameter), Program.Data.DbRoutineParameters); }
+
+        private void menuRoutineDependencyItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Dependancy), Program.Data.DbRoutineDependencies); }
+
+        private void menuSchemaItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Schema), Program.Data.DbSchemta); }
+
+        private void menuTableItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Table), Program.Data.DbTables); }
+
+        private void menuColumnItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Column), Program.Data.DbTableColumns); }
+
+        private void menuPropertyItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_ExtendedProperty), Program.Data.DbExtendedProperties); }
+
+        private void menuAttributeProperties_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), Program.Data.DomainAttributeProperties); }
+
+        private void menuAttributeAlaises_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), Program.Data.DomainAttributeAliases); }
+
+        private void entitiesToolStripMenuItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Entities), Program.Data.DomainEntities); }
+
+        private void entityPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), Program.Data.DomainEntityProperties); }
+
+        private void entityAliasToolStripMenuItem_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), Program.Data.DomainEntityAliases); }
+
+        #endregion
 
     }
 }
