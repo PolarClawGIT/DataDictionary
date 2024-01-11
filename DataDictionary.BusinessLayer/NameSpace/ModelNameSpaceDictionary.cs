@@ -49,6 +49,15 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
+        /// Do not use. Use the type specific overload of Add instead.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void Add(IModelNameSpaceKey key, IModelNameSpaceItem value)
+        { throw new InvalidOperationException("Do not use Base Add Method."); }
+
+        /// <summary>
         /// Generic Add of a new Item to the Collection
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -312,7 +321,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             Add(data: data,
                 parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((IDomainAttributeKey) data),
+                toKey: (T) => new ModelNameSpaceKey((IDomainAttributeKey)data),
                 toName: (T) => new ModelNameSpaceKeyMember((IDomainAttributeItem)data),
                 toScope: (T) => ScopeType.ModelAttribute);
         }
@@ -410,6 +419,13 @@ namespace DataDictionary.BusinessLayer.NameSpace
             { this.Remove(item); }
         }
 
-
+        /// <summary>
+        /// Removes all elements
+        /// </summary>
+        public new void Clear()
+        {
+            RootItem.Children.Clear();
+            base.Clear();
+        }
     }
 }

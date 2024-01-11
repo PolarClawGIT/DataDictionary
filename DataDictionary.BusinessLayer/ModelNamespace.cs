@@ -59,6 +59,12 @@ namespace DataDictionary.BusinessLayer
             {
                 data.ModelNamespace.Clear();
 
+                foreach (ModelItem item in data.Models)
+                {
+                    ModelKey key = new ModelKey(item);
+                    LoadNameSpaceCore(data, key, progress);
+                }
+
                 foreach (DbCatalogItem item in data.DbCatalogs)
                 {
                     DbCatalogKey catalogKey = new DbCatalogKey(item);
@@ -69,12 +75,6 @@ namespace DataDictionary.BusinessLayer
                 {
                     LibrarySourceKey sourceKey = new LibrarySourceKey(item);
                     LoadNameSpaceCore(data, sourceKey, progress);
-                }
-
-                foreach (ModelItem item in data.Models)
-                {
-                    ModelKey key = new ModelKey(item);
-                    LoadNameSpaceCore(data, key, progress);
                 }
             }
         }

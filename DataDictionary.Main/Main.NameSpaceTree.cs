@@ -1,18 +1,19 @@
-﻿using DataDictionary.BusinessLayer.NameSpace;
+﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.NameSpace;
+using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.DomainData.Alias;
-using DataDictionary.DataLayer.LibraryData;
+using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Main.Controls;
-using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using Toolbox.Threading;
 
@@ -20,29 +21,29 @@ namespace DataDictionary.Main
 {
     partial class Main
     {
-        Dictionary<TreeNode, Object> dbDataNodes = new Dictionary<TreeNode, Object>();
+        Dictionary<TreeNode, Object> nameSpaceNodes = new Dictionary<TreeNode, Object>();
 
-        List<Object> expandedDbNode = new List<object>();
-        void ClearDataSourcesTree()
+        List<Object> expandedNameSpaceNodes = new List<object>();
+        void ClearNameSpaceTree()
         {
-            expandedDbNode.Clear();
-            expandedDbNode.AddRange(dbDataNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value));
+            expandedNameSpaceNodes.Clear();
+            expandedNameSpaceNodes.AddRange(nameSpaceNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value));
 
-            dataSourceNavigation.Nodes.Clear();
-            dbDataNodes.Clear();
+            nameSpaceNavigation.Nodes.Clear();
+            nameSpaceNodes.Clear();
         }
 
-        void BuildDataSourcesTree()
+        void BuildNameSpaceTree()
         {
-            dataSourceNavigation.BeginUpdate();
-            dataSourceNavigation.UseWaitCursor = true;
-            dataSourceNavigation.Enabled = false;
+            nameSpaceNavigation.BeginUpdate();
+            nameSpaceNavigation.UseWaitCursor = true;
+            nameSpaceNavigation.Enabled = false;
 
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
 
             WorkItem treeWork = new WorkItem()
-            { WorkName = "Load Data Source Tree", DoWork = LoadTree };
+            { WorkName = "Load NameSpace Tree", DoWork = LoadTree };
             progress = treeWork.OnProgressChanged;
 
             work.Add(treeWork);
@@ -50,12 +51,12 @@ namespace DataDictionary.Main
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                foreach (TreeNode item in dbDataNodes.Where(w => expandedDbNode.Contains(w.Value)).Select(s => s.Key).ToList())
+                foreach (TreeNode item in nameSpaceNodes.Where(w => expandedNameSpaceNodes.Contains(w.Value)).Select(s => s.Key).ToList())
                 { item.ExpandParent(); }
 
-                dataSourceNavigation.UseWaitCursor = false;
-                dataSourceNavigation.Enabled = true;
-                dataSourceNavigation.EndUpdate();
+                nameSpaceNavigation.UseWaitCursor = false;
+                nameSpaceNavigation.Enabled = true;
+                nameSpaceNavigation.EndUpdate();
             }
 
             void LoadTree()
@@ -65,19 +66,18 @@ namespace DataDictionary.Main
                 progress(completeWork, totalWork);
 
                 CreateNodes(
-                    dataSourceNavigation.Nodes,
-                    Program.Data.ModelNamespace.RootItem.Children.Select(s => Program.Data.ModelNamespace[s]));
+                    nameSpaceNavigation.Nodes,
+                    Program.Data.ModelNamespace.RootItem.Children.Select(s => Program.Data.ModelNamespace[s]).ToList());
 
                 void CreateNodes(TreeNodeCollection target, IEnumerable<ModelNameSpaceItem> items)
                 {
-
                     foreach (IGrouping<ScopeType, ModelNameSpaceItem>? scopeGroup in items.GroupBy(g => g.ScopeId).OrderBy(o => o.Key))
                     {
                         TreeNodeCollection nodes = target;
 
                         if (scopeGroup.Count() > 1)
                         {
-                            TreeNode scopeNode = dataSourceNavigation.Invoke<TreeNode>(() =>
+                            TreeNode scopeNode = nameSpaceNavigation.Invoke<TreeNode>(() =>
                             {
                                 TreeNode newNode = target.Add(scopeGroup.Key.ToScopeName().Split(".").Last());
                                 newNode.ImageKey = scopeGroup.Key.ToScopeName();
@@ -90,12 +90,12 @@ namespace DataDictionary.Main
 
                         foreach (ModelNameSpaceItem item in scopeGroup.OrderBy(o => o.OrdinalPosition).ThenBy(o => o.MemberName))
                         {
-                            TreeNode node = dataSourceNavigation.Invoke<TreeNode>(() =>
+                            TreeNode node = nameSpaceNavigation.Invoke<TreeNode>(() =>
                             {
                                 TreeNode newNode = nodes.Add(item.MemberName);
                                 newNode.ImageKey = item.ScopeId.ToScopeName();
                                 newNode.SelectedImageKey = item.ScopeId.ToScopeName();
-                                if (item.Source is object sourceItem) { dbDataNodes.Add(newNode, sourceItem); }
+                                if (item.Source is object sourceItem) { nameSpaceNodes.Add(newNode, sourceItem); }
 
                                 return newNode;
                             });
@@ -115,11 +115,71 @@ namespace DataDictionary.Main
             }
         }
 
-        private void dataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void RefreshCommand_Click(object sender, EventArgs e)
         {
-            if (dataSourceNavigation.SelectedNode is TreeNode node && dbDataNodes.ContainsKey(node))
+            ClearNameSpaceTree();
+
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(Program.Data.LoadNameSpace());
+
+            this.DoWork(work, OnComplete);
+
+            void OnComplete(RunWorkerCompletedEventArgs args)
+            { BuildNameSpaceTree(); }
+        }
+
+        private void NewAttributeCommand_ButtonClick(object sender, EventArgs e)
+        {
+            DomainAttributeItem item = new DomainAttributeItem();
+
+            if (nameSpaceNavigation.SelectedNode is not null
+                && nameSpaceNodes.ContainsKey(nameSpaceNavigation.SelectedNode)
+                && nameSpaceNodes[nameSpaceNavigation.SelectedNode] is ModelSubjectAreaItem subject
+                && subject.SubjectAreaId is Guid subjectId)
+            { item.SubjectAreaId = subjectId; }
+
+            Program.Data.DomainAttributes.Add(item);
+
+            if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
+            { nameSpaceNavigation.SelectedNode = node.Key; }
+
+            Activate(item);
+        }
+
+        private void NewEntityCommand_ButtonClick(object sender, EventArgs e)
+        {
+            DomainEntityItem item = new DomainEntityItem();
+
+            if (nameSpaceNavigation.SelectedNode is not null
+                && nameSpaceNodes.ContainsKey(nameSpaceNavigation.SelectedNode)
+                && nameSpaceNodes[nameSpaceNavigation.SelectedNode] is ModelSubjectAreaItem subject
+                && subject.SubjectAreaId is Guid subjectId)
+            { item.SubjectAreaId = subjectId; }
+
+            Program.Data.DomainEntities.Add(item);
+
+            if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
+            { nameSpaceNavigation.SelectedNode = node.Key; }
+
+            Activate(item);
+        }
+
+        private void NewSubjectAreaCommand_ButtonClick(object sender, EventArgs e)
+        {
+            ModelSubjectAreaItem item = new ModelSubjectAreaItem();
+            Program.Data.ModelSubjectAreas.Add(item);
+
+            if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
+            { nameSpaceNavigation.SelectedNode = node.Key; }
+
+            Activate(item);
+        }
+
+        private void DataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (nameSpaceNavigation.SelectedNode is TreeNode node && nameSpaceNodes.ContainsKey(node))
             {
-                dynamic dataNode = dbDataNodes[node];
+                dynamic dataNode = nameSpaceNodes[node];
                 Activate(dataNode);
             }
         }
@@ -153,5 +213,18 @@ namespace DataDictionary.Main
 
         void Activate(LibraryMemberItem memberItem)
         { Activate((data) => new Forms.Library.LibraryMember() { DataKey = new LibraryMemberKey(memberItem) }, memberItem); }
+
+        void Activate(DomainAttributeItem attributeItem)
+        { Activate((data) => new Forms.Domain.DomainAttribute() { DataKey = new DomainAttributeKey(attributeItem) }, attributeItem); }
+
+        void Activate(DomainEntityItem entityItem)
+        { Activate((data) => new Forms.Domain.DomainEntity() { DataKey = new DomainEntityKey(entityItem) }, entityItem); }
+
+        void Activate(ModelSubjectAreaItem subjectItem)
+        { Activate((data) => new Forms.Domain.ModelSubjectArea() { DataKey = new ModelSubjectAreaKey(subjectItem) }, subjectItem); }
+
+        void Activate(ModelItem modelItem)
+        { Activate(() => new Forms.Model.ModelManager()); }
+
     }
 }

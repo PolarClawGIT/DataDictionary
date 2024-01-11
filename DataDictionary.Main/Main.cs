@@ -50,15 +50,8 @@ namespace DataDictionary.Main
             this.IsLocked(true);
 
             // Setup Images for Tree Control
-            dataSourceNavigation.ImageList = ModelScopeExtension.ToImageList();
-            SetImages(domainModelNavigation, domainModelImageItems.Values);
+            nameSpaceNavigation.ImageList = ModelScopeExtension.ToImageList();
 
-            // Setup Tabs
-            navigationTabs.ImageList = new ImageList();
-            foreach (navigationTabImageIndex item in Enum.GetValues(typeof(navigationTabImageIndex)))
-            { navigationTabs.ImageList.Images.Add(item.ToString(), navigationTabImages[item]); }
-            navigationDataSourceTab.ImageKey = navigationTabImageIndex.Database.ToString();
-            navigationDomainTab.ImageKey = navigationTabImageIndex.Domain.ToString();
 
             //Hook the WorkerQueue up to this forms UI thread for events.
             Program.Worker.InvokeUsing = this.Invoke;
@@ -86,9 +79,12 @@ namespace DataDictionary.Main
             // Setup the Data
             SendMessage(new DoUnbindData());
 
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(Program.Data.LoadNameSpace());
+
+
             if (Settings.Default.IsOnLineMode)
             {
-                List<WorkItem> work = new List<WorkItem>();
                 DatabaseWork factory = new DatabaseWork();
                 work.Add(factory.OpenConnection());
                 work.AddRange(Program.Data.LoadApplicationData(factory));
@@ -104,8 +100,6 @@ namespace DataDictionary.Main
             // Handles the Application Data File
             void FileLoad()
             {
-
-                List<WorkItem> work = new List<WorkItem>();
                 if (appDataFile.Exists) // AppData already contains the Application Data File
                 { work.AddRange(Program.Data.LoadApplicationData(appDataFile)); }
                 else if (appInstallFile.Exists)
@@ -144,8 +138,6 @@ namespace DataDictionary.Main
                 splashDone = true;
                 splashTimer.Elapsed -= MinTime_Elapsed;
             }
-
-
         }
 
 
@@ -153,13 +145,7 @@ namespace DataDictionary.Main
         {
             if (Program.Data.Model is ModelItem data)
             {
-                modelNameData.DataBindings.Add(new Binding(nameof(modelNameData.Text), data, nameof(data.ModelTitle)));
-                modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), Program.Data.Model, nameof(data.ModelDescription)));
-
-                BuildDataSourcesTree();
-
-                if (sortByAttributeEntityCommand.Checked) { BuildDomainModelTreeByAttribute(); }
-                else { BuildDomainModelTreeByEntity(); }
+                BuildNameSpaceTree();
 
                 return true;
             }
@@ -168,11 +154,7 @@ namespace DataDictionary.Main
 
         public void UnbindDataCore()
         {
-            modelNameData.DataBindings.Clear();
-            modelDescriptionData.DataBindings.Clear();
-
-            ClearDomainModelTree();
-            ClearDataSourcesTree();
+            ClearNameSpaceTree();
         }
 
         private void Main_FormClosing(object? sender, FormClosingEventArgs e)
@@ -290,16 +272,6 @@ namespace DataDictionary.Main
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         { SendMessage(new WindowsSelectAllCommand() { HandledBy = this.ActiveMdiChild }); }
-
-        private void navigationDbSchemaTab_MouseDoubleClick(object sender, MouseEventArgs e)
-        { //TODO: Not Working. Does not show when the context menu is assigned to the control or rigged to an event.
-            dbSchemaContextMenu.Show();
-        }
-
-        private void navigationDomainTab_MouseDoubleClick(object sender, MouseEventArgs e)
-        { //TODO: Not Working. Does not show when the context menu is assigned to the control or rigged to an event.
-            domainModelMenu.Show();
-        }
 
         private void extendedPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.ViewTextTemplate()); }
@@ -443,5 +415,7 @@ namespace DataDictionary.Main
             { SendMessage(new Messages.DoBindData()); }
 
         }
+
+
     }
 }
