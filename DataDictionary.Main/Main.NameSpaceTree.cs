@@ -22,9 +22,9 @@ namespace DataDictionary.Main
 {
     partial class Main
     {
-        Dictionary<TreeNode, Object> nameSpaceNodes = new Dictionary<TreeNode, Object>();
+        Dictionary<TreeNode, ModelNameSpaceItem> nameSpaceNodes = new Dictionary<TreeNode, ModelNameSpaceItem>();
 
-        List<Object> expandedNameSpaceNodes = new List<object>();
+        List<ModelNameSpaceItem> expandedNameSpaceNodes = new List<ModelNameSpaceItem>();
         void ClearNameSpaceTree()
         {
             expandedNameSpaceNodes.Clear();
@@ -96,7 +96,7 @@ namespace DataDictionary.Main
                                 TreeNode newNode = nodes.Add(item.MemberName);
                                 newNode.ImageKey = item.ScopeId.ToScopeName();
                                 newNode.SelectedImageKey = item.ScopeId.ToScopeName();
-                                if (item.Source is object sourceItem) { nameSpaceNodes.Add(newNode, sourceItem); }
+                                nameSpaceNodes.Add(newNode, item);
 
                                 return newNode;
                             });
@@ -135,14 +135,14 @@ namespace DataDictionary.Main
 
             if (nameSpaceNavigation.SelectedNode is not null
                 && nameSpaceNodes.ContainsKey(nameSpaceNavigation.SelectedNode)
-                && nameSpaceNodes[nameSpaceNavigation.SelectedNode] is ModelSubjectAreaItem subject
+                && nameSpaceNodes[nameSpaceNavigation.SelectedNode].Source is ModelSubjectAreaItem subject
                 && subject.SubjectAreaId is Guid subjectId)
             { item.SubjectAreaId = subjectId; }
 
             Program.Data.DomainAttributes.Add(item);
 
-            if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
-            { nameSpaceNavigation.SelectedNode = node.Key; }
+            if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
+            { nameSpaceNavigation.SelectedNode = node; }
 
             Activate(item);
         }
@@ -153,14 +153,14 @@ namespace DataDictionary.Main
 
             if (nameSpaceNavigation.SelectedNode is not null
                 && nameSpaceNodes.ContainsKey(nameSpaceNavigation.SelectedNode)
-                && nameSpaceNodes[nameSpaceNavigation.SelectedNode] is ModelSubjectAreaItem subject
+                && nameSpaceNodes[nameSpaceNavigation.SelectedNode].Source is ModelSubjectAreaItem subject
                 && subject.SubjectAreaId is Guid subjectId)
             { item.SubjectAreaId = subjectId; }
 
             Program.Data.DomainEntities.Add(item);
 
-            if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
-            { nameSpaceNavigation.SelectedNode = node.Key; }
+            if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
+            { nameSpaceNavigation.SelectedNode = node; }
 
             Activate(item);
         }
@@ -170,17 +170,19 @@ namespace DataDictionary.Main
             ModelSubjectAreaItem item = new ModelSubjectAreaItem();
             Program.Data.ModelSubjectAreas.Add(item);
 
-            if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)) is KeyValuePair<TreeNode, object> node)
-            { nameSpaceNavigation.SelectedNode = node.Key; }
+            if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
+            { nameSpaceNavigation.SelectedNode = node; }
 
             Activate(item);
         }
 
         private void DataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (nameSpaceNavigation.SelectedNode is TreeNode node && nameSpaceNodes.ContainsKey(node))
+            if (nameSpaceNavigation.SelectedNode is TreeNode node
+                && nameSpaceNodes.ContainsKey(node)
+                && nameSpaceNodes[node].Source is Object taget)
             {
-                dynamic dataNode = nameSpaceNodes[node];
+                dynamic dataNode = taget;
                 Activate(dataNode);
             }
         }
