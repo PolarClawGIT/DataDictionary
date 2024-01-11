@@ -35,7 +35,7 @@ namespace DataDictionary.Main.Controls
             {ScopeType.DatabaseSchemaProcedureParameter, Resources.Parameter },
             {ScopeType.DatabaseSchemaFunctionParameter,  Resources.Parameter },
 
-            {ScopeType.Model,                            Resources.SaveTable },
+            {ScopeType.Model,                            Resources.SoftwareDefinitionModel },
             {ScopeType.ModelSubjectArea,                 Resources.Diagram },
             {ScopeType.ModelAttribute,                   Resources.Attribute },
             {ScopeType.ModelEntity,                      Resources.Entity },
