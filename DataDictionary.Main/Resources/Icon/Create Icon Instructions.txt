@@ -1,4 +1,4 @@
-﻿Visaul Studio is not very helpful to create ico files (Icon files). It cannot edit anything with 24bit color or higher, for example.
+﻿Visual Studio is not very helpful to create ico files (Icon files). It cannot edit anything with 24bit color or higher, for example.
 
 To work around this:
 - Create Icon file

@@ -51,7 +51,7 @@ namespace DataDictionary.Main.Forms.Model
         public ModelManager()
         {
             InitializeComponent();
-            this.Icon = Resources.Icon_SaveTable;
+            this.Icon = Resources.Icon_SoftwareDefinitionModel;
 
             newItemCommand.Enabled = true;
             newItemCommand.Click += NewItemCommand_Click;
