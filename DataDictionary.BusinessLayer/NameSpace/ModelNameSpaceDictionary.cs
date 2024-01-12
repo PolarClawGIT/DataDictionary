@@ -42,14 +42,12 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// </summary>
         public ModelNameSpaceDictionary() : base()
         {
-            ModelNameSpaceItem rootItem = new ModelNameSpaceItem()
-            { SystemId = Guid.Empty };
-
+            ModelNameSpaceItem rootItem = new ModelNameSpaceItem();
             RootItem = rootItem;
         }
 
         /// <summary>
-        /// Do not use. Use the type specific overload of Add instead.
+        /// Do not use. Use the overload of Add instead.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
@@ -58,314 +56,27 @@ namespace DataDictionary.BusinessLayer.NameSpace
         { throw new InvalidOperationException("Do not use Base Add Method."); }
 
         /// <summary>
-        /// Generic Add of a new Item to the Collection
+        /// Adds a ModelNameSpaceItem to the collection.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="data"></param>
-        /// <param name="parentKey"></param>
-        /// <param name="toKey"></param>
-        /// <param name="toName"></param>
-        /// <param name="toScope"></param>
-        protected void Add<T>(
-            T data,
-            ModelNameSpaceKey parentKey,
-            Func<T, ModelNameSpaceKey> toKey,
-            Func<T, ModelNameSpaceKeyMember> toName,
-            Func<T, ScopeKey> toScope)
-            where T : class
+        /// <param name="value"></param>
+        public void Add(ModelNameSpaceItem value)
         {
-            ModelNameSpaceItem? parentItem;
-
-            if (parentKey.Equals(this.RootItem))
-            { parentItem = this.RootItem; }
-            else if (this.TryGetValue(parentKey, out parentItem))
-            { } // parentItem is already assigned
-
-            if (parentItem is ModelNameSpaceItem)
+            if (this.ContainsKey(value.SystemKey))
             {
-                ModelNameSpaceKey newKey = toKey(data);
-
-                Int32 ordinalPosition = Int32.MaxValue;
-                if (data is IDbColumnPosition pos && pos.OrdinalPosition is Int32 posValue)
-                { ordinalPosition = posValue; }
-
-                ModelNameSpaceItem newItem = new ModelNameSpaceItem()
-                {
-                    MemberNameKey = toName(data),
-                    MemberScopeKey = toScope(data),
-                    SystemId = toKey(data).SystemId,
-                    Source = data,
-                    SystemParentId = parentKey.SystemId,
-                    OrdinalPosition = ordinalPosition
-                };
-
-
-                if (this.ContainsKey(newKey))
-                {
-                    Exception ex = new ArgumentException("Item already exists");
-                    ex.Data.Add("Child", data.ToString());
-                    throw ex;
-                }
-
-                base.Add(newKey, newItem);
-                parentItem.Children.Add(newKey);
-            }
-            else
-            {
-                Exception ex = new ArgumentException("Parent Key not found");
-                ex.Data.Add("Child", data.ToString());
+                Exception ex = new ArgumentException("Item already exists");
+                ex.Data.Add("Child", value.ToString());
                 throw ex;
             }
-        }
 
-        /// <summary>
-        /// Adds Database Catalog to collection
-        /// </summary>
-        /// <param name="data"></param>
-        public void Add(IDbCatalogItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(RootItem),
-                toKey: (T) => new ModelNameSpaceKey((IDbCatalogKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IDbCatalogKeyName)data),
-                toScope: (T) => new ScopeKey(data));
-        }
+            if (value.SystemParentKey is ModelNameSpaceKey parentKey)
+            {
+                if (this.ContainsKey(parentKey))
+                { this[parentKey].Children.Add(value.SystemKey); }
+                else { this.RootItem.Children.Add(value.SystemKey); }
+            }
+            else { this.RootItem.Children.Add(value.SystemKey); }
 
-        /// <summary>
-        /// Adds Database Schema to collection
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(IDbCatalogKey parent, IDbSchemaItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((IDbSchemaKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IDbSchemaKeyName)data),
-                toScope: (T) => new ScopeKey(data));
-        }
-
-        /// <summary>
-        /// Adds Database Table to collection
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(IDbSchemaKey parent, IDbTableItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((IDbTableKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IDbTableKeyName)data),
-                toScope: (T) => new ScopeKey(data));
-        }
-
-        /// <summary>
-        /// Adds Database Table Column to collection
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(IDbTableKey parent, IDbTableColumnItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((IDbTableColumnKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IDbTableColumnKeyName)data),
-                toScope: (T) => new ScopeKey(data));
-        }
-
-        /// <summary>
-        /// Adds Database Routine to collection
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(IDbSchemaKey parent, IDbRoutineItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((IDbRoutineKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IDbRoutineKeyName)data),
-                toScope: (T) => new ScopeKey(data));
-        }
-
-        /// <summary>
-        /// Adds Database Routine Parameter to collection
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(IDbRoutineKey parent, IDbRoutineParameterItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((IDbRoutineParameterKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IDbRoutineParameterKeyName)data),
-                toScope: (T) => new ScopeKey(data));
-        }
-
-        /// <summary>
-        /// Adds Database Domain to collection
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(IDbSchemaKey parent, IDbDomainItem data)
-        {
-
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((IDbDomainKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IDbDomainKeyName)data),
-                toScope: (T) => new ScopeKey(data));
-        }
-
-        /// <summary>
-        /// Adds Database Constraint to collection
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(IDbTableKey parent, IDbConstraintItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((IDbConstraintKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IDbConstraintKeyName)data),
-                toScope: (T) => new ScopeKey(data));
-        }
-
-        /// <summary>
-        /// Adds Library Source to collection
-        /// </summary>
-        /// <param name="data"></param>
-        public void Add(ILibrarySourceItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(RootItem),
-                toKey: (T) => new ModelNameSpaceKey((ILibrarySourceKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((ILibrarySourceKeyName)data),
-                toScope: (T) => new ScopeKey(data));
-        }
-
-        /// <summary>
-        /// Adds Library Member (top level) to collection
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(ILibrarySourceKey parent, ILibraryMemberItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((ILibraryMemberKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((ILibraryMemberKeyName)data),
-                toScope: (T) => new ScopeKey(data));
-        }
-
-        /// <summary>
-        /// Adds Library Member to collection
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(ILibraryMemberKey parent, ILibraryMemberItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((ILibraryMemberKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((ILibraryMemberKeyName)data),
-                toScope: (T) => new ScopeKey(data));
-        }
-
-        /// <summary>
-        /// Adds the Model (top level) to collection 
-        /// </summary>
-        /// <param name="data"></param>
-        public void Add(IModelItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(RootItem),
-                toKey: (T) => new ModelNameSpaceKey((IModelKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IModelItem)data),
-                toScope: (T) => ScopeType.Model);
-        }
-
-        /// <summary>
-        /// Adds the Model Subject Area to collection 
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(IModelItem parent, IModelSubjectAreaItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((IModelSubjectAreaKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IModelSubjectAreaItem)data),
-                toScope: (T) => ScopeType.ModelSubjectArea);
-        }
-
-        /// <summary>
-        /// Adds the Model Subject Area to collection 
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(IModelSubjectAreaItem parent, IModelSubjectAreaItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((IModelSubjectAreaKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IModelSubjectAreaItem)data),
-                toScope: (T) => ScopeType.ModelSubjectArea);
-        }
-
-        /// <summary>
-        /// Adds the Model Attribute to collection 
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(IModelItem parent, IDomainAttributeItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((IDomainAttributeKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IDomainAttributeItem)data),
-                toScope: (T) => ScopeType.ModelAttribute);
-        }
-
-        /// <summary>
-        /// Adds the Model Attribute to collection 
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(IModelSubjectAreaItem parent, IDomainAttributeItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((IDomainAttributeKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IDomainAttributeItem)data),
-                toScope: (T) => ScopeType.ModelAttribute);
-        }
-
-        /// <summary>
-        /// Adds the Model Entity to collection 
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(IModelItem parent, IDomainEntityItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((IDomainEntityKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IDomainEntityItem)data),
-                toScope: (T) => ScopeType.ModelEntity);
-        }
-
-        /// <summary>
-        /// Adds the Model Entity to collection 
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="parent"></param>
-        public void Add(IModelSubjectAreaItem parent, IDomainEntityItem data)
-        {
-            Add(data: data,
-                parentKey: new ModelNameSpaceKey(parent),
-                toKey: (T) => new ModelNameSpaceKey((IDomainEntityKey)data),
-                toName: (T) => new ModelNameSpaceKeyMember((IDomainEntityItem)data),
-                toScope: (T) => ScopeType.ModelEntity);
+            base.Add(value.SystemKey, value);
         }
 
         /// <summary>
@@ -385,39 +96,20 @@ namespace DataDictionary.BusinessLayer.NameSpace
                 foreach (ModelNameSpaceKey childKey in children)
                 { this.Remove(childKey); }
 
-                if (this.RootItem.Children.FirstOrDefault(w => removeKey.Equals(w)) is ModelNameSpaceKey rootChild)
+                while (this.RootItem.Children.FirstOrDefault(w => removeKey.Equals(w)) is ModelNameSpaceKey rootChild)
                 { this.RootItem.Children.Remove(rootChild); }
+
+                if (removeItem.SystemParentKey is ModelNameSpaceKey && this.ContainsKey(removeItem.SystemParentKey))
+                {
+                    while (this.RootItem.Children.FirstOrDefault(w => removeKey.Equals(w)) is ModelNameSpaceKey parentChild)
+                    { this.RootItem.Children.Remove(parentChild); }
+                }
 
                 if (this.ContainsKey(removeKey))
                 { base.Remove(removeKey); }
             }
         }
 
-        /// <summary>
-        /// Removes a Catalog and the children.
-        /// </summary>
-        /// <param name="key"></param>
-        public void Remove(IDbCatalogKey key)
-        {
-            DbCatalogKey catalogKey = new DbCatalogKey(key);
-            List<ModelNameSpaceKey> catalogs = this.Where(w => w.Value.Source is IDbCatalogItem && catalogKey.Equals(w.Value.Source)).Select(s => s.Key).ToList();
-
-            foreach (ModelNameSpaceKey item in catalogs)
-            { this.Remove(item); }
-        }
-
-        /// <summary>
-        /// Removes a Library and the children.
-        /// </summary>
-        /// <param name="key"></param>
-        public void Remove(ILibrarySourceKey key)
-        {
-            LibrarySourceKey libraryKey = new LibrarySourceKey(key);
-            List<ModelNameSpaceKey> Libraries = this.Where(w => w.Value.Source is ILibrarySourceItem && libraryKey.Equals(w.Value.Source)).Select(s => s.Key).ToList();
-
-            foreach (ModelNameSpaceKey item in Libraries)
-            { this.Remove(item); }
-        }
 
         /// <summary>
         /// Removes all elements

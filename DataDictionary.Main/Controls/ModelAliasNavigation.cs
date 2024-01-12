@@ -47,7 +47,7 @@ namespace DataDictionary.Main.Controls
             foreach (ModelNameSpaceKey childKey in parent.Children)
             {
                 ModelNameSpaceItem child = Program.Data.ModelNamespace[childKey];
-                ListViewItem childItem = new ListViewItem(child.MemberName, child.ScopeId.ToScopeName());
+                ListViewItem childItem = new ListViewItem(child.MemberName, child.Scope.ToScopeName());
                 childItem.ToolTipText = child.MemberFullName;
 
                 alaisViewItems.Add(childItem, childKey);
@@ -59,7 +59,7 @@ namespace DataDictionary.Main.Controls
 
             if (parentKey is ModelNameSpaceKey)
             {
-                ListViewItem parentItem = new ListViewItem(parent.MemberName, parent.ScopeId.ToScopeName());
+                ListViewItem parentItem = new ListViewItem(parent.MemberName, parent.Scope.ToScopeName());
                 parentItem.Font = new Font(parentItem.Font, FontStyle.Underline);
                 parentItem.ToolTipText = "navigate to Parent";
 
@@ -91,7 +91,7 @@ namespace DataDictionary.Main.Controls
                 }
 
                 aliasNameData.Text = Program.Data.ModelNamespace[selectedKey].MemberFullName;
-                aliasScopeData.Text = Program.Data.ModelNamespace[selectedKey].ScopeId.ToScopeName();
+                aliasScopeData.Text = Program.Data.ModelNamespace[selectedKey].Scope.ToScopeName();
                 SelectedAlias = Program.Data.ModelNamespace[selectedKey];
 
                 AliasSelectedItemChanged(this, EventArgs.Empty);

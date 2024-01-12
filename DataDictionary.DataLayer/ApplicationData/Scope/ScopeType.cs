@@ -115,7 +115,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <summary>
         /// SQL Type/Domain
         /// </summary>
-        DatabaseType,
+        DatabaseDomain,
 
         /// <summary>
         /// SQL View

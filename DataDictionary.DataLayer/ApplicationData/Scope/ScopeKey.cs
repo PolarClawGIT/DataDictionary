@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <summary>
         /// Primary Key ID for the Scope
         /// </summary>
-        ScopeType ScopeId { get; }
+        ScopeType Scope { get; }
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     public class ScopeKey : IScopeKey, IKeyComparable<IScopeKey>, IEquatable<ScopeType>, IParsable<ScopeKey>
     {
         /// <inheritdoc/>
-        public ScopeType ScopeId { get; init; } = ScopeType.Null;
+        public ScopeType Scope { get; init; } = ScopeType.Null;
 
         /// <summary>
         /// Basic Constructor for the Scope Key.
@@ -40,14 +40,14 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// </summary>
         /// <param name="source"></param>
         public ScopeKey(ScopeType source) : this()
-        { ScopeId = source; } 
+        { Scope = source; } 
 
         /// <summary>
         /// Constructor for the Scope Key.
         /// </summary>
         /// <param name="source"></param>
         public ScopeKey(IScopeKey source) : this()
-        { if (source is IScopeKey) { ScopeId = source.ScopeId; } }
+        { if (source is IScopeKey) { Scope = source.Scope; } }
 
         /// <summary>
         /// Constructor for the Scope Key.
@@ -56,7 +56,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         public ScopeKey(IScopeKeyName source) : this()
         {
             if (ScopeKey.TryParse(source.ScopeName, out ScopeKey? result))
-            { ScopeId = result.ScopeId; }
+            { Scope = result.Scope; }
         }
 
         /// <summary>
@@ -73,17 +73,17 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         public Boolean Equals(IScopeKey? other)
         {
             return other is IScopeKey
-                && this.ScopeId != ScopeType.Null
-                && other.ScopeId != ScopeType.Null
-                && this.ScopeId.Equals(other.ScopeId);
+                && this.Scope != ScopeType.Null
+                && other.Scope != ScopeType.Null
+                && this.Scope.Equals(other.Scope);
         }
 
         /// <inheritdoc/>
         public bool Equals(ScopeType other)
         {
-            return this.ScopeId != ScopeType.Null &&
+            return this.Scope != ScopeType.Null &&
                     other != ScopeType.Null &&
-                    this.ScopeId == other;
+                    this.Scope == other;
         }
 
         /// <inheritdoc/>
@@ -128,7 +128,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
-        { return (ScopeId).GetHashCode(); }
+        { return (Scope).GetHashCode(); }
         #endregion
 
         #region IParsable
@@ -156,7 +156,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.DatabaseFunction,          "Database.Schema.Function" },
             {ScopeType.DatabaseProcedure,         "Database.Schema.Procedure" },
             {ScopeType.DatabaseTable,             "Database.Schema.Table" },
-            {ScopeType.DatabaseType,              "Database.Schema.Type" },
+            {ScopeType.DatabaseDomain,              "Database.Schema.Type" },
             {ScopeType.DatabaseView,              "Database.Schema.View" },
             {ScopeType.DatabaseViewColumn,        "Database.Schema.View.Column" },
             {ScopeType.DatabaseTableColumn,       "Database.Schema.Table.Column" },
@@ -190,7 +190,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         public static bool TryParse([NotNullWhen(true)] String? source, IFormatProvider? provider, [MaybeNullWhen(false)] out ScopeKey result)
         {
             if (parseName.FirstOrDefault(w => w.Value.Equals(source, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> dbItem && dbItem.Key != ScopeType.Null)
-            { result = new ScopeKey() { ScopeId = dbItem.Key }; return true; }
+            { result = new ScopeKey() { Scope = dbItem.Key }; return true; }
             else { result = null; return false; }
         }
 
@@ -203,7 +203,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         public static bool TryParse([NotNullWhen(true)] String? source, [MaybeNullWhen(false)] out ScopeKey result)
         {
             if (parseName.FirstOrDefault(w => w.Value.Equals(source, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> dbItem && dbItem.Key != ScopeType.Null)
-            { result = new ScopeKey() { ScopeId = dbItem.Key }; return true; }
+            { result = new ScopeKey() { Scope = dbItem.Key }; return true; }
             else { result = null; return false; }
         }
         #endregion
@@ -214,8 +214,8 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <returns></returns>
         public override string ToString()
         {
-            if (parseName.ContainsKey(ScopeId)) { return parseName[ScopeId]; }
-            else { return ScopeId.ToString(); }
+            if (parseName.ContainsKey(Scope)) { return parseName[Scope]; }
+            else { return Scope.ToString(); }
         }
 
     }

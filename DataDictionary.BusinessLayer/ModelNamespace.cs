@@ -3,6 +3,7 @@ using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
@@ -159,6 +160,7 @@ namespace DataDictionary.BusinessLayer
                 List<DbConstraintItem> constraints = data.DbConstraints.Where(w => catalogKey.Equals(w)).ToList();
                 List<DbRoutineItem> routines = data.DbRoutines.Where(w => catalogKey.Equals(w) && w.IsSystem == false).ToList();
                 List<DbRoutineParameterItem> routineParameters = data.DbRoutineParameters.Where(w => catalogKey.Equals(w)).ToList();
+                List<DbDomainItem> domains = data.DbDomains.Where(w => catalogKey.Equals(w)).ToList();
 
                 totalWork = totalWork +
                     schemta.Count +
@@ -166,35 +168,36 @@ namespace DataDictionary.BusinessLayer
                     tableColumns.Count +
                     constraints.Count +
                     routines.Count +
-                    routineParameters.Count;
+                    routineParameters.Count +
+                    domains.Count;
 
                 DbCatalogKeyName catalogName = new DbCatalogKeyName(catalogItem);
-                data.ModelNamespace.Add(catalogItem);
+                data.ModelNamespace.Add(new ModelNameSpaceItem(catalogItem));
                 progress(completedWork++, totalWork);
 
                 foreach (DbSchemaItem schemaItem in schemta)
                 {
                     DbSchemaKey schemaKey = new DbSchemaKey(schemaItem);
                     DbSchemaKeyName schemaName = new DbSchemaKeyName(schemaItem);
-                    data.ModelNamespace.Add(catalogKey, schemaItem);
+                    data.ModelNamespace.Add(new ModelNameSpaceItem(catalogKey, schemaItem));
                     progress(completedWork++, totalWork);
 
                     foreach (DbTableItem tableItem in tables.Where(w => schemaName.Equals(w)))
                     {
                         DbTableKey tableKey = new DbTableKey(tableItem);
                         DbTableKeyName tableName = new DbTableKeyName(tableItem);
-                        data.ModelNamespace.Add(schemaKey, tableItem);
+                        data.ModelNamespace.Add(new ModelNameSpaceItem(schemaKey, tableItem));
                         progress(completedWork++, totalWork);
 
                         foreach (DbTableColumnItem columnItem in tableColumns.Where(w => tableName.Equals(w)))
                         {
-                            data.ModelNamespace.Add(tableKey, columnItem);
+                            data.ModelNamespace.Add(new ModelNameSpaceItem(tableKey, columnItem));
                             progress(completedWork++, totalWork);
                         }
 
                         foreach (DbConstraintItem constraintItem in constraints.Where(w => tableName.Equals(w)))
                         {
-                            data.ModelNamespace.Add(tableKey, constraintItem);
+                            data.ModelNamespace.Add(new ModelNameSpaceItem(tableKey, constraintItem));
                             progress(completedWork++, totalWork);
                         }
                     }
@@ -203,14 +206,20 @@ namespace DataDictionary.BusinessLayer
                     {
                         DbRoutineKey routineKey = new DbRoutineKey(routineItem);
                         DbRoutineKeyName routineName = new DbRoutineKeyName(routineItem);
-                        data.ModelNamespace.Add(schemaKey, routineItem);
+                        data.ModelNamespace.Add(new ModelNameSpaceItem(schemaKey, routineItem));
                         progress(completedWork++, totalWork);
 
                         foreach (DbRoutineParameterItem parameterItem in routineParameters.Where(w => routineName.Equals(w)))
                         {
-                            data.ModelNamespace.Add(routineKey, parameterItem);
+                            data.ModelNamespace.Add(new ModelNameSpaceItem(routineKey, parameterItem));
                             progress(completedWork++, totalWork);
                         }
+                    }
+
+                    foreach (DbDomainItem domainItem in domains.Where(w => schemaName.Equals(w)))
+                    {
+                        data.ModelNamespace.Add(new ModelNameSpaceItem(schemaKey, domainItem));
+                        progress(completedWork++, totalWork);
                     }
                 }
             }
@@ -327,14 +336,14 @@ namespace DataDictionary.BusinessLayer
                 List<LibraryMemberItem> members = data.LibraryMembers.Where(w => libraryKey.Equals(w)).ToList();
                 totalWork = totalWork + members.Count;
 
-                data.ModelNamespace.Add(libraryitem);
+                data.ModelNamespace.Add(new ModelNameSpaceItem(libraryitem));
                 progress(completedWork++, totalWork);
 
                 foreach (LibraryMemberItem memberItem in members.
                     Where(w => w.MemberParentId is null))
                 {
                     LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
-                    data.ModelNamespace.Add(libraryKey, memberItem);
+                    data.ModelNamespace.Add(new ModelNameSpaceItem(libraryKey, memberItem));
                     progress(completedWork++, totalWork);
 
                     AddChildMember(libraryKey, memberKey);
@@ -345,7 +354,7 @@ namespace DataDictionary.BusinessLayer
                     foreach (LibraryMemberItem memberItem in members.Where(w => new LibraryMemberKeyParent(w).Equals(memberKey)))
                     {
                         LibraryMemberKey childKey = new LibraryMemberKey(memberItem);
-                        data.ModelNamespace.Add(memberKey, memberItem);
+                        data.ModelNamespace.Add(new ModelNameSpaceItem(memberKey, memberItem));
                         progress(completedWork++, totalWork);
 
                         AddChildMember(sourceKey, childKey);
@@ -405,13 +414,13 @@ namespace DataDictionary.BusinessLayer
                     attributes.Count +
                     entities.Count;
 
-                data.ModelNamespace.Add(modelItem);
+                data.ModelNamespace.Add(new ModelNameSpaceItem(modelItem));
                 progress(completedWork++, totalWork);
 
                 foreach (ModelSubjectAreaItem subjectItem in subjectAreas)
                 {
                     ModelSubjectAreaKey subjectKey = new ModelSubjectAreaKey(subjectItem);
-                    data.ModelNamespace.Add(modelItem, subjectItem);
+                    data.ModelNamespace.Add(new ModelNameSpaceItem(modelItem, subjectItem));
                     progress(completedWork++, totalWork);
 
 
@@ -421,7 +430,7 @@ namespace DataDictionary.BusinessLayer
                     {
                         if(missingEntities.Contains(entityItem)) { missingEntities.Remove(entityItem); }
 
-                        data.ModelNamespace.Add(subjectItem, entityItem);
+                        data.ModelNamespace.Add(new ModelNameSpaceItem(subjectItem, entityItem));
                         progress(completedWork++, totalWork);
                     }
 
@@ -429,7 +438,7 @@ namespace DataDictionary.BusinessLayer
                     {
                         if (missingAttributes.Contains(attributeItem)) { missingAttributes.Remove(attributeItem); }
 
-                        data.ModelNamespace.Add(subjectItem, attributeItem);
+                        data.ModelNamespace.Add(new ModelNameSpaceItem(subjectItem, attributeItem));
                         progress(completedWork++, totalWork);
                     }
                 }
@@ -437,13 +446,13 @@ namespace DataDictionary.BusinessLayer
                 // Handle items not in a Subject Area scoped to the Model
                 foreach (DomainEntityItem entityItem in missingEntities)
                 {
-                    data.ModelNamespace.Add(modelItem, entityItem);
+                    data.ModelNamespace.Add(new ModelNameSpaceItem(modelItem, entityItem));
                     progress(completedWork++, totalWork);
                 }
 
                 foreach (DomainAttributeItem attributeItem in missingAttributes)
                 {
-                    data.ModelNamespace.Add(modelItem, attributeItem);
+                    data.ModelNamespace.Add(new ModelNameSpaceItem(modelItem, attributeItem));
                     progress(completedWork++, totalWork);
                 }
 
@@ -463,7 +472,7 @@ namespace DataDictionary.BusinessLayer
             WorkItem deleteWork = new WorkItem()
             {
                 WorkName = "Remove Catalog NameSpace",
-                DoWork = () => data.ModelNamespace.Remove(key),
+                DoWork = () => data.ModelNamespace.Remove(new ModelNameSpaceKey(key)),
             };
 
             work.Add(deleteWork);
@@ -483,7 +492,7 @@ namespace DataDictionary.BusinessLayer
             WorkItem deleteWork = new WorkItem()
             {
                 WorkName = "Remove Library NameSpace",
-                DoWork = () => data.ModelNamespace.Remove(key)
+                DoWork = () => data.ModelNamespace.Remove(new ModelNameSpaceKey(key))
             };
 
             work.Add(deleteWork);

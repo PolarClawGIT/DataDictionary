@@ -72,7 +72,7 @@ namespace DataDictionary.Main
 
                 void CreateNodes(TreeNodeCollection target, IEnumerable<ModelNameSpaceItem> items)
                 {
-                    foreach (IGrouping<ScopeType, ModelNameSpaceItem>? scopeGroup in items.GroupBy(g => g.ScopeId).OrderBy(o => o.Key))
+                    foreach (IGrouping<ScopeType, ModelNameSpaceItem>? scopeGroup in items.GroupBy(g => g.Scope).OrderBy(o => o.Key))
                     {
                         TreeNodeCollection nodes = target;
 
@@ -83,6 +83,8 @@ namespace DataDictionary.Main
                                 TreeNode newNode = target.Add(scopeGroup.Key.ToScopeName().Split(".").Last());
                                 newNode.ImageKey = scopeGroup.Key.ToScopeName();
                                 newNode.SelectedImageKey = scopeGroup.Key.ToScopeName();
+                                newNode.NodeFont = new Font(newNode.TreeView.Font, FontStyle.Italic);
+                                newNode.ToolTipText = String.Format("set of {0}", newNode.Text);
 
                                 nodes = newNode.Nodes;
                                 return newNode;
@@ -94,11 +96,16 @@ namespace DataDictionary.Main
                             TreeNode node = nameSpaceNavigation.Invoke<TreeNode>(() =>
                             {
                                 TreeNode newNode = nodes.Add(item.MemberName);
-                                newNode.ImageKey = item.ScopeId.ToScopeName();
-                                newNode.SelectedImageKey = item.ScopeId.ToScopeName();
+                                newNode.ImageKey = item.Scope.ToScopeName();
+                                newNode.SelectedImageKey = item.Scope.ToScopeName();
                                 nameSpaceNodes.Add(newNode, item);
+                                newNode.ToolTipText = item.MemberFullName;
+                                item.PropertyChanged += Item_PropertyChanged;
 
                                 return newNode;
+
+                                void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+                                { newNode.Text = item.MemberName; }
                             });
 
                             if (item.Children.Count > 0)
@@ -115,6 +122,8 @@ namespace DataDictionary.Main
                 }
             }
         }
+
+
 
         private void RefreshCommand_Click(object sender, EventArgs e)
         {

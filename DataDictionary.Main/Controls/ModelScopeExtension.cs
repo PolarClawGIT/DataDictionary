@@ -32,7 +32,7 @@ namespace DataDictionary.Main.Controls
             {ScopeType.DatabaseFunction,                 Resources.ScalarFunction },
             {ScopeType.DatabaseProcedure,                Resources.Procedure },
             {ScopeType.DatabaseTable,                    Resources.Table },
-            {ScopeType.DatabaseType,                     Resources.Type },
+            {ScopeType.DatabaseDomain,                   Resources.Type },
             {ScopeType.DatabaseView,                     Resources.View },
             {ScopeType.DatabaseViewColumn,               Resources.Column },
             {ScopeType.DatabaseTableColumn,              Resources.Column },

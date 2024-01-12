@@ -181,7 +181,7 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 DomainEntityAliasItem newItem = new DomainEntityAliasItem(DataKey);
                 newItem.AliasName = modelAliasNavigation.SelectedAlias.MemberFullName;
-                newItem.ScopeName = modelAliasNavigation.SelectedAlias.ScopeId.ToScopeName();
+                newItem.ScopeName = modelAliasNavigation.SelectedAlias.Scope.ToScopeName();
 
                 e.NewObject = newItem;
             }

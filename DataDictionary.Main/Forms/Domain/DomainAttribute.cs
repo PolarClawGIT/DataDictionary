@@ -291,7 +291,7 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 DomainAttributeAliasItem newItem = new DomainAttributeAliasItem(DataKey);
                 newItem.AliasName = modelAliasNavigation.SelectedAlias.MemberFullName;
-                newItem.ScopeName = modelAliasNavigation.SelectedAlias.ScopeId.ToScopeName();
+                newItem.ScopeName = modelAliasNavigation.SelectedAlias.Scope.ToScopeName();
 
                 e.NewObject = newItem;
             }

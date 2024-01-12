@@ -24,7 +24,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
             {ScopeType.DatabaseFunction, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Function} },
             {ScopeType.DatabaseProcedure, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Procedure} },
             {ScopeType.DatabaseTable, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Table} },
-            {ScopeType.DatabaseType, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Type} },
+            {ScopeType.DatabaseDomain, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Type} },
             {ScopeType.DatabaseView, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.View} },
             {ScopeType.DatabaseViewColumn, new DbElementScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.View, ElementScope= DbElementScope.Column} },
             {ScopeType.DatabaseTableColumn, new DbElementScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Table, ElementScope= DbElementScope.Column} },
@@ -95,8 +95,8 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// <returns></returns>
         public static IDbScopeKey? TryScope(this IScopeKey source)
         {
-            if (scopeCrossWalk.ContainsKey(source.ScopeId))
-            { return scopeCrossWalk[source.ScopeId]; }
+            if (scopeCrossWalk.ContainsKey(source.Scope))
+            { return scopeCrossWalk[source.Scope]; }
             else { return null; }
         }
 
@@ -107,8 +107,8 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// <returns></returns>
         public static IDbScopeKey? TryScope(this IScopeKeyName source)
         {
-            if (scopeCrossWalk.ContainsKey(new ScopeKey(source).ScopeId))
-            { return scopeCrossWalk[new ScopeKey(source).ScopeId]; }
+            if (scopeCrossWalk.ContainsKey(new ScopeKey(source).Scope))
+            { return scopeCrossWalk[new ScopeKey(source).Scope]; }
             else { return null; }
         }
     }
