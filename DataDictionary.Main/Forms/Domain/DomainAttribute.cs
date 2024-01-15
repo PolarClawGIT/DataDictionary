@@ -105,6 +105,7 @@ namespace DataDictionary.Main.Forms.Domain
             else
             {
                 deleteItemCommand.Enabled = false;
+                this.IsLocked(true);
                 return false;
             }
         }
@@ -393,7 +394,7 @@ namespace DataDictionary.Main.Forms.Domain
                 if (RowState == DataRowState.Unchanged
                     && bindingProperties.DataSource is IEnumerable<DomainAttributePropertyItem> properties
                     && properties.Count(w => w.RowState() != DataRowState.Unchanged) > 0)
-                {   RowState = DataRowState.Modified; }
+                { RowState = DataRowState.Modified; }
 
                 if (RowState == DataRowState.Unchanged
                     && bindingAlias.DataSource is IEnumerable<DomainAttributeAliasItem> alias

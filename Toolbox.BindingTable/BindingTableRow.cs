@@ -142,7 +142,7 @@ namespace Toolbox.BindingTable
         protected virtual Nullable<T> GetValue<T>(String columnName)
             where T : struct, IParsable<T>
         {
-            if (data is not DataRow row || row.RowState == DataRowState.Detached)
+            if (data is not DataRow row)
             {
                 Exception error = new InvalidOperationException("Internal DataRow is not defined");
                 if (GetBindingTable() is not null) { error.Data.Add(nameof(GetBindingTable), GetBindingTable()); }
@@ -156,6 +156,8 @@ namespace Toolbox.BindingTable
             Object? baseValue = null;
             if (data.RowState == DataRowState.Deleted)
             { baseValue = row[columnName, DataRowVersion.Original]; }
+            else if(data.RowState == DataRowState.Detached) 
+            { return new Nullable<T>(); }
             else { baseValue = row[columnName]; }
 
             if (baseValue == DBNull.Value) { return new Nullable<T>(); }
@@ -179,25 +181,7 @@ namespace Toolbox.BindingTable
         /// <remarks>String are a Microsoft special class and needs different handling</remarks>
         protected virtual String? GetValue(String columnName)
         {
-
-            // Debug logic. Can data be returned if the row is detached or deleted?
-            if (data.RowState is DataRowState.Deleted or DataRowState.Detached)
-            {
-                Object x;
-                if (data.HasVersion(DataRowVersion.Current))
-                { x = data[columnName, DataRowVersion.Current]; }
-
-                if (data.HasVersion(DataRowVersion.Proposed))
-                { x = data[columnName, DataRowVersion.Proposed]; }
-
-                if (data.HasVersion(DataRowVersion.Original))
-                { x = data[columnName, DataRowVersion.Original]; }
-
-                x = data[columnName];
-            }
-
-
-            if (data is not DataRow row || row.RowState == DataRowState.Detached)
+            if (data is not DataRow row)
             {
                 Exception error = new InvalidOperationException("Internal DataRow is not defined");
                 if (GetBindingTable() is not null) { error.Data.Add(nameof(GetBindingTable), GetBindingTable()); }
@@ -211,6 +195,8 @@ namespace Toolbox.BindingTable
             Object? baseValue = null;
             if (data.RowState == DataRowState.Deleted && data.HasVersion(DataRowVersion.Original))
             { baseValue = row[columnName, DataRowVersion.Original]; }
+            else if (data.RowState == DataRowState.Detached)
+            { return null; }
             else { baseValue = row[columnName]; }
 
             if (baseValue == DBNull.Value) { return null; }

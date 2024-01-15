@@ -100,6 +100,7 @@ namespace DataDictionary.Main.Forms.Domain
             else
             {
                 deleteItemCommand.Enabled = false;
+                this.IsLocked(true);
                 return false;
             }
         }
