@@ -89,6 +89,10 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// </summary>
         public virtual Object? Source { get; init; } = null;
 
+        /// <summary>
+        /// Function that is used to reset the internal NameKey to what is returned by this value.
+        /// </summary>
+        /// <remarks>Used by OnPropertyChanged event</remarks>
         protected virtual Func<ModelNameSpaceKeyMember> GetNameKey { get; set; } = () => new ModelNameSpaceKeyMember(String.Empty);
 
         /// <summary>
@@ -404,6 +408,12 @@ namespace DataDictionary.BusinessLayer.NameSpace
                 { handler(this, new PropertyChangedEventArgs(nameof(NameKey))); }
             }
         }
+
+        /// <summary>
+        /// Used to clear all subscriptions to the events.
+        /// </summary>
+        public void ClearEvents()
+        { Delegate.RemoveAll(PropertyChanged, PropertyChanged); }
 
         /// <summary>
         /// Returns a string that represents the current object.

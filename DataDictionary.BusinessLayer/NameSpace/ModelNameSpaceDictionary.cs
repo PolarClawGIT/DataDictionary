@@ -12,6 +12,8 @@ using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
+using System.ComponentModel;
+using System.Security.Authentication.ExtendedProtection;
 
 namespace DataDictionary.BusinessLayer.NameSpace
 {
@@ -52,6 +54,9 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <exception cref="InvalidOperationException"></exception>
+        /// <remarks>
+        /// This method is expected to catch calls to the base.Add.
+        /// </remarks>
         public void Add(IModelNameSpaceKey key, IModelNameSpaceItem value)
         { throw new InvalidOperationException("Do not use Base Add Method."); }
 
@@ -59,7 +64,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// Adds a ModelNameSpaceItem to the collection.
         /// </summary>
         /// <param name="value"></param>
-        public void Add(ModelNameSpaceItem value)
+        public virtual void Add(ModelNameSpaceItem value)
         {
             if (this.ContainsKey(value.SystemKey))
             {
@@ -77,16 +82,18 @@ namespace DataDictionary.BusinessLayer.NameSpace
             else { this.RootItem.Children.Add(value.SystemKey); }
 
             base.Add(value.SystemKey, value);
+            OnListChanged(ModelNameSpaceChangedType.ItemAdded, value);
         }
 
         /// <summary>
-        /// Removes an item and the children of that items.
+        /// Removes an item and the children
         /// </summary>
         /// <param name="key"></param>
+        /// <returns></returns>
         /// <remarks>
-        /// This method is expected to catch any call to the Base.Remove.
+        /// This method is expected to catch calls to the base.Remove.
         /// </remarks>
-        public void Remove(IModelNameSpaceKey key)
+        public virtual Boolean Remove(IModelNameSpaceKey key)
         {
             ModelNameSpaceKey removeKey = new ModelNameSpaceKey(key);
             if (this.ContainsKey(removeKey) && this[removeKey] is ModelNameSpaceItem removeItem)
@@ -105,18 +112,40 @@ namespace DataDictionary.BusinessLayer.NameSpace
                     { this.RootItem.Children.Remove(parentChild); }
                 }
 
-                if (this.ContainsKey(removeKey))
-                { base.Remove(removeKey); }
+                OnListChanged(ModelNameSpaceChangedType.ItemDeleted, removeItem);
+                removeItem.ClearEvents();
+
+                return base.Remove(removeKey);
             }
+            else { return false; }
         }
 
+        /// <summary>
+        /// Raised when add, remove, or Clear is called.
+        /// </summary>
+        public event EventHandler<ModelNameSpaceChangedEventArgs>? ListChanged;
+
+        /// <summary>
+        /// Used to raise the ListChanged event.
+        /// </summary>
+        /// <param name="changedType"></param>
+        /// <param name="data"></param>
+        protected virtual void OnListChanged(ModelNameSpaceChangedType changedType, IModelNameSpaceItem? data)
+        {
+            if (ListChanged is EventHandler<ModelNameSpaceChangedEventArgs> handler)
+            { handler(this, new ModelNameSpaceChangedEventArgs(changedType, data)); }
+        }
 
         /// <summary>
         /// Removes all elements
         /// </summary>
-        public new void Clear()
+        public new virtual void Clear()
         {
             RootItem.Children.Clear();
+
+            while (this.Count > 0)
+            { this.Remove(this.First().Key); }
+
             base.Clear();
         }
     }

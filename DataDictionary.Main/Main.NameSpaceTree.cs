@@ -29,6 +29,7 @@ namespace DataDictionary.Main
         {
             expandedNameSpaceNodes.Clear();
             expandedNameSpaceNodes.AddRange(nameSpaceNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value));
+            Program.Data.ModelNamespace.ListChanged -= ModelNamespace_ListChanged;
 
             nameSpaceNavigation.Nodes.Clear();
             nameSpaceNodes.Clear();
@@ -58,6 +59,7 @@ namespace DataDictionary.Main
                 nameSpaceLayout.UseWaitCursor = false;
                 nameSpaceLayout.Enabled = true;
                 nameSpaceNavigation.EndUpdate();
+                Program.Data.ModelNamespace.ListChanged += ModelNamespace_ListChanged;
             }
 
             void LoadTree()
@@ -123,7 +125,44 @@ namespace DataDictionary.Main
             }
         }
 
+        private void ModelNamespace_ListChanged(object? sender, ModelNameSpaceChangedEventArgs e)
+        {
+            TreeNodeCollection taget = nameSpaceNavigation.Nodes;
 
+            if (sender is ModelNameSpaceDictionary source)
+            {
+                if (e.ChangedType == ModelNameSpaceChangedType.ItemAdded && e.Item is ModelNameSpaceItem addedItem)
+                {
+                    if (nameSpaceNodes.FirstOrDefault(w => addedItem.SystemParentKey is not null && addedItem.SystemParentKey.Equals(w.Value.SystemKey)).Key is TreeNode parentNode)
+                    { taget = parentNode.Nodes; }
+
+                    TreeNode node = nameSpaceNavigation.Invoke<TreeNode>(() =>
+                    {
+                        TreeNode newNode = taget.Add(addedItem.MemberName);
+                        newNode.ImageKey = addedItem.Scope.ToScopeName();
+                        newNode.SelectedImageKey = addedItem.Scope.ToScopeName();
+                        nameSpaceNodes.Add(newNode, addedItem);
+                        newNode.ToolTipText = addedItem.MemberFullName;
+                        addedItem.PropertyChanged += Item_PropertyChanged;
+
+                        return newNode;
+
+                        void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+                        { newNode.Text = addedItem.MemberName; }
+                    });
+                }
+
+                if (e.ChangedType == ModelNameSpaceChangedType.ItemDeleted && e.Item is ModelNameSpaceItem deletedItem)
+                {
+                    ModelNameSpaceKey deleteKey = deletedItem.SystemKey;
+                    if (nameSpaceNodes.FirstOrDefault(w => deletedItem.SystemKey.Equals(w.Value.SystemKey)).Key is TreeNode node)
+                    {
+                        node.Remove();
+                        nameSpaceNodes.Remove(node);
+                    }
+                }
+            }
+        }
 
         private void RefreshCommand_Click(object sender, EventArgs e)
         {
@@ -146,9 +185,16 @@ namespace DataDictionary.Main
                 && nameSpaceNodes.ContainsKey(nameSpaceNavigation.SelectedNode)
                 && nameSpaceNodes[nameSpaceNavigation.SelectedNode].Source is ModelSubjectAreaItem subject
                 && subject.SubjectAreaId is Guid subjectId)
-            { item.SubjectAreaId = subjectId; }
-
-            Program.Data.DomainAttributes.Add(item);
+            {
+                item.SubjectAreaId = subjectId;
+                Program.Data.DomainAttributes.Add(item);
+                Program.Data.ModelNamespace.Add(new ModelNameSpaceItem(subject, item));
+            }
+            else
+            {
+                Program.Data.DomainAttributes.Add(item);
+                Program.Data.ModelNamespace.Add(new ModelNameSpaceItem(Program.Data.Model, item));
+            }
 
             if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
             { nameSpaceNavigation.SelectedNode = node; }
@@ -164,9 +210,16 @@ namespace DataDictionary.Main
                 && nameSpaceNodes.ContainsKey(nameSpaceNavigation.SelectedNode)
                 && nameSpaceNodes[nameSpaceNavigation.SelectedNode].Source is ModelSubjectAreaItem subject
                 && subject.SubjectAreaId is Guid subjectId)
-            { item.SubjectAreaId = subjectId; }
-
-            Program.Data.DomainEntities.Add(item);
+            { 
+                item.SubjectAreaId = subjectId;
+                Program.Data.DomainEntities.Add(item);
+                Program.Data.ModelNamespace.Add(new ModelNameSpaceItem(subject, item));
+            }
+            else
+            {
+                Program.Data.DomainEntities.Add(item);
+                Program.Data.ModelNamespace.Add(new ModelNameSpaceItem(Program.Data.Model, item));
+            }
 
             if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
             { nameSpaceNavigation.SelectedNode = node; }
@@ -178,6 +231,7 @@ namespace DataDictionary.Main
         {
             ModelSubjectAreaItem item = new ModelSubjectAreaItem();
             Program.Data.ModelSubjectAreas.Add(item);
+            Program.Data.ModelNamespace.Add(new ModelNameSpaceItem(Program.Data.Model, item));
 
             if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
             { nameSpaceNavigation.SelectedNode = node; }
