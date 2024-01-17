@@ -54,8 +54,8 @@ Begin Try
 			Primary Key ([DependencyId]))
 
 	Insert Into @Values
-	Select	Coalesce(A.[DependencyId], D.[DependencyId], NewId()) As [DependencyId],
-			P.[RoutineId],       
+	Select	X.[DependencyId],
+			X.[RoutineId],       
 			NullIf(Trim(D.[ReferenceSchemaName]),'') As [ReferenceSchemaName],
 			NullIf(Trim(D.[ReferenceObjectName]),'') As [ReferenceObjectName],
 			NullIf(Trim(D.[ReferenceObjectType]),'') As [ReferenceObjectType],
@@ -69,25 +69,31 @@ Begin Try
 			D.[IsInsertAll],  
 			D.[IsIncomplete]
 	From	@Data D
-			Left Join [App_DataDictionary].[DatabaseRoutine_AK] P
-			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
-				NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
-				NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName] And
-				NullIf(Trim(D.[RoutineName]),'') = P.[RoutineName]
-			Left Join [App_DataDictionary].[DatabaseRoutineDependency] A
-			On	P.[RoutineId] = A.[RoutineId] and
-				IsNull(Trim(D.[ReferenceSchemaName]),'') = IsNull(A.[ReferenceSchemaName],'') And
-				IsNull(Trim(D.[ReferenceObjectName]),'') = IsNull(A.[ReferenceObjectName],'') And
-				IsNull(Trim(D.[ReferenceColumnName]),'') = IsNull(A.[ReferenceColumnName],'')
-	Where	P.[CatalogId] is Null Or
-			P.[CatalogId] In (
-				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
-						Left Join [App_DataDictionary].[ModelCatalog] C
-						On	A.[CatalogId] = C.[CatalogId]
-				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-						(@ModelId is Null Or @ModelId = C.[ModelId]))
-
+			Inner Join [App_DataDictionary].[DatabaseRoutine_AK] P
+			On	D.[DatabaseName] = P.[DatabaseName] And
+				D.[SchemaName] = P.[SchemaName] And
+				D.[RoutineName] = P.[RoutineName]
+			Left Join [App_DataDictionary].[DatabaseRoutineDependency_AK] A
+			On	D.[DatabaseName] = A.[DatabaseName] And
+				D.[SchemaName] = A.[SchemaName] And
+				D.[RoutineName] = A.[RoutineName] And
+				IsNull(D.[ReferenceSchemaName],'') = IsNull(A.[ReferenceSchemaName],'') And
+				IsNull(D.[ReferenceObjectName],'') = IsNull(A.[ReferenceObjectName],'') And
+				IsNull(D.[ReferenceColumnName],'') = IsNull(A.[ReferenceColumnName],'')
+			Cross Apply (
+				Select	Coalesce(A.[DependencyId], D.[DependencyId], NewId()) As [DependencyId],
+						Coalesce(A.[RoutineId], P.[RoutineId]) As [RoutineId],
+						Coalesce(A.[SchemaId], P.[SchemaId]) As [SchemaId],
+						Coalesce(A.[CatalogId], P.[CatalogId], @CatalogId) As [CatalogId]) X
+	Where	@CatalogId is Null or
+			X.[CatalogId] = @CatalogId or
+			X.[CatalogId] In (
+			Select	A.[CatalogId]
+			From	[App_DataDictionary].[DatabaseCatalog] A
+					Left Join [App_DataDictionary].[ModelCatalog] C
+					On	A.[CatalogId] = C.[CatalogId]
+			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+					(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
 	Delete From [App_DataDictionary].[DatabaseRoutineDependency]

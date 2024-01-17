@@ -65,8 +65,8 @@ Begin Try
 		From	[App_DataDictionary].[ApplicationScope] S
 				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
-	Select	Coalesce(A.[ParameterId], D.[ParameterId], NewId()) As [ParameterId],
-			P.[RoutineId],
+	Select	X.[ParameterId],
+			X.[RoutineId],
 			NullIf(Trim(D.[ParameterName]),'') As [ParameterName],
 			S.[ScopeId],     
 			D.[OrdinalPosition],
@@ -87,26 +87,31 @@ Begin Try
 			NullIf(Trim(D.[DomainSchema]),'') As [DomainSchema],
 			NullIf(Trim(D.[DomainName]),'') As [DomainName]
 	From	@Data D
-			Left Join [App_DataDictionary].[DatabaseRoutine_AK] P
-			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
-				NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
-				NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName] And
-				NullIf(Trim(D.[RoutineName]),'') = P.[RoutineName]
+			Inner Join [App_DataDictionary].[DatabaseRoutine_AK] P
+			On	D.[DatabaseName] = P.[DatabaseName] And
+				D.[SchemaName] = P.[SchemaName] And
+				D.[RoutineName] = P.[RoutineName]
+			Left Join [App_DataDictionary].[DatabaseRoutineParameter_AK] A
+			On	D.[DatabaseName] = A.[DatabaseName] And
+				D.[SchemaName] = A.[SchemaName] And
+				D.[RoutineName] = A.[RoutineName] And
+				D.[ParameterName] = A.[ParameterName]
 			Left Join [Scope] S
 			On	D.[ScopeName] = S.[ScopeName]
-			Left Join [App_DataDictionary].[DatabaseRoutineParameter_AK] A
-			On	P.[CatalogId] = A.[CatalogId] And
-				P.[SchemaId] = A.[SchemaId] and
-				P.[RoutineId] = A.[RoutineId] and
-				NullIf(Trim(D.[ParameterName]),'') = A.[ParameterName]
-	Where	P.[CatalogId] is Null Or
-			P.[CatalogId] In (
-				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
-						Left Join [App_DataDictionary].[ModelCatalog] C
-						On	A.[CatalogId] = C.[CatalogId]
-				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-						(@ModelId is Null Or @ModelId = C.[ModelId]))
+			Cross Apply (
+				Select	Coalesce(A.[ParameterId], D.[ParameterId], NewId()) As [ParameterId],
+						Coalesce(A.[RoutineId], P.[RoutineId]) As [RoutineId],
+						Coalesce(A.[SchemaId], P.[SchemaId]) As [SchemaId],
+						Coalesce(A.[CatalogId], P.[CatalogId], @CatalogId) As [CatalogId]) X
+	Where	@CatalogId is Null or
+			X.[CatalogId] = @CatalogId or
+			X.[CatalogId] In (
+			Select	A.[CatalogId]
+			From	[App_DataDictionary].[DatabaseCatalog] A
+					Left Join [App_DataDictionary].[ModelCatalog] C
+					On	A.[CatalogId] = C.[CatalogId]
+			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+					(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
 	Delete From [App_DataDictionary].[DatabaseRoutineParameter]

@@ -61,8 +61,8 @@ Begin Try
 		From	[App_DataDictionary].[ApplicationScope] S
 				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
-	Select	Coalesce(A.[DomainId], D.[DomainId], NewId()) As [DomainId],
-			P.[SchemaId],
+	Select	X.[DomainId],
+			X.[SchemaId],
 			NullIf(Trim(D.[DomainName]),'') As [DomainName],
 			S.[ScopeId],
 			NullIf(Trim(D.[DataType]),'') As [DataType],
@@ -80,24 +80,28 @@ Begin Try
 			NullIf(Trim(D.[CollationSchema]),'') As [CollationSchema],
 			NullIf(Trim(D.[CollationName]),'') As [CollationName]
 	From	@Data D
-			Left Join [App_DataDictionary].[DatabaseSchema_AK] P
-			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
-				NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
-				NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName]
+			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
+			On	D.[DatabaseName] = P.[DatabaseName] And
+				D.[SchemaName] = P.[SchemaName]
+			Left Join [App_DataDictionary].[DatabaseDomain_AK] A
+			On	D.[DatabaseName] = A.[DatabaseName] And
+				D.[SchemaName] = A.[SchemaName] And
+				D.[DomainName] = A.[DomainName]
 			Left Join [Scope] S
 			On	D.[ScopeName] = S.[ScopeName]
-			Left Join [App_DataDictionary].[DatabaseDomain_AK] A
-			On	P.[CatalogId] = A.[CatalogId] And
-				P.[SchemaId] = A.[SchemaId] and
-				NullIf(Trim(D.[DomainName]),'') = A.[DomainName]
-	Where	P.[CatalogId] is Null Or
-			P.[CatalogId] In (
-				Select	A.[CatalogId]
-				From	[App_DataDictionary].[DatabaseCatalog] A
-						Left Join [App_DataDictionary].[ModelCatalog] C
-						On	A.[CatalogId] = C.[CatalogId]
-				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
-						(@ModelId is Null Or @ModelId = C.[ModelId]))
+			Cross Apply (
+				Select	Coalesce(A.[DomainId], D.[DomainId], NewId()) As [DomainId],
+						Coalesce(A.[SchemaId], P.[SchemaId]) As [SchemaId],
+						Coalesce(A.[CatalogId], P.[CatalogId], @CatalogId) As [CatalogId]) X
+	Where	@CatalogId is Null or
+			X.[CatalogId] = @CatalogId or
+			X.[CatalogId] In (
+			Select	A.[CatalogId]
+			From	[App_DataDictionary].[DatabaseCatalog] A
+					Left Join [App_DataDictionary].[ModelCatalog] C
+					On	A.[CatalogId] = C.[CatalogId]
+			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+					(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
 	Delete From [App_DataDictionary].[DatabaseDomain]
