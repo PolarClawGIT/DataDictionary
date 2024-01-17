@@ -222,6 +222,7 @@
     <Build Include="App_DataDictionary\User Defined Types\typeModelSubjectArea.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetModelSubjectArea.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetModelSubjectArea.sql" />
+    <Build Include="App_DataDictionary\Views\DatabaseRoutineDependency_AK.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
