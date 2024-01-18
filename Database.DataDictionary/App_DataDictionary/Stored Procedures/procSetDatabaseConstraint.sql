@@ -74,13 +74,21 @@ Begin Try
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
-	If @CatalogId is Not Null And Not Exists (
-		Select	[CatalogId]
-		From	@Values V
-				Inner Join [App_DataDictionary].[DatabaseConstraint_AK] A
-				On V.[ConstraintId] = A.[ConstraintId]
-		Where [CatalogId] = @CatalogId)
-	Exec [App_DataDictionary].[procSetDatabaseConstraintColumn] @CatalogId = @CatalogId -- Cascades Delete
+	Delete From [App_DataDictionary].[DatabaseConstraintColumn]
+	From	[App_DataDictionary].[DatabaseConstraintColumn] T
+			Inner Join [App_DataDictionary].[DatabaseConstraint_AK] P
+			On	T.[ConstraintId] = P.[ConstraintId]
+			Left Join @Values S
+			On	P.[ConstraintId] = S.[ConstraintId]
+	Where	S.[ColumnId] is Null And
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseConstraintColumn] (Constraint): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[DatabaseConstraint]
 	From	[App_DataDictionary].[DatabaseConstraint] T

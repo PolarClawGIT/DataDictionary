@@ -23,17 +23,6 @@ Begin Try
 	If @ModelId is Null and @CatalogId is Null
 	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
 
-	IF Exists (
-		Select	1
-		From	@Data D
-				Left Join [App_DataDictionary].[DatabaseRoutine_AK] P
-				On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
-					NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
-					NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName] And
-					NullIf(Trim(D.[RoutineName]),'') = P.[RoutineName]
-		Where	P.[CatalogId] is Null)
-	Throw 50000, '[DatabaseName], [SchemaName] or [RoutineName] does not match existing data', 2;
-
 	-- Clean the Data
 	Declare @Values Table (
 		[ParameterId]            UniqueIdentifier Not Null,
