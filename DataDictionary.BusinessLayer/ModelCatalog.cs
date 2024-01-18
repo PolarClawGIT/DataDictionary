@@ -461,7 +461,6 @@ namespace DataDictionary.BusinessLayer
                 workName: "Save DbRoutineDependencies",
                 command: (conn) => data.DbRoutineDependencies.SaveCommand(conn, key)));
 
-
             work.Add(factory.CreateWork(
                 workName: "Save DbExtendedProperties",
                 command: (conn) => data.DbExtendedProperties.SaveCommand(conn, key)));
@@ -520,7 +519,6 @@ namespace DataDictionary.BusinessLayer
             work.Add(factory.CreateWork(
                 workName: "Save DbRoutineDependencies",
                 command: (conn) => data.DbRoutineDependencies.SaveCommand(conn, key)));
-
 
             work.Add(factory.CreateWork(
                 workName: "Save DbExtendedProperties",

@@ -169,6 +169,7 @@ namespace DataDictionary.Main
             ClearNameSpaceTree();
 
             List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(Program.Data.RemoveNameSpace());
             work.AddRange(Program.Data.LoadNameSpace());
 
             this.DoWork(work, OnComplete);
@@ -210,7 +211,7 @@ namespace DataDictionary.Main
                 && nameSpaceNodes.ContainsKey(nameSpaceNavigation.SelectedNode)
                 && nameSpaceNodes[nameSpaceNavigation.SelectedNode].Source is ModelSubjectAreaItem subject
                 && subject.SubjectAreaId is Guid subjectId)
-            { 
+            {
                 item.SubjectAreaId = subjectId;
                 Program.Data.DomainEntities.Add(item);
                 Program.Data.ModelNamespace.Add(new ModelNameSpaceItem(subject, item));
@@ -238,6 +239,9 @@ namespace DataDictionary.Main
 
             Activate(item);
         }
+
+        private void ManageModelCommand_ButtonClick(object sender, EventArgs e)
+        { Activate(() => new Forms.Model.ModelManager()); }
 
         private void DataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
@@ -282,7 +286,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Library.LibraryMember() { DataKey = new LibraryMemberKey(memberItem) }, memberItem); }
 
         void Activate(DomainAttributeItem attributeItem)
-        { Activate((data) => new Forms.Domain.DomainAttribute() { DataKey = new DomainAttributeKey(attributeItem) }, attributeItem); }
+        { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
 
         void Activate(DomainEntityItem entityItem)
         { Activate((data) => new Forms.Domain.DomainEntity() { DataKey = new DomainEntityKey(entityItem) }, entityItem); }
@@ -291,7 +295,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Domain.ModelSubjectArea() { DataKey = new ModelSubjectAreaKey(subjectItem) }, subjectItem); }
 
         void Activate(ModelItem modelItem)
-        { Activate(() => new Forms.Model.ModelManager()); }
+        { Activate((data) => new Forms.Model.Model(modelItem), modelItem); }
 
         #region ToolStrip Items
         private void manageLibrariesCommand_ButtonClick(object sender, EventArgs e)

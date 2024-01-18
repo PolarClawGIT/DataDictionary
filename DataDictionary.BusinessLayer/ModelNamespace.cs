@@ -58,8 +58,6 @@ namespace DataDictionary.BusinessLayer
 
             void ThreadWork()
             {
-                data.ModelNamespace.Clear();
-
                 foreach (ModelItem item in data.Models)
                 {
                     ModelKey key = new ModelKey(item);
@@ -428,7 +426,7 @@ namespace DataDictionary.BusinessLayer
 
                     foreach (DomainEntityItem entityItem in entities.Where(w => subjectKey.Equals(w)))
                     {
-                        if(missingEntities.Contains(entityItem)) { missingEntities.Remove(entityItem); }
+                        if (missingEntities.Contains(entityItem)) { missingEntities.Remove(entityItem); }
 
                         data.ModelNamespace.Add(new ModelNameSpaceItem(subjectItem, entityItem));
                         progress(completedWork++, totalWork);
@@ -496,6 +494,48 @@ namespace DataDictionary.BusinessLayer
             };
 
             work.Add(deleteWork);
+            return work;
+        }
+
+        /// <summary>
+        /// Remove NameSpace Data for a Model
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> RemoveNameSpace(this IModelNamespace data, IModelKey key)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            WorkItem deleteWork = new WorkItem()
+            {
+                WorkName = "Remove Model NameSpace",
+                DoWork = () => data.ModelNamespace.Remove(new ModelNameSpaceKey(key))
+            };
+
+            work.Add(deleteWork);
+            return work;
+        }
+
+        /// <summary>
+        /// Remove NameSpace Data for the entire dataset
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> RemoveNameSpace<T>(this T data)
+            where T : IModelNamespace, IModel, IModelCatalog, IModelLibrary
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            foreach (ModelItem item in data.Models)
+            { work.AddRange(RemoveNameSpace(data, item)); }
+
+            foreach (DbCatalogItem item in data.DbCatalogs)
+            { work.AddRange(RemoveNameSpace(data, item)); }
+
+            foreach (LibrarySourceItem item in data.LibrarySources)
+            { work.AddRange(RemoveNameSpace(data, item)); }
+
             return work;
         }
     }

@@ -43,9 +43,7 @@
             copyToolStripButton = new ToolStripButton();
             pasteToolStripButton = new ToolStripButton();
             helpToolStripButton = new ToolStripButton();
-            rowStateCommand = new ToolStripSplitButton();
-            rowStateAcceptChangesCommand = new ToolStripMenuItem();
-            rowStateRejectChangesCommand = new ToolStripMenuItem();
+            rowStateCommand = new ToolStripLabel();
             toolStripSeparator = new ToolStripSeparator();
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripSeparator2 = new ToolStripSeparator();
@@ -181,27 +179,10 @@
             // 
             rowStateCommand.Alignment = ToolStripItemAlignment.Right;
             rowStateCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            rowStateCommand.DropDownItems.AddRange(new ToolStripItem[] { rowStateAcceptChangesCommand, rowStateRejectChangesCommand });
-            rowStateCommand.Image = (Image)resources.GetObject("rowStateCommand.Image");
-            rowStateCommand.ImageTransparentColor = Color.Magenta;
+            rowStateCommand.Image = Properties.Resources.Row;
             rowStateCommand.Name = "rowStateCommand";
-            rowStateCommand.Size = new Size(32, 22);
+            rowStateCommand.Size = new Size(16, 22);
             rowStateCommand.Text = "Row State";
-            rowStateCommand.ToolTipText = "Row State";
-            // 
-            // rowStateAcceptChangesCommand
-            // 
-            rowStateAcceptChangesCommand.Enabled = false;
-            rowStateAcceptChangesCommand.Name = "rowStateAcceptChangesCommand";
-            rowStateAcceptChangesCommand.Size = new Size(180, 22);
-            rowStateAcceptChangesCommand.Text = "Accept Changes";
-            // 
-            // rowStateRejectChangesCommand
-            // 
-            rowStateRejectChangesCommand.Enabled = false;
-            rowStateRejectChangesCommand.Name = "rowStateRejectChangesCommand";
-            rowStateRejectChangesCommand.Size = new Size(180, 22);
-            rowStateRejectChangesCommand.Text = "Reject Changes";
             // 
             // ApplicationBase
             // 
@@ -229,8 +210,6 @@
         protected ToolStripButton newItemCommand;
         protected ToolStripButton deleteItemCommand;
         protected ToolStripSplitButton importDataCommand;
-        private ToolStripSplitButton rowStateCommand;
-        protected ToolStripMenuItem rowStateAcceptChangesCommand;
-        protected ToolStripMenuItem rowStateRejectChangesCommand;
+        private ToolStripLabel rowStateCommand;
     }
 }

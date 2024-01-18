@@ -33,12 +33,6 @@ namespace DataDictionary.Main.Forms.Domain
             deleteItemCommand.Click += DeleteItemCommand_Click;
             deleteItemCommand.Image = Resources.DeleteEntity;
             deleteItemCommand.ToolTipText = "Remove the Entity";
-
-            rowStateAcceptChangesCommand.Enabled = true;
-            rowStateAcceptChangesCommand.Click += RowStateAcceptChangesCommand_Click;
-
-            rowStateRejectChangesCommand.Enabled = true;
-            rowStateRejectChangesCommand.Click += RowStateRejectChangesCommand_Click;
         }
 
         private void DomainEntity_Load(object sender, EventArgs e)
@@ -313,58 +307,6 @@ namespace DataDictionary.Main.Forms.Domain
                 Program.Data.DomainEntityProperties.Remove(key);
                 Program.Data.DomainEntityAliases.Remove(key);
                 Program.Data.DomainEntities.Remove(data);
-            }
-        }
-
-        private void RowStateRejectChangesCommand_Click(object? sender, EventArgs e)
-        {
-            if (bindingEntity.Current is DomainEntityItem data)
-            {
-                if (bindingProperties.DataSource is IEnumerable<DomainEntityPropertyItem> properties)
-                {
-                    foreach (DomainEntityPropertyItem item in properties)
-                    { item.RejectChanges(); }
-
-                    bindingProperties.ResetBindings(false);
-                }
-
-                if (bindingAlias.DataSource is IEnumerable<DomainEntityAliasItem> alias)
-                {
-                    foreach (DomainEntityAliasItem item in alias)
-                    { item.RejectChanges(); }
-
-                    bindingAlias.ResetBindings(false);
-                }
-
-                data.RejectChanges();
-                bindingEntity.ResetBindings(false);
-                UpdateRowState();
-            }
-        }
-
-        private void RowStateAcceptChangesCommand_Click(object? sender, EventArgs e)
-        {
-            if (bindingEntity.Current is DomainEntityItem data)
-            {
-                if (bindingProperties.DataSource is IEnumerable<DomainEntityPropertyItem> properties)
-                {
-                    foreach (DomainEntityPropertyItem item in properties)
-                    { item.AcceptChanges(); }
-
-                    bindingProperties.ResetBindings(false);
-                }
-
-                if (bindingAlias.DataSource is IEnumerable<DomainEntityAliasItem> alias)
-                {
-                    foreach (DomainEntityAliasItem item in alias)
-                    { item.AcceptChanges(); }
-
-                    bindingAlias.ResetBindings(false);
-                }
-
-                data.AcceptChanges();
-                bindingEntity.ResetBindings(false);
-                UpdateRowState();
             }
         }
 

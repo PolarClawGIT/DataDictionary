@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 using Toolbox.Threading;
@@ -21,6 +22,11 @@ namespace DataDictionary.BusinessLayer
         /// List of Models from the Application Database.
         /// </summary>
         ModelCollection Models { get; }
+
+        /// <summary>
+        /// List of Domain Subject Areas within the Model.
+        /// </summary>
+        ModelSubjectAreaCollection ModelSubjectAreas { get; }
     }
 
     /// <summary>
@@ -31,26 +37,26 @@ namespace DataDictionary.BusinessLayer
     /// Forms need to connect to the Key for the data object they are presenting.
     /// If the data should change, the Forms need to reset the bindings and get new data from this object.
     /// </remarks>
-    public partial class ModelData: IModel
+    public partial class ModelData : IModel
     {
         // Model
         ModelItem defaultModel;
-        ModelKey modelKey;
+        //ModelKey modelKey;
 
         /// <inheritdoc/>
-        public ModelKey ModelKey { get { return modelKey; } internal set { modelKey = new ModelKey(value); } }
+        public ModelKey ModelKey { get { return new ModelKey(Model); } }
 
         /// <inheritdoc/>
         public ModelCollection Models { get; } = new ModelCollection();
 
         /// <summary>
-        /// The current Model (by ModelKey) opened by the application
+        /// The current Model opened by the application
         /// </summary>
         public ModelItem Model
         {
             get
             {
-                if (Models.FirstOrDefault(w => new ModelKey(w) == ModelKey) is ModelItem item)
+                if (Models.FirstOrDefault() is ModelItem item)
                 { return item; }
                 else { return defaultModel; }
             }
@@ -84,7 +90,6 @@ namespace DataDictionary.BusinessLayer
         protected ModelData() : base()
         {
             defaultModel = new ModelItem();
-            modelKey = new ModelKey(defaultModel);
             Models.Add(defaultModel);
         }
 
@@ -103,6 +108,7 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
 
             work.AddRange(this.RemoveModel());
+            work.AddRange(this.RemoveNameSpace());
 
             work.Add(new WorkItem()
             {
@@ -110,10 +116,11 @@ namespace DataDictionary.BusinessLayer
                 DoWork = () =>
                 {
                     defaultModel = new ModelItem();
-                    ModelKey = new ModelKey(defaultModel);
                     Models.Add(defaultModel);
                 }
             });
+
+            work.AddRange(this.LoadNameSpace());
 
             return work;
         }
@@ -130,38 +137,31 @@ namespace DataDictionary.BusinessLayer
             ModelKey key = new ModelKey(modelKey);
 
             work.AddRange(this.RemoveModel());
-            work.Add(factory.CreateWork(
-                workName: "Load Models",
-                target: this.Models,
-                command: (conn) =>
-                {
-                    this.ModelKey = key;
-                    return this.Models.LoadCommand(conn, key);
-                }));
-            work.AddRange(this.LoadDomain(factory, modelKey));
-            work.AddRange(this.LoadCatalog(factory, modelKey));
-            work.AddRange(this.LoadLibrary(factory, modelKey));
+            work.AddRange(this.RemoveNameSpace());
+            work.AddRange(this.LoadModelData(factory, key));
+            work.AddRange(this.LoadDomain(factory, key));
+            work.AddRange(this.LoadCatalog(factory, key));
+            work.AddRange(this.LoadLibrary(factory, key));
+            work.AddRange(this.LoadNameSpace());
 
             return work;
         }
-
 
         /// <summary>
         /// Creates Work Items that Save the Model to the Application Database
         /// </summary>
         /// <param name="factory"></param>
+        /// <param name="modelKey"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> SaveModel(IDatabaseWork factory)
+        public IReadOnlyList<WorkItem> SaveModel(IDatabaseWork factory, IModelKey modelKey)
         {
             List<WorkItem> work = new List<WorkItem>();
+            ModelKey key = new ModelKey(modelKey);
 
-            work.Add(factory.CreateWork(
-                workName: "Save Models",
-                command: this.Models.SaveCommand));
-
-            work.AddRange(this.SaveDomain(factory, modelKey));
-            work.AddRange(this.SaveCatalog(factory, modelKey));
-            work.AddRange(this.SaveLibrary(factory, modelKey));
+            work.AddRange(this.SaveModelData(factory, key));
+            work.AddRange(this.SaveDomain(factory, key));
+            work.AddRange(this.SaveCatalog(factory, key));
+            work.AddRange(this.SaveLibrary(factory, key));
 
             return work;
         }
@@ -175,10 +175,10 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
 
             work.Add(new WorkItem() { WorkName = "Clear Model", DoWork = this.Models.Clear });
+            work.Add(new WorkItem() { WorkName = "Clear Subject Areas", DoWork = this.ModelSubjectAreas.Clear });
             work.AddRange(this.RemoveDomain());
             work.AddRange(this.RemoveCatalog());
             work.AddRange(this.RemoveLibrary());
-
             return work;
         }
 
@@ -197,11 +197,7 @@ namespace DataDictionary.BusinessLayer
                 workName: "Delete Model",
                 command: (conn) => this.Models.DeleteCommand(conn, key)));
 
-            work.Add(new WorkItem() { WorkName = "Clear Models", DoWork = this.Models.Clear });
-            work.AddRange(this.RemoveDomain());
-            work.AddRange(this.RemoveCatalog());
-            work.AddRange(this.RemoveLibrary());
-
+            work.AddRange(this.RemoveModel());
             return work;
         }
 

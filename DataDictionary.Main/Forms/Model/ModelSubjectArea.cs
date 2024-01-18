@@ -19,12 +19,6 @@ namespace DataDictionary.Main.Forms.Domain
             deleteItemCommand.Click += DeleteItemCommand_Click;
             deleteItemCommand.Image = Resources.DeleteDiagram;
             deleteItemCommand.ToolTipText = "Remove the Subject Area";
-
-            rowStateAcceptChangesCommand.Enabled = true;
-            rowStateAcceptChangesCommand.Click += RowStateAcceptChangesCommand_Click;
-
-            rowStateRejectChangesCommand.Enabled = true;
-            rowStateRejectChangesCommand.Click += RowStateRejectChangesCommand_Click;
         }
 
         private void DomainSubjectArea_Load(object sender, EventArgs e)
@@ -97,24 +91,5 @@ namespace DataDictionary.Main.Forms.Domain
             }
         }
 
-        private void RowStateRejectChangesCommand_Click(object? sender, EventArgs e)
-        {
-            if (bindingSubject.Current is DomainAttributeItem data)
-            {
-                data.RejectChanges();
-                bindingSubject.ResetBindings(false);
-                RowState = data.RowState();
-            }
-        }
-
-        private void RowStateAcceptChangesCommand_Click(object? sender, EventArgs e)
-        {
-            if (bindingSubject.Current is DomainAttributeItem data)
-            {
-                data.AcceptChanges();
-                bindingSubject.ResetBindings(false);
-                RowState = data.RowState();
-            }
-        }
     }
 }

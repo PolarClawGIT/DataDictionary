@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.ApplicationData.Help;
+using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using System;
@@ -151,8 +152,8 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <param name="file"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> SaveModel<T>(this T data, FileInfo file)
-            where T : IModelCatalog, IModelLibrary, IModelDomain
+        public static IReadOnlyList<WorkItem> SaveModelData<T>(this T data, FileInfo file)
+            where T : IModelCatalog, IModelLibrary, IModelDomain, IModel
         {
             List<WorkItem> workItems = new List<WorkItem>();
 
@@ -190,6 +191,7 @@ namespace DataDictionary.BusinessLayer
                     workSet.Tables.Add(data.DomainEntityProperties.ToDataTable());
 
                     //IModel
+                    workSet.Tables.Add(data.Models.ToDataTable());
                     workSet.Tables.Add(data.ModelSubjectAreas.ToDataTable());
 
                     // Write the Data
@@ -205,16 +207,19 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <param name="file"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadModel<T>(this T data, FileInfo file)
-            where T : IModelCatalog, IModelLibrary, IModelDomain
+        public static IReadOnlyList<WorkItem> LoadModelData<T>(this T data, FileInfo file)
+            where T : IModelCatalog, IModelLibrary, IModelDomain, IModel, IModelNamespace
         {
             List<WorkItem> workItems = new List<WorkItem>();
 
             workItems.AddRange(data.RemoveCatalog());
             workItems.AddRange(data.RemoveLibrary());
             workItems.AddRange(data.RemoveDomain());
+            workItems.AddRange(data.RemoveNameSpace());
 
             workItems.Add(new WorkItem() { WorkName = "Load Model Data", DoWork = DoWork });
+
+            workItems.AddRange(data.LoadNameSpace());
 
             return workItems.AsReadOnly();
 
@@ -250,9 +255,58 @@ namespace DataDictionary.BusinessLayer
                     LoadTable(workSet, data.DomainEntityProperties);
 
                     //IModel
+                    LoadTable(workSet, data.Models);
                     LoadTable(workSet, data.ModelSubjectAreas);
                 }
             }
+        }
+
+        /// <summary>
+        /// Loads the Model from the Database.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="factory"></param>
+        /// <param name="modelKey"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> LoadModelData(this IModel data, IDatabaseWork factory, IModelKey modelKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            ModelKey key = new ModelKey(modelKey);
+
+            work.Add(factory.CreateWork(
+                workName: "Load Models",
+                target: data.Models,
+                command: (conn) => data.Models.LoadCommand(conn, key)));
+
+            work.Add(factory.CreateWork(
+                workName: "Load DomainSubjectAreas",
+                target: data.ModelSubjectAreas,
+                command: (conn) => data.ModelSubjectAreas.LoadCommand(conn, key)));
+
+            return work;
+        }
+
+        /// <summary>
+        /// Saves the Model from the Database.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="factory"></param>
+        /// <param name="modelKey"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> SaveModelData(this IModel data, IDatabaseWork factory, IModelKey modelKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            ModelKey key = new ModelKey(modelKey);
+
+            work.Add(factory.CreateWork(
+                workName: "Save Models",
+                command: (conn) => data.Models.SaveCommand(conn)));
+
+            work.Add(factory.CreateWork(
+                workName: "Save SubjectAreas",
+                command: (conn) => data.ModelSubjectAreas.SaveCommand(conn, key)));
+
+            return work;
         }
 
         /// <summary>

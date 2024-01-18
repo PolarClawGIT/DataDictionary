@@ -115,6 +115,7 @@
             helpAboutMenuItem = new ToolStripMenuItem();
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
+            manageModelCommand = new ToolStripSplitButton();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
@@ -155,7 +156,7 @@
             // 
             // dataSourceToolStrip
             // 
-            dataSourceToolStrip.Items.AddRange(new ToolStripItem[] { newAttributeCommand, newEntityCommand, newSubjectAreaCommand, toolStripSeparator6, manageDatabasesCommand, manageLibrariesCommand, toolStripSeparator7, refreshCommand });
+            dataSourceToolStrip.Items.AddRange(new ToolStripItem[] { manageModelCommand, newAttributeCommand, newEntityCommand, newSubjectAreaCommand, toolStripSeparator6, manageDatabasesCommand, manageLibrariesCommand, toolStripSeparator7, refreshCommand });
             dataSourceToolStrip.Location = new Point(0, 0);
             dataSourceToolStrip.Name = "dataSourceToolStrip";
             dataSourceToolStrip.Size = new Size(300, 25);
@@ -262,7 +263,6 @@
             // 
             subjectAreaContextMenu.Items.AddRange(new ToolStripItem[] { subjectAreaToolStripMenuItem });
             subjectAreaContextMenu.Name = "subjectAreaContextMenu";
-            subjectAreaContextMenu.OwnerItem = newSubjectAreaCommand;
             subjectAreaContextMenu.Size = new Size(187, 26);
             // 
             // subjectAreaToolStripMenuItem
@@ -400,7 +400,7 @@
             libraryContextMenu.Items.AddRange(new ToolStripItem[] { viewLibrarySourceCommand, viewLibraryMemberCommand });
             libraryContextMenu.Name = "libraryContextMenu";
             libraryContextMenu.OwnerItem = manageLibrariesCommand;
-            libraryContextMenu.Size = new Size(205, 70);
+            libraryContextMenu.Size = new Size(205, 48);
             // 
             // viewLibrarySourceCommand
             // 
@@ -786,6 +786,16 @@
             // 
             openFileDialog.FileName = "openFileDialog";
             // 
+            // manageModelCommand
+            // 
+            manageModelCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            manageModelCommand.Image = Properties.Resources.SoftwareDefinitionModel;
+            manageModelCommand.ImageTransparentColor = Color.Magenta;
+            manageModelCommand.Name = "manageModelCommand";
+            manageModelCommand.Size = new Size(32, 22);
+            manageModelCommand.Text = "manageModelCommand";
+            manageModelCommand.ButtonClick += ManageModelCommand_ButtonClick;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -912,5 +922,6 @@
         private ContextMenuStrip libraryContextMenu;
         private ToolStripMenuItem viewLibrarySourceCommand;
         private ToolStripMenuItem viewLibraryMemberCommand;
+        private ToolStripSplitButton manageModelCommand;
     }
 }

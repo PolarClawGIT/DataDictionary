@@ -2,6 +2,7 @@
 using DataDictionary.Main.Messages;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,10 +28,16 @@ namespace DataDictionary.Main.Forms
         Boolean IsOpenItem(Object? item) { return true; }
 
         /// <summary>
+        /// The RowState of the related data.
+        /// </summary>
+        public DataRowState? RowState { get; set; }
+
+        /// <summary>
         ///  Collection of child controls.
         /// </summary>
         /// <remarks>Implemented by the Control class</remarks>
         ControlCollection Controls { get; }
+
     }
 
     /// <summary>
@@ -65,7 +72,14 @@ namespace DataDictionary.Main.Forms
         /// </summary>
         public static void BindData(this IApplicationDataBind dataForm)
         {
-            if (dataForm.BindDataCore()) { dataForm.IsLocked(false); dataForm.IsWaitCursor(false); }
+            if (dataForm.BindDataCore())
+            {
+                if (dataForm.RowState is DataRowState.Detached or DataRowState.Deleted)
+                { dataForm.IsLocked(true); }
+                else { dataForm.IsLocked(false); }
+
+                dataForm.IsWaitCursor(false);
+            }
             else
             {
                 dataForm.IsLocked(true);
@@ -139,7 +153,7 @@ namespace DataDictionary.Main.Forms
         /// <summary>
         /// Key used to get the Data for the Form.
         /// </summary>
-        TKey DataKey { get; init; }
+        TKey DataKey { get; }
     }
 
 }

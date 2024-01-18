@@ -196,11 +196,15 @@ namespace DataDictionary.Main
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             (this as IApplicationDataBind).UnbindData();
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(Program.Data.NewModel());
 
-            DoWork(Program.Data.NewModel(), onCompleting);
+            DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { (this as IApplicationDataBind).BindData(); }
+            {
+                (this as IApplicationDataBind).BindData();
+            }
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -283,7 +287,10 @@ namespace DataDictionary.Main
                 FileInfo openFile = new FileInfo(openFileDialog.FileName);
 
                 SendMessage(new Messages.DoUnbindData());
-                DoWork(Program.Data.LoadModel(openFile), onCompleting);
+                List<WorkItem> work = new List<WorkItem>();
+                work.AddRange(Program.Data.LoadModelData(openFile));
+
+                DoWork(work, onCompleting);
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
@@ -295,7 +302,7 @@ namespace DataDictionary.Main
             if (Program.Data.ModelFile is FileInfo file)
             {
                 SendMessage(new Messages.DoUnbindData());
-                DoWork(Program.Data.SaveModel(Program.Data.ModelFile), onCompleting);
+                DoWork(Program.Data.SaveModelData(Program.Data.ModelFile), onCompleting);
             }
             else
             { saveAsToolStripMenuItem_Click(sender, e); }
@@ -328,14 +335,12 @@ namespace DataDictionary.Main
                 saveToolStripMenuItem.Enabled = true;
 
                 SendMessage(new Messages.DoUnbindData());
-                DoWork(Program.Data.SaveModel(openFile), onCompleting);
+                DoWork(Program.Data.SaveModelData(openFile), onCompleting);
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { SendMessage(new Messages.DoBindData()); }
 
         }
-
-
     }
 }

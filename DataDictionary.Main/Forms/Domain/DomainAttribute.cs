@@ -15,7 +15,7 @@ namespace DataDictionary.Main.Forms.Domain
 {
     partial class DomainAttribute : ApplicationBase, IApplicationDataForm<DomainAttributeKey>
     {
-        public required DomainAttributeKey DataKey { get; init; }
+        public DomainAttributeKey DataKey { get; private set; }
 
         public bool IsOpenItem(object? item)
         { return DataKey.Equals(item); }
@@ -34,11 +34,46 @@ namespace DataDictionary.Main.Forms.Domain
             deleteItemCommand.Image = Resources.DeleteAttribute;
             deleteItemCommand.ToolTipText = "Remove the Attribute";
 
-            rowStateAcceptChangesCommand.Enabled = true;
-            rowStateAcceptChangesCommand.Click += RowStateAcceptChangesCommand_Click;
+            DomainAttributeItem data = new DomainAttributeItem();
+            DataKey = new DomainAttributeKey(data);
+            bindingAttribute.DataSource = new BindingList<DomainAttributeItem>() { data };
 
-            rowStateRejectChangesCommand.Enabled = true;
-            rowStateRejectChangesCommand.Click += RowStateRejectChangesCommand_Click;
+            bindingProperties.DataSource =
+                   new BindingView<DomainAttributePropertyItem>(
+                       Program.Data.DomainAttributeProperties,
+                       w => DataKey.Equals(w));
+
+            bindingAlias.DataSource =
+                    new BindingView<DomainAttributeAliasItem>(
+                        Program.Data.DomainAttributeAliases,
+                        w => DataKey.Equals(w));
+        }
+
+        public DomainAttribute(DomainAttributeItem data) : this()
+        {
+            DataKey = new DomainAttributeKey(data);
+
+            if (Program.Data.DomainAttributes.Contains(data))
+            {
+                bindingAttribute.DataSource = new BindingView<DomainAttributeItem>(Program.Data.DomainAttributes, w => DataKey.Equals(w));
+                bindingAttribute.Position = 0;
+            }
+
+            if (bindingAttribute.Current is not DomainAttributeItem)
+            {
+                bindingAttribute.DataSource = new BindingList<DomainAttributeItem>() { data };
+                bindingAttribute.Position = 0;
+            }
+
+            bindingProperties.DataSource =
+                   new BindingView<DomainAttributePropertyItem>(
+                       Program.Data.DomainAttributeProperties,
+                       w => DataKey.Equals(w));
+
+            bindingAlias.DataSource =
+                    new BindingView<DomainAttributeAliasItem>(
+                        Program.Data.DomainAttributeAliases,
+                        w => DataKey.Equals(w));
         }
 
         private void DomainAttribute_Load(object sender, EventArgs e)
@@ -52,9 +87,8 @@ namespace DataDictionary.Main.Forms.Domain
 
         public bool BindDataCore()
         {
-            bindingAttribute.DataSource = new BindingView<DomainAttributeItem>(Program.Data.DomainAttributes, w => DataKey.Equals(w));
-            bindingAttribute.Position = 0;
             bindingAttribute.CurrentItemChanged += DataChanged;
+            UpdateRowState();
 
             if (bindingAttribute.Current is DomainAttributeItem data)
             {
@@ -67,10 +101,7 @@ namespace DataDictionary.Main.Forms.Domain
                 subjectAreaData.ReadOnly = (subjectAreaData.DataSource is IList subjectAreaItems && subjectAreaItems.Count == 0);
                 subjectAreaData.DataBindings.Add(new Binding(nameof(subjectAreaData.SelectedValue), bindingAttribute, nameof(data.SubjectAreaId), true, DataSourceUpdateMode.OnValidation, Guid.Empty));
 
-                bindingProperties.DataSource =
-                    new BindingView<DomainAttributePropertyItem>(
-                        Program.Data.DomainAttributeProperties,
-                        w => DataKey.Equals(w));
+
                 propertyNavigation.AutoGenerateColumns = false;
                 propertyNavigation.DataSource = bindingProperties;
                 bindingProperties.CurrentItemChanged += DataChanged;
@@ -89,23 +120,16 @@ namespace DataDictionary.Main.Forms.Domain
                     && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)
                 { BindChoiceData(property, propItem); }
 
-                bindingAlias.DataSource =
-                    new BindingView<DomainAttributeAliasItem>(
-                        Program.Data.DomainAttributeAliases,
-                        w => DataKey.Equals(w));
                 aliasData.AutoGenerateColumns = false;
                 aliasData.DataSource = bindingAlias;
                 bindingAlias.CurrentItemChanged += DataChanged;
 
                 deleteItemCommand.Enabled = true;
-
-                UpdateRowState();
                 return true;
             }
             else
             {
                 deleteItemCommand.Enabled = false;
-                this.IsLocked(true);
                 return false;
             }
         }
@@ -131,8 +155,6 @@ namespace DataDictionary.Main.Forms.Domain
             propertyDefinitionData.DataBindings.Clear();
 
             aliasData.DataSource = null;
-            bindingAlias.DataSource = null;
-            bindingAttribute.DataSource = null;
         }
 
         void BindChoiceData(PropertyItem property, DomainAttributePropertyItem data)
@@ -329,58 +351,6 @@ namespace DataDictionary.Main.Forms.Domain
                 Program.Data.DomainAttributeAliases.Remove(key);
                 Program.Data.DomainAttributeProperties.Remove(key);
                 Program.Data.DomainAttributes.Remove(data);
-                UpdateRowState();
-            }
-        }
-
-        private void RowStateRejectChangesCommand_Click(object? sender, EventArgs e)
-        {
-            if (bindingAttribute.Current is DomainAttributeItem data)
-            {
-                if (bindingProperties.DataSource is IEnumerable<DomainAttributePropertyItem> properties)
-                {
-                    foreach (DomainAttributePropertyItem item in properties)
-                    { item.RejectChanges(); }
-
-                    bindingProperties.ResetBindings(false);
-                }
-
-                if (bindingAlias.DataSource is IEnumerable<DomainAttributeAliasItem> alias)
-                {
-                    foreach (DomainAttributeAliasItem item in alias)
-                    { item.RejectChanges(); }
-
-                    bindingAlias.ResetBindings(false);
-                }
-
-                data.RejectChanges();
-                bindingAttribute.ResetBindings(false);
-                UpdateRowState();
-            }
-        }
-
-        private void RowStateAcceptChangesCommand_Click(object? sender, EventArgs e)
-        {
-            if (bindingAttribute.Current is DomainAttributeItem data)
-            {
-                if (bindingProperties.DataSource is IEnumerable<DomainAttributePropertyItem> properties)
-                {
-                    foreach (DomainAttributePropertyItem item in properties)
-                    { item.AcceptChanges(); }
-
-                    bindingProperties.ResetBindings(false);
-                }
-
-                if (bindingAlias.DataSource is IEnumerable<DomainAttributeAliasItem> alias)
-                {
-                    foreach (DomainAttributeAliasItem item in alias)
-                    { item.AcceptChanges(); }
-
-                    bindingAlias.ResetBindings(false);
-                }
-
-                data.AcceptChanges();
-                bindingAttribute.ResetBindings(false);
                 UpdateRowState();
             }
         }

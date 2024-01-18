@@ -1,6 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.ApplicationData.Model;
-using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
@@ -56,12 +55,7 @@ namespace DataDictionary.BusinessLayer
     /// </summary>
     /// <remarks>When combined with the Extension class, this approximates multi-inheritance.</remarks>
     public interface IModelDomain : IModelAttribute, IModelEntity
-    {
-        /// <summary>
-        /// List of Domain Subject Areas within the Model.
-        /// </summary>
-        ModelSubjectAreaCollection ModelSubjectAreas { get; }
-    }
+    { }
 
     /// <summary>
     /// Implementation of Model Domain (Attribute, Entity and Subject Area)
@@ -111,11 +105,6 @@ namespace DataDictionary.BusinessLayer
                 target: data.DomainEntityProperties,
                 command: (conn) => data.DomainEntityProperties.LoadCommand(conn, key)));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DomainSubjectAreas",
-                target: data.ModelSubjectAreas,
-                command: (conn) => data.ModelSubjectAreas.LoadCommand(conn, key)));
-
             return work;
         }
 
@@ -130,10 +119,6 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
             ModelKey key = new ModelKey(modelKey);
-
-            work.Add(factory.CreateWork(
-                workName: "Save DomainSubjectAreas",
-                command: (conn) => data.ModelSubjectAreas.SaveCommand(conn, key)));
 
             work.Add(factory.CreateWork(
                 workName: "Save DomainAttributes",
@@ -176,7 +161,6 @@ namespace DataDictionary.BusinessLayer
             work.Add(new WorkItem() { WorkName = "Clear DomainEntities", DoWork = data.DomainEntities.Clear });
             work.Add(new WorkItem() { WorkName = "Clear DomainEntityAliases", DoWork = data.DomainEntityAliases.Clear });
             work.Add(new WorkItem() { WorkName = "Clear DomainEntityProperties", DoWork = data.DomainEntityProperties.Clear });
-            work.Add(new WorkItem() { WorkName = "Clear DomainSubjectAreas", DoWork = data.ModelSubjectAreas.Clear });
 
             return work;
         }

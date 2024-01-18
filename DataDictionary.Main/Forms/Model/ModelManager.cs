@@ -145,7 +145,6 @@ namespace DataDictionary.Main.Forms.Model
                 ModelKey key = new ModelKey(item);
                 work.Add(factory.OpenConnection());
                 work.AddRange(Program.Data.LoadModel(factory, key));
-                work.AddRange(Program.Data.LoadNameSpace());
 
                 DoLocalWork(work);
             }
@@ -162,7 +161,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 ModelKey key = new ModelKey(item);
                 work.Add(factory.OpenConnection());
-                work.AddRange(Program.Data.SaveModel(factory));
+                work.AddRange(Program.Data.SaveModel(factory,Program.Data.ModelKey));
                 work.AddRange(LoadLocalData(factory));
 
                 DoLocalWork(work);
