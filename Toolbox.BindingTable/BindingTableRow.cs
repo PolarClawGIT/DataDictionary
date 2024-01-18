@@ -94,8 +94,6 @@ namespace Toolbox.BindingTable
             }
         }
 
-
-
         /// <summary>
         /// Constructor that loaded the DataRow.
         /// </summary>
@@ -156,7 +154,7 @@ namespace Toolbox.BindingTable
             Object? baseValue = null;
             if (data.RowState == DataRowState.Deleted)
             { baseValue = row[columnName, DataRowVersion.Original]; }
-            else if(data.RowState == DataRowState.Detached) 
+            else if (data.RowState == DataRowState.Detached)
             { return new Nullable<T>(); }
             else { baseValue = row[columnName]; }
 
@@ -338,8 +336,13 @@ namespace Toolbox.BindingTable
                 if (data.HasVersion(DataRowVersion.Proposed) && row.RowState == DataRowState.Unchanged)
                 { return DataRowState.Modified; }
 
-                return row.RowState;
-
+                if (bindingTable is null)
+                { return DataRowState.Detached; }
+                else if (row.RowState is DataRowState.Detached)
+                { return DataRowState.Detached; }
+                else if (bindingTable.Contains(this))
+                { return row.RowState; }
+                else { return DataRowState.Deleted; }
             }
             else { return DataRowState.Detached; }
         }
@@ -394,6 +397,51 @@ namespace Toolbox.BindingTable
         {
             if (data is DataRow row)
             { row.RejectChanges(); }
+        }
+
+        /// <inheritdoc cref="DataRow.Delete"/>
+        /// <remarks>
+        /// This delete mimics the behavior of removing an item from a list.
+        /// The internal DataRow is copied over to a different table and deleted from the original.
+        /// The item itself is removed from the BindingTable
+        /// As a result, a direct reference to the BindingTableRow persists a value.
+        /// The RowState method will return Deleted.
+        /// </remarks>
+        public virtual void Remove()
+        {
+            if (bindingTable is not null && bindingTable.Contains(this))
+            {
+                // Warning: This is a recursive call.
+                // BindingTable calls this method to as part of RemoveItem.
+                // The Else part of this method is executed as the BindingTable no longer contains the item.
+                bindingTable.Remove(this);
+            }
+            else
+            {
+                data.Table.RowChanging -= Table_RowChanging;
+                data.Table.RowChanged -= Table_RowChanged;
+                data.Table.RowDeleting -= Table_RowDeleting;
+                data.Table.RowDeleted -= Table_RowDeleted;
+                data.Table.Disposed -= Table_Disposed;
+                data.Table.ColumnChanged -= Table_ColumnChanged;
+
+                using (DataTable temp = new DataTable("Remove_BindingTableRow"))
+                {
+                    temp.AddColumns(this.ColumnDefinitions(), true);
+
+                    DataRow removing = data;
+                    temp.ImportRow(data);
+                    data = temp.Rows[0];
+                    removing.Delete();
+                }
+
+                data.Table.RowChanging += Table_RowChanging;
+                data.Table.RowChanged += Table_RowChanged;
+                data.Table.RowDeleting += Table_RowDeleting;
+                data.Table.RowDeleted += Table_RowDeleted;
+                data.Table.Disposed += Table_Disposed;
+                data.Table.ColumnChanged += Table_ColumnChanged;
+            }
         }
         #endregion
 

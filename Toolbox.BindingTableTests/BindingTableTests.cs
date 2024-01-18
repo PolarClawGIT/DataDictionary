@@ -68,5 +68,41 @@ namespace Toolbox.BindingTable.Tests
             Assert.IsTrue(result.All(w => w.IsFilter == true));
 
         }
+
+        [TestMethod()]
+        public void BindingTable_Disconnected()
+        {
+            BindingTable<TestItem> source = new BindingTable<TestItem>() {
+                new TestItem(){ TestTitle="Test 1", TestDescription = "Test 1", IsFilter = false },
+                new TestItem(){ TestTitle="Test 2", TestDescription = "Test 2", IsFilter = true },
+                new TestItem(){ TestTitle="Test 3", TestDescription = "Test 3", IsFilter = false },
+                new TestItem(){ TestTitle="Test 4", TestDescription = "Test 4", IsFilter = true },
+            };
+
+            TestItem newItem01 = new TestItem() { TestTitle = "Test 5", TestDescription = "Test 5", IsFilter = true };
+            TestItem newItem02 = new TestItem() { TestTitle = "Test 6", TestDescription = "Test 6", IsFilter = true };
+
+            Assert.AreEqual(DataRowState.Detached, newItem01.RowState());
+
+            source.Add(newItem01);
+            source.Add(newItem02);
+
+            Assert.AreEqual(DataRowState.Added, newItem01.RowState());
+
+            newItem01.Remove();  // Removed by BindgingTableRow
+            source.Remove(newItem02); // Removed by BindingTable 
+
+            Assert.AreEqual(DataRowState.Deleted, newItem01.RowState());
+            Assert.AreEqual(DataRowState.Deleted, newItem02.RowState());
+
+            // Value persists after delete, because it is only removed from the BindingTable
+            Assert.AreEqual("Test 5", newItem01.TestTitle);
+
+            source.Add(newItem02); // Can be re-added
+            Assert.AreEqual(DataRowState.Added, newItem02.RowState());
+
+            source.Clear();
+        }
+
     }
 }
