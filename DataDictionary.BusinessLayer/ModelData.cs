@@ -174,12 +174,17 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.Add(new WorkItem() { WorkName = "Clear Model", DoWork = this.Models.Clear });
-            work.Add(new WorkItem() { WorkName = "Clear Subject Areas", DoWork = this.ModelSubjectAreas.Clear });
+            work.Add(new WorkItem() { WorkName = "Clear Model", DoWork = ClearModel });
             work.AddRange(this.RemoveDomain());
             work.AddRange(this.RemoveCatalog());
             work.AddRange(this.RemoveLibrary());
             return work;
+
+            void ClearModel ()
+            {
+                this.Models.Clear();
+                this.ModelSubjectAreas.Clear();
+            }
         }
 
         /// <summary>

@@ -25,10 +25,17 @@ Begin Try
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
-		[AttributeId] UniqueIdentifier Not Null,
-		[SubjectAreaId] UniqueIdentifier Null,
-		[AttributeTitle] [App_DataDictionary].[typeTitle] Not Null,
-		[AttributeDescription] [App_DataDictionary].[typeDescription] Null,
+		    [AttributeId]          UniqueIdentifier Not Null,
+			[AttributeTitle]       [App_DataDictionary].[typeTitle] Not Null,
+			[AttributeDescription] [App_DataDictionary].[typeDescription] Null,
+			[TypeOfAttributeId]    UniqueIdentifier Null,
+			[IsSingleValue]        Bit Null,
+			--[IsMultiValue]         Bit Null,
+			[IsSimple]             Bit Null,
+			--[IsComposite]          Bit Null,
+			[IsDerived]            Bit Null,
+			[IsNullable]           Bit Null,
+			[IsKey]                Bit Null,
 		Primary Key ([AttributeId]))
 
 	Declare @Delete Table (
@@ -36,13 +43,20 @@ Begin Try
 		Primary Key ([AttributeId]))
 
 	Insert Into @Values
-	Select	Coalesce(T.[AttributeId], D.[AttributeId], NewId()) As [AttributeId],
-			D.[SubjectAreaId],
+	Select	X.[AttributeId],
 			NullIf(Trim(D.[AttributeTitle]),'') As [AttributeTitle],
-			NullIf(Trim(D.[AttributeDescription]),'') As [AttributeDescription]
+			NullIf(Trim(D.[AttributeDescription]),'') As [AttributeDescription],
+			D.[TypeOfAttributeId],
+			D.[IsSingleValue],
+			--D.[IsMultiValue],
+			D.[IsSimple],
+			--D.[IsComposite],
+			D.[IsDerived],
+			D.[IsNullable],
+			D.[IsKey]
 	From	@Data D
-			Left Join [App_DataDictionary].[DomainAttribute] T
-			On	Coalesce(D.[AttributeId], @AttributeId) = T.[AttributeId]
+			Cross apply (
+				Select	Coalesce(D.[AttributeId], @AttributeId, NewId()) As [AttributeId]) X
 
 	Insert Into @Delete
 	Select	T.[AttributeId]
@@ -86,12 +100,28 @@ Begin Try
 	;With [Delta] As (
 		Select	[AttributeId],
 				[AttributeTitle],
-				[AttributeDescription]
+				[AttributeDescription],
+				[TypeOfAttributeId],
+				[IsSingleValue],
+				--[IsMultiValue],
+				[IsSimple],
+				--[IsComposite],
+				[IsDerived],
+				[IsNullable],
+				[IsKey]
 		From	@Values
 		Except
 		Select	[AttributeId],
 				[AttributeTitle],
-				[AttributeDescription]
+				[AttributeDescription],
+				[TypeOfAttributeId],
+				[IsSingleValue],
+				--[IsMultiValue],
+				[IsSimple],
+				--[IsComposite],
+				[IsDerived],
+				[IsNullable],
+				[IsKey]
 		From	[App_DataDictionary].[DomainAttribute])
 	Update [App_DataDictionary].[DomainAttribute]
 	Set		[AttributeTitle] = S.[AttributeTitle],
@@ -101,31 +131,29 @@ Begin Try
 			On	T.[AttributeId] = S.[AttributeId]
 	Print FormatMessage ('Update [App_DataDictionary].[DomainAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	;With [Delta] As (
-		Select	@ModelId As [ModelId],
-				[AttributeId],
-				[SubjectAreaId]
-		From	@Values
-		Except
-		Select	[ModelId],
-				[AttributeId],
-				[SubjectAreaId]
-		From	[App_DataDictionary].[ModelAttribute])
-	Update [App_DataDictionary].[ModelAttribute]
-	Set		[SubjectAreaId] = S.[SubjectAreaId]
-	From	[App_DataDictionary].[ModelAttribute] T
-			Inner Join [Delta] S
-			On	T.[ModelId] = S.[ModelId] And
-				T.[AttributeId] = S.[AttributeId]
-	Print FormatMessage ('Update [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
 	Insert Into [App_DataDictionary].[DomainAttribute] (
 			[AttributeId],
 			[AttributeTitle],
-			[AttributeDescription])
+			[AttributeDescription],
+			[TypeOfAttributeId],
+			[IsSingleValue],
+			--[IsMultiValue],
+			[IsSimple],
+			--[IsComposite],
+			[IsDerived],
+			[IsNullable],
+			[IsKey])
 	Select	S.[AttributeId],
 			S.[AttributeTitle],
-			S.[AttributeDescription]
+			S.[AttributeDescription],
+			S.[TypeOfAttributeId],
+			S.[IsSingleValue],
+			--[IsMultiValue],
+			S.[IsSimple],
+			--[IsComposite],
+			S.[IsDerived],
+			S.[IsNullable],
+			S.[IsKey]
 	From	@Values S
 			Left Join [App_DataDictionary].[DomainAttribute] T
 			On	S.[AttributeId] = T.[AttributeId]
@@ -134,11 +162,9 @@ Begin Try
 
 	Insert Into [App_DataDictionary].[ModelAttribute] (
 			[ModelId],
-			[AttributeId],
-			[SubjectAreaId])
+			[AttributeId])
 	Select	@ModelId As [ModelId],
-			S.[AttributeId],
-			S.[SubjectAreaId]
+			S.[AttributeId]
 	From	@Values S
 			Left Join [App_DataDictionary].[ModelAttribute] T
 			On	S.[AttributeId] = T.[AttributeId] And

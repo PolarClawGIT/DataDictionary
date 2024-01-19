@@ -97,11 +97,6 @@ namespace DataDictionary.Main.Forms.Domain
                 attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttribute, nameof(data.AttributeTitle)));
                 attributeDescriptionData.DataBindings.Add(new Binding(nameof(attributeDescriptionData.Text), bindingAttribute, nameof(data.AttributeDescription)));
 
-                SubjectAreaNameItem.Load(subjectAreaData);
-                subjectAreaData.ReadOnly = (subjectAreaData.DataSource is IList subjectAreaItems && subjectAreaItems.Count == 0);
-                subjectAreaData.DataBindings.Add(new Binding(nameof(subjectAreaData.SelectedValue), bindingAttribute, nameof(data.SubjectAreaId), true, DataSourceUpdateMode.OnValidation, Guid.Empty));
-
-
                 propertyNavigation.AutoGenerateColumns = false;
                 propertyNavigation.DataSource = bindingProperties;
                 bindingProperties.CurrentItemChanged += DataChanged;
@@ -147,7 +142,6 @@ namespace DataDictionary.Main.Forms.Domain
             this.DataBindings.Clear();
             attributeTitleData.DataBindings.Clear();
             attributeDescriptionData.DataBindings.Clear();
-            subjectAreaData.DataBindings.Clear();
 
             propertyNavigation.DataSource = null;
             propertyTypeData.DataBindings.Clear();

@@ -9,12 +9,22 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 
 Select	D.[AttributeId],
-		A.[SubjectAreaId],
 		D.[AttributeTitle],
-		D.[AttributeDescription]
+		D.[AttributeDescription],
+		D.[TypeOfAttributeId],
+		P.[AttributeTitle] As [TypeOfAttributeTitle],
+		D.[IsSingleValue],
+		D.[IsMultiValue],
+		D.[IsSimple],
+		D.[IsComposite],
+		D.[IsDerived],
+		D.[IsNullable],
+		D.[IsKey]
 From	[App_DataDictionary].[DomainAttribute] D
 		Left Join [App_DataDictionary].[ModelAttribute] A
 		On	D.[AttributeId] = A.[AttributeId]
+		Left Join [App_DataDictionary].[DomainAttribute] P
+		On	D.[TypeOfAttributeId] = P.[AttributeId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@AttributeId is Null or @AttributeId = D.[AttributeId]) And
 		(@AttributeTitle is Null or @AttributeTitle = D.[AttributeTitle])

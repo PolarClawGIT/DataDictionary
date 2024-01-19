@@ -80,7 +80,7 @@ Begin Try
 			On	T.[ConstraintId] = P.[ConstraintId]
 			Left Join @Values S
 			On	P.[ConstraintId] = S.[ConstraintId]
-	Where	S.[ColumnId] is Null And
+	Where	S.[ConstraintId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
 				From	[App_DataDictionary].[DatabaseCatalog] A

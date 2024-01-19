@@ -506,11 +506,12 @@ namespace DataDictionary.BusinessLayer
         public static IReadOnlyList<WorkItem> RemoveNameSpace(this IModelNamespace data, IModelKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
+            ModelKey modelKey = new ModelKey(key);
 
             WorkItem deleteWork = new WorkItem()
             {
                 WorkName = "Remove Model NameSpace",
-                DoWork = () => data.ModelNamespace.Remove(new ModelNameSpaceKey(key))
+                DoWork = () => data.ModelNamespace.Remove(new ModelNameSpaceKey(modelKey))
             };
 
             work.Add(deleteWork);
@@ -518,7 +519,7 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <summary>
-        /// Remove NameSpace Data for the entire dataset
+        /// Remove NameSpace Data for the entire dataset XX
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
