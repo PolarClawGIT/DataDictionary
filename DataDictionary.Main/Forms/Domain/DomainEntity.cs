@@ -57,10 +57,6 @@ namespace DataDictionary.Main.Forms.Domain
                 entityTitleData.DataBindings.Add(new Binding(nameof(entityTitleData.Text), data, nameof(data.EntityTitle)));
                 entityDescriptionData.DataBindings.Add(new Binding(nameof(entityDescriptionData.Text), data, nameof(data.EntityDescription)));
 
-                SubjectAreaNameItem.Load(subjectAreaData);
-                subjectAreaData.ReadOnly = (subjectAreaData.DataSource is IList subjectAreaItems && subjectAreaItems.Count == 0);
-                subjectAreaData.DataBindings.Add(new Binding(nameof(subjectAreaData.SelectedValue), data, nameof(data.SubjectAreaId), true, DataSourceUpdateMode.OnValidation, Guid.Empty));
-
                 bindingProperties.DataSource =
                     new BindingView<DomainEntityPropertyItem>(
                         Program.Data.DomainEntityProperties,
@@ -111,7 +107,6 @@ namespace DataDictionary.Main.Forms.Domain
 
             entityTitleData.DataBindings.Clear();
             entityDescriptionData.DataBindings.Clear();
-            subjectAreaData.DataBindings.Clear();
 
             propertyNavigation.DataSource = null;
             propertyTypeData.DataBindings.Clear();

@@ -80,9 +80,6 @@ namespace DataDictionary.Main.Forms.Domain
                 this.IsLocked(true);
                 ModelSubjectAreaKey key = new ModelSubjectAreaKey(data);
 
-                foreach (DomainEntityItem item in Program.Data.DomainEntities.Where(w => key.Equals(w)).ToList())
-                { item.SubjectAreaId = null; }
-
                 Program.Data.ModelSubjectAreas.Remove(data);
                 RowState = data.RowState();
             }

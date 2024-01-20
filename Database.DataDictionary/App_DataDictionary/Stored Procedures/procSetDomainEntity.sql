@@ -26,9 +26,9 @@ Begin Try
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[EntityId] UniqueIdentifier Not Null,
-		[SubjectAreaId] UniqueIdentifier Null,
 		[EntityTitle] [App_DataDictionary].[typeTitle] Not Null,
 		[EntityDescription] [App_DataDictionary].[typeDescription] Null,
+		[TypeOfEntityId] UniqueIdentifier Null,
 		Primary Key ([EntityId]))
 
 	Declare @Delete Table (
@@ -37,9 +37,9 @@ Begin Try
 
 	Insert Into @Values
 	Select	Coalesce(T.[EntityId], D.[EntityId], NewId()) As [EntityId],
-			D.[SubjectAreaId],
 			NullIf(Trim(D.[EntityTitle]),'') As [EntityTitle],
-			NullIf(Trim(D.[EntityDescription]),'') As [EntityDescription]
+			NullIf(Trim(D.[EntityDescription]),'') As [EntityDescription],
+			D.[TypeOfEntityId]
 	From	@Data D
 			Left Join [App_DataDictionary].[DomainEntity] T
 			On	Coalesce(D.[EntityId], @EntityId) = T.[EntityId]
@@ -63,88 +63,61 @@ Begin Try
 	From	[App_DataDictionary].[DomainEntityProperty] T
 			Inner Join @Delete S
 			On	T.[EntityId] = S.[EntityId]
-	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityProperty] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[DomainEntityAlias]
 	From	[App_DataDictionary].[DomainEntityAlias] T
 			Inner Join @Delete S
 			On	T.[EntityId] = S.[EntityId]
-	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityAlias] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[ModelEntity]
 	From	[App_DataDictionary].[ModelEntity] T
 			Inner Join @Delete S
 			On	T.[EntityId] = S.[EntityId]
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[DomainEntity]
 	From	[App_DataDictionary].[DomainEntity] T
 			Inner Join @Delete S
 			On	T.[EntityId] = S.[EntityId]
-	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntity] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[EntityId],
 				[EntityTitle],
-				[EntityDescription]
+				[EntityDescription],
+				[TypeOfEntityId]
 		From	@Values
 		Except
 		Select	[EntityId],
 				[EntityTitle],
-				[EntityDescription]
+				[EntityDescription],
+				[TypeOfEntityId]
 		From	[App_DataDictionary].[DomainEntity])
 	Update [App_DataDictionary].[DomainEntity]
 	Set		[EntityTitle] = S.[EntityTitle],
-			[EntityDescription] = S.[EntityDescription]
+			[EntityDescription] = S.[EntityDescription],
+			[TypeOfEntityId] = S.[TypeOfEntityId]
 	From	[App_DataDictionary].[DomainEntity] T
 			Inner Join [Delta] S
 			On	T.[EntityId] = S.[EntityId]
 	Print FormatMessage ('Update [App_DataDictionary].[DomainEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	;With [Delta] As (
-		Select	@ModelId As [ModelId],
-				[EntityId],
-				[SubjectAreaId]
-		From	@Values
-		Except
-		Select	[ModelId],
-				[EntityId],
-				[SubjectAreaId]
-		From	[App_DataDictionary].[ModelEntity])
-	Update [App_DataDictionary].[ModelEntity]
-	Set		[SubjectAreaId] = S.[SubjectAreaId]
-	From	[App_DataDictionary].[ModelEntity] T
-			Inner Join [Delta] S
-			On	T.[ModelId] = S.[ModelId] And
-				T.[EntityId] = S.[EntityId]
-	Print FormatMessage ('Update [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
 	Insert Into [App_DataDictionary].[DomainEntity] (
 			[EntityId],
 			[EntityTitle],
-			[EntityDescription])
+			[EntityDescription],
+			[TypeOfEntityId])
 	Select	S.[EntityId],
 			S.[EntityTitle],
-			S.[EntityDescription]
+			S.[EntityDescription],
+			S.[TypeOfEntityId]
 	From	@Values S
 			Left Join [App_DataDictionary].[DomainEntity] T
 			On	S.[EntityId] = T.[EntityId]
 	Where	T.[EntityId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Insert Into [App_DataDictionary].[ModelEntity] (
-			[ModelId],
-			[EntityId],
-			[SubjectAreaId])
-	Select	@ModelId As [ModelId],
-			S.[EntityId],
-			S.[SubjectAreaId]
-	From	@Values S
-			Left Join [App_DataDictionary].[ModelEntity] T
-			On	S.[EntityId] = T.[EntityId] And
-				@ModelId = T.[ModelId]
-	Where	T.[EntityId] Is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

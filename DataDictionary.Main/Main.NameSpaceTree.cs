@@ -195,20 +195,8 @@ namespace DataDictionary.Main
         {
             DomainEntityItem item = new DomainEntityItem();
 
-            if (nameSpaceNavigation.SelectedNode is not null
-                && nameSpaceNodes.ContainsKey(nameSpaceNavigation.SelectedNode)
-                && nameSpaceNodes[nameSpaceNavigation.SelectedNode].Source is ModelSubjectAreaItem subject
-                && subject.SubjectAreaId is Guid subjectId)
-            {
-                item.SubjectAreaId = subjectId;
-                Program.Data.DomainEntities.Add(item);
-                Program.Data.ModelNamespace.Add(new ModelNameSpaceItem(subject, item));
-            }
-            else
-            {
-                Program.Data.DomainEntities.Add(item);
-                Program.Data.ModelNamespace.Add(new ModelNameSpaceItem(Program.Data.Model, item));
-            }
+            Program.Data.DomainEntities.Add(item);
+            Program.Data.ModelNamespace.Add(new ModelNameSpaceItem(Program.Data.Model, item));
 
             if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
             { nameSpaceNavigation.SelectedNode = node; }
