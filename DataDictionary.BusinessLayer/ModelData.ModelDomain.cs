@@ -24,7 +24,5 @@ namespace DataDictionary.BusinessLayer
         /// <inheritdoc/>
         public DomainEntityPropertyCollection DomainEntityProperties { get; } = new DomainEntityPropertyCollection();
 
-        /// <inheritdoc/>
-        public ModelSubjectAreaCollection ModelSubjectAreas { get; } = new ModelSubjectAreaCollection();
     }
 }

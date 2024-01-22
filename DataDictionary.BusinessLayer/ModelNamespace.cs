@@ -10,6 +10,7 @@ using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.ModelData.Attribute;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
 using Toolbox.Threading;
 
@@ -402,6 +403,7 @@ namespace DataDictionary.BusinessLayer
             {
                 // This improve performance as it is working off of a fixed sub-set of data.
                 List<ModelSubjectAreaItem> subjectAreas = data.ModelSubjectAreas.ToList();
+                List<ModelAttributeItem> attributeSubjects = data.ModelAttributes.ToList();
                 List<DomainEntityItem> entities = data.DomainEntities.ToList();
                 List<DomainAttributeItem> attributes = data.DomainAttributes.ToList();
 
@@ -422,22 +424,25 @@ namespace DataDictionary.BusinessLayer
                     progress(completedWork++, totalWork);
 
 
-                    //TODO: Hierarchy of Subject areas (Db Change)
-
                     foreach (DomainEntityItem entityItem in entities.Where(w => subjectKey.Equals(w)))
-                    {
+                    { // TODO: Revise for Model Entity Subjects
                         if (missingEntities.Contains(entityItem)) { missingEntities.Remove(entityItem); }
 
                         data.ModelNamespace.Add(new ModelNameSpaceItem(subjectItem, entityItem));
                         progress(completedWork++, totalWork);
                     }
 
-                    foreach (DomainAttributeItem attributeItem in attributes.Where(w => subjectKey.Equals(w)))
+                    foreach (ModelAttributeItem modelAttribute in attributeSubjects.Where(w => subjectKey.Equals(w)))
                     {
-                        if (missingAttributes.Contains(attributeItem)) { missingAttributes.Remove(attributeItem); }
+                        DomainAttributeKey attributeKey = new DomainAttributeKey(modelAttribute);
 
-                        data.ModelNamespace.Add(new ModelNameSpaceItem(subjectItem, attributeItem));
-                        progress(completedWork++, totalWork);
+                        foreach (DomainAttributeItem attributeItem in attributes.Where(w => attributeKey.Equals(w)))
+                        {
+                            if (missingAttributes.Contains(attributeItem)) { missingAttributes.Remove(attributeItem); }
+
+                            data.ModelNamespace.Add(new ModelNameSpaceItem(subjectItem, attributeItem));
+                            progress(completedWork++, totalWork);
+                        }
                     }
                 }
 

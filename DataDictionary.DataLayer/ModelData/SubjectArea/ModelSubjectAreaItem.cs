@@ -12,17 +12,12 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
     /// <summary>
     /// Interface for Model Subject Area Item
     /// </summary>
-    public interface IModelSubjectAreaItem : IModelSubjectAreaKey, IDataItem
+    public interface IModelSubjectAreaItem : IModelSubjectAreaKey, IModelSubjectAreaUniqueKey, IDataItem
     {
-        /// <summary>
-        /// Title of the Subject Area
-        /// </summary>
-        string? SubjectAreaTitle { get; }
-
         /// <summary>
         /// Description of the Subject Area
         /// </summary>
-        string? SubjectAreaDescription { get; }
+        String? SubjectAreaDescription { get; }
     }
 
     /// <summary>
@@ -35,13 +30,13 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
         public Guid? SubjectAreaId { get { return GetValue<Guid>("SubjectAreaId"); } protected set { SetValue("SubjectAreaId", value); } }
 
         /// <inheritdoc/>
-        public string? SubjectAreaTitle { get { return GetValue("SubjectAreaTitle"); } set { SetValue("SubjectAreaTitle", value); } }
+        public String? SubjectAreaTitle { get { return GetValue("SubjectAreaTitle"); } set { SetValue("SubjectAreaTitle", value); } }
 
         /// <inheritdoc/>
-        public string? SubjectAreaDescription { get { return GetValue("SubjectAreaDescription"); } set { SetValue("SubjectAreaDescription", value); } }
+        public String? SubjectAreaDescription { get { return GetValue("SubjectAreaDescription"); } set { SetValue("SubjectAreaDescription", value); } }
 
         /// <summary>
-        /// Constructor for Domain Attribute Item
+        /// Constructor for Model Subject Area Item
         /// </summary>
         public ModelSubjectAreaItem() : base()
         {

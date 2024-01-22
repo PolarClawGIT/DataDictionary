@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.ModelData.Attribute;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -24,9 +25,14 @@ namespace DataDictionary.BusinessLayer
         ModelCollection Models { get; }
 
         /// <summary>
-        /// List of Domain Subject Areas within the Model.
+        /// List of Subject Areas within the Model.
         /// </summary>
         ModelSubjectAreaCollection ModelSubjectAreas { get; }
+
+        /// <summary>
+        /// List of Attributes within the Model.
+        /// </summary>
+        ModelAttributeCollection ModelAttributes { get; }
     }
 
     /// <summary>
@@ -48,6 +54,12 @@ namespace DataDictionary.BusinessLayer
 
         /// <inheritdoc/>
         public ModelCollection Models { get; } = new ModelCollection();
+
+        /// <inheritdoc/>
+        public ModelSubjectAreaCollection ModelSubjectAreas { get; } = new ModelSubjectAreaCollection();
+
+        /// <inheritdoc/>
+        public ModelAttributeCollection ModelAttributes { get; } = new ModelAttributeCollection();
 
         /// <summary>
         /// The current Model opened by the application
