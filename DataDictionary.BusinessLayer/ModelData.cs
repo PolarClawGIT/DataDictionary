@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Model;
-using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
+using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.ModelData.SubjectArea;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 using Toolbox.Threading;

@@ -23,7 +23,7 @@ Begin Try
 	Declare	@Values Table (
 		[SubjectAreaId]          UniqueIdentifier NOT NULL,
 		[ModelId]                UniqueIdentifier NOT NULL,
-		[SubjectAreaParentId]    UniqueIdentifier NULL,
+		--[SubjectAreaParentId]    UniqueIdentifier NULL,
 		[SubjectAreaTitle]       [App_DataDictionary].[typeTitle] NOT NULL,
 		[SubjectAreaDescription] [App_DataDictionary].[typeDescription] NULL,
 		Primary Key ([SubjectAreaId]))
@@ -35,7 +35,7 @@ Begin Try
 	Insert Into @Values
 	Select	Coalesce(D.[SubjectAreaId], @SubjectAreaId, NewId()) As [SubjectAreaId],
 			@ModelId As [ModelId],
-			D.[SubjectAreaParentId],
+			--D.[SubjectAreaParentId],
 			NullIf(Trim(D.[SubjectAreaTitle]), '') As [SubjectAreaTitle],
 			NullIf(Trim(D.[SubjectAreaDescription]), '') As [SubjectAreaDescription]
 	From	@Data D
@@ -77,12 +77,12 @@ Begin Try
 				From	@Delete)
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelRelationship]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Update [App_DataDictionary].[ModelSubjectArea]
-	Set		[SubjectAreaParentId] = null
-	Where	[SubjectAreaParentId] In (
-				Select	[SubjectAreaId]
-				From	@Delete)
-	Print FormatMessage ('Update [App_DataDictionary].[ModelSubjectArea] (Parent): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	--Update [App_DataDictionary].[ModelSubjectArea]
+	--Set		[SubjectAreaParentId] = null
+	--Where	[SubjectAreaParentId] In (
+	--			Select	[SubjectAreaId]
+	--			From	@Delete)
+	--Print FormatMessage ('Update [App_DataDictionary].[ModelSubjectArea] (Parent): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[ModelSubjectArea]
 	Where	[SubjectAreaId] In (
@@ -92,18 +92,18 @@ Begin Try
 
 	;With [Delta] As (
 		Select	[SubjectAreaId],
-				[SubjectAreaParentId],
+				--[SubjectAreaParentId],
 				[SubjectAreaTitle],
 				[SubjectAreaDescription]
 		From	@Values
 		Except
 		Select	[SubjectAreaId],
-				[SubjectAreaParentId],
+				--[SubjectAreaParentId],
 				[SubjectAreaTitle],
 				[SubjectAreaDescription]
 		From	[App_DataDictionary].[ModelSubjectArea])
 	Update [App_DataDictionary].[ModelSubjectArea]
-	Set		[SubjectAreaParentId] = S.[SubjectAreaParentId],
+	Set		--[SubjectAreaParentId] = S.[SubjectAreaParentId],
 			[SubjectAreaTitle] = S.[SubjectAreaTitle],
 			[SubjectAreaDescription] = S.[SubjectAreaDescription]
 	From	[Delta] S
@@ -114,12 +114,12 @@ Begin Try
 	Insert Into [App_DataDictionary].[ModelSubjectArea] (
 			[ModelId],
 			[SubjectAreaId],
-			[SubjectAreaParentId],
+			--[SubjectAreaParentId],
 			[SubjectAreaTitle],
 			[SubjectAreaDescription])
 	Select	S.[ModelId],
 			S.[SubjectAreaId],
-			S.[SubjectAreaParentId],
+			--S.[SubjectAreaParentId],
 			S.[SubjectAreaTitle],
 			S.[SubjectAreaDescription]
 	From	@Values S

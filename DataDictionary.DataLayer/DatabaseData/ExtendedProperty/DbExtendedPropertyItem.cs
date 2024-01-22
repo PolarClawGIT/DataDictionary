@@ -1,23 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
+﻿using System.Data;
 using Toolbox.BindingTable;
-using Toolbox.DbContext;
-using Microsoft.Data.SqlClient;
-using System.Collections.Concurrent;
-using System.Diagnostics.Contracts;
-using System.Reflection;
-using DataDictionary.DataLayer.DomainData;
-using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.Schema;
-using DataDictionary.DataLayer.DatabaseData.Table;
 
 namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 {

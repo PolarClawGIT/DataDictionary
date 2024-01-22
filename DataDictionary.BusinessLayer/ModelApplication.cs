@@ -1,8 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.ApplicationData.Help;
-using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.ModelData;
 using System;
 using System.Collections.Generic;
 using System.Linq;

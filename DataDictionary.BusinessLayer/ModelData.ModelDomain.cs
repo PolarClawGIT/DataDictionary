@@ -1,6 +1,6 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
-using DataDictionary.DataLayer.DomainData.Attribute;
+﻿using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
+using DataDictionary.DataLayer.ModelData.SubjectArea;
 
 namespace DataDictionary.BusinessLayer
 {

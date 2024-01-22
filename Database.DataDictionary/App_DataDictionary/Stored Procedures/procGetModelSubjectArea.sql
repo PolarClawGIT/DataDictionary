@@ -9,7 +9,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 
 Select	[SubjectAreaId],
-		[SubjectAreaParentId],
+		--[SubjectAreaParentId],
 		[SubjectAreaTitle],
 		[SubjectAreaDescription]
 From	[App_DataDictionary].[ModelSubjectArea]

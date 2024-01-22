@@ -1,21 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Model;
-using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.Domain;
-using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Schema;
-using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.DomainData.Alias;
-using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.DomainData.Entity;
-using DataDictionary.DataLayer.LibraryData.Member;
-using DataDictionary.DataLayer.LibraryData.Source;
-using System.ComponentModel;
-using System.Security.Authentication.ExtendedProtection;
-
-namespace DataDictionary.BusinessLayer.NameSpace
+﻿namespace DataDictionary.BusinessLayer.NameSpace
 {
     /// <summary>
     /// Collection of Model Alias Items with hierarchy support.

@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
-using System.Data;
+﻿using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 

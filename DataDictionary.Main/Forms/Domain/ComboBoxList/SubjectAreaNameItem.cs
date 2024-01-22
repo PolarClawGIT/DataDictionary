@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
+﻿using DataDictionary.DataLayer.ModelData.SubjectArea;
 using DataDictionary.Main.Controls;
 using System.ComponentModel;
 

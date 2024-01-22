@@ -4,10 +4,11 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataDictionary.DataLayer.ModelData;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.ApplicationData.Model.SubjectArea
+namespace DataDictionary.DataLayer.ModelData.SubjectArea
 {
     /// <summary>
     /// Generic Base class for Model Subject Area

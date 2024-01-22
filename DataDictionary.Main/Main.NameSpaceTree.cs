@@ -1,7 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.NameSpace;
-using DataDictionary.DataLayer.ApplicationData.Model;
-using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
@@ -13,6 +11,8 @@ using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
+using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.ModelData.SubjectArea;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;

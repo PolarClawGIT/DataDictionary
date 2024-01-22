@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Model.SubjectArea;
+﻿// Ignore Spelling: Nullable
+
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;

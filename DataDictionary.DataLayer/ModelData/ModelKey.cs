@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ApplicationData.Model
+namespace DataDictionary.DataLayer.ModelData
 {
     /// <summary>
     /// Interface for the Primary Key of the Model.

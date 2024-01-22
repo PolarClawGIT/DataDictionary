@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.ApplicationData.Model
+namespace DataDictionary.DataLayer.ModelData
 {
     /// <summary>
     /// Generic Base class for Models
@@ -110,6 +110,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Model
     /// <summary>
     /// Default List/Collection of Models
     /// </summary>
-    public class ModelCollection: ModelCollection<ModelItem>
+    public class ModelCollection : ModelCollection<ModelItem>
     { }
 }

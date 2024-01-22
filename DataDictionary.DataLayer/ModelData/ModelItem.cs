@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.ApplicationData.Model
+namespace DataDictionary.DataLayer.ModelData
 {
     /// <summary>
     /// Interface for the Model.
@@ -63,13 +63,13 @@ namespace DataDictionary.DataLayer.ApplicationData.Model
         { return columnDefinitions; }
 
         /// <inheritdoc/>
-        public Boolean Validate()
+        public bool Validate()
         {
-            Boolean result = false;
+            bool result = false;
 
-            if (String.IsNullOrWhiteSpace(this.ModelTitle))
+            if (string.IsNullOrWhiteSpace(ModelTitle))
             { SetRowError("[ModelTitle] cannot be empty"); }
-            else if (this.ModelId == Guid.Empty)
+            else if (ModelId == Guid.Empty)
             { SetRowError("[ModelId] cannot be empty"); }
             else { result = true; }
 

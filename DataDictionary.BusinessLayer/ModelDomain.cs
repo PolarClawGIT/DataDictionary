@@ -1,8 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
+using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer

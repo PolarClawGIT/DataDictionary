@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ApplicationData.Model.SubjectArea
+namespace DataDictionary.DataLayer.ModelData.SubjectArea
 {
     /// <summary>
     /// Interface for the Model Subject Area Key
