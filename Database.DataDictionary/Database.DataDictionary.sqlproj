@@ -226,6 +226,9 @@
     <Build Include="App_DataDictionary\User Defined Types\typeModelAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetModelAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetModelAttribute.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeModelEntity.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetModelEntity.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetModelEntity.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

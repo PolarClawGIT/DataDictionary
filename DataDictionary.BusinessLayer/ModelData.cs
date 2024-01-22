@@ -2,6 +2,7 @@
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.Attribute;
+using DataDictionary.DataLayer.ModelData.Entity;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
@@ -33,6 +34,11 @@ namespace DataDictionary.BusinessLayer
         /// List of Attributes within the Model.
         /// </summary>
         ModelAttributeCollection ModelAttributes { get; }
+
+        /// <summary>
+        /// List of Entity within the Model.
+        /// </summary>
+        ModelEntityCollection ModelEntities { get; }
     }
 
     /// <summary>
@@ -60,6 +66,9 @@ namespace DataDictionary.BusinessLayer
 
         /// <inheritdoc/>
         public ModelAttributeCollection ModelAttributes { get; } = new ModelAttributeCollection();
+
+        /// <inheritdoc/>
+        public ModelEntityCollection ModelEntities { get; } = new ModelEntityCollection();
 
         /// <summary>
         /// The current Model opened by the application

@@ -194,6 +194,7 @@ namespace DataDictionary.BusinessLayer
                     workSet.Tables.Add(data.Models.ToDataTable());
                     workSet.Tables.Add(data.ModelSubjectAreas.ToDataTable());
                     workSet.Tables.Add(data.ModelAttributes.ToDataTable());
+                    workSet.Tables.Add(data.ModelEntities.ToDataTable());
 
                     // Write the Data
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
@@ -259,6 +260,7 @@ namespace DataDictionary.BusinessLayer
                     LoadTable(workSet, data.Models);
                     LoadTable(workSet, data.ModelSubjectAreas);
                     LoadTable(workSet, data.ModelAttributes);
+                    LoadTable(workSet, data.ModelEntities);
                 }
             }
         }
@@ -290,6 +292,11 @@ namespace DataDictionary.BusinessLayer
                 target: data.ModelAttributes,
                 command: (conn) => data.ModelAttributes.LoadCommand(conn, key)));
 
+            work.Add(factory.CreateWork(
+                workName: "Load Model Entities",
+                target: data.ModelEntities,
+                command: (conn) => data.ModelEntities.LoadCommand(conn, key)));
+
             return work;
         }
 
@@ -316,6 +323,10 @@ namespace DataDictionary.BusinessLayer
             work.Add(factory.CreateWork(
                 workName: "Save Model Attributes",
                 command: (conn) => data.ModelAttributes.SaveCommand(conn, key)));
+
+            work.Add(factory.CreateWork(
+                workName: "Save Model Entities",
+                command: (conn) => data.ModelEntities.SaveCommand(conn, key)));
 
             return work;
         }
