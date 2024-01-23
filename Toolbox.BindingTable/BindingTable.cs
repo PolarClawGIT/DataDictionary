@@ -297,7 +297,9 @@ namespace Toolbox.BindingTable
 
         protected override void ClearItems()
         {
-            dataItems.Clear();
+            while (this.Count > 0)
+            { RemoveAt(0); }
+
             base.ClearItems();
         }
 

@@ -45,12 +45,17 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// <summary>
         /// Container for the SystemParentId
         /// </summary>
-        public ModelNameSpaceKey? SystemParentKey { get; protected set; }
+        public ModelNameSpaceKey? SystemParentKey { get; internal protected set; }
 
         /// <summary>
         /// Container for the MemberName.
         /// </summary>
         public ModelNameSpaceKeyMember NameKey { get; protected set; }
+
+        /// <summary>
+        /// List of keys that are the children of this record.
+        /// </summary>
+        public virtual List<ModelNameSpaceKey> Children { get; } = new List<ModelNameSpaceKey>();
 
         /// <summary>
         /// Container for the Scope.
@@ -80,11 +85,6 @@ namespace DataDictionary.BusinessLayer.NameSpace
         public virtual Int32 OrdinalPosition { get; protected set; } = Int32.MaxValue;
 
         /// <summary>
-        /// List of keys that are the children of this record.
-        /// </summary>
-        public virtual List<ModelNameSpaceKey> Children { get; } = new List<ModelNameSpaceKey>();
-
-        /// <summary>
         /// Source of the Model NameSpace Item.
         /// </summary>
         public virtual Object? Source { get; init; } = null;
@@ -95,6 +95,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// <remarks>Used by OnPropertyChanged event</remarks>
         protected virtual Func<ModelNameSpaceKeyMember> GetNameKey { get; set; } = () => new ModelNameSpaceKeyMember(String.Empty);
 
+        #region Constrictors
         /// <summary>
         /// Constructor for a Model NameSpace, Base (blank item)
         /// </summary>
@@ -388,6 +389,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             ScopeKey = new ScopeKey(ScopeType.ModelEntity);
             data.PropertyChanged += OnPropertyChanged;
         }
+        #endregion
 
         /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;

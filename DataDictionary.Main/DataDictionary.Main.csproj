@@ -36,6 +36,11 @@ Allows entry of MS Description and custom properties for Entities and Attributes
 
   <ItemGroup>
     <Compile Update="Forms\Application\Property.cs" />
+    <Compile Update="Forms\Domain\DomainAttribute.Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DomainAttribute.Resource.resx</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -77,6 +82,10 @@ Allows entry of MS Description and custom properties for Entities and Attributes
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Forms\Domain\DomainAttribute.Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DomainAttribute.Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

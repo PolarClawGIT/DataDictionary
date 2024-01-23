@@ -262,7 +262,8 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Library.LibraryMember() { DataKey = new LibraryMemberKey(memberItem) }, memberItem); }
 
         void Activate(DomainAttributeItem attributeItem)
-        { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
+        //{ Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
+        { Activate((data) => new Forms.Domain.DomainAttribute_New(attributeItem), attributeItem); }
 
         void Activate(DomainEntityItem entityItem)
         { Activate((data) => new Forms.Domain.DomainEntity() { DataKey = new DomainEntityKey(entityItem) }, entityItem); }

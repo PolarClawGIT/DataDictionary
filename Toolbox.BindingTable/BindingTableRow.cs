@@ -28,6 +28,8 @@ namespace Toolbox.BindingTable
         String? GetColumnError(String columnName);
         String[] GetColumnsInError();
         IReadOnlyList<DataColumn> ColumnDefinitions();
+
+        event EventHandler? RowStateChanged;
     }
 
     /// <summary>
@@ -291,7 +293,7 @@ namespace Toolbox.BindingTable
         { }
 
         protected virtual void Table_RowChanged(object sender, DataRowChangeEventArgs e)
-        { }
+        { OnRowStateChanged(); }
 
         protected virtual void Table_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
@@ -304,6 +306,8 @@ namespace Toolbox.BindingTable
                 data.Table.Disposed -= Table_Disposed;
                 data.Table.ColumnChanged -= Table_ColumnChanged;
             }
+
+            OnRowStateChanged();
         }
 
         protected virtual void Table_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -325,6 +329,8 @@ namespace Toolbox.BindingTable
                 && e.Row.RowState != DataRowState.Detached
                 && e.Column is not null)
             { OnPropertyChanged(e.Column.ColumnName); }
+
+            OnRowStateChanged();
         }
 
         /// <inheritdoc cref="DataRow.RowState"/>
@@ -390,6 +396,7 @@ namespace Toolbox.BindingTable
         {
             if (data is DataRow row)
             { row.AcceptChanges(); }
+            OnRowStateChanged();
         }
 
         /// <inheritdoc cref="DataRow.RejectChanges"/>
@@ -397,11 +404,15 @@ namespace Toolbox.BindingTable
         {
             if (data is DataRow row)
             { row.RejectChanges(); }
+            OnRowStateChanged();
         }
+        #endregion
 
-        /// <inheritdoc cref="DataRow.Delete"/>
+        /// <summary>
+        /// Removes the item from the table.
+        /// </summary>
         /// <remarks>
-        /// This delete mimics the behavior of removing an item from a list.
+        /// This mimics the behavior of removing an item from a IList instead of a Delete on a DataRow.
         /// The internal DataRow is copied over to a different table and deleted from the original.
         /// The item itself is removed from the BindingTable
         /// As a result, a direct reference to the BindingTableRow persists a value.
@@ -442,8 +453,27 @@ namespace Toolbox.BindingTable
                 data.Table.Disposed += Table_Disposed;
                 data.Table.ColumnChanged += Table_ColumnChanged;
             }
+
+            OnRowStateChanged();
         }
-        #endregion
+
+        /// <summary>
+        /// Occurs when and event that can change the RowState occurs.
+        /// </summary>
+        public event EventHandler? RowStateChanged;
+        private DataRowState lastRowState = DataRowState.Detached;
+        protected void OnRowStateChanged()
+        {
+            if (RowStateChanged is EventHandler hander)
+            {
+                DataRowState currentState = this.RowState();
+                if (currentState != lastRowState)
+                {
+                    hander(this, EventArgs.Empty);
+                    lastRowState = currentState;
+                }
+            }
+        }
 
         #region INotifyPropertyChanged
         /// <inheritdoc/>
@@ -491,4 +521,5 @@ namespace Toolbox.BindingTable
         }
         #endregion
     }
+
 }

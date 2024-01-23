@@ -6,9 +6,12 @@
     [TypeOfAttributeId]    UniqueIdentifier Null,
     [TypeOfAttributeTitle] [App_DataDictionary].[typeTitle] Null,
     [IsSingleValue]        Bit Null,
-    --[IsMultiValue]         Bit Null,
-    [IsSimple]             Bit Null,
-    --[IsComposite]          Bit Null,
+    [IsMultiValue]         Bit Null,
+    [IsSimpleType]         Bit Null,
+    [IsCompositeType]      Bit Null,
+    [IsIntegral]           Bit Null,
     [IsDerived]            Bit Null,
+    [IsValued]             Bit Null,
     [IsNullable]           Bit Null,
-    [IsKey]                Bit Null)
+    [IsKey]                Bit Null,
+    [IsNonKey]             Bit Null)

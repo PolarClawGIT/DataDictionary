@@ -104,6 +104,54 @@
         }
 
         /// <summary>
+        /// Moves a item to a new parent
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public virtual Boolean Move(IModelNameSpaceKey item, IModelNameSpaceKey? parent)
+        { // TODO: Not Certain this is needed. May just need to manipulate the Children.
+            ModelNameSpaceKey currentKey = new ModelNameSpaceKey(item);
+
+            if (this.ContainsKey(currentKey))
+            {
+                ModelNameSpaceItem currentItem = this[currentKey];
+
+                if (currentItem.SystemParentKey is not null && this.ContainsKey(currentItem.SystemParentKey))
+                {
+                    while (this[currentItem.SystemParentKey].Children.Contains(currentKey))
+                    { this[currentItem.SystemParentKey].Children.Remove(currentKey); }
+                }
+                else
+                {
+                    while (RootItem.Children.Contains(currentKey))
+                    { RootItem.Children.Remove(currentKey); }
+                }
+
+                if(parent is IModelNameSpaceKey
+                    && new ModelNameSpaceKey(parent) is ModelNameSpaceKey parentKey
+                    && this.ContainsKey(parentKey))
+                {
+                    this[parentKey].Children.Add(currentKey);
+                    currentItem.SystemParentKey = parentKey;
+
+                    OnListChanged(ModelNameSpaceChangedType.ItemMoved, currentItem);
+                    return true;
+                }
+                else
+                {
+                    RootItem.Children.Add(currentKey);
+                    currentItem.SystemParentKey = null;
+
+                    OnListChanged(ModelNameSpaceChangedType.ItemMoved, currentItem);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Raised when add, remove, or Clear is called.
         /// </summary>
         public event EventHandler<ModelNameSpaceChangedEventArgs>? ListChanged;

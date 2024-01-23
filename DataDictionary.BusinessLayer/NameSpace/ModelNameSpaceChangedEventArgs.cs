@@ -24,6 +24,11 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// Remove and Clear raises this and data is the item removed.
         /// </summary>
         ItemDeleted = 2,
+
+        /// <summary>
+        /// An item was moved.
+        /// </summary>
+        ItemMoved = 3,
     }
 
     /// <summary>
@@ -32,7 +37,6 @@ namespace DataDictionary.BusinessLayer.NameSpace
     /// <remarks>Inspired by the IBindingList.ListChanged Event</remarks>
     public class ModelNameSpaceChangedEventArgs : EventArgs
     {
-        
         /// <summary>
         /// What type of change was made
         /// </summary>

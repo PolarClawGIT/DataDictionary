@@ -30,29 +30,54 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         String? TypeOfAttributeTitle { get; set; }
 
         /// <summary>
-        /// Is Attribute Single Valued (false = MultiValued, null = unknown)
+        /// Is Attribute Single Valued (has only one value, not multi-valued)
         /// </summary>
-        Boolean? IsSingleValue { get; set; }
+        Boolean IsSingleValue { get; set; }
 
         /// <summary>
-        /// Is Attribute a Simple Type (false = composite, null = unknown)
+        /// Is Attribute Multi Valued (has multiple values, not single)
         /// </summary>
-        Boolean? IsSimple { get; set; }
+        Boolean IsMultiValue { get; set; }
 
         /// <summary>
-        /// Is Attribute a Derived Value (Computed value, null = unknown)
+        /// Is Attribute a Simple Type (cannot be decomposed, not composite)
         /// </summary>
-        Boolean? IsDerived { get; set; }
+        Boolean IsSimpleType { get; set; }
 
         /// <summary>
-        /// Is Attribute a Null-able value (Allows Null value, exceptions allowed)
+        /// Is Attribute a Composite Type (composed of multiple Simple Types, not Simple)
         /// </summary>
-        Boolean? IsNullable { get; set; }
+        Boolean IsCompositeType { get; set; }
 
         /// <summary>
-        /// Is Attribute is used as a Key (exceptions allowed)
+        /// Is Attribute a Derived Value (Computed value, not Integral)
         /// </summary>
-        Boolean? IsKey { get; set; }
+        Boolean IsDerived { get; set; }
+
+        /// <summary>
+        /// Is Attribute an Integral value (distinct or basic value, not Derived)
+        /// </summary>
+        Boolean IsIntegral { get; set; }
+
+        /// <summary>
+        /// Is the Attribute a Null-able value (allows Null value)
+        /// </summary>
+        Boolean IsNullable { get; set; }
+
+        /// <summary>
+        /// Is the Attribute a valued (not null) attribute.
+        /// </summary>
+        Boolean IsValued { get; set; }
+
+        /// <summary>
+        /// Is the Attribute is used as a Key (part of a PK, FK, or AK)
+        /// </summary>
+        Boolean IsKey { get; set; }
+
+        /// <summary>
+        /// Is the Attribute a Non-Key item (not part of a PK, FK or AK)
+        /// </summary>
+        Boolean IsNonKey { get; set; }
     }
 
     /// <summary>
@@ -97,48 +122,155 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         }
 
         /// <inheritdoc/>
-        public Boolean? IsSingleValue
+        public Boolean IsSingleValue
         {
-            get { return GetValue<bool>("IsSingleValue", BindingItemParsers.BooleanTryParse); }
+            get
+            {
+                if (GetValue<bool>("IsSingleValue", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
             set
             {
                 SetValue<Boolean>("IsSingleValue", value);
-                if (value is null) { SetValue<Boolean>("IsMultiValue", null); }
-                else { SetValue<Boolean>("IsMultiValue", !value); }
+                if (value == true) { SetValue<Boolean>("IsMultiValue", !value); }
             }
         }
 
         /// <inheritdoc/>
-        public Boolean? IsSimple
+        public Boolean IsMultiValue
         {
-            get { return GetValue<bool>("IsSimple", BindingItemParsers.BooleanTryParse); }
+            get
+            {
+                if (GetValue<bool>("IsMultiValue", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
             set
             {
-                SetValue<Boolean>("IsSimple", value);
-                if (value is null) { SetValue<Boolean>("IsComposite", null); }
-                else { SetValue<Boolean>("IsComposite", !value); }
+                SetValue<Boolean>("IsMultiValue", value);
+                if (value == true) { SetValue<Boolean>("IsSingleValue", !value); }
             }
         }
 
         /// <inheritdoc/>
-        public Boolean? IsDerived
+        public Boolean IsSimpleType
         {
-            get { return GetValue<bool>("IsDerived", BindingItemParsers.BooleanTryParse); }
-            set { SetValue<Boolean>("IsDerived", value); }
+            get
+            {
+                if (GetValue<bool>("IsSimpleType", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
+            set
+            {
+                SetValue<Boolean>("IsSimpleType", value);
+                if (value == true) { SetValue<Boolean>("IsCompositeType", !value); }
+            }
         }
 
         /// <inheritdoc/>
-        public Boolean? IsNullable
+        public Boolean IsCompositeType
         {
-            get { return GetValue<bool>("IsNullable", BindingItemParsers.BooleanTryParse); }
-            set { SetValue<Boolean>("IsNullable", value); }
+            get
+            {
+                if (GetValue<bool>("IsCompositeType", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
+            set
+            {
+                SetValue<Boolean>("IsCompositeType", value);
+                if (value == true) { SetValue<Boolean>("IsSimpleType", !value); }
+            }
         }
 
         /// <inheritdoc/>
-        public Boolean? IsKey
+        public Boolean IsIntegral
         {
-            get { return GetValue<bool>("IsKey", BindingItemParsers.BooleanTryParse); }
-            set { SetValue<Boolean>("IsKey", value); }
+            get
+            {
+                if (GetValue<bool>("IsIntegral", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
+            set
+            {
+                SetValue<Boolean>("IsIntegral", value);
+                if (value == true) { SetValue<Boolean>("IsDerived", !value); }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsDerived
+        {
+            get
+            {
+                if (GetValue<bool>("IsDerived", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
+            set
+            {
+                SetValue<Boolean>("IsDerived", value);
+                if (value == true) { SetValue<Boolean>("IsIntegral", !value); }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsValued
+        {
+            get
+            {
+                if (GetValue<bool>("IsValued", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
+            set
+            {
+                SetValue<Boolean>("IsValued", value);
+                if (value == true) { SetValue<Boolean>("IsNullable", !value); }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsNullable
+        {
+            get
+            {
+                if (GetValue<bool>("IsNullable", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
+            set
+            {
+                SetValue<Boolean>("IsNullable", value);
+                if (value == true) { SetValue<Boolean>("IsValued", !value); }
+            }
+        }
+
+
+
+        /// <inheritdoc/>
+        public Boolean IsKey
+        {
+            get
+            {
+                if (GetValue<bool>("IsKey", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
+            set
+            {
+                SetValue<Boolean>("IsKey", value);
+                if (value == true) { SetValue<Boolean>("IsNonKey", !value); }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Boolean IsNonKey
+        {
+            get
+            {
+                if (GetValue<bool>("IsNonKey", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                else { return false; }
+            }
+            set
+            {
+                SetValue<Boolean>("IsNonKey", value);
+                if (value == true) { SetValue<Boolean>("IsKey", !value); }
+            }
         }
 
         /// <summary>
@@ -155,17 +287,18 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("AttributeTitle", typeof(string)){ AllowDBNull = false},
             new DataColumn("AttributeDescription", typeof(string)){ AllowDBNull = true},
-
             new DataColumn("TypeOfAttributeId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("TypeOfAttributeTitle", typeof(string)){ AllowDBNull = true},
-
             new DataColumn("IsSingleValue", typeof(bool)){ AllowDBNull = true},
             new DataColumn("IsMultiValue", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsSimple", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsComposite", typeof(bool)){ AllowDBNull = true},
+            new DataColumn("IsSimpleType", typeof(bool)){ AllowDBNull = true},
+            new DataColumn("IsCompositeType", typeof(bool)){ AllowDBNull = true},
+            new DataColumn("IsIntegral", typeof(bool)){ AllowDBNull = true},
             new DataColumn("IsDerived", typeof(bool)){ AllowDBNull = true},
+            new DataColumn("IsValued", typeof(bool)){ AllowDBNull = true},
             new DataColumn("IsNullable", typeof(bool)){ AllowDBNull = true},
             new DataColumn("IsKey", typeof(bool)){ AllowDBNull = true},
+            new DataColumn("IsNonKey", typeof(bool)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

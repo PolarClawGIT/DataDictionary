@@ -13,13 +13,16 @@ Select	D.[AttributeId],
 		D.[AttributeDescription],
 		D.[TypeOfAttributeId],
 		P.[AttributeTitle] As [TypeOfAttributeTitle],
-		D.[IsSingleValue],
-		D.[IsMultiValue],
-		D.[IsSimple],
-		D.[IsComposite],
-		D.[IsDerived],
-		D.[IsNullable],
-		D.[IsKey]
+		Convert(Bit,IIF(D.[IsSingleValue] = 1,1,0)) As [IsSingleValue],
+		Convert(Bit,IIF(D.[IsSingleValue] = 0,1,0)) As [IsMultiValue],
+		Convert(Bit,IIF(D.[IsSimpleType] = 1,1,0)) As [IsSimpleType],
+		Convert(Bit,IIF(D.[IsSimpleType] = 0,1,0)) As [IsCompositeType],
+		Convert(Bit,IIF(D.[IsDerived] = 0,1,0)) As [IsIntegral],
+		Convert(Bit,IIF(D.[IsDerived] = 1,1,0)) As [IsDerived],
+		Convert(Bit,IIF(D.[IsNullable] = 0,1,0)) As [IsValued],
+		Convert(Bit,IIF(D.[IsNullable] = 1,1,0)) As [IsNullable],
+		Convert(Bit,IIF(D.[IsKey] = 1,1,0)) As [IsKey],
+		Convert(Bit,IIF(D.[IsKey] = 0,1,0)) As [IsNonKey]
 From	[App_DataDictionary].[DomainAttribute] D
 		Left Join [App_DataDictionary].[ModelAttribute] A
 		On	D.[AttributeId] = A.[AttributeId]

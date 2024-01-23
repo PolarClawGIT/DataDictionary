@@ -18,7 +18,7 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer
 {
     /// <summary>
-    /// Interface component for the Model Alias
+    /// Interface component for the Model Namespace
     /// </summary>
     /// <remarks>When combined with the Extension class, this approximates multi-inheritance.</remarks>
     public interface IModelNamespace
@@ -30,7 +30,7 @@ namespace DataDictionary.BusinessLayer
     }
 
     /// <summary>
-    /// Implementation component for the Model Alias data
+    /// Implementation component for the Model Namespace data
     /// </summary>
     /// <remarks>When combined with the Extension class, this implements multi-inheritance.</remarks>
     public static class ModelNamespace

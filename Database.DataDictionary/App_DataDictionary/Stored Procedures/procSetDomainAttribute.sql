@@ -30,9 +30,7 @@ Begin Try
 			[AttributeDescription] [App_DataDictionary].[typeDescription] Null,
 			[TypeOfAttributeId]    UniqueIdentifier Null,
 			[IsSingleValue]        Bit Null,
-			--[IsMultiValue]         Bit Null,
-			[IsSimple]             Bit Null,
-			--[IsComposite]          Bit Null,
+			[IsSimpleType]         Bit Null,
 			[IsDerived]            Bit Null,
 			[IsNullable]           Bit Null,
 			[IsKey]                Bit Null,
@@ -47,13 +45,26 @@ Begin Try
 			NullIf(Trim(D.[AttributeTitle]),'') As [AttributeTitle],
 			NullIf(Trim(D.[AttributeDescription]),'') As [AttributeDescription],
 			D.[TypeOfAttributeId],
-			D.[IsSingleValue],
-			--D.[IsMultiValue],
-			D.[IsSimple],
-			--D.[IsComposite],
-			D.[IsDerived],
-			D.[IsNullable],
-			D.[IsKey]
+			Case
+				When D.[IsSingleValue] = 1 Then 1
+				When D.[IsMultiValue] = 1 Then 0
+				Else Null End As [IsSingleValue],
+			Case
+				When D.[IsSimpleType] = 1 Then 1
+				When D.[IsCompositeType] = 1 Then 0
+				Else Null End As [IsSimpleType],
+			Case
+				When D.[IsDerived] = 1 Then 1
+				When D.[IsIntegral] = 1 Then 0
+				Else Null End As [IsDerived],
+			Case
+				When D.[IsNullable] = 1 Then 1
+				When D.[IsValued] = 1 Then 0
+				Else Null End As [IsNullable],
+			Case
+				When D.[IsKey] = 1 Then 1
+				When D.[IsNonKey] = 1 Then 0
+				Else Null End As [IsKey]
 	From	@Data D
 			Cross apply (
 				Select	Coalesce(D.[AttributeId], @AttributeId, NewId()) As [AttributeId]) X
@@ -103,9 +114,7 @@ Begin Try
 				[AttributeDescription],
 				[TypeOfAttributeId],
 				[IsSingleValue],
-				--[IsMultiValue],
-				[IsSimple],
-				--[IsComposite],
+				[IsSimpleType],
 				[IsDerived],
 				[IsNullable],
 				[IsKey]
@@ -116,9 +125,7 @@ Begin Try
 				[AttributeDescription],
 				[TypeOfAttributeId],
 				[IsSingleValue],
-				--[IsMultiValue],
-				[IsSimple],
-				--[IsComposite],
+				[IsSimpleType],
 				[IsDerived],
 				[IsNullable],
 				[IsKey]
@@ -137,9 +144,7 @@ Begin Try
 			[AttributeDescription],
 			[TypeOfAttributeId],
 			[IsSingleValue],
-			--[IsMultiValue],
-			[IsSimple],
-			--[IsComposite],
+			[IsSimpleType],
 			[IsDerived],
 			[IsNullable],
 			[IsKey])
@@ -148,9 +153,7 @@ Begin Try
 			S.[AttributeDescription],
 			S.[TypeOfAttributeId],
 			S.[IsSingleValue],
-			--[IsMultiValue],
-			S.[IsSimple],
-			--[IsComposite],
+			S.[IsSimpleType],
 			S.[IsDerived],
 			S.[IsNullable],
 			S.[IsKey]
