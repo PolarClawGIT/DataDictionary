@@ -9,18 +9,8 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Properties
     /// </summary>
-    public interface IDomainAttributePropertyItem : IDomainAttributePropertyKey, IDataItem
-    {
-        /// <summary>
-        /// Property Value. Type and Format is dependent on PeropertyId.
-        /// </summary>
-        public string? PropertyValue { get; }
-
-        /// <summary>
-        /// Property Value for Rich Text Definition properties.
-        /// </summary>
-        public string? DefinitionText { get; }
-    }
+    public interface IDomainAttributePropertyItem : IDomainAttributePropertyKey, IDomainProperty, IDataItem
+    { }
 
     /// <summary>
     /// Implementation for Domain Attribute Properties

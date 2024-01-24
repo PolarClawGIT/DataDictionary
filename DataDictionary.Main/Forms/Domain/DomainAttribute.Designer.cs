@@ -31,6 +31,7 @@
             components = new System.ComponentModel.Container();
             TableLayoutPanel mainLayout;
             TableLayoutPanel detailsLayout;
+            SplitContainer propertiesSplit;
             titleData = new Controls.TextBoxData();
             descriptionData = new Controls.TextBoxData();
             detailTabLayout = new TabControl();
@@ -47,16 +48,29 @@
             isNonKeyData = new CheckBox();
             isKeyData = new CheckBox();
             propertyTab = new TabPage();
+            propertiesData = new DataGridView();
+            propertyIdColumn = new DataGridViewComboBoxColumn();
+            propertyValueColumn = new DataGridViewTextBoxColumn();
+            domainProperty = new Controls.DomainProperty();
             aliasTab = new TabPage();
-            bindingSource = new BindingSource(components);
+            mainBinding = new BindingSource(components);
             toolTip = new ToolTip(components);
+            propertyBinding = new BindingSource(components);
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
+            propertiesSplit = new SplitContainer();
             mainLayout.SuspendLayout();
             detailTabLayout.SuspendLayout();
             detailTab.SuspendLayout();
             detailsLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)bindingSource).BeginInit();
+            propertyTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)propertiesSplit).BeginInit();
+            propertiesSplit.Panel1.SuspendLayout();
+            propertiesSplit.Panel2.SuspendLayout();
+            propertiesSplit.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)propertiesData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)mainBinding).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)propertyBinding).BeginInit();
             SuspendLayout();
             // 
             // mainLayout
@@ -73,7 +87,7 @@
             mainLayout.RowStyles.Add(new RowStyle());
             mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
             mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
-            mainLayout.Size = new Size(353, 450);
+            mainLayout.Size = new Size(426, 521);
             mainLayout.TabIndex = 1;
             // 
             // titleData
@@ -85,7 +99,7 @@
             titleData.Multiline = false;
             titleData.Name = "titleData";
             titleData.ReadOnly = false;
-            titleData.Size = new Size(347, 44);
+            titleData.Size = new Size(420, 44);
             titleData.TabIndex = 0;
             // 
             // descriptionData
@@ -97,7 +111,7 @@
             descriptionData.Multiline = true;
             descriptionData.Name = "descriptionData";
             descriptionData.ReadOnly = false;
-            descriptionData.Size = new Size(347, 74);
+            descriptionData.Size = new Size(420, 88);
             descriptionData.TabIndex = 1;
             // 
             // detailTabLayout
@@ -106,11 +120,12 @@
             detailTabLayout.Controls.Add(propertyTab);
             detailTabLayout.Controls.Add(aliasTab);
             detailTabLayout.Dock = DockStyle.Fill;
-            detailTabLayout.Location = new Point(3, 133);
+            detailTabLayout.Location = new Point(3, 147);
             detailTabLayout.Name = "detailTabLayout";
             detailTabLayout.SelectedIndex = 0;
-            detailTabLayout.Size = new Size(347, 314);
+            detailTabLayout.Size = new Size(420, 371);
             detailTabLayout.TabIndex = 2;
+            detailTabLayout.SelectedIndexChanged += DetailTabLayout_SelectedIndexChanged;
             // 
             // detailTab
             // 
@@ -119,7 +134,7 @@
             detailTab.Location = new Point(4, 24);
             detailTab.Name = "detailTab";
             detailTab.Padding = new Padding(3);
-            detailTab.Size = new Size(339, 286);
+            detailTab.Size = new Size(412, 286);
             detailTab.TabIndex = 0;
             detailTab.Text = "Details";
             // 
@@ -149,7 +164,7 @@
             detailsLayout.RowStyles.Add(new RowStyle());
             detailsLayout.RowStyles.Add(new RowStyle());
             detailsLayout.RowStyles.Add(new RowStyle());
-            detailsLayout.Size = new Size(333, 280);
+            detailsLayout.Size = new Size(406, 280);
             detailsLayout.TabIndex = 0;
             // 
             // isMultiValuedData
@@ -183,7 +198,7 @@
             typeOfAttributeData.Location = new Point(3, 3);
             typeOfAttributeData.Name = "typeOfAttributeData";
             typeOfAttributeData.ReadOnly = false;
-            typeOfAttributeData.Size = new Size(327, 44);
+            typeOfAttributeData.Size = new Size(400, 44);
             typeOfAttributeData.TabIndex = 0;
             // 
             // isSimpleTypeData
@@ -269,12 +284,71 @@
             // propertyTab
             // 
             propertyTab.BackColor = SystemColors.Control;
+            propertyTab.Controls.Add(propertiesSplit);
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(192, 72);
+            propertyTab.Size = new Size(412, 343);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
+            // 
+            // propertiesSplit
+            // 
+            propertiesSplit.Dock = DockStyle.Fill;
+            propertiesSplit.FixedPanel = FixedPanel.Panel2;
+            propertiesSplit.Location = new Point(3, 3);
+            propertiesSplit.Name = "propertiesSplit";
+            propertiesSplit.Orientation = Orientation.Horizontal;
+            // 
+            // propertiesSplit.Panel1
+            // 
+            propertiesSplit.Panel1.Controls.Add(propertiesData);
+            // 
+            // propertiesSplit.Panel2
+            // 
+            propertiesSplit.Panel2.Controls.Add(domainProperty);
+            propertiesSplit.Size = new Size(406, 337);
+            propertiesSplit.SplitterDistance = 100;
+            propertiesSplit.TabIndex = 1;
+            // 
+            // propertiesData
+            // 
+            propertiesData.AllowUserToAddRows = false;
+            propertiesData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            propertiesData.Columns.AddRange(new DataGridViewColumn[] { propertyIdColumn, propertyValueColumn });
+            propertiesData.Dock = DockStyle.Fill;
+            propertiesData.Location = new Point(0, 0);
+            propertiesData.Name = "propertiesData";
+            propertiesData.ReadOnly = true;
+            propertiesData.RowTemplate.Height = 25;
+            propertiesData.Size = new Size(406, 100);
+            propertiesData.TabIndex = 0;
+            // 
+            // propertyIdColumn
+            // 
+            propertyIdColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            propertyIdColumn.DataPropertyName = "PropertyId";
+            propertyIdColumn.FillWeight = 30F;
+            propertyIdColumn.HeaderText = "Property";
+            propertyIdColumn.Name = "propertyIdColumn";
+            propertyIdColumn.ReadOnly = true;
+            // 
+            // propertyValueColumn
+            // 
+            propertyValueColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            propertyValueColumn.DataPropertyName = "PropertyValue";
+            propertyValueColumn.FillWeight = 70F;
+            propertyValueColumn.HeaderText = "Property Value";
+            propertyValueColumn.Name = "propertyValueColumn";
+            propertyValueColumn.ReadOnly = true;
+            // 
+            // domainProperty
+            // 
+            domainProperty.Dock = DockStyle.Fill;
+            domainProperty.Location = new Point(0, 0);
+            domainProperty.Name = "domainProperty";
+            domainProperty.Size = new Size(406, 233);
+            domainProperty.TabIndex = 1;
             // 
             // aliasTab
             // 
@@ -285,13 +359,17 @@
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
-            // DomainAttribute_New
+            // propertyBinding
+            // 
+            propertyBinding.AddingNew += PropertyBinding_AddingNew;
+            // 
+            // DomainAttribute
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(353, 475);
+            ClientSize = new Size(426, 546);
             Controls.Add(mainLayout);
-            Name = "DomainAttribute_New";
+            Name = "DomainAttribute";
             Text = "DomainAttribute_New";
             Load += Form_Load;
             Controls.SetChildIndex(mainLayout, 0);
@@ -301,21 +379,26 @@
             detailTab.ResumeLayout(false);
             detailsLayout.ResumeLayout(false);
             detailsLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)bindingSource).EndInit();
+            propertyTab.ResumeLayout(false);
+            propertiesSplit.Panel1.ResumeLayout(false);
+            propertiesSplit.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)propertiesSplit).EndInit();
+            propertiesSplit.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)propertiesData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)mainBinding).EndInit();
+            ((System.ComponentModel.ISupportInitialize)propertyBinding).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private TableLayoutPanel mainLayout;
         private Controls.TextBoxData titleData;
         private Controls.TextBoxData descriptionData;
         private TabControl detailTabLayout;
         private TabPage detailTab;
         private TabPage propertyTab;
-        private BindingSource bindingSource;
-        private TableLayoutPanel detailsLayout;
+        private BindingSource mainBinding;
         private TabPage aliasTab;
         private Controls.ComboBoxData typeOfAttributeData;
         private CheckBox isSingleValueData;
@@ -329,5 +412,11 @@
         private CheckBox isNonKeyData;
         private CheckBox isKeyData;
         private ToolTip toolTip;
+        private DataGridView propertiesData;
+        private Controls.DomainProperty domainProperty;
+        private DataGridViewComboBoxColumn propertyIdColumn;
+        private DataGridViewTextBoxColumn propertyValueColumn;
+        private BindingSource propertyBinding;
+        private SplitContainer propertiesSplit;
     }
 }
