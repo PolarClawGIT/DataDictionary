@@ -263,7 +263,7 @@ namespace DataDictionary.Main
 
         void Activate(DomainAttributeItem attributeItem)
         //{ Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
-        { Activate((data) => new Forms.Domain.DomainAttribute_New(attributeItem), attributeItem); }
+        { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
 
         void Activate(DomainEntityItem entityItem)
         { Activate((data) => new Forms.Domain.DomainEntity() { DataKey = new DomainEntityKey(entityItem) }, entityItem); }
