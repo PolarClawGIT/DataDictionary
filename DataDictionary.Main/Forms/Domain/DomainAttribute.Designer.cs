@@ -134,7 +134,7 @@
             detailTab.Location = new Point(4, 24);
             detailTab.Name = "detailTab";
             detailTab.Padding = new Padding(3);
-            detailTab.Size = new Size(412, 286);
+            detailTab.Size = new Size(412, 343);
             detailTab.TabIndex = 0;
             detailTab.Text = "Details";
             // 
@@ -164,7 +164,7 @@
             detailsLayout.RowStyles.Add(new RowStyle());
             detailsLayout.RowStyles.Add(new RowStyle());
             detailsLayout.RowStyles.Add(new RowStyle());
-            detailsLayout.Size = new Size(406, 280);
+            detailsLayout.Size = new Size(406, 337);
             detailsLayout.TabIndex = 0;
             // 
             // isMultiValuedData
@@ -295,7 +295,6 @@
             // propertiesSplit
             // 
             propertiesSplit.Dock = DockStyle.Fill;
-            propertiesSplit.FixedPanel = FixedPanel.Panel2;
             propertiesSplit.Location = new Point(3, 3);
             propertiesSplit.Name = "propertiesSplit";
             propertiesSplit.Orientation = Orientation.Horizontal;
