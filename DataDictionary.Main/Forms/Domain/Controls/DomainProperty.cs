@@ -1,18 +1,9 @@
 ﻿using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.DataLayer.ApplicationData.Property;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using PropertyCollection = DataDictionary.DataLayer.ApplicationData.Property.PropertyCollection;
 
-namespace DataDictionary.Main.Controls
+namespace DataDictionary.Main.Forms.Domain.Controls
 {
     partial class DomainProperty : UserControl
     {

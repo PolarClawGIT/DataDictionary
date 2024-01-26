@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.Controls
+﻿namespace DataDictionary.Main.Forms.Domain.Controls
 {
     partial class DomainProperty
     {
@@ -31,11 +31,11 @@
             TabControl propertyTabs;
             TableLayoutPanel propertyValueLayout;
             propertyValueTab = new TabPage();
-            propertyTypeData = new ComboBoxData();
-            propertyValueData = new TextBoxData();
-            propertyChoiceData = new CheckedListBoxData();
+            propertyTypeData = new DataDictionary.Main.Controls.ComboBoxData();
+            propertyValueData = new DataDictionary.Main.Controls.TextBoxData();
+            propertyChoiceData = new DataDictionary.Main.Controls.CheckedListBoxData();
             propertyDefinitionTab = new TabPage();
-            propertyDefinitionData = new RichTextBoxData();
+            propertyDefinitionData = new DataDictionary.Main.Controls.RichTextBoxData();
             propertyTabs = new TabControl();
             propertyValueLayout = new TableLayoutPanel();
             propertyTabs.SuspendLayout();
@@ -169,10 +169,11 @@
         #endregion
 
         private TabPage propertyValueTab;
-        private ComboBoxData propertyTypeData;
-        private TextBoxData propertyValueData;
-        private CheckedListBoxData propertyChoiceData;
+        private DataDictionary.Main.Controls.ComboBoxData propertyTypeData;
+        private DataDictionary.Main.Controls.TextBoxData propertyValueData;
+        private DataDictionary.Main.Controls.CheckedListBoxData propertyChoiceData;
         private TabPage propertyDefinitionTab;
-        private RichTextBoxData propertyDefinitionData;
+        private DataDictionary.Main.Controls.RichTextBoxData propertyDefinitionData;
+
     }
 }

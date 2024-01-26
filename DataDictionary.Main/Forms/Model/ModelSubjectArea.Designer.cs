@@ -31,8 +31,8 @@
             components = new System.ComponentModel.Container();
             TableLayoutPanel subjectAreaLayout;
             TabControl subjectAreaTab;
-            subjectAreaTitleData = new Controls.TextBoxData();
-            subjectAreaDescriptionData = new Controls.TextBoxData();
+            subjectAreaTitleData = new DataDictionary.Main.Controls.TextBoxData();
+            subjectAreaDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
             attributeTab = new TabPage();
             attributeData = new DataGridView();
             attributeTitleColumn = new DataGridViewTextBoxColumn();
@@ -207,8 +207,8 @@
 
         #endregion
 
-        private Controls.TextBoxData subjectAreaTitleData;
-        private Controls.TextBoxData subjectAreaDescriptionData;
+        private DataDictionary.Main.Controls.TextBoxData subjectAreaTitleData;
+        private DataDictionary.Main.Controls.TextBoxData subjectAreaDescriptionData;
         private TabPage attributeTab;
         private DataGridView attributeData;
         private TabPage entityTab;

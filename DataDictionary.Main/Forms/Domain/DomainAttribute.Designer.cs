@@ -32,13 +32,13 @@
             TableLayoutPanel mainLayout;
             TableLayoutPanel detailsLayout;
             SplitContainer propertiesSplit;
-            titleData = new Controls.TextBoxData();
-            descriptionData = new Controls.TextBoxData();
+            titleData = new DataDictionary.Main.Controls.TextBoxData();
+            descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             detailTabLayout = new TabControl();
             detailTab = new TabPage();
             isMultiValuedData = new CheckBox();
             isSingleValueData = new CheckBox();
-            typeOfAttributeData = new Controls.ComboBoxData();
+            typeOfAttributeData = new DataDictionary.Main.Controls.ComboBoxData();
             isSimpleTypeData = new CheckBox();
             isCompositeTypeData = new CheckBox();
             isIntegralData = new CheckBox();
@@ -354,7 +354,7 @@
             aliasTab.BackColor = SystemColors.Control;
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
-            aliasTab.Size = new Size(192, 72);
+            aliasTab.Size = new Size(412, 343);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
@@ -392,14 +392,14 @@
 
         #endregion
 
-        private Controls.TextBoxData titleData;
-        private Controls.TextBoxData descriptionData;
+        private DataDictionary.Main.Controls.TextBoxData titleData;
+        private DataDictionary.Main.Controls.TextBoxData descriptionData;
         private TabControl detailTabLayout;
         private TabPage detailTab;
         private TabPage propertyTab;
         private BindingSource mainBinding;
         private TabPage aliasTab;
-        private Controls.ComboBoxData typeOfAttributeData;
+        private DataDictionary.Main.Controls.ComboBoxData typeOfAttributeData;
         private CheckBox isSingleValueData;
         private CheckBox isMultiValuedData;
         private CheckBox isSimpleTypeData;
