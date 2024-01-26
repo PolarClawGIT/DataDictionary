@@ -12,6 +12,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
+    [Obsolete("not used", true)]
     record ScopeNameItem : IScopeKeyName
     {
         public String ScopeName { get; init; } = String.Empty;

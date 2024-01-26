@@ -4,6 +4,7 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
+    [Obsolete("not used", true)]
     record SubjectAreaNameItem
     {
         public Guid SubjectAreaId { get; set; } = Guid.Empty;
