@@ -56,6 +56,8 @@
             mainBinding = new BindingSource(components);
             toolTip = new ToolTip(components);
             propertyBinding = new BindingSource(components);
+            subjectAreaTab = new TabPage();
+            entityTab = new TabPage();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             propertiesSplit = new SplitContainer();
@@ -119,6 +121,8 @@
             detailTabLayout.Controls.Add(detailTab);
             detailTabLayout.Controls.Add(propertyTab);
             detailTabLayout.Controls.Add(aliasTab);
+            detailTabLayout.Controls.Add(subjectAreaTab);
+            detailTabLayout.Controls.Add(entityTab);
             detailTabLayout.Dock = DockStyle.Fill;
             detailTabLayout.Location = new Point(3, 147);
             detailTabLayout.Name = "detailTabLayout";
@@ -362,6 +366,24 @@
             // 
             propertyBinding.AddingNew += PropertyBinding_AddingNew;
             // 
+            // subjectAreaTab
+            // 
+            subjectAreaTab.BackColor = SystemColors.Control;
+            subjectAreaTab.Location = new Point(4, 24);
+            subjectAreaTab.Name = "subjectAreaTab";
+            subjectAreaTab.Size = new Size(412, 343);
+            subjectAreaTab.TabIndex = 3;
+            subjectAreaTab.Text = "Subject Area";
+            // 
+            // entityTab
+            // 
+            entityTab.BackColor = SystemColors.Control;
+            entityTab.Location = new Point(4, 24);
+            entityTab.Name = "entityTab";
+            entityTab.Size = new Size(412, 343);
+            entityTab.TabIndex = 4;
+            entityTab.Text = "Entities";
+            // 
             // DomainAttribute
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -417,5 +439,7 @@
         private DataGridViewTextBoxColumn propertyValueColumn;
         private BindingSource propertyBinding;
         private SplitContainer propertiesSplit;
+        private TabPage subjectAreaTab;
+        private TabPage entityTab;
     }
 }
