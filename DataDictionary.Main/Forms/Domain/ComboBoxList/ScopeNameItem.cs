@@ -12,16 +12,46 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
-    [Obsolete("not used", true)]
     record ScopeNameItem : IScopeKeyName
     {
+        public ScopeType ScopeType { get; set; } = ScopeType.Null;
         public String ScopeName { get; init; } = String.Empty;
 
         public static ScopeNameItem Empty { get; } = new ScopeNameItem();
 
         protected ScopeNameItem() : base() { }
 
-        public ScopeNameItem(IScopeKeyName source) : base()
-        { if (source.ScopeName is String value) { ScopeName = value; } }
+        public static void Load(ComboBoxData control)
+        {
+            ScopeNameItem scopeNameItem = new ScopeNameItem();
+            BindingList<ScopeNameItem> list = new BindingList<ScopeNameItem>();
+
+            foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
+            {
+                String name = item.ToScopeName();
+                if (!String.IsNullOrEmpty(name))
+                { list.Add(new ScopeNameItem() { ScopeType = item, ScopeName = name }); }
+            }
+
+            control.DataSource = list;
+            control.ValueMember = nameof(scopeNameItem.ScopeType);
+            control.DisplayMember = nameof(scopeNameItem.ScopeName);
+        }
+        public static void Load(DataGridViewComboBoxColumn control)
+        {
+            ScopeNameItem scopeNameItem = new ScopeNameItem();
+            BindingList<ScopeNameItem> list = new BindingList<ScopeNameItem>();
+
+            foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
+            {
+                String name = item.ToScopeName();
+                if (!String.IsNullOrEmpty(name))
+                { list.Add(new ScopeNameItem() { ScopeType = item, ScopeName = name }); }
+            }
+
+            control.DataSource = list;
+            control.ValueMember = nameof(scopeNameItem.ScopeType);
+            control.DisplayMember = nameof(scopeNameItem.ScopeName);
+        }
     }
 }

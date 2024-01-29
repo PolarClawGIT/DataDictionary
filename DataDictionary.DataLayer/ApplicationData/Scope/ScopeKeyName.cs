@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// <summary>
     /// Interface for the Unique Scope Key
     /// </summary>
-    public interface IScopeKeyName : IKey, IToScopeType
+    public interface IScopeKeyName : IKey
     {
         /// <summary>
         /// The Database Scope Name. This describes the Scope/Level of an Object within database.

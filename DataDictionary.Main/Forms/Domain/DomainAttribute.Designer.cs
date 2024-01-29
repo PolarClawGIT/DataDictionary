@@ -31,7 +31,6 @@
             components = new System.ComponentModel.Container();
             TableLayoutPanel mainLayout;
             TableLayoutPanel detailsLayout;
-            SplitContainer propertiesSplit;
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             detailTabLayout = new TabControl();
@@ -48,19 +47,25 @@
             isNonKeyData = new CheckBox();
             isKeyData = new CheckBox();
             propertyTab = new TabPage();
+            propertiesSplit = new SplitContainer();
             propertiesData = new DataGridView();
             propertyIdColumn = new DataGridViewComboBoxColumn();
             propertyValueColumn = new DataGridViewTextBoxColumn();
             domainProperty = new Controls.DomainProperty();
             aliasTab = new TabPage();
+            aliasSplit = new SplitContainer();
+            aliasesData = new DataGridView();
+            domainAlias = new Controls.DomainAlias();
+            subjectAreaTab = new TabPage();
+            entityTab = new TabPage();
             mainBinding = new BindingSource(components);
             toolTip = new ToolTip(components);
             propertyBinding = new BindingSource(components);
-            subjectAreaTab = new TabPage();
-            entityTab = new TabPage();
+            aliasBinding = new BindingSource(components);
+            aliaseScopeColumn = new DataGridViewComboBoxColumn();
+            aliasNameColumn = new DataGridViewTextBoxColumn();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
-            propertiesSplit = new SplitContainer();
             mainLayout.SuspendLayout();
             detailTabLayout.SuspendLayout();
             detailTab.SuspendLayout();
@@ -71,8 +76,15 @@
             propertiesSplit.Panel2.SuspendLayout();
             propertiesSplit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)propertiesData).BeginInit();
+            aliasTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)aliasSplit).BeginInit();
+            aliasSplit.Panel1.SuspendLayout();
+            aliasSplit.Panel2.SuspendLayout();
+            aliasSplit.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)aliasesData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)mainBinding).BeginInit();
             ((System.ComponentModel.ISupportInitialize)propertyBinding).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)aliasBinding).BeginInit();
             SuspendLayout();
             // 
             // mainLayout
@@ -292,7 +304,7 @@
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(412, 343);
+            propertyTab.Size = new Size(192, 72);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -310,8 +322,8 @@
             // propertiesSplit.Panel2
             // 
             propertiesSplit.Panel2.Controls.Add(domainProperty);
-            propertiesSplit.Size = new Size(406, 337);
-            propertiesSplit.SplitterDistance = 100;
+            propertiesSplit.Size = new Size(186, 66);
+            propertiesSplit.SplitterDistance = 25;
             propertiesSplit.TabIndex = 1;
             // 
             // propertiesData
@@ -324,7 +336,7 @@
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
             propertiesData.RowTemplate.Height = 25;
-            propertiesData.Size = new Size(406, 100);
+            propertiesData.Size = new Size(186, 25);
             propertiesData.TabIndex = 0;
             // 
             // propertyIdColumn
@@ -350,28 +362,64 @@
             domainProperty.Dock = DockStyle.Fill;
             domainProperty.Location = new Point(0, 0);
             domainProperty.Name = "domainProperty";
-            domainProperty.Size = new Size(406, 233);
+            domainProperty.Size = new Size(186, 37);
             domainProperty.TabIndex = 1;
             // 
             // aliasTab
             // 
             aliasTab.BackColor = SystemColors.Control;
+            aliasTab.Controls.Add(aliasSplit);
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Size = new Size(412, 343);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
-            // propertyBinding
+            // aliasSplit
             // 
-            propertyBinding.AddingNew += PropertyBinding_AddingNew;
+            aliasSplit.Dock = DockStyle.Fill;
+            aliasSplit.Location = new Point(0, 0);
+            aliasSplit.Name = "aliasSplit";
+            aliasSplit.Orientation = Orientation.Horizontal;
+            // 
+            // aliasSplit.Panel1
+            // 
+            aliasSplit.Panel1.Controls.Add(aliasesData);
+            // 
+            // aliasSplit.Panel2
+            // 
+            aliasSplit.Panel2.Controls.Add(domainAlias);
+            aliasSplit.Size = new Size(412, 343);
+            aliasSplit.SplitterDistance = 100;
+            aliasSplit.TabIndex = 0;
+            // 
+            // aliasesData
+            // 
+            aliasesData.AllowUserToAddRows = false;
+            aliasesData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            aliasesData.Columns.AddRange(new DataGridViewColumn[] { aliaseScopeColumn, aliasNameColumn });
+            aliasesData.Dock = DockStyle.Fill;
+            aliasesData.Location = new Point(0, 0);
+            aliasesData.Name = "aliasesData";
+            aliasesData.ReadOnly = true;
+            aliasesData.RowTemplate.Height = 25;
+            aliasesData.Size = new Size(412, 100);
+            aliasesData.TabIndex = 0;
+            // 
+            // domainAlias
+            // 
+            domainAlias.Dock = DockStyle.Fill;
+            domainAlias.Location = new Point(0, 0);
+            domainAlias.Name = "domainAlias";
+            domainAlias.Size = new Size(412, 239);
+            domainAlias.TabIndex = 0;
             // 
             // subjectAreaTab
             // 
             subjectAreaTab.BackColor = SystemColors.Control;
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
-            subjectAreaTab.Size = new Size(412, 343);
+            subjectAreaTab.Size = new Size(192, 72);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -380,9 +428,34 @@
             entityTab.BackColor = SystemColors.Control;
             entityTab.Location = new Point(4, 24);
             entityTab.Name = "entityTab";
-            entityTab.Size = new Size(412, 343);
+            entityTab.Size = new Size(192, 72);
             entityTab.TabIndex = 4;
             entityTab.Text = "Entities";
+            // 
+            // propertyBinding
+            // 
+            propertyBinding.AddingNew += PropertyBinding_AddingNew;
+            // 
+            // aliasBinding
+            // 
+            aliasBinding.AddingNew += AliasBinding_AddingNew;
+            // 
+            // aliaseScopeColumn
+            // 
+            aliaseScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliaseScopeColumn.DataPropertyName = "Scope";
+            aliaseScopeColumn.FillWeight = 50F;
+            aliaseScopeColumn.HeaderText = "Scope";
+            aliaseScopeColumn.Name = "aliaseScopeColumn";
+            aliaseScopeColumn.ReadOnly = true;
+            // 
+            // aliasNameColumn
+            // 
+            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliasNameColumn.DataPropertyName = "AliasName";
+            aliasNameColumn.HeaderText = "Alias Name";
+            aliasNameColumn.Name = "aliasNameColumn";
+            aliasNameColumn.ReadOnly = true;
             // 
             // DomainAttribute
             // 
@@ -406,8 +479,15 @@
             ((System.ComponentModel.ISupportInitialize)propertiesSplit).EndInit();
             propertiesSplit.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)propertiesData).EndInit();
+            aliasTab.ResumeLayout(false);
+            aliasSplit.Panel1.ResumeLayout(false);
+            aliasSplit.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)aliasSplit).EndInit();
+            aliasSplit.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)aliasesData).EndInit();
             ((System.ComponentModel.ISupportInitialize)mainBinding).EndInit();
             ((System.ComponentModel.ISupportInitialize)propertyBinding).EndInit();
+            ((System.ComponentModel.ISupportInitialize)aliasBinding).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -441,5 +521,11 @@
         private SplitContainer propertiesSplit;
         private TabPage subjectAreaTab;
         private TabPage entityTab;
+        private SplitContainer aliasSplit;
+        private DataGridView aliasesData;
+        private Controls.DomainAlias domainAlias;
+        private BindingSource aliasBinding;
+        private DataGridViewComboBoxColumn aliaseScopeColumn;
+        private DataGridViewTextBoxColumn aliasNameColumn;
     }
 }

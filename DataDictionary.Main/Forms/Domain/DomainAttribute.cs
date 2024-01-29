@@ -31,6 +31,7 @@ namespace DataDictionary.Main.Forms.Domain
 
             //If the FixedPanel is set in the Designer, the SpliterDistance is recomputed.
             propertiesSplit.FixedPanel = FixedPanel.Panel2;
+            aliasSplit.FixedPanel = FixedPanel.Panel2;
 
             newItemCommand.Click += NewItemCommand_Click;
         }
@@ -44,6 +45,7 @@ namespace DataDictionary.Main.Forms.Domain
                 mainBinding.Position = 0;
 
                 propertyBinding.DataSource = new BindingView<DomainAttributePropertyItem>(Program.Data.DomainAttributeProperties, w => key.Equals(w));
+                aliasBinding.DataSource = new BindingView<DomainAttributeAliasItem>(Program.Data.DomainAttributeAliases, w => key.Equals(w));
             }
             else
             {
@@ -59,6 +61,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             IDomainAttributeItem nameOfValues;
             PropertyNameItem.Load(propertyIdColumn);
+            ScopeNameItem.Load(aliaseScopeColumn);
 
             this.DataBindings.Add(new Binding(nameof(this.Text), mainBinding, nameof(nameOfValues.AttributeTitle)));
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), mainBinding, nameof(nameOfValues.AttributeTitle)));
@@ -77,8 +80,11 @@ namespace DataDictionary.Main.Forms.Domain
 
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = propertyBinding;
-
             domainProperty.BindData(propertyBinding);
+
+            aliasesData.AutoGenerateColumns = false;
+            aliasesData.DataSource = aliasBinding;
+            domainAlias.BindData(aliasBinding);
 
             // TODO: Could this be stored in Help Docs for easy retrieval? Otherwise this text is maintained in multiple locations.
             toolTip.SetToolTip(isSingleValueData, DomainAttribute_Resource.IsSingleValue);
@@ -98,11 +104,10 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (sender is IBindingTableRow data)
             {
-                this.Invoke(() =>
-                {
-                    RowState = data.RowState();
-                    this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted);
-                });
+                RowState = data.RowState();
+                if (IsHandleCreated)
+                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
+                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
             }
         }
 
@@ -113,7 +118,11 @@ namespace DataDictionary.Main.Forms.Domain
                 propertyBinding.AddNew();
                 domainProperty.RefreshControls();
             }
-            else if (detailTabLayout.TabPages[detailTabLayout.SelectedIndex] == aliasTab) { }
+            else if (detailTabLayout.TabPages[detailTabLayout.SelectedIndex] == aliasTab)
+            {
+                aliasBinding.AddNew();
+                domainAlias.RefreshControls();
+            }
             else { }
         }
 
@@ -143,6 +152,15 @@ namespace DataDictionary.Main.Forms.Domain
             if (mainBinding.Current is DomainAttributeItem current)
             {
                 DomainAttributePropertyItem newItem = new DomainAttributePropertyItem(current);
+                e.NewObject = newItem;
+            }
+        }
+
+        private void AliasBinding_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (mainBinding.Current is DomainAttributeItem current)
+            {
+                DomainAttributeAliasItem newItem = new DomainAttributeAliasItem(current);
                 e.NewObject = newItem;
             }
         }

@@ -99,17 +99,5 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
             { return scopeCrossWalk[source.Scope]; }
             else { return null; }
         }
-
-        /// <summary>
-        /// Attempts to convert a Scope Type into Db Scope Key.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public static IDbScopeKey? TryScope(this IScopeKeyName source)
-        {
-            if (scopeCrossWalk.ContainsKey(new ScopeKey(source).Scope))
-            { return scopeCrossWalk[new ScopeKey(source).Scope]; }
-            else { return null; }
-        }
     }
 }
