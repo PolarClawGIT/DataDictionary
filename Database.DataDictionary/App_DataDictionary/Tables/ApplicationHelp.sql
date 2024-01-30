@@ -3,8 +3,9 @@
 	[HelpId] UniqueIdentifier Not Null CONSTRAINT [DF_ApplicationHelpId] DEFAULT (newsequentialid()),
 	[HelpParentId] UniqueIdentifier Null,
 	[HelpSubject] NVarChar(100) Not Null,
+	[HelpToolTip] NVarChar(500) Null,
 	[HelpText] NVarChar(Max) Not Null,
-	[NameSpace] NVarChar(1000) Null,
+	[NameSpace] NVarChar(1023) Null, -- Length is based on the fact I don't use long names. 1023 is the VB.Net NameSpace definition.
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_ApplicationHelp_ModfiedBy] DEFAULT (ORIGINAL_LOGIN()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL Constraint [DF_ApplicationHelp_SysStart] Default (sysdatetime()),

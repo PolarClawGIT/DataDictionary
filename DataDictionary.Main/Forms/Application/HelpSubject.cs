@@ -1,9 +1,11 @@
-﻿using DataDictionary.BusinessLayer.WorkFlows;
+﻿using DataDictionary.BusinessLayer.NameSpace;
+using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,15 +16,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Dialogs
 {
     partial class HelpSubject : ApplicationBase
     {
-        HelpItem? helpItem = null;
-        HelpKey? helpKey;
-        HelpKeyUnique? initNameSpace;
-        String initHelpSubject = String.Empty;
+        List<Control> controlList = new List<Control>();
 
         Boolean IsLocked
         {
@@ -44,77 +44,85 @@ namespace DataDictionary.Main.Dialogs
             deleteItemCommand.Click += DeleteItemCommand_Click;
             deleteItemCommand.Image = Resources.DeleteStatusHelp;
 
+            helpBinding.DataSource = Program.Data.HelpSubjects;
+
             // Setup Images for Tree Control
             SetImages(helpContentNavigation, helpContentImageItems.Values);
         }
 
-
-        public HelpSubject(Object targetForm) : this()
-        { initNameSpace = new HelpKeyUnique(targetForm); }
-
-        public HelpSubject(String targetSubject) : this()
-        { initHelpSubject = targetSubject; }
-
-        private void NewItemCommand_Click(object? sender, EventArgs e)
+        public HelpSubject(Form targetForm) : this()
         {
-            UnBindData();
-            helpItem = new HelpItem() { HelpSubject = "(new Subject)" };
-            helpKey = new HelpKey(helpItem);
-            Program.Data.HelpSubjects.Add(helpItem);
-            BuildHelpContentTree();
-            BindData();
-        }
-
-        private void DeleteItemCommand_Click(object? sender, EventArgs e)
-        {
-            if (Program.Data.HelpSubjects.FirstOrDefault(w => helpKey is not null && helpKey.Equals(w)) is HelpItem item)
+            if (helpBinding.DataSource is IList<HelpItem> subjects)
             {
-                UnBindData();
-                Program.Data.HelpSubjects.Remove(item);
-                helpItem = new HelpItem();
-                helpKey = new HelpKey(helpItem);
-                BuildHelpContentTree();
-                BindData();
+                if (subjects.FirstOrDefault(w => w.NameSpace is String && w.NameSpace.Equals(targetForm.GetType().FullName, StringComparison.CurrentCultureIgnoreCase)) is HelpItem subject)
+                { helpBinding.Position = subjects.IndexOf(subject); }
+            }
+
+            controlList.Add(targetForm);
+
+            AddChild(targetForm);
+
+            void AddChild(Control child)
+            {
+                foreach (Control item in child.Controls)
+                {
+                    if (!String.IsNullOrWhiteSpace(item.Name))
+                    { controlList.Add(item); }
+
+                    if (child.HasChildren && child is not UserControl)
+                    { AddChild(item); }
+                }
             }
         }
 
+        public HelpSubject(String targetSubject) : this()
+        {
+            if (helpBinding.DataSource is IList<HelpItem> subjects)
+            {
+                if (subjects.FirstOrDefault(w => w.HelpSubject is String && w.HelpSubject.Equals(targetSubject, StringComparison.CurrentCultureIgnoreCase)) is HelpItem subject)
+                { helpBinding.Position = subjects.IndexOf(subject); }
+            }
+        }
 
         private void HelpSubject_Load(object sender, EventArgs e)
         {
-            BuildHelpContentTree();
-            BindData();
+            IHelpItem nameOfValues;
+            helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(nameOfValues.HelpSubject)));
+            helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(nameOfValues.NameSpace)));
+            helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(nameOfValues.HelpToolTip)));
+            helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(nameOfValues.HelpText)));
+
+            BuildHelpTree();
+            BuildNameSpace();
         }
 
-        void BindData()
+        void BuildNameSpace()
         {
-            errorProvider.Clear();
+            nameSpaceBrowser.Items.Clear();
 
-            if (helpKey is null && initNameSpace is null)
-            { IsLocked = true; }
-            else if (helpKey is not null && Program.Data.HelpSubjects.FirstOrDefault(w => helpKey.Equals(w)) is HelpItem byKey)
-            { helpItem = byKey; IsLocked = false; }
-            else if (initNameSpace is not null && Program.Data.HelpSubjects.FirstOrDefault(w => initNameSpace.Equals(w)) is HelpItem byNameSpace)
-            { helpItem = byNameSpace; helpKey = new HelpKey(byNameSpace); IsLocked = false; }
-            else if (Program.Data.HelpSubjects.FirstOrDefault(w => String.Equals(w.HelpSubject, initHelpSubject, StringComparison.OrdinalIgnoreCase)) is HelpItem bySubject)
-            { helpItem = bySubject; helpKey = new HelpKey(bySubject); IsLocked = false; }
-
-            if (helpItem is not null)
+            if (controlList.Count > 0)
             {
-                var x = helpItem.RowState();
+                nameSpacesGroup.Text = String.Format("NameSpaces ({0})", controlList[0].GetType().FullName);
 
-                helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpItem, nameof(helpItem.HelpSubject)));
-                helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpItem, nameof(helpItem.NameSpace)));
-                helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpItem, nameof(helpItem.HelpText)));
-                ValidateChildren();
+                foreach (Control item in controlList)
+                {
+                    ListViewItem newItem = new ListViewItem(item.Name); // Column 0, Name
+                    if (item is not Form)
+                    { newItem.SubItems.Add(item.GetType().Name); } // Column 1, Type
+
+                    nameSpaceBrowser.Items.Add(newItem);
+                }
             }
         }
 
-        void UnBindData()
+        private void NewItemCommand_Click(object? sender, EventArgs e)
+        { helpBinding.AddNew(); }
+
+        private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
-            helpSubjectData.DataBindings.Clear();
-            helpNameSpaceData.DataBindings.Clear();
-            helpTextData.DataBindings.Clear();
+
         }
+
 
         #region Help Content Tree
         Dictionary<TreeNode, Object> helpContentNodes = new Dictionary<TreeNode, Object>();
@@ -128,17 +136,25 @@ namespace DataDictionary.Main.Dialogs
             {helpContentImageIndex.HelpPage,    ("HelpPage",   Resources.HelpIndexFile) },
         };
 
-        void BuildHelpContentTree()
+        void BuildHelpTree()
         {
             helpContentNavigation.Nodes.Clear();
             helpContentNodes.Clear();
 
-            foreach (HelpItem item in Program.Data.HelpSubjects.Where(w => w.HelpParentId is null))
+            if (helpBinding.DataSource is IEnumerable<HelpItem> items)
             {
-                TreeNode subjectNode = CreateNode(item, helpContentImageIndex.HelpPage, null);
-                helpContentNavigation.Nodes.Add(subjectNode);
+                foreach (HelpItem item in items.Where(w => w.HelpParentId is null))
+                {
+                    TreeNode subjectNode = CreateNode(item, helpContentImageIndex.HelpPage, null);
+                    helpContentNavigation.Nodes.Add(subjectNode);
 
-                if (helpKey is not null && helpKey.Equals(item)) { helpContentNavigation.SelectedNode = subjectNode; }
+                    if (helpBinding.Current is HelpItem current)
+                    {
+                        HelpKey key = new HelpKey(current);
+                        if (key.Equals(item))
+                        { helpContentNavigation.SelectedNode = subjectNode; }
+                    }
+                }
             }
 
             TreeNode CreateNode(HelpItem source, helpContentImageIndex imageIndex, TreeNode? parentNode = null)
@@ -150,8 +166,11 @@ namespace DataDictionary.Main.Dialogs
                 if (parentNode is not null) { parentNode.Nodes.Add(result); }
                 helpContentNodes.Add(result, source);
 
-                foreach (HelpItem childItem in Program.Data.HelpSubjects.Where(w => w.HelpParentId == source.HelpId))
-                { CreateNode(childItem, imageIndex, result); }
+                if (helpBinding.DataSource is IEnumerable<HelpItem> items)
+                {
+                    foreach (HelpItem childItem in items.Where(w => w.HelpParentId == source.HelpId))
+                    { CreateNode(childItem, imageIndex, result); }
+                }
 
                 return result;
             }
@@ -169,14 +188,15 @@ namespace DataDictionary.Main.Dialogs
 
         private void helpContentNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (helpContentNodes.ContainsKey(e.Node) &&
-                helpContentNodes[e.Node] is HelpItem item)
+            if (helpContentNodes.ContainsKey(e.Node))
             {
-                UnBindData();
-                helpItem = item;
-                helpKey = new HelpKey(item);
-                BindData();
+                if (helpBinding.DataSource is IList<HelpItem> items && helpContentNodes[e.Node] is HelpItem target)
+                {
+                    if (items.Contains(target))
+                    { helpBinding.Position = items.IndexOf(target); }
+                }
             }
+
         }
         #endregion
 
@@ -215,10 +235,85 @@ namespace DataDictionary.Main.Dialogs
         #region IColleague
 
         protected override void HandleMessage(DbApplicationBatchStarting message)
-        { UnBindData(); }
+        { }
 
         protected override void HandleMessage(DbApplicationBatchCompleted message)
-        { BuildHelpContentTree(); BindData(); }
+        { }
         #endregion
+
+        private void helpBinding_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            HelpItem newItem = new HelpItem();
+
+            if (controlList.FirstOrDefault() is Control root)
+            {
+                newItem.HelpSubject = root.Name;
+                newItem.NameSpace = new ModelNameSpaceKeyMember(String.Format("{0}", root.GetType().FullName)).MemberFullName;
+            }
+
+            e.NewObject = newItem;
+        }
+
+        private void helpBinding_DataError(object sender, BindingManagerDataErrorEventArgs e)
+        {
+
+        }
+
+        private void helpBinding_BindingComplete(object sender, BindingCompleteEventArgs e)
+        {
+
+        }
+
+        private void helpBinding_CurrentChanged(object sender, EventArgs e)
+        {
+            if (helpBinding.Current is HelpItem current)
+            {
+                RowState = current.RowState();
+                helpNameSpaceData.Enabled = false;
+                nameSpacesGroup.Enabled = false;
+
+                if (controlList.FirstOrDefault() is Control root)
+                {
+                    ModelNameSpaceKeyMember formNameSpace = new ModelNameSpaceKeyMember(String.Format("{0}", root.GetType().FullName));
+
+                    if (current.NameSpace is String)
+                    {
+                        ModelNameSpaceKeyMember currentNameSpace = new ModelNameSpaceKeyMember(current.NameSpace);
+
+                        if (currentNameSpace.MemberPath == formNameSpace.MemberPath)
+                        {
+                            helpNameSpaceData.Enabled = true;
+                            nameSpacesGroup.Enabled = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void nameSpaceBrowser_DoubleClick(object sender, EventArgs e)
+        {
+            if (nameSpaceBrowser.SelectedItems.Count > 0)
+            {
+                Control selected = controlList[nameSpaceBrowser.SelectedItems[0].Index];
+                Control root = NameSpaceBrowserRoot(selected);
+                ModelNameSpaceKeyMember nameSpace;
+
+                if (selected is Form)
+                { nameSpace = new ModelNameSpaceKeyMember(String.Format("{0}", root.GetType().FullName)); }
+                else
+                { nameSpace = new ModelNameSpaceKeyMember(String.Format("{0}.{1}", root.GetType().FullName, selected.Name)); }
+
+                helpNameSpaceData.Text = nameSpace.MemberFullName;
+            }
+        }
+
+        Control NameSpaceBrowserRoot(Control current)
+        {
+            if (current is Form)
+            { return current; }
+            else if (current.Parent is Control)
+            { return NameSpaceBrowserRoot(current.Parent); }
+            else { return current; }
+        }
     }
 }

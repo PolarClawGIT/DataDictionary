@@ -11,6 +11,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 Select	[HelpId],
 		[HelpParentId],
 		[HelpSubject],
+		[HelpToolTip],
 		[HelpText],
 		[NameSpace]
 From	[App_DataDictionary].[ApplicationHelp]

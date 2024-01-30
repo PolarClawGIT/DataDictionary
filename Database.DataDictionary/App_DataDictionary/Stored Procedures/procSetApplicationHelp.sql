@@ -23,6 +23,7 @@ Begin Try
 	Select	IsNull(D.[HelpId],NewId()) As [HelpId],
 			D.[HelpParentId],
 			NullIf(Trim(D.[HelpSubject]),'') As [HelpSubject],
+			NullIf(Trim(D.[HelpToolTip]),'') As [HelpToolTip],
 			NullIf(Trim(D.[HelpText]),'') As [HelpText],
 			NullIf(Trim(D.[NameSpace]),'') As [NameSpace]
 	From	@Data D
@@ -40,6 +41,7 @@ Begin Try
 		Select	V.[HelpId],
 				V.[HelpParentId],
 				V.[HelpSubject],
+				V.[HelpToolTip],
 				V.[HelpText],
 				V.[NameSpace]
 		From	@Values V
@@ -49,6 +51,7 @@ Begin Try
 		Select	[HelpId],
 				[HelpParentId],
 				[HelpSubject],
+				[HelpToolTip],
 				[HelpText],
 				[NameSpace]
 		From	[App_DataDictionary].[ApplicationHelp])
@@ -58,11 +61,12 @@ Begin Try
 	When Matched Then Update
 		Set	[HelpParentId] = S.[HelpParentId],
 			[HelpSubject] = S.[HelpSubject],
+			[HelpToolTip] = S.[HelpToolTip],
 			[HelpText] = S.[HelpText],
 			[NameSpace] = S.[NameSpace]
 	When Not Matched by Target Then
-		Insert([HelpId], [HelpParentId], [HelpSubject], [HelpText], [NameSpace])
-		Values ([HelpId], [HelpParentId], [HelpSubject], [HelpText], [NameSpace]);
+		Insert([HelpId], [HelpParentId], [HelpSubject], [HelpToolTip], [HelpText], [NameSpace])
+		Values ([HelpId], [HelpParentId], [HelpSubject], [HelpToolTip], [HelpText], [NameSpace]);
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
