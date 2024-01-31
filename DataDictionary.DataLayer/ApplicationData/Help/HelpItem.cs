@@ -53,7 +53,16 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
         public string? HelpToolTip { get { return GetValue("HelpToolTip"); } set { SetValue("HelpToolTip", value); } }
 
         /// <inheritdoc/>
-        public string? HelpText { get { return GetValue("HelpText"); } set { SetValue("HelpText", value); } }
+        public string? HelpText
+        {
+            get { return GetValue("HelpText"); }
+            set
+            {
+                // The Rich Text control is specifically aggressive about changing the value outside of what the user does.
+                if (HelpText == value) { }
+                else { SetValue("HelpText", value); }
+            }
+        }
 
         /// <inheritdoc/>
         public string? NameSpace { get { return GetValue("NameSpace"); } set { SetValue("NameSpace", value); } }

@@ -30,27 +30,38 @@
         {
             components = new System.ComponentModel.Container();
             SplitContainer helpSplitLayout;
+            TabControl helpTabs;
             helpContentNavigation = new TreeView();
             helpDetailLayout = new TableLayoutPanel();
             helpSubjectData = new Controls.TextBoxData();
+            helpDescriptionLayout = new TabPage();
+            helpTextData = new Controls.RichTextBoxData();
+            helpNameSpaceLayout = new TabPage();
+            nameSpaceGroupLayout = new TableLayoutPanel();
             helpNameSpaceData = new Controls.TextBoxData();
             helpToolTipData = new Controls.TextBoxData();
-            helpTextData = new Controls.RichTextBoxData();
-            nameSpacesGroup = new GroupBox();
-            nameSpaceBrowser = new ListView();
-            nameSpaceNameColumn = new ColumnHeader();
-            nameSpaceTypeColumn = new ColumnHeader();
+            controlsGroup = new GroupBox();
+            controlData = new ListView();
+            controlNameColumn = new ColumnHeader();
+            controlTypeColumn = new ColumnHeader();
             errorProvider = new ErrorProvider(components);
             helpBinding = new BindingSource(components);
+            nameSpaceBinding = new BindingSource(components);
             helpSplitLayout = new SplitContainer();
+            helpTabs = new TabControl();
             ((System.ComponentModel.ISupportInitialize)helpSplitLayout).BeginInit();
             helpSplitLayout.Panel1.SuspendLayout();
             helpSplitLayout.Panel2.SuspendLayout();
             helpSplitLayout.SuspendLayout();
             helpDetailLayout.SuspendLayout();
-            nameSpacesGroup.SuspendLayout();
+            helpTabs.SuspendLayout();
+            helpDescriptionLayout.SuspendLayout();
+            helpNameSpaceLayout.SuspendLayout();
+            nameSpaceGroupLayout.SuspendLayout();
+            controlsGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             ((System.ComponentModel.ISupportInitialize)helpBinding).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)nameSpaceBinding).BeginInit();
             SuspendLayout();
             // 
             // helpSplitLayout
@@ -78,27 +89,20 @@
             helpContentNavigation.Name = "helpContentNavigation";
             helpContentNavigation.Size = new Size(151, 569);
             helpContentNavigation.TabIndex = 0;
-            helpContentNavigation.NodeMouseDoubleClick += helpContentNavigation_NodeMouseDoubleClick;
+            helpContentNavigation.NodeMouseClick += HelpContentNavigation_NodeMouseClick;
             // 
             // helpDetailLayout
             // 
             helpDetailLayout.ColumnCount = 1;
             helpDetailLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             helpDetailLayout.Controls.Add(helpSubjectData, 0, 0);
-            helpDetailLayout.Controls.Add(helpNameSpaceData, 0, 1);
-            helpDetailLayout.Controls.Add(helpToolTipData, 0, 3);
-            helpDetailLayout.Controls.Add(helpTextData, 0, 4);
-            helpDetailLayout.Controls.Add(nameSpacesGroup, 0, 2);
+            helpDetailLayout.Controls.Add(helpTabs, 0, 1);
             helpDetailLayout.Dock = DockStyle.Fill;
             helpDetailLayout.Location = new Point(0, 0);
             helpDetailLayout.Name = "helpDetailLayout";
-            helpDetailLayout.RowCount = 5;
+            helpDetailLayout.RowCount = 2;
             helpDetailLayout.RowStyles.Add(new RowStyle());
-            helpDetailLayout.RowStyles.Add(new RowStyle());
-            helpDetailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            helpDetailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            helpDetailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            helpDetailLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            helpDetailLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             helpDetailLayout.Size = new Size(577, 569);
             helpDetailLayout.TabIndex = 0;
             // 
@@ -116,78 +120,129 @@
             helpSubjectData.Validated += helpSubjectData_Validated;
             helpSubjectData.Validating += helpSubjectData_Validating;
             // 
-            // helpNameSpaceData
+            // helpTabs
             // 
-            helpNameSpaceData.AutoSize = true;
-            helpNameSpaceData.Dock = DockStyle.Fill;
-            helpNameSpaceData.HeaderText = "Name Space";
-            helpNameSpaceData.Location = new Point(3, 53);
-            helpNameSpaceData.Multiline = false;
-            helpNameSpaceData.Name = "helpNameSpaceData";
-            helpNameSpaceData.ReadOnly = false;
-            helpNameSpaceData.Size = new Size(571, 44);
-            helpNameSpaceData.TabIndex = 1;
+            helpTabs.Controls.Add(helpDescriptionLayout);
+            helpTabs.Controls.Add(helpNameSpaceLayout);
+            helpTabs.Dock = DockStyle.Fill;
+            helpTabs.Location = new Point(3, 53);
+            helpTabs.Name = "helpTabs";
+            helpTabs.SelectedIndex = 0;
+            helpTabs.Size = new Size(571, 513);
+            helpTabs.TabIndex = 6;
             // 
-            // helpToolTipData
+            // helpDescriptionLayout
             // 
-            helpToolTipData.AutoSize = true;
-            helpToolTipData.Dock = DockStyle.Fill;
-            helpToolTipData.HeaderText = "Tool Tips";
-            helpToolTipData.Location = new Point(3, 196);
-            helpToolTipData.Multiline = true;
-            helpToolTipData.Name = "helpToolTipData";
-            helpToolTipData.ReadOnly = false;
-            helpToolTipData.Size = new Size(571, 87);
-            helpToolTipData.TabIndex = 4;
+            helpDescriptionLayout.BackColor = SystemColors.Control;
+            helpDescriptionLayout.Controls.Add(helpTextData);
+            helpDescriptionLayout.Location = new Point(4, 24);
+            helpDescriptionLayout.Name = "helpDescriptionLayout";
+            helpDescriptionLayout.Padding = new Padding(3);
+            helpDescriptionLayout.Size = new Size(563, 485);
+            helpDescriptionLayout.TabIndex = 0;
+            helpDescriptionLayout.Text = "Description";
             // 
             // helpTextData
             // 
             helpTextData.AutoSize = true;
             helpTextData.Dock = DockStyle.Fill;
             helpTextData.HeaderText = "Text";
-            helpTextData.Location = new Point(3, 289);
+            helpTextData.Location = new Point(3, 3);
             helpTextData.Name = "helpTextData";
             helpTextData.ReadOnly = false;
             helpTextData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
-            helpTextData.Size = new Size(571, 277);
+            helpTextData.Size = new Size(557, 479);
             helpTextData.TabIndex = 2;
             helpTextData.Validated += helpTextData_Validated;
             helpTextData.Validating += helpTextData_Validating;
             // 
-            // nameSpacesGroup
+            // helpNameSpaceLayout
             // 
-            nameSpacesGroup.Controls.Add(nameSpaceBrowser);
-            nameSpacesGroup.Dock = DockStyle.Fill;
-            nameSpacesGroup.Location = new Point(3, 103);
-            nameSpacesGroup.Name = "nameSpacesGroup";
-            nameSpacesGroup.Size = new Size(571, 87);
-            nameSpacesGroup.TabIndex = 5;
-            nameSpacesGroup.TabStop = false;
-            nameSpacesGroup.Text = "Name Spaces";
+            helpNameSpaceLayout.BackColor = SystemColors.Control;
+            helpNameSpaceLayout.Controls.Add(nameSpaceGroupLayout);
+            helpNameSpaceLayout.Location = new Point(4, 24);
+            helpNameSpaceLayout.Name = "helpNameSpaceLayout";
+            helpNameSpaceLayout.Padding = new Padding(3);
+            helpNameSpaceLayout.Size = new Size(563, 485);
+            helpNameSpaceLayout.TabIndex = 1;
+            helpNameSpaceLayout.Text = "NameSpace";
             // 
-            // nameSpaceBrowser
+            // nameSpaceGroupLayout
             // 
-            nameSpaceBrowser.Columns.AddRange(new ColumnHeader[] { nameSpaceNameColumn, nameSpaceTypeColumn });
-            nameSpaceBrowser.Dock = DockStyle.Fill;
-            nameSpaceBrowser.HeaderStyle = ColumnHeaderStyle.Nonclickable;
-            nameSpaceBrowser.Location = new Point(3, 19);
-            nameSpaceBrowser.MultiSelect = false;
-            nameSpaceBrowser.Name = "nameSpaceBrowser";
-            nameSpaceBrowser.Size = new Size(565, 65);
-            nameSpaceBrowser.TabIndex = 3;
-            nameSpaceBrowser.UseCompatibleStateImageBehavior = false;
-            nameSpaceBrowser.View = View.Details;
-            nameSpaceBrowser.DoubleClick += nameSpaceBrowser_DoubleClick;
+            nameSpaceGroupLayout.ColumnCount = 1;
+            nameSpaceGroupLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            nameSpaceGroupLayout.Controls.Add(helpNameSpaceData, 0, 0);
+            nameSpaceGroupLayout.Controls.Add(helpToolTipData, 0, 1);
+            nameSpaceGroupLayout.Controls.Add(controlsGroup, 0, 2);
+            nameSpaceGroupLayout.Dock = DockStyle.Fill;
+            nameSpaceGroupLayout.Location = new Point(3, 3);
+            nameSpaceGroupLayout.Name = "nameSpaceGroupLayout";
+            nameSpaceGroupLayout.RowCount = 3;
+            nameSpaceGroupLayout.RowStyles.Add(new RowStyle());
+            nameSpaceGroupLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            nameSpaceGroupLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
+            nameSpaceGroupLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            nameSpaceGroupLayout.Size = new Size(557, 479);
+            nameSpaceGroupLayout.TabIndex = 1;
             // 
-            // nameSpaceNameColumn
+            // helpNameSpaceData
             // 
-            nameSpaceNameColumn.Text = "Control Name";
-            nameSpaceNameColumn.Width = 300;
+            helpNameSpaceData.AutoSize = true;
+            helpNameSpaceData.Dock = DockStyle.Fill;
+            helpNameSpaceData.HeaderText = "Name Space";
+            helpNameSpaceData.Location = new Point(3, 3);
+            helpNameSpaceData.Multiline = false;
+            helpNameSpaceData.Name = "helpNameSpaceData";
+            helpNameSpaceData.ReadOnly = false;
+            helpNameSpaceData.Size = new Size(551, 44);
+            helpNameSpaceData.TabIndex = 1;
             // 
-            // nameSpaceTypeColumn
+            // helpToolTipData
             // 
-            nameSpaceTypeColumn.Text = "Control Type";
-            nameSpaceTypeColumn.Width = 150;
+            helpToolTipData.AutoSize = true;
+            helpToolTipData.Dock = DockStyle.Fill;
+            helpToolTipData.HeaderText = "Short Summary (aka Tool Tip)";
+            helpToolTipData.Location = new Point(3, 53);
+            helpToolTipData.Multiline = true;
+            helpToolTipData.Name = "helpToolTipData";
+            helpToolTipData.ReadOnly = false;
+            helpToolTipData.Size = new Size(551, 79);
+            helpToolTipData.TabIndex = 4;
+            // 
+            // controlsGroup
+            // 
+            controlsGroup.Controls.Add(controlData);
+            controlsGroup.Dock = DockStyle.Fill;
+            controlsGroup.Location = new Point(3, 138);
+            controlsGroup.Name = "controlsGroup";
+            controlsGroup.Size = new Size(551, 338);
+            controlsGroup.TabIndex = 6;
+            controlsGroup.TabStop = false;
+            controlsGroup.Text = "Controls for: ";
+            // 
+            // controlData
+            // 
+            controlData.CheckBoxes = true;
+            controlData.Columns.AddRange(new ColumnHeader[] { controlNameColumn, controlTypeColumn });
+            controlData.Dock = DockStyle.Fill;
+            controlData.Location = new Point(3, 19);
+            controlData.Name = "controlData";
+            controlData.Size = new Size(545, 316);
+            controlData.TabIndex = 5;
+            controlData.UseCompatibleStateImageBehavior = false;
+            controlData.View = View.Details;
+            controlData.ItemChecked += controlData_ItemChecked;
+            controlData.Resize += controlData_Resize;
+            // 
+            // controlNameColumn
+            // 
+            controlNameColumn.Text = "Control Name";
+            controlNameColumn.Width = 300;
+            // 
+            // controlTypeColumn
+            // 
+            controlTypeColumn.Text = "Control Type";
+            controlTypeColumn.Width = 150;
             // 
             // errorProvider
             // 
@@ -217,9 +272,16 @@
             helpSplitLayout.ResumeLayout(false);
             helpDetailLayout.ResumeLayout(false);
             helpDetailLayout.PerformLayout();
-            nameSpacesGroup.ResumeLayout(false);
+            helpTabs.ResumeLayout(false);
+            helpDescriptionLayout.ResumeLayout(false);
+            helpDescriptionLayout.PerformLayout();
+            helpNameSpaceLayout.ResumeLayout(false);
+            nameSpaceGroupLayout.ResumeLayout(false);
+            nameSpaceGroupLayout.PerformLayout();
+            controlsGroup.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ((System.ComponentModel.ISupportInitialize)helpBinding).EndInit();
+            ((System.ComponentModel.ISupportInitialize)nameSpaceBinding).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -232,11 +294,15 @@
         private Controls.TextBoxData helpSubjectData;
         private ErrorProvider errorProvider;
         private TableLayoutPanel helpDetailLayout;
-        private ListView nameSpaceBrowser;
         private Controls.TextBoxData helpToolTipData;
         private BindingSource helpBinding;
-        private ColumnHeader nameSpaceTypeColumn;
-        private ColumnHeader nameSpaceNameColumn;
-        private GroupBox nameSpacesGroup;
+        private TableLayoutPanel nameSpaceGroupLayout;
+        private BindingSource nameSpaceBinding;
+        private TabPage helpDescriptionLayout;
+        private TabPage helpNameSpaceLayout;
+        private ListView controlData;
+        private ColumnHeader controlNameColumn;
+        private ColumnHeader controlTypeColumn;
+        private GroupBox controlsGroup;
     }
 }

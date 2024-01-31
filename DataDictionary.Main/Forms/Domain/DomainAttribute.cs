@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.DomainData;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.Main.Forms.Application;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Properties;
 using System;
@@ -86,17 +87,10 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.DataSource = aliasBinding;
             domainAlias.BindData(aliasBinding);
 
-            // TODO: Could this be stored in Help Docs for easy retrieval? Otherwise this text is maintained in multiple locations.
-            toolTip.SetToolTip(isSingleValueData, DomainAttribute_Resource.IsSingleValue);
-            toolTip.SetToolTip(isMultiValuedData, DomainAttribute_Resource.IsMultiValue);
-            toolTip.SetToolTip(isSimpleTypeData, DomainAttribute_Resource.IsSimpleType);
-            toolTip.SetToolTip(isCompositeTypeData, DomainAttribute_Resource.IsCompositeType);
-            toolTip.SetToolTip(isIntegralData, DomainAttribute_Resource.IsIntegral);
-            toolTip.SetToolTip(isDerivedData, DomainAttribute_Resource.IsDerived);
-            toolTip.SetToolTip(isValuedData, DomainAttribute_Resource.IsValued);
-            toolTip.SetToolTip(isNullableData, DomainAttribute_Resource.IsNullable);
-            toolTip.SetToolTip(isNonKeyData, DomainAttribute_Resource.IsNonKey);
-            toolTip.SetToolTip(isKeyData, DomainAttribute_Resource.IsKey);
+            // TODO: User Control are assigned tool tips but the tool tip does not display.
+            // Apparently the User Control does not get the event.
+            toolTip.LoadToolTips(this); 
+
 
         }
 

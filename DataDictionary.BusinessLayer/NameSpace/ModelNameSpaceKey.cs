@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;
@@ -46,6 +47,13 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// <param name="source" >A ModelNameSpace</param>
         public ModelNameSpaceKey(IModelNameSpaceKey source) : this()
         { SystemId = source.SystemId; }
+
+        /// <summary>
+        /// Constructor for the Model NameSpace Key, Application Help
+        /// </summary>
+        /// <param name="source"></param>
+        public ModelNameSpaceKey(IHelpKey source): this()
+        {   SystemId = source.HelpId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model NameSpace Key, Catalog

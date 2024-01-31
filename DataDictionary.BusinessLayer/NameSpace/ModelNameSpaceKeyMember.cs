@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;
@@ -93,6 +94,13 @@ namespace DataDictionary.BusinessLayer.NameSpace
             if (source.MemberFullName is String)
             { memberParts.AddRange(NameParts(source.MemberFullName)); }
         }
+
+        /// <summary>
+        /// Constructor for Model NameSpace Key Member Name, Application Help
+        /// </summary>
+        /// <param name="source"></param>
+        public ModelNameSpaceKeyMember(IHelpKeyUnique source) : base()
+        { memberParts.AddRange(NameParts(source.NameSpace ?? String.Empty)); }
 
         /// <summary>
         /// Constructor for Model NameSpace Key Member Name, Catalog

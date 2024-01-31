@@ -55,6 +55,8 @@
             aliasTab = new TabPage();
             aliasSplit = new SplitContainer();
             aliasesData = new DataGridView();
+            aliaseScopeColumn = new DataGridViewComboBoxColumn();
+            aliasNameColumn = new DataGridViewTextBoxColumn();
             domainAlias = new Controls.DomainAlias();
             subjectAreaTab = new TabPage();
             entityTab = new TabPage();
@@ -62,8 +64,6 @@
             toolTip = new ToolTip(components);
             propertyBinding = new BindingSource(components);
             aliasBinding = new BindingSource(components);
-            aliaseScopeColumn = new DataGridViewComboBoxColumn();
-            aliasNameColumn = new DataGridViewTextBoxColumn();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             mainLayout.SuspendLayout();
@@ -371,7 +371,7 @@
             aliasTab.Controls.Add(aliasSplit);
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
-            aliasTab.Size = new Size(412, 343);
+            aliasTab.Size = new Size(192, 72);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
@@ -389,8 +389,8 @@
             // aliasSplit.Panel2
             // 
             aliasSplit.Panel2.Controls.Add(domainAlias);
-            aliasSplit.Size = new Size(412, 343);
-            aliasSplit.SplitterDistance = 100;
+            aliasSplit.Size = new Size(192, 72);
+            aliasSplit.SplitterDistance = 25;
             aliasSplit.TabIndex = 0;
             // 
             // aliasesData
@@ -403,15 +403,32 @@
             aliasesData.Name = "aliasesData";
             aliasesData.ReadOnly = true;
             aliasesData.RowTemplate.Height = 25;
-            aliasesData.Size = new Size(412, 100);
+            aliasesData.Size = new Size(192, 25);
             aliasesData.TabIndex = 0;
+            // 
+            // aliaseScopeColumn
+            // 
+            aliaseScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliaseScopeColumn.DataPropertyName = "Scope";
+            aliaseScopeColumn.FillWeight = 50F;
+            aliaseScopeColumn.HeaderText = "Scope";
+            aliaseScopeColumn.Name = "aliaseScopeColumn";
+            aliaseScopeColumn.ReadOnly = true;
+            // 
+            // aliasNameColumn
+            // 
+            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliasNameColumn.DataPropertyName = "AliasName";
+            aliasNameColumn.HeaderText = "Alias Name";
+            aliasNameColumn.Name = "aliasNameColumn";
+            aliasNameColumn.ReadOnly = true;
             // 
             // domainAlias
             // 
             domainAlias.Dock = DockStyle.Fill;
             domainAlias.Location = new Point(0, 0);
             domainAlias.Name = "domainAlias";
-            domainAlias.Size = new Size(412, 239);
+            domainAlias.Size = new Size(192, 43);
             domainAlias.TabIndex = 0;
             // 
             // subjectAreaTab
@@ -439,23 +456,6 @@
             // aliasBinding
             // 
             aliasBinding.AddingNew += AliasBinding_AddingNew;
-            // 
-            // aliaseScopeColumn
-            // 
-            aliaseScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliaseScopeColumn.DataPropertyName = "Scope";
-            aliaseScopeColumn.FillWeight = 50F;
-            aliaseScopeColumn.HeaderText = "Scope";
-            aliaseScopeColumn.Name = "aliaseScopeColumn";
-            aliaseScopeColumn.ReadOnly = true;
-            // 
-            // aliasNameColumn
-            // 
-            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliasNameColumn.DataPropertyName = "AliasName";
-            aliasNameColumn.HeaderText = "Alias Name";
-            aliasNameColumn.Name = "aliasNameColumn";
-            aliasNameColumn.ReadOnly = true;
             // 
             // DomainAttribute
             // 

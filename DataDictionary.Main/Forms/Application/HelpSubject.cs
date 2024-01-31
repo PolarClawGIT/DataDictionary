@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms;
+using DataDictionary.Main.Forms.Application;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using Microsoft.IdentityModel.Tokens;
@@ -22,7 +23,35 @@ namespace DataDictionary.Main.Dialogs
 {
     partial class HelpSubject : ApplicationBase
     {
-        List<Control> controlList = new List<Control>();
+        class ControlItem : IComparable
+        {
+            public required Control Source { get; init; }
+            public ListViewItem? ListItem { get; set; }
+
+            public String ControlType { get { return Source.GetType().Name; } }
+            public String ControlName { get { return Source.Name; } }
+            public Boolean IsForm { get { return Source is Form; } }
+            public String FullName
+            {
+                get
+                {
+                    if (Source.GetType().FullName is String fullName) { return fullName; }
+                    else { return String.Empty; }
+                }
+            }
+
+            public ModelNameSpaceKeyMember NameSpaceKey { get { return Source.ToNameSpaceKey(); } }
+
+            public int CompareTo(object? obj)
+            {
+                if (obj is ControlItem item)
+                { return String.Compare(this.ControlName, item.ControlName); }
+                else { return -1; }
+
+            }
+        }
+
+        BindingList<ControlItem> controlList = new BindingList<ControlItem>();
 
         Boolean IsLocked
         {
@@ -34,6 +63,8 @@ namespace DataDictionary.Main.Dialogs
         {
             InitializeComponent();
             this.Icon = Resources.Icon_HelpTableOfContent;
+            controlData.Columns[0].Width = (Int32)(controlData.ClientSize.Width * 0.7);
+            controlData.Columns[1].Width = (Int32)(controlData.ClientSize.Width * 0.3);
 
             helpToolStripButton.Enabled = false;
             newItemCommand.Enabled = true;
@@ -52,22 +83,31 @@ namespace DataDictionary.Main.Dialogs
 
         public HelpSubject(Form targetForm) : this()
         {
-            if (helpBinding.DataSource is IList<HelpItem> subjects)
-            {
-                if (subjects.FirstOrDefault(w => w.NameSpace is String && w.NameSpace.Equals(targetForm.GetType().FullName, StringComparison.CurrentCultureIgnoreCase)) is HelpItem subject)
-                { helpBinding.Position = subjects.IndexOf(subject); }
-            }
-
-            controlList.Add(targetForm);
+            List<ControlItem> values = new List<ControlItem>();
 
             AddChild(targetForm);
+            values.Sort();
+            values.Insert(0, new ControlItem() { Source = targetForm });
+
+            controlList.AddRange(values);
+            nameSpaceBinding.DataSource = controlList;
+
+            if (helpBinding.DataSource is IList<HelpItem> subjects && targetForm.GetType().FullName is String fullName)
+            {
+                ModelNameSpaceKeyMember formKey = new ModelNameSpaceKeyMember(fullName);
+
+                if (subjects.FirstOrDefault(w => w.NameSpace is String && formKey.Equals(new ModelNameSpaceKeyMember(w.NameSpace))) is HelpItem subject)
+                { helpBinding.Position = subjects.IndexOf(subject); }
+            }
 
             void AddChild(Control child)
             {
                 foreach (Control item in child.Controls)
                 {
+                    var x = new ControlItem() { Source = item };
+
                     if (!String.IsNullOrWhiteSpace(item.Name))
-                    { controlList.Add(item); }
+                    { values.Add(new ControlItem() { Source = item }); }
 
                     if (child.HasChildren && child is not UserControl)
                     { AddChild(item); }
@@ -92,28 +132,24 @@ namespace DataDictionary.Main.Dialogs
             helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(nameOfValues.HelpToolTip)));
             helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(nameOfValues.HelpText)));
 
-            BuildHelpTree();
-            BuildNameSpace();
-        }
+            // Setup the ListView control controlData
+            if (controlList.FirstOrDefault(w => w.IsForm) is ControlItem baseForm)
+            { controlsGroup.Text = String.Format("Controls for: {0}", baseForm.ControlName); }
 
-        void BuildNameSpace()
-        {
-            nameSpaceBrowser.Items.Clear();
-
-            if (controlList.Count > 0)
+            foreach (ControlItem item in controlList.OrderBy(o => o.IsForm == false).ThenBy(o => o.ControlName))
             {
-                nameSpacesGroup.Text = String.Format("NameSpaces ({0})", controlList[0].GetType().FullName);
+                ListViewItem newItem = new ListViewItem(item.ControlName);
+                newItem.SubItems.Add(item.ControlType);
 
-                foreach (Control item in controlList)
-                {
-                    ListViewItem newItem = new ListViewItem(item.Name); // Column 0, Name
-                    if (item is not Form)
-                    { newItem.SubItems.Add(item.GetType().Name); } // Column 1, Type
+                item.ListItem = newItem;
 
-                    nameSpaceBrowser.Items.Add(newItem);
-                }
+                controlData.Items.Add(newItem);
             }
+
+
+            BuildHelpTree();
         }
+
 
         private void NewItemCommand_Click(object? sender, EventArgs e)
         { helpBinding.AddNew(); }
@@ -144,37 +180,44 @@ namespace DataDictionary.Main.Dialogs
             if (helpBinding.DataSource is IEnumerable<HelpItem> items)
             {
                 foreach (HelpItem item in items.Where(w => w.HelpParentId is null))
-                {
-                    TreeNode subjectNode = CreateNode(item, helpContentImageIndex.HelpPage, null);
-                    helpContentNavigation.Nodes.Add(subjectNode);
-
-                    if (helpBinding.Current is HelpItem current)
-                    {
-                        HelpKey key = new HelpKey(current);
-                        if (key.Equals(item))
-                        { helpContentNavigation.SelectedNode = subjectNode; }
-                    }
-                }
+                { TreeNode subjectNode = CreateNode(item, helpContentImageIndex.HelpPage); }
             }
 
-            TreeNode CreateNode(HelpItem source, helpContentImageIndex imageIndex, TreeNode? parentNode = null)
+        }
+
+        private TreeNode CreateNode(HelpItem source, helpContentImageIndex imageIndex, TreeNode? parentNode = null)
+        {
+            TreeNode result = new TreeNode(source.HelpSubject);
+            result.ImageKey = helpContentImageItems[imageIndex].imageKey;
+            result.SelectedImageKey = helpContentImageItems[imageIndex].imageKey;
+
+            if (parentNode is null)
+            { helpContentNavigation.Nodes.Add(result); }
+            else { parentNode.Nodes.Add(result); }
+
+            helpContentNodes.Add(result, source);
+
+            if (helpBinding.Current is HelpItem current && current == source)
+            { helpContentNavigation.SelectedNode = result; }
+
+            if (helpBinding.DataSource is IEnumerable<HelpItem> items)
             {
-                TreeNode result = new TreeNode(source.HelpSubject);
-                result.ImageKey = helpContentImageItems[imageIndex].imageKey;
-                result.SelectedImageKey = helpContentImageItems[imageIndex].imageKey;
-
-                if (parentNode is not null) { parentNode.Nodes.Add(result); }
-                helpContentNodes.Add(result, source);
-
-                if (helpBinding.DataSource is IEnumerable<HelpItem> items)
-                {
-                    foreach (HelpItem childItem in items.Where(w => w.HelpParentId == source.HelpId))
-                    { CreateNode(childItem, imageIndex, result); }
-                }
-
-                return result;
+                foreach (HelpItem childItem in items.Where(w => w.HelpParentId == source.HelpId))
+                { CreateNode(childItem, imageIndex, result); }
             }
 
+            source.PropertyChanged += Source_PropertyChanged;
+
+            return result;
+        }
+
+        private void Source_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (sender is HelpItem item && helpContentNodes.FirstOrDefault(w => w.Value == item).Key is TreeNode node)
+            {
+                if (node.Text != item.HelpSubject)
+                { node.Text = item.HelpSubject; }
+            }
         }
 
         void SetImages(TreeView tree, IEnumerable<(String imageKey, Image image)> images)
@@ -186,7 +229,8 @@ namespace DataDictionary.Main.Dialogs
             { tree.ImageList.Images.Add(image.imageKey, image.image); }
         }
 
-        private void helpContentNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+
+        private void HelpContentNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (helpContentNodes.ContainsKey(e.Node))
             {
@@ -196,8 +240,8 @@ namespace DataDictionary.Main.Dialogs
                     { helpBinding.Position = items.IndexOf(target); }
                 }
             }
-
         }
+
         #endregion
 
         private void helpSubjectData_Validating(object sender, CancelEventArgs e)
@@ -245,23 +289,17 @@ namespace DataDictionary.Main.Dialogs
         {
             HelpItem newItem = new HelpItem();
 
-            if (controlList.FirstOrDefault() is Control root)
+            if (controlList.FirstOrDefault(w => w.IsForm) is ControlItem root)
             {
-                newItem.HelpSubject = root.Name;
-                newItem.NameSpace = new ModelNameSpaceKeyMember(String.Format("{0}", root.GetType().FullName)).MemberFullName;
+                newItem.HelpSubject = root.ControlName;
+                newItem.NameSpace = new ModelNameSpaceKeyMember(String.Format("{0}", root.FullName)).MemberFullName;
             }
+            else
+            { newItem.HelpSubject = "(new Help Subject)"; }
+
+            CreateNode(newItem, helpContentImageIndex.HelpPage);
 
             e.NewObject = newItem;
-        }
-
-        private void helpBinding_DataError(object sender, BindingManagerDataErrorEventArgs e)
-        {
-
-        }
-
-        private void helpBinding_BindingComplete(object sender, BindingCompleteEventArgs e)
-        {
-
         }
 
         private void helpBinding_CurrentChanged(object sender, EventArgs e)
@@ -269,51 +307,86 @@ namespace DataDictionary.Main.Dialogs
             if (helpBinding.Current is HelpItem current)
             {
                 RowState = current.RowState();
-                helpNameSpaceData.Enabled = false;
-                nameSpacesGroup.Enabled = false;
+                helpNameSpaceLayout.Enabled = false;
 
-                if (controlList.FirstOrDefault() is Control root)
+                if (controlList.FirstOrDefault(w => w.IsForm) is ControlItem root && current.NameSpace is String)
                 {
-                    ModelNameSpaceKeyMember formNameSpace = new ModelNameSpaceKeyMember(String.Format("{0}", root.GetType().FullName));
+                    ModelNameSpaceKeyMember currentNameSpace = new ModelNameSpaceKeyMember(current.NameSpace);
+                    ModelNameSpaceKeyMember formNameSpace = new ModelNameSpaceKeyMember(root.FullName);
+                    ModelNameSpaceKeyMember parentNameSpace = new ModelNameSpaceKeyMember(currentNameSpace.MemberPath);
 
-                    if (current.NameSpace is String)
+                    if (formNameSpace.Equals(currentNameSpace))
                     {
-                        ModelNameSpaceKeyMember currentNameSpace = new ModelNameSpaceKeyMember(current.NameSpace);
+                        helpNameSpaceLayout.Enabled = true;
 
-                        if (currentNameSpace.MemberPath == formNameSpace.MemberPath)
+                        if (controlList.FirstOrDefault(w => currentNameSpace.Equals(new ModelNameSpaceKeyMember(w.FullName))) is ControlItem formItem)
                         {
-                            helpNameSpaceData.Enabled = true;
-                            nameSpacesGroup.Enabled = true;
+                            if (formItem.ListItem is not null && formItem.ListItem.Index >= 0)
+                            { formItem.ListItem.Checked = true; }
+                        }
+                    }
+                    else if (formNameSpace.Equals(parentNameSpace))
+                    {
+                        helpNameSpaceLayout.Enabled = true;
+
+                        if (controlList.FirstOrDefault(w => currentNameSpace.Equals(new ModelNameSpaceKeyMember(String.Format("{0}.{1}", root.FullName, w.ControlName)))) is ControlItem item)
+                        {
+                            if (item.ListItem is not null && item.ListItem.Index >= 0)
+                            { item.ListItem.Checked = true; }
                         }
                     }
                 }
             }
         }
 
-        private void nameSpaceBrowser_DoubleClick(object sender, EventArgs e)
+        private void helpBinding_DataError(object sender, BindingManagerDataErrorEventArgs e)
+        { } // Helps in Debugging binding
+
+        private void helpBinding_BindingComplete(object sender, BindingCompleteEventArgs e)
+        { }  // Helps in Debugging binding
+
+
+        private void controlData_Resize(object sender, EventArgs e)
         {
-            if (nameSpaceBrowser.SelectedItems.Count > 0)
-            {
-                Control selected = controlList[nameSpaceBrowser.SelectedItems[0].Index];
-                Control root = NameSpaceBrowserRoot(selected);
-                ModelNameSpaceKeyMember nameSpace;
-
-                if (selected is Form)
-                { nameSpace = new ModelNameSpaceKeyMember(String.Format("{0}", root.GetType().FullName)); }
-                else
-                { nameSpace = new ModelNameSpaceKeyMember(String.Format("{0}.{1}", root.GetType().FullName, selected.Name)); }
-
-                helpNameSpaceData.Text = nameSpace.MemberFullName;
-            }
+            controlData.Columns[0].Width = (Int32)(controlData.ClientSize.Width * 0.7);
+            controlData.Columns[1].Width = (Int32)(controlData.ClientSize.Width * 0.3);
         }
 
-        Control NameSpaceBrowserRoot(Control current)
+        ListViewItem? currentItem = null; // To prevent recursive calls
+        private void controlData_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            if (current is Form)
-            { return current; }
-            else if (current.Parent is Control)
-            { return NameSpaceBrowserRoot(current.Parent); }
-            else { return current; }
+            if (currentItem is null && e.Item.Checked)
+            {
+                // ItemChecked event is called each time the Checked state changes for any item, even in code.
+                // The currentItem is used to track the item currently being worked on.
+                // This prevents the recursive call fired when the Check state is set by the following loop.
+                currentItem = e.Item;
+
+                foreach (ControlItem item in
+                controlList.Where(w => w.ListItem != e.Item
+                    && w.ListItem is not null
+                    && w.ListItem.Index >= 0
+                    && w.ListItem.Checked))
+                {
+                    if (item.ListItem is ListViewItem viewItem && viewItem.Index >= 0)
+                    { viewItem.Checked = false; }
+                }
+
+                if (helpBinding.Current is HelpItem current && current.NameSpace is String && controlList.FirstOrDefault(w => w.ListItem == e.Item) is ControlItem selected && controlList.FirstOrDefault(w => w.IsForm) is ControlItem root)
+                {
+                    ModelNameSpaceKeyMember currentNameSpace = new ModelNameSpaceKeyMember(current.NameSpace);
+                    ModelNameSpaceKeyMember formNameSpace = new ModelNameSpaceKeyMember(root.FullName);
+                    ModelNameSpaceKeyMember controlNameSpace = selected.NameSpaceKey;
+
+                    if (selected.IsForm)
+                    { controlNameSpace = formNameSpace; }
+
+                    if (!currentNameSpace.Equals(controlNameSpace))
+                    { current.NameSpace = controlNameSpace.MemberFullName; }
+                }
+
+                currentItem = null;
+            }
         }
     }
 }
