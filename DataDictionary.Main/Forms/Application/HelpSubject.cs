@@ -23,41 +23,38 @@ namespace DataDictionary.Main.Dialogs
 {
     partial class HelpSubject : ApplicationBase
     {
-        class ControlItem : IComparable
+        class ControlItem
         {
-            public required Control Source { get; init; }
+            public required Form SourceForm { get; init; }
+            public required Control SourceControl { get; init; }
             public ListViewItem? ListItem { get; set; }
 
-            public String ControlType { get { return Source.GetType().Name; } }
-            public String ControlName { get { return Source.Name; } }
-            public Boolean IsForm { get { return Source is Form; } }
-            public String FullName
+            public String ControlType
             {
                 get
                 {
-                    if (Source.GetType().FullName is String fullName) { return fullName; }
-                    else { return String.Empty; }
+                    if (SourceControl is Form) { return "Form"; }
+                    else { return SourceControl.GetType().Name; }
                 }
             }
-
-            public ModelNameSpaceKeyMember NameSpaceKey { get { return Source.ToNameSpaceKey(); } }
-
-            public int CompareTo(object? obj)
+            public String ControlName
             {
-                if (obj is ControlItem item)
-                { return String.Compare(this.ControlName, item.ControlName); }
-                else { return -1; }
-
+                get
+                {
+                    String fullName = SourceControl.ToFullControlName();
+                    String formName = SourceForm.ToFullControlName();
+                    if (SourceControl is Form) { return formName; }
+                    else { return fullName.Substring(formName.Length + 1); }
+                }
             }
+            public Boolean IsForm { get { return SourceControl is Form; } }
+            public String FullName { get { return SourceControl.ToFullControlName(); } }
+
+            public override string ToString()
+            { return FullName; }
         }
 
         BindingList<ControlItem> controlList = new BindingList<ControlItem>();
-
-        Boolean IsLocked
-        {
-            get { return !helpDetailLayout.Enabled; }
-            set { helpDetailLayout.Enabled = !value; }
-        }
 
         public HelpSubject() : base()
         {
@@ -83,35 +80,22 @@ namespace DataDictionary.Main.Dialogs
 
         public HelpSubject(Form targetForm) : this()
         {
-            List<ControlItem> values = new List<ControlItem>();
+            List<Control> values = targetForm.ToControlList()
+                                             .OrderBy(o => o is not Form)
+                                             .ThenBy(o => o.ToFullControlName())
+                                             .ToList();
 
-            AddChild(targetForm);
-            values.Sort();
-            values.Insert(0, new ControlItem() { Source = targetForm });
+            controlList.Add(new ControlItem() { SourceForm = targetForm, SourceControl = targetForm });
 
-            controlList.AddRange(values);
+            foreach (Control item in values)
+            { controlList.Add(new ControlItem() { SourceForm = targetForm, SourceControl = item }); }
+
             nameSpaceBinding.DataSource = controlList;
 
-            if (helpBinding.DataSource is IList<HelpItem> subjects && targetForm.GetType().FullName is String fullName)
+            if (helpBinding.DataSource is IList<HelpItem> subjects && targetForm.ToFullControlName() is String fullName)
             {
-                ModelNameSpaceKeyMember formKey = new ModelNameSpaceKeyMember(fullName);
-
-                if (subjects.FirstOrDefault(w => w.NameSpace is String && formKey.Equals(new ModelNameSpaceKeyMember(w.NameSpace))) is HelpItem subject)
+                if (subjects.FirstOrDefault(w => w.NameSpace is String && w.NameSpace == fullName) is HelpItem subject)
                 { helpBinding.Position = subjects.IndexOf(subject); }
-            }
-
-            void AddChild(Control child)
-            {
-                foreach (Control item in child.Controls)
-                {
-                    var x = new ControlItem() { Source = item };
-
-                    if (!String.IsNullOrWhiteSpace(item.Name))
-                    { values.Add(new ControlItem() { Source = item }); }
-
-                    if (child.HasChildren && child is not UserControl)
-                    { AddChild(item); }
-                }
             }
         }
 
@@ -146,13 +130,18 @@ namespace DataDictionary.Main.Dialogs
                 controlData.Items.Add(newItem);
             }
 
-
             BuildHelpTree();
         }
 
 
         private void NewItemCommand_Click(object? sender, EventArgs e)
-        { helpBinding.AddNew(); }
+        {
+            if (helpBinding.AddNew() is HelpItem newItem)
+            {
+                TreeNode newNode = CreateNode(newItem, helpContentImageIndex.HelpPage);
+                helpContentNavigation.SelectedNode = newNode;
+            }
+        }
 
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
@@ -177,8 +166,13 @@ namespace DataDictionary.Main.Dialogs
             helpContentNavigation.Nodes.Clear();
             helpContentNodes.Clear();
 
+
             if (helpBinding.DataSource is IEnumerable<HelpItem> items)
             {
+
+
+
+
                 foreach (HelpItem item in items.Where(w => w.HelpParentId is null))
                 { TreeNode subjectNode = CreateNode(item, helpContentImageIndex.HelpPage); }
             }
@@ -291,13 +285,11 @@ namespace DataDictionary.Main.Dialogs
 
             if (controlList.FirstOrDefault(w => w.IsForm) is ControlItem root)
             {
-                newItem.HelpSubject = root.ControlName;
-                newItem.NameSpace = new ModelNameSpaceKeyMember(String.Format("{0}", root.FullName)).MemberFullName;
+                newItem.HelpSubject = root.SourceForm.Name;
+                newItem.NameSpace = root.FullName;
             }
             else
             { newItem.HelpSubject = "(new Help Subject)"; }
-
-            CreateNode(newItem, helpContentImageIndex.HelpPage);
 
             e.NewObject = newItem;
         }
@@ -372,17 +364,12 @@ namespace DataDictionary.Main.Dialogs
                     { viewItem.Checked = false; }
                 }
 
-                if (helpBinding.Current is HelpItem current && current.NameSpace is String && controlList.FirstOrDefault(w => w.ListItem == e.Item) is ControlItem selected && controlList.FirstOrDefault(w => w.IsForm) is ControlItem root)
+                if (helpBinding.Current is HelpItem current
+                    && current.NameSpace is String
+                    && controlList.FirstOrDefault(w => w.ListItem == e.Item) is ControlItem selected
+                    && controlList.FirstOrDefault(w => w.IsForm) is ControlItem root)
                 {
-                    ModelNameSpaceKeyMember currentNameSpace = new ModelNameSpaceKeyMember(current.NameSpace);
-                    ModelNameSpaceKeyMember formNameSpace = new ModelNameSpaceKeyMember(root.FullName);
-                    ModelNameSpaceKeyMember controlNameSpace = selected.NameSpaceKey;
-
-                    if (selected.IsForm)
-                    { controlNameSpace = formNameSpace; }
-
-                    if (!currentNameSpace.Equals(controlNameSpace))
-                    { current.NameSpace = controlNameSpace.MemberFullName; }
+                    current.NameSpace = selected.FullName;
                 }
 
                 currentItem = null;

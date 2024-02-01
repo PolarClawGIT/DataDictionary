@@ -165,7 +165,7 @@
             helpNameSpaceLayout.Padding = new Padding(3);
             helpNameSpaceLayout.Size = new Size(563, 485);
             helpNameSpaceLayout.TabIndex = 1;
-            helpNameSpaceLayout.Text = "NameSpace";
+            helpNameSpaceLayout.Text = "Programmability";
             // 
             // nameSpaceGroupLayout
             // 

@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NameSpace;
 using DataDictionary.DataLayer.ApplicationData.Help;
+using DataDictionary.Main.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,30 +11,35 @@ namespace DataDictionary.Main.Forms.Application
 {
     static class HelpSubjectExtension
     {
-        public static ModelNameSpaceKeyMember ToNameSpaceKey(this Control source)
-        {
-            if (source is Form && source.GetType().FullName is String fullName)
-            { return new ModelNameSpaceKeyMember(fullName); }
-            else if (GetRoot(source).GetType().FullName is String rootName)
-            { return new ModelNameSpaceKeyMember(String.Format("{0}.{1}", rootName, source.Name)); }
-            else { return new ModelNameSpaceKeyMember(source.Name); }
 
-            Control GetRoot(Control item)
-            {
-                if (item is Form) { return item; }
-                else if (item.Parent is null) { return item; }
-                else { return GetRoot(item.Parent); }
-            }
-        }
-
+        /// <summary>
+        /// Looks up the Tool Tip data from the HelpData and returns the value.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Important: The name in the HelpData and the Name in the control must match exactly (C# String.Equels compare).
+        /// Renames of the control does not update the HelpData.
+        /// </remarks>
         public static String ToToolTipText(this Control source)
         {
-            ModelNameSpaceKeyMember key = source.ToNameSpaceKey();
-            if (Program.Data.HelpSubjects.FirstOrDefault(w => key.Equals(new ModelNameSpaceKeyMember(w))) is HelpItem item && item.HelpToolTip is String toolTip)
+            if (Program.Data.HelpSubjects.FirstOrDefault(w => w.NameSpace == source.ToFullControlName()) is HelpItem item && item.HelpToolTip is String toolTip)
             { return toolTip; }
             else { return String.Empty; }
         }
 
+        /// <summary>
+        /// Reads the HelpData and loads the Tool Tip control with the values.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="source"></param>
+        /// <remarks>
+        /// This can load tool tips for any control in the Controls structure.
+        /// That includes controls nested inside User Controls.
+        /// This works because the Form.Controls structure includes all controls that appear in the form (built in and User Controls).
+        /// Not all control types display Tool Tips. The key is that they are the top-most visible control.
+        /// Otherwise, the hidden control does not receive the event.
+        /// </remarks>
         public static void LoadToolTips(this ToolTip target, Control source)
         {
             if (source.ToToolTipText() is String value && !String.IsNullOrWhiteSpace(value))

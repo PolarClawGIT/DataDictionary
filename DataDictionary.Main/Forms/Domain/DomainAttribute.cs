@@ -87,11 +87,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.DataSource = aliasBinding;
             domainAlias.BindData(aliasBinding);
 
-            // TODO: User Control are assigned tool tips but the tool tip does not display.
-            // Apparently the User Control does not get the event.
             toolTip.LoadToolTips(this); 
-
-
         }
 
         private void Data_RowStateChanged(object? sender, EventArgs e)

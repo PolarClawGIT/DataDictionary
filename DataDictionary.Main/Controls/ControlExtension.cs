@@ -24,5 +24,55 @@ namespace DataDictionary.Main.Controls
             else if (source.Parent is Control parent) { return FindUserControl(parent); }
             else { return null; }
         }
+
+        /// <summary>
+        /// Walks up the Parent Controls to work out the Name of the control.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static String ToFullControlName(this Control source)
+        {
+            String result = String.Empty;
+            Control? current = source;
+
+            if (source is Form && source.GetType().FullName is String formType)
+            { result = formType; current = null; }
+            else { result = source.Name; }
+
+            while (current is not null)
+            {
+                if (!String.IsNullOrWhiteSpace(current.Name))
+                {
+                    if (current is UserControl)
+                    { result = String.Format("{0}.{1}", current.Name, result); }
+                    else if (current is Form && current.GetType().FullName is String fullName)
+                    { result = String.Format("{0}.{1}", fullName, result); }
+                }
+
+                if (current is Form)
+                { current = null; }
+                else { current = current.Parent; }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Flattens Control collections into a simple List
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<Control> ToControlList(this Control source)
+        {
+            List<Control> result = new List<Control>();
+
+            if (!source.HasChildren && !String.IsNullOrWhiteSpace(source.Name))
+            { result.Add(source); }
+
+            foreach (Control child in source.Controls)
+            { result.AddRange(ToControlList(child)); }
+
+            return result;
+        }
     }
 }
