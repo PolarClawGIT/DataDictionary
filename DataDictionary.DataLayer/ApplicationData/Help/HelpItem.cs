@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     /// <summary>
     /// Interface for a Help Item used for Help Text.
     /// </summary>
-    public interface IHelpItem : IHelpKey, IHelpKeyParent, IHelpKeyUnique, IDataItem
+    public interface IHelpItem : IHelpKey, IHelpKeyUnique, IDataItem
     {
         /// <summary>
         /// Title/Subject of the Help Document.
@@ -43,8 +43,8 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
         /// <inheritdoc/>
         public Guid? HelpId { get { return GetValue<Guid>("HelpId"); } protected set { SetValue("HelpId", value); } }
 
-        /// <inheritdoc/>
-        public Guid? HelpParentId { get { return GetValue<Guid>("HelpParentId"); } protected set { SetValue("HelpParentId", value); } }
+        // Obsolete, Use NameSpace instead
+        //public Guid? HelpParentId { get { return GetValue<Guid>("HelpParentId"); } protected set { SetValue("HelpParentId", value); } }
 
         /// <inheritdoc/>
         public string? HelpSubject { get { return GetValue("HelpSubject"); } set { SetValue("HelpSubject", value); } }
@@ -78,7 +78,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("HelpId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("HelpParentId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("HelpSubject", typeof(string)){ AllowDBNull = false},
             new DataColumn("HelpToolTip", typeof(string)){ AllowDBNull = true},
             new DataColumn("HelpText", typeof(string)){ AllowDBNull = true},

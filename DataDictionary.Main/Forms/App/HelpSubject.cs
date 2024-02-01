@@ -1,25 +1,12 @@
 ﻿using DataDictionary.BusinessLayer.NameSpace;
-using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.Main.Controls;
-using DataDictionary.Main.Forms;
-using DataDictionary.Main.Forms.Application;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics.Eventing.Reader;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Dialogs
+namespace DataDictionary.Main.Forms.App
 {
     partial class HelpSubject : ApplicationBase
     {
@@ -154,11 +141,13 @@ namespace DataDictionary.Main.Dialogs
         enum helpContentImageIndex
         {
             HelpPage,
+            HelpGroup
         }
 
         static Dictionary<helpContentImageIndex, (String imageKey, Image image)> helpContentImageItems = new Dictionary<helpContentImageIndex, (String imageKey, Image image)>()
         {
-            {helpContentImageIndex.HelpPage,    ("HelpPage",   Resources.HelpIndexFile) },
+            {helpContentImageIndex.HelpPage,    ("HelpPage",   Resources.StatusHelp) },
+            {helpContentImageIndex.HelpGroup,   ("HelpGroup",  Resources.HelpIndexFile) },
         };
 
         void BuildHelpTree()
@@ -166,20 +155,70 @@ namespace DataDictionary.Main.Dialogs
             helpContentNavigation.Nodes.Clear();
             helpContentNodes.Clear();
 
-
             if (helpBinding.DataSource is IEnumerable<HelpItem> items)
+            { TreeGroup(helpContentNavigation.Nodes, items); }
+
+            void TreeGroup(TreeNodeCollection target, IEnumerable<HelpItem> source, String? groupLevel = null)
             {
+                List<IGrouping<String, HelpItem>> grouping = source.OrderBy(o => o.NameSpace).
+                    GroupBy(g =>
+                    {
+                        if (String.IsNullOrWhiteSpace(g.NameSpace)) { return String.Empty; }
+                        else
+                        {
+                            String remaining;
+                            if (g.NameSpace is null) { remaining = string.Empty; }
+                            else if (String.IsNullOrWhiteSpace(groupLevel)) { remaining = g.NameSpace; }
+                            else { remaining = g.NameSpace.Replace(String.Format("{0}.", groupLevel), String.Empty); }
 
+                            if (remaining.IndexOf('.') > 0)
+                            { return remaining.Substring(0, remaining.IndexOf('.')); }
+                            else { return remaining; }
+                        }
+                    }).ToList();
 
+                TreeNodeCollection parent = target;
 
+                foreach (IGrouping<String, HelpItem> group in grouping)
+                {
+                    List<HelpItem> items = group.Where(w => w.NameSpace == groupLevel)
+                                                .OrderBy(o => o.NameSpace)
+                                                .ThenBy(o => o.HelpSubject)
+                                                .ToList();
+                    List<HelpItem> subItems = group.Except(items).ToList();
 
-                foreach (HelpItem item in items.Where(w => w.HelpParentId is null))
-                { TreeNode subjectNode = CreateNode(item, helpContentImageIndex.HelpPage); }
+                    if (items.Count == 1)
+                    {
+                        TreeNode newNode = CreateNode(items[0], helpContentImageIndex.HelpPage, parent);
+                        parent = newNode.Nodes;
+                    }
+                    else if (items.Count > 1)
+                    {
+                        TreeNode newNode;
+                        if (String.IsNullOrWhiteSpace(group.Key))
+                        { newNode = new TreeNode("General"); }
+                        else { newNode = new TreeNode(group.Key); }
+
+                        newNode.ImageKey = helpContentImageItems[helpContentImageIndex.HelpGroup].imageKey;
+                        newNode.SelectedImageKey = helpContentImageItems[helpContentImageIndex.HelpGroup].imageKey;
+
+                        parent.Add(newNode);
+
+                        foreach (HelpItem item in items)
+                        { CreateNode(item, helpContentImageIndex.HelpPage, newNode.Nodes); }
+                    }
+
+                    String level;
+                    if (String.IsNullOrWhiteSpace(groupLevel)) { level = group.Key; }
+                    else { level = String.Format("{0}.{1}", groupLevel, group.Key); }
+
+                    TreeGroup(parent, subItems, level);
+                }
+
             }
-
         }
 
-        private TreeNode CreateNode(HelpItem source, helpContentImageIndex imageIndex, TreeNode? parentNode = null)
+        private TreeNode CreateNode(HelpItem source, helpContentImageIndex imageIndex, TreeNodeCollection? parentNode = null)
         {
             TreeNode result = new TreeNode(source.HelpSubject);
             result.ImageKey = helpContentImageItems[imageIndex].imageKey;
@@ -187,7 +226,7 @@ namespace DataDictionary.Main.Dialogs
 
             if (parentNode is null)
             { helpContentNavigation.Nodes.Add(result); }
-            else { parentNode.Nodes.Add(result); }
+            else { parentNode.Add(result); }
 
             helpContentNodes.Add(result, source);
 
@@ -196,8 +235,8 @@ namespace DataDictionary.Main.Dialogs
 
             if (helpBinding.DataSource is IEnumerable<HelpItem> items)
             {
-                foreach (HelpItem childItem in items.Where(w => w.HelpParentId == source.HelpId))
-                { CreateNode(childItem, imageIndex, result); }
+                //foreach (HelpItem childItem in items.Where(w => w.HelpParentId == source.HelpId))
+                //{ CreateNode(childItem, imageIndex, result); }
             }
 
             source.PropertyChanged += Source_PropertyChanged;
@@ -299,7 +338,8 @@ namespace DataDictionary.Main.Dialogs
             if (helpBinding.Current is HelpItem current)
             {
                 RowState = current.RowState();
-                helpNameSpaceLayout.Enabled = false;
+
+                controlData.Enabled = false;
 
                 if (controlList.FirstOrDefault(w => w.IsForm) is ControlItem root && current.NameSpace is String)
                 {
@@ -309,7 +349,7 @@ namespace DataDictionary.Main.Dialogs
 
                     if (formNameSpace.Equals(currentNameSpace))
                     {
-                        helpNameSpaceLayout.Enabled = true;
+                        controlData.Enabled = true;
 
                         if (controlList.FirstOrDefault(w => currentNameSpace.Equals(new ModelNameSpaceKeyMember(w.FullName))) is ControlItem formItem)
                         {
@@ -319,7 +359,7 @@ namespace DataDictionary.Main.Dialogs
                     }
                     else if (formNameSpace.Equals(parentNameSpace))
                     {
-                        helpNameSpaceLayout.Enabled = true;
+                        controlData.Enabled = true;
 
                         if (controlList.FirstOrDefault(w => currentNameSpace.Equals(new ModelNameSpaceKeyMember(String.Format("{0}.{1}", root.FullName, w.ControlName)))) is ControlItem item)
                         {

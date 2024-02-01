@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.Forms.Application
+﻿namespace DataDictionary.Main.Forms.App
 {
     partial class Property
     {

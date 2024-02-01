@@ -174,12 +174,12 @@ namespace DataDictionary.Main
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)
         {
             if (ActiveMdiChild is Form currentForm)
-            { Activate(() => new Dialogs.HelpSubject(currentForm)); }
-            else { Activate(() => new Dialogs.HelpSubject()); }
+            { Activate(() => new Forms.App.HelpSubject(currentForm)); }
+            else { Activate(() => new Forms.App.HelpSubject()); }
         }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Dialogs.HelpSubject()); }
+        { Activate(() => new Forms.App.HelpSubject()); }
 
         private void HelpAboutMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.AboutBox()); }
@@ -187,11 +187,11 @@ namespace DataDictionary.Main
         private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             if (ActiveMdiChild is Form currentForm)
-            { Activate(() => new Dialogs.HelpSubject(currentForm)); }
+            { Activate(() => new Forms.App.HelpSubject(currentForm)); }
         }
 
         private void browsePropertiesCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Application.Property()); }
+        { Activate(() => new Forms.App.Property()); }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -226,7 +226,7 @@ namespace DataDictionary.Main
         { Activate(() => new Dialogs.ViewTextTemplate()); }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Dialogs.ApplicationOptions()); }
+        { Activate(() => new App.ApplicationOptions()); }
         #endregion
 
         #region IColleague

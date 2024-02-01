@@ -21,25 +21,15 @@ Begin Try
 	Declare @Values [App_DataDictionary].[typeApplicationHelp]
 	Insert Into @Values
 	Select	IsNull(D.[HelpId],NewId()) As [HelpId],
-			D.[HelpParentId],
 			NullIf(Trim(D.[HelpSubject]),'') As [HelpSubject],
 			NullIf(Trim(D.[HelpToolTip]),'') As [HelpToolTip],
 			NullIf(Trim(D.[HelpText]),'') As [HelpText],
 			NullIf(Trim(D.[NameSpace]),'') As [NameSpace]
 	From	@Data D
 
-	-- Validation
-	If Exists (
-		Select	[HelpParentId], [HelpSubject]
-		From	@Values
-		Group By [HelpParentId], [HelpSubject]
-		Having	Count(*) > 1)
-	Throw 50000, '[HelpParentId] cannot be duplicate for the same parent topic', 2;
-
 	-- Apply Changes
-	With [Delta] As (
+;	With [Delta] As (
 		Select	V.[HelpId],
-				V.[HelpParentId],
 				V.[HelpSubject],
 				V.[HelpToolTip],
 				V.[HelpText],
@@ -49,7 +39,6 @@ Begin Try
 				On	V.[HelpId] = A.[HelpId]
 		Except
 		Select	[HelpId],
-				[HelpParentId],
 				[HelpSubject],
 				[HelpToolTip],
 				[HelpText],
@@ -59,14 +48,13 @@ Begin Try
 	Using [Delta] As S
 	On	T.[HelpId] = S.[HelpId]
 	When Matched Then Update
-		Set	[HelpParentId] = S.[HelpParentId],
-			[HelpSubject] = S.[HelpSubject],
+		Set	[HelpSubject] = S.[HelpSubject],
 			[HelpToolTip] = S.[HelpToolTip],
 			[HelpText] = S.[HelpText],
 			[NameSpace] = S.[NameSpace]
 	When Not Matched by Target Then
-		Insert([HelpId], [HelpParentId], [HelpSubject], [HelpToolTip], [HelpText], [NameSpace])
-		Values ([HelpId], [HelpParentId], [HelpSubject], [HelpToolTip], [HelpText], [NameSpace]);
+		Insert([HelpId], [HelpSubject], [HelpToolTip], [HelpText], [NameSpace])
+		Values ([HelpId], [HelpSubject], [HelpToolTip], [HelpText], [NameSpace]);
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
