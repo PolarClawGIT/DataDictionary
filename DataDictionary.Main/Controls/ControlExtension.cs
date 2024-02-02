@@ -43,7 +43,7 @@ namespace DataDictionary.Main.Controls
             {
                 if (!String.IsNullOrWhiteSpace(current.Name))
                 {
-                    if (current is UserControl)
+                    if (current is UserControl && current != source)
                     { result = String.Format("{0}.{1}", current.Name, result); }
                     else if (current is Form && current.GetType().FullName is String fullName)
                     { result = String.Format("{0}.{1}", fullName, result); }
@@ -65,9 +65,7 @@ namespace DataDictionary.Main.Controls
         public static IReadOnlyList<Control> ToControlList(this Control source)
         {
             List<Control> result = new List<Control>();
-
-            if (!source.HasChildren && !String.IsNullOrWhiteSpace(source.Name))
-            { result.Add(source); }
+            result.Add(source);
 
             foreach (Control child in source.Controls)
             { result.AddRange(ToControlList(child)); }

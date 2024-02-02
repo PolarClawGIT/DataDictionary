@@ -105,5 +105,14 @@ namespace DataDictionary.Main.Properties {
                 this["LastLibraryPath"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("About")]
+        public string DefaultSubject {
+            get {
+                return ((string)(this["DefaultSubject"]));
+            }
+        }
     }
 }

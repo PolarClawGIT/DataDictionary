@@ -35,6 +35,17 @@
     </xs:element>
   </xs:schema>
   <HelpItem>
+    <HelpId>7581bfb8-d99b-4cde-92ab-01cb1b77a3dc</HelpId>
+    <HelpSubject>Attribute- Key</HelpSubject>
+    <HelpToolTip>Is the Attribute is used as a Key (part of a PK, FK, or AK)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is the Attribute is used as a Key (part of a PK, FK, or AK)\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isKeyData</NameSpace>
+  </HelpItem>
+  <HelpItem>
     <HelpId>00000000-0000-0000-0010-100000000000</HelpId>
     <HelpSubject>Setup</HelpSubject>
     <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fswiss\fprq2\fcharset0 Segoe UI;}{\f2\fnil Segoe UI;}{\f3\fnil\fcharset2 Symbol;}}
@@ -109,7 +120,7 @@ This tool is intended to fill the gap. Something easy enough for Business to use
   </HelpItem>
   <HelpItem>
     <HelpId>30abbe4f-3056-4e7f-87eb-521025f5ec26</HelpId>
-    <HelpSubject>DomainAttribute- Composite attribute</HelpSubject>
+    <HelpSubject>Attribute- Composite</HelpSubject>
     <HelpToolTip>Is Attribute a Composite Type (composed of multiple Simple Types, not Simple)</HelpToolTip>
     <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}{\f1\fnil\fcharset0 Segoe UI;}}
 {\*\generator Riched20 10.0.19041}\viewkind4\uc1 
@@ -122,7 +133,7 @@ This tool is intended to fill the gap. Something easy enough for Business to use
   </HelpItem>
   <HelpItem>
     <HelpId>d09b5d65-5e53-4960-ad14-5a901cff6958</HelpId>
-    <HelpSubject>DomainAttribute- Derived attribute</HelpSubject>
+    <HelpSubject>Attribute- Derived</HelpSubject>
     <HelpToolTip>Is Attribute a Derived Value (computed value, not Integral)</HelpToolTip>
     <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}}
 {\*\generator Riched20 10.0.19041}\viewkind4\uc1 
@@ -133,6 +144,17 @@ Not an Integral value\par
 }
 </HelpText>
     <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isDerivedData</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>79abc1c2-7c20-4431-b761-6442f736f8bd</HelpId>
+    <HelpSubject>Attribute- Valued</HelpSubject>
+    <HelpToolTip>Is the Attribute a valued (not null) attribute.</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is the Attribute a valued (not null) attribute.\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isValuedData</NameSpace>
   </HelpItem>
   <HelpItem>
     <HelpId>177b29f2-f449-4045-a43b-8f3cf07355ad</HelpId>
@@ -152,8 +174,30 @@ The application can also save data to its own installation folder (AppData.XML).
     <NameSpace>Errors</NameSpace>
   </HelpItem>
   <HelpItem>
+    <HelpId>b469fbb3-08bc-4500-8549-9cb877ad6fdc</HelpId>
+    <HelpSubject>Attribute- Multivalued</HelpSubject>
+    <HelpToolTip>Is Attribute Multi Valued (has multiple values, not single)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is Attribute Multi Valued (has multiple values, not single)\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isMultiValuedData</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>70b892dc-4844-4886-b09d-9dede899fd44</HelpId>
+    <HelpSubject>Attribute- Single</HelpSubject>
+    <HelpToolTip>Is Attribute Single Valued (has only one value, not multi-valued)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is Attribute Single Valued (has only one value, not multi-valued)\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isSingleValueData</NameSpace>
+  </HelpItem>
+  <HelpItem>
     <HelpId>f97525ae-bb77-4724-9397-a7a9293cbcde</HelpId>
-    <HelpSubject>DomainAttribute</HelpSubject>
+    <HelpSubject>Domain Attribute</HelpSubject>
     <HelpToolTip>Attribute management</HelpToolTip>
     <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil Segoe UI;}}
 {\*\generator Riched20 10.0.19041}\viewkind4\uc1 
@@ -161,6 +205,50 @@ The application can also save data to its own installation folder (AppData.XML).
 }
 </HelpText>
     <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>aadd18a8-af8f-4ecb-b7cc-ae8d101cef66</HelpId>
+    <HelpSubject>Attribute- Integral</HelpSubject>
+    <HelpToolTip>Is Attribute an Integral value (distinct or basic value, not Derived)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is Attribute an Integral value (distinct or basic value, not Derived)\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isIntegralData</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>2ae83017-c0a5-42ec-acb6-c240d4db23dc</HelpId>
+    <HelpSubject>Attribute- Simple</HelpSubject>
+    <HelpToolTip>Is Attribute a Simple Type (cannot be decomposed, not composite)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is Attribute a Simple Type (cannot be decomposed, not composite)\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isSimpleTypeData</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>a6e95ad7-edf4-45cf-b28a-d636374b39f1</HelpId>
+    <HelpSubject>Attribute- NonKey</HelpSubject>
+    <HelpToolTip>Is the Attribute a Non-Key item (not part of a PK, FK or AK)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is the Attribute a Non-Key item (not part of a PK, FK or AK)\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isNonKeyData</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>82237476-b610-4695-bccd-d878a68c65ed</HelpId>
+    <HelpSubject>Attribute- Nullable</HelpSubject>
+    <HelpToolTip>Is the Attribute a Null-able value (allows Null value)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is the Attribute a Null-able value (allows Null value)\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isNullableData</NameSpace>
   </HelpItem>
   <PropertyItem>
     <PropertyId>00000000-0000-0000-0010-000000000010</PropertyId>

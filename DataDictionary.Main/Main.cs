@@ -175,11 +175,11 @@ namespace DataDictionary.Main
         {
             if (ActiveMdiChild is Form currentForm)
             { Activate(() => new Forms.App.HelpSubject(currentForm)); }
-            else { Activate(() => new Forms.App.HelpSubject()); }
+            else { Activate(() => new Forms.App.HelpSubject(Settings.Default.DefaultSubject)); }
         }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.App.HelpSubject()); }
+        { Activate(() => new Forms.App.HelpSubject(Settings.Default.DefaultSubject)); }
 
         private void HelpAboutMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.AboutBox()); }

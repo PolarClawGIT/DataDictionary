@@ -231,7 +231,6 @@
             controlData.TabIndex = 5;
             controlData.UseCompatibleStateImageBehavior = false;
             controlData.View = View.Details;
-            controlData.ItemChecked += controlData_ItemChecked;
             controlData.Resize += controlData_Resize;
             // 
             // controlNameColumn
@@ -254,6 +253,7 @@
             helpBinding.BindingComplete += helpBinding_BindingComplete;
             helpBinding.DataError += helpBinding_DataError;
             helpBinding.CurrentChanged += helpBinding_CurrentChanged;
+            helpBinding.PositionChanged += HelpBinding_PositionChanged;
             // 
             // HelpSubject
             // 

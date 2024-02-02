@@ -12,30 +12,36 @@ namespace DataDictionary.Main.Forms.App
     {
         class ControlItem
         {
-            public required Form SourceForm { get; init; }
-            public required Control SourceControl { get; init; }
             public ListViewItem? ListItem { get; set; }
+            public String ControlType { get; private set; }
+            public String ControlName { get; private set; }
+            public Boolean IsForm { get; private set; }
+            public String FullName { get; private set; }
 
-            public String ControlType
+            public ControlItem(Control source)
             {
-                get
+                FullName = source.ToFullControlName();
+
+                if (source is Form)
                 {
-                    if (SourceControl is Form) { return "Form"; }
-                    else { return SourceControl.GetType().Name; }
+                    if (source.GetType().BaseType is Type baseType)
+                    { ControlType = baseType.Name; }
+                    else { ControlType = source.GetType().Name; }
+
+                    ControlName = source.ToFullControlName();
+                    IsForm = true;
+                }
+                else
+                {
+                    Control root = source;
+                    while (root is not Form && root.Parent is not null)
+                    { root = root.Parent; }
+
+                    ControlName = source.ToFullControlName().Replace(String.Format("{0}.", root.ToFullControlName()), String.Empty);
+                    ControlType = source.GetType().Name;
+                    IsForm = false;
                 }
             }
-            public String ControlName
-            {
-                get
-                {
-                    String fullName = SourceControl.ToFullControlName();
-                    String formName = SourceForm.ToFullControlName();
-                    if (SourceControl is Form) { return formName; }
-                    else { return fullName.Substring(formName.Length + 1); }
-                }
-            }
-            public Boolean IsForm { get { return SourceControl is Form; } }
-            public String FullName { get { return SourceControl.ToFullControlName(); } }
 
             public override string ToString()
             { return FullName; }
@@ -68,16 +74,22 @@ namespace DataDictionary.Main.Forms.App
         public HelpSubject(Form targetForm) : this()
         {
             List<Control> values = targetForm.ToControlList()
-                                             .OrderBy(o => o is not Form)
-                                             .ThenBy(o => o.ToFullControlName())
-                                             .ToList();
-
-            controlList.Add(new ControlItem() { SourceForm = targetForm, SourceControl = targetForm });
+                .Where(w => !String.IsNullOrWhiteSpace(w.Name)
+                            && !(w is Panel or ToolStrip or SplitContainer or Splitter or TabControl))
+                .OrderBy(o => o is not Form)
+                .ThenBy(o => o.ToFullControlName())
+                .ToList();
 
             foreach (Control item in values)
-            { controlList.Add(new ControlItem() { SourceForm = targetForm, SourceControl = item }); }
+            {
+                ControlItem newControl = new ControlItem(item);
+                ListViewItem newItem = new ListViewItem(newControl.ControlName);
+                newItem.SubItems.Add(newControl.ControlType);
+                newControl.ListItem = newItem;
 
-            nameSpaceBinding.DataSource = controlList;
+                controlList.Add(newControl);
+                controlData.Items.Add(newItem);
+            }
 
             if (helpBinding.DataSource is IList<HelpItem> subjects && targetForm.ToFullControlName() is String fullName)
             {
@@ -92,6 +104,9 @@ namespace DataDictionary.Main.Forms.App
             {
                 if (subjects.FirstOrDefault(w => w.HelpSubject is String && w.HelpSubject.Equals(targetSubject, StringComparison.CurrentCultureIgnoreCase)) is HelpItem subject)
                 { helpBinding.Position = subjects.IndexOf(subject); }
+                else if (subjects.FirstOrDefault(w => w.NameSpace is String && w.NameSpace == targetSubject) is HelpItem nameSpaceSubject)
+                { helpBinding.Position = subjects.IndexOf(nameSpaceSubject); }
+
             }
         }
 
@@ -106,16 +121,6 @@ namespace DataDictionary.Main.Forms.App
             // Setup the ListView control controlData
             if (controlList.FirstOrDefault(w => w.IsForm) is ControlItem baseForm)
             { controlsGroup.Text = String.Format("Controls for: {0}", baseForm.ControlName); }
-
-            foreach (ControlItem item in controlList.OrderBy(o => o.IsForm == false).ThenBy(o => o.ControlName))
-            {
-                ListViewItem newItem = new ListViewItem(item.ControlName);
-                newItem.SubItems.Add(item.ControlType);
-
-                item.ListItem = newItem;
-
-                controlData.Items.Add(newItem);
-            }
 
             BuildHelpTree();
         }
@@ -324,7 +329,7 @@ namespace DataDictionary.Main.Forms.App
 
             if (controlList.FirstOrDefault(w => w.IsForm) is ControlItem root)
             {
-                newItem.HelpSubject = root.SourceForm.Name;
+                newItem.HelpSubject = root.ControlName;
                 newItem.NameSpace = root.FullName;
             }
             else
@@ -338,38 +343,29 @@ namespace DataDictionary.Main.Forms.App
             if (helpBinding.Current is HelpItem current)
             {
                 RowState = current.RowState();
-
                 controlData.Enabled = false;
+                controlData.ItemChecked -= ControlData_ItemChecked;
 
-                if (controlList.FirstOrDefault(w => w.IsForm) is ControlItem root && current.NameSpace is String)
+                while (controlData.CheckedItems.Count > 0)
+                { controlData.CheckedItems[0].Checked = false; }
+
+                if (current.NameSpace is String currentNameSpace
+                    && controlList.FirstOrDefault(w => w.FullName == currentNameSpace) is ControlItem control
+                    && control.ListItem is ListViewItem listItem)
                 {
-                    ModelNameSpaceKeyMember currentNameSpace = new ModelNameSpaceKeyMember(current.NameSpace);
-                    ModelNameSpaceKeyMember formNameSpace = new ModelNameSpaceKeyMember(root.FullName);
-                    ModelNameSpaceKeyMember parentNameSpace = new ModelNameSpaceKeyMember(currentNameSpace.MemberPath);
-
-                    if (formNameSpace.Equals(currentNameSpace))
-                    {
-                        controlData.Enabled = true;
-
-                        if (controlList.FirstOrDefault(w => currentNameSpace.Equals(new ModelNameSpaceKeyMember(w.FullName))) is ControlItem formItem)
-                        {
-                            if (formItem.ListItem is not null && formItem.ListItem.Index >= 0)
-                            { formItem.ListItem.Checked = true; }
-                        }
-                    }
-                    else if (formNameSpace.Equals(parentNameSpace))
-                    {
-                        controlData.Enabled = true;
-
-                        if (controlList.FirstOrDefault(w => currentNameSpace.Equals(new ModelNameSpaceKeyMember(String.Format("{0}.{1}", root.FullName, w.ControlName)))) is ControlItem item)
-                        {
-                            if (item.ListItem is not null && item.ListItem.Index >= 0)
-                            { item.ListItem.Checked = true; }
-                        }
-                    }
+                    listItem.Checked = true;
+                    controlData.Enabled = true;
+                    controlData.ItemChecked += ControlData_ItemChecked;
                 }
             }
         }
+
+        private void HelpBinding_PositionChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
 
         private void helpBinding_DataError(object sender, BindingManagerDataErrorEventArgs e)
         { } // Helps in Debugging binding
@@ -385,7 +381,7 @@ namespace DataDictionary.Main.Forms.App
         }
 
         ListViewItem? currentItem = null; // To prevent recursive calls
-        private void controlData_ItemChecked(object sender, ItemCheckedEventArgs e)
+        private void ControlData_ItemChecked(object? sender, ItemCheckedEventArgs e)
         {
             if (currentItem is null && e.Item.Checked)
             {
@@ -407,13 +403,14 @@ namespace DataDictionary.Main.Forms.App
                 if (helpBinding.Current is HelpItem current
                     && current.NameSpace is String
                     && controlList.FirstOrDefault(w => w.ListItem == e.Item) is ControlItem selected
-                    && controlList.FirstOrDefault(w => w.IsForm) is ControlItem root)
-                {
-                    current.NameSpace = selected.FullName;
-                }
+                    && controlList.FirstOrDefault(w => w.IsForm) is ControlItem root
+                    && current.NameSpace != selected.FullName)
+                { current.NameSpace = selected.FullName; }
 
                 currentItem = null;
             }
         }
+
+
     }
 }
