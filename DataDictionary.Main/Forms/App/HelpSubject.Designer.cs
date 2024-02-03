@@ -253,7 +253,6 @@
             helpBinding.BindingComplete += helpBinding_BindingComplete;
             helpBinding.DataError += helpBinding_DataError;
             helpBinding.CurrentChanged += helpBinding_CurrentChanged;
-            helpBinding.PositionChanged += HelpBinding_PositionChanged;
             // 
             // HelpSubject
             // 

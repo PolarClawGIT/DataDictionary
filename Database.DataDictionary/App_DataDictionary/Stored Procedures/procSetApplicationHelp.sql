@@ -1,4 +1,5 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetApplicationHelp]
+		@HelpId UniqueIdentifier = null,
 		@Data [App_DataDictionary].[typeApplicationHelp] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -18,25 +19,42 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeApplicationHelp]
+	Declare @Values Table (
+			[HelpId] UniqueIdentifier Not Null,
+			[HelpSubject] NVarChar(100) Not Null,
+			[HelpToolTip] NVarChar(500) Null,
+			[HelpText] NVarChar(Max) Not Null,
+			[NameSpace] NVarChar(1023) Null,
+			Primary Key ([HelpId]))
+
 	Insert Into @Values
-	Select	IsNull(D.[HelpId],NewId()) As [HelpId],
+	Select	Coalesce(D.[HelpId], @HelpId, NewId()) As [HelpId],
 			NullIf(Trim(D.[HelpSubject]),'') As [HelpSubject],
 			NullIf(Trim(D.[HelpToolTip]),'') As [HelpToolTip],
 			NullIf(Trim(D.[HelpText]),'') As [HelpText],
 			NullIf(Trim(D.[NameSpace]),'') As [NameSpace]
 	From	@Data D
+	Where	(@HelpId is Null or @HelpId = D.[HelpId])
 
 	-- Apply Changes
-;	With [Delta] As (
-		Select	V.[HelpId],
-				V.[HelpSubject],
-				V.[HelpToolTip],
-				V.[HelpText],
-				V.[NameSpace]
-		From	@Values V
-				Left Join [App_DataDictionary].[ApplicationHelp] A
-				On	V.[HelpId] = A.[HelpId]
+	Delete From [App_DataDictionary].[ApplicationHelp]
+	From	[App_DataDictionary].[ApplicationHelp] T
+			Left Join @Values S
+			On	T.[HelpId] = S.[HelpId]
+	Where	S.[HelpId] is Null And
+			T.[HelpId] In (
+				Select	[HelpId]
+				From	[App_DataDictionary].[ApplicationHelp]
+				Where	(@HelpId is Null Or @HelpId = [HelpId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[ApplicationHelp]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	;With [Delta] As (
+		Select	[HelpId],
+				[HelpSubject],
+				[HelpToolTip],
+				[HelpText],
+				[NameSpace]
+		From	@Values
 		Except
 		Select	[HelpId],
 				[HelpSubject],
@@ -44,17 +62,32 @@ Begin Try
 				[HelpText],
 				[NameSpace]
 		From	[App_DataDictionary].[ApplicationHelp])
-	Merge [App_DataDictionary].[ApplicationHelp] As T
-	Using [Delta] As S
-	On	T.[HelpId] = S.[HelpId]
-	When Matched Then Update
-		Set	[HelpSubject] = S.[HelpSubject],
+	Update [App_DataDictionary].[ApplicationHelp]
+	Set		[HelpSubject] = S.[HelpSubject],
 			[HelpToolTip] = S.[HelpToolTip],
 			[HelpText] = S.[HelpText],
 			[NameSpace] = S.[NameSpace]
-	When Not Matched by Target Then
-		Insert([HelpId], [HelpSubject], [HelpToolTip], [HelpText], [NameSpace])
-		Values ([HelpId], [HelpSubject], [HelpToolTip], [HelpText], [NameSpace]);
+	From	[App_DataDictionary].[ApplicationHelp] T
+			Inner Join [Delta] S
+			On	T.[HelpId] = S.[HelpId]
+	Print FormatMessage ('Update [App_DataDictionary].[ApplicationHelp]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[ApplicationHelp] (
+			[HelpId],
+			[HelpSubject],
+			[HelpToolTip],
+			[HelpText],
+			[NameSpace])
+	Select	S.[HelpId],
+			S.[HelpSubject],
+			S.[HelpToolTip],
+			S.[HelpText],
+			S.[NameSpace]
+	From	@Values S
+			Left Join [App_DataDictionary].[ApplicationHelp] T
+			On	S.[HelpId] = T.[HelpId]
+	Where	T.[HelpId] is Null
+	Print FormatMessage ('Insert [App_DataDictionary].[ApplicationHelp]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -95,16 +128,4 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
-GO
--- Provide System Documentation
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetApplicationHelp',
-	@value = N'Performs Set on ApplicationHelp.'
-GO
-EXEC sp_addextendedproperty @name = N'MS_Description',
-	@level0type = N'SCHEMA', @level0name = N'App_DataDictionary',
-    @level1type = N'PROCEDURE', @level1name = N'procSetApplicationHelp',
-	@level2type = N'PARAMETER', @level2name = N'@Data',
-	@value = N'Data'
 GO

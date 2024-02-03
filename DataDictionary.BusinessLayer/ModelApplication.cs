@@ -146,6 +146,46 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <summary>
+        /// Creates the work items to Load the Help Subjects using the Help key passed.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="factory"></param>
+        /// <param name="helpKey"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> LoadHelp(this IModelApplication data, IDatabaseWork factory, IHelpKey helpKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            HelpKey key = new HelpKey(helpKey);
+
+            work.Add(factory.CreateWork(
+                workName: "Load Help",
+                target: data.HelpSubjects,
+                command: (conn) => data.HelpSubjects.LoadCommand(conn, key)));
+
+            return work;
+        }
+
+        /// <summary>
+        /// Creates the work items to Save the Help Subjects using the Help key passed.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="factory"></param>
+        /// <param name="helpKey"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> SaveHelp(this IModelApplication data, IDatabaseWork factory, IHelpKey helpKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            HelpKey key = new HelpKey(helpKey);
+
+            work.Add(factory.CreateWork(
+                workName: "Save Help",
+                target: data.HelpSubjects,
+                command: (conn) => data.HelpSubjects.SaveCommand(conn, key)));
+
+            return work;
+        }
+
+        /// <summary>
         /// Saves the Model to a file.
         /// </summary>
         /// <typeparam name="T"></typeparam>

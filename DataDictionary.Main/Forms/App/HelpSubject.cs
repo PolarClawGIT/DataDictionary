@@ -28,7 +28,10 @@ namespace DataDictionary.Main.Forms.App
                     { ControlType = baseType.Name; }
                     else { ControlType = source.GetType().Name; }
 
-                    ControlName = source.ToFullControlName();
+                    if (String.IsNullOrWhiteSpace(source.Name))
+                    { ControlName = GetType().Name; }
+                    else { ControlName = source.Name; }
+
                     IsForm = true;
                 }
                 else
@@ -69,7 +72,18 @@ namespace DataDictionary.Main.Forms.App
 
             // Setup Images for Tree Control
             SetImages(helpContentNavigation, helpContentImageItems.Values);
+
+            openFromDatabaseCommand.Enabled = false; // TODO: Not Ready
+            openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click;
+
+            saveToDatabaseCommand.Enabled = false; // TODO: Not Ready
+            saveToDatabaseCommand.Click += SaveToDatabaseCommand_Click;
+
+            deleteFromDatabaseCommand.Enabled = false; // TODO: Not Ready
+            deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
+
         }
+
 
         public HelpSubject(Form targetForm) : this()
         {
@@ -90,6 +104,9 @@ namespace DataDictionary.Main.Forms.App
                 controlList.Add(newControl);
                 controlData.Items.Add(newItem);
             }
+
+            if (controlList.FirstOrDefault(w => w.IsForm) is ControlItem baseForm)
+            { controlsGroup.Text = String.Format("Controls for: {0}", baseForm.ControlName); }
 
             if (helpBinding.DataSource is IList<HelpItem> subjects && targetForm.ToFullControlName() is String fullName)
             {
@@ -118,10 +135,6 @@ namespace DataDictionary.Main.Forms.App
             helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(nameOfValues.HelpToolTip)));
             helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(nameOfValues.HelpText)));
 
-            // Setup the ListView control controlData
-            if (controlList.FirstOrDefault(w => w.IsForm) is ControlItem baseForm)
-            { controlsGroup.Text = String.Format("Controls for: {0}", baseForm.ControlName); }
-
             BuildHelpTree();
         }
 
@@ -130,6 +143,8 @@ namespace DataDictionary.Main.Forms.App
         {
             if (helpBinding.AddNew() is HelpItem newItem)
             {
+                //TODO: Always added at end of list. Can it be added based on Name Space?
+
                 TreeNode newNode = CreateNode(newItem, helpContentImageIndex.HelpPage);
                 helpContentNavigation.SelectedNode = newNode;
             }
@@ -137,12 +152,33 @@ namespace DataDictionary.Main.Forms.App
 
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
+            if (helpBinding.Current is HelpItem current)
+            {
+                //TODO: Test/Debug. Appears to work but the tree after refresh does not match.
 
+                foreach (KeyValuePair<TreeNode, HelpItem> item in helpContentNodes.Where(w => w.Value == current))
+                {
+                    if (helpContentNavigation.Nodes.Contains(item.Key))
+                    {
+                        helpContentNavigation.SelectedNode = item.Key.Parent;
+
+                        foreach (TreeNode child in item.Key.Nodes)
+                        {
+                            helpContentNavigation.Nodes.Remove(child);
+                            item.Key.Parent.Nodes.Add(child);
+                        }
+
+                        item.Key.Remove();
+                    }
+                }
+
+                current.Remove();
+            }
         }
 
 
         #region Help Content Tree
-        Dictionary<TreeNode, Object> helpContentNodes = new Dictionary<TreeNode, Object>();
+        Dictionary<TreeNode, HelpItem> helpContentNodes = new Dictionary<TreeNode, HelpItem>();
         enum helpContentImageIndex
         {
             HelpPage,
@@ -253,6 +289,10 @@ namespace DataDictionary.Main.Forms.App
         {
             if (sender is HelpItem item && helpContentNodes.FirstOrDefault(w => w.Value == item).Key is TreeNode node)
             {
+                //TODO: Currently only updates the Subject title.
+                // Can it update the tree based on NameSpace?
+                // How do I delta the tree vs the NameSpace?
+
                 if (node.Text != item.HelpSubject)
                 { node.Text = item.HelpSubject; }
             }
@@ -344,6 +384,8 @@ namespace DataDictionary.Main.Forms.App
             {
                 RowState = current.RowState();
                 controlData.Enabled = false;
+
+                // So checked event does not fire while the data is being worked
                 controlData.ItemChecked -= ControlData_ItemChecked;
 
                 while (controlData.CheckedItems.Count > 0)
@@ -359,13 +401,6 @@ namespace DataDictionary.Main.Forms.App
                 }
             }
         }
-
-        private void HelpBinding_PositionChanged(object sender, EventArgs e)
-        {
-
-        }
-
-
 
         private void helpBinding_DataError(object sender, BindingManagerDataErrorEventArgs e)
         { } // Helps in Debugging binding
@@ -411,6 +446,21 @@ namespace DataDictionary.Main.Forms.App
             }
         }
 
+
+        private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
     }
 }
