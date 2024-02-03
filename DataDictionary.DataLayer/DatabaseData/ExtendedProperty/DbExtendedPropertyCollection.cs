@@ -1,5 +1,5 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Model;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.ModelData;
 using System;
 using System.Collections.Generic;
 using System.Data;

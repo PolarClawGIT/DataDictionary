@@ -1,6 +1,6 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Model;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Schema;
+using DataDictionary.DataLayer.ModelData;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;

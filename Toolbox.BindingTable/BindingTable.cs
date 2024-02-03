@@ -297,7 +297,9 @@ namespace Toolbox.BindingTable
 
         protected override void ClearItems()
         {
-            dataItems.Clear();
+            while (this.Count > 0)
+            { RemoveAt(0); }
+
             base.ClearItems();
         }
 
@@ -346,12 +348,16 @@ namespace Toolbox.BindingTable
         protected override void OnListChanged(ListChangedEventArgs e)
         { if (OnListChangedEnabled) { base.OnListChanged(e); } }
 
+        /// <summary>
+        // Removes a specific items from the Binding List and Data Table
+        /// </summary>
+        /// <param name="index"></param>
         protected override void RemoveItem(Int32 index)
         {
-            if (this[index].GetRow() is DataRow row && row.RowState != DataRowState.Detached)
-            { row.Delete(); }
+            TBindingItem removing = this[index];
 
-            base.RemoveItem(index);
+            base.RemoveItem(index); // Remove from the list
+            removing.Remove(); // Remove from the table (deleted in table)
         }
 
         protected override void SetItem(Int32 index, TBindingItem item)

@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainEntity]
-		@ModelId UniqueIdentifier,
+		@ModelId UniqueIdentifier = Null,
+		@EntityId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeDomainEntity] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -18,82 +19,105 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDomainEntity]
-	Insert Into @Values
-	Select	IsNull(D.[EntityId],NewId()) As [EntityId],
-			D.[SubjectAreaId],
-			NullIf(Trim(D.[EntityTitle]),'') As [EntityTitle],
-			NullIf(Trim(D.[EntityDescription]),'') As [EntityDescription]
-	From	@Data D
-
 	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
+	If @ModelId is Null and @EntityId is Null
+	Throw 50000, '@ModelId or @EntityId must be specified', 1;
 
-	If Exists (
-		Select	[EntityId]
-		From	@Values
-		Group By [EntityId]
-		Having Count(*) > 1)
-	Throw 50000, '[EntityId] cannot be duplicate', 3;
+	-- Clean the Data, helps performance
+	Declare @Values Table (
+		[EntityId] UniqueIdentifier Not Null,
+		[EntityTitle] [App_DataDictionary].[typeTitle] Not Null,
+		[EntityDescription] [App_DataDictionary].[typeDescription] Null,
+		[TypeOfEntityId] UniqueIdentifier Null,
+		Primary Key ([EntityId]))
+
+	Declare @Delete Table (
+		[EntityId] UniqueIdentifier Not Null,
+		Primary Key ([EntityId]))
+
+	Insert Into @Values
+	Select	Coalesce(T.[EntityId], D.[EntityId], NewId()) As [EntityId],
+			NullIf(Trim(D.[EntityTitle]),'') As [EntityTitle],
+			NullIf(Trim(D.[EntityDescription]),'') As [EntityDescription],
+			D.[TypeOfEntityId]
+	From	@Data D
+			Left Join [App_DataDictionary].[DomainEntity] T
+			On	Coalesce(D.[EntityId], @EntityId) = T.[EntityId]
+
+	Insert Into @Delete
+	Select	T.[EntityId]
+	From	[App_DataDictionary].[DomainEntity] T
+			Left Join @Values S
+			On	T.[EntityId] = S.[EntityId]
+	Where	S.[EntityId] is Null And
+			T.[EntityId] In (
+			Select	A.[EntityId]
+			From	[App_DataDictionary].[DomainEntity] A
+					Left Join [App_DataDictionary].[ModelEntity] C
+					On	A.[EntityId] = C.[EntityId]
+			Where	(@EntityId is Null Or @EntityId = A.[EntityId]) And
+					(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
-	-- Note: Merge statement can throw errors with FK and UK constraints.
-	With [Data] As (
-		Select	D.[EntityId],
-				D.[EntityTitle],
-				D.[EntityDescription]
-		From	@Values D
-				Inner Join [App_DataDictionary].[DomainEntity] A
-				On	D.[EntityId] = A.[EntityId]),
-	[Delta] As (
+	Delete From [App_DataDictionary].[DomainEntityProperty]
+	From	[App_DataDictionary].[DomainEntityProperty] T
+			Inner Join @Delete S
+			On	T.[EntityId] = S.[EntityId]
+	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityProperty] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[DomainEntityAlias]
+	From	[App_DataDictionary].[DomainEntityAlias] T
+			Inner Join @Delete S
+			On	T.[EntityId] = S.[EntityId]
+	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityAlias] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[ModelEntity]
+	From	[App_DataDictionary].[ModelEntity] T
+			Inner Join @Delete S
+			On	T.[EntityId] = S.[EntityId]
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[DomainEntity]
+	From	[App_DataDictionary].[DomainEntity] T
+			Inner Join @Delete S
+			On	T.[EntityId] = S.[EntityId]
+	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntity] (Entity): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	;With [Delta] As (
 		Select	[EntityId],
 				[EntityTitle],
-				[EntityDescription]
-		From	[Data]
+				[EntityDescription],
+				[TypeOfEntityId]
+		From	@Values
 		Except
 		Select	[EntityId],
 				[EntityTitle],
-				[EntityDescription]
+				[EntityDescription],
+				[TypeOfEntityId]
 		From	[App_DataDictionary].[DomainEntity])
 	Update [App_DataDictionary].[DomainEntity]
 	Set		[EntityTitle] = S.[EntityTitle],
-			[EntityDescription] = S.[EntityDescription]
-	From	[Delta] S
-			Inner Join [App_DataDictionary].[DomainEntity] T
-			On	S.[EntityId] = T.[EntityId];
+			[EntityDescription] = S.[EntityDescription],
+			[TypeOfEntityId] = S.[TypeOfEntityId]
+	From	[App_DataDictionary].[DomainEntity] T
+			Inner Join [Delta] S
+			On	T.[EntityId] = S.[EntityId]
 	Print FormatMessage ('Update [App_DataDictionary].[DomainEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [App_DataDictionary].[DomainEntity] (
 			[EntityId],
 			[EntityTitle],
-			[EntityDescription])
+			[EntityDescription],
+			[TypeOfEntityId])
 	Select	S.[EntityId],
 			S.[EntityTitle],
-			S.[EntityDescription]
+			S.[EntityDescription],
+			S.[TypeOfEntityId]
 	From	@Values S
 			Left Join [App_DataDictionary].[DomainEntity] T
 			On	S.[EntityId] = T.[EntityId]
-	Where	T.[EntityId] is Null;
+	Where	T.[EntityId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	With [Data] As (
-		Select	@ModelId As [ModelId],
-				[EntityId],
-				[SubjectAreaId]
-		From	@Values)
-	Merge [App_DataDictionary].[ModelEntity] As T
-	Using [Data] As S
-	On	T.[ModelId] = S.[ModelId] And
-		T.[EntityId] = S.[EntityId]
-	When Matched Then Update Set
-		[SubjectAreaId] = S.[SubjectAreaId]
-	When Not Matched by Target Then
-		Insert ([ModelId], [EntityId], [SubjectAreaId])
-		Values ([ModelId], [EntityId], [SubjectAreaId])
-	When Not Matched by Source And T.[ModelId] = @ModelId Then Delete;
-	Print FormatMessage ('Merge [App_DataDictionary].[ApplicationEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

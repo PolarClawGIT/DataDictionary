@@ -9,12 +9,15 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 
 Select	D.[EntityId],
-		A.[SubjectAreaId],
 		D.[EntityTitle],
-		D.[EntityDescription]
+		D.[EntityDescription],
+		D.[TypeOfEntityId],
+		P.[EntityTitle] As [TypeOfEntityTitle]
 From	[App_DataDictionary].[DomainEntity] D
 		Left Join [App_DataDictionary].[ModelEntity] A
 		On	D.[EntityId] = A.[EntityId]
+		Left Join [App_DataDictionary].[DomainEntity] P
+		On	D.[TypeOfEntityId] = P.[EntityId]
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@EntityId is Null or @EntityId = D.[EntityId]) And
 		(@EntityTitle is Null or @EntityTitle = D.[EntityTitle])

@@ -16,17 +16,22 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     /// <summary>
     /// Interface for a Help Item used for Help Text.
     /// </summary>
-    public interface IHelpItem : IHelpKey, IHelpKeyParent, IHelpKeyUnique, IDataItem
+    public interface IHelpItem : IHelpKey, IHelpKeyUnique, IDataItem
     {
         /// <summary>
         /// Title/Subject of the Help Document.
         /// </summary>
-        string? HelpSubject { get; }
+        String? HelpSubject { get; }
 
         /// <summary>
         /// Body of the Help Document
         /// </summary>
-        string? HelpText { get; }
+        String? HelpText { get; }
+
+        /// <summary>
+        /// ToolTipe of the Help Document. May appear on individual controls.
+        /// </summary>
+        String? HelpToolTip { get; }
     }
 
     /// <summary>
@@ -38,14 +43,26 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
         /// <inheritdoc/>
         public Guid? HelpId { get { return GetValue<Guid>("HelpId"); } protected set { SetValue("HelpId", value); } }
 
-        /// <inheritdoc/>
-        public Guid? HelpParentId { get { return GetValue<Guid>("HelpParentId"); } protected set { SetValue("HelpParentId", value); } }
+        // Obsolete, Use NameSpace instead
+        //public Guid? HelpParentId { get { return GetValue<Guid>("HelpParentId"); } protected set { SetValue("HelpParentId", value); } }
 
         /// <inheritdoc/>
         public string? HelpSubject { get { return GetValue("HelpSubject"); } set { SetValue("HelpSubject", value); } }
 
         /// <inheritdoc/>
-        public string? HelpText { get { return GetValue("HelpText"); } set { SetValue("HelpText", value); } }
+        public string? HelpToolTip { get { return GetValue("HelpToolTip"); } set { SetValue("HelpToolTip", value); } }
+
+        /// <inheritdoc/>
+        public string? HelpText
+        {
+            get { return GetValue("HelpText"); }
+            set
+            {
+                // The Rich Text control is specifically aggressive about changing the value outside of what the user does.
+                if (HelpText == value) { }
+                else { SetValue("HelpText", value); }
+            }
+        }
 
         /// <inheritdoc/>
         public string? NameSpace { get { return GetValue("NameSpace"); } set { SetValue("NameSpace", value); } }
@@ -61,8 +78,8 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("HelpId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("HelpParentId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("HelpSubject", typeof(string)){ AllowDBNull = false},
+            new DataColumn("HelpToolTip", typeof(string)){ AllowDBNull = true},
             new DataColumn("HelpText", typeof(string)){ AllowDBNull = true},
             new DataColumn("NameSpace", typeof(string)){ AllowDBNull = true},
         };

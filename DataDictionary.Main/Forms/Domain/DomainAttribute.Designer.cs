@@ -29,161 +29,324 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            TableLayoutPanel attributeLayout;
-            TabPage attributePropertyTab;
-            TableLayoutPanel propertyLayout;
-            TabControl propertyTabLayout;
-            TableLayoutPanel propertyValueLayout;
-            TabPage aliasTab;
-            TableLayoutPanel alaisLayout;
-            attributeDescriptionData = new Controls.TextBoxData();
-            attributeTitleData = new Controls.TextBoxData();
-            attributeTabLayout = new TabControl();
-            propertyNavigation = new DataGridView();
-            propertyTypeColumn = new DataGridViewComboBoxColumn();
+            TableLayoutPanel mainLayout;
+            TableLayoutPanel detailsLayout;
+            titleData = new DataDictionary.Main.Controls.TextBoxData();
+            descriptionData = new DataDictionary.Main.Controls.TextBoxData();
+            detailTabLayout = new TabControl();
+            detailTab = new TabPage();
+            isMultiValuedData = new CheckBox();
+            isSingleValueData = new CheckBox();
+            typeOfAttributeData = new DataDictionary.Main.Controls.ComboBoxData();
+            isSimpleTypeData = new CheckBox();
+            isCompositeTypeData = new CheckBox();
+            isIntegralData = new CheckBox();
+            isDerivedData = new CheckBox();
+            isValuedData = new CheckBox();
+            isNullableData = new CheckBox();
+            isNonKeyData = new CheckBox();
+            isKeyData = new CheckBox();
+            propertyTab = new TabPage();
+            propertiesSplit = new SplitContainer();
+            propertiesData = new DataGridView();
+            propertyIdColumn = new DataGridViewComboBoxColumn();
             propertyValueColumn = new DataGridViewTextBoxColumn();
-            propertyValueTab = new TabPage();
-            propertyTypeData = new Controls.ComboBoxData();
-            propertyValueData = new Controls.TextBoxData();
-            propertyChoiceData = new Controls.CheckedListBoxData();
-            propertyDefinitionTab = new TabPage();
-            propertyDefinitionData = new Controls.RichTextBoxData();
-            aliasData = new DataGridView();
-            scopeNameColumn = new DataGridViewTextBoxColumn();
-            aliasNameColumn = new DataGridViewTextBoxColumn();
-            modelAliasNavigation = new Controls.ModelAliasNavigation();
-            subjectAreaData = new Controls.ComboBoxData();
-            errorProvider = new ErrorProvider(components);
-            bindingProperties = new BindingSource(components);
-            bindingAlias = new BindingSource(components);
-            attributeLayout = new TableLayoutPanel();
-            attributePropertyTab = new TabPage();
-            propertyLayout = new TableLayoutPanel();
-            propertyTabLayout = new TabControl();
-            propertyValueLayout = new TableLayoutPanel();
+            domainProperty = new Controls.DomainProperty();
             aliasTab = new TabPage();
-            alaisLayout = new TableLayoutPanel();
-            attributeLayout.SuspendLayout();
-            attributeTabLayout.SuspendLayout();
-            attributePropertyTab.SuspendLayout();
-            propertyLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)propertyNavigation).BeginInit();
-            propertyTabLayout.SuspendLayout();
-            propertyValueTab.SuspendLayout();
-            propertyValueLayout.SuspendLayout();
-            propertyDefinitionTab.SuspendLayout();
+            aliasSplit = new SplitContainer();
+            aliasesData = new DataGridView();
+            aliaseScopeColumn = new DataGridViewComboBoxColumn();
+            aliasNameColumn = new DataGridViewTextBoxColumn();
+            domainAlias = new Controls.DomainAlias();
+            subjectAreaTab = new TabPage();
+            entityTab = new TabPage();
+            mainBinding = new BindingSource(components);
+            toolTip = new ToolTip(components);
+            propertyBinding = new BindingSource(components);
+            aliasBinding = new BindingSource(components);
+            mainLayout = new TableLayoutPanel();
+            detailsLayout = new TableLayoutPanel();
+            mainLayout.SuspendLayout();
+            detailTabLayout.SuspendLayout();
+            detailTab.SuspendLayout();
+            detailsLayout.SuspendLayout();
+            propertyTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)propertiesSplit).BeginInit();
+            propertiesSplit.Panel1.SuspendLayout();
+            propertiesSplit.Panel2.SuspendLayout();
+            propertiesSplit.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)propertiesData).BeginInit();
             aliasTab.SuspendLayout();
-            alaisLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)aliasData).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)aliasSplit).BeginInit();
+            aliasSplit.Panel1.SuspendLayout();
+            aliasSplit.Panel2.SuspendLayout();
+            aliasSplit.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)aliasesData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)mainBinding).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)propertyBinding).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)aliasBinding).BeginInit();
             SuspendLayout();
             // 
-            // attributeLayout
+            // mainLayout
             // 
-            attributeLayout.AutoSize = true;
-            attributeLayout.ColumnCount = 1;
-            attributeLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            attributeLayout.Controls.Add(attributeDescriptionData, 0, 2);
-            attributeLayout.Controls.Add(attributeTitleData, 0, 0);
-            attributeLayout.Controls.Add(attributeTabLayout, 0, 3);
-            attributeLayout.Controls.Add(subjectAreaData, 0, 1);
-            attributeLayout.Dock = DockStyle.Fill;
-            attributeLayout.Location = new Point(0, 25);
-            attributeLayout.Name = "attributeLayout";
-            attributeLayout.RowCount = 4;
-            attributeLayout.RowStyles.Add(new RowStyle());
-            attributeLayout.RowStyles.Add(new RowStyle());
-            attributeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            attributeLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
-            attributeLayout.Size = new Size(529, 616);
-            attributeLayout.TabIndex = 0;
+            mainLayout.ColumnCount = 1;
+            mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            mainLayout.Controls.Add(titleData, 0, 0);
+            mainLayout.Controls.Add(descriptionData, 0, 1);
+            mainLayout.Controls.Add(detailTabLayout, 0, 2);
+            mainLayout.Dock = DockStyle.Fill;
+            mainLayout.Location = new Point(0, 25);
+            mainLayout.Name = "mainLayout";
+            mainLayout.RowCount = 3;
+            mainLayout.RowStyles.Add(new RowStyle());
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
+            mainLayout.Size = new Size(426, 521);
+            mainLayout.TabIndex = 1;
             // 
-            // attributeDescriptionData
+            // titleData
             // 
-            attributeDescriptionData.AutoSize = true;
-            attributeDescriptionData.Dock = DockStyle.Fill;
-            attributeDescriptionData.HeaderText = "Description (Summary)";
-            attributeDescriptionData.Location = new Point(3, 97);
-            attributeDescriptionData.Multiline = true;
-            attributeDescriptionData.Name = "attributeDescriptionData";
-            attributeDescriptionData.ReadOnly = false;
-            attributeDescriptionData.Size = new Size(523, 98);
-            attributeDescriptionData.TabIndex = 0;
+            titleData.AutoSize = true;
+            titleData.Dock = DockStyle.Fill;
+            titleData.HeaderText = "Title";
+            titleData.Location = new Point(3, 3);
+            titleData.Multiline = false;
+            titleData.Name = "titleData";
+            titleData.ReadOnly = false;
+            titleData.Size = new Size(420, 44);
+            titleData.TabIndex = 0;
             // 
-            // attributeTitleData
+            // descriptionData
             // 
-            attributeTitleData.AutoSize = true;
-            attributeTitleData.Dock = DockStyle.Fill;
-            attributeTitleData.HeaderText = "Attribute Title";
-            attributeTitleData.Location = new Point(0, 0);
-            attributeTitleData.Margin = new Padding(0);
-            attributeTitleData.Multiline = false;
-            attributeTitleData.Name = "attributeTitleData";
-            attributeTitleData.ReadOnly = false;
-            attributeTitleData.Size = new Size(529, 44);
-            attributeTitleData.TabIndex = 0;
-            attributeTitleData.Validating += attributeTitleData_Validating;
+            descriptionData.AutoSize = true;
+            descriptionData.Dock = DockStyle.Fill;
+            descriptionData.HeaderText = "Description";
+            descriptionData.Location = new Point(3, 53);
+            descriptionData.Multiline = true;
+            descriptionData.Name = "descriptionData";
+            descriptionData.ReadOnly = false;
+            descriptionData.Size = new Size(420, 88);
+            descriptionData.TabIndex = 1;
             // 
-            // attributeTabLayout
+            // detailTabLayout
             // 
-            attributeTabLayout.Controls.Add(attributePropertyTab);
-            attributeTabLayout.Controls.Add(aliasTab);
-            attributeTabLayout.Dock = DockStyle.Fill;
-            attributeTabLayout.Location = new Point(3, 201);
-            attributeTabLayout.Name = "attributeTabLayout";
-            attributeTabLayout.SelectedIndex = 0;
-            attributeTabLayout.Size = new Size(523, 412);
-            attributeTabLayout.TabIndex = 4;
-            attributeTabLayout.SelectedIndexChanged += attributeTabLayout_SelectedIndexChanged;
+            detailTabLayout.Controls.Add(detailTab);
+            detailTabLayout.Controls.Add(propertyTab);
+            detailTabLayout.Controls.Add(aliasTab);
+            detailTabLayout.Controls.Add(subjectAreaTab);
+            detailTabLayout.Controls.Add(entityTab);
+            detailTabLayout.Dock = DockStyle.Fill;
+            detailTabLayout.Location = new Point(3, 147);
+            detailTabLayout.Name = "detailTabLayout";
+            detailTabLayout.SelectedIndex = 0;
+            detailTabLayout.Size = new Size(420, 371);
+            detailTabLayout.TabIndex = 2;
+            detailTabLayout.SelectedIndexChanged += DetailTabLayout_SelectedIndexChanged;
             // 
-            // attributePropertyTab
+            // detailTab
             // 
-            attributePropertyTab.BackColor = SystemColors.Control;
-            attributePropertyTab.Controls.Add(propertyLayout);
-            attributePropertyTab.Location = new Point(4, 24);
-            attributePropertyTab.Name = "attributePropertyTab";
-            attributePropertyTab.Padding = new Padding(3);
-            attributePropertyTab.Size = new Size(515, 384);
-            attributePropertyTab.TabIndex = 1;
-            attributePropertyTab.Text = "Properties";
+            detailTab.BackColor = SystemColors.Control;
+            detailTab.Controls.Add(detailsLayout);
+            detailTab.Location = new Point(4, 24);
+            detailTab.Name = "detailTab";
+            detailTab.Padding = new Padding(3);
+            detailTab.Size = new Size(412, 343);
+            detailTab.TabIndex = 0;
+            detailTab.Text = "Details";
             // 
-            // propertyLayout
+            // detailsLayout
             // 
-            propertyLayout.ColumnCount = 1;
-            propertyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            propertyLayout.Controls.Add(propertyNavigation, 0, 0);
-            propertyLayout.Controls.Add(propertyTabLayout, 0, 1);
-            propertyLayout.Dock = DockStyle.Fill;
-            propertyLayout.Location = new Point(3, 3);
-            propertyLayout.Name = "propertyLayout";
-            propertyLayout.RowCount = 2;
-            propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-            propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            propertyLayout.Size = new Size(509, 378);
-            propertyLayout.TabIndex = 0;
+            detailsLayout.ColumnCount = 2;
+            detailsLayout.ColumnStyles.Add(new ColumnStyle());
+            detailsLayout.ColumnStyles.Add(new ColumnStyle());
+            detailsLayout.Controls.Add(isMultiValuedData, 1, 1);
+            detailsLayout.Controls.Add(isSingleValueData, 0, 1);
+            detailsLayout.Controls.Add(typeOfAttributeData, 0, 0);
+            detailsLayout.Controls.Add(isSimpleTypeData, 0, 2);
+            detailsLayout.Controls.Add(isCompositeTypeData, 1, 2);
+            detailsLayout.Controls.Add(isIntegralData, 0, 3);
+            detailsLayout.Controls.Add(isDerivedData, 1, 3);
+            detailsLayout.Controls.Add(isValuedData, 0, 4);
+            detailsLayout.Controls.Add(isNullableData, 1, 4);
+            detailsLayout.Controls.Add(isNonKeyData, 0, 5);
+            detailsLayout.Controls.Add(isKeyData, 1, 5);
+            detailsLayout.Dock = DockStyle.Fill;
+            detailsLayout.Location = new Point(3, 3);
+            detailsLayout.Name = "detailsLayout";
+            detailsLayout.RowCount = 6;
+            detailsLayout.RowStyles.Add(new RowStyle());
+            detailsLayout.RowStyles.Add(new RowStyle());
+            detailsLayout.RowStyles.Add(new RowStyle());
+            detailsLayout.RowStyles.Add(new RowStyle());
+            detailsLayout.RowStyles.Add(new RowStyle());
+            detailsLayout.RowStyles.Add(new RowStyle());
+            detailsLayout.Size = new Size(406, 337);
+            detailsLayout.TabIndex = 0;
             // 
-            // propertyNavigation
+            // isMultiValuedData
             // 
-            propertyNavigation.AllowUserToAddRows = false;
-            propertyNavigation.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            propertyNavigation.Columns.AddRange(new DataGridViewColumn[] { propertyTypeColumn, propertyValueColumn });
-            propertyNavigation.Dock = DockStyle.Fill;
-            propertyNavigation.Location = new Point(3, 3);
-            propertyNavigation.Name = "propertyNavigation";
-            propertyNavigation.RowTemplate.Height = 25;
-            propertyNavigation.Size = new Size(503, 145);
-            propertyNavigation.TabIndex = 0;
-            propertyNavigation.Leave += propertyNavigation_Leave;
+            isMultiValuedData.AutoSize = true;
+            isMultiValuedData.Location = new Point(107, 53);
+            isMultiValuedData.Name = "isMultiValuedData";
+            isMultiValuedData.Size = new Size(94, 19);
+            isMultiValuedData.TabIndex = 1;
+            isMultiValuedData.Text = "Multi-Valued";
+            isMultiValuedData.UseVisualStyleBackColor = true;
             // 
-            // propertyTypeColumn
+            // isSingleValueData
             // 
-            propertyTypeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            propertyTypeColumn.DataPropertyName = "PropertyId";
-            propertyTypeColumn.FillWeight = 30F;
-            propertyTypeColumn.HeaderText = "Property Type";
-            propertyTypeColumn.Name = "propertyTypeColumn";
+            isSingleValueData.AutoSize = true;
+            isSingleValueData.Location = new Point(3, 53);
+            isSingleValueData.Name = "isSingleValueData";
+            isSingleValueData.Size = new Size(98, 19);
+            isSingleValueData.TabIndex = 0;
+            isSingleValueData.Text = "Single-Valued";
+            isSingleValueData.UseVisualStyleBackColor = true;
+            // 
+            // typeOfAttributeData
+            // 
+            typeOfAttributeData.AutoSize = true;
+            typeOfAttributeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            detailsLayout.SetColumnSpan(typeOfAttributeData, 2);
+            typeOfAttributeData.Dock = DockStyle.Fill;
+            typeOfAttributeData.DropDownStyle = ComboBoxStyle.DropDown;
+            typeOfAttributeData.HeaderText = "Type of Attribute";
+            typeOfAttributeData.Location = new Point(3, 3);
+            typeOfAttributeData.Name = "typeOfAttributeData";
+            typeOfAttributeData.ReadOnly = false;
+            typeOfAttributeData.Size = new Size(400, 44);
+            typeOfAttributeData.TabIndex = 0;
+            // 
+            // isSimpleTypeData
+            // 
+            isSimpleTypeData.AutoSize = true;
+            isSimpleTypeData.Location = new Point(3, 78);
+            isSimpleTypeData.Name = "isSimpleTypeData";
+            isSimpleTypeData.Size = new Size(89, 19);
+            isSimpleTypeData.TabIndex = 2;
+            isSimpleTypeData.Text = "Simple Type";
+            isSimpleTypeData.UseVisualStyleBackColor = true;
+            // 
+            // isCompositeTypeData
+            // 
+            isCompositeTypeData.AutoSize = true;
+            isCompositeTypeData.Location = new Point(107, 78);
+            isCompositeTypeData.Name = "isCompositeTypeData";
+            isCompositeTypeData.Size = new Size(111, 19);
+            isCompositeTypeData.TabIndex = 3;
+            isCompositeTypeData.Text = "Composite Type";
+            isCompositeTypeData.UseVisualStyleBackColor = true;
+            // 
+            // isIntegralData
+            // 
+            isIntegralData.AutoSize = true;
+            isIntegralData.Location = new Point(3, 103);
+            isIntegralData.Name = "isIntegralData";
+            isIntegralData.Size = new Size(77, 19);
+            isIntegralData.TabIndex = 4;
+            isIntegralData.Text = "is Integral";
+            isIntegralData.UseVisualStyleBackColor = true;
+            // 
+            // isDerivedData
+            // 
+            isDerivedData.AutoSize = true;
+            isDerivedData.Location = new Point(107, 103);
+            isDerivedData.Name = "isDerivedData";
+            isDerivedData.Size = new Size(77, 19);
+            isDerivedData.TabIndex = 5;
+            isDerivedData.Text = "is Derived";
+            isDerivedData.UseVisualStyleBackColor = true;
+            // 
+            // isValuedData
+            // 
+            isValuedData.AutoSize = true;
+            isValuedData.Location = new Point(3, 128);
+            isValuedData.Name = "isValuedData";
+            isValuedData.Size = new Size(72, 19);
+            isValuedData.TabIndex = 6;
+            isValuedData.Text = "is Valued";
+            isValuedData.UseVisualStyleBackColor = true;
+            // 
+            // isNullableData
+            // 
+            isNullableData.AutoSize = true;
+            isNullableData.Location = new Point(107, 128);
+            isNullableData.Name = "isNullableData";
+            isNullableData.Size = new Size(81, 19);
+            isNullableData.TabIndex = 7;
+            isNullableData.Text = "is Nullable";
+            isNullableData.UseVisualStyleBackColor = true;
+            // 
+            // isNonKeyData
+            // 
+            isNonKeyData.AutoSize = true;
+            isNonKeyData.Location = new Point(3, 153);
+            isNonKeyData.Name = "isNonKeyData";
+            isNonKeyData.Size = new Size(84, 19);
+            isNonKeyData.TabIndex = 8;
+            isNonKeyData.Text = "is Non-Key";
+            isNonKeyData.UseVisualStyleBackColor = true;
+            // 
+            // isKeyData
+            // 
+            isKeyData.AutoSize = true;
+            isKeyData.Location = new Point(107, 153);
+            isKeyData.Name = "isKeyData";
+            isKeyData.Size = new Size(56, 19);
+            isKeyData.TabIndex = 9;
+            isKeyData.Text = "is Key";
+            isKeyData.UseVisualStyleBackColor = true;
+            // 
+            // propertyTab
+            // 
+            propertyTab.BackColor = SystemColors.Control;
+            propertyTab.Controls.Add(propertiesSplit);
+            propertyTab.Location = new Point(4, 24);
+            propertyTab.Name = "propertyTab";
+            propertyTab.Padding = new Padding(3);
+            propertyTab.Size = new Size(192, 72);
+            propertyTab.TabIndex = 1;
+            propertyTab.Text = "Properties";
+            // 
+            // propertiesSplit
+            // 
+            propertiesSplit.Dock = DockStyle.Fill;
+            propertiesSplit.Location = new Point(3, 3);
+            propertiesSplit.Name = "propertiesSplit";
+            propertiesSplit.Orientation = Orientation.Horizontal;
+            // 
+            // propertiesSplit.Panel1
+            // 
+            propertiesSplit.Panel1.Controls.Add(propertiesData);
+            // 
+            // propertiesSplit.Panel2
+            // 
+            propertiesSplit.Panel2.Controls.Add(domainProperty);
+            propertiesSplit.Size = new Size(186, 66);
+            propertiesSplit.SplitterDistance = 25;
+            propertiesSplit.TabIndex = 1;
+            // 
+            // propertiesData
+            // 
+            propertiesData.AllowUserToAddRows = false;
+            propertiesData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            propertiesData.Columns.AddRange(new DataGridViewColumn[] { propertyIdColumn, propertyValueColumn });
+            propertiesData.Dock = DockStyle.Fill;
+            propertiesData.Location = new Point(0, 0);
+            propertiesData.Name = "propertiesData";
+            propertiesData.ReadOnly = true;
+            propertiesData.RowTemplate.Height = 25;
+            propertiesData.Size = new Size(186, 25);
+            propertiesData.TabIndex = 0;
+            // 
+            // propertyIdColumn
+            // 
+            propertyIdColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            propertyIdColumn.DataPropertyName = "PropertyId";
+            propertyIdColumn.FillWeight = 30F;
+            propertyIdColumn.HeaderText = "Property";
+            propertyIdColumn.Name = "propertyIdColumn";
+            propertyIdColumn.ReadOnly = true;
             // 
             // propertyValueColumn
             // 
@@ -194,259 +357,175 @@
             propertyValueColumn.Name = "propertyValueColumn";
             propertyValueColumn.ReadOnly = true;
             // 
-            // propertyTabLayout
+            // domainProperty
             // 
-            propertyTabLayout.Controls.Add(propertyValueTab);
-            propertyTabLayout.Controls.Add(propertyDefinitionTab);
-            propertyTabLayout.Dock = DockStyle.Fill;
-            propertyTabLayout.Location = new Point(3, 154);
-            propertyTabLayout.Name = "propertyTabLayout";
-            propertyTabLayout.SelectedIndex = 0;
-            propertyTabLayout.Size = new Size(503, 221);
-            propertyTabLayout.TabIndex = 1;
-            // 
-            // propertyValueTab
-            // 
-            propertyValueTab.BackColor = SystemColors.Control;
-            propertyValueTab.Controls.Add(propertyValueLayout);
-            propertyValueTab.Location = new Point(4, 24);
-            propertyValueTab.Name = "propertyValueTab";
-            propertyValueTab.Padding = new Padding(3);
-            propertyValueTab.Size = new Size(495, 193);
-            propertyValueTab.TabIndex = 0;
-            propertyValueTab.Text = "Value";
-            // 
-            // propertyValueLayout
-            // 
-            propertyValueLayout.ColumnCount = 2;
-            propertyValueLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            propertyValueLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            propertyValueLayout.Controls.Add(propertyTypeData, 0, 0);
-            propertyValueLayout.Controls.Add(propertyValueData, 0, 1);
-            propertyValueLayout.Controls.Add(propertyChoiceData, 1, 0);
-            propertyValueLayout.Dock = DockStyle.Fill;
-            propertyValueLayout.Location = new Point(3, 3);
-            propertyValueLayout.Name = "propertyValueLayout";
-            propertyValueLayout.RowCount = 2;
-            propertyValueLayout.RowStyles.Add(new RowStyle());
-            propertyValueLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            propertyValueLayout.Size = new Size(489, 187);
-            propertyValueLayout.TabIndex = 0;
-            // 
-            // propertyTypeData
-            // 
-            propertyTypeData.AutoSize = true;
-            propertyTypeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            propertyTypeData.Dock = DockStyle.Fill;
-            propertyTypeData.DropDownStyle = ComboBoxStyle.DropDown;
-            propertyTypeData.HeaderText = "Property Type";
-            propertyTypeData.Location = new Point(3, 3);
-            propertyTypeData.Name = "propertyTypeData";
-            propertyTypeData.ReadOnly = false;
-            propertyTypeData.Size = new Size(238, 44);
-            propertyTypeData.TabIndex = 0;
-            propertyTypeData.SelectedIndexChanged += propertyTypeData_SelectedIndexChanged;
-            // 
-            // propertyValueData
-            // 
-            propertyValueData.AutoSize = true;
-            propertyValueData.Dock = DockStyle.Fill;
-            propertyValueData.HeaderText = "Property Value";
-            propertyValueData.Location = new Point(3, 53);
-            propertyValueData.Multiline = true;
-            propertyValueData.Name = "propertyValueData";
-            propertyValueData.ReadOnly = false;
-            propertyValueData.Size = new Size(238, 131);
-            propertyValueData.TabIndex = 1;
-            // 
-            // propertyChoiceData
-            // 
-            propertyChoiceData.AutoSize = true;
-            propertyChoiceData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            propertyChoiceData.CheckOnClick = true;
-            propertyChoiceData.DataSource = null;
-            propertyChoiceData.DisplayMember = "";
-            propertyChoiceData.Dock = DockStyle.Fill;
-            propertyChoiceData.HeaderText = "Property Choice";
-            propertyChoiceData.Location = new Point(247, 3);
-            propertyChoiceData.Name = "propertyChoiceData";
-            propertyValueLayout.SetRowSpan(propertyChoiceData, 2);
-            propertyChoiceData.Size = new Size(239, 181);
-            propertyChoiceData.TabIndex = 2;
-            propertyChoiceData.ItemCheck += propertyChoiceData_ItemCheck;
-            // 
-            // propertyDefinitionTab
-            // 
-            propertyDefinitionTab.BackColor = SystemColors.Control;
-            propertyDefinitionTab.Controls.Add(propertyDefinitionData);
-            propertyDefinitionTab.Location = new Point(4, 24);
-            propertyDefinitionTab.Name = "propertyDefinitionTab";
-            propertyDefinitionTab.Padding = new Padding(3);
-            propertyDefinitionTab.Size = new Size(192, 72);
-            propertyDefinitionTab.TabIndex = 1;
-            propertyDefinitionTab.Text = "Defintion";
-            // 
-            // propertyDefinitionData
-            // 
-            propertyDefinitionData.AutoSize = true;
-            propertyDefinitionData.Dock = DockStyle.Fill;
-            propertyDefinitionData.HeaderText = "Definition";
-            propertyDefinitionData.Location = new Point(3, 3);
-            propertyDefinitionData.Name = "propertyDefinitionData";
-            propertyDefinitionData.ReadOnly = false;
-            propertyDefinitionData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
-            propertyDefinitionData.Size = new Size(186, 66);
-            propertyDefinitionData.TabIndex = 0;
-            propertyDefinitionData.Validated += propertyDefinitionData_Validated;
+            domainProperty.Dock = DockStyle.Fill;
+            domainProperty.Location = new Point(0, 0);
+            domainProperty.Name = "domainProperty";
+            domainProperty.Size = new Size(186, 37);
+            domainProperty.TabIndex = 1;
             // 
             // aliasTab
             // 
             aliasTab.BackColor = SystemColors.Control;
-            aliasTab.Controls.Add(alaisLayout);
+            aliasTab.Controls.Add(aliasSplit);
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
-            aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(515, 384);
-            aliasTab.TabIndex = 3;
-            aliasTab.Text = "Alias";
+            aliasTab.Size = new Size(192, 72);
+            aliasTab.TabIndex = 2;
+            aliasTab.Text = "Aliases";
             // 
-            // alaisLayout
+            // aliasSplit
             // 
-            alaisLayout.ColumnCount = 1;
-            alaisLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            alaisLayout.Controls.Add(aliasData, 0, 0);
-            alaisLayout.Controls.Add(modelAliasNavigation, 0, 1);
-            alaisLayout.Dock = DockStyle.Fill;
-            alaisLayout.Location = new Point(3, 3);
-            alaisLayout.Name = "alaisLayout";
-            alaisLayout.RowCount = 2;
-            alaisLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
-            alaisLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            alaisLayout.Size = new Size(509, 378);
-            alaisLayout.TabIndex = 0;
+            aliasSplit.Dock = DockStyle.Fill;
+            aliasSplit.Location = new Point(0, 0);
+            aliasSplit.Name = "aliasSplit";
+            aliasSplit.Orientation = Orientation.Horizontal;
             // 
-            // aliasData
+            // aliasSplit.Panel1
             // 
-            aliasData.AllowUserToAddRows = false;
-            aliasData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            aliasData.Columns.AddRange(new DataGridViewColumn[] { scopeNameColumn, aliasNameColumn });
-            aliasData.Dock = DockStyle.Fill;
-            aliasData.Location = new Point(3, 3);
-            aliasData.MultiSelect = false;
-            aliasData.Name = "aliasData";
-            aliasData.ReadOnly = true;
-            aliasData.RowTemplate.Height = 25;
-            aliasData.Size = new Size(503, 107);
-            aliasData.TabIndex = 1;
+            aliasSplit.Panel1.Controls.Add(aliasesData);
             // 
-            // scopeNameColumn
+            // aliasSplit.Panel2
             // 
-            scopeNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            scopeNameColumn.DataPropertyName = "ScopeName";
-            scopeNameColumn.FillWeight = 30F;
-            scopeNameColumn.HeaderText = "Scope";
-            scopeNameColumn.MinimumWidth = 100;
-            scopeNameColumn.Name = "scopeNameColumn";
-            scopeNameColumn.ReadOnly = true;
+            aliasSplit.Panel2.Controls.Add(domainAlias);
+            aliasSplit.Size = new Size(192, 72);
+            aliasSplit.SplitterDistance = 25;
+            aliasSplit.TabIndex = 0;
+            // 
+            // aliasesData
+            // 
+            aliasesData.AllowUserToAddRows = false;
+            aliasesData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            aliasesData.Columns.AddRange(new DataGridViewColumn[] { aliaseScopeColumn, aliasNameColumn });
+            aliasesData.Dock = DockStyle.Fill;
+            aliasesData.Location = new Point(0, 0);
+            aliasesData.Name = "aliasesData";
+            aliasesData.ReadOnly = true;
+            aliasesData.RowTemplate.Height = 25;
+            aliasesData.Size = new Size(192, 25);
+            aliasesData.TabIndex = 0;
+            // 
+            // aliaseScopeColumn
+            // 
+            aliaseScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliaseScopeColumn.DataPropertyName = "Scope";
+            aliaseScopeColumn.FillWeight = 50F;
+            aliaseScopeColumn.HeaderText = "Scope";
+            aliaseScopeColumn.Name = "aliaseScopeColumn";
+            aliaseScopeColumn.ReadOnly = true;
             // 
             // aliasNameColumn
             // 
             aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             aliasNameColumn.DataPropertyName = "AliasName";
-            aliasNameColumn.FillWeight = 70F;
-            aliasNameColumn.HeaderText = "Alias";
-            aliasNameColumn.MinimumWidth = 250;
+            aliasNameColumn.HeaderText = "Alias Name";
             aliasNameColumn.Name = "aliasNameColumn";
             aliasNameColumn.ReadOnly = true;
             // 
-            // modelAliasNavigation
+            // domainAlias
             // 
-            modelAliasNavigation.Dock = DockStyle.Fill;
-            modelAliasNavigation.Location = new Point(3, 116);
-            modelAliasNavigation.Name = "modelAliasNavigation";
-            modelAliasNavigation.Size = new Size(503, 259);
-            modelAliasNavigation.TabIndex = 2;
+            domainAlias.Dock = DockStyle.Fill;
+            domainAlias.Location = new Point(0, 0);
+            domainAlias.Name = "domainAlias";
+            domainAlias.Size = new Size(192, 43);
+            domainAlias.TabIndex = 0;
             // 
-            // subjectAreaData
+            // subjectAreaTab
             // 
-            subjectAreaData.AutoSize = true;
-            subjectAreaData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            subjectAreaData.Dock = DockStyle.Fill;
-            subjectAreaData.DropDownStyle = ComboBoxStyle.DropDown;
-            subjectAreaData.HeaderText = "Subject Area";
-            subjectAreaData.Location = new Point(3, 47);
-            subjectAreaData.Name = "subjectAreaData";
-            subjectAreaData.ReadOnly = false;
-            subjectAreaData.Size = new Size(523, 44);
-            subjectAreaData.TabIndex = 5;
+            subjectAreaTab.BackColor = SystemColors.Control;
+            subjectAreaTab.Location = new Point(4, 24);
+            subjectAreaTab.Name = "subjectAreaTab";
+            subjectAreaTab.Size = new Size(192, 72);
+            subjectAreaTab.TabIndex = 3;
+            subjectAreaTab.Text = "Subject Area";
             // 
-            // errorProvider
+            // entityTab
             // 
-            errorProvider.ContainerControl = this;
+            entityTab.BackColor = SystemColors.Control;
+            entityTab.Location = new Point(4, 24);
+            entityTab.Name = "entityTab";
+            entityTab.Size = new Size(192, 72);
+            entityTab.TabIndex = 4;
+            entityTab.Text = "Entities";
             // 
-            // bindingProperties
+            // propertyBinding
             // 
-            bindingProperties.AddingNew += bindingProperties_AddingNew;
-            bindingProperties.BindingComplete += BindingComplete;
-            bindingProperties.CurrentChanged += bindingProperties_CurrentChanged;
+            propertyBinding.AddingNew += PropertyBinding_AddingNew;
             // 
-            // bindingAlias
+            // aliasBinding
             // 
-            bindingAlias.AddingNew += bindingAlias_AddingNew;
+            aliasBinding.AddingNew += AliasBinding_AddingNew;
             // 
             // DomainAttribute
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(529, 641);
-            Controls.Add(attributeLayout);
+            ClientSize = new Size(426, 546);
+            Controls.Add(mainLayout);
             Name = "DomainAttribute";
-            Text = "Domain Attribute";
-            Load += DomainAttribute_Load;
-            Controls.SetChildIndex(attributeLayout, 0);
-            attributeLayout.ResumeLayout(false);
-            attributeLayout.PerformLayout();
-            attributeTabLayout.ResumeLayout(false);
-            attributePropertyTab.ResumeLayout(false);
-            propertyLayout.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)propertyNavigation).EndInit();
-            propertyTabLayout.ResumeLayout(false);
-            propertyValueTab.ResumeLayout(false);
-            propertyValueLayout.ResumeLayout(false);
-            propertyValueLayout.PerformLayout();
-            propertyDefinitionTab.ResumeLayout(false);
-            propertyDefinitionTab.PerformLayout();
+            Text = "DomainAttribute_New";
+            Load += Form_Load;
+            Controls.SetChildIndex(mainLayout, 0);
+            mainLayout.ResumeLayout(false);
+            mainLayout.PerformLayout();
+            detailTabLayout.ResumeLayout(false);
+            detailTab.ResumeLayout(false);
+            detailsLayout.ResumeLayout(false);
+            detailsLayout.PerformLayout();
+            propertyTab.ResumeLayout(false);
+            propertiesSplit.Panel1.ResumeLayout(false);
+            propertiesSplit.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)propertiesSplit).EndInit();
+            propertiesSplit.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)propertiesData).EndInit();
             aliasTab.ResumeLayout(false);
-            alaisLayout.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)aliasData).EndInit();
-            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
-            ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
-            ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
+            aliasSplit.Panel1.ResumeLayout(false);
+            aliasSplit.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)aliasSplit).EndInit();
+            aliasSplit.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)aliasesData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)mainBinding).EndInit();
+            ((System.ComponentModel.ISupportInitialize)propertyBinding).EndInit();
+            ((System.ComponentModel.ISupportInitialize)aliasBinding).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private Controls.TextBoxData attributeTitleData;
-        private Controls.TextBoxData attributeDescriptionData;
-        private ErrorProvider errorProvider;
-        private DataGridView propertyNavigation;
-        private TabPage propertyValueTab;
-        private TabPage propertyDefinitionTab;
-        private Controls.ComboBoxData propertyTypeData;
-        private Controls.TextBoxData propertyValueData;
-        private Controls.RichTextBoxData propertyDefinitionData;
-        private BindingSource bindingProperties;
-        private DataGridViewComboBoxColumn propertyTypeColumn;
+        private DataDictionary.Main.Controls.TextBoxData titleData;
+        private DataDictionary.Main.Controls.TextBoxData descriptionData;
+        private TabControl detailTabLayout;
+        private TabPage detailTab;
+        private TabPage propertyTab;
+        private BindingSource mainBinding;
+        private TabPage aliasTab;
+        private DataDictionary.Main.Controls.ComboBoxData typeOfAttributeData;
+        private CheckBox isSingleValueData;
+        private CheckBox isMultiValuedData;
+        private CheckBox isSimpleTypeData;
+        private CheckBox isCompositeTypeData;
+        private CheckBox isIntegralData;
+        private CheckBox isDerivedData;
+        private CheckBox isValuedData;
+        private CheckBox isNullableData;
+        private CheckBox isNonKeyData;
+        private CheckBox isKeyData;
+        private ToolTip toolTip;
+        private DataGridView propertiesData;
+        private Controls.DomainProperty domainProperty;
+        private DataGridViewComboBoxColumn propertyIdColumn;
         private DataGridViewTextBoxColumn propertyValueColumn;
-        private Controls.CheckedListBoxData propertyChoiceData;
-        private Controls.ComboBoxData subjectAreaData;
-        private DataGridView aliasData;
-        private Controls.ModelAliasNavigation modelAliasNavigation;
-        private BindingSource bindingAlias;
-        private TabControl attributeTabLayout;
-        private DataGridViewTextBoxColumn scopeNameColumn;
+        private BindingSource propertyBinding;
+        private SplitContainer propertiesSplit;
+        private TabPage subjectAreaTab;
+        private TabPage entityTab;
+        private SplitContainer aliasSplit;
+        private DataGridView aliasesData;
+        private Controls.DomainAlias domainAlias;
+        private BindingSource aliasBinding;
+        private DataGridViewComboBoxColumn aliaseScopeColumn;
         private DataGridViewTextBoxColumn aliasNameColumn;
     }
 }

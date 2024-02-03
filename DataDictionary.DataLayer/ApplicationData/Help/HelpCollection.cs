@@ -14,13 +14,21 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class HelpCollection<TItem> : BindingTable<TItem>, IReadData, IWriteData, IValidateList<HelpItem>
+    public abstract class HelpCollection<TItem> : BindingTable<TItem>,
+        IReadData, IWriteData,
+        IReadData<IHelpKey>, IWriteData<IHelpKey>,
+        IValidateList<HelpItem>
         where TItem : HelpItem, new()
-    {        /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null, null, null)); }
+    {
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IHelpKey key)
+        { return LoadCommand(connection, (key.HelpId, null, null)); }
 
-        Command LoadCommand(IConnection connection, (Guid? helpId, string? helpSubject, string? nameSpace, bool? obsolete) parameters)
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection)
+        { return LoadCommand(connection, (null, null, null)); }
+
+        Command LoadCommand(IConnection connection, (Guid? helpId, string? helpSubject, string? nameSpace) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
@@ -34,10 +42,18 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
+        { return SaveCommand(connection); }
+
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, IHelpKey key)
+        { return SaveCommand(connection, key.HelpId); }
+
+        Command SaveCommand(IConnection connection, Guid? helpId)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetApplicationHelp]";
+            command.AddParameter("@@HelpId", helpId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationHelp]", this);
             return command;
         }
@@ -60,13 +76,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
                     HelpKeyUnique key = new HelpKeyUnique(w);
                     return (this.Any(r => key.Equals(r) && !ReferenceEquals(w, r)));
                 }))
-            {
-                if (String.IsNullOrWhiteSpace(item.GetRowError()))
-                {
-                    item.SetRowError("[NameSpace] cannot be duplicate");
-                    result.Add(item);
-                }
-            }
+            { }
 
             return result;
         }

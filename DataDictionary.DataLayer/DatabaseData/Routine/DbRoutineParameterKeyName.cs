@@ -60,16 +60,18 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// <summary>
         /// Try to Create a Database Parameter Key from the Alias.
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="source">A four part Alias name with a Scope of a Procedure/Function Parameter.</param>
         /// <returns>A Column Key or Null if a key could not be constructed.</returns>
-        public static new DbRoutineParameterKeyName? TryCreate(IDomainAliasItem source)
+        public static new DbRoutineParameterKeyName? TryCreate<T>(T source)
+            where T : IAliasKeyName, IScopeKeyName
         {
             if (source.AliasName is null) { return null; }
 
             List<String> parsed = AliasExtension.NameParts(source.AliasName);
             if (parsed.Count != 4) { return null; }
 
-            if (new ScopeKey(source).ScopeId is ScopeType.DatabaseSchemaProcedureParameter or ScopeType.DatabaseSchemaFunctionParameter)
+            if (new ScopeKey(source).Scope is ScopeType.DatabaseProcedureParameter or ScopeType.DatabaseFunctionParameter)
             {
                 return new DbRoutineParameterKeyName()
                 {

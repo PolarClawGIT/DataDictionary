@@ -1,6 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
@@ -11,6 +10,7 @@ using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
+using DataDictionary.DataLayer.ModelData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -461,7 +461,6 @@ namespace DataDictionary.BusinessLayer
                 workName: "Save DbRoutineDependencies",
                 command: (conn) => data.DbRoutineDependencies.SaveCommand(conn, key)));
 
-
             work.Add(factory.CreateWork(
                 workName: "Save DbExtendedProperties",
                 command: (conn) => data.DbExtendedProperties.SaveCommand(conn, key)));
@@ -520,7 +519,6 @@ namespace DataDictionary.BusinessLayer
             work.Add(factory.CreateWork(
                 workName: "Save DbRoutineDependencies",
                 command: (conn) => data.DbRoutineDependencies.SaveCommand(conn, key)));
-
 
             work.Add(factory.CreateWork(
                 workName: "Save DbExtendedProperties",

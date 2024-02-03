@@ -511,4 +511,11 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[typeDomainAlias]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="12f436fc-0155-4bb7-9a33-8c630fbd3a87" ChangeDateTime="01/23/2024 21:05:54">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DomainAttribute].[IsSimple]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DomainAttribute]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[IsSimpleType]" />
+  </Operation>
 </Operations>

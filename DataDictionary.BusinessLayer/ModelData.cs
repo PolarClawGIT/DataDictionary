@@ -1,16 +1,46 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Help;
-using DataDictionary.DataLayer.ApplicationData.Model;
-using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.DomainData.Entity;
-using DataDictionary.DataLayer.DomainData.SubjectArea;
+using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.ModelData.Attribute;
+using DataDictionary.DataLayer.ModelData.Entity;
+using DataDictionary.DataLayer.ModelData.SubjectArea;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer
 {
+    /// <summary>
+    /// Model part of the 
+    /// </summary>
+    public interface IModel
+    {
+        /// <summary>
+        /// The Key of the Model that is currently opened by the application.
+        /// </summary>
+        ModelKey ModelKey { get; }
+
+        /// <summary>
+        /// List of Models from the Application Database.
+        /// </summary>
+        ModelCollection Models { get; }
+
+        /// <summary>
+        /// List of Subject Areas within the Model.
+        /// </summary>
+        ModelSubjectAreaCollection ModelSubjectAreas { get; }
+
+        /// <summary>
+        /// List of Attributes within the Model.
+        /// </summary>
+        ModelAttributeCollection ModelAttributes { get; }
+
+        /// <summary>
+        /// List of Entity within the Model.
+        /// </summary>
+        ModelEntityCollection ModelEntities { get; }
+    }
+
     /// <summary>
     /// Represents the main data object used by the application.
     /// </summary>
@@ -19,30 +49,35 @@ namespace DataDictionary.BusinessLayer
     /// Forms need to connect to the Key for the data object they are presenting.
     /// If the data should change, the Forms need to reset the bindings and get new data from this object.
     /// </remarks>
-    public partial class ModelData
+    public partial class ModelData : IModel
     {
         // Model
         ModelItem defaultModel;
-        ModelKey modelKey;
+        //ModelKey modelKey;
 
-        /// <summary>
-        /// The Key of the Model that is currently opened by the application.
-        /// </summary>
-        public ModelKey ModelKey { get { return modelKey; } internal set { modelKey = new ModelKey(value); } }
+        /// <inheritdoc/>
+        public ModelKey ModelKey { get { return new ModelKey(Model); } }
 
-        /// <summary>
-        /// List of Models from the Application Database.
-        /// </summary>
+        /// <inheritdoc/>
         public ModelCollection Models { get; } = new ModelCollection();
 
+        /// <inheritdoc/>
+        public ModelSubjectAreaCollection ModelSubjectAreas { get; } = new ModelSubjectAreaCollection();
+
+        /// <inheritdoc/>
+        public ModelAttributeCollection ModelAttributes { get; } = new ModelAttributeCollection();
+
+        /// <inheritdoc/>
+        public ModelEntityCollection ModelEntities { get; } = new ModelEntityCollection();
+
         /// <summary>
-        /// The current Model (by ModelKey) opened by the application
+        /// The current Model opened by the application
         /// </summary>
         public ModelItem Model
         {
             get
             {
-                if (Models.FirstOrDefault(w => new ModelKey(w) == ModelKey) is ModelItem item)
+                if (Models.FirstOrDefault() is ModelItem item)
                 { return item; }
                 else { return defaultModel; }
             }
@@ -76,7 +111,6 @@ namespace DataDictionary.BusinessLayer
         protected ModelData() : base()
         {
             defaultModel = new ModelItem();
-            modelKey = new ModelKey(defaultModel);
             Models.Add(defaultModel);
         }
 
@@ -95,6 +129,7 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
 
             work.AddRange(this.RemoveModel());
+            work.AddRange(this.RemoveNameSpace());
 
             work.Add(new WorkItem()
             {
@@ -102,10 +137,11 @@ namespace DataDictionary.BusinessLayer
                 DoWork = () =>
                 {
                     defaultModel = new ModelItem();
-                    ModelKey = new ModelKey(defaultModel);
                     Models.Add(defaultModel);
                 }
             });
+
+            work.AddRange(this.LoadNameSpace());
 
             return work;
         }
@@ -122,38 +158,31 @@ namespace DataDictionary.BusinessLayer
             ModelKey key = new ModelKey(modelKey);
 
             work.AddRange(this.RemoveModel());
-            work.Add(factory.CreateWork(
-                workName: "Load Models",
-                target: this.Models,
-                command: (conn) =>
-                {
-                    this.ModelKey = key;
-                    return this.Models.LoadCommand(conn, key);
-                }));
-            work.AddRange(this.LoadDomain(factory, modelKey));
-            work.AddRange(this.LoadCatalog(factory, modelKey));
-            work.AddRange(this.LoadLibrary(factory, modelKey));
+            work.AddRange(this.RemoveNameSpace());
+            work.AddRange(this.LoadModelData(factory, key));
+            work.AddRange(this.LoadDomain(factory, key));
+            work.AddRange(this.LoadCatalog(factory, key));
+            work.AddRange(this.LoadLibrary(factory, key));
+            work.AddRange(this.LoadNameSpace());
 
             return work;
         }
-
 
         /// <summary>
         /// Creates Work Items that Save the Model to the Application Database
         /// </summary>
         /// <param name="factory"></param>
+        /// <param name="modelKey"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> SaveModel(IDatabaseWork factory)
+        public IReadOnlyList<WorkItem> SaveModel(IDatabaseWork factory, IModelKey modelKey)
         {
             List<WorkItem> work = new List<WorkItem>();
+            ModelKey key = new ModelKey(modelKey);
 
-            work.Add(factory.CreateWork(
-                workName: "Save Models",
-                command: this.Models.SaveCommand));
-
-            work.AddRange(this.SaveDomain(factory, modelKey));
-            work.AddRange(this.SaveCatalog(factory, modelKey));
-            work.AddRange(this.SaveLibrary(factory, modelKey));
+            work.AddRange(this.SaveModelData(factory, key));
+            work.AddRange(this.SaveDomain(factory, key));
+            work.AddRange(this.SaveCatalog(factory, key));
+            work.AddRange(this.SaveLibrary(factory, key));
 
             return work;
         }
@@ -166,12 +195,17 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.Add(new WorkItem() { WorkName = "Clear Model", DoWork = this.Models.Clear });
+            work.Add(new WorkItem() { WorkName = "Clear Model", DoWork = ClearModel });
             work.AddRange(this.RemoveDomain());
             work.AddRange(this.RemoveCatalog());
             work.AddRange(this.RemoveLibrary());
-
             return work;
+
+            void ClearModel ()
+            {
+                this.Models.Clear();
+                this.ModelSubjectAreas.Clear();
+            }
         }
 
         /// <summary>
@@ -189,11 +223,7 @@ namespace DataDictionary.BusinessLayer
                 workName: "Delete Model",
                 command: (conn) => this.Models.DeleteCommand(conn, key)));
 
-            work.Add(new WorkItem() { WorkName = "Clear Models", DoWork = this.Models.Clear });
-            work.AddRange(this.RemoveDomain());
-            work.AddRange(this.RemoveCatalog());
-            work.AddRange(this.RemoveLibrary());
-
+            work.AddRange(this.RemoveModel());
             return work;
         }
 

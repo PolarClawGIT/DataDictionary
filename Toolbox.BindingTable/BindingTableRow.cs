@@ -23,9 +23,13 @@ namespace Toolbox.BindingTable
         void OnPropertyChanged(string propertyName);
         void SetRowError(string value);
         void SetColumnError(String columnName, String? error);
+        void AcceptChanges();
+        void RejectChanges();
         String? GetColumnError(String columnName);
         String[] GetColumnsInError();
         IReadOnlyList<DataColumn> ColumnDefinitions();
+
+        event EventHandler? RowStateChanged;
     }
 
     /// <summary>
@@ -92,8 +96,6 @@ namespace Toolbox.BindingTable
             }
         }
 
-
-
         /// <summary>
         /// Constructor that loaded the DataRow.
         /// </summary>
@@ -136,11 +138,11 @@ namespace Toolbox.BindingTable
         /// <typeparam name="T"></typeparam>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        /// <remarks>Many data types have there onw TryParse functions. These can be handled genericly.</remarks>
+        /// <remarks>Many data types have there own TryParse functions. These can be handled generically.</remarks>
         protected virtual Nullable<T> GetValue<T>(String columnName)
             where T : struct, IParsable<T>
         {
-            if (data is not DataRow row || row.RowState == DataRowState.Detached)
+            if (data is not DataRow row)
             {
                 Exception error = new InvalidOperationException("Internal DataRow is not defined");
                 if (GetBindingTable() is not null) { error.Data.Add(nameof(GetBindingTable), GetBindingTable()); }
@@ -151,7 +153,17 @@ namespace Toolbox.BindingTable
             if (!row.Table.Columns.Contains(columnName))
             { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
 
-            if (row[columnName] == DBNull.Value) { return new Nullable<T>(); }
+            Object? baseValue = null;
+            if (data.RowState == DataRowState.Deleted)
+            { baseValue = row[columnName, DataRowVersion.Original]; }
+            else if (data.RowState == DataRowState.Detached)
+            { return new Nullable<T>(); }
+            else { baseValue = row[columnName]; }
+
+            if (baseValue == DBNull.Value) { return new Nullable<T>(); }
+
+            if (String.IsNullOrWhiteSpace(baseValue.ToString()))
+            { return new Nullable<T>(); }
 
             // Generic handling
             if (T.TryParse(row[columnName].ToString(), null, out T value))
@@ -166,10 +178,10 @@ namespace Toolbox.BindingTable
         /// </summary>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        /// <remarks>String are a Microsoft special class and needs diffrent handling</remarks>
+        /// <remarks>String are a Microsoft special class and needs different handling</remarks>
         protected virtual String? GetValue(String columnName)
         {
-            if (data is not DataRow row || row.RowState == DataRowState.Detached)
+            if (data is not DataRow row)
             {
                 Exception error = new InvalidOperationException("Internal DataRow is not defined");
                 if (GetBindingTable() is not null) { error.Data.Add(nameof(GetBindingTable), GetBindingTable()); }
@@ -180,9 +192,16 @@ namespace Toolbox.BindingTable
             if (!row.Table.Columns.Contains(columnName))
             { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
 
-            if (row[columnName] == DBNull.Value) { return null; }
+            Object? baseValue = null;
+            if (data.RowState == DataRowState.Deleted && data.HasVersion(DataRowVersion.Original))
+            { baseValue = row[columnName, DataRowVersion.Original]; }
+            else if (data.RowState == DataRowState.Detached)
+            { return null; }
+            else { baseValue = row[columnName]; }
 
-            if (row[columnName] is String stringValue)
+            if (baseValue == DBNull.Value) { return null; }
+
+            if (baseValue is String stringValue)
             {
                 if (string.IsNullOrEmpty(stringValue)) { return null; }
                 else { return stringValue; }
@@ -209,7 +228,7 @@ namespace Toolbox.BindingTable
         /// <param name="parseFunction"></param>
         /// <returns></returns>
         /// <remarks>
-        /// Some data types do not implment IParsable (like Boolean) or a specialzied version of TryParse is needed.
+        /// Some data types do not implement IParsable (like Boolean) or a specialized version of TryParse is needed.
         /// This allows a TryParse function to be passed in.
         /// </remarks>
         protected virtual Nullable<T> GetValue<T>(String columnName, tryParseDelegate<T> parseFunction)
@@ -220,9 +239,14 @@ namespace Toolbox.BindingTable
             if (data is not DataRow row) { throw new InvalidOperationException("Internal DataRow is not defined"); }
             if (!row.Table.Columns.Contains(columnName)) { throw new ArgumentOutOfRangeException(String.Format("{0} not in list of Columns", columnName)); }
 
-            if (row[columnName] == DBNull.Value) { return new Nullable<T>(); }
+            Object? baseValue = null;
+            if (data.RowState == DataRowState.Deleted)
+            { baseValue = row[columnName, DataRowVersion.Original]; }
+            else { baseValue = row[columnName]; }
 
-            if (row[columnName].ToString() is String stringValue &&
+            if (baseValue == DBNull.Value) { return new Nullable<T>(); }
+
+            if (baseValue.ToString() is String stringValue &&
                 parseFunction(stringValue, out T result))
             { return new Nullable<T>(result); }
 
@@ -239,7 +263,9 @@ namespace Toolbox.BindingTable
         protected virtual void SetValue<T>(String columnName, Nullable<T> value)
             where T : struct
         {
-            if (data is DataRow row && row.Table.Columns.Contains(columnName))
+            if (data is DataRow row
+                && row.Table.Columns.Contains(columnName)
+                && data.RowState is DataRowState.Added or DataRowState.Unchanged or DataRowState.Modified)
             {
                 if (value is null) { row[columnName] = DBNull.Value; }
                 else { row[columnName] = value.Value; }
@@ -253,7 +279,9 @@ namespace Toolbox.BindingTable
         /// <param name="value"></param>
         protected virtual void SetValue(String columnName, String? value)
         {
-            if (data is DataRow row && row.Table.Columns.Contains(columnName))
+            if (data is DataRow row
+                && row.Table.Columns.Contains(columnName)
+                && data.RowState is DataRowState.Added or DataRowState.Unchanged or DataRowState.Modified)
             {
                 if (String.IsNullOrWhiteSpace(value)) { row[columnName] = DBNull.Value; }
                 else { row[columnName] = value; }
@@ -265,7 +293,7 @@ namespace Toolbox.BindingTable
         { }
 
         protected virtual void Table_RowChanged(object sender, DataRowChangeEventArgs e)
-        { }
+        { OnRowStateChanged(); }
 
         protected virtual void Table_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
@@ -278,6 +306,8 @@ namespace Toolbox.BindingTable
                 data.Table.Disposed -= Table_Disposed;
                 data.Table.ColumnChanged -= Table_ColumnChanged;
             }
+
+            OnRowStateChanged();
         }
 
         protected virtual void Table_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -299,11 +329,29 @@ namespace Toolbox.BindingTable
                 && e.Row.RowState != DataRowState.Detached
                 && e.Column is not null)
             { OnPropertyChanged(e.Column.ColumnName); }
+
+            OnRowStateChanged();
         }
 
         /// <inheritdoc cref="DataRow.RowState"/>
         public virtual DataRowState RowState()
-        { if (data is DataRow row) { return row.RowState; } else { return DataRowState.Detached; } }
+        {
+            if (data is DataRow row)
+            {
+                // For whatever reason, the row state can be unchanged but their is a Proposed row.
+                if (data.HasVersion(DataRowVersion.Proposed) && row.RowState == DataRowState.Unchanged)
+                { return DataRowState.Modified; }
+
+                if (bindingTable is null)
+                { return DataRowState.Detached; }
+                else if (row.RowState is DataRowState.Detached)
+                { return DataRowState.Detached; }
+                else if (bindingTable.Contains(this))
+                { return row.RowState; }
+                else { return DataRowState.Deleted; }
+            }
+            else { return DataRowState.Detached; }
+        }
 
         /// <inheritdoc cref="DataRow.RowError"/>
         public virtual String GetRowError()
@@ -342,7 +390,90 @@ namespace Toolbox.BindingTable
         /// <inheritdoc cref="DataRow.HasVersion"/>
         public virtual Boolean HasRowVersion(DataRowVersion version)
         { if (data is DataRow row) { return row.HasVersion(version); } else { return false; } }
+
+        /// <inheritdoc cref="DataRow.AcceptChanges"/>
+        public virtual void AcceptChanges()
+        {
+            if (data is DataRow row)
+            { row.AcceptChanges(); }
+            OnRowStateChanged();
+        }
+
+        /// <inheritdoc cref="DataRow.RejectChanges"/>
+        public virtual void RejectChanges()
+        {
+            if (data is DataRow row)
+            { row.RejectChanges(); }
+            OnRowStateChanged();
+        }
         #endregion
+
+        /// <summary>
+        /// Removes the item from the table.
+        /// </summary>
+        /// <remarks>
+        /// This mimics the behavior of removing an item from a IList instead of a Delete on a DataRow.
+        /// The internal DataRow is copied over to a different table and deleted from the original.
+        /// The item itself is removed from the BindingTable
+        /// As a result, a direct reference to the BindingTableRow persists a value.
+        /// The RowState method will return Deleted.
+        /// </remarks>
+        public virtual void Remove()
+        {
+            if (bindingTable is not null && bindingTable.Contains(this))
+            {
+                // Warning: This is a recursive call.
+                // BindingTable calls this method to as part of RemoveItem.
+                // The Else part of this method is executed as the BindingTable no longer contains the item.
+                bindingTable.Remove(this);
+            }
+            else
+            {
+                data.Table.RowChanging -= Table_RowChanging;
+                data.Table.RowChanged -= Table_RowChanged;
+                data.Table.RowDeleting -= Table_RowDeleting;
+                data.Table.RowDeleted -= Table_RowDeleted;
+                data.Table.Disposed -= Table_Disposed;
+                data.Table.ColumnChanged -= Table_ColumnChanged;
+
+                using (DataTable temp = new DataTable("Remove_BindingTableRow"))
+                {
+                    temp.AddColumns(this.ColumnDefinitions(), true);
+
+                    DataRow removing = data;
+                    temp.ImportRow(data);
+                    data = temp.Rows[0];
+                    removing.Delete();
+                }
+
+                data.Table.RowChanging += Table_RowChanging;
+                data.Table.RowChanged += Table_RowChanged;
+                data.Table.RowDeleting += Table_RowDeleting;
+                data.Table.RowDeleted += Table_RowDeleted;
+                data.Table.Disposed += Table_Disposed;
+                data.Table.ColumnChanged += Table_ColumnChanged;
+            }
+
+            OnRowStateChanged();
+        }
+
+        /// <summary>
+        /// Occurs when and event that can change the RowState occurs.
+        /// </summary>
+        public event EventHandler? RowStateChanged;
+        private DataRowState lastRowState = DataRowState.Detached;
+        protected void OnRowStateChanged()
+        {
+            if (RowStateChanged is EventHandler hander)
+            {
+                DataRowState currentState = this.RowState();
+                if (currentState != lastRowState)
+                {
+                    hander(this, EventArgs.Empty);
+                    lastRowState = currentState;
+                }
+            }
+        }
 
         #region INotifyPropertyChanged
         /// <inheritdoc/>
@@ -390,4 +521,5 @@ namespace Toolbox.BindingTable
         }
         #endregion
     }
+
 }

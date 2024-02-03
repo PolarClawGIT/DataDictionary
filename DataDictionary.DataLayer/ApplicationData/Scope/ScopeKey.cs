@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <summary>
         /// Primary Key ID for the Scope
         /// </summary>
-        ScopeType ScopeId { get; }
+        ScopeType Scope { get; }
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     public class ScopeKey : IScopeKey, IKeyComparable<IScopeKey>, IEquatable<ScopeType>, IParsable<ScopeKey>
     {
         /// <inheritdoc/>
-        public ScopeType ScopeId { get; init; } = ScopeType.Null;
+        public ScopeType Scope { get; init; } = ScopeType.Null;
 
         /// <summary>
         /// Basic Constructor for the Scope Key.
@@ -40,14 +40,14 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// </summary>
         /// <param name="source"></param>
         public ScopeKey(ScopeType source) : this()
-        { ScopeId = source; } 
+        { Scope = source; } 
 
         /// <summary>
         /// Constructor for the Scope Key.
         /// </summary>
         /// <param name="source"></param>
         public ScopeKey(IScopeKey source) : this()
-        { if (source is IScopeKey) { ScopeId = source.ScopeId; } }
+        { if (source is IScopeKey) { Scope = source.Scope; } }
 
         /// <summary>
         /// Constructor for the Scope Key.
@@ -56,7 +56,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         public ScopeKey(IScopeKeyName source) : this()
         {
             if (ScopeKey.TryParse(source.ScopeName, out ScopeKey? result))
-            { ScopeId = result.ScopeId; }
+            { Scope = result.Scope; }
         }
 
         /// <summary>
@@ -73,17 +73,17 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         public Boolean Equals(IScopeKey? other)
         {
             return other is IScopeKey
-                && this.ScopeId != ScopeType.Null
-                && other.ScopeId != ScopeType.Null
-                && this.ScopeId.Equals(other.ScopeId);
+                && this.Scope != ScopeType.Null
+                && other.Scope != ScopeType.Null
+                && this.Scope.Equals(other.Scope);
         }
 
         /// <inheritdoc/>
         public bool Equals(ScopeType other)
         {
-            return this.ScopeId != ScopeType.Null &&
+            return this.Scope != ScopeType.Null &&
                     other != ScopeType.Null &&
-                    this.ScopeId == other;
+                    this.Scope == other;
         }
 
         /// <inheritdoc/>
@@ -128,36 +128,46 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
-        { return (ScopeId).GetHashCode(); }
+        { return (Scope).GetHashCode(); }
         #endregion
 
         #region IParsable
-        static Dictionary<ScopeType, String> scopeTypeToLibraryScope = new Dictionary<ScopeType, String>()
+        /// <summary>
+        /// This is the list that translates the ScopeType Enum to what the Database uses as ScopeName.
+        /// The Int32 of ScopeType does not need to match what is in the Database.
+        /// The Text must match what is in the database.
+        /// Each Level within the structure is delimited by a Period.
+        /// </summary>
+        static Dictionary<ScopeType, String> parseName = new Dictionary<ScopeType, string>()
         {
-            {ScopeType.Library,"Library" },
-            {ScopeType.LibraryEvent,"Library.Event" },
-            {ScopeType.LibraryField,"Library.Field" },
-            {ScopeType.LibraryMethod,"Library.Method" },
-            {ScopeType.LibraryNameSpace,"Library.NameSpace" },
-            {ScopeType.LibraryProperty,"Library.Property" },
-            {ScopeType.LibraryParameter,"Library.Parameter" },
-            {ScopeType.LibraryType,"Library.Type" },
-        };
+            {ScopeType.Null,                      "N/A" },
 
-        static Dictionary<ScopeType, String> scopeTypeToDatabaseScope = new Dictionary<ScopeType, String>()
-        {
-            {ScopeType.Database,"Database" },
-            {ScopeType.DatabaseSchema,"Database.Schema" },
-            {ScopeType.DatabaseSchemaFunction,"Database.Schema.Function" },
-            {ScopeType.DatabaseSchemaProcedure,"Database.Schema.Procedure" },
-            {ScopeType.DatabaseSchemaTable,"Database.Schema.Table" },
-            {ScopeType.DatabaseSchemaType,"Database.Schema.Type" },
-            {ScopeType.DatabaseSchemaView,"Database.Schema.View" },
-            {ScopeType.DatabaseSchemaViewColumn,"Database.Schema.View.Column" },
-            {ScopeType.DatabaseSchemaTableColumn,"Database.Schema.Table.Column" },
-            {ScopeType.DatabaseSchemaTableConstraint,"Database.Schema.Table.Constraint" },
-            {ScopeType.DatabaseSchemaProcedureParameter,"Database.Schema.Procedure.Parameter" },
-            {ScopeType.DatabaseSchemaFunctionParameter,"Database.Schema.Function.Parameter" },
+            {ScopeType.Library,                   "Library" },
+            {ScopeType.LibraryEvent,              "Library.Event" },
+            {ScopeType.LibraryField,              "Library.Field" },
+            {ScopeType.LibraryMethod,             "Library.Method" },
+            {ScopeType.LibraryNameSpace,          "Library.NameSpace" },
+            {ScopeType.LibraryProperty,           "Library.Property" },
+            {ScopeType.LibraryParameter,          "Library.Parameter" },
+            {ScopeType.LibraryType,               "Library.Type" },
+
+            {ScopeType.Database,                  "Database" },
+            {ScopeType.DatabaseSchema,            "Database.Schema" },
+            {ScopeType.DatabaseFunction,          "Database.Schema.Function" },
+            {ScopeType.DatabaseProcedure,         "Database.Schema.Procedure" },
+            {ScopeType.DatabaseTable,             "Database.Schema.Table" },
+            {ScopeType.DatabaseDomain,              "Database.Schema.Type" },
+            {ScopeType.DatabaseView,              "Database.Schema.View" },
+            {ScopeType.DatabaseViewColumn,        "Database.Schema.View.Column" },
+            {ScopeType.DatabaseTableColumn,       "Database.Schema.Table.Column" },
+            {ScopeType.DatabaseTableConstraint,   "Database.Schema.Table.Constraint" },
+            {ScopeType.DatabaseProcedureParameter,"Database.Schema.Procedure.Parameter" },
+            {ScopeType.DatabaseFunctionParameter, "Database.Schema.Function.Parameter" },
+
+            {ScopeType.Model,                     "Model" },
+            {ScopeType.ModelAttribute,            "Model.Attribute" },
+            {ScopeType.ModelEntity,               "Model.Entity" },
+            {ScopeType.ModelSubjectArea,          "Model.SubjectArea" },
         };
 
         /// <inheritdoc/>
@@ -179,10 +189,8 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <inheritdoc/>
         public static bool TryParse([NotNullWhen(true)] String? source, IFormatProvider? provider, [MaybeNullWhen(false)] out ScopeKey result)
         {
-            if (scopeTypeToDatabaseScope.FirstOrDefault(w => w.Value.Equals(source, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> dbItem && dbItem.Key != ScopeType.Null)
-            { result = new ScopeKey() { ScopeId = dbItem.Key }; return true; }
-            else if (scopeTypeToLibraryScope.FirstOrDefault(w => w.Value.Equals(source, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> libraryItem && libraryItem.Key != ScopeType.Null)
-            { result = new ScopeKey() { ScopeId = libraryItem.Key }; return true; }
+            if (parseName.FirstOrDefault(w => w.Value.Equals(source, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> dbItem && dbItem.Key != ScopeType.Null)
+            { result = new ScopeKey() { Scope = dbItem.Key }; return true; }
             else { result = null; return false; }
         }
 
@@ -194,10 +202,8 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <returns>true if s was successfully parsed; otherwise, false.</returns>
         public static bool TryParse([NotNullWhen(true)] String? source, [MaybeNullWhen(false)] out ScopeKey result)
         {
-            if (scopeTypeToDatabaseScope.FirstOrDefault(w => w.Value.Equals(source, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> dbItem && dbItem.Key != ScopeType.Null)
-            { result = new ScopeKey() { ScopeId = dbItem.Key }; return true; }
-            else if (scopeTypeToLibraryScope.FirstOrDefault(w => w.Value.Equals(source, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> libraryItem && libraryItem.Key != ScopeType.Null)
-            { result = new ScopeKey() { ScopeId = libraryItem.Key }; return true; }
+            if (parseName.FirstOrDefault(w => w.Value.Equals(source, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> dbItem && dbItem.Key != ScopeType.Null)
+            { result = new ScopeKey() { Scope = dbItem.Key }; return true; }
             else { result = null; return false; }
         }
         #endregion
@@ -208,9 +214,8 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <returns></returns>
         public override string ToString()
         {
-            if (scopeTypeToLibraryScope.ContainsKey(ScopeId)) { return scopeTypeToLibraryScope[ScopeId]; }
-            else if (scopeTypeToDatabaseScope.ContainsKey(ScopeId)) { return scopeTypeToDatabaseScope[ScopeId]; }
-            else { return ScopeId.ToString(); }
+            if (parseName.ContainsKey(Scope)) { return parseName[Scope]; }
+            else { return Scope.ToString(); }
         }
 
     }

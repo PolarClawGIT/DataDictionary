@@ -5,6 +5,7 @@ WITH SCHEMABINDING AS
 Select	C.[CatalogId],
 		S.[SchemaId],
 		T.[ConstraintId],
+		T.[ParentTableId],
 		C.[SourceDatabaseName] As [DatabaseName],
 		S.[SchemaName],
 		T.[ConstraintName],

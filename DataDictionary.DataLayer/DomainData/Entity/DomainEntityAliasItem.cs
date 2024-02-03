@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for Domain Entity Alias Items
     /// </summary>
-    public interface IDomainEntityAliasItem : IDomainEntityKey, IDomainAliasItem, IDataItem
+    public interface IDomainEntityAliasItem : IDomainEntityKey, IDomainAlias, IDataItem
     { }
 
     /// <summary>
@@ -32,6 +32,12 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// <inheritdoc/>
         public string? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }
 
+        /// <inheritdoc/>
+        public ScopeType Scope
+        {
+            get { return new ScopeKey((IScopeKeyName)this).Scope; }
+            set { ScopeName = value.ToScopeName(); OnPropertyChanged(nameof(Scope)); }
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

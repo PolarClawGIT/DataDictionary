@@ -1,24 +1,17 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
-using DataDictionary.DataLayer.DomainData.SubjectArea;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer
 {
 
     /// <summary>
-    /// Interface component for the Model Domain (Attribute, Entity and Subject Area)
+    /// Interface component for the Model Attribute
     /// </summary>
-    /// <remarks>When combined with the Extension class, this approximates multi-inheritance.</remarks>
-    public interface IModelDomain
+    public interface IModelAttribute
     {
         /// <summary>
         /// List of Domain Attributes within the Model.
@@ -34,7 +27,13 @@ namespace DataDictionary.BusinessLayer
         /// List of Domain Properties for the Attributes within the Model.
         /// </summary>
         DomainAttributePropertyCollection DomainAttributeProperties { get; }
+    }
 
+    /// <summary>
+    /// Interface component for the Model Entity
+    /// </summary>
+    public interface IModelEntity
+    {
         /// <summary>
         /// List of Domain Entities within the Model.
         /// </summary>
@@ -49,12 +48,14 @@ namespace DataDictionary.BusinessLayer
         /// List of Domain Properties for the Entities within the Model.
         /// </summary>
         DomainEntityPropertyCollection DomainEntityProperties { get; }
-
-        /// <summary>
-        /// List of Domain Subject Areas within the Model.
-        /// </summary>
-        DomainSubjectAreaCollection DomainSubjectAreas { get; }
     }
+
+    /// <summary>
+    /// Interface component for the Model Domain (Attribute, Entity and Subject Area)
+    /// </summary>
+    /// <remarks>When combined with the Extension class, this approximates multi-inheritance.</remarks>
+    public interface IModelDomain : IModelAttribute, IModelEntity
+    { }
 
     /// <summary>
     /// Implementation of Model Domain (Attribute, Entity and Subject Area)
@@ -104,11 +105,6 @@ namespace DataDictionary.BusinessLayer
                 target: data.DomainEntityProperties,
                 command: (conn) => data.DomainEntityProperties.LoadCommand(conn, key)));
 
-            work.Add(factory.CreateWork(
-                workName: "Load DomainSubjectAreas",
-                target: data.DomainSubjectAreas,
-                command: (conn) => data.DomainSubjectAreas.LoadCommand(conn, key)));
-
             return work;
         }
 
@@ -123,10 +119,6 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
             ModelKey key = new ModelKey(modelKey);
-
-            work.Add(factory.CreateWork(
-                workName: "Save DomainSubjectAreas",
-                command: (conn) => data.DomainSubjectAreas.SaveCommand(conn, key)));
 
             work.Add(factory.CreateWork(
                 workName: "Save DomainAttributes",
@@ -169,7 +161,6 @@ namespace DataDictionary.BusinessLayer
             work.Add(new WorkItem() { WorkName = "Clear DomainEntities", DoWork = data.DomainEntities.Clear });
             work.Add(new WorkItem() { WorkName = "Clear DomainEntityAliases", DoWork = data.DomainEntityAliases.Clear });
             work.Add(new WorkItem() { WorkName = "Clear DomainEntityProperties", DoWork = data.DomainEntityProperties.Clear });
-            work.Add(new WorkItem() { WorkName = "Clear DomainSubjectAreas", DoWork = data.DomainSubjectAreas.Clear });
 
             return work;
         }

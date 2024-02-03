@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Model;
+﻿using DataDictionary.DataLayer.ModelData;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,8 +16,8 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class DomainAttributeCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>,
-        IWriteData<IModelKey>,
+        IReadData<IModelKey>, IReadData<IDomainAttributeKey>,
+        IWriteData<IModelKey>, IWriteData<IDomainAttributeKey>,
         IDeleteData<IModelKey>, IDeleteData<IDomainAttributeKey>,
         IRemoveData<IDomainAttributeKey>
         where TItem : BindingTableRow, IDomainAttributeItem, new()
@@ -25,6 +25,10 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
         { return LoadCommand(connection, (modelId.ModelId, null, null, null)); }
+
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IDomainAttributeKey attributeKey)
+        { return LoadCommand(connection, (null, attributeKey.AttributeId, null, null)); }
 
         Command LoadCommand(IConnection connection, (Guid? modelId, Guid? attributeId, string? attributeTitle, bool? obsolete) parameters)
         {
@@ -39,11 +43,19 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IModelKey modelId)
+        { return SaveCommand(connection, (modelId.ModelId, null)); }
+
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, IDomainAttributeKey attributeKey)
+        { return SaveCommand(connection, (null, attributeKey.AttributeId)); }
+
+        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? attributeId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetDomainAttribute]";
-            command.AddParameter("@ModelId", modelId.ModelId);
+            command.AddParameter("@ModelId", parameters.modelId);
+            command.AddParameter("@AttributeId", parameters.attributeId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttribute]", this);
             return command;
         }
@@ -54,13 +66,13 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
 
         /// <inheritdoc/>
         public Command DeleteCommand(IConnection connection, IModelKey parameters)
-        { return DeleteCommand(connection, (null, parameters.ModelId)); }
+        { return DeleteCommand(connection, (parameters.ModelId, null)); }
 
         Command DeleteCommand(IConnection connection, (Guid? modelId, Guid? attributeId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procDeleteDomainAttribute]";
+            command.CommandText = "[App_DataDictionary].[procSetDomainAttribute]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@AttributeId", parameters.attributeId);
 

@@ -8,12 +8,10 @@
             <xs:complexType>
               <xs:sequence>
                 <xs:element name="HelpId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" />
-                <xs:element name="HelpParentId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" minOccurs="0" />
                 <xs:element name="HelpSubject" type="xs:string" />
-                <xs:element name="HelpText" type="xs:string" />
+                <xs:element name="HelpToolTip" type="xs:string" minOccurs="0" />
+                <xs:element name="HelpText" type="xs:string" minOccurs="0" />
                 <xs:element name="NameSpace" type="xs:string" minOccurs="0" />
-                <xs:element name="Obsolete" type="xs:boolean" />
-                <xs:element name="SysStart" type="xs:dateTime" minOccurs="0" />
               </xs:sequence>
             </xs:complexType>
           </xs:element>
@@ -29,8 +27,6 @@
                 <xs:element name="IsChoice" type="xs:boolean" minOccurs="0" />
                 <xs:element name="ExtendedProperty" type="xs:string" minOccurs="0" />
                 <xs:element name="ChoiceList" type="xs:string" minOccurs="0" />
-                <xs:element name="Obsolete" type="xs:boolean" />
-                <xs:element name="SysStart" type="xs:dateTime" minOccurs="0" />
               </xs:sequence>
             </xs:complexType>
           </xs:element>
@@ -39,8 +35,19 @@
     </xs:element>
   </xs:schema>
   <HelpItem>
+    <HelpId>7581bfb8-d99b-4cde-92ab-01cb1b77a3dc</HelpId>
+    <HelpSubject>Attribute- Key</HelpSubject>
+    <HelpToolTip>Is the Attribute is used as a Key (part of a PK, FK, or AK)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is the Attribute is used as a Key (part of a PK, FK, or AK)\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isKeyData</NameSpace>
+  </HelpItem>
+  <HelpItem>
     <HelpId>00000000-0000-0000-0010-100000000000</HelpId>
-    <HelpSubject>Application Setup</HelpSubject>
+    <HelpSubject>Setup</HelpSubject>
     <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fswiss\fprq2\fcharset0 Segoe UI;}{\f2\fnil Segoe UI;}{\f3\fnil\fcharset2 Symbol;}}
 {\*\listtable 
 {\list\listhybrid
@@ -91,8 +98,7 @@ If the database is empty, this can be addressed by using the application. Under 
 \pard\f2\par
 }
 </HelpText>
-    <Obsolete>false</Obsolete>
-    <SysStart>2023-09-21T19:00:51.0488959-07:00</SysStart>
+    <NameSpace>Setup</NameSpace>
   </HelpItem>
   <HelpItem>
     <HelpId>00000000-0000-0000-0020-100000000000</HelpId>
@@ -110,8 +116,139 @@ This tool is intended to fill the gap. Something easy enough for Business to use
 \f1\par
 }
 </HelpText>
-    <Obsolete>false</Obsolete>
-    <SysStart>2023-09-21T19:01:10.9281455-07:00</SysStart>
+    <NameSpace>DataDictionary.Main.Forms</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>30abbe4f-3056-4e7f-87eb-521025f5ec26</HelpId>
+    <HelpSubject>Attribute- Composite</HelpSubject>
+    <HelpToolTip>Is Attribute a Composite Type (composed of multiple Simple Types, not Simple)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}{\f1\fnil\fcharset0 Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Composite attribute: An attribute that is a combination of other attributes is known as composite attribute. For example, In student entity, the student address is a composite attribute as an address is composed of other attributes such as pin code, state, country.\par
+\par
+\f1 Not a Simple Type.\f0\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isCompositeTypeData</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>d09b5d65-5e53-4960-ad14-5a901cff6958</HelpId>
+    <HelpSubject>Attribute- Derived</HelpSubject>
+    <HelpToolTip>Is Attribute a Derived Value (computed value, not Integral)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 A Derived attribute is an attribute that can be derived from other attributes of the entity.\par
+\par
+AKA: Calcualted Value\par
+Not an Integral value\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isDerivedData</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>79abc1c2-7c20-4431-b761-6442f736f8bd</HelpId>
+    <HelpSubject>Attribute- Valued</HelpSubject>
+    <HelpToolTip>Is the Attribute a valued (not null) attribute.</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is the Attribute a valued (not null) attribute.\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isValuedData</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>177b29f2-f449-4045-a43b-8f3cf07355ad</HelpId>
+    <HelpSubject>Error: File Not Found on Save to My Documents</HelpSubject>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fswiss\fprq2\fcharset0 Segoe UI;}{\f1\fnil\fcharset0 Segoe UI;}{\f2\fswiss\fprq2\fcharset0 Calibri;}{\f3\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\widctlpar\sa160\sl252\slmult1\f0\fs18 An error screen may appear when saving a Model to My Documents. This is a feature of anti-malware software such as \i\f1 Microsoft Defender\i0\f0 . Such software has a list of protected folders that include My Documents and all sub-folders. The anti-malware is attempting to protect the system against unknown threats, such as ransom ware.\par
+While this software is free of malicious code (as I released it), that does not prove that it is safe. I am looking at have the code verified and signed as trust worthy.\par
+There are work-arounds.\par
+The first it to save the file to an unprotected directory such as Downloads or other drive. The file(s) can then be reviewed and verified as safe. The files are just XML so they can be viewed in most browsers. This has the advantage of keeping the protection in place, just in case something is wrong.\par
+If you truly trust this software, open the anti-malware software and add an exception for the application.\par
+The application can also save data to its own installation folder (AppData.XML). This can throw errors as well as this may be a protected folder. Anti-malware software will normally allow this but in some cases, an error will be generated.\kerning2\f2\fs22\par
+
+\pard\kerning0\f3\fs18\par
+}
+</HelpText>
+    <NameSpace>Errors</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>b469fbb3-08bc-4500-8549-9cb877ad6fdc</HelpId>
+    <HelpSubject>Attribute- Multivalued</HelpSubject>
+    <HelpToolTip>Is Attribute Multi Valued (has multiple values, not single)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is Attribute Multi Valued (has multiple values, not single)\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isMultiValuedData</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>70b892dc-4844-4886-b09d-9dede899fd44</HelpId>
+    <HelpSubject>Attribute- Single</HelpSubject>
+    <HelpToolTip>Is Attribute Single Valued (has only one value, not multi-valued)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is Attribute Single Valued (has only one value, not multi-valued)\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isSingleValueData</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>f97525ae-bb77-4724-9397-a7a9293cbcde</HelpId>
+    <HelpSubject>Domain Attribute</HelpSubject>
+    <HelpToolTip>Attribute management</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Attributes are the data elements (fields/columns/properties) of an Entity Relationship Model.\f1\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>aadd18a8-af8f-4ecb-b7cc-ae8d101cef66</HelpId>
+    <HelpSubject>Attribute- Integral</HelpSubject>
+    <HelpToolTip>Is Attribute an Integral value (distinct or basic value, not Derived)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is Attribute an Integral value (distinct or basic value, not Derived)\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isIntegralData</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>2ae83017-c0a5-42ec-acb6-c240d4db23dc</HelpId>
+    <HelpSubject>Attribute- Simple</HelpSubject>
+    <HelpToolTip>Is Attribute a Simple Type (cannot be decomposed, not composite)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is Attribute a Simple Type (cannot be decomposed, not composite)\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isSimpleTypeData</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>a6e95ad7-edf4-45cf-b28a-d636374b39f1</HelpId>
+    <HelpSubject>Attribute- NonKey</HelpSubject>
+    <HelpToolTip>Is the Attribute a Non-Key item (not part of a PK, FK or AK)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is the Attribute a Non-Key item (not part of a PK, FK or AK)\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isNonKeyData</NameSpace>
+  </HelpItem>
+  <HelpItem>
+    <HelpId>82237476-b610-4695-bccd-d878a68c65ed</HelpId>
+    <HelpSubject>Attribute- Nullable</HelpSubject>
+    <HelpToolTip>Is the Attribute a Null-able value (allows Null value)</HelpToolTip>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Is the Attribute a Null-able value (allows Null value)\par
+}
+</HelpText>
+    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isNullableData</NameSpace>
   </HelpItem>
   <PropertyItem>
     <PropertyId>00000000-0000-0000-0010-000000000010</PropertyId>
@@ -121,8 +258,6 @@ This tool is intended to fill the gap. Something easy enough for Business to use
     <IsExtendedProperty>false</IsExtendedProperty>
     <IsFrameworkSummary>false</IsFrameworkSummary>
     <IsChoice>false</IsChoice>
-    <Obsolete>false</Obsolete>
-    <SysStart>2023-09-11T16:24:23.3586914-07:00</SysStart>
   </PropertyItem>
   <PropertyItem>
     <PropertyId>00000000-0000-0000-0020-000000000010</PropertyId>
@@ -132,8 +267,6 @@ This tool is intended to fill the gap. Something easy enough for Business to use
     <IsExtendedProperty>false</IsExtendedProperty>
     <IsFrameworkSummary>false</IsFrameworkSummary>
     <IsChoice>false</IsChoice>
-    <Obsolete>false</Obsolete>
-    <SysStart>2023-09-11T16:24:23.3586914-07:00</SysStart>
   </PropertyItem>
   <PropertyItem>
     <PropertyId>00000000-0000-0000-0010-000000000020</PropertyId>
@@ -144,8 +277,6 @@ This tool is intended to fill the gap. Something easy enough for Business to use
     <IsFrameworkSummary>false</IsFrameworkSummary>
     <IsChoice>false</IsChoice>
     <ExtendedProperty>MS_Description</ExtendedProperty>
-    <Obsolete>false</Obsolete>
-    <SysStart>2023-09-11T16:24:23.3586914-07:00</SysStart>
   </PropertyItem>
   <PropertyItem>
     <PropertyId>00000000-0000-0000-0010-000000000030</PropertyId>
@@ -155,8 +286,6 @@ This tool is intended to fill the gap. Something easy enough for Business to use
     <IsExtendedProperty>false</IsExtendedProperty>
     <IsFrameworkSummary>true</IsFrameworkSummary>
     <IsChoice>false</IsChoice>
-    <Obsolete>false</Obsolete>
-    <SysStart>2023-09-11T16:24:23.3586914-07:00</SysStart>
   </PropertyItem>
   <PropertyItem>
     <PropertyId>00000000-0000-0000-0020-000000000030</PropertyId>
@@ -167,7 +296,5 @@ This tool is intended to fill the gap. Something easy enough for Business to use
     <IsFrameworkSummary>false</IsFrameworkSummary>
     <IsChoice>true</IsChoice>
     <ChoiceList>Boolean, Byte , Byte[], Char[], DateTime, DateTimeOffset, Decimal, Double, Guid, Int16, Int32, Int64, Single, String, TimeSpan, Xml, Object</ChoiceList>
-    <Obsolete>false</Obsolete>
-    <SysStart>2023-09-11T16:24:23.3586914-07:00</SysStart>
   </PropertyItem>
 </NewDataSet>

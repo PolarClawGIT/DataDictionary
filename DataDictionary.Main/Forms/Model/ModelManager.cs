@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.ApplicationData.Model;
+using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -51,7 +51,7 @@ namespace DataDictionary.Main.Forms.Model
         public ModelManager()
         {
             InitializeComponent();
-            this.Icon = Resources.Icon_SaveTable;
+            this.Icon = Resources.Icon_SoftwareDefinitionModel;
 
             newItemCommand.Enabled = true;
             newItemCommand.Click += NewItemCommand_Click;
@@ -145,7 +145,6 @@ namespace DataDictionary.Main.Forms.Model
                 ModelKey key = new ModelKey(item);
                 work.Add(factory.OpenConnection());
                 work.AddRange(Program.Data.LoadModel(factory, key));
-                work.AddRange(Program.Data.LoadAlias());
 
                 DoLocalWork(work);
             }
@@ -162,7 +161,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 ModelKey key = new ModelKey(item);
                 work.Add(factory.OpenConnection());
-                work.AddRange(Program.Data.SaveModel(factory));
+                work.AddRange(Program.Data.SaveModel(factory,Program.Data.ModelKey));
                 work.AddRange(LoadLocalData(factory));
 
                 DoLocalWork(work);

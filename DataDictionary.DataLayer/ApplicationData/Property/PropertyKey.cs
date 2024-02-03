@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
         /// <summary>
         /// Property Id of the Property.
         /// </summary>
-        Nullable<Guid> PropertyId { get; }
+        Guid? PropertyId { get; }
     }
 
     /// <summary>
@@ -23,7 +23,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     public class PropertyKey : IPropertyKey, IKeyEquality<IPropertyKey>
     {
         /// <inheritdoc/>
-        public Nullable<Guid> PropertyId { get; init; } = Guid.Empty;
+        public Guid? PropertyId { get; init; } = Guid.Empty;
 
         /// <summary>
         /// Constructor for the Primary Key of the Property.

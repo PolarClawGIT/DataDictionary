@@ -23,17 +23,6 @@ Begin Try
 	If @ModelId is Null and @CatalogId is Null
 	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
 
-	IF Exists (
-		Select	1
-		From	@Data D
-				Left Join [App_DataDictionary].[DatabaseTable_AK] P
-				On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
-					NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
-					NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName] And
-					NullIf(Trim(D.[TableName]),'') = P.[TableName]
-		Where	P.[CatalogId] is Null)
-	Throw 50000, '[DatabaseName], [SchemaName] or [TableName] does not match existing data', 2;
-
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[ColumnId]              UniqueIdentifier Not Null,
@@ -72,8 +61,8 @@ Begin Try
 		From	[App_DataDictionary].[ApplicationScope] S
 				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
-	Select	Coalesce(A.[ColumnId], D.[ColumnId], NewId()) As [ColumnId],
-			P.[TableId],
+	Select	X.[ColumnId],
+			X.[TableId],
 			NullIf(Trim(D.[ColumnName]),'') As [ColumnName],
 			S.[ScopeId],
 			D.[OrdinalPosition],
@@ -101,19 +90,40 @@ Begin Try
 			NullIf(Trim([ComputedDefinition]),'') As [ComputedDefinition],
 			NullIf(Trim([GeneratedAlwayType]),'') As [GeneratedAlwayType]
 	From	@Data D
-			Left Join [App_DataDictionary].[DatabaseTable_AK] P
-			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
-				NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName] And
-				NullIf(Trim(D.[SchemaName]),'') = P.[SchemaName] And
-				NullIf(Trim(D.[TableName]),'') = P.[TableName]
+			Inner Join [App_DataDictionary].[DatabaseTable_AK] P
+			On	D.[DatabaseName] = P.[DatabaseName] And
+				D.[SchemaName] = P.[SchemaName] And
+				D.[TableName] = P.[TableName]
+			Left Join [App_DataDictionary].[DatabaseTableColumn_AK] A
+			On	D.[DatabaseName] = A.[DatabaseName] And
+				D.[SchemaName] = A.[SchemaName] And
+				D.[TableName] = A.[TableName] And
+				D.[ColumnName] = A.[ColumnName]
 			Left Join [Scope] S
 			On	D.[ScopeName] = S.[ScopeName]
-			Left Join [App_DataDictionary].[DatabaseTableColumn_AK] A
-			On	P.[CatalogId] = A.[CatalogId] And
-				P.[SchemaId] = A.[SchemaId] and
-				P.[TableId] = A.[TableId] and
-				NullIf(Trim(D.[ColumnName]),'') = A.[ColumnName]
-	Where	P.[CatalogId] is Null Or
+			Cross Apply (
+				Select	Coalesce(A.[ColumnId], D.[ColumnId], NewId()) As [ColumnId],
+						Coalesce(A.[TableId], P.[TableId]) As [TableId],
+						Coalesce(A.[SchemaId], P.[SchemaId]) As [SchemaId],
+						Coalesce(A.[CatalogId], P.[CatalogId], @CatalogId) As [CatalogId]) X
+	Where	@CatalogId is Null or
+			X.[CatalogId] = @CatalogId or
+			X.[CatalogId] In (
+			Select	A.[CatalogId]
+			From	[App_DataDictionary].[DatabaseCatalog] A
+					Left Join [App_DataDictionary].[ModelCatalog] C
+					On	A.[CatalogId] = C.[CatalogId]
+			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+					(@ModelId is Null Or @ModelId = C.[ModelId]))
+
+	-- Apply Changes
+	Delete From [App_DataDictionary].[DatabaseConstraintColumn]
+	From	[App_DataDictionary].[DatabaseConstraintColumn] T
+			Inner Join [App_DataDictionary].[DatabaseConstraint_AK] P
+			On	T.[ConstraintId] = P.[ConstraintId]
+			Left Join @Values S
+			On	T.[ParentColumnId] = S.[ColumnId]
+	Where	S.[ColumnId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
 				From	[App_DataDictionary].[DatabaseCatalog] A
@@ -121,8 +131,8 @@ Begin Try
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseConstraintColumn] (Column): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	-- Apply Changes
 	Delete From [App_DataDictionary].[DatabaseTableColumn]
 	From	[App_DataDictionary].[DatabaseTableColumn] T
 			Inner Join [App_DataDictionary].[DatabaseTable_AK] P

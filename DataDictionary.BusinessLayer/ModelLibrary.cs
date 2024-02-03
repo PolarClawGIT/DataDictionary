@@ -1,10 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
+using DataDictionary.DataLayer.ModelData;
 using System;
 using System.Collections.Generic;
 using System.Linq;

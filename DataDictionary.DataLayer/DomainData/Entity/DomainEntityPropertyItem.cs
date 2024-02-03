@@ -1,34 +1,16 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Model;
-using DataDictionary.DataLayer.ApplicationData.Property;
+﻿using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
-using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DomainData.Entity
 {
     /// <summary>
     /// Interface for Domain Entity Properties
     /// </summary>
-    public interface IDomainEntityPropertyItem : IDomainEntityPropertyKey, IDataItem
-    {
-        /// <summary>
-        /// Property Value. Type and Format is dependent on PeropertyId.
-        /// </summary>
-        public string? PropertyValue { get; }
-
-        /// <summary>
-        /// Property Value for Rich Text Definition properties.
-        /// </summary>
-        public string? DefinitionText { get; }
-    }
+    public interface IDomainEntityPropertyItem : IDomainEntityPropertyKey, IDomainProperty, IDataItem
+    { }
 
     /// <summary>
     /// Implementation for Domain Entity Properties

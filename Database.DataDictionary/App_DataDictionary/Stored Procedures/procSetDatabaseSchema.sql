@@ -23,15 +23,6 @@ Begin Try
 	If @ModelId is Null and @CatalogId is Null
 	Throw 50000, '@ModelId or @CatalogId must be specified', 1;
 
-	IF Exists (
-		Select	1
-		From	@Data D
-				Left Join [App_DataDictionary].[DatabaseCatalog_AK] P
-				On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
-					NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName]
-		Where	P.[CatalogId] is Null)
-	Throw 50000, '[DatabaseName] does not match existing data', 2;
-
 	-- Clean the Data, helps performance
 	Declare @Values Table (
 		[SchemaId]   UniqueIdentifier Not Null,
@@ -46,20 +37,39 @@ Begin Try
 		From	[App_DataDictionary].[ApplicationScope] S
 				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
-	Select	Coalesce(A.[SchemaId], D.[SchemaId], NewId()) As [SchemaId],
-			P.[CatalogId],
+	Select	X.[SchemaId],
+			X.[CatalogId],
 			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
 			S.[ScopeId]
 	From	@Data D
-			Left Join [App_DataDictionary].[DatabaseCatalog_AK] P
-			On	Coalesce(D.[CatalogId], @CatalogId) = P.[CatalogId] And
-				NullIf(Trim(D.[DatabaseName]),'') = P.[DatabaseName]
+			Inner Join [App_DataDictionary].[DatabaseCatalog_AK] P
+			On	D.[DatabaseName] = P.[DatabaseName]
+			Left Join [App_DataDictionary].[DatabaseSchema_AK] A
+			On	D.[DatabaseName] = A.[DatabaseName] And
+				D.[SchemaName] = A.[SchemaName]
 			Left Join [Scope] S
 			On	D.[ScopeName] = S.[ScopeName]
-			Left Join [App_DataDictionary].[DatabaseSchema_AK] A
-			On	P.[CatalogId] = A.[CatalogId] And
-				NullIf(Trim(D.[SchemaName]),'') = A.[SchemaName]
-	Where	P.[CatalogId] is Null Or
+			Cross apply (
+				Select	Coalesce(A.[SchemaId], D.[SchemaId], NewId()) As [SchemaId],
+						Coalesce(A.[CatalogId], P.[CatalogId], @CatalogId) As [CatalogId]) X
+	Where	@CatalogId is Null or
+			X.[CatalogId] = @CatalogId or
+			X.[CatalogId] In (
+			Select	A.[CatalogId]
+			From	[App_DataDictionary].[DatabaseCatalog] A
+					Left Join [App_DataDictionary].[ModelCatalog] C
+					On	A.[CatalogId] = C.[CatalogId]
+			Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+					(@ModelId is Null Or @ModelId = C.[ModelId]))
+
+	-- Apply Changes
+	Delete From [App_DataDictionary].[DatabaseConstraintColumn]
+	From	[App_DataDictionary].[DatabaseConstraintColumn] T
+			Inner Join [App_DataDictionary].[DatabaseConstraint_AK] P
+			On	T.[ConstraintId] = P.[ConstraintId]
+			Left Join @Values S
+			On	P.[SchemaId] = S.[SchemaId]
+	Where	S.[SchemaId] is Null And
 			P.[CatalogId] In (
 				Select	A.[CatalogId]
 				From	[App_DataDictionary].[DatabaseCatalog] A
@@ -67,17 +77,120 @@ Begin Try
 						On	A.[CatalogId] = C.[CatalogId]
 				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
 						(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseConstraintColumn] (Schema): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	-- Apply Changes
-	If @CatalogId is Not Null And Not Exists (Select [CatalogId] From @Values Where [CatalogId] = @CatalogId)
-	Begin -- Cascades Delete
-		Exec [App_DataDictionary].[procSetDatabaseConstraint] @CatalogId = @CatalogId
-		Exec [App_DataDictionary].[procSetDatabaseDomain] @CatalogId = @CatalogId
-		Exec [App_DataDictionary].[procSetDatabaseTable] @CatalogId = @CatalogId
-		Exec [App_DataDictionary].[procSetDatabaseRoutine] @CatalogId = @CatalogId
-		
-		Exec [App_DataDictionary].[procSetDatabaseExtendedProperty] @CatalogId = @CatalogId
-	End
+	Delete From [App_DataDictionary].[DatabaseConstraint]
+	From	[App_DataDictionary].[DatabaseConstraint] T
+			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
+			On	T.[SchemaId] = P.[SchemaId]
+			Left Join @Values S
+			On	P.[SchemaId] = S.[SchemaId]
+	Where	S.[SchemaId] is Null And
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseConstraint] (Schema): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[DatabaseDomain]
+	From	[App_DataDictionary].[DatabaseDomain] T
+			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
+			On	T.[SchemaId] = P.[SchemaId]
+			Left Join @Values S
+			On	P.[SchemaId] = S.[SchemaId]
+	Where	S.[SchemaId] is Null And
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseDomain] (Schema): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[DatabaseRoutineDependency]
+	From	[App_DataDictionary].[DatabaseRoutineDependency] T
+			Inner Join [App_DataDictionary].[DatabaseRoutine_AK] P
+			On	T.[RoutineId] = P.[RoutineId]
+			Left Join @Values S
+			On	P.[SchemaId] = S.[SchemaId]
+	Where	S.[SchemaId] is Null And
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseRoutineDependency] (Schema): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[DatabaseRoutineParameter]
+	From	[App_DataDictionary].[DatabaseRoutineParameter] T
+			Inner Join [App_DataDictionary].[DatabaseRoutine_AK] P
+			On	T.[RoutineId] = P.[RoutineId]
+			Left Join @Values S
+			On	P.[SchemaId] = S.[SchemaId]
+	Where	S.[SchemaId] is Null And
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseRoutineParameter] (Schema): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[DatabaseRoutine]
+	From	[App_DataDictionary].[DatabaseRoutine] T
+			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
+			On	T.[SchemaId] = P.[SchemaId]
+			Left Join @Values S
+			On	P.[SchemaId] = S.[SchemaId]
+	Where	S.[SchemaId] is Null And
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseRoutine] (Schema): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[DatabaseTableColumn]
+	From	[App_DataDictionary].[DatabaseTableColumn] T
+			Inner Join [App_DataDictionary].[DatabaseTable_AK] P
+			On	T.[TableId] = P.[TableId]
+			Left Join @Values S
+			On	P.[SchemaId] = S.[SchemaId]
+	Where	S.[SchemaId] is Null And
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseTableColumn] (Schema): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[DatabaseTable]
+	From	[App_DataDictionary].[DatabaseTable] T
+			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
+			On	T.[SchemaId] = P.[SchemaId]
+			Left Join @Values S
+			On	P.[SchemaId] = S.[SchemaId]
+	Where	S.[SchemaId] is Null And
+			P.[CatalogId] In (
+				Select	A.[CatalogId]
+				From	[App_DataDictionary].[DatabaseCatalog] A
+						Left Join [App_DataDictionary].[ModelCatalog] C
+						On	A.[CatalogId] = C.[CatalogId]
+				Where	(@CatalogId is Null Or @CatalogId = A.[CatalogId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseTable] (Schema): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 
 	Delete From [App_DataDictionary].[DatabaseSchema]
 	From	[App_DataDictionary].[DatabaseSchema] T

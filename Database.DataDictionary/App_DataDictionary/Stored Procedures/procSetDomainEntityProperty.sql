@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainEntityProperty]
-		@ModelId UniqueIdentifier,
+		@ModelId UniqueIdentifier = Null,
+		@EntityId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeDomainEntityProperty] ReadOnly
 As
 Set NoCount On -- Do not show record counts
@@ -18,73 +19,83 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeDomainEntityProperty]
+	-- Validation
+	If @ModelId is Null and @EntityId is Null
+	Throw 50000, '@ModelId or @EntityId must be specified', 1;
+
+	-- Clean the Data, helps performance
+	Declare @Values Table (
+		[EntityId]		UniqueIdentifier Not Null,
+		[PropertyId]		UniqueIdentifier NOT Null,
+		[PropertyValue]		NVarChar(4000) Null,
+		[DefinitionText]    NVarChar(Max) Null,
+		Primary Key ([EntityId],[PropertyId]))
+
 	Insert Into @Values
+	Select	[EntityId],
+			[PropertyId],
+			[PropertyValue],
+			[DefinitionText]
+	From	@Values
 	Select	D.[EntityId],
-			P.[PropertyId],
+			D.[PropertyId],
 			NullIf(Trim(D.[PropertyValue]),'') As [PropertyValue],
 			NullIf(Trim(D.[DefinitionText]),'') As [DefinitionText]
 	From	@Data D
-			Inner Join [App_DataDictionary].[ApplicationProperty] P
-			On	D.[PropertyId] = P.[PropertyId]
-
-	-- Validation
-	If Not Exists (Select 1 From [App_DataDictionary].[Model] Where [ModelId] = @ModelId)
-	Throw 50000, '[ModelId] could not be found that matched the parameter', 1;
-
-	If Exists (
-		Select	V.[EntityId]
-		From	@Values V
-				Left Join [App_DataDictionary].[DomainEntity] A
-				On	V.[EntityId] = A.[EntityId]
-				Left Join [App_DataDictionary].[ModelEntity] P
-				On	V.[EntityId] = P.[EntityId] And
-					P.[ModelId] = @ModelId
-		Where	A.[EntityId] is Null Or
-				P.[EntityId] is Null)
-	Throw 50000, '[EntityId] could not be found or is not associated with Model specified', 2;
 
 	-- Apply Changes
-	With [Delta] As (
+	Delete From [App_DataDictionary].[DomainEntityProperty]
+	From	[App_DataDictionary].[DomainEntityProperty] T
+			Left Join @Values S
+			On	T.[EntityId] = S.[EntityId] And
+				T.[PropertyId] = S.[PropertyId]
+	Where	S.[EntityId] is Null And
+			T.[EntityId] In (
+			Select	A.[EntityId]
+			From	[App_DataDictionary].[DomainEntity] A
+					Left Join [App_DataDictionary].[ModelEntity] C
+					On	A.[EntityId] = C.[EntityId]
+			Where	(@EntityId is Null Or @EntityId = A.[EntityId]) And
+					(@ModelId is Null Or @ModelId = C.[ModelId]))
+	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	;With [Delta] As (
 		Select	[EntityId],
 				[PropertyId],
 				[PropertyValue],
 				[DefinitionText]
 		From	@Values
-		Except
+		Except 
 		Select	[EntityId],
 				[PropertyId],
 				[PropertyValue],
 				[DefinitionText]
-		From	[App_DataDictionary].[DomainEntityProperty]),
-	[Data] As (
-		Select	V.[EntityId],
-				V.[PropertyId],
-				V.[PropertyValue],
-				V.[DefinitionText],
-				IIF(D.[EntityId] is Null,0, 1) As [IsDiffrent]
-		From	@Values V
-				Left Join [Delta] D
-				On	V.[EntityId] = D.[EntityId] and
-					V.[PropertyId] = D.[PropertyId])
-	Merge [App_DataDictionary].[DomainEntityProperty] T
-	Using [Data] S
-	On	T.[EntityId] = S.[EntityId] And
-		T.[PropertyId] = S.[PropertyId]
-	When Matched And S.[IsDiffrent] = 1 Then Update
-		Set	[PropertyValue] = S.[PropertyValue],
+		From	[App_DataDictionary].[DomainEntityProperty])
+	Update [App_DataDictionary].[DomainEntityProperty]
+	Set		[PropertyValue] = S.[PropertyValue],
 			[DefinitionText] = S.[DefinitionText]
-	When Not Matched by Target Then
-		Insert ([EntityId], [PropertyId], [PropertyValue], [DefinitionText])
-		Values ([EntityId], [PropertyId], [PropertyValue], [DefinitionText])
-	When Not Matched by Source And (T.[EntityId] in (
-		Select	[EntityId]
-		From	[App_DataDictionary].[ModelEntity]
-		Where	[ModelId] = @ModelId))
-		Then Delete;
+	From	[App_DataDictionary].[DomainEntityProperty] T
+			Inner Join [Delta] S
+			On	T.[EntityId] = S.[EntityId] And
+				T.[PropertyId] = S.[PropertyId]
+	Print FormatMessage ('Update [App_DataDictionary].[DomainEntityProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-
+	Insert Into  [App_DataDictionary].[DomainEntityProperty] (
+			[EntityId],
+			[PropertyId],
+			[PropertyValue],
+			[DefinitionText])
+	Select	S.[EntityId],
+			S.[PropertyId],
+			S.[PropertyValue],
+			S.[DefinitionText]
+	From	@Values S
+			Left Join [App_DataDictionary].[DomainEntityProperty] T
+			On	S.[EntityId] = T.[EntityId] And
+				S.[PropertyId] = T.[PropertyId]
+	Where	T.[EntityId] is Null
+	Print FormatMessage ('Insert [App_DataDictionary].[DomainEntityProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, commit it

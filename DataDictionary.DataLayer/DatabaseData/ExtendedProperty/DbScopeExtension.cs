@@ -21,16 +21,16 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         static Dictionary<ScopeType, IDbScopeKey> scopeCrossWalk = new Dictionary<ScopeType, IDbScopeKey>()
         {
             {ScopeType.DatabaseSchema, new DbCatalogScopeKey(){ CatalogScope = DbCatalogScope.Schema} },
-            {ScopeType.DatabaseSchemaFunction, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Function} },
-            {ScopeType.DatabaseSchemaProcedure, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Procedure} },
-            {ScopeType.DatabaseSchemaTable, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Table} },
-            {ScopeType.DatabaseSchemaType, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Type} },
-            {ScopeType.DatabaseSchemaView, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.View} },
-            {ScopeType.DatabaseSchemaViewColumn, new DbElementScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.View, ElementScope= DbElementScope.Column} },
-            {ScopeType.DatabaseSchemaTableColumn, new DbElementScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Table, ElementScope= DbElementScope.Column} },
-            {ScopeType.DatabaseSchemaTableConstraint, new DbElementScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Table, ElementScope= DbElementScope.Constraint} },
-            {ScopeType.DatabaseSchemaProcedureParameter, new DbElementScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Procedure, ElementScope= DbElementScope.Parameter} },
-            {ScopeType.DatabaseSchemaFunctionParameter, new DbElementScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Function, ElementScope= DbElementScope.Parameter} },
+            {ScopeType.DatabaseFunction, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Function} },
+            {ScopeType.DatabaseProcedure, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Procedure} },
+            {ScopeType.DatabaseTable, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Table} },
+            {ScopeType.DatabaseDomain, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Type} },
+            {ScopeType.DatabaseView, new DbObjectScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.View} },
+            {ScopeType.DatabaseViewColumn, new DbElementScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.View, ElementScope= DbElementScope.Column} },
+            {ScopeType.DatabaseTableColumn, new DbElementScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Table, ElementScope= DbElementScope.Column} },
+            {ScopeType.DatabaseTableConstraint, new DbElementScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Table, ElementScope= DbElementScope.Constraint} },
+            {ScopeType.DatabaseProcedureParameter, new DbElementScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Procedure, ElementScope= DbElementScope.Parameter} },
+            {ScopeType.DatabaseFunctionParameter, new DbElementScopeKey(){ CatalogScope = DbCatalogScope.Schema, ObjectScope = DbObjectScope.Function, ElementScope= DbElementScope.Parameter} },
         };
 
         /// <summary>
@@ -95,20 +95,8 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// <returns></returns>
         public static IDbScopeKey? TryScope(this IScopeKey source)
         {
-            if (scopeCrossWalk.ContainsKey(source.ScopeId))
-            { return scopeCrossWalk[source.ScopeId]; }
-            else { return null; }
-        }
-
-        /// <summary>
-        /// Attempts to convert a Scope Type into Db Scope Key.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public static IDbScopeKey? TryScope(this IScopeKeyName source)
-        {
-            if (scopeCrossWalk.ContainsKey(new ScopeKey(source).ScopeId))
-            { return scopeCrossWalk[new ScopeKey(source).ScopeId]; }
+            if (scopeCrossWalk.ContainsKey(source.Scope))
+            { return scopeCrossWalk[source.Scope]; }
             else { return null; }
         }
     }

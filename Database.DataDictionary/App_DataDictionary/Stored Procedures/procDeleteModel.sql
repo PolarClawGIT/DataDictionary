@@ -20,21 +20,33 @@ Begin Try
 	-- Validation
 
 	-- Delete Model
+	Delete From [App_DataDictionary].[ModelEntity]
+	Where	[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	
+	Delete From [App_DataDictionary].[ModelAttribute]
+	Where	[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	Delete From [App_DataDictionary].[ModelProcess]
 	Where	[ModelId] = @ModelId
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelProcess]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelAttribute]
+	Delete From [App_DataDictionary].[ModelRelationship]
 	Where	[ModelId] = @ModelId
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelRelationship]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[ModelSubjectArea]
+	Where	[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[ModelCatalog]
 	Where	[ModelId] = @ModelId
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelCatalog]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelEntity]
+	Delete From [App_DataDictionary].[ModelLibrary]
 	Where	[ModelId] = @ModelId
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelLibrary]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[Model]
 	Where	[ModelId] = @ModelId

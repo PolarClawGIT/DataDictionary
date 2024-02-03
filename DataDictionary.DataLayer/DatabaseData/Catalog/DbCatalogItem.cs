@@ -1,11 +1,7 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Model;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using Microsoft.Data.SqlClient;
-using System.ComponentModel;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
-using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DatabaseData.Catalog
 {

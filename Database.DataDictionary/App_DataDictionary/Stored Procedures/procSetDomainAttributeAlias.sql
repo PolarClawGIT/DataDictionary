@@ -85,7 +85,10 @@ Begin Try
 			On	D.[AliasName] = A.[AliasName]
 
 	-- Apply Changes
-	Insert Into [App_DataDictionary].[DomainAlias] ([AliasId], [ParentAliasId], [AliasElement])
+	Insert Into [App_DataDictionary].[DomainAlias] (
+			[AliasId],
+			[ParentAliasId],
+			[AliasElement])
 	Select	V.[AliasId],
 			P.[AliasId] As [ParentAliasId],
 			V.[AliasElement]

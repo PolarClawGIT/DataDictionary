@@ -9,9 +9,12 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
-    record PropertyNameItem
+    record PropertyNameItem : IPropertyKey, IPropertyKeyUnique
     {
-        public Guid PropertyId { get; set; } = Guid.Empty;
+        /// <inheritdoc/>
+        public Guid? PropertyId { get; set; } = Guid.Empty;
+
+        /// <inheritdoc/>
         public String PropertyTitle { get; set; } = String.Empty;
 
         public static void Load(ComboBoxData control)

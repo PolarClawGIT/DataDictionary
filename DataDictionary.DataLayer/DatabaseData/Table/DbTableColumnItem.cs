@@ -1,22 +1,12 @@
 ﻿// Ignore Spelling: Nullable
 
-using DataDictionary.DataLayer.ApplicationData.Model;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.DataLayer.DomainData;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Runtime.ExceptionServices;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 

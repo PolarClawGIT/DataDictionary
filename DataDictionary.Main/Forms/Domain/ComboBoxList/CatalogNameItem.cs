@@ -10,7 +10,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
-    [Obsolete()]
+    [Obsolete("not used", true)]
     record CatalogNameItem : IDbCatalogKeyName
     {
         public String DatabaseName { get; set; } = String.Empty;

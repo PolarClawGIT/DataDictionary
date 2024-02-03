@@ -16,14 +16,36 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// Library NameSpaces are defined by the namespace or type and the element of the namespace or type.
     /// </summary>
     /// <remarks>
-    /// This list matches to the database view [App_DataDictionary].[ModelScope]
+    /// This list mimics what is in the database but the Value (Int32) does not match.
+    /// Each Database Entry, is expected to have an entry here.
     /// </remarks>
+    /// <see cref="ScopeKey"/>
     public enum ScopeType
     {
         /// <summary>
         /// Represents the undefined Scope.
         /// </summary>
         Null,
+
+        /// <summary>
+        /// Application Model
+        /// </summary>
+        Model,
+
+        /// <summary>
+        /// Application Model Subject Area
+        /// </summary>
+        ModelSubjectArea,
+
+        /// <summary>
+        /// Application Model Attribute
+        /// </summary>
+        ModelAttribute,
+
+        /// <summary>
+        /// Application Model Entity
+        /// </summary>
+        ModelEntity,
 
         /// <summary>
         /// .Net Library
@@ -76,58 +98,60 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         DatabaseSchema,
 
         /// <summary>
+        /// SQL Table
+        /// </summary>
+        DatabaseTable,
+
+        /// <summary>
         /// SQL Function
         /// </summary>
-        DatabaseSchemaFunction,
+        DatabaseFunction,
 
         /// <summary>
         /// SQL Procedure
         /// </summary>
-        DatabaseSchemaProcedure,
-
-        /// <summary>
-        /// SQL Table
-        /// </summary>
-        DatabaseSchemaTable,
+        DatabaseProcedure,
 
         /// <summary>
         /// SQL Type/Domain
         /// </summary>
-        DatabaseSchemaType,
+        DatabaseDomain,
 
         /// <summary>
         /// SQL View
         /// </summary>
-        DatabaseSchemaView,
+        DatabaseView,
 
         /// <summary>
         /// SQL View Column
         /// </summary>
-        DatabaseSchemaViewColumn,
+        DatabaseViewColumn,
 
         //DatabaseSchemaViewIndex,
 
         /// <summary>
         /// SQL Table Column
         /// </summary>
-        DatabaseSchemaTableColumn,
+        DatabaseTableColumn,
 
         /// <summary>
         /// SQL Table Constraint
         /// </summary>
-        DatabaseSchemaTableConstraint,
+        DatabaseTableConstraint,
 
         //DatabaseSchemaTableIndex,
 
         /// <summary>
         /// SQL Procedure Parameter
         /// </summary>
-        DatabaseSchemaProcedureParameter,
+        DatabaseProcedureParameter,
 
         /// <summary>
         /// SQL Function Parameter
         /// </summary>
-        DatabaseSchemaFunctionParameter,
+        DatabaseFunctionParameter,
+
+
     }
 
     /// <summary>
