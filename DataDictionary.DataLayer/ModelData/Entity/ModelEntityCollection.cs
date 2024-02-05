@@ -17,7 +17,6 @@ namespace DataDictionary.DataLayer.ModelData.Entity
     public abstract class ModelEntityCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IModelEntityKey>,
         IWriteData<IModelKey>, IWriteData<IModelEntityKey>,
-        IDeleteData<IModelKey>, IDeleteData<IModelEntityKey>,
         IRemoveData<IModelEntityKey>
         where TItem : BindingTableRow, IModelEntityKey, new()
     {
@@ -56,26 +55,9 @@ namespace DataDictionary.DataLayer.ModelData.Entity
             command.CommandText = "[App_DataDictionary].[procSetModelEntity]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@EntityId", parameters.EntityId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeModelEntity]", this);
-            return command;
-        }
 
-        /// <inheritdoc/>
-        public Command DeleteCommand(IConnection connection, IModelKey key)
-        { return DeleteCommand(connection, (key.ModelId, null)); }
-
-        /// <inheritdoc/>
-        public Command DeleteCommand(IConnection connection, IModelEntityKey key)
-        { return DeleteCommand(connection, (null, key.EntityId)); }
-
-        Command DeleteCommand(IConnection connection, (Guid? modelId, Guid? EntityId) parameters)
-        {
-            Command command = connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetModelSubjectArea]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@EntityId", parameters.EntityId);
-
+            IEnumerable<TItem> data = this.Where(w => parameters.EntityId is null || w.EntityId == parameters.EntityId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeModelEntity]", data);
             return command;
         }
 

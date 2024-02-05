@@ -71,7 +71,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             command.CommandText = "[App_DataDictionary].[procSetDatabaseTableColumn]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseTableColumn]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseTableColumn]", data);
             return command;
         }
 

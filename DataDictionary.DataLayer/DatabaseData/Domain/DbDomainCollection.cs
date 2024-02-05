@@ -70,7 +70,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
             command.CommandText = "[App_DataDictionary].[procSetDatabaseDomain]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseDomain]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseDomain]", data);
             return command;
         }
 

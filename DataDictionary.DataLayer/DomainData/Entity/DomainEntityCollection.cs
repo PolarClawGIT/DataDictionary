@@ -55,7 +55,9 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             command.CommandText = "[App_DataDictionary].[procSetDomainEntity]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@EntityId", parameters.EntityId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainEntity]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.EntityId is null || w.EntityId == parameters.EntityId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainEntity]", data);
             return command;
         }
 

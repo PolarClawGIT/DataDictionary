@@ -17,7 +17,6 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
     public abstract class ModelAttributeCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IModelAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IModelAttributeKey>,
-        IDeleteData<IModelKey>, IDeleteData<IModelAttributeKey>,
         IRemoveData<IModelAttributeKey>
         where TItem : BindingTableRow, IModelAttributeKey, new()
     {
@@ -56,26 +55,9 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
             command.CommandText = "[App_DataDictionary].[procSetModelAttribute]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@AttributeId", parameters.attributeId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeModelAttribute]", this);
-            return command;
-        }
 
-        /// <inheritdoc/>
-        public Command DeleteCommand(IConnection connection, IModelKey key)
-        { return DeleteCommand(connection, (key.ModelId, null)); }
-
-        /// <inheritdoc/>
-        public Command DeleteCommand(IConnection connection, IModelAttributeKey key)
-        { return DeleteCommand(connection, (null, key.AttributeId)); }
-
-        Command DeleteCommand(IConnection connection, (Guid? modelId, Guid? attributeId) parameters)
-        {
-            Command command = connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetModelSubjectArea]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@AttributeId", parameters.attributeId);
-
+            IEnumerable<TItem> data = this.Where(w => parameters.attributeId is null || w.AttributeId == parameters.attributeId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeModelAttribute]", data);
             return command;
         }
 

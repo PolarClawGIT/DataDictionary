@@ -55,7 +55,9 @@ namespace DataDictionary.DataLayer.LibraryData.Member
             command.CommandText = "[App_DataDictionary].[procSetLibraryMember]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@LibraryId", parameters.libraryId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeLibraryMember]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.libraryId is null || w.LibraryId == parameters.libraryId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeLibraryMember]", data);
             return command;
         }
 

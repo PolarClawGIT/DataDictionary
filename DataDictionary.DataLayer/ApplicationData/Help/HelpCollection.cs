@@ -53,8 +53,10 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetApplicationHelp]";
-            command.AddParameter("@@HelpId", helpId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationHelp]", this);
+            command.AddParameter("@HelpId", helpId);
+
+            IEnumerable<TItem> data = this.Where(w => helpId is null || w.HelpId == helpId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationHelp]", data);
             return command;
         }
 

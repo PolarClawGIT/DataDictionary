@@ -70,7 +70,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
             command.CommandText = "[App_DataDictionary].[procSetDatabaseRoutine]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutine]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutine]", data);
             return command;
         }
 

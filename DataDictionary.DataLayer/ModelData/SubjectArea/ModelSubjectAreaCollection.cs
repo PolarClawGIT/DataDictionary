@@ -57,6 +57,8 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
             command.CommandText = "[App_DataDictionary].[procSetModelSubjectArea]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@SubjectAreaId", parameters.subjectAreaId);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.subjectAreaId is null || w.SubjectAreaId == parameters.subjectAreaId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeModelSubjectArea]", this);
             return command;
         }

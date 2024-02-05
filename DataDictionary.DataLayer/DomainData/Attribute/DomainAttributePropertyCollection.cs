@@ -55,7 +55,9 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             command.CommandText = "[App_DataDictionary].[procSetDomainAttributeProperty]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@AttributeId", parameters.attributeId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttributeProperty]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.attributeId is null || w.AttributeId == parameters.attributeId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttributeProperty]", data);
             return command;
         }
 

@@ -71,7 +71,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
             command.CommandText = "[App_DataDictionary].[procSetDatabaseConstraint]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseConstraint]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseConstraint]", data);
             return command;
         }
 

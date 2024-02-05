@@ -71,7 +71,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
             command.CommandText = "[App_DataDictionary].[procSetDatabaseCatalog]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseCatalog]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseCatalog]", data);
             return command;
         }
 
