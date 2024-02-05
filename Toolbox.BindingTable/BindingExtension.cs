@@ -32,7 +32,10 @@ namespace Toolbox.BindingTable
             }
         }
 
-
+        /// <inheritdoc cref="DataTableExtensions.CopyToDataTable"/>
+        /// <remarks>Handles enumerations of BindingTableRows</remarks>
+        public static DataTable ToDataTable(this IEnumerable<BindingTableRow> data)
+        { return data.Select(s => s.GetRow()).CopyToDataTable(); }
     }
 
     static class BindingPrivateExtension

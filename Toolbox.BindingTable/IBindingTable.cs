@@ -29,6 +29,6 @@ namespace Toolbox.BindingTable
     }
 
     public interface IBindingTable<T> : IBindingTable, ICollection<T>
-        where T : class, INotifyPropertyChanged
+        where T : IBindingTableRow
     { }
 }
