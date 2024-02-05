@@ -159,24 +159,7 @@ namespace DataDictionary.Main.Forms.App
         {
             if (helpBinding.Current is HelpItem current)
             {
-                //TODO: Test/Debug. Tree does not match what is expected.
-
-                foreach (KeyValuePair<TreeNode, HelpItem> item in helpContentNodes.Where(w => w.Value == current))
-                {
-                    if (helpContentNavigation.Nodes.Contains(item.Key))
-                    {
-                        helpContentNavigation.SelectedNode = item.Key.Parent;
-
-                        foreach (TreeNode child in item.Key.Nodes)
-                        {
-                            helpContentNavigation.Nodes.Remove(child);
-                            item.Key.Parent.Nodes.Add(child);
-                        }
-
-                        item.Key.Remove();
-                    }
-                }
-
+                RemoveNode(current);
                 current.Remove();
             }
         }
@@ -240,15 +223,7 @@ namespace DataDictionary.Main.Forms.App
                     }
                     else if (items.Count > 1)
                     {
-                        TreeNode newNode;
-                        if (String.IsNullOrWhiteSpace(group.Key))
-                        { newNode = new TreeNode("General"); }
-                        else { newNode = new TreeNode(group.Key); }
-
-                        newNode.ImageKey = helpContentImageItems[helpContentImageIndex.HelpGroup].imageKey;
-                        newNode.SelectedImageKey = helpContentImageItems[helpContentImageIndex.HelpGroup].imageKey;
-
-                        parent.Add(newNode);
+                        TreeNode newNode = CreateNode(group.Key, helpContentImageIndex.HelpGroup, parent);
 
                         foreach (HelpItem item in items)
                         { CreateNode(item, helpContentImageIndex.HelpPage, newNode.Nodes); }
@@ -282,6 +257,24 @@ namespace DataDictionary.Main.Forms.App
             source.PropertyChanged += Source_PropertyChanged;
 
             return result;
+        }
+
+        private TreeNode CreateNode(String nodeText, helpContentImageIndex imageIndex, TreeNodeCollection? parentNode = null)
+        {
+            TreeNode result = new TreeNode(nodeText);
+            result.ImageKey = helpContentImageItems[imageIndex].imageKey;
+            result.SelectedImageKey = helpContentImageItems[imageIndex].imageKey;
+
+            if (parentNode is null)
+            { helpContentNavigation.Nodes.Add(result); }
+            else { parentNode.Add(result); }
+
+            return result;
+        }
+
+        private void RemoveNode(HelpItem source)
+        {
+
         }
 
         private void Source_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -377,11 +370,16 @@ namespace DataDictionary.Main.Forms.App
             e.NewObject = newItem;
         }
 
+        HelpItem? lastHelpItem; // Used exclusively by CurrentChanged to get the prior current value.
         private void helpBinding_CurrentChanged(object sender, EventArgs e)
         {
             if (helpBinding.Current is HelpItem current)
             {
-                RowState = current.RowState();
+                if (lastHelpItem is not null)
+                { lastHelpItem.RowStateChanged -= Current_RowStateChanged; }
+
+                current.RowStateChanged += Current_RowStateChanged;
+                lastHelpItem = current;
                 controlData.Enabled = false;
 
                 // So checked event does not fire while the data is being worked
@@ -399,6 +397,12 @@ namespace DataDictionary.Main.Forms.App
                     controlData.ItemChecked += ControlData_ItemChecked;
                 }
             }
+
+            void Current_RowStateChanged(object? sender, EventArgs e)
+            {
+                if (helpBinding.Current is HelpItem current)
+                { RowState = current.RowState(); }
+            }
         }
 
         private void helpBinding_DataError(object sender, BindingManagerDataErrorEventArgs e)
@@ -406,7 +410,6 @@ namespace DataDictionary.Main.Forms.App
 
         private void helpBinding_BindingComplete(object sender, BindingCompleteEventArgs e)
         { }  // Helps in Debugging binding
-
 
         private void controlData_Resize(object sender, EventArgs e)
         {
@@ -445,7 +448,6 @@ namespace DataDictionary.Main.Forms.App
             }
         }
 
-
         private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
             if (helpBinding.Current is HelpItem current)
@@ -453,17 +455,22 @@ namespace DataDictionary.Main.Forms.App
                 DatabaseWork factory = new DatabaseWork();
                 List<WorkItem> work = new List<WorkItem>();
 
+                RemoveNode(current);
                 current.Remove();
 
                 work.Add(factory.OpenConnection());
                 work.AddRange(Program.Data.SaveHelp(factory, current));
 
+                IsLocked(true);
+                IsWaitCursor(true);
                 DoWork(work, onCompleting);
 
                 void onCompleting(RunWorkerCompletedEventArgs args)
                 {
-                    if (args.Error is not null)
-                    { current.AcceptChanges(); }
+                    IsWaitCursor(false);
+
+                    if (args.Error is null)
+                    { IsLocked(false); }
                 }
             }
         }
@@ -478,14 +485,19 @@ namespace DataDictionary.Main.Forms.App
                 work.Add(factory.OpenConnection());
                 work.AddRange(Program.Data.SaveHelp(factory, current));
 
+                IsLocked(true);
+                IsWaitCursor(true);
                 DoWork(work, onCompleting);
 
                 void onCompleting(RunWorkerCompletedEventArgs args)
                 {
-                    if (args.Error is not null)
+                    IsWaitCursor(false);
+
+                    if (args.Error is null)
                     {
                         current.AcceptChanges();
                         RowState = current.RowState();
+                        IsLocked(false);
                     }
                 }
             }
@@ -493,6 +505,8 @@ namespace DataDictionary.Main.Forms.App
 
         private void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            //TODO: Open is having cross threading problems with the RTF control.
+
             if (helpBinding.Current is HelpItem current)
             {
                 DatabaseWork factory = new DatabaseWork();
@@ -503,10 +517,17 @@ namespace DataDictionary.Main.Forms.App
                 work.Add(factory.OpenConnection());
                 work.AddRange(Program.Data.LoadHelp(factory, current));
 
+                IsLocked(true);
+                IsWaitCursor(true);
                 DoWork(work, onCompleting);
 
                 void onCompleting(RunWorkerCompletedEventArgs args)
                 {
+                    IsWaitCursor(false);
+
+                    if (args.Error is null)
+                    { IsLocked(false); }
+
                     if (helpBinding.DataSource is IList<HelpItem> subjects)
                     {
                         if (subjects.FirstOrDefault(w => key.Equals(w)) is HelpItem subject)

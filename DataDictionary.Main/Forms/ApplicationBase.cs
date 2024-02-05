@@ -20,7 +20,33 @@ using static System.Windows.Forms.Control;
 namespace DataDictionary.Main.Forms
 {
 
-    partial class ApplicationBase : Form, IColleague
+    interface IApplicationForm
+    {
+        /// <summary>
+        /// Locks (disable) and Unlock (enable) the Form.
+        /// </summary>
+        /// <param name="newState">Sets the new Value. If Null, the value is not set, only returned.</param>
+        /// <returns>
+        /// True disables the top most controls.
+        /// False enables the top most controls.
+        /// </returns>
+        Boolean IsLocked(Boolean? newState = null);
+
+        /// <summary>
+        /// Controls the UseWaitCursor of the top most controls.
+        /// </summary>
+        /// <param name="newState"></param>
+        /// <returns></returns>
+        Boolean IsWaitCursor(Boolean? newState = null);
+
+        /// <summary>
+        ///  Collection of child controls.
+        /// </summary>
+        /// <remarks>Implemented by the Control classes, including Form.</remarks>
+        ControlCollection Controls { get; }
+    }
+
+    partial class ApplicationBase : Form, IColleague, IApplicationForm
     {
         Dictionary<DataRowState, (Image icon, String tooltip)> rowStateSettings = new Dictionary<DataRowState, (Image icon, string tooltip)>()
         {
@@ -173,8 +199,36 @@ namespace DataDictionary.Main.Forms
             void completing(RunWorkerCompletedEventArgs result)
             {
                 if (result.Error is not null) { Program.ShowException(result.Error); }
-                if (onCompleting is not null) { onCompleting(result); }
+                if (onCompleting is not null) { onCompleting(result);  }
             }
+        }
+
+        public virtual Boolean IsLocked(Boolean? newState = null)
+        {
+            if (newState is Boolean value)
+            {
+                foreach (Control item in this.Controls)
+                {
+                    if (item is MdiClient) { } // Don't touch the MdiClient control as it will cause child forms to be disabled.
+                    else { item.Enabled = !value; }
+                }
+            }
+
+            return this.Controls.Cast<Control>().Any(w => w.Enabled);
+        }
+
+        public virtual Boolean IsWaitCursor(Boolean? newState = null)
+        {
+            if (newState is Boolean value)
+            {
+                foreach (Control item in this.Controls)
+                {
+                    if (item is MdiClient) { } // Don't touch the MdiClient control as it will cause child forms to be disabled.
+                    else { item.UseWaitCursor = value; }
+                }
+            }
+
+            return this.Controls.Cast<Control>().Any(w => w.UseWaitCursor);
         }
 
         #region IColleague

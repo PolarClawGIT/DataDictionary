@@ -10,11 +10,12 @@ using static System.Windows.Forms.Control;
 
 namespace DataDictionary.Main.Forms
 {
+
     /// <summary>
     /// Base Interface for Application Data Forms.
     /// </summary>
     /// <remarks>This is a partial class that is intended to work with the ApplicationBase class.</remarks>
-    interface IApplicationDataForm
+    interface IApplicationDataForm : IApplicationForm
     {
         /// <summary>
         /// Is the object passed the item the form is using for data.
@@ -31,12 +32,6 @@ namespace DataDictionary.Main.Forms
         /// The RowState of the related data.
         /// </summary>
         public DataRowState? RowState { get; set; }
-
-        /// <summary>
-        ///  Collection of child controls.
-        /// </summary>
-        /// <remarks>Implemented by the Control class</remarks>
-        ControlCollection Controls { get; }
 
     }
 
@@ -55,7 +50,6 @@ namespace DataDictionary.Main.Forms
         /// Performs the Unbinding of the Data for the Form. Called by UnbindData.
         /// </summary>
         public void UnbindDataCore();
-
 
     }
 
@@ -87,7 +81,6 @@ namespace DataDictionary.Main.Forms
             }
         }
 
-
         /// <summary>
         /// Class UnbindDataCore and locks the form.
         /// </summary>
@@ -97,50 +90,6 @@ namespace DataDictionary.Main.Forms
             dataForm.IsWaitCursor(true);
             dataForm.UnbindDataCore();
         }
-
-        /// <summary>
-        /// Locks (disable) and Unlock (enable) the Form.
-        /// </summary>
-        /// <param name="dataForm"></param>
-        /// <param name="newState">Sets the new Value. If Null, the value is not set, only returned.</param>
-        /// <returns>
-        /// True disables the top most controls.
-        /// False enables the top most controls.
-        /// </returns>
-        public static Boolean IsLocked(this IApplicationDataForm dataForm, Boolean? newState = null)
-        {
-            if (newState is Boolean value)
-            {
-                foreach (Control item in dataForm.Controls)
-                {
-                    if (item is MdiClient) { } // Don't touch the MdiClient control as it will cause child forms to be disabled.
-                    else { item.Enabled = !value; }
-                }
-            }
-
-            return dataForm.Controls.Cast<Control>().Any(w => w.Enabled);
-        }
-
-        /// <summary>
-        /// Controls the UseWaitCursor of the top most controls.
-        /// </summary>
-        /// <param name="dataForm"></param>
-        /// <param name="newState"></param>
-        /// <returns></returns>
-        public static Boolean IsWaitCursor(this IApplicationDataForm dataForm, Boolean? newState = null)
-        {
-            if (newState is Boolean value)
-            {
-                foreach (Control item in dataForm.Controls)
-                {
-                    if (item is MdiClient) { } // Don't touch the MdiClient control as it will cause child forms to be disabled.
-                    else { item.UseWaitCursor = value; }
-                }
-            }
-
-            return dataForm.Controls.Cast<Control>().Any(w => w.UseWaitCursor);
-        }
-
     }
 
     /// <summary>
