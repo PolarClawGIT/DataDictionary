@@ -22,7 +22,7 @@ namespace Toolbox.BindingTable
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static DataTable ToDataTable(this IBindingTable source)
+        static DataTable ToDataTable(this IBindingTable source)
         {
             using (DataTable data = new DataTable())
             {
@@ -34,8 +34,26 @@ namespace Toolbox.BindingTable
 
         /// <inheritdoc cref="DataTableExtensions.CopyToDataTable"/>
         /// <remarks>Handles enumerations of BindingTableRows</remarks>
-        public static DataTable ToDataTable(this IEnumerable<BindingTableRow> data)
-        { return data.Select(s => s.GetRow()).CopyToDataTable(); }
+        public static DataTable ToDataTable<T>(this IEnumerable<T> data)
+            where T : BindingTableRow, new()
+        {
+            DataTable result;
+            DataColumn[] dataColumns = new T().ColumnDefinitions().ToArray();
+
+            IList<DataRow> values = data.Select(s => s.GetRow()).ToList();
+
+            if (values.Count == 0)
+            {
+                // CopyToDataTable returns a Invalid Operation Exception if there are no rows in the list.
+                // Return an empty table in that scenario.
+                using (result = new DataTable())
+                { result.AddColumns(dataColumns.ToArray()); }
+            }
+            else { result = values.CopyToDataTable(); }
+
+
+            return result;
+        }
     }
 
     static class BindingPrivateExtension

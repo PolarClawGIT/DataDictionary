@@ -179,7 +179,6 @@ namespace DataDictionary.BusinessLayer
 
             work.Add(factory.CreateWork(
                 workName: "Save Help",
-                target: data.HelpSubjects,
                 command: (conn) => data.HelpSubjects.SaveCommand(conn, key)));
 
             return work;

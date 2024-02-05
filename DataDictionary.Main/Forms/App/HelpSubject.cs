@@ -1,10 +1,13 @@
-﻿using DataDictionary.BusinessLayer.NameSpace;
+﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NameSpace;
 using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using System.Data;
+using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.App
 {
@@ -73,13 +76,13 @@ namespace DataDictionary.Main.Forms.App
             // Setup Images for Tree Control
             SetImages(helpContentNavigation, helpContentImageItems.Values);
 
-            openFromDatabaseCommand.Enabled = false; // TODO: Not Ready
+            openFromDatabaseCommand.Enabled = true;
             openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click;
 
-            saveToDatabaseCommand.Enabled = false; // TODO: Not Ready
+            saveToDatabaseCommand.Enabled = true;
             saveToDatabaseCommand.Click += SaveToDatabaseCommand_Click;
 
-            deleteFromDatabaseCommand.Enabled = false; // TODO: Not Ready
+            deleteFromDatabaseCommand.Enabled = true;
             deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
 
         }
@@ -119,6 +122,8 @@ namespace DataDictionary.Main.Forms.App
         {
             if (helpBinding.DataSource is IList<HelpItem> subjects)
             {
+                var x = subjects.FirstOrDefault(w => w.NameSpace is String && w.NameSpace == targetSubject);
+
                 if (subjects.FirstOrDefault(w => w.HelpSubject is String && w.HelpSubject.Equals(targetSubject, StringComparison.CurrentCultureIgnoreCase)) is HelpItem subject)
                 { helpBinding.Position = subjects.IndexOf(subject); }
                 else if (subjects.FirstOrDefault(w => w.NameSpace is String && w.NameSpace == targetSubject) is HelpItem nameSpaceSubject)
@@ -130,10 +135,10 @@ namespace DataDictionary.Main.Forms.App
         private void HelpSubject_Load(object sender, EventArgs e)
         {
             IHelpItem nameOfValues;
-            helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(nameOfValues.HelpSubject)));
-            helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(nameOfValues.NameSpace)));
-            helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(nameOfValues.HelpToolTip)));
-            helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(nameOfValues.HelpText)));
+            helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(nameOfValues.HelpSubject), false, DataSourceUpdateMode.OnPropertyChanged));
+            helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(nameOfValues.NameSpace), false, DataSourceUpdateMode.OnPropertyChanged));
+            helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(nameOfValues.HelpToolTip), false, DataSourceUpdateMode.OnPropertyChanged));
+            helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(nameOfValues.HelpText), false, DataSourceUpdateMode.OnPropertyChanged));
 
             BuildHelpTree();
         }
@@ -154,7 +159,7 @@ namespace DataDictionary.Main.Forms.App
         {
             if (helpBinding.Current is HelpItem current)
             {
-                //TODO: Test/Debug. Appears to work but the tree after refresh does not match.
+                //TODO: Test/Debug. Tree does not match what is expected.
 
                 foreach (KeyValuePair<TreeNode, HelpItem> item in helpContentNodes.Where(w => w.Value == current))
                 {
@@ -273,12 +278,6 @@ namespace DataDictionary.Main.Forms.App
 
             if (helpBinding.Current is HelpItem current && current == source)
             { helpContentNavigation.SelectedNode = result; }
-
-            if (helpBinding.DataSource is IEnumerable<HelpItem> items)
-            {
-                //foreach (HelpItem childItem in items.Where(w => w.HelpParentId == source.HelpId))
-                //{ CreateNode(childItem, imageIndex, result); }
-            }
 
             source.PropertyChanged += Source_PropertyChanged;
 
@@ -449,17 +448,72 @@ namespace DataDictionary.Main.Forms.App
 
         private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (helpBinding.Current is HelpItem current)
+            {
+                DatabaseWork factory = new DatabaseWork();
+                List<WorkItem> work = new List<WorkItem>();
+
+                current.Remove();
+
+                work.Add(factory.OpenConnection());
+                work.AddRange(Program.Data.SaveHelp(factory, current));
+
+                DoWork(work, onCompleting);
+
+                void onCompleting(RunWorkerCompletedEventArgs args)
+                {
+                    if (args.Error is not null)
+                    { current.AcceptChanges(); }
+                }
+            }
         }
 
         private void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (helpBinding.Current is HelpItem current)
+            {
+                DatabaseWork factory = new DatabaseWork();
+                List<WorkItem> work = new List<WorkItem>();
+
+                work.Add(factory.OpenConnection());
+                work.AddRange(Program.Data.SaveHelp(factory, current));
+
+                DoWork(work, onCompleting);
+
+                void onCompleting(RunWorkerCompletedEventArgs args)
+                {
+                    if (args.Error is not null)
+                    {
+                        current.AcceptChanges();
+                        RowState = current.RowState();
+                    }
+                }
+            }
         }
 
         private void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (helpBinding.Current is HelpItem current)
+            {
+                DatabaseWork factory = new DatabaseWork();
+                List<WorkItem> work = new List<WorkItem>();
+                HelpKey key = new HelpKey(current);
+                current.Remove();
+
+                work.Add(factory.OpenConnection());
+                work.AddRange(Program.Data.LoadHelp(factory, current));
+
+                DoWork(work, onCompleting);
+
+                void onCompleting(RunWorkerCompletedEventArgs args)
+                {
+                    if (helpBinding.DataSource is IList<HelpItem> subjects)
+                    {
+                        if (subjects.FirstOrDefault(w => key.Equals(w)) is HelpItem subject)
+                        { helpBinding.Position = subjects.IndexOf(subject); }
+                    }
+                }
+            }
         }
 
     }

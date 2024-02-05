@@ -86,7 +86,7 @@ namespace DataDictionary.DataLayer
         /// <param name="value"></param>
         /// <remarks>Handles a Enumeration of BindingTableRow</remarks>
         public static void AddParameter<T>(this Command command, String parameterName, String structureType, IEnumerable<T> value)
-            where T : BindingTableRow
+            where T : BindingTableRow, new()
         {
             if (value is not null)
             {

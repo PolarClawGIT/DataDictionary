@@ -11,6 +11,7 @@ using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Forms;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -173,7 +174,7 @@ namespace DataDictionary.Main
         #region Menu Events
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)
         {
-            if (ActiveMdiChild is Form currentForm)
+            if (ActiveMdiChild is Form currentForm && currentForm is not AboutBox)
             { Activate(() => new Forms.App.HelpSubject(currentForm)); }
             else { Activate(() => new Forms.App.HelpSubject(Settings.Default.DefaultSubject)); }
         }
