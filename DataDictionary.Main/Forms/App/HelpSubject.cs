@@ -73,6 +73,9 @@ namespace DataDictionary.Main.Forms.App
 
             helpBinding.DataSource = Program.Data.HelpSubjects;
 
+            if (helpBinding.DataSource is IList<HelpItem> subjects && subjects.FirstOrDefault(w => w.NameSpace == Settings.Default.DefaultSubject) is HelpItem subject)
+            { helpBinding.Position = subjects.IndexOf(subject); }
+
             // Setup Images for Tree Control
             SetImages(helpContentNavigation, helpContentImageItems.Values);
 
@@ -122,13 +125,10 @@ namespace DataDictionary.Main.Forms.App
         {
             if (helpBinding.DataSource is IList<HelpItem> subjects)
             {
-                var x = subjects.FirstOrDefault(w => w.NameSpace is String && w.NameSpace == targetSubject);
-
                 if (subjects.FirstOrDefault(w => w.HelpSubject is String && w.HelpSubject.Equals(targetSubject, StringComparison.CurrentCultureIgnoreCase)) is HelpItem subject)
                 { helpBinding.Position = subjects.IndexOf(subject); }
                 else if (subjects.FirstOrDefault(w => w.NameSpace is String && w.NameSpace == targetSubject) is HelpItem nameSpaceSubject)
                 { helpBinding.Position = subjects.IndexOf(nameSpaceSubject); }
-
             }
         }
 
@@ -160,7 +160,7 @@ namespace DataDictionary.Main.Forms.App
             if (helpBinding.Current is HelpItem current)
             {
                 RemoveNode(current);
-                current.Remove();
+                helpBinding.RemoveCurrent();
             }
         }
 
@@ -274,7 +274,36 @@ namespace DataDictionary.Main.Forms.App
 
         private void RemoveNode(HelpItem source)
         {
+            HelpKey key = new HelpKey(source);
 
+            KeyValuePair<TreeNode, HelpItem> currentValue = helpContentNodes.FirstOrDefault(w => key.Equals(w.Value));
+
+            if (currentValue.Key is TreeNode && currentValue.Key.Nodes.Count == 0)
+            {
+                helpContentNodes.Remove(currentValue.Key);
+                helpContentNavigation.Nodes.Remove(currentValue.Key);
+            }
+
+            if (currentValue.Key is TreeNode && currentValue.Key.Nodes.Count > 0)
+            {
+                TreeNodeCollection? parent = null;
+                if (currentValue.Key.Parent is not null)
+                { parent = currentValue.Key.Parent.Nodes; }
+
+                String nodeText = "(unknown)";
+                if (source.NameSpace is String)
+                { nodeText = source.NameSpace.Split('.').Last(); }
+
+                TreeNode newNode = CreateNode(nodeText, helpContentImageIndex.HelpGroup, parent);
+                helpContentNavigation.Nodes.Remove(currentValue.Key);
+                helpContentNodes.Remove(currentValue.Key);
+
+                foreach (TreeNode item in currentValue.Key.Nodes)
+                { newNode.Nodes.Add(item); }
+            }
+
+            if (helpBinding.DataSource is IList<HelpItem> subjects && subjects.Where(w => w.NameSpace == Settings.Default.DefaultSubject) is HelpItem subject)
+            { helpBinding.Position = subjects.IndexOf(subject); }
         }
 
         private void Source_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -298,7 +327,6 @@ namespace DataDictionary.Main.Forms.App
             foreach ((string imageKey, Image image) image in images.Where(w => !tree.ImageList.Images.ContainsKey(w.imageKey)))
             { tree.ImageList.Images.Add(image.imageKey, image.image); }
         }
-
 
         private void HelpContentNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
@@ -375,6 +403,9 @@ namespace DataDictionary.Main.Forms.App
         {
             if (helpBinding.Current is HelpItem current)
             {
+                // The item(s) with the Default NameSpace cannot change NameSpaces. This is the About subject.
+                helpNameSpaceData.Enabled = !(current.NameSpace is String && current.NameSpace == Settings.Default.DefaultSubject);
+
                 if (lastHelpItem is not null)
                 { lastHelpItem.RowStateChanged -= Current_RowStateChanged; }
 
@@ -450,7 +481,9 @@ namespace DataDictionary.Main.Forms.App
 
         private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
-            if (helpBinding.Current is HelpItem current)
+            if (helpBinding.Current is HelpItem current
+                && current.NameSpace is String
+                && current.NameSpace != Settings.Default.DefaultSubject) // Cannot Delete the Default Subject
             {
                 DatabaseWork factory = new DatabaseWork();
                 List<WorkItem> work = new List<WorkItem>();
@@ -505,8 +538,6 @@ namespace DataDictionary.Main.Forms.App
 
         private void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
-            //TODO: Open is having cross threading problems with the RTF control.
-
             if (helpBinding.Current is HelpItem current)
             {
                 DatabaseWork factory = new DatabaseWork();
@@ -516,6 +547,9 @@ namespace DataDictionary.Main.Forms.App
 
                 work.Add(factory.OpenConnection());
                 work.AddRange(Program.Data.LoadHelp(factory, current));
+
+                // Unbind the RTF control to avoid errors generated by background thread
+                helpTextData.DataBindings.Clear();
 
                 IsLocked(true);
                 IsWaitCursor(true);
@@ -531,7 +565,10 @@ namespace DataDictionary.Main.Forms.App
                     if (helpBinding.DataSource is IList<HelpItem> subjects)
                     {
                         if (subjects.FirstOrDefault(w => key.Equals(w)) is HelpItem subject)
-                        { helpBinding.Position = subjects.IndexOf(subject); }
+                        {
+                            helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(subject.HelpText), false, DataSourceUpdateMode.OnPropertyChanged));
+                            helpBinding.Position = subjects.IndexOf(subject);
+                        }
                     }
                 }
             }

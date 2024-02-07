@@ -40,6 +40,7 @@ namespace DataDictionary.Main.Controls
         /// </summary>
         /// <remarks>
         /// The name appears to be very touchy. Changing it to "RichText" causes an error during binding while "Rtf" does not.
+        /// ListChange and PropertyChange Events during threading can cause issues with this control where other controls don't have that issue.
         /// </remarks>
         [Browsable(false), RefreshProperties(RefreshProperties.All), SettingsBindable(true), DefaultValue(""), Category("Appearance")]
         public String Rtf
