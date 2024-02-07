@@ -7,29 +7,29 @@ With [Data] As (
 	Select	[AliasId],
 			NullIf([ParentAliasId], [AliasId]) As [ParentAliasId],
 			Convert(NVarChar(Max),
-				FormatMessage('[%s]',[AliasElement])) As [AliasName],
+				FormatMessage('[%s]',[AliasMember])) As [AliasName],
 			Convert(NVarChar(Max), Null) As [ParentAliasName],
-			[AliasElement]
+			[AliasMember]
 	From	[App_DataDictionary].[DomainAlias]
 	Where	[AliasId] = @AliasId
 	Union All
 	Select	D.[AliasId],
 			NullIf(P.[ParentAliasId], D.[AliasId]) As [ParentAliasId],
 			Convert(NVarChar(Max),
-				FormatMessage('[%s].%s',P.[AliasElement],D.[AliasName])) As [AliasName],
+				FormatMessage('[%s].%s',P.[AliasMember],D.[AliasName])) As [AliasName],
 			Convert(NVarChar(Max),
 				IIF(D.[ParentAliasName] is Null,
-				FormatMessage('[%s]',P.[AliasElement]),
-				FormatMessage('[%s].%s',P.[AliasElement], D.[ParentAliasName])))
+				FormatMessage('[%s]',P.[AliasMember]),
+				FormatMessage('[%s].%s',P.[AliasMember], D.[ParentAliasName])))
 				As [ParentAliasName],
-			D.[AliasElement]
+			D.[AliasMember]
 	From	[Data] D
 			Inner Join [App_DataDictionary].[DomainAlias] P
 			On	D.[ParentAliasId] = P.[AliasId])
 Select	[AliasId],
 		[AliasName],
 		[ParentAliasName],
-		[AliasElement]
+		[AliasMember]
 From	[Data]
 Where	[ParentAliasId] is Null)
 GO

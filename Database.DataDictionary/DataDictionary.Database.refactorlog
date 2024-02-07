@@ -539,4 +539,32 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[typeNameSpaceFullName]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="be8ef556-bfad-4280-8fd9-7c244950a4d0" ChangeDateTime="02/07/2024 16:34:26">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeNameSpaceFullName]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeNameSpacePath]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2b4402f1-b8cd-4011-a92e-06d0b163b8bc" ChangeDateTime="02/07/2024 16:38:24">
+    <Property Name="ElementName" Value="[App_DataDictionary].[funcSplitAliasName]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcSplitNameSpace]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7c7e48a7-cc67-4cab-a4b5-566c4ea74549" ChangeDateTime="02/07/2024 16:50:25">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeNameSpaceElement]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeNameSpaceMember]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="82d42274-12de-4a87-b5fe-151aeecde0d6" ChangeDateTime="02/07/2024 16:53:21">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DomainAlias].[AliasElement]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DomainAlias]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[AliasMember]" />
+  </Operation>
 </Operations>
