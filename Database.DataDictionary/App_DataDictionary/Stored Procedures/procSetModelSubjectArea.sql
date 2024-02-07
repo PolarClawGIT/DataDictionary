@@ -20,25 +20,52 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare	@Values Table (
+	Declare @Values Table (
 		[SubjectAreaId]          UniqueIdentifier NOT NULL,
-		[ModelId]                UniqueIdentifier NOT NULL,
-		--[SubjectAreaParentId]    UniqueIdentifier NULL,
-		[SubjectAreaTitle]       [App_DataDictionary].[typeTitle] NOT NULL,
+		[SubjectAreaTitle]       [App_DataDictionary].[typeTitle] Not NULL,
 		[SubjectAreaDescription] [App_DataDictionary].[typeDescription] NULL,
+		[ParentNameSpace]        [App_DataDictionary].[typeNameSpacePath] Null,
+		[SubjectAreaNameSpace]   [App_DataDictionary].[typeNameSpacePath] Null,
+		[SubjectAreaMember]		 [App_DataDictionary].[typeNameSpaceMember] Not Null,
 		Primary Key ([SubjectAreaId]))
 
 	Declare @Delete Table (
 		[SubjectAreaId] UniqueIdentifier Not Null,
 		Primary Key ([SubjectAreaId]))
 
+	;With [Existing] As (
+		Select	S.[SubjectAreaId],
+				X.[SubjectAreaNameSpace]
+		From	[App_DataDictionary].[ModelSubjectArea] S
+				Cross Apply [App_DataDictionary].[funcGetSubjectAreaName](S.[SubjectAreaId]) X),
+	[Data] As (
+		Select	N.[SubjectAreaId],
+				IIF(X.[IsBase] = 1,NullIf(Trim(s.[SubjectAreaTitle]), ''),Null) As [SubjectAreaTitle],
+				NullIf(Trim(S.[SubjectAreaDescription]), '') As [SubjectAreaDescription],
+				X.[ParentNameSpace] As [ParentNameSpace],
+				X.[NameSpace] As [SubjectAreaNameSpace],
+				X.[NameSpaceMember] As [SubjectAreaMember],
+				Row_Number() Over (
+					Partition By X.[NameSpaceMember]
+					Order By IIF(X.[IsBase] = 1,0,1),
+							X.[NameSpaceMember])
+					As [RankIndex]
+		From	@Data S
+				Cross apply [App_DataDictionary].[funcSplitNameSpace](S.[SubjectAreaNameSpace]) X
+				Left Join [Existing] T
+				On	X.[NameSpace] = T.[SubjectAreaNameSpace]
+				Cross Apply (Select	Coalesce(T.[SubjectAreaId], S.[SubjectAreaId], @SubjectAreaId, NewId()) As [SubjectAreaId]) N
+		Where	@SubjectAreaId is Null or
+				N.[SubjectAreaId] = @SubjectAreaId)
 	Insert Into @Values
-	Select	Coalesce(D.[SubjectAreaId], @SubjectAreaId, NewId()) As [SubjectAreaId],
-			@ModelId As [ModelId],
-			--D.[SubjectAreaParentId],
-			NullIf(Trim(D.[SubjectAreaTitle]), '') As [SubjectAreaTitle],
-			NullIf(Trim(D.[SubjectAreaDescription]), '') As [SubjectAreaDescription]
-	From	@Data D
+	Select	[SubjectAreaId],
+			IsNull([SubjectAreaTitle], [SubjectAreaMember]) As [SubjectAreaTitle],
+			[SubjectAreaDescription],
+			[ParentNameSpace],
+			[SubjectAreaNameSpace],
+			[SubjectAreaMember]
+	From	[Data]
+	Where	[RankIndex] = 1
 
 	Insert Into @Delete
 	Select	T.[SubjectAreaId]
@@ -91,19 +118,24 @@ Begin Try
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
-		Select	[SubjectAreaId],
-				--[SubjectAreaParentId],
-				[SubjectAreaTitle],
-				[SubjectAreaDescription]
-		From	@Values
+		Select	S.[SubjectAreaId],
+				P.[SubjectAreaId] As [SubjectAreaParentId],
+				S.[SubjectAreaMember],
+				S.[SubjectAreaTitle],
+				S.[SubjectAreaDescription]
+		From	@Values S
+				Left Join @Values P
+				On	S.[ParentNameSpace] = P.[SubjectAreaNameSpace]
 		Except
 		Select	[SubjectAreaId],
-				--[SubjectAreaParentId],
+				[SubjectAreaParentId],
+				[SubjectAreaMember],
 				[SubjectAreaTitle],
 				[SubjectAreaDescription]
 		From	[App_DataDictionary].[ModelSubjectArea])
 	Update [App_DataDictionary].[ModelSubjectArea]
-	Set		--[SubjectAreaParentId] = S.[SubjectAreaParentId],
+	Set		[SubjectAreaParentId] = S.[SubjectAreaParentId],
+			[SubjectAreaMember] = S.[SubjectAreaMember],
 			[SubjectAreaTitle] = S.[SubjectAreaTitle],
 			[SubjectAreaDescription] = S.[SubjectAreaDescription]
 	From	[Delta] S
@@ -114,15 +146,19 @@ Begin Try
 	Insert Into [App_DataDictionary].[ModelSubjectArea] (
 			[ModelId],
 			[SubjectAreaId],
-			--[SubjectAreaParentId],
+			[SubjectAreaParentId],
+			[SubjectAreaMember],
 			[SubjectAreaTitle],
 			[SubjectAreaDescription])
-	Select	S.[ModelId],
+	Select	@ModelId As [ModelId],
 			S.[SubjectAreaId],
-			--S.[SubjectAreaParentId],
+			P.[SubjectAreaId] As [SubjectAreaParentId],
+			S.[SubjectAreaMember],
 			S.[SubjectAreaTitle],
 			S.[SubjectAreaDescription]
 	From	@Values S
+			Left Join @Values P
+				On	S.[ParentNameSpace] = P.[SubjectAreaNameSpace]
 			Left Join [App_DataDictionary].[ModelSubjectArea] T
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]
 	Where	T.[SubjectAreaId] is Null

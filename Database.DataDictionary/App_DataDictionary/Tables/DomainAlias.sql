@@ -4,8 +4,8 @@
 	-- Multiple items may have the same Alias Name but refer to different objects.
 	[AliasId]           UniqueIdentifier NOT NULL CONSTRAINT [DF_DomainAliasId] DEFAULT (newid()),
 	[ParentAliasId]     UniqueIdentifier NULL,
-	[AliasMember]       [App_DataDictionary].[typeNameSpaceMember] Not Null, -- Cannot enforce unique value because of Index limits.
-	--[AliasCheckSum]     As (Binary_CheckSum([AliasNameElement])), -- Used for case Sensitive and indexing
+	[AliasMember]       [App_DataDictionary].[typeNameSpaceMember] Not Null,
+	--[AliasCheckSum]     As (Binary_CheckSum([AliasMember])), -- Used for indexing. Not needed unless the index would exceed 1700 bytes.
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DomainAlias_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DomainAlias_SysStart] DEFAULT (sysdatetime()),
@@ -14,3 +14,7 @@
 	CONSTRAINT [PK_DomainAlias] PRIMARY KEY CLUSTERED ([AliasId] ASC),
 	CONSTRAINT [FK_DomainAliasParent] FOREIGN KEY ([ParentAliasId]) REFERENCES [App_DataDictionary].[DomainAlias] ([AliasId]),
 )
+GO
+CREATE UNIQUE INDEX [AK_DomainAlias]
+    ON [App_DataDictionary].[DomainAlias]([ParentAliasId] ASC, [AliasMember] ASC)
+GO
