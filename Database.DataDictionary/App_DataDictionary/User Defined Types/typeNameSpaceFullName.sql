@@ -3,4 +3,4 @@
 -- This value is of unknown length. Examples are:
 -- Database: [DatabaseName].[SchemaName].[TableName].[ColumnName]
 -- Library, C#: [NameSpace].[SubNameSpace].[ClassName].[PropertyName]
-CREATE TYPE [App_DataDictionary].[typeAliasName] FROM NVarchar(Max)
+CREATE TYPE [App_DataDictionary].[typeNameSpaceFullName] FROM NVarchar(Max)

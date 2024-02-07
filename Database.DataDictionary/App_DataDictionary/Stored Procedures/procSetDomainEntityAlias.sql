@@ -24,16 +24,16 @@ Begin Try
 		[EntityId]       UniqueIdentifier Not Null,
 		[AliasId]           UniqueIdentifier Not Null,
 		[ScopeId]           Int Not Null,
-		[AliasElement]		[App_DataDictionary].[typeAliasElement] Not Null,
-		[AliasName]			[App_DataDictionary].[typeAliasName] Not Null,
-		[ParentAliasName]	[App_DataDictionary].[typeAliasElement] Null
+		[AliasElement]		[App_DataDictionary].[typeNameSpaceElement] Not Null,
+		[AliasName]			[App_DataDictionary].[typeNameSpaceFullName] Not Null,
+		[ParentAliasName]	[App_DataDictionary].[typeNameSpaceElement] Null
 		Primary Key ([EntityId], [AliasId]))
 
 	Declare @Alias Table (
 		[AliasId]           UniqueIdentifier Not Null,
-		[AliasElement]		[App_DataDictionary].[typeAliasElement] Not Null,
-		[AliasName]			[App_DataDictionary].[typeAliasName] Not Null,
-		[ParentAliasName]	[App_DataDictionary].[typeAliasElement] Null,
+		[AliasElement]		[App_DataDictionary].[typeNameSpaceElement] Not Null,
+		[AliasName]			[App_DataDictionary].[typeNameSpaceFullName] Not Null,
+		[ParentAliasName]	[App_DataDictionary].[typeNameSpaceElement] Null,
 		Primary Key ([AliasId]))
 
 

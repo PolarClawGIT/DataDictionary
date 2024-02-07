@@ -518,4 +518,25 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[IsSimpleType]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="2b1966f1-6ad2-4909-b935-431eb5b6e77f" ChangeDateTime="02/07/2024 16:09:58">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeAliasName]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeNameSpaceFull]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="45d9def3-4e0f-4e5e-9d32-1f152115c173" ChangeDateTime="02/07/2024 16:10:29">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeAliasElement]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeNameSpaceElement]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7793b8bb-a33b-4547-ad25-1213bf25bc14" ChangeDateTime="02/07/2024 16:12:40">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeNameSpaceFull]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeNameSpaceFullName]" />
+  </Operation>
 </Operations>

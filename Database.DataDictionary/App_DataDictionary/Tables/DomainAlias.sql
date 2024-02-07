@@ -4,7 +4,7 @@
 	-- Multiple items may have the same Alias Name but refer to different objects.
 	[AliasId]           UniqueIdentifier NOT NULL CONSTRAINT [DF_DomainAliasId] DEFAULT (newid()),
 	[ParentAliasId]     UniqueIdentifier NULL,
-	[AliasElement]      [App_DataDictionary].[typeAliasElement] Not Null, -- Cannot enforce unique value because of Index limits.
+	[AliasElement]      [App_DataDictionary].[typeNameSpaceElement] Not Null, -- Cannot enforce unique value because of Index limits.
 	--[AliasCheckSum]     As (Binary_CheckSum([AliasNameElement])), -- Used for case Sensitive and indexing
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DomainAlias_ModfiedBy] DEFAULT (original_login()),
