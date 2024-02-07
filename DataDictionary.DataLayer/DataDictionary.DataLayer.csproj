@@ -31,6 +31,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>DbScript.resx</DependentUpon>
     </Compile>
+    <Compile Update="VersionNumber.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>VersionNumber.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
