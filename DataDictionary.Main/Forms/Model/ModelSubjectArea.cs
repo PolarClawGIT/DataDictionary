@@ -36,6 +36,7 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 subjectAreaTitleData.DataBindings.Add(new Binding(nameof(subjectAreaTitleData.Text), data, nameof(data.SubjectAreaTitle)));
                 subjectAreaDescriptionData.DataBindings.Add(new Binding(nameof(subjectAreaDescriptionData.Text), data, nameof(data.SubjectAreaDescription)));
+                subjectAreaNameSpaceData.DataBindings.Add(new Binding(nameof(subjectAreaNameSpaceData.Text), data, nameof(data.SubjectAreaNameSpace)));
 
                 attributeData.AutoGenerateColumns = false;
                 attributeData.DataSource = new BindingView<DomainAttributeItem>(Program.Data.DomainAttributes, w => DataKey.Equals(w));
