@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.ApplicationData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,6 +31,7 @@ namespace DataDictionary.Main.Controls
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
+        [Obsolete("use ToNameSpaceKey")]
         public static String ToFullControlName(this Control source)
         {
             String result = String.Empty;
@@ -71,6 +73,38 @@ namespace DataDictionary.Main.Controls
             { result.AddRange(ToControlList(child)); }
 
             return result;
+        }
+
+        /// <summary>
+        /// Converts a Control into a NameSpaceKey
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static NameSpaceKey ToNameSpaceKey(this Control source)
+        {
+            String result;
+            Control? current = source;
+
+            if (source is Form && source.GetType().FullName is String formType)
+            { result = formType; current = null; }
+            else { result = source.Name; }
+
+            while (current is not null)
+            {
+                if (!String.IsNullOrWhiteSpace(current.Name))
+                {
+                    if (current is UserControl && current != source)
+                    { result = String.Format("{0}.{1}", current.Name, result); }
+                    else if (current is Form && current.GetType().FullName is String fullName)
+                    { result = String.Format("{0}.{1}", fullName, result); }
+                }
+
+                if (current is Form)
+                { current = null; }
+                else { current = current.Parent; }
+            }
+
+            return new NameSpaceKey(result);
         }
     }
 }

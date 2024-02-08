@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NameSpace;
+using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
@@ -17,23 +18,18 @@ namespace DataDictionary.Main.Forms.App
         {
             public ListViewItem? ListItem { get; set; }
             public String ControlType { get; private set; }
-            public String ControlName { get; private set; }
+            public NameSpaceKey ControlName { get; private set; }
             public Boolean IsForm { get; private set; }
-            public String FullName { get; private set; }
 
             public ControlItem(Control source)
             {
-                FullName = source.ToFullControlName();
+                ControlName = source.ToNameSpaceKey();
 
                 if (source is Form)
                 {
                     if (source.GetType().BaseType is Type baseType)
                     { ControlType = baseType.Name; }
                     else { ControlType = source.GetType().Name; }
-
-                    if (String.IsNullOrWhiteSpace(source.Name))
-                    { ControlName = GetType().Name; }
-                    else { ControlName = source.Name; }
 
                     IsForm = true;
                 }
@@ -43,14 +39,13 @@ namespace DataDictionary.Main.Forms.App
                     while (root is not Form && root.Parent is not null)
                     { root = root.Parent; }
 
-                    ControlName = source.ToFullControlName().Replace(String.Format("{0}.", root.ToFullControlName()), String.Empty);
                     ControlType = source.GetType().Name;
                     IsForm = false;
                 }
             }
 
             public override string ToString()
-            { return FullName; }
+            { return ControlName.MemberFullName; }
         }
 
         BindingList<ControlItem> controlList = new BindingList<ControlItem>();
@@ -73,7 +68,8 @@ namespace DataDictionary.Main.Forms.App
 
             helpBinding.DataSource = Program.Data.HelpSubjects;
 
-            if (helpBinding.DataSource is IList<HelpItem> subjects && subjects.FirstOrDefault(w => w.NameSpace == Settings.Default.DefaultSubject) is HelpItem subject)
+            if (helpBinding.DataSource is IList<HelpItem> subjects
+                && subjects.FirstOrDefault(w => w.NameSpace == Settings.Default.DefaultSubject) is HelpItem subject)
             { helpBinding.Position = subjects.IndexOf(subject); }
 
             // Setup Images for Tree Control
@@ -93,17 +89,31 @@ namespace DataDictionary.Main.Forms.App
 
         public HelpSubject(Form targetForm) : this()
         {
+            NameSpaceKey key = targetForm.ToNameSpaceKey();
+
             List<Control> values = targetForm.ToControlList()
                 .Where(w => !String.IsNullOrWhiteSpace(w.Name)
+                            && w is not Form
                             && !(w is Panel or ToolStrip or SplitContainer or Splitter or TabControl))
                 .OrderBy(o => o is not Form)
-                .ThenBy(o => o.ToFullControlName())
+                .ThenBy(o => o.ToNameSpaceKey())
                 .ToList();
 
+            // Take care of current form
+            ControlItem baseForm = new ControlItem(targetForm);
+            ListViewItem baseItem = new ListViewItem(baseForm.ControlName.MemberName);
+            baseForm.ListItem = baseItem;
+            controlList.Add(baseForm);
+            controlData.Items.Add(baseItem);
+            controlsGroup.Text = String.Format("Controls for: {0}", baseForm.ControlName.Format("{0}"));
+
+            // Add all the forms controls
             foreach (Control item in values)
             {
                 ControlItem newControl = new ControlItem(item);
-                ListViewItem newItem = new ListViewItem(newControl.ControlName);
+                String itemName = newControl.ControlName.Format("{0}")
+                    .Replace(String.Format("{0}.", baseForm.ControlName.Format("{0}")), String.Empty);
+                ListViewItem newItem = new ListViewItem(itemName);
                 newItem.SubItems.Add(newControl.ControlType);
                 newControl.ListItem = newItem;
 
@@ -111,12 +121,9 @@ namespace DataDictionary.Main.Forms.App
                 controlData.Items.Add(newItem);
             }
 
-            if (controlList.FirstOrDefault(w => w.IsForm) is ControlItem baseForm)
-            { controlsGroup.Text = String.Format("Controls for: {0}", baseForm.ControlName); }
-
-            if (helpBinding.DataSource is IList<HelpItem> subjects && targetForm.ToFullControlName() is String fullName)
+            if (helpBinding.DataSource is IList<HelpItem> subjects)
             {
-                if (subjects.FirstOrDefault(w => w.NameSpace is String && w.NameSpace == fullName) is HelpItem subject)
+                if (subjects.FirstOrDefault(w => key.Equals(new NameSpaceKey(w))) is HelpItem subject)
                 { helpBinding.Position = subjects.IndexOf(subject); }
             }
         }
@@ -125,9 +132,12 @@ namespace DataDictionary.Main.Forms.App
         {
             if (helpBinding.DataSource is IList<HelpItem> subjects)
             {
-                if (subjects.FirstOrDefault(w => w.HelpSubject is String && w.HelpSubject.Equals(targetSubject, StringComparison.CurrentCultureIgnoreCase)) is HelpItem subject)
+                if (subjects.FirstOrDefault(w => w.HelpSubject is String
+                    && w.HelpSubject.Equals(targetSubject, StringComparison.CurrentCultureIgnoreCase))
+                    is HelpItem subject)
                 { helpBinding.Position = subjects.IndexOf(subject); }
-                else if (subjects.FirstOrDefault(w => w.NameSpace is String && w.NameSpace == targetSubject) is HelpItem nameSpaceSubject)
+                else if (subjects.FirstOrDefault(w => w.NameSpace is not null
+                    && w.NameSpace == targetSubject) is HelpItem nameSpaceSubject)
                 { helpBinding.Position = subjects.IndexOf(nameSpaceSubject); }
             }
         }
@@ -189,7 +199,9 @@ namespace DataDictionary.Main.Forms.App
 
             void TreeGroup(TreeNodeCollection target, IEnumerable<HelpItem> source, String? groupLevel = null)
             {
-                List<IGrouping<String, HelpItem>> grouping = source.OrderBy(o => o.NameSpace).
+                List<IGrouping<String, HelpItem>> grouping = source.
+                    OrderBy(o => o.NameSpace != Settings.Default.DefaultSubject). // Make About first in the list
+                    ThenBy(o => new NameSpaceKey(o)).
                     GroupBy(g =>
                     {
                         if (String.IsNullOrWhiteSpace(g.NameSpace)) { return String.Empty; }
@@ -389,8 +401,8 @@ namespace DataDictionary.Main.Forms.App
 
             if (controlList.FirstOrDefault(w => w.IsForm) is ControlItem root)
             {
-                newItem.HelpSubject = root.ControlName;
-                newItem.NameSpace = root.FullName;
+                newItem.HelpSubject = root.ControlName.MemberName;
+                newItem.NameSpace = root.ControlName.MemberFullName;
             }
             else
             { newItem.HelpSubject = "(new Help Subject)"; }
@@ -403,6 +415,8 @@ namespace DataDictionary.Main.Forms.App
         {
             if (helpBinding.Current is HelpItem current)
             {
+                NameSpaceKey key = new NameSpaceKey(current);
+
                 // The item(s) with the Default NameSpace cannot change NameSpaces. This is the About subject.
                 helpNameSpaceData.Enabled = !(current.NameSpace is String && current.NameSpace == Settings.Default.DefaultSubject);
 
@@ -419,8 +433,7 @@ namespace DataDictionary.Main.Forms.App
                 while (controlData.CheckedItems.Count > 0)
                 { controlData.CheckedItems[0].Checked = false; }
 
-                if (current.NameSpace is String currentNameSpace
-                    && controlList.FirstOrDefault(w => w.FullName == currentNameSpace) is ControlItem control
+                if (controlList.FirstOrDefault(w => key.Equals(w.ControlName)) is ControlItem control
                     && control.ListItem is ListViewItem listItem)
                 {
                     listItem.Checked = true;
@@ -468,12 +481,14 @@ namespace DataDictionary.Main.Forms.App
                     { viewItem.Checked = false; }
                 }
 
-                if (helpBinding.Current is HelpItem current
-                    && current.NameSpace is String
-                    && controlList.FirstOrDefault(w => w.ListItem == e.Item) is ControlItem selected
-                    && controlList.FirstOrDefault(w => w.IsForm) is ControlItem root
-                    && current.NameSpace != selected.FullName)
-                { current.NameSpace = selected.FullName; }
+                if (helpBinding.Current is HelpItem current)
+                {
+                    NameSpaceKey key = new NameSpaceKey(current);
+                    if (controlList.FirstOrDefault(w => w.ListItem == e.Item) is ControlItem selected
+                        && !key.Equals(selected.ControlName))
+                    { current.NameSpace = selected.ControlName.MemberFullName; }
+
+                }
 
                 currentItem = null;
             }

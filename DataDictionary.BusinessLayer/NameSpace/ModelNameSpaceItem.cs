@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+﻿using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;
@@ -19,7 +20,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
     /// <summary>
     /// Interface for a Model NameSpace Item.
     /// </summary>
-    public interface IModelNameSpaceItem : IModelNameSpaceKeyMember, IModelNameSpaceKey, IScopeKey
+    public interface IModelNameSpaceItem : IModelNameSpaceKey, INameSpaceKey, IScopeKey
     {
         /// <summary>
         /// Parent System Id
@@ -50,7 +51,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// <summary>
         /// Container for the MemberName.
         /// </summary>
-        public ModelNameSpaceKeyMember NameKey { get; protected set; }
+        public NameSpaceKey NameKey { get; protected set; }
 
         /// <summary>
         /// List of keys that are the children of this record.
@@ -93,7 +94,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// Function that is used to reset the internal NameKey to what is returned by this value.
         /// </summary>
         /// <remarks>Used by OnPropertyChanged event</remarks>
-        protected virtual Func<ModelNameSpaceKeyMember> GetNameKey { get; set; } = () => new ModelNameSpaceKeyMember(String.Empty);
+        protected virtual Func<NameSpaceKey> GetNameKey { get; set; } = () => new NameSpaceKey(String.Empty);
 
         #region Constrictors
         /// <summary>
@@ -102,7 +103,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
         public ModelNameSpaceItem() : base()
         {
             SystemKey = new ModelNameSpaceKey();
-            NameKey = new ModelNameSpaceKeyMember(String.Empty);
+            NameKey = new NameSpaceKey(String.Empty);
             ScopeKey = new ScopeKey(ScopeType.Null);
         }
 
@@ -114,7 +115,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             SystemKey = new ModelNameSpaceKey((IDbCatalogKey)data);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IDbCatalogKeyName)data);
+            GetNameKey = () => new NameSpaceKey((IDbCatalogKeyName)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(data);
             data.PropertyChanged += OnPropertyChanged;
@@ -130,7 +131,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((IDbSchemaKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IDbSchemaKeyName)data);
+            GetNameKey = () => new NameSpaceKey((IDbSchemaKeyName)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(data);
             data.PropertyChanged += OnPropertyChanged;
@@ -146,7 +147,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((IDbTableKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IDbTableKeyName)data);
+            GetNameKey = () => new NameSpaceKey((IDbTableKeyName)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(data);
             data.PropertyChanged += OnPropertyChanged;
@@ -162,7 +163,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((IDbTableColumnKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IDbTableColumnKeyName)data);
+            GetNameKey = () => new NameSpaceKey((IDbTableColumnKeyName)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(data);
             if (data.OrdinalPosition is Int32 position) { OrdinalPosition = position; }
@@ -179,7 +180,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((IDbConstraintKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IDbConstraintKeyName)data);
+            GetNameKey = () => new NameSpaceKey((IDbConstraintKeyName)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(data);
             data.PropertyChanged += OnPropertyChanged;
@@ -195,7 +196,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((IDbRoutineKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IDbRoutineKeyName)data);
+            GetNameKey = () => new NameSpaceKey((IDbRoutineKeyName)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(data);
             data.PropertyChanged += OnPropertyChanged;
@@ -211,7 +212,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((IDbRoutineParameterKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IDbRoutineParameterKeyName)data);
+            GetNameKey = () => new NameSpaceKey((IDbRoutineParameterKeyName)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(data);
             if (data.OrdinalPosition is Int32 position) { OrdinalPosition = position; }
@@ -228,7 +229,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((IDbDomainKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IDbDomainKeyName)data);
+            GetNameKey = () => new NameSpaceKey((IDbDomainKeyName)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(data);
             data.PropertyChanged += OnPropertyChanged;
@@ -242,7 +243,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             SystemKey = new ModelNameSpaceKey((ILibrarySourceKey)data);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((ILibrarySourceKeyName)data);
+            GetNameKey = () => new NameSpaceKey((ILibrarySourceKeyName)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(data);
             data.PropertyChanged += OnPropertyChanged;
@@ -258,7 +259,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((ILibraryMemberKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((ILibraryMemberKeyName)data);
+            GetNameKey = () => new NameSpaceKey((ILibraryMemberKeyName)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(data);
             data.PropertyChanged += OnPropertyChanged;
@@ -274,7 +275,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((ILibraryMemberKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((ILibraryMemberKeyName)data);
+            GetNameKey = () => new NameSpaceKey((ILibraryMemberKeyName)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(data);
             data.PropertyChanged += OnPropertyChanged;
@@ -288,7 +289,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             SystemKey = new ModelNameSpaceKey((IModelKey)data);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IModelItem)data);
+            GetNameKey = () => new NameSpaceKey((IModelItem)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(ScopeType.Model);
             data.PropertyChanged += OnPropertyChanged;
@@ -304,7 +305,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((IModelSubjectAreaKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IModelSubjectAreaItem)data);
+            GetNameKey = () => new NameSpaceKey((IModelSubjectAreaItem)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(ScopeType.ModelSubjectArea);
             data.PropertyChanged += OnPropertyChanged;
@@ -320,7 +321,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((IModelSubjectAreaKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IModelSubjectAreaItem)data);
+            GetNameKey = () => new NameSpaceKey((IModelSubjectAreaItem)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(ScopeType.ModelSubjectArea);
             data.PropertyChanged += OnPropertyChanged;
@@ -336,7 +337,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((IDomainAttributeKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IDomainAttributeItem)data);
+            GetNameKey = () => new NameSpaceKey((IDomainAttributeItem)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(ScopeType.ModelAttribute);
             data.PropertyChanged += OnPropertyChanged;
@@ -352,7 +353,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((IDomainAttributeKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IDomainAttributeItem)data);
+            GetNameKey = () => new NameSpaceKey((IDomainAttributeItem)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(ScopeType.ModelAttribute);
             data.PropertyChanged += OnPropertyChanged;
@@ -368,7 +369,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((IDomainEntityKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IDomainEntityItem)data);
+            GetNameKey = () => new NameSpaceKey((IDomainEntityItem)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(ScopeType.ModelEntity);
             data.PropertyChanged += OnPropertyChanged;
@@ -384,7 +385,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
             SystemKey = new ModelNameSpaceKey((IDomainEntityKey)data);
             SystemParentKey = new ModelNameSpaceKey(parent);
             Source = data;
-            GetNameKey = () => new ModelNameSpaceKeyMember((IDomainEntityItem)data);
+            GetNameKey = () => new NameSpaceKey((IDomainEntityItem)data);
             NameKey = GetNameKey();
             ScopeKey = new ScopeKey(ScopeType.ModelEntity);
             data.PropertyChanged += OnPropertyChanged;
@@ -403,7 +404,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
         {
             PropertyChangedEventHandler? handler = PropertyChanged;
 
-            if (GetNameKey() is ModelNameSpaceKeyMember newNameKey && !newNameKey.Equals(NameKey))
+            if (GetNameKey() is NameSpaceKey newNameKey && !newNameKey.Equals(NameKey))
             {
                 NameKey = newNameKey;
                 if (handler is PropertyChangedEventHandler)
