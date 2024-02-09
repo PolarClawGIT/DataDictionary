@@ -160,7 +160,7 @@ namespace DataDictionary.Main.Forms.Database
                     }
                 }
 
-                dialog.OpenHelp = () => Activate(() => new App.HelpSubject(dialog));
+                dialog.OpenHelp = () => Activate(() => new ApplicationWide.HelpSubject(dialog));
 
                 DialogResult result = dialog.ShowDialog();
 

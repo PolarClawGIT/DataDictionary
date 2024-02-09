@@ -1,6 +1,6 @@
 ﻿using DataDictionary.DataLayer.DomainData;
 using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.Main.Forms.App;
+using DataDictionary.Main.Forms.ApplicationWide;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Properties;
 using System;

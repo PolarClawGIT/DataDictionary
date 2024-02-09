@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.Forms.App
+﻿namespace DataDictionary.Main.Forms.ApplicationWide
 {
     partial class HelpSubject
     {

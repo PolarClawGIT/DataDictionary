@@ -10,7 +10,7 @@ using System.ComponentModel;
 using System.Data;
 using Toolbox.Threading;
 
-namespace DataDictionary.Main.Forms.App
+namespace DataDictionary.Main.Forms.ApplicationWide
 {
     partial class HelpSubject : ApplicationBase
     {

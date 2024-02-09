@@ -175,12 +175,12 @@ namespace DataDictionary.Main
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)
         {
             if (ActiveMdiChild is Form currentForm && currentForm is not AboutBox)
-            { Activate(() => new Forms.App.HelpSubject(currentForm)); }
-            else { Activate(() => new Forms.App.HelpSubject(Settings.Default.DefaultSubject)); }
+            { Activate(() => new Forms.ApplicationWide.HelpSubject(currentForm)); }
+            else { Activate(() => new Forms.ApplicationWide.HelpSubject(Settings.Default.DefaultSubject)); }
         }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.App.HelpSubject(Settings.Default.DefaultSubject)); }
+        { Activate(() => new Forms.ApplicationWide.HelpSubject(Settings.Default.DefaultSubject)); }
 
         private void HelpAboutMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.AboutBox()); }
@@ -188,11 +188,11 @@ namespace DataDictionary.Main
         private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             if (ActiveMdiChild is Form currentForm)
-            { Activate(() => new Forms.App.HelpSubject(currentForm)); }
+            { Activate(() => new Forms.ApplicationWide.HelpSubject(currentForm)); }
         }
 
         private void browsePropertiesCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.App.Property()); }
+        { Activate(() => new Forms.ApplicationWide.Property()); }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -227,7 +227,7 @@ namespace DataDictionary.Main
         { Activate(() => new Dialogs.ViewTextTemplate()); }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new App.ApplicationOptions()); }
+        { Activate(() => new ApplicationWide.ApplicationOptions()); }
         #endregion
 
         #region IColleague

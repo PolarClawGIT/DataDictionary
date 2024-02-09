@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Forms.App
+namespace DataDictionary.Main.Forms.ApplicationWide
 {
     partial class Property : ApplicationBase
     {

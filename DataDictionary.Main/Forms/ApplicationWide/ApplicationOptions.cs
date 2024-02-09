@@ -15,7 +15,7 @@ using Toolbox.Threading;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer;
 
-namespace DataDictionary.Main.App
+namespace DataDictionary.Main.ApplicationWide
 {
     partial class ApplicationOptions : ApplicationBase
     {

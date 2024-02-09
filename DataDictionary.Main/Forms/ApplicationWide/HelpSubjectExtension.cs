@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.Main.Forms.App
+namespace DataDictionary.Main.Forms.ApplicationWide
 {
     static class HelpSubjectExtension
     {

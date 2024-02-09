@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.App
+﻿namespace DataDictionary.Main.ApplicationWide
 {
     partial class ApplicationOptions
     {
