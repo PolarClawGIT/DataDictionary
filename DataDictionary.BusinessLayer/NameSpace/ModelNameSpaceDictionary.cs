@@ -109,6 +109,7 @@
         /// <param name="item"></param>
         /// <param name="parent"></param>
         /// <returns></returns>
+        [Obsolete("May Not be needed")]
         public virtual Boolean Move(IModelNameSpaceKey item, IModelNameSpaceKey? parent)
         { // TODO: Not Certain this is needed. May just need to manipulate the Children.
             ModelNameSpaceKey currentKey = new ModelNameSpaceKey(item);

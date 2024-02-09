@@ -163,7 +163,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// Constructor for NameSpace Key, for internal Equals and Convert.
         /// </summary>
         /// <param name="source"></param>
-        protected NameSpaceKey(INameSpaceKey source) : this()
+        public NameSpaceKey(INameSpaceKey source) : this()
         { memberParts.AddRange(NameParts(source.MemberFullName ?? String.Empty)); }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(ModelData.SubjectArea.IModelSubjectAreaItem source) : base()
-        { memberParts.Add(source.SubjectAreaTitle ?? String.Empty); }
+        { memberParts.AddRange(NameParts(source.SubjectAreaNameSpace ?? source.SubjectAreaTitle ?? String.Empty)); }
 
         /// <summary>
         /// Constructor for NameSpace Key from Domain Entity
@@ -399,9 +399,39 @@ namespace DataDictionary.DataLayer.ApplicationData
         public virtual String Format(String pattern = "[{0}]", String delimiter = ".")
         { return String.Join(delimiter, memberParts.Select(s => String.Format(pattern, s))); }
 
+        /// <summary>
+        /// Groups the NameSpaces based on Hierarchy.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IEnumerable<NameSpaceKey> Group(IEnumerable<NameSpaceKey> source)
+        {
+            List<NameSpaceKey> result = new List<NameSpaceKey>();
+
+            List<NameSpaceKey> group = source.GroupBy(g => g).Select(s => s.Key).ToList();
+
+            foreach (NameSpaceKey item in group)
+            {
+                if (!result.Contains(item))
+                { result.Add(item); }
+
+                NameSpaceKey? key = item.ParentKey;
+
+                while (key is not null)
+                {
+                    if (!result.Contains(key))
+                    { result.Add(key); }
+
+                    key = key.ParentKey;
+                }
+            }
+            return result;
+        }
+
         /// <inheritdoc/>
         public override string ToString()
         { return MemberFullName; }
 
     }
+
 }

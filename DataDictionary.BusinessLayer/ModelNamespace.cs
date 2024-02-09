@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NameSpace;
+using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;
@@ -412,6 +413,13 @@ namespace DataDictionary.BusinessLayer
                 List<DomainEntityItem> missingEntities = data.DomainEntities.ToList();
                 List<DomainAttributeItem> missingAttributes = data.DomainAttributes.ToList();
 
+                List<(NameSpaceKey nameSpace, ModelNameSpaceKey key)> modelNameSpace = NameSpaceKey.Group(
+                    data.ModelSubjectAreas.
+                        //Where(w => !String.IsNullOrWhiteSpace(w.SubjectAreaNameSpace)).
+                        Select(s => new NameSpaceKey(s))).
+                        Select(s => (s, new ModelNameSpaceKey(s))).
+                        ToList();
+
                 totalWork = totalWork +
                     attributes.Count +
                     entities.Count;
@@ -419,38 +427,86 @@ namespace DataDictionary.BusinessLayer
                 data.ModelNamespace.Add(new ModelNameSpaceItem(modelItem));
                 progress(completedWork++, totalWork);
 
-                foreach (ModelSubjectAreaItem subjectItem in subjectAreas)
+                foreach ((NameSpaceKey nameSpace, ModelNameSpaceKey key) nameSpaceItem in modelNameSpace.OrderBy(o => o.nameSpace))
                 {
-                    ModelSubjectAreaKey subjectKey = new ModelSubjectAreaKey(subjectItem);
-                    data.ModelNamespace.Add(new ModelNameSpaceItem(modelItem, subjectItem));
-                    progress(completedWork++, totalWork);
+                    (NameSpaceKey nameSpace, ModelNameSpaceKey key) parent = modelNameSpace.
+                        FirstOrDefault(w =>
+                            nameSpaceItem.nameSpace.ParentKey is NameSpaceKey nameSpaceParent
+                            && nameSpaceParent.Equals(w.nameSpace));
 
+                    ModelSubjectAreaItem? parentSubject = subjectAreas.
+                        FirstOrDefault(w =>
+                            nameSpaceItem.nameSpace.ParentKey is NameSpaceKey subjectNameSpaceParent
+                            && subjectNameSpaceParent.Equals(new NameSpaceKey(w)));
 
-                    foreach (ModelEntityItem modelEntity in entitySubjects.Where(w => subjectKey.Equals(w)))
+                    IEnumerable<ModelSubjectAreaItem> subjectItems = subjectAreas.
+                        Where(w => nameSpaceItem.nameSpace.Equals(new NameSpaceKey(w)));
+
+                    foreach (ModelSubjectAreaItem subjectItem in subjectItems)
                     {
-                        DomainEntityKey entityKey = new DomainEntityKey(modelEntity);
+                        ModelNameSpaceItem newItem;
 
-                        foreach (DomainEntityItem entityItem in entities.Where(w => entityKey.Equals(w)))
-                        { 
-                            if (missingEntities.Contains(entityItem)) { missingEntities.Remove(entityItem); }
-
-                            data.ModelNamespace.Add(new ModelNameSpaceItem(subjectItem, entityItem));
-                            progress(completedWork++, totalWork);
-                        }
-                    }
-
-                    foreach (ModelAttributeItem modelAttribute in attributeSubjects.Where(w => subjectKey.Equals(w)))
-                    {
-                        DomainAttributeKey attributeKey = new DomainAttributeKey(modelAttribute);
-
-                        foreach (DomainAttributeItem attributeItem in attributes.Where(w => attributeKey.Equals(w)))
+                        if (parentSubject is not null)
+                        { newItem = new ModelNameSpaceItem(parentSubject, subjectItem); }
+                        else
                         {
-                            if (missingAttributes.Contains(attributeItem)) { missingAttributes.Remove(attributeItem); }
-
-                            data.ModelNamespace.Add(new ModelNameSpaceItem(subjectItem, attributeItem));
-                            progress(completedWork++, totalWork);
+                            if (parent.Equals(default))
+                            { newItem = new ModelNameSpaceItem(modelItem, subjectItem); }
+                            else { newItem = new ModelNameSpaceItem(parent.key, subjectItem); }
                         }
+
+                        data.ModelNamespace.Add(newItem);
+
+                        ModelSubjectAreaKey subjectKey = new ModelSubjectAreaKey(subjectItem);
+                        progress(completedWork++, totalWork);
+
+                        // Add Entities
+                        foreach (ModelEntityItem modelEntity in entitySubjects.Where(w => subjectKey.Equals(w)))
+                        {
+                            DomainEntityKey entityKey = new DomainEntityKey(modelEntity);
+
+                            foreach (DomainEntityItem entityItem in entities.Where(w => entityKey.Equals(w)))
+                            {
+                                if (missingEntities.Contains(entityItem)) { missingEntities.Remove(entityItem); }
+
+                                data.ModelNamespace.Add(new ModelNameSpaceItem(subjectItem, entityItem));
+                                progress(completedWork++, totalWork);
+                            }
+                        }
+
+                        // Add Attributes
+                        foreach (ModelAttributeItem modelAttribute in attributeSubjects.Where(w => subjectKey.Equals(w)))
+                        {
+                            DomainAttributeKey attributeKey = new DomainAttributeKey(modelAttribute);
+
+                            foreach (DomainAttributeItem attributeItem in attributes.Where(w => attributeKey.Equals(w)))
+                            {
+                                if (missingAttributes.Contains(attributeItem)) { missingAttributes.Remove(attributeItem); }
+
+                                data.ModelNamespace.Add(new ModelNameSpaceItem(subjectItem, attributeItem));
+                                progress(completedWork++, totalWork);
+                            }
+                        }
+
                     }
+
+                    // Handle No Subject Area matching (normally does not occur)
+                    if (subjectItems.Count() == 0)
+                    {
+                        ModelNameSpaceItem newItem;
+
+                        if (parentSubject is not null)
+                        { newItem = new ModelNameSpaceItem(parentSubject, nameSpaceItem.nameSpace, nameSpaceItem.key); }
+                        else
+                        {
+                            if (parent.Equals(default))
+                            { newItem = new ModelNameSpaceItem(modelItem, nameSpaceItem.nameSpace, nameSpaceItem.key); }
+                            else { newItem = new ModelNameSpaceItem(parent.key, nameSpaceItem.nameSpace, nameSpaceItem.key); }
+                        }
+
+                        data.ModelNamespace.Add(newItem);
+                    }
+
                 }
 
                 // Handle items not in a Subject Area scoped to the Model

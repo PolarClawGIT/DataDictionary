@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
@@ -152,6 +153,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// <param name="source">A Library Member</param>
         public ModelNameSpaceKey(IDomainEntityKey source) : this()
         { SystemId = source.EntityId ?? Guid.Empty; }
+
+        /// <summary>
+        /// Constructor for the NameSpace Key
+        /// </summary>
+        /// <param name="source"></param>
+        /// <remarks>NameSpaces do not have a GUID of their own, so a new GUID is created.</remarks>
+        public ModelNameSpaceKey(INameSpaceKey source) : this()
+        { SystemId = Guid.NewGuid(); }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>

@@ -97,7 +97,7 @@ namespace DataDictionary.Main
                         {
                             TreeNode node = nameSpaceNavigation.Invoke<TreeNode>(() =>
                             {
-                                TreeNode newNode = nodes.Add(item.MemberName);
+                                TreeNode newNode = nodes.Add(item.MemberTitle);
                                 newNode.ImageKey = item.Scope.ToScopeName();
                                 newNode.SelectedImageKey = item.Scope.ToScopeName();
                                 nameSpaceNodes.Add(newNode, item);

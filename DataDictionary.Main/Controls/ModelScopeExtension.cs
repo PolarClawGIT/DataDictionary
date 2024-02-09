@@ -44,6 +44,7 @@ namespace DataDictionary.Main.Controls
             {ScopeType.ModelSubjectArea,                 Resources.Diagram },
             {ScopeType.ModelAttribute,                   Resources.Attribute },
             {ScopeType.ModelEntity,                      Resources.Entity },
+            {ScopeType.ModelNameSpace,                   Resources.Namespace },
 
         };
 
