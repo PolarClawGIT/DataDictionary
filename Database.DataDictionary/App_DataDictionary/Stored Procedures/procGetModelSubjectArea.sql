@@ -14,7 +14,7 @@ Select	S.[SubjectAreaId],
 		S.[SubjectAreaDescription],
 		X.[SubjectAreaNameSpace]
 From	[App_DataDictionary].[ModelSubjectArea] S
-		Cross Apply [App_DataDictionary].[funcGetSubjectAreaNameSpace](S.[SubjectAreaId]) X
+		Cross Apply [App_DataDictionary].[funcGetSubjectAreaName](S.[SubjectAreaId]) X
 Where	(@ModelId is Null or @ModelId = S.[ModelId]) And
 		(@SubjectAreaId is Null or @SubjectAreaId = S.[SubjectAreaId]) And
 		(@SubjectAreaTitle is Null or @SubjectAreaTitle = S.[SubjectAreaTitle])
