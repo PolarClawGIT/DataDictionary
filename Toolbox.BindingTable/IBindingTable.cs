@@ -24,6 +24,12 @@ namespace Toolbox.BindingTable
         /// <inheritdoc cref="DataTable.Load(IDataReader, LoadOption, FillErrorEventHandler?)"/>
         void Load(IDataReader reader, LoadOption loadOption, FillErrorEventHandler? errorHandler);
 
+        /// <summary>
+        /// Loads from a DataSet.
+        /// </summary>
+        /// <param name="source"></param>
+        void Load(DataSet source);
+
         /// <inheritdoc cref="DataTable.CreateDataReader"/>
         IDataReader CreateDataReader();
     }

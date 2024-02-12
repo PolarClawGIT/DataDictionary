@@ -167,6 +167,19 @@ namespace Toolbox.BindingTable
             }
         }
 
+        public virtual void Load(DataSet source)
+        {
+            if (source.Tables.Contains(BindingName) &&
+                source.Tables[BindingName] is DataTable data)
+            { Load(data.CreateDataReader()); }
+            else
+            {
+                Exception ex = new InvalidOperationException("Expected TableName not found");
+                ex.Data.Add(nameof(BindingName), BindingName);
+                throw ex;
+            }
+        }
+
         public virtual IDataReader CreateDataReader()
         { return dataItems.CreateDataReader(); }
 
