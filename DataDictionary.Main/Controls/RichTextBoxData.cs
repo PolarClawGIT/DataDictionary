@@ -43,7 +43,7 @@ namespace DataDictionary.Main.Controls
         /// ListChange and PropertyChange Events during threading can cause issues with this control where other controls don't have that issue.
         /// </remarks>
         [Browsable(false), RefreshProperties(RefreshProperties.All), SettingsBindable(true), DefaultValue(""), Category("Appearance")]
-        public String Rtf
+        public String? Rtf
         {
             get
             { return richTextBox.Rtf; }
@@ -83,31 +83,43 @@ namespace DataDictionary.Main.Controls
 
         private void toolStripBold_Click(object sender, EventArgs e)
         {
-            if (richTextBox.SelectionFont.Bold)
-            { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Regular); }
-            else { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Bold); }
+            if (richTextBox.SelectionFont is Font value)
+            {
+                if (value.Bold)
+                { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Regular); }
+                else { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Bold); }
+            }
         }
 
         private void toolStripItalic_Click(object sender, EventArgs e)
         {
-            if (richTextBox.SelectionFont.Italic)
-            { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Regular); }
-            else { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Italic); }
+            if (richTextBox.SelectionFont is Font value)
+            {
+                if (value.Italic)
+                { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Regular); }
+                else { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Italic); }
+            }
         }
 
         private void toolStripUnderline_Click(object sender, EventArgs e)
         {
-            if (richTextBox.SelectionFont.Underline)
-            { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Regular); }
-            else { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Underline); }
+            if (richTextBox.SelectionFont is Font value)
+            {
+                if (value.Underline)
+                { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Regular); }
+                else { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Underline); }
+            }
         }
 
 
         private void toolStripStrikeThrough_Click(object sender, EventArgs e)
         {
-            if (richTextBox.SelectionFont.Strikeout)
-            { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Regular); }
-            else { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Strikeout); }
+            if (richTextBox.SelectionFont is Font value)
+            {
+                if (value.Strikeout)
+                { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Regular); }
+                else { richTextBox.SelectionFont = new Font(richTextBox.SelectionFont, FontStyle.Strikeout); }
+            }
         }
 
         private void toolStripBulletList_Click(object sender, EventArgs e)
