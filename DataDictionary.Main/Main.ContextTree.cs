@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.NameSpace;
+using DataDictionary.BusinessLayer.ContextName;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
@@ -22,30 +22,30 @@ namespace DataDictionary.Main
 {
     partial class Main
     {
-        Dictionary<TreeNode, ModelNameSpaceItem> nameSpaceNodes = new Dictionary<TreeNode, ModelNameSpaceItem>();
+        Dictionary<TreeNode, ContextNameItem> contextNodes = new Dictionary<TreeNode, ContextNameItem>();
 
-        List<ModelNameSpaceItem> expandedNameSpaceNodes = new List<ModelNameSpaceItem>();
-        void ClearNameSpaceTree()
+        List<ContextNameItem> expandedContextNodes = new List<ContextNameItem>();
+        void ClearTree()
         {
-            expandedNameSpaceNodes.Clear();
-            expandedNameSpaceNodes.AddRange(nameSpaceNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value));
-            Program.Data.ModelNamespace.ListChanged -= ModelNamespace_ListChanged;
+            expandedContextNodes.Clear();
+            expandedContextNodes.AddRange(contextNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value));
+            Program.Data.ContextName.ListChanged -= ModelContextName_ListChanged;
 
-            nameSpaceNavigation.Nodes.Clear();
-            nameSpaceNodes.Clear();
+            contextNameNavigation.Nodes.Clear();
+            contextNodes.Clear();
         }
 
-        void BuildNameSpaceTree()
+        void BuildTree()
         {
-            nameSpaceNavigation.BeginUpdate();
-            nameSpaceLayout.UseWaitCursor = true;
-            nameSpaceLayout.Enabled = false;
+            contextNameNavigation.BeginUpdate();
+            contextNameLayout.UseWaitCursor = true;
+            contextNameLayout.Enabled = false;
 
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
 
             WorkItem treeWork = new WorkItem()
-            { WorkName = "Load NameSpace Tree", DoWork = LoadTree };
+            { WorkName = "Load Context Name Tree", DoWork = LoadTree };
             progress = treeWork.OnProgressChanged;
 
             work.Add(treeWork);
@@ -53,34 +53,34 @@ namespace DataDictionary.Main
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                foreach (TreeNode item in nameSpaceNodes.Where(w => expandedNameSpaceNodes.Contains(w.Value)).Select(s => s.Key).ToList())
+                foreach (TreeNode item in contextNodes.Where(w => expandedContextNodes.Contains(w.Value)).Select(s => s.Key).ToList())
                 { item.ExpandParent(); }
 
-                nameSpaceLayout.UseWaitCursor = false;
-                nameSpaceLayout.Enabled = true;
-                nameSpaceNavigation.EndUpdate();
-                Program.Data.ModelNamespace.ListChanged += ModelNamespace_ListChanged;
+                contextNameLayout.UseWaitCursor = false;
+                contextNameLayout.Enabled = true;
+                contextNameNavigation.EndUpdate();
+                Program.Data.ContextName.ListChanged += ModelContextName_ListChanged;
             }
 
             void LoadTree()
             {
-                Int32 totalWork = Program.Data.ModelNamespace.Count;
+                Int32 totalWork = Program.Data.ContextName.Count;
                 Int32 completeWork = 0;
                 progress(completeWork, totalWork);
 
                 CreateNodes(
-                    nameSpaceNavigation.Nodes,
-                    Program.Data.ModelNamespace.RootItem.Children.Select(s => Program.Data.ModelNamespace[s]).ToList());
+                    contextNameNavigation.Nodes,
+                    Program.Data.ContextName.RootItem.Children.Select(s => Program.Data.ContextName[s]).ToList());
 
-                void CreateNodes(TreeNodeCollection target, IEnumerable<ModelNameSpaceItem> items)
+                void CreateNodes(TreeNodeCollection target, IEnumerable<ContextNameItem> items)
                 {
-                    foreach (IGrouping<ScopeType, ModelNameSpaceItem>? scopeGroup in items.GroupBy(g => g.Scope).OrderBy(o => o.Key))
+                    foreach (IGrouping<ScopeType, ContextNameItem>? scopeGroup in items.GroupBy(g => g.Scope).OrderBy(o => o.Key))
                     {
                         TreeNodeCollection nodes = target;
 
                         if (scopeGroup.Count() > 1)
                         {
-                            TreeNode scopeNode = nameSpaceNavigation.Invoke<TreeNode>(() =>
+                            TreeNode scopeNode = contextNameNavigation.Invoke<TreeNode>(() =>
                             {
                                 TreeNode newNode = target.Add(scopeGroup.Key.ToScopeName().Split(".").Last());
                                 newNode.ImageKey = scopeGroup.Key.ToScopeName();
@@ -93,14 +93,14 @@ namespace DataDictionary.Main
                             });
                         }
 
-                        foreach (ModelNameSpaceItem item in scopeGroup.OrderBy(o => o.OrdinalPosition).ThenBy(o => o.MemberName))
+                        foreach (ContextNameItem item in scopeGroup.OrderBy(o => o.OrdinalPosition).ThenBy(o => o.MemberName))
                         {
-                            TreeNode node = nameSpaceNavigation.Invoke<TreeNode>(() =>
+                            TreeNode node = contextNameNavigation.Invoke<TreeNode>(() =>
                             {
                                 TreeNode newNode = nodes.Add(item.MemberTitle);
                                 newNode.ImageKey = item.Scope.ToScopeName();
                                 newNode.SelectedImageKey = item.Scope.ToScopeName();
-                                nameSpaceNodes.Add(newNode, item);
+                                contextNodes.Add(newNode, item);
                                 newNode.ToolTipText = item.MemberFullName;
                                 item.PropertyChanged += Item_PropertyChanged;
 
@@ -114,7 +114,7 @@ namespace DataDictionary.Main
                             {
                                 CreateNodes(
                                     node.Nodes,
-                                    item.Children.Select(s => Program.Data.ModelNamespace[s]));
+                                    item.Children.Select(s => Program.Data.ContextName[s]));
                             }
 
                             progress(completeWork++, totalWork);
@@ -125,23 +125,23 @@ namespace DataDictionary.Main
             }
         }
 
-        private void ModelNamespace_ListChanged(object? sender, ModelNameSpaceChangedEventArgs e)
+        private void ModelContextName_ListChanged(object? sender, ContextNameChangedEventArgs e)
         {
-            TreeNodeCollection taget = nameSpaceNavigation.Nodes;
+            TreeNodeCollection taget = contextNameNavigation.Nodes;
 
-            if (sender is ModelNameSpaceDictionary source)
+            if (sender is ContextNameDictionary source)
             {
-                if (e.ChangedType == ModelNameSpaceChangedType.ItemAdded && e.Item is ModelNameSpaceItem addedItem)
+                if (e.ChangedType == ContextNameChangedType.ItemAdded && e.Item is ContextNameItem addedItem)
                 {
-                    if (nameSpaceNodes.FirstOrDefault(w => addedItem.SystemParentKey is not null && addedItem.SystemParentKey.Equals(w.Value.SystemKey)).Key is TreeNode parentNode)
+                    if (contextNodes.FirstOrDefault(w => addedItem.SystemParentKey is not null && addedItem.SystemParentKey.Equals(w.Value.SystemKey)).Key is TreeNode parentNode)
                     { taget = parentNode.Nodes; }
 
-                    TreeNode node = nameSpaceNavigation.Invoke<TreeNode>(() =>
+                    TreeNode node = contextNameNavigation.Invoke<TreeNode>(() =>
                     {
                         TreeNode newNode = taget.Add(addedItem.MemberName);
                         newNode.ImageKey = addedItem.Scope.ToScopeName();
                         newNode.SelectedImageKey = addedItem.Scope.ToScopeName();
-                        nameSpaceNodes.Add(newNode, addedItem);
+                        contextNodes.Add(newNode, addedItem);
                         newNode.ToolTipText = addedItem.MemberFullName;
                         addedItem.PropertyChanged += Item_PropertyChanged;
 
@@ -152,13 +152,13 @@ namespace DataDictionary.Main
                     });
                 }
 
-                if (e.ChangedType == ModelNameSpaceChangedType.ItemDeleted && e.Item is ModelNameSpaceItem deletedItem)
+                if (e.ChangedType == ContextNameChangedType.ItemDeleted && e.Item is ContextNameItem deletedItem)
                 {
-                    ModelNameSpaceKey deleteKey = deletedItem.SystemKey;
-                    if (nameSpaceNodes.FirstOrDefault(w => deletedItem.SystemKey.Equals(w.Value.SystemKey)).Key is TreeNode node)
+                    ContextNameKey deleteKey = deletedItem.SystemKey;
+                    if (contextNodes.FirstOrDefault(w => deletedItem.SystemKey.Equals(w.Value.SystemKey)).Key is TreeNode node)
                     {
                         node.Remove();
-                        nameSpaceNodes.Remove(node);
+                        contextNodes.Remove(node);
                     }
                 }
             }
@@ -166,16 +166,16 @@ namespace DataDictionary.Main
 
         private void RefreshCommand_Click(object sender, EventArgs e)
         {
-            ClearNameSpaceTree();
+            ClearTree();
 
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(Program.Data.RemoveNameSpace());
-            work.AddRange(Program.Data.LoadNameSpace());
+            work.AddRange(Program.Data.RemoveContextName());
+            work.AddRange(Program.Data.LoadContextName());
 
             this.DoWork(work, OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
-            { BuildNameSpaceTree(); }
+            { BuildTree(); }
         }
 
         private void NewAttributeCommand_ButtonClick(object sender, EventArgs e)
@@ -183,10 +183,10 @@ namespace DataDictionary.Main
             DomainAttributeItem item = new DomainAttributeItem();
 
             Program.Data.DomainAttributes.Add(item);
-            Program.Data.ModelNamespace.Add(new ModelNameSpaceItem(Program.Data.Model, item));
+            Program.Data.ContextName.Add(new ContextNameItem(Program.Data.Model, item));
 
-            if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
-            { nameSpaceNavigation.SelectedNode = node; }
+            if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
+            { contextNameNavigation.SelectedNode = node; }
 
             Activate(item);
         }
@@ -196,10 +196,10 @@ namespace DataDictionary.Main
             DomainEntityItem item = new DomainEntityItem();
 
             Program.Data.DomainEntities.Add(item);
-            Program.Data.ModelNamespace.Add(new ModelNameSpaceItem(Program.Data.Model, item));
+            Program.Data.ContextName.Add(new ContextNameItem(Program.Data.Model, item));
 
-            if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
-            { nameSpaceNavigation.SelectedNode = node; }
+            if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
+            { contextNameNavigation.SelectedNode = node; }
 
             Activate(item);
         }
@@ -208,10 +208,10 @@ namespace DataDictionary.Main
         {
             ModelSubjectAreaItem item = new ModelSubjectAreaItem();
             Program.Data.ModelSubjectAreas.Add(item);
-            Program.Data.ModelNamespace.Add(new ModelNameSpaceItem(Program.Data.Model, item));
+            Program.Data.ContextName.Add(new ContextNameItem(Program.Data.Model, item));
 
-            if (nameSpaceNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
-            { nameSpaceNavigation.SelectedNode = node; }
+            if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
+            { contextNameNavigation.SelectedNode = node; }
 
             Activate(item);
         }
@@ -221,9 +221,9 @@ namespace DataDictionary.Main
 
         private void DataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (nameSpaceNavigation.SelectedNode is TreeNode node
-                && nameSpaceNodes.ContainsKey(node)
-                && nameSpaceNodes[node].Source is Object taget)
+            if (contextNameNavigation.SelectedNode is TreeNode node
+                && contextNodes.ContainsKey(node)
+                && contextNodes[node].Source is Object taget)
             {
                 dynamic dataNode = taget;
                 Activate(dataNode);

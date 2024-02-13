@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.ApplicationData
         /// </summary>
         /// <returns></returns>
         /// <remarks>Provides mechanism to map the "this" into the Interface</remarks>
-        IHelpSubjectData AsHelpSubject { get; }
+        IHelpSubjectData AsHelpSubjectData { get; }
 
         /// <inheritdoc cref="DbWorkItem.ILoadData.Load(IDatabaseWork)"/>
         /// <remarks>HelpSubject</remarks>
@@ -59,6 +59,6 @@ namespace DataDictionary.BusinessLayer.ApplicationData
         public HelpCollection HelpSubjects { get; } = new HelpCollection();
 
         /// <inheritdoc/>
-        public IHelpSubjectData AsHelpSubject { get { return this; } }
+        public IHelpSubjectData AsHelpSubjectData { get { return this; } }
     }
 }

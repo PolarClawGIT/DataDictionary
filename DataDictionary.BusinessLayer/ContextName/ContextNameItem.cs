@@ -15,12 +15,12 @@ using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
 using System.ComponentModel;
 
-namespace DataDictionary.BusinessLayer.NameSpace
+namespace DataDictionary.BusinessLayer.ContextName
 {
     /// <summary>
-    /// Interface for a Model NameSpace Item.
+    /// Interface for a Context Name Item.
     /// </summary>
-    public interface IModelNameSpaceItem : IModelNameSpaceKey, INameSpaceKey, IScopeKey
+    public interface IContextNameItem : IContextNameKey, INameSpaceKey, IScopeKey
     {
         /// <summary>
         /// Parent System Id
@@ -39,24 +39,24 @@ namespace DataDictionary.BusinessLayer.NameSpace
     }
 
     /// <summary>
-    /// Implementation for Model NameSpace Item.
+    /// Implementation for Context Name Item.
     /// </summary>
-    public class ModelNameSpaceItem : IModelNameSpaceItem, INotifyPropertyChanged
+    public class ContextNameItem : IContextNameItem, INotifyPropertyChanged
     {
         /// <summary>
         /// Container for the SystemId
         /// </summary>
-        public ModelNameSpaceKey SystemKey { get; protected set; }
+        public ContextNameKey SystemKey { get; protected set; }
 
         /// <summary>
         /// Container for the SystemParentId
         /// </summary>
-        public ModelNameSpaceKey? SystemParentKey { get; internal protected set; }
+        public ContextNameKey? SystemParentKey { get; internal protected set; }
 
         /// <summary>
         /// List of keys that are the children of this record.
         /// </summary>
-        public virtual List<ModelNameSpaceKey> Children { get; } = new List<ModelNameSpaceKey>();
+        public virtual List<ContextNameKey> Children { get; } = new List<ContextNameKey>();
 
         /// <summary>
         /// Container for the Scope.
@@ -94,7 +94,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
         public virtual Int32 OrdinalPosition { get; protected set; } = Int32.MaxValue;
 
         /// <summary>
-        /// Source of the Model NameSpace Item.
+        /// Source of the Context Name Item.
         /// </summary>
         public virtual Object? Source { get; init; } = null;
 
@@ -135,21 +135,21 @@ namespace DataDictionary.BusinessLayer.NameSpace
 
         #region Constrictors
         /// <summary>
-        /// Constructor for a Model NameSpace, Base (blank item)
+        /// Constructor for a Context Name, Base (blank item)
         /// </summary>
-        public ModelNameSpaceItem() : base()
+        public ContextNameItem() : base()
         {
-            SystemKey = new ModelNameSpaceKey();
+            SystemKey = new ContextNameKey();
             ScopeKey = new ScopeKey(ScopeType.Null);
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbCatalog
+        /// Constructor for a Context Name, DbCatalog
         /// </summary>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbCatalogItem data) : base()
+        public ContextNameItem(IDbCatalogItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbCatalogKey)data);
+            SystemKey = new ContextNameKey((IDbCatalogKey)data);
             ScopeKey = new ScopeKey(data);
             Source = data;
 
@@ -160,14 +160,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbSchema
+        /// Constructor for a Context Name, DbSchema
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbCatalogKey parent, IDbSchemaItem data) : base()
+        public ContextNameItem(IDbCatalogKey parent, IDbSchemaItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbSchemaKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((IDbSchemaKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             ScopeKey = new ScopeKey(data);
             Source = data;
 
@@ -178,14 +178,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbTable
+        /// Constructor for a Context Name, DbTable
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbSchemaKey parent, IDbTableItem data) : base()
+        public ContextNameItem(IDbSchemaKey parent, IDbTableItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbTableKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((IDbTableKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             ScopeKey = new ScopeKey(data);
             Source = data;
 
@@ -196,14 +196,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbTableColumn
+        /// Constructor for a Context Name, DbTableColumn
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbTableKey parent, IDbTableColumnItem data) : base()
+        public ContextNameItem(IDbTableKey parent, IDbTableColumnItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbTableColumnKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((IDbTableColumnKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             ScopeKey = new ScopeKey(data);
             Source = data;
 
@@ -215,14 +215,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbConstraint
+        /// Constructor for a Context Name, DbConstraint
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbTableKey parent, IDbConstraintItem data) : base()
+        public ContextNameItem(IDbTableKey parent, IDbConstraintItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbConstraintKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((IDbConstraintKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             ScopeKey = new ScopeKey(data);
             Source = data;
 
@@ -233,14 +233,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbRoutine
+        /// Constructor for a Context Name, DbRoutine
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbSchemaKey parent, IDbRoutineItem data) : base()
+        public ContextNameItem(IDbSchemaKey parent, IDbRoutineItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbRoutineKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((IDbRoutineKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             ScopeKey = new ScopeKey(data);
             Source = data;
 
@@ -251,14 +251,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbRoutineParameter
+        /// Constructor for a Context Name, DbRoutineParameter
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbRoutineKey parent, IDbRoutineParameterItem data) : base()
+        public ContextNameItem(IDbRoutineKey parent, IDbRoutineParameterItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbRoutineParameterKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((IDbRoutineParameterKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(data);
 
@@ -270,14 +270,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbDomain
+        /// Constructor for a Context Name, DbDomain
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbSchemaKey parent, IDbDomainItem data) : base()
+        public ContextNameItem(IDbSchemaKey parent, IDbDomainItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbDomainKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((IDbDomainKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(data);
 
@@ -288,12 +288,12 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, LibrarySource
+        /// Constructor for a Context Name, LibrarySource
         /// </summary>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(ILibrarySourceItem data) : base()
+        public ContextNameItem(ILibrarySourceItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((ILibrarySourceKey)data);
+            SystemKey = new ContextNameKey((ILibrarySourceKey)data);
             Source = data;
             ScopeKey = new ScopeKey(data);
 
@@ -304,14 +304,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, LibraryMember
+        /// Constructor for a Context Name, LibraryMember
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(ILibrarySourceKey parent, ILibraryMemberItem data) : base()
+        public ContextNameItem(ILibrarySourceKey parent, ILibraryMemberItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((ILibraryMemberKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((ILibraryMemberKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(data);
 
@@ -322,14 +322,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, LibraryMember
+        /// Constructor for a Context Name, LibraryMember
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(ILibraryMemberKey parent, ILibraryMemberItem data) : base()
+        public ContextNameItem(ILibraryMemberKey parent, ILibraryMemberItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((ILibraryMemberKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((ILibraryMemberKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(data);
 
@@ -340,12 +340,12 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, Model
+        /// Constructor for a Context Name, Model
         /// </summary>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelItem data) : base()
+        public ContextNameItem(IModelItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IModelKey)data);
+            SystemKey = new ContextNameKey((IModelKey)data);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.Model);
 
@@ -356,14 +356,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, ModelSubjectArea
+        /// Constructor for a Context Name, ModelSubjectArea
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelKey parent, IModelSubjectAreaItem data) : base()
+        public ContextNameItem(IModelKey parent, IModelSubjectAreaItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IModelSubjectAreaKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((IModelSubjectAreaKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelSubjectArea);
 
@@ -374,14 +374,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, ModelSubjectArea
+        /// Constructor for a Context Name, ModelSubjectArea
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelSubjectAreaKey parent, IModelSubjectAreaItem data) : base()
+        public ContextNameItem(IModelSubjectAreaKey parent, IModelSubjectAreaItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IModelSubjectAreaKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((IModelSubjectAreaKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelSubjectArea);
 
@@ -392,15 +392,15 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// /// Constructor for a Model NameSpace, Model/NameSpace
+        /// /// Constructor for a Context Name, Model/NameSpace
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
         /// <param name="dataKey"></param>
-        public ModelNameSpaceItem(IModelKey parent, INameSpaceKey data, IModelNameSpaceKey dataKey)
+        public ContextNameItem(IModelKey parent, INameSpaceKey data, IContextNameKey dataKey)
         {
-            SystemKey = new ModelNameSpaceKey(dataKey);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey(dataKey);
+            SystemParentKey = new ContextNameKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelNameSpace);
 
@@ -409,15 +409,15 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// /// /// Constructor for a Model NameSpace, NameSpace/NameSpace
+        /// /// /// Constructor for a Context Name, NameSpace/NameSpace
         /// </summary>
         /// <param name="parentKey"></param>
         /// <param name="data"></param>
         /// <param name="dataKey"></param>
-        public ModelNameSpaceItem(IModelNameSpaceKey parentKey, INameSpaceKey data, IModelNameSpaceKey dataKey)
+        public ContextNameItem(IContextNameKey parentKey, INameSpaceKey data, IContextNameKey dataKey)
         {
-            SystemKey = new ModelNameSpaceKey(dataKey);
-            SystemParentKey = new ModelNameSpaceKey(parentKey);
+            SystemKey = new ContextNameKey(dataKey);
+            SystemParentKey = new ContextNameKey(parentKey);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelNameSpace);
 
@@ -426,15 +426,15 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, SubjectArea/NameSpace
+        /// Constructor for a Context Name, SubjectArea/NameSpace
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
         /// <param name="dataKey"></param>
-        public ModelNameSpaceItem(IModelSubjectAreaItem parent, INameSpaceKey data, IModelNameSpaceKey dataKey)
+        public ContextNameItem(IModelSubjectAreaItem parent, INameSpaceKey data, IContextNameKey dataKey)
         {
-            SystemKey = new ModelNameSpaceKey(dataKey);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey(dataKey);
+            SystemParentKey = new ContextNameKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelNameSpace);
 
@@ -443,14 +443,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, NameSpace/SubjectArea
+        /// Constructor for a Context Name, NameSpace/SubjectArea
         /// </summary>
         /// <param name="parentKey"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelNameSpaceKey parentKey, IModelSubjectAreaItem data)
+        public ContextNameItem(IContextNameKey parentKey, IModelSubjectAreaItem data)
         {
-            SystemKey = new ModelNameSpaceKey((INameSpaceKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parentKey);
+            SystemKey = new ContextNameKey((INameSpaceKey)data);
+            SystemParentKey = new ContextNameKey(parentKey);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelSubjectArea);
 
@@ -462,14 +462,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
 
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DomainAttribute
+        /// Constructor for a Context Name, DomainAttribute
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelKey parent, IDomainAttributeItem data) : base()
+        public ContextNameItem(IModelKey parent, IDomainAttributeItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDomainAttributeKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((IDomainAttributeKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelAttribute);
 
@@ -480,14 +480,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DomainAttribute
+        /// Constructor for a Context Name, DomainAttribute
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelSubjectAreaKey parent, IDomainAttributeItem data) : base()
+        public ContextNameItem(IModelSubjectAreaKey parent, IDomainAttributeItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDomainAttributeKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((IDomainAttributeKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelAttribute);
 
@@ -498,14 +498,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DomainEntity
+        /// Constructor for a Context Name, DomainEntity
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelKey parent, IDomainEntityItem data) : base()
+        public ContextNameItem(IModelKey parent, IDomainEntityItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDomainEntityKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((IDomainEntityKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelEntity);
 
@@ -516,14 +516,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DomainEntity
+        /// Constructor for a Context Name, DomainEntity
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelSubjectAreaKey parent, IDomainEntityItem data) : base()
+        public ContextNameItem(IModelSubjectAreaKey parent, IDomainEntityItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDomainEntityKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new ContextNameKey((IDomainEntityKey)data);
+            SystemParentKey = new ContextNameKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelEntity);
 

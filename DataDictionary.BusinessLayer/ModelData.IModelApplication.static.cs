@@ -224,18 +224,18 @@ namespace DataDictionary.BusinessLayer
         /// <param name="file"></param>
         /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadModelData<T>(this T data, FileInfo file)
-            where T : IModelCatalog, IModelLibrary, IModelDomain, IModel, IModelNamespace
+            where T : IModelCatalog, IModelLibrary, IModelDomain, IModel, IModelContextName
         {
             List<WorkItem> workItems = new List<WorkItem>();
 
             workItems.AddRange(data.RemoveCatalog());
             workItems.AddRange(data.RemoveLibrary());
             workItems.AddRange(data.RemoveDomain());
-            workItems.AddRange(data.RemoveNameSpace());
+            workItems.AddRange(data.RemoveContextName());
 
             workItems.Add(new WorkItem() { WorkName = "Load Model Data", DoWork = DoWork });
 
-            workItems.AddRange(data.LoadNameSpace());
+            workItems.AddRange(data.LoadContextName());
 
             return workItems.AsReadOnly();
 

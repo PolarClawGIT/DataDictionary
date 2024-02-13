@@ -10,14 +10,11 @@ namespace DataDictionary.BusinessLayer.ApplicationData
     /// Interface representing Application data
     /// </summary>
     public interface IApplicationData
-    {
-
-    }
+    { }
 
     /// <summary>
     /// Implementation for Application data
     /// </summary>
     public partial class ApplicationData: IApplicationData
-    {
-    }
+    { }
 }

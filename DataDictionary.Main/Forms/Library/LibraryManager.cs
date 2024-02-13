@@ -163,7 +163,7 @@ namespace DataDictionary.Main.Forms.Library
                 {
                     FileInfo fileInfo = new FileInfo(file);
                     work.AddRange(Program.Data.LoadLibrary(fileInfo));
-                    work.AddRange(Program.Data.LoadNameSpace(fileInfo));
+                    work.AddRange(Program.Data.LoadContextName(fileInfo));
                 }
 
                 DoLocalWork(work);
@@ -178,7 +178,7 @@ namespace DataDictionary.Main.Forms.Library
             {
                 List<WorkItem> work = new List<WorkItem>();
                 LibrarySourceKey key = new LibrarySourceKey(item);
-                work.AddRange(Program.Data.RemoveNameSpace(key));
+                work.AddRange(Program.Data.RemoveContextName(key));
                 work.AddRange(Program.Data.RemoveLibrary(key));
                 DoLocalWork(work);
             }
@@ -218,7 +218,7 @@ namespace DataDictionary.Main.Forms.Library
 
                 LibrarySourceKey key = new LibrarySourceKey(item);
                 work.AddRange(Program.Data.LoadLibrary(factory, key));
-                work.AddRange(Program.Data.LoadNameSpace(key));
+                work.AddRange(Program.Data.LoadContextName(key));
                 work.AddRange(LoadLocalData(factory));
 
                 DoLocalWork(work);

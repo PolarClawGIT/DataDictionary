@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameSpace;
+using DataDictionary.BusinessLayer.ContextName;
 using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.Main.Controls;

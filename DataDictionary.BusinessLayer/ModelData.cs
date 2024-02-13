@@ -129,7 +129,7 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
 
             work.AddRange(this.RemoveModel());
-            work.AddRange(this.RemoveNameSpace());
+            work.AddRange(this.RemoveContextName());
 
             work.Add(new WorkItem()
             {
@@ -141,7 +141,7 @@ namespace DataDictionary.BusinessLayer
                 }
             });
 
-            work.AddRange(this.LoadNameSpace());
+            work.AddRange(this.LoadContextName());
 
             return work;
         }
@@ -158,12 +158,12 @@ namespace DataDictionary.BusinessLayer
             ModelKey key = new ModelKey(modelKey);
 
             work.AddRange(this.RemoveModel());
-            work.AddRange(this.RemoveNameSpace());
+            work.AddRange(this.RemoveContextName());
             work.AddRange(this.LoadModelData(factory, key));
             work.AddRange(this.LoadDomain(factory, key));
             work.AddRange(this.LoadCatalog(factory, key));
             work.AddRange(this.LoadLibrary(factory, key));
-            work.AddRange(this.LoadNameSpace());
+            work.AddRange(this.LoadContextName());
 
             return work;
         }

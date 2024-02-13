@@ -51,7 +51,7 @@ namespace DataDictionary.Main
             this.IsLocked(true);
 
             // Setup Images for Tree Control
-            nameSpaceNavigation.ImageList = ModelScopeExtension.ToImageList();
+            contextNameNavigation.ImageList = ModelScopeExtension.ToImageList();
 
 
             //Hook the WorkerQueue up to this forms UI thread for events.
@@ -81,7 +81,7 @@ namespace DataDictionary.Main
             SendMessage(new DoUnbindData());
 
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(Program.Data.LoadNameSpace());
+            work.AddRange(Program.Data.LoadContextName());
 
 
             if (Settings.Default.IsOnLineMode)
@@ -146,7 +146,7 @@ namespace DataDictionary.Main
         {
             if (Program.Data.Model is ModelItem data)
             {
-                BuildNameSpaceTree();
+                BuildTree();
 
                 return true;
             }
@@ -155,7 +155,7 @@ namespace DataDictionary.Main
 
         public void UnbindDataCore()
         {
-            ClearNameSpaceTree();
+            ClearTree();
         }
 
         private void Main_FormClosing(object? sender, FormClosingEventArgs e)

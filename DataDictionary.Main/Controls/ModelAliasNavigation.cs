@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.NameSpace;
+﻿using DataDictionary.BusinessLayer.ContextName;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using System.ComponentModel;
 
@@ -6,13 +6,13 @@ namespace DataDictionary.Main.Controls
 {
     partial class ModelAliasNavigation : UserControl
     {
-        Dictionary<ListViewItem, ModelNameSpaceKey> alaisViewItems = new Dictionary<ListViewItem, ModelNameSpaceKey>();
-        Stack<ModelNameSpaceKey> navigationStack = new Stack<ModelNameSpaceKey>();
+        Dictionary<ListViewItem, ContextNameKey> alaisViewItems = new Dictionary<ListViewItem, ContextNameKey>();
+        Stack<ContextNameKey> navigationStack = new Stack<ContextNameKey>();
 
         /// <summary>
         /// The current Alias Item selected
         /// </summary>
-        public ModelNameSpaceItem? SelectedAlias { get; private set; }
+        public ContextNameItem? SelectedAlias { get; private set; }
 
         public ModelAliasNavigation()
         {
@@ -38,15 +38,15 @@ namespace DataDictionary.Main.Controls
             aliasList.Items.Clear();
             alaisViewItems.Clear();
 
-            ModelNameSpaceItem parent = Program.Data.ModelNamespace.RootItem;
-            ModelNameSpaceKey? parentKey = null;
+            ContextNameItem parent = Program.Data.ContextName.RootItem;
+            ContextNameKey? parentKey = null;
 
-            if (navigationStack.TryPeek(out parentKey) && parentKey is ModelNameSpaceKey)
-            { parent = Program.Data.ModelNamespace[parentKey]; }
+            if (navigationStack.TryPeek(out parentKey) && parentKey is ContextNameKey)
+            { parent = Program.Data.ContextName[parentKey]; }
 
-            foreach (ModelNameSpaceKey childKey in parent.Children)
+            foreach (ContextNameKey childKey in parent.Children)
             {
-                ModelNameSpaceItem child = Program.Data.ModelNamespace[childKey];
+                ContextNameItem child = Program.Data.ContextName[childKey];
                 ListViewItem childItem = new ListViewItem(child.MemberName, child.Scope.ToScopeName());
                 childItem.ToolTipText = child.MemberFullName;
 
@@ -57,7 +57,7 @@ namespace DataDictionary.Main.Controls
             aliasList.Sort();
             aliasList.Sorting = SortOrder.None;
 
-            if (parentKey is ModelNameSpaceKey)
+            if (parentKey is ContextNameKey)
             {
                 ListViewItem parentItem = new ListViewItem(parent.MemberName, parent.Scope.ToScopeName());
                 parentItem.Font = new Font(parentItem.Font, FontStyle.Underline);
@@ -75,24 +75,24 @@ namespace DataDictionary.Main.Controls
             if (aliasList.SelectedItems.Count > 0
                && alaisViewItems.ContainsKey(aliasList.SelectedItems[0]))
             {
-                ModelNameSpaceKey selectedKey = alaisViewItems[aliasList.SelectedItems[0]];
+                ContextNameKey selectedKey = alaisViewItems[aliasList.SelectedItems[0]];
 
-                if (navigationStack.TryPeek(out ModelNameSpaceKey? parentKey)
+                if (navigationStack.TryPeek(out ContextNameKey? parentKey)
                     && selectedKey.Equals(parentKey))
                 {
                     navigationStack.Pop();
                     AliasListLoad();
                 }
 
-                else if (Program.Data.ModelNamespace[selectedKey].Children.Count > 0)
+                else if (Program.Data.ContextName[selectedKey].Children.Count > 0)
                 {
                     navigationStack.Push(selectedKey);
                     AliasListLoad();
                 }
 
-                aliasNameData.Text = Program.Data.ModelNamespace[selectedKey].MemberFullName;
-                aliasScopeData.Text = Program.Data.ModelNamespace[selectedKey].Scope.ToScopeName();
-                SelectedAlias = Program.Data.ModelNamespace[selectedKey];
+                aliasNameData.Text = Program.Data.ContextName[selectedKey].MemberFullName;
+                aliasScopeData.Text = Program.Data.ContextName[selectedKey].Scope.ToScopeName();
+                SelectedAlias = Program.Data.ContextName[selectedKey];
 
                 AliasSelectedItemChanged(this, EventArgs.Empty);
             }

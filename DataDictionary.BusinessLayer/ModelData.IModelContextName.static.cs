@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.NameSpace;
+﻿using DataDictionary.BusinessLayer.ContextName;
 using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
@@ -19,26 +19,26 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer
 {
     /// <summary>
-    /// Implementation component for the Model Namespace data
+    /// Implementation component for the Model Context Name data
     /// </summary>
     /// <remarks>When combined with the Extension class, this implements multi-inheritance.</remarks>
-    public static class ModelNamespace
+    public static class ModelContextName
     {
         /// <summary>
-        /// Load NameSpace Data for the Model.
+        /// Load Context Name Data for the Model.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadNameSpace<T>(this T data)
-            where T : IModelCatalog, IModelLibrary, IModel, IModelDomain, IModelNamespace
+        public static IReadOnlyList<WorkItem> LoadContextName<T>(this T data)
+            where T : IModelCatalog, IModelLibrary, IModel, IModelDomain, IModelContextName
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
 
             WorkItem loadWork = new WorkItem()
             {
-                WorkName = "Load NameSpace",
+                WorkName = "Load Context Names",
                 DoWork = ThreadWork
             };
             progress = loadWork.OnProgressChanged;
@@ -52,32 +52,32 @@ namespace DataDictionary.BusinessLayer
                 foreach (ModelItem item in data.Models)
                 {
                     ModelKey key = new ModelKey(item);
-                    LoadNameSpaceCore(data, key, progress);
+                    LoadContextNameCore(data, key, progress);
                 }
 
                 foreach (DbCatalogItem item in data.DbCatalogs)
                 {
                     DbCatalogKey catalogKey = new DbCatalogKey(item);
-                    LoadNameSpaceCore(data, catalogKey, progress);
+                    LoadContextNameCore(data, catalogKey, progress);
                 }
 
                 foreach (LibrarySourceItem item in data.LibrarySources)
                 {
                     LibrarySourceKey sourceKey = new LibrarySourceKey(item);
-                    LoadNameSpaceCore(data, sourceKey, progress);
+                    LoadContextNameCore(data, sourceKey, progress);
                 }
             }
         }
 
         /// <summary>
-        /// Load NameSpace Data from a Catalog
+        /// Load Context Name Data from a Catalog
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadNameSpace<T>(this T data, IDbCatalogKeyName key)
-            where T : IModelCatalog, IModelNamespace
+        public static IReadOnlyList<WorkItem> LoadContextName<T>(this T data, IDbCatalogKeyName key)
+            where T : IModelCatalog, IModelContextName
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -99,20 +99,20 @@ namespace DataDictionary.BusinessLayer
                 foreach (DbCatalogItem? item in data.DbCatalogs.Where(w => nameKey.Equals(w)))
                 {
                     DbCatalogKey catalogKey = new DbCatalogKey(item);
-                    LoadNameSpaceCore(data, catalogKey, progress);
+                    LoadContextNameCore(data, catalogKey, progress);
                 }
             }
         }
 
         /// <summary>
-        /// Load NameSpace Data from a Catalog
+        /// Load Context Name Data from a Catalog
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadNameSpace<T>(this T data, IDbCatalogKey key)
-            where T : IModelCatalog, IModelNamespace
+        public static IReadOnlyList<WorkItem> LoadContextName<T>(this T data, IDbCatalogKey key)
+            where T : IModelCatalog, IModelContextName
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -129,11 +129,11 @@ namespace DataDictionary.BusinessLayer
             return work;
 
             void ThreadWork()
-            { LoadNameSpaceCore(data, key, progress); }
+            { LoadContextNameCore(data, key, progress); }
         }
 
-        private static void LoadNameSpaceCore<T>(T data, IDbCatalogKey key, Action<Int32, Int32> progress)
-            where T : IModelCatalog, IModelNamespace
+        private static void LoadContextNameCore<T>(T data, IDbCatalogKey key, Action<Int32, Int32> progress)
+            where T : IModelCatalog, IModelContextName
         {
             DbCatalogKey catalogKey = new DbCatalogKey(key);
             List<DbCatalogItem> catalogs = data.DbCatalogs.Where(w => catalogKey.Equals(w) && w.IsSystem == false).ToList();
@@ -161,32 +161,32 @@ namespace DataDictionary.BusinessLayer
                     domains.Count;
 
                 DbCatalogKeyName catalogName = new DbCatalogKeyName(catalogItem);
-                data.ModelNamespace.Add(new ModelNameSpaceItem(catalogItem));
+                data.ContextName.Add(new ContextNameItem(catalogItem));
                 progress(completedWork++, totalWork);
 
                 foreach (DbSchemaItem schemaItem in schemta)
                 {
                     DbSchemaKey schemaKey = new DbSchemaKey(schemaItem);
                     DbSchemaKeyName schemaName = new DbSchemaKeyName(schemaItem);
-                    data.ModelNamespace.Add(new ModelNameSpaceItem(catalogKey, schemaItem));
+                    data.ContextName.Add(new ContextNameItem(catalogKey, schemaItem));
                     progress(completedWork++, totalWork);
 
                     foreach (DbTableItem tableItem in tables.Where(w => schemaName.Equals(w)))
                     {
                         DbTableKey tableKey = new DbTableKey(tableItem);
                         DbTableKeyName tableName = new DbTableKeyName(tableItem);
-                        data.ModelNamespace.Add(new ModelNameSpaceItem(schemaKey, tableItem));
+                        data.ContextName.Add(new ContextNameItem(schemaKey, tableItem));
                         progress(completedWork++, totalWork);
 
                         foreach (DbTableColumnItem columnItem in tableColumns.Where(w => tableName.Equals(w)))
                         {
-                            data.ModelNamespace.Add(new ModelNameSpaceItem(tableKey, columnItem));
+                            data.ContextName.Add(new ContextNameItem(tableKey, columnItem));
                             progress(completedWork++, totalWork);
                         }
 
                         foreach (DbConstraintItem constraintItem in constraints.Where(w => tableName.Equals(w)))
                         {
-                            data.ModelNamespace.Add(new ModelNameSpaceItem(tableKey, constraintItem));
+                            data.ContextName.Add(new ContextNameItem(tableKey, constraintItem));
                             progress(completedWork++, totalWork);
                         }
                     }
@@ -195,19 +195,19 @@ namespace DataDictionary.BusinessLayer
                     {
                         DbRoutineKey routineKey = new DbRoutineKey(routineItem);
                         DbRoutineKeyName routineName = new DbRoutineKeyName(routineItem);
-                        data.ModelNamespace.Add(new ModelNameSpaceItem(schemaKey, routineItem));
+                        data.ContextName.Add(new ContextNameItem(schemaKey, routineItem));
                         progress(completedWork++, totalWork);
 
                         foreach (DbRoutineParameterItem parameterItem in routineParameters.Where(w => routineName.Equals(w)))
                         {
-                            data.ModelNamespace.Add(new ModelNameSpaceItem(routineKey, parameterItem));
+                            data.ContextName.Add(new ContextNameItem(routineKey, parameterItem));
                             progress(completedWork++, totalWork);
                         }
                     }
 
                     foreach (DbDomainItem domainItem in domains.Where(w => schemaName.Equals(w)))
                     {
-                        data.ModelNamespace.Add(new ModelNameSpaceItem(schemaKey, domainItem));
+                        data.ContextName.Add(new ContextNameItem(schemaKey, domainItem));
                         progress(completedWork++, totalWork);
                     }
                 }
@@ -215,14 +215,14 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <summary>
-        /// Load NameSpace Data from a Library
+        /// Load Context Name Data from a Library
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadNameSpace<T>(this T data, FileInfo key)
-            where T : IModelLibrary, IModelNamespace
+        public static IReadOnlyList<WorkItem> LoadContextName<T>(this T data, FileInfo key)
+            where T : IModelLibrary, IModelContextName
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -243,21 +243,21 @@ namespace DataDictionary.BusinessLayer
                 foreach (LibrarySourceItem? item in data.LibrarySources.Where(w => String.Equals(w.SourceFile, key.Name, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     LibrarySourceKey sourceKey = new LibrarySourceKey(item);
-                    LoadNameSpaceCore(data, sourceKey, progress);
+                    LoadContextNameCore(data, sourceKey, progress);
                 }
             }
 
         }
 
         /// <summary>
-        /// Load NameSpace Data from a Library
+        /// Load Context Name Data from a Library
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadNameSpace<T>(this T data, ILibrarySourceKeyName key)
-            where T : IModelLibrary, IModelNamespace
+        public static IReadOnlyList<WorkItem> LoadContextName<T>(this T data, ILibrarySourceKeyName key)
+            where T : IModelLibrary, IModelContextName
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -279,20 +279,20 @@ namespace DataDictionary.BusinessLayer
                 foreach (LibrarySourceItem? item in data.LibrarySources.Where(w => nameKey.Equals(w)))
                 {
                     LibrarySourceKey sourceKey = new LibrarySourceKey(item);
-                    LoadNameSpaceCore(data, sourceKey, progress);
+                    LoadContextNameCore(data, sourceKey, progress);
                 }
             }
         }
 
         /// <summary>
-        /// Load NameSpace Data from a Library
+        /// Load Context Name Data from a Library
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadNameSpace<T>(this T data, ILibrarySourceKey key)
-            where T : IModelLibrary, IModelNamespace
+        public static IReadOnlyList<WorkItem> LoadContextName<T>(this T data, ILibrarySourceKey key)
+            where T : IModelLibrary, IModelContextName
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -309,11 +309,11 @@ namespace DataDictionary.BusinessLayer
             return work;
 
             void ThreadWork()
-            { LoadNameSpaceCore(data, key, progress); }
+            { LoadContextNameCore(data, key, progress); }
         }
 
-        private static void LoadNameSpaceCore<T>(T data, ILibrarySourceKey key, Action<int, int> progress)
-            where T : IModelLibrary, IModelNamespace
+        private static void LoadContextNameCore<T>(T data, ILibrarySourceKey key, Action<int, int> progress)
+            where T : IModelLibrary, IModelContextName
         {
             LibrarySourceKey libraryKey = new LibrarySourceKey(key);
             List<LibrarySourceItem> libraries = data.LibrarySources.Where(w => libraryKey.Equals(w)).ToList();
@@ -325,14 +325,14 @@ namespace DataDictionary.BusinessLayer
                 List<LibraryMemberItem> members = data.LibraryMembers.Where(w => libraryKey.Equals(w)).ToList();
                 totalWork = totalWork + members.Count;
 
-                data.ModelNamespace.Add(new ModelNameSpaceItem(libraryitem));
+                data.ContextName.Add(new ContextNameItem(libraryitem));
                 progress(completedWork++, totalWork);
 
                 foreach (LibraryMemberItem memberItem in members.
                     Where(w => w.MemberParentId is null))
                 {
                     LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
-                    data.ModelNamespace.Add(new ModelNameSpaceItem(libraryKey, memberItem));
+                    data.ContextName.Add(new ContextNameItem(libraryKey, memberItem));
                     progress(completedWork++, totalWork);
 
                     AddChildMember(libraryKey, memberKey);
@@ -343,7 +343,7 @@ namespace DataDictionary.BusinessLayer
                     foreach (LibraryMemberItem memberItem in members.Where(w => new LibraryMemberKeyParent(w).Equals(memberKey)))
                     {
                         LibraryMemberKey childKey = new LibraryMemberKey(memberItem);
-                        data.ModelNamespace.Add(new ModelNameSpaceItem(memberKey, memberItem));
+                        data.ContextName.Add(new ContextNameItem(memberKey, memberItem));
                         progress(completedWork++, totalWork);
 
                         AddChildMember(sourceKey, childKey);
@@ -353,14 +353,14 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <summary>
-        /// Load NameSpace Data from a Model
+        /// Load Context Name Data from a Model
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> LoadNameSpace<T>(this T data, IModelKey key)
-            where T : IModel, IModelDomain, IModelNamespace
+        public static IReadOnlyList<WorkItem> LoadContextName<T>(this T data, IModelKey key)
+            where T : IModel, IModelDomain, IModelContextName
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -377,11 +377,11 @@ namespace DataDictionary.BusinessLayer
             return work;
 
             void ThreadWork()
-            { LoadNameSpaceCore(data, key, progress); }
+            { LoadContextNameCore(data, key, progress); }
         }
 
-        private static void LoadNameSpaceCore<T>(T data, IModelKey key, Action<int, int> progress)
-            where T : IModel, IModelDomain, IModelNamespace
+        private static void LoadContextNameCore<T>(T data, IModelKey key, Action<int, int> progress)
+            where T : IModel, IModelDomain, IModelContextName
         {
             ModelKey modelKey = new ModelKey(key);
             List<ModelItem> models = data.Models.Where(w => modelKey.Equals(w)).ToList();
@@ -401,23 +401,23 @@ namespace DataDictionary.BusinessLayer
                 List<DomainEntityItem> missingEntities = data.DomainEntities.ToList();
                 List<DomainAttributeItem> missingAttributes = data.DomainAttributes.ToList();
 
-                List<(NameSpaceKey nameSpace, ModelNameSpaceKey key)> modelNameSpace = NameSpaceKey.Group(
+                List<(NameSpaceKey nameSpace, ContextNameKey key)> modelNameSpace = NameSpaceKey.Group(
                     data.ModelSubjectAreas.
                         //Where(w => !String.IsNullOrWhiteSpace(w.SubjectAreaNameSpace)).
                         Select(s => new NameSpaceKey(s))).
-                        Select(s => (s, new ModelNameSpaceKey(s))).
+                        Select(s => (s, new ContextNameKey(s))).
                         ToList();
 
                 totalWork = totalWork +
                     attributes.Count +
                     entities.Count;
 
-                data.ModelNamespace.Add(new ModelNameSpaceItem(modelItem));
+                data.ContextName.Add(new ContextNameItem(modelItem));
                 progress(completedWork++, totalWork);
 
-                foreach ((NameSpaceKey nameSpace, ModelNameSpaceKey key) nameSpaceItem in modelNameSpace.OrderBy(o => o.nameSpace))
+                foreach ((NameSpaceKey nameSpace, ContextNameKey key) nameSpaceItem in modelNameSpace.OrderBy(o => o.nameSpace))
                 {
-                    (NameSpaceKey nameSpace, ModelNameSpaceKey key) parent = modelNameSpace.
+                    (NameSpaceKey nameSpace, ContextNameKey key) parent = modelNameSpace.
                         FirstOrDefault(w =>
                             nameSpaceItem.nameSpace.ParentKey is NameSpaceKey nameSpaceParent
                             && nameSpaceParent.Equals(w.nameSpace));
@@ -432,18 +432,18 @@ namespace DataDictionary.BusinessLayer
 
                     foreach (ModelSubjectAreaItem subjectItem in subjectItems)
                     {
-                        ModelNameSpaceItem newItem;
+                        ContextNameItem newItem;
 
                         if (parentSubject is not null)
-                        { newItem = new ModelNameSpaceItem(parentSubject, subjectItem); }
+                        { newItem = new ContextNameItem(parentSubject, subjectItem); }
                         else
                         {
                             if (parent.Equals(default))
-                            { newItem = new ModelNameSpaceItem(modelItem, subjectItem); }
-                            else { newItem = new ModelNameSpaceItem(parent.key, subjectItem); }
+                            { newItem = new ContextNameItem(modelItem, subjectItem); }
+                            else { newItem = new ContextNameItem(parent.key, subjectItem); }
                         }
 
-                        data.ModelNamespace.Add(newItem);
+                        data.ContextName.Add(newItem);
 
                         ModelSubjectAreaKey subjectKey = new ModelSubjectAreaKey(subjectItem);
                         progress(completedWork++, totalWork);
@@ -457,7 +457,7 @@ namespace DataDictionary.BusinessLayer
                             {
                                 if (missingEntities.Contains(entityItem)) { missingEntities.Remove(entityItem); }
 
-                                data.ModelNamespace.Add(new ModelNameSpaceItem(subjectItem, entityItem));
+                                data.ContextName.Add(new ContextNameItem(subjectItem, entityItem));
                                 progress(completedWork++, totalWork);
                             }
                         }
@@ -471,7 +471,7 @@ namespace DataDictionary.BusinessLayer
                             {
                                 if (missingAttributes.Contains(attributeItem)) { missingAttributes.Remove(attributeItem); }
 
-                                data.ModelNamespace.Add(new ModelNameSpaceItem(subjectItem, attributeItem));
+                                data.ContextName.Add(new ContextNameItem(subjectItem, attributeItem));
                                 progress(completedWork++, totalWork);
                             }
                         }
@@ -481,18 +481,18 @@ namespace DataDictionary.BusinessLayer
                     // Handle No Subject Area matching (normally does not occur)
                     if (subjectItems.Count() == 0)
                     {
-                        ModelNameSpaceItem newItem;
+                        ContextNameItem newItem;
 
                         if (parentSubject is not null)
-                        { newItem = new ModelNameSpaceItem(parentSubject, nameSpaceItem.nameSpace, nameSpaceItem.key); }
+                        { newItem = new ContextNameItem(parentSubject, nameSpaceItem.nameSpace, nameSpaceItem.key); }
                         else
                         {
                             if (parent.Equals(default))
-                            { newItem = new ModelNameSpaceItem(modelItem, nameSpaceItem.nameSpace, nameSpaceItem.key); }
-                            else { newItem = new ModelNameSpaceItem(parent.key, nameSpaceItem.nameSpace, nameSpaceItem.key); }
+                            { newItem = new ContextNameItem(modelItem, nameSpaceItem.nameSpace, nameSpaceItem.key); }
+                            else { newItem = new ContextNameItem(parent.key, nameSpaceItem.nameSpace, nameSpaceItem.key); }
                         }
 
-                        data.ModelNamespace.Add(newItem);
+                        data.ContextName.Add(newItem);
                     }
 
                 }
@@ -500,13 +500,13 @@ namespace DataDictionary.BusinessLayer
                 // Handle items not in a Subject Area scoped to the Model
                 foreach (DomainEntityItem entityItem in missingEntities)
                 {
-                    data.ModelNamespace.Add(new ModelNameSpaceItem(modelItem, entityItem));
+                    data.ContextName.Add(new ContextNameItem(modelItem, entityItem));
                     progress(completedWork++, totalWork);
                 }
 
                 foreach (DomainAttributeItem attributeItem in missingAttributes)
                 {
-                    data.ModelNamespace.Add(new ModelNameSpaceItem(modelItem, attributeItem));
+                    data.ContextName.Add(new ContextNameItem(modelItem, attributeItem));
                     progress(completedWork++, totalWork);
                 }
 
@@ -519,14 +519,14 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> RemoveNameSpace(this IModelNamespace data, IDbCatalogKey key)
+        public static IReadOnlyList<WorkItem> RemoveContextName(this IModelContextName data, IDbCatalogKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             WorkItem deleteWork = new WorkItem()
             {
                 WorkName = "Remove Catalog NameSpace",
-                DoWork = () => data.ModelNamespace.Remove(new ModelNameSpaceKey(key)),
+                DoWork = () => data.ContextName.Remove(new ContextNameKey(key)),
             };
 
             work.Add(deleteWork);
@@ -539,14 +539,14 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> RemoveNameSpace(this IModelNamespace data, ILibrarySourceKey key)
+        public static IReadOnlyList<WorkItem> RemoveContextName(this IModelContextName data, ILibrarySourceKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             WorkItem deleteWork = new WorkItem()
             {
                 WorkName = "Remove Library NameSpace",
-                DoWork = () => data.ModelNamespace.Remove(new ModelNameSpaceKey(key))
+                DoWork = () => data.ContextName.Remove(new ContextNameKey(key))
             };
 
             work.Add(deleteWork);
@@ -559,15 +559,15 @@ namespace DataDictionary.BusinessLayer
         /// <param name="data"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> RemoveNameSpace(this IModelNamespace data, IModelKey key)
+        public static IReadOnlyList<WorkItem> RemoveContextName(this IModelContextName data, IModelKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
             ModelKey modelKey = new ModelKey(key);
 
             WorkItem deleteWork = new WorkItem()
             {
-                WorkName = "Remove Model NameSpace",
-                DoWork = () => data.ModelNamespace.Remove(new ModelNameSpaceKey(modelKey))
+                WorkName = "Remove Model Context Name",
+                DoWork = () => data.ContextName.Remove(new ContextNameKey(modelKey))
             };
 
             work.Add(deleteWork);
@@ -575,23 +575,23 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <summary>
-        /// Remove NameSpace Data for the entire dataset XX
+        /// Remove NameSpace Data for the entire dataset
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> RemoveNameSpace<T>(this T data)
-            where T : IModelNamespace, IModel, IModelCatalog, IModelLibrary
+        public static IReadOnlyList<WorkItem> RemoveContextName<T>(this T data)
+            where T : IModelContextName, IModel, IModelCatalog, IModelLibrary
         {
             List<WorkItem> work = new List<WorkItem>();
 
             foreach (ModelItem item in data.Models)
-            { work.AddRange(RemoveNameSpace(data, item)); }
+            { work.AddRange(RemoveContextName(data, item)); }
 
             foreach (DbCatalogItem item in data.DbCatalogs)
-            { work.AddRange(RemoveNameSpace(data, item)); }
+            { work.AddRange(RemoveContextName(data, item)); }
 
             foreach (LibrarySourceItem item in data.LibrarySources)
-            { work.AddRange(RemoveNameSpace(data, item)); }
+            { work.AddRange(RemoveContextName(data, item)); }
 
             return work;
         }

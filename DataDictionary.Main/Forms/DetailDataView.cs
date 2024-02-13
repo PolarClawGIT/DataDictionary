@@ -64,7 +64,7 @@ namespace DataDictionary.Main.Forms
             { Activate((data) => new Forms.Database.DbTableColumn() { DataKey = new DbTableColumnKeyName(columnItem) }, columnItem); }
 
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DomainAttributeItem attributeItem)
-            { Activate((data) => new Forms.Domain.DomainAttribute_Old(attributeItem), attributeItem); }
+            { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
 
         }
 

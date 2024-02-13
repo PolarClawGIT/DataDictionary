@@ -1,7 +1,7 @@
-﻿namespace DataDictionary.BusinessLayer.NameSpace
+﻿namespace DataDictionary.BusinessLayer.ContextName
 {
     /// <summary>
-    /// Collection of Model Alias Items with hierarchy support.
+    /// Collection of Context Name Items with hierarchy support.
     /// </summary>
     /// <remarks>
     /// SortedDictionary was chosen over Dictionary or a SortedList.
@@ -15,19 +15,19 @@
     /// Important: The Key is a GUID. As such, the order is not reflective of how the structure is displayed.
     /// The actual order is not important. Only that the structure uses an internal B-Tree lookup to speed process up.
     /// </remarks>
-    public class ModelNameSpaceDictionary : SortedDictionary<ModelNameSpaceKey, ModelNameSpaceItem>
+    public class ContextNameDictionary : SortedDictionary<ContextNameKey, ContextNameItem>
     {
         /// <summary>
         /// Root key for the hierarchy.
         /// </summary>
-        public ModelNameSpaceItem RootItem { get; private set; }
+        public ContextNameItem RootItem { get; private set; }
 
         /// <summary>
         /// Constructor for ModelAliasCollection
         /// </summary>
-        public ModelNameSpaceDictionary() : base()
+        public ContextNameDictionary() : base()
         {
-            ModelNameSpaceItem rootItem = new ModelNameSpaceItem();
+            ContextNameItem rootItem = new ContextNameItem();
             RootItem = rootItem;
         }
 
@@ -40,14 +40,14 @@
         /// <remarks>
         /// This method is expected to catch calls to the base.Add.
         /// </remarks>
-        public void Add(IModelNameSpaceKey key, IModelNameSpaceItem value)
+        public void Add(IContextNameKey key, IContextNameItem value)
         { throw new InvalidOperationException("Do not use Base Add Method."); }
 
         /// <summary>
         /// Adds a ModelNameSpaceItem to the collection.
         /// </summary>
         /// <param name="value"></param>
-        public virtual void Add(ModelNameSpaceItem value)
+        public virtual void Add(ContextNameItem value)
         {
             if (this.ContainsKey(value.SystemKey))
             {
@@ -56,7 +56,7 @@
                 throw ex;
             }
 
-            if (value.SystemParentKey is ModelNameSpaceKey parentKey)
+            if (value.SystemParentKey is ContextNameKey parentKey)
             {
                 if (this.ContainsKey(parentKey))
                 { this[parentKey].Children.Add(value.SystemKey); }
@@ -65,7 +65,7 @@
             else { this.RootItem.Children.Add(value.SystemKey); }
 
             base.Add(value.SystemKey, value);
-            OnListChanged(ModelNameSpaceChangedType.ItemAdded, value);
+            OnListChanged(ContextNameChangedType.ItemAdded, value);
         }
 
         /// <summary>
@@ -76,26 +76,26 @@
         /// <remarks>
         /// This method is expected to catch calls to the base.Remove.
         /// </remarks>
-        public virtual Boolean Remove(IModelNameSpaceKey key)
+        public virtual Boolean Remove(IContextNameKey key)
         {
-            ModelNameSpaceKey removeKey = new ModelNameSpaceKey(key);
-            if (this.ContainsKey(removeKey) && this[removeKey] is ModelNameSpaceItem removeItem)
+            ContextNameKey removeKey = new ContextNameKey(key);
+            if (this.ContainsKey(removeKey) && this[removeKey] is ContextNameItem removeItem)
             {
-                List<ModelNameSpaceKey> children = removeItem.Children.ToList();
+                List<ContextNameKey> children = removeItem.Children.ToList();
 
-                foreach (ModelNameSpaceKey childKey in children)
+                foreach (ContextNameKey childKey in children)
                 { this.Remove(childKey); }
 
-                while (this.RootItem.Children.FirstOrDefault(w => removeKey.Equals(w)) is ModelNameSpaceKey rootChild)
+                while (this.RootItem.Children.FirstOrDefault(w => removeKey.Equals(w)) is ContextNameKey rootChild)
                 { this.RootItem.Children.Remove(rootChild); }
 
-                if (removeItem.SystemParentKey is ModelNameSpaceKey && this.ContainsKey(removeItem.SystemParentKey))
+                if (removeItem.SystemParentKey is ContextNameKey && this.ContainsKey(removeItem.SystemParentKey))
                 {
-                    while (this.RootItem.Children.FirstOrDefault(w => removeKey.Equals(w)) is ModelNameSpaceKey parentChild)
+                    while (this.RootItem.Children.FirstOrDefault(w => removeKey.Equals(w)) is ContextNameKey parentChild)
                     { this.RootItem.Children.Remove(parentChild); }
                 }
 
-                OnListChanged(ModelNameSpaceChangedType.ItemDeleted, removeItem);
+                OnListChanged(ContextNameChangedType.ItemDeleted, removeItem);
                 removeItem.ClearEvents();
 
                 return base.Remove(removeKey);
@@ -110,13 +110,13 @@
         /// <param name="parent"></param>
         /// <returns></returns>
         [Obsolete("May Not be needed")]
-        public virtual Boolean Move(IModelNameSpaceKey item, IModelNameSpaceKey? parent)
+        public virtual Boolean Move(IContextNameKey item, IContextNameKey? parent)
         { // TODO: Not Certain this is needed. May just need to manipulate the Children.
-            ModelNameSpaceKey currentKey = new ModelNameSpaceKey(item);
+            ContextNameKey currentKey = new ContextNameKey(item);
 
             if (this.ContainsKey(currentKey))
             {
-                ModelNameSpaceItem currentItem = this[currentKey];
+                ContextNameItem currentItem = this[currentKey];
 
                 if (currentItem.SystemParentKey is not null && this.ContainsKey(currentItem.SystemParentKey))
                 {
@@ -129,14 +129,14 @@
                     { RootItem.Children.Remove(currentKey); }
                 }
 
-                if(parent is IModelNameSpaceKey
-                    && new ModelNameSpaceKey(parent) is ModelNameSpaceKey parentKey
+                if(parent is IContextNameKey
+                    && new ContextNameKey(parent) is ContextNameKey parentKey
                     && this.ContainsKey(parentKey))
                 {
                     this[parentKey].Children.Add(currentKey);
                     currentItem.SystemParentKey = parentKey;
 
-                    OnListChanged(ModelNameSpaceChangedType.ItemMoved, currentItem);
+                    OnListChanged(ContextNameChangedType.ItemMoved, currentItem);
                     return true;
                 }
                 else
@@ -144,7 +144,7 @@
                     RootItem.Children.Add(currentKey);
                     currentItem.SystemParentKey = null;
 
-                    OnListChanged(ModelNameSpaceChangedType.ItemMoved, currentItem);
+                    OnListChanged(ContextNameChangedType.ItemMoved, currentItem);
                     return true;
                 }
             }
@@ -155,17 +155,17 @@
         /// <summary>
         /// Raised when add, remove, or Clear is called.
         /// </summary>
-        public event EventHandler<ModelNameSpaceChangedEventArgs>? ListChanged;
+        public event EventHandler<ContextNameChangedEventArgs>? ListChanged;
 
         /// <summary>
         /// Used to raise the ListChanged event.
         /// </summary>
         /// <param name="changedType"></param>
         /// <param name="data"></param>
-        protected virtual void OnListChanged(ModelNameSpaceChangedType changedType, IModelNameSpaceItem? data)
+        protected virtual void OnListChanged(ContextNameChangedType changedType, IContextNameItem? data)
         {
-            if (ListChanged is EventHandler<ModelNameSpaceChangedEventArgs> handler)
-            { handler(this, new ModelNameSpaceChangedEventArgs(changedType, data)); }
+            if (ListChanged is EventHandler<ContextNameChangedEventArgs> handler)
+            { handler(this, new ContextNameChangedEventArgs(changedType, data)); }
         }
 
         /// <summary>

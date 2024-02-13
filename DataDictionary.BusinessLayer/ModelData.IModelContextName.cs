@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.NameSpace;
+﻿using DataDictionary.BusinessLayer.ContextName;
 
 namespace DataDictionary.BusinessLayer
 {
@@ -6,12 +6,12 @@ namespace DataDictionary.BusinessLayer
     /// Interface component for the Model Namespace
     /// </summary>
     /// <remarks>When combined with the Extension class, this approximates multi-inheritance.</remarks>
-    public interface IModelNamespace
+    public interface IModelContextName
     {
         /// <summary>
-        /// List of available Model Alias Items from Catalogs and Libraries.
+        /// List of available Context Names (NameSpaces)
         /// </summary>
-        ModelNameSpaceDictionary ModelNamespace { get; }
+        ContextNameDictionary ContextName { get; }
     }
 
 
