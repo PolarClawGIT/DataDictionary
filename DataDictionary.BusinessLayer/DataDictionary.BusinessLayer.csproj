@@ -44,4 +44,12 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ApplicationData\NameSpace\" />
+    <Folder Include="ModelData_New\Domain\" />
+    <Folder Include="ModelData_New\SubjectArea\" />
+    <Folder Include="ModelData_New\Catalog\" />
+    <Folder Include="ModelData_New\Library\" />
+  </ItemGroup>
+
 </Project>

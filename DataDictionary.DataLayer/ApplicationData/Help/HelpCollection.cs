@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     public abstract class HelpCollection<TItem> : BindingTable<TItem>,
         IReadData, IWriteData,
         IReadData<IHelpKey>, IWriteData<IHelpKey>,
-        IValidateList<HelpItem>
+        IRemoveData<IHelpKey>
         where TItem : HelpItem, new()
     {
         /// <inheritdoc/>
@@ -81,6 +81,15 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
             { }
 
             return result;
+        }
+
+        /// <inheritdoc/>
+        public void Remove(IHelpKey helpItem)
+        {
+            HelpKey key = new HelpKey(helpItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
         }
     }
 

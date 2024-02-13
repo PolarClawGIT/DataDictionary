@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+﻿using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -45,6 +46,52 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <returns></returns>
         WorkItem CreateWork<TDbItem>(String workName, IBindingTable<DbExtendedPropertyItem> target, IBindingTable<TDbItem> source)
             where TDbItem : class, IBindingTableRow, IDbExtendedProperty;
+
+        /// <summary>
+        /// Create a WorkItem for loading a Data Object.
+        /// </summary>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <param name="workName"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        WorkItem CreateLoad<TCollection>(String workName, TCollection target)
+            where TCollection : IBindingTable, IReadData;
+
+        /// <summary>
+        /// Create a WorkItem for loading a Data Object by Key.
+        /// </summary>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="workName"></param>
+        /// <param name="target"></param>
+        /// <param name="targetKey"></param>
+        /// <returns></returns>
+        WorkItem CreateLoad<TCollection, TKey>(String workName, TCollection target, TKey targetKey)
+            where TKey : IKey
+            where TCollection : IBindingTable, IReadData<TKey>;
+
+        /// <summary>
+        /// Create a WorkItem for loading a Data Object.
+        /// </summary>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <param name="workName"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        WorkItem CreateSave<TCollection>(String workName, TCollection target)
+    where TCollection : IBindingTable, IWriteData;
+
+        /// <summary>
+        /// Create a WorkItem for loading a Data Object by Key.
+        /// </summary>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="workName"></param>
+        /// <param name="target"></param>
+        /// <param name="targetKey"></param>
+        /// <returns></returns>
+        WorkItem CreateSave<TCollection, TKey>(String workName, TCollection target, TKey targetKey)
+            where TKey : IKey
+            where TCollection : IBindingTable, IWriteData<TKey>;
 
         /// <summary>
         /// Creates the WorkItem that opens the Connection to the Database.
@@ -145,7 +192,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         public WorkItem CreateWork<TDbItem>(String workName, IBindingTable<DbExtendedPropertyItem> target, IBindingTable<TDbItem> source)
             where TDbItem : class, IBindingTableRow, IDbExtendedProperty
         {
-            Action<int, int> progress = (x,y) => { };
+            Action<int, int> progress = (x, y) => { };
 
             WorkItem result = new WorkItem()
             {
@@ -234,5 +281,92 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             { Connection.Open(); }
             else { throw new ArgumentNullException(nameof(Connection)); }
         }
+
+        /// <inheritdoc/>
+        public WorkItem CreateLoad<TCollection>(String workName, TCollection target)
+            where TCollection : IBindingTable, IReadData
+        {
+            return this.CreateWork(
+                workName: workName,
+                target: target,
+                command: target.LoadCommand);
+        }
+
+        /// <inheritdoc/>
+        public WorkItem CreateLoad<TCollection, TKey>(String workName, TCollection target, TKey targetKey)
+            where TKey : IKey
+            where TCollection : IBindingTable, IReadData<TKey>
+        {
+            return this.CreateWork(
+                workName: workName,
+                target: target,
+                command: (conn) => target.LoadCommand(conn, targetKey));
+        }
+
+        /// <inheritdoc/>
+        public WorkItem CreateSave<TCollection>(String workName, TCollection target)
+            where TCollection : IBindingTable, IWriteData
+        {
+            return this.CreateWork(
+                workName: workName,
+                command: target.SaveCommand);
+        }
+
+        /// <inheritdoc/>
+        public WorkItem CreateSave<TCollection, TKey>(String workName, TCollection target, TKey targetKey)
+            where TKey : IKey
+            where TCollection : IBindingTable, IWriteData<TKey>
+        {
+            return this.CreateWork(
+                workName: workName,
+                command: (conn) => target.SaveCommand(conn, targetKey));
+        }
+
+    }
+
+    /// <summary>
+    /// Helper Method for DatabaseWork
+    /// </summary>
+    public static class WorkItem_Extension
+    {
+        /// <summary>
+        /// Creates a List out of a Single Work Item.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> ToList(this WorkItem source)
+        { return new List<WorkItem> { source }.AsReadOnly(); }
+
+        /// <summary>
+        /// Create a WorkItem for loading a Data Object from DataSet (normally from file).
+        /// </summary>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <param name="workName"></param>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static WorkItem CreateLoad<TCollection>(this DataSet source, String workName, TCollection target)
+            where TCollection : IBindingTable
+        {
+            return new WorkItem() { WorkName = workName, DoWork = DoWork };
+
+            void DoWork()
+            {
+                if (source.Tables.Contains(target.BindingName) &&
+                    source.Tables[target.BindingName] is DataTable sourceTable)
+                { target.Load(sourceTable.CreateDataReader()); }
+            }
+        }
+
+        /// <summary>
+        /// Create a WorkItem for Clearing a Data Object (remove all).
+        /// </summary>
+        /// <typeparam name="TCollection"></typeparam>
+        /// <param name="target"></param>
+        /// <param name="workName"></param>
+        /// <returns></returns>
+        public static WorkItem CreateClear<TCollection>(this TCollection target, String workName)
+            where TCollection : IBindingTable
+        { return new WorkItem() { WorkName = workName, DoWork = () => target.Clear() }; }
     }
 }
