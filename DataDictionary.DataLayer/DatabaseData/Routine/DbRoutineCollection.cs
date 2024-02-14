@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     public abstract class DbRoutineCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKeyName>, IRemoveData<IDbRoutineKeyName>
+        IRemoveItem<IDbCatalogKey>, IRemoveItem<IDbSchemaKeyName>, IRemoveItem<IDbRoutineKeyName>
         where TItem : BindingTableRow, IDbRoutineItem, IDbCatalogKey, IDbSchemaKeyName, IDbRoutineKeyName, new()
     {
         /// <inheritdoc/>

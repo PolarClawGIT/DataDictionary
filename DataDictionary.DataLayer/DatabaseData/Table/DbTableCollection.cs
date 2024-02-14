@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     public abstract class DbTableCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKeyName>, IRemoveData<IDbTableKeyName>
+        IRemoveItem<IDbCatalogKey>, IRemoveItem<IDbSchemaKeyName>, IRemoveItem<IDbTableKeyName>
         where TItem : BindingTableRow, IDbTableItem, IDbCatalogKey, IDbSchemaKeyName, IDbTableKeyName, new()
     {
         /// <inheritdoc/>

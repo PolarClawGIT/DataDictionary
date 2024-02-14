@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     public abstract class DbExtendedPropertyCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>
+        IRemoveItem<IDbCatalogKey>
         where TItem : BindingTableRow, IDbExtendedPropertyItem, IDbCatalogKey, new()
     {
         /// <inheritdoc/>

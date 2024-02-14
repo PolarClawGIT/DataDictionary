@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.ModelData.Entity
     public abstract class ModelEntityCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IModelEntityKey>,
         IWriteData<IModelKey>, IWriteData<IModelEntityKey>,
-        IRemoveData<IModelEntityKey>
+        IRemoveItem<IModelEntityKey>
         where TItem : BindingTableRow, IModelEntityKey, new()
     {
         /// <inheritdoc/>

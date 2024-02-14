@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     public abstract class DomainEntityPropertyCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDomainEntityKey>,
         IWriteData<IModelKey>, IWriteData<IDomainEntityKey>,
-        IRemoveData<IDomainEntityKey>
+        IRemoveItem<IDomainEntityKey>
         where TItem : BindingTableRow, IDomainEntityPropertyItem, new()
     {
         /// <inheritdoc/>

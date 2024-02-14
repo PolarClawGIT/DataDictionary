@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer
     /// A data object capable of Removing Data by Key
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
-    public interface IRemoveData<TKey>
+    public interface IRemoveItem<TKey>
         where TKey : IKey
     {
         /// <summary>

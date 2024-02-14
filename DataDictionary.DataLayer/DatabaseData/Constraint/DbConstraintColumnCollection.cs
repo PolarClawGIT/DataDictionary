@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     public abstract class DbConstraintColumnCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbConstraintKeyName>
+        IRemoveItem<IDbCatalogKey>, IRemoveItem<IDbConstraintKeyName>
         where TItem : BindingTableRow, IDbConstraintColumnItem, IDbCatalogKey, IDbConstraintKeyName, new()
     {
         /// <inheritdoc/>

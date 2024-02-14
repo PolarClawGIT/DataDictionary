@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
     public abstract class DbSchemaCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKeyName>
+        IRemoveItem<IDbCatalogKey>, IRemoveItem<IDbSchemaKeyName>
         where TItem : BindingTableRow, IDbSchemaItem, IDbCatalogKey, IDbSchemaKeyName,  new()
     {
         /// <inheritdoc/>

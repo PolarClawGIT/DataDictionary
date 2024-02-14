@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     public abstract class DomainAttributeAliasCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDomainAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IDomainAttributeKey>,
-        IRemoveData<IDomainAttributeKey>
+        IRemoveItem<IDomainAttributeKey>
         where TItem : BindingTableRow, IDomainAttributeAliasItem, new()
     {
         /// <inheritdoc/>

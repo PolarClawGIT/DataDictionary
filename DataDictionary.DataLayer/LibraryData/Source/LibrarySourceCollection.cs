@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
     public class LibrarySourceCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>, IReadData<ILibrarySourceKey>, 
         IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>,
-        IRemoveData<LibrarySourceKey>, IRemoveData<LibrarySourceKeyName>
+        IRemoveItem<LibrarySourceKey>, IRemoveItem<LibrarySourceKeyName>
         where TItem : BindingTableRow, ILibrarySourceItem, ILibrarySourceKey, ILibrarySourceKeyName,  new()
     {
         /// <inheritdoc/>

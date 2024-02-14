@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
         IReadData<IModelKey>, IReadData<IModelSubjectAreaKey>,
         IWriteData<IModelKey>, IWriteData<IModelSubjectAreaKey>,
         IDeleteData<IModelKey>, IDeleteData<IModelSubjectAreaKey>,
-        IRemoveData<IModelSubjectAreaKey>
+        IRemoveItem<IModelSubjectAreaKey>
         where TItem : BindingTableRow, IModelSubjectAreaItem, new()
     {
         /// <inheritdoc/>

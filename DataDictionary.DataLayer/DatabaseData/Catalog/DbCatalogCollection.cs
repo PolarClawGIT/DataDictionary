@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     public abstract class DbCatalogCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>
+        IRemoveItem<IDbCatalogKey>
         where TItem : BindingTableRow, IDbCatalogItem, IDbCatalogKey, new()
     {
         /// <inheritdoc/>

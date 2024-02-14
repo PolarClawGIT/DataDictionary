@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     public abstract class DbDomainCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbDomainKeyName>
+        IRemoveItem<IDbCatalogKey>, IRemoveItem<IDbDomainKeyName>
         where TItem : BindingTableRow, IDbDomainItem, IDbCatalogKey, IDbDomainKeyName, new()
     {
         /// <inheritdoc/>

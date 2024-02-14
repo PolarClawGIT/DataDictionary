@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     public abstract class HelpCollection<TItem> : BindingTable<TItem>,
         IReadData, IWriteData,
         IReadData<IHelpKey>, IWriteData<IHelpKey>,
-        IRemoveData<IHelpKey>
+        IRemoveItem<IHelpKey>
         where TItem : HelpItem, new()
     {
         /// <inheritdoc/>

@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         IReadData<IModelKey>, IReadData<IDomainAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IDomainAttributeKey>,
         IDeleteData<IModelKey>, IDeleteData<IDomainAttributeKey>,
-        IRemoveData<IDomainAttributeKey>
+        IRemoveItem<IDomainAttributeKey>
         where TItem : BindingTableRow, IDomainAttributeItem, new()
     {
         /// <inheritdoc/>

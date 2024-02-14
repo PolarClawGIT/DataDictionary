@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
     public abstract class ModelAttributeCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IModelAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IModelAttributeKey>,
-        IRemoveData<IModelAttributeKey>
+        IRemoveItem<IModelAttributeKey>
         where TItem : BindingTableRow, IModelAttributeKey, new()
     {
         /// <inheritdoc/>
