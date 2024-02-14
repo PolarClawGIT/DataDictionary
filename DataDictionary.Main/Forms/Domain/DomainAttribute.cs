@@ -29,11 +29,6 @@ namespace DataDictionary.Main.Forms.Domain
         {
             InitializeComponent();
             this.Icon = Resources.Icon_Attribute;
-
-            //If the FixedPanel is set in the Designer, the SpliterDistance is recomputed.
-            propertiesSplit.FixedPanel = FixedPanel.Panel2;
-            aliasSplit.FixedPanel = FixedPanel.Panel2;
-
             newItemCommand.Click += NewItemCommand_Click;
         }
 

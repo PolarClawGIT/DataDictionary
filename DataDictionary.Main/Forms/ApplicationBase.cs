@@ -80,14 +80,35 @@ namespace DataDictionary.Main.Forms
             }
         }
 
+        /// <summary>
+        /// Constructor called when in Form Design mode
+        /// </summary>
         public ApplicationBase() : base()
         {
             InitializeComponent();
-            Program.Messenger.AddColleague(this);
-
             RowState = null;
 
-            SendMessage(new FormAddMdiChild() { ChildForm = this });
+            try
+            {// Designer might throw errors when this code is executed.
+                // TODO: This code should be skipped in design mode. 
+                // The property DesignMode does not get set until after the Load event fires.
+                // There is no known way to detect if the Form is in design mode within the constructor.
+                // This is my work-around.
+                Program.Messenger.AddColleague(this);
+                SendMessage(new FormAddMdiChild() { ChildForm = this });
+            }
+            catch (Exception ex)
+            {// Cannot do anything when the Designer throws errors.
+                // This data will likely not show up in any window.
+                // Meaning there is next to no way to debug this.
+                System.Diagnostics.Debug.WriteLine("Designer Error ignored");
+                System.Diagnostics.Debug.WriteLine(string.Format("  Exception: {0}", ex.Message));
+
+                if (ex.InnerException is Exception innerEx)
+                { System.Diagnostics.Debug.WriteLine(string.Format("  InnerException: {0}", innerEx.Message)); }
+
+                System.Diagnostics.Debug.WriteLine(string.Format("  StackTrace: {0}", ex.StackTrace));
+            }
         }
 
         #region Open Form
@@ -199,7 +220,7 @@ namespace DataDictionary.Main.Forms
             void completing(RunWorkerCompletedEventArgs result)
             {
                 if (result.Error is not null) { Program.ShowException(result.Error); }
-                if (onCompleting is not null) { onCompleting(result);  }
+                if (onCompleting is not null) { onCompleting(result); }
             }
         }
 

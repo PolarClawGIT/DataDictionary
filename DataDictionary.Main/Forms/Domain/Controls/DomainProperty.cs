@@ -1,14 +1,12 @@
 ﻿using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.DataLayer.ApplicationData.Property;
-using PropertyCollection = DataDictionary.DataLayer.ApplicationData.Property.PropertyCollection;
 
 namespace DataDictionary.Main.Forms.Domain.Controls
 {
     partial class DomainProperty : UserControl
     {
         Func<IDomainProperty?> GetCurrent = () => { return null; };
-        PropertyCollection propertyDefinitions = Program.Data.Properties;
 
         public DomainProperty()
         {
