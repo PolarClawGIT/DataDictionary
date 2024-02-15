@@ -88,10 +88,10 @@ namespace DataDictionary.Main
             {
                 DatabaseWork factory = new DatabaseWork();
                 work.Add(factory.OpenConnection());
-                work.AddRange(Program.Data.LoadApplicationData(factory));
+                work.AddRange(Program.Data.ApplicationData.Load(factory));
 
                 if (!appDataFile.Exists)
-                { work.AddRange(Program.Data.SaveApplicationData(appDataFile)); }
+                { work.AddRange(Program.Data.ApplicationData.Save(appDataFile)); }
 
                 this.DoWork(work, OnComplete);
             }
@@ -102,11 +102,11 @@ namespace DataDictionary.Main
             void FileLoad()
             {
                 if (appDataFile.Exists) // AppData already contains the Application Data File
-                { work.AddRange(Program.Data.LoadApplicationData(appDataFile)); }
+                { work.AddRange(Program.Data.ApplicationData.Load(appDataFile)); }
                 else if (appInstallFile.Exists)
                 { // AppData does not contain file but the install folder does (Copy it)
-                    work.AddRange(Program.Data.LoadApplicationData(appInstallFile));
-                    work.AddRange(Program.Data.SaveApplicationData(appDataFile));
+                    work.AddRange(Program.Data.ApplicationData.Load(appInstallFile));
+                    work.AddRange(Program.Data.ApplicationData.Save(appDataFile));
                 }
                 this.DoWork(work, OnComplete);
             }

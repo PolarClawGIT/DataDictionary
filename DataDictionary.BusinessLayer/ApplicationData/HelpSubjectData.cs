@@ -2,7 +2,6 @@
 using DataDictionary.DataLayer.ApplicationData.Help;
 using System.Collections;
 using System.Collections.ObjectModel;
-using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -11,8 +10,9 @@ namespace DataDictionary.BusinessLayer.ApplicationData
     /// <summary>
     /// Interface component for the HelpSubject data
     /// </summary>
+    /// <remarks>Used to hide the DataLayer methods from the Application Layer.</remarks>
     public interface IHelpSubjectData :
-        IBindingList<HelpItem>,
+        IBindingTable<HelpItem>,
         ILoadData, ILoadData<IHelpKey>,
         ISaveData, ISaveData<IHelpKey>
     { }
@@ -44,7 +44,7 @@ namespace DataDictionary.BusinessLayer.ApplicationData
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
-        public virtual new IReadOnlyList<WorkItem> Load(DataSet source)
+        internal virtual new IReadOnlyList<WorkItem> Load(System.Data.DataSet source)
         { return new WorkItem() { WorkName = "Load Help", DoWork = () => base.Load(source) }.ToList(); }
     }
 }

@@ -13,9 +13,10 @@ namespace DataDictionary.BusinessLayer.ApplicationData
     /// <summary>
     /// Interface component for the Property data
     /// </summary>
-    public interface IPropertyData:
-        IBindingList<PropertyItem>,
-        ISaveData,ILoadData
+    /// <remarks>Used to hide the DataLayer methods from the Application Layer.</remarks>
+    public interface IPropertyData :
+        IBindingTable<PropertyItem>,
+        ISaveData, ILoadData
     { }
 
     /// <summary>
@@ -35,7 +36,7 @@ namespace DataDictionary.BusinessLayer.ApplicationData
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
-        public virtual new IReadOnlyList<WorkItem> Load(System.Data.DataSet source)
+        internal virtual new IReadOnlyList<WorkItem> Load(System.Data.DataSet source)
         { return new WorkItem() { WorkName = "Load Properties", DoWork = () => base.Load(source) }.ToList(); }
     }
 

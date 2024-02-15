@@ -23,25 +23,22 @@ namespace DataDictionary.BusinessLayer.ApplicationData
         /// Wrapper for Application Properties.
         /// </summary>
         IPropertyData Properties { get; }
-
     }
 
     /// <summary>
     /// Implementation for Application data
     /// </summary>
-    public class ApplicationData: IApplicationData
+    public class ApplicationData: IApplicationData, ILoadData, ISaveData, ILoadFile, ISaveFile 
     {
         /// <inheritdoc/>
-        public IHelpSubjectData HelpSubjects { get; } = new HelpSubjectData();
+        public IHelpSubjectData HelpSubjects { get { return helpSubjects; } }
+        private readonly HelpSubjectData helpSubjects = new HelpSubjectData();
 
         /// <inheritdoc/>
-        public IPropertyData Properties { get; } = new PropertyData();
+        public IPropertyData Properties { get { return Properties; } }
+        private readonly PropertyData properties = new PropertyData();
 
-        /// <summary>
-        /// Loads the Application Data from the Database
-        /// </summary>
-        /// <param name="factory"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -50,11 +47,7 @@ namespace DataDictionary.BusinessLayer.ApplicationData
             return work;
         }
 
-        /// <summary>
-        /// Loads the Application Data from a File
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(FileInfo file)
         {
             List<WorkItem> workItems = new List<WorkItem>
@@ -69,17 +62,13 @@ namespace DataDictionary.BusinessLayer.ApplicationData
                 using (System.Data.DataSet workSet = new System.Data.DataSet())
                 {
                     workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
-                    HelpSubjects.Load(workSet);
-                    Properties.Load(workSet);
+                    helpSubjects.Load(workSet);
+                    properties.Load(workSet);
                 }
             }
         }
 
-        /// <summary>
-        /// Saves the Application Data to the Database
-        /// </summary>
-        /// <param name="factory"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -88,11 +77,7 @@ namespace DataDictionary.BusinessLayer.ApplicationData
             return work;
         }
 
-        /// <summary>
-        /// Saves the Application Data to a File
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Save(FileInfo file)
         {
             List<WorkItem> workItems = new List<WorkItem>();

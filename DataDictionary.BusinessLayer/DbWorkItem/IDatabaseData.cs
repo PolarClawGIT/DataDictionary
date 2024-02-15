@@ -20,13 +20,6 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="factory"></param>
         /// <returns></returns>
         IReadOnlyList<WorkItem> Load(IDatabaseWork factory);
-
-        /// <summary>
-        /// Create WorkItems that loads data from a DataSet (normally a file)
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        IReadOnlyList<WorkItem> Load(System.Data.DataSet source);
     }
 
     /// <summary>
@@ -89,17 +82,5 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         IReadOnlyList<WorkItem> Remove(TKey dataKey);
     }
 
-    /// <summary>
-    /// Interface for Create WorkItems Load/Save 
-    /// </summary>
-    public interface IDatabaseData: ILoadData, ISaveData
-    { }
 
-    /// <summary>
-    /// Interface for Create WorkItems Load/Save by Key
-    /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    public interface IDatabaseData<TKey> : IDatabaseData, ILoadData<TKey>, ISaveData<TKey>, IRemoveData<TKey>
-    where TKey : IKey
-    { }
 }
