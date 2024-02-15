@@ -2,6 +2,7 @@
 using DataDictionary.DataLayer.ApplicationData.Property;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,14 +16,14 @@ namespace DataDictionary.BusinessLayer.ApplicationData
     /// </summary>
     /// <remarks>Used to hide the DataLayer methods from the Application Layer.</remarks>
     public interface IPropertyData :
-        IBindingTable<PropertyItem>,
+        IBindingData<PropertyItem>,
         ISaveData, ILoadData
     { }
 
     /// <summary>
     /// Wrapper Class for Application Properties.
     /// </summary>
-    public class PropertyData : PropertyCollection, IPropertyData
+    class PropertyData : PropertyCollection, IPropertyData, IBindingName
     {
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
@@ -33,12 +34,5 @@ namespace DataDictionary.BusinessLayer.ApplicationData
         /// <remarks>Property</remarks>
         public virtual IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
         { return factory.CreateSave("Save Properties", this).ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>Property</remarks>
-        internal virtual new IReadOnlyList<WorkItem> Load(System.Data.DataSet source)
-        { return new WorkItem() { WorkName = "Load Properties", DoWork = () => base.Load(source) }.ToList(); }
     }
-
-
 }

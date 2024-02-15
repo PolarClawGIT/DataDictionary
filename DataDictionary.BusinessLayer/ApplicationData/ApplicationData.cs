@@ -1,6 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.DataLayer.ApplicationData.Help;
+using DataDictionary.DataLayer.ApplicationData.Property;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,15 +31,15 @@ namespace DataDictionary.BusinessLayer.ApplicationData
     /// <summary>
     /// Implementation for Application data
     /// </summary>
-    public class ApplicationData: IApplicationData, ILoadData, ISaveData, ILoadFile, ISaveFile 
+    public class ApplicationData : IApplicationData, ILoadData, ISaveData, ILoadFile, ISaveFile
     {
         /// <inheritdoc/>
-        public IHelpSubjectData HelpSubjects { get { return helpSubjects; } }
-        private readonly HelpSubjectData helpSubjects = new HelpSubjectData();
+        public IHelpSubjectData HelpSubjects { get { return helpSubjectValues; } }
+        private readonly HelpSubjectData helpSubjectValues = new HelpSubjectData();
 
         /// <inheritdoc/>
-        public IPropertyData Properties { get { return Properties; } }
-        private readonly PropertyData properties = new PropertyData();
+        public IPropertyData Properties { get { return propertyValues; } }
+        private readonly PropertyData propertyValues = new PropertyData();
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
@@ -62,8 +65,8 @@ namespace DataDictionary.BusinessLayer.ApplicationData
                 using (System.Data.DataSet workSet = new System.Data.DataSet())
                 {
                     workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
-                    helpSubjects.Load(workSet);
-                    properties.Load(workSet);
+                    helpSubjectValues.Load(workSet);
+                    propertyValues.Load(workSet);
                 }
             }
         }

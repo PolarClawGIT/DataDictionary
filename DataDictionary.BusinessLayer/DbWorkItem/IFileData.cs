@@ -32,5 +32,4 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <returns></returns>
         IReadOnlyList<WorkItem> Save(FileInfo file);
     }
-
 }

@@ -7,7 +7,18 @@ using System.Threading.Tasks;
 
 namespace Toolbox.BindingTable
 {
-    public interface IBindingList<TRow>: IBindingList, ICollection<TRow>, ICancelAddNew, IRaiseItemChangedEvents
+    public interface IBindingList<TRow> : IBindingList, ICollection<TRow>, IList<TRow>, ICancelAddNew, IRaiseItemChangedEvents
         where TRow : class, INotifyPropertyChanged
-    { }
+    {
+        /// <summary>
+        /// Gets or sets the element at the specified index.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        new TRow this[int index]
+        {
+            get { return ((IList<TRow>)this)[index]; }
+            set { ((IList<TRow>)this)[index] = value; }
+        }
+    }
 }

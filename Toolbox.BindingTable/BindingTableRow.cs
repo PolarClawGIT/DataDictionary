@@ -13,25 +13,6 @@ using System.Xml;
 
 namespace Toolbox.BindingTable
 {
-    public interface IBindingTableRow : INotifyPropertyChanged
-    {
-        String GetRowError();
-        Boolean HasRowErrors();
-        Boolean HasRowVersion(DataRowVersion version);
-        DataRowState RowState();
-        void ClearRowErrors();
-        void OnPropertyChanged(string propertyName);
-        void SetRowError(string value);
-        void SetColumnError(String columnName, String? error);
-        void AcceptChanges();
-        void RejectChanges();
-        String? GetColumnError(String columnName);
-        String[] GetColumnsInError();
-        IReadOnlyList<DataColumn> ColumnDefinitions();
-
-        event EventHandler? RowStateChanged;
-    }
-
     /// <summary>
     /// The BindingTableRow is the wrappers around the DataRow used by the BindingTable class.
     /// This wrappers job is to expose the DataRow as a POCO like class while keeping the

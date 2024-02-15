@@ -55,7 +55,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
     /// Interface for Create WorkItems that Save Data to the Database by Key
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
-    public interface ISaveData<TKey>: ISaveData, ILoadData<TKey>
+    public interface ISaveData<TKey>: ILoadData<TKey>
     where TKey : IKey
     {
         /// <summary>

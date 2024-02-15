@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer;
+﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
@@ -185,6 +186,28 @@ namespace DataDictionary.Main.Forms
         /// <param name="data"></param>
         /// <returns></returns>
         protected virtual TForm Activate<TForm>(Func<IDataItem, TForm> constructor, IDataItem data)
+            where TForm : ApplicationBase
+        {
+            Form parent = MdiParent ?? this;
+
+            if (parent.MdiChildren.FirstOrDefault(w =>
+                w is TForm targetForm &&
+                targetForm is IApplicationDataForm dataForm &&
+                dataForm.IsOpenItem(data)) is ApplicationBase existingForm)
+            {
+                existingForm.Activate();
+                return (TForm)existingForm;
+            }
+            else
+            {
+                TForm newForm = constructor(data);
+                newForm.MdiParent = parent;
+                newForm.Show();
+                return newForm;
+            }
+        }
+
+        protected virtual TForm Activate<TForm>(Func<IBindingData, TForm> constructor, IBindingData data)
             where TForm : ApplicationBase
         {
             Form parent = MdiParent ?? this;
