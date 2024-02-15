@@ -34,7 +34,7 @@ namespace Toolbox.BindingTable
         IDataReader CreateDataReader();
     }
 
-    public interface IBindingTable<T> : IBindingTable, ICollection<T>
-        where T : IBindingTableRow
+    public interface IBindingTable<T> : IBindingTable, IBindingList<T>
+        where T : class, IBindingTableRow
     { }
 }

@@ -12,6 +12,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ApplicationData\NameSpace\**" />
+    <EmbeddedResource Remove="ApplicationData\NameSpace\**" />
+    <None Remove="ApplicationData\NameSpace\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="VersionNumber.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -42,15 +48,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VersionNumber.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ApplicationData\NameSpace\" />
-    <Folder Include="ModelData_New\Domain\" />
-    <Folder Include="ModelData_New\Context\" />
-    <Folder Include="ModelData_New\SubjectArea\" />
-    <Folder Include="ModelData_New\Catalog\" />
-    <Folder Include="ModelData_New\Library\" />
   </ItemGroup>
 
 </Project>

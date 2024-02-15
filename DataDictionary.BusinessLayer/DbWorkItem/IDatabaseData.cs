@@ -9,11 +9,6 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
-    // TODO: C# interfaces do not support most inheritance keywords.
-    // Specifically the "override" keyword in a child interface or the class.
-    // The desired it to mark each of these methods as Abstract
-    // Currently, these interfaces are only used for Documentation Purposes.
-
     /// <summary>
     /// Interface for Create WorkItems that loads data from the Database
     /// </summary>
@@ -24,14 +19,14 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// </summary>
         /// <param name="factory"></param>
         /// <returns></returns>
-        abstract IReadOnlyList<WorkItem> Load(IDatabaseWork factory);
+        IReadOnlyList<WorkItem> Load(IDatabaseWork factory);
 
         /// <summary>
-        /// Create WorkItems that Load Data from a DataSet (Normally a File)
+        /// Create WorkItems that loads data from a DataSet (normally a file)
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        abstract IReadOnlyList<WorkItem> Load(System.Data.DataSet source);
+        IReadOnlyList<WorkItem> Load(System.Data.DataSet source);
     }
 
     /// <summary>
@@ -47,7 +42,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="factory"></param>
         /// <param name="dataKey"></param>
         /// <returns></returns>
-        abstract IReadOnlyList<WorkItem> Load(IDatabaseWork factory, TKey dataKey);
+        IReadOnlyList<WorkItem> Load(IDatabaseWork factory, TKey dataKey);
     }
 
     /// <summary>
@@ -60,7 +55,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// </summary>
         /// <param name="factory"></param>
         /// <returns></returns>
-        abstract IReadOnlyList<WorkItem> Save(IDatabaseWork factory);
+        IReadOnlyList<WorkItem> Save(IDatabaseWork factory);
     }
 
     /// <summary>
@@ -76,7 +71,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="factory"></param>
         /// <param name="dataKey"></param>
         /// <returns></returns>
-        abstract IReadOnlyList<WorkItem> Save(IDatabaseWork factory, TKey dataKey);
+        IReadOnlyList<WorkItem> Save(IDatabaseWork factory, TKey dataKey);
     }
 
     /// <summary>
@@ -91,7 +86,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// </summary>
         /// <param name="dataKey"></param>
         /// <returns></returns>
-        abstract IReadOnlyList<WorkItem> Remove(TKey dataKey);
+        IReadOnlyList<WorkItem> Remove(TKey dataKey);
     }
 
     /// <summary>

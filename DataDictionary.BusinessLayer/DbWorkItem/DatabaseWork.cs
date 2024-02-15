@@ -78,7 +78,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="target"></param>
         /// <returns></returns>
         WorkItem CreateSave<TCollection>(String workName, TCollection target)
-    where TCollection : IBindingTable, IWriteData;
+            where TCollection : IBindingTable, IWriteData;
 
         /// <summary>
         /// Create a WorkItem for loading a Data Object by Key.
@@ -336,27 +336,6 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <returns></returns>
         public static IReadOnlyList<WorkItem> ToList(this WorkItem source)
         { return new List<WorkItem> { source }.AsReadOnly(); }
-
-        /// <summary>
-        /// Create a WorkItem for loading a Data Object from DataSet (normally from file).
-        /// </summary>
-        /// <typeparam name="TCollection"></typeparam>
-        /// <param name="workName"></param>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public static WorkItem CreateLoad<TCollection>(this DataSet source, String workName, TCollection target)
-            where TCollection : IBindingTable
-        {
-            return new WorkItem() { WorkName = workName, DoWork = DoWork };
-
-            void DoWork()
-            {
-                if (source.Tables.Contains(target.BindingName) &&
-                    source.Tables[target.BindingName] is DataTable sourceTable)
-                { target.Load(sourceTable.CreateDataReader()); }
-            }
-        }
 
         /// <summary>
         /// Create a WorkItem for Clearing a Data Object (remove all).
