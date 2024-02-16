@@ -18,27 +18,27 @@ namespace DataDictionary.BusinessLayer.ApplicationData
     /// <summary>
     /// Wrapper Class for Application Help.
     /// </summary>
-    class HelpSubjectData : HelpCollection, IHelpSubjectData, IBindingName
+    class HelpSubjectData : HelpCollection, IHelpSubjectData
     {
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
         public virtual IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
-        { return factory.CreateLoad("Load Help", this).ToList(); }
+        { return factory.CreateLoad(this).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
         public virtual IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IHelpKey helpKey)
-        { return factory.CreateLoad("Load Help", this, helpKey).ToList(); }
+        { return factory.CreateLoad(this, helpKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
         public virtual IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
-        { return factory.CreateSave("Save Help", this).ToList(); }
+        { return factory.CreateSave(this).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
         public virtual IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IHelpKey helpKey)
-        { return factory.CreateSave("Save Help", this, helpKey).ToList(); }
+        { return factory.CreateSave(this, helpKey).ToList(); }
 
 
     }

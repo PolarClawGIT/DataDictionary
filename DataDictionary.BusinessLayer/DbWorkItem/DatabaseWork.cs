@@ -51,10 +51,9 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// Create a WorkItem for loading a Data Object.
         /// </summary>
         /// <typeparam name="TCollection"></typeparam>
-        /// <param name="workName"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        WorkItem CreateLoad<TCollection>(String workName, TCollection target)
+        WorkItem CreateLoad<TCollection>(TCollection target)
             where TCollection : IBindingTable, IReadData;
 
         /// <summary>
@@ -62,11 +61,10 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// </summary>
         /// <typeparam name="TCollection"></typeparam>
         /// <typeparam name="TKey"></typeparam>
-        /// <param name="workName"></param>
         /// <param name="target"></param>
         /// <param name="targetKey"></param>
         /// <returns></returns>
-        WorkItem CreateLoad<TCollection, TKey>(String workName, TCollection target, TKey targetKey)
+        WorkItem CreateLoad<TCollection, TKey>(TCollection target, TKey targetKey)
             where TKey : IKey
             where TCollection : IBindingTable, IReadData<TKey>;
 
@@ -74,10 +72,9 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// Create a WorkItem for loading a Data Object.
         /// </summary>
         /// <typeparam name="TCollection"></typeparam>
-        /// <param name="workName"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        WorkItem CreateSave<TCollection>(String workName, TCollection target)
+        WorkItem CreateSave<TCollection>(TCollection target)
             where TCollection : IBindingTable, IWriteData;
 
         /// <summary>
@@ -89,7 +86,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="target"></param>
         /// <param name="targetKey"></param>
         /// <returns></returns>
-        WorkItem CreateSave<TCollection, TKey>(String workName, TCollection target, TKey targetKey)
+        WorkItem CreateSave<TCollection, TKey>(TCollection target, TKey targetKey)
             where TKey : IKey
             where TCollection : IBindingTable, IWriteData<TKey>;
 
@@ -283,42 +280,42 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         }
 
         /// <inheritdoc/>
-        public WorkItem CreateLoad<TCollection>(String workName, TCollection target)
+        public WorkItem CreateLoad<TCollection>(TCollection target)
             where TCollection : IBindingTable, IReadData
         {
             return this.CreateWork(
-                workName: workName,
+                workName: String.Format("Load {0}",target.BindingName),
                 target: target,
                 command: target.LoadCommand);
         }
 
         /// <inheritdoc/>
-        public WorkItem CreateLoad<TCollection, TKey>(String workName, TCollection target, TKey targetKey)
+        public WorkItem CreateLoad<TCollection, TKey>(TCollection target, TKey targetKey)
             where TKey : IKey
             where TCollection : IBindingTable, IReadData<TKey>
         {
             return this.CreateWork(
-                workName: workName,
+                workName: String.Format("Load {0}", target.BindingName),
                 target: target,
                 command: (conn) => target.LoadCommand(conn, targetKey));
         }
 
         /// <inheritdoc/>
-        public WorkItem CreateSave<TCollection>(String workName, TCollection target)
+        public WorkItem CreateSave<TCollection>(TCollection target)
             where TCollection : IBindingTable, IWriteData
         {
             return this.CreateWork(
-                workName: workName,
+                workName: String.Format("Save {0}", target.BindingName),
                 command: target.SaveCommand);
         }
 
         /// <inheritdoc/>
-        public WorkItem CreateSave<TCollection, TKey>(String workName, TCollection target, TKey targetKey)
+        public WorkItem CreateSave<TCollection, TKey>(TCollection target, TKey targetKey)
             where TKey : IKey
             where TCollection : IBindingTable, IWriteData<TKey>
         {
             return this.CreateWork(
-                workName: workName,
+                workName: String.Format("Load {0}", target.BindingName),
                 command: (conn) => target.SaveCommand(conn, targetKey));
         }
 

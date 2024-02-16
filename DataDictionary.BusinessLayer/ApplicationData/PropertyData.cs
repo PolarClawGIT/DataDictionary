@@ -23,16 +23,16 @@ namespace DataDictionary.BusinessLayer.ApplicationData
     /// <summary>
     /// Wrapper Class for Application Properties.
     /// </summary>
-    class PropertyData : PropertyCollection, IPropertyData, IBindingName
+    class PropertyData : PropertyCollection, IPropertyData
     {
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
         public virtual IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
-        { return factory.CreateLoad("Load Properties", this).ToList(); }
+        { return factory.CreateLoad(this).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
         public virtual IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
-        { return factory.CreateSave("Save Properties", this).ToList(); }
+        { return factory.CreateSave(this).ToList(); }
     }
 }
