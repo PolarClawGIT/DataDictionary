@@ -62,7 +62,7 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
         }
 
         /// <inheritdoc/>
-        public void Remove(IModelAttributeKey modelAttributeItem)
+        public virtual void Remove(IModelAttributeKey modelAttributeItem)
         {
             ModelAttributeKey key = new ModelAttributeKey(modelAttributeItem);
 

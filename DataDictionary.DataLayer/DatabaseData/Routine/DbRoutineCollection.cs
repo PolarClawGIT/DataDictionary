@@ -77,7 +77,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbCatalogKey catalogItem)
+        public virtual void Remove(IDbCatalogKey catalogItem)
         {
             DbCatalogKey key = new DbCatalogKey(catalogItem);
 
@@ -86,7 +86,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbSchemaKeyName schemaItem)
+        public virtual void Remove(IDbSchemaKeyName schemaItem)
         {
             DbSchemaKeyName key = new DbSchemaKeyName(schemaItem);
 
@@ -95,7 +95,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbRoutineKeyName routineItem)
+        public virtual void Remove(IDbRoutineKeyName routineItem)
         {
             DbRoutineKeyName key = new DbRoutineKeyName(routineItem);
 

@@ -77,7 +77,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbCatalogKey catalogItem)
+        public virtual void Remove(IDbCatalogKey catalogItem)
         {
             DbCatalogKey key = new DbCatalogKey(catalogItem);
 
@@ -86,7 +86,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbDomainKeyName domainItem)
+        public virtual void Remove(IDbDomainKeyName domainItem)
         {
             DbDomainKeyName key = new DbDomainKeyName(domainItem);
 

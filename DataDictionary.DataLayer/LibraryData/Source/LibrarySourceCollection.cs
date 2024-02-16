@@ -66,7 +66,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
         }
 
         /// <inheritdoc/>
-        public void Remove(LibrarySourceKey libraryItem)
+        public virtual void Remove(LibrarySourceKey libraryItem)
         {
             LibrarySourceKey key = new LibrarySourceKey(libraryItem);
 
@@ -75,7 +75,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
         }
 
         /// <inheritdoc/>
-        public void Remove(LibrarySourceKeyName libraryItem)
+        public virtual void Remove(LibrarySourceKeyName libraryItem)
         {
             LibrarySourceKeyName key = new LibrarySourceKeyName(libraryItem);
 

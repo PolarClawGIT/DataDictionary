@@ -62,7 +62,7 @@ namespace DataDictionary.DataLayer.ModelData.Entity
         }
 
         /// <inheritdoc/>
-        public void Remove(IModelEntityKey modelEntityItem)
+        public virtual void Remove(IModelEntityKey modelEntityItem)
         {
             ModelEntityKey key = new ModelEntityKey(modelEntityItem);
 

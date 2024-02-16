@@ -63,7 +63,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbCatalogKey catalogItem)
+        public virtual void Remove(IDbCatalogKey catalogItem)
         {
             DbCatalogKey key = new DbCatalogKey(catalogItem);
 

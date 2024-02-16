@@ -62,7 +62,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         }
 
         /// <inheritdoc/>
-        public void Remove(IDomainAttributeKey attributeItem)
+        public virtual void Remove(IDomainAttributeKey attributeItem)
         {
             DomainAttributeKey key = new DomainAttributeKey(attributeItem);
 

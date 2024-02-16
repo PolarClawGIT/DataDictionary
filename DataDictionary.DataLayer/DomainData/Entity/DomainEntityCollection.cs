@@ -81,7 +81,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         }
 
         /// <inheritdoc/>
-        public void Remove(IDomainEntityKey entityItem)
+        public virtual void Remove(IDomainEntityKey entityItem)
         {
             DomainEntityKey key = new DomainEntityKey(entityItem);
 

@@ -84,7 +84,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
         }
 
         /// <inheritdoc/>
-        public void Remove(IHelpKey helpItem)
+        public virtual void Remove(IHelpKey helpItem)
         {
             HelpKey key = new HelpKey(helpItem);
 

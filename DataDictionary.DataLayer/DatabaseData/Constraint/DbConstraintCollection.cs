@@ -78,7 +78,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbCatalogKey catalogItem)
+        public virtual void Remove(IDbCatalogKey catalogItem)
         {
             DbCatalogKey key = new DbCatalogKey(catalogItem);
 
@@ -87,7 +87,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbConstraintKeyName constraintItem)
+        public virtual void Remove(IDbConstraintKeyName constraintItem)
         {
             DbConstraintKeyName key = new DbConstraintKeyName(constraintItem);
 

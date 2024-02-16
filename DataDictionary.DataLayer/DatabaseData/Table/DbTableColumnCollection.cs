@@ -78,7 +78,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbCatalogKey catalogItem)
+        public virtual void Remove(IDbCatalogKey catalogItem)
         {
             DbCatalogKey key = new DbCatalogKey(catalogItem);
 
@@ -87,7 +87,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbSchemaKeyName schemaItem)
+        public virtual void Remove(IDbSchemaKeyName schemaItem)
         {
             DbSchemaKeyName key = new DbSchemaKeyName(schemaItem);
 
@@ -96,7 +96,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbTableKeyName tableItem)
+        public virtual void Remove(IDbTableKeyName tableItem)
         {
             DbTableKeyName key = new DbTableKeyName(tableItem);
 
@@ -105,7 +105,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbTableColumnKeyName columnItem)
+        public virtual void Remove(IDbTableColumnKeyName columnItem)
         {
             DbTableColumnKeyName key = new DbTableColumnKeyName(columnItem);
 

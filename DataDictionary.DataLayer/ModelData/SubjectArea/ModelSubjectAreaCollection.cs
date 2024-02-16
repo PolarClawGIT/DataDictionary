@@ -83,7 +83,7 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
         }
 
         /// <inheritdoc/>
-        public void Remove(IModelSubjectAreaKey subjectAreaItem)
+        public virtual void Remove(IModelSubjectAreaKey subjectAreaItem)
         {
             ModelSubjectAreaKey key = new ModelSubjectAreaKey(subjectAreaItem);
 
