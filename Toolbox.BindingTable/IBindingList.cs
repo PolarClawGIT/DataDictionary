@@ -15,10 +15,15 @@ namespace Toolbox.BindingTable
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
+        /// <remakes>Resolves ambiguity between IList, ICollection and IBindingList</remakes>
         new TRow this[int index]
         {
             get { return ((IList<TRow>)this)[index]; }
             set { ((IList<TRow>)this)[index] = value; }
         }
+
+        /// <inheritdoc cref="ICollection{T}.Count"/>
+        /// <remakes>Resolves ambiguity between IList, ICollection and IBindingList</remakes>
+        new Int32 Count { get { return ((ICollection<TRow>)this).Count; } }
     }
 }
