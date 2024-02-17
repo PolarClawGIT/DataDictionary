@@ -82,7 +82,6 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// </summary>
         /// <typeparam name="TCollection"></typeparam>
         /// <typeparam name="TKey"></typeparam>
-        /// <param name="workName"></param>
         /// <param name="target"></param>
         /// <param name="targetKey"></param>
         /// <returns></returns>
