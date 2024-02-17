@@ -62,14 +62,14 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(LibrarySourceKey libraryKey)
+        public virtual void Remove(ILibrarySourceKey libraryKey)
         {
             foreach (TItem item in this.Where(w => libraryKey.Equals(w)).ToList())
             { base.Remove(item); }
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(LibrarySourceKeyName libraryKey)
+        public virtual void Remove(ILibrarySourceKeyName libraryKey)
         {
             foreach (TItem item in this.Where(w => libraryKey.Equals(w)).ToList())
             { base.Remove(item); }
