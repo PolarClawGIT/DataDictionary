@@ -27,7 +27,7 @@ namespace DataDictionary.BusinessLayer
             DomainAttributeUniqueKey attributeKeyUnique = new DomainAttributeUniqueKey(columnKey);
             AliasKeyName aliasKey = new AliasKeyName(columnKey);
 
-            if (this.DbTableColumns.FirstOrDefault(w => key.Equals(w)) is DbTableColumnItem columnItem
+            if (this.DbCatalogs.DbTableColumns.FirstOrDefault(w => key.Equals(w)) is DbTableColumnItem columnItem
                 && this.DbCatalogs.FirstOrDefault(w => new DbCatalogKey(columnItem).Equals(w)) is DbCatalogItem catalogItem
                 )
             {
@@ -59,7 +59,7 @@ namespace DataDictionary.BusinessLayer
                     this.DomainAttributeAliases.Add(aliasItem);
                 }
 
-                foreach (DbExtendedPropertyItem propertyItem in this.GetExtendedProperty(columnItem))
+                foreach (DbExtendedPropertyItem propertyItem in DbCatalogs.DbExtendedProperties.GetExtendedProperty(columnItem))
                 {
                     PropertyKeyExtended propertyByName = new PropertyKeyExtended(propertyItem);
 
@@ -115,7 +115,7 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
 
             DbTableKeyName key = new DbTableKeyName(tableKey);
-            foreach (DbTableColumnItem item in this.DbTableColumns.Where(w => key.Equals(w)))
+            foreach (DbTableColumnItem item in DbCatalogs.DbTableColumns.Where(w => key.Equals(w)))
             { work.AddRange(ImportAttribute(item)); }
 
             return work;
@@ -130,7 +130,7 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
 
             DbSchemaKeyName key = new DbSchemaKeyName(schemaKey);
-            foreach (DbTableItem item in this.DbTables.Where(w => key.Equals(w) && w.IsSystem == false))
+            foreach (DbTableItem item in DbCatalogs.DbTables.Where(w => key.Equals(w) && w.IsSystem == false))
             { work.AddRange(ImportAttribute(item)); }
 
             return work;
@@ -145,7 +145,7 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
             DbCatalogKeyName key = new DbCatalogKeyName(catalogKey);
 
-            foreach (DbSchemaItem item in this.DbSchemta.Where(w => key.Equals(w) && w.IsSystem == false))
+            foreach (DbSchemaItem item in DbCatalogs.DbSchemta.Where(w => key.Equals(w) && w.IsSystem == false))
             { work.AddRange(ImportAttribute(item)); }
 
             return work;
@@ -157,7 +157,7 @@ namespace DataDictionary.BusinessLayer
             DomainEntityUniqueKey entityKeyUnique = new DomainEntityUniqueKey(tableKey);
             AliasKeyName aliasKey = new AliasKeyName(tableKey);
 
-            if (this.DbTables.FirstOrDefault(w => key.Equals(w)) is DbTableItem tableItem
+            if (DbCatalogs.DbTables.FirstOrDefault(w => key.Equals(w)) is DbTableItem tableItem
                 && this.DbCatalogs.FirstOrDefault(w => new DbCatalogKey(tableItem).Equals(w)) is DbCatalogItem catalogItem)
             {
                 DomainEntityItem? entityItem = this.DomainEntities.FirstOrDefault(w => entityKeyUnique.Equals(w));
@@ -188,7 +188,7 @@ namespace DataDictionary.BusinessLayer
                     this.DomainEntityAliases.Add(aliasItem);
                 }
 
-                foreach (DbExtendedPropertyItem propertyItem in this.GetExtendedProperty(tableItem))
+                foreach (DbExtendedPropertyItem propertyItem in DbCatalogs.DbExtendedProperties.GetExtendedProperty(tableItem))
                 {
                     PropertyKeyExtended propertyByName = new PropertyKeyExtended(propertyItem);
 
@@ -238,7 +238,7 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
 
             DbSchemaKeyName key = new DbSchemaKeyName(schemaKey);
-            foreach (DbTableItem item in this.DbTables.Where(w => key.Equals(w) && w.IsSystem == false))
+            foreach (DbTableItem item in DbCatalogs.DbTables.Where(w => key.Equals(w) && w.IsSystem == false))
             { work.AddRange(ImportEntity(item)); }
 
             return work;
@@ -253,7 +253,7 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
             DbCatalogKeyName key = new DbCatalogKeyName(catalogKey);
 
-            foreach (DbSchemaItem item in this.DbSchemta.Where(w => key.Equals(w) && w.IsSystem == false))
+            foreach (DbSchemaItem item in DbCatalogs.DbSchemta.Where(w => key.Equals(w) && w.IsSystem == false))
             { work.AddRange(ImportEntity(item)); }
 
             return work;

@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.ContextName;
+﻿using DataDictionary.BusinessLayer.CatalogData;
+using DataDictionary.BusinessLayer.ContextName;
 using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
@@ -112,7 +113,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="key"></param>
         /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadContextName<T>(this T data, IDbCatalogKey key)
-            where T : IModelCatalog, IModelContextName
+            where T : ICatalogData, IModelContextName
         {
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -133,7 +134,7 @@ namespace DataDictionary.BusinessLayer
         }
 
         private static void LoadContextNameCore<T>(T data, IDbCatalogKey key, Action<Int32, Int32> progress)
-            where T : IModelCatalog, IModelContextName
+            where T : ICatalogData, IModelContextName
         {
             DbCatalogKey catalogKey = new DbCatalogKey(key);
             List<DbCatalogItem> catalogs = data.DbCatalogs.Where(w => catalogKey.Equals(w) && w.IsSystem == false).ToList();

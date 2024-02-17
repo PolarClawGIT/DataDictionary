@@ -41,10 +41,10 @@
         /// This method is expected to catch calls to the base.Add.
         /// </remarks>
         public void Add(IContextNameKey key, IContextNameItem value)
-        { throw new InvalidOperationException("Do not use Base Add Method."); }
+        { throw new InvalidOperationException("Do not use. Use Add by ContextNameItem."); }
 
         /// <summary>
-        /// Adds a ModelNameSpaceItem to the collection.
+        /// Adds an item to the collection.
         /// </summary>
         /// <param name="value"></param>
         public virtual void Add(ContextNameItem value)

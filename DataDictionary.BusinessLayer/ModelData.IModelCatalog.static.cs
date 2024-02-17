@@ -16,6 +16,7 @@ namespace DataDictionary.BusinessLayer
     /// Implementation of the Model Catalog
     /// </summary>
     /// <remarks>When combined with the Interface class, this approximates multi-inheritance.</remarks>
+    [Obsolete()]
     public static class ModelCatalog
     {
         /// <summary>
