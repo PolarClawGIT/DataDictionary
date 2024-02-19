@@ -15,7 +15,8 @@ namespace DataDictionary.BusinessLayer.ApplicationData
     /// <summary>
     /// Interface representing Application data
     /// </summary>
-    public interface IApplicationData
+    public interface IApplicationData:
+        ILoadData, ISaveData, ILoadFile, ISaveFile
     {
         /// <summary>
         /// Wrapper for Application Help.

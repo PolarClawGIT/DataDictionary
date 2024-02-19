@@ -234,6 +234,7 @@ namespace DataDictionary.BusinessLayer
     /// <summary>
     /// Extension Method for the Model Data.
     /// </summary>
+    [Obsolete("To be replaced with BusinessLayerData")]
     public static class ModelDataExtension
     {
         /// <summary>

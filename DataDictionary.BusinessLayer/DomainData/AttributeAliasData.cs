@@ -1,12 +1,6 @@
-﻿using DataDictionary.BusinessLayer.CatalogData;
-using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.DomainData

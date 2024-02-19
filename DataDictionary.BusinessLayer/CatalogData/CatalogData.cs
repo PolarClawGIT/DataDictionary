@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.ContextName;
+﻿using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
@@ -72,7 +72,7 @@ namespace DataDictionary.BusinessLayer.CatalogData
     /// <summary>
     /// Implementation for Catalog data
     /// </summary>
-    class CatalogData :ICatalogData, IContextNameData
+    class CatalogData :ICatalogData, INameScopeData
     {
         /// <inheritdoc/>
         public IDatabaseData DbCatalogs { get { return catalogs; } }
@@ -248,10 +248,10 @@ namespace DataDictionary.BusinessLayer.CatalogData
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<ContextNameItem> GetContextNames (Action<Int32, Int32> progress)
+        public IReadOnlyList<NameScopeItem> GetContextNames (Action<Int32, Int32> progress)
         {
             // This improve performance by reducing the number of calls
-            List<ContextNameItem> result = new List<ContextNameItem>();
+            List<NameScopeItem> result = new List<NameScopeItem>();
             List<DbCatalogItem> catalogs = DbCatalogs.Where(w => w.IsSystem == false).ToList();
             List<DbSchemaItem> schemta = DbSchemta.Where(w => w.IsSystem == false).ToList();
             List<DbTableItem> tables = DbTables.Where(w => w.IsSystem == false).ToList();
@@ -275,32 +275,32 @@ namespace DataDictionary.BusinessLayer.CatalogData
             {
                 DbCatalogKey catalogKey = new DbCatalogKey(catalogItem);
                 DbCatalogKeyName catalogName = new DbCatalogKeyName(catalogItem);
-                result.Add(new ContextNameItem(catalogItem));
+                result.Add(new NameScopeItem(catalogItem));
                 progress(completedWork++, totalWork);
 
                 foreach (DbSchemaItem schemaItem in schemta.Where(w => catalogName.Equals(w)).ToList())
                 {
                     DbSchemaKey schemaKey = new DbSchemaKey(schemaItem);
                     DbSchemaKeyName schemaName = new DbSchemaKeyName(schemaItem);
-                    result.Add(new ContextNameItem(catalogKey, schemaItem));
+                    result.Add(new NameScopeItem(catalogKey, schemaItem));
                     progress(completedWork++, totalWork);
 
                     foreach (DbTableItem tableItem in tables.Where(w => schemaName.Equals(w)).ToList())
                     {
                         DbTableKey tableKey = new DbTableKey(tableItem);
                         DbTableKeyName tableName = new DbTableKeyName(tableItem);
-                        result.Add(new ContextNameItem(schemaKey, tableItem));
+                        result.Add(new NameScopeItem(schemaKey, tableItem));
                         progress(completedWork++, totalWork);
 
                         foreach (DbTableColumnItem columnItem in tableColumns.Where(w => tableName.Equals(w)).ToList())
                         {
-                            result.Add(new ContextNameItem(tableKey, columnItem));
+                            result.Add(new NameScopeItem(tableKey, columnItem));
                             progress(completedWork++, totalWork);
                         }
 
                         foreach (DbConstraintItem constraintItem in constraints.Where(w => tableName.Equals(w)).ToList())
                         {
-                            result.Add(new ContextNameItem(tableKey, constraintItem));
+                            result.Add(new NameScopeItem(tableKey, constraintItem));
                             progress(completedWork++, totalWork);
                         }
                     }
@@ -309,19 +309,19 @@ namespace DataDictionary.BusinessLayer.CatalogData
                     {
                         DbRoutineKey routineKey = new DbRoutineKey(routineItem);
                         DbRoutineKeyName routineName = new DbRoutineKeyName(routineItem);
-                        result.Add(new ContextNameItem(schemaKey, routineItem));
+                        result.Add(new NameScopeItem(schemaKey, routineItem));
                         progress(completedWork++, totalWork);
 
                         foreach (DbRoutineParameterItem parameterItem in routineParameters.Where(w => routineName.Equals(w)).ToList())
                         {
-                            result.Add(new ContextNameItem(routineKey, parameterItem));
+                            result.Add(new NameScopeItem(routineKey, parameterItem));
                             progress(completedWork++, totalWork);
                         }
                     }
 
                     foreach (DbDomainItem domainItem in domains.Where(w => schemaName.Equals(w)).ToList())
                     {
-                        result.Add(new ContextNameItem(schemaKey, domainItem));
+                        result.Add(new NameScopeItem(schemaKey, domainItem));
                         progress(completedWork++, totalWork);
                     }
                 }

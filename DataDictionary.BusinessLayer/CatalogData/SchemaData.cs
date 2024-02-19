@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.ContextName;
+﻿using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Schema;

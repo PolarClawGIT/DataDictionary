@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.ContextName;
+﻿using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
@@ -31,7 +31,7 @@ namespace DataDictionary.BusinessLayer.LibraryData
 
     }
 
-    class LibraryData : ILibraryData, IContextNameData
+    class LibraryData : ILibraryData, INameScopeData
     {
         /// <inheritdoc/>
         public ILibraryMemberData LibraryMembers { get { return members; } }
@@ -99,9 +99,9 @@ namespace DataDictionary.BusinessLayer.LibraryData
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<ContextNameItem> GetContextNames(Action<Int32, Int32> progress) 
+        public IReadOnlyList<NameScopeItem> GetContextNames(Action<Int32, Int32> progress) 
         {
-            List<ContextNameItem> result = new List<ContextNameItem>();
+            List<NameScopeItem> result = new List<NameScopeItem>();
             List<LibrarySourceItem> libraries = LibrarySources.ToList();
             List<LibraryMemberItem> members = LibraryMembers.ToList();
 
@@ -111,14 +111,14 @@ namespace DataDictionary.BusinessLayer.LibraryData
             foreach (LibrarySourceItem libraryitem in libraries)
             {
                 LibrarySourceKey libraryKey = new LibrarySourceKey(libraryitem);
-                result.Add(new ContextNameItem(libraryitem));
+                result.Add(new NameScopeItem(libraryitem));
                 progress(completedWork++, totalWork);
 
                 foreach (LibraryMemberItem memberItem in members.
                     Where(w => w.MemberParentId is null))
                 {
                     LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
-                    result.Add(new ContextNameItem(libraryKey, memberItem));
+                    result.Add(new NameScopeItem(libraryKey, memberItem));
                     progress(completedWork++, totalWork);
 
                     AddChildMember(libraryKey, memberKey);
@@ -129,7 +129,7 @@ namespace DataDictionary.BusinessLayer.LibraryData
                     foreach (LibraryMemberItem memberItem in members.Where(w => new LibraryMemberKeyParent(w).Equals(memberKey)))
                     {
                         LibraryMemberKey childKey = new LibraryMemberKey(memberItem);
-                        result.Add(new ContextNameItem(memberKey, memberItem));
+                        result.Add(new NameScopeItem(memberKey, memberItem));
                         progress(completedWork++, totalWork);
 
                         AddChildMember(sourceKey, childKey);

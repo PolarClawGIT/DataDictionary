@@ -7,14 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer
 {
-	partial class BusinessLayerData : IApplicationData
+    partial class BusinessLayerData
 	{
-		/// <inheritdoc/>
-		public IHelpSubjectData HelpSubjects { get { return ApplicationData.HelpSubjects; } }
-
-		/// <inheritdoc/>
-		public IPropertyData Properties { get { return ApplicationData.Properties; } }
-
 		/// <summary>
 		/// Wrapper for Application Data
 		/// </summary>
