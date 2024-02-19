@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer
 {
-    partial class ModelData
+    partial class BusinessLayerData
     {
+        /// <summary>
+        /// Wrapper for the Domain Data (Entity, Attribute, Process ...)
+        /// </summary>
         public IDomainData DomainData { get; } = new DomainData.DomainData();
     }
 }

@@ -24,6 +24,11 @@ namespace DataDictionary.BusinessLayer.DomainData
         /// List of Domain Entities within the Model.
         /// </summary>
         IEntityData DomainEntities { get; }
+
+        /// <summary>
+        /// List of Domain Models. (expected, 0 or 1 item)
+        /// </summary>
+        IModelData DomainModel { get; }
     }
 
     class DomainData: IDomainData
@@ -36,10 +41,15 @@ namespace DataDictionary.BusinessLayer.DomainData
         public IEntityData DomainEntities { get { return entites; } }
         private readonly EntityData entites;
 
+        /// <inheritdoc/>
+        public IModelData DomainModel { get { return models; } }
+        private readonly ModelData models;
+
         public DomainData() : base ()
         {
             attributes = new AttributeData();
             entites = new EntityData();
+            models = new ModelData();
         }
 
         /// <inheritdoc/>
@@ -47,6 +57,7 @@ namespace DataDictionary.BusinessLayer.DomainData
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(models.Load(factory, dataKey));
             work.AddRange(attributes.Load(factory, dataKey));
             work.AddRange(entites.Load(factory, dataKey));
 
@@ -58,6 +69,7 @@ namespace DataDictionary.BusinessLayer.DomainData
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(models.Save(factory, dataKey));
             work.AddRange(attributes.Save(factory, dataKey));
             work.AddRange(entites.Save(factory, dataKey));
 

@@ -64,8 +64,6 @@ namespace DataDictionary.BusinessLayer.CatalogData
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
-        internal required ICatalogData Catalog { get; init; }
-
         /// <inheritdoc/>
         /// <remarks>ExtendedProperty</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)

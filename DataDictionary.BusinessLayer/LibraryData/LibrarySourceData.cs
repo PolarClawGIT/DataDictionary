@@ -13,83 +13,34 @@ namespace DataDictionary.BusinessLayer.LibraryData
     /// <summary>
     /// Interface representing Library data
     /// </summary>
-    public interface ILibrarySourceData :
-        IBindingData<LibrarySourceItem>,
-        ILoadData<ILibrarySourceKey>, ILoadData<IModelKey>,
-        ISaveData<ILibrarySourceKey>, ISaveData<IModelKey>
-    {
-        /// <summary>
-        /// List of Domain Properties for the Entities within the Model.
-        /// </summary>
-        ILibraryMemberData LibraryMembers { get; }
-    }
+    public interface ILibrarySourceData : IBindingData<LibrarySourceItem>
+    { }
 
     /// <summary>
     /// Implementation for Library data
     /// </summary>
-    public class LibrarySourceData: LibrarySourceCollection, ILibrarySourceData
+    public class LibrarySourceData: LibrarySourceCollection, ILibrarySourceData,
+        ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>,
+        ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <inheritdoc/>
-        public ILibraryMemberData LibraryMembers { get { return members; } }
-        private readonly LibraryMemberData members;
-
-        /// <summary>
-        /// Constructor for LibrarySourceData
-        /// </summary>
-        public LibrarySourceData() : base ()
-        {
-            members = new LibraryMemberData();
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
+        /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceKey dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateLoad(this, dataKey));
-            work.AddRange(members.Load(factory, dataKey));
-
-            return work;
-        }
+        { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
+        /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateLoad(this, dataKey));
-            work.AddRange(members.Load(factory, dataKey));
-
-            return work;
-        }
+        { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
+        /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceKey dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateSave(this, dataKey));
-            work.AddRange(members.Save(factory, dataKey));
-
-            return work;
-        }
+        { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
+        /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(factory.CreateSave(this, dataKey).ToList());
-            work.AddRange(members.Save(factory, dataKey));
-
-            return work;
-        }
-
-        /// <inheritdoc />
-        public override void Remove(ILibrarySourceKey sourceItem)
-        {
-            base.Remove(sourceItem);
-            members.Remove(sourceItem);
-        }
+        { return factory.CreateSave(this, dataKey).ToList(); }
     }
 }

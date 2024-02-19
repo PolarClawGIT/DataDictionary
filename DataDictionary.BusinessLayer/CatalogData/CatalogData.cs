@@ -14,15 +14,14 @@ namespace DataDictionary.BusinessLayer.CatalogData
     /// <summary>
     /// Interface representing Catalog data
     /// </summary>
-    public interface ICatalogData :
-        IBindingData<DbCatalogItem>,
-        ILoadData<IDbCatalogKey>, ILoadData<IModelKey>,
-        ISaveData<IDbCatalogKey>, ISaveData<IModelKey>
+    public interface ICatalogData:
+        ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
+        ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
-        /// List of Database Schemta within the Model.
+        /// List of Database Catalogs within the Model.
         /// </summary>
-        ISchemaData DbSchemta { get; }
+        IDatabaseData DbCatalogs { get; }
 
         /// <summary>
         /// List of Database Domains (types) within the Model.
@@ -68,19 +67,17 @@ namespace DataDictionary.BusinessLayer.CatalogData
         /// List of Database Columns for the Tables/Views within the Model.
         /// </summary>
         ITableColumnData DbTableColumns { get; }
-
-        /// <summary>
-        /// Removes the Catalog and its children by Key
-        /// </summary>
-        /// <param name="catalogItem"></param>
-        void Remove(IDbCatalogKey catalogItem);
     }
 
     /// <summary>
     /// Implementation for Catalog data
     /// </summary>
-    class CatalogData : DbCatalogCollection, ICatalogData
+    class CatalogData :ICatalogData, IContextNameData
     {
+        /// <inheritdoc/>
+        public IDatabaseData DbCatalogs { get { return catalogs; } }
+        private readonly DatabaseData catalogs;
+
         /// <inheritdoc/>
         public ISchemaData DbSchemta { get { return schemta; } }
         private readonly SchemaData schemta;
@@ -121,47 +118,22 @@ namespace DataDictionary.BusinessLayer.CatalogData
         public ITableColumnData DbTableColumns { get { return tableColumns; } }
         private readonly TableColumnData tableColumns;
 
-        /// <summary>
-        /// Constructor for CatalogData
-        /// </summary>
         public CatalogData() : base()
         {
-            schemta = new SchemaData() { Catalog = this };
-            domains = new DomainData() { Catalog = this };
-            extendedProperties = new ExtendedPropertyData() { Catalog = this };
+            catalogs = new DatabaseData();
+            schemta = new SchemaData();
+            domains = new DomainData();
+            extendedProperties = new ExtendedPropertyData();
 
-            tables = new TableData() { Catalog = this };
-            tableColumns = new TableColumnData() { Catalog = this };
+            tables = new TableData();
+            tableColumns = new TableColumnData();
 
-            routines = new RoutineData() { Catalog = this };
-            routineParameters = new RoutineParameterData() { Catalog = this };
-            routineDependencies = new RoutineDependencyData() { Catalog = this };
+            routines = new RoutineData();
+            routineParameters = new RoutineParameterData();
+            routineDependencies = new RoutineDependencyData();
 
-            constraints = new ConstraintData() { Catalog = this };
-            constraintColumns = new ConstraintColumnData() { Catalog = this };
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateLoad(this, dataKey));
-            work.AddRange(schemta.Load(factory, dataKey));
-            work.AddRange(domains.Load(factory, dataKey));
-            work.AddRange(extendedProperties.Load(factory, dataKey));
-
-            work.AddRange(tables.Load(factory, dataKey));
-            work.AddRange(tableColumns.Load(factory, dataKey));
-
-            work.AddRange(routines.Load(factory, dataKey));
-            work.AddRange(routineParameters.Load(factory, dataKey));
-            work.AddRange(routineDependencies.Load(factory, dataKey));
-
-            work.AddRange(constraints.Load(factory, dataKey));
-            work.AddRange(constraintColumns.Load(factory, dataKey));
-
-            return work;
+            constraints = new ConstraintData();
+            constraintColumns = new ConstraintColumnData();
         }
 
         /// <inheritdoc/>
@@ -169,7 +141,7 @@ namespace DataDictionary.BusinessLayer.CatalogData
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(factory.CreateLoad(this, dataKey));
+            work.AddRange(catalogs.Load(factory, dataKey));
             work.AddRange(schemta.Load(factory, dataKey));
             work.AddRange(domains.Load(factory, dataKey));
             work.AddRange(extendedProperties.Load(factory, dataKey));
@@ -183,140 +155,6 @@ namespace DataDictionary.BusinessLayer.CatalogData
 
             work.AddRange(constraints.Load(factory, dataKey));
             work.AddRange(constraintColumns.Load(factory, dataKey));
-
-            return work;
-        }
-
-        /// <summary>
-        /// Create Work Items that Load Catalog meta data from a source
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public IReadOnlyList<WorkItem> Load(DbSchemaContext source)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            DbCatalogKey key = new DbCatalogKey(new DbCatalogItem());
-            DatabaseWork factory = new DatabaseWork() { Connection = source.CreateConnection() };
-
-            work.Add(factory.OpenConnection());
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbCatalogs",
-                target: this,
-                command: (conn) => this.SchemaCommand(conn, key)));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbSchemta",
-                target: schemta,
-                command: (conn) => schemta.SchemaCommand(conn, key)));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbDomains",
-                target: domains,
-                command: (conn) => domains.SchemaCommand(conn, key)));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbTables",
-                target: tables,
-                command: (conn) => tables.SchemaCommand(conn, key)));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbTableColumns",
-                target: tableColumns,
-                command: (conn) => tableColumns.SchemaCommand(conn, key)));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbConstraints",
-                target: constraints,
-                command: (conn) => constraints.SchemaCommand(conn, key)));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbConstraintColumns",
-                target: constraintColumns,
-                command: (conn) => constraintColumns.SchemaCommand(conn, key)));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbRoutines",
-                target: routines,
-                command: (conn) => routines.SchemaCommand(conn, key)));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbRoutineParameters",
-                target: routineParameters,
-                command: (conn) => routineParameters.SchemaCommand(conn, key)));
-
-            work.Add(new WorkItem()
-            {
-                WorkName = "Load DbRoutineDependencies",
-                DoWork = () =>
-                {
-                    foreach (DbRoutineItem item in routines)
-                    {
-                        routineDependencies.Load(
-                            factory.Connection.ExecuteReader(
-                                routineDependencies.SchemaCommand(
-                                    factory.Connection, item)));
-                    }
-                },
-                IsCanceling = () => factory.IsCanceling
-            });
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbSchemta",
-                source: schemta,
-                target: extendedProperties));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbTables",
-                source: tables,
-                target: extendedProperties));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbTableColumns",
-                source: tableColumns,
-                target: extendedProperties));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbConstraints",
-                source: constraints,
-                target: extendedProperties));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbDomains",
-                source: domains,
-                target: extendedProperties));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbRoutines",
-                source: routines,
-                target: extendedProperties));
-
-            work.Add(factory.CreateWork(
-                workName: "Load DbExtendedProperties, DbRoutineParameters",
-                source: routineParameters,
-                target: extendedProperties));
-            return work;
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDbCatalogKey dataKey)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(factory.CreateSave(this, dataKey).ToList());
-            work.AddRange(schemta.Save(factory, dataKey));
-            work.AddRange(domains.Save(factory, dataKey));
-            work.AddRange(extendedProperties.Save(factory, dataKey));
-
-            work.AddRange(tables.Save(factory, dataKey));
-            work.AddRange(tableColumns.Save(factory, dataKey));
-
-            work.AddRange(routines.Save(factory, dataKey));
-            work.AddRange(routineParameters.Save(factory, dataKey));
-            work.AddRange(routineDependencies.Save(factory, dataKey));
-
-            work.AddRange(constraints.Save(factory, dataKey));
-            work.AddRange(constraintColumns.Save(factory, dataKey));
 
             return work;
         }
@@ -326,7 +164,7 @@ namespace DataDictionary.BusinessLayer.CatalogData
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(factory.CreateSave(this, dataKey).ToList());
+            work.AddRange(catalogs.Save(factory, dataKey));
             work.AddRange(schemta.Save(factory, dataKey));
             work.AddRange(domains.Save(factory, dataKey));
             work.AddRange(extendedProperties.Save(factory, dataKey));
@@ -344,10 +182,57 @@ namespace DataDictionary.BusinessLayer.CatalogData
             return work;
         }
 
-        /// <inheritdoc />
-        public override void Remove(IDbCatalogKey catalogItem)
+        /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
         {
-            base.Remove(catalogItem);
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(catalogs.Load(factory, dataKey));
+            work.AddRange(schemta.Load(factory, dataKey));
+            work.AddRange(domains.Load(factory, dataKey));
+            work.AddRange(extendedProperties.Load(factory, dataKey));
+
+            work.AddRange(tables.Load(factory, dataKey));
+            work.AddRange(tableColumns.Load(factory, dataKey));
+
+            work.AddRange(routines.Load(factory, dataKey));
+            work.AddRange(routineParameters.Load(factory, dataKey));
+            work.AddRange(routineDependencies.Load(factory, dataKey));
+
+            work.AddRange(constraints.Load(factory, dataKey));
+            work.AddRange(constraintColumns.Load(factory, dataKey));
+
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDbCatalogKey dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(catalogs.Save(factory, dataKey));
+            work.AddRange(schemta.Save(factory, dataKey));
+            work.AddRange(domains.Save(factory, dataKey));
+            work.AddRange(extendedProperties.Save(factory, dataKey));
+
+            work.AddRange(tables.Save(factory, dataKey));
+            work.AddRange(tableColumns.Save(factory, dataKey));
+
+            work.AddRange(routines.Save(factory, dataKey));
+            work.AddRange(routineParameters.Save(factory, dataKey));
+            work.AddRange(routineDependencies.Save(factory, dataKey));
+
+            work.AddRange(constraints.Save(factory, dataKey));
+            work.AddRange(constraintColumns.Save(factory, dataKey));
+
+            return work;
+        }
+
+
+        /// <inheritdoc />
+        public void Remove(IDbCatalogKey catalogItem)
+        {
+            catalogs.Remove(catalogItem);
             schemta.Remove(catalogItem);
             domains.Remove(catalogItem);
 
@@ -362,11 +247,12 @@ namespace DataDictionary.BusinessLayer.CatalogData
             constraintColumns.Remove(catalogItem);
         }
 
-        internal IReadOnlyList<ContextNameItem> GetContextNames (Action<Int32, Int32> progress)
+        /// <inheritdoc />
+        public IReadOnlyList<ContextNameItem> GetContextNames (Action<Int32, Int32> progress)
         {
             // This improve performance by reducing the number of calls
             List<ContextNameItem> result = new List<ContextNameItem>();
-            List<DbCatalogItem> catalogs = this.Where(w => w.IsSystem == false).ToList();
+            List<DbCatalogItem> catalogs = DbCatalogs.Where(w => w.IsSystem == false).ToList();
             List<DbSchemaItem> schemta = DbSchemta.Where(w => w.IsSystem == false).ToList();
             List<DbTableItem> tables = DbTables.Where(w => w.IsSystem == false).ToList();
             List<DbTableColumnItem> tableColumns = DbTableColumns.ToList();
@@ -440,9 +326,6 @@ namespace DataDictionary.BusinessLayer.CatalogData
                     }
                 }
             }
-
-
-
             return result;
         }
     }

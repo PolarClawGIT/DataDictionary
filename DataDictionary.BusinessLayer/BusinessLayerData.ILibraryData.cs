@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer
 {
-    partial class ModelData
+    partial class BusinessLayerData
     {
+        /// <summary>
+        /// Wrapper for Library Data (Library Source and Member)
+        /// </summary>
         ILibraryData LibraryData { get; } = new LibraryData.LibraryData();
     }
 }

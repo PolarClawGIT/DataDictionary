@@ -4,7 +4,7 @@ using DataDictionary.DataLayer.ModelData.SubjectArea;
 
 namespace DataDictionary.BusinessLayer
 {
-    partial class ModelData: IModelDomain
+    partial class ModelData_Old : IModelDomain
     {
         /// <inheritdoc/>
         public DomainAttributeCollection DomainAttributes { get; } = new DomainAttributeCollection();

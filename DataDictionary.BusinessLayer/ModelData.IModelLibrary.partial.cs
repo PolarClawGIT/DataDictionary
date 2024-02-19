@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer
 {
-    partial class ModelData: IModelLibrary
+    partial class ModelData_Old : IModelLibrary
     {
         /// <inheritdoc/>
         public LibrarySourceCollection LibrarySources { get; } = new LibrarySourceCollection();

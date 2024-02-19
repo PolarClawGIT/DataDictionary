@@ -31,7 +31,8 @@ namespace DataDictionary.BusinessLayer.ApplicationData
     /// <summary>
     /// Implementation for Application data
     /// </summary>
-    public class ApplicationData : IApplicationData, ILoadData, ISaveData, ILoadFile, ISaveFile
+    public class ApplicationData : IApplicationData,
+        ILoadData, ISaveData, ILoadFile, ISaveFile
     {
         /// <inheritdoc/>
         public IHelpSubjectData HelpSubjects { get { return helpSubjectValues; } }

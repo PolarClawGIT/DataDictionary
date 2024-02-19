@@ -2,7 +2,7 @@
 
 namespace DataDictionary.BusinessLayer
 {
-    public partial class ModelData: IModelContextName
+    public partial class ModelData_Old: IModelContextName
     {
         /// <inheritdoc/>
         public ContextNameDictionary ContextName { get; } = new ContextNameDictionary();

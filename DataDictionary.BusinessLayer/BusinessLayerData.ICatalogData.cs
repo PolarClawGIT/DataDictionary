@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer
 {
-    partial class ModelData
+    partial class BusinessLayerData
     {
         /// <summary>
-        /// List of Database Catalogs within the Model.
+        /// Wrapper for the Catalog (database) Data
         /// </summary>
-        public ICatalogData DbCatalogs { get; } = new CatalogData.CatalogData();
+        public ICatalogData CatalogData { get; } = new CatalogData.CatalogData();
 
     }
 }
