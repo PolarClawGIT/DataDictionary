@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.BusinessLayer.ContextName
+namespace DataDictionary.BusinessLayer.NameScope
 {
 
     /// <summary>
     /// List of supported ListChangeTypes
     /// </summary>
-    public enum ContextNameChangedType
+    public enum NameScopeChangedType
     {
         /// <summary>
         /// An item added to the list. 
@@ -32,27 +32,27 @@ namespace DataDictionary.BusinessLayer.ContextName
     }
 
     /// <summary>
-    /// Event Args for change in the Model Name Space list
+    /// Event Args for change in the NameScope list
     /// </summary>
     /// <remarks>Inspired by the IBindingList.ListChanged Event</remarks>
-    public class ContextNameChangedEventArgs : EventArgs
+    public class NameScopeChangedEventArgs : EventArgs
     {
         /// <summary>
         /// What type of change was made
         /// </summary>
-        public ContextNameChangedType ChangedType { get; }
+        public NameScopeChangedType ChangedType { get; }
 
         /// <summary>
         /// Model NameSpace Item impacted, if any.
         /// </summary>
-        public IContextNameItem? Item { get; }
+        public INameScopeItem? Item { get; }
 
         /// <summary>
         /// Constructor for Event Args for change in the Model Name Space list.
         /// </summary>
         /// <param name="changedType"></param>
         /// <param name="data"></param>
-        public ContextNameChangedEventArgs(ContextNameChangedType changedType, IContextNameItem? data)
+        public NameScopeChangedEventArgs(NameScopeChangedType changedType, INameScopeItem? data)
         {
             this.ChangedType = changedType;
             this.Item = data;

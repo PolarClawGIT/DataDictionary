@@ -19,139 +19,139 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.BusinessLayer.ContextName
+namespace DataDictionary.BusinessLayer.NameScope
 {
     /// <summary>
-    /// Interface for the Context Name Key
+    /// Interface for the NameScope Key
     /// </summary>
-    public interface IContextNameKey : IKey
+    public interface INameScopeKey : IKey
     {
         /// <summary>
-        /// System Id of the Context Name item.
+        /// System Id of the NameScope item.
         /// </summary>
         public Guid SystemId { get; }
     }
 
     /// <summary>
-    /// Implementation for the Context Name Key
+    /// Implementation for the NameScope Key
     /// </summary>
-    public class ContextNameKey : IContextNameKey, IKeyComparable<IContextNameKey>
+    public class NameScopeKey : INameScopeKey, IKeyComparable<INameScopeKey>
     {
         /// <inheritdoc/>
         public Guid SystemId { get; init; } = Guid.Empty;
 
-        internal ContextNameKey() : base() { }
+        internal NameScopeKey() : base() { }
 
         /// <summary>
-        /// Constructor for the Context Name Key
+        /// Constructor for the NameScope Key
         /// </summary>
         /// <param name="source" >A ModelNameSpace</param>
-        public ContextNameKey(IContextNameKey source) : this()
+        public NameScopeKey(INameScopeKey source) : this()
         { SystemId = source.SystemId; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Application Help
+        /// Constructor for the NameScope Key, Application Help
         /// </summary>
         /// <param name="source"></param>
-        public ContextNameKey(IHelpKey source): this()
+        public NameScopeKey(IHelpKey source): this()
         {   SystemId = source.HelpId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Catalog
+        /// Constructor for the NameScope Key, Catalog
         /// </summary>
         /// <param name="source">A Database Catalog</param>
-        public ContextNameKey(IDbCatalogKey source) : this()
+        public NameScopeKey(IDbCatalogKey source) : this()
         { SystemId = source.CatalogId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Schema
+        /// Constructor for the NameScope Key, Schema
         /// </summary>
         /// <param name="source">A Database Schema</param>
-        public ContextNameKey(IDbSchemaKey source) : this()
+        public NameScopeKey(IDbSchemaKey source) : this()
         { SystemId = source.SchemaId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Table
+        /// Constructor for the NameScope Key, Table
         /// </summary>
         /// <param name="source">A Database Table</param>
-        public ContextNameKey(IDbTableKey source) : this()
+        public NameScopeKey(IDbTableKey source) : this()
         {SystemId = source.TableId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Column
+        /// Constructor for the NameScope Key, Column
         /// </summary>
         /// <param name="source">A Database Table Column</param>
-        public ContextNameKey(IDbTableColumnKey source) : this()
+        public NameScopeKey(IDbTableColumnKey source) : this()
         {SystemId = source.ColumnId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Domain
+        /// Constructor for the NameScope Key, Domain
         /// </summary>
         /// <param name="source">A Database Domain</param>
-        public ContextNameKey(IDbDomainKey source) : this()
+        public NameScopeKey(IDbDomainKey source) : this()
         {SystemId = source.DomainId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Routine
+        /// Constructor for the NameScope Key, Routine
         /// </summary>
         /// <param name="source">A Database Routine</param>
-        public ContextNameKey(IDbRoutineKey source) : this()
+        public NameScopeKey(IDbRoutineKey source) : this()
         {SystemId = source.RoutineId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Parameter
+        /// Constructor for the NameScope Key, Parameter
         /// </summary>
         /// <param name="source">A Database Routine Parameter</param>
-        public ContextNameKey(IDbRoutineParameterKey source) : this()
+        public NameScopeKey(IDbRoutineParameterKey source) : this()
         {SystemId = source.ParameterId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Constraint
+        /// Constructor for the NameScope Key, Constraint
         /// </summary>
         /// <param name="source">A Database Constraint</param>
-        public ContextNameKey(IDbConstraintKey source) : this()
+        public NameScopeKey(IDbConstraintKey source) : this()
         {SystemId = source.ConstraintId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Library
+        /// Constructor for the NameScope Key, Library
         /// </summary>
         /// <param name="source">A Library Source</param>
-        public ContextNameKey(ILibrarySourceKey source) : this()
+        public NameScopeKey(ILibrarySourceKey source) : this()
         {SystemId = source.LibraryId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Library Member
+        /// Constructor for the NameScope Key, Library Member
         /// </summary>
         /// <param name="source">A Library Member</param>
-        public ContextNameKey(ILibraryMemberKey source) : this()
+        public NameScopeKey(ILibraryMemberKey source) : this()
         {SystemId = source.MemberId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Model
+        /// Constructor for the NameScope Key, Model
         /// </summary>
         /// <param name="source">A Library Member</param>
-        public ContextNameKey(IModelKey source) : this()
+        public NameScopeKey(IModelKey source) : this()
         { SystemId = source.ModelId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Subject Area
+        /// Constructor for the NameScope Key, Subject Area
         /// </summary>
         /// <param name="source">A Library Member</param>
-        public ContextNameKey(IModelSubjectAreaKey source) : this()
+        public NameScopeKey(IModelSubjectAreaKey source) : this()
         { SystemId = source.SubjectAreaId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Attribute
+        /// Constructor for the NameScope Key, Attribute
         /// </summary>
         /// <param name="source">A Library Member</param>
-        public ContextNameKey(IDomainAttributeKey source) : this()
+        public NameScopeKey(IDomainAttributeKey source) : this()
         { SystemId = source.AttributeId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the Context Name Key, Entity
+        /// Constructor for the NameScope Key, Entity
         /// </summary>
         /// <param name="source">A Library Member</param>
-        public ContextNameKey(IDomainEntityKey source) : this()
+        public NameScopeKey(IDomainEntityKey source) : this()
         { SystemId = source.EntityId ?? Guid.Empty; }
 
         /// <summary>
@@ -159,24 +159,24 @@ namespace DataDictionary.BusinessLayer.ContextName
         /// </summary>
         /// <param name="source"></param>
         /// <remarks>NameSpaces do not have a GUID of their own, so a new GUID is created.</remarks>
-        public ContextNameKey(INameSpaceKey source) : this()
+        public NameScopeKey(INameSpaceKey source) : this()
         { SystemId = Guid.NewGuid(); }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public virtual bool Equals(IContextNameKey? other)
+        public virtual bool Equals(INameScopeKey? other)
         {
             return
-                other is IContextNameKey &&
+                other is INameScopeKey &&
                 SystemId.Equals(other.SystemId);
         }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IContextNameKey value && Equals(new ContextNameKey(value)); }
+        { return obj is INameScopeKey value && Equals(new NameScopeKey(value)); }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(IContextNameKey? other)
+        public virtual int CompareTo(INameScopeKey? other)
         {
             if (other is null) { return 1; }
             else { return SystemId.CompareTo(other.SystemId); }
@@ -184,30 +184,30 @@ namespace DataDictionary.BusinessLayer.ContextName
 
         /// <inheritdoc/>
         public virtual int CompareTo(object? obj)
-        { if (obj is IContextNameKey value) { return CompareTo(new ContextNameKey(value)); } else { return 1; } }
+        { if (obj is INameScopeKey value) { return CompareTo(new NameScopeKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static bool operator ==(ContextNameKey left, ContextNameKey right)
+        public static bool operator ==(NameScopeKey left, NameScopeKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(ContextNameKey left, ContextNameKey right)
+        public static bool operator !=(NameScopeKey left, NameScopeKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(ContextNameKey left, ContextNameKey right)
+        public static bool operator <(NameScopeKey left, NameScopeKey right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(ContextNameKey left, ContextNameKey right)
+        public static bool operator <=(NameScopeKey left, NameScopeKey right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(ContextNameKey left, ContextNameKey right)
+        public static bool operator >(NameScopeKey left, NameScopeKey right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(ContextNameKey left, ContextNameKey right)
+        public static bool operator >=(NameScopeKey left, NameScopeKey right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>
