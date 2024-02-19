@@ -16,6 +16,7 @@ namespace DataDictionary.BusinessLayer
     /// Implementation of Model Domain (Attribute, Entity and Subject Area)
     /// </summary>
     /// <remarks>When combined with the Extension class, this approximates multi-inheritance.</remarks>
+    [Obsolete("To be replaced with BusinessLayerData")]
     public static class ModelDomain
     {
         /// <summary>

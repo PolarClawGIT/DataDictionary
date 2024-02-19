@@ -1,34 +1,163 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer
 {
     /// <summary>
-    /// Method for the Model Data
+    /// Implementation component for the Application data
     /// </summary>
+    /// <remarks>When combined with the Extension class, this implements multi-inheritance.</remarks>
     [Obsolete("To be replaced with BusinessLayerData")]
-    public static class ModelData_Extension
+    public static class ModelApplication
     {
         /// <summary>
-        /// Loads a Single Table from a DataSet.
+        /// Loads the Application Data from the Database.
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
-        static void LoadTable(System.Data.DataSet source, IBindingTable target)
+        /// <param name="data"></param>
+        /// <param name="factory"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> LoadApplicationData(this IModelApplication data, IDatabaseWork factory)
         {
-            if (source.Tables.Contains(target.BindingName) &&
-                source.Tables[target.BindingName] is System.Data.DataTable helpData)
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem()
             {
-                target.Clear();
-                target.Load(helpData.CreateDataReader());
+                WorkName = "Clear Help",
+                DoWork = data.HelpSubjects.Clear
+            });
+
+            work.Add(new WorkItem()
+            {
+                WorkName = "Clear Properties",
+                DoWork = data.Properties.Clear
+            });
+
+            work.Add(factory.CreateWork(
+                workName: "Load HelpSubjects",
+                target: data.HelpSubjects,
+                command: data.HelpSubjects.LoadCommand));
+
+            work.Add(factory.CreateWork(
+                workName: "Load Properties",
+                target: data.Properties,
+                command: data.Properties.LoadCommand));
+
+            return work;
+        }
+
+        /// <summary>
+        /// Loads the Application Data from a File
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> LoadApplicationData(this IModelApplication data, FileInfo file)
+        {
+            List<WorkItem> workItems = new List<WorkItem>
+            {
+                new WorkItem() { WorkName = "Load Application Data", DoWork = DoWork }
+            };
+
+            return workItems.AsReadOnly();
+
+            void DoWork()
+            {
+                using (System.Data.DataSet workSet = new System.Data.DataSet())
+                {
+                    workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
+                    LoadTable(workSet, data.HelpSubjects);
+                    LoadTable(workSet, data.Properties);
+                }
             }
+        }
+
+        /// <summary>
+        /// Saves the Application Data to the Database.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="factory"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> SaveApplicationData(this IModelApplication data, IDatabaseWork factory)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(factory.CreateWork(
+                workName: "Save HelpSubjects",
+                command: data.HelpSubjects.SaveCommand));
+
+            work.Add(factory.CreateWork(
+                workName: "Save Properties",
+                command: data.Properties.SaveCommand));
+
+            return work;
+        }
+
+        /// <summary>
+        /// Saves the Application Data to a file.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> SaveApplicationData(this IModelApplication data, FileInfo file)
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+
+            workItems.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
+
+            return workItems.AsReadOnly();
+
+            void DoWork()
+            {
+                using (System.Data.DataSet workSet = new System.Data.DataSet())
+                {
+                    workSet.Tables.Add(data.HelpSubjects.ToDataTable());
+                    workSet.Tables.Add(data.Properties.ToDataTable());
+
+                    workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates the work items to Load the Help Subjects using the Help key passed.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="factory"></param>
+        /// <param name="helpKey"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> LoadHelp(this IModelApplication data, IDatabaseWork factory, IHelpKey helpKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            HelpKey key = new HelpKey(helpKey);
+
+            work.Add(factory.CreateWork(
+                workName: "Load Help",
+                target: data.HelpSubjects,
+                command: (conn) => data.HelpSubjects.LoadCommand(conn, key)));
+
+            return work;
+        }
+
+        /// <summary>
+        /// Creates the work items to Save the Help Subjects using the Help key passed.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="factory"></param>
+        /// <param name="helpKey"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> SaveHelp(this IModelApplication data, IDatabaseWork factory, IHelpKey helpKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            HelpKey key = new HelpKey(helpKey);
+
+            work.Add(factory.CreateWork(
+                workName: "Save Help",
+                command: (conn) => data.HelpSubjects.SaveCommand(conn, key)));
+
+            return work;
         }
 
         /// <summary>
@@ -96,18 +225,18 @@ namespace DataDictionary.BusinessLayer
         /// <param name="file"></param>
         /// <returns></returns>
         public static IReadOnlyList<WorkItem> LoadModelData<T>(this T data, FileInfo file)
-            where T : IModelCatalog, IModelLibrary, IModelDomain, IModel//, IModelContextName
+            where T : IModelCatalog, IModelLibrary, IModelDomain, IModel, IModelNamespace
         {
             List<WorkItem> workItems = new List<WorkItem>();
 
             workItems.AddRange(data.RemoveCatalog());
             workItems.AddRange(data.RemoveLibrary());
             workItems.AddRange(data.RemoveDomain());
-            //workItems.AddRange(data.RemoveContextName());
+            workItems.AddRange(data.RemoveNameSpace());
 
             workItems.Add(new WorkItem() { WorkName = "Load Model Data", DoWork = DoWork });
 
-            //workItems.AddRange(data.LoadContextName());
+            workItems.AddRange(data.LoadNameSpace());
 
             return workItems.AsReadOnly();
 
@@ -217,5 +346,19 @@ namespace DataDictionary.BusinessLayer
             return work;
         }
 
+        /// <summary>
+        /// Loads a Single Table from a DataSet.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        static void LoadTable(System.Data.DataSet source, IBindingTable target)
+        {
+            if (source.Tables.Contains(target.BindingName) &&
+                source.Tables[target.BindingName] is System.Data.DataTable helpData)
+            {
+                target.Clear();
+                target.Load(helpData.CreateDataReader());
+            }
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     public abstract class LibraryMemberCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ILibrarySourceKey>,
         IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>,
-        IRemoveItem<LibrarySourceKey>, IRemoveItem<LibrarySourceKeyName>
+        IRemoveItem<ILibrarySourceKey>, IRemoveItem<ILibrarySourceKeyName>
         where TItem : BindingTableRow, ILibraryMemberItem, ILibrarySourceKey, ILibrarySourceKeyName, new()
     {
         /// <inheritdoc/>

@@ -1,7 +1,5 @@
-﻿using DataDictionary.BusinessLayer.CatalogData;
-using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.Attribute;
 using DataDictionary.DataLayer.ModelData.Entity;
@@ -15,6 +13,7 @@ namespace DataDictionary.BusinessLayer
     /// <summary>
     /// Model part of the 
     /// </summary>
+    [Obsolete("To be replaced with BusinessLayerData")]
     public interface IModel
     {
         /// <summary>
@@ -51,6 +50,7 @@ namespace DataDictionary.BusinessLayer
     /// Forms need to connect to the Key for the data object they are presenting.
     /// If the data should change, the Forms need to reset the bindings and get new data from this object.
     /// </remarks>
+    [Obsolete("To be replaced with BusinessLayerData")]
     public partial class ModelData : IModel
     {
         // Model
@@ -131,7 +131,7 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
 
             work.AddRange(this.RemoveModel());
-            work.Add(new WorkItem() { WorkName = "Clear Context", DoWork = () => ContextName.Clear() });
+            work.AddRange(this.RemoveNameSpace());
 
             work.Add(new WorkItem()
             {
@@ -143,7 +143,7 @@ namespace DataDictionary.BusinessLayer
                 }
             });
 
-            work.AddRange(this.LoadContextName());
+            work.AddRange(this.LoadNameSpace());
 
             return work;
         }
@@ -160,12 +160,12 @@ namespace DataDictionary.BusinessLayer
             ModelKey key = new ModelKey(modelKey);
 
             work.AddRange(this.RemoveModel());
-            work.Add(new WorkItem() { WorkName = "Clear Context", DoWork = () => ContextName.Clear() });
-            work.AddRange(this.LoadModelData(factory, key));
+            work.AddRange(this.RemoveNameSpace());
+            //work.AddRange(this.LoadModelData(factory, key));
             work.AddRange(this.LoadDomain(factory, key));
-            work.AddRange(DbCatalogs.Load(factory, key));
+            work.AddRange(this.LoadCatalog(factory, key));
             work.AddRange(this.LoadLibrary(factory, key));
-            work.AddRange(this.LoadContextName());
+            work.AddRange(this.LoadNameSpace());
 
             return work;
         }
@@ -181,9 +181,9 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
             ModelKey key = new ModelKey(modelKey);
 
-            work.AddRange(this.SaveModelData(factory, key));
+            //work.AddRange(this.SaveModelData(factory, key));
             work.AddRange(this.SaveDomain(factory, key));
-            work.AddRange(DbCatalogs.Save(factory, key));
+            work.AddRange(this.SaveCatalog(factory, key));
             work.AddRange(this.SaveLibrary(factory, key));
 
             return work;
@@ -199,23 +199,14 @@ namespace DataDictionary.BusinessLayer
 
             work.Add(new WorkItem() { WorkName = "Clear Model", DoWork = ClearModel });
             work.AddRange(this.RemoveDomain());
-            work.Add(new WorkItem() { WorkName = "Remove Catalog", DoWork = RemoveCatalog});
+            work.AddRange(this.RemoveCatalog());
             work.AddRange(this.RemoveLibrary());
             return work;
 
-            void ClearModel()
+            void ClearModel ()
             {
                 this.Models.Clear();
                 this.ModelSubjectAreas.Clear();
-            }
-
-            void RemoveCatalog()
-            {
-                while (DbCatalogs.FirstOrDefault() is DbCatalogItem item)
-                {
-                    DbCatalogKey key = new DbCatalogKey(item);
-                    DbCatalogs.Remove(key);
-                }
             }
         }
 

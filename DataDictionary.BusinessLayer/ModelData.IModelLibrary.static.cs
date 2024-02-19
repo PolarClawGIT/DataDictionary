@@ -21,6 +21,7 @@ namespace DataDictionary.BusinessLayer
     /// Implementation component for the Model Library
     /// </summary>
     /// <remarks>When combined with the Extension class, this implements multi-inheritance.</remarks>
+    [Obsolete("To be replaced with BusinessLayerData")]
     public static class ModelLibrary
     {
         static Dictionary<ScopeType, String> scopeTypeToNetCoding = new Dictionary<ScopeType, String>
