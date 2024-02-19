@@ -28,7 +28,14 @@ namespace Toolbox.DbContext
             ApplicationName = "Data Dictionary Manager (C) 2023 William Howard" // TODO: pull this from the Assembly?
         };
 
+        /// <summary>
+        /// Name of the Database Server of the Connection
+        /// </summary>
         public String ServerName { get { return ConnectionBuilder.DataSource; } init { ConnectionBuilder.DataSource = value; } }
+
+        /// <summary>
+        /// Name of the Database of the Connection
+        /// </summary>
         public String DatabaseName
         {
             get { return ConnectionBuilder.InitialCatalog; }
