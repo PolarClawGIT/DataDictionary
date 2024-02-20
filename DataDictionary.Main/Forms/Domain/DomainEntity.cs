@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.ContextName;
+﻿using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Entity;
@@ -167,7 +167,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void bindingAlias_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (modelAliasNavigation.SelectedAlias is ContextNameItem selected)
+            if (modelAliasNavigation.SelectedAlias is NameScopeItem selected)
             {
                 DomainEntityAliasItem newItem = new DomainEntityAliasItem(DataKey);
                 newItem.AliasName = modelAliasNavigation.SelectedAlias.MemberFullName;

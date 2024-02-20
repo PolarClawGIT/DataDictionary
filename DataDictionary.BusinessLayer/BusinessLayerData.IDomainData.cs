@@ -12,6 +12,7 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Wrapper for the Domain Data (Entity, Attribute, Process ...)
         /// </summary>
-        public IDomainData DomainData { get; } = new DomainData.DomainData();
+        public IDomainData DomainData { get { return domain; } }
+        private readonly DomainData.DomainData domain = new DomainData.DomainData();
     }
 }

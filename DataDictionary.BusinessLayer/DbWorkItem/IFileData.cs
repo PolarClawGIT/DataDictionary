@@ -8,28 +8,37 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.DbWorkItem
 {
     /// <summary>
-    /// Interface for Create workItems that Load Data from a File
+    /// Interface for Create workItems that Imports/Exports Data to a File
     /// </summary>
-    public interface ILoadFile
+    public interface IFileData
     {
         /// <summary>
         /// Create WorkItems that Load Data from a file
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> Load(FileInfo file);
-    }
+        IReadOnlyList<WorkItem> Import(FileInfo file);
 
-    /// <summary>
-    /// Interface for Create workItems that Save Data to a File
-    /// </summary>
-    public interface ISaveFile: ILoadFile
-    {
         /// <summary>
         /// Create WorkItems that Save Data to a file
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> Save(FileInfo file);
+        IReadOnlyList<WorkItem> Export(FileInfo file);
+    }
+
+    interface IDataTableFile
+    {
+        /// <summary>
+        /// Returns a List of DataTables for use Exporting to a File
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyList<System.Data.DataTable> Export();
+
+        /// <summary>
+        /// Loads the DataObject using the data found in the DataSet.
+        /// </summary>
+        /// <param name="source"></param>
+        void Import(System.Data.DataSet source);
     }
 }

@@ -72,6 +72,17 @@
         }
 
         /// <summary>
+        /// Adds a list of items to the collection
+        /// </summary>
+        /// <param name="values"></param>
+        public virtual void AddRange(IEnumerable<NameScopeItem> values)
+        {
+            foreach (NameScopeItem item in values)
+            { Add(item); }
+        }
+
+
+        /// <summary>
         /// Removes an item and the children
         /// </summary>
         /// <param name="key"></param>
@@ -132,7 +143,7 @@
                     { RootItem.Children.Remove(currentKey); }
                 }
 
-                if(parent is INameScopeKey
+                if (parent is INameScopeKey
                     && new NameScopeKey(parent) is NameScopeKey parentKey
                     && this.ContainsKey(parentKey))
                 {

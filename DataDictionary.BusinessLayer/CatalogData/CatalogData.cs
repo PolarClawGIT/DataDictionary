@@ -7,6 +7,7 @@ using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.CatalogData
@@ -14,9 +15,10 @@ namespace DataDictionary.BusinessLayer.CatalogData
     /// <summary>
     /// Interface representing Catalog data
     /// </summary>
-    public interface ICatalogData:
+    public interface ICatalogData :
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
+        
     {
         /// <summary>
         /// List of Database Catalogs within the Model.
@@ -72,7 +74,7 @@ namespace DataDictionary.BusinessLayer.CatalogData
     /// <summary>
     /// Implementation for Catalog data
     /// </summary>
-    class CatalogData :ICatalogData, INameScopeData
+    class CatalogData : ICatalogData, IDataTableFile, INameScopeData
     {
         /// <inheritdoc/>
         public IDatabaseData DbCatalogs { get { return catalogs; } }
@@ -228,6 +230,49 @@ namespace DataDictionary.BusinessLayer.CatalogData
             return work;
         }
 
+        /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
+        public IReadOnlyList<System.Data.DataTable> Export()
+        {
+            List<System.Data.DataTable> result = new List<System.Data.DataTable>();
+            result.Add(catalogs.ToDataTable());
+            result.Add(schemta.ToDataTable());
+            result.Add(domains.ToDataTable());
+
+            result.Add(tables.ToDataTable());
+            result.Add(tableColumns.ToDataTable());
+
+            result.Add(routines.ToDataTable());
+            result.Add(routineParameters.ToDataTable());
+            result.Add(routineDependencies.ToDataTable());
+
+            result.Add(constraints.ToDataTable());
+            result.Add(constraintColumns.ToDataTable());
+
+            result.Add(extendedProperties.ToDataTable());
+            return result;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
+        public void Import(System.Data.DataSet source)
+        {
+            catalogs.Load(source);
+            schemta.Load(source);
+            domains.Load(source);
+
+            tables.Load(source);
+            tableColumns.Load(source);
+
+            routines.Load(source);
+            routineParameters.Load(source);
+            routineDependencies.Load(source);
+
+            constraints.Load(source);
+            constraintColumns.Load(source);
+
+            extendedProperties.Load(source);
+        }
 
         /// <inheritdoc />
         public void Remove(IDbCatalogKey catalogItem)
@@ -245,10 +290,12 @@ namespace DataDictionary.BusinessLayer.CatalogData
 
             constraints.Remove(catalogItem);
             constraintColumns.Remove(catalogItem);
+
+            extendedProperties.Remove(catalogItem);
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<NameScopeItem> GetContextNames (Action<Int32, Int32> progress)
+        public IReadOnlyList<NameScopeItem> GetNameScopes()
         {
             // This improve performance by reducing the number of calls
             List<NameScopeItem> result = new List<NameScopeItem>();
@@ -261,48 +308,29 @@ namespace DataDictionary.BusinessLayer.CatalogData
             List<DbRoutineParameterItem> routineParameters = DbRoutineParameters.ToList();
             List<DbDomainItem> domains = DbDomains.ToList();
 
-            Int32 totalWork = catalogs.Count +
-                    schemta.Count +
-                    tables.Count +
-                    tableColumns.Count +
-                    constraints.Count +
-                    routines.Count +
-                    routineParameters.Count +
-                    domains.Count;
-            Int32 completedWork = 0;
-
             foreach (DbCatalogItem catalogItem in catalogs) // Expect zero or one
             {
                 DbCatalogKey catalogKey = new DbCatalogKey(catalogItem);
                 DbCatalogKeyName catalogName = new DbCatalogKeyName(catalogItem);
                 result.Add(new NameScopeItem(catalogItem));
-                progress(completedWork++, totalWork);
 
                 foreach (DbSchemaItem schemaItem in schemta.Where(w => catalogName.Equals(w)).ToList())
                 {
                     DbSchemaKey schemaKey = new DbSchemaKey(schemaItem);
                     DbSchemaKeyName schemaName = new DbSchemaKeyName(schemaItem);
                     result.Add(new NameScopeItem(catalogKey, schemaItem));
-                    progress(completedWork++, totalWork);
 
                     foreach (DbTableItem tableItem in tables.Where(w => schemaName.Equals(w)).ToList())
                     {
                         DbTableKey tableKey = new DbTableKey(tableItem);
                         DbTableKeyName tableName = new DbTableKeyName(tableItem);
                         result.Add(new NameScopeItem(schemaKey, tableItem));
-                        progress(completedWork++, totalWork);
 
                         foreach (DbTableColumnItem columnItem in tableColumns.Where(w => tableName.Equals(w)).ToList())
-                        {
-                            result.Add(new NameScopeItem(tableKey, columnItem));
-                            progress(completedWork++, totalWork);
-                        }
+                        { result.Add(new NameScopeItem(tableKey, columnItem)); }
 
                         foreach (DbConstraintItem constraintItem in constraints.Where(w => tableName.Equals(w)).ToList())
-                        {
-                            result.Add(new NameScopeItem(tableKey, constraintItem));
-                            progress(completedWork++, totalWork);
-                        }
+                        { result.Add(new NameScopeItem(tableKey, constraintItem)); }
                     }
 
                     foreach (DbRoutineItem routineItem in routines.Where(w => schemaName.Equals(w)).ToList())
@@ -310,20 +338,13 @@ namespace DataDictionary.BusinessLayer.CatalogData
                         DbRoutineKey routineKey = new DbRoutineKey(routineItem);
                         DbRoutineKeyName routineName = new DbRoutineKeyName(routineItem);
                         result.Add(new NameScopeItem(schemaKey, routineItem));
-                        progress(completedWork++, totalWork);
 
                         foreach (DbRoutineParameterItem parameterItem in routineParameters.Where(w => routineName.Equals(w)).ToList())
-                        {
-                            result.Add(new NameScopeItem(routineKey, parameterItem));
-                            progress(completedWork++, totalWork);
-                        }
+                        { result.Add(new NameScopeItem(routineKey, parameterItem)); }
                     }
 
                     foreach (DbDomainItem domainItem in domains.Where(w => schemaName.Equals(w)).ToList())
-                    {
-                        result.Add(new NameScopeItem(schemaKey, domainItem));
-                        progress(completedWork++, totalWork);
-                    }
+                    { result.Add(new NameScopeItem(schemaKey, domainItem)); }
                 }
             }
             return result;

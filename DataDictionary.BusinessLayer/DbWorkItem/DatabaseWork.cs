@@ -334,6 +334,14 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         { return new List<WorkItem> { source }.AsReadOnly(); }
 
         /// <summary>
+        /// Creates a List out of a Single DataTable
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<DataTable> ToList(this DataTable source)
+        { return new List<DataTable> { source }.AsReadOnly(); }
+
+        /// <summary>
         /// Create a WorkItem for Clearing a Data Object (remove all).
         /// </summary>
         /// <typeparam name="TCollection"></typeparam>

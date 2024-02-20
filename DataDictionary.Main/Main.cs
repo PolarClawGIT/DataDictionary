@@ -1,14 +1,5 @@
 using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.WorkFlows;
-using DataDictionary.DataLayer.ApplicationData.Property;
-using DataDictionary.DataLayer.DatabaseData;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.Schema;
-using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
@@ -16,9 +7,6 @@ using DataDictionary.Main.Forms;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -55,13 +43,13 @@ namespace DataDictionary.Main
 
 
             //Hook the WorkerQueue up to this forms UI thread for events.
-            Program.Worker.InvokeUsing = this.Invoke;
+            Worker.InvokeUsing = this.Invoke;
         }
 
         #region Form
         private void Main_Load(object sender, EventArgs e)
         {
-            Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
+            Worker.ProgressChanged += WorkerQueue_ProgressChanged;
 
             // Display the Splash screen (Show a minimum of 10 seconds or wait for data to Load)
             Dialogs.AboutBox splashScreen = new Dialogs.AboutBox();
@@ -81,17 +69,14 @@ namespace DataDictionary.Main
             SendMessage(new DoUnbindData());
 
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(Program.Data.LoadContextName());
-
-
             if (Settings.Default.IsOnLineMode)
             {
                 DatabaseWork factory = new DatabaseWork();
                 work.Add(factory.OpenConnection());
-                work.AddRange(Program.Data.ApplicationData.Load(factory));
+                work.AddRange(BusinessData.ApplicationData.Load(factory));
 
                 if (!appDataFile.Exists)
-                { work.AddRange(Program.Data.ApplicationData.Save(appDataFile)); }
+                { work.AddRange(BusinessData.ApplicationData.Export(appDataFile)); }
 
                 this.DoWork(work, OnComplete);
             }
@@ -102,11 +87,11 @@ namespace DataDictionary.Main
             void FileLoad()
             {
                 if (appDataFile.Exists) // AppData already contains the Application Data File
-                { work.AddRange(Program.Data.ApplicationData.Load(appDataFile)); }
+                { work.AddRange(BusinessData.ApplicationData.Import(appDataFile)); }
                 else if (appInstallFile.Exists)
                 { // AppData does not contain file but the install folder does (Copy it)
-                    work.AddRange(Program.Data.ApplicationData.Load(appInstallFile));
-                    work.AddRange(Program.Data.ApplicationData.Save(appDataFile));
+                    work.AddRange(BusinessData.ApplicationData.Import(appInstallFile));
+                    work.AddRange(BusinessData.ApplicationData.Export(appDataFile));
                 }
                 this.DoWork(work, OnComplete);
             }
@@ -144,13 +129,10 @@ namespace DataDictionary.Main
 
         public bool BindDataCore()
         {
-            if (Program.Data.Model is ModelItem data)
-            {
-                BuildTree();
+            BusinessData.LoadNameScope();
+            BuildTree();
 
-                return true;
-            }
-            else { return false; }
+            return true;
         }
 
         public void UnbindDataCore()
@@ -162,7 +144,7 @@ namespace DataDictionary.Main
         { }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
-        { Program.Worker.ProgressChanged -= WorkerQueue_ProgressChanged; }
+        { Worker.ProgressChanged -= WorkerQueue_ProgressChanged; }
 
         private void WorkerQueue_ProgressChanged(object? sender, WorkerProgressChangedEventArgs e)
         {
@@ -270,7 +252,7 @@ namespace DataDictionary.Main
         {
             openFileDialog.Filter = "XML Data Dictionary|*.XML";
 
-            if (Program.Data.ModelFile is FileInfo file)
+            if (BusinessData.ModelFile is FileInfo file)
             {
                 openFileDialog.InitialDirectory = file.DirectoryName;
                 openFileDialog.FileName = file.Name;
@@ -289,7 +271,7 @@ namespace DataDictionary.Main
 
                 SendMessage(new Messages.DoUnbindData());
                 List<WorkItem> work = new List<WorkItem>();
-                work.AddRange(Program.Data.LoadModelData(openFile));
+                work.AddRange(BusinessData.Import(openFile));
 
                 DoWork(work, onCompleting);
             }
@@ -300,10 +282,10 @@ namespace DataDictionary.Main
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Program.Data.ModelFile is FileInfo file)
+            if (BusinessData.ModelFile is FileInfo file)
             {
                 SendMessage(new Messages.DoUnbindData());
-                DoWork(Program.Data.SaveModelData(Program.Data.ModelFile), onCompleting);
+                DoWork(BusinessData.Export(file), onCompleting);
             }
             else
             { saveAsToolStripMenuItem_Click(sender, e); }
@@ -316,7 +298,7 @@ namespace DataDictionary.Main
         {
             saveFileDialog.Filter = "XML Data Dictionary|*.XML";
 
-            if (Program.Data.ModelFile is FileInfo file)
+            if (BusinessData.ModelFile is FileInfo file)
             {
                 saveFileDialog.InitialDirectory = file.DirectoryName;
                 saveFileDialog.FileName = file.Name;
@@ -332,11 +314,11 @@ namespace DataDictionary.Main
             if (dialogResult is DialogResult.OK)
             {
                 FileInfo openFile = new FileInfo(saveFileDialog.FileName);
-                Program.Data.ModelFile = openFile;
+                BusinessData.ModelFile = openFile;
                 saveToolStripMenuItem.Enabled = true;
 
                 SendMessage(new Messages.DoUnbindData());
-                DoWork(Program.Data.SaveModelData(openFile), onCompleting);
+                DoWork(BusinessData.Export(openFile), onCompleting);
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)

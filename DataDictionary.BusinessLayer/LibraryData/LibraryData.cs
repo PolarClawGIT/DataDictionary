@@ -3,11 +3,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.LibraryData
@@ -31,7 +27,7 @@ namespace DataDictionary.BusinessLayer.LibraryData
 
     }
 
-    class LibraryData : ILibraryData, INameScopeData
+    class LibraryData : ILibraryData, IDataTableFile, INameScopeData
     {
         /// <inheritdoc/>
         public ILibraryMemberData LibraryMembers { get { return members; } }
@@ -43,12 +39,12 @@ namespace DataDictionary.BusinessLayer.LibraryData
 
         public LibraryData() :base()
         {
-            members = new LibraryMemberData();
             sources = new LibrarySourceData();
+            members = new LibraryMemberData();
         }
 
         /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
+        /// <remarks>Library</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -59,7 +55,7 @@ namespace DataDictionary.BusinessLayer.LibraryData
         }
 
         /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
+        /// <remarks>Library</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -70,7 +66,7 @@ namespace DataDictionary.BusinessLayer.LibraryData
         }
 
         /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
+        /// <remarks>Library</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -81,7 +77,7 @@ namespace DataDictionary.BusinessLayer.LibraryData
         }
 
         /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
+        /// <remarks>Library</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -89,6 +85,24 @@ namespace DataDictionary.BusinessLayer.LibraryData
             work.AddRange(members.Save(factory, dataKey));
 
             return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Library</remarks>
+        public IReadOnlyList<System.Data.DataTable> Export()
+        {
+            List<System.Data.DataTable> result = new List<System.Data.DataTable>();
+            result.Add(sources.ToDataTable());
+            result.Add(members.ToDataTable());
+            return result;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Library</remarks>
+        public void Import(System.Data.DataSet source)
+        {
+            sources.Load(source);
+            members.Load(source);
         }
 
         /// <inheritdoc />
@@ -99,27 +113,22 @@ namespace DataDictionary.BusinessLayer.LibraryData
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<NameScopeItem> GetContextNames(Action<Int32, Int32> progress) 
+        public IReadOnlyList<NameScopeItem> GetNameScopes() 
         {
             List<NameScopeItem> result = new List<NameScopeItem>();
             List<LibrarySourceItem> libraries = LibrarySources.ToList();
             List<LibraryMemberItem> members = LibraryMembers.ToList();
 
-            Int32 totalWork = libraries.Count + members.Count();
-            Int32 completedWork = 0;
-
             foreach (LibrarySourceItem libraryitem in libraries)
             {
                 LibrarySourceKey libraryKey = new LibrarySourceKey(libraryitem);
                 result.Add(new NameScopeItem(libraryitem));
-                progress(completedWork++, totalWork);
 
                 foreach (LibraryMemberItem memberItem in members.
                     Where(w => w.MemberParentId is null))
                 {
                     LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
                     result.Add(new NameScopeItem(libraryKey, memberItem));
-                    progress(completedWork++, totalWork);
 
                     AddChildMember(libraryKey, memberKey);
                 }
@@ -130,7 +139,6 @@ namespace DataDictionary.BusinessLayer.LibraryData
                     {
                         LibraryMemberKey childKey = new LibraryMemberKey(memberItem);
                         result.Add(new NameScopeItem(memberKey, memberItem));
-                        progress(completedWork++, totalWork);
 
                         AddChildMember(sourceKey, childKey);
                     }

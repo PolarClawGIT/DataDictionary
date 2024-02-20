@@ -40,7 +40,7 @@ namespace DataDictionary.Main.ApplicationWide
             List<WorkItem> work = new List<WorkItem>();
             DatabaseWork factory = new DatabaseWork();
             work.Add(factory.OpenConnection());
-            work.AddRange(Program.Data.ApplicationData.Save(factory));
+            work.AddRange(BusinessData.ApplicationData.Save(factory));
             this.DoWork(work, OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
@@ -54,7 +54,7 @@ namespace DataDictionary.Main.ApplicationWide
             List<WorkItem> work = new List<WorkItem>();
             DatabaseWork factory = new DatabaseWork();
             work.Add(factory.OpenConnection());
-            work.AddRange(Program.Data.ApplicationData.Load(factory));
+            work.AddRange(BusinessData.ApplicationData.Load(factory));
             this.DoWork(work, OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
@@ -64,7 +64,7 @@ namespace DataDictionary.Main.ApplicationWide
         private void commandSaveToFile_Click(object sender, EventArgs e)
         {
             FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
-            this.DoWork(Program.Data.ApplicationData.Save(appDataFile), OnComplete);
+            this.DoWork(BusinessData.ApplicationData.Export(appDataFile), OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             { } // Nothing to do at this point
@@ -75,7 +75,7 @@ namespace DataDictionary.Main.ApplicationWide
             SendMessage(new DbApplicationBatchStarting());
 
             FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
-            this.DoWork(Program.Data.ApplicationData.Load(appDataFile), OnComplete);
+            this.DoWork(BusinessData.ApplicationData.Import(appDataFile), OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             { SendMessage(new DbApplicationBatchCompleted()); }

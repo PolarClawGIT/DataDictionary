@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer.CatalogData
     /// </summary>
     public interface ITableData: IBindingData<DbTableItem>
     {
-
+        internal IReadOnlyList<WorkItem> Load(IDbSchemaItem parent, NameScopeDictionary target);
     }
 
     class TableData : DbTableCollection, ITableData,
@@ -39,6 +39,25 @@ namespace DataDictionary.BusinessLayer.CatalogData
         /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
+
+        public IReadOnlyList<WorkItem> Load(IDbSchemaItem parent, NameScopeDictionary target)
+        {
+            List<WorkItem> result = new List<WorkItem>();
+            DbSchemaKeyName nameKey = new DbSchemaKeyName(parent);
+            DbSchemaKey key = new DbSchemaKey(parent);
+
+            foreach (DbTableItem item in this.Where(w => nameKey.Equals(w)))
+            {
+                result.Add(new WorkItem()
+                {
+                    WorkName = "Building Name Tree",
+                    DoWork = () => { target.Add(new NameScopeItem(key, item)); }
+                });
+                //result.AddRange(Catalog.DbTableColumns.Load(item, target));
+            }
+
+            return result;
+        }
 
     }
 }

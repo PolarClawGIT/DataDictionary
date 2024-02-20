@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.DomainData
@@ -29,7 +30,7 @@ namespace DataDictionary.BusinessLayer.DomainData
     }
 
     class EntityData: DomainEntityCollection, IEntityData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
     {
         /// <inheritdoc/>
         public IEntityAliasData DomainEntityAliases { get { return entityAlias; } }
@@ -64,5 +65,25 @@ namespace DataDictionary.BusinessLayer.DomainData
         /// <remarks>Entity</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Entity</remarks>
+        public IReadOnlyList<System.Data.DataTable> Export()
+        {
+            List<System.Data.DataTable> result = new List<System.Data.DataTable>();
+            result.Add(this.ToDataTable());
+            result.Add(entityAlias.ToDataTable());
+            result.Add(entityProperty.ToDataTable());
+            return result;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Entity</remarks>
+        public void Import(System.Data.DataSet source)
+        {
+            this.Load(source);
+            entityAlias.Load(source);
+            entityProperty.Load(source);
+        }
     }
 }

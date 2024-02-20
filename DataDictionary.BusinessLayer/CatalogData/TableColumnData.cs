@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
@@ -9,12 +10,12 @@ namespace DataDictionary.BusinessLayer.CatalogData
     /// <summary>
     /// Interface representing Catalog TableColumn data
     /// </summary>
-    public interface ITableColumnData: IBindingData<DbTableColumnItem>
+    public interface ITableColumnData : IBindingData<DbTableColumnItem>
     {
-
+        internal IReadOnlyList<WorkItem> Load(IDbTableItem parent, NameScopeDictionary target);
     }
 
-    class TableColumnData: DbTableColumnCollection, ITableColumnData,
+    class TableColumnData : DbTableColumnCollection, ITableColumnData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
@@ -37,5 +38,24 @@ namespace DataDictionary.BusinessLayer.CatalogData
         /// <remarks>TableColumn</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
+
+        public IReadOnlyList<WorkItem> Load(IDbTableItem parent, NameScopeDictionary target)
+        {
+            List<WorkItem> result = new List<WorkItem>();
+            DbTableKeyName nameKey = new DbTableKeyName(parent);
+            DbTableKey key = new DbTableKey(parent);
+
+            result.Add(new WorkItem()
+            {
+                WorkName = "Building Name Tree",
+                DoWork = () =>
+                {
+                    foreach (DbTableColumnItem item in this.Where(w => nameKey.Equals(w)))
+                    { target.Add(new NameScopeItem(key, item)); }
+                }
+            });
+
+            return result;
+        }
     }
 }

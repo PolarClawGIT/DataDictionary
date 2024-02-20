@@ -9,21 +9,10 @@ namespace DataDictionary.Main
 {
     internal static class Program
     {
-
-        /// <summary>
-        /// Worker Queue (Background and Foreground). Singleton access point.
-        /// </summary>
-        public static WorkerQueue Worker { get; } = new WorkerQueue();
-
-        /// <summary>
-        /// Mediator to allow messages to be sent between related forms. Messenger
-        /// </summary>
-        public static Mediator Messenger { get; } = new Mediator();
-
-
         /// <summary>
         /// Data used by the Application
         /// </summary>
+        [Obsolete("Being Replaced with new Business Layer object")]
         public static ModelData Data { get; } = new ModelData(new Context()
         { //TODO: Can this be secured better?
             ServerName = Settings.Default.AppServer,

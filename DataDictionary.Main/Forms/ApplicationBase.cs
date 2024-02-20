@@ -1,18 +1,10 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 using Toolbox.Mediator;
 using Toolbox.Threading;
@@ -95,7 +87,7 @@ namespace DataDictionary.Main.Forms
                 // The property DesignMode does not get set until after the Load event fires.
                 // There is no known way to detect if the Form is in design mode within the constructor.
                 // This is my work-around.
-                Program.Messenger.AddColleague(this);
+                Messenger.AddColleague(this);
                 SendMessage(new FormAddMdiChild() { ChildForm = this });
             }
             catch (Exception ex)
@@ -238,7 +230,7 @@ namespace DataDictionary.Main.Forms
         /// <remarks>The method calls LockForm and UnlockForm while work is being done.</remarks>
         protected void DoWork(IEnumerable<WorkItem> work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
         {
-            Program.Worker.Enqueue(work, completing);
+            Worker.Enqueue(work, completing);
 
             void completing(RunWorkerCompletedEventArgs result)
             {

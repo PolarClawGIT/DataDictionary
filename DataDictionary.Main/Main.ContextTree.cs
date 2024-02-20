@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.ContextName;
+using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
@@ -22,14 +22,14 @@ namespace DataDictionary.Main
 {
     partial class Main
     {
-        Dictionary<TreeNode, ContextNameItem> contextNodes = new Dictionary<TreeNode, ContextNameItem>();
+        Dictionary<TreeNode, NameScopeItem> contextNodes = new Dictionary<TreeNode, NameScopeItem>();
 
-        List<ContextNameItem> expandedContextNodes = new List<ContextNameItem>();
+        List<NameScopeItem> expandedContextNodes = new List<NameScopeItem>();
         void ClearTree()
         {
             expandedContextNodes.Clear();
             expandedContextNodes.AddRange(contextNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value));
-            Program.Data.ContextName.ListChanged -= ModelContextName_ListChanged;
+            BusinessData.NameScope.ListChanged -= ModelContextName_ListChanged;
 
             contextNameNavigation.Nodes.Clear();
             contextNodes.Clear();
@@ -59,22 +59,22 @@ namespace DataDictionary.Main
                 contextNameLayout.UseWaitCursor = false;
                 contextNameLayout.Enabled = true;
                 contextNameNavigation.EndUpdate();
-                Program.Data.ContextName.ListChanged += ModelContextName_ListChanged;
+                BusinessData.NameScope.ListChanged += ModelContextName_ListChanged;
             }
 
             void LoadTree()
             {
-                Int32 totalWork = Program.Data.ContextName.Count;
+                Int32 totalWork = BusinessData.NameScope.Count;
                 Int32 completeWork = 0;
                 progress(completeWork, totalWork);
 
                 CreateNodes(
                     contextNameNavigation.Nodes,
-                    Program.Data.ContextName.RootItem.Children.Select(s => Program.Data.ContextName[s]).ToList());
+                    BusinessData.NameScope.RootItem.Children.Select(s => BusinessData.NameScope[s]).ToList());
 
-                void CreateNodes(TreeNodeCollection target, IEnumerable<ContextNameItem> items)
+                void CreateNodes(TreeNodeCollection target, IEnumerable<NameScopeItem> items)
                 {
-                    foreach (IGrouping<ScopeType, ContextNameItem>? scopeGroup in items.GroupBy(g => g.Scope).OrderBy(o => o.Key))
+                    foreach (IGrouping<ScopeType, NameScopeItem>? scopeGroup in items.GroupBy(g => g.Scope).OrderBy(o => o.Key))
                     {
                         TreeNodeCollection nodes = target;
 
@@ -93,7 +93,7 @@ namespace DataDictionary.Main
                             });
                         }
 
-                        foreach (ContextNameItem item in scopeGroup.OrderBy(o => o.OrdinalPosition).ThenBy(o => o.MemberName))
+                        foreach (NameScopeItem item in scopeGroup.OrderBy(o => o.OrdinalPosition).ThenBy(o => o.MemberName))
                         {
                             TreeNode node = contextNameNavigation.Invoke<TreeNode>(() =>
                             {
@@ -114,7 +114,7 @@ namespace DataDictionary.Main
                             {
                                 CreateNodes(
                                     node.Nodes,
-                                    item.Children.Select(s => Program.Data.ContextName[s]));
+                                    item.Children.Select(s => BusinessData.NameScope[s]));
                             }
 
                             progress(completeWork++, totalWork);
@@ -125,13 +125,13 @@ namespace DataDictionary.Main
             }
         }
 
-        private void ModelContextName_ListChanged(object? sender, ContextNameChangedEventArgs e)
+        private void ModelContextName_ListChanged(object? sender, NameScopeChangedEventArgs e)
         {
             TreeNodeCollection taget = contextNameNavigation.Nodes;
 
-            if (sender is ContextNameDictionary source)
+            if (sender is NameScopeDictionary source)
             {
-                if (e.ChangedType == ContextNameChangedType.ItemAdded && e.Item is ContextNameItem addedItem)
+                if (e.ChangedType == NameScopeChangedType.ItemAdded && e.Item is NameScopeItem addedItem)
                 {
                     if (contextNodes.FirstOrDefault(w => addedItem.SystemParentKey is not null && addedItem.SystemParentKey.Equals(w.Value.SystemKey)).Key is TreeNode parentNode)
                     { taget = parentNode.Nodes; }
@@ -152,9 +152,9 @@ namespace DataDictionary.Main
                     });
                 }
 
-                if (e.ChangedType == ContextNameChangedType.ItemDeleted && e.Item is ContextNameItem deletedItem)
+                if (e.ChangedType == NameScopeChangedType.ItemDeleted && e.Item is NameScopeItem deletedItem)
                 {
-                    ContextNameKey deleteKey = deletedItem.SystemKey;
+                    NameScopeKey deleteKey = deletedItem.SystemKey;
                     if (contextNodes.FirstOrDefault(w => deletedItem.SystemKey.Equals(w.Value.SystemKey)).Key is TreeNode node)
                     {
                         node.Remove();
@@ -168,22 +168,17 @@ namespace DataDictionary.Main
         {
             ClearTree();
 
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(Program.Data.RemoveContextName());
-            work.AddRange(Program.Data.LoadContextName());
 
-            this.DoWork(work, OnComplete);
-
-            void OnComplete(RunWorkerCompletedEventArgs args)
-            { BuildTree(); }
+            BusinessData.NameScope.Clear();
+            BusinessData.LoadNameScope();
         }
 
         private void NewAttributeCommand_ButtonClick(object sender, EventArgs e)
         {
             DomainAttributeItem item = new DomainAttributeItem();
 
-            Program.Data.DomainAttributes.Add(item);
-            Program.Data.ContextName.Add(new ContextNameItem(Program.Data.Model, item));
+            BusinessData.DomainData.DomainAttributes.Add(item);
+            //Program.Data.ContextName.Add(new NameScopeItem(Program.Data.Model, item));
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
             { contextNameNavigation.SelectedNode = node; }
@@ -195,8 +190,8 @@ namespace DataDictionary.Main
         {
             DomainEntityItem item = new DomainEntityItem();
 
-            Program.Data.DomainEntities.Add(item);
-            Program.Data.ContextName.Add(new ContextNameItem(Program.Data.Model, item));
+            BusinessData.DomainData.DomainEntities.Add(item);
+            //Program.Data.ContextName.Add(new NameScopeItem(Program.Data.Model, item));
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
             { contextNameNavigation.SelectedNode = node; }
@@ -207,8 +202,8 @@ namespace DataDictionary.Main
         private void NewSubjectAreaCommand_ButtonClick(object sender, EventArgs e)
         {
             ModelSubjectAreaItem item = new ModelSubjectAreaItem();
-            Program.Data.ModelSubjectAreas.Add(item);
-            Program.Data.ContextName.Add(new ContextNameItem(Program.Data.Model, item));
+            BusinessData.DomainData.ModelSubjectAreas.Add(item);
+            //Program.Data.ContextName.Add(new NameScopeItem(Program.Data.Model, item));
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
             { contextNameNavigation.SelectedNode = node; }

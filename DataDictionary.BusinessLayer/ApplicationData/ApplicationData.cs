@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.ApplicationData
     /// Interface representing Application data
     /// </summary>
     public interface IApplicationData:
-        ILoadData, ISaveData, ILoadFile, ISaveFile
+        ILoadData, ISaveData, IFileData
     {
         /// <summary>
         /// Wrapper for Application Help.
@@ -33,7 +33,7 @@ namespace DataDictionary.BusinessLayer.ApplicationData
     /// Implementation for Application data
     /// </summary>
     public class ApplicationData : IApplicationData,
-        ILoadData, ISaveData, ILoadFile, ISaveFile
+        ILoadData, ISaveData, IFileData
     {
         /// <inheritdoc/>
         public IHelpSubjectData HelpSubjects { get { return helpSubjectValues; } }
@@ -53,7 +53,7 @@ namespace DataDictionary.BusinessLayer.ApplicationData
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Load(FileInfo file)
+        public IReadOnlyList<WorkItem> Import(FileInfo file)
         {
             List<WorkItem> workItems = new List<WorkItem>
             {
@@ -83,7 +83,7 @@ namespace DataDictionary.BusinessLayer.ApplicationData
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Save(FileInfo file)
+        public IReadOnlyList<WorkItem> Export(FileInfo file)
         {
             List<WorkItem> workItems = new List<WorkItem>();
 

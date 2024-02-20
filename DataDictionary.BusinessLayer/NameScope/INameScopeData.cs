@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.NameScope
 {
+    /// <summary>
+    /// Interface for objects that contain NameScope Data
+    /// </summary>
     interface INameScopeData
     {
         /// <summary>
         /// Generates a list of NameScope to be added to the NameScope Dictionary.
         /// </summary>
-        /// <param name="progress"></param>
         /// <returns></returns>
-        IReadOnlyList<NameScopeItem> GetContextNames(Action<Int32, Int32> progress);
+        IReadOnlyList<NameScopeItem> GetNameScopes();
     }
 }
