@@ -257,7 +257,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Database.DbTableColumn() { DataKey = new DbTableColumnKeyName(columnItem) }, columnItem); }
 
         void Activate(DbConstraintItem constraintItem)
-        { Activate((data) => new Forms.Database.DbConstraint() { DataKey = new DbConstraintKeyName(constraintItem) }, constraintItem); }
+        { Activate((data) => new Forms.Database.DbConstraint(constraintItem), constraintItem); }
 
         void Activate(DbRoutineItem routineItem)
         { Activate((data) => new Forms.Database.DbRoutine() { DataKey = new DbRoutineKeyName(routineItem) }, routineItem); }

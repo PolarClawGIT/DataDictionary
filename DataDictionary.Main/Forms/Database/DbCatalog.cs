@@ -27,11 +27,14 @@ namespace DataDictionary.Main.Forms.Database
 
         public DbCatalog(IDbCatalogItem catalogItem) : this()
         {
-            bindingSource.DataSource = new BindingList<IDbCatalogItem> { catalogItem };
+            DbCatalogKeyName key = new DbCatalogKeyName(catalogItem);
             RowState = catalogItem.RowState();
             catalogItem.RowStateChanged += CatalogItem_RowStateChanged;
-            bindingSource.Position = 0;
             this.Text = catalogItem.ToString();
+
+            bindingSource.DataSource = new BindingView<DbCatalogItem>(BusinessData.DatabaseData.DbCatalogs, w => key.Equals(w) && false);
+            bindingSource.Position = 0;
+           
         }
 
         private void CatalogItem_RowStateChanged(object? sender, EventArgs e)
@@ -53,6 +56,8 @@ namespace DataDictionary.Main.Forms.Database
             sourceServerNameData.DataBindings.Add(new Binding(nameof(sourceServerNameData.Text), bindingSource, nameof(bindingNames.SourceServerName)));
             sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(sourceDatabaseNameData.Text), bindingSource, nameof(bindingNames.SourceDatabaseName)));
             sourceDateData.DataBindings.Add(new Binding(nameof(sourceDateData.Text), bindingSource, nameof(bindingNames.SourceDate)));
+
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSource.Current is not DbCatalogItem);
         }
 
         private void ImportDataCommand_Click(object? sender, EventArgs e)
