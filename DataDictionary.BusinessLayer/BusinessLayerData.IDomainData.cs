@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.DomainData;
+﻿using DataDictionary.BusinessLayer.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,6 @@ namespace DataDictionary.BusinessLayer
         /// Wrapper for the Domain Data (Entity, Attribute, Process ...)
         /// </summary>
         public IDomainData DomainData { get { return domain; } }
-        private readonly DomainData.DomainData domain = new DomainData.DomainData();
+        private readonly DomainData domain = new DomainData();
     }
 }

@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.ModelData;
 using System;
 using System.Collections.Generic;
@@ -8,37 +8,38 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.DomainData
+namespace DataDictionary.BusinessLayer.Domain
 {
     /// <summary>
-    /// Interface component for the Model Attribute Property
+    /// Interface component for the Model Entity Property
     /// </summary>
-    public interface IAttributePropertyData : IBindingData<DomainAttributePropertyItem>
+    public interface IEntityPropertyData:
+        IBindingData<DomainEntityPropertyItem>
     {
 
     }
 
-    class AttributePropertyData: DomainAttributePropertyCollection, IAttributePropertyData,
-        ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>,
+    class EntityPropertyData : DomainEntityPropertyCollection, IEntityPropertyData,
+        ILoadData<IDomainEntityKey>, ISaveData<IDomainEntityKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <inheritdoc/>
-        /// <remarks>AttributeProperty</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDomainAttributeKey dataKey)
+        /// <remarks>EntityProperty</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDomainEntityKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>AttributeProperty</remarks>
+        /// <remarks>EntityProperty</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>AttributeProperty</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainAttributeKey dataKey)
+        /// <remarks>EntityProperty</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainEntityKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>AttributeProperty</remarks>
+        /// <remarks>EntityProperty</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
     }

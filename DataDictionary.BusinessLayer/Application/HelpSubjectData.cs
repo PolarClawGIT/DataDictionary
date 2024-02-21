@@ -3,7 +3,7 @@ using DataDictionary.DataLayer.ApplicationData.Help;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.ApplicationData
+namespace DataDictionary.BusinessLayer.Application
 {
     /// <summary>
     /// Interface component for the HelpSubject data

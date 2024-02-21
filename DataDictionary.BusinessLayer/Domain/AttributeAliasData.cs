@@ -3,7 +3,7 @@ using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.DomainData
+namespace DataDictionary.BusinessLayer.Domain
 {
     /// <summary>
     /// Interface component for the Model Attribute Alias

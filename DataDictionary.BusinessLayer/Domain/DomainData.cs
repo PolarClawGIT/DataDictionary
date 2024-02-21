@@ -3,7 +3,7 @@ using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.DomainData
+namespace DataDictionary.BusinessLayer.Domain
 {
     /// <summary>
     /// Interface representing Domain data

@@ -63,7 +63,7 @@ namespace DataDictionary.BusinessLayer
                 {
                     workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
                     domain.Import(workSet);
-                    catalog.Import(workSet);
+                    database.Import(workSet);
                     library.Import(workSet);
                 }
             }
@@ -79,7 +79,7 @@ namespace DataDictionary.BusinessLayer
                 using (System.Data.DataSet workSet = new System.Data.DataSet())
                 {
                     workSet.Tables.AddRange(domain.Export().ToArray());
-                    workSet.Tables.AddRange(catalog.Export().ToArray());
+                    workSet.Tables.AddRange(database.Export().ToArray());
                     workSet.Tables.AddRange(library.Export().ToArray());
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }

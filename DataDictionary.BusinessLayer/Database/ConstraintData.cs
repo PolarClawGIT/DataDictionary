@@ -4,7 +4,7 @@ using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.CatalogData
+namespace DataDictionary.BusinessLayer.Database
 {
     /// <summary>
     /// Interface representing Catalog Constraint data

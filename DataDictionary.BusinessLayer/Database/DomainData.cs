@@ -1,41 +1,40 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.CatalogData
+namespace DataDictionary.BusinessLayer.Database
 {
     /// <summary>
-    /// Interface representing Catalog ConstraintColumn data
+    /// Interface representing Catalog Domain data
     /// </summary>
-    public interface IConstraintColumnData :
-        IBindingData<DbConstraintColumnItem>
+    public interface IDomainData : IBindingData<DbDomainItem>
     {
 
     }
 
-    class ConstraintColumnData: DbConstraintColumnCollection, IConstraintColumnData,
+    class DomainData : DbDomainCollection, IDomainData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <inheritdoc/>
-        /// <remarks>ConstraintColumn</remarks>
+        /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>ConstraintColumn</remarks>
+        /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>ConstraintColumn</remarks>
+        /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDbCatalogKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>ConstraintColumn</remarks>
+        /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
     }

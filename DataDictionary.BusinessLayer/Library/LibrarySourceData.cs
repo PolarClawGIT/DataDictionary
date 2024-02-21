@@ -1,5 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.DataLayer.ModelData;
 using System;
@@ -9,17 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.LibraryData
+namespace DataDictionary.BusinessLayer.Library
 {
     /// <summary>
-    /// Interface representing Library Member data
+    /// Interface representing Library data
     /// </summary>
-    public interface ILibraryMemberData : IBindingData<LibraryMemberItem>
-    {
+    public interface ILibrarySourceData : IBindingData<LibrarySourceItem>
+    { }
 
-    }
-
-    class LibraryMemberData : LibraryMemberCollection, ILibraryMemberData,
+    /// <summary>
+    /// Implementation for Library data
+    /// </summary>
+    public class LibrarySourceData: LibrarySourceCollection, ILibrarySourceData,
         ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {

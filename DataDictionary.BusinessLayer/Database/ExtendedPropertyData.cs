@@ -8,7 +8,7 @@ using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.CatalogData
+namespace DataDictionary.BusinessLayer.Database
 {
     /// <summary>
     /// Interface representing Catalog ExtendedProperty data

@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.LibraryData;
+﻿using DataDictionary.BusinessLayer.Library;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,6 @@ namespace DataDictionary.BusinessLayer
         /// Wrapper for Library Data (Library Source and Member)
         /// </summary>
         public ILibraryData LibraryData { get { return library; } }
-        private readonly LibraryData.LibraryData library = new LibraryData.LibraryData();
+        private readonly LibraryData library = new LibraryData();
     }
 }

@@ -12,9 +12,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ApplicationData\NameSpace\**" />
-    <EmbeddedResource Remove="ApplicationData\NameSpace\**" />
-    <None Remove="ApplicationData\NameSpace\**" />
+    <Compile Remove="Application\NameSpace\**" />
+    <EmbeddedResource Remove="Application\NameSpace\**" />
+    <None Remove="Application\NameSpace\**" />
   </ItemGroup>
 
   <ItemGroup>

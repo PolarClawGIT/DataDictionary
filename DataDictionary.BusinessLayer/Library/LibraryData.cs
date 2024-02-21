@@ -6,7 +6,7 @@ using DataDictionary.DataLayer.ModelData;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.LibraryData
+namespace DataDictionary.BusinessLayer.Library
 {
     /// <summary>
     /// Interface representing .Net Library Data

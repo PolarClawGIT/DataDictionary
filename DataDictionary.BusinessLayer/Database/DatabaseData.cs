@@ -10,12 +10,12 @@ using DataDictionary.DataLayer.ModelData;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.CatalogData
+namespace DataDictionary.BusinessLayer.Database
 {
     /// <summary>
     /// Interface representing Catalog data
     /// </summary>
-    public interface ICatalogData :
+    public interface IDatabaseData :
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
         
@@ -23,7 +23,7 @@ namespace DataDictionary.BusinessLayer.CatalogData
         /// <summary>
         /// List of Database Catalogs within the Model.
         /// </summary>
-        IDatabaseData DbCatalogs { get; }
+        ICatalogData DbCatalogs { get; }
 
         /// <summary>
         /// List of Database Domains (types) within the Model.
@@ -74,11 +74,11 @@ namespace DataDictionary.BusinessLayer.CatalogData
     /// <summary>
     /// Implementation for Catalog data
     /// </summary>
-    class CatalogData : ICatalogData, IDataTableFile, INameScopeData
+    class DatabaseData : IDatabaseData, IDataTableFile, INameScopeData
     {
         /// <inheritdoc/>
-        public IDatabaseData DbCatalogs { get { return catalogs; } }
-        private readonly DatabaseData catalogs;
+        public ICatalogData DbCatalogs { get { return catalogs; } }
+        private readonly CatalogData catalogs;
 
         /// <inheritdoc/>
         public ISchemaData DbSchemta { get { return schemta; } }
@@ -120,9 +120,9 @@ namespace DataDictionary.BusinessLayer.CatalogData
         public ITableColumnData DbTableColumns { get { return tableColumns; } }
         private readonly TableColumnData tableColumns;
 
-        public CatalogData() : base()
+        public DatabaseData() : base()
         {
-            catalogs = new DatabaseData();
+            catalogs = new CatalogData();
             schemta = new SchemaData();
             domains = new DomainData();
             extendedProperties = new ExtendedPropertyData();

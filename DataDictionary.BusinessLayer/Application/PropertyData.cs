@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.ApplicationData
+namespace DataDictionary.BusinessLayer.Application
 {
     /// <summary>
     /// Interface component for the Property data

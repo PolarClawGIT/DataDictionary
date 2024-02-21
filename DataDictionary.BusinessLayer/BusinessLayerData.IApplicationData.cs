@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.ApplicationData;
+﻿using DataDictionary.BusinessLayer.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,6 @@ namespace DataDictionary.BusinessLayer
 		/// <summary>
 		/// Wrapper for Application Data
 		/// </summary>
-		public IApplicationData ApplicationData { get; } = new ApplicationData.ApplicationData();
+		public IApplicationData ApplicationData { get; } = new ApplicationData();
 	}
 }

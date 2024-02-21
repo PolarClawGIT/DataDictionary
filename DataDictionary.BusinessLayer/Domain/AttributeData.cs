@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.DomainData
+namespace DataDictionary.BusinessLayer.Domain
 {
     /// <summary>
     /// Interface component for the Model Attribute

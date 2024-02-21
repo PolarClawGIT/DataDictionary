@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer
         public void LoadNameScope()
         {
             NameScope.Clear();
-            NameScope.AddRange(catalog.GetNameScopes());
+            NameScope.AddRange(database.GetNameScopes());
             NameScope.AddRange(library.GetNameScopes());
             NameScope.AddRange(domain.GetNameScopes());
         }

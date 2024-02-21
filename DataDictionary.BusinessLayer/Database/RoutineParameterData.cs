@@ -4,37 +4,37 @@ using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.CatalogData
+namespace DataDictionary.BusinessLayer.Database
 {
     /// <summary>
-    /// Interface representing Catalog RoutineDependency data
+    /// Interface representing Catalog RoutineParameter data
     /// </summary>
-    public interface IRoutineDependencyData: IBindingData<DbRoutineDependencyItem>
+    public interface IRoutineParameterData: IBindingData<DbRoutineParameterItem>
     {
 
     }
 
-    class RoutineDependencyData: DbRoutineDependencyCollection, IRoutineDependencyData,
+    class RoutineParameterData: DbRoutineParameterCollection, IRoutineParameterData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <inheritdoc/>
-        /// <remarks>RoutineDependency</remarks>
+        /// <remarks>RoutineParameter</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>RoutineDependency</remarks>
+        /// <remarks>RoutineParameter</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>RoutineDependency</remarks>
+        /// <remarks>RoutineParameter</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDbCatalogKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>RoutineDependency</remarks>
+        /// <remarks>RoutineParameter</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
     }
