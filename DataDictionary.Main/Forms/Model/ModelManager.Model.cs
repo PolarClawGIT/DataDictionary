@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,22 +29,32 @@ namespace DataDictionary.Main.Forms.Model
             {
                 data = source;
                 data.PropertyChanged += Data_PropertyChanged;
+                data.RowStateChanged += Data_RowStateChanged;
+            }
+
+            private void Data_RowStateChanged(object? sender, EventArgs e)
+            {
+                if (RowStateChanged is EventHandler handler)
+                { handler(sender, e); }
             }
 
             private void Data_PropertyChanged(object? sender, PropertyChangedEventArgs e)
             {
-                if (!String.IsNullOrWhiteSpace(e.PropertyName))
-                { OnPropertyChanged(e.PropertyName); }
+                if (PropertyChanged is PropertyChangedEventHandler handler)
+                { handler(sender, e); }
             }
 
             public event PropertyChangedEventHandler? PropertyChanged;
+            public event EventHandler? RowStateChanged;
+
             public virtual void OnPropertyChanged(string propertyName)
             {
                 if (PropertyChanged is PropertyChangedEventHandler handler)
                 { handler(this, new PropertyChangedEventArgs(propertyName)); }
-
-
             }
+
+            public DataRowState RowState()
+            { return data.RowState(); }
         }
 
         class ModelManagerCollection : BindingList<ModelManagerItem>

@@ -1,4 +1,7 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.ModelData;
 using System;
@@ -27,10 +30,15 @@ namespace DataDictionary.BusinessLayer.Domain
         /// List of Domain Properties for the Entities within the Model.
         /// </summary>
         IEntityPropertyData DomainEntityProperties { get; }
+
+        void Import(IDatabaseData source, IDbCatalogKeyName key);
+
+        void Import(IDatabaseData source, IDbTableKeyName key);
     }
 
     class EntityData: DomainEntityCollection, IEntityData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        IDataTableFile
     {
         /// <inheritdoc/>
         public IEntityAliasData DomainEntityAliases { get { return entityAlias; } }
@@ -84,6 +92,16 @@ namespace DataDictionary.BusinessLayer.Domain
             this.Load(source);
             entityAlias.Load(source);
             entityProperty.Load(source);
+        }
+
+        public void Import(IDatabaseData source, IDbCatalogKeyName key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Import(IDatabaseData source, IDbTableKeyName key)
+        {
+            throw new NotImplementedException();
         }
     }
 }

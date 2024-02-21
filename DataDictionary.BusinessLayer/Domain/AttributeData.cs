@@ -1,11 +1,9 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -27,10 +25,17 @@ namespace DataDictionary.BusinessLayer.Domain
         /// List of Domain Properties for the Attributes within the Model.
         /// </summary>
         IAttributePropertyData DomainAttributeProperties { get; }
+
+        void Import(IDatabaseData source, IDbCatalogKeyName key);
+
+        void Import(IDatabaseData source, IDbTableKeyName key);
+
+        void Import(IDatabaseData source, IDbTableColumnKeyName key);
     }
 
     class AttributeData : DomainAttributeCollection, IAttributeData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        IDataTableFile
     {
         /// <inheritdoc/>
         public IAttributeAliasData DomainAttributeAliases { get { return attributeAlias; } }
@@ -84,6 +89,21 @@ namespace DataDictionary.BusinessLayer.Domain
             this.Load(source);
             attributeAlias.Load(source);
             attributeProperty.Load(source);
+        }
+
+        public void Import(IDatabaseData source, IDbCatalogKeyName key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Import(IDatabaseData source, IDbTableKeyName key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Import(IDatabaseData source, IDbTableColumnKeyName key)
+        {
+            throw new NotImplementedException();
         }
     }
 }

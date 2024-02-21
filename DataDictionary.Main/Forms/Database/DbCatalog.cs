@@ -1,16 +1,18 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
+using System.Data;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbCatalog : ApplicationBase, IApplicationDataForm<DbCatalogKey>
+    partial class DbCatalog : ApplicationBase, IApplicationDataForm
     {
-        public required DbCatalogKey DataKey { get; init; }
 
-        public bool IsOpenItem(object? item)
-        { return DataKey.Equals(item); }
+        public Boolean IsOpenItem(object? item)
+        { return bindingSource.Current is IDbCatalogItem current && ReferenceEquals(current, item); }
 
         public DbCatalog() : base()
         {
@@ -23,51 +25,43 @@ namespace DataDictionary.Main.Forms.Database
             importDataCommand.ToolTipText = "Import the Database to the Domain Model";
         }
 
-        private void DbCatalog_Load(object sender, EventArgs e)
-        { (this as IApplicationDataBind).BindData(); }
-
-        public bool BindDataCore()
+        public DbCatalog(IDbCatalogItem catalogItem) : this()
         {
-            if (Program.Data.DbCatalogs.FirstOrDefault(w => DataKey.Equals(w)) is DbCatalogItem data)
-            {
-                this.Text = new DbCatalogKey(data).ToString();
-
-                catalogTitleData.DataBindings.Add(new Binding(nameof(catalogTitleData.Text), data, nameof(data.CatalogTitle)));
-                catalogDescriptionData.DataBindings.Add(new Binding(nameof(catalogDescriptionData.Text), data, nameof(data.CatalogDescription)));
-                sourceServerNameData.DataBindings.Add(new Binding(nameof(sourceServerNameData.Text), data, nameof(data.SourceServerName)));
-                sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(sourceDatabaseNameData.Text), data, nameof(data.SourceDatabaseName)));
-                sourceDateData.DataBindings.Add(new Binding(nameof(sourceDateData.Text), data, nameof(data.SourceDate)));
-
-                return true;
-            }
-            else { return false; }
+            bindingSource.DataSource = new BindingList<IDbCatalogItem> { catalogItem };
+            RowState = catalogItem.RowState();
+            catalogItem.RowStateChanged += CatalogItem_RowStateChanged;
+            bindingSource.Position = 0;
+            this.Text = catalogItem.ToString();
         }
 
-        public void UnbindDataCore()
+        private void CatalogItem_RowStateChanged(object? sender, EventArgs e)
         {
-            catalogTitleData.DataBindings.Clear();
-            catalogDescriptionData.DataBindings.Clear();
-            sourceServerNameData.DataBindings.Clear();
-            sourceDatabaseNameData.DataBindings.Clear();
-            sourceDateData.DataBindings.Clear();
+            if (sender is IBindingRowState data)
+            {
+                RowState = data.RowState();
+                if (IsHandleCreated)
+                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
+                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
+            }
+        }
+
+        private void DbCatalog_Load(object sender, EventArgs e)
+        {
+            IDbCatalogItem bindingNames;
+            catalogTitleData.DataBindings.Add(new Binding(nameof(catalogTitleData.Text), bindingSource, nameof(bindingNames.CatalogTitle)));
+            catalogDescriptionData.DataBindings.Add(new Binding(nameof(catalogDescriptionData.Text), bindingSource, nameof(bindingNames.CatalogDescription)));
+            sourceServerNameData.DataBindings.Add(new Binding(nameof(sourceServerNameData.Text), bindingSource, nameof(bindingNames.SourceServerName)));
+            sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(sourceDatabaseNameData.Text), bindingSource, nameof(bindingNames.SourceDatabaseName)));
+            sourceDateData.DataBindings.Add(new Binding(nameof(sourceDateData.Text), bindingSource, nameof(bindingNames.SourceDate)));
         }
 
         private void ImportDataCommand_Click(object? sender, EventArgs e)
         {
-
-            List<WorkItem> work = new List<WorkItem>();
-
-            if (Program.Data.DbCatalogs.FirstOrDefault(w => DataKey.Equals(w)) is DbCatalogItem data)
+            if (bindingSource.Current is IDbCatalogItem current)
             {
-                if (importOptionEntity.Checked) { work.AddRange(Program.Data.ImportEntity(data)); }
-                if (importOptionAttribute.Checked) { work.AddRange(Program.Data.ImportAttribute(data)); }
-
-                SendMessage(new Messages.DoUnbindData());
-                this.DoWork(work, onCompleting);
+                BusinessData.DomainData.DomainAttributes.Import(BusinessData.DatabaseData, current);
+                BusinessData.DomainData.DomainEntities.Import(BusinessData.DatabaseData, current);
             }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
         }
     }
 }

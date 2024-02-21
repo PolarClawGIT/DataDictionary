@@ -39,9 +39,11 @@
             importOptionEntity = new ToolStripMenuItem();
             importOptionAttribute = new ToolStripMenuItem();
             importOptionProcesses = new ToolStripMenuItem();
+            bindingSource = new BindingSource(components);
             catalogManagerLayout = new TableLayoutPanel();
             catalogManagerLayout.SuspendLayout();
             importOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingSource).BeginInit();
             SuspendLayout();
             // 
             // catalogManagerLayout
@@ -131,7 +133,7 @@
             // 
             importOptions.Items.AddRange(new ToolStripItem[] { importOptionEntity, importOptionAttribute, importOptionProcesses });
             importOptions.Name = "contextMenuStrip1";
-            importOptions.Size = new Size(181, 92);
+            importOptions.Size = new Size(166, 70);
             // 
             // importOptionEntity
             // 
@@ -139,7 +141,7 @@
             importOptionEntity.CheckOnClick = true;
             importOptionEntity.CheckState = CheckState.Checked;
             importOptionEntity.Name = "importOptionEntity";
-            importOptionEntity.Size = new Size(180, 22);
+            importOptionEntity.Size = new Size(165, 22);
             importOptionEntity.Text = "Import Entities";
             // 
             // importOptionAttribute
@@ -148,7 +150,7 @@
             importOptionAttribute.CheckOnClick = true;
             importOptionAttribute.CheckState = CheckState.Checked;
             importOptionAttribute.Name = "importOptionAttribute";
-            importOptionAttribute.Size = new Size(180, 22);
+            importOptionAttribute.Size = new Size(165, 22);
             importOptionAttribute.Text = "Import Attributes";
             // 
             // importOptionProcesses
@@ -156,7 +158,7 @@
             importOptionProcesses.CheckOnClick = true;
             importOptionProcesses.Enabled = false;
             importOptionProcesses.Name = "importOptionProcesses";
-            importOptionProcesses.Size = new Size(180, 22);
+            importOptionProcesses.Size = new Size(165, 22);
             importOptionProcesses.Text = "Import Processes";
             // 
             // DbCatalog
@@ -172,6 +174,7 @@
             catalogManagerLayout.ResumeLayout(false);
             catalogManagerLayout.PerformLayout();
             importOptions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)bindingSource).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -187,5 +190,6 @@
         private ToolStripMenuItem importOptionEntity;
         private ToolStripMenuItem importOptionAttribute;
         private ToolStripMenuItem importOptionProcesses;
+        private BindingSource bindingSource;
     }
 }

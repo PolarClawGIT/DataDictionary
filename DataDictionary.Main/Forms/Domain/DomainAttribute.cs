@@ -87,7 +87,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void Data_RowStateChanged(object? sender, EventArgs e)
         {
-            if (sender is IBindingTableRow data)
+            if (sender is IBindingRowState data)
             {
                 RowState = data.RowState();
                 if (IsHandleCreated)

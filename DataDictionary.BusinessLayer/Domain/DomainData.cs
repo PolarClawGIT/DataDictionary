@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
@@ -34,7 +35,9 @@ namespace DataDictionary.BusinessLayer.Domain
 
     }
 
-    class DomainData: IDomainData, IDataTableFile//, INameScopeData
+    class DomainData: IDomainData,
+        IDataTableFile
+    //, INameScopeData
     {
         /// <inheritdoc/>
         public IAttributeData DomainAttributes { get { return attributes; } }

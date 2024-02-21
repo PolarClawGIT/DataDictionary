@@ -244,8 +244,8 @@ namespace DataDictionary.Main
         }
 
 
-        void Activate(DbCatalogItem catalogItem)
-        { Activate((data) => new Forms.Database.DbCatalog() { DataKey = new DbCatalogKey(catalogItem) }, catalogItem); }
+        void Activate(IDbCatalogItem catalogItem)
+        { Activate((data) => new Forms.Database.DbCatalog(catalogItem), catalogItem); }
 
         void Activate(DbSchemaItem schemaItem)
         { Activate((data) => new Forms.Database.DbSchema() { DataKey = new DbSchemaKeyName(schemaItem) }, schemaItem); }
