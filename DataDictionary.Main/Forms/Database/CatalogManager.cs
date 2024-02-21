@@ -196,7 +196,7 @@ namespace DataDictionary.Main.Forms.Database
                     };
 
                     work.AddRange(Program.Data.LoadCatalog(source));
-                    work.AddRange(Program.Data.LoadContextName(source));
+                    //work.AddRange(Program.Data.LoadContextName(source));
 
                     DoLocalWork(work);
                 }
@@ -211,8 +211,8 @@ namespace DataDictionary.Main.Forms.Database
 
             if (catalogBinding.Current is CatalogManagerItem item)
             {
-                work.AddRange(Program.Data.RemoveContextName(item));
-                work.AddRange(Program.Data.RemoveCatalog(item));
+                //work.AddRange(Program.Data.RemoveContextName(item));
+                //work.AddRange(Program.Data.RemoveCatalog(item));
             }
 
             DoLocalWork(work);
@@ -251,7 +251,7 @@ namespace DataDictionary.Main.Forms.Database
                 DbCatalogKey key = new DbCatalogKey(item);
                 work.Add(factory.OpenConnection());
                 work.AddRange(Program.Data.LoadCatalog(factory, key));
-                work.AddRange(Program.Data.LoadContextName(key));
+                //work.AddRange(Program.Data.LoadContextName(key));
 
                 DoLocalWork(work);
             }
