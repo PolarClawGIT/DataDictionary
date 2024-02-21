@@ -12,14 +12,16 @@ namespace DataDictionary.BusinessLayer.Database
     /// Interface representing Catalog Table data
     /// </summary>
     public interface ITableData: IBindingData<DbTableItem>
-    {
-        internal IReadOnlyList<WorkItem> Load(IDbSchemaItem parent, NameScopeDictionary target);
-    }
+    { }
 
     class TableData : DbTableCollection, ITableData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        IDatabaseDataItem, INameScopeData
     {
+        /// <inheritdoc/>
+        public required IDatabaseData Database { get; init; }
+
         /// <inheritdoc/>
         /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
@@ -40,23 +42,27 @@ namespace DataDictionary.BusinessLayer.Database
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
-        public IReadOnlyList<WorkItem> Load(IDbSchemaItem parent, NameScopeDictionary target)
+        /// <inheritdoc/>
+        /// <remarks>Table</remarks>
+        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target)
         {
-            List<WorkItem> result = new List<WorkItem>();
-            DbSchemaKeyName nameKey = new DbSchemaKeyName(parent);
-            DbSchemaKey key = new DbSchemaKey(parent);
+            List<WorkItem> work = new List<WorkItem>();
 
-            foreach (DbTableItem item in this.Where(w => nameKey.Equals(w)))
+            work.Add(new WorkItem()
             {
-                result.Add(new WorkItem()
+                WorkName = "Load NameScope, Table",
+                DoWork = () =>
                 {
-                    WorkName = "Building Name Tree",
-                    DoWork = () => { target.Add(new NameScopeItem(key, item)); }
-                });
-                //result.AddRange(Catalog.DbTableColumns.Load(item, target));
-            }
+                    foreach (DbTableItem item in this.Where(w => w.IsSystem == false))
+                    {
+                        DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
+                        if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is IDbSchemaItem parent)
+                        { target.Add(new NameScopeItem(parent, item)); }
+                    }
+                }
+            });
 
-            return result;
+            return work;
         }
 
     }

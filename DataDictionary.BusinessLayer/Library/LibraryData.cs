@@ -27,7 +27,7 @@ namespace DataDictionary.BusinessLayer.Library
 
     }
 
-    class LibraryData : ILibraryData, IDataTableFile, INameScopeData
+    class LibraryData : ILibraryData, IDataTableFile//, INameScopeData
     {
         /// <inheritdoc/>
         public ILibraryMemberData LibraryMembers { get { return members; } }

@@ -208,7 +208,7 @@ namespace DataDictionary.BusinessLayer.NameScope
             Source = data;
 
             GetNameSpaceKey = () => new NameSpaceKey((IDbTableColumnKeyName)data);
-            GetTitle = () => new DbTableColumnKeyName(data).TableName;
+            GetTitle = () => new DbTableColumnKeyName(data).ColumnName;
 
             if (data.OrdinalPosition is Int32 position) { OrdinalPosition = position; }
             data.PropertyChanged += OnPropertyChanged;
@@ -263,7 +263,7 @@ namespace DataDictionary.BusinessLayer.NameScope
             ScopeKey = new ScopeKey(data);
 
             GetNameSpaceKey = () => new NameSpaceKey((IDbRoutineParameterKeyName)data);
-            GetTitle = () => new DbRoutineParameterKeyName(data).RoutineName;
+            GetTitle = () => new DbRoutineParameterKeyName(data).ParameterName;
 
             if (data.OrdinalPosition is Int32 position) { OrdinalPosition = position; }
             data.PropertyChanged += OnPropertyChanged;

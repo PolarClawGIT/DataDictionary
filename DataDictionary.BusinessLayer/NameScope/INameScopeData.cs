@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.NameScope
 {
     /// <summary>
     /// Interface for objects that contain NameScope Data
     /// </summary>
-    interface INameScopeData
+    public interface INameScopeData
     {
         /// <summary>
-        /// Generates a list of NameScope to be added to the NameScope Dictionary.
+        /// Create Work Items that are used to load the NameScopeDictionary
         /// </summary>
+        /// <param name="target"></param>
         /// <returns></returns>
-        IReadOnlyList<NameScopeItem> GetNameScopes();
+        IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target);
     }
 }

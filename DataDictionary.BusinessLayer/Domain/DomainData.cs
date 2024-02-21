@@ -34,7 +34,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
     }
 
-    class DomainData: IDomainData, IDataTableFile, INameScopeData
+    class DomainData: IDomainData, IDataTableFile//, INameScopeData
     {
         /// <inheritdoc/>
         public IAttributeData DomainAttributes { get { return attributes; } }

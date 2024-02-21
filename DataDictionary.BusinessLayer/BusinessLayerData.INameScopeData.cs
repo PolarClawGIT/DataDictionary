@@ -13,14 +13,6 @@ namespace DataDictionary.BusinessLayer
         /// Wrapper for NameScope Data (NameSpace)
         /// </summary>
         public NameScopeDictionary NameScope { get; } = new NameScopeDictionary();
-
-        public void LoadNameScope()
-        {
-            NameScope.Clear();
-            NameScope.AddRange(database.GetNameScopes());
-            NameScope.AddRange(library.GetNameScopes());
-            NameScope.AddRange(domain.GetNameScopes());
-        }
     }
 
 }

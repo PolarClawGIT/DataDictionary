@@ -10,15 +10,20 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Interface representing Catalog Schema data
     /// </summary>
-    public interface ISchemaData : IBindingData<DbSchemaItem>
+    public interface ISchemaData :
+        IBindingData<DbSchemaItem>
     {
 
     }
 
     class SchemaData : DbSchemaCollection, ISchemaData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        IDatabaseDataItem, INameScopeData
     {
+        /// <inheritdoc/>
+        public required IDatabaseData Database { get; init; }
+
         /// <inheritdoc/>
         /// <remarks>Schema</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
@@ -39,26 +44,27 @@ namespace DataDictionary.BusinessLayer.Database
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
-        public IReadOnlyList<WorkItem> Load(IDbCatalogItem parent, NameScopeDictionary target)
+        /// <inheritdoc/>
+        /// <remarks>Schema</remarks>
+        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target)
         {
-            List<WorkItem> result = new List<WorkItem>();
-            DbCatalogKeyName nameKey = new DbCatalogKeyName(parent);
-            DbCatalogKey key = new DbCatalogKey(parent);
+            List<WorkItem> work = new List<WorkItem>();
 
-            foreach (DbSchemaItem item in this.Where(w => nameKey.Equals(w)))
+            work.Add(new WorkItem()
             {
-                result.Add(new WorkItem()
+                WorkName = "Load NameScope, Schema",
+                DoWork = () =>
                 {
-                    WorkName = "Building Name Tree",
-                    DoWork = () => { target.Add(new NameScopeItem(key, item)); }
-                });
-                //result.AddRange(Catalog.DbTables.Load(item, target));
-                //result.AddRange(Catalog.DbConstraints.Load(item, target));
-                //result.AddRange(Catalog.DbDomains.Load(item, target));
-                //result.AddRange(Catalog.DbRoutines.Load(item, target));
-            }
+                    foreach (DbSchemaItem item in this.Where(w => w.IsSystem == false))
+                    {
+                        DbCatalogKeyName nameKey = new DbCatalogKeyName(item);
+                        if (Database.DbCatalogs.FirstOrDefault(w => nameKey.Equals(w)) is IDbCatalogItem parent)
+                        { target.Add(new NameScopeItem(parent, item)); }
+                    }
+                }
+            });
 
-            return result;
+            return work;
         }
     }
 }

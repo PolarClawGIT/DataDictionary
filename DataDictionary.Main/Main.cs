@@ -129,7 +129,6 @@ namespace DataDictionary.Main
 
         public bool BindDataCore()
         {
-            BusinessData.LoadNameScope();
             BuildTree();
 
             return true;

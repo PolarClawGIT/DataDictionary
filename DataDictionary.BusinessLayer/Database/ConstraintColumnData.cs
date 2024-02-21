@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.ModelData;
@@ -11,14 +12,16 @@ namespace DataDictionary.BusinessLayer.Database
     /// </summary>
     public interface IConstraintColumnData :
         IBindingData<DbConstraintColumnItem>
-    {
-
-    }
+    { }
 
     class ConstraintColumnData: DbConstraintColumnCollection, IConstraintColumnData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        IDatabaseDataItem
     {
+        /// <inheritdoc/>
+        public required IDatabaseData Database { get; init; }
+
         /// <inheritdoc/>
         /// <remarks>ConstraintColumn</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)

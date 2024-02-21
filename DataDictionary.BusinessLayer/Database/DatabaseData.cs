@@ -17,13 +17,18 @@ namespace DataDictionary.BusinessLayer.Database
     /// </summary>
     public interface IDatabaseData :
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
-        
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        INameScopeData
     {
         /// <summary>
         /// List of Database Catalogs within the Model.
         /// </summary>
         ICatalogData DbCatalogs { get; }
+
+        /// <summary>
+        /// List of Database Schemta within the Model.
+        /// </summary>
+        ISchemaData DbSchemta { get; }
 
         /// <summary>
         /// List of Database Domains (types) within the Model.
@@ -69,12 +74,37 @@ namespace DataDictionary.BusinessLayer.Database
         /// List of Database Columns for the Tables/Views within the Model.
         /// </summary>
         ITableColumnData DbTableColumns { get; }
+
+        /// <summary>
+        /// Removes a Catalog, by Key, and all child data.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        IReadOnlyList<WorkItem> Remove(IDbCatalogKey key);
+
+        /// <summary>
+        /// Imports a Catalog from a Database Source
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        IReadOnlyList<WorkItem> Import(DbSchemaContext source);
+    }
+
+    /// <summary>
+    /// Interface used by the Database Data Items
+    /// </summary>
+    interface IDatabaseDataItem
+    {
+        /// <summary>
+        /// The Wrapper Data Object that this object contained within.
+        /// </summary>
+        IDatabaseData Database { get; }
     }
 
     /// <summary>
     /// Implementation for Catalog data
     /// </summary>
-    class DatabaseData : IDatabaseData, IDataTableFile, INameScopeData
+    class DatabaseData : IDatabaseData, IDataTableFile
     {
         /// <inheritdoc/>
         public ICatalogData DbCatalogs { get { return catalogs; } }
@@ -122,20 +152,21 @@ namespace DataDictionary.BusinessLayer.Database
 
         public DatabaseData() : base()
         {
-            catalogs = new CatalogData();
-            schemta = new SchemaData();
-            domains = new DomainData();
-            extendedProperties = new ExtendedPropertyData();
+            catalogs = new CatalogData() { Database = this };
+            schemta = new SchemaData() { Database = this };
+            domains = new DomainData() { Database = this };
 
-            tables = new TableData();
-            tableColumns = new TableColumnData();
+            tables = new TableData() { Database = this };
+            tableColumns = new TableColumnData() { Database = this };
 
-            routines = new RoutineData();
-            routineParameters = new RoutineParameterData();
-            routineDependencies = new RoutineDependencyData();
+            routines = new RoutineData() { Database = this };
+            routineParameters = new RoutineParameterData() { Database = this };
+            routineDependencies = new RoutineDependencyData() { Database = this };
 
-            constraints = new ConstraintData();
-            constraintColumns = new ConstraintColumnData();
+            constraints = new ConstraintData() { Database = this };
+            constraintColumns = new ConstraintColumnData() { Database = this };
+
+            extendedProperties = new ExtendedPropertyData() { Database = this };
         }
 
         /// <inheritdoc/>
@@ -274,80 +305,157 @@ namespace DataDictionary.BusinessLayer.Database
             extendedProperties.Load(source);
         }
 
-        /// <inheritdoc />
-        public void Remove(IDbCatalogKey catalogItem)
+        /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
+        public IReadOnlyList<WorkItem> Import(DbSchemaContext source)
         {
-            catalogs.Remove(catalogItem);
-            schemta.Remove(catalogItem);
-            domains.Remove(catalogItem);
+            List<WorkItem> work = new List<WorkItem>();
+            DbCatalogKey key = new DbCatalogKey(new DbCatalogItem());
 
-            tables.Remove(catalogItem);
-            tableColumns.Remove(catalogItem);
+            DatabaseWork factory = new DatabaseWork() { Connection = source.CreateConnection() };
+            work.Add(factory.OpenConnection());
 
-            routines.Remove(catalogItem);
-            routineParameters.Remove(catalogItem);
-            routineDependencies.Remove(catalogItem);
+            work.Add(factory.CreateWork(
+                            workName: "Load DbCatalogs",
+                            target: catalogs,
+                            command: (conn) => catalogs.SchemaCommand(conn, key)));
 
-            constraints.Remove(catalogItem);
-            constraintColumns.Remove(catalogItem);
+            work.Add(factory.CreateWork(
+                workName: "Load DbSchemta",
+                target: schemta,
+                command: (conn) => schemta.SchemaCommand(conn, key)));
 
-            extendedProperties.Remove(catalogItem);
+            work.Add(factory.CreateWork(
+                workName: "Load DbDomains",
+                target: domains,
+                command: (conn) => domains.SchemaCommand(conn, key)));
+
+            work.Add(factory.CreateWork(
+                workName: "Load DbTables",
+                target: tables,
+                command: (conn) => tables.SchemaCommand(conn, key)));
+
+            work.Add(factory.CreateWork(
+                workName: "Load DbTableColumns",
+                target: tableColumns,
+                command: (conn) => tableColumns.SchemaCommand(conn, key)));
+
+            work.Add(factory.CreateWork(
+                workName: "Load DbConstraints",
+                target: constraints,
+                command: (conn) => constraints.SchemaCommand(conn, key)));
+
+            work.Add(factory.CreateWork(
+                workName: "Load DbConstraintColumns",
+                target: constraintColumns,
+                command: (conn) => constraintColumns.SchemaCommand(conn, key)));
+
+            work.Add(factory.CreateWork(
+                workName: "Load DbRoutines",
+                target: routines,
+                command: (conn) => routines.SchemaCommand(conn, key)));
+
+            work.Add(factory.CreateWork(
+                workName: "Load DbRoutineParameters",
+                target: routineParameters,
+                command: (conn) => routineParameters.SchemaCommand(conn, key)));
+
+            work.Add(new WorkItem()
+            {
+                WorkName = "Load DbRoutineDependencies",
+                DoWork = () =>
+                {
+                    foreach (DbRoutineItem item in routines)
+                    {
+                        routineDependencies.Load(
+                            factory.Connection.ExecuteReader(
+                                routineDependencies.SchemaCommand(
+                                    factory.Connection, item)));
+                    }
+                },
+                IsCanceling = () => factory.IsCanceling
+            });
+
+            work.Add(factory.CreateWork(
+                workName: "Load DbExtendedProperties, DbSchemta",
+                source: schemta,
+                target: extendedProperties));
+
+            work.Add(factory.CreateWork(
+                workName: "Load DbExtendedProperties, DbTables",
+                source: tables,
+                target: extendedProperties));
+
+            work.Add(factory.CreateWork(
+                workName: "Load DbExtendedProperties, DbTableColumns",
+                source: tableColumns,
+                target: extendedProperties));
+
+            work.Add(factory.CreateWork(
+                workName: "Load DbExtendedProperties, DbConstraints",
+                source: constraints,
+                target: extendedProperties));
+
+            work.Add(factory.CreateWork(
+                workName: "Load DbExtendedProperties, DbDomains",
+                source: domains,
+                target: extendedProperties));
+
+            work.Add(factory.CreateWork(
+                workName: "Load DbExtendedProperties, DbRoutines",
+                source: routines,
+                target: extendedProperties));
+
+            work.Add(factory.CreateWork(
+                workName: "Load DbExtendedProperties, DbRoutineParameters",
+                source: routineParameters,
+                target: extendedProperties));
+
+            return work;
         }
 
-        /// <inheritdoc />
-        public IReadOnlyList<NameScopeItem> GetNameScopes()
+        /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
+        public IReadOnlyList<WorkItem> Remove(IDbCatalogKey key)
         {
-            // This improve performance by reducing the number of calls
-            List<NameScopeItem> result = new List<NameScopeItem>();
-            List<DbCatalogItem> catalogs = DbCatalogs.Where(w => w.IsSystem == false).ToList();
-            List<DbSchemaItem> schemta = DbSchemta.Where(w => w.IsSystem == false).ToList();
-            List<DbTableItem> tables = DbTables.Where(w => w.IsSystem == false).ToList();
-            List<DbTableColumnItem> tableColumns = DbTableColumns.ToList();
-            List<DbConstraintItem> constraints = DbConstraints.ToList();
-            List<DbRoutineItem> routines = DbRoutines.Where(w => w.IsSystem == false).ToList();
-            List<DbRoutineParameterItem> routineParameters = DbRoutineParameters.ToList();
-            List<DbDomainItem> domains = DbDomains.ToList();
+            List<WorkItem> work = new List<WorkItem>();
 
-            foreach (DbCatalogItem catalogItem in catalogs) // Expect zero or one
-            {
-                DbCatalogKey catalogKey = new DbCatalogKey(catalogItem);
-                DbCatalogKeyName catalogName = new DbCatalogKeyName(catalogItem);
-                result.Add(new NameScopeItem(catalogItem));
+            work.Add(new WorkItem() { WorkName = "Remove Catalog", DoWork = () => { catalogs.Remove(key); } });
+            work.Add(new WorkItem() { WorkName = "Remove Schemta", DoWork = () => { schemta.Remove(key); } });
+            work.Add(new WorkItem() { WorkName = "Remove Domains", DoWork = () => { domains.Remove(key); } });
 
-                foreach (DbSchemaItem schemaItem in schemta.Where(w => catalogName.Equals(w)).ToList())
-                {
-                    DbSchemaKey schemaKey = new DbSchemaKey(schemaItem);
-                    DbSchemaKeyName schemaName = new DbSchemaKeyName(schemaItem);
-                    result.Add(new NameScopeItem(catalogKey, schemaItem));
+            work.Add(new WorkItem() { WorkName = "Remove Tables", DoWork = () => { tables.Remove(key); } });
+            work.Add(new WorkItem() { WorkName = "Remove Table Columns", DoWork = () => { tableColumns.Remove(key); } });
 
-                    foreach (DbTableItem tableItem in tables.Where(w => schemaName.Equals(w)).ToList())
-                    {
-                        DbTableKey tableKey = new DbTableKey(tableItem);
-                        DbTableKeyName tableName = new DbTableKeyName(tableItem);
-                        result.Add(new NameScopeItem(schemaKey, tableItem));
+            work.Add(new WorkItem() { WorkName = "Remove Routines", DoWork = () => { routines.Remove(key); } });
+            work.Add(new WorkItem() { WorkName = "Remove Routine Parameters", DoWork = () => { routineParameters.Remove(key); } });
+            work.Add(new WorkItem() { WorkName = "Remove Routine Dependencies", DoWork = () => { routineDependencies.Remove(key); } });
 
-                        foreach (DbTableColumnItem columnItem in tableColumns.Where(w => tableName.Equals(w)).ToList())
-                        { result.Add(new NameScopeItem(tableKey, columnItem)); }
+            work.Add(new WorkItem() { WorkName = "Remove Constraints", DoWork = () => { constraints.Remove(key); } });
+            work.Add(new WorkItem() { WorkName = "Remove Constraint Columns", DoWork = () => { constraintColumns.Remove(key); } });
 
-                        foreach (DbConstraintItem constraintItem in constraints.Where(w => tableName.Equals(w)).ToList())
-                        { result.Add(new NameScopeItem(tableKey, constraintItem)); }
-                    }
+            work.Add(new WorkItem() { WorkName = "Remove Extended Properties", DoWork = () => { extendedProperties.Remove(key); } });
+            return work;
+        }
 
-                    foreach (DbRoutineItem routineItem in routines.Where(w => schemaName.Equals(w)).ToList())
-                    {
-                        DbRoutineKey routineKey = new DbRoutineKey(routineItem);
-                        DbRoutineKeyName routineName = new DbRoutineKeyName(routineItem);
-                        result.Add(new NameScopeItem(schemaKey, routineItem));
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target)
+        {
+            List<WorkItem> work = new List<WorkItem>();
 
-                        foreach (DbRoutineParameterItem parameterItem in routineParameters.Where(w => routineName.Equals(w)).ToList())
-                        { result.Add(new NameScopeItem(routineKey, parameterItem)); }
-                    }
+            work.AddRange(catalogs.Export(target));
+            work.AddRange(schemta.Export(target));
+            work.AddRange(domains.Export(target));
 
-                    foreach (DbDomainItem domainItem in domains.Where(w => schemaName.Equals(w)).ToList())
-                    { result.Add(new NameScopeItem(schemaKey, domainItem)); }
-                }
-            }
-            return result;
+            work.AddRange(tables.Export(target));
+            work.AddRange(tableColumns.Export(target));
+
+            work.AddRange(routines.Export(target));
+            work.AddRange(routineParameters.Export(target));
+
+            work.AddRange(constraints.Export(target));
+
+            return work;
         }
     }
 }

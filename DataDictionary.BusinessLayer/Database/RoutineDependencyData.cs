@@ -16,8 +16,12 @@ namespace DataDictionary.BusinessLayer.Database
 
     class RoutineDependencyData: DbRoutineDependencyCollection, IRoutineDependencyData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        IDatabaseDataItem
     {
+        /// <inheritdoc/>
+        public required IDatabaseData Database { get; init; }
+
         /// <inheritdoc/>
         /// <remarks>RoutineDependency</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
