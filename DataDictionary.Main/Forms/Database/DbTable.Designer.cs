@@ -54,6 +54,10 @@
             importOptions = new ContextMenuStrip(components);
             importOptionEntity = new ToolStripMenuItem();
             importOptionAttribute = new ToolStripMenuItem();
+            bindingTable = new BindingSource(components);
+            bindingProperties = new BindingSource(components);
+            bindingColumns = new BindingSource(components);
+            bindingConstraints = new BindingSource(components);
             dbTableLayout = new TableLayoutPanel();
             tableDetailLayout = new TabControl();
             extendedPropertiesTab = new TabPage();
@@ -70,6 +74,10 @@
             ((System.ComponentModel.ISupportInitialize)tableConstraintData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             importOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingTable).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingColumns).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingConstraints).BeginInit();
             SuspendLayout();
             // 
             // dbTableLayout
@@ -144,7 +152,6 @@
             extendedPropertiesData.Location = new Point(3, 3);
             extendedPropertiesData.Name = "extendedPropertiesData";
             extendedPropertiesData.ReadOnly = true;
-            extendedPropertiesData.RowTemplate.Height = 25;
             extendedPropertiesData.Size = new Size(413, 118);
             extendedPropertiesData.TabIndex = 5;
             // 
@@ -185,10 +192,8 @@
             tableColumnsData.Dock = DockStyle.Fill;
             tableColumnsData.Location = new Point(3, 3);
             tableColumnsData.Name = "tableColumnsData";
-            tableColumnsData.RowTemplate.Height = 25;
             tableColumnsData.Size = new Size(413, 118);
             tableColumnsData.TabIndex = 0;
-            tableColumnsData.RowHeaderMouseDoubleClick += tableColumnsData_RowHeaderMouseDoubleClick;
             // 
             // ColumnNameValue
             // 
@@ -245,7 +250,6 @@
             tableConstraintData.Location = new Point(3, 3);
             tableConstraintData.Name = "tableConstraintData";
             tableConstraintData.ReadOnly = true;
-            tableConstraintData.RowTemplate.Height = 25;
             tableConstraintData.Size = new Size(413, 118);
             tableConstraintData.TabIndex = 0;
             // 
@@ -325,7 +329,7 @@
             // 
             importOptions.Items.AddRange(new ToolStripItem[] { importOptionEntity, importOptionAttribute });
             importOptions.Name = "ImportOptions";
-            importOptions.Size = new Size(181, 70);
+            importOptions.Size = new Size(166, 48);
             // 
             // importOptionEntity
             // 
@@ -333,7 +337,7 @@
             importOptionEntity.CheckOnClick = true;
             importOptionEntity.CheckState = CheckState.Checked;
             importOptionEntity.Name = "importOptionEntity";
-            importOptionEntity.Size = new Size(180, 22);
+            importOptionEntity.Size = new Size(165, 22);
             importOptionEntity.Text = "Import Entity";
             // 
             // importOptionAttribute
@@ -342,7 +346,7 @@
             importOptionAttribute.CheckOnClick = true;
             importOptionAttribute.CheckState = CheckState.Checked;
             importOptionAttribute.Name = "importOptionAttribute";
-            importOptionAttribute.Size = new Size(180, 22);
+            importOptionAttribute.Size = new Size(165, 22);
             importOptionAttribute.Text = "Import Attributes";
             // 
             // DbTable
@@ -367,6 +371,10 @@
             ((System.ComponentModel.ISupportInitialize)tableConstraintData).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             importOptions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)bindingTable).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingColumns).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingConstraints).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -393,5 +401,9 @@
         private ContextMenuStrip importOptions;
         private ToolStripMenuItem importOptionEntity;
         private ToolStripMenuItem importOptionAttribute;
+        private BindingSource bindingTable;
+        private BindingSource bindingProperties;
+        private BindingSource bindingColumns;
+        private BindingSource bindingConstraints;
     }
 }

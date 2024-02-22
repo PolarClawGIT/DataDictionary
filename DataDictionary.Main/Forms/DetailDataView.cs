@@ -61,14 +61,15 @@ namespace DataDictionary.Main.Forms
 
         private void bindingTableValue_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            //TODO: Add support for more items
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DbSchemaItem schemaItem)
-            { Activate((data) => new Forms.Database.DbSchema() { DataKey = new DbSchemaKeyName(schemaItem) }, schemaItem); }
+            { Activate((data) => new Forms.Database.DbSchema(schemaItem), schemaItem); }
 
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DbTableItem tableItem)
-            { Activate((data) => new Forms.Database.DbTable() { DataKey = new DbTableKeyName(tableItem) }, tableItem); }
+            { Activate((data) => new Forms.Database.DbTable(tableItem), tableItem); }
 
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DbTableColumnItem columnItem)
-            { Activate((data) => new Forms.Database.DbTableColumn() { DataKey = new DbTableColumnKeyName(columnItem) }, columnItem); }
+            { Activate((data) => new Forms.Database.DbTableColumn(columnItem), columnItem); }
 
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DomainAttributeItem attributeItem)
             { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }

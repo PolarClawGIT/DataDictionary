@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel dbTableLayout;
             TabControl domainDetailLayout;
             TabPage domainTab;
@@ -65,6 +66,8 @@
             catalogNameData = new Controls.TextBoxData();
             schemaNameData = new Controls.TextBoxData();
             domainNameData = new Controls.TextBoxData();
+            bindingDomain = new BindingSource(components);
+            bindingProperties = new BindingSource(components);
             dbTableLayout = new TableLayoutPanel();
             domainDetailLayout = new TabControl();
             domainTab = new TabPage();
@@ -94,6 +97,8 @@
             characterDataLayout.SuspendLayout();
             extendedPropertiesTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDomain).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
             SuspendLayout();
             // 
             // dbTableLayout
@@ -511,7 +516,6 @@
             extendedPropertiesData.Location = new Point(3, 3);
             extendedPropertiesData.Name = "extendedPropertiesData";
             extendedPropertiesData.ReadOnly = true;
-            extendedPropertiesData.RowTemplate.Height = 25;
             extendedPropertiesData.Size = new Size(186, 66);
             extendedPropertiesData.TabIndex = 5;
             // 
@@ -603,6 +607,8 @@
             characterDataLayout.PerformLayout();
             extendedPropertiesTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDomain).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -635,5 +641,7 @@
         private TableLayoutPanel tableLayoutPanel1;
         private TabPage defaultComputedTab;
         private Controls.TextBoxData domainDefaultData;
+        private BindingSource bindingDomain;
+        private BindingSource bindingProperties;
     }
 }

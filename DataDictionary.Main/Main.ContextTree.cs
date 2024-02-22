@@ -248,25 +248,25 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Database.DbCatalog(catalogItem), catalogItem); }
 
         void Activate(DbSchemaItem schemaItem)
-        { Activate((data) => new Forms.Database.DbSchema() { DataKey = new DbSchemaKeyName(schemaItem) }, schemaItem); }
+        { Activate((data) => new Forms.Database.DbSchema(schemaItem), schemaItem); }
 
         void Activate(DbTableItem tableItem)
-        { Activate((data) => new Forms.Database.DbTable() { DataKey = new DbTableKeyName(tableItem) }, tableItem); }
+        { Activate((data) => new Forms.Database.DbTable(tableItem), tableItem); }
 
         void Activate(DbTableColumnItem columnItem)
-        { Activate((data) => new Forms.Database.DbTableColumn() { DataKey = new DbTableColumnKeyName(columnItem) }, columnItem); }
+        { Activate((data) => new Forms.Database.DbTableColumn(columnItem), columnItem); }
 
         void Activate(DbConstraintItem constraintItem)
         { Activate((data) => new Forms.Database.DbConstraint(constraintItem), constraintItem); }
 
         void Activate(DbRoutineItem routineItem)
-        { Activate((data) => new Forms.Database.DbRoutine() { DataKey = new DbRoutineKeyName(routineItem) }, routineItem); }
+        { Activate((data) => new Forms.Database.DbRoutine(routineItem), routineItem); }
 
         void Activate(DbRoutineParameterItem routineParameterItem)
-        { Activate((data) => new Forms.Database.DbRoutineParameter() { DataKey = new DbRoutineParameterKeyName(routineParameterItem) }, routineParameterItem); }
+        { Activate((data) => new Forms.Database.DbRoutineParameter(routineParameterItem), routineParameterItem); }
 
         void Activate(DbDomainItem domainItem)
-        { Activate((data) => new Forms.Database.DbDomain() { DataKey = new DbDomainKeyName(domainItem) }, domainItem); }
+        { Activate((data) => new Forms.Database.DbDomain(domainItem) , domainItem); }
 
         void Activate(LibrarySourceItem sourceItem)
         { Activate((data) => new Forms.Library.LibrarySource() { DataKey = new LibrarySourceKey(sourceItem) }, sourceItem); }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel dbTableLayout;
             TabControl columnDetailLayout;
             TabPage columnsTab;
@@ -59,6 +60,9 @@
             collationNameData = new Controls.TextBoxData();
             otherDataTab = new TabPage();
             numericDataLayout = new TableLayoutPanel();
+            domainCatalogData = new Controls.TextBoxData();
+            domainSchemaData = new Controls.TextBoxData();
+            domainNameData = new Controls.TextBoxData();
             extendedPropertiesData = new DataGridView();
             propertyNameData = new DataGridViewTextBoxColumn();
             propertyValueData = new DataGridViewTextBoxColumn();
@@ -66,9 +70,8 @@
             schemaNameData = new Controls.TextBoxData();
             routineNameData = new Controls.TextBoxData();
             parameterNameData = new Controls.TextBoxData();
-            domainNameData = new Controls.TextBoxData();
-            domainSchemaData = new Controls.TextBoxData();
-            domainCatalogData = new Controls.TextBoxData();
+            bindingParameter = new BindingSource(components);
+            bindingProperties = new BindingSource(components);
             dbTableLayout = new TableLayoutPanel();
             columnDetailLayout = new TabControl();
             columnsTab = new TabPage();
@@ -96,6 +99,8 @@
             numericDataLayout.SuspendLayout();
             extendedPropertiesTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingParameter).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
             SuspendLayout();
             // 
             // dbTableLayout
@@ -506,6 +511,42 @@
             numericDataLayout.Size = new Size(623, 307);
             numericDataLayout.TabIndex = 3;
             // 
+            // domainCatalogData
+            // 
+            domainCatalogData.AutoSize = true;
+            domainCatalogData.Dock = DockStyle.Fill;
+            domainCatalogData.HeaderText = "Domain Catalog";
+            domainCatalogData.Location = new Point(3, 3);
+            domainCatalogData.Multiline = false;
+            domainCatalogData.Name = "domainCatalogData";
+            domainCatalogData.ReadOnly = true;
+            domainCatalogData.Size = new Size(617, 44);
+            domainCatalogData.TabIndex = 21;
+            // 
+            // domainSchemaData
+            // 
+            domainSchemaData.AutoSize = true;
+            domainSchemaData.Dock = DockStyle.Fill;
+            domainSchemaData.HeaderText = "Domain Schema";
+            domainSchemaData.Location = new Point(3, 53);
+            domainSchemaData.Multiline = false;
+            domainSchemaData.Name = "domainSchemaData";
+            domainSchemaData.ReadOnly = true;
+            domainSchemaData.Size = new Size(617, 44);
+            domainSchemaData.TabIndex = 22;
+            // 
+            // domainNameData
+            // 
+            domainNameData.AutoSize = true;
+            domainNameData.Dock = DockStyle.Fill;
+            domainNameData.HeaderText = "Domain (Data Type) Name";
+            domainNameData.Location = new Point(3, 103);
+            domainNameData.Multiline = false;
+            domainNameData.Name = "domainNameData";
+            domainNameData.ReadOnly = true;
+            domainNameData.Size = new Size(617, 44);
+            domainNameData.TabIndex = 23;
+            // 
             // extendedPropertiesTab
             // 
             extendedPropertiesTab.Controls.Add(extendedPropertiesData);
@@ -527,7 +568,6 @@
             extendedPropertiesData.Location = new Point(3, 3);
             extendedPropertiesData.Name = "extendedPropertiesData";
             extendedPropertiesData.ReadOnly = true;
-            extendedPropertiesData.RowTemplate.Height = 25;
             extendedPropertiesData.Size = new Size(186, 66);
             extendedPropertiesData.TabIndex = 5;
             // 
@@ -596,42 +636,6 @@
             parameterNameData.Size = new Size(651, 44);
             parameterNameData.TabIndex = 13;
             // 
-            // domainNameData
-            // 
-            domainNameData.AutoSize = true;
-            domainNameData.Dock = DockStyle.Fill;
-            domainNameData.HeaderText = "Domain (Data Type) Name";
-            domainNameData.Location = new Point(3, 103);
-            domainNameData.Multiline = false;
-            domainNameData.Name = "domainNameData";
-            domainNameData.ReadOnly = true;
-            domainNameData.Size = new Size(617, 44);
-            domainNameData.TabIndex = 23;
-            // 
-            // domainSchemaData
-            // 
-            domainSchemaData.AutoSize = true;
-            domainSchemaData.Dock = DockStyle.Fill;
-            domainSchemaData.HeaderText = "Domain Schema";
-            domainSchemaData.Location = new Point(3, 53);
-            domainSchemaData.Multiline = false;
-            domainSchemaData.Name = "domainSchemaData";
-            domainSchemaData.ReadOnly = true;
-            domainSchemaData.Size = new Size(617, 44);
-            domainSchemaData.TabIndex = 22;
-            // 
-            // domainCatalogData
-            // 
-            domainCatalogData.AutoSize = true;
-            domainCatalogData.Dock = DockStyle.Fill;
-            domainCatalogData.HeaderText = "Domain Catalog";
-            domainCatalogData.Location = new Point(3, 3);
-            domainCatalogData.Multiline = false;
-            domainCatalogData.Name = "domainCatalogData";
-            domainCatalogData.ReadOnly = true;
-            domainCatalogData.Size = new Size(617, 44);
-            domainCatalogData.TabIndex = 21;
-            // 
             // DbRoutineParameter
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -667,6 +671,8 @@
             numericDataLayout.PerformLayout();
             extendedPropertiesTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingParameter).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -705,5 +711,7 @@
         private Controls.TextBoxData domainCatalogData;
         private Controls.TextBoxData domainSchemaData;
         private Controls.TextBoxData domainNameData;
+        private BindingSource bindingParameter;
+        private BindingSource bindingProperties;
     }
 }

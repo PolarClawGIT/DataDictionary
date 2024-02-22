@@ -1,5 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using System.Data;
@@ -17,7 +19,6 @@ namespace DataDictionary.Main.Forms.Database
         public DbCatalog() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.Icon_Database;
 
             importDataCommand.DropDown = importOptions;
             importDataCommand.Enabled = true;
@@ -28,23 +29,16 @@ namespace DataDictionary.Main.Forms.Database
         public DbCatalog(IDbCatalogItem catalogItem) : this()
         {
             DbCatalogKeyName key = new DbCatalogKeyName(catalogItem);
-            RowState = catalogItem.RowState();
-            catalogItem.RowStateChanged += CatalogItem_RowStateChanged;
-            this.Text = catalogItem.ToString();
 
-            bindingSource.DataSource = new BindingView<DbCatalogItem>(BusinessData.DatabaseData.DbCatalogs, w => key.Equals(w) && false);
+            bindingSource.DataSource = new BindingView<DbCatalogItem>(BusinessData.DatabaseData.DbCatalogs, w => key.Equals(w));
             bindingSource.Position = 0;
-           
-        }
 
-        private void CatalogItem_RowStateChanged(object? sender, EventArgs e)
-        {
-            if (sender is IBindingRowState data)
+            if(bindingSource.Current is IDbCatalogItem current)
             {
-                RowState = data.RowState();
-                if (IsHandleCreated)
-                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
-                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
+                this.Icon = new ScopeKey(current).Scope.ToIcon();
+                RowState = current.RowState();
+                current.RowStateChanged += RowStateChanged;
+                this.Text = current.ToString();
             }
         }
 
@@ -57,7 +51,18 @@ namespace DataDictionary.Main.Forms.Database
             sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(sourceDatabaseNameData.Text), bindingSource, nameof(bindingNames.SourceDatabaseName)));
             sourceDateData.DataBindings.Add(new Binding(nameof(sourceDateData.Text), bindingSource, nameof(bindingNames.SourceDate)));
 
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSource.Current is not DbCatalogItem);
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSource.Current is not IDbCatalogItem);
+        }
+
+        private void RowStateChanged(object? sender, EventArgs e)
+        {
+            if (sender is IBindingRowState data)
+            {
+                RowState = data.RowState();
+                if (IsHandleCreated)
+                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
+                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
+            }
         }
 
         private void ImportDataCommand_Click(object? sender, EventArgs e)
