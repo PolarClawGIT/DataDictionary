@@ -46,7 +46,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         public bool BindDataCore()
         {
-            bindingEntity.DataSource = new BindingView<DomainEntityItem>(Program.Data.DomainEntities, w => DataKey.Equals(w));
+            bindingEntity.DataSource = new BindingView<DomainEntityItem>(BusinessData.DomainData.DomainEntities, w => DataKey.Equals(w));
             bindingEntity.Position = 0;
             bindingEntity.CurrentItemChanged += DataChanged;
 
@@ -59,7 +59,7 @@ namespace DataDictionary.Main.Forms.Domain
 
                 bindingProperties.DataSource =
                     new BindingView<DomainEntityPropertyItem>(
-                        Program.Data.DomainEntityProperties,
+                        BusinessData.DomainData.DomainEntities.DomainEntityProperties,
                         w => DataKey.Equals(w));
                 propertyNavigation.AutoGenerateColumns = false;
                 propertyNavigation.DataSource = bindingProperties;
@@ -75,10 +75,10 @@ namespace DataDictionary.Main.Forms.Domain
                 propertyDefinitionData.Enabled = false;
 
                 if (bindingProperties.Current is DomainEntityPropertyItem propItem
-                    && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)
+                    && BusinessData.ApplicationData.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)
                 { BindChoiceData(property, propItem); }
 
-                bindingAlias.DataSource = new BindingView<DomainEntityAliasItem>(Program.Data.DomainEntityAliases, w => DataKey.Equals(w));
+                bindingAlias.DataSource = new BindingView<DomainEntityAliasItem>(BusinessData.DomainData.DomainEntities.DomainEntityAliases, w => DataKey.Equals(w));
                 aliasData.AutoGenerateColumns = false;
                 aliasData.DataSource = bindingAlias;
 
