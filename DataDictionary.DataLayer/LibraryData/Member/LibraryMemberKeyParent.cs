@@ -16,6 +16,8 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// Parent Member Id for the Library Member
         /// </summary>
         public Guid? MemberParentId { get; }
+
+
     }
 
     /// <summary>
@@ -25,6 +27,9 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     {
         /// <inheritdoc/>
         public Guid? MemberParentId { get; init; } = Guid.Empty;
+
+        /// <inheritdoc/>
+        public override Boolean HasValue { get { return base.HasValue && MemberParentId.HasValue && MemberParentId != Guid.Empty; } }
 
         /// <summary>
         /// Constructor for the Library Member Key

@@ -26,6 +26,9 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// <inheritdoc/>
         public Guid? MemberId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc/>
+        public override Boolean HasValue { get { return base.HasValue && MemberId.HasValue && MemberId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Library Member Key
         /// </summary>

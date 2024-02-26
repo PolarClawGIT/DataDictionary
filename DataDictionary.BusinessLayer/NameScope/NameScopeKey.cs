@@ -127,6 +127,13 @@ namespace DataDictionary.BusinessLayer.NameScope
         {SystemId = source.MemberId ?? Guid.Empty; }
 
         /// <summary>
+        /// Constructor for the NameScope Key, Library Member
+        /// </summary>
+        /// <param name="source">A Library Member</param>
+        public NameScopeKey(ILibraryMemberKeyParent source) : this()
+        { SystemId = source.MemberParentId ?? Guid.Empty; }
+
+        /// <summary>
         /// Constructor for the NameScope Key, Model
         /// </summary>
         /// <param name="source">A Library Member</param>

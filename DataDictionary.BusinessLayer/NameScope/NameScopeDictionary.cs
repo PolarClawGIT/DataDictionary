@@ -81,7 +81,6 @@
             { Add(item); }
         }
 
-
         /// <summary>
         /// Removes an item and the children
         /// </summary>

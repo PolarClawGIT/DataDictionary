@@ -199,12 +199,7 @@ namespace DataDictionary.Main.Forms.Database
 
                     work.AddRange(BusinessData.DatabaseData.Import(source));
                     work.AddRange(BusinessData.DatabaseData.Export(names));
-                    work.Add(
-                        new WorkItem()
-                        {
-                            WorkName = "Load NameScope",
-                            DoWork = () => BusinessData.NameScope.AddRange(names)
-                        });
+                    work.AddRange(BusinessData.NameScope.Import(names));
 
                     DoLocalWork(work);
                 }
@@ -271,12 +266,7 @@ namespace DataDictionary.Main.Forms.Database
                 work.Add(factory.OpenConnection());
                 work.AddRange(BusinessData.DatabaseData.Load(factory, key));
                 work.AddRange(BusinessData.DatabaseData.Export(names));
-                work.Add(
-                    new WorkItem()
-                    {
-                        WorkName = "Load NameScope",
-                        DoWork = () => BusinessData.NameScope.AddRange(names)
-                    });
+                work.AddRange(BusinessData.NameScope.Import(names));
 
                 DoLocalWork(work);
             }

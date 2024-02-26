@@ -13,7 +13,8 @@ namespace DataDictionary.BusinessLayer.Library
     /// </summary>
     public interface ILibraryData :
         ILoadData<ILibrarySourceKey>, ILoadData<IModelKey>,
-        ISaveData<ILibrarySourceKey>, ISaveData<IModelKey>
+        ISaveData<ILibrarySourceKey>, ISaveData<IModelKey>,
+        INameScopeData
     {
         /// <summary>
         /// List of .Net Library Members within the Model
@@ -25,6 +26,19 @@ namespace DataDictionary.BusinessLayer.Library
         /// </summary>
         ILibrarySourceData LibrarySources { get; }
 
+        /// <summary>
+        /// Removes a Library, by Key, and all child data.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        IReadOnlyList<WorkItem> Remove(ILibrarySourceKey key);
+
+        /// <summary>
+        /// Imports a Library from Visual Studio XML Documentation file.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        IReadOnlyList<WorkItem> Import(FileInfo source);
     }
 
     class LibraryData : ILibraryData, IDataTableFile//, INameScopeData
@@ -37,10 +51,10 @@ namespace DataDictionary.BusinessLayer.Library
         public ILibrarySourceData LibrarySources { get { return sources; } }
         private readonly LibrarySourceData sources;
 
-        public LibraryData() :base()
+        public LibraryData() : base()
         {
-            sources = new LibrarySourceData();
-            members = new LibraryMemberData();
+            sources = new LibrarySourceData() { Library = this };
+            members = new LibraryMemberData() { Library = this };
         }
 
         /// <inheritdoc/>
@@ -106,47 +120,55 @@ namespace DataDictionary.BusinessLayer.Library
         }
 
         /// <inheritdoc />
-        public void Remove(ILibrarySourceKey sourceItem)
+        /// <remarks>Library</remarks>
+        public IReadOnlyList<WorkItem> Remove(ILibrarySourceKey key)
         {
-            sources.Remove(sourceItem);
-            members.Remove(sourceItem);
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem() { WorkName = "Remove Library Source", DoWork = () => { sources.Remove(key); } });
+            work.Add(new WorkItem() { WorkName = "Remove Library Members", DoWork = () => { members.Remove(key); } });
+
+            return work;
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<NameScopeItem> GetNameScopes() 
+        /// <remarks>Library</remarks>
+        public IReadOnlyList<WorkItem> Import(FileInfo source)
         {
-            List<NameScopeItem> result = new List<NameScopeItem>();
-            List<LibrarySourceItem> libraries = LibrarySources.ToList();
-            List<LibraryMemberItem> members = LibraryMembers.ToList();
+            List<WorkItem> work = new List<WorkItem>();
+            LibraryImport import = new LibraryImport();
 
-            foreach (LibrarySourceItem libraryitem in libraries)
+            WorkItem item = new WorkItem()
             {
-                LibrarySourceKey libraryKey = new LibrarySourceKey(libraryitem);
-                result.Add(new NameScopeItem(libraryitem));
+                WorkName = "Import Library",
+                DoWork = () => { import.Import(source); }
+            };
+            import.Progress = item.OnProgressChanged;
+            work.Add(item);
 
-                foreach (LibraryMemberItem memberItem in members.
-                    Where(w => w.MemberParentId is null))
+            work.Add(new WorkItem()
+            {
+                WorkName = "Import Library",
+                DoWork = () =>
                 {
-                    LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
-                    result.Add(new NameScopeItem(libraryKey, memberItem));
-
-                    AddChildMember(libraryKey, memberKey);
+                    sources.AddRange(import.Sources);
+                    members.AddRange(import.Members);
                 }
+            });
 
-                void AddChildMember(LibrarySourceKey sourceKey, LibraryMemberKey memberKey)
-                {
-                    foreach (LibraryMemberItem memberItem in members.Where(w => new LibraryMemberKeyParent(w).Equals(memberKey)))
-                    {
-                        LibraryMemberKey childKey = new LibraryMemberKey(memberItem);
-                        result.Add(new NameScopeItem(memberKey, memberItem));
-
-                        AddChildMember(sourceKey, childKey);
-                    }
-                }
-            }
-
-            return result;
+            return work;
         }
 
+        /// <inheritdoc />
+        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(sources.Export(target));
+            work.AddRange(members.Export(target));
+
+            return work;
+        }
     }
 }
+

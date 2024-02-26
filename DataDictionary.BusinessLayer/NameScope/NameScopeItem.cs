@@ -340,6 +340,24 @@ namespace DataDictionary.BusinessLayer.NameScope
         }
 
         /// <summary>
+        /// Constructor for a NameScope, LibraryMember
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="data"></param>
+        public NameScopeItem(ILibraryMemberKeyParent parent, ILibraryMemberItem data) : base()
+        {
+            SystemKey = new NameScopeKey((ILibraryMemberKey)data);
+            SystemParentKey = new NameScopeKey(parent);
+            Source = data;
+            ScopeKey = new ScopeKey(data);
+
+            GetNameSpaceKey = () => new NameSpaceKey((ILibraryMemberKeyName)data);
+            GetTitle = () => new LibraryMemberKeyName(data).MemberName;
+
+            data.PropertyChanged += OnPropertyChanged;
+        }
+
+        /// <summary>
         /// Constructor for a NameScope, Model
         /// </summary>
         /// <param name="data"></param>

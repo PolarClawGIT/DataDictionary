@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.DataLayer.ModelData;
 using System;
@@ -24,6 +25,9 @@ namespace DataDictionary.BusinessLayer.Library
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <inheritdoc/>
+        public required ILibraryData Library { get; init; }
+
+        /// <inheritdoc/>
         /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
@@ -42,5 +46,22 @@ namespace DataDictionary.BusinessLayer.Library
         /// <remarks>Table</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
+
+        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem()
+            {
+                WorkName = "Load NameScope, Library",
+                DoWork = () =>
+                {
+                    foreach (LibrarySourceItem item in this)
+                    { target.Add(new NameScopeItem(item)); }
+                }
+            });
+
+            return work;
+        }
     }
 }

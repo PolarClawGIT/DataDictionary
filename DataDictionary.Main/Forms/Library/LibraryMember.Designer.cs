@@ -28,18 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel libraryMemberLayout;
             TabControl memberTabs;
             childMembersTab = new TabPage();
             childMemberData = new DataGridView();
+            memberNameColumn = new DataGridViewTextBoxColumn();
+            scopeNameColumn = new DataGridViewTextBoxColumn();
             memberDataTab = new TabPage();
             memberData = new Controls.TextBoxData();
             assemblyNameData = new Controls.TextBoxData();
             memberNameSpaceData = new Controls.TextBoxData();
             memberNameData = new Controls.TextBoxData();
             scopeData = new Controls.TextBoxData();
-            memberNameColumn = new DataGridViewTextBoxColumn();
-            scopeNameColumn = new DataGridViewTextBoxColumn();
+            bindingMember = new BindingSource(components);
+            bindingChild = new BindingSource(components);
             libraryMemberLayout = new TableLayoutPanel();
             memberTabs = new TabControl();
             libraryMemberLayout.SuspendLayout();
@@ -47,6 +50,8 @@
             childMembersTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)childMemberData).BeginInit();
             memberDataTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingMember).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingChild).BeginInit();
             SuspendLayout();
             // 
             // libraryMemberLayout
@@ -102,10 +107,27 @@
             childMemberData.Location = new Point(3, 3);
             childMemberData.Name = "childMemberData";
             childMemberData.ReadOnly = true;
-            childMemberData.RowTemplate.Height = 25;
             childMemberData.Size = new Size(359, 226);
             childMemberData.TabIndex = 0;
             childMemberData.RowHeaderMouseDoubleClick += childMemberData_RowHeaderMouseDoubleClick;
+            // 
+            // memberNameColumn
+            // 
+            memberNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            memberNameColumn.DataPropertyName = "MemberName";
+            memberNameColumn.FillWeight = 60F;
+            memberNameColumn.HeaderText = "Member Name";
+            memberNameColumn.Name = "memberNameColumn";
+            memberNameColumn.ReadOnly = true;
+            // 
+            // scopeNameColumn
+            // 
+            scopeNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            scopeNameColumn.DataPropertyName = "ScopeName";
+            scopeNameColumn.FillWeight = 40F;
+            scopeNameColumn.HeaderText = "Scope";
+            scopeNameColumn.Name = "scopeNameColumn";
+            scopeNameColumn.ReadOnly = true;
             // 
             // memberDataTab
             // 
@@ -178,24 +200,6 @@
             scopeData.Size = new Size(373, 44);
             scopeData.TabIndex = 6;
             // 
-            // memberNameColumn
-            // 
-            memberNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            memberNameColumn.DataPropertyName = "MemberName";
-            memberNameColumn.FillWeight = 60F;
-            memberNameColumn.HeaderText = "Member Name";
-            memberNameColumn.Name = "memberNameColumn";
-            memberNameColumn.ReadOnly = true;
-            // 
-            // scopeNameColumn
-            // 
-            scopeNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            scopeNameColumn.DataPropertyName = "ScopeName";
-            scopeNameColumn.FillWeight = 40F;
-            scopeNameColumn.HeaderText = "Scope";
-            scopeNameColumn.Name = "scopeNameColumn";
-            scopeNameColumn.ReadOnly = true;
-            // 
             // LibraryMember
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -213,6 +217,8 @@
             ((System.ComponentModel.ISupportInitialize)childMemberData).EndInit();
             memberDataTab.ResumeLayout(false);
             memberDataTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingMember).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingChild).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -229,5 +235,7 @@
         private Controls.TextBoxData scopeData;
         private DataGridViewTextBoxColumn memberNameColumn;
         private DataGridViewTextBoxColumn scopeNameColumn;
+        private BindingSource bindingMember;
+        private BindingSource bindingChild;
     }
 }

@@ -1,15 +1,17 @@
-﻿using DataDictionary.DataLayer.LibraryData.Source;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.LibraryData.Source;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
+using System.Data;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Library
 {
-    partial class LibrarySource : ApplicationBase, IApplicationDataForm<LibrarySourceKey>
+    partial class LibrarySource : ApplicationBase, IApplicationDataForm
     {
-        public required LibrarySourceKey DataKey { get; init; }
-
-        public bool IsOpenItem(object? item)
-        { return DataKey.Equals(item); }
+        public Boolean IsOpenItem(object? item)
+        { return bindingSource.Current is ILibrarySourceItem current && ReferenceEquals(current, item); }
 
         public LibrarySource() : base()
         {
@@ -17,32 +19,46 @@ namespace DataDictionary.Main.Forms.Library
             this.Icon = Resources.Icon_Library;
         }
 
-        private void LibrarySource_Load(object sender, EventArgs e)
-        { (this as IApplicationDataBind).BindData(); }
-
-        public Boolean BindDataCore()
+        public LibrarySource(ILibrarySourceItem librarySource) : this ()
         {
-            if (Program.Data.LibrarySources.FirstOrDefault(w => DataKey.Equals(w)) is LibrarySourceItem sourceItem)
+            LibrarySourceKeyName key = new LibrarySourceKeyName(librarySource);
+
+            bindingSource.DataSource = new BindingView<LibrarySourceItem>(BusinessData.LibraryData.LibrarySources, w => key.Equals(w));
+            bindingSource.Position = 0;
+
+            if (bindingSource.Current is ILibrarySourceItem current)
             {
-                libraryTitleData.DataBindings.Add(new Binding(nameof(libraryTitleData.Text), sourceItem, nameof(sourceItem.LibraryTitle)));
-                libraryDescriptionData.DataBindings.Add(new Binding(nameof(libraryDescriptionData.Text), sourceItem, nameof(sourceItem.LibraryDescription)));
-                asseblyNameData.DataBindings.Add(new Binding(nameof(asseblyNameData.Text), sourceItem, nameof(sourceItem.AssemblyName)));
-                sourceFileNameData.DataBindings.Add(new Binding(nameof(sourceFileNameData.Text), sourceItem, nameof(sourceItem.SourceFile)));
-                sourceFileDate.DataBindings.Add(new Binding(nameof(sourceFileDate.Text), sourceItem, nameof(sourceItem.SourceDate)));
-
-                return true;
+                this.Icon = new ScopeKey(current).Scope.ToIcon();
+                RowState = current.RowState();
+                current.RowStateChanged += RowStateChanged;
+                this.Text = current.ToString();
             }
-            else { return false; }
         }
 
-        public void UnbindDataCore()
+        private void LibrarySource_Load(object sender, EventArgs e)
         {
-            libraryTitleData.DataBindings.Clear();
-            libraryDescriptionData.DataBindings.Clear();
-            asseblyNameData.DataBindings.Clear();
-            sourceFileNameData.DataBindings.Clear();
-            sourceFileDate.DataBindings.Clear();
+            ILibrarySourceItem bindingNames;
+
+            libraryTitleData.DataBindings.Add(new Binding(nameof(libraryTitleData.Text), bindingSource, nameof(bindingNames.LibraryTitle)));
+            libraryDescriptionData.DataBindings.Add(new Binding(nameof(libraryDescriptionData.Text), bindingSource, nameof(bindingNames.LibraryDescription)));
+            asseblyNameData.DataBindings.Add(new Binding(nameof(asseblyNameData.Text), bindingSource, nameof(bindingNames.AssemblyName)));
+            sourceFileNameData.DataBindings.Add(new Binding(nameof(sourceFileNameData.Text), bindingSource, nameof(bindingNames.SourceFile)));
+            sourceFileDate.DataBindings.Add(new Binding(nameof(sourceFileDate.Text), bindingSource, nameof(bindingNames.SourceDate)));
+
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSource.Current is not ILibrarySourceItem);
         }
+
+        private void RowStateChanged(object? sender, EventArgs e)
+        {
+            if (sender is IBindingRowState data)
+            {
+                RowState = data.RowState();
+                if (IsHandleCreated)
+                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
+                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
+            }
+        }
+
 
         private void libraryTitleData_Validating(object sender, CancelEventArgs e)
         {

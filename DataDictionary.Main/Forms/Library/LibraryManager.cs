@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Main.Controls;
@@ -21,6 +22,9 @@ namespace DataDictionary.Main.Forms.Library
 {
     partial class LibraryManager : ApplicationBase, IApplicationDataBind
     {
+        public Boolean IsOpenItem(object? item)
+        { return true; }
+
         LibrarySourceCollection dbData = new LibrarySourceCollection();
         LibraryManagerCollection bindingData = new LibraryManagerCollection();
 
@@ -88,7 +92,7 @@ namespace DataDictionary.Main.Forms.Library
 
         public Boolean BindDataCore()
         {
-            bindingData.Build(Program.Data.LibrarySources, dbData);
+            bindingData.Build(BusinessData.LibraryData.LibrarySources, dbData);
             libraryBinding.DataSource = bindingData;
 
             libraryNavigation.AutoGenerateColumns = false;
@@ -158,12 +162,14 @@ namespace DataDictionary.Main.Forms.Library
 
                 // Create the work items for each of the files selected
                 List<WorkItem> work = new List<WorkItem>();
+                List<NameScopeItem> names = new List<NameScopeItem>();
 
                 foreach (String file in openFileDialog.FileNames)
                 {
                     FileInfo fileInfo = new FileInfo(file);
-                    work.AddRange(Program.Data.LoadLibrary(fileInfo));
-                    //work.AddRange(Program.Data.LoadContextName(fileInfo));
+                    work.AddRange(BusinessData.LibraryData.Import(fileInfo));
+                    work.AddRange(BusinessData.LibraryData.Export(names));
+                    work.AddRange(BusinessData.NameScope.Import(names));
                 }
 
                 DoLocalWork(work);
@@ -178,8 +184,16 @@ namespace DataDictionary.Main.Forms.Library
             {
                 List<WorkItem> work = new List<WorkItem>();
                 LibrarySourceKey key = new LibrarySourceKey(item);
-                //work.AddRange(Program.Data.RemoveContextName(key));
-                work.AddRange(Program.Data.RemoveLibrary(key));
+                NameScopeKey scopeKey = new NameScopeKey(item);
+
+                work.AddRange(BusinessData.LibraryData.Remove(key));
+                work.Add(
+                    new WorkItem()
+                    {
+                        WorkName = "Remove NameScope",
+                        DoWork = () => { BusinessData.NameScope.Remove(scopeKey); }
+                    });
+
                 DoLocalWork(work);
             }
         }
@@ -195,10 +209,13 @@ namespace DataDictionary.Main.Forms.Library
 
                 LibrarySourceKey key = new LibrarySourceKey(item);
                 work.Add(factory.OpenConnection());
-                Boolean inModelList = (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
+                Boolean inModelList = (BusinessData.LibraryData.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
 
                 if (inModelList)
-                {   work.AddRange(Program.Data.DeleteLibrary(factory, key)); }
+                {
+                    work.AddRange(BusinessData.LibraryData.Remove(key));
+                    work.AddRange(BusinessData.LibraryData.Save(factory, key));
+                }
                 else { work.AddRange(dbData.DeleteLibrary(factory, key)); }
 
                 work.AddRange(LoadLocalData(factory));
@@ -214,13 +231,14 @@ namespace DataDictionary.Main.Forms.Library
             {
                 List<WorkItem> work = new List<WorkItem>();
                 DatabaseWork factory = new DatabaseWork();
+                List<NameScopeItem> names = new List<NameScopeItem>();
                 work.Add(factory.OpenConnection());
 
                 LibrarySourceKey key = new LibrarySourceKey(item);
-                work.AddRange(Program.Data.LoadLibrary(factory, key));
-                //work.AddRange(Program.Data.LoadContextName(key));
+                work.AddRange(BusinessData.LibraryData.Load(factory, key));
                 work.AddRange(LoadLocalData(factory));
-
+                work.AddRange(BusinessData.LibraryData.Export(names));
+                work.AddRange(BusinessData.NameScope.Import(names));
                 DoLocalWork(work);
             }
 
@@ -238,7 +256,7 @@ namespace DataDictionary.Main.Forms.Library
                 LibrarySourceKey key = new LibrarySourceKey(item);
                 work.Add(factory.OpenConnection());
 
-                if (inModelList) { work.AddRange(Program.Data.SaveLibrary(factory, key)); }
+                if (inModelList) { work.AddRange(BusinessData.LibraryData.Save(factory, key)); }
                 else { work.AddRange(dbData.SaveLibrary(factory, key)); }
 
                 work.AddRange(LoadLocalData(factory));

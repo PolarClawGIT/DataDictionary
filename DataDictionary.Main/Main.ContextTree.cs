@@ -266,13 +266,13 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Database.DbRoutineParameter(routineParameterItem), routineParameterItem); }
 
         void Activate(DbDomainItem domainItem)
-        { Activate((data) => new Forms.Database.DbDomain(domainItem) , domainItem); }
+        { Activate((data) => new Forms.Database.DbDomain(domainItem), domainItem); }
 
         void Activate(LibrarySourceItem sourceItem)
-        { Activate((data) => new Forms.Library.LibrarySource() { DataKey = new LibrarySourceKey(sourceItem) }, sourceItem); }
+        { Activate((data) => new Forms.Library.LibrarySource(sourceItem), sourceItem); }
 
         void Activate(LibraryMemberItem memberItem)
-        { Activate((data) => new Forms.Library.LibraryMember() { DataKey = new LibraryMemberKey(memberItem) }, memberItem); }
+        { Activate((data) => new Forms.Library.LibraryMember(memberItem), memberItem); }
 
         void Activate(DomainAttributeItem attributeItem)
         //{ Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }

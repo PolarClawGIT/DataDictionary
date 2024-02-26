@@ -25,6 +25,9 @@ namespace DataDictionary.DataLayer.LibraryData.Source
         /// <inheritdoc/>
         public Guid? LibraryId { get; init; } = Guid.Empty;
 
+        /// <inheritdoc cref="Nullable{T}.HasValue"/>
+        public virtual Boolean HasValue { get { return LibraryId.HasValue && LibraryId != Guid.Empty; } }
+
         /// <summary>
         /// Constructor for the Library Source Key
         /// </summary>
