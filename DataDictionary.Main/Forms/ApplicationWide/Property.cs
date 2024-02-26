@@ -66,7 +66,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             if (newItem is not null)
             {
                 DataKey = new PropertyKey(newItem);
-                bindingSource.Position = Program.Data.Properties.IndexOf(newItem);
+                bindingSource.Position = BusinessData.ApplicationData.Properties.IndexOf(newItem);
             }
 
             propertyTitleData.Focus();
@@ -224,10 +224,10 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         {
             bindingSource.CurrentChanged -= BindingSource_CurrentChanged;
             if (bindingSource.DataSource is null)
-            { bindingSource.DataSource = Program.Data.Properties; }
+            { bindingSource.DataSource = BusinessData.ApplicationData.Properties; }
 
             bindingSource.ResetBindings(false);
-            if (Program.Data.Properties.FirstOrDefault(w => DataKey.Equals(w)) is PropertyItem current)
+            if (BusinessData.ApplicationData.Properties.FirstOrDefault(w => DataKey.Equals(w)) is PropertyItem current)
             { bindingSource.Position = bindingSource.IndexOf(current); }
             bindingSource.CurrentChanged += BindingSource_CurrentChanged;
 
