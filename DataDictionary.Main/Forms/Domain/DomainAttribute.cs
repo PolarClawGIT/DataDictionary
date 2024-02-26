@@ -1,5 +1,7 @@
-﻿using DataDictionary.DataLayer.DomainData;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.DomainData;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.ApplicationWide;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Properties;
@@ -18,12 +20,8 @@ namespace DataDictionary.Main.Forms.Domain
 {
     partial class DomainAttribute : ApplicationBase, IApplicationDataForm
     {
-        public bool IsOpenItem(object? item)
-        {
-            return (
-                mainBinding.Current is DomainAttributeItem current
-                && new DomainAttributeKey(current).Equals(item));
-        }
+        public Boolean IsOpenItem(object? item)
+        { return mainBinding.Current is IDomainAttributeItem current && ReferenceEquals(current, item); }
 
         public DomainAttribute() : base()
         {
@@ -32,25 +30,22 @@ namespace DataDictionary.Main.Forms.Domain
             newItemCommand.Click += NewItemCommand_Click;
         }
 
-        public DomainAttribute(DomainAttributeItem data) : this()
+        public DomainAttribute(IDomainAttributeItem attributeItem) : this()
         {
-            if (Program.Data.DomainAttributes.Contains(data))
-            {
-                DomainAttributeKey key = new DomainAttributeKey(data);
-                mainBinding.DataSource = new BindingView<DomainAttributeItem>(Program.Data.DomainAttributes, w => key.Equals(w));
-                mainBinding.Position = 0;
+            DomainAttributeKey key = new DomainAttributeKey(attributeItem);
+            mainBinding.DataSource = new BindingView<DomainAttributeItem>(BusinessData.DomainData.DomainAttributes, w => key.Equals(w));
+            mainBinding.Position = 0;
 
-                propertyBinding.DataSource = new BindingView<DomainAttributePropertyItem>(Program.Data.DomainAttributeProperties, w => key.Equals(w));
-                aliasBinding.DataSource = new BindingView<DomainAttributeAliasItem>(Program.Data.DomainAttributeAliases, w => key.Equals(w));
-            }
-            else
+            if (mainBinding.Current is IDomainAttributeItem current)
             {
-                mainBinding.DataSource = new BindingList<DomainAttributeItem>() { data };
-                mainBinding.Position = 0;
-            }
+                this.Icon = new ScopeKey(ScopeType.ModelAttribute).Scope.ToIcon();
+                RowState = current.RowState();
+                current.RowStateChanged += RowStateChanged;
+                this.Text = current.ToString();
 
-            RowState = data.RowState();
-            data.RowStateChanged += Data_RowStateChanged;
+                propertyBinding.DataSource = new BindingView<DomainAttributePropertyItem>(BusinessData.DomainData.DomainAttributes.DomainAttributeProperties, w => key.Equals(w));
+                aliasBinding.DataSource = new BindingView<DomainAttributeAliasItem>(BusinessData.DomainData.DomainAttributes.DomainAttributeAliases, w => key.Equals(w));
+            }
         }
 
         private void Form_Load(object sender, EventArgs e)
@@ -82,10 +77,11 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.DataSource = aliasBinding;
             domainAlias.BindData(aliasBinding);
 
-            toolTip.LoadToolTips(this); 
+            toolTip.LoadToolTips(this);
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || mainBinding.Current is not IDomainAttributeItem);
         }
 
-        private void Data_RowStateChanged(object? sender, EventArgs e)
+        private void RowStateChanged(object? sender, EventArgs e)
         {
             if (sender is IBindingRowState data)
             {
