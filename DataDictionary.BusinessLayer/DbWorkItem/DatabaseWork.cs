@@ -103,9 +103,16 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
     }
 
     /// <summary>
-    /// Manages the Database Work Items
+    /// Manages the Database Work Items and the Connection used to perform the work.
     /// </summary>
-    public class DatabaseWork : IDatabaseWork
+    /// <remarks>
+    /// This is called a "factory" in a number of places.
+    /// The class is not part of a factory pattern.
+    /// What it does do is manages the Work Items that interact with the database.
+    /// All the items get the same connection.
+    /// Rollback/commit occurs on all items sharing the same DatabaseWork instance.
+    /// </remarks>
+    class DatabaseWork : IDatabaseWork
     {
         class WorkState
         {
@@ -119,12 +126,6 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         public IConnection Connection { get; internal set; }
 
         Dictionary<IWorkItem, WorkState> workItems = new Dictionary<IWorkItem, WorkState>();
-
-        /// <summary>
-        /// Work item that opens the connection on the ModelData context.
-        /// </summary>
-        public DatabaseWork() : base()
-        { Connection = ModelData.ModelContext.CreateConnection(); }
 
         /// <summary>
         /// Work item that opens the connection on the specified context.

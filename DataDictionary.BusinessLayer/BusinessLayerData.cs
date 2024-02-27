@@ -5,6 +5,7 @@ using DbConnection = Toolbox.DbContext.Context;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
+using Toolbox.DbContext;
 
 
 namespace DataDictionary.BusinessLayer
@@ -30,6 +31,12 @@ namespace DataDictionary.BusinessLayer
         /// Current File, if any, used to load the Model.
         /// </summary>
         public FileInfo? ModelFile { get; set; }
+
+        /// <summary>
+        /// Returns a new Default factory Database Worker.
+        /// </summary>
+        public IDatabaseWork GetDbFactory () 
+        { return new DatabaseWork(DbConnection); } 
 
         /// <summary>
         /// Constructor for the Business Layer Data Object

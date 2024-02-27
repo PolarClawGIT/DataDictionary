@@ -75,7 +75,7 @@ namespace DataDictionary.Main.Forms.Database
             if (Settings.Default.IsOnLineMode)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
                 work.AddRange(LoadLocalData(factory));
                 this.DoWork(work, onCompleting);
@@ -234,7 +234,7 @@ namespace DataDictionary.Main.Forms.Database
             if (catalogBinding.Current is CatalogManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 DbCatalogKey key = new DbCatalogKey(item);
 
                 work.Add(factory.OpenConnection());
@@ -258,7 +258,7 @@ namespace DataDictionary.Main.Forms.Database
             if (catalogBinding.Current is CatalogManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 NameScopeKey scopeKey = new NameScopeKey(item);
                 List<NameScopeItem> names = new List<NameScopeItem>();
 
@@ -279,7 +279,7 @@ namespace DataDictionary.Main.Forms.Database
             if (catalogBinding.Current is CatalogManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
 
                 DbCatalogKey key = new DbCatalogKey(item);
                 work.Add(factory.OpenConnection());

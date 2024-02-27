@@ -63,7 +63,7 @@ namespace DataDictionary.Main
 
             if (Settings.Default.IsOnLineMode)
             {
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
                 work.AddRange(BusinessData.ApplicationData.Load(factory));
 

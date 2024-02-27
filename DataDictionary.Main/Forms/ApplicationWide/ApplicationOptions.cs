@@ -38,7 +38,7 @@ namespace DataDictionary.Main.ApplicationWide
         private void commandSaveToDatabase_Click(object sender, EventArgs e)
         {
             List<WorkItem> work = new List<WorkItem>();
-            DatabaseWork factory = new DatabaseWork();
+            IDatabaseWork factory = BusinessData.GetDbFactory();
             work.Add(factory.OpenConnection());
             work.AddRange(BusinessData.ApplicationData.Save(factory));
             this.DoWork(work, OnComplete);
@@ -52,7 +52,7 @@ namespace DataDictionary.Main.ApplicationWide
             SendMessage(new DbApplicationBatchStarting());
 
             List<WorkItem> work = new List<WorkItem>();
-            DatabaseWork factory = new DatabaseWork();
+            IDatabaseWork factory = BusinessData.GetDbFactory();
             work.Add(factory.OpenConnection());
             work.AddRange(BusinessData.ApplicationData.Load(factory));
             this.DoWork(work, OnComplete);

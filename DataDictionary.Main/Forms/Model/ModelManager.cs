@@ -68,7 +68,7 @@ namespace DataDictionary.Main.Forms.Model
             if (Settings.Default.IsOnLineMode)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
                 this.DoWork(work, onCompleting);
             }
@@ -120,7 +120,7 @@ namespace DataDictionary.Main.Forms.Model
             if (modelBinding.Current is ModelManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 ModelKey key = new ModelKey(item);
                 
                 work.Add(factory.OpenConnection());
@@ -143,7 +143,7 @@ namespace DataDictionary.Main.Forms.Model
             if (modelBinding.Current is ModelManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
 
                 ModelKey key = new ModelKey(item);
                 work.Add(factory.OpenConnection());
@@ -161,7 +161,7 @@ namespace DataDictionary.Main.Forms.Model
             if (modelBinding.Current is ModelManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
 
                 ModelKey key = new ModelKey(item);
                 work.Add(factory.OpenConnection());

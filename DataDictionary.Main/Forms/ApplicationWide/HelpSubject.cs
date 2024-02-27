@@ -499,7 +499,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 && current.NameSpace is String
                 && current.NameSpace != Settings.Default.DefaultSubject) // Cannot Delete the Default Subject
             {
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
                 RemoveNode(current);
@@ -526,7 +526,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         {
             if (helpBinding.Current is HelpItem current)
             {
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
 
                 work.Add(factory.OpenConnection());
@@ -554,7 +554,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         {
             if (helpBinding.Current is HelpItem current)
             {
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
                 HelpKey key = new HelpKey(current);
                 current.Remove();

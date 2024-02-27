@@ -170,7 +170,7 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
             DbCatalogKey key = new DbCatalogKey(new DbCatalogItem());
 
-            DatabaseWork factory = new DatabaseWork() { Connection = source.CreateConnection() };
+            DatabaseWork factory = new DatabaseWork(source);
             work.Add(factory.OpenConnection());
 
             work.Add(factory.CreateWork(

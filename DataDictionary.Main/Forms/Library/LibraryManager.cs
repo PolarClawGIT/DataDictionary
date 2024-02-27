@@ -80,7 +80,7 @@ namespace DataDictionary.Main.Forms.Library
             if (Settings.Default.IsOnLineMode)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
                 work.AddRange(LoadLocalData(factory));
                 this.DoWork(work, onCompleting);
@@ -205,7 +205,7 @@ namespace DataDictionary.Main.Forms.Library
             if (libraryBinding.Current is LibraryManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
 
                 LibrarySourceKey key = new LibrarySourceKey(item);
                 work.Add(factory.OpenConnection());
@@ -230,7 +230,7 @@ namespace DataDictionary.Main.Forms.Library
             if (libraryBinding.Current is LibraryManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<NameScopeItem> names = new List<NameScopeItem>();
                 work.Add(factory.OpenConnection());
 
@@ -252,7 +252,7 @@ namespace DataDictionary.Main.Forms.Library
             if (libraryBinding.Current is LibraryManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 LibrarySourceKey key = new LibrarySourceKey(item);
                 work.Add(factory.OpenConnection());
 
