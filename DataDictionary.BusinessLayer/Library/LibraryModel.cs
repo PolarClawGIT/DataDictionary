@@ -11,9 +11,9 @@ namespace DataDictionary.BusinessLayer.Library
     /// <summary>
     /// Interface representing .Net Library Data
     /// </summary>
-    public interface ILibraryData :
-        ILoadData<ILibrarySourceKey>, ILoadData<IModelKey>,
-        ISaveData<ILibrarySourceKey>, ISaveData<IModelKey>,
+    public interface ILibraryModel :
+        ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>, IRemoveData<ILibrarySourceKey>,
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
         INameScopeData
     {
         /// <summary>
@@ -27,13 +27,6 @@ namespace DataDictionary.BusinessLayer.Library
         ILibrarySourceData LibrarySources { get; }
 
         /// <summary>
-        /// Removes a Library, by Key, and all child data.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        IReadOnlyList<WorkItem> Remove(ILibrarySourceKey key);
-
-        /// <summary>
         /// Imports a Library from Visual Studio XML Documentation file.
         /// </summary>
         /// <param name="source"></param>
@@ -41,7 +34,7 @@ namespace DataDictionary.BusinessLayer.Library
         IReadOnlyList<WorkItem> Import(FileInfo source);
     }
 
-    class LibraryData : ILibraryData, IDataTableFile//, INameScopeData
+    class LibraryModel : ILibraryModel, IDataTableFile//, INameScopeData
     {
         /// <inheritdoc/>
         public ILibraryMemberData LibraryMembers { get { return members; } }
@@ -51,7 +44,7 @@ namespace DataDictionary.BusinessLayer.Library
         public ILibrarySourceData LibrarySources { get { return sources; } }
         private readonly LibrarySourceData sources;
 
-        public LibraryData() : base()
+        public LibraryModel() : base()
         {
             sources = new LibrarySourceData() { Library = this };
             members = new LibraryMemberData() { Library = this };
@@ -127,6 +120,18 @@ namespace DataDictionary.BusinessLayer.Library
 
             work.Add(new WorkItem() { WorkName = "Remove Library Source", DoWork = () => { sources.Remove(key); } });
             work.Add(new WorkItem() { WorkName = "Remove Library Members", DoWork = () => { members.Remove(key); } });
+
+            return work;
+        }
+
+        /// <inheritdoc />
+        /// <remarks>Library</remarks>
+        public IReadOnlyList<WorkItem> Remove()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem() { WorkName = "Remove Library Source", DoWork = () => { sources.Clear(); } });
+            work.Add(new WorkItem() { WorkName = "Remove Library Members", DoWork = () => { members.Clear(); } });
 
             return work;
         }

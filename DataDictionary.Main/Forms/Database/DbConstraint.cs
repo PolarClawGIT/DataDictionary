@@ -26,7 +26,7 @@ namespace DataDictionary.Main.Forms.Database
             DbConstraintKeyName key = new DbConstraintKeyName(constraintItem);
             DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
 
-            bindingConstraint.DataSource = new BindingView<DbConstraintItem>(BusinessData.DatabaseData.DbConstraints, w => key.Equals(w));
+            bindingConstraint.DataSource = new BindingView<DbConstraintItem>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
             bindingConstraint.Position = 0;
 
             if (bindingConstraint.Current is IDbConstraintItem current)
@@ -36,8 +36,8 @@ namespace DataDictionary.Main.Forms.Database
                 current.RowStateChanged += RowStateChanged;
                 this.Text = current.ToString();
 
-                bindingColumn.DataSource = new BindingView<DbConstraintColumnItem>(BusinessData.DatabaseData.DbConstraintColumns, w => key.Equals(w));
-                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseData.DbExtendedProperties, w => propertyKey.Equals(w));
+                bindingColumn.DataSource = new BindingView<DbConstraintColumnItem>(BusinessData.DatabaseModel.DbConstraintColumns, w => key.Equals(w));
+                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }
 

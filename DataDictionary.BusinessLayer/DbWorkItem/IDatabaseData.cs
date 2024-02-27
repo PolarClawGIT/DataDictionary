@@ -70,8 +70,20 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
     /// <summary>
     /// Interface for Create WorkItems that removes items from the collection by Key
     /// </summary>
+    public interface IRemoveData
+    {
+        /// <summary>
+        /// Create WorkItems that removes all items from the collection
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyList<WorkItem> Remove();
+    }
+
+    /// <summary>
+    /// Interface for Create WorkItems that removes items from the collection by Key
+    /// </summary>
     /// <typeparam name="TKey"></typeparam>
-    public interface IRemoveData<TKey>
+    public interface IRemoveData<TKey> : IRemoveData
         where TKey : IKey
     {
         /// <summary>

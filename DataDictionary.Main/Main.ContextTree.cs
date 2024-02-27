@@ -172,7 +172,7 @@ namespace DataDictionary.Main
             List<WorkItem> work = new List<WorkItem>();
             List<NameScopeItem> names = new List<NameScopeItem>();
 
-            work.AddRange(BusinessData.DatabaseData.Export(names));
+            work.AddRange(BusinessData.DatabaseModel.Export(names));
 
             //work.AddRange(BusinessData.LibraryData.Export(names));
             //work.AddRange(BusinessData.DomainData.Export(names));
@@ -195,7 +195,7 @@ namespace DataDictionary.Main
         {
             DomainAttributeItem item = new DomainAttributeItem();
 
-            BusinessData.DomainData.DomainAttributes.Add(item);
+            BusinessData.DomainModel.DomainAttributes.Add(item);
             //Program.Data.ContextName.Add(new NameScopeItem(Program.Data.Model, item));
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
@@ -208,7 +208,7 @@ namespace DataDictionary.Main
         {
             DomainEntityItem item = new DomainEntityItem();
 
-            BusinessData.DomainData.DomainEntities.Add(item);
+            BusinessData.DomainModel.DomainEntities.Add(item);
             //Program.Data.ContextName.Add(new NameScopeItem(Program.Data.Model, item));
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
@@ -220,7 +220,7 @@ namespace DataDictionary.Main
         private void NewSubjectAreaCommand_ButtonClick(object sender, EventArgs e)
         {
             ModelSubjectAreaItem item = new ModelSubjectAreaItem();
-            BusinessData.DomainData.ModelSubjectAreas.Add(item);
+            BusinessData.ModelSubjectAreas.Add(item);
             //Program.Data.ContextName.Add(new NameScopeItem(Program.Data.Model, item));
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
@@ -295,67 +295,67 @@ namespace DataDictionary.Main
         { Activate(() => new Forms.Database.CatalogManager()); }
 
         private void menuCatalogItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Database), BusinessData.DatabaseData.DbCatalogs); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Database), BusinessData.DatabaseModel.DbCatalogs); }
 
         private void menuAttributes_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Attribute), BusinessData.DomainData.DomainAttributes); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Attribute), BusinessData.DomainModel.DomainAttributes); }
 
         private void subjectAreaToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Diagram), BusinessData.DomainData.ModelSubjectAreas); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Diagram), BusinessData.ModelSubjectAreas); }
 
         private void browseHelpCommand_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_HelpTableOfContent), BusinessData.ApplicationData.HelpSubjects); }
 
         private void viewLibrarySourceCommand_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Library), BusinessData.LibraryData.LibrarySources); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Library), BusinessData.LibraryModel.LibrarySources); }
 
         private void viewLibraryMemberCommand_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Class), BusinessData.LibraryData.LibraryMembers); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Class), BusinessData.LibraryModel.LibraryMembers); }
 
         private void menuConstraintItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Key), BusinessData.DatabaseData.DbConstraints); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Key), BusinessData.DatabaseModel.DbConstraints); }
 
         private void menuConstraintColumnItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_KeyColumn), BusinessData.DatabaseData.DbConstraintColumns); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_KeyColumn), BusinessData.DatabaseModel.DbConstraintColumns); }
 
         private void menuDataTypeItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_DomainType), BusinessData.DatabaseData.DbDomains); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_DomainType), BusinessData.DatabaseModel.DbDomains); }
 
         private void menuRoutineItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Procedure), BusinessData.DatabaseData.DbRoutines); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Procedure), BusinessData.DatabaseModel.DbRoutines); }
 
         private void menuRoutineParameterItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Parameter), BusinessData.DatabaseData.DbRoutineParameters); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Parameter), BusinessData.DatabaseModel.DbRoutineParameters); }
 
         private void menuRoutineDependencyItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Dependancy), BusinessData.DatabaseData.DbRoutineDependencies); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Dependancy), BusinessData.DatabaseModel.DbRoutineDependencies); }
 
         private void menuSchemaItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Schema), BusinessData.DatabaseData.DbSchemta); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Schema), BusinessData.DatabaseModel.DbSchemta); }
 
         private void menuTableItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Table), BusinessData.DatabaseData.DbTables); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Table), BusinessData.DatabaseModel.DbTables); }
 
         private void menuColumnItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Column), BusinessData.DatabaseData.DbTableColumns); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Column), BusinessData.DatabaseModel.DbTableColumns); }
 
         private void menuPropertyItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_ExtendedProperty), BusinessData.DatabaseData.DbExtendedProperties); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_ExtendedProperty), BusinessData.DatabaseModel.DbExtendedProperties); }
 
         private void menuAttributeProperties_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainData.DomainAttributes.DomainAttributeProperties); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainModel.DomainAttributes.DomainAttributeProperties); }
 
         private void menuAttributeAlaises_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainData.DomainAttributes.DomainAttributeAliases); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.DomainAttributes.DomainAttributeAliases); }
 
         private void entitiesToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Entities), BusinessData.DomainData.DomainEntities); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Entities), BusinessData.DomainModel.DomainEntities); }
 
         private void entityPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainData.DomainEntities.DomainEntityProperties); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainModel.DomainEntities.DomainEntityProperties); }
 
         private void entityAliasToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainData.DomainEntities.DomainEntityAliases); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.DomainEntities.DomainEntityAliases); }
 
         #endregion
 

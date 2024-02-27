@@ -15,8 +15,8 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Interface representing Catalog data
     /// </summary>
-    public interface IDatabaseData :
-        ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
+    public interface IDatabaseModel :
+        ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>, IRemoveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         INameScopeData
     {
@@ -76,13 +76,6 @@ namespace DataDictionary.BusinessLayer.Database
         ITableColumnData DbTableColumns { get; }
 
         /// <summary>
-        /// Removes a Catalog, by Key, and all child data.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        IReadOnlyList<WorkItem> Remove(IDbCatalogKey key);
-
-        /// <summary>
         /// Imports a Catalog from a Database Source
         /// </summary>
         /// <param name="source"></param>
@@ -93,18 +86,18 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Interface used by the Database Data Items
     /// </summary>
-    interface IDatabaseDataItem
+    interface IDatabaseModelItem
     {
         /// <summary>
         /// The Wrapper Data Object that this object contained within.
         /// </summary>
-        IDatabaseData Database { get; }
+        IDatabaseModel Database { get; }
     }
 
     /// <summary>
     /// Implementation for Catalog data
     /// </summary>
-    class DatabaseData : IDatabaseData, IDataTableFile
+    class DatabaseModel : IDatabaseModel, IDataTableFile
     {
         /// <inheritdoc/>
         public ICatalogData DbCatalogs { get { return catalogs; } }
@@ -150,7 +143,7 @@ namespace DataDictionary.BusinessLayer.Database
         public ITableColumnData DbTableColumns { get { return tableColumns; } }
         private readonly TableColumnData tableColumns;
 
-        public DatabaseData() : base()
+        public DatabaseModel() : base()
         {
             catalogs = new CatalogData() { Database = this };
             schemta = new SchemaData() { Database = this };
@@ -437,6 +430,32 @@ namespace DataDictionary.BusinessLayer.Database
             work.Add(new WorkItem() { WorkName = "Remove Extended Properties", DoWork = () => { extendedProperties.Remove(key); } });
             return work;
         }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Remove()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem() { WorkName = "Remove Catalog", DoWork = () => { catalogs.Clear(); } });
+            work.Add(new WorkItem() { WorkName = "Remove Schemta", DoWork = () => { schemta.Clear(); } });
+            work.Add(new WorkItem() { WorkName = "Remove Domains", DoWork = () => { domains.Clear(); } });
+
+            work.Add(new WorkItem() { WorkName = "Remove Tables", DoWork = () => { tables.Clear(); } });
+            work.Add(new WorkItem() { WorkName = "Remove Table Columns", DoWork = () => { tableColumns.Clear(); } });
+
+            work.Add(new WorkItem() { WorkName = "Remove Routines", DoWork = () => { routines.Clear(); } });
+            work.Add(new WorkItem() { WorkName = "Remove Routine Parameters", DoWork = () => { routineParameters.Clear(); } });
+            work.Add(new WorkItem() { WorkName = "Remove Routine Dependencies", DoWork = () => { routineDependencies.Clear(); } });
+
+            work.Add(new WorkItem() { WorkName = "Remove Constraints", DoWork = () => { constraints.Clear(); } });
+            work.Add(new WorkItem() { WorkName = "Remove Constraint Columns", DoWork = () => { constraintColumns.Clear(); } });
+
+            work.Add(new WorkItem() { WorkName = "Remove Extended Properties", DoWork = () => { extendedProperties.Clear(); } });
+
+
+            return work;
+        }
+
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target)

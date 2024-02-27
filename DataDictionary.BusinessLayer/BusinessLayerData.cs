@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using Toolbox.Threading;
 using Toolbox.BindingTable;
 using DbConnection = Toolbox.DbContext.Context;
+using DataDictionary.DataLayer.ModelData;
+using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.Model;
 
 
 namespace DataDictionary.BusinessLayer
@@ -14,7 +17,8 @@ namespace DataDictionary.BusinessLayer
     /// <summary>
     /// Main Data Container for all Business Data.
     /// </summary>
-    public partial class BusinessLayerData : IFileData
+    public partial class BusinessLayerData : IFileData,
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData
     {
         /// <summary>
         /// Database Context for accessing the Application Db.
@@ -31,7 +35,6 @@ namespace DataDictionary.BusinessLayer
         /// Current File, if any, used to load the Model.
         /// </summary>
         public FileInfo? ModelFile { get; set; }
-
 
         /// <summary>
         /// Constructor for the Business Layer Data Object
@@ -53,6 +56,62 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey key)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(models.Load(factory, key));
+            work.AddRange(subjectAreas.Load(factory, key));
+
+            work.AddRange(DomainModel.Load(factory, key));
+            work.AddRange(DatabaseModel.Load(factory, key));
+            work.AddRange(LibraryModel.Load(factory, key));
+
+            return work;
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey key)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(models.Save(factory, key));
+            work.AddRange(subjectAreas.Save(factory, key));
+
+            work.AddRange(DomainModel.Save(factory, key));
+            work.AddRange(DatabaseModel.Save(factory, key));
+            work.AddRange(LibraryModel.Save(factory, key));
+
+            return work;
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Remove()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(models.Remove());
+            work.AddRange(subjectAreas.Remove());
+
+            work.AddRange(DomainModel.Remove());
+            work.AddRange(DatabaseModel.Remove());
+            work.AddRange(LibraryModel.Remove());
+
+            return work;
+        }
+
+        /// <summary>
+        /// Creates WorkItems to create a new Model
+        /// </summary>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> Create ()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(models.Create());
+            return work;
+        }
+
+        /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Import(FileInfo file)
         {
             return new List<WorkItem>() { new WorkItem() { WorkName = "Load Model Data", DoWork = DoWork } };
@@ -62,10 +121,16 @@ namespace DataDictionary.BusinessLayer
                 using (System.Data.DataSet workSet = new System.Data.DataSet())
                 {
                     workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
+
+                    models.Import(workSet);
+                    subjectAreas.Import(workSet);
+
                     domain.Import(workSet);
                     database.Import(workSet);
                     library.Import(workSet);
                 }
+
+                ModelFile = file;
             }
         }
 
@@ -78,11 +143,16 @@ namespace DataDictionary.BusinessLayer
             {
                 using (System.Data.DataSet workSet = new System.Data.DataSet())
                 {
+                    workSet.Tables.Add(models.ToDataTable());
+                    workSet.Tables.Add(subjectAreas.ToDataTable());
+
                     workSet.Tables.AddRange(domain.Export().ToArray());
                     workSet.Tables.AddRange(database.Export().ToArray());
                     workSet.Tables.AddRange(library.Export().ToArray());
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }
+
+                ModelFile = file;
             }
         }
     }

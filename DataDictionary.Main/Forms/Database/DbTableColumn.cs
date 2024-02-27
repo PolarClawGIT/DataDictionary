@@ -30,7 +30,7 @@ namespace DataDictionary.Main.Forms.Database
             DbTableColumnKeyName key = new DbTableColumnKeyName(columnItem);
             DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
 
-            bindingColumn.DataSource = new BindingView<DbTableColumnItem>(BusinessData.DatabaseData.DbTableColumns, w => key.Equals(w));
+            bindingColumn.DataSource = new BindingView<DbTableColumnItem>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
             bindingColumn.Position = 0;
 
             if (bindingColumn.Current is IDbTableColumnItem current)
@@ -40,7 +40,7 @@ namespace DataDictionary.Main.Forms.Database
                 this.Text = current.ToString();
                 this.Icon = new ScopeKey(current).Scope.ToIcon();
 
-                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseData.DbExtendedProperties, w => propertyKey.Equals(w));
+                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
 
         }
@@ -104,7 +104,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             if (bindingColumn.Current is IDbTableItem current)
             {
-                BusinessData.DomainData.DomainAttributes.Import(BusinessData.DatabaseData, current);
+                BusinessData.DomainModel.DomainAttributes.Import(BusinessData.DatabaseModel, current);
             }
         }
     }

@@ -23,7 +23,7 @@ namespace DataDictionary.Main.Forms.Library
         {
             LibrarySourceKeyName key = new LibrarySourceKeyName(librarySource);
 
-            bindingSource.DataSource = new BindingView<LibrarySourceItem>(BusinessData.LibraryData.LibrarySources, w => key.Equals(w));
+            bindingSource.DataSource = new BindingView<LibrarySourceItem>(BusinessData.LibraryModel.LibrarySources, w => key.Equals(w));
             bindingSource.Position = 0;
 
             if (bindingSource.Current is ILibrarySourceItem current)

@@ -29,7 +29,7 @@ namespace DataDictionary.Main.Forms.Model
                 if (modelBinding.Current is ModelManagerItem item)
                 {
                     ModelKey key = new ModelKey(item);
-                    return (Program.Data.Models.FirstOrDefault(w => key.Equals(w)) is ModelItem);
+                    return (BusinessData.Models.FirstOrDefault(w => key.Equals(w)) is ModelItem);
                 }
                 else { return false; }
             }
@@ -70,7 +70,6 @@ namespace DataDictionary.Main.Forms.Model
                 List<WorkItem> work = new List<WorkItem>();
                 DatabaseWork factory = new DatabaseWork();
                 work.Add(factory.OpenConnection());
-                work.AddRange(LoadLocalData(factory));
                 this.DoWork(work, onCompleting);
             }
 
@@ -80,7 +79,7 @@ namespace DataDictionary.Main.Forms.Model
 
         public bool BindDataCore()
         {
-            bindingData.Build(Program.Data.Models, dbData);
+            bindingData.Build(BusinessData.Models, dbData);
 
             modelBinding.DataSource = bindingData;
 
@@ -107,7 +106,8 @@ namespace DataDictionary.Main.Forms.Model
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(Program.Data.NewModel());
+            work.AddRange(BusinessData.Remove());
+            work.AddRange(BusinessData.Create()); 
 
             DoLocalWork(work);
         }
@@ -125,10 +125,13 @@ namespace DataDictionary.Main.Forms.Model
                 
                 work.Add(factory.OpenConnection());
 
-                if (inModelList) { work.AddRange(Program.Data.DeleteModel(factory, key)); }
+                if (inModelList)
+                {
+                    work.AddRange(BusinessData.Remove());
+                    work.AddRange(BusinessData.Save(factory, key));
+                }
                 else { work.AddRange(dbData.DeleteModel(factory, key)); }
 
-                work.AddRange(LoadLocalData(factory));
                 DoLocalWork(work);
             }
         }
@@ -144,7 +147,8 @@ namespace DataDictionary.Main.Forms.Model
 
                 ModelKey key = new ModelKey(item);
                 work.Add(factory.OpenConnection());
-                work.AddRange(Program.Data.LoadModel(factory, key));
+                work.AddRange(BusinessData.Remove());
+                work.AddRange(BusinessData.Load(factory, key));
 
                 DoLocalWork(work);
             }
@@ -161,8 +165,7 @@ namespace DataDictionary.Main.Forms.Model
 
                 ModelKey key = new ModelKey(item);
                 work.Add(factory.OpenConnection());
-                work.AddRange(Program.Data.SaveModel(factory,Program.Data.ModelKey));
-                work.AddRange(LoadLocalData(factory));
+                work.AddRange(BusinessData.Save(factory, key));
 
                 DoLocalWork(work);
             }
@@ -176,15 +179,6 @@ namespace DataDictionary.Main.Forms.Model
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { SendMessage(new Messages.DoBindData()); }
-        }
-
-        private IReadOnlyList<WorkItem> LoadLocalData(IDatabaseWork factory)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem() { WorkName = "Clear local data", DoWork = dbData.Clear });
-            work.AddRange(dbData.LoadModel(factory));
-
-            return work;
         }
 
         protected override void HandleMessage(OnlineStatusChanged message)

@@ -34,7 +34,7 @@ namespace DataDictionary.Main.Forms.Database
             DbDomainKeyName key = new DbDomainKeyName(domainItem);
             DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
 
-            bindingDomain.DataSource = new BindingView<DbDomainItem>(BusinessData.DatabaseData.DbDomains, w => key.Equals(w));
+            bindingDomain.DataSource = new BindingView<DbDomainItem>(BusinessData.DatabaseModel.DbDomains, w => key.Equals(w));
             bindingDomain.Position = 0;
 
             if (bindingDomain.Current is IDbDomainItem current)
@@ -44,7 +44,7 @@ namespace DataDictionary.Main.Forms.Database
                 current.RowStateChanged += RowStateChanged;
                 this.Text = current.ToString();
 
-                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseData.DbExtendedProperties, w => propertyKey.Equals(w));
+                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }
 

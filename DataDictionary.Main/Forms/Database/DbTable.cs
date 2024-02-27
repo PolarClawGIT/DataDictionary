@@ -32,7 +32,7 @@ namespace DataDictionary.Main.Forms.Database
             DbTableKeyName key = new DbTableKeyName(tableItem);
             DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
 
-            bindingTable.DataSource = new BindingView<DbTableItem>(BusinessData.DatabaseData.DbTables, w => key.Equals(w));
+            bindingTable.DataSource = new BindingView<DbTableItem>(BusinessData.DatabaseModel.DbTables, w => key.Equals(w));
             bindingTable.Position = 0;
 
             if (bindingTable.Current is IDbTableItem current)
@@ -42,9 +42,9 @@ namespace DataDictionary.Main.Forms.Database
                 this.Text = current.ToString();
                 this.Icon = new ScopeKey(current).Scope.ToIcon();
 
-                bindingColumns.DataSource = new BindingView<DbTableColumnItem>(BusinessData.DatabaseData.DbTableColumns, w => key.Equals(w));
-                bindingConstraints.DataSource = new BindingView<DbConstraintItem>(BusinessData.DatabaseData.DbConstraints, w => key.Equals(w));
-                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseData.DbExtendedProperties, w => propertyKey.Equals(w));
+                bindingColumns.DataSource = new BindingView<DbTableColumnItem>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
+                bindingConstraints.DataSource = new BindingView<DbConstraintItem>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
+                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }
 
@@ -84,8 +84,8 @@ namespace DataDictionary.Main.Forms.Database
         {
             if (bindingTable.Current is IDbTableItem current)
             {
-                BusinessData.DomainData.DomainAttributes.Import(BusinessData.DatabaseData, current);
-                BusinessData.DomainData.DomainEntities.Import(BusinessData.DatabaseData, current);
+                BusinessData.DomainModel.DomainAttributes.Import(BusinessData.DatabaseModel, current);
+                BusinessData.DomainModel.DomainEntities.Import(BusinessData.DatabaseModel, current);
             }
         }
     }

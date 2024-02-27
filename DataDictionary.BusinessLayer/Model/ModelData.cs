@@ -8,14 +8,20 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Domain
+namespace DataDictionary.BusinessLayer.Model
 {
     /// <summary>
     /// Interface component for the Domain Model 
     /// </summary>
     public interface IModelData :
         IBindingData<ModelItem>
-    { }
+    {
+        /// <summary>
+        /// Create WorkItem that create a new Model instance.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<WorkItem> Create();
+    }
 
     class ModelData : ModelCollection, IModelData,
         ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
@@ -38,6 +44,12 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
         public void Import(System.Data.DataSet source)
-        { this.Load(source); }
+        { Load(source); }
+
+        public IReadOnlyList<WorkItem> Remove()
+        { return new WorkItem() { WorkName = "Remove Model", DoWork = () => { Clear(); } }.ToList(); }
+
+        public IEnumerable<WorkItem> Create()
+        { return new WorkItem() { WorkName = "Create Model", DoWork = () => { Add(new ModelItem()); } }.ToList(); }
     }
 }

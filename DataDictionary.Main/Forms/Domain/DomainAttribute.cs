@@ -33,7 +33,7 @@ namespace DataDictionary.Main.Forms.Domain
         public DomainAttribute(IDomainAttributeItem attributeItem) : this()
         {
             DomainAttributeKey key = new DomainAttributeKey(attributeItem);
-            mainBinding.DataSource = new BindingView<DomainAttributeItem>(BusinessData.DomainData.DomainAttributes, w => key.Equals(w));
+            mainBinding.DataSource = new BindingView<DomainAttributeItem>(BusinessData.DomainModel.DomainAttributes, w => key.Equals(w));
             mainBinding.Position = 0;
 
             if (mainBinding.Current is IDomainAttributeItem current)
@@ -43,8 +43,8 @@ namespace DataDictionary.Main.Forms.Domain
                 current.RowStateChanged += RowStateChanged;
                 this.Text = current.ToString();
 
-                propertyBinding.DataSource = new BindingView<DomainAttributePropertyItem>(BusinessData.DomainData.DomainAttributes.DomainAttributeProperties, w => key.Equals(w));
-                aliasBinding.DataSource = new BindingView<DomainAttributeAliasItem>(BusinessData.DomainData.DomainAttributes.DomainAttributeAliases, w => key.Equals(w));
+                propertyBinding.DataSource = new BindingView<DomainAttributePropertyItem>(BusinessData.DomainModel.DomainAttributes.DomainAttributeProperties, w => key.Equals(w));
+                aliasBinding.DataSource = new BindingView<DomainAttributeAliasItem>(BusinessData.DomainModel.DomainAttributes.DomainAttributeAliases, w => key.Equals(w));
             }
         }
 

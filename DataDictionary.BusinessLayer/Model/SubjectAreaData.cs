@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.Domain
+namespace DataDictionary.BusinessLayer.Model
 {
     /// <summary>
     /// Interface component for the Model SubjectArea
@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.Domain
         ILoadData<IModelSubjectAreaKey>, ISaveData<IModelSubjectAreaKey>
     { }
 
-    class SubjectAreaData: ModelSubjectAreaCollection, ISubjectAreaData,
+    class SubjectAreaData : ModelSubjectAreaCollection, ISubjectAreaData,
         ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
     {
         /// <inheritdoc/>
@@ -51,6 +51,9 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
         public void Import(System.Data.DataSet source)
-        { this.Load(source); }
+        { Load(source); }
+
+        public IReadOnlyList<WorkItem> Remove()
+        { return new WorkItem() { WorkName = "Remove Subject Area", DoWork = () => { Clear(); } }.ToList(); }
     }
 }

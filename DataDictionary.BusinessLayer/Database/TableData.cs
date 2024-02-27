@@ -17,10 +17,10 @@ namespace DataDictionary.BusinessLayer.Database
     class TableData : DbTableCollection, ITableData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseDataItem, INameScopeData
+        IDatabaseModelItem, INameScopeData
     {
         /// <inheritdoc/>
-        public required IDatabaseData Database { get; init; }
+        public required IDatabaseModel Database { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>Table</remarks>

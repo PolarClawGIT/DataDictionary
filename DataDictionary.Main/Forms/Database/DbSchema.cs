@@ -24,7 +24,7 @@ namespace DataDictionary.Main.Forms.Database
             DbSchemaKeyName key = new DbSchemaKeyName(schemaItem);
             DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
 
-            bindingSchema.DataSource = new BindingView<DbSchemaItem>(BusinessData.DatabaseData.DbSchemta, w => key.Equals(w));
+            bindingSchema.DataSource = new BindingView<DbSchemaItem>(BusinessData.DatabaseModel.DbSchemta, w => key.Equals(w));
             bindingSchema.Position = 0;
 
             if (bindingSchema.Current is IDbSchemaItem current)
@@ -34,7 +34,7 @@ namespace DataDictionary.Main.Forms.Database
                 this.Text = current.ToString();
                 this.Icon = new ScopeKey(current).Scope.ToIcon();
 
-                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseData.DbExtendedProperties, w => propertyKey.Equals(w));
+                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }
 

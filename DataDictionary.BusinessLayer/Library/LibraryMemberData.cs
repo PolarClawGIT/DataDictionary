@@ -25,7 +25,7 @@ namespace DataDictionary.BusinessLayer.Library
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <inheritdoc/>
-        public required ILibraryData Library { get; init; }
+        public required ILibraryModel Library { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>Table</remarks>

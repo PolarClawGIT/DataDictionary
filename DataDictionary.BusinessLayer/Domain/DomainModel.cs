@@ -1,5 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
@@ -9,20 +9,11 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface representing Domain data
     /// </summary>
-    public interface IDomainData:
-        ILoadData<IModelKey>, ISaveData<IModelKey>
-        
+    public interface IDomainModel:
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        IRemoveData
+
     {
-        /// <summary>
-        /// List of Domain Models. (expected, 0 or 1 item)
-        /// </summary>
-        IModelData DomainModel { get; }
-
-        /// <summary>
-        /// List of Subject Areas within the Model.
-        /// </summary>
-        ISubjectAreaData ModelSubjectAreas { get; }
-
         /// <summary>
         /// List of Domain Attributes within the Model.
         /// </summary>
@@ -32,10 +23,9 @@ namespace DataDictionary.BusinessLayer.Domain
         /// List of Domain Entities within the Model.
         /// </summary>
         IEntityData DomainEntities { get; }
-
     }
 
-    class DomainData: IDomainData,
+    class DomainModel: IDomainModel,
         IDataTableFile
     //, INameScopeData
     {
@@ -47,20 +37,10 @@ namespace DataDictionary.BusinessLayer.Domain
         public IEntityData DomainEntities { get { return entites; } }
         private readonly EntityData entites;
 
-        /// <inheritdoc/>
-        public IModelData DomainModel { get { return models; } }
-        private readonly ModelData models;
-
-        /// <inheritdoc/>
-        public ISubjectAreaData ModelSubjectAreas { get { return subjectAreas; } }
-        private readonly SubjectAreaData subjectAreas;
-
-        public DomainData() : base ()
+        public DomainModel() : base ()
         {
             attributes = new AttributeData();
             entites = new EntityData();
-            models = new ModelData();
-            subjectAreas = new SubjectAreaData();
         }
 
         /// <inheritdoc/>
@@ -68,7 +48,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(models.Load(factory, dataKey));
+            
             work.AddRange(attributes.Load(factory, dataKey));
             work.AddRange(entites.Load(factory, dataKey));
 
@@ -80,7 +60,6 @@ namespace DataDictionary.BusinessLayer.Domain
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(models.Save(factory, dataKey));
             work.AddRange(attributes.Save(factory, dataKey));
             work.AddRange(entites.Save(factory, dataKey));
 
@@ -92,8 +71,6 @@ namespace DataDictionary.BusinessLayer.Domain
         public IReadOnlyList<System.Data.DataTable> Export()
         {
             List<System.Data.DataTable> result = new List<System.Data.DataTable>();
-            result.AddRange(models.Export());
-            result.AddRange(subjectAreas.Export());
             result.AddRange(attributes.Export());
             result.AddRange(entites.Export());
             return result;
@@ -103,14 +80,24 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <remarks>Attribute</remarks>
         public void Import(System.Data.DataSet source)
         {
-            models.Import(source);
-            subjectAreas.Import(source);
             attributes.Import(source);
             entites.Import(source);
         }
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
+        public IReadOnlyList<WorkItem> Remove()
+        {
+            List<WorkItem> result = new List<WorkItem>();
+            attributes.Remove();
+            entites.Remove();
+
+            return result;
+        }
+
+
+
+        [Obsolete("Need this code to build out NameScope")]
         public IReadOnlyList<NameScopeItem> GetNameScopes()
         {
             List<NameScopeItem> result = new List<NameScopeItem>();

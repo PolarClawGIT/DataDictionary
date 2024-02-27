@@ -19,10 +19,10 @@ namespace DataDictionary.BusinessLayer.Database
     class SchemaData : DbSchemaCollection, ISchemaData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseDataItem, INameScopeData
+        IDatabaseModelItem, INameScopeData
     {
         /// <inheritdoc/>
-        public required IDatabaseData Database { get; init; }
+        public required IDatabaseModel Database { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>Schema</remarks>

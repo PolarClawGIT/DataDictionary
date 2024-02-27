@@ -26,11 +26,11 @@ namespace DataDictionary.BusinessLayer.Domain
         /// </summary>
         IAttributePropertyData DomainAttributeProperties { get; }
 
-        void Import(IDatabaseData source, IDbCatalogKeyName key);
+        void Import(IDatabaseModel source, IDbCatalogKeyName key);
 
-        void Import(IDatabaseData source, IDbTableKeyName key);
+        void Import(IDatabaseModel source, IDbTableKeyName key);
 
-        void Import(IDatabaseData source, IDbTableColumnKeyName key);
+        void Import(IDatabaseModel source, IDbTableColumnKeyName key);
     }
 
     class AttributeData : DomainAttributeCollection, IAttributeData,
@@ -72,6 +72,34 @@ namespace DataDictionary.BusinessLayer.Domain
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
+        public override void Remove(IDomainAttributeKey attributeItem)
+        {
+            base.Remove(attributeItem);
+            DomainAttributeKey key = new DomainAttributeKey(attributeItem);
+            attributeAlias.Remove(key);
+            attributeProperty.Remove(key);
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Remove()
+        {
+            List<WorkItem> result = new List<WorkItem>();
+
+            result.Add(new WorkItem()
+            {
+                WorkName = "Remove Attributes",
+                DoWork = () =>
+                {
+                    attributeAlias.Clear();
+                    attributeProperty.Clear();
+                    this.Clear();
+                }
+            });
+
+            return result;
+        }
+
+        /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
         public IReadOnlyList<System.Data.DataTable> Export()
         {
@@ -91,17 +119,17 @@ namespace DataDictionary.BusinessLayer.Domain
             attributeProperty.Load(source);
         }
 
-        public void Import(IDatabaseData source, IDbCatalogKeyName key)
+        public void Import(IDatabaseModel source, IDbCatalogKeyName key)
         {
             throw new NotImplementedException();
         }
 
-        public void Import(IDatabaseData source, IDbTableKeyName key)
+        public void Import(IDatabaseModel source, IDbTableKeyName key)
         {
             throw new NotImplementedException();
         }
 
-        public void Import(IDatabaseData source, IDbTableColumnKeyName key)
+        public void Import(IDatabaseModel source, IDbTableColumnKeyName key)
         {
             throw new NotImplementedException();
         }

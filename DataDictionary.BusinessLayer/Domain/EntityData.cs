@@ -31,9 +31,9 @@ namespace DataDictionary.BusinessLayer.Domain
         /// </summary>
         IEntityPropertyData DomainEntityProperties { get; }
 
-        void Import(IDatabaseData source, IDbCatalogKeyName key);
+        void Import(IDatabaseModel source, IDbCatalogKeyName key);
 
-        void Import(IDatabaseData source, IDbTableKeyName key);
+        void Import(IDatabaseModel source, IDbTableKeyName key);
     }
 
     class EntityData: DomainEntityCollection, IEntityData,
@@ -75,6 +75,34 @@ namespace DataDictionary.BusinessLayer.Domain
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Remove()
+        {
+            List<WorkItem> result = new List<WorkItem>();
+
+            result.Add(new WorkItem()
+            {
+                WorkName = "Remove Entities",
+                DoWork = () =>
+                {
+                    entityAlias.Clear();
+                    entityProperty.Clear();
+                    this.Clear();
+                }
+            });
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public override void Remove(IDomainEntityKey entityItem)
+        {
+            base.Remove(entityItem);
+            DomainEntityKey key = new DomainEntityKey(entityItem);
+            entityAlias.Remove(key);
+            entityProperty.Remove(key);
+        }
+
+        /// <inheritdoc/>
         /// <remarks>Entity</remarks>
         public IReadOnlyList<System.Data.DataTable> Export()
         {
@@ -94,12 +122,12 @@ namespace DataDictionary.BusinessLayer.Domain
             entityProperty.Load(source);
         }
 
-        public void Import(IDatabaseData source, IDbCatalogKeyName key)
+        public void Import(IDatabaseModel source, IDbCatalogKeyName key)
         {
             throw new NotImplementedException();
         }
 
-        public void Import(IDatabaseData source, IDbTableKeyName key)
+        public void Import(IDatabaseModel source, IDbTableKeyName key)
         {
             throw new NotImplementedException();
         }

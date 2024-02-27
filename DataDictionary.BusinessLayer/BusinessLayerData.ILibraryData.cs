@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Wrapper for Library Data (Library Source and Member)
         /// </summary>
-        public ILibraryData LibraryData { get { return library; } }
-        private readonly LibraryData library = new LibraryData();
+        public ILibraryModel LibraryModel { get { return library; } }
+        private readonly LibraryModel library = new LibraryModel();
     }
 }

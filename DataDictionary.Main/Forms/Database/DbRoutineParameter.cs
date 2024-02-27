@@ -27,7 +27,7 @@ namespace DataDictionary.Main.Forms.Database
             DbRoutineParameterKeyName key = new DbRoutineParameterKeyName(parameterItem);
             DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
 
-            bindingParameter.DataSource = new BindingView<DbRoutineParameterItem>(BusinessData.DatabaseData.DbRoutineParameters, w => key.Equals(w));
+            bindingParameter.DataSource = new BindingView<DbRoutineParameterItem>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
             bindingParameter.Position = 0;
 
             if (bindingParameter.Current is IDbRoutineParameterItem current)
@@ -37,7 +37,7 @@ namespace DataDictionary.Main.Forms.Database
                 current.RowStateChanged += RowStateChanged;
                 this.Text = current.ToString();
 
-                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseData.DbExtendedProperties, w => propertyKey.Equals(w));
+                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }
 

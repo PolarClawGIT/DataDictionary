@@ -21,10 +21,10 @@ namespace DataDictionary.BusinessLayer.Database
     class CatalogData : DbCatalogCollection, ICatalogData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
-        IDatabaseDataItem, INameScopeData
+        IDatabaseModelItem, INameScopeData
     {
         /// <inheritdoc/>
-        public required IDatabaseData Database { get; init; }
+        public required IDatabaseModel Database { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>

@@ -26,7 +26,7 @@ namespace DataDictionary.Main.Forms.Database
             DbRoutineKeyName key = new DbRoutineKeyName(routineItem);
             DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
 
-            bindingRoutine.DataSource = new BindingView<DbRoutineItem>(BusinessData.DatabaseData.DbRoutines, w => key.Equals(w));
+            bindingRoutine.DataSource = new BindingView<DbRoutineItem>(BusinessData.DatabaseModel.DbRoutines, w => key.Equals(w));
             bindingRoutine.Position = 0;
 
             if (bindingRoutine.Current is IDbRoutineItem current)
@@ -36,9 +36,9 @@ namespace DataDictionary.Main.Forms.Database
                 this.Text = current.ToString();
                 this.Icon = new ScopeKey(current).Scope.ToIcon();
 
-                bindingParameters.DataSource = new BindingView<DbRoutineParameterItem>(BusinessData.DatabaseData.DbRoutineParameters, w => key.Equals(w));
-                bindingDependencies.DataSource = new BindingView<DbRoutineDependencyItem>(BusinessData.DatabaseData.DbRoutineDependencies, w => key.Equals(w));
-                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseData.DbExtendedProperties, w => propertyKey.Equals(w));
+                bindingParameters.DataSource = new BindingView<DbRoutineParameterItem>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
+                bindingDependencies.DataSource = new BindingView<DbRoutineDependencyItem>(BusinessData.DatabaseModel.DbRoutineDependencies, w => key.Equals(w));
+                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }
 

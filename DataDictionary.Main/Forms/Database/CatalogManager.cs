@@ -31,7 +31,7 @@ namespace DataDictionary.Main.Forms.Database
                 if (catalogBinding.Current is CatalogManagerItem item)
                 {
                     DbCatalogKey key = new DbCatalogKey(item);
-                    return (BusinessData.DatabaseData.DbCatalogs.FirstOrDefault(w => key.Equals(w)) is DbCatalogItem);
+                    return (BusinessData.DatabaseModel.DbCatalogs.FirstOrDefault(w => key.Equals(w)) is DbCatalogItem);
                 }
                 else { return false; }
             }
@@ -87,7 +87,7 @@ namespace DataDictionary.Main.Forms.Database
 
         public Boolean BindDataCore()
         {
-            bindingData.Build(BusinessData.DatabaseData.DbCatalogs, dbData);
+            bindingData.Build(BusinessData.DatabaseModel.DbCatalogs, dbData);
 
             catalogBinding.DataSource = bindingData;
 
@@ -197,8 +197,8 @@ namespace DataDictionary.Main.Forms.Database
                         DatabaseName = dialog.DatabaseName
                     };
 
-                    work.AddRange(BusinessData.DatabaseData.Import(source));
-                    work.AddRange(BusinessData.DatabaseData.Export(names));
+                    work.AddRange(BusinessData.DatabaseModel.Import(source));
+                    work.AddRange(BusinessData.DatabaseModel.Export(names));
                     work.AddRange(BusinessData.NameScope.Import(names));
 
                     DoLocalWork(work);
@@ -215,7 +215,7 @@ namespace DataDictionary.Main.Forms.Database
             {
                 NameScopeKey scopeKey = new NameScopeKey(item);
                 DbCatalogKey catalogKey = new DbCatalogKey(item);
-                work.AddRange(BusinessData.DatabaseData.Remove(catalogKey));
+                work.AddRange(BusinessData.DatabaseModel.Remove(catalogKey));
                 work.Add(
                     new WorkItem()
                     {
@@ -241,8 +241,8 @@ namespace DataDictionary.Main.Forms.Database
 
                 if (inModelList)
                 {
-                    work.AddRange(BusinessData.DatabaseData.Remove(key));
-                    work.AddRange(BusinessData.DatabaseData.Save(factory, key));
+                    work.AddRange(BusinessData.DatabaseModel.Remove(key));
+                    work.AddRange(BusinessData.DatabaseModel.Save(factory, key));
                 }
                 else { work.AddRange(dbData.DeleteCatalog(factory, key)); }
 
@@ -264,8 +264,8 @@ namespace DataDictionary.Main.Forms.Database
 
                 DbCatalogKey key = new DbCatalogKey(item);
                 work.Add(factory.OpenConnection());
-                work.AddRange(BusinessData.DatabaseData.Load(factory, key));
-                work.AddRange(BusinessData.DatabaseData.Export(names));
+                work.AddRange(BusinessData.DatabaseModel.Load(factory, key));
+                work.AddRange(BusinessData.DatabaseModel.Export(names));
                 work.AddRange(BusinessData.NameScope.Import(names));
 
                 DoLocalWork(work);
@@ -284,7 +284,7 @@ namespace DataDictionary.Main.Forms.Database
                 DbCatalogKey key = new DbCatalogKey(item);
                 work.Add(factory.OpenConnection());
 
-                if (inModelList) { work.AddRange(BusinessData.DatabaseData.Save(factory, key)); }
+                if (inModelList) { work.AddRange(BusinessData.DatabaseModel.Save(factory, key)); }
                 else { work.AddRange(dbData.SaveCatalog(factory, key)); }
 
                 work.AddRange(LoadLocalData(factory));

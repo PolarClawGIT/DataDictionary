@@ -21,7 +21,7 @@ namespace DataDictionary.Main.Forms.Library
         {
             LibraryMemberKeyName nameKey = new LibraryMemberKeyName(libraryMember);
 
-            bindingMember.DataSource = new BindingView<LibraryMemberItem>(BusinessData.LibraryData.LibraryMembers, w => nameKey.Equals(w));
+            bindingMember.DataSource = new BindingView<LibraryMemberItem>(BusinessData.LibraryModel.LibraryMembers, w => nameKey.Equals(w));
             bindingMember.Position = 0;
 
             if (bindingMember.Current is ILibraryMemberItem current)
@@ -32,7 +32,7 @@ namespace DataDictionary.Main.Forms.Library
                 current.RowStateChanged += RowStateChanged;
                 this.Text = current.ToString();
 
-                bindingChild.DataSource = new BindingView<LibraryMemberItem>(BusinessData.LibraryData.LibraryMembers, w => new LibraryMemberKeyParent(w).Equals(key));
+                bindingChild.DataSource = new BindingView<LibraryMemberItem>(BusinessData.LibraryModel.LibraryMembers, w => new LibraryMemberKeyParent(w).Equals(key));
             }
         }
 

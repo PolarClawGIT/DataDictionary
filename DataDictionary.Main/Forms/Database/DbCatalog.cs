@@ -30,7 +30,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             DbCatalogKeyName key = new DbCatalogKeyName(catalogItem);
 
-            bindingSource.DataSource = new BindingView<DbCatalogItem>(BusinessData.DatabaseData.DbCatalogs, w => key.Equals(w));
+            bindingSource.DataSource = new BindingView<DbCatalogItem>(BusinessData.DatabaseModel.DbCatalogs, w => key.Equals(w));
             bindingSource.Position = 0;
 
             if(bindingSource.Current is IDbCatalogItem current)
@@ -69,8 +69,8 @@ namespace DataDictionary.Main.Forms.Database
         {
             if (bindingSource.Current is IDbCatalogItem current)
             {
-                BusinessData.DomainData.DomainAttributes.Import(BusinessData.DatabaseData, current);
-                BusinessData.DomainData.DomainEntities.Import(BusinessData.DatabaseData, current);
+                BusinessData.DomainModel.DomainAttributes.Import(BusinessData.DatabaseModel, current);
+                BusinessData.DomainModel.DomainEntities.Import(BusinessData.DatabaseModel, current);
             }
         }
     }

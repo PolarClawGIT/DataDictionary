@@ -63,10 +63,10 @@ namespace DataDictionary.BusinessLayer.Database
     class ExtendedPropertyData : DbExtendedPropertyCollection, IExtendedPropertyData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseDataItem
+        IDatabaseModelItem
     {
         /// <inheritdoc/>
-        public required IDatabaseData Database { get; init; }
+        public required IDatabaseModel Database { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>ExtendedProperty</remarks>

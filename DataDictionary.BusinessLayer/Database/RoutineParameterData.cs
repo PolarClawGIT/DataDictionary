@@ -18,10 +18,10 @@ namespace DataDictionary.BusinessLayer.Database
     class RoutineParameterData: DbRoutineParameterCollection, IRoutineParameterData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseDataItem, INameScopeData
+        IDatabaseModelItem, INameScopeData
     {
         /// <inheritdoc/>
-        public required IDatabaseData Database { get; init; }
+        public required IDatabaseModel Database { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>RoutineParameter</remarks>

@@ -92,7 +92,7 @@ namespace DataDictionary.Main.Forms.Library
 
         public Boolean BindDataCore()
         {
-            bindingData.Build(BusinessData.LibraryData.LibrarySources, dbData);
+            bindingData.Build(BusinessData.LibraryModel.LibrarySources, dbData);
             libraryBinding.DataSource = bindingData;
 
             libraryNavigation.AutoGenerateColumns = false;
@@ -167,8 +167,8 @@ namespace DataDictionary.Main.Forms.Library
                 foreach (String file in openFileDialog.FileNames)
                 {
                     FileInfo fileInfo = new FileInfo(file);
-                    work.AddRange(BusinessData.LibraryData.Import(fileInfo));
-                    work.AddRange(BusinessData.LibraryData.Export(names));
+                    work.AddRange(BusinessData.LibraryModel.Import(fileInfo));
+                    work.AddRange(BusinessData.LibraryModel.Export(names));
                     work.AddRange(BusinessData.NameScope.Import(names));
                 }
 
@@ -186,7 +186,7 @@ namespace DataDictionary.Main.Forms.Library
                 LibrarySourceKey key = new LibrarySourceKey(item);
                 NameScopeKey scopeKey = new NameScopeKey(item);
 
-                work.AddRange(BusinessData.LibraryData.Remove(key));
+                work.AddRange(BusinessData.LibraryModel.Remove(key));
                 work.Add(
                     new WorkItem()
                     {
@@ -209,12 +209,12 @@ namespace DataDictionary.Main.Forms.Library
 
                 LibrarySourceKey key = new LibrarySourceKey(item);
                 work.Add(factory.OpenConnection());
-                Boolean inModelList = (BusinessData.LibraryData.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
+                Boolean inModelList = (BusinessData.LibraryModel.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
 
                 if (inModelList)
                 {
-                    work.AddRange(BusinessData.LibraryData.Remove(key));
-                    work.AddRange(BusinessData.LibraryData.Save(factory, key));
+                    work.AddRange(BusinessData.LibraryModel.Remove(key));
+                    work.AddRange(BusinessData.LibraryModel.Save(factory, key));
                 }
                 else { work.AddRange(dbData.DeleteLibrary(factory, key)); }
 
@@ -235,9 +235,9 @@ namespace DataDictionary.Main.Forms.Library
                 work.Add(factory.OpenConnection());
 
                 LibrarySourceKey key = new LibrarySourceKey(item);
-                work.AddRange(BusinessData.LibraryData.Load(factory, key));
+                work.AddRange(BusinessData.LibraryModel.Load(factory, key));
                 work.AddRange(LoadLocalData(factory));
-                work.AddRange(BusinessData.LibraryData.Export(names));
+                work.AddRange(BusinessData.LibraryModel.Export(names));
                 work.AddRange(BusinessData.NameScope.Import(names));
                 DoLocalWork(work);
             }
@@ -256,7 +256,7 @@ namespace DataDictionary.Main.Forms.Library
                 LibrarySourceKey key = new LibrarySourceKey(item);
                 work.Add(factory.OpenConnection());
 
-                if (inModelList) { work.AddRange(BusinessData.LibraryData.Save(factory, key)); }
+                if (inModelList) { work.AddRange(BusinessData.LibraryModel.Save(factory, key)); }
                 else { work.AddRange(dbData.SaveLibrary(factory, key)); }
 
                 work.AddRange(LoadLocalData(factory));
