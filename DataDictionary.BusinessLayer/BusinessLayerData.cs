@@ -1,15 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Threading;
 using Toolbox.BindingTable;
 using DbConnection = Toolbox.DbContext.Context;
 using DataDictionary.DataLayer.ModelData;
-using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.Model;
+using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.DataLayer.ModelData.SubjectArea;
 
 
 namespace DataDictionary.BusinessLayer
@@ -18,7 +13,7 @@ namespace DataDictionary.BusinessLayer
     /// Main Data Container for all Business Data.
     /// </summary>
     public partial class BusinessLayerData : IFileData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData, INameScopeData
     {
         /// <summary>
         /// Database Context for accessing the Application Db.
@@ -104,12 +99,8 @@ namespace DataDictionary.BusinessLayer
         /// Creates WorkItems to create a new Model
         /// </summary>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> Create ()
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(models.Create());
-            return work;
-        }
+        public IReadOnlyList<WorkItem> Create()
+        { return models.Create(); }
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Import(FileInfo file)
@@ -154,6 +145,45 @@ namespace DataDictionary.BusinessLayer
 
                 ModelFile = file;
             }
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem()
+            {
+                WorkName = "Load NameScope, Models",
+                DoWork = () =>
+                {
+                    if (models.FirstOrDefault() is ModelItem modelItem)
+                    { target.Add(new NameScopeItem(modelItem)); }
+                }
+            });
+
+            work.Add(new WorkItem()
+            {
+                WorkName = "Load NameScope, Subject Areas",
+                DoWork = () =>
+                {
+                    if (models.FirstOrDefault() is ModelItem modelItem)
+                    {
+                        foreach (ModelSubjectAreaItem item in subjectAreas)
+                        {
+                            ModelKey key = new ModelKey(modelItem);
+                            { target.Add(new NameScopeItem(key, item)); }
+                        }
+                    }
+                }
+            });
+
+            work.AddRange(domain.Export(target, models.FirstOrDefault));
+            work.AddRange(database.Export(target));
+            work.AddRange(library.Export(target));
+
+            return work;
+
         }
     }
 }

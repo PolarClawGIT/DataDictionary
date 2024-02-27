@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.Model
         /// Create WorkItem that create a new Model instance.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<WorkItem> Create();
+        IReadOnlyList<WorkItem> Create();
     }
 
     class ModelData : ModelCollection, IModelData,
@@ -49,7 +49,7 @@ namespace DataDictionary.BusinessLayer.Model
         public IReadOnlyList<WorkItem> Remove()
         { return new WorkItem() { WorkName = "Remove Model", DoWork = () => { Clear(); } }.ToList(); }
 
-        public IEnumerable<WorkItem> Create()
+        public IReadOnlyList<WorkItem> Create()
         { return new WorkItem() { WorkName = "Create Model", DoWork = () => { Add(new ModelItem()); } }.ToList(); }
     }
 }

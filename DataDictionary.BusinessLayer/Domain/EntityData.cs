@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Entity;
@@ -38,7 +39,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
     class EntityData: DomainEntityCollection, IEntityData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile
+        IDataTableFile, INameScopeData<IModelKey>
     {
         /// <inheritdoc/>
         public IEntityAliasData DomainEntityAliases { get { return entityAlias; } }
@@ -130,6 +131,22 @@ namespace DataDictionary.BusinessLayer.Domain
         public void Import(IDatabaseModel source, IDbTableKeyName key)
         {
             throw new NotImplementedException();
+        }
+
+        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target, Func<IModelKey?> parent)
+        {
+            return new WorkItem()
+            {
+                WorkName = "Load NameScope, Entities",
+                DoWork = () =>
+                {
+                    if (parent() is IModelKey key)
+                    {
+                        foreach (DomainEntityItem item in this)
+                        { target.Add(new NameScopeItem(key, item)); }
+                    }
+                }
+            }.ToList();
         }
     }
 }

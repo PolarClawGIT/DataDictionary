@@ -171,18 +171,8 @@ namespace DataDictionary.Main
 
             List<WorkItem> work = new List<WorkItem>();
             List<NameScopeItem> names = new List<NameScopeItem>();
-
-            work.AddRange(BusinessData.DatabaseModel.Export(names));
-
-            //work.AddRange(BusinessData.LibraryData.Export(names));
-            //work.AddRange(BusinessData.DomainData.Export(names));
-
-            work.Add(
-                new WorkItem()
-                {
-                    WorkName = "Load NameScope",
-                    DoWork = () => BusinessData.NameScope.AddRange(names)
-                });
+            work.AddRange(BusinessData.Export(names));
+            work.AddRange(BusinessData.NameScope.Import(names));
 
             this.DoWork(work, onCompleting);
 

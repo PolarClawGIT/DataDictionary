@@ -1,5 +1,6 @@
 using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
@@ -12,23 +13,9 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main
 {
-    partial class Main : ApplicationBase, IApplicationDataBind
+    partial class Main : ApplicationBase
     {
-
-        #region Static Data
-        enum navigationTabImageIndex
-        {
-            Database,
-            Domain
-        }
-        Dictionary<navigationTabImageIndex, Image> navigationTabImages = new Dictionary<navigationTabImageIndex, Image>()
-        {
-            {navigationTabImageIndex.Database, Resources.Database },
-            {navigationTabImageIndex.Domain, Resources.Dictionary }
-        };
-        #endregion
-
-        public bool IsOpenItem(object? item)
+        public Boolean IsOpenItem(object? item)
         { return true; }
 
         public Main() : base()
@@ -36,7 +23,7 @@ namespace DataDictionary.Main
             InitializeComponent();
             Icon = Resources.Icon_Application;
             toolStrip.Hide(); // Hide base ToolStrip
-            this.IsLocked(true);
+            IsLocked(true);
 
             // Setup Images for Tree Control
             contextNameNavigation.ImageList = ModelScopeExtension.ToImageList();
@@ -69,6 +56,11 @@ namespace DataDictionary.Main
             SendMessage(new DoUnbindData());
 
             List<WorkItem> work = new List<WorkItem>();
+            List<NameScopeItem> names = new List<NameScopeItem>();
+            work.AddRange(BusinessData.Create());
+            work.AddRange(BusinessData.Export(names));
+            work.AddRange(BusinessData.NameScope.Import(names));
+
             if (Settings.Default.IsOnLineMode)
             {
                 DatabaseWork factory = new DatabaseWork();
@@ -99,7 +91,8 @@ namespace DataDictionary.Main
             // Handle data load complete
             void OnComplete(RunWorkerCompletedEventArgs args)
             {
-                if (splashDone) { splashScreen.Close(); }
+                if (splashDone)
+                { this.Invoke(() => splashScreen.Close()); }
 
                 if (args.Error is not null && Settings.Default.IsOnLineMode)
                 { // Could not load the data from the database for whatever reason.
@@ -111,33 +104,31 @@ namespace DataDictionary.Main
                 }
                 else
                 {
-                    SendMessage(new DoBindData());
+                    BuildTree();
                     SendMessage(new OnlineStatusChanged());
                     dataLoaded = true;
+                    IsLocked(false);
                 }
             }
 
             // Handle Splash timer timed out.
             void MinTime_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
             {
-                if (dataLoaded) { this.Invoke(() => splashScreen.Close()); }
+                if (dataLoaded)
+                {
+                    this.Invoke(() =>
+                    {
+                        splashScreen.Close();
+                        IsLocked(false);
+                    });
+                }
+
                 splashDone = true;
                 splashTimer.Elapsed -= MinTime_Elapsed;
+
             }
         }
 
-
-        public bool BindDataCore()
-        {
-            BuildTree();
-
-            return true;
-        }
-
-        public void UnbindDataCore()
-        {
-            ClearTree();
-        }
 
         private void Main_FormClosing(object? sender, FormClosingEventArgs e)
         { }
@@ -177,15 +168,20 @@ namespace DataDictionary.Main
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            (this as IApplicationDataBind).UnbindData();
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(Program.Data.NewModel());
+            List<NameScopeItem> names = new List<NameScopeItem>();
+            work.AddRange(BusinessData.Remove());
+            work.AddRange(BusinessData.NameScope.Remove());
+            work.AddRange(BusinessData.Create());
+            work.AddRange(BusinessData.Export(names));
+            work.AddRange(BusinessData.NameScope.Import(names));
 
             DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                (this as IApplicationDataBind).BindData();
+                ClearTree();
+                BuildTree();
             }
         }
 

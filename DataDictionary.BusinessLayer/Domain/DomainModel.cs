@@ -1,7 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.ModelData.SubjectArea;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -26,8 +28,7 @@ namespace DataDictionary.BusinessLayer.Domain
     }
 
     class DomainModel: IDomainModel,
-        IDataTableFile
-    //, INameScopeData
+        IDataTableFile, INameScopeData<IModelKey>
     {
         /// <inheritdoc/>
         public IAttributeData DomainAttributes { get { return attributes; } }
@@ -77,7 +78,7 @@ namespace DataDictionary.BusinessLayer.Domain
         }
 
         /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
+        /// <remarks>Domain</remarks>
         public void Import(System.Data.DataSet source)
         {
             attributes.Import(source);
@@ -95,6 +96,18 @@ namespace DataDictionary.BusinessLayer.Domain
             return result;
         }
 
+
+        /// <inheritdoc/>
+        /// <remarks>Domain</remarks>
+        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target, Func<IModelKey?> parent)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(attributes.Export(target, parent));
+            work.AddRange(entites.Export(target, parent));
+
+            return work;
+        }
 
 
         [Obsolete("Need this code to build out NameScope")]
@@ -232,5 +245,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
             return result;
         }
+
+
     }
 }

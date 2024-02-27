@@ -26,7 +26,7 @@ namespace DataDictionary.Main.Forms.Model
         public Model(ModelItem data): this()
         {
             DataKey = new ModelKey(data);
-            bindingModel.DataSource = new BindingView<ModelItem>(Program.Data.Models, w => DataKey.Equals(w));
+            bindingModel.DataSource = new BindingView<ModelItem>(BusinessData.Models, w => DataKey.Equals(w));
         }
 
         private void Model_Load(object sender, EventArgs e)

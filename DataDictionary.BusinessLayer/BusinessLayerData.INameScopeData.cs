@@ -17,10 +17,13 @@ namespace DataDictionary.BusinessLayer
         public NameScopeDictionary NameScope { get; } = new NameScopeDictionary();
     }
 
+    /// <summary>
+    /// Extension class for NameScopeDictionary
+    /// </summary>
     public static class BusinessLayerData_NameScope
     {
         /// <summary>
-        /// Import a List of NameScopeItems to the NameScopeDictionary
+        /// Create WorkItems to Import a List of NameScopeItems to the NameScopeDictionary
         /// </summary>
         /// <param name="target"></param>
         /// <param name="source"></param>
@@ -30,6 +33,14 @@ namespace DataDictionary.BusinessLayer
             return new WorkItem()
             { WorkName = "Load NameScope", DoWork = () => target.AddRange(source) }.ToList();
         }
+
+        /// <summary>
+        /// Create WorkItems to Remove all items from a NameScopeDictionary.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static IReadOnlyList<WorkItem> Remove(this NameScopeDictionary target)
+        {   return new WorkItem() { WorkName = "Remove NameScope", DoWork = () => target.Clear() }.ToList(); }
     }
 
 }
