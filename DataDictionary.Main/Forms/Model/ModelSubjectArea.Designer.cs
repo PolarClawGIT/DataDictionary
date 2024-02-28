@@ -41,8 +41,10 @@
             entityData = new DataGridView();
             entityTitleColumn = new DataGridViewTextBoxColumn();
             entityDescriptionColumn = new DataGridViewTextBoxColumn();
-            bindingSubject = new BindingSource(components);
             subjectAreaNameSpaceData = new DataDictionary.Main.Controls.TextBoxData();
+            bindingSubject = new BindingSource(components);
+            bindingEntity = new BindingSource(components);
+            bindingAttribute = new BindingSource(components);
             subjectAreaLayout = new TableLayoutPanel();
             subjectAreaTab = new TabControl();
             subjectAreaLayout.SuspendLayout();
@@ -52,6 +54,8 @@
             entityTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)entityData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingSubject).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingEntity).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
             SuspendLayout();
             // 
             // subjectAreaLayout
@@ -128,7 +132,6 @@
             attributeData.Dock = DockStyle.Fill;
             attributeData.Location = new Point(3, 3);
             attributeData.Name = "attributeData";
-            attributeData.RowTemplate.Height = 25;
             attributeData.Size = new Size(359, 163);
             attributeData.TabIndex = 0;
             // 
@@ -155,19 +158,20 @@
             entityTab.Location = new Point(4, 24);
             entityTab.Name = "entityTab";
             entityTab.Padding = new Padding(3);
-            entityTab.Size = new Size(365, 96);
+            entityTab.Size = new Size(365, 169);
             entityTab.TabIndex = 1;
             entityTab.Text = "Entities";
             // 
             // entityData
             // 
+            entityData.AllowUserToAddRows = false;
+            entityData.AllowUserToDeleteRows = false;
             entityData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             entityData.Columns.AddRange(new DataGridViewColumn[] { entityTitleColumn, entityDescriptionColumn });
             entityData.Dock = DockStyle.Fill;
             entityData.Location = new Point(3, 3);
             entityData.Name = "entityData";
-            entityData.RowTemplate.Height = 25;
-            entityData.Size = new Size(359, 90);
+            entityData.Size = new Size(359, 163);
             entityData.TabIndex = 0;
             // 
             // entityTitleColumn
@@ -216,6 +220,8 @@
             entityTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)entityData).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingSubject).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingEntity).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -234,5 +240,7 @@
         private DataGridViewTextBoxColumn entityDescriptionColumn;
         private BindingSource bindingSubject;
         private DataDictionary.Main.Controls.TextBoxData subjectAreaNameSpaceData;
+        private BindingSource bindingEntity;
+        private BindingSource bindingAttribute;
     }
 }

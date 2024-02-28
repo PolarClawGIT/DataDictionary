@@ -222,8 +222,9 @@ namespace DataDictionary.Main
         private void NewSubjectAreaCommand_ButtonClick(object sender, EventArgs e)
         {
             ModelSubjectAreaItem item = new ModelSubjectAreaItem();
+
             BusinessData.ModelSubjectAreas.Add(item);
-            //Program.Data.ContextName.Add(new NameScopeItem(Program.Data.Model, item));
+            BusinessData.NameScope.Add(BusinessData.Models.FirstOrDefault(), item);
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
             { contextNameNavigation.SelectedNode = node; }
@@ -284,7 +285,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Domain.DomainEntity() { DataKey = new DomainEntityKey(entityItem) }, entityItem); }
 
         void Activate(ModelSubjectAreaItem subjectItem)
-        { Activate((data) => new Forms.Domain.ModelSubjectArea() { DataKey = new ModelSubjectAreaKey(subjectItem) }, subjectItem); }
+        { Activate((data) => new Forms.Domain.ModelSubjectArea(subjectItem) , subjectItem); }
 
         void Activate(ModelItem modelItem)
         { Activate((data) => new Forms.Model.Model(modelItem), modelItem); }

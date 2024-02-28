@@ -224,7 +224,7 @@ namespace DataDictionary.Main
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             if (Settings.Default.IsOnLineMode)
-            { toolStripOnlineStatus.Text = String.Format("On-Line: {0}.{0}",  BusinessData.Connection.ServerName, BusinessData.Connection.DatabaseName); }
+            { toolStripOnlineStatus.Text = String.Format("On-Line: {0}.{0}", BusinessData.Connection.ServerName, BusinessData.Connection.DatabaseName); }
             else { toolStripOnlineStatus.Text = "Off-Line"; }
         }
         #endregion
