@@ -33,10 +33,24 @@ namespace DataDictionary.BusinessLayer
         public FileInfo? ModelFile { get; set; }
 
         /// <summary>
+        /// Current Title of the Model or default "New Model"
+        /// </summary>
+        public String ModelTitle
+        {
+            get
+            {
+                if (models.FirstOrDefault() is IModelItem model
+                    && !String.IsNullOrWhiteSpace(model.ModelTitle))
+                { return model.ModelTitle; }
+                else { return "New Model"; }
+            }
+        }
+
+        /// <summary>
         /// Returns a new Default factory Database Worker.
         /// </summary>
-        public IDatabaseWork GetDbFactory () 
-        { return new DatabaseWork(DbConnection); } 
+        public IDatabaseWork GetDbFactory()
+        { return new DatabaseWork(DbConnection); }
 
         /// <summary>
         /// Constructor for the Business Layer Data Object
@@ -45,7 +59,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="databaseName"></param>
         /// <param name="applicationRole"></param>
         /// <param name="ApplicationRolePassword"></param>
-        public BusinessLayerData(String serverName, String databaseName, String? applicationRole, String? ApplicationRolePassword)
+        public BusinessLayerData(String serverName, String databaseName, String? applicationRole, String? ApplicationRolePassword) : base()
         {
             DbConnection = new DbConnection()
             {
@@ -55,6 +69,8 @@ namespace DataDictionary.BusinessLayer
                 ApplicationRolePassword = ApplicationRolePassword,
                 ValidateCommand = true
             };
+
+            models.Add(new ModelItem());
         }
 
         /// <inheritdoc/>

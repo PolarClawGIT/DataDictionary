@@ -57,7 +57,6 @@ namespace DataDictionary.Main
 
             List<WorkItem> work = new List<WorkItem>();
             List<NameScopeItem> names = new List<NameScopeItem>();
-            work.AddRange(BusinessData.Create());
             work.AddRange(BusinessData.Export(names));
             work.AddRange(BusinessData.NameScope.Import(names));
 
@@ -225,7 +224,7 @@ namespace DataDictionary.Main
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             if (Settings.Default.IsOnLineMode)
-            { toolStripOnlineStatus.Text = String.Format("On-Line: {0}.{0}", Program.Data.ServerName, Program.Data.DatabaseName); }
+            { toolStripOnlineStatus.Text = String.Format("On-Line: {0}.{0}",  BusinessData.Connection.ServerName, BusinessData.Connection.DatabaseName); }
             else { toolStripOnlineStatus.Text = "Off-Line"; }
         }
         #endregion
@@ -255,7 +254,7 @@ namespace DataDictionary.Main
             else
             {
                 openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                openFileDialog.FileName = Program.Data.Model.ModelTitle;
+                openFileDialog.FileName = BusinessData.ModelTitle;
             }
 
             DialogResult dialogResult = openFileDialog.ShowDialog();
@@ -301,7 +300,7 @@ namespace DataDictionary.Main
             else
             {
                 saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                saveFileDialog.FileName = Program.Data.Model.ModelTitle;
+                saveFileDialog.FileName = BusinessData.ModelTitle;
             }
 
             DialogResult dialogResult = saveFileDialog.ShowDialog();
