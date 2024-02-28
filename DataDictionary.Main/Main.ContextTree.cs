@@ -157,8 +157,11 @@ namespace DataDictionary.Main
                     NameScopeKey deleteKey = deletedItem.SystemKey;
                     if (contextNodes.FirstOrDefault(w => deletedItem.SystemKey.Equals(w.Value.SystemKey)).Key is TreeNode node)
                     {
-                        node.Remove();
-                        contextNodes.Remove(node);
+                        contextNameNavigation.Invoke(() =>
+                        {
+                            node.Remove();
+                            contextNodes.Remove(node);
+                        });
                     }
                 }
             }
