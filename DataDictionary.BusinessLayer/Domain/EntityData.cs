@@ -25,12 +25,12 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <summary>
         /// List of Domain Aliases for the Entities within the Model.
         /// </summary>
-        IEntityAliasData DomainEntityAliases { get; }
+        IEntityAliasData Aliases { get; }
 
         /// <summary>
         /// List of Domain Properties for the Entities within the Model.
         /// </summary>
-        IEntityPropertyData DomainEntityProperties { get; }
+        IEntityPropertyData Properties { get; }
 
         void Import(IDatabaseModel source, IDbCatalogKeyName key);
 
@@ -42,17 +42,17 @@ namespace DataDictionary.BusinessLayer.Domain
         IDataTableFile, INameScopeData<IModelKey>
     {
         /// <inheritdoc/>
-        public IEntityAliasData DomainEntityAliases { get { return entityAlias; } }
-        private readonly EntityAliasData entityAlias;
+        public IEntityAliasData Aliases { get { return aliasValues; } }
+        private readonly EntityAliasData aliasValues;
 
         /// <inheritdoc/>
-        public IEntityPropertyData DomainEntityProperties { get { return entityProperty; } }
-        private readonly EntityPropertyData entityProperty;
+        public IEntityPropertyData Properties { get { return propertyValues; } }
+        private readonly EntityPropertyData propertyValues;
 
         public EntityData() : base ()
         {
-            entityAlias = new EntityAliasData();
-            entityProperty = new EntityPropertyData();
+            aliasValues = new EntityAliasData();
+            propertyValues = new EntityPropertyData();
         }
 
         /// <inheritdoc/>
@@ -85,8 +85,8 @@ namespace DataDictionary.BusinessLayer.Domain
                 WorkName = "Remove Entities",
                 DoWork = () =>
                 {
-                    entityAlias.Clear();
-                    entityProperty.Clear();
+                    aliasValues.Clear();
+                    propertyValues.Clear();
                     this.Clear();
                 }
             });
@@ -99,8 +99,8 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             base.Remove(entityItem);
             DomainEntityKey key = new DomainEntityKey(entityItem);
-            entityAlias.Remove(key);
-            entityProperty.Remove(key);
+            aliasValues.Remove(key);
+            propertyValues.Remove(key);
         }
 
         /// <inheritdoc/>
@@ -109,8 +109,8 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             List<System.Data.DataTable> result = new List<System.Data.DataTable>();
             result.Add(this.ToDataTable());
-            result.Add(entityAlias.ToDataTable());
-            result.Add(entityProperty.ToDataTable());
+            result.Add(aliasValues.ToDataTable());
+            result.Add(propertyValues.ToDataTable());
             return result;
         }
 
@@ -119,8 +119,8 @@ namespace DataDictionary.BusinessLayer.Domain
         public void Import(System.Data.DataSet source)
         {
             this.Load(source);
-            entityAlias.Load(source);
-            entityProperty.Load(source);
+            aliasValues.Load(source);
+            propertyValues.Load(source);
         }
 
         public void Import(IDatabaseModel source, IDbCatalogKeyName key)

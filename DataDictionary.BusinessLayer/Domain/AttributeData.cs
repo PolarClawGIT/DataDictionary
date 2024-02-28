@@ -20,12 +20,12 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <summary>
         /// List of Domain Aliases for the Attributes within the Model.
         /// </summary>
-        IAttributeAliasData DomainAttributeAliases { get; }
+        IAttributeAliasData Aliases { get; }
 
         /// <summary>
         /// List of Domain Properties for the Attributes within the Model.
         /// </summary>
-        IAttributePropertyData DomainAttributeProperties { get; }
+        IAttributePropertyData Properties { get; }
 
         void Import(IDatabaseModel source, IDbCatalogKeyName key);
 
@@ -39,17 +39,17 @@ namespace DataDictionary.BusinessLayer.Domain
         IDataTableFile, INameScopeData<IModelKey>
     {
         /// <inheritdoc/>
-        public IAttributeAliasData DomainAttributeAliases { get { return attributeAlias; } }
-        private readonly AttributeAliasData attributeAlias;
+        public IAttributeAliasData Aliases { get { return aliasValues; } }
+        private readonly AttributeAliasData aliasValues;
 
         /// <inheritdoc/>
-        public IAttributePropertyData DomainAttributeProperties { get { return attributeProperty; } }
-        private readonly AttributePropertyData attributeProperty;
+        public IAttributePropertyData Properties { get { return propertyValues; } }
+        private readonly AttributePropertyData propertyValues;
 
         public AttributeData() : base()
         {
-            attributeAlias = new AttributeAliasData();
-            attributeProperty = new AttributePropertyData();
+            aliasValues = new AttributeAliasData();
+            propertyValues = new AttributePropertyData();
         }
 
         /// <inheritdoc/>
@@ -77,8 +77,8 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             base.Remove(attributeItem);
             DomainAttributeKey key = new DomainAttributeKey(attributeItem);
-            attributeAlias.Remove(key);
-            attributeProperty.Remove(key);
+            aliasValues.Remove(key);
+            propertyValues.Remove(key);
         }
 
         /// <inheritdoc/>
@@ -91,8 +91,8 @@ namespace DataDictionary.BusinessLayer.Domain
                 WorkName = "Remove Attributes",
                 DoWork = () =>
                 {
-                    attributeAlias.Clear();
-                    attributeProperty.Clear();
+                    aliasValues.Clear();
+                    propertyValues.Clear();
                     this.Clear();
                 }
             });
@@ -106,8 +106,8 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             List<System.Data.DataTable> result = new List<System.Data.DataTable>();
             result.Add(this.ToDataTable());
-            result.Add(attributeAlias.ToDataTable());
-            result.Add(attributeProperty.ToDataTable());
+            result.Add(aliasValues.ToDataTable());
+            result.Add(propertyValues.ToDataTable());
             return result;
         }
 
@@ -116,8 +116,8 @@ namespace DataDictionary.BusinessLayer.Domain
         public void Import(System.Data.DataSet source)
         {
             this.Load(source);
-            attributeAlias.Load(source);
-            attributeProperty.Load(source);
+            aliasValues.Load(source);
+            propertyValues.Load(source);
         }
 
         public void Import(IDatabaseModel source, IDbCatalogKeyName key)

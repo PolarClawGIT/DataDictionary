@@ -167,6 +167,5 @@
         private CheckBox isSystemData;
         private BindingSource bindingSchema;
         private BindingSource bindingProperties;
-        private TableLayoutPanel scheamLayout;
     }
 }

@@ -197,7 +197,7 @@ namespace DataDictionary.Main
         {
             DomainAttributeItem item = new DomainAttributeItem();
 
-            BusinessData.DomainModel.DomainAttributes.Add(item);
+            BusinessData.DomainModel.Attributes.Add(item);
             //Program.Data.ContextName.Add(new NameScopeItem(Program.Data.Model, item));
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
@@ -210,7 +210,7 @@ namespace DataDictionary.Main
         {
             DomainEntityItem item = new DomainEntityItem();
 
-            BusinessData.DomainModel.DomainEntities.Add(item);
+            BusinessData.DomainModel.Entities.Add(item);
             //Program.Data.ContextName.Add(new NameScopeItem(Program.Data.Model, item));
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
@@ -300,7 +300,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Database), BusinessData.DatabaseModel.DbCatalogs); }
 
         private void menuAttributes_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Attribute), BusinessData.DomainModel.DomainAttributes); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Attribute), BusinessData.DomainModel.Attributes); }
 
         private void subjectAreaToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Diagram), BusinessData.ModelSubjectAreas); }
@@ -345,19 +345,19 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_ExtendedProperty), BusinessData.DatabaseModel.DbExtendedProperties); }
 
         private void menuAttributeProperties_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainModel.DomainAttributes.DomainAttributeProperties); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainModel.Attributes.Properties); }
 
         private void menuAttributeAlaises_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.DomainAttributes.DomainAttributeAliases); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.Attributes.Aliases); }
 
         private void entitiesToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Entities), BusinessData.DomainModel.DomainEntities); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Entities), BusinessData.DomainModel.Entities); }
 
         private void entityPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainModel.DomainEntities.DomainEntityProperties); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainModel.Entities.Properties); }
 
         private void entityAliasToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.DomainEntities.DomainEntityAliases); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.Entities.Aliases); }
 
         #endregion
 

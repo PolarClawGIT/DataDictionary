@@ -104,7 +104,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             if (bindingColumn.Current is IDbTableItem current)
             {
-                BusinessData.DomainModel.DomainAttributes.Import(BusinessData.DatabaseModel, current);
+                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, current);
             }
         }
     }

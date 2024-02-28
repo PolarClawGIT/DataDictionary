@@ -280,7 +280,7 @@ namespace DataDictionary.BusinessLayer.Library
                     else { throw new InvalidOperationException("Expected exactly one [members] node."); }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             { throw; }
         }
 

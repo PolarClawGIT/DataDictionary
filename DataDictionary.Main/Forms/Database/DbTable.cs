@@ -84,8 +84,8 @@ namespace DataDictionary.Main.Forms.Database
         {
             if (bindingTable.Current is IDbTableItem current)
             {
-                BusinessData.DomainModel.DomainAttributes.Import(BusinessData.DatabaseModel, current);
-                BusinessData.DomainModel.DomainEntities.Import(BusinessData.DatabaseModel, current);
+                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, current);
+                BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, current);
             }
         }
     }
