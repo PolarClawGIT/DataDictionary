@@ -14,7 +14,9 @@ namespace DataDictionary.DataLayer.ModelData.Entity
     /// <summary>
     /// Interface for the Model Entity
     /// </summary>
-    public interface IModelEntityItem : IModelEntityKey, IDomainEntityUniqueKey, IModelSubjectAreaUniqueKey, IDataItem
+    public interface IModelEntityItem : IModelEntityKey,
+        IDomainEntityUniqueKey, IDomainEntityKey,
+        IModelSubjectAreaUniqueKey, IDataItem
     { }
 
     /// <summary>

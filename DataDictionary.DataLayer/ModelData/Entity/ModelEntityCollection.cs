@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.DomainData.Entity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -15,9 +16,9 @@ namespace DataDictionary.DataLayer.ModelData.Entity
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class ModelEntityCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>, IReadData<IModelEntityKey>,
-        IWriteData<IModelKey>, IWriteData<IModelEntityKey>,
-        IRemoveItem<IModelEntityKey>
+        IReadData<IModelKey>, IReadData<IModelEntityKey>, IReadData<IDomainEntityKey>,
+        IWriteData<IModelKey>, IWriteData<IModelEntityKey>, IWriteData<IDomainEntityKey>,
+        IRemoveItem<IModelEntityKey>, IRemoveItem<IDomainEntityKey>
         where TItem : BindingTableRow, IModelEntityKey, new()
     {
         /// <inheritdoc/>
@@ -28,6 +29,9 @@ namespace DataDictionary.DataLayer.ModelData.Entity
         public Command LoadCommand(IConnection connection, IModelEntityKey key)
         { return LoadCommand(connection, (null, key.EntityId, null)); }
 
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IDomainEntityKey key)
+        { return LoadCommand(connection, (null, key.EntityId, null)); }
 
         Command LoadCommand(IConnection connection, (Guid? modelId, Guid? EntityId, Guid? subjectId) parameters)
         {
@@ -48,6 +52,10 @@ namespace DataDictionary.DataLayer.ModelData.Entity
         public Command SaveCommand(IConnection connection, IModelEntityKey key)
         { return SaveCommand(connection, (null, key.EntityId)); }
 
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, IDomainEntityKey key)
+        { return SaveCommand(connection, (null, key.EntityId)); }
+
         Command SaveCommand(IConnection connection, (Guid? modelId, Guid? EntityId) parameters)
         {
             Command command = connection.CreateCommand();
@@ -65,6 +73,15 @@ namespace DataDictionary.DataLayer.ModelData.Entity
         public virtual void Remove(IModelEntityKey modelEntityItem)
         {
             ModelEntityKey key = new ModelEntityKey(modelEntityItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public virtual void Remove(IDomainEntityKey domainEntityItem)
+        {
+            DomainEntityKey key = new DomainEntityKey(domainEntityItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

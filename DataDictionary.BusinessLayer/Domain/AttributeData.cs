@@ -27,6 +27,11 @@ namespace DataDictionary.BusinessLayer.Domain
         /// </summary>
         IAttributePropertyData Properties { get; }
 
+        /// <summary>
+        /// List of Model Attribute Subject Areas within the Model.
+        /// </summary>
+        IAttributeSubjectAreaData SubjectAreas { get; }
+
         void Import(IDatabaseModel source, IDbCatalogKeyName key);
 
         void Import(IDatabaseModel source, IDbTableKeyName key);
@@ -46,10 +51,15 @@ namespace DataDictionary.BusinessLayer.Domain
         public IAttributePropertyData Properties { get { return propertyValues; } }
         private readonly AttributePropertyData propertyValues;
 
+        /// <inheritdoc/>
+        public IAttributeSubjectAreaData SubjectAreas { get { return subjectAreaValues; } }
+        private readonly AttributeSubjectAreaData subjectAreaValues;
+
         public AttributeData() : base()
         {
             aliasValues = new AttributeAliasData();
             propertyValues = new AttributePropertyData();
+            subjectAreaValues = new AttributeSubjectAreaData();
         }
 
         /// <inheritdoc/>
@@ -79,6 +89,7 @@ namespace DataDictionary.BusinessLayer.Domain
             DomainAttributeKey key = new DomainAttributeKey(attributeItem);
             aliasValues.Remove(key);
             propertyValues.Remove(key);
+            subjectAreaValues.Remove(key);
         }
 
         /// <inheritdoc/>
@@ -108,6 +119,7 @@ namespace DataDictionary.BusinessLayer.Domain
             result.Add(this.ToDataTable());
             result.Add(aliasValues.ToDataTable());
             result.Add(propertyValues.ToDataTable());
+            result.Add(subjectAreaValues.ToDataTable());
             return result;
         }
 
@@ -118,6 +130,7 @@ namespace DataDictionary.BusinessLayer.Domain
             this.Load(source);
             aliasValues.Load(source);
             propertyValues.Load(source);
+            subjectAreaValues.Load(source);
         }
 
         public void Import(IDatabaseModel source, IDbCatalogKeyName key)

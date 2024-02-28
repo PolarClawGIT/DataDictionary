@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.DomainData.Attribute;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -15,9 +16,9 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class ModelAttributeCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>, IReadData<IModelAttributeKey>,
-        IWriteData<IModelKey>, IWriteData<IModelAttributeKey>,
-        IRemoveItem<IModelAttributeKey>
+        IReadData<IModelKey>, IReadData<IModelAttributeKey>, IReadData<IDomainAttributeKey>,
+        IWriteData<IModelKey>, IWriteData<IModelAttributeKey>, IWriteData<IDomainAttributeKey>,
+        IRemoveItem<IModelAttributeKey>, IRemoveItem<IDomainAttributeKey>
         where TItem : BindingTableRow, IModelAttributeKey, new()
     {
         /// <inheritdoc/>
@@ -28,6 +29,9 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
         public Command LoadCommand(IConnection connection, IModelAttributeKey key)
         { return LoadCommand(connection, (null, key.AttributeId, null)); }
 
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IDomainAttributeKey key)
+        { return LoadCommand(connection, (null, key.AttributeId, null)); }
 
         Command LoadCommand(IConnection connection, (Guid? modelId, Guid? attributeId, Guid? subjectId) parameters)
         {
@@ -48,6 +52,10 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
         public Command SaveCommand(IConnection connection, IModelAttributeKey key)
         { return SaveCommand(connection, (null, key.AttributeId)); }
 
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, IDomainAttributeKey key)
+        { return SaveCommand(connection, (null, key.AttributeId)); }
+
         Command SaveCommand(IConnection connection, (Guid? modelId, Guid? attributeId) parameters)
         {
             Command command = connection.CreateCommand();
@@ -65,6 +73,15 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
         public virtual void Remove(IModelAttributeKey modelAttributeItem)
         {
             ModelAttributeKey key = new ModelAttributeKey(modelAttributeItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public virtual void Remove(IDomainAttributeKey domainAttributeItem)
+        {
+            DomainAttributeKey key = new DomainAttributeKey(domainAttributeItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

@@ -174,34 +174,20 @@ namespace DataDictionary.BusinessLayer
         public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target)
         {
             List<WorkItem> work = new List<WorkItem>();
+            Func<ModelItem?> model = models.FirstOrDefault;
 
             work.Add(new WorkItem()
             {
                 WorkName = "Load NameScope, Models",
                 DoWork = () =>
                 {
-                    if (models.FirstOrDefault() is ModelItem modelItem)
+                    if (model() is ModelItem modelItem)
                     { target.Add(new NameScopeItem(modelItem)); }
                 }
             });
 
-            work.Add(new WorkItem()
-            {
-                WorkName = "Load NameScope, Subject Areas",
-                DoWork = () =>
-                {
-                    if (models.FirstOrDefault() is ModelItem modelItem)
-                    {
-                        foreach (ModelSubjectAreaItem item in subjectAreas)
-                        {
-                            ModelKey key = new ModelKey(modelItem);
-                            { target.Add(new NameScopeItem(key, item)); }
-                        }
-                    }
-                }
-            });
-
-            work.AddRange(domain.Export(target, models.FirstOrDefault));
+            work.AddRange(subjectAreas.Export(target, model));
+            work.AddRange(domain.Export(target, model));
             work.AddRange(database.Export(target));
             work.AddRange(library.Export(target));
 

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
 using System;
@@ -20,7 +21,8 @@ namespace DataDictionary.BusinessLayer.Model
     { }
 
     class SubjectAreaData : ModelSubjectAreaCollection, ISubjectAreaData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile,
+        INameScopeData<IModelKey>
     {
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
@@ -55,5 +57,21 @@ namespace DataDictionary.BusinessLayer.Model
 
         public IReadOnlyList<WorkItem> Remove()
         { return new WorkItem() { WorkName = "Remove Subject Area", DoWork = () => { Clear(); } }.ToList(); }
+
+        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target, Func<IModelKey?> parent)
+        {
+            return new WorkItem()
+            {
+                WorkName = "Load NameScope, Subject Areas",
+                DoWork = () =>
+                {
+                    if (parent() is IModelKey modelKey)
+                    {
+                        foreach (ModelSubjectAreaItem item in this)
+                        { target.Add(new NameScopeItem(modelKey, item)); }
+                    }
+                }
+            }.ToList();
+        }
     }
 }

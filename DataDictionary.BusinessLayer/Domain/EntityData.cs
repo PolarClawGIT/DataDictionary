@@ -5,6 +5,7 @@ using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.ModelData.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,12 +33,17 @@ namespace DataDictionary.BusinessLayer.Domain
         /// </summary>
         IEntityPropertyData Properties { get; }
 
+        /// <summary>
+        /// List of Model Entity Subject Areas within the Model.
+        /// </summary>
+        IEntitySubjectAreaData SubjectAreas { get; }
+
         void Import(IDatabaseModel source, IDbCatalogKeyName key);
 
         void Import(IDatabaseModel source, IDbTableKeyName key);
     }
 
-    class EntityData: DomainEntityCollection, IEntityData,
+    class EntityData : DomainEntityCollection, IEntityData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDataTableFile, INameScopeData<IModelKey>
     {
@@ -49,10 +55,15 @@ namespace DataDictionary.BusinessLayer.Domain
         public IEntityPropertyData Properties { get { return propertyValues; } }
         private readonly EntityPropertyData propertyValues;
 
-        public EntityData() : base ()
+        /// <inheritdoc/>
+        public IEntitySubjectAreaData SubjectAreas { get { return subjectAreaValues; } }
+        private readonly EntitySubjectAreaData subjectAreaValues;
+
+        public EntityData() : base()
         {
             aliasValues = new EntityAliasData();
             propertyValues = new EntityPropertyData();
+            subjectAreaValues = new EntitySubjectAreaData();
         }
 
         /// <inheritdoc/>
@@ -87,6 +98,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 {
                     aliasValues.Clear();
                     propertyValues.Clear();
+                    subjectAreaValues.Clear();
                     this.Clear();
                 }
             });
@@ -101,6 +113,7 @@ namespace DataDictionary.BusinessLayer.Domain
             DomainEntityKey key = new DomainEntityKey(entityItem);
             aliasValues.Remove(key);
             propertyValues.Remove(key);
+            subjectAreaValues.Remove(key);
         }
 
         /// <inheritdoc/>
@@ -111,6 +124,7 @@ namespace DataDictionary.BusinessLayer.Domain
             result.Add(this.ToDataTable());
             result.Add(aliasValues.ToDataTable());
             result.Add(propertyValues.ToDataTable());
+            result.Add(subjectAreaValues.ToDataTable());
             return result;
         }
 
@@ -121,6 +135,7 @@ namespace DataDictionary.BusinessLayer.Domain
             this.Load(source);
             aliasValues.Load(source);
             propertyValues.Load(source);
+            subjectAreaValues.Load(source);
         }
 
         public void Import(IDatabaseModel source, IDbCatalogKeyName key)
@@ -140,10 +155,19 @@ namespace DataDictionary.BusinessLayer.Domain
                 WorkName = "Load NameScope, Entities",
                 DoWork = () =>
                 {
-                    if (parent() is IModelKey key)
+                    if (parent() is IModelKey modelKey)
                     {
-                        foreach (DomainEntityItem item in this)
-                        { target.Add(new NameScopeItem(key, item)); }
+                        foreach (DomainEntityItem entity in this)
+                        {
+                            DomainEntityKey entityKey = new DomainEntityKey(entity);
+                            List<ModelEntityItem> subjects = subjectAreaValues.Where(w => entityKey.Equals(w)).ToList();
+
+                            foreach (ModelEntityItem subject in subjects)
+                            { target.Add(new NameScopeItem(subject, entity)); }
+
+                            if (subjects.Count == 0)
+                            { target.Add(new NameScopeItem(modelKey, entity)); }
+                        }
                     }
                 }
             }.ToList();
