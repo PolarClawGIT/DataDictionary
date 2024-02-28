@@ -15,7 +15,7 @@
     /// Important: The Key is a GUID. As such, the order is not reflective of how the structure is displayed.
     /// The actual order is not important. Only that the structure uses an internal B-Tree lookup to speed process up.
     /// 
-    /// NameScope is also called NameSpace and is used as Alias Names. 
+    /// NameScope is also called NameSpace, Alias Names and Context Names.
     /// NameScope was chosen to avoid naming collusions and reduce confusion.
     /// </remarks>
     public class NameScopeDictionary : SortedDictionary<NameScopeKey, NameScopeItem>
@@ -50,7 +50,8 @@
         /// Adds an item to the collection.
         /// </summary>
         /// <param name="value"></param>
-        public virtual void Add(NameScopeItem value)
+        /// <param name="isChild"></param>
+        public virtual void Add(NameScopeItem value, Boolean isChild = false)
         {
             if (this.ContainsKey(value.SystemKey))
             {
@@ -77,8 +78,12 @@
         /// <param name="values"></param>
         public virtual void AddRange(IEnumerable<NameScopeItem> values)
         {
+            OnListChanged(NameScopeChangedType.BeginBatch);
+
             foreach (NameScopeItem item in values)
             { Add(item); }
+
+            OnListChanged(NameScopeChangedType.EndBatch);
         }
 
         /// <summary>
@@ -91,13 +96,37 @@
         /// </remarks>
         public virtual Boolean Remove(INameScopeKey key)
         {
+            Boolean result = false;
+
+            NameScopeKey removeKey = new NameScopeKey(key);
+            if (this.ContainsKey(removeKey) && this[removeKey] is NameScopeItem removeItem)
+            {
+                if (removeItem.Children.Count > 0)
+                {
+                    OnListChanged(NameScopeChangedType.BeginBatch);
+                    result = RemoveCore(key);
+                    OnListChanged(NameScopeChangedType.EndBatch);
+                }
+                else { result = RemoveCore(key); }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Removes an item and the children
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        protected virtual Boolean RemoveCore(INameScopeKey key)
+        {
             NameScopeKey removeKey = new NameScopeKey(key);
             if (this.ContainsKey(removeKey) && this[removeKey] is NameScopeItem removeItem)
             {
                 List<NameScopeKey> children = removeItem.Children.ToList();
 
+
                 foreach (NameScopeKey childKey in children)
-                { this.Remove(childKey); }
+                { this.RemoveCore(childKey); }
 
                 while (this.RootItem.Children.FirstOrDefault(w => removeKey.Equals(w)) is NameScopeKey rootChild)
                 { this.RootItem.Children.Remove(rootChild); }
@@ -175,7 +204,7 @@
         /// </summary>
         /// <param name="changedType"></param>
         /// <param name="data"></param>
-        protected virtual void OnListChanged(NameScopeChangedType changedType, INameScopeItem? data)
+        protected virtual void OnListChanged(NameScopeChangedType changedType, INameScopeItem? data = null)
         {
             if (ListChanged is EventHandler<NameScopeChangedEventArgs> handler)
             { handler(this, new NameScopeChangedEventArgs(changedType, data)); }

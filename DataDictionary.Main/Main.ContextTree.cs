@@ -29,7 +29,7 @@ namespace DataDictionary.Main
         {
             expandedContextNodes.Clear();
             expandedContextNodes.AddRange(contextNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value));
-            BusinessData.NameScope.ListChanged -= ModelContextName_ListChanged;
+            BusinessData.NameScope.ListChanged -= NameScope_ListChanged;
 
             contextNameNavigation.Nodes.Clear();
             contextNodes.Clear();
@@ -59,7 +59,7 @@ namespace DataDictionary.Main
                 contextNameLayout.UseWaitCursor = false;
                 contextNameLayout.Enabled = true;
                 contextNameNavigation.EndUpdate();
-                BusinessData.NameScope.ListChanged += ModelContextName_ListChanged;
+                BusinessData.NameScope.ListChanged += NameScope_ListChanged;
             }
 
             void LoadTree()
@@ -120,51 +120,60 @@ namespace DataDictionary.Main
                             progress(completeWork++, totalWork);
                         }
                     }
-
                 }
             }
         }
 
-        private void ModelContextName_ListChanged(object? sender, NameScopeChangedEventArgs e)
+        private void NameScope_ListChanged(object? sender, NameScopeChangedEventArgs e)
         {
             TreeNodeCollection taget = contextNameNavigation.Nodes;
 
-            if (sender is NameScopeDictionary source)
-            {
-                if (e.ChangedType == NameScopeChangedType.ItemAdded && e.Item is NameScopeItem addedItem)
+            if (e.ChangedType == NameScopeChangedType.BeginBatch)
+            { // Suspend Drawing while working on children.
+                contextNameNavigation.Invoke(() =>
+                { contextNameNavigation.BeginUpdate(); });
+            }
+
+            if (e.ChangedType == NameScopeChangedType.ItemAdded && e.Item is NameScopeItem addedItem)
+            {// Handle Add
+                if (contextNodes.FirstOrDefault(w => addedItem.SystemParentKey is not null && addedItem.SystemParentKey.Equals(w.Value.SystemKey)).Key is TreeNode parentNode)
+                { taget = parentNode.Nodes; }
+
+                TreeNode node = contextNameNavigation.Invoke<TreeNode>(() =>
                 {
-                    if (contextNodes.FirstOrDefault(w => addedItem.SystemParentKey is not null && addedItem.SystemParentKey.Equals(w.Value.SystemKey)).Key is TreeNode parentNode)
-                    { taget = parentNode.Nodes; }
+                    TreeNode newNode = taget.Add(addedItem.MemberName);
+                    newNode.ImageKey = addedItem.Scope.ToScopeName();
+                    newNode.SelectedImageKey = addedItem.Scope.ToScopeName();
+                    contextNodes.Add(newNode, addedItem);
+                    newNode.ToolTipText = addedItem.MemberFullName;
+                    addedItem.PropertyChanged += Item_PropertyChanged;
 
-                    TreeNode node = contextNameNavigation.Invoke<TreeNode>(() =>
+                    return newNode;
+
+                    void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+                    { newNode.Text = addedItem.MemberName; }
+                });
+            }
+
+            if (e.ChangedType == NameScopeChangedType.ItemDeleted && e.Item is NameScopeItem deletedItem)
+            { // Handle Remove
+                NameScopeKey deleteKey = deletedItem.SystemKey;
+                if (contextNodes.FirstOrDefault(w => deletedItem.SystemKey.Equals(w.Value.SystemKey)).Key is TreeNode node)
+                {
+                    contextNameNavigation.Invoke(() =>
                     {
-                        TreeNode newNode = taget.Add(addedItem.MemberName);
-                        newNode.ImageKey = addedItem.Scope.ToScopeName();
-                        newNode.SelectedImageKey = addedItem.Scope.ToScopeName();
-                        contextNodes.Add(newNode, addedItem);
-                        newNode.ToolTipText = addedItem.MemberFullName;
-                        addedItem.PropertyChanged += Item_PropertyChanged;
-
-                        return newNode;
-
-                        void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-                        { newNode.Text = addedItem.MemberName; }
+                        node.Remove();
+                        contextNodes.Remove(node);
                     });
                 }
-
-                if (e.ChangedType == NameScopeChangedType.ItemDeleted && e.Item is NameScopeItem deletedItem)
-                {
-                    NameScopeKey deleteKey = deletedItem.SystemKey;
-                    if (contextNodes.FirstOrDefault(w => deletedItem.SystemKey.Equals(w.Value.SystemKey)).Key is TreeNode node)
-                    {
-                        contextNameNavigation.Invoke(() =>
-                        {
-                            node.Remove();
-                            contextNodes.Remove(node);
-                        });
-                    }
-                }
             }
+
+            if (e.ChangedType == NameScopeChangedType.EndBatch)
+            { // Restart Drawing once all the child nodes are addressed
+                contextNameNavigation.Invoke(() =>
+                { contextNameNavigation.EndUpdate(); });
+            }
+
         }
 
         private void RefreshCommand_Click(object sender, EventArgs e)

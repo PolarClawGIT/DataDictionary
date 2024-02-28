@@ -17,18 +17,29 @@ namespace DataDictionary.BusinessLayer.NameScope
         /// An item added to the list. 
         /// Add raises this and data is the item added.
         /// </summary>
-        ItemAdded = 1,
+        ItemAdded,
 
         /// <summary>
         /// An item deleted from the list.
         /// Remove and Clear raises this and data is the item removed.
         /// </summary>
-        ItemDeleted = 2,
+        ItemDeleted,
 
         /// <summary>
         /// An item was moved.
         /// </summary>
-        ItemMoved = 3,
+        [Obsolete]
+        ItemMoved,
+
+        /// <summary>
+        /// A batch add/remove is started
+        /// </summary>
+        BeginBatch,
+
+        /// <summary>
+        /// A Batch add/remove is started
+        /// </summary>
+        EndBatch
     }
 
     /// <summary>
@@ -41,6 +52,8 @@ namespace DataDictionary.BusinessLayer.NameScope
         /// What type of change was made
         /// </summary>
         public NameScopeChangedType ChangedType { get; }
+
+        
 
         /// <summary>
         /// Model NameSpace Item impacted, if any.

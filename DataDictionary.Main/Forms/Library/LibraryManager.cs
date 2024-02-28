@@ -35,7 +35,7 @@ namespace DataDictionary.Main.Forms.Library
                 if (libraryBinding.Current is LibraryManagerItem item)
                 {
                     LibrarySourceKey key = new LibrarySourceKey(item);
-                    return (Program.Data.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
+                    return (BusinessData.LibraryModel.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
                 }
                 else { return false; }
             }
