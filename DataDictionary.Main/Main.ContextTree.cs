@@ -224,7 +224,7 @@ namespace DataDictionary.Main
             ModelSubjectAreaItem item = new ModelSubjectAreaItem();
 
             BusinessData.ModelSubjectAreas.Add(item);
-            BusinessData.NameScope.Add(BusinessData.Models.FirstOrDefault(), item);
+            BusinessData.NameScope.Add(new NameScopeItem(BusinessData.Model, item));
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
             { contextNameNavigation.SelectedNode = node; }

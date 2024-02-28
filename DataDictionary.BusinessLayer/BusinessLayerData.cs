@@ -33,18 +33,10 @@ namespace DataDictionary.BusinessLayer
         public FileInfo? ModelFile { get; set; }
 
         /// <summary>
-        /// Current Title of the Model or default "New Model"
+        /// The Current Model being used by the application
         /// </summary>
-        public String ModelTitle
-        {
-            get
-            {
-                if (models.FirstOrDefault() is IModelItem model
-                    && !String.IsNullOrWhiteSpace(model.ModelTitle))
-                { return model.ModelTitle; }
-                else { return "New Model"; }
-            }
-        }
+        /// <remarks>There should always be exactly one Model</remarks>
+        public ModelItem Model { get { return models.First(); } }
 
         /// <summary>
         /// Returns a new Default factory Database Worker.
@@ -78,6 +70,7 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
+            work.AddRange(models.Remove());
             work.AddRange(models.Load(factory, key));
             work.AddRange(subjectAreas.Load(factory, key));
 
@@ -104,6 +97,7 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <inheritdoc/>
+        /// <remarks>Automatically makes a new empty Model</remarks>
         public IReadOnlyList<WorkItem> Remove()
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -115,15 +109,10 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(DatabaseModel.Remove());
             work.AddRange(LibraryModel.Remove());
 
+            work.AddRange(models.Create());
+
             return work;
         }
-
-        /// <summary>
-        /// Creates WorkItems to create a new Model
-        /// </summary>
-        /// <returns></returns>
-        public IReadOnlyList<WorkItem> Create()
-        { return models.Create(); }
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Import(FileInfo file)
@@ -136,6 +125,7 @@ namespace DataDictionary.BusinessLayer
                 {
                     workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
 
+                    models.Clear();
                     models.Import(workSet);
                     subjectAreas.Import(workSet);
 

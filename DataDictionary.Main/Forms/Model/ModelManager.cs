@@ -29,7 +29,7 @@ namespace DataDictionary.Main.Forms.Model
                 if (modelBinding.Current is ModelManagerItem item)
                 {
                     ModelKey key = new ModelKey(item);
-                    return (BusinessData.Models.FirstOrDefault(w => key.Equals(w)) is ModelItem);
+                    return (BusinessData.Model is IModelItem);
                 }
                 else { return false; }
             }
@@ -42,7 +42,7 @@ namespace DataDictionary.Main.Forms.Model
                 if (modelBinding.Current is ModelManagerItem item)
                 {
                     ModelKey key = new ModelKey(item);
-                    return (dbData.FirstOrDefault(w => key.Equals(w)) is ModelItem);
+                    return (dbData.FirstOrDefault(w => key.Equals(w)) is IModelItem);
                 }
                 else { return false; }
             }
@@ -79,7 +79,7 @@ namespace DataDictionary.Main.Forms.Model
 
         public bool BindDataCore()
         {
-            bindingData.Build(BusinessData.Models, dbData);
+            bindingData.Build(BusinessData.Model, dbData);
 
             modelBinding.DataSource = bindingData;
 
@@ -106,8 +106,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(BusinessData.Remove());
-            work.AddRange(BusinessData.Create()); 
+            work.AddRange(BusinessData.Remove()); 
 
             DoLocalWork(work);
         }

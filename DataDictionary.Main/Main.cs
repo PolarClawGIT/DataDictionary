@@ -171,7 +171,6 @@ namespace DataDictionary.Main
             List<NameScopeItem> names = new List<NameScopeItem>();
             work.AddRange(BusinessData.Remove());
             work.AddRange(BusinessData.NameScope.Remove());
-            work.AddRange(BusinessData.Create());
             work.AddRange(BusinessData.Export(names));
             work.AddRange(BusinessData.NameScope.Import(names));
 
@@ -254,7 +253,7 @@ namespace DataDictionary.Main
             else
             {
                 openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                openFileDialog.FileName = BusinessData.ModelTitle;
+                openFileDialog.FileName = BusinessData.Model.ModelTitle;
             }
 
             DialogResult dialogResult = openFileDialog.ShowDialog();
@@ -300,7 +299,7 @@ namespace DataDictionary.Main
             else
             {
                 saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                saveFileDialog.FileName = BusinessData.ModelTitle;
+                saveFileDialog.FileName = BusinessData.Model.ModelTitle;
             }
 
             DialogResult dialogResult = saveFileDialog.ShowDialog();

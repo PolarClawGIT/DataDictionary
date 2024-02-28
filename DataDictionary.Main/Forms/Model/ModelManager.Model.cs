@@ -15,7 +15,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             private bool inModel = false;
             private bool inDatabase = false;
-            ModelItem data;
+            IModelItem data;
 
             public Boolean InModel { get { return inModel; } set { inModel = value; OnPropertyChanged(nameof(InModel)); } }
             public Boolean InDatabase { get { return inDatabase; } set { inDatabase = value; OnPropertyChanged(nameof(InDatabase)); } }
@@ -25,7 +25,7 @@ namespace DataDictionary.Main.Forms.Model
             public string? ModelDescription { get { return data.ModelDescription; } set { data.ModelDescription = value; } }
 
 
-            public ModelManagerItem(ModelItem source) : base()
+            public ModelManagerItem(IModelItem source) : base()
             {
                 data = source;
                 data.PropertyChanged += Data_PropertyChanged;
@@ -59,11 +59,13 @@ namespace DataDictionary.Main.Forms.Model
 
         class ModelManagerCollection : BindingList<ModelManagerItem>
         {
-            public void Build(IEnumerable<ModelItem> modelItems, IEnumerable<ModelItem> dbItems)
+            public void Build(IModelItem modelItem, IEnumerable<ModelItem> dbItems)
             {
                 this.Clear();
 
                 // List of keys all keys
+                var modelItems = new List<IModelItem>() { modelItem };
+
                 List<ModelKey> modelKeys = modelItems.Select(s => new ModelKey(s))
                     .Union(dbItems.Select(s => new ModelKey(s)))
                     .ToList();
@@ -71,7 +73,6 @@ namespace DataDictionary.Main.Forms.Model
                 foreach (ModelKey modelKey in modelKeys)
                 {
                     ModelManagerItem? item = this.FirstOrDefault(w => modelKey.Equals(w));
-                    ModelItem? modelItem = modelItems.FirstOrDefault(w => modelKey.Equals(w));
                     ModelItem? dbItem = dbItems.FirstOrDefault(w => modelKey.Equals(w));
 
                     if (item is null && dbItem is ModelItem)

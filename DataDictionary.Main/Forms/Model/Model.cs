@@ -1,63 +1,56 @@
-﻿using DataDictionary.DataLayer.ModelData;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.ModelData;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
+using System.Data;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class Model : ApplicationBase, IApplicationDataForm<ModelKey>
+    partial class Model : ApplicationBase, IApplicationDataForm
     {
-        public ModelKey DataKey { get; private set; }
+        public Boolean IsOpenItem(object? item)
+        { return bindingModel.Current is IModelItem current && ReferenceEquals(current, item); }
 
-        public bool IsOpenItem(object? item)
-        { return DataKey.Equals(item); }
 
         public Model() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.Icon_SoftwareDefinitionModel;
-            bindingModel.AllowNew = false;
-
-            ModelItem data = new ModelItem();
-            DataKey = new ModelKey(data);
-            bindingModel.DataSource = new BindingList<ModelItem>() { data };
         }
 
-        public Model(ModelItem data): this()
+        public Model(IModelItem data): this()
         {
-            DataKey = new ModelKey(data);
-            bindingModel.DataSource = new BindingView<ModelItem>(BusinessData.Models, w => DataKey.Equals(w));
+            bindingModel.AllowNew = false;
+            bindingModel.DataSource = new BindingList<IModelItem>(){ data } ;
+            bindingModel.Position = 0;
+
+            if (bindingModel.Current is IModelItem current)
+            {
+                this.Icon = ScopeType.Model.ToIcon();
+                RowState = current.RowState();
+                current.RowStateChanged += RowStateChanged;
+                this.Text = current.ToString();
+            }
         }
 
         private void Model_Load(object sender, EventArgs e)
         {
-            bindingModel.CurrentItemChanged += DataChanged;
-            UpdateRowState();
-
-            ModelItem? nameBinding = null;
+            IModelItem nameBinding;
             DataBindings.Add(new Binding(nameof(Text), bindingModel, nameof(nameBinding.ModelTitle)));
             modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), bindingModel, nameof(nameBinding.ModelTitle)));
             modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), bindingModel, nameof(nameBinding.ModelDescription)));
         }
 
-        public bool BindDataCore()
+        private void RowStateChanged(object? sender, EventArgs e)
         {
-            UpdateRowState();
-            return true;
-        }
-
-        public void UnbindDataCore()
-        {
-            //throw new NotImplementedException();
-        }
-
-        private void DataChanged(object? sender, EventArgs e)
-        { UpdateRowState(); }
-
-        void UpdateRowState()
-        {
-            if (bindingModel.Current is ModelItem data)
-            { RowState = data.RowState(); }
+            if (sender is IBindingRowState data)
+            {
+                RowState = data.RowState();
+                if (IsHandleCreated)
+                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
+                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
+            }
         }
     }
 }
