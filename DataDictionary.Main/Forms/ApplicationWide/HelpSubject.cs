@@ -65,7 +65,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             deleteItemCommand.Click += DeleteItemCommand_Click;
             deleteItemCommand.Image = Resources.DeleteStatusHelp;
 
-            helpBinding.DataSource = Program.Data.HelpSubjects;
+            helpBinding.DataSource = BusinessData.ApplicationData.HelpSubjects;
 
             if (helpBinding.DataSource is IList<HelpItem> subjects
                 && subjects.FirstOrDefault(w => w.NameSpace == Settings.Default.DefaultSubject) is HelpItem subject)

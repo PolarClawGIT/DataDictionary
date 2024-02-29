@@ -198,7 +198,7 @@ namespace DataDictionary.Main
             DomainAttributeItem item = new DomainAttributeItem();
 
             BusinessData.DomainModel.Attributes.Add(item);
-            //Program.Data.ContextName.Add(new NameScopeItem(Program.Data.Model, item));
+            BusinessData.NameScope.Add(new NameScopeItem(BusinessData.Model, item));
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
             { contextNameNavigation.SelectedNode = node; }
@@ -211,7 +211,7 @@ namespace DataDictionary.Main
             DomainEntityItem item = new DomainEntityItem();
 
             BusinessData.DomainModel.Entities.Add(item);
-            //Program.Data.ContextName.Add(new NameScopeItem(Program.Data.Model, item));
+            BusinessData.NameScope.Add(new NameScopeItem(BusinessData.Model, item));
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
             { contextNameNavigation.SelectedNode = node; }
