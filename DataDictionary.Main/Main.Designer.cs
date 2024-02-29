@@ -733,7 +733,6 @@
             testFormToolStripMenuItem.Name = "testFormToolStripMenuItem";
             testFormToolStripMenuItem.Size = new Size(129, 22);
             testFormToolStripMenuItem.Text = "Test Form";
-            testFormToolStripMenuItem.Click += testFormToolStripMenuItem_Click;
             // 
             // textEditorToolStripMenuItem
             // 

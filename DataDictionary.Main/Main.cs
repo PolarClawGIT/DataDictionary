@@ -231,10 +231,6 @@ namespace DataDictionary.Main
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
         { new Forms.UnitTestGridView().Show(); }
 
-        [Obsolete("Proof of Concept Only")]
-        private void testFormToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new ProofOfConcept.CodeLibrary()); }
-
         private void peekAtClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Forms.ClipboardView()); }
 
