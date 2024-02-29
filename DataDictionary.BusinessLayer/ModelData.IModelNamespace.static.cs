@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NameSpace;
-using DataDictionary.DataLayer.ApplicationData;
+using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Domain;

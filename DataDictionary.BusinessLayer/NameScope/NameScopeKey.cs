@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData;
 using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
@@ -13,11 +12,6 @@ using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.NameScope
 {

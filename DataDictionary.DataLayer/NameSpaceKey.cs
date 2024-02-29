@@ -5,29 +5,30 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ApplicationData
+namespace DataDictionary.DataLayer
 {
     /// <summary>
     /// Interface for the NameSpace Key.
+    /// NameSpace is used with Alias (Entity and Attribute), Model Subject Areas, and Help Subjects.
     /// </summary>
     public interface INameSpaceKey : IKey
     {
         /// <summary>
         /// Name of the Member
         /// </summary>
-        String MemberName { get; }
+        string MemberName { get; }
 
         /// <summary>
         /// Path of the Member.
         /// </summary>
         /// <remarks>Formated, period delimited and square bracket qualified.</remarks>
-        String MemberPath { get; }
+        string MemberPath { get; }
 
         /// <summary>
         /// Path and Name of the Member.
         /// </summary>
         /// <remarks>Formated, period delimited and square bracket qualified.</remarks>
-        String MemberFullName { get; }
+        string MemberFullName { get; }
     }
 
 
@@ -37,23 +38,23 @@ namespace DataDictionary.DataLayer.ApplicationData
     public class NameSpaceKey : INameSpaceKey, IKeyComparable<INameSpaceKey>, IKeyComparable<NameSpaceKey>
     {
         /// <inheritdoc/>
-        public String MemberName
+        public string MemberName
         {
             get
             {
                 if (memberParts.Count > 0) { return memberParts[memberParts.Count - 1]; }
-                else { return String.Empty; }
+                else { return string.Empty; }
             }
         }
 
         /// <inheritdoc/>
-        public String MemberPath
+        public string MemberPath
         {
             get
             {
                 if (memberParts.Count > 1)
-                { return String.Join(".", memberParts.Select(s => String.Format("[{0}]", s)).SkipLast(1)); }
-                else { return String.Empty; }
+                { return string.Join(".", memberParts.Select(s => string.Format("[{0}]", s)).SkipLast(1)); }
+                else { return string.Empty; }
             }
         }
 
@@ -75,68 +76,68 @@ namespace DataDictionary.DataLayer.ApplicationData
         }
 
         /// <inheritdoc/>
-        public String MemberFullName
-        { get { return String.Join(".", memberParts.Select(s => String.Format("[{0}]", s))); } }
+        public string MemberFullName
+        { get { return string.Join(".", memberParts.Select(s => string.Format("[{0}]", s))); } }
 
         /// <summary>
         /// The Member Name Parts that compose the Key.
         /// </summary>
-        protected List<String> memberParts = new List<String>();
+        protected List<string> memberParts = new List<string>();
 
         /// <summary>
         /// Parses a String into Name Parts per the rules of a NameSpace Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public List<String> NameParts(String source)
+        public List<string> NameParts(string source)
         {
-            List<String> elements = new List<String>();
-            String parse = source;
+            List<string> elements = new List<string>();
+            string parse = source;
 
             // Parse the name into its pieces.
-            while (!String.IsNullOrWhiteSpace(parse))
+            while (!string.IsNullOrWhiteSpace(parse))
             {
-                String reverse = new String(parse.ToCharArray().Reverse().ToArray());
+                string reverse = new string(parse.ToCharArray().Reverse().ToArray());
 
                 if (!parse.Contains(".")
                     && !parse.Contains("[")
                     && !parse.Contains("]"))
                 {
-                    elements.Add(String.Format("{0}", parse));
-                    parse = String.Empty;
+                    elements.Add(string.Format("{0}", parse));
+                    parse = string.Empty;
                 }
                 else if (!parse.Contains(".")
                     && parse.StartsWith("[")
                     && parse.EndsWith("]"))
                 {
-                    String value = parse.Substring(1, parse.Length - 2);
+                    string value = parse.Substring(1, parse.Length - 2);
                     elements.Add(value);
-                    parse = String.Empty;
+                    parse = string.Empty;
                 }
                 else if (parse.Contains(".")
                     && !parse.Contains("[")
                     && !parse.Contains("]"))
                 {
-                    Int32 index = reverse.IndexOf(".");
-                    String value = parse.Substring(parse.Length - index);
-                    elements.Add(String.Format("{0}", value));
+                    int index = reverse.IndexOf(".");
+                    string value = parse.Substring(parse.Length - index);
+                    elements.Add(string.Format("{0}", value));
                     parse = parse.Substring(0, parse.Length - index - 1);
                 }
                 else if (parse.Contains(".[")
                     && parse.EndsWith("]"))
                 {
-                    Int32 index = reverse.IndexOf("[.");
-                    String value = parse.Substring(parse.Length - index, index - 1);
-                    elements.Add(String.Format("{0}", value));
+                    int index = reverse.IndexOf("[.");
+                    string value = parse.Substring(parse.Length - index, index - 1);
+                    elements.Add(string.Format("{0}", value));
                     parse = parse.Substring(0, parse.Length - index - 2);
                 }
                 else if (parse.Contains(".")
                     && parse.Contains("]")
                     && reverse.IndexOf(".") < reverse.IndexOf("]"))
                 {
-                    Int32 index = reverse.IndexOf(".");
-                    String value = parse.Substring(parse.Length - index);
-                    elements.Add(String.Format("{0}", value));
+                    int index = reverse.IndexOf(".");
+                    string value = parse.Substring(parse.Length - index);
+                    elements.Add(string.Format("{0}", value));
                     parse = parse.Substring(0, parse.Length - index - 1);
                 }
                 else
@@ -164,7 +165,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(INameSpaceKey source) : this()
-        { memberParts.AddRange(NameParts(source.MemberFullName ?? String.Empty)); }
+        { memberParts.AddRange(NameParts(source.MemberFullName ?? string.Empty)); }
 
         /// <summary>
         /// Constructor for NameSpace Key, Clone
@@ -177,7 +178,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// Constructor for NameSpace Key from String
         /// </summary>
         /// <param name="source"></param>
-        public NameSpaceKey(String source) : this()
+        public NameSpaceKey(string source) : this()
         { memberParts.AddRange(NameParts(source)); }
 
         #region Constructors
@@ -185,71 +186,71 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// Constructor for NameSpace Key from Application Help
         /// </summary>
         /// <param name="source"></param>
-        public NameSpaceKey(Help.IHelpKeyUnique source) : base()
-        { memberParts.AddRange(NameParts(source.NameSpace ?? String.Empty)); }
+        public NameSpaceKey(ApplicationData.Help.IHelpKeyUnique source) : base()
+        { memberParts.AddRange(NameParts(source.NameSpace ?? string.Empty)); }
 
         /// <summary>
         /// Constructor for NameSpace Key from Database Catalog
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(DatabaseData.Catalog.IDbCatalogKeyName source) : base()
-        { memberParts.Add(source.DatabaseName ?? String.Empty); }
+        { memberParts.Add(source.DatabaseName ?? string.Empty); }
 
         /// <summary>
         /// Constructor for NameSpace Key from Database Schema
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(DatabaseData.Schema.IDbSchemaKeyName source) : this((DatabaseData.Catalog.IDbCatalogKeyName)source)
-        { memberParts.Add(source.SchemaName ?? String.Empty); }
+        { memberParts.Add(source.SchemaName ?? string.Empty); }
 
         /// <summary>
         /// Constructor for NameSpace Key from Database Table
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(DatabaseData.Table.IDbTableKeyName source) : this((DatabaseData.Schema.IDbSchemaKeyName)source)
-        { memberParts.Add(source.TableName ?? String.Empty); }
+        { memberParts.Add(source.TableName ?? string.Empty); }
 
         /// <summary>
         /// Constructor for NameSpace Key from Database Table Column
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(DatabaseData.Table.IDbTableColumnKeyName source) : this((DatabaseData.Table.IDbTableKeyName)source)
-        { memberParts.Add(source.ColumnName ?? String.Empty); }
+        { memberParts.Add(source.ColumnName ?? string.Empty); }
 
         /// <summary>
         /// Constructor for NameSpace Key from Database Constraint
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(DatabaseData.Constraint.IDbConstraintKeyName source) : this((DatabaseData.Schema.IDbSchemaKeyName)source)
-        { memberParts.Add(source.ConstraintName ?? String.Empty); }
+        { memberParts.Add(source.ConstraintName ?? string.Empty); }
 
         /// <summary>
         /// Constructor for NameSpace Key from Database Domain
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(DatabaseData.Domain.IDbDomainKeyName source) : this((DatabaseData.Schema.IDbSchemaKeyName)source)
-        { memberParts.Add(source.DomainName ?? String.Empty); }
+        { memberParts.Add(source.DomainName ?? string.Empty); }
 
         /// <summary>
         /// Constructor for NameSpace Key from Database Routine
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(DatabaseData.Routine.IDbRoutineKeyName source) : this((DatabaseData.Schema.IDbSchemaKeyName)source)
-        { memberParts.Add(source.RoutineName ?? String.Empty); }
+        { memberParts.Add(source.RoutineName ?? string.Empty); }
 
         /// <summary>
         /// Constructor for NameSpace Key from Database Routine Parameter
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(DatabaseData.Routine.IDbRoutineParameterKeyName source) : this((DatabaseData.Routine.IDbRoutineKeyName)source)
-        { memberParts.Add(source.ParameterName ?? String.Empty); }
+        { memberParts.Add(source.ParameterName ?? string.Empty); }
 
         /// <summary>
         /// Constructor for NameSpace Key from Library Source
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(LibraryData.Source.ILibrarySourceKeyName source) : base()
-        { memberParts.Add(source.AssemblyName ?? String.Empty); }
+        { memberParts.Add(source.AssemblyName ?? string.Empty); }
 
         /// <summary>
         /// Constructor for NameSpace Key from Library Member
@@ -257,8 +258,8 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// <param name="source"></param>
         public NameSpaceKey(LibraryData.Member.ILibraryMemberKeyName source) : base()
         {
-            memberParts.Add(source.NameSpace ?? String.Empty);
-            memberParts.Add(source.MemberName ?? String.Empty);
+            memberParts.Add(source.NameSpace ?? string.Empty);
+            memberParts.Add(source.MemberName ?? string.Empty);
         }
 
         /// <summary>
@@ -266,28 +267,28 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(ModelData.IModelItem source) : base()
-        { memberParts.Add(source.ModelTitle ?? String.Empty); }
+        { memberParts.Add(source.ModelTitle ?? string.Empty); }
 
         /// <summary>
         /// Constructor for NameSpace Key from Model Subject Area
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(ModelData.SubjectArea.IModelSubjectAreaItem source) : base()
-        { memberParts.AddRange(NameParts(source.SubjectAreaNameSpace ?? source.SubjectAreaTitle ?? String.Empty)); }
+        { memberParts.AddRange(NameParts(source.SubjectAreaNameSpace ?? source.SubjectAreaTitle ?? string.Empty)); }
 
         /// <summary>
         /// Constructor for NameSpace Key from Domain Entity
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(DomainData.Entity.IDomainEntityItem source) : base()
-        { memberParts.Add(source.EntityTitle ?? String.Empty); }
+        { memberParts.Add(source.EntityTitle ?? string.Empty); }
 
         /// <summary>
         /// Constructor for NameSpace Key from Domain Attribute
         /// </summary>
         /// <param name="source"></param>
         public NameSpaceKey(DomainData.Attribute.IDomainAttributeItem source) : base()
-        { memberParts.Add(source.AttributeTitle ?? String.Empty); }
+        { memberParts.Add(source.AttributeTitle ?? string.Empty); }
 
 
 
@@ -307,7 +308,7 @@ namespace DataDictionary.DataLayer.ApplicationData
         {
             if (other is NameSpaceKey otherKey)
             {
-                Int32 index = 0;
+                int index = 0;
 
                 while (memberParts.Count > index
                     && otherKey.memberParts.Count > index
@@ -396,8 +397,8 @@ namespace DataDictionary.DataLayer.ApplicationData
         /// Delimiter placed between names.
         /// Default is "."</param>
         /// <returns></returns>
-        public virtual String Format(String pattern = "[{0}]", String delimiter = ".")
-        { return String.Join(delimiter, memberParts.Select(s => String.Format(pattern, s))); }
+        public virtual string Format(string pattern = "[{0}]", string delimiter = ".")
+        { return string.Join(delimiter, memberParts.Select(s => string.Format(pattern, s))); }
 
         /// <summary>
         /// Groups the NameSpaces based on Hierarchy.
