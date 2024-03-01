@@ -383,7 +383,7 @@ namespace DataDictionary.DataLayer
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(base.GetHashCode(), MemberFullName); }
+        { return MemberFullName.GetHashCode(); }
         #endregion
 
         /// <summary>

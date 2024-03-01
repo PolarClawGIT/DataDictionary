@@ -47,8 +47,8 @@ namespace DataDictionary.BusinessLayer.NameScope
         /// Constructor for the NameScope Key, Application Help
         /// </summary>
         /// <param name="source"></param>
-        public NameScopeKey(IHelpKey source): this()
-        {   SystemId = source.HelpId ?? Guid.Empty; }
+        public NameScopeKey(IHelpKey source) : this()
+        { SystemId = source.HelpId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameScope Key, Catalog
@@ -69,56 +69,56 @@ namespace DataDictionary.BusinessLayer.NameScope
         /// </summary>
         /// <param name="source">A Database Table</param>
         public NameScopeKey(IDbTableKey source) : this()
-        {SystemId = source.TableId ?? Guid.Empty; }
+        { SystemId = source.TableId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameScope Key, Column
         /// </summary>
         /// <param name="source">A Database Table Column</param>
         public NameScopeKey(IDbTableColumnKey source) : this()
-        {SystemId = source.ColumnId ?? Guid.Empty; }
+        { SystemId = source.ColumnId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameScope Key, Domain
         /// </summary>
         /// <param name="source">A Database Domain</param>
         public NameScopeKey(IDbDomainKey source) : this()
-        {SystemId = source.DomainId ?? Guid.Empty; }
+        { SystemId = source.DomainId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameScope Key, Routine
         /// </summary>
         /// <param name="source">A Database Routine</param>
         public NameScopeKey(IDbRoutineKey source) : this()
-        {SystemId = source.RoutineId ?? Guid.Empty; }
+        { SystemId = source.RoutineId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameScope Key, Parameter
         /// </summary>
         /// <param name="source">A Database Routine Parameter</param>
         public NameScopeKey(IDbRoutineParameterKey source) : this()
-        {SystemId = source.ParameterId ?? Guid.Empty; }
+        { SystemId = source.ParameterId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameScope Key, Constraint
         /// </summary>
         /// <param name="source">A Database Constraint</param>
         public NameScopeKey(IDbConstraintKey source) : this()
-        {SystemId = source.ConstraintId ?? Guid.Empty; }
+        { SystemId = source.ConstraintId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameScope Key, Library
         /// </summary>
         /// <param name="source">A Library Source</param>
         public NameScopeKey(ILibrarySourceKey source) : this()
-        {SystemId = source.LibraryId ?? Guid.Empty; }
+        { SystemId = source.LibraryId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameScope Key, Library Member
         /// </summary>
         /// <param name="source">A Library Member</param>
         public NameScopeKey(ILibraryMemberKey source) : this()
-        {SystemId = source.MemberId ?? Guid.Empty; }
+        { SystemId = source.MemberId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameScope Key, Library Member
@@ -162,6 +162,13 @@ namespace DataDictionary.BusinessLayer.NameScope
         /// <remarks>NameSpaces do not have a GUID of their own, so a new GUID is created.</remarks>
         public NameScopeKey(INameSpaceKey source) : this()
         { SystemId = Guid.NewGuid(); }
+
+        /// <summary>
+        /// Constructor for the NameSpace Key
+        /// </summary>
+        /// <param name="source"></param>
+        public NameScopeKey(INameSpaceItem source) : this()
+        { SystemId = source.SystemId; }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
@@ -213,11 +220,7 @@ namespace DataDictionary.BusinessLayer.NameScope
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        {
-            return HashCode.Combine(
-                base.GetHashCode(),
-                SystemId.GetHashCode());
-        }
+        { return SystemId.GetHashCode(); }
         #endregion
 
         /// <summary>
