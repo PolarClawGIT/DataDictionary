@@ -81,17 +81,6 @@ namespace DataDictionary.Main.Forms.Domain
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || mainBinding.Current is not IDomainAttributeItem);
         }
 
-        private void RowStateChanged(object? sender, EventArgs e)
-        {
-            if (sender is IBindingRowState data)
-            {
-                RowState = data.RowState();
-                if (IsHandleCreated)
-                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
-                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
-            }
-        }
-
         private void NewItemCommand_Click(object? sender, EventArgs e)
         {
             if (detailTabLayout.TabPages[detailTabLayout.SelectedIndex] == propertyTab)

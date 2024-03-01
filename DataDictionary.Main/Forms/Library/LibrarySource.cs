@@ -48,18 +48,6 @@ namespace DataDictionary.Main.Forms.Library
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSource.Current is not ILibrarySourceItem);
         }
 
-        private void RowStateChanged(object? sender, EventArgs e)
-        {
-            if (sender is IBindingRowState data)
-            {
-                RowState = data.RowState();
-                if (IsHandleCreated)
-                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
-                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
-            }
-        }
-
-
         private void libraryTitleData_Validating(object sender, CancelEventArgs e)
         {
             if (String.IsNullOrWhiteSpace(libraryTitleData.Text))

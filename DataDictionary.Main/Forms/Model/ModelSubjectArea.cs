@@ -63,17 +63,6 @@ namespace DataDictionary.Main.Forms.Domain
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSubject.Current is not IModelSubjectAreaItem);
         }
 
-        private void RowStateChanged(object? sender, EventArgs e)
-        {
-            if (sender is IBindingRowState data)
-            {
-                RowState = data.RowState();
-                if (IsHandleCreated)
-                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
-                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
-            }
-        }
-
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
             if (bindingSubject.Current is ModelSubjectAreaItem current)

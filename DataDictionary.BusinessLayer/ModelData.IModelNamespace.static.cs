@@ -22,6 +22,7 @@ namespace DataDictionary.BusinessLayer
     /// Implementation component for the Model Namespace data
     /// </summary>
     /// <remarks>When combined with the Extension class, this implements multi-inheritance.</remarks>
+    [Obsolete()]
     public static class ModelNamespace
     {
         /// <summary>

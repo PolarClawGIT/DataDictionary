@@ -52,18 +52,6 @@ namespace DataDictionary.Main.Forms.Library
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingMember.Current is not ILibraryMemberItem);
         }
 
-        private void RowStateChanged(object? sender, EventArgs e)
-        {
-            if (sender is IBindingRowState data)
-            {
-                RowState = data.RowState();
-                if (IsHandleCreated)
-                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
-                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
-            }
-        }
-
-
         private void childMemberData_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (bindingChild.Current is ILibraryMemberItem child)

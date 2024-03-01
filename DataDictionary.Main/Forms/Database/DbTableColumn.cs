@@ -88,18 +88,6 @@ namespace DataDictionary.Main.Forms.Database
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingColumn.Current is not IDbTableColumnItem);
         }
 
-        private void RowStateChanged(object? sender, EventArgs e)
-        {
-            if (sender is IBindingRowState data)
-            {
-                RowState = data.RowState();
-                if (IsHandleCreated)
-                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
-                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
-            }
-        }
-
-
         private void ImportDataCommand_Click(object? sender, EventArgs e)
         {
             if (bindingColumn.Current is IDbTableItem current)

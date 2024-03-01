@@ -223,6 +223,23 @@ namespace DataDictionary.Main.Forms
         #endregion
 
         /// <summary>
+        /// Delegate for the Event to handle the RowState of the data.
+        /// </summary>
+        /// <param name="sender">IBindingRowState</param>
+        /// <param name="e"></param>
+        /// <remarks>This will lock the form is the data is Detached or Deleted.</remarks>
+        protected virtual void RowStateChanged(object? sender, EventArgs e)
+        {
+            if (sender is IBindingRowState data)
+            {
+                RowState = data.RowState();
+                if (IsHandleCreated)
+                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
+                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
+            }
+        }
+
+        /// <summary>
         /// Performs the list of work on a background thread.
         /// </summary>
         /// <param name="work"></param>
@@ -239,6 +256,12 @@ namespace DataDictionary.Main.Forms
             }
         }
 
+        /// <summary>
+        /// Set and returns the Locked State of the form.
+        /// </summary>
+        /// <param name="newState"></param>
+        /// <returns></returns>
+        /// <remarks>Locked enables or disables the top level controls of the form.</remarks>
         public virtual Boolean IsLocked(Boolean? newState = null)
         {
             if (newState is Boolean value)
