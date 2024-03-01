@@ -197,7 +197,7 @@ namespace DataDictionary.Main.Forms.Domain
 
             if (propertyTypeData.SelectedItem is PropertyNameItem selected
                 && bindingProperties.Current is DomainEntityPropertyItem currentRow
-                && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == selected.PropertyId) is PropertyItem property)
+                && BusinessData.ApplicationData.Properties.FirstOrDefault(w => w.PropertyId == selected.PropertyId) is PropertyItem property)
             { BindChoiceData(property, currentRow); }
         }
 
@@ -299,9 +299,9 @@ namespace DataDictionary.Main.Forms.Domain
                 this.IsLocked(true);
                 DomainEntityKey key = new DomainEntityKey(data);
 
-                Program.Data.DomainEntityProperties.Remove(key);
-                Program.Data.DomainEntityAliases.Remove(key);
-                Program.Data.DomainEntities.Remove(data);
+                BusinessData.DomainModel.Entities.Properties.Remove(key);
+                BusinessData.DomainModel.Entities.Aliases.Remove(key);
+                BusinessData.DomainModel.Entities.Remove(data);
             }
         }
 

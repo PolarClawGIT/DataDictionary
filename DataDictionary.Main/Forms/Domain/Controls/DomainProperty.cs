@@ -37,7 +37,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             if (propertyTypeData.SelectedItem is PropertyNameItem selected
                 && GetCurrent() is IDomainProperty currentRow)
             {
-                if (Program.Data.Properties.FirstOrDefault(w => w.PropertyId == selected.PropertyId) is PropertyItem property)
+                if (BusinessData.ApplicationData.Properties.FirstOrDefault(w => w.PropertyId == selected.PropertyId) is PropertyItem property)
                 {
                     // Cleanup not performed by Binding
                     propertyChoiceData.Items.Clear();
