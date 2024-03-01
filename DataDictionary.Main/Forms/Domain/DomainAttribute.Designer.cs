@@ -61,7 +61,6 @@
             subjectAreaTab = new TabPage();
             entityTab = new TabPage();
             mainBinding = new BindingSource(components);
-            toolTip = new ToolTip(components);
             propertyBinding = new BindingSource(components);
             aliasBinding = new BindingSource(components);
             mainLayout = new TableLayoutPanel();
@@ -493,7 +492,6 @@
         private CheckBox isNullableData;
         private CheckBox isNonKeyData;
         private CheckBox isKeyData;
-        private ToolTip toolTip;
         private BindingSource propertyBinding;
         private TabPage subjectAreaTab;
         private TabPage entityTab;

@@ -77,31 +77,38 @@ namespace DataDictionary.Main.Forms
         /// <summary>
         /// Constructor called when in Form Design mode
         /// </summary>
+        /// <remarks>
+        /// WARNING: When a child form is designed, this method executes.
+        /// The "DesignMode" property IS NOT SET.
+        /// Any reference to instances of Objects defined outside of this code
+        /// will throw errors when a child form is designed.
+        /// This causes lots of issue with Visual Studio.
+        /// </remarks>
         public ApplicationBase() : base()
         {
             InitializeComponent();
             RowState = null;
+        }
 
-            try
-            {// Designer might throw errors when this code is executed.
-                // TODO: This code should be skipped in design mode. 
-                // The property DesignMode does not get set until after the Load event fires.
-                // There is no known way to detect if the Form is in design mode within the constructor.
-                // This is my work-around.
+        /// <summary>
+        /// Load event for the Application Base
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <remarks>
+        /// WARNING: When a child form is designed, this method executes.
+        /// The "DesignMode" property IS Set.
+        /// Any reference to instances of Objects defined outside of this code
+        /// will throw errors when a child form is designed.
+        /// This causes lots of issue with Visual Studio.
+        /// </remarks>
+        private void ApplicationBase_Load(object sender, EventArgs e)
+        {
+            if (!DesignMode)
+            { // Avoids issues where the Load event fires in Design Mode
                 Messenger.AddColleague(this);
                 SendMessage(new FormAddMdiChild() { ChildForm = this });
-            }
-            catch (Exception ex)
-            {// Cannot do anything when the Designer throws errors.
-                // This data will likely not show up in any window.
-                // Meaning there is next to no way to debug this.
-                System.Diagnostics.Debug.WriteLine("Designer Error ignored");
-                System.Diagnostics.Debug.WriteLine(string.Format("  Exception: {0}", ex.Message));
-
-                if (ex.InnerException is Exception innerEx)
-                { System.Diagnostics.Debug.WriteLine(string.Format("  InnerException: {0}", innerEx.Message)); }
-
-                System.Diagnostics.Debug.WriteLine(string.Format("  StackTrace: {0}", ex.StackTrace));
+                LoadToolTips(this);
             }
         }
 
@@ -223,10 +230,6 @@ namespace DataDictionary.Main.Forms
         }
         #endregion
 
-        private void ApplicationBase_Load(object sender, EventArgs e)
-        {
-            LoadToolTips(this);
-        }
 
         /// <summary>
         /// Delegate for the Event to handle the RowState of the data.
@@ -599,6 +602,6 @@ namespace DataDictionary.Main.Forms
             }
         }
 
-        
+
     }
 }
