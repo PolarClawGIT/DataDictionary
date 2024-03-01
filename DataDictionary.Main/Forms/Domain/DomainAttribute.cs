@@ -77,7 +77,6 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.DataSource = aliasBinding;
             domainAlias.BindData(aliasBinding);
 
-            toolTip.LoadToolTips(this);
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || mainBinding.Current is not IDomainAttributeItem);
         }
 

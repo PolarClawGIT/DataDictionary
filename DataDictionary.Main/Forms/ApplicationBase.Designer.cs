@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             ToolStripSeparator toolStripSeparator;
             ToolStripSeparator toolStripSeparator1;
             ToolStripSeparator toolStripSeparator2;
@@ -44,6 +45,7 @@
             pasteToolStripButton = new ToolStripButton();
             helpToolStripButton = new ToolStripButton();
             rowStateCommand = new ToolStripLabel();
+            toolTip = new ToolTip(components);
             toolStripSeparator = new ToolStripSeparator();
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripSeparator2 = new ToolStripSeparator();
@@ -192,6 +194,7 @@
             Controls.Add(toolStrip);
             Name = "ApplicationBase";
             Text = "ApplicationBase";
+            Load += ApplicationBase_Load;
             toolStrip.ResumeLayout(false);
             toolStrip.PerformLayout();
             ResumeLayout(false);
@@ -211,5 +214,6 @@
         protected ToolStripButton deleteItemCommand;
         protected ToolStripSplitButton importDataCommand;
         private ToolStripLabel rowStateCommand;
+        protected ToolTip toolTip;
     }
 }

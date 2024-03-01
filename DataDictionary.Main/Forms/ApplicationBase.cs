@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -222,6 +223,11 @@ namespace DataDictionary.Main.Forms
         }
         #endregion
 
+        private void ApplicationBase_Load(object sender, EventArgs e)
+        {
+            LoadToolTips(this);
+        }
+
         /// <summary>
         /// Delegate for the Event to handle the RowState of the data.
         /// </summary>
@@ -236,6 +242,39 @@ namespace DataDictionary.Main.Forms
                 if (IsHandleCreated)
                 { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
                 else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
+            }
+        }
+
+        /// <summary>
+        /// Used to Load the ToolTips into the Form. 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <remarks>
+        /// This can load tool tips for any control in the Controls structure.
+        /// That includes controls nested inside User Controls.
+        /// This works because the Form.Controls structure includes all controls that appear in the form (built in and User Controls).
+        /// Not all control types display Tool Tips. The key is that they are the top-most visible control.
+        /// Otherwise, the hidden control does not receive the event.
+        /// </remarks>
+        /// <example>
+        /// Run during Form Load event.
+        /// LoadToolTips(this); // where this is a Form
+        /// </example>
+        protected virtual void LoadToolTips(Control source)
+        {
+            if (ToToolTipText(source) is String value && !String.IsNullOrWhiteSpace(value))
+            { toolTip.SetToolTip(source, value); }
+
+            foreach (Control child in source.Controls)
+            { LoadToolTips(child); }
+
+            String ToToolTipText(Control source)
+            {
+                NameSpaceKey key = source.ToNameSpaceKey();
+                if (BusinessData.ApplicationData.HelpSubjects.FirstOrDefault(w => key.Equals(new NameSpaceKey(w))) is HelpItem item
+                    && item.HelpToolTip is String toolTip)
+                { return toolTip; }
+                else { return String.Empty; }
             }
         }
 
@@ -257,7 +296,7 @@ namespace DataDictionary.Main.Forms
         }
 
         /// <summary>
-        /// Set and returns the Locked State of the form.
+        /// Set and returns the Locked state of the form.
         /// </summary>
         /// <param name="newState"></param>
         /// <returns></returns>
@@ -276,6 +315,11 @@ namespace DataDictionary.Main.Forms
             return this.Controls.Cast<Control>().Any(w => w.Enabled);
         }
 
+        /// <summary>
+        /// Set and returns the Wait Cursor state of the form
+        /// </summary>
+        /// <param name="newState"></param>
+        /// <returns></returns>
         public virtual Boolean IsWaitCursor(Boolean? newState = null)
         {
             if (newState is Boolean value)
@@ -554,5 +598,7 @@ namespace DataDictionary.Main.Forms
                 toolStrip.VisibleChanged -= toolStrip_VisibleChanged;
             }
         }
+
+        
     }
 }
