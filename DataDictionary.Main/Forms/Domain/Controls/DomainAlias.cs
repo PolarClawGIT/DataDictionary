@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.NameSpace;
+﻿using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Controls;
@@ -19,13 +19,13 @@ namespace DataDictionary.Main.Forms.Domain.Controls
     {
         Func<IDomainAlias?> GetCurrent = () => { return null; };
 
-        Dictionary<ListViewItem, ModelNameSpaceKey> alaisViewItems = new Dictionary<ListViewItem, ModelNameSpaceKey>();
-        Stack<ModelNameSpaceKey> navigationStack = new Stack<ModelNameSpaceKey>();
+        Dictionary<ListViewItem, NameScopeKey> alaisViewItems = new Dictionary<ListViewItem, NameScopeKey>();
+        Stack<NameScopeKey> navigationStack = new Stack<NameScopeKey>();
 
         /// <summary>
         /// The current Alias Item selected
         /// </summary>
-        public ModelNameSpaceItem? SelectedAlias { get; private set; }
+        public NameScopeItem? SelectedAlias { get; private set; }
 
         public DomainAlias()
         {
@@ -57,15 +57,15 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             aliasBrowser.Items.Clear();
             alaisViewItems.Clear();
 
-            ModelNameSpaceItem parent = Program.Data.ModelNamespace.RootItem;
-            ModelNameSpaceKey? parentKey = null;
+            NameScopeItem parent = BusinessData.NameScope.RootItem;
+            NameScopeKey? parentKey = null;
 
-            if (navigationStack.TryPeek(out parentKey) && parentKey is ModelNameSpaceKey)
-            { parent = Program.Data.ModelNamespace[parentKey]; }
+            if (navigationStack.TryPeek(out parentKey) && parentKey is NameScopeKey)
+            { parent = BusinessData.NameScope[parentKey]; }
 
-            foreach (ModelNameSpaceKey childKey in parent.Children)
+            foreach (NameScopeKey childKey in parent.Children)
             {
-                ModelNameSpaceItem child = Program.Data.ModelNamespace[childKey];
+                NameScopeItem child = BusinessData.NameScope[childKey];
                 ListViewItem childItem = new ListViewItem(child.MemberName, child.Scope.ToScopeName());
                 childItem.ToolTipText = child.MemberFullName;
 
@@ -76,7 +76,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             aliasBrowser.Sort();
             aliasBrowser.Sorting = SortOrder.None;
 
-            if (parentKey is ModelNameSpaceKey)
+            if (parentKey is NameScopeKey)
             { // Doing custom hot Tracks
                 ListViewItem parentItem = new ListViewItem(parent.MemberName, parent.Scope.ToScopeName());
                 parentItem.Font = new Font(parentItem.Font, FontStyle.Underline);
@@ -110,16 +110,16 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             if (aliasBrowser.SelectedItems.Count > 0
                 && alaisViewItems.ContainsKey(aliasBrowser.SelectedItems[0]))
             {
-                ModelNameSpaceKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
+                NameScopeKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
 
-                if (navigationStack.TryPeek(out ModelNameSpaceKey? parentKey)
+                if (navigationStack.TryPeek(out NameScopeKey? parentKey)
                     && selectedKey.Equals(parentKey))
                 {
                     navigationStack.Pop();
                     AliasListLoad();
                 }
 
-                else if (Program.Data.ModelNamespace[selectedKey].Children.Count > 0)
+                else if (BusinessData.NameScope[selectedKey].Children.Count > 0)
                 {
                     navigationStack.Push(selectedKey);
                     AliasListLoad();
@@ -144,9 +144,9 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             if (aliasBrowser.SelectedItems.Count > 0
                 && alaisViewItems.ContainsKey(aliasBrowser.SelectedItems[0]))
             {
-                ModelNameSpaceKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
-                aliasNameData.Text = Program.Data.ModelNamespace[selectedKey].MemberFullName;
-                aliasScopeData.Text = Program.Data.ModelNamespace[selectedKey].Scope.ToScopeName();
+                NameScopeKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
+                aliasNameData.Text = BusinessData.NameScope[selectedKey].MemberFullName;
+                aliasScopeData.Text = BusinessData.NameScope[selectedKey].Scope.ToScopeName();
 
                 AliasSelectedItemChanged(this, EventArgs.Empty);
             }

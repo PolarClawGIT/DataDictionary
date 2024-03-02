@@ -1,17 +1,11 @@
-﻿using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData;
+﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 using Toolbox.Mediator;
 using Toolbox.Threading;
@@ -20,7 +14,33 @@ using static System.Windows.Forms.Control;
 namespace DataDictionary.Main.Forms
 {
 
-    partial class ApplicationBase : Form, IColleague
+    interface IApplicationForm
+    {
+        /// <summary>
+        /// Locks (disable) and Unlock (enable) the Form.
+        /// </summary>
+        /// <param name="newState">Sets the new Value. If Null, the value is not set, only returned.</param>
+        /// <returns>
+        /// True disables the top most controls.
+        /// False enables the top most controls.
+        /// </returns>
+        Boolean IsLocked(Boolean? newState = null);
+
+        /// <summary>
+        /// Controls the UseWaitCursor of the top most controls.
+        /// </summary>
+        /// <param name="newState"></param>
+        /// <returns></returns>
+        Boolean IsWaitCursor(Boolean? newState = null);
+
+        /// <summary>
+        ///  Collection of child controls.
+        /// </summary>
+        /// <remarks>Implemented by the Control classes, including Form.</remarks>
+        ControlCollection Controls { get; }
+    }
+
+    partial class ApplicationBase : Form, IColleague, IApplicationForm
     {
         Dictionary<DataRowState, (Image icon, String tooltip)> rowStateSettings = new Dictionary<DataRowState, (Image icon, string tooltip)>()
         {
@@ -54,14 +74,42 @@ namespace DataDictionary.Main.Forms
             }
         }
 
+        /// <summary>
+        /// Constructor called when in Form Design mode
+        /// </summary>
+        /// <remarks>
+        /// WARNING: When a child form is designed, this method executes.
+        /// The "DesignMode" property IS NOT SET.
+        /// Any reference to instances of Objects defined outside of this code
+        /// will throw errors when a child form is designed.
+        /// This causes lots of issue with Visual Studio.
+        /// </remarks>
         public ApplicationBase() : base()
         {
             InitializeComponent();
-            Program.Messenger.AddColleague(this);
-
             RowState = null;
+        }
 
-            SendMessage(new FormAddMdiChild() { ChildForm = this });
+        /// <summary>
+        /// Load event for the Application Base
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <remarks>
+        /// WARNING: When a child form is designed, this method executes.
+        /// The "DesignMode" property IS Set.
+        /// Any reference to instances of Objects defined outside of this code
+        /// will throw errors when a child form is designed.
+        /// This causes lots of issue with Visual Studio.
+        /// </remarks>
+        private void ApplicationBase_Load(object sender, EventArgs e)
+        {
+            if (!DesignMode)
+            { // Avoids issues where the Load event fires in Design Mode
+                Messenger.AddColleague(this);
+                SendMessage(new FormAddMdiChild() { ChildForm = this });
+                LoadToolTips(this);
+            }
         }
 
         #region Open Form
@@ -158,7 +206,80 @@ namespace DataDictionary.Main.Forms
                 return newForm;
             }
         }
+
+        protected virtual TForm Activate<TForm>(Func<IBindingData, TForm> constructor, IBindingData data)
+            where TForm : ApplicationBase
+        {
+            Form parent = MdiParent ?? this;
+
+            if (parent.MdiChildren.FirstOrDefault(w =>
+                w is TForm targetForm &&
+                targetForm is IApplicationDataForm dataForm &&
+                dataForm.IsOpenItem(data)) is ApplicationBase existingForm)
+            {
+                existingForm.Activate();
+                return (TForm)existingForm;
+            }
+            else
+            {
+                TForm newForm = constructor(data);
+                newForm.MdiParent = parent;
+                newForm.Show();
+                return newForm;
+            }
+        }
         #endregion
+
+
+        /// <summary>
+        /// Delegate for the Event to handle the RowState of the data.
+        /// </summary>
+        /// <param name="sender">IBindingRowState</param>
+        /// <param name="e"></param>
+        /// <remarks>This will lock the form is the data is Detached or Deleted.</remarks>
+        protected virtual void RowStateChanged(object? sender, EventArgs e)
+        {
+            if (sender is IBindingRowState data)
+            {
+                RowState = data.RowState();
+                if (IsHandleCreated)
+                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
+                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
+            }
+        }
+
+        /// <summary>
+        /// Used to Load the ToolTips into the Form. 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <remarks>
+        /// This can load tool tips for any control in the Controls structure.
+        /// That includes controls nested inside User Controls.
+        /// This works because the Form.Controls structure includes all controls that appear in the form (built in and User Controls).
+        /// Not all control types display Tool Tips. The key is that they are the top-most visible control.
+        /// Otherwise, the hidden control does not receive the event.
+        /// </remarks>
+        /// <example>
+        /// Run during Form Load event.
+        /// LoadToolTips(this); // where this is a Form
+        /// </example>
+        protected virtual void LoadToolTips(Control source)
+        {
+            if (ToToolTipText(source) is String value && !String.IsNullOrWhiteSpace(value))
+            { toolTip.SetToolTip(source, value); }
+
+            foreach (Control child in source.Controls)
+            { LoadToolTips(child); }
+
+            String ToToolTipText(Control source)
+            {
+                NameSpaceKey key = source.ToNameSpaceKey();
+                if (BusinessData.ApplicationData.HelpSubjects.FirstOrDefault(w => key.Equals(new NameSpaceKey(w))) is HelpItem item
+                    && item.HelpToolTip is String toolTip)
+                { return toolTip; }
+                else { return String.Empty; }
+            }
+        }
 
         /// <summary>
         /// Performs the list of work on a background thread.
@@ -168,13 +289,52 @@ namespace DataDictionary.Main.Forms
         /// <remarks>The method calls LockForm and UnlockForm while work is being done.</remarks>
         protected void DoWork(IEnumerable<WorkItem> work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
         {
-            Program.Worker.Enqueue(work, completing);
+            Worker.Enqueue(work, completing);
 
             void completing(RunWorkerCompletedEventArgs result)
             {
                 if (result.Error is not null) { Program.ShowException(result.Error); }
                 if (onCompleting is not null) { onCompleting(result); }
             }
+        }
+
+        /// <summary>
+        /// Set and returns the Locked state of the form.
+        /// </summary>
+        /// <param name="newState"></param>
+        /// <returns></returns>
+        /// <remarks>Locked enables or disables the top level controls of the form.</remarks>
+        public virtual Boolean IsLocked(Boolean? newState = null)
+        {
+            if (newState is Boolean value)
+            {
+                foreach (Control item in this.Controls)
+                {
+                    if (item is MdiClient) { } // Don't touch the MdiClient control as it will cause child forms to be disabled.
+                    else { item.Enabled = !value; }
+                }
+            }
+
+            return this.Controls.Cast<Control>().Any(w => w.Enabled);
+        }
+
+        /// <summary>
+        /// Set and returns the Wait Cursor state of the form
+        /// </summary>
+        /// <param name="newState"></param>
+        /// <returns></returns>
+        public virtual Boolean IsWaitCursor(Boolean? newState = null)
+        {
+            if (newState is Boolean value)
+            {
+                foreach (Control item in this.Controls)
+                {
+                    if (item is MdiClient) { } // Don't touch the MdiClient control as it will cause child forms to be disabled.
+                    else { item.UseWaitCursor = value; }
+                }
+            }
+
+            return this.Controls.Cast<Control>().Any(w => w.UseWaitCursor);
         }
 
         #region IColleague
@@ -413,7 +573,7 @@ namespace DataDictionary.Main.Forms
         #endregion
 
         private void helpToolStripButton_Click(object sender, EventArgs e)
-        { Activate(() => new App.HelpSubject(this)); }
+        { Activate(() => new ApplicationWide.HelpSubject(this)); }
 
         private void toolStrip_VisibleChanged(object? sender, EventArgs e)
         {
@@ -441,5 +601,7 @@ namespace DataDictionary.Main.Forms
                 toolStrip.VisibleChanged -= toolStrip_VisibleChanged;
             }
         }
+
+
     }
 }

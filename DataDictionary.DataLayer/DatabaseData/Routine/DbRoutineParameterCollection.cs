@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     public abstract class DbRoutineParameterCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKeyName>, IRemoveData<IDbRoutineKeyName>, IRemoveData<IDbRoutineParameterKeyName>
+        IRemoveItem<IDbCatalogKey>, IRemoveItem<IDbSchemaKeyName>, IRemoveItem<IDbRoutineKeyName>, IRemoveItem<IDbRoutineParameterKeyName>
         where TItem : BindingTableRow, IDbRoutineParameterItem, IDbCatalogKey, IDbSchemaKeyName, IDbRoutineKeyName, IDbRoutineParameterKeyName, new()
     {
         /// <inheritdoc/>
@@ -71,12 +71,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
             command.CommandText = "[App_DataDictionary].[procSetDatabaseRoutineParameter]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutineParameter]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseRoutineParameter]", data);
             return command;
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbCatalogKey catalogItem)
+        public virtual void Remove(IDbCatalogKey catalogItem)
         {
             DbCatalogKey key = new DbCatalogKey(catalogItem);
 
@@ -85,7 +87,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbRoutineKeyName routineItem)
+        public virtual void Remove(IDbRoutineKeyName routineItem)
         {
             DbRoutineKeyName key = new DbRoutineKeyName(routineItem);
 
@@ -94,7 +96,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbRoutineParameterKeyName parameterItem)
+        public virtual void Remove(IDbRoutineParameterKeyName parameterItem)
         {
             DbRoutineParameterKeyName key = new DbRoutineParameterKeyName(parameterItem);
 
@@ -103,7 +105,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbSchemaKeyName schemaItem)
+        public virtual void Remove(IDbSchemaKeyName schemaItem)
         {
             DbSchemaKeyName key = new DbSchemaKeyName(schemaItem);
 

@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     public abstract class DomainEntityPropertyCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDomainEntityKey>,
         IWriteData<IModelKey>, IWriteData<IDomainEntityKey>,
-        IRemoveData<IDomainEntityKey>
+        IRemoveItem<IDomainEntityKey>
         where TItem : BindingTableRow, IDomainEntityPropertyItem, new()
     {
         /// <inheritdoc/>
@@ -54,12 +54,14 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             command.CommandText = "[App_DataDictionary].[procSetDomainEntityProperty]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@EntityId", parameters.EntityId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainEntityProperty]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.EntityId is null || w.EntityId == parameters.EntityId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainEntityProperty]", data);
             return command;
         }
 
         /// <inheritdoc/>
-        public void Remove(IDomainEntityKey entityItem)
+        public virtual void Remove(IDomainEntityKey entityItem)
         {
             DomainEntityKey key = new DomainEntityKey(entityItem);
 

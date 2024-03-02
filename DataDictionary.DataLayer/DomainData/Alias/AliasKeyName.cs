@@ -32,13 +32,13 @@ namespace DataDictionary.DataLayer.DomainData.Alias
         /// <summary>
         /// Constructor for the Domain Alias Key
         /// </summary>
-        protected AliasKeyName () : base() { }
+        protected AliasKeyName() : base() { }
 
         /// <summary>
         /// Constructor for the Domain Alias Key
         /// </summary>
         /// <param name="source"></param>
-        public AliasKeyName(IAliasKeyName source): this()
+        public AliasKeyName(IAliasKeyName source) : this()
         {
             if (source.AliasName is string) { AliasName = source.AliasName; }
             else { AliasName = string.Empty; }
@@ -148,11 +148,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        {
-            return HashCode.Combine(
-            base.GetHashCode(),
-            AliasName.GetHashCode(KeyExtension.CompareString));
-        }
+        { return AliasName.GetHashCode(KeyExtension.CompareString); }
         #endregion
 
         /// <inheritdoc/>

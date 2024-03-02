@@ -1,124 +1,99 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
+using System.Data;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbTableColumn : ApplicationBase, IApplicationDataForm<DbTableColumnKeyName>
+    partial class DbTableColumn : ApplicationBase, IApplicationDataForm
     {
-        public required DbTableColumnKeyName DataKey { get; init; }
-
-        public bool IsOpenItem(object? item)
-        { return DataKey.Equals(item); }
+        public Boolean IsOpenItem(object? item)
+        { return bindingColumn.Current is IDbTableColumnItem current && ReferenceEquals(current, item); }
 
         public DbTableColumn() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.Icon_Column;
 
             importDataCommand.Enabled = true;
             importDataCommand.Click += ImportDataCommand_Click;
             importDataCommand.ToolTipText = "Import the Table/View Column to the Domain Model";
         }
 
-        private void DbColumn_Load(object sender, EventArgs e)
-        { (this as IApplicationDataBind).BindData(); }
-
-        public bool BindDataCore()
+        public DbTableColumn(IDbTableColumnItem columnItem): this ()
         {
-            if (Program.Data.DbTableColumns.FirstOrDefault(w => DataKey.Equals(w)) is DbTableColumnItem data)
+            DbTableColumnKeyName key = new DbTableColumnKeyName(columnItem);
+            DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
+
+            bindingColumn.DataSource = new BindingView<DbTableColumnItem>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
+            bindingColumn.Position = 0;
+
+            if (bindingColumn.Current is IDbTableColumnItem current)
             {
-                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.DatabaseName)));
-                schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
-                tableNameData.DataBindings.Add(new Binding(nameof(tableNameData.Text), data, nameof(data.TableName)));
-                columnNameData.DataBindings.Add(new Binding(nameof(columnNameData.Text), data, nameof(data.ColumnName)));
-                ordinalPositionData.DataBindings.Add(new Binding(nameof(ordinalPositionData.Text), data, nameof(data.OrdinalPosition)));
-                columnDefaultData.DataBindings.Add(new Binding(nameof(columnDefaultData.Text), data, nameof(data.ColumnDefault)));
-                columnComputedData.DataBindings.Add(new Binding(nameof(columnComputedData.Text), data, nameof(data.ComputedDefinition)));
-                isNullableData.DataBindings.Add(new Binding(nameof(isNullableData.Checked), data, nameof(data.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
-                isComputedData.DataBindings.Add(new Binding(nameof(isComputedData.Checked), data, nameof(data.IsComputed), true, DataSourceUpdateMode.OnValidation, false));
+                RowState = current.RowState();
+                current.RowStateChanged += RowStateChanged;
+                this.Text = current.ToString();
+                this.Icon = new ScopeKey(current).Scope.ToIcon();
 
-                dataTypeData.DataBindings.Add(new Binding(nameof(columnNameData.Text), data, nameof(data.DataType)));
-                characterMaximumLengthData.DataBindings.Add(new Binding(nameof(characterMaximumLengthData.Text), data, nameof(data.CharacterMaximumLength)));
-                characterOctetLengthData.DataBindings.Add(new Binding(nameof(characterOctetLengthData.Text), data, nameof(data.CharacterOctetLength)));
-                numericPrecisionData.DataBindings.Add(new Binding(nameof(numericPrecisionData.Text), data, nameof(data.NumericPrecision)));
-                numericPrecisionRadixData.DataBindings.Add(new Binding(nameof(numericPrecisionRadixData.Text), data, nameof(data.NumericPrecisionRadix)));
-                numericScaleData.DataBindings.Add(new Binding(nameof(numericScaleData.Text), data, nameof(data.NumericScale)));
-                dateTimePrecisionData.DataBindings.Add(new Binding(nameof(dateTimePrecisionData.Text), data, nameof(data.DateTimePrecision)));
-
-                characterSetCatalogData.DataBindings.Add(new Binding(nameof(characterSetCatalogData.Text), data, nameof(data.CharacterSetCatalog)));
-                characterSetSchemaData.DataBindings.Add(new Binding(nameof(characterSetSchemaData.Text), data, nameof(data.CharacterSetSchema)));
-                characterSetNameData.DataBindings.Add(new Binding(nameof(characterSetNameData.Text), data, nameof(data.CharacterSetName)));
-
-                collationCatalogData.DataBindings.Add(new Binding(nameof(collationCatalogData.Text), data, nameof(data.CollationCatalog)));
-                collationSchemaData.DataBindings.Add(new Binding(nameof(collationSchemaData.Text), data, nameof(data.CollationSchema)));
-                collationNameData.DataBindings.Add(new Binding(nameof(collationNameData.Text), data, nameof(data.CollationName)));
-
-                domainCatalogData.DataBindings.Add(new Binding(nameof(domainCatalogData.Text), data, nameof(data.CollationCatalog)));
-                domainSchemaData.DataBindings.Add(new Binding(nameof(domainSchemaData.Text), data, nameof(data.DomainSchema)));
-                domainNameData.DataBindings.Add(new Binding(nameof(domainNameData.Text), data, nameof(data.DomainName)));
-
-                generatedAlwayTypeData.DataBindings.Add(new Binding(nameof(generatedAlwayTypeData.Text), data, nameof(data.GeneratedAlwayType)));
-                isIdentityData.DataBindings.Add(new Binding(nameof(isIdentityData.Checked), data, nameof(data.IsIdentity), true, DataSourceUpdateMode.OnValidation, false));
-                isHiddenData.DataBindings.Add(new Binding(nameof(isHiddenData.Checked), data, nameof(data.IsHidden), true, DataSourceUpdateMode.OnValidation, false));
-
-                extendedPropertiesData.AutoGenerateColumns = false;
-                extendedPropertiesData.DataSource = Program.Data.GetExtendedProperty(DataKey).ToList();
-
-                return true;
+                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
-            else { return false; }
+
         }
 
-        public void UnbindDataCore()
+        private void DbColumn_Load(object sender, EventArgs e)
         {
-            catalogNameData.DataBindings.Clear();
-            schemaNameData.DataBindings.Clear();
-            tableNameData.DataBindings.Clear();
-            columnNameData.DataBindings.Clear();
-            ordinalPositionData.DataBindings.Clear();
-            columnDefaultData.DataBindings.Clear();
-            columnComputedData.DataBindings.Clear();
-            isComputedData.DataBindings.Clear();
-            isNullableData.DataBindings.Clear();
-            dataTypeData.DataBindings.Clear();
-            characterMaximumLengthData.DataBindings.Clear();
-            characterOctetLengthData.DataBindings.Clear();
-            numericPrecisionData.DataBindings.Clear();
-            numericPrecisionRadixData.DataBindings.Clear();
-            numericScaleData.DataBindings.Clear();
-            dateTimePrecisionData.DataBindings.Clear();
-            characterSetCatalogData.DataBindings.Clear();
-            characterSetSchemaData.DataBindings.Clear();
-            characterSetNameData.DataBindings.Clear();
-            collationCatalogData.DataBindings.Clear();
-            collationSchemaData.DataBindings.Clear();
-            collationNameData.DataBindings.Clear();
-            domainCatalogData.DataBindings.Clear();
-            domainNameData.DataBindings.Clear();
-            generatedAlwayTypeData.DataBindings.Clear();
-            isIdentityData.DataBindings.Clear();
-            isHiddenData.DataBindings.Clear();
+            IDbTableColumnItem bindingNames;
+            catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingColumn, nameof(bindingNames.DatabaseName)));
+            schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingColumn, nameof(bindingNames.SchemaName)));
+            tableNameData.DataBindings.Add(new Binding(nameof(tableNameData.Text), bindingColumn, nameof(bindingNames.TableName)));
+            columnNameData.DataBindings.Add(new Binding(nameof(columnNameData.Text), bindingColumn, nameof(bindingNames.ColumnName)));
+            ordinalPositionData.DataBindings.Add(new Binding(nameof(ordinalPositionData.Text), bindingColumn, nameof(bindingNames.OrdinalPosition)));
+            columnDefaultData.DataBindings.Add(new Binding(nameof(columnDefaultData.Text), bindingColumn, nameof(bindingNames.ColumnDefault)));
+            columnComputedData.DataBindings.Add(new Binding(nameof(columnComputedData.Text), bindingColumn, nameof(bindingNames.ComputedDefinition)));
+            isNullableData.DataBindings.Add(new Binding(nameof(isNullableData.Checked), bindingColumn, nameof(bindingNames.IsNullable), true, DataSourceUpdateMode.OnValidation, false));
+            isComputedData.DataBindings.Add(new Binding(nameof(isComputedData.Checked), bindingColumn, nameof(bindingNames.IsComputed), true, DataSourceUpdateMode.OnValidation, false));
 
-            extendedPropertiesData.DataSource = null;
+            dataTypeData.DataBindings.Add(new Binding(nameof(columnNameData.Text), bindingColumn, nameof(bindingNames.DataType)));
+            characterMaximumLengthData.DataBindings.Add(new Binding(nameof(characterMaximumLengthData.Text), bindingColumn, nameof(bindingNames.CharacterMaximumLength)));
+            characterOctetLengthData.DataBindings.Add(new Binding(nameof(characterOctetLengthData.Text), bindingColumn, nameof(bindingNames.CharacterOctetLength)));
+            numericPrecisionData.DataBindings.Add(new Binding(nameof(numericPrecisionData.Text), bindingColumn, nameof(bindingNames.NumericPrecision)));
+            numericPrecisionRadixData.DataBindings.Add(new Binding(nameof(numericPrecisionRadixData.Text), bindingColumn, nameof(bindingNames.NumericPrecisionRadix)));
+            numericScaleData.DataBindings.Add(new Binding(nameof(numericScaleData.Text), bindingColumn, nameof(bindingNames.NumericScale)));
+            dateTimePrecisionData.DataBindings.Add(new Binding(nameof(dateTimePrecisionData.Text), bindingColumn, nameof(bindingNames.DateTimePrecision)));
+
+            characterSetCatalogData.DataBindings.Add(new Binding(nameof(characterSetCatalogData.Text), bindingColumn, nameof(bindingNames.CharacterSetCatalog)));
+            characterSetSchemaData.DataBindings.Add(new Binding(nameof(characterSetSchemaData.Text), bindingColumn, nameof(bindingNames.CharacterSetSchema)));
+            characterSetNameData.DataBindings.Add(new Binding(nameof(characterSetNameData.Text), bindingColumn, nameof(bindingNames.CharacterSetName)));
+
+            collationCatalogData.DataBindings.Add(new Binding(nameof(collationCatalogData.Text), bindingColumn, nameof(bindingNames.CollationCatalog)));
+            collationSchemaData.DataBindings.Add(new Binding(nameof(collationSchemaData.Text), bindingColumn, nameof(bindingNames.CollationSchema)));
+            collationNameData.DataBindings.Add(new Binding(nameof(collationNameData.Text), bindingColumn, nameof(bindingNames.CollationName)));
+
+            domainCatalogData.DataBindings.Add(new Binding(nameof(domainCatalogData.Text), bindingColumn, nameof(bindingNames.CollationCatalog)));
+            domainSchemaData.DataBindings.Add(new Binding(nameof(domainSchemaData.Text), bindingColumn, nameof(bindingNames.DomainSchema)));
+            domainNameData.DataBindings.Add(new Binding(nameof(domainNameData.Text), bindingColumn, nameof(bindingNames.DomainName)));
+
+            generatedAlwayTypeData.DataBindings.Add(new Binding(nameof(generatedAlwayTypeData.Text), bindingColumn, nameof(bindingNames.GeneratedAlwayType)));
+            isIdentityData.DataBindings.Add(new Binding(nameof(isIdentityData.Checked), bindingColumn, nameof(bindingNames.IsIdentity), true, DataSourceUpdateMode.OnValidation, false));
+            isHiddenData.DataBindings.Add(new Binding(nameof(isHiddenData.Checked), bindingColumn, nameof(bindingNames.IsHidden), true, DataSourceUpdateMode.OnValidation, false));
+
+            extendedPropertiesData.AutoGenerateColumns = false;
+            extendedPropertiesData.DataSource = bindingProperties;
+
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingColumn.Current is not IDbTableColumnItem);
         }
 
         private void ImportDataCommand_Click(object? sender, EventArgs e)
         {
-            List<WorkItem> work = new List<WorkItem>();
-
-            if (Program.Data.DbTableColumns.FirstOrDefault(w => DataKey.Equals(w)) is DbTableColumnItem data)
+            if (bindingColumn.Current is IDbTableItem current)
             {
-                work.AddRange(Program.Data.ImportAttribute(data));
-
-                SendMessage(new Messages.DoUnbindData());
-                this.DoWork(work, onCompleting);
+                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, current);
             }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
         }
     }
 }

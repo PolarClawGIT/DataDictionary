@@ -2,75 +2,65 @@
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Routine;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using System.Data;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbRoutine : ApplicationBase, IApplicationDataForm<DbRoutineKeyName>
+    partial class DbRoutine : ApplicationBase, IApplicationDataForm
     {
-        public required DbRoutineKeyName DataKey { get; init; }
-
-        public bool IsOpenItem(object? item)
-        { return DataKey.Equals(item); }
+        public Boolean IsOpenItem(object? item)
+        { return bindingRoutine.Current is IDbRoutineItem current && ReferenceEquals(current, item); }
 
         public DbRoutine() : base()
         {
             InitializeComponent();
-            // Icon set in Binding
+        }
+
+        public DbRoutine(IDbRoutineItem routineItem): this()
+        {
+            DbRoutineKeyName key = new DbRoutineKeyName(routineItem);
+            DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
+
+            bindingRoutine.DataSource = new BindingView<DbRoutineItem>(BusinessData.DatabaseModel.DbRoutines, w => key.Equals(w));
+            bindingRoutine.Position = 0;
+
+            if (bindingRoutine.Current is IDbRoutineItem current)
+            {
+                RowState = current.RowState();
+                current.RowStateChanged += RowStateChanged;
+                this.Text = current.ToString();
+                this.Icon = new ScopeKey(current).Scope.ToIcon();
+
+                bindingParameters.DataSource = new BindingView<DbRoutineParameterItem>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
+                bindingDependencies.DataSource = new BindingView<DbRoutineDependencyItem>(BusinessData.DatabaseModel.DbRoutineDependencies, w => key.Equals(w));
+                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
+            }
         }
 
         private void DbRoutine_Load(object sender, EventArgs e)
-        { (this as IApplicationDataBind).BindData(); }
-
-        public bool BindDataCore()
         {
-            if (Program.Data.DbRoutines.FirstOrDefault(w => DataKey.Equals(w)) is DbRoutineItem data)
-            {
-                this.Text = DataKey.ToString();
-                DbRoutineParameterItem? firstParameter = Program.Data.DbRoutineParameters.OrderBy(o => o.OrdinalPosition).FirstOrDefault(w => DataKey.Equals(w));
+            IDbRoutineItem bindingNames;
+            catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingRoutine, nameof(bindingNames.DatabaseName)));
+            schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingRoutine, nameof(bindingNames.SchemaName)));
+            routineNameData.DataBindings.Add(new Binding(nameof(routineNameData.Text), bindingRoutine, nameof(bindingNames.RoutineName)));
+            routineTypeData.DataBindings.Add(new Binding(nameof(routineTypeData.Text), bindingRoutine, nameof(bindingNames.RoutineType)));
+            isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), bindingRoutine, nameof(bindingNames.IsSystem)));
 
-                if (new ScopeKey(data).Equals(ScopeType.DatabaseProcedure))
-                { this.Icon = Resources.Icon_Procedure; }
-                else if (new ScopeKey(data).Equals(ScopeType.DatabaseFunction) && firstParameter is DbRoutineParameterItem isScalar && isScalar.OrdinalPosition == 0)
-                { this.Icon = Resources.Icon_ScalarFunction; }
-                else if (new ScopeKey(data).Equals(ScopeType.DatabaseFunction) && firstParameter is DbRoutineParameterItem isTable && isTable.OrdinalPosition != 0)
-                { this.Icon = Resources.Icon_TableFunction; }
+            extendedPropertiesData.AutoGenerateColumns = false;
+            extendedPropertiesData.DataSource = bindingProperties;
 
-                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.DatabaseName)));
-                schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
-                routineNameData.DataBindings.Add(new Binding(nameof(routineNameData.Text), data, nameof(data.RoutineName)));
-                routineTypeData.DataBindings.Add(new Binding(nameof(routineTypeData.Text), data, nameof(data.RoutineType)));
-                isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), data, nameof(data.IsSystem)));
+            parametersData.AutoGenerateColumns = false;
+            parametersData.DataSource = bindingParameters;
 
-                extendedPropertiesData.AutoGenerateColumns = false;
-                extendedPropertiesData.DataSource = Program.Data.GetExtendedProperty(DataKey);
+            dependenciesData.AutoGenerateColumns = false;
+            dependenciesData.DataSource = bindingDependencies;
 
-                parametersData.AutoGenerateColumns = false;
-                parametersData.DataSource = Program.Data.GetRoutineParameters(DataKey);
-
-                dependenciesData.AutoGenerateColumns = false;
-                dependenciesData.DataSource = Program.Data.GetRoutineDependencies(DataKey);
-
-                return true;
-            }
-            else
-            { return false; }
-        }
-
-        public void UnbindDataCore()
-        {
-            catalogNameData.DataBindings.Clear();
-            schemaNameData.DataBindings.Clear();
-            routineNameData.DataBindings.Clear();
-            routineTypeData.DataBindings.Clear();
-            isSystemData.DataBindings.Clear();
-
-            extendedPropertiesData.DataSource = null;
-            parametersData.DataSource = null;
-            dependenciesData.DataSource = null;
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingRoutine.Current is not IDbRoutineItem);
         }
     }
 }

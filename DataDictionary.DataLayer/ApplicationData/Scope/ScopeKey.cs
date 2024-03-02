@@ -156,7 +156,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.DatabaseFunction,          "Database.Schema.Function" },
             {ScopeType.DatabaseProcedure,         "Database.Schema.Procedure" },
             {ScopeType.DatabaseTable,             "Database.Schema.Table" },
-            {ScopeType.DatabaseDomain,              "Database.Schema.Type" },
+            {ScopeType.DatabaseDomain,            "Database.Schema.Type" },
             {ScopeType.DatabaseView,              "Database.Schema.View" },
             {ScopeType.DatabaseViewColumn,        "Database.Schema.View.Column" },
             {ScopeType.DatabaseTableColumn,       "Database.Schema.Table.Column" },
@@ -168,6 +168,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.ModelAttribute,            "Model.Attribute" },
             {ScopeType.ModelEntity,               "Model.Entity" },
             {ScopeType.ModelSubjectArea,          "Model.SubjectArea" },
+            {ScopeType.ModelNameSpace,            "Model.NameSpace" },
         };
 
         /// <inheritdoc/>

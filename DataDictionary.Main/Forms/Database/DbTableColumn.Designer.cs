@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TableLayoutPanel dbTableLayout;
             TabControl columnDetailLayout;
             TabPage columnsTab;
@@ -79,6 +80,8 @@
             schemaNameData = new Controls.TextBoxData();
             tableNameData = new Controls.TextBoxData();
             columnNameData = new Controls.TextBoxData();
+            bindingColumn = new BindingSource(components);
+            bindingProperties = new BindingSource(components);
             dbTableLayout = new TableLayoutPanel();
             columnDetailLayout = new TabControl();
             columnsTab = new TabPage();
@@ -111,6 +114,8 @@
             numericDataLayout.SuspendLayout();
             extendedPropertiesTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingColumn).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
             SuspendLayout();
             // 
             // dbTableLayout
@@ -459,7 +464,7 @@
             characterDataTab.Location = new Point(4, 24);
             characterDataTab.Name = "characterDataTab";
             characterDataTab.Padding = new Padding(3);
-            characterDataTab.Size = new Size(617, 325);
+            characterDataTab.Size = new Size(617, 300);
             characterDataTab.TabIndex = 0;
             characterDataTab.Text = "Character";
             // 
@@ -485,7 +490,7 @@
             characterDataLayout.RowStyles.Add(new RowStyle());
             characterDataLayout.RowStyles.Add(new RowStyle());
             characterDataLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            characterDataLayout.Size = new Size(611, 319);
+            characterDataLayout.Size = new Size(611, 294);
             characterDataLayout.TabIndex = 3;
             // 
             // characterSetCatalogData
@@ -567,7 +572,7 @@
             defaultComputedTab.Location = new Point(4, 24);
             defaultComputedTab.Name = "defaultComputedTab";
             defaultComputedTab.Padding = new Padding(3);
-            defaultComputedTab.Size = new Size(617, 325);
+            defaultComputedTab.Size = new Size(617, 300);
             defaultComputedTab.TabIndex = 4;
             defaultComputedTab.Text = "Default and Computed";
             // 
@@ -583,7 +588,7 @@
             defautComputedLayout.RowCount = 2;
             defautComputedLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             defautComputedLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            defautComputedLayout.Size = new Size(611, 319);
+            defautComputedLayout.Size = new Size(611, 294);
             defautComputedLayout.TabIndex = 0;
             // 
             // columnComputedData
@@ -592,11 +597,11 @@
             defautComputedLayout.SetColumnSpan(columnComputedData, 3);
             columnComputedData.Dock = DockStyle.Fill;
             columnComputedData.HeaderText = "Computed";
-            columnComputedData.Location = new Point(3, 162);
+            columnComputedData.Location = new Point(3, 150);
             columnComputedData.Multiline = true;
             columnComputedData.Name = "columnComputedData";
             columnComputedData.ReadOnly = true;
-            columnComputedData.Size = new Size(605, 154);
+            columnComputedData.Size = new Size(605, 141);
             columnComputedData.TabIndex = 16;
             // 
             // columnDefaultData
@@ -609,7 +614,7 @@
             columnDefaultData.Multiline = true;
             columnDefaultData.Name = "columnDefaultData";
             columnDefaultData.ReadOnly = true;
-            columnDefaultData.Size = new Size(605, 153);
+            columnDefaultData.Size = new Size(605, 141);
             columnDefaultData.TabIndex = 14;
             // 
             // otherDataTab
@@ -716,7 +721,6 @@
             extendedPropertiesData.Location = new Point(3, 3);
             extendedPropertiesData.Name = "extendedPropertiesData";
             extendedPropertiesData.ReadOnly = true;
-            extendedPropertiesData.RowTemplate.Height = 25;
             extendedPropertiesData.Size = new Size(186, 66);
             extendedPropertiesData.TabIndex = 5;
             // 
@@ -825,6 +829,8 @@
             numericDataLayout.PerformLayout();
             extendedPropertiesTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingColumn).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -870,5 +876,7 @@
         private Controls.TextBoxData numericPrecisionData;
         private Controls.TextBoxData numericPrecisionRadixData;
         private Controls.TextBoxData numericScaleData;
+        private BindingSource bindingColumn;
+        private BindingSource bindingProperties;
     }
 }

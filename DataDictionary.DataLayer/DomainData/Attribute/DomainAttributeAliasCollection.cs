@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     public abstract class DomainAttributeAliasCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDomainAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IDomainAttributeKey>,
-        IRemoveData<IDomainAttributeKey>
+        IRemoveItem<IDomainAttributeKey>
         where TItem : BindingTableRow, IDomainAttributeAliasItem, new()
     {
         /// <inheritdoc/>
@@ -55,12 +55,14 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             command.CommandText = "[App_DataDictionary].[procSetDomainAttributeAlias]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@AttributeId", parameters.attributeId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttributeAlias]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.attributeId is null || w.AttributeId == parameters.attributeId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttributeAlias]", data);
             return command;
         }
 
         /// <inheritdoc/>
-        public void Remove(IDomainAttributeKey attributeItem)
+        public virtual void Remove(IDomainAttributeKey attributeItem)
         {
             DomainAttributeKey key = new DomainAttributeKey(attributeItem);
 

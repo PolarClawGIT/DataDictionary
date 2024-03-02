@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     public abstract class DbDomainCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbDomainKeyName>
+        IRemoveItem<IDbCatalogKey>, IRemoveItem<IDbDomainKeyName>
         where TItem : BindingTableRow, IDbDomainItem, IDbCatalogKey, IDbDomainKeyName, new()
     {
         /// <inheritdoc/>
@@ -70,12 +70,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
             command.CommandText = "[App_DataDictionary].[procSetDatabaseDomain]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseDomain]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseDomain]", data);
             return command;
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbCatalogKey catalogItem)
+        public virtual void Remove(IDbCatalogKey catalogItem)
         {
             DbCatalogKey key = new DbCatalogKey(catalogItem);
 
@@ -84,7 +86,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbDomainKeyName domainItem)
+        public virtual void Remove(IDbDomainKeyName domainItem)
         {
             DbDomainKeyName key = new DbDomainKeyName(domainItem);
 

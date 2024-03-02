@@ -28,16 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            TabControl propertyTabs;
-            TableLayoutPanel propertyValueLayout;
+            propertyTabs = new TabControl();
             propertyValueTab = new TabPage();
+            propertyValueLayout = new TableLayoutPanel();
             propertyTypeData = new DataDictionary.Main.Controls.ComboBoxData();
             propertyValueData = new DataDictionary.Main.Controls.TextBoxData();
             propertyChoiceData = new DataDictionary.Main.Controls.CheckedListBoxData();
             propertyDefinitionTab = new TabPage();
             propertyDefinitionData = new DataDictionary.Main.Controls.RichTextBoxData();
-            propertyTabs = new TabControl();
-            propertyValueLayout = new TableLayoutPanel();
             propertyTabs.SuspendLayout();
             propertyValueTab.SuspendLayout();
             propertyValueLayout.SuspendLayout();
@@ -174,6 +172,7 @@
         private DataDictionary.Main.Controls.CheckedListBoxData propertyChoiceData;
         private TabPage propertyDefinitionTab;
         private DataDictionary.Main.Controls.RichTextBoxData propertyDefinitionData;
-
+        private TabControl propertyTabs;
+        private TableLayoutPanel propertyValueLayout;
     }
 }

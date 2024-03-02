@@ -84,17 +84,15 @@ namespace DataDictionary.DataLayer
         /// <param name="parameterName"></param>
         /// <param name="structureType"></param>
         /// <param name="value"></param>
-        public static void AddParameter(this Command command, String parameterName, String structureType, IBindingTable value)
+        /// <remarks>Handles a Enumeration of BindingTableRow</remarks>
+        public static void AddParameter<T>(this Command command, String parameterName, String structureType, IEnumerable<T> value)
+            where T : BindingTableRow, new()
         {
             if (value is not null)
             {
-                using (DataTable data = new DataTable())
-                {
-                    data.Load(value.CreateDataReader());
-
-                    command.Parameters.Add(new SqlParameter(parameterName, SqlDbType.Structured)
-                    { Value = data, TypeName = structureType });
-                }
+                DataTable data = value.ToDataTable();
+                command.Parameters.Add(new SqlParameter(parameterName, SqlDbType.Structured)
+                { Value = data, TypeName = structureType });
             }
         }
 

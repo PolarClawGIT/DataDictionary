@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
     public abstract class DbCatalogCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>
+        IRemoveItem<IDbCatalogKey>
         where TItem : BindingTableRow, IDbCatalogItem, IDbCatalogKey, new()
     {
         /// <inheritdoc/>
@@ -71,12 +71,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
             command.CommandText = "[App_DataDictionary].[procSetDatabaseCatalog]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseCatalog]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseCatalog]", data);
             return command;
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbCatalogKey catalogItem)
+        public virtual void Remove(IDbCatalogKey catalogItem)
         {
             DbCatalogKey key = new DbCatalogKey(catalogItem);
 

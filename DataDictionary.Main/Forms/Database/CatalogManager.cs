@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DomainData.Alias;
@@ -30,7 +31,7 @@ namespace DataDictionary.Main.Forms.Database
                 if (catalogBinding.Current is CatalogManagerItem item)
                 {
                     DbCatalogKey key = new DbCatalogKey(item);
-                    return (Program.Data.DbCatalogs.FirstOrDefault(w => key.Equals(w)) is DbCatalogItem);
+                    return (BusinessData.DatabaseModel.DbCatalogs.FirstOrDefault(w => key.Equals(w)) is DbCatalogItem);
                 }
                 else { return false; }
             }
@@ -74,7 +75,7 @@ namespace DataDictionary.Main.Forms.Database
             if (Settings.Default.IsOnLineMode)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
                 work.AddRange(LoadLocalData(factory));
                 this.DoWork(work, onCompleting);
@@ -86,7 +87,7 @@ namespace DataDictionary.Main.Forms.Database
 
         public Boolean BindDataCore()
         {
-            bindingData.Build(Program.Data.DbCatalogs, dbData);
+            bindingData.Build(BusinessData.DatabaseModel.DbCatalogs, dbData);
 
             catalogBinding.DataSource = bindingData;
 
@@ -160,7 +161,7 @@ namespace DataDictionary.Main.Forms.Database
                     }
                 }
 
-                dialog.OpenHelp = () => Activate(() => new App.HelpSubject(dialog));
+                dialog.OpenHelp = () => Activate(() => new ApplicationWide.HelpSubject(dialog));
 
                 DialogResult result = dialog.ShowDialog();
 
@@ -189,20 +190,21 @@ namespace DataDictionary.Main.Forms.Database
                     { catalogKey = new DbCatalogKey(existing); }
 
                     List<WorkItem> work = new List<WorkItem>();
+                    List<NameScopeItem> names = new List<NameScopeItem>();
                     DbSchemaContext source = new BusinessLayer.DbSchemaContext()
                     {
                         ServerName = dialog.ServerName,
                         DatabaseName = dialog.DatabaseName
                     };
 
-                    work.AddRange(Program.Data.LoadCatalog(source));
-                    work.AddRange(Program.Data.LoadNameSpace(source));
+                    work.AddRange(BusinessData.DatabaseModel.Import(source));
+                    work.AddRange(BusinessData.DatabaseModel.Export(names));
+                    work.AddRange(BusinessData.NameScope.Import(names));
 
                     DoLocalWork(work);
                 }
             }
         }
-
 
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
@@ -211,8 +213,15 @@ namespace DataDictionary.Main.Forms.Database
 
             if (catalogBinding.Current is CatalogManagerItem item)
             {
-                work.AddRange(Program.Data.RemoveNameSpace(item));
-                work.AddRange(Program.Data.RemoveCatalog(item));
+                NameScopeKey scopeKey = new NameScopeKey(item);
+                DbCatalogKey catalogKey = new DbCatalogKey(item);
+                work.AddRange(BusinessData.DatabaseModel.Remove(catalogKey));
+                work.Add(
+                    new WorkItem()
+                    {
+                        WorkName = "Remove NameScope",
+                        DoWork = () => { BusinessData.NameScope.Remove(scopeKey); }
+                    });
             }
 
             DoLocalWork(work);
@@ -225,13 +234,16 @@ namespace DataDictionary.Main.Forms.Database
             if (catalogBinding.Current is CatalogManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 DbCatalogKey key = new DbCatalogKey(item);
 
                 work.Add(factory.OpenConnection());
 
                 if (inModelList)
-                { work.AddRange(Program.Data.DeleteCatalog(factory, key)); }
+                {
+                    work.AddRange(BusinessData.DatabaseModel.Remove(key));
+                    work.AddRange(BusinessData.DatabaseModel.Save(factory, key));
+                }
                 else { work.AddRange(dbData.DeleteCatalog(factory, key)); }
 
                 work.AddRange(LoadLocalData(factory));
@@ -246,12 +258,15 @@ namespace DataDictionary.Main.Forms.Database
             if (catalogBinding.Current is CatalogManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                NameScopeKey scopeKey = new NameScopeKey(item);
+                List<NameScopeItem> names = new List<NameScopeItem>();
 
                 DbCatalogKey key = new DbCatalogKey(item);
                 work.Add(factory.OpenConnection());
-                work.AddRange(Program.Data.LoadCatalog(factory, key));
-                work.AddRange(Program.Data.LoadNameSpace(key));
+                work.AddRange(BusinessData.DatabaseModel.Load(factory, key));
+                work.AddRange(BusinessData.DatabaseModel.Export(names));
+                work.AddRange(BusinessData.NameScope.Import(names));
 
                 DoLocalWork(work);
             }
@@ -264,12 +279,12 @@ namespace DataDictionary.Main.Forms.Database
             if (catalogBinding.Current is CatalogManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
 
                 DbCatalogKey key = new DbCatalogKey(item);
                 work.Add(factory.OpenConnection());
 
-                if (inModelList) { work.AddRange(Program.Data.SaveCatalog(factory, key)); }
+                if (inModelList) { work.AddRange(BusinessData.DatabaseModel.Save(factory, key)); }
                 else { work.AddRange(dbData.SaveCatalog(factory, key)); }
 
                 work.AddRange(LoadLocalData(factory));

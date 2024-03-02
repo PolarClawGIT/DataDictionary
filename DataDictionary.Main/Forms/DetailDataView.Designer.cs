@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             TabControl dataViewLayout;
             TabPage dataObjectLayout;
             TabPage dataTableLayout;
             bindingTableValue = new DataGridView();
             dataTableValue = new DataGridView();
+            bindingSource = new BindingSource(components);
             dataViewLayout = new TabControl();
             dataObjectLayout = new TabPage();
             dataTableLayout = new TabPage();
@@ -41,6 +43,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingTableValue).BeginInit();
             dataTableLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataTableValue).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingSource).BeginInit();
             SuspendLayout();
             // 
             // dataViewLayout
@@ -48,10 +51,10 @@
             dataViewLayout.Controls.Add(dataObjectLayout);
             dataViewLayout.Controls.Add(dataTableLayout);
             dataViewLayout.Dock = DockStyle.Fill;
-            dataViewLayout.Location = new Point(0, 0);
+            dataViewLayout.Location = new Point(0, 25);
             dataViewLayout.Name = "dataViewLayout";
             dataViewLayout.SelectedIndex = 0;
-            dataViewLayout.Size = new Size(608, 354);
+            dataViewLayout.Size = new Size(608, 329);
             dataViewLayout.TabIndex = 0;
             // 
             // dataObjectLayout
@@ -60,7 +63,7 @@
             dataObjectLayout.Location = new Point(4, 24);
             dataObjectLayout.Name = "dataObjectLayout";
             dataObjectLayout.Padding = new Padding(3);
-            dataObjectLayout.Size = new Size(600, 326);
+            dataObjectLayout.Size = new Size(600, 301);
             dataObjectLayout.TabIndex = 0;
             dataObjectLayout.Text = "Data Object";
             dataObjectLayout.UseVisualStyleBackColor = true;
@@ -74,8 +77,7 @@
             bindingTableValue.Location = new Point(3, 3);
             bindingTableValue.Name = "bindingTableValue";
             bindingTableValue.ReadOnly = true;
-            bindingTableValue.RowTemplate.Height = 25;
-            bindingTableValue.Size = new Size(594, 320);
+            bindingTableValue.Size = new Size(594, 295);
             bindingTableValue.TabIndex = 0;
             bindingTableValue.RowHeaderMouseDoubleClick += bindingTableValue_RowHeaderMouseDoubleClick;
             // 
@@ -85,7 +87,7 @@
             dataTableLayout.Location = new Point(4, 24);
             dataTableLayout.Name = "dataTableLayout";
             dataTableLayout.Padding = new Padding(3);
-            dataTableLayout.Size = new Size(600, 326);
+            dataTableLayout.Size = new Size(600, 301);
             dataTableLayout.TabIndex = 1;
             dataTableLayout.Text = "Data Table";
             dataTableLayout.UseVisualStyleBackColor = true;
@@ -99,8 +101,7 @@
             dataTableValue.Location = new Point(3, 3);
             dataTableValue.Name = "dataTableValue";
             dataTableValue.ReadOnly = true;
-            dataTableValue.RowTemplate.Height = 25;
-            dataTableValue.Size = new Size(594, 320);
+            dataTableValue.Size = new Size(594, 295);
             dataTableValue.TabIndex = 0;
             // 
             // DetailDataView
@@ -112,17 +113,21 @@
             Name = "DetailDataView";
             Text = "Binding Data";
             Load += BindingDataView_Load;
+            Controls.SetChildIndex(dataViewLayout, 0);
             dataViewLayout.ResumeLayout(false);
             dataObjectLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingTableValue).EndInit();
             dataTableLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataTableValue).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingSource).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private DataGridView bindingTableValue;
         private DataGridView dataTableValue;
+        private BindingSource bindingSource;
     }
 }

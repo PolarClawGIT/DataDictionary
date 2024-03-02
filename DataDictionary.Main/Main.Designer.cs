@@ -32,7 +32,7 @@
             Panel navigationPanel;
             Splitter navigationSpliter;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            nameSpaceLayout = new TableLayoutPanel();
+            contextNameLayout = new TableLayoutPanel();
             dataSourceToolStrip = new ToolStrip();
             newAttributeCommand = new ToolStripSplitButton();
             attributeContextMenu = new ContextMenuStrip(components);
@@ -67,7 +67,7 @@
             viewLibraryMemberCommand = new ToolStripMenuItem();
             toolStripSeparator7 = new ToolStripSeparator();
             refreshCommand = new ToolStripButton();
-            nameSpaceNavigation = new TreeView();
+            contextNameNavigation = new TreeView();
             statusStrip = new StatusStrip();
             toolStripOnlineStatus = new ToolStripStatusLabel();
             toolStripWhiteSpace = new ToolStripStatusLabel();
@@ -119,7 +119,7 @@
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
-            nameSpaceLayout.SuspendLayout();
+            contextNameLayout.SuspendLayout();
             dataSourceToolStrip.SuspendLayout();
             attributeContextMenu.SuspendLayout();
             entityContextMenu.SuspendLayout();
@@ -132,7 +132,7 @@
             // 
             // navigationPanel
             // 
-            navigationPanel.Controls.Add(nameSpaceLayout);
+            navigationPanel.Controls.Add(contextNameLayout);
             navigationPanel.Dock = DockStyle.Left;
             navigationPanel.Location = new Point(0, 49);
             navigationPanel.Name = "navigationPanel";
@@ -141,18 +141,18 @@
             // 
             // nameSpaceLayout
             // 
-            nameSpaceLayout.ColumnCount = 1;
-            nameSpaceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            nameSpaceLayout.Controls.Add(dataSourceToolStrip, 0, 0);
-            nameSpaceLayout.Controls.Add(nameSpaceNavigation, 0, 1);
-            nameSpaceLayout.Dock = DockStyle.Fill;
-            nameSpaceLayout.Location = new Point(0, 0);
-            nameSpaceLayout.Name = "nameSpaceLayout";
-            nameSpaceLayout.RowCount = 2;
-            nameSpaceLayout.RowStyles.Add(new RowStyle());
-            nameSpaceLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            nameSpaceLayout.Size = new Size(300, 591);
-            nameSpaceLayout.TabIndex = 2;
+            contextNameLayout.ColumnCount = 1;
+            contextNameLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            contextNameLayout.Controls.Add(dataSourceToolStrip, 0, 0);
+            contextNameLayout.Controls.Add(contextNameNavigation, 0, 1);
+            contextNameLayout.Dock = DockStyle.Fill;
+            contextNameLayout.Location = new Point(0, 0);
+            contextNameLayout.Name = "nameSpaceLayout";
+            contextNameLayout.RowCount = 2;
+            contextNameLayout.RowStyles.Add(new RowStyle());
+            contextNameLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            contextNameLayout.Size = new Size(300, 591);
+            contextNameLayout.TabIndex = 2;
             // 
             // dataSourceToolStrip
             // 
@@ -435,13 +435,13 @@
             // 
             // nameSpaceNavigation
             // 
-            nameSpaceNavigation.Dock = DockStyle.Fill;
-            nameSpaceNavigation.HideSelection = false;
-            nameSpaceNavigation.Location = new Point(3, 28);
-            nameSpaceNavigation.Name = "nameSpaceNavigation";
-            nameSpaceNavigation.Size = new Size(294, 560);
-            nameSpaceNavigation.TabIndex = 0;
-            nameSpaceNavigation.NodeMouseDoubleClick += DataSourceNavigation_NodeMouseDoubleClick;
+            contextNameNavigation.Dock = DockStyle.Fill;
+            contextNameNavigation.HideSelection = false;
+            contextNameNavigation.Location = new Point(3, 28);
+            contextNameNavigation.Name = "nameSpaceNavigation";
+            contextNameNavigation.Size = new Size(294, 560);
+            contextNameNavigation.TabIndex = 0;
+            contextNameNavigation.NodeMouseDoubleClick += DataSourceNavigation_NodeMouseDoubleClick;
             // 
             // navigationSpliter
             // 
@@ -733,7 +733,6 @@
             testFormToolStripMenuItem.Name = "testFormToolStripMenuItem";
             testFormToolStripMenuItem.Size = new Size(129, 22);
             testFormToolStripMenuItem.Text = "Test Form";
-            testFormToolStripMenuItem.Click += testFormToolStripMenuItem_Click;
             // 
             // textEditorToolStripMenuItem
             // 
@@ -820,8 +819,8 @@
             Controls.SetChildIndex(navigationPanel, 0);
             Controls.SetChildIndex(navigationSpliter, 0);
             navigationPanel.ResumeLayout(false);
-            nameSpaceLayout.ResumeLayout(false);
-            nameSpaceLayout.PerformLayout();
+            contextNameLayout.ResumeLayout(false);
+            contextNameLayout.PerformLayout();
             dataSourceToolStrip.ResumeLayout(false);
             dataSourceToolStrip.PerformLayout();
             attributeContextMenu.ResumeLayout(false);
@@ -906,9 +905,9 @@
         private ToolStripSplitButton manageLibrariesCommand;
         private ToolStripSplitButton manageDatabasesCommand;
         private ToolStripButton refreshCommand;
-        private TreeView nameSpaceNavigation;
+        private TreeView contextNameNavigation;
         private ToolStripSeparator toolStripSeparator7;
-        private TableLayoutPanel nameSpaceLayout;
+        private TableLayoutPanel contextNameLayout;
         private ContextMenuStrip attributeContextMenu;
         private ToolStripMenuItem menuAttributes;
         private ToolStripMenuItem menuAttributeProperties;

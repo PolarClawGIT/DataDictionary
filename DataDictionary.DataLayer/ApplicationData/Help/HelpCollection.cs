@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     public abstract class HelpCollection<TItem> : BindingTable<TItem>,
         IReadData, IWriteData,
         IReadData<IHelpKey>, IWriteData<IHelpKey>,
-        IValidateList<HelpItem>
+        IRemoveItem<IHelpKey>
         where TItem : HelpItem, new()
     {
         /// <inheritdoc/>
@@ -53,8 +53,10 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetApplicationHelp]";
-            command.AddParameter("@@HelpId", helpId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationHelp]", this);
+            command.AddParameter("@HelpId", helpId);
+
+            IEnumerable<TItem> data = this.Where(w => helpId is null || w.HelpId == helpId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationHelp]", data);
             return command;
         }
 
@@ -79,6 +81,15 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
             { }
 
             return result;
+        }
+
+        /// <inheritdoc/>
+        public virtual void Remove(IHelpKey helpItem)
+        {
+            HelpKey key = new HelpKey(helpItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
         }
     }
 

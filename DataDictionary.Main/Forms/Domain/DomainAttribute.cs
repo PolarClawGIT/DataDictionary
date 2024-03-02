@@ -1,6 +1,8 @@
-﻿using DataDictionary.DataLayer.DomainData;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.DomainData;
 using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.Main.Forms.App;
+using DataDictionary.Main.Controls;
+using DataDictionary.Main.Forms.ApplicationWide;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Properties;
 using System;
@@ -18,44 +20,32 @@ namespace DataDictionary.Main.Forms.Domain
 {
     partial class DomainAttribute : ApplicationBase, IApplicationDataForm
     {
-        public bool IsOpenItem(object? item)
-        {
-            return (
-                mainBinding.Current is DomainAttributeItem current
-                && new DomainAttributeKey(current).Equals(item));
-        }
+        public Boolean IsOpenItem(object? item)
+        { return mainBinding.Current is IDomainAttributeItem current && ReferenceEquals(current, item); }
 
         public DomainAttribute() : base()
         {
             InitializeComponent();
             this.Icon = Resources.Icon_Attribute;
-
-            //If the FixedPanel is set in the Designer, the SpliterDistance is recomputed.
-            propertiesSplit.FixedPanel = FixedPanel.Panel2;
-            aliasSplit.FixedPanel = FixedPanel.Panel2;
-
             newItemCommand.Click += NewItemCommand_Click;
         }
 
-        public DomainAttribute(DomainAttributeItem data) : this()
+        public DomainAttribute(IDomainAttributeItem attributeItem) : this()
         {
-            if (Program.Data.DomainAttributes.Contains(data))
-            {
-                DomainAttributeKey key = new DomainAttributeKey(data);
-                mainBinding.DataSource = new BindingView<DomainAttributeItem>(Program.Data.DomainAttributes, w => key.Equals(w));
-                mainBinding.Position = 0;
+            DomainAttributeKey key = new DomainAttributeKey(attributeItem);
+            mainBinding.DataSource = new BindingView<DomainAttributeItem>(BusinessData.DomainModel.Attributes, w => key.Equals(w));
+            mainBinding.Position = 0;
 
-                propertyBinding.DataSource = new BindingView<DomainAttributePropertyItem>(Program.Data.DomainAttributeProperties, w => key.Equals(w));
-                aliasBinding.DataSource = new BindingView<DomainAttributeAliasItem>(Program.Data.DomainAttributeAliases, w => key.Equals(w));
-            }
-            else
+            if (mainBinding.Current is IDomainAttributeItem current)
             {
-                mainBinding.DataSource = new BindingList<DomainAttributeItem>() { data };
-                mainBinding.Position = 0;
-            }
+                this.Icon = new ScopeKey(ScopeType.ModelAttribute).Scope.ToIcon();
+                RowState = current.RowState();
+                current.RowStateChanged += RowStateChanged;
+                this.Text = current.ToString();
 
-            RowState = data.RowState();
-            data.RowStateChanged += Data_RowStateChanged;
+                propertyBinding.DataSource = new BindingView<DomainAttributePropertyItem>(BusinessData.DomainModel.Attributes.Properties, w => key.Equals(w));
+                aliasBinding.DataSource = new BindingView<DomainAttributeAliasItem>(BusinessData.DomainModel.Attributes.Aliases, w => key.Equals(w));
+            }
         }
 
         private void Form_Load(object sender, EventArgs e)
@@ -87,18 +77,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.DataSource = aliasBinding;
             domainAlias.BindData(aliasBinding);
 
-            toolTip.LoadToolTips(this); 
-        }
-
-        private void Data_RowStateChanged(object? sender, EventArgs e)
-        {
-            if (sender is IBindingTableRow data)
-            {
-                RowState = data.RowState();
-                if (IsHandleCreated)
-                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
-                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
-            }
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || mainBinding.Current is not IDomainAttributeItem);
         }
 
         private void NewItemCommand_Click(object? sender, EventArgs e)

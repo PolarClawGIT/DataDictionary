@@ -63,9 +63,9 @@ namespace DataDictionary.Main.ProofOfConcept
 
         private void RichTextControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            richTextCode.DataValue = richTextBoxData.Rtf;
+            richTextCode.DataValue = richTextBoxData.Rtf??String.Empty;
             plainText.DataValue = richTextBoxData.Text;
-            htmlText.DataValue = ToHtml(richTextBoxData.Rtf);
+            htmlText.DataValue = ToHtml(richTextBoxData.Rtf??String.Empty);
 
             htmlTextBoxData.DocumentText = htmlText.DataValue;
 

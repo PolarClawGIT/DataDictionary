@@ -5,7 +5,7 @@
 	[MemberParentId]   UniqueIdentifier Null,
 	[AssemblyName]     NVarChar(1023) Null,
 	[NameSpace]        NVarChar(Max) Null,
-	[MemberName]       [App_DataDictionary].[typeAliasElement] Not Null,
+	[MemberName]       [App_DataDictionary].[typeNameSpaceMember] Not Null,
 	[ScopeName]        [App_DataDictionary].[typeScopeName] Null,
 	[MemberType]       NVarChar(50) Null, 
 	[MemberData]       XML Null

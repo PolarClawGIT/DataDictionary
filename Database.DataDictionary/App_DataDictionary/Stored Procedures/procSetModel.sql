@@ -19,24 +19,85 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean the Data
-	Declare @Values [App_DataDictionary].[typeModel]
+	Declare @Values Table (
+		[ModelId] UniqueIdentifier NOT NULL,
+		[ModelTitle] [App_DataDictionary].[typeTitle] Not Null,
+		[ModelDescription] [App_DataDictionary].[typeDescription] Null,
+		Primary Key ([ModelId]))
+
 	Insert Into @Values
 	Select	V.[ModelId],
 			NullIf(Trim([ModelTitle]),'') As [ModelTitle],
 			NullIf(Trim([ModelDescription]),'') As [ModelDescription]
 	From	@Data D
-			Outer Apply (Select	IsNull([ModelId],NewId()) As [ModelId]) V
+			Outer Apply (Select	Coalesce(D.[ModelId], @ModelId, NewId()) As [ModelId]) V
 	Where	(@ModelId is Null or @ModelId = V.[ModelId])
 
-	-- Validation
-	If Exists (
-		Select	[ModelTitle]
-		From	@Values
-		Group By [ModelTitle]
-		Having	Count(*) > 1)
-	Throw 50000, '[ModelTitle] cannot be duplicate', 2;
-
 	-- Apply Changes
+	Delete From [App_DataDictionary].[ModelAttribute]
+	From	[App_DataDictionary].[ModelAttribute] T
+			Left Join @Values S
+			On	T.[ModelId] = S.[ModelId]
+	Where	S.[ModelId] is Null And
+			T.[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelAttribute] (Model): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[ModelEntity]
+	From	[App_DataDictionary].[ModelEntity] T
+			Left Join @Values S
+			On	T.[ModelId] = S.[ModelId]
+	Where	S.[ModelId] is Null And
+			T.[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity] (Model): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[ModelProcess]
+	From	[App_DataDictionary].[ModelProcess] T
+			Left Join @Values S
+			On	T.[ModelId] = S.[ModelId]
+	Where	S.[ModelId] is Null And
+			T.[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelProcess] (Model): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[ModelRelationship]
+	From	[App_DataDictionary].[ModelRelationship] T
+			Left Join @Values S
+			On	T.[ModelId] = S.[ModelId]
+	Where	S.[ModelId] is Null And
+			T.[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelRelationship] (Model): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[ModelSubjectArea]
+	From	[App_DataDictionary].[ModelSubjectArea] T
+			Left Join @Values S
+			On	T.[ModelId] = S.[ModelId]
+	Where	S.[ModelId] is Null And
+			T.[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectArea] (Model): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[ModelCatalog]
+	From	[App_DataDictionary].[ModelCatalog] T
+			Left Join @Values S
+			On	T.[ModelId] = S.[ModelId]
+	Where	S.[ModelId] is Null And
+			T.[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelCatalog] (Model): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[ModelLibrary]
+	From	[App_DataDictionary].[ModelLibrary] T
+			Left Join @Values S
+			On	T.[ModelId] = S.[ModelId]
+	Where	S.[ModelId] is Null And
+			T.[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelLibrary] (Model): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[Model]
+	From	[App_DataDictionary].[Model] T
+			Left Join @Values S
+			On	T.[ModelId] = S.[ModelId]
+	Where	S.[ModelId] is Null And
+			T.[ModelId] = @ModelId
+	Print FormatMessage ('Delete [App_DataDictionary].[Model]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	With [Delta] As (
 		Select	V.[ModelId],
 				V.[ModelTitle],

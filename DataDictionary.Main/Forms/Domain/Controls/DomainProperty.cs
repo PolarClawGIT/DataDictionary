@@ -1,14 +1,12 @@
 ﻿using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.DataLayer.ApplicationData.Property;
-using PropertyCollection = DataDictionary.DataLayer.ApplicationData.Property.PropertyCollection;
 
 namespace DataDictionary.Main.Forms.Domain.Controls
 {
     partial class DomainProperty : UserControl
     {
         Func<IDomainProperty?> GetCurrent = () => { return null; };
-        PropertyCollection propertyDefinitions = Program.Data.Properties;
 
         public DomainProperty()
         {
@@ -39,7 +37,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             if (propertyTypeData.SelectedItem is PropertyNameItem selected
                 && GetCurrent() is IDomainProperty currentRow)
             {
-                if (Program.Data.Properties.FirstOrDefault(w => w.PropertyId == selected.PropertyId) is PropertyItem property)
+                if (BusinessData.ApplicationData.Properties.FirstOrDefault(w => w.PropertyId == selected.PropertyId) is PropertyItem property)
                 {
                     // Cleanup not performed by Binding
                     propertyChoiceData.Items.Clear();

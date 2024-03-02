@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     public abstract class DbExtendedPropertyCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>
+        IRemoveItem<IDbCatalogKey>
         where TItem : BindingTableRow, IDbExtendedPropertyItem, IDbCatalogKey, new()
     {
         /// <inheritdoc/>
@@ -63,7 +63,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbCatalogKey catalogItem)
+        public virtual void Remove(IDbCatalogKey catalogItem)
         {
             DbCatalogKey key = new DbCatalogKey(catalogItem);
 

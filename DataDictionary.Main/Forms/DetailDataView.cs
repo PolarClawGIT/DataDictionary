@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Main.Properties;
@@ -9,8 +10,6 @@ namespace DataDictionary.Main.Forms
 {
     partial class DetailDataView : ApplicationBase, IApplicationDataBind
     {
-        public IBindingTable? bindingTableSource { get; private set; }
-
         public DetailDataView() : base()
         {
             InitializeComponent();
@@ -18,14 +17,22 @@ namespace DataDictionary.Main.Forms
 
         public DetailDataView(IBindingTable data, Icon? icon = null) : this()
         {
-            bindingTableSource = data;
+            bindingSource.DataSource = data;
+            this.Text = String.Format("{0}: {1}", this.Text, data.BindingName);
+            if (icon is Icon value) { this.Icon = value; }
+            else { this.Icon = Resources.Icon_Application; }
+        }
+
+        public DetailDataView(IBindingData data, Icon? icon = null) : this()
+        {
+            bindingSource.DataSource = data;
             this.Text = String.Format("{0}: {1}", this.Text, data.BindingName);
             if (icon is Icon value) { this.Icon = value; }
             else { this.Icon = Resources.Icon_Application; }
         }
 
         public Boolean IsOpenItem(Object? item)
-        { return ReferenceEquals(bindingTableSource, item); }
+        { return ReferenceEquals(bindingSource.DataSource, item); }
 
         private void BindingDataView_Load(object sender, EventArgs e)
         { (this as IApplicationDataBind).BindData(); }
@@ -33,17 +40,17 @@ namespace DataDictionary.Main.Forms
 
         public bool BindDataCore()
         {
-            if (bindingTableSource is IBindingTable value)
+            bindingTableValue.DataSource = bindingSource;
+
+            if (bindingSource.DataSource is IBindingDataReader reader)
             {
-                bindingTableValue.DataSource = bindingTableSource;
                 using (DataTable data = new DataTable())
                 {
-                    data.Load(bindingTableSource.CreateDataReader());
+                    data.Load(reader.CreateDataReader());
                     dataTableValue.DataSource = data;
-                }
-                return true;
+                }   
             }
-            else { return false; }
+            return true;
         }
 
         public void UnbindDataCore()
@@ -54,17 +61,18 @@ namespace DataDictionary.Main.Forms
 
         private void bindingTableValue_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            //TODO: Add support for more items
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DbSchemaItem schemaItem)
-            { Activate((data) => new Forms.Database.DbSchema() { DataKey = new DbSchemaKeyName(schemaItem) }, schemaItem); }
+            { Activate((data) => new Forms.Database.DbSchema(schemaItem), schemaItem); }
 
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DbTableItem tableItem)
-            { Activate((data) => new Forms.Database.DbTable() { DataKey = new DbTableKeyName(tableItem) }, tableItem); }
+            { Activate((data) => new Forms.Database.DbTable(tableItem), tableItem); }
 
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DbTableColumnItem columnItem)
-            { Activate((data) => new Forms.Database.DbTableColumn() { DataKey = new DbTableColumnKeyName(columnItem) }, columnItem); }
+            { Activate((data) => new Forms.Database.DbTableColumn(columnItem), columnItem); }
 
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DomainAttributeItem attributeItem)
-            { Activate((data) => new Forms.Domain.DomainAttribute_Old(attributeItem), attributeItem); }
+            { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
 
         }
 

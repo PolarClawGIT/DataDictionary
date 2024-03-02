@@ -2,7 +2,7 @@
 (	[MemberId]              UniqueIdentifier Not Null CONSTRAINT [DF_LibraryMemberId] DEFAULT (newid()),
 	[LibraryId]             UniqueIdentifier Not Null,
 	[MemberParentId]        UniqueIdentifier Null,
-	[MemberName]            [App_DataDictionary].[typeAliasElement] Not Null,
+	[MemberName]            [App_DataDictionary].[typeNameSpaceMember] Not Null,
 	[ScopeId]               Int Not Null,
 	[MemberType]            NVarChar(10) Null, -- .Net Documents produce a letter that is converted to a Member type. There may not be one.
 	[MemberData]            XML Null, -- Raw data as XML

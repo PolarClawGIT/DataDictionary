@@ -1,45 +1,21 @@
 using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.WorkFlows;
-using DataDictionary.DataLayer.ApplicationData.Property;
-using DataDictionary.DataLayer.DatabaseData;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.Schema;
-using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.DomainData.Entity;
+using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Dialogs;
 using DataDictionary.Main.Forms;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main
 {
-    partial class Main : ApplicationBase, IApplicationDataBind
+    partial class Main : ApplicationBase
     {
-
-        #region Static Data
-        enum navigationTabImageIndex
-        {
-            Database,
-            Domain
-        }
-        Dictionary<navigationTabImageIndex, Image> navigationTabImages = new Dictionary<navigationTabImageIndex, Image>()
-        {
-            {navigationTabImageIndex.Database, Resources.Database },
-            {navigationTabImageIndex.Domain, Resources.Dictionary }
-        };
-        #endregion
-
-        public bool IsOpenItem(object? item)
+        public Boolean IsOpenItem(object? item)
         { return true; }
 
         public Main() : base()
@@ -47,20 +23,20 @@ namespace DataDictionary.Main
             InitializeComponent();
             Icon = Resources.Icon_Application;
             toolStrip.Hide(); // Hide base ToolStrip
-            this.IsLocked(true);
+            IsLocked(true);
 
             // Setup Images for Tree Control
-            nameSpaceNavigation.ImageList = ModelScopeExtension.ToImageList();
+            contextNameNavigation.ImageList = ModelScopeExtension.ToImageList();
 
 
             //Hook the WorkerQueue up to this forms UI thread for events.
-            Program.Worker.InvokeUsing = this.Invoke;
+            Worker.InvokeUsing = this.Invoke;
         }
 
         #region Form
         private void Main_Load(object sender, EventArgs e)
         {
-            Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
+            Worker.ProgressChanged += WorkerQueue_ProgressChanged;
 
             // Display the Splash screen (Show a minimum of 10 seconds or wait for data to Load)
             Dialogs.AboutBox splashScreen = new Dialogs.AboutBox();
@@ -80,17 +56,18 @@ namespace DataDictionary.Main
             SendMessage(new DoUnbindData());
 
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(Program.Data.LoadNameSpace());
-
+            List<NameScopeItem> names = new List<NameScopeItem>();
+            work.AddRange(BusinessData.Export(names));
+            work.AddRange(BusinessData.NameScope.Import(names));
 
             if (Settings.Default.IsOnLineMode)
             {
-                DatabaseWork factory = new DatabaseWork();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
-                work.AddRange(Program.Data.LoadApplicationData(factory));
+                work.AddRange(BusinessData.ApplicationData.Load(factory));
 
                 if (!appDataFile.Exists)
-                { work.AddRange(Program.Data.SaveApplicationData(appDataFile)); }
+                { work.AddRange(BusinessData.ApplicationData.Export(appDataFile)); }
 
                 this.DoWork(work, OnComplete);
             }
@@ -101,11 +78,11 @@ namespace DataDictionary.Main
             void FileLoad()
             {
                 if (appDataFile.Exists) // AppData already contains the Application Data File
-                { work.AddRange(Program.Data.LoadApplicationData(appDataFile)); }
+                { work.AddRange(BusinessData.ApplicationData.Import(appDataFile)); }
                 else if (appInstallFile.Exists)
                 { // AppData does not contain file but the install folder does (Copy it)
-                    work.AddRange(Program.Data.LoadApplicationData(appInstallFile));
-                    work.AddRange(Program.Data.SaveApplicationData(appDataFile));
+                    work.AddRange(BusinessData.ApplicationData.Import(appInstallFile));
+                    work.AddRange(BusinessData.ApplicationData.Export(appDataFile));
                 }
                 this.DoWork(work, OnComplete);
             }
@@ -113,7 +90,8 @@ namespace DataDictionary.Main
             // Handle data load complete
             void OnComplete(RunWorkerCompletedEventArgs args)
             {
-                if (splashDone) { splashScreen.Close(); }
+                if (splashDone)
+                { this.Invoke(() => splashScreen.Close()); }
 
                 if (args.Error is not null && Settings.Default.IsOnLineMode)
                 { // Could not load the data from the database for whatever reason.
@@ -125,43 +103,37 @@ namespace DataDictionary.Main
                 }
                 else
                 {
-                    SendMessage(new DoBindData());
+                    BuildTree();
                     SendMessage(new OnlineStatusChanged());
                     dataLoaded = true;
+                    IsLocked(false);
                 }
             }
 
             // Handle Splash timer timed out.
             void MinTime_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
             {
-                if (dataLoaded) { this.Invoke(() => splashScreen.Close()); }
+                if (dataLoaded)
+                {
+                    this.Invoke(() =>
+                    {
+                        splashScreen.Close();
+                        IsLocked(false);
+                    });
+                }
+
                 splashDone = true;
                 splashTimer.Elapsed -= MinTime_Elapsed;
+
             }
         }
 
-
-        public bool BindDataCore()
-        {
-            if (Program.Data.Model is ModelItem data)
-            {
-                BuildNameSpaceTree();
-
-                return true;
-            }
-            else { return false; }
-        }
-
-        public void UnbindDataCore()
-        {
-            ClearNameSpaceTree();
-        }
 
         private void Main_FormClosing(object? sender, FormClosingEventArgs e)
         { }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
-        { Program.Worker.ProgressChanged -= WorkerQueue_ProgressChanged; }
+        { Worker.ProgressChanged -= WorkerQueue_ProgressChanged; }
 
         private void WorkerQueue_ProgressChanged(object? sender, WorkerProgressChangedEventArgs e)
         {
@@ -173,13 +145,13 @@ namespace DataDictionary.Main
         #region Menu Events
         private void HelpContentsMenuItem_Click(object sender, EventArgs e)
         {
-            if (ActiveMdiChild is Form currentForm)
-            { Activate(() => new Forms.App.HelpSubject(currentForm)); }
-            else { Activate(() => new Forms.App.HelpSubject(Settings.Default.DefaultSubject)); }
+            if (ActiveMdiChild is Form currentForm && currentForm is not AboutBox)
+            { Activate(() => new Forms.ApplicationWide.HelpSubject(currentForm)); }
+            else { Activate(() => new Forms.ApplicationWide.HelpSubject(Settings.Default.DefaultSubject)); }
         }
 
         private void HelpIndexMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.App.HelpSubject(Settings.Default.DefaultSubject)); }
+        { Activate(() => new Forms.ApplicationWide.HelpSubject(Settings.Default.DefaultSubject)); }
 
         private void HelpAboutMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Dialogs.AboutBox()); }
@@ -187,23 +159,27 @@ namespace DataDictionary.Main
         private void Main_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             if (ActiveMdiChild is Form currentForm)
-            { Activate(() => new Forms.App.HelpSubject(currentForm)); }
+            { Activate(() => new Forms.ApplicationWide.HelpSubject(currentForm)); }
         }
 
         private void browsePropertiesCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.App.Property()); }
+        { Activate(() => new Forms.ApplicationWide.Property()); }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            (this as IApplicationDataBind).UnbindData();
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(Program.Data.NewModel());
+            List<NameScopeItem> names = new List<NameScopeItem>();
+            work.AddRange(BusinessData.Remove());
+            work.AddRange(BusinessData.NameScope.Remove());
+            work.AddRange(BusinessData.Export(names));
+            work.AddRange(BusinessData.NameScope.Import(names));
 
             DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                (this as IApplicationDataBind).BindData();
+                ClearTree();
+                BuildTree();
             }
         }
 
@@ -226,7 +202,7 @@ namespace DataDictionary.Main
         { Activate(() => new Dialogs.ViewTextTemplate()); }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new App.ApplicationOptions()); }
+        { Activate(() => new ApplicationWide.ApplicationOptions()); }
         #endregion
 
         #region IColleague
@@ -247,17 +223,13 @@ namespace DataDictionary.Main
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             if (Settings.Default.IsOnLineMode)
-            { toolStripOnlineStatus.Text = String.Format("On-Line: {0}.{0}", Program.Data.ServerName, Program.Data.DatabaseName); }
+            { toolStripOnlineStatus.Text = String.Format("On-Line: {0}.{0}", BusinessData.Connection.ServerName, BusinessData.Connection.DatabaseName); }
             else { toolStripOnlineStatus.Text = "Off-Line"; }
         }
         #endregion
 
         private void gridViewToolStripMenuItem_Click(object sender, EventArgs e)
         { new Forms.UnitTestGridView().Show(); }
-
-        [Obsolete("Proof of Concept Only")]
-        private void testFormToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new ProofOfConcept.CodeLibrary()); }
 
         private void peekAtClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new Forms.ClipboardView()); }
@@ -269,7 +241,7 @@ namespace DataDictionary.Main
         {
             openFileDialog.Filter = "XML Data Dictionary|*.XML";
 
-            if (Program.Data.ModelFile is FileInfo file)
+            if (BusinessData.ModelFile is FileInfo file)
             {
                 openFileDialog.InitialDirectory = file.DirectoryName;
                 openFileDialog.FileName = file.Name;
@@ -277,7 +249,7 @@ namespace DataDictionary.Main
             else
             {
                 openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                openFileDialog.FileName = Program.Data.Model.ModelTitle;
+                openFileDialog.FileName = BusinessData.Model.ModelTitle;
             }
 
             DialogResult dialogResult = openFileDialog.ShowDialog();
@@ -288,7 +260,7 @@ namespace DataDictionary.Main
 
                 SendMessage(new Messages.DoUnbindData());
                 List<WorkItem> work = new List<WorkItem>();
-                work.AddRange(Program.Data.LoadModelData(openFile));
+                work.AddRange(BusinessData.Import(openFile));
 
                 DoWork(work, onCompleting);
             }
@@ -299,10 +271,10 @@ namespace DataDictionary.Main
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Program.Data.ModelFile is FileInfo file)
+            if (BusinessData.ModelFile is FileInfo file)
             {
                 SendMessage(new Messages.DoUnbindData());
-                DoWork(Program.Data.SaveModelData(Program.Data.ModelFile), onCompleting);
+                DoWork(BusinessData.Export(file), onCompleting);
             }
             else
             { saveAsToolStripMenuItem_Click(sender, e); }
@@ -315,7 +287,7 @@ namespace DataDictionary.Main
         {
             saveFileDialog.Filter = "XML Data Dictionary|*.XML";
 
-            if (Program.Data.ModelFile is FileInfo file)
+            if (BusinessData.ModelFile is FileInfo file)
             {
                 saveFileDialog.InitialDirectory = file.DirectoryName;
                 saveFileDialog.FileName = file.Name;
@@ -323,7 +295,7 @@ namespace DataDictionary.Main
             else
             {
                 saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                saveFileDialog.FileName = Program.Data.Model.ModelTitle;
+                saveFileDialog.FileName = BusinessData.Model.ModelTitle;
             }
 
             DialogResult dialogResult = saveFileDialog.ShowDialog();
@@ -331,11 +303,11 @@ namespace DataDictionary.Main
             if (dialogResult is DialogResult.OK)
             {
                 FileInfo openFile = new FileInfo(saveFileDialog.FileName);
-                Program.Data.ModelFile = openFile;
+                BusinessData.ModelFile = openFile;
                 saveToolStripMenuItem.Enabled = true;
 
                 SendMessage(new Messages.DoUnbindData());
-                DoWork(Program.Data.SaveModelData(openFile), onCompleting);
+                DoWork(BusinessData.Export(openFile), onCompleting);
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)

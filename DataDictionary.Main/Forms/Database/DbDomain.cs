@@ -1,5 +1,8 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Domain;
+using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
@@ -11,85 +14,68 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbDomain : ApplicationBase, IApplicationDataForm<DbDomainKeyName>
+    partial class DbDomain : ApplicationBase, IApplicationDataForm
     {
-        public required DbDomainKeyName DataKey { get; init; }
 
-        public bool IsOpenItem(object? item)
-        { return DataKey.Equals(item); }
+        public Boolean IsOpenItem(object? item)
+        { return bindingDomain.Current is IDbDomainItem current && ReferenceEquals(current, item); }
 
         public DbDomain() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.Icon_DomainType;
+        }
+
+        public DbDomain(IDbDomainItem domainItem) : this()
+        {
+            DbDomainKeyName key = new DbDomainKeyName(domainItem);
+            DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
+
+            bindingDomain.DataSource = new BindingView<DbDomainItem>(BusinessData.DatabaseModel.DbDomains, w => key.Equals(w));
+            bindingDomain.Position = 0;
+
+            if (bindingDomain.Current is IDbDomainItem current)
+            {
+                this.Icon = new ScopeKey(current).Scope.ToIcon();
+                RowState = current.RowState();
+                current.RowStateChanged += RowStateChanged;
+                this.Text = current.ToString();
+
+                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
+            }
         }
 
         private void DbDomain_Load(object sender, EventArgs e)
-        { (this as IApplicationDataBind).BindData(); }
-
-        public bool BindDataCore()
         {
-            if (Program.Data.DbDomains.FirstOrDefault(w => DataKey.Equals(w)) is DbDomainItem data)
-            {
-                this.Text = DataKey.ToString();
+            IDbDomainItem bindingNames;
+            catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingDomain, nameof(bindingNames.DatabaseName)));
+            schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingDomain, nameof(bindingNames.SchemaName)));
+            domainNameData.DataBindings.Add(new Binding(nameof(domainNameData.Text), bindingDomain, nameof(bindingNames.DomainName)));
+            domainDefaultData.DataBindings.Add(new Binding(nameof(domainDefaultData.Text), bindingDomain, nameof(bindingNames.DomainDefault)));
 
-                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.DatabaseName)));
-                schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
-                domainNameData.DataBindings.Add(new Binding(nameof(domainNameData.Text), data, nameof(data.DomainName)));
-                domainDefaultData.DataBindings.Add(new Binding(nameof(domainDefaultData.Text), data, nameof(data.DomainDefault)));
+            dataTypeData.DataBindings.Add(new Binding(nameof(dataTypeData.Text), bindingDomain, nameof(bindingNames.DataType)));
+            characterMaximumLengthData.DataBindings.Add(new Binding(nameof(characterMaximumLengthData.Text), bindingDomain, nameof(bindingNames.CharacterMaximumLength)));
+            characterOctetLengthData.DataBindings.Add(new Binding(nameof(characterOctetLengthData.Text), bindingDomain, nameof(bindingNames.CharacterOctetLength)));
+            numericPrecisionData.DataBindings.Add(new Binding(nameof(numericPrecisionData.Text), bindingDomain, nameof(bindingNames.NumericPrecision)));
+            numericPrecisionRadixData.DataBindings.Add(new Binding(nameof(numericPrecisionRadixData.Text), bindingDomain, nameof(bindingNames.NumericPrecisionRadix)));
+            numericScaleData.DataBindings.Add(new Binding(nameof(numericScaleData.Text), bindingDomain, nameof(bindingNames.NumericScale)));
+            dateTimePrecisionData.DataBindings.Add(new Binding(nameof(dateTimePrecisionData.Text), bindingDomain, nameof(bindingNames.DateTimePrecision)));
 
-                dataTypeData.DataBindings.Add(new Binding(nameof(dataTypeData.Text), data, nameof(data.DataType)));
-                characterMaximumLengthData.DataBindings.Add(new Binding(nameof(characterMaximumLengthData.Text), data, nameof(data.CharacterMaximumLength)));
-                characterOctetLengthData.DataBindings.Add(new Binding(nameof(characterOctetLengthData.Text), data, nameof(data.CharacterOctetLength)));
-                numericPrecisionData.DataBindings.Add(new Binding(nameof(numericPrecisionData.Text), data, nameof(data.NumericPrecision)));
-                numericPrecisionRadixData.DataBindings.Add(new Binding(nameof(numericPrecisionRadixData.Text), data, nameof(data.NumericPrecisionRadix)));
-                numericScaleData.DataBindings.Add(new Binding(nameof(numericScaleData.Text), data, nameof(data.NumericScale)));
-                dateTimePrecisionData.DataBindings.Add(new Binding(nameof(dateTimePrecisionData.Text), data, nameof(data.DateTimePrecision)));
+            characterSetCatalogData.DataBindings.Add(new Binding(nameof(characterSetCatalogData.Text), bindingDomain, nameof(bindingNames.CharacterSetCatalog)));
+            characterSetSchemaData.DataBindings.Add(new Binding(nameof(characterSetSchemaData.Text), bindingDomain, nameof(bindingNames.CharacterSetSchema)));
+            characterSetNameData.DataBindings.Add(new Binding(nameof(characterSetNameData.Text), bindingDomain, nameof(bindingNames.CharacterSetName)));
 
-                characterSetCatalogData.DataBindings.Add(new Binding(nameof(characterSetCatalogData.Text), data, nameof(data.CharacterSetCatalog)));
-                characterSetSchemaData.DataBindings.Add(new Binding(nameof(characterSetSchemaData.Text), data, nameof(data.CharacterSetSchema)));
-                characterSetNameData.DataBindings.Add(new Binding(nameof(characterSetNameData.Text), data, nameof(data.CharacterSetName)));
+            collationCatalogData.DataBindings.Add(new Binding(nameof(collationCatalogData.Text), bindingDomain, nameof(bindingNames.CollationCatalog)));
+            collationSchemaData.DataBindings.Add(new Binding(nameof(collationSchemaData.Text), bindingDomain, nameof(bindingNames.CollationSchema)));
+            collationNameData.DataBindings.Add(new Binding(nameof(collationNameData.Text), bindingDomain, nameof(bindingNames.CollationName)));
 
-                collationCatalogData.DataBindings.Add(new Binding(nameof(collationCatalogData.Text), data, nameof(data.CollationCatalog)));
-                collationSchemaData.DataBindings.Add(new Binding(nameof(collationSchemaData.Text), data, nameof(data.CollationSchema)));
-                collationNameData.DataBindings.Add(new Binding(nameof(collationNameData.Text), data, nameof(data.CollationName)));
+            extendedPropertiesData.AutoGenerateColumns = false;
+            extendedPropertiesData.DataSource = bindingProperties;
 
-                extendedPropertiesData.AutoGenerateColumns = false;
-                extendedPropertiesData.DataSource = Program.Data.GetExtendedProperty(DataKey).ToList();
-
-                return true;
-            }
-            else
-            { return false; }
-        }
-
-        public void UnbindDataCore()
-        {
-            catalogNameData.DataBindings.Clear();
-            schemaNameData.DataBindings.Clear();
-            domainNameData.DataBindings.Clear();
-            domainDefaultData.DataBindings.Clear();
-
-            dataTypeData.DataBindings.Clear();
-            characterMaximumLengthData.DataBindings.Clear();
-            characterOctetLengthData.DataBindings.Clear();
-            numericPrecisionData.DataBindings.Clear();
-            numericPrecisionRadixData.DataBindings.Clear();
-            numericScaleData.DataBindings.Clear();
-            dateTimePrecisionData.DataBindings.Clear();
-
-            characterSetCatalogData.DataBindings.Clear();
-            characterSetSchemaData.DataBindings.Clear();
-            characterSetNameData.DataBindings.Clear();
-
-            collationCatalogData.DataBindings.Clear();
-            collationSchemaData.DataBindings.Clear();
-            collationNameData.DataBindings.Clear();
-
-            extendedPropertiesData.DataSource = null;
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingDomain.Current is not IDbDomainItem);
         }
     }
 }

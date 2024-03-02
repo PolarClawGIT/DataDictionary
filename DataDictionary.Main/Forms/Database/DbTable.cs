@@ -1,24 +1,25 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
+using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbTable : ApplicationBase, IApplicationDataForm<DbTableKeyName>
+    partial class DbTable : ApplicationBase, IApplicationDataForm
     {
-        public required DbTableKeyName DataKey { get; init; }
-
-        public bool IsOpenItem(object? item)
-        { return DataKey.Equals(item); }
+        public Boolean IsOpenItem(object? item)
+        { return bindingTable.Current is IDbTableItem current && ReferenceEquals(current, item); }
 
         public DbTable() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.Icon_Table;
 
             importDataCommand.DropDown = importOptions;
             importDataCommand.Enabled = true;
@@ -26,67 +27,55 @@ namespace DataDictionary.Main.Forms.Database
             importDataCommand.ToolTipText = "Import the Table/View to the Domain Model";
         }
 
-        private void DbTable_Load(object sender, EventArgs e)
-        { (this as IApplicationDataBind).BindData(); }
-
-        public bool BindDataCore()
+        public DbTable(IDbTableItem tableItem) :this()
         {
-            if (Program.Data.DbTables.FirstOrDefault(w => DataKey == new DbTableKeyName(w)) is DbTableItem data)
+            DbTableKeyName key = new DbTableKeyName(tableItem);
+            DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
+
+            bindingTable.DataSource = new BindingView<DbTableItem>(BusinessData.DatabaseModel.DbTables, w => key.Equals(w));
+            bindingTable.Position = 0;
+
+            if (bindingTable.Current is IDbTableItem current)
             {
-                catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), data, nameof(data.DatabaseName)));
-                schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), data, nameof(data.SchemaName)));
-                tableNameData.DataBindings.Add(new Binding(nameof(tableNameData.Text), data, nameof(data.TableName)));
-                tableTypeData.DataBindings.Add(new Binding(nameof(tableTypeData.Text), data, nameof(data.TableType)));
-                isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), data, nameof(data.IsSystem)));
+                RowState = current.RowState();
+                current.RowStateChanged += RowStateChanged;
+                this.Text = current.ToString();
+                this.Icon = new ScopeKey(current).Scope.ToIcon();
 
-                extendedPropertiesData.AutoGenerateColumns = false;
-                extendedPropertiesData.DataSource = Program.Data.GetExtendedProperty(DataKey).ToList();
-
-                tableColumnsData.AutoGenerateColumns = false;
-                tableColumnsData.DataSource = new BindingView<DbTableColumnItem>(Program.Data.DbTableColumns, w => DataKey.Equals(w));
-
-                tableConstraintData.AutoGenerateColumns = false;
-                tableConstraintData.DataSource = new BindingView<DbConstraintItem>(Program.Data.DbConstraints, w => DataKey.Equals(w));
-
-                return true;
+                bindingColumns.DataSource = new BindingView<DbTableColumnItem>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
+                bindingConstraints.DataSource = new BindingView<DbConstraintItem>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
+                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
-            else { return false; }
         }
 
-        public void UnbindDataCore()
+        private void DbTable_Load(object sender, EventArgs e)
         {
-            catalogNameData.DataBindings.Clear();
-            schemaNameData.DataBindings.Clear();
-            tableNameData.DataBindings.Clear();
-            tableTypeData.DataBindings.Clear();
-            isSystemData.DataBindings.Clear();
+            IDbTableItem bindingNames;
+            catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingTable, nameof(bindingNames.DatabaseName)));
+            schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingTable, nameof(bindingNames.SchemaName)));
+            tableNameData.DataBindings.Add(new Binding(nameof(tableNameData.Text), bindingTable, nameof(bindingNames.TableName)));
+            tableTypeData.DataBindings.Add(new Binding(nameof(tableTypeData.Text), bindingTable, nameof(bindingNames.TableType)));
+            isSystemData.DataBindings.Add(new Binding(nameof(isSystemData.Checked), bindingTable, nameof(bindingNames.IsSystem)));
 
-            extendedPropertiesData.DataSource = null;
-            tableColumnsData.DataSource = null;
-        }
+            extendedPropertiesData.AutoGenerateColumns = false;
+            extendedPropertiesData.DataSource = bindingProperties;
 
-        private void tableColumnsData_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            if (tableColumnsData.Rows[e.RowIndex].DataBoundItem is DbTableColumnItem columnItem)
-            { Activate((data) => new Forms.Database.DbTableColumn() { DataKey = new DbTableColumnKeyName(columnItem) }, columnItem); }
+            tableColumnsData.AutoGenerateColumns = false;
+            tableColumnsData.DataSource = bindingColumns;
+
+            tableConstraintData.AutoGenerateColumns = false;
+            tableConstraintData.DataSource = bindingConstraints;
+
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingTable.Current is not IDbTableItem);
         }
 
         private void ImportDataCommand_Click(object? sender, EventArgs e)
         {
-
-            List<WorkItem> work = new List<WorkItem>();
-
-            if (Program.Data.DbTables.FirstOrDefault(w => DataKey.Equals(w)) is DbTableItem data)
+            if (bindingTable.Current is IDbTableItem current)
             {
-                if (importOptionEntity.Checked) { work.AddRange(Program.Data.ImportEntity(data)); }
-                if (importOptionAttribute.Checked) { work.AddRange(Program.Data.ImportAttribute(data)); }
-
-                SendMessage(new Messages.DoUnbindData());
-                this.DoWork(work, onCompleting);
+                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, current);
+                BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, current);
             }
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
         }
     }
 }

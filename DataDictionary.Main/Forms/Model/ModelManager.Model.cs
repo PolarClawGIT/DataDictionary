@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             private bool inModel = false;
             private bool inDatabase = false;
-            ModelItem data;
+            IModelItem data;
 
             public Boolean InModel { get { return inModel; } set { inModel = value; OnPropertyChanged(nameof(InModel)); } }
             public Boolean InDatabase { get { return inDatabase; } set { inDatabase = value; OnPropertyChanged(nameof(InDatabase)); } }
@@ -24,35 +25,47 @@ namespace DataDictionary.Main.Forms.Model
             public string? ModelDescription { get { return data.ModelDescription; } set { data.ModelDescription = value; } }
 
 
-            public ModelManagerItem(ModelItem source) : base()
+            public ModelManagerItem(IModelItem source) : base()
             {
                 data = source;
                 data.PropertyChanged += Data_PropertyChanged;
+                data.RowStateChanged += Data_RowStateChanged;
+            }
+
+            private void Data_RowStateChanged(object? sender, EventArgs e)
+            {
+                if (RowStateChanged is EventHandler handler)
+                { handler(sender, e); }
             }
 
             private void Data_PropertyChanged(object? sender, PropertyChangedEventArgs e)
             {
-                if (!String.IsNullOrWhiteSpace(e.PropertyName))
-                { OnPropertyChanged(e.PropertyName); }
+                if (PropertyChanged is PropertyChangedEventHandler handler)
+                { handler(sender, e); }
             }
 
             public event PropertyChangedEventHandler? PropertyChanged;
+            public event EventHandler? RowStateChanged;
+
             public virtual void OnPropertyChanged(string propertyName)
             {
                 if (PropertyChanged is PropertyChangedEventHandler handler)
                 { handler(this, new PropertyChangedEventArgs(propertyName)); }
-
-
             }
+
+            public DataRowState RowState()
+            { return data.RowState(); }
         }
 
         class ModelManagerCollection : BindingList<ModelManagerItem>
         {
-            public void Build(IEnumerable<ModelItem> modelItems, IEnumerable<ModelItem> dbItems)
+            public void Build(IModelItem modelItem, IEnumerable<ModelItem> dbItems)
             {
                 this.Clear();
 
                 // List of keys all keys
+                var modelItems = new List<IModelItem>() { modelItem };
+
                 List<ModelKey> modelKeys = modelItems.Select(s => new ModelKey(s))
                     .Union(dbItems.Select(s => new ModelKey(s)))
                     .ToList();
@@ -60,7 +73,6 @@ namespace DataDictionary.Main.Forms.Model
                 foreach (ModelKey modelKey in modelKeys)
                 {
                     ModelManagerItem? item = this.FirstOrDefault(w => modelKey.Equals(w));
-                    ModelItem? modelItem = modelItems.FirstOrDefault(w => modelKey.Equals(w));
                     ModelItem? dbItem = dbItems.FirstOrDefault(w => modelKey.Equals(w));
 
                     if (item is null && dbItem is ModelItem)

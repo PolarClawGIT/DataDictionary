@@ -22,11 +22,11 @@ namespace Toolbox.BindingTable
     public class BindingView<TRow> : BindingList<TRow>
         where TRow : class, INotifyPropertyChanged
     {
-        BindingList<TRow> baseData;
+        IBindingList<TRow> baseData;
 
         //public Action<TRow>? OnInsert { get; init; }
 
-        public BindingView(BindingList<TRow> baseData, Func<TRow, Boolean> filter) : base()
+        public BindingView(IBindingList<TRow> baseData, Func<TRow, Boolean> filter) : base()
         {
             this.baseData = baseData;
 

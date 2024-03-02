@@ -36,9 +36,11 @@
             sourceFileNameData = new Controls.TextBoxData();
             sourceFileDate = new Controls.TextBoxData();
             errorProvider = new ErrorProvider(components);
+            bindingSource = new BindingSource(components);
             libraryManagerLayout = new TableLayoutPanel();
             libraryManagerLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingSource).BeginInit();
             SuspendLayout();
             // 
             // libraryManagerLayout
@@ -144,6 +146,7 @@
             libraryManagerLayout.ResumeLayout(false);
             libraryManagerLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingSource).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -156,5 +159,6 @@
         private Controls.TextBoxData sourceFileNameData;
         private Controls.TextBoxData sourceFileDate;
         private ErrorProvider errorProvider;
+        private BindingSource bindingSource;
     }
 }

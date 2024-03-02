@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.NameSpace;
+﻿using DataDictionary.BusinessLayer.NameScope;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Entity;
@@ -46,7 +46,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         public bool BindDataCore()
         {
-            bindingEntity.DataSource = new BindingView<DomainEntityItem>(Program.Data.DomainEntities, w => DataKey.Equals(w));
+            bindingEntity.DataSource = new BindingView<DomainEntityItem>(BusinessData.DomainModel.Entities, w => DataKey.Equals(w));
             bindingEntity.Position = 0;
             bindingEntity.CurrentItemChanged += DataChanged;
 
@@ -59,7 +59,7 @@ namespace DataDictionary.Main.Forms.Domain
 
                 bindingProperties.DataSource =
                     new BindingView<DomainEntityPropertyItem>(
-                        Program.Data.DomainEntityProperties,
+                        BusinessData.DomainModel.Entities.Properties,
                         w => DataKey.Equals(w));
                 propertyNavigation.AutoGenerateColumns = false;
                 propertyNavigation.DataSource = bindingProperties;
@@ -75,10 +75,10 @@ namespace DataDictionary.Main.Forms.Domain
                 propertyDefinitionData.Enabled = false;
 
                 if (bindingProperties.Current is DomainEntityPropertyItem propItem
-                    && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)
+                    && BusinessData.ApplicationData.Properties.FirstOrDefault(w => w.PropertyId == propItem.PropertyId) is PropertyItem property)
                 { BindChoiceData(property, propItem); }
 
-                bindingAlias.DataSource = new BindingView<DomainEntityAliasItem>(Program.Data.DomainEntityAliases, w => DataKey.Equals(w));
+                bindingAlias.DataSource = new BindingView<DomainEntityAliasItem>(BusinessData.DomainModel.Entities.Aliases, w => DataKey.Equals(w));
                 aliasData.AutoGenerateColumns = false;
                 aliasData.DataSource = bindingAlias;
 
@@ -167,7 +167,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void bindingAlias_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (modelAliasNavigation.SelectedAlias is ModelNameSpaceItem selected)
+            if (modelAliasNavigation.SelectedAlias is NameScopeItem selected)
             {
                 DomainEntityAliasItem newItem = new DomainEntityAliasItem(DataKey);
                 newItem.AliasName = modelAliasNavigation.SelectedAlias.MemberFullName;
@@ -197,7 +197,7 @@ namespace DataDictionary.Main.Forms.Domain
 
             if (propertyTypeData.SelectedItem is PropertyNameItem selected
                 && bindingProperties.Current is DomainEntityPropertyItem currentRow
-                && Program.Data.Properties.FirstOrDefault(w => w.PropertyId == selected.PropertyId) is PropertyItem property)
+                && BusinessData.ApplicationData.Properties.FirstOrDefault(w => w.PropertyId == selected.PropertyId) is PropertyItem property)
             { BindChoiceData(property, currentRow); }
         }
 
@@ -299,9 +299,9 @@ namespace DataDictionary.Main.Forms.Domain
                 this.IsLocked(true);
                 DomainEntityKey key = new DomainEntityKey(data);
 
-                Program.Data.DomainEntityProperties.Remove(key);
-                Program.Data.DomainEntityAliases.Remove(key);
-                Program.Data.DomainEntities.Remove(data);
+                BusinessData.DomainModel.Entities.Properties.Remove(key);
+                BusinessData.DomainModel.Entities.Aliases.Remove(key);
+                BusinessData.DomainModel.Entities.Remove(data);
             }
         }
 

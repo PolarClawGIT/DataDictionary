@@ -13,6 +13,7 @@ namespace DataDictionary.BusinessLayer
     /// <summary>
     /// Model part of the 
     /// </summary>
+    [Obsolete("To be replaced with BusinessLayerData")]
     public interface IModel
     {
         /// <summary>
@@ -49,6 +50,7 @@ namespace DataDictionary.BusinessLayer
     /// Forms need to connect to the Key for the data object they are presenting.
     /// If the data should change, the Forms need to reset the bindings and get new data from this object.
     /// </remarks>
+    [Obsolete("To be replaced with BusinessLayerData")]
     public partial class ModelData : IModel
     {
         // Model
@@ -159,7 +161,7 @@ namespace DataDictionary.BusinessLayer
 
             work.AddRange(this.RemoveModel());
             work.AddRange(this.RemoveNameSpace());
-            work.AddRange(this.LoadModelData(factory, key));
+            //work.AddRange(this.LoadModelData(factory, key));
             work.AddRange(this.LoadDomain(factory, key));
             work.AddRange(this.LoadCatalog(factory, key));
             work.AddRange(this.LoadLibrary(factory, key));
@@ -179,7 +181,7 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
             ModelKey key = new ModelKey(modelKey);
 
-            work.AddRange(this.SaveModelData(factory, key));
+            //work.AddRange(this.SaveModelData(factory, key));
             work.AddRange(this.SaveDomain(factory, key));
             work.AddRange(this.SaveCatalog(factory, key));
             work.AddRange(this.SaveLibrary(factory, key));
@@ -232,6 +234,7 @@ namespace DataDictionary.BusinessLayer
     /// <summary>
     /// Extension Method for the Model Data.
     /// </summary>
+    [Obsolete("To be replaced with BusinessLayerData")]
     public static class ModelDataExtension
     {
         /// <summary>

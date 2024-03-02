@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     public abstract class LibraryMemberCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<ILibrarySourceKey>,
         IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>,
-        IRemoveData<LibrarySourceKey>, IRemoveData<LibrarySourceKeyName>
+        IRemoveItem<ILibrarySourceKey>, IRemoveItem<ILibrarySourceKeyName>
         where TItem : BindingTableRow, ILibraryMemberItem, ILibrarySourceKey, ILibrarySourceKeyName, new()
     {
         /// <inheritdoc/>
@@ -55,19 +55,21 @@ namespace DataDictionary.DataLayer.LibraryData.Member
             command.CommandText = "[App_DataDictionary].[procSetLibraryMember]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@LibraryId", parameters.libraryId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeLibraryMember]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.libraryId is null || w.LibraryId == parameters.libraryId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeLibraryMember]", data);
             return command;
         }
 
         /// <inheritdoc/>
-        public void Remove(LibrarySourceKey libraryKey)
+        public virtual void Remove(ILibrarySourceKey libraryKey)
         {
             foreach (TItem item in this.Where(w => libraryKey.Equals(w)).ToList())
             { base.Remove(item); }
         }
 
         /// <inheritdoc/>
-        public void Remove(LibrarySourceKeyName libraryKey)
+        public virtual void Remove(ILibrarySourceKeyName libraryKey)
         {
             foreach (TItem item in this.Where(w => libraryKey.Equals(w)).ToList())
             { base.Remove(item); }

@@ -24,40 +24,40 @@ Begin Try
 		[AttributeId]       UniqueIdentifier Not Null,
 		[AliasId]           UniqueIdentifier Not Null,
 		[ScopeId]           Int Not Null,
-		[AliasElement]		[App_DataDictionary].[typeAliasElement] Not Null,
-		[AliasName]			[App_DataDictionary].[typeAliasName] Not Null,
-		[ParentAliasName]	[App_DataDictionary].[typeAliasElement] Null
+		[AliasElement]		[App_DataDictionary].[typeNameSpaceMember] Not Null,
+		[AliasName]			[App_DataDictionary].[typeNameSpacePath] Not Null,
+		[ParentAliasName]	[App_DataDictionary].[typeNameSpaceMember] Null
 		Primary Key ([AttributeId], [AliasId]))
 
 	Declare @Alias Table (
 		[AliasId]           UniqueIdentifier Not Null,
-		[AliasElement]		[App_DataDictionary].[typeAliasElement] Not Null,
-		[AliasName]			[App_DataDictionary].[typeAliasName] Not Null,
-		[ParentAliasName]	[App_DataDictionary].[typeAliasElement] Null,
+		[AliasElement]		[App_DataDictionary].[typeNameSpaceMember] Not Null,
+		[AliasName]			[App_DataDictionary].[typeNameSpacePath] Not Null,
+		[ParentAliasName]	[App_DataDictionary].[typeNameSpaceMember] Null,
 		Primary Key ([AliasId]))
 
 	;With [Alias] As (
 		Select	I.[AliasId],
-				I.[AliasElement],
+				I.[AliasMember],
 				F.[AliasName],
 				F.[ParentAliasName]
 		From	[App_DataDictionary].[DomainAlias] I
 				Cross Apply [App_DataDictionary].[funcGetAliasName](I.[AliasId]) F),
 	[Data] As (	
 		Select	Coalesce(A.[AliasId],NewId()) As [AliasId],
-				N.[AliasElement],
-				N.[AliasName],
-				N.[ParentAliasName],
+				N.[NameSpaceMember] As [AliasElement],
+				N.[NameSpace] As [AliasName],
+				N.[ParentNameSpace] As [ParentAliasName],
 				Row_Number() Over (
 					Partition By 
 						IIF(A.[AliasId] is Null, 0,1),
-						A.[AliasId], N.[AliasName]
-					Order By N.[AliasName])
+						A.[AliasId], N.[NameSpace]
+					Order By N.[NameSpace])
 					As [RankIndex]
 		From	@Data D
-				Cross Apply [App_DataDictionary].[funcSplitAliasName](D.[AliasName]) N
+				Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[AliasName]) N
 				Left Join [Alias] A
-				On	N.[AliasName] = A.[AliasName])
+				On	N.[NameSpace] = A.[AliasName])
 	Insert Into @Alias
 	Select	[AliasId],
 			[AliasElement],
@@ -88,7 +88,7 @@ Begin Try
 	Insert Into [App_DataDictionary].[DomainAlias] (
 			[AliasId],
 			[ParentAliasId],
-			[AliasElement])
+			[AliasMember])
 	Select	V.[AliasId],
 			P.[AliasId] As [ParentAliasId],
 			V.[AliasElement]

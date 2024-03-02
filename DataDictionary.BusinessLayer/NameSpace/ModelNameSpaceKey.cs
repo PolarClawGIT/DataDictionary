@@ -12,11 +12,6 @@ using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.NameSpace
 {
@@ -52,8 +47,8 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// Constructor for the Model NameSpace Key, Application Help
         /// </summary>
         /// <param name="source"></param>
-        public ModelNameSpaceKey(IHelpKey source): this()
-        {   SystemId = source.HelpId ?? Guid.Empty; }
+        public ModelNameSpaceKey(IHelpKey source) : this()
+        { SystemId = source.HelpId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model NameSpace Key, Catalog
@@ -74,56 +69,56 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// </summary>
         /// <param name="source">A Database Table</param>
         public ModelNameSpaceKey(IDbTableKey source) : this()
-        {SystemId = source.TableId ?? Guid.Empty; }
+        { SystemId = source.TableId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model NameSpace Key, Column
         /// </summary>
         /// <param name="source">A Database Table Column</param>
         public ModelNameSpaceKey(IDbTableColumnKey source) : this()
-        {SystemId = source.ColumnId ?? Guid.Empty; }
+        { SystemId = source.ColumnId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model NameSpace Key, Domain
         /// </summary>
         /// <param name="source">A Database Domain</param>
         public ModelNameSpaceKey(IDbDomainKey source) : this()
-        {SystemId = source.DomainId ?? Guid.Empty; }
+        { SystemId = source.DomainId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model NameSpace Key, Routine
         /// </summary>
         /// <param name="source">A Database Routine</param>
         public ModelNameSpaceKey(IDbRoutineKey source) : this()
-        {SystemId = source.RoutineId ?? Guid.Empty; }
+        { SystemId = source.RoutineId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model NameSpace Key, Parameter
         /// </summary>
         /// <param name="source">A Database Routine Parameter</param>
         public ModelNameSpaceKey(IDbRoutineParameterKey source) : this()
-        {SystemId = source.ParameterId ?? Guid.Empty; }
+        { SystemId = source.ParameterId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model NameSpace Key, Constraint
         /// </summary>
         /// <param name="source">A Database Constraint</param>
         public ModelNameSpaceKey(IDbConstraintKey source) : this()
-        {SystemId = source.ConstraintId ?? Guid.Empty; }
+        { SystemId = source.ConstraintId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model NameSpace Key, Library
         /// </summary>
         /// <param name="source">A Library Source</param>
         public ModelNameSpaceKey(ILibrarySourceKey source) : this()
-        {SystemId = source.LibraryId ?? Guid.Empty; }
+        { SystemId = source.LibraryId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model NameSpace Key, Library Member
         /// </summary>
         /// <param name="source">A Library Member</param>
         public ModelNameSpaceKey(ILibraryMemberKey source) : this()
-        {SystemId = source.MemberId ?? Guid.Empty; }
+        { SystemId = source.MemberId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the Model NameSpace Key, Model
@@ -152,6 +147,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// <param name="source">A Library Member</param>
         public ModelNameSpaceKey(IDomainEntityKey source) : this()
         { SystemId = source.EntityId ?? Guid.Empty; }
+
+        /// <summary>
+        /// Constructor for the NameSpace Key
+        /// </summary>
+        /// <param name="source"></param>
+        /// <remarks>NameSpaces do not have a GUID of their own, so a new GUID is created.</remarks>
+        public ModelNameSpaceKey(INameSpaceKey source) : this()
+        { SystemId = Guid.NewGuid(); }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
@@ -203,11 +206,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        {
-            return HashCode.Combine(
-                base.GetHashCode(),
-                SystemId.GetHashCode());
-        }
+        { return SystemId.GetHashCode(); }
         #endregion
 
         /// <summary>

@@ -21,7 +21,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     public abstract class DbTableCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbSchemaKeyName>, IRemoveData<IDbTableKeyName>
+        IRemoveItem<IDbCatalogKey>, IRemoveItem<IDbSchemaKeyName>, IRemoveItem<IDbTableKeyName>
         where TItem : BindingTableRow, IDbTableItem, IDbCatalogKey, IDbSchemaKeyName, IDbTableKeyName, new()
     {
         /// <inheritdoc/>
@@ -70,12 +70,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             command.CommandText = "[App_DataDictionary].[procSetDatabaseTable]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseTable]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseTable]", data);
             return command;
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbCatalogKey catalogItem)
+        public virtual void Remove(IDbCatalogKey catalogItem)
         {
             DbCatalogKey key = new DbCatalogKey(catalogItem);
 
@@ -84,7 +86,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbSchemaKeyName schemaItem)
+        public virtual void Remove(IDbSchemaKeyName schemaItem)
         {
             DbSchemaKeyName key = new DbSchemaKeyName(schemaItem);
 
@@ -93,7 +95,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbTableKeyName tableItem)
+        public virtual void Remove(IDbTableKeyName tableItem)
         {
             DbTableKeyName key = new DbTableKeyName(tableItem);
 

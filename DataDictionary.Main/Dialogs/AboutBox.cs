@@ -29,7 +29,7 @@ namespace DataDictionary.Main.Dialogs
             Icon = Resources.Icon_Application;
             logoPictureBox.Image = Resources.Avatar;
             toolStrip.Hide(); // Hide base ToolStrip
-            Program.Worker.ProgressChanged += WorkerQueue_ProgressChanged;
+            Worker.ProgressChanged += WorkerQueue_ProgressChanged;
         }
 
         private void WorkerQueue_ProgressChanged(object? sender, WorkerProgressChangedEventArgs e)

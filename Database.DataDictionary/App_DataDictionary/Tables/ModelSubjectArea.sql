@@ -2,7 +2,8 @@
 (
 	[SubjectAreaId]          UniqueIdentifier NOT NULL CONSTRAINT [DF_ModelSubjectAreaId] DEFAULT (newsequentialid()),
 	[ModelId]                UniqueIdentifier NOT NULL,
-	--[SubjectAreaParentId]    UniqueIdentifier NULL,
+	[SubjectAreaParentId]    UniqueIdentifier NULL,
+	[SubjectAreaMember]      [App_DataDictionary].[typeNameSpaceMember] Not Null, -- Used to Create a NameSpace for the Model
 	[SubjectAreaTitle]       [App_DataDictionary].[typeTitle] NOT NULL,
 	[SubjectAreaDescription] [App_DataDictionary].[typeDescription] NULL,
 	-- TODO: Add System Version later once the schema is locked down
@@ -13,9 +14,12 @@
 	-- Keys
 	CONSTRAINT [PK_ModelSubjectArea] PRIMARY KEY CLUSTERED ([SubjectAreaId] ASC),
 	CONSTRAINT [UK_ModelSubjectArea] UNIQUE ([ModelId] ASC, [SubjectAreaId] ASC), -- FK's go to this.
-	--CONSTRAINT [FK_ModelSubjectAreaParent] FOREIGN KEY ([ModelId], [SubjectAreaParentId]) REFERENCES [App_DataDictionary].[ModelSubjectArea] ([ModelId], [SubjectAreaId]),
+	CONSTRAINT [FK_ModelSubjectAreaParent] FOREIGN KEY ([ModelId], [SubjectAreaParentId]) REFERENCES [App_DataDictionary].[ModelSubjectArea] ([ModelId], [SubjectAreaId]),
 )
 GO
-CREATE UNIQUE INDEX [AK_DomainSubjectArea]
+CREATE UNIQUE INDEX [AK_ModelSubjectArea]
     ON [App_DataDictionary].[ModelSubjectArea]([ModelId] ASC, [SubjectAreaTitle] ASC)
+GO
+CREATE UNIQUE INDEX [AK_ModelSubjectAreaMember]
+    ON [App_DataDictionary].[ModelSubjectArea]([ModelId] ASC, [SubjectAreaParentId] ASC, [SubjectAreaMember] ASC)
 GO

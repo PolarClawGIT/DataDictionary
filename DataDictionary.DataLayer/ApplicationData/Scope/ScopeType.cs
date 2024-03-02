@@ -48,6 +48,11 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         ModelEntity,
 
         /// <summary>
+        /// NameSpace item for the Model
+        /// </summary>
+        ModelNameSpace,
+
+        /// <summary>
         /// .Net Library
         /// </summary>
         Library,

@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     public abstract class DbConstraintColumnCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDbCatalogKey>, IReadSchema<IDbCatalogKey>,
         IWriteData<IModelKey>, IWriteData<IDbCatalogKey>,
-        IRemoveData<IDbCatalogKey>, IRemoveData<IDbConstraintKeyName>
+        IRemoveItem<IDbCatalogKey>, IRemoveItem<IDbConstraintKeyName>
         where TItem : BindingTableRow, IDbConstraintColumnItem, IDbCatalogKey, IDbConstraintKeyName, new()
     {
         /// <inheritdoc/>
@@ -70,12 +70,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
             command.CommandText = "[App_DataDictionary].[procSetDatabaseConstraintColumn]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@CatalogId", parameters.catalogId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseConstraintColumn]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.catalogId is null || w.CatalogId == parameters.catalogId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDatabaseConstraintColumn]", data);
             return command;
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbCatalogKey catalogItem)
+        public virtual void Remove(IDbCatalogKey catalogItem)
         {
             DbCatalogKey key = new DbCatalogKey(catalogItem);
 
@@ -84,7 +86,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         }
 
         /// <inheritdoc/>
-        public void Remove(IDbConstraintKeyName constraintItem)
+        public virtual void Remove(IDbConstraintKeyName constraintItem)
         {
             DbConstraintKeyName key = new DbConstraintKeyName(constraintItem);
 

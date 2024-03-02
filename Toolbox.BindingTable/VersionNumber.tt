@@ -5,9 +5,10 @@
 // 
 using System.Reflection;
 
-[assembly: AssemblyVersion("1.0.<#= this.RevisionYear #>.<#= this.RevisionDay #>")]
-[assembly: AssemblyFileVersion("1.0.<#= this.RevisionYear #>.<#= this.RevisionDay #>")]
+[assembly: AssemblyVersion("1.0.<#= this.RevisionYear #>.<#= this.RevisionMonth #>")]
+[assembly: AssemblyFileVersion("1.0.<#= this.RevisionYear #>.<#= this.RevisionMonth #>")]
 <#+
     int RevisionYear = DateTime.UtcNow.Year;
+    int RevisionMonth = DateTime.UtcNow.Month;
     int RevisionDay = DateTime.UtcNow.DayOfYear;
 #>

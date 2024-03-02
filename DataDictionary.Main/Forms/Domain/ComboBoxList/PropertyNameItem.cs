@@ -23,7 +23,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             BindingList<PropertyNameItem> list = new BindingList<PropertyNameItem>();
             list.Add(new PropertyNameItem() { PropertyId = Guid.Empty, PropertyTitle = "(select property Type)" });
 
-            foreach (PropertyItem item in Program.Data.Properties)
+            foreach (PropertyItem item in BusinessData.ApplicationData.Properties)
             {
                 if (item.PropertyId is Guid propertyId && item.PropertyTitle is String propertyTitle)
                 { list.Add(new PropertyNameItem() { PropertyId = propertyId, PropertyTitle = propertyTitle }); }
@@ -40,7 +40,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             BindingList<PropertyNameItem> list = new BindingList<PropertyNameItem>();
             list.Add(new PropertyNameItem() { PropertyId = Guid.Empty, PropertyTitle = "(select property Type)" });
 
-            foreach (PropertyItem item in Program.Data.Properties)
+            foreach (PropertyItem item in BusinessData.ApplicationData.Properties)
             {
                 if (item.PropertyId is Guid propertyId && item.PropertyTitle is String propertyTitle)
                 { list.Add(new PropertyNameItem() { PropertyId = propertyId, PropertyTitle = propertyTitle }); }

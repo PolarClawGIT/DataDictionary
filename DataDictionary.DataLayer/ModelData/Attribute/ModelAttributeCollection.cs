@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.DomainData.Attribute;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -15,10 +16,9 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class ModelAttributeCollection<TItem> : BindingTable<TItem>,
-        IReadData<IModelKey>, IReadData<IModelAttributeKey>,
-        IWriteData<IModelKey>, IWriteData<IModelAttributeKey>,
-        IDeleteData<IModelKey>, IDeleteData<IModelAttributeKey>,
-        IRemoveData<IModelAttributeKey>
+        IReadData<IModelKey>, IReadData<IModelAttributeKey>, IReadData<IDomainAttributeKey>,
+        IWriteData<IModelKey>, IWriteData<IModelAttributeKey>, IWriteData<IDomainAttributeKey>,
+        IRemoveItem<IModelAttributeKey>, IRemoveItem<IDomainAttributeKey>
         where TItem : BindingTableRow, IModelAttributeKey, new()
     {
         /// <inheritdoc/>
@@ -29,6 +29,9 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
         public Command LoadCommand(IConnection connection, IModelAttributeKey key)
         { return LoadCommand(connection, (null, key.AttributeId, null)); }
 
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IDomainAttributeKey key)
+        { return LoadCommand(connection, (null, key.AttributeId, null)); }
 
         Command LoadCommand(IConnection connection, (Guid? modelId, Guid? attributeId, Guid? subjectId) parameters)
         {
@@ -49,6 +52,10 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
         public Command SaveCommand(IConnection connection, IModelAttributeKey key)
         { return SaveCommand(connection, (null, key.AttributeId)); }
 
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, IDomainAttributeKey key)
+        { return SaveCommand(connection, (null, key.AttributeId)); }
+
         Command SaveCommand(IConnection connection, (Guid? modelId, Guid? attributeId) parameters)
         {
             Command command = connection.CreateCommand();
@@ -56,33 +63,25 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
             command.CommandText = "[App_DataDictionary].[procSetModelAttribute]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@AttributeId", parameters.attributeId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeModelAttribute]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.attributeId is null || w.AttributeId == parameters.attributeId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeModelAttribute]", data);
             return command;
         }
 
         /// <inheritdoc/>
-        public Command DeleteCommand(IConnection connection, IModelKey key)
-        { return DeleteCommand(connection, (key.ModelId, null)); }
-
-        /// <inheritdoc/>
-        public Command DeleteCommand(IConnection connection, IModelAttributeKey key)
-        { return DeleteCommand(connection, (null, key.AttributeId)); }
-
-        Command DeleteCommand(IConnection connection, (Guid? modelId, Guid? attributeId) parameters)
-        {
-            Command command = connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetModelSubjectArea]";
-            command.AddParameter("@ModelId", parameters.modelId);
-            command.AddParameter("@AttributeId", parameters.attributeId);
-
-            return command;
-        }
-
-        /// <inheritdoc/>
-        public void Remove(IModelAttributeKey modelAttributeItem)
+        public virtual void Remove(IModelAttributeKey modelAttributeItem)
         {
             ModelAttributeKey key = new ModelAttributeKey(modelAttributeItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
+        public virtual void Remove(IDomainAttributeKey domainAttributeItem)
+        {
+            DomainAttributeKey key = new DomainAttributeKey(domainAttributeItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

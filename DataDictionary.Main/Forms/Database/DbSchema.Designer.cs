@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            TableLayoutPanel dbSchemaLayout;
+            TableLayoutPanel scheamLayout;
             extendedPropertiesData = new DataGridView();
             propertyNameData = new DataGridViewTextBoxColumn();
             propertyValueData = new DataGridViewTextBoxColumn();
@@ -37,31 +37,15 @@
             schemaNameData = new Controls.TextBoxData();
             isSystemData = new CheckBox();
             errorProvider = new ErrorProvider(components);
-            dbSchemaLayout = new TableLayoutPanel();
-            dbSchemaLayout.SuspendLayout();
+            bindingSchema = new BindingSource(components);
+            bindingProperties = new BindingSource(components);
+            scheamLayout = new TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
+            scheamLayout.SuspendLayout();
             SuspendLayout();
-            // 
-            // dbSchemaLayout
-            // 
-            dbSchemaLayout.ColumnCount = 2;
-            dbSchemaLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            dbSchemaLayout.ColumnStyles.Add(new ColumnStyle());
-            dbSchemaLayout.Controls.Add(extendedPropertiesData, 0, 2);
-            dbSchemaLayout.Controls.Add(catalogNameData, 0, 0);
-            dbSchemaLayout.Controls.Add(schemaNameData, 0, 1);
-            dbSchemaLayout.Controls.Add(isSystemData, 1, 1);
-            dbSchemaLayout.Dock = DockStyle.Fill;
-            dbSchemaLayout.Location = new Point(0, 0);
-            dbSchemaLayout.Name = "dbSchemaLayout";
-            dbSchemaLayout.RowCount = 3;
-            dbSchemaLayout.RowStyles.Add(new RowStyle());
-            dbSchemaLayout.RowStyles.Add(new RowStyle());
-            dbSchemaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            dbSchemaLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            dbSchemaLayout.Size = new Size(384, 311);
-            dbSchemaLayout.TabIndex = 0;
             // 
             // extendedPropertiesData
             // 
@@ -69,13 +53,12 @@
             extendedPropertiesData.AllowUserToDeleteRows = false;
             extendedPropertiesData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             extendedPropertiesData.Columns.AddRange(new DataGridViewColumn[] { propertyNameData, propertyValueData });
-            dbSchemaLayout.SetColumnSpan(extendedPropertiesData, 2);
+            scheamLayout.SetColumnSpan(extendedPropertiesData, 2);
             extendedPropertiesData.Dock = DockStyle.Fill;
             extendedPropertiesData.Location = new Point(3, 103);
             extendedPropertiesData.Name = "extendedPropertiesData";
             extendedPropertiesData.ReadOnly = true;
-            extendedPropertiesData.RowTemplate.Height = 25;
-            extendedPropertiesData.Size = new Size(378, 205);
+            extendedPropertiesData.Size = new Size(404, 180);
             extendedPropertiesData.TabIndex = 4;
             // 
             // propertyNameData
@@ -98,14 +81,14 @@
             // catalogNameData
             // 
             catalogNameData.AutoSize = true;
-            dbSchemaLayout.SetColumnSpan(catalogNameData, 2);
+            scheamLayout.SetColumnSpan(catalogNameData, 2);
             catalogNameData.Dock = DockStyle.Fill;
             catalogNameData.HeaderText = "Catalog Name";
             catalogNameData.Location = new Point(3, 3);
             catalogNameData.Multiline = false;
             catalogNameData.Name = "catalogNameData";
             catalogNameData.ReadOnly = true;
-            catalogNameData.Size = new Size(378, 44);
+            catalogNameData.Size = new Size(404, 44);
             catalogNameData.TabIndex = 6;
             // 
             // schemaNameData
@@ -117,14 +100,14 @@
             schemaNameData.Multiline = false;
             schemaNameData.Name = "schemaNameData";
             schemaNameData.ReadOnly = true;
-            schemaNameData.Size = new Size(297, 44);
+            schemaNameData.Size = new Size(323, 44);
             schemaNameData.TabIndex = 7;
             // 
             // isSystemData
             // 
             isSystemData.AutoCheck = false;
             isSystemData.AutoSize = true;
-            isSystemData.Location = new Point(306, 53);
+            isSystemData.Location = new Point(332, 53);
             isSystemData.Name = "isSystemData";
             isSystemData.Size = new Size(75, 19);
             isSystemData.TabIndex = 5;
@@ -135,20 +118,43 @@
             // 
             errorProvider.ContainerControl = this;
             // 
+            // scheamLayout
+            // 
+            scheamLayout.ColumnCount = 2;
+            scheamLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            scheamLayout.ColumnStyles.Add(new ColumnStyle());
+            scheamLayout.Controls.Add(isSystemData, 1, 1);
+            scheamLayout.Controls.Add(extendedPropertiesData, 0, 2);
+            scheamLayout.Controls.Add(catalogNameData, 0, 0);
+            scheamLayout.Controls.Add(schemaNameData, 0, 1);
+            scheamLayout.Dock = DockStyle.Fill;
+            scheamLayout.Location = new Point(0, 25);
+            scheamLayout.Name = "scheamLayout";
+            scheamLayout.RowCount = 3;
+            scheamLayout.RowStyles.Add(new RowStyle());
+            scheamLayout.RowStyles.Add(new RowStyle());
+            scheamLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            scheamLayout.Size = new Size(410, 286);
+            scheamLayout.TabIndex = 1;
+            // 
             // DbSchema
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(384, 311);
-            Controls.Add(dbSchemaLayout);
+            ClientSize = new Size(410, 311);
+            Controls.Add(scheamLayout);
             Name = "DbSchema";
             Text = "Database Schema";
             Load += DbSchema_Load;
-            dbSchemaLayout.ResumeLayout(false);
-            dbSchemaLayout.PerformLayout();
+            Controls.SetChildIndex(scheamLayout, 0);
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
+            scheamLayout.ResumeLayout(false);
+            scheamLayout.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -159,5 +165,7 @@
         private Controls.TextBoxData catalogNameData;
         private Controls.TextBoxData schemaNameData;
         private CheckBox isSystemData;
+        private BindingSource bindingSchema;
+        private BindingSource bindingProperties;
     }
 }

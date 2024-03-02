@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Copyright>© 2023 William Howard, All Rights Reserved</Copyright>
@@ -10,6 +10,12 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Application\NameSpace\**" />
+    <EmbeddedResource Remove="Application\NameSpace\**" />
+    <None Remove="Application\NameSpace\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="VersionNumber.cs">

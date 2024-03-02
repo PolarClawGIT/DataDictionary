@@ -19,7 +19,7 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
         IReadData<IModelKey>, IReadData<IModelSubjectAreaKey>,
         IWriteData<IModelKey>, IWriteData<IModelSubjectAreaKey>,
         IDeleteData<IModelKey>, IDeleteData<IModelSubjectAreaKey>,
-        IRemoveData<IModelSubjectAreaKey>
+        IRemoveItem<IModelSubjectAreaKey>
         where TItem : BindingTableRow, IModelSubjectAreaItem, new()
     {
         /// <inheritdoc/>
@@ -57,6 +57,8 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
             command.CommandText = "[App_DataDictionary].[procSetModelSubjectArea]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@SubjectAreaId", parameters.subjectAreaId);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.subjectAreaId is null || w.SubjectAreaId == parameters.subjectAreaId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeModelSubjectArea]", this);
             return command;
         }
@@ -81,7 +83,7 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
         }
 
         /// <inheritdoc/>
-        public void Remove(IModelSubjectAreaKey subjectAreaItem)
+        public virtual void Remove(IModelSubjectAreaKey subjectAreaItem)
         {
             ModelSubjectAreaKey key = new ModelSubjectAreaKey(subjectAreaItem);
 

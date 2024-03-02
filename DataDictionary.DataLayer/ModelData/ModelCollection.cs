@@ -14,9 +14,13 @@ namespace DataDictionary.DataLayer.ModelData
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class ModelCollection<TItem> : BindingTable<TItem>, IReadData, IReadData<IModelKey>, IWriteData, IDeleteData<IModelKey>, IValidateList<ModelItem>
+    public abstract class ModelCollection<TItem> : BindingTable<TItem>,
+        IReadData, IReadData<IModelKey>,
+        IWriteData, IWriteData<IModelKey>,
+        IDeleteData<IModelKey>, IValidateList<ModelItem>
         where TItem : ModelItem, new()
-    {         /// <inheritdoc/>
+    {         
+        /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelIdentifier)
         { return LoadCommand(connection, (modelIdentifier.ModelId, null, true)); }
 
@@ -40,39 +44,25 @@ namespace DataDictionary.DataLayer.ModelData
             return command;
         }
 
-        /// <summary>
-        /// Saves the Model(s) to the Database.
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
+        { return SaveCommand(connection); }
+
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection, IModelKey key)
+        { return SaveCommand(connection, key.ModelId); }
+
+        Command SaveCommand(IConnection connection, Guid? modelId)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetModel]";
-            command.AddParameter("@Data", "[App_DataDictionary].[typeModel]", this);
+            command.AddParameter("@ModelId", modelId);
+
+            IEnumerable<TItem> data = this.Where(w => modelId is null || w.ModelId == modelId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeModel]", data);
 
             return command;
-        }
-
-        /// <summary>
-        /// Saves a single Model to the Database.
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public Command SaveCommand(IConnection connection, ModelItem item)
-        {
-            using (BindingTable<ModelItem> source = new BindingTable<ModelItem>() { item })
-            {
-                Command command = connection.CreateCommand();
-                command.CommandType = CommandType.StoredProcedure;
-                command.CommandText = "[App_DataDictionary].[procSetModel]";
-                command.AddParameter("@ModelId", item.ModelId);
-                command.AddParameter("@Data", "[App_DataDictionary].[typeModel]", source);
-
-                return command;
-            }
         }
 
         /// <summary>
@@ -105,6 +95,8 @@ namespace DataDictionary.DataLayer.ModelData
 
             return result;
         }
+
+
     }
 
     /// <summary>

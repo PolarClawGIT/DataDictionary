@@ -33,7 +33,10 @@ namespace DataDictionary.Main.Controls
         //https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms533049(v=vs.85)?redirectedfrom=MSDN
 
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         public void Cut() { webBrowser.Document.ExecCommand("CUT", false, null); }
+
 
         public void Copy() { webBrowser.Document.ExecCommand("COPY", false, null); }
 
@@ -47,11 +50,14 @@ namespace DataDictionary.Main.Controls
         { webBrowser.Document.ExecCommand("BOLD", false, null); }
 
         private void toolStripItalic_Click(object sender, EventArgs e)
+
         { webBrowser.Document.ExecCommand("ITALIC", false, null); }
+
 
         private void toolStripUnderline_Click(object sender, EventArgs e)
         { webBrowser.Document.ExecCommand("UNDERLINE", false, null); }
-
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         private void toolStripBulletList_Click(object sender, EventArgs e)
         {
 

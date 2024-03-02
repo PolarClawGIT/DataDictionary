@@ -184,13 +184,13 @@
     <Build Include="App_DataDictionary\Tables\DomainProcess.sql" />
     <Build Include="App_DataDictionary\Tables\DomainProcessProperty.sql" />
     <Build Include="App_DataDictionary\Tables\ModelProcess.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeAliasElement.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeNameSpaceMember.sql" />
     <Build Include="App_DataDictionary\Tables\ApplicationScope.sql" />
-    <Build Include="App_DataDictionary\Functions\funcSplitAliasName.sql" />
+    <Build Include="App_DataDictionary\Functions\funcSplitNameSpace.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseSchema_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseTable_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseRoutine_AK.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeAliasName.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeNameSpacePath.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeScopeName.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseTableColumn_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseRoutineParameter_AK.sql" />
@@ -229,6 +229,7 @@
     <Build Include="App_DataDictionary\User Defined Types\typeModelEntity.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetModelEntity.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetModelEntity.sql" />
+    <Build Include="App_DataDictionary\Functions\funcGetSubjectAreaName.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

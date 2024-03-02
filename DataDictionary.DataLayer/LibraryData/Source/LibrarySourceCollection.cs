@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
     public class LibrarySourceCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>, IReadData<ILibrarySourceKey>, 
         IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>,
-        IRemoveData<LibrarySourceKey>, IRemoveData<LibrarySourceKeyName>
+        IRemoveItem<ILibrarySourceKey>, IRemoveItem<ILibrarySourceKeyName>
         where TItem : BindingTableRow, ILibrarySourceItem, ILibrarySourceKey, ILibrarySourceKeyName,  new()
     {
         /// <inheritdoc/>
@@ -59,12 +59,14 @@ namespace DataDictionary.DataLayer.LibraryData.Source
             command.CommandText = "[App_DataDictionary].[procSetLibrarySource]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@LibraryId", parameters.libraryId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeLibrarySource]", this);
+
+            IEnumerable<TItem> data = this.Where(w => parameters.libraryId is null || w.LibraryId == parameters.libraryId);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeLibrarySource]", data);
             return command;
         }
 
         /// <inheritdoc/>
-        public void Remove(LibrarySourceKey libraryItem)
+        public virtual void Remove(ILibrarySourceKey libraryItem)
         {
             LibrarySourceKey key = new LibrarySourceKey(libraryItem);
 
@@ -73,7 +75,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
         }
 
         /// <inheritdoc/>
-        public void Remove(LibrarySourceKeyName libraryItem)
+        public virtual void Remove(ILibrarySourceKeyName libraryItem)
         {
             LibrarySourceKeyName key = new LibrarySourceKeyName(libraryItem);
 

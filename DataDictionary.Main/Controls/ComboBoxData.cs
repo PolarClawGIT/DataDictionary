@@ -32,11 +32,11 @@ namespace DataDictionary.Main.Controls
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Object DataSource { get { return comboBox.DataSource; } set { comboBox.DataSource = value; } }
+        public Object? DataSource { get { return comboBox.DataSource; } set { comboBox.DataSource = value; } }
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Object SelectedItem { get { return comboBox.SelectedItem; } set { comboBox.SelectedItem = value; } }
+        public Object? SelectedItem { get { return comboBox.SelectedItem; } set { comboBox.SelectedItem = value; } }
 
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

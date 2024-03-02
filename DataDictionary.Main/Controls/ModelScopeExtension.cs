@@ -15,52 +15,61 @@ namespace DataDictionary.Main.Controls
         /// </summary>
         /// <see cref="DataDictionary.DataLayer.ApplicationData.Scope.ScopeType"/>
         /// <see cref="DataDictionary.DataLayer.ApplicationData.Scope.ScopeKey"/>
-        static Dictionary<ScopeType, Image> images = new Dictionary<ScopeType, Image>()
+        static Dictionary<ScopeType, (Image image,Icon icon)> images = new Dictionary<ScopeType, (Image,Icon)>()
         {
-            {ScopeType.Null,                             Resources.UnknownMember },
-            {ScopeType.Library,                          Resources.Library },
-            {ScopeType.LibraryEvent,                     Resources.Event },
-            {ScopeType.LibraryField,                     Resources.Field },
-            {ScopeType.LibraryMethod,                    Resources.Method },
-            {ScopeType.LibraryNameSpace,                 Resources.Namespace },
-            {ScopeType.LibraryProperty,                  Resources.Property },
-            {ScopeType.LibraryParameter,                 Resources.Parameter },
-            {ScopeType.LibraryType,                      Resources.Class },
+            {ScopeType.Null,                             (Resources.UnknownMember, Resources.Icon_UnknownMember) },
+            {ScopeType.Library,                          (Resources.Library, Resources.Icon_Library) },
+            {ScopeType.LibraryEvent,                     (Resources.Event, Resources.Icon_UnknownMember) },
+            {ScopeType.LibraryField,                     (Resources.Field, Resources.Icon_Field) },
+            {ScopeType.LibraryMethod,                    (Resources.Method, Resources.Icon_Method) },
+            {ScopeType.LibraryNameSpace,                 (Resources.Namespace, Resources.Icon_Namespace) },
+            {ScopeType.LibraryProperty,                  (Resources.Property, Resources.Icon_Property) },
+            {ScopeType.LibraryParameter,                 (Resources.Parameter, Resources.Icon_Parameter) },
+            {ScopeType.LibraryType,                      (Resources.Class, Resources.Icon_Class) },
 
-            {ScopeType.Database,                         Resources.Database },
-            {ScopeType.DatabaseSchema,                   Resources.Schema },
-            {ScopeType.DatabaseFunction,                 Resources.ScalarFunction },
-            {ScopeType.DatabaseProcedure,                Resources.Procedure },
-            {ScopeType.DatabaseTable,                    Resources.Table },
-            {ScopeType.DatabaseDomain,                   Resources.Type },
-            {ScopeType.DatabaseView,                     Resources.View },
-            {ScopeType.DatabaseViewColumn,               Resources.Column },
-            {ScopeType.DatabaseTableColumn,              Resources.Column },
-            {ScopeType.DatabaseTableConstraint,          Resources.Key},
-            {ScopeType.DatabaseProcedureParameter,       Resources.Parameter },
-            {ScopeType.DatabaseFunctionParameter,        Resources.Parameter },
+            {ScopeType.Database,                         (Resources.Database, Resources.Icon_Database) },
+            {ScopeType.DatabaseSchema,                   (Resources.Schema, Resources.Icon_Schema) },
+            {ScopeType.DatabaseFunction,                 (Resources.ScalarFunction, Resources.Icon_ScalarFunction) },
+            {ScopeType.DatabaseProcedure,                (Resources.Procedure, Resources.Icon_Procedure) },
+            {ScopeType.DatabaseTable,                    (Resources.Table, Resources.Icon_Table) },
+            {ScopeType.DatabaseDomain,                   (Resources.DomainType, Resources.Icon_DomainType) },
+            {ScopeType.DatabaseView,                     (Resources.View, Resources.Icon_View) },
+            {ScopeType.DatabaseViewColumn,               (Resources.Column, Resources.Icon_Column) },
+            {ScopeType.DatabaseTableColumn,              (Resources.Column, Resources.Icon_Column) },
+            {ScopeType.DatabaseTableConstraint,          (Resources.Key, Resources.Icon_Key)},
+            {ScopeType.DatabaseProcedureParameter,       (Resources.Parameter, Resources.Icon_Parameter) },
+            {ScopeType.DatabaseFunctionParameter,        (Resources.Parameter, Resources.Icon_Parameter) },
 
-            {ScopeType.Model,                            Resources.SoftwareDefinitionModel },
-            {ScopeType.ModelSubjectArea,                 Resources.Diagram },
-            {ScopeType.ModelAttribute,                   Resources.Attribute },
-            {ScopeType.ModelEntity,                      Resources.Entity },
+            {ScopeType.Model,                            (Resources.SoftwareDefinitionModel, Resources.Icon_SoftwareDefinitionModel) },
+            {ScopeType.ModelSubjectArea,                 (Resources.Diagram, Resources.Icon_Diagram) },
+            {ScopeType.ModelAttribute,                   (Resources.Attribute, Resources.Icon_Attribute) },
+            {ScopeType.ModelEntity,                      (Resources.Entity, Resources.Icon_Entities) },
+            {ScopeType.ModelNameSpace,                   (Resources.Namespace, Resources.Icon_Namespace) },
 
         };
 
         public static Image ToImage(this ScopeType scope)
         {
             if (images.ContainsKey(scope))
-            { return images[scope]; }
+            { return images[scope].image; }
             else
-            { return images[ScopeType.Null]; }
+            { return images[ScopeType.Null].image; }
+        }
+
+        public static Icon ToIcon(this ScopeType scope)
+        {
+            if (images.ContainsKey(scope))
+            { return images[scope].icon; }
+            else
+            { return images[ScopeType.Null].icon; }
         }
 
         public static ImageList ToImageList()
         {
             ImageList result = new ImageList();
 
-            foreach (KeyValuePair<ScopeType, Image> item in images)
-            { result.Images.Add(item.Key.ToScopeName(), item.Value); }
+            foreach (KeyValuePair<ScopeType, (Image image, Icon icon)> item in images)
+            { result.Images.Add(item.Key.ToScopeName(), item.Value.image); }
 
             return result;
         }

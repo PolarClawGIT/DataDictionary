@@ -28,7 +28,7 @@ Begin Try
 		[MemberId]              UniqueIdentifier Not Null,
 		[LibraryId]             UniqueIdentifier Not Null,
 		[MemberParentId]        UniqueIdentifier Null,
-		[MemberName]            [App_DataDictionary].[typeAliasElement] Not Null,
+		[MemberName]            [App_DataDictionary].[typeNameSpaceMember] Not Null,
 		[ScopeId]               Int Not Null,
 		[MemberData]            XML Null,
 		Primary Key ([MemberId]))
@@ -36,9 +36,9 @@ Begin Try
 	Declare @NameSpace Table (
 		[MemberId]              UniqueIdentifier Not Null,
 		[LibraryId]             UniqueIdentifier Not Null,
-		[MemberName]		    [App_DataDictionary].[typeAliasElement] Not Null,
-		[NameSpace]             [App_DataDictionary].[typeAliasName] Not Null,
-		[ParentNameSpace]       [App_DataDictionary].[typeAliasName] Null,
+		[MemberName]		    [App_DataDictionary].[typeNameSpaceMember] Not Null,
+		[NameSpace]             [App_DataDictionary].[typeNameSpacePath] Not Null,
+		[ParentNameSpace]       [App_DataDictionary].[typeNameSpacePath] Null,
 		[ScopeId]               Int Not Null,
 		Primary Key ([MemberId]))
 
@@ -82,22 +82,22 @@ Begin Try
 	[Alias] As (
 		Select	Coalesce(D.[LibraryId], @LibraryId) As [LibraryId],
 				IIF(X.[IsBase] = 1, D.[MemberId], Null) As [MemberId],
-				X.[AliasElement] As [MemberName],
-				X.[AliasName] As [NameSpace],
-				X.[ParentAliasName] As [ParentNameSpace],
+				X.[NameSpaceMember] As [MemberName],
+				X.[NameSpace],
+				X.[ParentNameSpace],
 				S.[ScopeId],
 				Row_Number() Over (
 					Partition By 
 						Coalesce(D.[LibraryId], @LibraryId),
-						X.[AliasElement],
-						X.[AliasName]
+						X.[NameSpaceMember],
+						X.[NameSpace]
 					Order By
-						X.[AliasElement],
-						X.[AliasName],
+						X.[NameSpaceMember],
+						X.[NameSpace],
 						X.[IsBase] Desc)
 					As [RankIndex]
 		From	@Data D
-				Cross Apply [App_DataDictionary].[funcSplitAliasName] (
+				Cross Apply [App_DataDictionary].[funcSplitNameSpace] (
 					IIF(D.[NameSpace] is Null, D.[MemberName], FormatMessage('%s.%s',D.[NameSpace], D.[MemberName]))) X
 				Left Join @Data P
 				On	Coalesce(D.[LibraryId], @LibraryId) = Coalesce(P.[LibraryId], @LibraryId) And
@@ -150,13 +150,13 @@ Begin Try
 		Select	Coalesce(D.[LibraryId], @LibraryId) As [LibraryId],
 				D.[MemberId],
 				D.[MemberParentId],
-				X.[ParentAliasName] As [ParentNameSpace],
-				X.[AliasName] As [NameSpace],
-				X.[AliasElement] As [MemberName],
+				X.[ParentNameSpace],
+				X.[NameSpace],
+				X.[NameSpaceMember] As [MemberName],
 				S.[ScopeId],
 				D.[MemberData]
 		From	@Data D
-				Cross Apply [App_DataDictionary].[funcSplitAliasName] (
+				Cross Apply [App_DataDictionary].[funcSplitNameSpace] (
 					IIF(D.[NameSpace] is Null, D.[MemberName],
 						FormatMessage('%s.%s',D.[NameSpace], D.[MemberName]))) X
 				Left Join [Scope] S
