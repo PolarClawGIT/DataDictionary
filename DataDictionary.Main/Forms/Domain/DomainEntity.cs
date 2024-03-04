@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+﻿using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
@@ -25,21 +26,11 @@ namespace DataDictionary.Main.Forms.Domain
         {
             InitializeComponent();
             newItemCommand.Click += NewItemCommand_Click;
-        }
 
-        private void NewItemCommand_Click(object? sender, EventArgs e)
-        {
-            if (detailTabLayout.TabPages[detailTabLayout.SelectedIndex] == propertyTab)
-            {
-                bindingProperty.AddNew();
-                domainProperty.RefreshControls();
-            }
-            else if (detailTabLayout.TabPages[detailTabLayout.SelectedIndex] == aliasTab)
-            {
-                bindingAlias.AddNew();
-                domainAlias.RefreshControls();
-            }
-            else { }
+            deleteItemCommand.Enabled = true;
+            deleteItemCommand.Image = Resources.DeleteAttribute;
+            deleteItemCommand.Click += DeleteItemCommand_Click;
+            deleteItemCommand.ToolTipText = "Delete Attribute";
         }
 
         public DomainEntity(IDomainEntityItem entityItem) :this()
@@ -80,6 +71,30 @@ namespace DataDictionary.Main.Forms.Domain
             domainAlias.BindData(bindingAlias);
 
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingEntity.Current is not IDomainEntityItem);
+        }
+
+        private void NewItemCommand_Click(object? sender, EventArgs e)
+        {
+            if (detailTabLayout.TabPages[detailTabLayout.SelectedIndex] == propertyTab)
+            {
+                bindingProperty.AddNew();
+                domainProperty.RefreshControls();
+            }
+            else if (detailTabLayout.TabPages[detailTabLayout.SelectedIndex] == aliasTab)
+            {
+                bindingAlias.AddNew();
+                domainAlias.RefreshControls();
+            }
+            else { }
+        }
+
+        private void DeleteItemCommand_Click(object? sender, EventArgs e)
+        {
+            if (bindingEntity.Current is IDomainEntityItem current)
+            {
+                BusinessData.DomainModel.Entities.Remove(current);
+                BusinessData.NameScope.Remove(new NameScopeKey(current));
+            }
         }
 
         private void DetailTabLayout_SelectedIndexChanged(object sender, EventArgs e)

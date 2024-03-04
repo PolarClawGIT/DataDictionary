@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+﻿using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
@@ -18,7 +19,14 @@ namespace DataDictionary.Main.Forms.Domain
         {
             InitializeComponent();
             newItemCommand.Click += NewItemCommand_Click;
+
+            deleteItemCommand.Enabled = true;
+            deleteItemCommand.Image = Resources.DeleteAttribute;
+            deleteItemCommand.Click += DeleteItemCommand_Click;
+            deleteItemCommand.ToolTipText = "Delete Attribute";
         }
+
+
 
         public DomainAttribute(IDomainAttributeItem attributeItem) : this()
         {
@@ -83,6 +91,15 @@ namespace DataDictionary.Main.Forms.Domain
                 domainAlias.RefreshControls();
             }
             else { }
+        }
+
+        private void DeleteItemCommand_Click(object? sender, EventArgs e)
+        {
+            if (bindingAttribute.Current is IDomainAttributeItem current)
+            {
+                BusinessData.DomainModel.Attributes.Remove(current);
+                BusinessData.NameScope.Remove(new NameScopeKey(current));
+            }
         }
 
         private void DetailTabLayout_SelectedIndexChanged(object sender, EventArgs e)
