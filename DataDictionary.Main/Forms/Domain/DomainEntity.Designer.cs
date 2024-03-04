@@ -358,7 +358,6 @@
         private BindingSource bindingAlias;
         private BindingSource bindingProperty;
         private BindingSource bindingEntity;
-        private TableLayoutPanel detailsLayout;
         private DataDictionary.Main.Controls.ComboBoxData typeOfEntityData;
     }
 }

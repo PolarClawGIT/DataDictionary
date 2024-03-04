@@ -207,7 +207,7 @@ namespace DataDictionary.Main.Forms.Library
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
 
-                LibrarySourceKey key = new LibrarySourceKey(item);
+                ILibrarySourceKey key = new LibrarySourceKey(item);
                 work.Add(factory.OpenConnection());
                 Boolean inModelList = (BusinessData.LibraryModel.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
 
@@ -216,7 +216,11 @@ namespace DataDictionary.Main.Forms.Library
                     work.AddRange(BusinessData.LibraryModel.Remove(key));
                     work.AddRange(BusinessData.LibraryModel.Save(factory, key));
                 }
-                else { work.AddRange(dbData.DeleteLibrary(factory, key)); }
+                else
+                {
+                    work.Add(new WorkItem() { DoWork = () => { dbData.Remove(key); } });
+                    work.Add(factory.CreateSave(dbData, key));
+                }
 
                 work.AddRange(LoadLocalData(factory));
                 DoLocalWork(work);
@@ -253,11 +257,13 @@ namespace DataDictionary.Main.Forms.Library
             {
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                LibrarySourceKey key = new LibrarySourceKey(item);
+                ILibrarySourceKey key = new LibrarySourceKey(item);
                 work.Add(factory.OpenConnection());
 
-                if (inModelList) { work.AddRange(BusinessData.LibraryModel.Save(factory, key)); }
-                else { work.AddRange(dbData.SaveLibrary(factory, key)); }
+                if (inModelList)
+                { work.AddRange(BusinessData.LibraryModel.Save(factory, key)); }
+                else
+                { work.Add(factory.CreateSave(dbData, key)); }
 
                 work.AddRange(LoadLocalData(factory));
 
@@ -269,7 +275,7 @@ namespace DataDictionary.Main.Forms.Library
         {
             List<WorkItem> work = new List<WorkItem>();
             work.Add(new WorkItem() { WorkName = "Clear local data", DoWork = dbData.Clear });
-            work.AddRange(dbData.LoadLibrary(factory));
+            work.Add(factory.CreateLoad(dbData));
 
             return work;
         }

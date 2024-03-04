@@ -120,7 +120,7 @@ namespace DataDictionary.Main.Forms.Model
             {
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                ModelKey key = new ModelKey(item);
+                IModelKey key = new ModelKey(item);
                 
                 work.Add(factory.OpenConnection());
 
@@ -129,7 +129,10 @@ namespace DataDictionary.Main.Forms.Model
                     work.AddRange(BusinessData.Remove());
                     work.AddRange(BusinessData.Save(factory, key));
                 }
-                else { work.AddRange(dbData.DeleteModel(factory, key)); }
+                else {
+                    work.Add(new WorkItem() { DoWork = () => dbData.Remove(key) });
+                    work.Add(factory.CreateSave(dbData, key));
+                }
 
                 DoLocalWork(work);
             }

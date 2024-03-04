@@ -120,7 +120,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             List<WorkItem> work = new List<WorkItem>();
             work.Add(new WorkItem() { WorkName = "Clear local data", DoWork = dbData.Clear });
-            work.AddRange(dbData.LoadCatalog(factory));
+            work.AddRange(factory.CreateLoad(dbData).ToList());
 
             return work;
         }
@@ -235,7 +235,7 @@ namespace DataDictionary.Main.Forms.Database
             {
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                DbCatalogKey key = new DbCatalogKey(item);
+                IDbCatalogKey key = new DbCatalogKey(item);
 
                 work.Add(factory.OpenConnection());
 
@@ -244,7 +244,11 @@ namespace DataDictionary.Main.Forms.Database
                     work.AddRange(BusinessData.DatabaseModel.Remove(key));
                     work.AddRange(BusinessData.DatabaseModel.Save(factory, key));
                 }
-                else { work.AddRange(dbData.DeleteCatalog(factory, key)); }
+                else
+                {
+                    work.Add(new WorkItem() { DoWork = () => { dbData.Remove(key); } });
+                    work.Add(factory.CreateSave(dbData, key));
+                }
 
                 work.AddRange(LoadLocalData(factory));
                 DoLocalWork(work);
@@ -259,7 +263,6 @@ namespace DataDictionary.Main.Forms.Database
             {
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                NameScopeKey scopeKey = new NameScopeKey(item);
                 List<NameScopeItem> names = new List<NameScopeItem>();
 
                 DbCatalogKey key = new DbCatalogKey(item);
@@ -280,12 +283,14 @@ namespace DataDictionary.Main.Forms.Database
             {
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
+                IDbCatalogKey key = new DbCatalogKey(item);
 
-                DbCatalogKey key = new DbCatalogKey(item);
                 work.Add(factory.OpenConnection());
 
-                if (inModelList) { work.AddRange(BusinessData.DatabaseModel.Save(factory, key)); }
-                else { work.AddRange(dbData.SaveCatalog(factory, key)); }
+                if (inModelList)
+                { work.AddRange(BusinessData.DatabaseModel.Save(factory, key)); }
+                else
+                { work.Add(factory.CreateSave(dbData, key)); }
 
                 work.AddRange(LoadLocalData(factory));
 

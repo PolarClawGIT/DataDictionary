@@ -198,9 +198,6 @@ namespace DataDictionary.Main
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         { SendMessage(new WindowsSelectAllCommand() { HandledBy = this.ActiveMdiChild }); }
 
-        private void extendedPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Dialogs.ViewTextTemplate()); }
-
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new ApplicationWide.ApplicationOptions()); }
         #endregion
