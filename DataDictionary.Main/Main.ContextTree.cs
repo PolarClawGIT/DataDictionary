@@ -278,11 +278,10 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Library.LibraryMember(memberItem), memberItem); }
 
         void Activate(DomainAttributeItem attributeItem)
-        //{ Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
         { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
 
         void Activate(DomainEntityItem entityItem)
-        { Activate((data) => new Forms.Domain.DomainEntity() { DataKey = new DomainEntityKey(entityItem) }, entityItem); }
+        { Activate((data) => new Forms.Domain.DomainEntity(entityItem), entityItem); }
 
         void Activate(ModelSubjectAreaItem subjectItem)
         { Activate((data) => new Forms.Domain.ModelSubjectArea(subjectItem) , subjectItem); }

@@ -60,9 +60,9 @@
             domainAlias = new Controls.DomainAlias();
             subjectAreaTab = new TabPage();
             entityTab = new TabPage();
-            mainBinding = new BindingSource(components);
-            propertyBinding = new BindingSource(components);
-            aliasBinding = new BindingSource(components);
+            bindingAttribute = new BindingSource(components);
+            bindingProperty = new BindingSource(components);
+            bindingAlias = new BindingSource(components);
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
@@ -76,9 +76,9 @@
             aliasTab.SuspendLayout();
             aliaseLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)aliasesData).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)mainBinding).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)propertyBinding).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)aliasBinding).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingProperty).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
             SuspendLayout();
             // 
             // mainLayout
@@ -305,15 +305,15 @@
             // propertyLayout
             // 
             propertyLayout.ColumnCount = 1;
-            propertyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            propertyLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             propertyLayout.Controls.Add(propertiesData, 0, 0);
             propertyLayout.Controls.Add(domainProperty, 0, 1);
             propertyLayout.Dock = DockStyle.Fill;
             propertyLayout.Location = new Point(3, 3);
             propertyLayout.Name = "propertyLayout";
             propertyLayout.RowCount = 2;
-            propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+            propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
             propertyLayout.Size = new Size(406, 337);
             propertyLayout.TabIndex = 0;
             // 
@@ -326,7 +326,7 @@
             propertiesData.Location = new Point(3, 3);
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
-            propertiesData.Size = new Size(400, 162);
+            propertiesData.Size = new Size(400, 128);
             propertiesData.TabIndex = 1;
             // 
             // propertyIdColumn
@@ -350,9 +350,9 @@
             // domainProperty
             // 
             domainProperty.Dock = DockStyle.Fill;
-            domainProperty.Location = new Point(3, 171);
+            domainProperty.Location = new Point(3, 137);
             domainProperty.Name = "domainProperty";
-            domainProperty.Size = new Size(400, 163);
+            domainProperty.Size = new Size(400, 197);
             domainProperty.TabIndex = 2;
             // 
             // aliasTab
@@ -361,6 +361,7 @@
             aliasTab.Controls.Add(aliaseLayout);
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
+            aliasTab.Padding = new Padding(3);
             aliasTab.Size = new Size(412, 343);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
@@ -368,16 +369,16 @@
             // aliaseLayout
             // 
             aliaseLayout.ColumnCount = 1;
-            aliaseLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            aliaseLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             aliaseLayout.Controls.Add(aliasesData, 0, 0);
             aliaseLayout.Controls.Add(domainAlias, 0, 1);
             aliaseLayout.Dock = DockStyle.Fill;
-            aliaseLayout.Location = new Point(0, 0);
+            aliaseLayout.Location = new Point(3, 3);
             aliaseLayout.Name = "aliaseLayout";
             aliaseLayout.RowCount = 2;
-            aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            aliaseLayout.Size = new Size(412, 343);
+            aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+            aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
+            aliaseLayout.Size = new Size(406, 337);
             aliaseLayout.TabIndex = 1;
             // 
             // aliasesData
@@ -389,7 +390,7 @@
             aliasesData.Location = new Point(3, 3);
             aliasesData.Name = "aliasesData";
             aliasesData.ReadOnly = true;
-            aliasesData.Size = new Size(406, 165);
+            aliasesData.Size = new Size(400, 128);
             aliasesData.TabIndex = 0;
             // 
             // aliaseScopeColumn
@@ -412,9 +413,9 @@
             // domainAlias
             // 
             domainAlias.Dock = DockStyle.Fill;
-            domainAlias.Location = new Point(3, 174);
+            domainAlias.Location = new Point(3, 137);
             domainAlias.Name = "domainAlias";
-            domainAlias.Size = new Size(406, 166);
+            domainAlias.Size = new Size(400, 197);
             domainAlias.TabIndex = 0;
             // 
             // subjectAreaTab
@@ -422,7 +423,7 @@
             subjectAreaTab.BackColor = SystemColors.Control;
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
-            subjectAreaTab.Size = new Size(412, 343);
+            subjectAreaTab.Size = new Size(192, 72);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -435,13 +436,13 @@
             entityTab.TabIndex = 4;
             entityTab.Text = "Entities";
             // 
-            // propertyBinding
+            // bindingProperty
             // 
-            propertyBinding.AddingNew += PropertyBinding_AddingNew;
+            bindingProperty.AddingNew += BindingProperty_AddingNew;
             // 
-            // aliasBinding
+            // bindingAlias
             // 
-            aliasBinding.AddingNew += AliasBinding_AddingNew;
+            bindingAlias.AddingNew += BindingAlias_AddingNew;
             // 
             // DomainAttribute
             // 
@@ -465,9 +466,9 @@
             aliasTab.ResumeLayout(false);
             aliaseLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)aliasesData).EndInit();
-            ((System.ComponentModel.ISupportInitialize)mainBinding).EndInit();
-            ((System.ComponentModel.ISupportInitialize)propertyBinding).EndInit();
-            ((System.ComponentModel.ISupportInitialize)aliasBinding).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingProperty).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -479,7 +480,7 @@
         private TabControl detailTabLayout;
         private TabPage detailTab;
         private TabPage propertyTab;
-        private BindingSource mainBinding;
+        private BindingSource bindingAttribute;
         private TabPage aliasTab;
         private DataDictionary.Main.Controls.ComboBoxData typeOfAttributeData;
         private CheckBox isSingleValueData;
@@ -492,12 +493,12 @@
         private CheckBox isNullableData;
         private CheckBox isNonKeyData;
         private CheckBox isKeyData;
-        private BindingSource propertyBinding;
+        private BindingSource bindingProperty;
         private TabPage subjectAreaTab;
         private TabPage entityTab;
         private DataGridView aliasesData;
         private Controls.DomainAlias domainAlias;
-        private BindingSource aliasBinding;
+        private BindingSource bindingAlias;
         private DataGridViewComboBoxColumn aliaseScopeColumn;
         private DataGridViewTextBoxColumn aliasNameColumn;
         private DataGridView propertiesData;
