@@ -31,7 +31,18 @@ namespace DataDictionary.BusinessLayer
         public static IReadOnlyList<WorkItem> Import(this NameScopeDictionary target, IList<NameScopeItem> source)
         {
             return new WorkItem()
-            { WorkName = "Load NameScope", DoWork = () => target.AddRange(source) }.ToList();
+            {
+                WorkName = "Load NameScope",
+                DoWork = () =>
+                {
+                    foreach (NameScopeItem item in source)
+                    {
+                        NameScopeKey key = new NameScopeKey(item as INameScopeKey);
+                        if (!target.ContainsKey(key))
+                        { target.Add(item); }
+                    }
+                }
+            }.ToList();
         }
 
         /// <summary>
@@ -40,7 +51,7 @@ namespace DataDictionary.BusinessLayer
         /// <param name="target"></param>
         /// <returns></returns>
         public static IReadOnlyList<WorkItem> Remove(this NameScopeDictionary target)
-        {   return new WorkItem() { WorkName = "Remove NameScope", DoWork = () => target.Clear() }.ToList(); }
+        { return new WorkItem() { WorkName = "Remove NameScope", DoWork = () => target.Clear() }.ToList(); }
     }
 
 }
