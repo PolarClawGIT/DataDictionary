@@ -31,6 +31,7 @@
             components = new System.ComponentModel.Container();
             TableLayoutPanel mainLayout;
             TableLayoutPanel propertyLayout;
+            TableLayoutPanel detailsLayout;
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             detailTabLayout = new TabControl();
@@ -50,10 +51,13 @@
             bindingAlias = new BindingSource(components);
             bindingProperty = new BindingSource(components);
             bindingEntity = new BindingSource(components);
+            typeOfEntityData = new DataDictionary.Main.Controls.ComboBoxData();
             mainLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
+            detailsLayout = new TableLayoutPanel();
             mainLayout.SuspendLayout();
             detailTabLayout.SuspendLayout();
+            detailTab.SuspendLayout();
             propertyTab.SuspendLayout();
             propertyLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)propertiesData).BeginInit();
@@ -63,6 +67,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).BeginInit();
+            detailsLayout.SuspendLayout();
             SuspendLayout();
             // 
             // mainLayout
@@ -123,10 +128,11 @@
             // detailTab
             // 
             detailTab.BackColor = SystemColors.Control;
+            detailTab.Controls.Add(detailsLayout);
             detailTab.Location = new Point(4, 24);
             detailTab.Name = "detailTab";
             detailTab.Padding = new Padding(3);
-            detailTab.Size = new Size(460, 334);
+            detailTab.Size = new Size(412, 343);
             detailTab.TabIndex = 0;
             detailTab.Text = "Details";
             // 
@@ -137,7 +143,7 @@
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(412, 343);
+            propertyTab.Size = new Size(192, 72);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -153,7 +159,7 @@
             propertyLayout.RowCount = 2;
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            propertyLayout.Size = new Size(406, 337);
+            propertyLayout.Size = new Size(186, 66);
             propertyLayout.TabIndex = 0;
             // 
             // propertiesData
@@ -165,7 +171,7 @@
             propertiesData.Location = new Point(3, 3);
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
-            propertiesData.Size = new Size(400, 128);
+            propertiesData.Size = new Size(180, 20);
             propertiesData.TabIndex = 1;
             // 
             // propertyIdColumn
@@ -189,9 +195,9 @@
             // domainProperty
             // 
             domainProperty.Dock = DockStyle.Fill;
-            domainProperty.Location = new Point(3, 137);
+            domainProperty.Location = new Point(3, 29);
             domainProperty.Name = "domainProperty";
-            domainProperty.Size = new Size(400, 197);
+            domainProperty.Size = new Size(180, 34);
             domainProperty.TabIndex = 2;
             // 
             // aliasTab
@@ -201,7 +207,7 @@
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(412, 343);
+            aliasTab.Size = new Size(192, 72);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
@@ -217,7 +223,7 @@
             aliaseLayout.RowCount = 2;
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            aliaseLayout.Size = new Size(406, 337);
+            aliaseLayout.Size = new Size(186, 66);
             aliaseLayout.TabIndex = 1;
             // 
             // aliasesData
@@ -229,7 +235,7 @@
             aliasesData.Location = new Point(3, 3);
             aliasesData.Name = "aliasesData";
             aliasesData.ReadOnly = true;
-            aliasesData.Size = new Size(400, 128);
+            aliasesData.Size = new Size(180, 20);
             aliasesData.TabIndex = 0;
             // 
             // aliaseScopeColumn
@@ -252,9 +258,9 @@
             // domainAlias
             // 
             domainAlias.Dock = DockStyle.Fill;
-            domainAlias.Location = new Point(3, 137);
+            domainAlias.Location = new Point(3, 29);
             domainAlias.Name = "domainAlias";
-            domainAlias.Size = new Size(400, 197);
+            domainAlias.Size = new Size(180, 34);
             domainAlias.TabIndex = 0;
             // 
             // subjectAreaTab
@@ -274,6 +280,34 @@
             // 
             bindingProperty.AddingNew += BindingProperty_AddingNew;
             // 
+            // detailsLayout
+            // 
+            detailsLayout.ColumnCount = 1;
+            detailsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            detailsLayout.Controls.Add(typeOfEntityData, 0, 0);
+            detailsLayout.Dock = DockStyle.Fill;
+            detailsLayout.Location = new Point(3, 3);
+            detailsLayout.Name = "detailsLayout";
+            detailsLayout.RowCount = 2;
+            detailsLayout.RowStyles.Add(new RowStyle());
+            detailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            detailsLayout.Size = new Size(406, 337);
+            detailsLayout.TabIndex = 0;
+            // 
+            // typeOfEntityData
+            // 
+            typeOfEntityData.AutoSize = true;
+            typeOfEntityData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            detailsLayout.SetColumnSpan(typeOfEntityData, 2);
+            typeOfEntityData.Dock = DockStyle.Fill;
+            typeOfEntityData.DropDownStyle = ComboBoxStyle.DropDown;
+            typeOfEntityData.HeaderText = "Type of Entity";
+            typeOfEntityData.Location = new Point(3, 3);
+            typeOfEntityData.Name = "typeOfEntityData";
+            typeOfEntityData.ReadOnly = false;
+            typeOfEntityData.Size = new Size(400, 44);
+            typeOfEntityData.TabIndex = 1;
+            // 
             // DomainEntity
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -287,6 +321,7 @@
             mainLayout.ResumeLayout(false);
             mainLayout.PerformLayout();
             detailTabLayout.ResumeLayout(false);
+            detailTab.ResumeLayout(false);
             propertyTab.ResumeLayout(false);
             propertyLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)propertiesData).EndInit();
@@ -296,6 +331,8 @@
             ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).EndInit();
+            detailsLayout.ResumeLayout(false);
+            detailsLayout.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -321,5 +358,7 @@
         private BindingSource bindingAlias;
         private BindingSource bindingProperty;
         private BindingSource bindingEntity;
+        private TableLayoutPanel detailsLayout;
+        private DataDictionary.Main.Controls.ComboBoxData typeOfEntityData;
     }
 }
