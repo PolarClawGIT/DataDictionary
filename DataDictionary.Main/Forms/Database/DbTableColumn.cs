@@ -90,9 +90,9 @@ namespace DataDictionary.Main.Forms.Database
 
         private void ImportDataCommand_Click(object? sender, EventArgs e)
         {
-            if (bindingColumn.Current is IDbTableItem current)
+            if (bindingColumn.Current is IDbTableColumnItem current)
             {
-                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, current);
+                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
             }
         }
     }
