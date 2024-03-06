@@ -7,10 +7,9 @@
 	[MemberType]            NVarChar(10) Null, -- .Net Documents produce a letter that is converted to a Member type. There may not be one.
 	[MemberData]            XML Null, -- Raw data as XML
 	-- Keys
-	CONSTRAINT [PK_LibraryMember] PRIMARY KEY CLUSTERED ([LibraryId] ASC, [MemberId] ASC),
+	CONSTRAINT [PK_LibraryMember] PRIMARY KEY CLUSTERED ([MemberId] ASC),
 	CONSTRAINT [FK_LibraryMemberSource] FOREIGN KEY ([LibraryId]) REFERENCES [App_DataDictionary].[LibrarySource] ([LibraryId]),
-	CONSTRAINT [FK_LibraryMemberParent] FOREIGN KEY ([LibraryId], [MemberParentId]) REFERENCES [App_DataDictionary].[LibraryMember] ([LibraryId], [MemberId]),
+	CONSTRAINT [FK_LibraryMemberParent] FOREIGN KEY ([MemberParentId]) REFERENCES [App_DataDictionary].[LibraryMember] ([MemberId]),
 	CONSTRAINT [FK_LibraryMemberScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
-
 )
 GO
