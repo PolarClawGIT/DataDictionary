@@ -53,8 +53,6 @@ namespace DataDictionary.BusinessLayer.NameScope
         /// </summary>
         public NameScopeChangedType ChangedType { get; }
 
-        
-
         /// <summary>
         /// Model NameSpace Item impacted, if any.
         /// </summary>

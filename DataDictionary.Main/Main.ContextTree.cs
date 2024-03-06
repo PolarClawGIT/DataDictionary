@@ -27,12 +27,15 @@ namespace DataDictionary.Main
         List<NameScopeItem> expandedContextNodes = new List<NameScopeItem>();
         void ClearTree()
         {
-            expandedContextNodes.Clear();
-            expandedContextNodes.AddRange(contextNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value));
             BusinessData.NameScope.ListChanged -= NameScope_ListChanged;
 
-            contextNameNavigation.Nodes.Clear();
-            contextNodes.Clear();
+            contextNameNavigation.Invoke(() =>
+            {
+                expandedContextNodes.Clear();
+                expandedContextNodes.AddRange(contextNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value));
+                contextNameNavigation.Nodes.Clear();
+                contextNodes.Clear();
+            });
         }
 
         void BuildTree()
@@ -53,6 +56,16 @@ namespace DataDictionary.Main
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
+                foreach (NameScopeItem item in expandedContextNodes)
+                {
+                    NameScopeKey key = new NameScopeKey(item);
+
+                    KeyValuePair<TreeNode, NameScopeItem> value = contextNodes.FirstOrDefault(w => key.Equals(w));
+
+                    if (value.Key is TreeNode node)
+                    { node.Expand(); }
+                }
+
                 foreach (TreeNode item in contextNodes.Where(w => expandedContextNodes.Contains(w.Value)).Select(s => s.Key).ToList())
                 { item.ExpandParent(); }
 
@@ -129,12 +142,9 @@ namespace DataDictionary.Main
             TreeNodeCollection taget = contextNameNavigation.Nodes;
 
             if (e.ChangedType == NameScopeChangedType.BeginBatch)
-            { // Suspend Drawing while working on children.
-                contextNameNavigation.Invoke(() =>
-                { contextNameNavigation.BeginUpdate(); });
-            }
+            { RefreshTree(); }
 
-            if (e.ChangedType == NameScopeChangedType.ItemAdded && e.Item is NameScopeItem addedItem)
+            else if (e.ChangedType == NameScopeChangedType.ItemAdded && e.Item is NameScopeItem addedItem)
             {// Handle Add
                 if (contextNodes.FirstOrDefault(w => addedItem.SystemParentKey is not null && addedItem.SystemParentKey.Equals(w.Value.SystemKey)).Key is TreeNode parentNode)
                 { taget = parentNode.Nodes; }
@@ -155,7 +165,7 @@ namespace DataDictionary.Main
                 });
             }
 
-            if (e.ChangedType == NameScopeChangedType.ItemDeleted && e.Item is NameScopeItem deletedItem)
+            else if (e.ChangedType == NameScopeChangedType.ItemDeleted && e.Item is NameScopeItem deletedItem)
             { // Handle Remove
                 NameScopeKey deleteKey = deletedItem.SystemKey;
                 if (contextNodes.FirstOrDefault(w => deletedItem.SystemKey.Equals(w.Value.SystemKey)).Key is TreeNode node)
@@ -167,16 +177,12 @@ namespace DataDictionary.Main
                     });
                 }
             }
-
-            if (e.ChangedType == NameScopeChangedType.EndBatch)
-            { // Restart Drawing once all the child nodes are addressed
-                contextNameNavigation.Invoke(() =>
-                { contextNameNavigation.EndUpdate(); });
-            }
-
         }
 
         private void RefreshCommand_Click(object sender, EventArgs e)
+        { RefreshTree(); }
+
+        private void RefreshTree()
         {
             ClearTree();
             BusinessData.NameScope.Clear();
@@ -190,7 +196,6 @@ namespace DataDictionary.Main
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { BuildTree(); }
-
         }
 
         private void NewAttributeCommand_ButtonClick(object sender, EventArgs e)
@@ -284,7 +289,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Domain.DomainEntity(entityItem), entityItem); }
 
         void Activate(ModelSubjectAreaItem subjectItem)
-        { Activate((data) => new Forms.Domain.ModelSubjectArea(subjectItem) , subjectItem); }
+        { Activate((data) => new Forms.Domain.ModelSubjectArea(subjectItem), subjectItem); }
 
         void Activate(ModelItem modelItem)
         { Activate((data) => new Forms.Model.Model(modelItem), modelItem); }

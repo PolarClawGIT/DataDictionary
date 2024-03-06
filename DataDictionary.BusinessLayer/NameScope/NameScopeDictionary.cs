@@ -53,12 +53,7 @@
         /// <param name="isChild"></param>
         public virtual void Add(NameScopeItem value, Boolean isChild = false)
         {
-            if (this.ContainsKey(value.SystemKey))
-            {
-                Exception ex = new ArgumentException("Item already exists");
-                ex.Data.Add("Child", value.ToString());
-                throw ex;
-            }
+            if (this.ContainsKey(value.SystemKey)) { return; }
 
             if (value.SystemParentKey is NameScopeKey parentKey)
             {

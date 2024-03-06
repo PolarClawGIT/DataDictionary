@@ -33,15 +33,7 @@ namespace DataDictionary.BusinessLayer
             return new WorkItem()
             {
                 WorkName = "Load NameScope",
-                DoWork = () =>
-                {
-                    foreach (NameScopeItem item in source)
-                    {
-                        NameScopeKey key = new NameScopeKey(item as INameScopeKey);
-                        if (!target.ContainsKey(key))
-                        { target.Add(item); }
-                    }
-                }
+                DoWork = () => target.AddRange(source)
             }.ToList();
         }
 

@@ -159,14 +159,6 @@ namespace DataDictionary.BusinessLayer.NameScope
         /// Constructor for the NameSpace Key
         /// </summary>
         /// <param name="source"></param>
-        /// <remarks>NameSpaces do not have a GUID of their own, so a new GUID is created.</remarks>
-        public NameScopeKey(INameSpaceKey source) : this()
-        { SystemId = Guid.NewGuid(); }
-
-        /// <summary>
-        /// Constructor for the NameSpace Key
-        /// </summary>
-        /// <param name="source"></param>
         public NameScopeKey(INameSpaceItem source) : this()
         { SystemId = source.SystemId; }
 
