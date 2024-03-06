@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
@@ -60,10 +61,10 @@ namespace DataDictionary.Main
                 {
                     NameScopeKey key = new NameScopeKey(item);
 
-                    KeyValuePair<TreeNode, NameScopeItem> value = contextNodes.FirstOrDefault(w => key.Equals(w));
+                    KeyValuePair<TreeNode, NameScopeItem> value = contextNodes.FirstOrDefault(w => key.Equals(w.Value));
 
                     if (value.Key is TreeNode node)
-                    { node.Expand(); }
+                    { node.ExpandParent(); }
                 }
 
                 foreach (TreeNode item in contextNodes.Where(w => expandedContextNodes.Contains(w.Value)).Select(s => s.Key).ToList())
