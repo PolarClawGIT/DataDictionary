@@ -27,7 +27,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         /// </summary>
         public NameSpaceItem SelectedAlias { get; private set; } = new NameSpaceItem();
 
-        public DomainAlias()
+        public DomainAlias() :base()
         {
             InitializeComponent();
 
