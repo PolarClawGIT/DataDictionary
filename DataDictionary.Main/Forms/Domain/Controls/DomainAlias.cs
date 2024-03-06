@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Controls;
@@ -17,15 +18,14 @@ namespace DataDictionary.Main.Forms.Domain.Controls
 {
     partial class DomainAlias : UserControl
     {
-        Func<IDomainAlias?> GetCurrent = () => { return null; };
 
         Dictionary<ListViewItem, NameScopeKey> alaisViewItems = new Dictionary<ListViewItem, NameScopeKey>();
         Stack<NameScopeKey> navigationStack = new Stack<NameScopeKey>();
 
         /// <summary>
-        /// The current Alias Item selected
+        /// The current Alias Item
         /// </summary>
-        public NameScopeItem? SelectedAlias { get; private set; }
+        public NameSpaceItem SelectedAlias { get; private set; } = new NameSpaceItem();
 
         public DomainAlias()
         {
@@ -42,14 +42,11 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         public void BindData(BindingSource propertyBinding)
         {
             ScopeNameItem.Load(aliasScopeData);
-            IDomainAlias nameOfValues;
-            GetCurrent = () => { return propertyBinding.Current as IDomainAlias; };
-
-            aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), propertyBinding, nameof(nameOfValues.AliasName), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-            aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), propertyBinding, nameof(nameOfValues.Scope), true, DataSourceUpdateMode.OnPropertyChanged, ScopeType.Null));
-
+            INameScopeItem nameOfValues;
             AliasListLoad();
-            RefreshControls();
+            
+            aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), SelectedAlias, nameof(nameOfValues.MemberFullName), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+            aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), SelectedAlias, nameof(nameOfValues.Scope), true, DataSourceUpdateMode.OnPropertyChanged, ScopeType.Null));
         }
 
         private void AliasListLoad()
@@ -89,28 +86,18 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             aliasBrowser.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
-        public void RefreshControls()
-        {
-            if (GetCurrent() is IDomainAlias currentRow)
-            {
-                aliasNameData.Enabled = true;
-                aliasScopeData.Enabled = true;
-                aliasBrowser.Enabled = true;
-            }
-            else
-            {
-                aliasNameData.Enabled = false;
-                aliasScopeData.Enabled = false;
-                aliasBrowser.Enabled = false;
-            }
-        }
-
         private void AliasBrowser_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (aliasBrowser.SelectedItems.Count > 0
                 && alaisViewItems.ContainsKey(aliasBrowser.SelectedItems[0]))
             {
                 NameScopeKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
+                //SelectedAlias = BusinessData.NameScope[selectedKey];
+
+                var x = BusinessData.NameScope[selectedKey];
+
+                aliasNameData.Text = BusinessData.NameScope[selectedKey].MemberFullName;
+                aliasScopeData.SelectedValue = BusinessData.NameScope[selectedKey].Scope;
 
                 if (navigationStack.TryPeek(out NameScopeKey? parentKey)
                     && selectedKey.Equals(parentKey))
@@ -144,10 +131,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             if (aliasBrowser.SelectedItems.Count > 0
                 && alaisViewItems.ContainsKey(aliasBrowser.SelectedItems[0]))
             {
-                NameScopeKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
-                aliasNameData.Text = BusinessData.NameScope[selectedKey].MemberFullName;
-                aliasScopeData.Text = BusinessData.NameScope[selectedKey].Scope.ToScopeName();
-
+                //NameScopeKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
                 AliasSelectedItemChanged(this, EventArgs.Empty);
             }
         }

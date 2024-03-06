@@ -20,6 +20,7 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     /// Implementation for IToAliasName
     /// Default implementation.
     /// </summary>
+    [Obsolete("Not Used",true)]
     public static class ToAliasNameExtension
     {
         //public static String ToAliasName(this IToAliasName source)

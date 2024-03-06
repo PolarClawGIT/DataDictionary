@@ -85,7 +85,6 @@ namespace DataDictionary.Main.Forms.Domain
             else if (detailTabLayout.TabPages[detailTabLayout.SelectedIndex] == aliasTab)
             {
                 bindingAlias.AddNew();
-                domainAlias.RefreshControls();
             }
             else { }
         }
@@ -135,6 +134,9 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 DomainEntityAliasItem newItem = new DomainEntityAliasItem(current);
                 e.NewObject = newItem;
+
+                newItem.AliasName = domainAlias.SelectedAlias.MemberFullName;
+                newItem.Scope = domainAlias.SelectedAlias.Scope;
             }
         }
     }
