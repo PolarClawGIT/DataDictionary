@@ -373,6 +373,26 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ExportCatalogPart {
+            get {
+                object obj = ResourceManager.GetObject("ExportCatalogPart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ExportData {
+            get {
+                object obj = ResourceManager.GetObject("ExportData", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ExtendedProperty {
             get {
                 object obj = ResourceManager.GetObject("ExtendedProperty", resourceCulture);
@@ -781,6 +801,16 @@ namespace DataDictionary.Main.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_XMLTransformation {
+            get {
+                object obj = ResourceManager.GetObject("Icon_XMLTransformation", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Import {
@@ -796,6 +826,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap ImportCatalogPart {
             get {
                 object obj = ResourceManager.GetObject("ImportCatalogPart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ImportData {
+            get {
+                object obj = ResourceManager.GetObject("ImportData", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1436,6 +1476,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap View {
             get {
                 object obj = ResourceManager.GetObject("View", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap XMLTransformation {
+            get {
+                object obj = ResourceManager.GetObject("XMLTransformation", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

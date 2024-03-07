@@ -76,6 +76,7 @@
             textBox.Dock = DockStyle.Fill;
             textBox.Location = new Point(3, 18);
             textBox.Name = "textBox";
+            textBox.ScrollBars = ScrollBars.Both;
             textBox.Size = new Size(114, 23);
             textBox.TabIndex = 1;
             textBox.Validating += textBox_Validating;
