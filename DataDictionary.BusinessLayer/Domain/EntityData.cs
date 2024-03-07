@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Application;
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
@@ -46,8 +46,10 @@ namespace DataDictionary.BusinessLayer.Domain
 
     class EntityData : DomainEntityCollection, IEntityData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile, INameScopeData<IModelKey>
+        IDataTableFile, INamedScopeData<IModelKey>
     {
+        public required IDomainModel DomainModel { get; init; }
+
         /// <inheritdoc/>
         public IEntityAliasData Aliases { get { return aliasValues; } }
         private readonly EntityAliasData aliasValues;
@@ -202,7 +204,7 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
-        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target, Func<IModelKey?> parent)
+        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<IModelKey?> parent)
         {
             return new WorkItem()
             {
@@ -217,10 +219,10 @@ namespace DataDictionary.BusinessLayer.Domain
                             List<ModelEntityItem> subjects = subjectAreaValues.Where(w => entityKey.Equals(w)).ToList();
 
                             foreach (ModelEntityItem subject in subjects)
-                            { target.Add(new NameScopeItem(subject, entity)); }
+                            { target.Add(new NamedScopeItem(subject, entity)); }
 
                             if (subjects.Count == 0)
-                            { target.Add(new NameScopeItem(modelKey, entity)); }
+                            { target.Add(new NamedScopeItem(modelKey, entity)); }
                         }
                     }
                 }

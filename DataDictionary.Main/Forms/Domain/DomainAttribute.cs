@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.NameScope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Main.Controls;
@@ -100,7 +100,7 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingAttribute.Current is IDomainAttributeItem current)
             {
                 BusinessData.DomainModel.Attributes.Remove(current);
-                BusinessData.NameScope.Remove(new NameScopeKey(current));
+                BusinessData.NameScope.Remove(new NamedScopeKey(current));
             }
         }
 

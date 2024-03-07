@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Application;
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
@@ -40,8 +40,10 @@ namespace DataDictionary.BusinessLayer.Domain
 
     class AttributeData : DomainAttributeCollection, IAttributeData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile, INameScopeData<IModelKey>
+        IDataTableFile, INamedScopeData<IModelKey>
     {
+        public required IDomainModel DomainModel { get; init; }
+
         /// <inheritdoc/>
         public IAttributeAliasData Aliases { get { return aliasValues; } }
         private readonly AttributeAliasData aliasValues;
@@ -213,7 +215,7 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
-        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target, Func<IModelKey?> parent)
+        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<IModelKey?> parent)
         {
             return new WorkItem()
             {
@@ -223,7 +225,7 @@ namespace DataDictionary.BusinessLayer.Domain
                     if (parent() is IModelKey key)
                     {
                         foreach (DomainAttributeItem item in this)
-                        { target.Add(new NameScopeItem(key, item)); }
+                        { target.Add(new NamedScopeItem(key, item)); }
                     }
                 }
             }.ToList();

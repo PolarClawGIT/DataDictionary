@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.DataLayer.ModelData;
@@ -47,7 +47,7 @@ namespace DataDictionary.BusinessLayer.Library
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
-        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target)
+        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
         {
             List<WorkItem> work = new List<WorkItem>();
 
@@ -62,8 +62,8 @@ namespace DataDictionary.BusinessLayer.Library
                         LibraryMemberKeyParent keyParent = new LibraryMemberKeyParent(item);
 
                         if (keyParent.HasValue)
-                        { target.Add(new NameScopeItem(keyParent, item)); }
-                        else { target.Add(new NameScopeItem(sourceKey, item)); }
+                        { target.Add(new NamedScopeItem(keyParent, item)); }
+                        else { target.Add(new NamedScopeItem(sourceKey, item)); }
                     }
                 }
             });

@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DomainData.Alias;
@@ -190,7 +190,7 @@ namespace DataDictionary.Main.Forms.Database
                     { catalogKey = new DbCatalogKey(existing); }
 
                     List<WorkItem> work = new List<WorkItem>();
-                    List<NameScopeItem> names = new List<NameScopeItem>();
+                    List<NamedScopeItem> names = new List<NamedScopeItem>();
                     DbSchemaContext source = new BusinessLayer.DbSchemaContext()
                     {
                         ServerName = dialog.ServerName,
@@ -213,7 +213,7 @@ namespace DataDictionary.Main.Forms.Database
 
             if (catalogBinding.Current is CatalogManagerItem item)
             {
-                NameScopeKey scopeKey = new NameScopeKey(item);
+                NamedScopeKey scopeKey = new NamedScopeKey(item);
                 DbCatalogKey catalogKey = new DbCatalogKey(item);
                 work.AddRange(BusinessData.DatabaseModel.Remove(catalogKey));
                 work.Add(
@@ -263,7 +263,7 @@ namespace DataDictionary.Main.Forms.Database
             {
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<NameScopeItem> names = new List<NameScopeItem>();
+                List<NamedScopeItem> names = new List<NamedScopeItem>();
 
                 DbCatalogKey key = new DbCatalogKey(item);
                 work.Add(factory.OpenConnection());

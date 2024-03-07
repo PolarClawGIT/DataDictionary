@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Application;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
@@ -12,11 +12,17 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface representing Domain data
     /// </summary>
-    public interface IDomainModel:
+    public interface IDomainModel :
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IRemoveData
 
     {
+        /// <summary>
+        /// The Properties of the Model
+        /// </summary>
+        /// <remarks>Reference to IApplicationData.Properties</remarks>
+        IPropertyData ModelProperty { get; }
+
         /// <summary>
         /// List of Domain Attributes within the Model.
         /// </summary>
@@ -28,9 +34,12 @@ namespace DataDictionary.BusinessLayer.Domain
         IEntityData Entities { get; }
     }
 
-    class DomainModel: IDomainModel,
-        IDataTableFile, INameScopeData<IModelKey>
+    class DomainModel : IDomainModel,
+        IDataTableFile, INamedScopeData<IModelKey>
     {
+        /// <inheritdoc/>
+        public required IPropertyData ModelProperty { get; init; }
+
         /// <inheritdoc/>
         public IAttributeData Attributes { get { return attributeValues; } }
         private readonly AttributeData attributeValues;
@@ -39,10 +48,10 @@ namespace DataDictionary.BusinessLayer.Domain
         public IEntityData Entities { get { return entityValues; } }
         private readonly EntityData entityValues;
 
-        public DomainModel() : base ()
+        public DomainModel() : base()
         {
-            attributeValues = new AttributeData();
-            entityValues = new EntityData();
+            attributeValues = new AttributeData() { DomainModel = this };
+            entityValues = new EntityData() { DomainModel = this };
         }
 
         /// <inheritdoc/>
@@ -50,7 +59,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            
+
             work.AddRange(attributeValues.Load(factory, dataKey));
             work.AddRange(entityValues.Load(factory, dataKey));
 
@@ -100,7 +109,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target, Func<IModelKey?> parent)
+        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<IModelKey?> parent)
         {
             List<WorkItem> work = new List<WorkItem>();
 
@@ -112,9 +121,9 @@ namespace DataDictionary.BusinessLayer.Domain
 
 
         [Obsolete("Need this code to build out NameScope")]
-        public IReadOnlyList<NameScopeItem> GetNameScopes()
+        public IReadOnlyList<NamedScopeItem> GetNameScopes()
         {
-            List<NameScopeItem> result = new List<NameScopeItem>();
+            List<NamedScopeItem> result = new List<NamedScopeItem>();
             /* TODO: Needs to be re-worked
             List<ModelItem> models = DomainModel.ToList();
             List<ModelSubjectAreaItem> subjectAreas = ModelSubjectAreas.ToList();

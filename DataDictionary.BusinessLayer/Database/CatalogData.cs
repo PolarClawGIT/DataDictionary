@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.ModelData;
 using System;
@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.Database
     class CatalogData : DbCatalogCollection, ICatalogData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
-        IDatabaseModelItem, INameScopeData
+        IDatabaseModelItem, INamedScopeData
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -48,7 +48,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target)
+        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
         {
             List<WorkItem> work = new List<WorkItem>();
 
@@ -58,7 +58,7 @@ namespace DataDictionary.BusinessLayer.Database
                 DoWork = () =>
                 {
                     foreach (DbCatalogItem item in this.Where(w => w.IsSystem == false))
-                    { target.Add(new NameScopeItem(item)); }
+                    { target.Add(new NamedScopeItem(item)); }
                 }
             });
             return work;

@@ -3,7 +3,7 @@ using Toolbox.Threading;
 using Toolbox.BindingTable;
 using DbConnection = Toolbox.DbContext.Context;
 using DataDictionary.DataLayer.ModelData;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
 using Toolbox.DbContext;
 
@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer
     /// Main Data Container for all Business Data.
     /// </summary>
     public partial class BusinessLayerData : IFileData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData, INameScopeData
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData, INamedScopeData
     {
         /// <summary>
         /// Database Context for accessing the Application Db.
@@ -36,7 +36,7 @@ namespace DataDictionary.BusinessLayer
         /// The Current Model being used by the application
         /// </summary>
         /// <remarks>There should always be exactly one Model</remarks>
-        public ModelItem Model { get { return models.First(); } }
+        public ModelItem Model { get { return modelValues.First(); } }
 
         /// <summary>
         /// Returns a new Default factory Database Worker.
@@ -62,7 +62,16 @@ namespace DataDictionary.BusinessLayer
                 ValidateCommand = true
             };
 
-            models.Add(new ModelItem());
+            modelValues = new Model.ModelData();
+            subjectAreaValues = new Model.SubjectAreaData();
+            NameScope = new NamedScopeDictionary();
+
+            modelValues.Add(new ModelItem());
+            applicationValue = new Application.ApplicationData();
+            
+            domainValue = new Domain.DomainModel() { ModelProperty = applicationValue.Properties };
+            databaseValue = new Database.DatabaseModel();
+            libraryValue = new Library.LibraryModel();
         }
 
         /// <inheritdoc/>
@@ -70,9 +79,9 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(models.Remove());
-            work.AddRange(models.Load(factory, key));
-            work.AddRange(subjectAreas.Load(factory, key));
+            work.AddRange(modelValues.Remove());
+            work.AddRange(modelValues.Load(factory, key));
+            work.AddRange(subjectAreaValues.Load(factory, key));
 
             work.AddRange(DomainModel.Load(factory, key));
             work.AddRange(DatabaseModel.Load(factory, key));
@@ -86,8 +95,8 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(models.Save(factory, key));
-            work.AddRange(subjectAreas.Save(factory, key));
+            work.AddRange(modelValues.Save(factory, key));
+            work.AddRange(subjectAreaValues.Save(factory, key));
 
             work.AddRange(DomainModel.Save(factory, key));
             work.AddRange(DatabaseModel.Save(factory, key));
@@ -102,14 +111,14 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(models.Remove());
-            work.AddRange(subjectAreas.Remove());
+            work.AddRange(modelValues.Remove());
+            work.AddRange(subjectAreaValues.Remove());
 
             work.AddRange(DomainModel.Remove());
             work.AddRange(DatabaseModel.Remove());
             work.AddRange(LibraryModel.Remove());
 
-            work.AddRange(models.Create());
+            work.AddRange(modelValues.Create());
 
             return work;
         }
@@ -125,13 +134,13 @@ namespace DataDictionary.BusinessLayer
                 {
                     workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
 
-                    models.Clear();
-                    models.Import(workSet);
-                    subjectAreas.Import(workSet);
+                    modelValues.Clear();
+                    modelValues.Import(workSet);
+                    subjectAreaValues.Import(workSet);
 
-                    domain.Import(workSet);
-                    database.Import(workSet);
-                    library.Import(workSet);
+                    domainValue.Import(workSet);
+                    databaseValue.Import(workSet);
+                    libraryValue.Import(workSet);
                 }
 
                 ModelFile = file;
@@ -147,12 +156,12 @@ namespace DataDictionary.BusinessLayer
             {
                 using (System.Data.DataSet workSet = new System.Data.DataSet())
                 {
-                    workSet.Tables.Add(models.ToDataTable());
-                    workSet.Tables.Add(subjectAreas.ToDataTable());
+                    workSet.Tables.Add(modelValues.ToDataTable());
+                    workSet.Tables.Add(subjectAreaValues.ToDataTable());
 
-                    workSet.Tables.AddRange(domain.Export().ToArray());
-                    workSet.Tables.AddRange(database.Export().ToArray());
-                    workSet.Tables.AddRange(library.Export().ToArray());
+                    workSet.Tables.AddRange(domainValue.Export().ToArray());
+                    workSet.Tables.AddRange(databaseValue.Export().ToArray());
+                    workSet.Tables.AddRange(libraryValue.Export().ToArray());
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }
 
@@ -161,10 +170,10 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target)
+        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
         {
             List<WorkItem> work = new List<WorkItem>();
-            Func<ModelItem?> model = models.FirstOrDefault;
+            Func<ModelItem?> model = modelValues.FirstOrDefault;
 
             work.Add(new WorkItem()
             {
@@ -172,14 +181,14 @@ namespace DataDictionary.BusinessLayer
                 DoWork = () =>
                 {
                     if (model() is ModelItem modelItem)
-                    { target.Add(new NameScopeItem(modelItem)); }
+                    { target.Add(new NamedScopeItem(modelItem)); }
                 }
             });
 
-            work.AddRange(subjectAreas.Export(target, model));
-            work.AddRange(domain.Export(target, model));
-            work.AddRange(database.Export(target));
-            work.AddRange(library.Export(target));
+            work.AddRange(subjectAreaValues.Export(target, model));
+            work.AddRange(domainValue.Export(target, model));
+            work.AddRange(databaseValue.Export(target));
+            work.AddRange(libraryValue.Export(target));
 
             return work;
 

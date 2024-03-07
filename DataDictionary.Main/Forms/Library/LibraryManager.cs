@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Main.Controls;
@@ -162,7 +162,7 @@ namespace DataDictionary.Main.Forms.Library
 
                 // Create the work items for each of the files selected
                 List<WorkItem> work = new List<WorkItem>();
-                List<NameScopeItem> names = new List<NameScopeItem>();
+                List<NamedScopeItem> names = new List<NamedScopeItem>();
 
                 foreach (String file in openFileDialog.FileNames)
                 {
@@ -184,7 +184,7 @@ namespace DataDictionary.Main.Forms.Library
             {
                 List<WorkItem> work = new List<WorkItem>();
                 LibrarySourceKey key = new LibrarySourceKey(item);
-                NameScopeKey scopeKey = new NameScopeKey(item);
+                NamedScopeKey scopeKey = new NamedScopeKey(item);
 
                 work.AddRange(BusinessData.LibraryModel.Remove(key));
                 work.Add(
@@ -235,7 +235,7 @@ namespace DataDictionary.Main.Forms.Library
             {
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<NameScopeItem> names = new List<NameScopeItem>();
+                List<NamedScopeItem> names = new List<NamedScopeItem>();
                 work.Add(factory.OpenConnection());
 
                 LibrarySourceKey key = new LibrarySourceKey(item);

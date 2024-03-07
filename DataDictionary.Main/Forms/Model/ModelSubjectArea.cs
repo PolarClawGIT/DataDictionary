@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.NameScope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
@@ -70,7 +70,7 @@ namespace DataDictionary.Main.Forms.Domain
                 this.IsLocked(true);
                 ModelSubjectAreaKey key = new ModelSubjectAreaKey(current);
 
-                NameScopeKey nameKey = new NameScopeKey(current);
+                NamedScopeKey nameKey = new NamedScopeKey(current);
                 BusinessData.NameScope.Remove(nameKey);
 
                 current.Remove();

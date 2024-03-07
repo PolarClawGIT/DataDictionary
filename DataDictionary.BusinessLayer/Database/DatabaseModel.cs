@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.NameScope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.Database
     public interface IDatabaseModel :
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>, IRemoveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INameScopeData
+        INamedScopeData
     {
         /// <summary>
         /// List of Database Catalogs within the Model.
@@ -458,7 +458,7 @@ namespace DataDictionary.BusinessLayer.Database
 
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target)
+        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
         {
             List<WorkItem> work = new List<WorkItem>();
 

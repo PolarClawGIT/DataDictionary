@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.NameScope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer.Library
     public interface ILibraryModel :
         ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>, IRemoveData<ILibrarySourceKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INameScopeData
+        INamedScopeData
     {
         /// <summary>
         /// List of .Net Library Members within the Model
@@ -165,7 +165,7 @@ namespace DataDictionary.BusinessLayer.Library
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target)
+        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
         {
             List<WorkItem> work = new List<WorkItem>();
 

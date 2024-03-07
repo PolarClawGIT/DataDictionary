@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
@@ -23,9 +23,9 @@ namespace DataDictionary.Main
 {
     partial class Main
     {
-        Dictionary<TreeNode, NameScopeItem> contextNodes = new Dictionary<TreeNode, NameScopeItem>();
+        Dictionary<TreeNode, NamedScopeItem> contextNodes = new Dictionary<TreeNode, NamedScopeItem>();
 
-        List<NameScopeItem> expandedContextNodes = new List<NameScopeItem>();
+        List<NamedScopeItem> expandedContextNodes = new List<NamedScopeItem>();
         void ClearTree()
         {
             BusinessData.NameScope.ListChanged -= NameScope_ListChanged;
@@ -57,11 +57,11 @@ namespace DataDictionary.Main
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                foreach (NameScopeItem item in expandedContextNodes)
+                foreach (NamedScopeItem item in expandedContextNodes)
                 {
-                    NameScopeKey key = new NameScopeKey(item);
+                    NamedScopeKey key = new NamedScopeKey(item);
 
-                    KeyValuePair<TreeNode, NameScopeItem> value = contextNodes.FirstOrDefault(w => key.Equals(w.Value));
+                    KeyValuePair<TreeNode, NamedScopeItem> value = contextNodes.FirstOrDefault(w => key.Equals(w.Value));
 
                     if (value.Key is TreeNode node)
                     { node.ExpandParent(); }
@@ -86,9 +86,9 @@ namespace DataDictionary.Main
                     contextNameNavigation.Nodes,
                     BusinessData.NameScope.RootItem.Children.Select(s => BusinessData.NameScope[s]).ToList());
 
-                void CreateNodes(TreeNodeCollection target, IEnumerable<NameScopeItem> items)
+                void CreateNodes(TreeNodeCollection target, IEnumerable<NamedScopeItem> items)
                 {
-                    foreach (IGrouping<ScopeType, NameScopeItem>? scopeGroup in items.GroupBy(g => g.Scope).OrderBy(o => o.Key))
+                    foreach (IGrouping<ScopeType, NamedScopeItem>? scopeGroup in items.GroupBy(g => g.Scope).OrderBy(o => o.Key))
                     {
                         TreeNodeCollection nodes = target;
 
@@ -107,7 +107,7 @@ namespace DataDictionary.Main
                             });
                         }
 
-                        foreach (NameScopeItem item in scopeGroup.OrderBy(o => o.OrdinalPosition).ThenBy(o => o.MemberName))
+                        foreach (NamedScopeItem item in scopeGroup.OrderBy(o => o.OrdinalPosition).ThenBy(o => o.MemberName))
                         {
                             TreeNode node = contextNameNavigation.Invoke<TreeNode>(() =>
                             {
@@ -138,14 +138,14 @@ namespace DataDictionary.Main
             }
         }
 
-        private void NameScope_ListChanged(object? sender, NameScopeChangedEventArgs e)
+        private void NameScope_ListChanged(object? sender, NamedScopeChangedEventArgs e)
         {
             TreeNodeCollection taget = contextNameNavigation.Nodes;
 
-            if (e.ChangedType == NameScopeChangedType.BeginBatch)
+            if (e.ChangedType == NameScopedChangedType.BeginBatch)
             { RefreshTree(); }
 
-            else if (e.ChangedType == NameScopeChangedType.ItemAdded && e.Item is NameScopeItem addedItem)
+            else if (e.ChangedType == NameScopedChangedType.ItemAdded && e.Item is NamedScopeItem addedItem)
             {// Handle Add
                 if (contextNodes.FirstOrDefault(w => addedItem.SystemParentKey is not null && addedItem.SystemParentKey.Equals(w.Value.SystemKey)).Key is TreeNode parentNode)
                 { taget = parentNode.Nodes; }
@@ -166,9 +166,9 @@ namespace DataDictionary.Main
                 });
             }
 
-            else if (e.ChangedType == NameScopeChangedType.ItemDeleted && e.Item is NameScopeItem deletedItem)
+            else if (e.ChangedType == NameScopedChangedType.ItemDeleted && e.Item is NamedScopeItem deletedItem)
             { // Handle Remove
-                NameScopeKey deleteKey = deletedItem.SystemKey;
+                NamedScopeKey deleteKey = deletedItem.SystemKey;
                 if (contextNodes.FirstOrDefault(w => deletedItem.SystemKey.Equals(w.Value.SystemKey)).Key is TreeNode node)
                 {
                     contextNameNavigation.Invoke(() =>
@@ -189,7 +189,7 @@ namespace DataDictionary.Main
             BusinessData.NameScope.Clear();
 
             List<WorkItem> work = new List<WorkItem>();
-            List<NameScopeItem> names = new List<NameScopeItem>();
+            List<NamedScopeItem> names = new List<NamedScopeItem>();
             work.AddRange(BusinessData.Export(names));
             work.AddRange(BusinessData.NameScope.Import(names));
 
@@ -204,7 +204,7 @@ namespace DataDictionary.Main
             DomainAttributeItem item = new DomainAttributeItem();
 
             BusinessData.DomainModel.Attributes.Add(item);
-            BusinessData.NameScope.Add(new NameScopeItem(BusinessData.Model, item));
+            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
             { contextNameNavigation.SelectedNode = node; }
@@ -217,7 +217,7 @@ namespace DataDictionary.Main
             DomainEntityItem item = new DomainEntityItem();
 
             BusinessData.DomainModel.Entities.Add(item);
-            BusinessData.NameScope.Add(new NameScopeItem(BusinessData.Model, item));
+            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
             { contextNameNavigation.SelectedNode = node; }
@@ -230,7 +230,7 @@ namespace DataDictionary.Main
             ModelSubjectAreaItem item = new ModelSubjectAreaItem();
 
             BusinessData.ModelSubjectAreas.Add(item);
-            BusinessData.NameScope.Add(new NameScopeItem(BusinessData.Model, item));
+            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
 
             if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
             { contextNameNavigation.SelectedNode = node; }

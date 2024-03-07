@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer;
+﻿using DataDictionary.BusinessLayer.NameSpace;
+using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
@@ -6,7 +7,6 @@ using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.LibraryData.Member;
@@ -15,12 +15,12 @@ using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
 using System.ComponentModel;
 
-namespace DataDictionary.BusinessLayer.NameSpace
+namespace DataDictionary.BusinessLayer.NamedScope
 {
     /// <summary>
-    /// Interface for a Model NameSpace Item.
+    /// Interface for a NameScope Item.
     /// </summary>
-    public interface IModelNameSpaceItem : IModelNameSpaceKey, INameSpaceKey, IScopeKey
+    public interface INamedScopeItem : INamedScopeKey, INameSpaceKey, IScopeKey
     {
         /// <summary>
         /// Parent System Id
@@ -39,24 +39,24 @@ namespace DataDictionary.BusinessLayer.NameSpace
     }
 
     /// <summary>
-    /// Implementation for Model NameSpace Item.
+    /// Implementation for NameScope Item.
     /// </summary>
-    public class ModelNameSpaceItem : IModelNameSpaceItem, INotifyPropertyChanged
+    public class NamedScopeItem : INamedScopeItem, INotifyPropertyChanged
     {
         /// <summary>
         /// Container for the SystemId
         /// </summary>
-        public ModelNameSpaceKey SystemKey { get; protected set; }
+        public NamedScopeKey SystemKey { get; protected set; }
 
         /// <summary>
         /// Container for the SystemParentId
         /// </summary>
-        public ModelNameSpaceKey? SystemParentKey { get; internal protected set; }
+        public NamedScopeKey? SystemParentKey { get; internal protected set; }
 
         /// <summary>
         /// List of keys that are the children of this record.
         /// </summary>
-        public virtual List<ModelNameSpaceKey> Children { get; } = new List<ModelNameSpaceKey>();
+        public virtual List<NamedScopeKey> Children { get; } = new List<NamedScopeKey>();
 
         /// <summary>
         /// Container for the Scope.
@@ -94,7 +94,7 @@ namespace DataDictionary.BusinessLayer.NameSpace
         public virtual Int32 OrdinalPosition { get; protected set; } = Int32.MaxValue;
 
         /// <summary>
-        /// Source of the Model NameSpace Item.
+        /// Source of the NameScope Item.
         /// </summary>
         public virtual Object? Source { get; init; } = null;
 
@@ -104,17 +104,17 @@ namespace DataDictionary.BusinessLayer.NameSpace
         /// <remarks>Used by OnPropertyChanged event</remarks>
         protected virtual Func<NameSpaceKey> GetNameSpaceKey
         {
-            get { return funcGetNameSpaceKey; }
+            get { return funcGetKey; }
             private set
             {
-                funcGetNameSpaceKey = value;
+                funcGetKey = value;
                 nameSpaceKey = value();
                 OnPropertyChanged(nameof(MemberName));
                 OnPropertyChanged(nameof(MemberPath));
                 OnPropertyChanged(nameof(MemberFullName));
             }
         }
-        private Func<NameSpaceKey> funcGetNameSpaceKey = () => new NameSpaceKey(String.Empty);
+        private Func<NameSpaceKey> funcGetKey = () => new NameSpaceKey(String.Empty);
         private NameSpaceKey nameSpaceKey = new NameSpaceKey(String.Empty);
 
         /// <summary>
@@ -135,21 +135,21 @@ namespace DataDictionary.BusinessLayer.NameSpace
 
         #region Constrictors
         /// <summary>
-        /// Constructor for a Model NameSpace, Base (blank item)
+        /// Constructor for a NameScope, Base (blank item)
         /// </summary>
-        public ModelNameSpaceItem() : base()
+        public NamedScopeItem() : base()
         {
-            SystemKey = new ModelNameSpaceKey();
+            SystemKey = new NamedScopeKey();
             ScopeKey = new ScopeKey(ScopeType.Null);
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbCatalog
+        /// Constructor for a NameScope, DbCatalog
         /// </summary>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbCatalogItem data) : base()
+        public NamedScopeItem(IDbCatalogItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbCatalogKey)data);
+            SystemKey = new NamedScopeKey((IDbCatalogKey)data);
             ScopeKey = new ScopeKey(data);
             Source = data;
 
@@ -160,14 +160,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbSchema
+        /// Constructor for a NameScope, DbSchema
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbCatalogKey parent, IDbSchemaItem data) : base()
+        public NamedScopeItem(IDbCatalogKey parent, IDbSchemaItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbSchemaKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((IDbSchemaKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             ScopeKey = new ScopeKey(data);
             Source = data;
 
@@ -178,14 +178,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbTable
+        /// Constructor for a NameScope, DbTable
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbSchemaKey parent, IDbTableItem data) : base()
+        public NamedScopeItem(IDbSchemaKey parent, IDbTableItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbTableKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((IDbTableKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             ScopeKey = new ScopeKey(data);
             Source = data;
 
@@ -196,33 +196,33 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbTableColumn
+        /// Constructor for a NameScope, DbTableColumn
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbTableKey parent, IDbTableColumnItem data) : base()
+        public NamedScopeItem(IDbTableKey parent, IDbTableColumnItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbTableColumnKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((IDbTableColumnKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             ScopeKey = new ScopeKey(data);
             Source = data;
 
             GetNameSpaceKey = () => new NameSpaceKey((IDbTableColumnKeyName)data);
-            GetTitle = () => new DbTableColumnKeyName(data).TableName;
+            GetTitle = () => new DbTableColumnKeyName(data).ColumnName;
 
             if (data.OrdinalPosition is Int32 position) { OrdinalPosition = position; }
             data.PropertyChanged += OnPropertyChanged;
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbConstraint
+        /// Constructor for a NameScope, DbConstraint
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbTableKey parent, IDbConstraintItem data) : base()
+        public NamedScopeItem(IDbTableKey parent, IDbConstraintItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbConstraintKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((IDbConstraintKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             ScopeKey = new ScopeKey(data);
             Source = data;
 
@@ -233,14 +233,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbRoutine
+        /// Constructor for a NameScope, DbRoutine
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbSchemaKey parent, IDbRoutineItem data) : base()
+        public NamedScopeItem(IDbSchemaKey parent, IDbRoutineItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbRoutineKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((IDbRoutineKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             ScopeKey = new ScopeKey(data);
             Source = data;
 
@@ -251,33 +251,33 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbRoutineParameter
+        /// Constructor for a NameScope, DbRoutineParameter
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbRoutineKey parent, IDbRoutineParameterItem data) : base()
+        public NamedScopeItem(IDbRoutineKey parent, IDbRoutineParameterItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbRoutineParameterKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((IDbRoutineParameterKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(data);
 
             GetNameSpaceKey = () => new NameSpaceKey((IDbRoutineParameterKeyName)data);
-            GetTitle = () => new DbRoutineParameterKeyName(data).RoutineName;
+            GetTitle = () => new DbRoutineParameterKeyName(data).ParameterName;
 
             if (data.OrdinalPosition is Int32 position) { OrdinalPosition = position; }
             data.PropertyChanged += OnPropertyChanged;
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DbDomain
+        /// Constructor for a NameScope, DbDomain
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IDbSchemaKey parent, IDbDomainItem data) : base()
+        public NamedScopeItem(IDbSchemaKey parent, IDbDomainItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDbDomainKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((IDbDomainKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(data);
 
@@ -288,12 +288,12 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, LibrarySource
+        /// Constructor for a NameScope, LibrarySource
         /// </summary>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(ILibrarySourceItem data) : base()
+        public NamedScopeItem(ILibrarySourceItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((ILibrarySourceKey)data);
+            SystemKey = new NamedScopeKey((ILibrarySourceKey)data);
             Source = data;
             ScopeKey = new ScopeKey(data);
 
@@ -304,14 +304,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, LibraryMember
+        /// Constructor for a NameScope, LibraryMember
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(ILibrarySourceKey parent, ILibraryMemberItem data) : base()
+        public NamedScopeItem(ILibrarySourceKey parent, ILibraryMemberItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((ILibraryMemberKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((ILibraryMemberKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(data);
 
@@ -322,14 +322,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, LibraryMember
+        /// Constructor for a NameScope, LibraryMember
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(ILibraryMemberKey parent, ILibraryMemberItem data) : base()
+        public NamedScopeItem(ILibraryMemberKey parent, ILibraryMemberItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((ILibraryMemberKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((ILibraryMemberKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(data);
 
@@ -340,12 +340,30 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, Model
+        /// Constructor for a NameScope, LibraryMember
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="data"></param>
+        public NamedScopeItem(ILibraryMemberKeyParent parent, ILibraryMemberItem data) : base()
+        {
+            SystemKey = new NamedScopeKey((ILibraryMemberKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
+            Source = data;
+            ScopeKey = new ScopeKey(data);
+
+            GetNameSpaceKey = () => new NameSpaceKey((ILibraryMemberKeyName)data);
+            GetTitle = () => new LibraryMemberKeyName(data).MemberName;
+
+            data.PropertyChanged += OnPropertyChanged;
+        }
+
+        /// <summary>
+        /// Constructor for a NameScope, Model
         /// </summary>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelItem data) : base()
+        public NamedScopeItem(IModelItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IModelKey)data);
+            SystemKey = new NamedScopeKey((IModelKey)data);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.Model);
 
@@ -356,14 +374,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, ModelSubjectArea
+        /// Constructor for a NameScope, ModelSubjectArea
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelKey parent, IModelSubjectAreaItem data) : base()
+        public NamedScopeItem(IModelKey parent, IModelSubjectAreaItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IModelSubjectAreaKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((IModelSubjectAreaKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelSubjectArea);
 
@@ -374,14 +392,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, ModelSubjectArea
+        /// Constructor for a NameScope, ModelSubjectArea
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelSubjectAreaKey parent, IModelSubjectAreaItem data) : base()
+        public NamedScopeItem(IModelSubjectAreaKey parent, IModelSubjectAreaItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IModelSubjectAreaKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((IModelSubjectAreaKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelSubjectArea);
 
@@ -392,65 +410,62 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// /// Constructor for a Model NameSpace, Model/NameSpace
+        /// /// Constructor for a NameScope, Model/NameSpace
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        /// <param name="dataKey"></param>
-        public ModelNameSpaceItem(IModelKey parent, INameSpaceKey data, IModelNameSpaceKey dataKey)
+        public NamedScopeItem(IModelKey parent, INameSpaceItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey(dataKey);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey(data);
+            SystemParentKey = new NamedScopeKey(parent);
             Source = data;
-            ScopeKey = new ScopeKey(ScopeType.ModelNameSpace);
+            ScopeKey = new ScopeKey(data);
 
             GetNameSpaceKey = () => new NameSpaceKey(data);
             GetTitle = () => data.MemberName ?? String.Empty;
         }
 
         /// <summary>
-        /// /// /// Constructor for a Model NameSpace, NameSpace/NameSpace
-        /// </summary>
-        /// <param name="parentKey"></param>
-        /// <param name="data"></param>
-        /// <param name="dataKey"></param>
-        public ModelNameSpaceItem(IModelNameSpaceKey parentKey, INameSpaceKey data, IModelNameSpaceKey dataKey)
-        {
-            SystemKey = new ModelNameSpaceKey(dataKey);
-            SystemParentKey = new ModelNameSpaceKey(parentKey);
-            Source = data;
-            ScopeKey = new ScopeKey(ScopeType.ModelNameSpace);
-
-            GetNameSpaceKey = () => new NameSpaceKey(data);
-            GetTitle = () => data.MemberName ?? String.Empty;
-        }
-
-        /// <summary>
-        /// Constructor for a Model NameSpace, SubjectArea/NameSpace
+        /// Constructor for a NameScope, NameSpace/NameSpace
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        /// <param name="dataKey"></param>
-        public ModelNameSpaceItem(IModelSubjectAreaItem parent, INameSpaceKey data, IModelNameSpaceKey dataKey)
+        public NamedScopeItem(INameSpaceItem parent, INameSpaceItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey(dataKey);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey(data);
+            SystemParentKey = new NamedScopeKey(parent);
             Source = data;
-            ScopeKey = new ScopeKey(ScopeType.ModelNameSpace);
+            ScopeKey = new ScopeKey(data);
 
             GetNameSpaceKey = () => new NameSpaceKey(data);
             GetTitle = () => data.MemberName ?? String.Empty;
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, NameSpace/SubjectArea
+        /// Constructor for a NameScope, SubjectArea/NameSpace
         /// </summary>
-        /// <param name="parentKey"></param>
+        /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelNameSpaceKey parentKey, IModelSubjectAreaItem data)
+        public NamedScopeItem(IModelSubjectAreaItem parent, INameSpaceItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((INameSpaceKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parentKey);
+            SystemKey = new NamedScopeKey(data);
+            SystemParentKey = new NamedScopeKey(parent);
+            Source = data;
+            ScopeKey = new ScopeKey(data);
+
+            GetNameSpaceKey = () => new NameSpaceKey(data);
+            GetTitle = () => data.MemberName ?? String.Empty;
+        }
+
+        /// <summary>
+        /// Constructor for a NameScope, NameSpace/SubjectArea
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="data"></param>
+        public NamedScopeItem(INameSpaceItem parent, IModelSubjectAreaItem data): base()
+        {
+            SystemKey = new NamedScopeKey((IModelSubjectAreaKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelSubjectArea);
 
@@ -462,14 +477,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
 
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DomainAttribute
+        /// Constructor for a NameScope, DomainAttribute
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelKey parent, IDomainAttributeItem data) : base()
+        public NamedScopeItem(IModelKey parent, IDomainAttributeItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDomainAttributeKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((IDomainAttributeKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelAttribute);
 
@@ -480,14 +495,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DomainAttribute
+        /// Constructor for a NameScope, DomainAttribute
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelSubjectAreaKey parent, IDomainAttributeItem data) : base()
+        public NamedScopeItem(IModelSubjectAreaKey parent, IDomainAttributeItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDomainAttributeKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((IDomainAttributeKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelAttribute);
 
@@ -498,14 +513,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DomainEntity
+        /// Constructor for a NameScope, DomainEntity
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelKey parent, IDomainEntityItem data) : base()
+        public NamedScopeItem(IModelKey parent, IDomainEntityItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDomainEntityKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((IDomainEntityKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelEntity);
 
@@ -516,14 +531,14 @@ namespace DataDictionary.BusinessLayer.NameSpace
         }
 
         /// <summary>
-        /// Constructor for a Model NameSpace, DomainEntity
+        /// Constructor for a NameScope, DomainEntity
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public ModelNameSpaceItem(IModelSubjectAreaKey parent, IDomainEntityItem data) : base()
+        public NamedScopeItem(IModelSubjectAreaKey parent, IDomainEntityItem data) : base()
         {
-            SystemKey = new ModelNameSpaceKey((IDomainEntityKey)data);
-            SystemParentKey = new ModelNameSpaceKey(parent);
+            SystemKey = new NamedScopeKey((IDomainEntityKey)data);
+            SystemParentKey = new NamedScopeKey(parent);
             Source = data;
             ScopeKey = new ScopeKey(ScopeType.ModelEntity);
 

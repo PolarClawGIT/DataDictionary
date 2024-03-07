@@ -1,18 +1,14 @@
-﻿using DataDictionary.DataLayer;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Scope;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.BusinessLayer.NameScope
+namespace DataDictionary.BusinessLayer.NameSpace
 {
     /// <summary>
     /// Interface for a NameSpace item within a NameScope
     /// </summary>
-    public interface INameSpaceItem : INameScopeKey, INameSpaceKey, IScopeKey
+    public interface INameSpaceItem : INamedScopeKey, INameSpaceKey, IScopeKey
     { }
 
     /// <summary>

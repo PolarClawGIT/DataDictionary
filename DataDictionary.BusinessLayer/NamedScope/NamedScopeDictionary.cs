@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.BusinessLayer.NameScope
+﻿namespace DataDictionary.BusinessLayer.NamedScope
 {
     /// <summary>
     /// Collection of NameScope Items with hierarchy support.
@@ -18,19 +18,19 @@
     /// NameScope is also called NameSpace, Alias Names and Context Names.
     /// NameScope was chosen to avoid naming collusions and reduce confusion.
     /// </remarks>
-    public class NameScopeDictionary : SortedDictionary<NameScopeKey, NameScopeItem>
+    public class NamedScopeDictionary : SortedDictionary<NamedScopeKey, NamedScopeItem>
     {
         /// <summary>
         /// Root key for the hierarchy.
         /// </summary>
-        public NameScopeItem RootItem { get; private set; }
+        public NamedScopeItem RootItem { get; private set; }
 
         /// <summary>
         /// Constructor for ModelAliasCollection
         /// </summary>
-        public NameScopeDictionary() : base()
+        public NamedScopeDictionary() : base()
         {
-            NameScopeItem rootItem = new NameScopeItem();
+            NamedScopeItem rootItem = new NamedScopeItem();
             RootItem = rootItem;
         }
 
@@ -43,7 +43,7 @@
         /// <remarks>
         /// This method is expected to catch calls to the base.Add.
         /// </remarks>
-        public void Add(INameScopeKey key, INameScopeItem value)
+        public void Add(INamedScopeKey key, INamedScopeItem value)
         { throw new InvalidOperationException("Do not use. Use Add by ContextNameItem."); }
 
         /// <summary>
@@ -51,11 +51,11 @@
         /// </summary>
         /// <param name="value"></param>
         /// <param name="isChild"></param>
-        public virtual void Add(NameScopeItem value, Boolean isChild = false)
+        public virtual void Add(NamedScopeItem value, Boolean isChild = false)
         {
             if (this.ContainsKey(value.SystemKey)) { return; }
 
-            if (value.SystemParentKey is NameScopeKey parentKey)
+            if (value.SystemParentKey is NamedScopeKey parentKey)
             {
                 if (this.ContainsKey(parentKey))
                 { this[parentKey].Children.Add(value.SystemKey); }
@@ -64,21 +64,21 @@
             else { this.RootItem.Children.Add(value.SystemKey); }
 
             base.Add(value.SystemKey, value);
-            OnListChanged(NameScopeChangedType.ItemAdded, value);
+            OnListChanged(NameScopedChangedType.ItemAdded, value);
         }
 
         /// <summary>
         /// Adds a list of items to the collection
         /// </summary>
         /// <param name="values"></param>
-        public virtual void AddRange(IEnumerable<NameScopeItem> values)
+        public virtual void AddRange(IEnumerable<NamedScopeItem> values)
         {
-            OnListChanged(NameScopeChangedType.BeginBatch);
+            OnListChanged(NameScopedChangedType.BeginBatch);
 
-            foreach (NameScopeItem item in values)
+            foreach (NamedScopeItem item in values)
             { Add(item); }
 
-            OnListChanged(NameScopeChangedType.EndBatch);
+            OnListChanged(NameScopedChangedType.EndBatch);
         }
 
         /// <summary>
@@ -89,18 +89,18 @@
         /// <remarks>
         /// This method is expected to catch calls to the base.Remove.
         /// </remarks>
-        public virtual Boolean Remove(INameScopeKey key)
+        public virtual Boolean Remove(INamedScopeKey key)
         {
             Boolean result = false;
 
-            NameScopeKey removeKey = new NameScopeKey(key);
-            if (this.ContainsKey(removeKey) && this[removeKey] is NameScopeItem removeItem)
+            NamedScopeKey removeKey = new NamedScopeKey(key);
+            if (this.ContainsKey(removeKey) && this[removeKey] is NamedScopeItem removeItem)
             {
                 if (removeItem.Children.Count > 0)
                 {
-                    OnListChanged(NameScopeChangedType.BeginBatch);
+                    OnListChanged(NameScopedChangedType.BeginBatch);
                     result = RemoveCore(key);
-                    OnListChanged(NameScopeChangedType.EndBatch);
+                    OnListChanged(NameScopedChangedType.EndBatch);
                 }
                 else { result = RemoveCore(key); }
             }
@@ -112,27 +112,27 @@
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        protected virtual Boolean RemoveCore(INameScopeKey key)
+        protected virtual Boolean RemoveCore(INamedScopeKey key)
         {
-            NameScopeKey removeKey = new NameScopeKey(key);
-            if (this.ContainsKey(removeKey) && this[removeKey] is NameScopeItem removeItem)
+            NamedScopeKey removeKey = new NamedScopeKey(key);
+            if (this.ContainsKey(removeKey) && this[removeKey] is NamedScopeItem removeItem)
             {
-                List<NameScopeKey> children = removeItem.Children.ToList();
+                List<NamedScopeKey> children = removeItem.Children.ToList();
 
 
-                foreach (NameScopeKey childKey in children)
+                foreach (NamedScopeKey childKey in children)
                 { this.RemoveCore(childKey); }
 
-                while (this.RootItem.Children.FirstOrDefault(w => removeKey.Equals(w)) is NameScopeKey rootChild)
+                while (this.RootItem.Children.FirstOrDefault(w => removeKey.Equals(w)) is NamedScopeKey rootChild)
                 { this.RootItem.Children.Remove(rootChild); }
 
-                if (removeItem.SystemParentKey is NameScopeKey && this.ContainsKey(removeItem.SystemParentKey))
+                if (removeItem.SystemParentKey is NamedScopeKey && this.ContainsKey(removeItem.SystemParentKey))
                 {
-                    while (this.RootItem.Children.FirstOrDefault(w => removeKey.Equals(w)) is NameScopeKey parentChild)
+                    while (this.RootItem.Children.FirstOrDefault(w => removeKey.Equals(w)) is NamedScopeKey parentChild)
                     { this.RootItem.Children.Remove(parentChild); }
                 }
 
-                OnListChanged(NameScopeChangedType.ItemDeleted, removeItem);
+                OnListChanged(NameScopedChangedType.ItemDeleted, removeItem);
                 removeItem.ClearEvents();
 
                 return base.Remove(removeKey);
@@ -147,13 +147,13 @@
         /// <param name="parent"></param>
         /// <returns></returns>
         [Obsolete("May Not be needed")]
-        public virtual Boolean Move(INameScopeKey item, INameScopeKey? parent)
+        public virtual Boolean Move(INamedScopeKey item, INamedScopeKey? parent)
         { // TODO: Not Certain this is needed. May just need to manipulate the Children.
-            NameScopeKey currentKey = new NameScopeKey(item);
+            NamedScopeKey currentKey = new NamedScopeKey(item);
 
             if (this.ContainsKey(currentKey))
             {
-                NameScopeItem currentItem = this[currentKey];
+                NamedScopeItem currentItem = this[currentKey];
 
                 if (currentItem.SystemParentKey is not null && this.ContainsKey(currentItem.SystemParentKey))
                 {
@@ -166,14 +166,14 @@
                     { RootItem.Children.Remove(currentKey); }
                 }
 
-                if (parent is INameScopeKey
-                    && new NameScopeKey(parent) is NameScopeKey parentKey
+                if (parent is INamedScopeKey
+                    && new NamedScopeKey(parent) is NamedScopeKey parentKey
                     && this.ContainsKey(parentKey))
                 {
                     this[parentKey].Children.Add(currentKey);
                     currentItem.SystemParentKey = parentKey;
 
-                    OnListChanged(NameScopeChangedType.ItemMoved, currentItem);
+                    OnListChanged(NameScopedChangedType.ItemMoved, currentItem);
                     return true;
                 }
                 else
@@ -181,7 +181,7 @@
                     RootItem.Children.Add(currentKey);
                     currentItem.SystemParentKey = null;
 
-                    OnListChanged(NameScopeChangedType.ItemMoved, currentItem);
+                    OnListChanged(NameScopedChangedType.ItemMoved, currentItem);
                     return true;
                 }
             }
@@ -192,17 +192,17 @@
         /// <summary>
         /// Raised when add, remove, or Clear is called.
         /// </summary>
-        public event EventHandler<NameScopeChangedEventArgs>? ListChanged;
+        public event EventHandler<NamedScopeChangedEventArgs>? ListChanged;
 
         /// <summary>
         /// Used to raise the ListChanged event.
         /// </summary>
         /// <param name="changedType"></param>
         /// <param name="data"></param>
-        protected virtual void OnListChanged(NameScopeChangedType changedType, INameScopeItem? data = null)
+        protected virtual void OnListChanged(NameScopedChangedType changedType, INamedScopeItem? data = null)
         {
-            if (ListChanged is EventHandler<NameScopeChangedEventArgs> handler)
-            { handler(this, new NameScopeChangedEventArgs(changedType, data)); }
+            if (ListChanged is EventHandler<NamedScopeChangedEventArgs> handler)
+            { handler(this, new NamedScopeChangedEventArgs(changedType, data)); }
         }
 
         /// <summary>

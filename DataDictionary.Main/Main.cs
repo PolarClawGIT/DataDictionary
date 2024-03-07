@@ -1,6 +1,6 @@
 using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
@@ -56,7 +56,7 @@ namespace DataDictionary.Main
             SendMessage(new DoUnbindData());
 
             List<WorkItem> work = new List<WorkItem>();
-            List<NameScopeItem> names = new List<NameScopeItem>();
+            List<NamedScopeItem> names = new List<NamedScopeItem>();
             work.AddRange(BusinessData.Export(names));
             work.AddRange(BusinessData.NameScope.Import(names));
 
@@ -168,7 +168,7 @@ namespace DataDictionary.Main
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             List<WorkItem> work = new List<WorkItem>();
-            List<NameScopeItem> names = new List<NameScopeItem>();
+            List<NamedScopeItem> names = new List<NamedScopeItem>();
             work.AddRange(BusinessData.Remove());
             work.AddRange(BusinessData.NameScope.Remove());
             work.AddRange(BusinessData.Export(names));

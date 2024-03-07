@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.NameSpace;
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ModelData;
@@ -24,7 +24,7 @@ namespace DataDictionary.BusinessLayer.Model
 
     class SubjectAreaData : ModelSubjectAreaCollection, ISubjectAreaData,
         ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile,
-        INameScopeData<IModelKey>
+        INamedScopeData<IModelKey>
     {
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
@@ -60,7 +60,7 @@ namespace DataDictionary.BusinessLayer.Model
         public IReadOnlyList<WorkItem> Remove()
         { return new WorkItem() { WorkName = "Remove Subject Area", DoWork = () => { Clear(); } }.ToList(); }
 
-        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target, Func<IModelKey?> parent)
+        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<IModelKey?> parent)
         {
 
             return new WorkItem()
@@ -87,7 +87,7 @@ namespace DataDictionary.BusinessLayer.Model
                             NameSpaceItem newNameSpace = new NameSpaceItem(item);
 
                             nameSpaces.Add(newNameSpace);
-                            target.Add(new NameScopeItem(modelKey, newNameSpace));
+                            target.Add(new NamedScopeItem(modelKey, newNameSpace));
                         }
                         else
                         if (currentSubject.Count == 0 && parentNameSpace is null && parentSubject is not null)
@@ -95,7 +95,7 @@ namespace DataDictionary.BusinessLayer.Model
                             NameSpaceItem newNameSpace = new NameSpaceItem(item);
 
                             nameSpaces.Add(newNameSpace);
-                            target.Add(new NameScopeItem(parentSubject, newNameSpace));
+                            target.Add(new NamedScopeItem(parentSubject, newNameSpace));
                         }
                         else
                         if (currentSubject.Count == 0 && parentNameSpace is not null && parentSubject is null)
@@ -103,7 +103,7 @@ namespace DataDictionary.BusinessLayer.Model
                             NameSpaceItem newNameSpace = new NameSpaceItem(item);
 
                             nameSpaces.Add(newNameSpace);
-                            target.Add(new NameScopeItem(parentNameSpace, newNameSpace));
+                            target.Add(new NamedScopeItem(parentNameSpace, newNameSpace));
                         }
                         else
                         if (currentSubject.Count == 0 && parentNameSpace is not null && parentSubject is not null)
@@ -111,31 +111,31 @@ namespace DataDictionary.BusinessLayer.Model
                             NameSpaceItem newNameSpace = new NameSpaceItem(item);
 
                             nameSpaces.Add(newNameSpace);
-                            target.Add(new NameScopeItem(parentNameSpace, newNameSpace));
+                            target.Add(new NamedScopeItem(parentNameSpace, newNameSpace));
                         }
                         else
                         if (currentSubject.Count > 0 && parentNameSpace is null && parentSubject is null)
                         {
                             foreach (ModelSubjectAreaItem current in currentSubject)
-                            { target.Add(new NameScopeItem(modelKey, current)); }
+                            { target.Add(new NamedScopeItem(modelKey, current)); }
                         }
                         else
                         if (currentSubject.Count > 0 && parentNameSpace is null && parentSubject is not null)
                         {
                             foreach (ModelSubjectAreaItem current in currentSubject)
-                            { target.Add(new NameScopeItem(parentSubject, current)); }
+                            { target.Add(new NamedScopeItem(parentSubject, current)); }
                         }
                         else
                         if (currentSubject.Count > 0 && parentNameSpace is not null && parentSubject is null)
                         {
                             foreach (ModelSubjectAreaItem current in currentSubject)
-                            { target.Add(new NameScopeItem(parentNameSpace, current)); }
+                            { target.Add(new NamedScopeItem(parentNameSpace, current)); }
                         }
                         else
                         if (currentSubject.Count > 0 && parentNameSpace is not null && parentSubject is not null)
                         {
                             foreach (ModelSubjectAreaItem current in currentSubject)
-                            { target.Add(new NameScopeItem(parentSubject, current)); }
+                            { target.Add(new NamedScopeItem(parentSubject, current)); }
                         }
                     }
 

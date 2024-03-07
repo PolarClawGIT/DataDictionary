@@ -12,8 +12,8 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Wrapper for the Catalog (database) Data
         /// </summary>
-        public IDatabaseModel DatabaseModel { get { return database; } }
-        private readonly DatabaseModel database = new DatabaseModel();
+        public IDatabaseModel DatabaseModel { get { return databaseValue; } }
+        private readonly DatabaseModel databaseValue;
 
     }
 }

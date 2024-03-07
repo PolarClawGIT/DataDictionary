@@ -6,25 +6,25 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Threading;
 
-namespace DataDictionary.BusinessLayer.NameScope
+namespace DataDictionary.BusinessLayer.NamedScope
 {
     /// <summary>
     /// Interface for objects that contain NameScope Data
     /// </summary>
-    public interface INameScopeData
+    public interface INamedScopeData
     {
         /// <summary>
         /// Create Work Items that are used to load the NameScopeDictionary
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target);
+        IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target);
     }
 
     /// <summary>
     /// Interface for objects that contain NameScope Data
     /// </summary>
-    public interface INameScopeData<TKey>
+    public interface INamedScopeData<TKey>
         where TKey : IKey
     {
         /// <summary>
@@ -33,6 +33,6 @@ namespace DataDictionary.BusinessLayer.NameScope
         /// <param name="target"></param>
         /// <param name="parent"></param>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target, Func<TKey?> parent);
+        IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<TKey?> parent);
     }
 }
