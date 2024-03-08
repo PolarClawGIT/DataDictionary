@@ -25,10 +25,6 @@ namespace DataDictionary.Main.Forms.Domain
             deleteItemCommand.Image = Resources.DeleteAttribute;
             deleteItemCommand.Click += DeleteItemCommand_Click;
             deleteItemCommand.ToolTipText = "Delete Attribute";
-
-            exportDataCommand.Enabled = true;
-            exportDataCommand.Image = Resources.ExportCatalogPart;
-            exportDataCommand.Click += ExportDataCommand_Click;
         }
 
         public DomainAttribute(IDomainAttributeItem attributeItem) : this()
@@ -96,12 +92,6 @@ namespace DataDictionary.Main.Forms.Domain
                 bindingAlias.AddNew();
             }
             else { }
-        }
-
-        private void ExportDataCommand_Click(object? sender, EventArgs e)
-        {
-            if (bindingAttribute.Current is IDomainAttributeItem current)
-            { Activate(() => new Forms.ApplicationWide.TransformEditor(BusinessData.DomainModel.Attributes.ToXml(current))); }
         }
 
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
