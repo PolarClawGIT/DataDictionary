@@ -21,10 +21,10 @@ namespace DataDictionary.Main.Forms.Database
         {
             InitializeComponent();
 
-            importDataCommand.DropDown = importOptions;
-            importDataCommand.Enabled = true;
-            importDataCommand.ButtonClick += ImportDataCommand_Click;
-            importDataCommand.ToolTipText = "Import the Table/View to the Domain Model";
+            exportItemCommand.Image = Resources.ExportEntity;
+            exportItemCommand.Enabled = true;
+            exportItemCommand.ButtonClick += exportItemCommand_Click;
+            exportItemCommand.ToolTipText = "Export the Table/View to the Domain Model Entity";
         }
 
         public DbTable(IDbTableItem tableItem) :this()
@@ -69,7 +69,7 @@ namespace DataDictionary.Main.Forms.Database
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingTable.Current is not IDbTableItem);
         }
 
-        private void ImportDataCommand_Click(object? sender, EventArgs e)
+        private void exportItemCommand_Click(object? sender, EventArgs e)
         {
             if (bindingTable.Current is IDbTableItem current)
             {

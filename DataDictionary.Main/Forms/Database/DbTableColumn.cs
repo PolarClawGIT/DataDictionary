@@ -20,9 +20,10 @@ namespace DataDictionary.Main.Forms.Database
         {
             InitializeComponent();
 
-            importDataCommand.Enabled = true;
-            importDataCommand.Click += ImportDataCommand_Click;
-            importDataCommand.ToolTipText = "Import the Table/View Column to the Domain Model";
+            exportItemCommand.Image = Resources.ExportAttribute;
+            exportItemCommand.Enabled = true;
+            exportItemCommand.Click += exportItemCommand_Click;
+            exportItemCommand.ToolTipText = "Export the Table/View Column to the Domain Model Attribute";
         }
 
         public DbTableColumn(IDbTableColumnItem columnItem): this ()
@@ -88,7 +89,7 @@ namespace DataDictionary.Main.Forms.Database
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingColumn.Current is not IDbTableColumnItem);
         }
 
-        private void ImportDataCommand_Click(object? sender, EventArgs e)
+        private void exportItemCommand_Click(object? sender, EventArgs e)
         {
             if (bindingColumn.Current is IDbTableColumnItem current)
             {

@@ -36,7 +36,7 @@
             toolStrip = new ToolStrip();
             newItemCommand = new ToolStripButton();
             deleteItemCommand = new ToolStripButton();
-            importDataCommand = new ToolStripSplitButton();
+            exportItemCommand = new ToolStripSplitButton();
             openFromDatabaseCommand = new ToolStripButton();
             saveToDatabaseCommand = new ToolStripButton();
             deleteFromDatabaseCommand = new ToolStripButton();
@@ -46,7 +46,6 @@
             helpToolStripButton = new ToolStripButton();
             rowStateCommand = new ToolStripLabel();
             toolTip = new ToolTip(components);
-            exportDataCommand = new ToolStripSplitButton();
             toolStripSeparator = new ToolStripSeparator();
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripSeparator2 = new ToolStripSeparator();
@@ -70,7 +69,7 @@
             // 
             // toolStrip
             // 
-            toolStrip.Items.AddRange(new ToolStripItem[] { newItemCommand, deleteItemCommand, importDataCommand, exportDataCommand, toolStripSeparator2, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator1, helpToolStripButton, rowStateCommand });
+            toolStrip.Items.AddRange(new ToolStripItem[] { newItemCommand, exportItemCommand, deleteItemCommand, toolStripSeparator2, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator1, helpToolStripButton, rowStateCommand });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(800, 25);
@@ -97,15 +96,15 @@
             deleteItemCommand.Size = new Size(23, 22);
             deleteItemCommand.Text = "Delete Item";
             // 
-            // importDataCommand
+            // exportItemCommand
             // 
-            importDataCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            importDataCommand.Enabled = false;
-            importDataCommand.Image = Properties.Resources.ImportCatalogPart;
-            importDataCommand.ImageTransparentColor = Color.Magenta;
-            importDataCommand.Name = "importDataCommand";
-            importDataCommand.Size = new Size(32, 22);
-            importDataCommand.Text = "Import Data";
+            exportItemCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            exportItemCommand.Enabled = false;
+            exportItemCommand.Image = Properties.Resources.ExportDocument;
+            exportItemCommand.ImageTransparentColor = Color.Magenta;
+            exportItemCommand.Name = "exportItemCommand";
+            exportItemCommand.Size = new Size(32, 22);
+            exportItemCommand.Text = "Import Data";
             // 
             // openFromDatabaseCommand
             // 
@@ -187,16 +186,6 @@
             rowStateCommand.Size = new Size(16, 22);
             rowStateCommand.Text = "Row State";
             // 
-            // exportDataCommand
-            // 
-            exportDataCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            exportDataCommand.Enabled = false;
-            exportDataCommand.Image = Properties.Resources.ExportCatalogPart;
-            exportDataCommand.ImageTransparentColor = Color.Magenta;
-            exportDataCommand.Name = "exportDataCommand";
-            exportDataCommand.Size = new Size(32, 22);
-            exportDataCommand.Text = "Export Data";
-            // 
             // ApplicationBase
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -223,9 +212,8 @@
         protected ToolStripButton deleteFromDatabaseCommand;
         protected ToolStripButton newItemCommand;
         protected ToolStripButton deleteItemCommand;
-        protected ToolStripSplitButton importDataCommand;
+        protected ToolStripSplitButton exportItemCommand;
         private ToolStripLabel rowStateCommand;
         protected ToolTip toolTip;
-        protected ToolStripSplitButton exportDataCommand;
     }
 }

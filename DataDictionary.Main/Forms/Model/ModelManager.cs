@@ -55,7 +55,7 @@ namespace DataDictionary.Main.Forms.Model
 
             newItemCommand.Enabled = true;
             newItemCommand.Click += NewItemCommand_Click;
-            newItemCommand.Image = Resources.NewDictionary;
+            newItemCommand.Image = Resources.NewSoftwareDefinitionModel;
             newItemCommand.ToolTipText = "Create a empty Model";
 
             openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click;

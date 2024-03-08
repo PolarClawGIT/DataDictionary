@@ -17,6 +17,11 @@ namespace DataDictionary.Main.Forms.Model
         public Model() : base()
         {
             InitializeComponent();
+
+            exportItemCommand.Image = Resources.ExportSoftwareDefinitionModel;
+            exportItemCommand.Enabled = true;
+            exportItemCommand.ButtonClick += exportItemCommand_Click;
+            exportItemCommand.ToolTipText = "goto the Model Manager";
         }
 
         public Model(IModelItem data): this()
@@ -41,5 +46,8 @@ namespace DataDictionary.Main.Forms.Model
             modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), bindingModel, nameof(nameBinding.ModelTitle)));
             modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), bindingModel, nameof(nameBinding.ModelDescription)));
         }
+
+        private void exportItemCommand_Click(object? sender, EventArgs e)
+        { Activate(() => new Forms.Model.ModelManager()); }
     }
 }
