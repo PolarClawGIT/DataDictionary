@@ -20,10 +20,10 @@ namespace DataDictionary.Main.Forms.Database
         {
             InitializeComponent();
 
-            importDataCommand.DropDown = importOptions;
-            importDataCommand.Enabled = true;
-            importDataCommand.ButtonClick += ImportDataCommand_Click;
-            importDataCommand.ToolTipText = "Import the Database to the Domain Model";
+            exportItemCommand.Image = Resources.ExportSoftwareDefinitionModel;
+            exportItemCommand.Enabled = true;
+            exportItemCommand.ButtonClick += exportItemCommand_Click;
+            exportItemCommand.ToolTipText = "Export the Database to the Domain Model";
         }
 
         public DbCatalog(IDbCatalogItem catalogItem) : this()
@@ -54,7 +54,7 @@ namespace DataDictionary.Main.Forms.Database
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSource.Current is not IDbCatalogItem);
         }
 
-        private void ImportDataCommand_Click(object? sender, EventArgs e)
+        private void exportItemCommand_Click(object? sender, EventArgs e)
         {
             if (bindingSource.Current is IDbCatalogItem current)
             {
