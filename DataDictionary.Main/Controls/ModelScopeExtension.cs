@@ -41,11 +41,17 @@ namespace DataDictionary.Main.Controls
             {ScopeType.DatabaseFunctionParameter,        (Resources.Parameter, Resources.Icon_Parameter) },
 
             {ScopeType.Model,                            (Resources.SoftwareDefinitionModel, Resources.Icon_SoftwareDefinitionModel) },
-            {ScopeType.ModelSubjectArea,                 (Resources.Diagram, Resources.Icon_Diagram) },
-            {ScopeType.ModelAttribute,                   (Resources.Attribute, Resources.Icon_Attribute) },
-            {ScopeType.ModelEntity,                      (Resources.Entity, Resources.Icon_Entities) },
             {ScopeType.ModelNameSpace,                   (Resources.Namespace, Resources.Icon_Namespace) },
+            {ScopeType.ModelSubjectArea,                 (Resources.Diagram, Resources.Icon_Diagram) },
 
+            {ScopeType.ModelAttribute,                   (Resources.Attribute, Resources.Icon_Attribute) },
+            {ScopeType.ModelAttributeAlias,              (Resources.Synonym, Resources.Icon_Attribute) },
+            {ScopeType.ModelAttributeProperty,           (Resources.Property, Resources.Icon_Attribute) },
+
+            {ScopeType.ModelEntity,                      (Resources.Entity, Resources.Icon_Entities) },
+            {ScopeType.ModelEntityAlias,                 (Resources.Synonym, Resources.Icon_Entities) },
+            {ScopeType.ModelEntityProperty,              (Resources.Property, Resources.Icon_Entities) },
+            {ScopeType.ModelEntityAttribute,             (Resources.Attribute, Resources.Icon_Attribute) },
         };
 
         public static Image ToImage(this ScopeType scope)

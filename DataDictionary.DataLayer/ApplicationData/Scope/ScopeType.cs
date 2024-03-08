@@ -43,9 +43,34 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         ModelAttribute,
 
         /// <summary>
+        /// Application Model Attribute Alias
+        /// </summary>
+        ModelAttributeAlias,
+
+        /// <summary>
+        /// Application Model Attribute Property
+        /// </summary>
+        ModelAttributeProperty,
+
+        /// <summary>
         /// Application Model Entity
         /// </summary>
         ModelEntity,
+
+        /// <summary>
+        /// Application Model Entity Alias
+        /// </summary>
+        ModelEntityAlias,
+
+        /// <summary>
+        /// Application Model Entity Property
+        /// </summary>
+        ModelEntityProperty,
+
+        /// <summary>
+        /// Application Model Attribute of an Entity
+        /// </summary>
+        ModelEntityAttribute,
 
         /// <summary>
         /// NameSpace item for the Model

@@ -34,6 +34,7 @@ Begin Try;
 		(Null, 'Model.Entity', Null),
 		(Null, 'Model.Entity.Alias', NULL),
 		(Null, 'Model.Entity.Property', NULL),
+		(Null, 'Model.Entity.Attribute', NULL),
 		(Null, 'Model.Attribute', NULL),
 		(Null, 'Model.Attribute.Alias', NULL),
 		(Null, 'Model.Attribute.Property', NULL),
