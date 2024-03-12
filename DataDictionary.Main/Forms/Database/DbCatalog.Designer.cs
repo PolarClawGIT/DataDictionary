@@ -40,10 +40,13 @@
             importOptionAttribute = new ToolStripMenuItem();
             importOptionProcesses = new ToolStripMenuItem();
             bindingSource = new BindingSource(components);
+            catalogToolStrip = new ContextMenuStrip(components);
+            exportCommand = new ToolStripMenuItem();
             catalogManagerLayout = new TableLayoutPanel();
             catalogManagerLayout.SuspendLayout();
             importOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSource).BeginInit();
+            catalogToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // catalogManagerLayout
@@ -161,6 +164,20 @@
             importOptionProcesses.Size = new Size(165, 22);
             importOptionProcesses.Text = "Import Processes";
             // 
+            // catalogToolStrip
+            // 
+            catalogToolStrip.Items.AddRange(new ToolStripItem[] { exportCommand });
+            catalogToolStrip.Name = "databaseToolStrip";
+            catalogToolStrip.Size = new Size(222, 48);
+            // 
+            // exportCommand
+            // 
+            exportCommand.Image = Properties.Resources.ExportSoftwareDefinitionModel;
+            exportCommand.Name = "exportCommand";
+            exportCommand.Size = new Size(221, 22);
+            exportCommand.Text = "Export to Entities & Attributes";
+            exportCommand.Click += exportCommand_Click;
+            // 
             // DbCatalog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -175,6 +192,7 @@
             catalogManagerLayout.PerformLayout();
             importOptions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingSource).EndInit();
+            catalogToolStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -191,5 +209,7 @@
         private ToolStripMenuItem importOptionAttribute;
         private ToolStripMenuItem importOptionProcesses;
         private BindingSource bindingSource;
+        private ContextMenuStrip catalogToolStrip;
+        private ToolStripMenuItem exportCommand;
     }
 }

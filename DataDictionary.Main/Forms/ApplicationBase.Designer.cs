@@ -36,7 +36,6 @@
             toolStrip = new ToolStrip();
             newItemCommand = new ToolStripButton();
             deleteItemCommand = new ToolStripButton();
-            exportItemCommand = new ToolStripSplitButton();
             openFromDatabaseCommand = new ToolStripButton();
             saveToDatabaseCommand = new ToolStripButton();
             deleteFromDatabaseCommand = new ToolStripButton();
@@ -46,6 +45,7 @@
             helpToolStripButton = new ToolStripButton();
             rowStateCommand = new ToolStripLabel();
             toolTip = new ToolTip(components);
+            toolStripContextMenuPlaceHolder = new ToolStripLabel();
             toolStripSeparator = new ToolStripSeparator();
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripSeparator2 = new ToolStripSeparator();
@@ -69,7 +69,7 @@
             // 
             // toolStrip
             // 
-            toolStrip.Items.AddRange(new ToolStripItem[] { newItemCommand, exportItemCommand, deleteItemCommand, toolStripSeparator2, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator1, helpToolStripButton, rowStateCommand });
+            toolStrip.Items.AddRange(new ToolStripItem[] { newItemCommand, toolStripContextMenuPlaceHolder, deleteItemCommand, toolStripSeparator2, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator1, helpToolStripButton, rowStateCommand });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(800, 25);
@@ -95,16 +95,6 @@
             deleteItemCommand.Name = "deleteItemCommand";
             deleteItemCommand.Size = new Size(23, 22);
             deleteItemCommand.Text = "Delete Item";
-            // 
-            // exportItemCommand
-            // 
-            exportItemCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            exportItemCommand.Enabled = false;
-            exportItemCommand.Image = Properties.Resources.ExportDocument;
-            exportItemCommand.ImageTransparentColor = Color.Magenta;
-            exportItemCommand.Name = "exportItemCommand";
-            exportItemCommand.Size = new Size(32, 22);
-            exportItemCommand.Text = "Import Data";
             // 
             // openFromDatabaseCommand
             // 
@@ -186,6 +176,15 @@
             rowStateCommand.Size = new Size(16, 22);
             rowStateCommand.Text = "Row State";
             // 
+            // toolStripContextMenuPlaceHolder
+            // 
+            toolStripContextMenuPlaceHolder.MergeIndex = 1;
+            toolStripContextMenuPlaceHolder.Name = "toolStripContextMenuPlaceHolder";
+            toolStripContextMenuPlaceHolder.Size = new Size(119, 22);
+            toolStripContextMenuPlaceHolder.Text = "Context Place Holder";
+            toolStripContextMenuPlaceHolder.ToolTipText = "This is a Place Holder for Context Menu Items";
+            toolStripContextMenuPlaceHolder.Visible = false;
+            // 
             // ApplicationBase
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -212,8 +211,8 @@
         protected ToolStripButton deleteFromDatabaseCommand;
         protected ToolStripButton newItemCommand;
         protected ToolStripButton deleteItemCommand;
-        protected ToolStripSplitButton exportItemCommand;
         private ToolStripLabel rowStateCommand;
         protected ToolTip toolTip;
+        private ToolStripLabel toolStripContextMenuPlaceHolder;
     }
 }

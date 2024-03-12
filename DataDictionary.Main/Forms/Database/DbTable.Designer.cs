@@ -58,6 +58,8 @@
             bindingProperties = new BindingSource(components);
             bindingColumns = new BindingSource(components);
             bindingConstraints = new BindingSource(components);
+            tableToolStrip = new ContextMenuStrip(components);
+            exportCommand = new ToolStripMenuItem();
             dbTableLayout = new TableLayoutPanel();
             tableDetailLayout = new TabControl();
             extendedPropertiesTab = new TabPage();
@@ -78,6 +80,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingColumns).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingConstraints).BeginInit();
+            tableToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // dbTableLayout
@@ -349,6 +352,20 @@
             importOptionAttribute.Size = new Size(165, 22);
             importOptionAttribute.Text = "Import Attributes";
             // 
+            // tableToolStrip
+            // 
+            tableToolStrip.Items.AddRange(new ToolStripItem[] { exportCommand });
+            tableToolStrip.Name = "tableToolStrip";
+            tableToolStrip.Size = new Size(234, 48);
+            // 
+            // exportCommand
+            // 
+            exportCommand.Image = Properties.Resources.ExportEntity;
+            exportCommand.Name = "exportCommand";
+            exportCommand.Size = new Size(233, 22);
+            exportCommand.Text = "Export to Entity and Attributes";
+            exportCommand.Click += exportCommand_Click;
+            // 
             // DbTable
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -375,6 +392,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingColumns).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingConstraints).EndInit();
+            tableToolStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -405,5 +423,7 @@
         private BindingSource bindingProperties;
         private BindingSource bindingColumns;
         private BindingSource bindingConstraints;
+        private ContextMenuStrip tableToolStrip;
+        private ToolStripMenuItem exportCommand;
     }
 }

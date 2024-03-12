@@ -19,14 +19,10 @@ namespace DataDictionary.Main.Forms.Database
         public DbTableColumn() : base()
         {
             InitializeComponent();
-
-            exportItemCommand.Image = Resources.ExportAttribute;
-            exportItemCommand.Enabled = true;
-            exportItemCommand.Click += exportItemCommand_Click;
-            exportItemCommand.ToolTipText = "Export the Table/View Column to the Domain Model Attribute";
+            AddToolStrip(tableColumnToolStrip);
         }
 
-        public DbTableColumn(IDbTableColumnItem columnItem): this ()
+        public DbTableColumn(IDbTableColumnItem columnItem) : this()
         {
             DbTableColumnKeyName key = new DbTableColumnKeyName(columnItem);
             DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
@@ -89,12 +85,10 @@ namespace DataDictionary.Main.Forms.Database
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingColumn.Current is not IDbTableColumnItem);
         }
 
-        private void exportItemCommand_Click(object? sender, EventArgs e)
+        private void exportCommand_Click(object sender, EventArgs e)
         {
             if (bindingColumn.Current is IDbTableColumnItem current)
-            {
-                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
-            }
+            {   BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current); }
         }
     }
 }

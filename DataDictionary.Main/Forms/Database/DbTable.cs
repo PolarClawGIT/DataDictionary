@@ -20,14 +20,10 @@ namespace DataDictionary.Main.Forms.Database
         public DbTable() : base()
         {
             InitializeComponent();
-
-            exportItemCommand.Image = Resources.ExportEntity;
-            exportItemCommand.Enabled = true;
-            exportItemCommand.ButtonClick += exportItemCommand_Click;
-            exportItemCommand.ToolTipText = "Export the Table/View to the Domain Model Entity";
+            AddToolStrip(tableToolStrip);
         }
 
-        public DbTable(IDbTableItem tableItem) :this()
+        public DbTable(IDbTableItem tableItem) : this()
         {
             DbTableKeyName key = new DbTableKeyName(tableItem);
             DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
@@ -69,7 +65,7 @@ namespace DataDictionary.Main.Forms.Database
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingTable.Current is not IDbTableItem);
         }
 
-        private void exportItemCommand_Click(object? sender, EventArgs e)
+        private void exportCommand_Click(object sender, EventArgs e)
         {
             if (bindingTable.Current is IDbTableItem current)
             {

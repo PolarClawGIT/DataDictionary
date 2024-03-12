@@ -19,11 +19,7 @@ namespace DataDictionary.Main.Forms.Database
         public DbCatalog() : base()
         {
             InitializeComponent();
-
-            exportItemCommand.Image = Resources.ExportSoftwareDefinitionModel;
-            exportItemCommand.Enabled = true;
-            exportItemCommand.ButtonClick += exportItemCommand_Click;
-            exportItemCommand.ToolTipText = "Export the Database to the Domain Model";
+            AddToolStrip(catalogToolStrip);
         }
 
         public DbCatalog(IDbCatalogItem catalogItem) : this()
@@ -33,7 +29,7 @@ namespace DataDictionary.Main.Forms.Database
             bindingSource.DataSource = new BindingView<DbCatalogItem>(BusinessData.DatabaseModel.DbCatalogs, w => key.Equals(w));
             bindingSource.Position = 0;
 
-            if(bindingSource.Current is IDbCatalogItem current)
+            if (bindingSource.Current is IDbCatalogItem current)
             {
                 this.Icon = new ScopeKey(current).Scope.ToIcon();
                 RowState = current.RowState();
@@ -54,7 +50,7 @@ namespace DataDictionary.Main.Forms.Database
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSource.Current is not IDbCatalogItem);
         }
 
-        private void exportItemCommand_Click(object? sender, EventArgs e)
+        private void exportCommand_Click(object sender, EventArgs e)
         {
             if (bindingSource.Current is IDbCatalogItem current)
             {

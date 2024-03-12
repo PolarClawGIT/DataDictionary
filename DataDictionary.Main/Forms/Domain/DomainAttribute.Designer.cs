@@ -63,6 +63,8 @@
             bindingAttribute = new BindingSource(components);
             bindingProperty = new BindingSource(components);
             bindingAlias = new BindingSource(components);
+            attributeToolStrip = new ContextMenuStrip(components);
+            transformCommand = new ToolStripMenuItem();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
@@ -79,6 +81,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
+            attributeToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // mainLayout
@@ -298,7 +301,7 @@
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(412, 343);
+            propertyTab.Size = new Size(192, 72);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -314,7 +317,7 @@
             propertyLayout.RowCount = 2;
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            propertyLayout.Size = new Size(406, 337);
+            propertyLayout.Size = new Size(186, 66);
             propertyLayout.TabIndex = 0;
             // 
             // propertiesData
@@ -326,7 +329,7 @@
             propertiesData.Location = new Point(3, 3);
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
-            propertiesData.Size = new Size(400, 128);
+            propertiesData.Size = new Size(180, 20);
             propertiesData.TabIndex = 1;
             // 
             // propertyIdColumn
@@ -350,9 +353,9 @@
             // domainProperty
             // 
             domainProperty.Dock = DockStyle.Fill;
-            domainProperty.Location = new Point(3, 137);
+            domainProperty.Location = new Point(3, 29);
             domainProperty.Name = "domainProperty";
-            domainProperty.Size = new Size(400, 197);
+            domainProperty.Size = new Size(180, 34);
             domainProperty.TabIndex = 2;
             // 
             // aliasTab
@@ -362,7 +365,7 @@
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(412, 343);
+            aliasTab.Size = new Size(192, 72);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
@@ -378,7 +381,7 @@
             aliaseLayout.RowCount = 2;
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            aliaseLayout.Size = new Size(406, 337);
+            aliaseLayout.Size = new Size(186, 66);
             aliaseLayout.TabIndex = 1;
             // 
             // aliasesData
@@ -390,7 +393,7 @@
             aliasesData.Location = new Point(3, 3);
             aliasesData.Name = "aliasesData";
             aliasesData.ReadOnly = true;
-            aliasesData.Size = new Size(400, 128);
+            aliasesData.Size = new Size(180, 20);
             aliasesData.TabIndex = 0;
             // 
             // aliaseScopeColumn
@@ -413,9 +416,9 @@
             // domainAlias
             // 
             domainAlias.Dock = DockStyle.Fill;
-            domainAlias.Location = new Point(3, 137);
+            domainAlias.Location = new Point(3, 29);
             domainAlias.Name = "domainAlias";
-            domainAlias.Size = new Size(400, 197);
+            domainAlias.Size = new Size(180, 34);
             domainAlias.TabIndex = 0;
             // 
             // subjectAreaTab
@@ -444,6 +447,22 @@
             // 
             bindingAlias.AddingNew += BindingAlias_AddingNew;
             // 
+            // attributeToolStrip
+            // 
+            attributeToolStrip.Items.AddRange(new ToolStripItem[] { transformCommand });
+            attributeToolStrip.Name = "attributeContextMenu";
+            attributeToolStrip.Size = new Size(181, 48);
+            // 
+            // transformCommand
+            // 
+            transformCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            transformCommand.Image = Properties.Resources.XMLTransformation;
+            transformCommand.MergeAction = MergeAction.Insert;
+            transformCommand.MergeIndex = 0;
+            transformCommand.Name = "transformCommand";
+            transformCommand.Size = new Size(180, 22);
+            transformCommand.Text = "Transform";
+            // 
             // DomainAttribute
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -469,6 +488,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
+            attributeToolStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -506,5 +526,7 @@
         private DataGridViewTextBoxColumn propertyValueColumn;
         private Controls.DomainProperty domainProperty;
         private TableLayoutPanel aliaseLayout;
+        private ContextMenuStrip attributeToolStrip;
+        private ToolStripMenuItem transformCommand;
     }
 }

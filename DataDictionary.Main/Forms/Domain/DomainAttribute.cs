@@ -20,11 +20,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             InitializeComponent();
             newItemCommand.Click += NewItemCommand_Click;
-
-            deleteItemCommand.Enabled = true;
-            deleteItemCommand.Image = Resources.DeleteAttribute;
-            deleteItemCommand.Click += DeleteItemCommand_Click;
-            deleteItemCommand.ToolTipText = "Delete Attribute";
+            AddToolStrip(attributeToolStrip);
         }
 
         public DomainAttribute(IDomainAttributeItem attributeItem) : this()

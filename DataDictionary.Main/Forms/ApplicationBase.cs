@@ -337,6 +337,20 @@ namespace DataDictionary.Main.Forms
             return this.Controls.Cast<Control>().Any(w => w.UseWaitCursor);
         }
 
+        protected virtual void AddToolStrip(ContextMenuStrip menuStrip)
+        {
+            Int32 index = toolStrip.Items.IndexOf(toolStripContextMenuPlaceHolder);
+            foreach (ToolStripItem item in menuStrip.Items)
+            { // Make the items look like buttons instead of menu items.
+                item.DisplayStyle = ToolStripItemDisplayStyle.Image;
+                item.MergeAction = MergeAction.Insert;
+                item.MergeIndex = index;
+            }
+
+            // Add to the tool strip
+            ToolStripManager.Merge(menuStrip, toolStrip);
+        }
+
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;
 
