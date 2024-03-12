@@ -114,6 +114,7 @@
             helpAboutMenuItem = new ToolStripMenuItem();
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
+            browseTransforms = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
@@ -676,21 +677,21 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(135, 22);
+            customizeToolStripMenuItem.Size = new Size(180, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(135, 22);
+            optionsToolStripMenuItem.Size = new Size(180, 22);
             optionsToolStripMenuItem.Text = "&Options";
             optionsToolStripMenuItem.Click += optionsToolStripMenuItem_Click;
             // 
             // applicationToolStripMenuItem
             // 
-            applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { browsePropertiesCommand, browseHelpCommand });
+            applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { browsePropertiesCommand, browseHelpCommand, browseTransforms });
             applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
-            applicationToolStripMenuItem.Size = new Size(135, 22);
+            applicationToolStripMenuItem.Size = new Size(180, 22);
             applicationToolStripMenuItem.Text = "Application";
             // 
             // browsePropertiesCommand
@@ -713,7 +714,7 @@
             // 
             unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem, testFormToolStripMenuItem, textEditorToolStripMenuItem });
             unitTestingToolStripMenuItem.Name = "unitTestingToolStripMenuItem";
-            unitTestingToolStripMenuItem.Size = new Size(135, 22);
+            unitTestingToolStripMenuItem.Size = new Size(180, 22);
             unitTestingToolStripMenuItem.Text = "Testing";
             // 
             // gridViewToolStripMenuItem
@@ -779,6 +780,14 @@
             // openFileDialog
             // 
             openFileDialog.FileName = "openFileDialog";
+            // 
+            // browseTransforms
+            // 
+            browseTransforms.Image = Properties.Resources.XMLTransformation;
+            browseTransforms.Name = "browseTransforms";
+            browseTransforms.Size = new Size(187, 22);
+            browseTransforms.Text = "browse Transforms";
+            browseTransforms.Click += browseTransforms_Click;
             // 
             // Main
             // 
@@ -905,5 +914,6 @@
         private ToolStripMenuItem viewLibrarySourceCommand;
         private ToolStripMenuItem viewLibraryMemberCommand;
         private ToolStripSplitButton manageModelCommand;
+        private ToolStripMenuItem browseTransforms;
     }
 }

@@ -27,6 +27,11 @@ namespace DataDictionary.BusinessLayer.Application
         /// Wrapper for Application Properties.
         /// </summary>
         IPropertyData Properties { get; }
+
+        /// <summary>
+        /// Wrapper for Application Transforms.
+        /// </summary>
+        ITransformData Transforms { get; }
     }
 
     /// <summary>
@@ -44,11 +49,16 @@ namespace DataDictionary.BusinessLayer.Application
         private readonly PropertyData propertyValues = new PropertyData();
 
         /// <inheritdoc/>
+        public ITransformData Transforms { get { return transformValues; } }
+        private readonly TransformData transformValues = new TransformData();
+
+        /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(HelpSubjects.Load(factory));
             work.AddRange(Properties.Load(factory));
+            work.AddRange(Transforms.Load(factory));
             return work;
         }
 
@@ -69,6 +79,7 @@ namespace DataDictionary.BusinessLayer.Application
                     workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
                     helpSubjectValues.Load(workSet);
                     propertyValues.Load(workSet);
+                    transformValues.Load(workSet);
                 }
             }
         }
@@ -79,6 +90,7 @@ namespace DataDictionary.BusinessLayer.Application
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(HelpSubjects.Save(factory));
             work.AddRange(Properties.Save(factory));
+            work.AddRange(Transforms.Save(factory));
             return work;
         }
 
@@ -97,6 +109,7 @@ namespace DataDictionary.BusinessLayer.Application
                 {
                     workSet.Tables.Add(HelpSubjects.ToDataTable());
                     workSet.Tables.Add(Properties.ToDataTable());
+                    workSet.Tables.Add(Transforms.ToDataTable());
 
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }

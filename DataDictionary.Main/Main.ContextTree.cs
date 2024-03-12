@@ -365,6 +365,9 @@ namespace DataDictionary.Main
         private void entityAliasToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.Entities.Aliases); }
 
+        private void browseTransforms_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XMLTransformation), BusinessData.ApplicationData.Transforms); }
+
         #endregion
 
     }
