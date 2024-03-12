@@ -1,15 +1,7 @@
-﻿using System;
-
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Data;
-using System.Data.SqlTypes;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Security.Permissions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+using System.Xml.Linq;
 
 namespace Toolbox.BindingTable
 {
@@ -436,6 +428,43 @@ namespace Toolbox.BindingTable
             }
 
             OnRowStateChanged();
+        }
+
+        /// <summary>
+        /// Returns the internal DataRow as an XML Element
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Format:
+        ///     <{tableName}>
+        ///         <{columnName} DataType="{dataType}", AllowDBNull="{0|1}">
+        ///         {columnValue}
+        ///         </{columnName}>
+        ///     </{tableName}>
+        /// </remarks>
+        public virtual XElement ToXElement()
+        {
+            String name = this.GetType().Name;
+            if (!String.IsNullOrWhiteSpace(data.Table.TableName))
+            { name = data.Table.TableName; }
+
+            XElement result = new XElement(name);
+
+            foreach (DataColumn item in data.Table.Columns)
+            {
+                XElement column;
+                if (data[item] is DBNull)
+                { column = new XElement(item.ColumnName); }
+                else
+                { column = new XElement(item.ColumnName, data[item]); }
+
+                column.Add(new XAttribute(nameof(item.DataType), item.DataType));
+                column.Add(new XAttribute(nameof(item.AllowDBNull), item.AllowDBNull));
+
+                result.Add(column);
+            }
+
+            return result;
         }
 
         /// <summary>
