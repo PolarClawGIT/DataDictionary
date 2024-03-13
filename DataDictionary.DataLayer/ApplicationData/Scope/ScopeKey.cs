@@ -166,7 +166,13 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
 
             {ScopeType.Model,                     "Model" },
             {ScopeType.ModelAttribute,            "Model.Attribute" },
+            {ScopeType.ModelAttributeAlias,       "Model.Attribute.Alias" },
+            {ScopeType.ModelAttributeProperty,    "Model.Attribute.Property" },
             {ScopeType.ModelEntity,               "Model.Entity" },
+            {ScopeType.ModelEntityAlias,          "Model.Entity.Alias" },
+            {ScopeType.ModelEntityProperty,       "Model.Entity.Property" },
+            {ScopeType.ModelEntityAttribute,      "Model.Entity.Attribute" },
+
             {ScopeType.ModelSubjectArea,          "Model.SubjectArea" },
             {ScopeType.ModelNameSpace,            "Model.NameSpace" },
         };
