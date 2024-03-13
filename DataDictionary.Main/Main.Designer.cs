@@ -102,6 +102,7 @@
             applicationToolStripMenuItem = new ToolStripMenuItem();
             browsePropertiesCommand = new ToolStripMenuItem();
             browseHelpCommand = new ToolStripMenuItem();
+            browseTransforms = new ToolStripMenuItem();
             unitTestingToolStripMenuItem = new ToolStripMenuItem();
             gridViewToolStripMenuItem = new ToolStripMenuItem();
             testFormToolStripMenuItem = new ToolStripMenuItem();
@@ -114,7 +115,7 @@
             helpAboutMenuItem = new ToolStripMenuItem();
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
-            browseTransforms = new ToolStripMenuItem();
+            xmlViewerCommand = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
@@ -668,7 +669,7 @@
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem, applicationToolStripMenuItem, unitTestingToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem, applicationToolStripMenuItem, unitTestingToolStripMenuItem, xmlViewerCommand });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(46, 20);
             toolsToolStripMenuItem.Text = "&Tools";
@@ -709,6 +710,14 @@
             browseHelpCommand.Size = new Size(187, 22);
             browseHelpCommand.Text = "browse Help Subjects";
             browseHelpCommand.Click += browseHelpCommand_Click;
+            // 
+            // browseTransforms
+            // 
+            browseTransforms.Image = Properties.Resources.XMLTransformation;
+            browseTransforms.Name = "browseTransforms";
+            browseTransforms.Size = new Size(187, 22);
+            browseTransforms.Text = "browse Transforms";
+            browseTransforms.Click += browseTransforms_Click;
             // 
             // unitTestingToolStripMenuItem
             // 
@@ -781,13 +790,13 @@
             // 
             openFileDialog.FileName = "openFileDialog";
             // 
-            // browseTransforms
+            // xmlViewerCommand
             // 
-            browseTransforms.Image = Properties.Resources.XMLTransformation;
-            browseTransforms.Name = "browseTransforms";
-            browseTransforms.Size = new Size(187, 22);
-            browseTransforms.Text = "browse Transforms";
-            browseTransforms.Click += browseTransforms_Click;
+            xmlViewerCommand.Image = Properties.Resources.XmlFile;
+            xmlViewerCommand.Name = "xmlViewerCommand";
+            xmlViewerCommand.Size = new Size(180, 22);
+            xmlViewerCommand.Text = "XML Viewer";
+            xmlViewerCommand.Click += xmlViewerCommand_Click;
             // 
             // Main
             // 
@@ -915,5 +924,6 @@
         private ToolStripMenuItem viewLibraryMemberCommand;
         private ToolStripSplitButton manageModelCommand;
         private ToolStripMenuItem browseTransforms;
+        private ToolStripMenuItem xmlViewerCommand;
     }
 }

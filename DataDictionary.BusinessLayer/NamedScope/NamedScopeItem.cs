@@ -133,7 +133,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         private Func<String> funcGetTitle = () => String.Empty;
 
 
-        #region Constrictors
+        #region Constructors
         /// <summary>
         /// Constructor for a NameScope, Base (blank item)
         /// </summary>

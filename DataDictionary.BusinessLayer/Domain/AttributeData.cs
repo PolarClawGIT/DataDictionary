@@ -37,13 +37,6 @@ namespace DataDictionary.BusinessLayer.Domain
         /// List of Model Attribute Subject Areas within the Model.
         /// </summary>
         IAttributeSubjectAreaData SubjectAreas { get; }
-
-        /// <summary>
-        /// Returns the Attribute as XML.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        XDocument ToXml(IDomainAttributeKey key);
     }
 
     class AttributeData : DomainAttributeCollection, IAttributeData,
@@ -237,31 +230,6 @@ namespace DataDictionary.BusinessLayer.Domain
                     }
                 }
             }.ToList();
-        }
-
-        /// <inheritdoc/>
-        public XDocument ToXml(IDomainAttributeKey key)
-        {
-            DomainAttributeKey attributeKey = new DomainAttributeKey(key);
-            XDocument result = new XDocument();
-
-            if (this.FirstOrDefault(w => attributeKey.Equals(w)) is DomainAttributeItem attributeItem)
-            {
-                XElement xAttribute = new XElement(attributeItem.GetType().Name);
-
-                if (attributeItem.AttributeId is not null)
-                { xAttribute.Add(new XAttribute(nameof(attributeItem.AttributeId), attributeItem.AttributeId)); }
-
-                if(attributeItem.AttributeTitle is not null) 
-                { xAttribute.Add(new XElement(nameof(attributeItem.AttributeTitle), attributeItem.AttributeTitle)); }
-
-                if (attributeItem.AttributeDescription is not null)
-                { xAttribute.Add(new XElement(nameof(attributeItem.AttributeDescription), attributeItem.AttributeDescription)); }
-
-                result.Add(xAttribute);
-            }
-
-            return result;
         }
     }
 }
