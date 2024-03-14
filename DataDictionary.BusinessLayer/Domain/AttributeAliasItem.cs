@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Script;
+﻿using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using System;
 using System.Collections.Generic;

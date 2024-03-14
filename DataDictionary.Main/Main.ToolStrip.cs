@@ -83,6 +83,6 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XMLTransformation), BusinessData.ApplicationData.Transforms); }
 
         private void xmlViewerCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.ApplicationWide.DetailXmlView()); }
+        { Activate(() => new Forms.Scripting.DataBuilder()); }
     }
 }

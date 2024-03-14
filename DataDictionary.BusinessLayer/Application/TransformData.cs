@@ -16,6 +16,7 @@ namespace DataDictionary.BusinessLayer.Application
     /// Interface component for the Transform data
     /// </summary>
     /// <remarks>Used to hide the DataLayer methods from the Application Layer.</remarks>
+    [Obsolete("To be replaced by Scripting Objects")]
     public interface ITransformData :
         IBindingData<TransformItem>,
         ISaveData, ILoadData
@@ -37,6 +38,7 @@ namespace DataDictionary.BusinessLayer.Application
         (String? result, Exception? exception) TransformToText(ITransformKey key, XDocument source);
     }
 
+    [Obsolete("To be replaced by Scripting Objects")]
     class TransformData : TransformCollection, ITransformData
     {
         /// <inheritdoc/>

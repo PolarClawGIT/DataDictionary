@@ -14,6 +14,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Transform
     /// <summary>
     /// Interface for the Transform data.
     /// </summary>
+    [Obsolete("To be replaced by Scripting Objects")]
     public interface ITransformItem : ITransformKey, IScopeKeyName, IDataItem
     {
         /// <summary>

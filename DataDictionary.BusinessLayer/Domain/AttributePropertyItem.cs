@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Script;
+﻿using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData.Attribute;

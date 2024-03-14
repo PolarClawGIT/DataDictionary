@@ -1,4 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Script;
+﻿using DataDictionary.BusinessLayer.Scripting;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.Application

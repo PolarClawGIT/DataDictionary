@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Transform
     /// <summary>
     /// Interface for the Primary Key for the Transform.
     /// </summary>
+    [Obsolete("To be replaced by Scripting Objects")]
     public interface ITransformKey : IKey
     {
         /// <summary>
@@ -20,6 +21,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Transform
     /// <summary>
     /// Implementation of the Primary Key of the Transform.
     /// </summary>
+    [Obsolete("To be replaced by Scripting Objects")]
     public class TransformKey : ITransformKey, IKeyEquality<ITransformKey>
     {
         /// <inheritdoc/>

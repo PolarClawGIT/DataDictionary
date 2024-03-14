@@ -14,6 +14,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Transform
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
+    [Obsolete("To be replaced by Scripting Objects")]
     public abstract class TransformCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<ITransformKey>,
         IWriteData, IWriteData<ITransformKey>,

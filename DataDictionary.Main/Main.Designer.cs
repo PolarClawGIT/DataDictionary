@@ -115,6 +115,7 @@
             helpAboutMenuItem = new ToolStripMenuItem();
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
+            scriptingToolStripMenuItem = new ToolStripMenuItem();
             xmlViewerCommand = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
@@ -497,7 +498,7 @@
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, toolsToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, scriptingToolStripMenuItem, toolsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip.Location = new Point(0, 25);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(917, 24);
@@ -669,7 +670,7 @@
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem, applicationToolStripMenuItem, unitTestingToolStripMenuItem, xmlViewerCommand });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem, applicationToolStripMenuItem, unitTestingToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(46, 20);
             toolsToolStripMenuItem.Text = "&Tools";
@@ -790,12 +791,19 @@
             // 
             openFileDialog.FileName = "openFileDialog";
             // 
+            // scriptingToolStripMenuItem
+            // 
+            scriptingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { xmlViewerCommand });
+            scriptingToolStripMenuItem.Name = "scriptingToolStripMenuItem";
+            scriptingToolStripMenuItem.Size = new Size(66, 20);
+            scriptingToolStripMenuItem.Text = "&Scripting";
+            // 
             // xmlViewerCommand
             // 
             xmlViewerCommand.Image = Properties.Resources.XmlFile;
             xmlViewerCommand.Name = "xmlViewerCommand";
             xmlViewerCommand.Size = new Size(180, 22);
-            xmlViewerCommand.Text = "XML Viewer";
+            xmlViewerCommand.Text = "XML Data Builder";
             xmlViewerCommand.Click += xmlViewerCommand_Click;
             // 
             // Main
@@ -924,6 +932,7 @@
         private ToolStripMenuItem viewLibraryMemberCommand;
         private ToolStripSplitButton manageModelCommand;
         private ToolStripMenuItem browseTransforms;
+        private ToolStripMenuItem scriptingToolStripMenuItem;
         private ToolStripMenuItem xmlViewerCommand;
     }
 }

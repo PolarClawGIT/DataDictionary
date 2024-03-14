@@ -6,9 +6,9 @@ using System.ComponentModel;
 using System.Data;
 using System.Xml.Linq;
 
-namespace DataDictionary.Main.Forms.ApplicationWide
+namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class DetailXmlView : ApplicationBase, IApplicationDataForm
+    partial class DataBuilder : ApplicationBase, IApplicationDataForm
     {
         Dictionary<TreeNode, Func<XElement>> itemSelectorValues = new Dictionary<TreeNode, Func<XElement>>();
 
@@ -23,7 +23,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             }
         }
 
-        public DetailXmlView() : base()
+        public DataBuilder() : base()
         {
             InitializeComponent();
 

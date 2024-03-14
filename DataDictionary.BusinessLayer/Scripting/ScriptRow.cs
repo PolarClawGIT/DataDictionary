@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace DataDictionary.BusinessLayer.Script
+namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <summary>
     /// Interface for support of the ScriptRow functionality.

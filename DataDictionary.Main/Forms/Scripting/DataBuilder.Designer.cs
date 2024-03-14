@@ -1,6 +1,6 @@
-﻿namespace DataDictionary.Main.Forms.ApplicationWide
+﻿namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class DetailXmlView
+    partial class DataBuilder
     {
         /// <summary>
         /// Required designer variable.
