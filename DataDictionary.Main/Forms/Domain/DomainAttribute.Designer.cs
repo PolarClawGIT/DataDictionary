@@ -64,7 +64,6 @@
             bindingProperty = new BindingSource(components);
             bindingAlias = new BindingSource(components);
             attributeToolStrip = new ContextMenuStrip(components);
-            transformCommand = new ToolStripMenuItem();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
@@ -81,7 +80,6 @@
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
-            attributeToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // mainLayout
@@ -449,19 +447,8 @@
             // 
             // attributeToolStrip
             // 
-            attributeToolStrip.Items.AddRange(new ToolStripItem[] { transformCommand });
             attributeToolStrip.Name = "attributeContextMenu";
-            attributeToolStrip.Size = new Size(181, 48);
-            // 
-            // transformCommand
-            // 
-            transformCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            transformCommand.Image = Properties.Resources.XMLTransformation;
-            transformCommand.MergeAction = MergeAction.Insert;
-            transformCommand.MergeIndex = 0;
-            transformCommand.Name = "transformCommand";
-            transformCommand.Size = new Size(180, 22);
-            transformCommand.Text = "Transform";
+            attributeToolStrip.Size = new Size(181, 26);
             // 
             // DomainAttribute
             // 
@@ -488,7 +475,6 @@
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
-            attributeToolStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -527,6 +513,5 @@
         private Controls.DomainProperty domainProperty;
         private TableLayoutPanel aliaseLayout;
         private ContextMenuStrip attributeToolStrip;
-        private ToolStripMenuItem transformCommand;
     }
 }

@@ -1,17 +1,9 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Property;
+﻿using DataDictionary.BusinessLayer.Application;
+using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Main.Controls;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace DataDictionary.Main.Forms.ApplicationWide
@@ -45,17 +37,16 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         {
 
             // Load up Tree
-            foreach (DomainAttributeItem attributeItem in BusinessData.DomainModel.Attributes)
+            foreach (AttributeItem attributeItem in BusinessData.DomainModel.Attributes)
             {
-                DomainAttributeKey attributeKey = new DomainAttributeKey(attributeItem);
+                AttributeKey attributeKey = new AttributeKey(attributeItem);
                 TreeNode attributeNode = new TreeNode(attributeItem.AttributeTitle);
-                attributeNode.ImageKey = ScopeType.ModelAttribute.ToScopeName();
-                attributeNode.SelectedImageKey = ScopeType.ModelAttribute.ToString();
+                attributeNode.ImageKey = attributeItem.Scope.ToScopeName();
+                attributeNode.SelectedImageKey = attributeItem.Scope.ToScopeName();
                 itemSelection.Nodes.Add(attributeNode);
-                itemSelectorValues.Add(attributeNode, attributeItem.ToXElement);
+                itemSelectorValues.Add(attributeNode,() => attributeItem.GetXElement());
 
-
-                foreach (DomainAttributePropertyItem propertyItem in BusinessData.DomainModel.Attributes.Properties.Where(w => attributeKey.Equals(w)))
+                foreach (AttributePropertyItem propertyItem in BusinessData.DomainModel.Attributes.Properties.Where(w => attributeKey.Equals(w)))
                 {
                     PropertyKey propertyKey = new PropertyKey(propertyItem);
 
@@ -67,8 +58,8 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                         attributeNode.Nodes.Add(propertyNode);
 
                         itemSelectorValues.Add(propertyNode, () => {
-                            XElement value = propertyItem.ToXElement();
-                            value.Add(property.ToXElement());
+                            XElement value = propertyItem.GetXElement();
+                            value.Add(property.GetXElement());
 
                             return value;
                         });

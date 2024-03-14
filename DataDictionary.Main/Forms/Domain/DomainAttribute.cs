@@ -1,12 +1,10 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DomainData.Attribute;
+﻿using DataDictionary.BusinessLayer.Domain;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using System.Data;
-using System.Xml.Linq;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain
@@ -14,7 +12,7 @@ namespace DataDictionary.Main.Forms.Domain
     partial class DomainAttribute : ApplicationBase, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return bindingAttribute.Current is IDomainAttributeItem current && ReferenceEquals(current, item); }
+        { return bindingAttribute.Current is IAttributeItem current && ReferenceEquals(current, item); }
 
         public DomainAttribute() : base()
         {
@@ -23,27 +21,27 @@ namespace DataDictionary.Main.Forms.Domain
             AddToolStrip(attributeToolStrip);
         }
 
-        public DomainAttribute(IDomainAttributeItem attributeItem) : this()
+        public DomainAttribute(IAttributeItem attributeItem) : this()
         {
-            DomainAttributeKey key = new DomainAttributeKey(attributeItem);
-            bindingAttribute.DataSource = new BindingView<DomainAttributeItem>(BusinessData.DomainModel.Attributes, w => key.Equals(w));
+            AttributeKey key = new AttributeKey(attributeItem);
+            bindingAttribute.DataSource = new BindingView<AttributeItem>(BusinessData.DomainModel.Attributes, w => key.Equals(w));
             bindingAttribute.Position = 0;
 
-            if (bindingAttribute.Current is IDomainAttributeItem current)
+            if (bindingAttribute.Current is IAttributeItem current)
             {
-                this.Icon = new ScopeKey(ScopeType.ModelAttribute).Scope.ToIcon();
+                this.Icon = current.Scope.ToIcon();
                 RowState = current.RowState();
                 current.RowStateChanged += RowStateChanged;
                 this.Text = current.ToString();
 
-                bindingProperty.DataSource = new BindingView<DomainAttributePropertyItem>(BusinessData.DomainModel.Attributes.Properties, w => key.Equals(w));
-                bindingAlias.DataSource = new BindingView<DomainAttributeAliasItem>(BusinessData.DomainModel.Attributes.Aliases, w => key.Equals(w));
+                bindingProperty.DataSource = new BindingView<AttributePropertyItem>(BusinessData.DomainModel.Attributes.Properties, w => key.Equals(w));
+                bindingAlias.DataSource = new BindingView<AttributeAliasItem>(BusinessData.DomainModel.Attributes.Aliases, w => key.Equals(w));
             }
         }
 
         private void Form_Load(object sender, EventArgs e)
         {
-            IDomainAttributeItem nameOfValues;
+            IAttributeItem nameOfValues;
             PropertyNameItem.Load(propertyIdColumn);
             ScopeNameItem.Load(aliaseScopeColumn);
 
@@ -73,7 +71,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.DataSource = bindingAlias;
             domainAlias.BindData(bindingAlias);
 
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IDomainAttributeItem);
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeItem);
         }
 
         private void NewItemCommand_Click(object? sender, EventArgs e)
@@ -92,7 +90,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
-            if (bindingAttribute.Current is IDomainAttributeItem current)
+            if (bindingAttribute.Current is IAttributeItem current)
             {
                 BusinessData.DomainModel.Attributes.Remove(current);
                 BusinessData.NameScope.Remove(new NamedScopeKey(current));
@@ -122,9 +120,9 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingAttribute.Current is DomainAttributeItem current)
+            if (bindingAttribute.Current is AttributeItem current)
             {
-                DomainAttributePropertyItem newItem = new DomainAttributePropertyItem(current);
+                AttributePropertyItem newItem = new AttributePropertyItem(current);
                 e.NewObject = newItem;
 
             }
@@ -132,9 +130,9 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingAlias_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingAttribute.Current is DomainAttributeItem current)
+            if (bindingAttribute.Current is AttributeItem current)
             {
-                DomainAttributeAliasItem newItem = new DomainAttributeAliasItem(current);
+                AttributeAliasItem newItem = new AttributeAliasItem(current);
                 e.NewObject = newItem;
 
                 newItem.AliasName = domainAlias.SelectedAlias.MemberFullName;

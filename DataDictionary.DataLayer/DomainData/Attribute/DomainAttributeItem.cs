@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: Nullable
 
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -9,7 +10,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Item
     /// </summary>
-    public interface IDomainAttributeItem : IDomainAttributeKey, IDomainAttributeUniqueKey, IDataItem
+    public interface IDomainAttributeItem : IDomainAttributeKey, IDomainAttributeKeyName, IScopeKey, IDataItem
     {
         /// <summary>
         /// Description of the Domain Attribute
@@ -106,6 +107,9 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             get { return GetValue("AttributeDescription"); }
             set { SetValue("AttributeDescription", value); }
         }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get { return ScopeType.ModelAttribute; } }
 
         /// <inheritdoc/>
         public Guid? TypeOfAttributeId

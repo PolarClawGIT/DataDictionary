@@ -442,6 +442,7 @@ namespace Toolbox.BindingTable
         ///         </{columnName}>
         ///     </{tableName}>
         /// </remarks>
+        [Obsolete("Not used", true)]
         public virtual XElement ToXElement()
         {
             String name = this.GetType().Name;

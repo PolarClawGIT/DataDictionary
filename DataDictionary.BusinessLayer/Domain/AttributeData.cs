@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.Domain
     /// Interface component for the Model Attribute
     /// </summary>
     public interface IAttributeData :
-        IBindingData<DomainAttributeItem>,
+        IBindingData<AttributeItem>,
         ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>,
         ITableColumnImport
     {
@@ -39,7 +39,7 @@ namespace DataDictionary.BusinessLayer.Domain
         IAttributeSubjectAreaData SubjectAreas { get; }
     }
 
-    class AttributeData : DomainAttributeCollection, IAttributeData,
+    class AttributeData : DomainAttributeCollection<AttributeItem>, IAttributeData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDataTableFile, INamedScopeData<IModelKey>
     {
@@ -167,18 +167,18 @@ namespace DataDictionary.BusinessLayer.Domain
             foreach (DbTableColumnItem item in source.DbTableColumns.Where(w => nameKey.Equals(w)))
             {
                 AliasKeyName alaisKey = new AliasKeyName(item);
-                DomainAttributeKey attributeKey;
-                DomainAttributeUniqueKey uniqueKey = new DomainAttributeUniqueKey(item);
+                AttributeKey attributeKey;
+                AttributeKeyName uniqueKey = new AttributeKeyName(item);
                 AliasKeyName aliasKey = new AliasKeyName(item);
 
                 // Create Attribute or get existing
                 if (aliasValues.FirstOrDefault(w => aliasKey.Equals(w)) is DomainAttributeAliasItem existingAlias)
-                { attributeKey = new DomainAttributeKey(existingAlias); }
+                { attributeKey = new AttributeKey(existingAlias); }
                 else if (this.FirstOrDefault(w => uniqueKey.Equals(w)) is DomainAttributeItem existing)
-                { attributeKey = new DomainAttributeKey(existing); }
+                { attributeKey = new AttributeKey(existing); }
                 else
                 {
-                    DomainAttributeItem newItem = new DomainAttributeItem()
+                    AttributeItem newItem = new AttributeItem()
                     {
                         AttributeTitle = item.ColumnName,
                         IsDerived = item.IsComputed ?? false,
@@ -187,13 +187,13 @@ namespace DataDictionary.BusinessLayer.Domain
                         IsValued = !item.IsNullable ?? false,
                     };
                     this.Add(newItem);
-                    attributeKey = new DomainAttributeKey(newItem);
+                    attributeKey = new AttributeKey(newItem);
                 }
 
                 // Create Alias
                 if (aliasValues.Count(w => alaisKey.Equals(w) && attributeKey.Equals(w)) == 0)
                 {
-                    aliasValues.Add(new DomainAttributeAliasItem(attributeKey)
+                    aliasValues.Add(new AttributeAliasItem(attributeKey)
                     {
                         AliasName = item.ToAliasName(),
                         ScopeName = item.ScopeName
@@ -207,11 +207,11 @@ namespace DataDictionary.BusinessLayer.Domain
                     PropertyKeyExtended appKey = new PropertyKeyExtended(property);
 
                     if (propertyDefinition.FirstOrDefault(w =>
-                        appKey.Equals(w)) is IPropertyItem appProperty
+                        appKey.Equals(w)) is Application.IPropertyItem appProperty
                         && propertyValues.Count(w =>
                             attributeKey.Equals(w)
-                            && new PropertyKey(appProperty).Equals(w)) == 0)
-                    { propertyValues.Add(new DomainAttributePropertyItem(attributeKey, appProperty, property)); }
+                            && new Application.PropertyKey(appProperty).Equals(w)) == 0)
+                    { propertyValues.Add(new AttributePropertyItem(attributeKey, appProperty, property)); }
                 }
             }
         }

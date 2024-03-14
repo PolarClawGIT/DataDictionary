@@ -23,7 +23,7 @@ namespace DataDictionary.BusinessLayer.Application
     /// <summary>
     /// Wrapper Class for Application Properties.
     /// </summary>
-    class PropertyData : PropertyCollection, IPropertyData
+    class PropertyData : PropertyCollection<PropertyItem>, IPropertyData
     {
         /// <inheritdoc/>
         /// <remarks>Property</remarks>

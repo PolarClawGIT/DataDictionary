@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for the unique Name of a Attribute.
     /// </summary>
-    public interface IDomainAttributeUniqueKey : IKey
+    public interface IDomainAttributeKeyName : IKey
     {
         /// <summary>
         /// Title of the Domain Attribute (aka Name of the Attribute)
@@ -23,7 +23,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Implementation for the unique Name of a Attribute.
     /// </summary>
-    public class DomainAttributeUniqueKey : IDomainAttributeUniqueKey, IKeyComparable<IDomainAttributeUniqueKey>
+    public class DomainAttributeKeyName : IDomainAttributeKeyName, IKeyComparable<IDomainAttributeKeyName>
     {
         /// <inheritdoc/>
         public String AttributeTitle { get; init; } = string.Empty;
@@ -32,7 +32,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// Constructor for the Attribute Unique Key.
         /// </summary>
         /// <param name="source"></param>
-        public DomainAttributeUniqueKey(IDomainAttributeUniqueKey source) : base()
+        public DomainAttributeKeyName(IDomainAttributeKeyName source) : base()
         {
             if (source.AttributeTitle is string) { AttributeTitle = source.AttributeTitle; }
             else { AttributeTitle = string.Empty; }
@@ -42,7 +42,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// Constructor for the Attribute Unique Key.
         /// </summary>
         /// <param name="source"></param>
-        public DomainAttributeUniqueKey(IDbTableColumnKeyName source) : base()
+        public DomainAttributeKeyName(IDbTableColumnKeyName source) : base()
         {
             if (source.ColumnName is string) { AttributeTitle = source.ColumnName; }
             else { AttributeTitle = string.Empty; }
@@ -52,7 +52,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// Constructor for the Attribute Unique Key.
         /// </summary>
         /// <param name="source"></param>
-        public DomainAttributeUniqueKey(IDbRoutineParameterKeyName source) : base()
+        public DomainAttributeKeyName(IDbRoutineParameterKeyName source) : base()
         {
             if (source.ParameterName is string) { AttributeTitle = source.ParameterName.Replace("@",""); }
             else { AttributeTitle = string.Empty; }
@@ -60,10 +60,10 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public virtual bool Equals(IDomainAttributeUniqueKey? other)
+        public virtual bool Equals(IDomainAttributeKeyName? other)
         {
             return
-                other is IDomainAttributeUniqueKey &&
+                other is IDomainAttributeKeyName &&
                 !string.IsNullOrEmpty(AttributeTitle) &&
                 !string.IsNullOrEmpty(other.AttributeTitle) &&
                 AttributeTitle.Equals(other.AttributeTitle, KeyExtension.CompareString);
@@ -71,42 +71,42 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IDomainAttributeUniqueKey value && Equals(new DomainAttributeUniqueKey(value)); }
+        { return obj is IDomainAttributeKeyName value && Equals(new DomainAttributeKeyName(value)); }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(IDomainAttributeUniqueKey? other)
+        public virtual int CompareTo(IDomainAttributeKeyName? other)
         {
-            if (other is DomainAttributeUniqueKey value)
+            if (other is DomainAttributeKeyName value)
             { return string.Compare(AttributeTitle, value.AttributeTitle, true); }
             else { return 1; }
         }
 
         /// <inheritdoc/>
         public virtual int CompareTo(object? obj)
-        { if (obj is IDomainAttributeUniqueKey value) { return CompareTo(new DomainAttributeUniqueKey(value)); } else { return 1; } }
+        { if (obj is IDomainAttributeKeyName value) { return CompareTo(new DomainAttributeKeyName(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static bool operator ==(DomainAttributeUniqueKey left, DomainAttributeUniqueKey right)
+        public static bool operator ==(DomainAttributeKeyName left, DomainAttributeKeyName right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(DomainAttributeUniqueKey left, DomainAttributeUniqueKey right)
+        public static bool operator !=(DomainAttributeKeyName left, DomainAttributeKeyName right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(DomainAttributeUniqueKey left, DomainAttributeUniqueKey right)
+        public static bool operator <(DomainAttributeKeyName left, DomainAttributeKeyName right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(DomainAttributeUniqueKey left, DomainAttributeUniqueKey right)
+        public static bool operator <=(DomainAttributeKeyName left, DomainAttributeKeyName right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(DomainAttributeUniqueKey left, DomainAttributeUniqueKey right)
+        public static bool operator >(DomainAttributeKeyName left, DomainAttributeKeyName right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(DomainAttributeUniqueKey left, DomainAttributeUniqueKey right)
+        public static bool operator >=(DomainAttributeKeyName left, DomainAttributeKeyName right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>

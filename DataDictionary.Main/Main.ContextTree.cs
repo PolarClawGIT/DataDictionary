@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Scope;
@@ -201,7 +202,7 @@ namespace DataDictionary.Main
 
         private void NewAttributeCommand_ButtonClick(object sender, EventArgs e)
         {
-            DomainAttributeItem item = new DomainAttributeItem();
+            AttributeItem item = new AttributeItem();
 
             BusinessData.DomainModel.Attributes.Add(item);
             BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
@@ -283,7 +284,7 @@ namespace DataDictionary.Main
         void Activate(LibraryMemberItem memberItem)
         { Activate((data) => new Forms.Library.LibraryMember(memberItem), memberItem); }
 
-        void Activate(DomainAttributeItem attributeItem)
+        void Activate(AttributeItem attributeItem)
         { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
 
         void Activate(DomainEntityItem entityItem)

@@ -486,7 +486,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             SystemKey = new NamedScopeKey((IDomainAttributeKey)data);
             SystemParentKey = new NamedScopeKey(parent);
             Source = data;
-            ScopeKey = new ScopeKey(ScopeType.ModelAttribute);
+            ScopeKey = data.Scope;
 
             GetNameSpaceKey = () => new NameSpaceKey((IDomainAttributeItem)data);
             GetTitle = () => data.AttributeTitle ?? String.Empty;
@@ -504,7 +504,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             SystemKey = new NamedScopeKey((IDomainAttributeKey)data);
             SystemParentKey = new NamedScopeKey(parent);
             Source = data;
-            ScopeKey = new ScopeKey(ScopeType.ModelAttribute);
+            ScopeKey = data.Scope;
 
             GetNameSpaceKey = () => new NameSpaceKey((IDomainAttributeItem)data);
             GetTitle = () => data.AttributeTitle ?? String.Empty;

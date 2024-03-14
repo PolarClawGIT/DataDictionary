@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Attribute;
@@ -71,7 +72,7 @@ namespace DataDictionary.Main.Forms
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DbTableColumnItem columnItem)
             { Activate((data) => new Forms.Database.DbTableColumn(columnItem), columnItem); }
 
-            if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is DomainAttributeItem attributeItem)
+            if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is AttributeItem attributeItem)
             { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
 
         }
