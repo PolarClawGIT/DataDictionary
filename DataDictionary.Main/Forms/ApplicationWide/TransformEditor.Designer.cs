@@ -211,7 +211,7 @@
             // 
             // transformCommand
             // 
-            transformCommand.Image = Properties.Resources.XMLTransformation;
+            transformCommand.Image = Properties.Resources.XSLTransform;
             transformCommand.ImageAlign = ContentAlignment.TopLeft;
             transformCommand.Location = new Point(3, 383);
             transformCommand.Name = "transformCommand";

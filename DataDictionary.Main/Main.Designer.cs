@@ -714,7 +714,7 @@
             // 
             // browseTransforms
             // 
-            browseTransforms.Image = Properties.Resources.XMLTransformation;
+            browseTransforms.Image = Properties.Resources.XSLTransform;
             browseTransforms.Name = "browseTransforms";
             browseTransforms.Size = new Size(187, 22);
             browseTransforms.Text = "browse Transforms";

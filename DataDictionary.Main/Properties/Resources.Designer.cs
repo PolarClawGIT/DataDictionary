@@ -843,9 +843,29 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon Icon_XMLTransformation {
+        internal static System.Drawing.Icon Icon_XmlFile {
             get {
-                object obj = ResourceManager.GetObject("Icon_XMLTransformation", resourceCulture);
+                object obj = ResourceManager.GetObject("Icon_XmlFile", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_XMLSchema {
+            get {
+                object obj = ResourceManager.GetObject("Icon_XMLSchema", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_XSLTransform {
+            get {
+                object obj = ResourceManager.GetObject("Icon_XSLTransform", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -1543,9 +1563,9 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap XMLTransformation {
+        internal static System.Drawing.Bitmap XMLSchema {
             get {
-                object obj = ResourceManager.GetObject("XMLTransformation", resourceCulture);
+                object obj = ResourceManager.GetObject("XMLSchema", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

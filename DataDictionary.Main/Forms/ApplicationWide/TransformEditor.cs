@@ -162,7 +162,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         public TransformEditor() : base()
         {
             InitializeComponent();
-            Icon = Resources.Icon_XMLTransformation;
+            Icon = Resources.Icon_XSLTransform;
         }
 
         public TransformEditor(XDocument source) : this()

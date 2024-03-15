@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Application;
 using DataDictionary.BusinessLayer.Domain;
+using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.Main.Controls;
 using System.ComponentModel;
@@ -12,6 +13,7 @@ namespace DataDictionary.Main.Forms.Scripting
     {
         Dictionary<TreeNode, Func<XElement>> itemSelectorValues = new Dictionary<TreeNode, Func<XElement>>();
 
+        
         class FormData : INotifyPropertyChanged
         {
             public event PropertyChangedEventHandler? PropertyChanged;
@@ -31,9 +33,15 @@ namespace DataDictionary.Main.Forms.Scripting
             foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
             { scopeImages.Images.Add(item.ToScopeName(), item.ToImage()); }
             itemSelection.ImageList = scopeImages;
+
         }
 
         private void DetailXmlView_Load(object sender, EventArgs e)
+        {
+            BuildTree();
+        }
+
+        void BuildTree()
         {
 
             // Load up Tree
@@ -44,7 +52,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 attributeNode.ImageKey = attributeItem.Scope.ToScopeName();
                 attributeNode.SelectedImageKey = attributeItem.Scope.ToScopeName();
                 itemSelection.Nodes.Add(attributeNode);
-                itemSelectorValues.Add(attributeNode,() => attributeItem.GetXElement());
+                itemSelectorValues.Add(attributeNode, () => attributeItem.GetXElement());
 
                 foreach (AttributePropertyItem propertyItem in BusinessData.DomainModel.Attributes.Properties.Where(w => attributeKey.Equals(w)))
                 {
@@ -57,7 +65,8 @@ namespace DataDictionary.Main.Forms.Scripting
                         propertyNode.SelectedImageKey = ScopeType.ModelAttributeProperty.ToScopeName();
                         attributeNode.Nodes.Add(propertyNode);
 
-                        itemSelectorValues.Add(propertyNode, () => {
+                        itemSelectorValues.Add(propertyNode, () =>
+                        {
                             XElement value = propertyItem.GetXElement();
                             value.Add(property.GetXElement());
 
@@ -88,6 +97,12 @@ namespace DataDictionary.Main.Forms.Scripting
                     }
                 }
             }
+        }
+
+        private void itemSelection_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            bindingSchema.DataSource = null;
+
         }
     }
 }
