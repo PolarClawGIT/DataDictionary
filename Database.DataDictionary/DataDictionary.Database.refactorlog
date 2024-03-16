@@ -567,4 +567,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[AliasMember]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="e159f25d-251f-4bef-90c7-873fd8743ef2" ChangeDateTime="03/16/2024 16:41:14">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ScriptingSchemaElement].[ColumnId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[ScriptingSchemaElement]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[ElementId]" />
+  </Operation>
 </Operations>

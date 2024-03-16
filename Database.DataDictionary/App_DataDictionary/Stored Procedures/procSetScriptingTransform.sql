@@ -1,10 +1,10 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetApplicationTransform]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetScriptingTransform]
 		@TransformId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeApplicationTransform] ReadOnly
+		@Data [App_DataDictionary].[typeScriptingTransform] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on ApplicationTransform.
+/* Description: Performs Set on ScriptingTransform.
 */
 
 -- Transaction Handling
@@ -23,36 +23,27 @@ Begin Try
 			[TransformId]             UniqueIdentifier NOT NULL,
 			[TransformTitle]          [App_DataDictionary].[typeTitle] Not Null,
 			[TransformDescription]    [App_DataDictionary].[typeDescription] Null,
-			[ScopeId]                 Int Not Null,
 			[AsText]                  Bit Null,
 			[TransformScript]         XML Null,
 			Primary Key ([TransformId]))
 
-	;With [Scope] As (
-		Select	S.[ScopeId],
-				F.[ScopeName]
-		From	[App_DataDictionary].[ApplicationScope] S
-				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	X.[TransformId],
 			NullIf(Trim(D.[TransformTitle]),'') As [TransformTitle],
 			NullIf(Trim(D.[TransformDescription]),'') As [TransformDescription],
-			S.[ScopeId],
 			Case
 				When D.[AsText] = 1 Then 1
 				When D.[AsXml] = 1 Then 0
 				Else Null End As [AsText],
 			D.[TransformScript]
 	From	@Data D
-			Left Join [Scope] S
-				On	D.[ScopeName] = S.[ScopeName]
 			Cross apply (
 				Select	Coalesce(D.[TransformId], @TransformId, NewId()) As [TransformId]) X
 	Where	(@TransformId is Null or D.[TransformId] = @TransformId)
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[ApplicationTransform]
-	From	[App_DataDictionary].[ApplicationTransform] T
+	Delete From [App_DataDictionary].[ScriptingTransform]
+	From	[App_DataDictionary].[ScriptingTransform] T
 			Left Join @Values S
 			On	T.[TransformId] = S.[TransformId]
 	Where	S.[TransformId] is Null And
@@ -63,7 +54,6 @@ Begin Try
 		Select	[TransformId],
 				[TransformTitle],
 				[TransformDescription],
-				[ScopeId],
 				[AsText],
 				Convert(NVarChar(Max),[TransformScript]) As [TransformScript]
 		From	@Values
@@ -71,39 +61,35 @@ Begin Try
 		Select	[TransformId],
 				[TransformTitle],
 				[TransformDescription],
-				[ScopeId],
 				[AsText],
 				Convert(NVarChar(Max),[TransformScript]) As [TransformScript]
-		From	[App_DataDictionary].[ApplicationTransform])
-	Update [App_DataDictionary].[ApplicationTransform]
+		From	[App_DataDictionary].[ScriptingTransform])
+	Update [App_DataDictionary].[ScriptingTransform]
 	Set		[TransformTitle] = S.[TransformTitle],
 			[TransformDescription] = S.[TransformDescription],
-			[ScopeId] = S.[ScopeId],
 			[AsText] = S.[AsText],
 			[TransformScript] = S.[TransformScript]
-	From	[App_DataDictionary].[ApplicationTransform] T
+	From	[App_DataDictionary].[ScriptingTransform] T
 			Inner Join [Delta] S
 			On	T.[TransformId] = S.[TransformId]
-	Print FormatMessage ('Update [App_DataDictionary].[ApplicationTransform]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [App_DataDictionary].[ScriptingTransform]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [TransformTitle] (
+	Insert Into [App_DataDictionary].[ScriptingTransform] (
 			[TransformId],
 			[TransformTitle],
 			[TransformDescription],
-			[ScopeId],
 			[AsText],
 			[TransformScript])
 	Select	S.[TransformId],
 			S.[TransformTitle],
 			S.[TransformDescription],
-			S.[ScopeId],
 			S.[AsText],
 			S.[TransformScript]
 	From	@Values S
-			Left Join [App_DataDictionary].[ApplicationTransform] T
+			Left Join [App_DataDictionary].[ScriptingTransform] T
 			On	S.[TransformId] = T.[TransformId]
 	Where	T.[TransformId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ApplicationTransform]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [App_DataDictionary].[ScriptingTransform]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
