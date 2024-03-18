@@ -67,7 +67,7 @@ namespace DataDictionary.Main
                 work.AddRange(BusinessData.ApplicationData.Load(factory));
 
                 if (!appDataFile.Exists)
-                { work.AddRange(BusinessData.ApplicationData.Export(appDataFile)); }
+                { work.AddRange(BusinessData.ExportApplication(appDataFile)); }
 
                 this.DoWork(work, OnComplete);
             }
@@ -78,11 +78,11 @@ namespace DataDictionary.Main
             void FileLoad()
             {
                 if (appDataFile.Exists) // AppData already contains the Application Data File
-                { work.AddRange(BusinessData.ApplicationData.Import(appDataFile)); }
+                { work.AddRange(BusinessData.ImportApplication(appDataFile)); }
                 else if (appInstallFile.Exists)
                 { // AppData does not contain file but the install folder does (Copy it)
-                    work.AddRange(BusinessData.ApplicationData.Import(appInstallFile));
-                    work.AddRange(BusinessData.ApplicationData.Export(appDataFile));
+                    work.AddRange(BusinessData.ImportApplication(appInstallFile));
+                    work.AddRange(BusinessData.ExportApplication(appDataFile));
                 }
                 this.DoWork(work, OnComplete);
             }
@@ -257,7 +257,7 @@ namespace DataDictionary.Main
 
                 SendMessage(new Messages.DoUnbindData());
                 List<WorkItem> work = new List<WorkItem>();
-                work.AddRange(BusinessData.Import(openFile));
+                work.AddRange(BusinessData.ImportModel(openFile));
 
                 DoWork(work, onCompleting);
             }
@@ -271,7 +271,7 @@ namespace DataDictionary.Main
             if (BusinessData.ModelFile is FileInfo file)
             {
                 SendMessage(new Messages.DoUnbindData());
-                DoWork(BusinessData.Export(file), onCompleting);
+                DoWork(BusinessData.ExportModel(file), onCompleting);
             }
             else
             { saveAsToolStripMenuItem_Click(sender, e); }
@@ -304,7 +304,7 @@ namespace DataDictionary.Main
                 saveToolStripMenuItem.Enabled = true;
 
                 SendMessage(new Messages.DoUnbindData());
-                DoWork(BusinessData.Export(openFile), onCompleting);
+                DoWork(BusinessData.ExportModel(openFile), onCompleting);
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)

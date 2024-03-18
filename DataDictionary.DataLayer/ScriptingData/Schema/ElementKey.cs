@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Interface for the Primary Key for the Scripting Schema Element.
     /// </summary>
-    public interface ISchemaElementKey : IKey
+    public interface IElementKey : IKey
     {
         /// <summary>
         /// Schema Id of the Scripting Schema.
@@ -20,7 +20,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Implementation of the Primary Key of the Scripting Schema Element.
     /// </summary>
-    public class SchemaElementKey : ISchemaElementKey, IKeyEquality<ISchemaElementKey>
+    public class ElementKey : IElementKey, IKeyEquality<IElementKey>
     {
         /// <inheritdoc/>
         public Guid? ElementId { get; init; } = Guid.Empty;
@@ -29,7 +29,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         /// Constructor for the Primary Key of the Property.
         /// </summary>
         /// <param name="source"></param>
-        public SchemaElementKey(ISchemaElementKey source) : base()
+        public ElementKey(IElementKey source) : base()
         {
             if (source.ElementId is Guid) { ElementId = source.ElementId; }
             else { ElementId = Guid.Empty; }
@@ -37,19 +37,19 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
 
         #region IEquatable
         /// <inheritdoc/>
-        public Boolean Equals(ISchemaElementKey? other)
-        { return other is ISchemaElementKey && EqualityComparer<Guid?>.Default.Equals(this.ElementId, other.ElementId); }
+        public Boolean Equals(IElementKey? other)
+        { return other is IElementKey && EqualityComparer<Guid?>.Default.Equals(this.ElementId, other.ElementId); }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is ISchemaElementKey value && this.Equals(new SchemaElementKey(value)); }
+        { return obj is IElementKey value && this.Equals(new ElementKey(value)); }
 
         /// <inheritdoc/>
-        public static bool operator ==(SchemaElementKey left, SchemaElementKey right)
+        public static bool operator ==(ElementKey left, ElementKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(SchemaElementKey left, SchemaElementKey right)
+        public static bool operator !=(ElementKey left, ElementKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

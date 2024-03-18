@@ -15,11 +15,11 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class SchemaElementCollection<TItem> : BindingTable<TItem>,
-        IReadData, IReadData<ISchemaKey>, IReadData<ISchemaElementKey>,
-        IWriteData, IWriteData<ISchemaKey>, IWriteData<ISchemaElementKey>,
-        IRemoveItem<ISchemaKey>
-        where TItem : BindingTableRow, ISchemaElementItem, ISchemaKey, ISchemaElementKey, new()
+    public abstract class ElementCollection<TItem> : BindingTable<TItem>,
+        IReadData, IReadData<ISchemaKey>, IReadData<IElementKey>,
+        IWriteData, IWriteData<ISchemaKey>, IWriteData<IElementKey>,
+        IRemoveItem<ISchemaKey>, IRemoveItem<IElementKey>
+        where TItem : BindingTableRow, IElementItem, ISchemaKey, IElementKey, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         { return LoadCommand(connection, (key.SchemaId, null)); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, ISchemaElementKey key)
+        public Command LoadCommand(IConnection connection, IElementKey key)
         { return LoadCommand(connection, (null, key.ElementId)); }
 
         Command LoadCommand(IConnection connection, (Guid? SchemaId, Guid? ElementId) parameters)
@@ -55,7 +55,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
 
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, ISchemaElementKey key)
+        public Command SaveCommand(IConnection connection, IElementKey key)
         { return SaveCommand(connection, (null, key.ElementId)); }
 
         Command SaveCommand(IConnection connection, (Guid? SchemaId, Guid? ElementId) parameters)
@@ -82,11 +82,20 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
             { base.Remove(item); }
         }
 
+        /// <inheritdoc/>
+        public void Remove(IElementKey elementKey)
+        {
+            ElementKey key = new ElementKey(elementKey);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
     }
 
     /// <summary>
     /// Default List/Collection of Scripting Schema Element Items.
     /// </summary>
-    public class SchemaElementCollection : SchemaElementCollection<SchemaElementItem>
+    public class ElementCollection : ElementCollection<ElementItem>
     { }
 }

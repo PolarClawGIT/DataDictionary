@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Interface for the Scripting Schema Element data.
     /// </summary>
-    public interface ISchemaElementItem : ISchemaKey, ISchemaElementKey, IScopeKeyName
+    public interface IElementItem : ISchemaKey, IElementKey, IScopeKeyName
     {
         /// <summary>
         /// Name of the Column within the Scope to match to.
@@ -69,7 +69,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// Implementation for the Scripting Schema Element data.
     /// </summary>
     [Serializable]
-    public class SchemaElementItem : BindingTableRow, ISchemaElementItem, ISerializable
+    public class ElementItem : BindingTableRow, IElementItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? SchemaId
@@ -142,14 +142,14 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         /// <summary>
         /// Constructor for Schema Element Items
         /// </summary>
-        public SchemaElementItem() : base()
+        public ElementItem() : base()
         { if (ElementId is null) { ElementId = Guid.NewGuid(); } }
 
         /// <summary>
         /// Constructor for Schema Element Items
         /// </summary>
         /// <param name="key"></param>
-        public SchemaElementItem(ISchemaKey key) : this()
+        public ElementItem(ISchemaKey key) : this()
         { SchemaId = key.SchemaId; }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
@@ -174,7 +174,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected SchemaElementItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        protected ElementItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         { }
 
         #endregion

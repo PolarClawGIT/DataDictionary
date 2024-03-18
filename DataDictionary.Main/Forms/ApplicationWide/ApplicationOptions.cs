@@ -64,7 +64,7 @@ namespace DataDictionary.Main.ApplicationWide
         private void commandSaveToFile_Click(object sender, EventArgs e)
         {
             FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
-            this.DoWork(BusinessData.ApplicationData.Export(appDataFile), OnComplete);
+            this.DoWork(BusinessData.ExportApplication(appDataFile), OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             { } // Nothing to do at this point
@@ -75,7 +75,7 @@ namespace DataDictionary.Main.ApplicationWide
             SendMessage(new DbApplicationBatchStarting());
 
             FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
-            this.DoWork(BusinessData.ApplicationData.Import(appDataFile), OnComplete);
+            this.DoWork(BusinessData.ImportApplication(appDataFile), OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             { SendMessage(new DbApplicationBatchCompleted()); }

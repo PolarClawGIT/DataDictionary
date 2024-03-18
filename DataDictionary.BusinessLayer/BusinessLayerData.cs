@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer
     /// <summary>
     /// Main Data Container for all Business Data.
     /// </summary>
-    public partial class BusinessLayerData : IFileData,
+    public partial class BusinessLayerData : 
         ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData, INamedScopeData
     {
         /// <summary>
@@ -72,6 +72,8 @@ namespace DataDictionary.BusinessLayer
             domainValue = new Domain.DomainModel() { ModelProperty = applicationValue.Properties };
             databaseValue = new Database.DatabaseModel();
             libraryValue = new Library.LibraryModel();
+
+            scriptingValue = new Scripting.ScriptingEngine();
         }
 
         /// <inheritdoc/>
@@ -123,8 +125,12 @@ namespace DataDictionary.BusinessLayer
             return work;
         }
 
-        /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Import(FileInfo file)
+        /// <summary>
+        /// Imports the Model from a File
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> ImportModel(FileInfo file)
         {
             return new List<WorkItem>() { new WorkItem() { WorkName = "Load Model Data", DoWork = DoWork } };
 
@@ -147,8 +153,12 @@ namespace DataDictionary.BusinessLayer
             }
         }
 
-        /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Export(FileInfo file)
+        /// <summary>
+        /// Exports the Model to a File
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> ExportModel(FileInfo file)
         {
             return new List<WorkItem>() { new WorkItem() { WorkName = "Save Model Data", DoWork = DoWork } };
 
@@ -166,6 +176,57 @@ namespace DataDictionary.BusinessLayer
                 }
 
                 ModelFile = file;
+            }
+        }
+
+
+        /// <summary>
+        /// Imports the Application Data from a File
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> ImportApplication(FileInfo file)
+        {
+            List<WorkItem> workItems = new List<WorkItem>
+            {
+                new WorkItem() { WorkName = "Load Application Data", DoWork = DoWork }
+            };
+
+            return workItems.AsReadOnly();
+
+            void DoWork()
+            {
+                using (System.Data.DataSet workSet = new System.Data.DataSet())
+                {
+                    workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
+                    applicationValue.Import(workSet);
+                    scriptingValue.Import(workSet);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Exports the Application Data to a File
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> ExportApplication(FileInfo file)
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+
+            workItems.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
+
+            return workItems.AsReadOnly();
+
+            void DoWork()
+            {
+                using (System.Data.DataSet workSet = new System.Data.DataSet())
+                {
+                    workSet.Tables.AddRange(applicationValue.Export().ToArray());
+                    workSet.Tables.AddRange(scriptingValue.Export().ToArray());
+
+                    workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
+                }
             }
         }
 
