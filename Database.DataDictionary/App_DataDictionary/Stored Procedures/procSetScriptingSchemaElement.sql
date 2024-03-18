@@ -1,4 +1,5 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetScriptingSchemaElement]
+		@SchemaId UniqueIdentifier = Null,
 		@ElementId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeScriptingSchemaElement] ReadOnly
 As
@@ -40,7 +41,7 @@ Begin Try
 				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	X.[ElementId],
-			D.[SchemaId],
+			X.[SchemaId],
 			S.[ScopeId],
 			D.[ColumnName],
 			D.[DataName],
@@ -54,8 +55,10 @@ Begin Try
 			Left Join [Scope] S
 			On	D.[ScopeName] = S.[ScopeName]
 			Cross apply (
-				Select	Coalesce(D.[ElementId], @ElementId, NewId()) As [ElementId]) X
-	Where	(@ElementId is Null or D.[ElementId] = @ElementId)
+				Select	Coalesce(D.[ElementId], @ElementId, NewId()) As [ElementId],
+						Coalesce(D.[SchemaId], @SchemaId) As [SchemaId]) X
+	Where	(@ElementId is Null or X.[ElementId] = @ElementId) And
+			(@SchemaId is Null or X.[SchemaId] = @SchemaId)
 
 	-- Apply Changes
 	Delete From [App_DataDictionary].[ScriptingSchemaElement]
@@ -84,9 +87,9 @@ Begin Try
 				[SchemaId],
 				[ScopeId],
 				[ColumnName],
-				[DataName],
-				[DataType],
-				[DataNillable],
+				[ElementName],
+				[ElementType],
+				[ElementNillable],
 				[AsElement],
 				[DataAsText],
 				[DataAsCData],
@@ -96,9 +99,9 @@ Begin Try
 	Set		[SchemaId] = S.[SchemaId],
 			[ScopeId] = S.[ScopeId],
 			[ColumnName] = S.[ColumnName],
-			[DataName] = S.[DataName],
-			[DataType] = S.[DataType],
-			[DataNillable] = S.[DataNillable],
+			[ElementName] = S.[DataName],
+			[ElementType] = S.[DataType],
+			[ElementNillable] = S.[DataNillable],
 			[AsElement] = S.[AsElement],
 			[DataAsText] = S.[DataAsText],
 			[DataAsCData] = S.[DataAsCData],
@@ -113,9 +116,9 @@ Begin Try
 			[SchemaId],
 			[ScopeId],
 			[ColumnName],
-			[DataName],
-			[DataType],
-			[DataNillable],
+			[ElementName],
+			[ElementType],
+			[ElementNillable],
 			[AsElement],
 			[DataAsText],
 			[DataAsCData],

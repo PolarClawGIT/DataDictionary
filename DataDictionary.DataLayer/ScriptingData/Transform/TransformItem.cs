@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.ScriptingData.Schema;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,43 +10,42 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.ApplicationData.Transform
+namespace DataDictionary.DataLayer.ScriptingData.Transform
 {
     /// <summary>
-    /// Interface for the Transform data.
+    /// Interface for the Scripting Transform data.
     /// </summary>
-    [Obsolete("To be replaced by Scripting Objects")]
-    public interface ITransformItem : ITransformKey, IScopeKeyName, IDataItem
+    public interface ITransformItem : ITransformKey, IDataItem, IScopeKey
     {
         /// <summary>
         /// Title of the Transform.
         /// </summary>
-        String? TransformTitle { get; set; }
+        String? TransformTitle { get; }
 
         /// <summary>
         /// Description of the Transform. How the Transform is used.
         /// </summary>
-        String? TransformDescription { get; set; }
+        String? TransformDescription { get; }
 
         /// <summary>
         /// Is the result to be returned as Text (not XML)
         /// </summary>
-        Boolean AsText { get; set; }
+        Boolean AsText { get; }
 
         /// <summary>
         /// Is the result to be returned as XML (not Text)
         /// </summary>
-        Boolean AsXml { get; set; }
+        Boolean AsXml { get; }
 
         /// <summary>
-        /// Raw Transform Script (linked to TransformScript)
+        /// Raw XSLT Transform Script (linked to TransformDocument)
         /// </summary>
-        String? TransformSource { get; set; }
+        String? TransformScript { get; }
 
         /// <summary>
-        /// The XSLT Transform Script (linked to TransformSource)
+        /// The XSLT Transform Document (linked to TransformScript)
         /// </summary>
-        XDocument? TransformScript { get; set; }
+        XDocument? TransformDocument { get; }
 
         /// <summary>
         /// Exception was generated when parsing the TransformScript.
@@ -54,12 +54,10 @@ namespace DataDictionary.DataLayer.ApplicationData.Transform
     }
 
     /// <summary>
-    /// Implementation of the Transform data.
+    /// Implementation for the Scripting Transform data.
     /// </summary>
-    [Serializable]
     public class TransformItem : BindingTableRow, ITransformItem, ISerializable
     {
-
         /// <inheritdoc/>
         public Guid? TransformId
         {
@@ -74,10 +72,10 @@ namespace DataDictionary.DataLayer.ApplicationData.Transform
         public String? TransformDescription { get { return GetValue("TransformDescription"); } set { SetValue("TransformDescription", value); } }
 
         /// <inheritdoc/>
-        public String? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }
+        public ScopeType Scope { get { return ScopeType.ScriptingTransform; } }
 
         /// <inheritdoc/>
-        public Boolean AsText
+        public bool AsText
         {
             get
             {
@@ -92,7 +90,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Transform
         }
 
         /// <inheritdoc/>
-        public Boolean AsXml
+        public bool AsXml
         {
             get
             {
@@ -107,54 +105,56 @@ namespace DataDictionary.DataLayer.ApplicationData.Transform
         }
 
         /// <inheritdoc/>
-        public String? TransformSource
+        public String? TransformScript
         {
             get { return GetValue("TransformScript"); }
             set
             {
-                GetValue("TransformScript");
-                base.OnPropertyChanged(nameof(TransformScript));
-            }
-        }
-
-        /// <inheritdoc/>
-        public XDocument? TransformScript
-        {
-            get
-            {
+                SetValue("TransformScript", value);
                 TransformException = null;
-                String? value = GetValue("TransformScript");
+                transformValue = null;
 
                 try
                 {
-                    if (String.IsNullOrWhiteSpace(value)) { return null; }
-                    else { return XDocument.Parse(value); }
+                    if (!String.IsNullOrWhiteSpace(value))
+                    { transformValue = XDocument.Parse(value); }
+
                 }
                 catch (Exception ex)
                 {
                     ex.Data.Add(nameof(TransformScript), value);
                     TransformException = ex;
                     base.OnPropertyChanged(nameof(TransformException));
-                    return null;
                 }
 
+                base.OnPropertyChanged(nameof(TransformDocument));
             }
+        }
+
+        /// <inheritdoc/>
+        public XDocument? TransformDocument
+        {
+            get { return transformValue; }
             set
             {
+                transformValue = value;
+                TransformException = null;
                 String? data;
                 if (value is null) { data = null; }
                 else { data = value.ToString(); }
 
                 SetValue("TransformScript", data);
-                base.OnPropertyChanged(nameof(TransformSource));
+                base.OnPropertyChanged(nameof(TransformDocument));
             }
         }
+        private XDocument? transformValue = null;
+
 
         /// <inheritdoc/>
         public Exception? TransformException { get; protected set; }
 
         /// <summary>
-        /// Constructor for Domain Attribute Item
+        /// Constructor for Scripting Transform
         /// </summary>
         public TransformItem() : base()
         {
@@ -167,7 +167,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Transform
             new DataColumn("TransformId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("TransformTitle", typeof(string)){ AllowDBNull = false},
             new DataColumn("TransformDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = true},
             new DataColumn("AsText", typeof(bool)){ AllowDBNull = true},
             new DataColumn("AsXml", typeof(bool)){ AllowDBNull = true},
             new DataColumn("TransformScript", typeof(string)){ AllowDBNull = true},
@@ -176,5 +175,19 @@ namespace DataDictionary.DataLayer.ApplicationData.Transform
         /// <inheritdoc/>
         public override IReadOnlyList<DataColumn> ColumnDefinitions()
         { return columnDefinitions; }
+
+        #region ISerializable
+        /// <summary>
+        /// Serialization Constructor for the Database Table Column
+        /// </summary>
+        /// <param name="serializationInfo"></param>
+        /// <param name="streamingContext"></param>
+        protected TransformItem(SerializationInfo serializationInfo, StreamingContext streamingContext) : base(serializationInfo, streamingContext)
+        { }
+        #endregion
+
+        /// <inheritdoc/>
+        public override string ToString()
+        { return TransformTitle??String.Empty; }
     }
 }

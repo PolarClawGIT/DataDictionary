@@ -181,6 +181,26 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// </summary>
         DatabaseFunctionParameter,
 
+        /// <summary>
+        /// Scripting Engine
+        /// </summary>
+        Scripting,
+
+        /// <summary>
+        /// Scripting Schema
+        /// </summary>
+        ScriptingSchema,
+
+        /// <summary>
+        /// Scripting Schema Element
+        /// </summary>
+        ScriptingSchemaElement,
+
+        /// <summary>
+        /// Scripting Transform
+        /// </summary>
+        ScriptingTransform,
+
 
     }
 

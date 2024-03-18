@@ -26,7 +26,7 @@ namespace DataDictionary.Main
             IsLocked(true);
 
             // Setup Images for Tree Control
-            contextNameNavigation.ImageList = ModelScopeExtension.ToImageList();
+            contextNameNavigation.ImageList = ScopeExtension.ToImageList();
 
 
             //Hook the WorkerQueue up to this forms UI thread for events.

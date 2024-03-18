@@ -48,7 +48,11 @@ Begin Try;
 		(Null, 'Model.Process.Property', NULL),
 		(Null, 'Model.Process.Flow', NULL),
 		(Null, 'Model.Process.Flow.Inflow', NULL),
-		(Null, 'Model.Process.Flow.OutFlow', NULL)
+		(Null, 'Model.Process.Flow.OutFlow', NULL),
+		(Null, 'Scripting', NULL),
+		(Null, 'Scripting.Transform', NULL),
+		(Null, 'Scripting.Schema', NULL),
+		(Null, 'Scripting.Schema.Element', NULL)
 
 	Exec [App_DataDictionary].[procSetApplicationScope] @Scope
 
@@ -59,6 +63,7 @@ Begin Try;
 			F.[ScopeName]
 	From	[App_DataDictionary].[ApplicationScope] S
 			Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F
+	Order By F.[ScopeName]
 
 	-- By default, throw and error and exit without committing
 --;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;

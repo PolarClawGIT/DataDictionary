@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ApplicationData.Transform
+namespace DataDictionary.DataLayer.ScriptingData.Transform
 {
     /// <summary>
-    /// Interface for the Primary Key for the Transform.
+    /// Interface for the Primary Key for the Scripting Transform.
     /// </summary>
-    [Obsolete("To be replaced by Scripting Objects")]
     public interface ITransformKey : IKey
     {
         /// <summary>
@@ -19,9 +18,8 @@ namespace DataDictionary.DataLayer.ApplicationData.Transform
     }
 
     /// <summary>
-    /// Implementation of the Primary Key of the Transform.
+    /// Implementation of the Primary Key of the Scripting Transform.
     /// </summary>
-    [Obsolete("To be replaced by Scripting Objects")]
     public class TransformKey : ITransformKey, IKeyEquality<ITransformKey>
     {
         /// <inheritdoc/>

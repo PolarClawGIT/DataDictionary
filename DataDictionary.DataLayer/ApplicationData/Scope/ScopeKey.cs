@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     public interface IScopeKey : IKey
     {
         /// <summary>
-        /// Primary Key ID for the Scope
+        /// ScopeType for the Item. Primary Key for ScopeItem
         /// </summary>
         ScopeType Scope { get; }
     }
@@ -175,6 +175,11 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
 
             {ScopeType.ModelSubjectArea,          "Model.SubjectArea" },
             {ScopeType.ModelNameSpace,            "Model.NameSpace" },
+
+            {ScopeType.Scripting,                  "Scripting" },
+            {ScopeType.ScriptingSchema,            "Scripting.Schema" },
+            {ScopeType.ScriptingSchemaElement,     "Scripting.Schema.Element" },
+            {ScopeType.ScriptingTransform,         "Scripting.Transform" },
         };
 
         /// <inheritdoc/>

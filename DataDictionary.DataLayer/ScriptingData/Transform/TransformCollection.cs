@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.ApplicationData.Transform
+namespace DataDictionary.DataLayer.ScriptingData.Transform
 {
     /// <summary>
-    /// Generic Base class for Transform Items
+    /// Generic Base class for Scripting Transform Items
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    [Obsolete("To be replaced by Scripting Objects")]
     public abstract class TransformCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<ITransformKey>,
         IWriteData, IWriteData<ITransformKey>,
@@ -33,7 +32,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Transform
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetApplicationTransform]";
+            command.CommandText = "[App_DataDictionary].[procGetScriptingTransform]";
 
             command.AddParameter("@TransformId", parameters.TransformId);
             command.AddParameter("@TransformTitle", parameters.TransformTitle);
@@ -54,11 +53,11 @@ namespace DataDictionary.DataLayer.ApplicationData.Transform
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetApplicationTransform]";
+            command.CommandText = "[App_DataDictionary].[procSetScriptingTransform]";
             command.AddParameter("@TransformId", transformId);
 
             IEnumerable<TItem> data = this.Where(w => transformId is null || w.TransformId == transformId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationTransform]", data);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeScriptingTransform]", data);
             return command;
         }
 
@@ -74,7 +73,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Transform
     }
 
     /// <summary>
-    /// Default List/Collection of Transform Items.
+    /// Default List/Collection of Scripting Transform Items.
     /// </summary>
     public class TransformCollection : TransformCollection<TransformItem>
     { }

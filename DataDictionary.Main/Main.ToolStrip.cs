@@ -80,7 +80,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.Entities.Aliases); }
 
         private void browseTransforms_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XSLTransform), BusinessData.ApplicationData.Transforms); }
+        { throw new NotImplementedException(); }
 
         private void xmlViewerCommand_Click(object sender, EventArgs e)
         { Activate(() => new Forms.Scripting.DataBuilder()); }

@@ -14,6 +14,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
+    [Obsolete("Not gotten from the Database", true)]
     public abstract class ScopeCollection<TItem> : BindingTable<TItem>, IReadData, IWriteData
         where TItem : ScopeItem, new()
     {
@@ -40,6 +41,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// <summary>
     /// Default List/Collection of Scope Items.
     /// </summary>
+    [Obsolete("Not gotten from the Database", true)]
     public class ScopeCollection : ScopeCollection<ScopeItem>
     { }
 }

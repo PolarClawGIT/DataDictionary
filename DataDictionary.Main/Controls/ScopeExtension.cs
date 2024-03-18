@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Controls
 {
-    static class ModelScopeExtension
+    static class ScopeExtension
     {
         /// <summary>
         /// This associates a Image to a Model Scope. ScopeType must be defined. ScopeKey defines the text.
@@ -52,6 +52,11 @@ namespace DataDictionary.Main.Controls
             {ScopeType.ModelEntityAlias,                 (Resources.Synonym, Resources.Icon_Entities) },
             {ScopeType.ModelEntityProperty,              (Resources.Property, Resources.Icon_Entities) },
             {ScopeType.ModelEntityAttribute,             (Resources.Attribute, Resources.Icon_Attribute) },
+
+            {ScopeType.Scripting,                       (Resources.XmlFile, Resources.Icon_XmlFile) },
+            {ScopeType.ScriptingSchema,                 (Resources.XMLSchema, Resources.Icon_XMLSchema) },
+            {ScopeType.ScriptingSchemaElement,          (Resources.XMLElement, Resources.Icon_XMLElement) },
+            {ScopeType.ScriptingTransform,              (Resources.XSLTransform, Resources.Icon_XSLTransform) },
         };
 
         public static Image ToImage(this ScopeType scope)

@@ -12,6 +12,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// <summary>
     /// Interface for the Scope data.
     /// </summary>
+    [Obsolete("Not gotten from the Database", true)]
     public interface IScopeItem : IScopeKeyName, IDataItem
     {
         /// <summary>
@@ -24,6 +25,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// Implementation of the Scope data.
     /// </summary>
     [Serializable]
+    [Obsolete("Not gotten from the Database", true)]
     public class ScopeItem : BindingTableRow, IScopeItem, ISerializable
     {
         /// <inheritdoc/>

@@ -5,9 +5,9 @@
 	[ScopeId]               Int Not Null, -- Scope to match to. In effect what is the Table/Sub-Type to render
 	[ColumnName]            SysName Not Null, -- Name Column to match too
 	-- XSD definition, example <xsd:element name="City" type="xsd:string"  minOccurs="1" nillable="true">
-	[DataName]              SysName Null, -- Name of the data. Used as Attribute or Element name. If Null, Column Name is used.
-	[DataType]              SysName Null, -- The Data Type, null = do not generate. 
-	[DataNillable]          Bit Null, -- Is the data Nillable, null = do not generate
+	[ElementName]           SysName Null, -- Name of the data. Used as Attribute or Element name. If Null, Column Name is used.
+	[ElementType]           SysName Null, -- The Data Type, null = do not generate. 
+	[ElementNillable]       Bit Null, -- Is the data Nillable, null = do not generate
 	-- Element or Attribute rendering
 	[AsElement]             Bit Null, -- True Script as Element. False Script as Attribute, Null  N/A do not Script
 	-- Data Format, False for all = do not render data. Attribute rendering adds a "Data" attribute
