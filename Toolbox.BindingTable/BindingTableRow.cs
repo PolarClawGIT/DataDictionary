@@ -306,26 +306,6 @@ namespace Toolbox.BindingTable
             OnRowStateChanged();
         }
 
-        /// <inheritdoc cref="DataRow.RowState"/>
-        public virtual DataRowState RowState()
-        {
-            if (data is DataRow row)
-            {
-                // For whatever reason, the row state can be unchanged but their is a Proposed row.
-                if (data.HasVersion(DataRowVersion.Proposed) && row.RowState == DataRowState.Unchanged)
-                { return DataRowState.Modified; }
-
-                if (bindingTable is null)
-                { return DataRowState.Detached; }
-                else if (row.RowState is DataRowState.Detached)
-                { return DataRowState.Detached; }
-                else if (bindingTable.Contains(this))
-                { return row.RowState; }
-                else { return DataRowState.Deleted; }
-            }
-            else { return DataRowState.Detached; }
-        }
-
         /// <inheritdoc cref="DataRow.RowError"/>
         public virtual String GetRowError()
         { if (data is DataRow row) { return row.RowError; } else { return String.Empty; } }
@@ -468,6 +448,7 @@ namespace Toolbox.BindingTable
             return result;
         }
 
+        #region IBindingRowState
         /// <summary>
         /// Occurs when and event that can change the RowState occurs.
         /// </summary>
@@ -485,6 +466,27 @@ namespace Toolbox.BindingTable
                 }
             }
         }
+
+        /// <inheritdoc cref="DataRow.RowState"/>
+        public virtual DataRowState RowState()
+        {
+            if (data is DataRow row)
+            {
+                // For whatever reason, the row state can be unchanged but their is a Proposed row.
+                if (data.HasVersion(DataRowVersion.Proposed) && row.RowState == DataRowState.Unchanged)
+                { return DataRowState.Modified; }
+
+                if (bindingTable is null)
+                { return DataRowState.Detached; }
+                else if (row.RowState is DataRowState.Detached)
+                { return DataRowState.Detached; }
+                else if (bindingTable.Contains(this))
+                { return row.RowState; }
+                else { return DataRowState.Deleted; }
+            }
+            else { return DataRowState.Detached; }
+        }
+        #endregion
 
         #region INotifyPropertyChanged
         /// <inheritdoc/>

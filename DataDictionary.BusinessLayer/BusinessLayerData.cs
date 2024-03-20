@@ -248,6 +248,7 @@ namespace DataDictionary.BusinessLayer
 
             work.AddRange(subjectAreaValues.Export(target, model));
             work.AddRange(domainValue.Export(target, model));
+            work.AddRange(scriptingValue.Export(target, model));
             work.AddRange(databaseValue.Export(target));
             work.AddRange(libraryValue.Export(target));
 

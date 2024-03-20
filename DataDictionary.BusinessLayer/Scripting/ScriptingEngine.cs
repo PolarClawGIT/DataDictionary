@@ -2,6 +2,8 @@
 using System.Data;
 using Toolbox.Threading;
 using Toolbox.BindingTable;
+using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ModelData;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
@@ -25,12 +27,17 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// List of Scripting Engine Transforms.
         /// </summary>
         ITransformData Transforms { get; }
+
+        /// <summary>
+        /// List of Scripting Engine Column definitions
+        /// </summary>
+        IColumnData Columns { get; }
     }
 
     /// <summary>
     /// Implementation for Scripting Engine data
     /// </summary>
-    class ScriptingEngine : IScriptingEngine, IDataTableFile
+    class ScriptingEngine : IScriptingEngine, IDataTableFile, INamedScopeData<IModelKey>
     {
         /// <inheritdoc/>
         public ISchemaData Schemta { get { return schemtaValues; } }
@@ -42,11 +49,15 @@ namespace DataDictionary.BusinessLayer.Scripting
         public ITransformData Transforms { get { return transformValues; } }
         private readonly TransformData transformValues;
 
+        public IColumnData Columns { get { return columnValues; } }
+        private readonly ColumnData columnValues;
+
         public ScriptingEngine() : base()
         {
             schemtaValues = new SchemaData();
             elementValues = new ElementData();
             transformValues = new TransformData();
+            columnValues = new ColumnData();
         }
 
         /// <inheritdoc/>
@@ -58,6 +69,7 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.AddRange(schemtaValues.Load(factory));
             work.AddRange(elementValues.Load(factory));
             work.AddRange(transformValues.Load(factory));
+            work.Add(new WorkItem() { DoWork = columnValues.Load });
 
             return work;
         }
@@ -93,6 +105,18 @@ namespace DataDictionary.BusinessLayer.Scripting
             schemtaValues.Load(source);
             elementValues.Load(source);
             transformValues.Load(source);
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Scripting</remarks>
+        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<IModelKey?> parent)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(schemtaValues.Export(target, parent));
+            work.AddRange(transformValues.Export(target, parent));
+
+            return work;
         }
     }
 }

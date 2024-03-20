@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ScriptingData.Transform;
 using System;
 using System.Collections.Generic;
@@ -18,7 +20,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         ISaveData, ISaveData<ITransformKey>
     { }
 
-    class TransformData : TransformCollection<TransformItem>, ITransformData
+    class TransformData : TransformCollection<TransformItem>, ITransformData, INamedScopeData<IModelKey>
     {
         /// <inheritdoc/>
         /// <remarks>Transform</remarks>
@@ -39,5 +41,23 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <remarks>Transform</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
         { return factory.CreateSave(this).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Transform</remarks>
+        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<IModelKey?> parent)
+        {
+            return new WorkItem()
+            {
+                WorkName = "Load NameScope, Scripting Transforms",
+                DoWork = () =>
+                {
+                    if (parent() is IModelKey key)
+                    {
+                        foreach (TransformItem item in this)
+                        { target.Add(new NamedScopeItem(key, item)); }
+                    }
+                }
+            }.ToList();
+        }
     }
 }

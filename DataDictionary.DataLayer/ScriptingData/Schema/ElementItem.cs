@@ -3,6 +3,7 @@
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -15,12 +16,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Interface for the Scripting Schema Element data.
     /// </summary>
-    public interface IElementItem : ISchemaKey, IElementKey, IScopeKeyName
+    public interface IElementItem : ISchemaKey, IElementKey, IColumnKey, IScopeKeyName
     {
-        /// <summary>
-        /// Name of the Column within the Scope to match to.
-        /// </summary>
-        String? ColumnName { get; }
 
         /// <summary>
         /// Name of the Element to be generated. If Null/Empty, the Column Name is used.
@@ -139,6 +136,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
             set { SetValue<Boolean>("DataAsXml", value); }
         }
 
+
+
         /// <summary>
         /// Constructor for Schema Element Items
         /// </summary>
@@ -151,6 +150,17 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         /// <param name="key"></param>
         public ElementItem(ISchemaKey key) : this()
         { SchemaId = key.SchemaId; }
+
+        /// <summary>
+        /// Constructor for Schema Element Items
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="column"></param>
+        public ElementItem(ISchemaKey key, IColumnItem column) : this (key)
+        {
+            ScopeName = column.ScopeName;
+            ColumnName = column.ColumnName;
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

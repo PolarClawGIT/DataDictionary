@@ -200,8 +200,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// Scripting Transform
         /// </summary>
         ScriptingTransform,
-
-
     }
 
     /// <summary>

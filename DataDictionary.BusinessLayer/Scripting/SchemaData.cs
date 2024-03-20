@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ScriptingData.Schema;
 using System;
 using System.Collections.Generic;
@@ -19,7 +21,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     { }
 
    
-    class SchemaData : SchemaCollection<SchemaItem>, ISchemaData
+    class SchemaData : SchemaCollection<SchemaItem>, ISchemaData, INamedScopeData<IModelKey>
     {
         /// <inheritdoc/>
         /// <remarks>Schema</remarks>
@@ -41,5 +43,23 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <remarks>Schema</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
         { return factory.CreateSave(this).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Schema</remarks>
+        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<IModelKey?> parent)
+        {
+            return new WorkItem()
+            {
+                WorkName = "Load NameScope, Scripting Schema",
+                DoWork = () =>
+                {
+                    if (parent() is IModelKey key)
+                    {
+                        foreach (SchemaItem item in this)
+                        { target.Add(new NamedScopeItem(key, item)); }
+                    }
+                }
+            }.ToList();
+        }
     }
 }

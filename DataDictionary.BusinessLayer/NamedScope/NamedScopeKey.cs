@@ -13,6 +13,8 @@ using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
+using DataDictionary.DataLayer.ScriptingData.Schema;
+using DataDictionary.DataLayer.ScriptingData.Transform;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
@@ -155,6 +157,20 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <param name="source">A Library Member</param>
         public NamedScopeKey(IDomainEntityKey source) : this()
         { SystemId = source.EntityId ?? Guid.Empty; }
+
+        /// <summary>
+        /// Constructor for the NameScope Key, Scripting Schema
+        /// </summary>
+        /// <param name="source">A Scripting Schema</param>
+        public NamedScopeKey(ISchemaItem source) : this()
+        { SystemId = source.SchemaId ?? Guid.Empty; }
+
+        /// <summary>
+        /// Constructor for the NameScope Key, Scripting Transform
+        /// </summary>
+        /// <param name="source">A Scripting Transform</param>
+        public NamedScopeKey(ITransformItem source) : this()
+        { SystemId = source.TransformId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameSpace Key

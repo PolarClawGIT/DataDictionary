@@ -13,6 +13,8 @@ using DataDictionary.DataLayer.LibraryData.Member;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
+using DataDictionary.DataLayer.ScriptingData.Schema;
+using DataDictionary.DataLayer.ScriptingData.Transform;
 using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.NamedScope
@@ -547,6 +549,33 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
             data.PropertyChanged += OnPropertyChanged;
         }
+
+        public NamedScopeItem(IModelKey parent, ISchemaItem data) : base()
+        {
+            SystemKey = new NamedScopeKey((ISchemaItem)data);
+            SystemParentKey = new NamedScopeKey(parent);
+            Source = data;
+            ScopeKey = new ScopeKey(ScopeType.ModelEntity);
+
+            GetNameSpaceKey = () => new NameSpaceKey((ISchemaItem)data);
+            GetTitle = () => data.SchemaTitle ?? String.Empty;
+
+            data.PropertyChanged += OnPropertyChanged;
+        }
+
+        public NamedScopeItem(IModelKey parent, ITransformItem data) : base()
+        {
+            SystemKey = new NamedScopeKey((ITransformItem)data);
+            SystemParentKey = new NamedScopeKey(parent);
+            Source = data;
+            ScopeKey = new ScopeKey(ScopeType.ModelEntity);
+
+            GetNameSpaceKey = () => new NameSpaceKey((ITransformItem)data);
+            GetTitle = () => data.TransformTitle ?? String.Empty;
+
+            data.PropertyChanged += OnPropertyChanged;
+        }
+
         #endregion
 
         /// <inheritdoc/>

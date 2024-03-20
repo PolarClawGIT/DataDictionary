@@ -44,7 +44,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
             return command;
         }
 
-
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
         { return SaveCommand(connection); }
@@ -90,7 +89,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }
         }
-
     }
 
     /// <summary>

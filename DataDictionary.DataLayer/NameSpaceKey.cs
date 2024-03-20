@@ -413,6 +413,25 @@ namespace DataDictionary.DataLayer
             { memberParts.Add(source.AttributeTitle); }
         }
 
+        /// <summary>
+        /// Constructor for NameSpace Key from Scripting Schema
+        /// </summary>
+        /// <param name="source"></param>
+        public NameSpaceKey(ScriptingData.Schema.ISchemaItem source) : base()
+        {
+            if (source.SchemaTitle is String)
+            { memberParts.Add(source.SchemaTitle); }
+        }
+
+        /// <summary>
+        /// Constructor for NameSpace Key from Scripting Transform
+        /// </summary>
+        /// <param name="source"></param>
+        public NameSpaceKey(ScriptingData.Transform.ITransformItem source) : base()
+        {
+            if (source.TransformTitle is String)
+            { memberParts.Add(source.TransformTitle); }
+        }
 
 
         #endregion
