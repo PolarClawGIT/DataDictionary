@@ -16,7 +16,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.ApplicationWide
 {
-    partial class Property : ApplicationBase
+    partial class Property : ApplicationData
     {
         public PropertyKey DataKey { get; private set; }
 

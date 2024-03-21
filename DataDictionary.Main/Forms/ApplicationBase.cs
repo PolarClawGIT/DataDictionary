@@ -42,37 +42,6 @@ namespace DataDictionary.Main.Forms
 
     partial class ApplicationBase : Form, IColleague, IApplicationForm
     {
-        Dictionary<DataRowState, (Image icon, String tooltip)> rowStateSettings = new Dictionary<DataRowState, (Image icon, string tooltip)>()
-        {
-            { DataRowState.Added, new (Resources.RowAdded, "Added")},
-            { DataRowState.Deleted, new (Resources.RowDeleted, "Deleted")},
-            { DataRowState.Detached, new (Resources.RowDetached, "Detached")},
-            { DataRowState.Modified, new (Resources.RowModified, "Modified")},
-            { DataRowState.Unchanged, new (Resources.Row, "Unchanged")},
-        };
-
-        private DataRowState? rowState;
-        public DataRowState? RowState
-        {
-            get { return rowState; }
-            set
-            {
-                if (value is DataRowState state)
-                {
-                    rowStateCommand.Enabled = true;
-                    rowStateCommand.Visible = true;
-                    rowStateCommand.Image = rowStateSettings[state].icon;
-                    rowStateCommand.ToolTipText = rowStateSettings[state].tooltip;
-                }
-                else
-                {
-                    rowStateCommand.Enabled = false;
-                    rowStateCommand.Visible = false;
-                }
-
-                rowState = value;
-            }
-        }
 
         /// <summary>
         /// Constructor called when in Form Design mode
@@ -87,10 +56,7 @@ namespace DataDictionary.Main.Forms
         public ApplicationBase() : base()
         {
             InitializeComponent();
-            RowState = null;
             
-            toolStrip.TransferItems(clipboardCommands, 0);
-            toolStrip.TransferItems(databaseCommands, 0);
         }
 
         /// <summary>
@@ -234,22 +200,7 @@ namespace DataDictionary.Main.Forms
         #endregion
 
 
-        /// <summary>
-        /// Delegate for the Event to handle the RowState of the data.
-        /// </summary>
-        /// <param name="sender">IBindingRowState</param>
-        /// <param name="e"></param>
-        /// <remarks>This will lock the form is the data is Detached or Deleted.</remarks>
-        protected virtual void RowStateChanged(object? sender, EventArgs e)
-        {
-            if (sender is IBindingRowState data)
-            {
-                RowState = data.RowState();
-                if (IsHandleCreated)
-                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
-                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
-            }
-        }
+
 
         /// <summary>
         /// Used to Load the ToolTips into the Form. 
@@ -340,24 +291,6 @@ namespace DataDictionary.Main.Forms
             return this.Controls.Cast<Control>().Any(w => w.UseWaitCursor);
         }
 
-        [Obsolete("Replace with extension method")]
-        protected virtual void AddToolStrip(ContextMenuStrip menuStrip)
-        {
-            Int32 index = toolStrip.Items.IndexOf(toolStripContextMenuPlaceHolder);
-            foreach (ToolStripItem item in menuStrip.Items)
-            { // Make the items look like buttons instead of menu items.
-                item.DisplayStyle = ToolStripItemDisplayStyle.Image;
-                item.MergeAction = MergeAction.Insert;
-                item.MergeIndex = index;
-            }
-
-            // Add to the tool strip
-            toolStrip.Items.Insert(index, new ToolStripSeparator());
-            foreach (ToolStripItem item in menuStrip.Items.Cast<ToolStripItem>().Reverse())
-            {
-                toolStrip.Items.Insert(index, item);
-            }
-        }
 
 
         #region IColleague
@@ -595,35 +528,6 @@ namespace DataDictionary.Main.Forms
 
         #endregion
 
-        private void helpToolStripButton_Click(object sender, EventArgs e)
-        { Activate(() => new ApplicationWide.HelpSubject(this)); }
-
-        private void toolStrip_VisibleChanged(object? sender, EventArgs e)
-        {
-            // Visibility can be set in code.
-            // More often it changes based on other controls on the Form and any over lapping controls or form not the top most form.
-            if (toolStrip.Visible)
-            {
-                // Assumes that a TableLayout Control or similar is the only other control on the page.
-                // Condition and order is an attempt to prevent issues when multiple controls on the same form.
-                if (this.Controls.Cast<Control>().
-                    OrderBy(o => o.Top).
-                    FirstOrDefault(w => w.HasChildren &&
-                        w != toolStrip && // Not the ToolStrip
-                        w.Top < toolStrip.Height // Top control does not overlap with ToolStrip
-                        ) is Control topControl)
-                {
-                    topControl.Padding = new Padding(
-                       topControl.Padding.Left,
-                       toolStrip.Height + topControl.Padding.Top,
-                       topControl.Padding.Right,
-                       topControl.Padding.Bottom);
-                }
-
-                // Don't respond to further changes to Visibility (change only on first time visible only).
-                toolStrip.VisibleChanged -= toolStrip_VisibleChanged;
-            }
-        }
 
 
     }

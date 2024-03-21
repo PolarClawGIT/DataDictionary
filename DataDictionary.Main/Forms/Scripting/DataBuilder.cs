@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
-    partial class DataBuilder : ApplicationBase, IApplicationDataForm
+    partial class DataBuilder : ApplicationData, IApplicationDataForm
     {
         Dictionary<TreeNode, Func<XElement>> itemSelectorValues = new Dictionary<TreeNode, Func<XElement>>();
 

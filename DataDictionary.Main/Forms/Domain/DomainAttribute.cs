@@ -9,7 +9,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain
 {
-    partial class DomainAttribute : ApplicationBase, IApplicationDataForm
+    partial class DomainAttribute : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return bindingAttribute.Current is IAttributeItem current && ReferenceEquals(current, item); }

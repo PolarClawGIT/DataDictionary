@@ -11,7 +11,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbRoutine : ApplicationBase, IApplicationDataForm
+    partial class DbRoutine : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return bindingRoutine.Current is IDbRoutineItem current && ReferenceEquals(current, item); }

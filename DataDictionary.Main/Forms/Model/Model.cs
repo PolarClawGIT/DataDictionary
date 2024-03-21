@@ -8,7 +8,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class Model : ApplicationBase, IApplicationDataForm
+    partial class Model : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return bindingModel.Current is IModelItem current && ReferenceEquals(current, item); }

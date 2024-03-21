@@ -20,7 +20,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class CatalogManager : ApplicationBase, IApplicationDataBind
+    partial class CatalogManager : ApplicationData, IApplicationDataBind
     {
         DbCatalogCollection dbData = new DbCatalogCollection();
         CatalogManagerCollection bindingData = new CatalogManagerCollection();
@@ -51,7 +51,7 @@ namespace DataDictionary.Main.Forms.Database
             }
         }
 
-        public CatalogManager()
+        public CatalogManager() :base()
         {
             InitializeComponent();
             toolStrip.TransferItems(catalogContextMenu, 0);

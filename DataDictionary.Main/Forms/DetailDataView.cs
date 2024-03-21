@@ -9,7 +9,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
 {
-    partial class DetailDataView : ApplicationBase, IApplicationDataBind
+    partial class DetailDataView : ApplicationData, IApplicationDataBind
     {
         public DetailDataView() : base()
         {

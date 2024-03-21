@@ -11,7 +11,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain
 {
-    partial class ModelSubjectArea : ApplicationBase, IApplicationDataForm
+    partial class ModelSubjectArea : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return bindingSubject.Current is IModelSubjectAreaItem current && ReferenceEquals(current, item); }

@@ -12,7 +12,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbTable : ApplicationBase, IApplicationDataForm
+    partial class DbTable : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return bindingTable.Current is IDbTableItem current && ReferenceEquals(current, item); }

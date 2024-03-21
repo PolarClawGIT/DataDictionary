@@ -20,7 +20,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Library
 {
-    partial class LibraryManager : ApplicationBase, IApplicationDataBind
+    partial class LibraryManager : ApplicationData, IApplicationDataBind
     {
         public Boolean IsOpenItem(object? item)
         { return true; }

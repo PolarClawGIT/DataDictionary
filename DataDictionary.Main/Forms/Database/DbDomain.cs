@@ -18,7 +18,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbDomain : ApplicationBase, IApplicationDataForm
+    partial class DbDomain : ApplicationData, IApplicationDataForm
     {
 
         public Boolean IsOpenItem(object? item)

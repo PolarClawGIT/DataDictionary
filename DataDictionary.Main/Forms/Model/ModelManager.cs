@@ -17,7 +17,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class ModelManager : ApplicationBase, IApplicationDataBind
+    partial class ModelManager : ApplicationData, IApplicationDataBind
     {
         ModelCollection dbData = new ModelCollection();
         ModelManagerCollection bindingData = new ModelManagerCollection();

@@ -11,7 +11,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.ApplicationWide
 {
-    partial class HelpSubject : ApplicationBase
+    partial class HelpSubject : ApplicationData
     {
         class ControlItem
         {

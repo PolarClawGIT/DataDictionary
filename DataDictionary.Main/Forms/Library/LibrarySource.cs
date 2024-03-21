@@ -8,7 +8,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Library
 {
-    partial class LibrarySource : ApplicationBase, IApplicationDataForm
+    partial class LibrarySource : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return bindingSource.Current is ILibrarySourceItem current && ReferenceEquals(current, item); }

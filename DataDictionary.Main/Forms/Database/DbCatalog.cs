@@ -10,7 +10,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbCatalog : ApplicationBase, IApplicationDataForm
+    partial class DbCatalog : ApplicationData, IApplicationDataForm
     {
 
         public Boolean IsOpenItem(object? item)

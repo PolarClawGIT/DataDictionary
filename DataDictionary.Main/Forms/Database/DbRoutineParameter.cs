@@ -11,7 +11,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbRoutineParameter : ApplicationBase
+    partial class DbRoutineParameter : ApplicationData
     {
 
         public Boolean IsOpenItem(object? item)
