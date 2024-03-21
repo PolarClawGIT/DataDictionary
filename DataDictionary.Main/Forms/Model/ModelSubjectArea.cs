@@ -19,11 +19,7 @@ namespace DataDictionary.Main.Forms.Domain
         public ModelSubjectArea() : base()
         {
             InitializeComponent();
-
-            deleteItemCommand.Click += DeleteItemCommand_Click;
-            deleteItemCommand.Enabled = true;
-            deleteItemCommand.Image = Resources.DeleteDiagram;
-            deleteItemCommand.ToolTipText = "Remove the Subject Area";
+            toolStrip.TransferItems(subjectAreaToolStrip,0);
         }
 
         public ModelSubjectArea(IModelSubjectAreaItem subjectAreaItem) : this()
@@ -33,7 +29,7 @@ namespace DataDictionary.Main.Forms.Domain
             bindingSubject.DataSource = new BindingView<ModelSubjectAreaItem>(BusinessData.ModelSubjectAreas, w => key.Equals(w));
             bindingSubject.Position = 0;
 
-            if(bindingSubject.Current is IModelSubjectAreaItem current)
+            if (bindingSubject.Current is IModelSubjectAreaItem current)
             {
                 this.Icon = ScopeType.ModelSubjectArea.ToIcon();
                 RowState = current.RowState();
@@ -64,7 +60,8 @@ namespace DataDictionary.Main.Forms.Domain
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSubject.Current is not IModelSubjectAreaItem);
         }
 
-        private void DeleteItemCommand_Click(object? sender, EventArgs e)
+
+        private void RemoveSubjectAreaCommand_Click(object sender, EventArgs e)
         {
             if (bindingSubject.Current is ModelSubjectAreaItem current)
             {
@@ -81,6 +78,5 @@ namespace DataDictionary.Main.Forms.Domain
                 RowState = current.RowState();
             }
         }
-
     }
 }

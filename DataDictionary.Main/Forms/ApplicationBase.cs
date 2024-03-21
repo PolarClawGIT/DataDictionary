@@ -88,6 +88,9 @@ namespace DataDictionary.Main.Forms
         {
             InitializeComponent();
             RowState = null;
+            
+            toolStrip.TransferItems(clipboardCommands, 0);
+            toolStrip.TransferItems(databaseCommands, 0);
         }
 
         /// <summary>
@@ -337,6 +340,7 @@ namespace DataDictionary.Main.Forms
             return this.Controls.Cast<Control>().Any(w => w.UseWaitCursor);
         }
 
+        [Obsolete("Replace with extension method")]
         protected virtual void AddToolStrip(ContextMenuStrip menuStrip)
         {
             Int32 index = toolStrip.Items.IndexOf(toolStripContextMenuPlaceHolder);
@@ -348,8 +352,13 @@ namespace DataDictionary.Main.Forms
             }
 
             // Add to the tool strip
-            ToolStripManager.Merge(menuStrip, toolStrip);
+            toolStrip.Items.Insert(index, new ToolStripSeparator());
+            foreach (ToolStripItem item in menuStrip.Items.Cast<ToolStripItem>().Reverse())
+            {
+                toolStrip.Items.Insert(index, item);
+            }
         }
+
 
         #region IColleague
         public event EventHandler<MessageEventArgs>? OnSendMessage;

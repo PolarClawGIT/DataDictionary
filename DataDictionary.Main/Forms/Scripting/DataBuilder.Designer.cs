@@ -395,7 +395,6 @@
         private DataGridView schemaColumnData;
         private CheckBox scriptAsElementData;
         private CheckBox scriptAsAttributeData;
-        private GroupBox dataFormatGroup;
         private CheckBox scriptAsTextData;
         private CheckBox scriptAsCData;
         private CheckBox scriptAsXmlData;

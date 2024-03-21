@@ -25,15 +25,10 @@ namespace DataDictionary.Main.Forms.Domain
         public DomainEntity() : base()
         {
             InitializeComponent();
-            newItemCommand.Click += NewItemCommand_Click;
-
-            deleteItemCommand.Enabled = true;
-            deleteItemCommand.Image = Resources.DeleteAttribute;
-            deleteItemCommand.Click += DeleteItemCommand_Click;
-            deleteItemCommand.ToolTipText = "Delete Attribute";
+            toolStrip.TransferItems(entityToolStrip, 0);
         }
 
-        public DomainEntity(IDomainEntityItem entityItem) :this()
+        public DomainEntity(IDomainEntityItem entityItem) : this()
         {
             DomainEntityKey key = new DomainEntityKey(entityItem);
             bindingEntity.DataSource = new BindingView<DomainEntityItem>(BusinessData.DomainModel.Entities, w => key.Equals(w));
@@ -55,7 +50,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             IDomainEntityItem nameOfValues;
             PropertyNameItem.Load(propertyIdColumn);
-            ScopeNameItem.Load(aliaseScopeColumn); 
+            ScopeNameItem.Load(aliaseScopeColumn);
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));
@@ -98,27 +93,6 @@ namespace DataDictionary.Main.Forms.Domain
             }
         }
 
-        private void DetailTabLayout_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (detailTabLayout.TabPages[detailTabLayout.SelectedIndex] == propertyTab)
-            {
-                newItemCommand.Enabled = true;
-                newItemCommand.Image = Resources.NewProperty;
-                newItemCommand.ToolTipText = "add Property";
-            }
-            else if (detailTabLayout.TabPages[detailTabLayout.SelectedIndex] == aliasTab)
-            {
-                newItemCommand.Enabled = true;
-                newItemCommand.Image = Resources.NewSynonym;
-                newItemCommand.ToolTipText = "add Alias";
-            }
-            else
-            {
-                newItemCommand.Enabled = false;
-                newItemCommand.Image = Resources.NewDocument;
-            }
-        }
-
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
         {
             if (bindingEntity.Current is DomainEntityItem current)
@@ -138,6 +112,24 @@ namespace DataDictionary.Main.Forms.Domain
                 newItem.AliasName = domainAlias.SelectedAlias.MemberFullName;
                 newItem.Scope = domainAlias.SelectedAlias.Scope;
             }
+        }
+
+        private void AddPropertyCommand_Click(object sender, EventArgs e)
+        {
+            if (detailTabLayout.SelectedTab == propertyTab)
+            {
+                bindingProperty.AddNew();
+                domainProperty.RefreshControls();
+            }
+            else { detailTabLayout.SelectedTab = propertyTab; }
+        }
+
+        private void AddAliasCommand_Click(object sender, EventArgs e)
+        {
+            if (detailTabLayout.SelectedTab == aliasTab)
+            { bindingAlias.AddNew(); }
+            else
+            { detailTabLayout.SelectedTab = aliasTab; }
         }
     }
 }

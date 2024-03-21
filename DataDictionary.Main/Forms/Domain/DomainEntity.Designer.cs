@@ -30,12 +30,13 @@
         {
             components = new System.ComponentModel.Container();
             TableLayoutPanel mainLayout;
-            TableLayoutPanel propertyLayout;
             TableLayoutPanel detailsLayout;
+            TableLayoutPanel propertyLayout;
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             detailTabLayout = new TabControl();
             detailTab = new TabPage();
+            typeOfEntityData = new DataDictionary.Main.Controls.ComboBoxData();
             propertyTab = new TabPage();
             propertiesData = new DataGridView();
             propertyIdColumn = new DataGridViewComboBoxColumn();
@@ -51,13 +52,17 @@
             bindingAlias = new BindingSource(components);
             bindingProperty = new BindingSource(components);
             bindingEntity = new BindingSource(components);
-            typeOfEntityData = new DataDictionary.Main.Controls.ComboBoxData();
+            entityToolStrip = new ContextMenuStrip(components);
+            addPropertyCommand = new ToolStripMenuItem();
+            addAliasCommand = new ToolStripMenuItem();
+            removeEntityComand = new ToolStripMenuItem();
             mainLayout = new TableLayoutPanel();
-            propertyLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
+            propertyLayout = new TableLayoutPanel();
             mainLayout.SuspendLayout();
             detailTabLayout.SuspendLayout();
             detailTab.SuspendLayout();
+            detailsLayout.SuspendLayout();
             propertyTab.SuspendLayout();
             propertyLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)propertiesData).BeginInit();
@@ -67,7 +72,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).BeginInit();
-            detailsLayout.SuspendLayout();
+            entityToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // mainLayout
@@ -123,7 +128,6 @@
             detailTabLayout.SelectedIndex = 0;
             detailTabLayout.Size = new Size(420, 371);
             detailTabLayout.TabIndex = 2;
-            detailTabLayout.SelectedIndexChanged += DetailTabLayout_SelectedIndexChanged;
             // 
             // detailTab
             // 
@@ -135,6 +139,34 @@
             detailTab.Size = new Size(412, 343);
             detailTab.TabIndex = 0;
             detailTab.Text = "Details";
+            // 
+            // detailsLayout
+            // 
+            detailsLayout.ColumnCount = 1;
+            detailsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            detailsLayout.Controls.Add(typeOfEntityData, 0, 0);
+            detailsLayout.Dock = DockStyle.Fill;
+            detailsLayout.Location = new Point(3, 3);
+            detailsLayout.Name = "detailsLayout";
+            detailsLayout.RowCount = 2;
+            detailsLayout.RowStyles.Add(new RowStyle());
+            detailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            detailsLayout.Size = new Size(406, 337);
+            detailsLayout.TabIndex = 0;
+            // 
+            // typeOfEntityData
+            // 
+            typeOfEntityData.AutoSize = true;
+            typeOfEntityData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            detailsLayout.SetColumnSpan(typeOfEntityData, 2);
+            typeOfEntityData.Dock = DockStyle.Fill;
+            typeOfEntityData.DropDownStyle = ComboBoxStyle.DropDown;
+            typeOfEntityData.HeaderText = "Type of Entity";
+            typeOfEntityData.Location = new Point(3, 3);
+            typeOfEntityData.Name = "typeOfEntityData";
+            typeOfEntityData.ReadOnly = false;
+            typeOfEntityData.Size = new Size(400, 44);
+            typeOfEntityData.TabIndex = 1;
             // 
             // propertyTab
             // 
@@ -280,33 +312,35 @@
             // 
             bindingProperty.AddingNew += BindingProperty_AddingNew;
             // 
-            // detailsLayout
+            // entityToolStrip
             // 
-            detailsLayout.ColumnCount = 1;
-            detailsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            detailsLayout.Controls.Add(typeOfEntityData, 0, 0);
-            detailsLayout.Dock = DockStyle.Fill;
-            detailsLayout.Location = new Point(3, 3);
-            detailsLayout.Name = "detailsLayout";
-            detailsLayout.RowCount = 2;
-            detailsLayout.RowStyles.Add(new RowStyle());
-            detailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            detailsLayout.Size = new Size(406, 337);
-            detailsLayout.TabIndex = 0;
+            entityToolStrip.Items.AddRange(new ToolStripItem[] { addPropertyCommand, addAliasCommand, removeEntityComand });
+            entityToolStrip.Name = "attributeContextMenu";
+            entityToolStrip.Size = new Size(148, 70);
             // 
-            // typeOfEntityData
+            // addPropertyCommand
             // 
-            typeOfEntityData.AutoSize = true;
-            typeOfEntityData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            detailsLayout.SetColumnSpan(typeOfEntityData, 2);
-            typeOfEntityData.Dock = DockStyle.Fill;
-            typeOfEntityData.DropDownStyle = ComboBoxStyle.DropDown;
-            typeOfEntityData.HeaderText = "Type of Entity";
-            typeOfEntityData.Location = new Point(3, 3);
-            typeOfEntityData.Name = "typeOfEntityData";
-            typeOfEntityData.ReadOnly = false;
-            typeOfEntityData.Size = new Size(400, 44);
-            typeOfEntityData.TabIndex = 1;
+            addPropertyCommand.Image = Properties.Resources.NewProperty;
+            addPropertyCommand.Name = "addPropertyCommand";
+            addPropertyCommand.Size = new Size(147, 22);
+            addPropertyCommand.Text = "add Property";
+            addPropertyCommand.Click += AddPropertyCommand_Click;
+            // 
+            // addAliasCommand
+            // 
+            addAliasCommand.Image = Properties.Resources.NewSynonym;
+            addAliasCommand.Name = "addAliasCommand";
+            addAliasCommand.Size = new Size(147, 22);
+            addAliasCommand.Text = "add Alias";
+            addAliasCommand.Click += AddAliasCommand_Click;
+            // 
+            // removeEntityComand
+            // 
+            removeEntityComand.Image = Properties.Resources.DeleteEntity;
+            removeEntityComand.Name = "removeEntityComand";
+            removeEntityComand.Size = new Size(147, 22);
+            removeEntityComand.Text = "remove Entity";
+            removeEntityComand.Click += DeleteItemCommand_Click;
             // 
             // DomainEntity
             // 
@@ -322,6 +356,8 @@
             mainLayout.PerformLayout();
             detailTabLayout.ResumeLayout(false);
             detailTab.ResumeLayout(false);
+            detailsLayout.ResumeLayout(false);
+            detailsLayout.PerformLayout();
             propertyTab.ResumeLayout(false);
             propertyLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)propertiesData).EndInit();
@@ -331,8 +367,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).EndInit();
-            detailsLayout.ResumeLayout(false);
-            detailsLayout.PerformLayout();
+            entityToolStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -359,5 +394,9 @@
         private BindingSource bindingProperty;
         private BindingSource bindingEntity;
         private DataDictionary.Main.Controls.ComboBoxData typeOfEntityData;
+        private ContextMenuStrip entityToolStrip;
+        private ToolStripMenuItem addPropertyCommand;
+        private ToolStripMenuItem addAliasCommand;
+        private ToolStripMenuItem removeEntityComand;
     }
 }

@@ -47,6 +47,9 @@
             errorProvider = new ErrorProvider(components);
             helpBinding = new BindingSource(components);
             nameSpaceBinding = new BindingSource(components);
+            helpContextMenu = new ContextMenuStrip(components);
+            newHelpCommand = new ToolStripMenuItem();
+            deleteHelpCommand = new ToolStripMenuItem();
             helpSplitLayout = new SplitContainer();
             helpTabs = new TabControl();
             ((System.ComponentModel.ISupportInitialize)helpSplitLayout).BeginInit();
@@ -62,6 +65,7 @@
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             ((System.ComponentModel.ISupportInitialize)helpBinding).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nameSpaceBinding).BeginInit();
+            helpContextMenu.SuspendLayout();
             SuspendLayout();
             // 
             // helpSplitLayout
@@ -163,7 +167,7 @@
             helpNameSpaceLayout.Location = new Point(4, 24);
             helpNameSpaceLayout.Name = "helpNameSpaceLayout";
             helpNameSpaceLayout.Padding = new Padding(3);
-            helpNameSpaceLayout.Size = new Size(563, 485);
+            helpNameSpaceLayout.Size = new Size(192, 72);
             helpNameSpaceLayout.TabIndex = 1;
             helpNameSpaceLayout.Text = "Programmability";
             // 
@@ -182,7 +186,7 @@
             nameSpaceGroupLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
             nameSpaceGroupLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
             nameSpaceGroupLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            nameSpaceGroupLayout.Size = new Size(557, 479);
+            nameSpaceGroupLayout.Size = new Size(186, 66);
             nameSpaceGroupLayout.TabIndex = 1;
             // 
             // helpNameSpaceData
@@ -194,7 +198,7 @@
             helpNameSpaceData.Multiline = false;
             helpNameSpaceData.Name = "helpNameSpaceData";
             helpNameSpaceData.ReadOnly = false;
-            helpNameSpaceData.Size = new Size(551, 44);
+            helpNameSpaceData.Size = new Size(180, 44);
             helpNameSpaceData.TabIndex = 1;
             // 
             // helpToolTipData
@@ -206,16 +210,16 @@
             helpToolTipData.Multiline = true;
             helpToolTipData.Name = "helpToolTipData";
             helpToolTipData.ReadOnly = false;
-            helpToolTipData.Size = new Size(551, 79);
+            helpToolTipData.Size = new Size(180, 1);
             helpToolTipData.TabIndex = 4;
             // 
             // controlsGroup
             // 
             controlsGroup.Controls.Add(controlData);
             controlsGroup.Dock = DockStyle.Fill;
-            controlsGroup.Location = new Point(3, 138);
+            controlsGroup.Location = new Point(3, 56);
             controlsGroup.Name = "controlsGroup";
-            controlsGroup.Size = new Size(551, 338);
+            controlsGroup.Size = new Size(180, 7);
             controlsGroup.TabIndex = 6;
             controlsGroup.TabStop = false;
             controlsGroup.Text = "Controls for: ";
@@ -227,7 +231,7 @@
             controlData.Dock = DockStyle.Fill;
             controlData.Location = new Point(3, 19);
             controlData.Name = "controlData";
-            controlData.Size = new Size(545, 316);
+            controlData.Size = new Size(174, 0);
             controlData.TabIndex = 5;
             controlData.UseCompatibleStateImageBehavior = false;
             controlData.View = View.Details;
@@ -253,6 +257,28 @@
             helpBinding.BindingComplete += helpBinding_BindingComplete;
             helpBinding.DataError += helpBinding_DataError;
             helpBinding.CurrentChanged += helpBinding_CurrentChanged;
+            // 
+            // helpContextMenu
+            // 
+            helpContextMenu.Items.AddRange(new ToolStripItem[] { newHelpCommand, deleteHelpCommand });
+            helpContextMenu.Name = "helpContextMenu";
+            helpContextMenu.Size = new Size(169, 48);
+            // 
+            // newHelpCommand
+            // 
+            newHelpCommand.Image = Properties.Resources.NewStatusHelp;
+            newHelpCommand.Name = "newHelpCommand";
+            newHelpCommand.Size = new Size(168, 22);
+            newHelpCommand.Text = "New Help Subject";
+            newHelpCommand.Click += newHelpCommand_Click;
+            // 
+            // deleteHelpCommand
+            // 
+            deleteHelpCommand.Image = Properties.Resources.DeleteStatusHelp;
+            deleteHelpCommand.Name = "deleteHelpCommand";
+            deleteHelpCommand.Size = new Size(168, 22);
+            deleteHelpCommand.Text = "Delete Help";
+            deleteHelpCommand.Click += deleteHelpCommand_Click;
             // 
             // HelpSubject
             // 
@@ -281,6 +307,7 @@
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ((System.ComponentModel.ISupportInitialize)helpBinding).EndInit();
             ((System.ComponentModel.ISupportInitialize)nameSpaceBinding).EndInit();
+            helpContextMenu.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -303,5 +330,8 @@
         private ColumnHeader controlNameColumn;
         private ColumnHeader controlTypeColumn;
         private GroupBox controlsGroup;
+        private ContextMenuStrip helpContextMenu;
+        private ToolStripMenuItem newHelpCommand;
+        private ToolStripMenuItem deleteHelpCommand;
     }
 }

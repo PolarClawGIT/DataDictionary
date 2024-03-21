@@ -64,6 +64,9 @@
             bindingProperty = new BindingSource(components);
             bindingAlias = new BindingSource(components);
             attributeToolStrip = new ContextMenuStrip(components);
+            addPropertyCommand = new ToolStripMenuItem();
+            addAliasCommand = new ToolStripMenuItem();
+            removeAttributeCommand = new ToolStripMenuItem();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
@@ -80,6 +83,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
+            attributeToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // mainLayout
@@ -136,7 +140,6 @@
             detailTabLayout.SelectedIndex = 0;
             detailTabLayout.Size = new Size(420, 371);
             detailTabLayout.TabIndex = 2;
-            detailTabLayout.SelectedIndexChanged += DetailTabLayout_SelectedIndexChanged;
             // 
             // detailTab
             // 
@@ -447,8 +450,33 @@
             // 
             // attributeToolStrip
             // 
+            attributeToolStrip.Items.AddRange(new ToolStripItem[] { addPropertyCommand, addAliasCommand, removeAttributeCommand });
             attributeToolStrip.Name = "attributeContextMenu";
-            attributeToolStrip.Size = new Size(181, 26);
+            attributeToolStrip.Size = new Size(181, 92);
+            // 
+            // addPropertyCommand
+            // 
+            addPropertyCommand.Image = Properties.Resources.NewProperty;
+            addPropertyCommand.Name = "addPropertyCommand";
+            addPropertyCommand.Size = new Size(180, 22);
+            addPropertyCommand.Text = "add Property";
+            addPropertyCommand.Click += AddPropertyCommand_Click;
+            // 
+            // addAliasCommand
+            // 
+            addAliasCommand.Image = Properties.Resources.NewSynonym;
+            addAliasCommand.Name = "addAliasCommand";
+            addAliasCommand.Size = new Size(180, 22);
+            addAliasCommand.Text = "add Alias";
+            addAliasCommand.Click += AddAliasCommand_Click;
+            // 
+            // removeAttributeCommand
+            // 
+            removeAttributeCommand.Image = Properties.Resources.DeleteAttribute;
+            removeAttributeCommand.Name = "removeAttributeCommand";
+            removeAttributeCommand.Size = new Size(180, 22);
+            removeAttributeCommand.Text = "remove Attribute";
+            removeAttributeCommand.Click += DeleteItemCommand_Click;
             // 
             // DomainAttribute
             // 
@@ -475,6 +503,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
+            attributeToolStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -513,5 +542,8 @@
         private Controls.DomainProperty domainProperty;
         private TableLayoutPanel aliaseLayout;
         private ContextMenuStrip attributeToolStrip;
+        private ToolStripMenuItem addPropertyCommand;
+        private ToolStripMenuItem addAliasCommand;
+        private ToolStripMenuItem removeAttributeCommand;
     }
 }

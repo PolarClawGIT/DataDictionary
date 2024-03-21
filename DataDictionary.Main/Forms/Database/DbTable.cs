@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Forms.Database
         public DbTable() : base()
         {
             InitializeComponent();
-            AddToolStrip(tableToolStrip);
+            toolStrip.TransferItems(tableToolStrip, 0);
         }
 
         public DbTable(IDbTableItem tableItem) : this()

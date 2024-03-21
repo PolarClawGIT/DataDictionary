@@ -25,10 +25,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             InitializeComponent();
             this.Icon = Resources.Icon_Property;
             DataKey = new PropertyKey(new PropertyItem());
-
-            newItemCommand.Enabled = true;
-            newItemCommand.Click += NewItemCommand_Click;
-            newItemCommand.Image = Resources.NewProperty;
+            toolStrip.TransferItems(propertyToolStrip, 0);
 
             copyToolStripButton.Enabled = true;
             copyToolStripButton.Click += CopyToolStripButton_Click;
@@ -293,5 +290,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         }
         #endregion
 
+        private void addPropertyComand_Click(object sender, EventArgs e)
+        { NewCommand(); }
     }
 }

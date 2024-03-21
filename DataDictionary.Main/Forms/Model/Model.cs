@@ -13,11 +13,10 @@ namespace DataDictionary.Main.Forms.Model
         public Boolean IsOpenItem(object? item)
         { return bindingModel.Current is IModelItem current && ReferenceEquals(current, item); }
 
-
         public Model() : base()
         {
             InitializeComponent();
-            AddToolStrip(modelToolStrip);
+            toolStrip.TransferItems(modelToolStrip,0);
         }
 
         public Model(IModelItem data) : this()

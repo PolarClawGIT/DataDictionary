@@ -53,11 +53,6 @@ namespace DataDictionary.Main.Forms.Model
             InitializeComponent();
             this.Icon = Resources.Icon_SoftwareDefinitionModel;
 
-            newItemCommand.Enabled = true;
-            newItemCommand.Click += NewItemCommand_Click;
-            newItemCommand.Image = Resources.NewSoftwareDefinitionModel;
-            newItemCommand.ToolTipText = "Create a empty Model";
-
             openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click;
             deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
             saveToDatabaseCommand.Click += SaveToDatabaseCommand_Click;
@@ -102,16 +97,6 @@ namespace DataDictionary.Main.Forms.Model
             modelBinding.DataSource = null;
         }
 
-        private void NewItemCommand_Click(object? sender, EventArgs e)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(BusinessData.Remove()); 
-
-            DoLocalWork(work);
-        }
-
-
         private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
             modelNavigation.EndEdit();
@@ -121,7 +106,7 @@ namespace DataDictionary.Main.Forms.Model
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 IModelKey key = new ModelKey(item);
-                
+
                 work.Add(factory.OpenConnection());
 
                 if (inModelList)
@@ -129,7 +114,8 @@ namespace DataDictionary.Main.Forms.Model
                     work.AddRange(BusinessData.Remove());
                     work.AddRange(BusinessData.Save(factory, key));
                 }
-                else {
+                else
+                {
                     work.Add(new WorkItem() { DoWork = () => dbData.Remove(key) });
                     work.Add(factory.CreateSave(dbData, key));
                 }
@@ -201,6 +187,13 @@ namespace DataDictionary.Main.Forms.Model
         private void BindingComplete(object sender, BindingCompleteEventArgs e)
         { if (sender is BindingSource binding) { binding.BindComplete(sender, e); } }
 
+        private void newModelCommand_Click(object sender, EventArgs e)
+        {
+            List<WorkItem> work = new List<WorkItem>();
 
+            work.AddRange(BusinessData.Remove());
+
+            DoLocalWork(work);
+        }
     }
 }

@@ -56,14 +56,10 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             controlData.Columns[0].Width = (Int32)(controlData.ClientSize.Width * 0.7);
             controlData.Columns[1].Width = (Int32)(controlData.ClientSize.Width * 0.3);
 
+            toolStrip.TransferItems(helpContextMenu,0);
             helpToolStripButton.Enabled = false;
-            newItemCommand.Enabled = true;
-            newItemCommand.Click += NewItemCommand_Click;
-            newItemCommand.Image = Resources.NewStatusHelp;
-
-            deleteItemCommand.Enabled = true;
-            deleteItemCommand.Click += DeleteItemCommand_Click;
-            deleteItemCommand.Image = Resources.DeleteStatusHelp;
+            newHelpCommand.Enabled = true;
+            deleteHelpCommand.Enabled = true;
 
             helpBinding.DataSource = BusinessData.ApplicationData.HelpSubjects;
 
@@ -93,7 +89,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             List<Control> values = targetForm.ToControlList()
                 .Where(w => !String.IsNullOrWhiteSpace(w.Name)
                             && w is not Form
-                            && !(w is Panel or ToolStrip or SplitContainer or Splitter or TabControl))
+                            && !(w is Panel or ToolStrip or MenuStrip or SplitContainer or Splitter))
                 .OrderBy(o => o is not Form)
                 .ThenBy(o => o.ToNameSpaceKey())
                 .ToList();
@@ -153,7 +149,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         }
 
 
-        private void NewItemCommand_Click(object? sender, EventArgs e)
+        private void newHelpCommand_Click(object? sender, EventArgs e)
         {
             if (helpBinding.AddNew() is HelpItem newItem)
             {
@@ -164,7 +160,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             }
         }
 
-        private void DeleteItemCommand_Click(object? sender, EventArgs e)
+        private void deleteHelpCommand_Click(object? sender, EventArgs e)
         {
             if (helpBinding.Current is HelpItem current)
             {

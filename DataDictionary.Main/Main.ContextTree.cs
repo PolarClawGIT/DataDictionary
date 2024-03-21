@@ -43,8 +43,8 @@ namespace DataDictionary.Main
         void BuildTree()
         {
             contextNameNavigation.BeginUpdate();
-            contextNameLayout.UseWaitCursor = true;
-            contextNameLayout.Enabled = false;
+            contextNameNavigation.UseWaitCursor = true;
+            contextNameNavigation.Enabled = false;
 
             List<WorkItem> work = new List<WorkItem>();
             Action<Int32, Int32> progress = (x, y) => { };
@@ -71,8 +71,8 @@ namespace DataDictionary.Main
                 foreach (TreeNode item in contextNodes.Where(w => expandedContextNodes.Contains(w.Value)).Select(s => s.Key).ToList())
                 { item.ExpandParent(); }
 
-                contextNameLayout.UseWaitCursor = false;
-                contextNameLayout.Enabled = true;
+                contextNameNavigation.UseWaitCursor = false;
+                contextNameNavigation.Enabled = true;
                 contextNameNavigation.EndUpdate();
                 BusinessData.NameScope.ListChanged += NameScope_ListChanged;
             }
@@ -181,7 +181,7 @@ namespace DataDictionary.Main
             }
         }
 
-        private void RefreshCommand_Click(object sender, EventArgs e)
+        private void RefreshCommand_Click(object? sender, EventArgs e)
         { RefreshTree(); }
 
         private void RefreshTree()
@@ -200,47 +200,6 @@ namespace DataDictionary.Main
             { BuildTree(); }
         }
 
-        private void NewAttributeCommand_ButtonClick(object sender, EventArgs e)
-        {
-            AttributeItem item = new AttributeItem();
-
-            BusinessData.DomainModel.Attributes.Add(item);
-            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
-
-            if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
-            { contextNameNavigation.SelectedNode = node; }
-
-            Activate(item);
-        }
-
-        private void NewEntityCommand_ButtonClick(object sender, EventArgs e)
-        {
-            DomainEntityItem item = new DomainEntityItem();
-
-            BusinessData.DomainModel.Entities.Add(item);
-            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
-
-            if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
-            { contextNameNavigation.SelectedNode = node; }
-
-            Activate(item);
-        }
-
-        private void NewSubjectAreaCommand_ButtonClick(object sender, EventArgs e)
-        {
-            ModelSubjectAreaItem item = new ModelSubjectAreaItem();
-
-            BusinessData.ModelSubjectAreas.Add(item);
-            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
-
-            if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
-            { contextNameNavigation.SelectedNode = node; }
-
-            Activate(item);
-        }
-
-        private void ManageModelCommand_ButtonClick(object sender, EventArgs e)
-        { Activate(() => new Forms.Model.ModelManager()); }
 
         private void DataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {

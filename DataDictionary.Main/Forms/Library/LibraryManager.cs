@@ -57,16 +57,7 @@ namespace DataDictionary.Main.Forms.Library
         public LibraryManager()
         {
             InitializeComponent();
-
-            newItemCommand.Enabled = true;
-            newItemCommand.Click += NewItemCommand_Click;
-            newItemCommand.Image = Resources.NewLibrary;
-            newItemCommand.ToolTipText = "Import a Visual Studio XML Documentation file to the Model";
-
-            deleteItemCommand.Enabled = true;
-            deleteItemCommand.Click += DeleteItemCommand_Click;
-            deleteItemCommand.Image = Resources.DeleteLibrary;
-            deleteItemCommand.ToolTipText = "Removes the Library from the Model";
+            toolStrip.TransferItems(libararyToolStrip, 0);
 
             openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click; ;
             deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
@@ -117,85 +108,6 @@ namespace DataDictionary.Main.Forms.Library
 
             libraryNavigation.DataSource = null;
             libraryBinding.DataSource = null;
-        }
-
-        private void NewItemCommand_Click(object? sender, EventArgs e)
-        {
-            openFileDialog.Filter = "XML VS Documentation|*.XML";
-            openFileDialog.Multiselect = true;
-
-            // Work out what directory to start in
-            String initPath = Settings.Default.LastLibraryPath;
-
-            if (String.IsNullOrWhiteSpace(initPath) || new DirectoryInfo(initPath).Exists == false)
-            {
-                initPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-
-                if (new DirectoryInfo(initPath).GetDirectories("source").FirstOrDefault() is DirectoryInfo sourcePath)
-                { initPath = sourcePath.FullName; }
-
-                if (new DirectoryInfo(initPath).GetDirectories("repos").FirstOrDefault() is DirectoryInfo repoPath)
-                { initPath = repoPath.FullName; }
-
-                Settings.Default.LastLibraryPath = initPath;
-                Settings.Default.Save();
-            }
-
-            // Open the Dialog
-            openFileDialog.InitialDirectory = Settings.Default.LastLibraryPath;
-            openFileDialog.FileName = String.Empty;
-            DialogResult dialogResult = openFileDialog.ShowDialog();
-
-            // Respond to Dialog options
-            if (dialogResult is DialogResult.OK)
-            {
-                // Save the Directory to LastLibraryPath
-                if (openFileDialog.FileNames.FirstOrDefault() is String firstFile)
-                {
-                    FileInfo file = new FileInfo(firstFile);
-                    if (file.Directory is DirectoryInfo firstDirectory && firstDirectory.FullName != initPath)
-                    {
-                        Settings.Default.LastLibraryPath = firstDirectory.FullName;
-                        Settings.Default.Save();
-                    }
-                }
-
-                // Create the work items for each of the files selected
-                List<WorkItem> work = new List<WorkItem>();
-                List<NamedScopeItem> names = new List<NamedScopeItem>();
-
-                foreach (String file in openFileDialog.FileNames)
-                {
-                    FileInfo fileInfo = new FileInfo(file);
-                    work.AddRange(BusinessData.LibraryModel.Import(fileInfo));
-                    work.AddRange(BusinessData.LibraryModel.Export(names));
-                    work.AddRange(BusinessData.NameScope.Import(names));
-                }
-
-                DoLocalWork(work);
-            }
-        }
-
-        private void DeleteItemCommand_Click(object? sender, EventArgs e)
-        {
-            libraryNavigation.EndEdit();
-
-            if (libraryBinding.Current is LibraryManagerItem item)
-            {
-                List<WorkItem> work = new List<WorkItem>();
-                LibrarySourceKey key = new LibrarySourceKey(item);
-                NamedScopeKey scopeKey = new NamedScopeKey(item);
-
-                work.AddRange(BusinessData.LibraryModel.Remove(key));
-                work.Add(
-                    new WorkItem()
-                    {
-                        WorkName = "Remove NameScope",
-                        DoWork = () => { BusinessData.NameScope.Remove(scopeKey); }
-                    });
-
-                DoLocalWork(work);
-            }
         }
 
         private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
@@ -316,16 +228,95 @@ namespace DataDictionary.Main.Forms.Library
             deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
         }
 
-        private void libraryBinding_CurrentChanged(object sender, EventArgs e)
+        private void LibraryBinding_CurrentChanged(object sender, EventArgs e)
         {
             if (libraryBinding.Current is LibraryManagerItem item)
             {
                 LibrarySourceKey key = new LibrarySourceKey(item);
 
-                deleteItemCommand.Enabled = inModelList;
+                removeLibraryComand.Enabled = inModelList;
                 openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
                 deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
                 saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
+            }
+        }
+
+        private void AddLibraryCommand_Click(object sender, EventArgs e)
+        {
+            openFileDialog.Filter = "XML VS Documentation|*.XML";
+            openFileDialog.Multiselect = true;
+
+            // Work out what directory to start in
+            String initPath = Settings.Default.LastLibraryPath;
+
+            if (String.IsNullOrWhiteSpace(initPath) || new DirectoryInfo(initPath).Exists == false)
+            {
+                initPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+                if (new DirectoryInfo(initPath).GetDirectories("source").FirstOrDefault() is DirectoryInfo sourcePath)
+                { initPath = sourcePath.FullName; }
+
+                if (new DirectoryInfo(initPath).GetDirectories("repos").FirstOrDefault() is DirectoryInfo repoPath)
+                { initPath = repoPath.FullName; }
+
+                Settings.Default.LastLibraryPath = initPath;
+                Settings.Default.Save();
+            }
+
+            // Open the Dialog
+            openFileDialog.InitialDirectory = Settings.Default.LastLibraryPath;
+            openFileDialog.FileName = String.Empty;
+            DialogResult dialogResult = openFileDialog.ShowDialog();
+
+            // Respond to Dialog options
+            if (dialogResult is DialogResult.OK)
+            {
+                // Save the Directory to LastLibraryPath
+                if (openFileDialog.FileNames.FirstOrDefault() is String firstFile)
+                {
+                    FileInfo file = new FileInfo(firstFile);
+                    if (file.Directory is DirectoryInfo firstDirectory && firstDirectory.FullName != initPath)
+                    {
+                        Settings.Default.LastLibraryPath = firstDirectory.FullName;
+                        Settings.Default.Save();
+                    }
+                }
+
+                // Create the work items for each of the files selected
+                List<WorkItem> work = new List<WorkItem>();
+                List<NamedScopeItem> names = new List<NamedScopeItem>();
+
+                foreach (String file in openFileDialog.FileNames)
+                {
+                    FileInfo fileInfo = new FileInfo(file);
+                    work.AddRange(BusinessData.LibraryModel.Import(fileInfo));
+                    work.AddRange(BusinessData.LibraryModel.Export(names));
+                    work.AddRange(BusinessData.NameScope.Import(names));
+                }
+
+                DoLocalWork(work);
+            }
+        }
+
+        private void RemoveLibraryComand_Click(object sender, EventArgs e)
+        {
+            libraryNavigation.EndEdit();
+
+            if (libraryBinding.Current is LibraryManagerItem item)
+            {
+                List<WorkItem> work = new List<WorkItem>();
+                LibrarySourceKey key = new LibrarySourceKey(item);
+                NamedScopeKey scopeKey = new NamedScopeKey(item);
+
+                work.AddRange(BusinessData.LibraryModel.Remove(key));
+                work.Add(
+                    new WorkItem()
+                    {
+                        WorkName = "Remove NameScope",
+                        DoWork = () => { BusinessData.NameScope.Remove(scopeKey); }
+                    });
+
+                DoLocalWork(work);
             }
         }
     }

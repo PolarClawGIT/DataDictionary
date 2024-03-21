@@ -53,12 +53,15 @@ namespace DataDictionary.Main.Forms.Domain.Controls
 
             foreach (NamedScopeKey childKey in parent.Children)
             {
-                NamedScopeItem child = BusinessData.NameScope[childKey];
-                ListViewItem childItem = new ListViewItem(child.MemberName, child.Scope.ToScopeName());
-                childItem.ToolTipText = child.MemberFullName;
+                if (BusinessData.NameScope.ContainsKey(childKey))
+                {
+                    NamedScopeItem child = BusinessData.NameScope[childKey];
+                    ListViewItem childItem = new ListViewItem(child.MemberName, child.Scope.ToScopeName());
+                    childItem.ToolTipText = child.MemberFullName;
 
-                alaisViewItems.Add(childItem, childKey);
-                aliasBrowser.Items.Add(childItem);
+                    alaisViewItems.Add(childItem, childKey);
+                    aliasBrowser.Items.Add(childItem);
+                }
             }
             aliasBrowser.Sorting = SortOrder.Ascending;
             aliasBrowser.Sort();

@@ -19,7 +19,7 @@ namespace DataDictionary.Main.Forms.Database
         public DbCatalog() : base()
         {
             InitializeComponent();
-            AddToolStrip(catalogToolStrip);
+            toolStrip.TransferItems(catalogToolStrip, 0);
         }
 
         public DbCatalog(IDbCatalogItem catalogItem) : this()

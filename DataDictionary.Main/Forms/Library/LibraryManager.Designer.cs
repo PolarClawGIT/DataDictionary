@@ -43,11 +43,15 @@
             libraryBinding = new BindingSource(components);
             errorProvider = new ErrorProvider(components);
             openFileDialog = new OpenFileDialog();
+            libararyToolStrip = new ContextMenuStrip(components);
+            addLibraryCommand = new ToolStripMenuItem();
+            removeLibraryComand = new ToolStripMenuItem();
             libraryManagerLayout = new TableLayoutPanel();
             libraryManagerLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)libraryNavigation).BeginInit();
             ((System.ComponentModel.ISupportInitialize)libraryBinding).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
+            libararyToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // libraryManagerLayout
@@ -95,7 +99,6 @@
             libraryNavigation.Dock = DockStyle.Fill;
             libraryNavigation.Location = new Point(3, 3);
             libraryNavigation.Name = "libraryNavigation";
-            libraryNavigation.RowTemplate.Height = 25;
             libraryNavigation.Size = new Size(560, 330);
             libraryNavigation.TabIndex = 0;
             // 
@@ -186,7 +189,7 @@
             // libraryBinding
             // 
             libraryBinding.BindingComplete += BindingComplete;
-            libraryBinding.CurrentChanged += libraryBinding_CurrentChanged;
+            libraryBinding.CurrentChanged += LibraryBinding_CurrentChanged;
             // 
             // errorProvider
             // 
@@ -195,6 +198,28 @@
             // openFileDialog
             // 
             openFileDialog.FileName = "openFileDialog";
+            // 
+            // libararyToolStrip
+            // 
+            libararyToolStrip.Items.AddRange(new ToolStripItem[] { addLibraryCommand, removeLibraryComand });
+            libararyToolStrip.Name = "libararyToolStrip";
+            libararyToolStrip.Size = new Size(181, 70);
+            // 
+            // addLibraryCommand
+            // 
+            addLibraryCommand.Image = Properties.Resources.NewLibrary;
+            addLibraryCommand.Name = "addLibraryCommand";
+            addLibraryCommand.Size = new Size(180, 22);
+            addLibraryCommand.Text = "add Library";
+            addLibraryCommand.Click += AddLibraryCommand_Click;
+            // 
+            // removeLibraryComand
+            // 
+            removeLibraryComand.Image = Properties.Resources.DeleteLibrary;
+            removeLibraryComand.Name = "removeLibraryComand";
+            removeLibraryComand.Size = new Size(180, 22);
+            removeLibraryComand.Text = "remove Library";
+            removeLibraryComand.Click += RemoveLibraryComand_Click;
             // 
             // LibraryManager
             // 
@@ -211,6 +236,7 @@
             ((System.ComponentModel.ISupportInitialize)libraryNavigation).EndInit();
             ((System.ComponentModel.ISupportInitialize)libraryBinding).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
+            libararyToolStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -230,5 +256,8 @@
         private DataGridViewTextBoxColumn libraryDescriptionColumn;
         private DataGridViewCheckBoxColumn inModelColumn;
         private DataGridViewCheckBoxColumn inDatabaseColumn;
+        private ContextMenuStrip libararyToolStrip;
+        private ToolStripMenuItem addLibraryCommand;
+        private ToolStripMenuItem removeLibraryComand;
     }
 }

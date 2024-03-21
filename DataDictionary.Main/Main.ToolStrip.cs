@@ -1,4 +1,8 @@
-﻿using DataDictionary.Main.Properties;
+﻿using DataDictionary.BusinessLayer.Domain;
+using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.DomainData.Entity;
+using DataDictionary.DataLayer.ModelData.SubjectArea;
+using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +14,53 @@ namespace DataDictionary.Main
     partial class Main
     {
 
-        private void manageLibrariesCommand_ButtonClick(object sender, EventArgs e)
+        private void manageLibrariesCommand_ButtonClick(object? sender, EventArgs e)
         { Activate(() => new Forms.Library.LibraryManager()); }
 
-        private void manageDatabasesCommand_ButtonClick(object sender, EventArgs e)
+        private void manageDatabasesCommand_ButtonClick(object? sender, EventArgs e)
         { Activate(() => new Forms.Database.CatalogManager()); }
+
+        private void NewAttributeCommand_ButtonClick(object? sender, EventArgs e)
+        {
+            AttributeItem item = new AttributeItem();
+
+            BusinessData.DomainModel.Attributes.Add(item);
+            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
+
+            if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
+            { contextNameNavigation.SelectedNode = node; }
+
+            Activate(item);
+        }
+
+        private void NewEntityCommand_ButtonClick(object? sender, EventArgs e)
+        {
+            DomainEntityItem item = new DomainEntityItem();
+
+            BusinessData.DomainModel.Entities.Add(item);
+            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
+
+            if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
+            { contextNameNavigation.SelectedNode = node; }
+
+            Activate(item);
+        }
+
+        private void NewSubjectAreaCommand_ButtonClick(object? sender, EventArgs e)
+        {
+            ModelSubjectAreaItem item = new ModelSubjectAreaItem();
+
+            BusinessData.ModelSubjectAreas.Add(item);
+            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
+
+            if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
+            { contextNameNavigation.SelectedNode = node; }
+
+            Activate(item);
+        }
+
+        private void ManageModelCommand_ButtonClick(object? sender, EventArgs e)
+        { Activate(() => new Forms.Model.ModelManager()); }
 
         private void menuCatalogItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Database), BusinessData.DatabaseModel.DbCatalogs); }

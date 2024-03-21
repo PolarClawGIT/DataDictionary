@@ -4,6 +4,7 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DomainData.Alias;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
@@ -53,15 +54,10 @@ namespace DataDictionary.Main.Forms.Database
         public CatalogManager()
         {
             InitializeComponent();
+            toolStrip.TransferItems(catalogContextMenu, 0);
 
-            newItemCommand.Enabled = true;
-            newItemCommand.Click += NewItemCommand_Click;
-            newItemCommand.Image = Resources.NewDatabase;
-            newItemCommand.ToolTipText = "Import a Catalog (Database Schema) into the Model";
-
-            deleteItemCommand.Click += DeleteItemCommand_Click;
-            deleteItemCommand.Image = Resources.DeleteDatabase;
-            deleteItemCommand.ToolTipText = "Removes the Catalog from the Model";
+            addDatabaseCommand.Enabled = true;
+            removeDatabaseCommand.Enabled = false;
 
             openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click;
             deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
@@ -135,7 +131,7 @@ namespace DataDictionary.Main.Forms.Database
             { SendMessage(new Messages.DoBindData()); }
         }
 
-        private void NewItemCommand_Click(object? sender, EventArgs e)
+        private void addDatabaseCommand_Click(object? sender, EventArgs e)
         {
             using (Dialogs.ServerConnectionDialog dialog = new Dialogs.ServerConnectionDialog())
             {
@@ -206,7 +202,7 @@ namespace DataDictionary.Main.Forms.Database
             }
         }
 
-        private void DeleteItemCommand_Click(object? sender, EventArgs e)
+        private void removeDatabaseCommand_Click(object? sender, EventArgs e)
         {
             catalogNavigation.EndEdit();
             List<WorkItem> work = new List<WorkItem>();
@@ -301,7 +297,7 @@ namespace DataDictionary.Main.Forms.Database
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             base.HandleMessage(message);
-            deleteItemCommand.Enabled = inModelList;
+            removeDatabaseCommand.Enabled = inModelList;
             openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList && !inModelList;
             deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
             saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
@@ -309,7 +305,7 @@ namespace DataDictionary.Main.Forms.Database
 
         private void catalogBinding_CurrentChanged(object sender, EventArgs e)
         {
-            deleteItemCommand.Enabled = inModelList;
+            removeDatabaseCommand.Enabled = inModelList;
             openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList && !inModelList;
             deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
             saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
