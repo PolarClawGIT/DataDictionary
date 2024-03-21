@@ -22,7 +22,7 @@ namespace DataDictionary.Main
         {
             InitializeComponent();
             Icon = Resources.Icon_Application;
-           
+
             IsLocked(true);
 
             // Setup Images for Tree Control

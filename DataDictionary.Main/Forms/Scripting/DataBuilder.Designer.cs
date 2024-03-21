@@ -110,7 +110,7 @@
             schemaNameData.Location = new Point(3, 3);
             schemaNameData.Multiline = false;
             schemaNameData.Name = "schemaNameData";
-            schemaNameData.ReadOnly = false;
+            schemaNameData.ReadOnly = true;
             schemaNameData.Size = new Size(605, 44);
             schemaNameData.TabIndex = 2;
             // 
