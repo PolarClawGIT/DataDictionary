@@ -91,15 +91,12 @@
             peekAtClipboardToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
             selectAllToolStripMenuItem = new ToolStripMenuItem();
-            scriptingToolStripMenuItem = new ToolStripMenuItem();
-            xmlViewerCommand = new ToolStripMenuItem();
             toolsToolStripMenuItem = new ToolStripMenuItem();
             customizeToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
             applicationToolStripMenuItem = new ToolStripMenuItem();
             browsePropertiesCommand = new ToolStripMenuItem();
             browseHelpCommand = new ToolStripMenuItem();
-            browseTransforms = new ToolStripMenuItem();
             unitTestingToolStripMenuItem = new ToolStripMenuItem();
             gridViewToolStripMenuItem = new ToolStripMenuItem();
             testFormToolStripMenuItem = new ToolStripMenuItem();
@@ -456,7 +453,7 @@
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, scriptingToolStripMenuItem, toolsToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, toolsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Padding = new Padding(0, 2, 0, 2);
@@ -628,21 +625,6 @@
             selectAllToolStripMenuItem.Text = "Select &All";
             selectAllToolStripMenuItem.Click += selectAllToolStripMenuItem_Click;
             // 
-            // scriptingToolStripMenuItem
-            // 
-            scriptingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { xmlViewerCommand });
-            scriptingToolStripMenuItem.Name = "scriptingToolStripMenuItem";
-            scriptingToolStripMenuItem.Size = new Size(66, 20);
-            scriptingToolStripMenuItem.Text = "&Scripting";
-            // 
-            // xmlViewerCommand
-            // 
-            xmlViewerCommand.Image = Properties.Resources.XmlFile;
-            xmlViewerCommand.Name = "xmlViewerCommand";
-            xmlViewerCommand.Size = new Size(165, 22);
-            xmlViewerCommand.Text = "XML Data Builder";
-            xmlViewerCommand.Click += xmlViewerCommand_Click;
-            // 
             // toolsToolStripMenuItem
             // 
             toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customizeToolStripMenuItem, optionsToolStripMenuItem, applicationToolStripMenuItem, unitTestingToolStripMenuItem });
@@ -654,21 +636,21 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(135, 22);
+            customizeToolStripMenuItem.Size = new Size(180, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(135, 22);
+            optionsToolStripMenuItem.Size = new Size(180, 22);
             optionsToolStripMenuItem.Text = "&Options";
             optionsToolStripMenuItem.Click += optionsToolStripMenuItem_Click;
             // 
             // applicationToolStripMenuItem
             // 
-            applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { browsePropertiesCommand, browseHelpCommand, browseTransforms });
+            applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { browsePropertiesCommand, browseHelpCommand });
             applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
-            applicationToolStripMenuItem.Size = new Size(135, 22);
+            applicationToolStripMenuItem.Size = new Size(180, 22);
             applicationToolStripMenuItem.Text = "Application";
             // 
             // browsePropertiesCommand
@@ -687,38 +669,30 @@
             browseHelpCommand.Text = "browse Help Subjects";
             browseHelpCommand.Click += browseHelpCommand_Click;
             // 
-            // browseTransforms
-            // 
-            browseTransforms.Image = Properties.Resources.XSLTransform;
-            browseTransforms.Name = "browseTransforms";
-            browseTransforms.Size = new Size(187, 22);
-            browseTransforms.Text = "browse Transforms";
-            browseTransforms.Click += browseTransforms_Click;
-            // 
             // unitTestingToolStripMenuItem
             // 
             unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem, testFormToolStripMenuItem, textEditorToolStripMenuItem });
             unitTestingToolStripMenuItem.Name = "unitTestingToolStripMenuItem";
-            unitTestingToolStripMenuItem.Size = new Size(135, 22);
+            unitTestingToolStripMenuItem.Size = new Size(180, 22);
             unitTestingToolStripMenuItem.Text = "Testing";
             // 
             // gridViewToolStripMenuItem
             // 
             gridViewToolStripMenuItem.Name = "gridViewToolStripMenuItem";
-            gridViewToolStripMenuItem.Size = new Size(129, 22);
+            gridViewToolStripMenuItem.Size = new Size(180, 22);
             gridViewToolStripMenuItem.Text = "Grid View";
             gridViewToolStripMenuItem.Click += gridViewToolStripMenuItem_Click;
             // 
             // testFormToolStripMenuItem
             // 
             testFormToolStripMenuItem.Name = "testFormToolStripMenuItem";
-            testFormToolStripMenuItem.Size = new Size(129, 22);
+            testFormToolStripMenuItem.Size = new Size(180, 22);
             testFormToolStripMenuItem.Text = "Test Form";
             // 
             // textEditorToolStripMenuItem
             // 
             textEditorToolStripMenuItem.Name = "textEditorToolStripMenuItem";
-            textEditorToolStripMenuItem.Size = new Size(129, 22);
+            textEditorToolStripMenuItem.Size = new Size(180, 22);
             textEditorToolStripMenuItem.Text = "Text Editor";
             textEditorToolStripMenuItem.Click += textEditorToolStripMenuItem_Click;
             // 
@@ -831,6 +805,7 @@
             schemaManagerCommand.Name = "schemaManagerCommand";
             schemaManagerCommand.Size = new Size(177, 22);
             schemaManagerCommand.Text = "Schema Manager";
+            schemaManagerCommand.Click += schemaManagerCommand_Click;
             // 
             // transformManagerCommand
             // 
@@ -838,6 +813,7 @@
             transformManagerCommand.Name = "transformManagerCommand";
             transformManagerCommand.Size = new Size(177, 22);
             transformManagerCommand.Text = "Transform Manager";
+            transformManagerCommand.Click += transformManagerCommand_Click;
             // 
             // toolStripSeparator7
             // 
@@ -964,9 +940,6 @@
         private ContextMenuStrip libraryContextMenu;
         private ToolStripMenuItem viewLibrarySourceCommand;
         private ToolStripMenuItem viewLibraryMemberCommand;
-        private ToolStripMenuItem browseTransforms;
-        private ToolStripMenuItem scriptingToolStripMenuItem;
-        private ToolStripMenuItem xmlViewerCommand;
         private ToolStripMenuItem menuManageCatalog;
         private ToolStrip toolStrip;
         private ToolStripButton manageModelCommand;

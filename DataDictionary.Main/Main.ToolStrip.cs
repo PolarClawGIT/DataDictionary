@@ -125,10 +125,11 @@ namespace DataDictionary.Main
         private void entityAliasToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.Entities.Aliases); }
 
-        private void browseTransforms_Click(object sender, EventArgs e)
-        { throw new NotImplementedException(); }
 
-        private void xmlViewerCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.DataBuilder()); }
+        private void transformManagerCommand_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Scripting.TransformManager()); }
+
+        private void schemaManagerCommand_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Scripting.SchemaManager()); }
     }
 }

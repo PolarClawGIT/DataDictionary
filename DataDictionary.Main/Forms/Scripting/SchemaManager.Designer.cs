@@ -99,13 +99,13 @@
             // 
             schemaToolStrip.Items.AddRange(new ToolStripItem[] { addSchemaCommand, removeSchemaCommand, openSchemaElements });
             schemaToolStrip.Name = "schemaToolStrip";
-            schemaToolStrip.Size = new Size(160, 70);
+            schemaToolStrip.Size = new Size(181, 92);
             // 
             // addSchemaCommand
             // 
             addSchemaCommand.Image = Properties.Resources.NewXMLSchema;
             addSchemaCommand.Name = "addSchemaCommand";
-            addSchemaCommand.Size = new Size(159, 22);
+            addSchemaCommand.Size = new Size(180, 22);
             addSchemaCommand.Text = "add Schema";
             addSchemaCommand.Click += addSchemaCommand_Click;
             // 
@@ -113,7 +113,7 @@
             // 
             removeSchemaCommand.Image = Properties.Resources.DeleteXMLSchema;
             removeSchemaCommand.Name = "removeSchemaCommand";
-            removeSchemaCommand.Size = new Size(159, 22);
+            removeSchemaCommand.Size = new Size(180, 22);
             removeSchemaCommand.Text = "remove Schema";
             removeSchemaCommand.Click += removeSchemaCommand_Click;
             // 
@@ -121,7 +121,7 @@
             // 
             openSchemaElements.Image = Properties.Resources.XMLElement;
             openSchemaElements.Name = "openSchemaElements";
-            openSchemaElements.Size = new Size(159, 22);
+            openSchemaElements.Size = new Size(180, 22);
             openSchemaElements.Text = "open Elements";
             openSchemaElements.Click += openSchemaElements_Click;
             // 
