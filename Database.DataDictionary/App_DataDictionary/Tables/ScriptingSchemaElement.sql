@@ -24,6 +24,6 @@
 	CONSTRAINT [FK_ScriptingSchemaElementScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
 )
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [UX_ScriptingSchemaElement]
+CREATE UNIQUE NONCLUSTERED INDEX [AK_ScriptingSchemaElement]
     ON [App_DataDictionary].[ScriptingSchemaElement]([SchemaId], [ScopeId], [ColumnName]);
 GO
