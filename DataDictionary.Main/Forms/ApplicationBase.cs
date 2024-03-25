@@ -154,7 +154,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="constructor"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected virtual TForm Activate<TForm>(Func<IDataItem, TForm> constructor, IDataItem data)
+        protected virtual TForm Activate<TForm>(Func<IBindingTableRow, TForm> constructor, IBindingTableRow data)
             where TForm : ApplicationBase
         {
             Form parent = MdiParent ?? this;

@@ -213,7 +213,7 @@ namespace DataDictionary.Main
         }
 
 
-        void Activate(IDbCatalogItem catalogItem)
+        void Activate(DbCatalogItem catalogItem)
         { Activate((data) => new Forms.Database.DbCatalog(catalogItem), catalogItem); }
 
         void Activate(DbSchemaItem schemaItem)

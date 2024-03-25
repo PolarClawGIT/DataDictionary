@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.ModelData
     /// <summary>
     /// Interface for the Model.
     /// </summary>
-    public interface IModelItem : IModelKey, IDataItem
+    public interface IModelItem : IModelKey
     {
         /// <summary>
         /// Title for the Model.

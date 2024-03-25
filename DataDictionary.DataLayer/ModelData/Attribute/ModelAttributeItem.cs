@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
     /// </summary>
     public interface IModelAttributeItem : IModelAttributeKey,
         IDomainAttributeKeyName, IDomainAttributeKey,
-        IModelSubjectAreaUniqueKey, IDataItem
+        IModelSubjectAreaUniqueKey
     { }
 
     /// <summary>

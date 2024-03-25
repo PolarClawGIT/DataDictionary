@@ -29,13 +29,7 @@ namespace DataDictionary.Main.Forms.Database
             bindingSource.DataSource = new BindingView<DbCatalogItem>(BusinessData.DatabaseModel.DbCatalogs, w => key.Equals(w));
             bindingSource.Position = 0;
 
-            if (bindingSource.Current is IDbCatalogItem current)
-            {
-                this.Icon = new ScopeKey(current).Scope.ToIcon();
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-            }
+            Setup(bindingSource);
         }
 
         private void DbCatalog_Load(object sender, EventArgs e)

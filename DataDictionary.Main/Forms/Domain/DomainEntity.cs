@@ -34,13 +34,10 @@ namespace DataDictionary.Main.Forms.Domain
             bindingEntity.DataSource = new BindingView<DomainEntityItem>(BusinessData.DomainModel.Entities, w => key.Equals(w));
             bindingEntity.Position = 0;
 
+            Setup(bindingEntity, ScopeType.ModelEntity);
+
             if (bindingEntity.Current is IDomainEntityItem current)
             {
-                this.Icon = new ScopeKey(ScopeType.ModelEntity).Scope.ToIcon();
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-
                 bindingProperty.DataSource = new BindingView<DomainEntityPropertyItem>(BusinessData.DomainModel.Entities.Properties, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<DomainEntityAliasItem>(BusinessData.DomainModel.Entities.Aliases, w => key.Equals(w));
             }

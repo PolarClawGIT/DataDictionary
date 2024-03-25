@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Help;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Properties;
 using System;
@@ -115,6 +116,27 @@ namespace DataDictionary.Main.Forms
             if (!DesignMode)
             { // Avoids issues where the Load event fires in Design Mode
                 LoadToolTips(this);
+            }
+        }
+
+        /// <summary>
+        /// Common Setup method.
+        /// Sets Title, Icon and RowState based on the BindingSource data.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="scope"></param>
+        protected void Setup(BindingSource data, ScopeType scope = ScopeType.Null)
+        {
+            if(data.Current is Object) { this.Text = data.ToString(); }
+
+            if (data.Current is IScopeKeyName scopeKey)
+            { this.Icon = new ScopeKey(scopeKey).Scope.ToIcon(); }
+            else { this.Icon = scope.ToIcon(); }
+
+            if (data.Current is IBindingRowState binding)
+            {
+                RowState = binding.RowState();
+                binding.RowStateChanged += RowStateChanged;
             }
         }
 

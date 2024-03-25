@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Item
     /// </summary>
-    public interface IDomainAttributeItem : IDomainAttributeKey, IDomainAttributeKeyName, IScopeKey, IDataItem
+    public interface IDomainAttributeItem : IDomainAttributeKey, IDomainAttributeKeyName, IScopeKey
     {
         /// <summary>
         /// Description of the Domain Attribute

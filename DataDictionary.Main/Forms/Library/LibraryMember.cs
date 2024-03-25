@@ -24,14 +24,11 @@ namespace DataDictionary.Main.Forms.Library
             bindingMember.DataSource = new BindingView<LibraryMemberItem>(BusinessData.LibraryModel.LibraryMembers, w => nameKey.Equals(w));
             bindingMember.Position = 0;
 
+            Setup(bindingMember);
+
             if (bindingMember.Current is ILibraryMemberItem current)
             {
                 LibraryMemberKey key = new LibraryMemberKey(current);
-                this.Icon = new ScopeKey(current).Scope.ToIcon();
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-
                 bindingChild.DataSource = new BindingView<LibraryMemberItem>(BusinessData.LibraryModel.LibraryMembers, w => new LibraryMemberKeyParent(w).Equals(key));
             }
         }
@@ -54,7 +51,7 @@ namespace DataDictionary.Main.Forms.Library
 
         private void childMemberData_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (bindingChild.Current is ILibraryMemberItem child)
+            if (bindingChild.Current is LibraryMemberItem child)
             { Activate((data) => new LibraryMember(child), child); }
         }
 

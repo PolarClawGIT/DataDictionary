@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Toolbox.BindingTable
 {
     public interface IBindingList<TRow> : IBindingList, ICollection<TRow>, IList<TRow>, ICancelAddNew, IRaiseItemChangedEvents
-        where TRow : class, INotifyPropertyChanged
+        where TRow : class, IBindingPropertyChanged
     {
         /// <summary>
         /// Gets or sets the element at the specified index.

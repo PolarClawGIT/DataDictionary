@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Data;
+﻿using System.Data;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 
@@ -266,7 +265,7 @@ namespace Toolbox.BindingTable
         { }
 
         protected virtual void Table_RowChanged(object sender, DataRowChangeEventArgs e)
-        { OnRowStateChanged(); }
+        { IBindingRowState.OnRowStateChanged(this, RowStateChanged, ref lastRowState); }
 
         protected virtual void Table_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
@@ -280,7 +279,7 @@ namespace Toolbox.BindingTable
                 data.Table.ColumnChanged -= Table_ColumnChanged;
             }
 
-            OnRowStateChanged();
+            IBindingRowState.OnRowStateChanged(this, RowStateChanged, ref lastRowState);
         }
 
         protected virtual void Table_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -303,7 +302,7 @@ namespace Toolbox.BindingTable
                 && e.Column is not null)
             { OnPropertyChanged(e.Column.ColumnName); }
 
-            OnRowStateChanged();
+            IBindingRowState.OnRowStateChanged(this, RowStateChanged, ref lastRowState);
         }
 
         /// <inheritdoc cref="DataRow.RowError"/>
@@ -349,7 +348,7 @@ namespace Toolbox.BindingTable
         {
             if (data is DataRow row)
             { row.AcceptChanges(); }
-            OnRowStateChanged();
+            IBindingRowState.OnRowStateChanged(this, RowStateChanged, ref lastRowState);
         }
 
         /// <inheritdoc cref="DataRow.RejectChanges"/>
@@ -357,7 +356,7 @@ namespace Toolbox.BindingTable
         {
             if (data is DataRow row)
             { row.RejectChanges(); }
-            OnRowStateChanged();
+            IBindingRowState.OnRowStateChanged(this, RowStateChanged, ref lastRowState);
         }
         #endregion
 
@@ -407,7 +406,7 @@ namespace Toolbox.BindingTable
                 data.Table.ColumnChanged += Table_ColumnChanged;
             }
 
-            OnRowStateChanged();
+            IBindingRowState.OnRowStateChanged(this, RowStateChanged, ref lastRowState);
         }
 
         /// <summary>
@@ -452,20 +451,8 @@ namespace Toolbox.BindingTable
         /// <summary>
         /// Occurs when and event that can change the RowState occurs.
         /// </summary>
-        public event EventHandler? RowStateChanged;
+        public virtual event EventHandler<RowStateEventArgs>? RowStateChanged;
         private DataRowState lastRowState = DataRowState.Detached;
-        protected void OnRowStateChanged()
-        {
-            if (RowStateChanged is EventHandler hander)
-            {
-                DataRowState currentState = this.RowState();
-                if (currentState != lastRowState)
-                {
-                    hander(this, EventArgs.Empty);
-                    lastRowState = currentState;
-                }
-            }
-        }
 
         /// <inheritdoc cref="DataRow.RowState"/>
         public virtual DataRowState RowState()
@@ -490,20 +477,11 @@ namespace Toolbox.BindingTable
 
         #region INotifyPropertyChanged
         /// <inheritdoc/>
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public virtual event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
 
-        /// <inheritdoc cref="INotifyPropertyChanged.PropertyChanged"/>
-        /// <remarks>
-        /// The method assumes that the Property Name and the Column Name are identical.
-        /// The actual property changed event is raised on the Column change event, not the Set method.
-        /// This allows changes made directly to the table row to be captured.
-        /// </remarks>
-        public virtual void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged is PropertyChangedEventHandler handler)
-            { handler(this, new PropertyChangedEventArgs(propertyName)); }
-        }
 
+        public virtual void OnPropertyChanged(String propertyName)
+        { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, propertyName); }
         #endregion
 
         #region ISerializable

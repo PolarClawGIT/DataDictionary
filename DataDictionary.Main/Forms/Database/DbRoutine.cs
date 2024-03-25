@@ -29,13 +29,10 @@ namespace DataDictionary.Main.Forms.Database
             bindingRoutine.DataSource = new BindingView<DbRoutineItem>(BusinessData.DatabaseModel.DbRoutines, w => key.Equals(w));
             bindingRoutine.Position = 0;
 
+            Setup(bindingRoutine);
+
             if (bindingRoutine.Current is IDbRoutineItem current)
             {
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-                this.Icon = new ScopeKey(current).Scope.ToIcon();
-
                 bindingParameters.DataSource = new BindingView<DbRoutineParameterItem>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
                 bindingDependencies.DataSource = new BindingView<DbRoutineDependencyItem>(BusinessData.DatabaseModel.DbRoutineDependencies, w => key.Equals(w));
                 bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));

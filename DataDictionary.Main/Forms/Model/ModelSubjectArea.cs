@@ -29,13 +29,10 @@ namespace DataDictionary.Main.Forms.Domain
             bindingSubject.DataSource = new BindingView<ModelSubjectAreaItem>(BusinessData.ModelSubjectAreas, w => key.Equals(w));
             bindingSubject.Position = 0;
 
+            Setup(bindingSubject);
+
             if (bindingSubject.Current is IModelSubjectAreaItem current)
             {
-                this.Icon = ScopeType.ModelSubjectArea.ToIcon();
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-
                 List<DomainAttributeKey> attributeKeys = BusinessData.DomainModel.Attributes.SubjectAreas.Where(w => key.Equals(w)).Select(s => new DomainAttributeKey(s)).ToList();
                 bindingAttribute.DataSource = new BindingView<AttributeItem>(BusinessData.DomainModel.Attributes, w => attributeKeys.Contains(new DomainAttributeKey(w)));
 

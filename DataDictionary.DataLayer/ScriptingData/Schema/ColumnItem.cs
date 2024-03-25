@@ -14,7 +14,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Interface for the Scripting Schema Column data.
     /// </summary>
-    public interface IColumnItem : IColumnKey, IDataItem
+    public interface IColumnItem : IColumnKey
     {
         /// <inheritdoc cref="DataColumn.AllowDBNull"/>
         Boolean AllowDBNull { get; }
@@ -27,7 +27,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// Implementation for the Scripting Schema Column data.
     /// </summary>
     /// <remarks>The items are expected to be static.</remarks>
-    public class ColumnItem : IColumnItem
+    public class ColumnItem : IColumnItem, IBindingPropertyChanged
     {
         /// <inheritdoc/>
         public String ScopeName { get; init; } = ScopeType.Null.ToScopeName();
@@ -58,49 +58,12 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
             DataType = source.DataType;
         }
 
-        #region IBindingRowState
-        /// <summary>
-        /// Occurs when and event that can change the RowState occurs.
-        /// </summary>
-        public event EventHandler? RowStateChanged;
-        private DataRowState lastRowState = DataRowState.Detached;
-
         /// <inheritdoc/>
-        protected void OnRowStateChanged()
-        {
-            if (RowStateChanged is EventHandler hander)
-            {
-                DataRowState currentState = this.RowState();
-                if (currentState != lastRowState)
-                {
-                    hander(this, EventArgs.Empty);
-                    lastRowState = currentState;
-                }
-            }
-        }
-
-        /// <inheritdoc/>
-        public DataRowState RowState()
-        { return DataRowState.Unchanged; }
-        #endregion
-
-        #region INotifyPropertyChanged
-        /// <inheritdoc/>
+        /// <remarks>Needed by BindingList but not invoked.</remarks>
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <inheritdoc cref="INotifyPropertyChanged.PropertyChanged"/>
-        public virtual void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged is PropertyChangedEventHandler handler)
-            { handler(this, new PropertyChangedEventArgs(propertyName)); }
-        }
-
-        #endregion
 
         /// <inheritdoc/>
         public override string ToString()
         { return String.Format("{0} {1}", ScopeName, ColumnName); }
-
-
     }
 }

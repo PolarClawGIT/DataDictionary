@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Alias Items
     /// </summary>
-    public interface IDomainAttributeAliasItem : IDomainAttributeKey, IDomainAlias, IDataItem
+    public interface IDomainAttributeAliasItem : IDomainAttributeKey, IDomainAlias
     { }
 
     /// <summary>

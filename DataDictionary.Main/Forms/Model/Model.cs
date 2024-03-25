@@ -25,13 +25,7 @@ namespace DataDictionary.Main.Forms.Model
             bindingModel.DataSource = new BindingList<IModelItem>() { data };
             bindingModel.Position = 0;
 
-            if (bindingModel.Current is IModelItem current)
-            {
-                this.Icon = ScopeType.Model.ToIcon();
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-            }
+            Setup(bindingModel);
         }
 
         private void Model_Load(object sender, EventArgs e)

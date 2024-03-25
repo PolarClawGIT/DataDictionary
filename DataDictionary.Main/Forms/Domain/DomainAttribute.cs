@@ -26,13 +26,10 @@ namespace DataDictionary.Main.Forms.Domain
             bindingAttribute.DataSource = new BindingView<AttributeItem>(BusinessData.DomainModel.Attributes, w => key.Equals(w));
             bindingAttribute.Position = 0;
 
+            Setup(bindingAttribute);
+
             if (bindingAttribute.Current is IAttributeItem current)
             {
-                this.Icon = current.Scope.ToIcon();
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-
                 bindingProperty.DataSource = new BindingView<AttributePropertyItem>(BusinessData.DomainModel.Attributes.Properties, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<AttributeAliasItem>(BusinessData.DomainModel.Attributes.Aliases, w => key.Equals(w));
             }

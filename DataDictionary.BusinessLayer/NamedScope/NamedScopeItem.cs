@@ -16,6 +16,7 @@ using DataDictionary.DataLayer.ModelData.SubjectArea;
 using DataDictionary.DataLayer.ScriptingData.Schema;
 using DataDictionary.DataLayer.ScriptingData.Transform;
 using System.ComponentModel;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
@@ -158,7 +159,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((IDbCatalogKeyName)data);
             GetTitle = () => new DbCatalogKeyName(data).DatabaseName;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -176,7 +178,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((IDbSchemaKeyName)data);
             GetTitle = () => new DbSchemaKeyName(data).SchemaName;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -194,7 +197,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((IDbTableKeyName)data);
             GetTitle = () => new DbTableKeyName(data).TableName;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -213,7 +217,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetTitle = () => new DbTableColumnKeyName(data).ColumnName;
 
             if (data.OrdinalPosition is Int32 position) { OrdinalPosition = position; }
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -231,7 +236,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((IDbConstraintKeyName)data);
             GetTitle = () => new DbConstraintKeyName(data).ConstraintName;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -249,7 +255,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((IDbRoutineKeyName)data);
             GetTitle = () => new DbRoutineKeyName(data).RoutineName;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -268,7 +275,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetTitle = () => new DbRoutineParameterKeyName(data).ParameterName;
 
             if (data.OrdinalPosition is Int32 position) { OrdinalPosition = position; }
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -286,7 +294,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((IDbDomainKeyName)data);
             GetTitle = () => new DbDomainKeyName(data).DomainName;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -302,7 +311,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((ILibrarySourceKeyName)data);
             GetTitle = () => new LibrarySourceKeyName(data).AssemblyName;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -320,7 +330,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((ILibraryMemberKeyName)data);
             GetTitle = () => new LibraryMemberKeyName(data).MemberName;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -338,7 +349,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((ILibraryMemberKeyName)data);
             GetTitle = () => new LibraryMemberKeyName(data).MemberName;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -356,7 +368,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((ILibraryMemberKeyName)data);
             GetTitle = () => new LibraryMemberKeyName(data).MemberName;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -372,7 +385,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((IModelItem)data);
             GetTitle = () => data.ModelTitle ?? String.Empty;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -390,7 +404,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((IModelSubjectAreaItem)data);
             GetTitle = () => data.SubjectAreaTitle ?? String.Empty;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -408,7 +423,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((IModelSubjectAreaItem)data);
             GetTitle = () => data.SubjectAreaTitle ?? String.Empty;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -464,7 +480,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="data"></param>
-        public NamedScopeItem(INameSpaceItem parent, IModelSubjectAreaItem data): base()
+        public NamedScopeItem(INameSpaceItem parent, IModelSubjectAreaItem data) : base()
         {
             SystemKey = new NamedScopeKey((IModelSubjectAreaKey)data);
             SystemParentKey = new NamedScopeKey(parent);
@@ -474,7 +490,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((IModelSubjectAreaItem)data);
             GetTitle = () => data.SubjectAreaTitle ?? String.Empty;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
 
@@ -493,7 +510,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((IDomainAttributeItem)data);
             GetTitle = () => data.AttributeTitle ?? String.Empty;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -511,7 +529,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((IDomainAttributeItem)data);
             GetTitle = () => data.AttributeTitle ?? String.Empty;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -529,7 +548,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((IDomainEntityItem)data);
             GetTitle = () => data.EntityTitle ?? String.Empty;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -547,7 +567,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((IDomainEntityItem)data);
             GetTitle = () => data.EntityTitle ?? String.Empty;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         public NamedScopeItem(IModelKey parent, ISchemaItem data) : base()
@@ -560,7 +581,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((ISchemaItem)data);
             GetTitle = () => data.SchemaTitle ?? String.Empty;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         public NamedScopeItem(IModelKey parent, ITransformItem data) : base()
@@ -573,7 +595,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetNameSpaceKey = () => new NameSpaceKey((ITransformItem)data);
             GetTitle = () => data.TransformTitle ?? String.Empty;
 
-            data.PropertyChanged += OnPropertyChanged;
+            if (data is IBindingPropertyChanged binding)
+            { binding.PropertyChanged += OnPropertyChanged; }
         }
 
         #endregion
