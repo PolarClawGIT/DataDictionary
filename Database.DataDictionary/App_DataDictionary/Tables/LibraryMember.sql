@@ -13,3 +13,6 @@
 	CONSTRAINT [FK_LibraryMemberScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
 )
 GO
+CREATE NONCLUSTERED INDEX [FK_LibraryMemberParent]
+    ON [App_DataDictionary].[LibraryMember]([MemberParentId]);
+GO
