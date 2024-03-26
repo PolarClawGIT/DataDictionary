@@ -27,9 +27,6 @@ namespace DataDictionary.Main
             BusinessData.DomainModel.Attributes.Add(item);
             BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
 
-            if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
-            { contextNameNavigation.SelectedNode = node; }
-
             Activate(item);
         }
 
@@ -40,9 +37,6 @@ namespace DataDictionary.Main
             BusinessData.DomainModel.Entities.Add(item);
             BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
 
-            if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
-            { contextNameNavigation.SelectedNode = node; }
-
             Activate(item);
         }
 
@@ -52,9 +46,6 @@ namespace DataDictionary.Main
 
             BusinessData.ModelSubjectAreas.Add(item);
             BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
-
-            if (contextNodes.FirstOrDefault(w => ReferenceEquals(w.Value, item)).Key is TreeNode node)
-            { contextNameNavigation.SelectedNode = node; }
 
             Activate(item);
         }

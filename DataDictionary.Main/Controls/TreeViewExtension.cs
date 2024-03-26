@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.Threading;
 
 namespace DataDictionary.Main.Controls
 {
@@ -26,30 +27,88 @@ namespace DataDictionary.Main.Controls
             }
         }
 
-        public static IDictionary<TreeNode, NamedScopeItem> Load(this TreeView target, NamedScopeDictionary data, Action<Int32, Int32>? progress = null)
+        static Dictionary<TreeView, Dictionary<TreeNode, NamedScopeItem>> treeNodes = new Dictionary<TreeView, Dictionary<TreeNode, NamedScopeItem>>();
+
+        public static IEnumerable<WorkItem> Load(this TreeView target, NamedScopeDictionary data)
         {
-            Dictionary<TreeNode, NamedScopeItem> result = new Dictionary<TreeNode, NamedScopeItem>();
-
-            target.Invoke(() =>
-            {
-                target.Enabled = false;
-                target.UseWaitCursor = true;
-                target.BeginUpdate();
-            });
-
-            // Progress tracker
-            if (progress is null) { progress = (x, y) => { }; }
+            List<WorkItem> result = new List<WorkItem>();
+            List<NamedScopeKey> expandedNodes = new List<NamedScopeKey>();
+            Action<Int32, Int32> progress = (x, y) => { };
             Int32 totalWork = data.Count;
             Int32 completeWork = 0;
-            progress(completeWork, totalWork);
 
-            CreatNodes(target.Nodes, SelectItems(data.RootItem.Children));
+            if (!treeNodes.ContainsKey(target))
+            { treeNodes.Add(target, new Dictionary<TreeNode, NamedScopeItem>()); }
 
-            target.Invoke(() =>
+            result.Add(new WorkItem()
             {
-                target.EndUpdate();
-                target.UseWaitCursor = false;
-                target.Enabled = true;
+                WorkName = "Store Expanded Nodes",
+                DoWork = () =>
+                {
+                    target.Invoke(() =>
+                    {
+                        expandedNodes.AddRange(treeNodes[target]
+                        .Where(w => w.Key.IsExpanded
+                            || (w.Key.Nodes.Count == 0
+                                && w.Key.Parent is not null
+                                && w.Key.Parent.IsExpanded))
+                        .Select(s => new NamedScopeKey(s.Value)));
+
+                        treeNodes[target].Clear();
+                    });
+                }
+            });
+
+            result.Add(new WorkItem()
+            {
+                WorkName = "Disable and Clear the Tree",
+                DoWork = () =>
+                {
+                    target.Invoke(() =>
+                    {
+                        target.Enabled = false;
+                        target.UseWaitCursor = true;
+                        target.BeginUpdate();
+                        target.Nodes.Clear();
+                    });
+                }
+            });
+
+            WorkItem buildTree = new WorkItem()
+            {
+                WorkName = "Build Tree",
+                DoWork = () =>
+                { CreatNodes(target.Nodes, SelectItems(data.RootItem.Children)); }
+            };
+            progress = buildTree.OnProgressChanged;
+            result.Add(buildTree);
+
+            result.Add(new WorkItem()
+            {
+                WorkName = "Expand Tree Nodes",
+                DoWork = () => target.Invoke(() =>
+                {
+                    foreach (NamedScopeKey item in expandedNodes)
+                    {
+                        var node = treeNodes[target].FirstOrDefault(w => item.Equals(w.Value));
+                        if (node.Key is not null && !node.Key.IsExpanded)
+                        { node.Key.ExpandParent(); }
+                    }
+                })
+            });
+
+            result.Add(new WorkItem()
+            {
+                WorkName = "Enable Tree",
+                DoWork = () =>
+                {
+                    target.Invoke(() =>
+                    {
+                        target.EndUpdate();
+                        target.UseWaitCursor = false;
+                        target.Enabled = true;
+                    });
+                }
             });
 
             return result;
@@ -82,9 +141,9 @@ namespace DataDictionary.Main.Controls
                             TreeNode newNode = nodes.Add(item.MemberTitle);
                             newNode.ImageKey = item.Scope.ToScopeName();
                             newNode.SelectedImageKey = item.Scope.ToScopeName();
-                            result.Add(newNode, item);
                             newNode.ToolTipText = item.MemberFullName;
                             item.PropertyChanged += Item_PropertyChanged;
+                            treeNodes[target].Add(newNode, item);
 
                             progress(completeWork++, totalWork);
                             return newNode;
@@ -93,10 +152,9 @@ namespace DataDictionary.Main.Controls
                             { newNode.Text = item.MemberName; }
                         });
 
+
                         if (item.Children.Count > 0)
                         { CreatNodes(node.Nodes, SelectItems(item.Children)); }
-
-                        //progress(completeWork++, totalWork);
                     }
                 }
             }
@@ -111,5 +169,11 @@ namespace DataDictionary.Main.Controls
             }
         }
 
+        public static NamedScopeItem? GetItem(this TreeNode source)
+        {
+            if (treeNodes.ContainsKey(source.TreeView) && treeNodes[source.TreeView].ContainsKey(source))
+            { return treeNodes[source.TreeView][source]; }
+            else { return null; }
+        }
     }
 }

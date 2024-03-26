@@ -59,6 +59,7 @@ namespace DataDictionary.Main
             List<NamedScopeItem> names = new List<NamedScopeItem>();
             work.AddRange(BusinessData.Export(names));
             work.AddRange(BusinessData.NameScope.Import(names));
+            work.AddRange(contextNameNavigation.Load(BusinessData.NameScope));
 
             if (Settings.Default.IsOnLineMode)
             {
@@ -84,6 +85,9 @@ namespace DataDictionary.Main
                     work.AddRange(BusinessData.ImportApplication(appInstallFile));
                     work.AddRange(BusinessData.ExportApplication(appDataFile));
                 }
+
+                work.AddRange(contextNameNavigation.Load(BusinessData.NameScope));
+
                 this.DoWork(work, OnComplete);
             }
 
@@ -103,7 +107,6 @@ namespace DataDictionary.Main
                 }
                 else
                 {
-                    BuildTree();
                     SendMessage(new OnlineStatusChanged());
                     dataLoaded = true;
                     IsLocked(false);
@@ -173,14 +176,12 @@ namespace DataDictionary.Main
             work.AddRange(BusinessData.NameScope.Remove());
             work.AddRange(BusinessData.Export(names));
             work.AddRange(BusinessData.NameScope.Import(names));
+            work.AddRange(contextNameNavigation.Load(BusinessData.NameScope));
 
             DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                ClearTree();
-                BuildTree();
-            }
+            { }
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -315,7 +316,7 @@ namespace DataDictionary.Main
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         { Application.Exit(); }
 
-        
+
 
     }
 }
