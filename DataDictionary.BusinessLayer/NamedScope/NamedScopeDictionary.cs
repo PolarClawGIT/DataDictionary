@@ -64,7 +64,6 @@
             else { this.RootItem.Children.Add(value.SystemKey); }
 
             base.Add(value.SystemKey, value);
-            OnListChanged(NameScopedChangedType.ItemAdded, value);
         }
 
         /// <summary>
@@ -73,12 +72,8 @@
         /// <param name="values"></param>
         public virtual void AddRange(IEnumerable<NamedScopeItem> values)
         {
-            OnListChanged(NameScopedChangedType.BeginBatch);
-
             foreach (NamedScopeItem item in values)
             { Add(item); }
-
-            OnListChanged(NameScopedChangedType.EndBatch);
         }
 
         /// <summary>
@@ -95,15 +90,7 @@
 
             NamedScopeKey removeKey = new NamedScopeKey(key);
             if (this.ContainsKey(removeKey) && this[removeKey] is NamedScopeItem removeItem)
-            {
-                if (removeItem.Children.Count > 0)
-                {
-                    OnListChanged(NameScopedChangedType.BeginBatch);
-                    result = RemoveCore(key);
-                    OnListChanged(NameScopedChangedType.EndBatch);
-                }
-                else { result = RemoveCore(key); }
-            }
+            { result = RemoveCore(key); }
             return result;
         }
 
@@ -132,7 +119,6 @@
                     { this.RootItem.Children.Remove(parentChild); }
                 }
 
-                OnListChanged(NameScopedChangedType.ItemDeleted, removeItem);
                 removeItem.ClearEvents();
 
                 return base.Remove(removeKey);
@@ -173,7 +159,6 @@
                     this[parentKey].Children.Add(currentKey);
                     currentItem.SystemParentKey = parentKey;
 
-                    OnListChanged(NameScopedChangedType.ItemMoved, currentItem);
                     return true;
                 }
                 else
@@ -181,7 +166,6 @@
                     RootItem.Children.Add(currentKey);
                     currentItem.SystemParentKey = null;
 
-                    OnListChanged(NameScopedChangedType.ItemMoved, currentItem);
                     return true;
                 }
             }
@@ -190,30 +174,15 @@
         }
 
         /// <summary>
-        /// Raised when add, remove, or Clear is called.
-        /// </summary>
-        public event EventHandler<NamedScopeChangedEventArgs>? ListChanged;
-
-        /// <summary>
-        /// Used to raise the ListChanged event.
-        /// </summary>
-        /// <param name="changedType"></param>
-        /// <param name="data"></param>
-        protected virtual void OnListChanged(NameScopedChangedType changedType, INamedScopeItem? data = null)
-        {
-            if (ListChanged is EventHandler<NamedScopeChangedEventArgs> handler)
-            { handler(this, new NamedScopeChangedEventArgs(changedType, data)); }
-        }
-
-        /// <summary>
         /// Removes all elements
         /// </summary>
         public new virtual void Clear()
         {
             RootItem.Children.Clear();
+            Boolean success = true;
 
-            while (this.Count > 0)
-            { this.Remove(this.First().Key); }
+            while (this.Count > 0 && success)
+            { success = this.Remove(this.First().Key); }
 
             base.Clear();
         }

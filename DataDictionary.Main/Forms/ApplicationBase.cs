@@ -526,6 +526,8 @@ namespace DataDictionary.Main.Forms
 
         protected virtual void HandleMessage(OnlineStatusChanged message) { }
 
+        protected virtual void HandleMessage(RefreshNavigation message) { }
+
         #endregion
 
 

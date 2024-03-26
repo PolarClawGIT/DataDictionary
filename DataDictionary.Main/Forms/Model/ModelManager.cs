@@ -166,7 +166,10 @@ namespace DataDictionary.Main.Forms.Model
             this.DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
+            { 
+                SendMessage(new Messages.DoBindData());
+                SendMessage(new Messages.RefreshNavigation());
+            }
         }
 
         protected override void HandleMessage(OnlineStatusChanged message)

@@ -146,7 +146,6 @@
 
         #endregion
 
-        private TableLayoutPanel schemaManagerLayout;
         private DataGridView schemaNavigation;
         private BindingSource bindingSchema;
         private Controls.TextBoxData schemaTitleData;

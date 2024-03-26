@@ -16,6 +16,7 @@ using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using Toolbox.Threading;
@@ -29,123 +30,35 @@ namespace DataDictionary.Main
         List<NamedScopeItem> expandedContextNodes = new List<NamedScopeItem>();
         void ClearTree()
         {
-            BusinessData.NameScope.ListChanged -= NameScope_ListChanged;
-
             contextNameNavigation.Invoke(() =>
             {
                 expandedContextNodes.Clear();
-                expandedContextNodes.AddRange(contextNodes.Where(w => w.Key.IsExpanded).Select(s => s.Value));
+                expandedContextNodes.AddRange(contextNodes
+                    .Where(w => w.Key.IsExpanded
+                        || (w.Key.Nodes.Count == 0
+                            && w.Key.Parent is not null
+                            && w.Key.Parent.IsExpanded))
+                    .Select(s => s.Value));
                 contextNameNavigation.Nodes.Clear();
-                contextNodes.Clear();
             });
         }
 
-        void BuildTree()
+        void BuildTree(Action<Int32, Int32>? progress = null)
         {
-            contextNameNavigation.BeginUpdate();
-            contextNameNavigation.UseWaitCursor = true;
-            contextNameNavigation.Enabled = false;
+            contextNodes.Clear();
+            IDictionary<TreeNode, NamedScopeItem> nodes = contextNameNavigation.Load(BusinessData.NameScope, progress);
 
-            List<WorkItem> work = new List<WorkItem>();
-            Action<Int32, Int32> progress = (x, y) => { };
-
-            WorkItem treeWork = new WorkItem()
-            { WorkName = "Load Context Name Tree", DoWork = LoadTree };
-            progress = treeWork.OnProgressChanged;
-
-            work.Add(treeWork);
-            DoWork(work, onCompleting);
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                foreach (NamedScopeItem item in expandedContextNodes)
-                {
-                    NamedScopeKey key = new NamedScopeKey(item);
-
-                    KeyValuePair<TreeNode, NamedScopeItem> value = contextNodes.FirstOrDefault(w => key.Equals(w.Value));
-
-                    if (value.Key is TreeNode node)
-                    { node.ExpandParent(); }
-                }
-
-                foreach (TreeNode item in contextNodes.Where(w => expandedContextNodes.Contains(w.Value)).Select(s => s.Key).ToList())
-                { item.ExpandParent(); }
-
-                contextNameNavigation.UseWaitCursor = false;
-                contextNameNavigation.Enabled = true;
-                contextNameNavigation.EndUpdate();
-                BusinessData.NameScope.ListChanged += NameScope_ListChanged;
-            }
-
-            void LoadTree()
-            {
-                Int32 totalWork = BusinessData.NameScope.Count;
-                Int32 completeWork = 0;
-                progress(completeWork, totalWork);
-
-                CreateNodes(
-                    contextNameNavigation.Nodes,
-                    BusinessData.NameScope.RootItem.Children.Select(s => BusinessData.NameScope[s]).ToList());
-
-                void CreateNodes(TreeNodeCollection target, IEnumerable<NamedScopeItem> items)
-                {
-                    foreach (IGrouping<ScopeType, NamedScopeItem>? scopeGroup in items.GroupBy(g => g.Scope).OrderBy(o => o.Key))
-                    {
-                        TreeNodeCollection nodes = target;
-
-                        if (scopeGroup.Count() > 1)
-                        {
-                            TreeNode scopeNode = contextNameNavigation.Invoke<TreeNode>(() =>
-                            {
-                                TreeNode newNode = target.Add(scopeGroup.Key.ToScopeName().Split(".").Last());
-                                newNode.ImageKey = scopeGroup.Key.ToScopeName();
-                                newNode.SelectedImageKey = scopeGroup.Key.ToScopeName();
-                                newNode.NodeFont = new Font(newNode.TreeView.Font, FontStyle.Italic);
-                                newNode.ToolTipText = String.Format("set of {0}", newNode.Text);
-
-                                nodes = newNode.Nodes;
-                                return newNode;
-                            });
-                        }
-
-                        foreach (NamedScopeItem item in scopeGroup.OrderBy(o => o.OrdinalPosition).ThenBy(o => o.MemberName))
-                        {
-                            TreeNode node = contextNameNavigation.Invoke<TreeNode>(() =>
-                            {
-                                TreeNode newNode = nodes.Add(item.MemberTitle);
-                                newNode.ImageKey = item.Scope.ToScopeName();
-                                newNode.SelectedImageKey = item.Scope.ToScopeName();
-                                contextNodes.Add(newNode, item);
-                                newNode.ToolTipText = item.MemberFullName;
-                                item.PropertyChanged += Item_PropertyChanged;
-
-                                return newNode;
-
-                                void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-                                { newNode.Text = item.MemberName; }
-                            });
-
-                            if (item.Children.Count > 0)
-                            {
-                                CreateNodes(
-                                    node.Nodes,
-                                    item.Children.Select(s => BusinessData.NameScope[s]));
-                            }
-
-                            progress(completeWork++, totalWork);
-                        }
-                    }
-                }
-            }
+            foreach (KeyValuePair<TreeNode, NamedScopeItem> item in nodes)
+            { contextNodes.Add(item.Key, item.Value); }
         }
 
+
         private void NameScope_ListChanged(object? sender, NamedScopeChangedEventArgs e)
-        {
+        { // TODO: Not working as expected
             TreeNodeCollection taget = contextNameNavigation.Nodes;
 
-            if (e.ChangedType == NameScopedChangedType.BeginBatch)
-            { RefreshTree(); }
-
+            if (e.ChangedType == NameScopedChangedType.EndBatch)
+            { RefreshTree(); } // TODO: Causes a circler loop
             else if (e.ChangedType == NameScopedChangedType.ItemAdded && e.Item is NamedScopeItem addedItem)
             {// Handle Add
                 if (contextNodes.FirstOrDefault(w => addedItem.SystemParentKey is not null && addedItem.SystemParentKey.Equals(w.Value.SystemKey)).Key is TreeNode parentNode)
@@ -181,25 +94,47 @@ namespace DataDictionary.Main
             }
         }
 
+        protected override void HandleMessage(RefreshNavigation message)
+        {
+            base.HandleMessage(message);
+            RefreshTree();
+        }
+
         private void RefreshCommand_Click(object? sender, EventArgs e)
         { RefreshTree(); }
 
         private void RefreshTree()
         {
-            ClearTree();
             BusinessData.NameScope.Clear();
+            ClearTree();
 
             List<WorkItem> work = new List<WorkItem>();
             List<NamedScopeItem> names = new List<NamedScopeItem>();
+            Action<Int32, Int32> progress = (x, y) => { };
             work.AddRange(BusinessData.Export(names));
             work.AddRange(BusinessData.NameScope.Import(names));
+
+            WorkItem treeWork = new WorkItem() { DoWork = () => { BuildTree(progress); } };
+            progress = treeWork.OnProgressChanged;
+            work.Add(treeWork);
 
             this.DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { BuildTree(); }
+            { ExpandedTree(); }
         }
 
+        private void ExpandedTree()
+        {
+            foreach (NamedScopeItem item in expandedContextNodes)
+            {
+                NamedScopeKey key = new NamedScopeKey(item);
+
+                var target = contextNodes.FirstOrDefault(w => key.Equals(w.Value));
+                if (target.Key is not null && !target.Key.IsExpanded)
+                { target.Key.ExpandParent(); }
+            }
+        }
 
         private void DataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {

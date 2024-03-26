@@ -199,7 +199,10 @@ namespace DataDictionary.Main.Forms.Library
             this.DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
+            {
+                SendMessage(new Messages.DoBindData());
+                SendMessage(new Messages.RefreshNavigation());
+            }
         }
 
         private void libraryTitleData_Validating(object sender, CancelEventArgs e)

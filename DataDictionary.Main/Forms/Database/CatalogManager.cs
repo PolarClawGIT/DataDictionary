@@ -128,7 +128,10 @@ namespace DataDictionary.Main.Forms.Database
             this.DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
+            { 
+                SendMessage(new Messages.DoBindData());
+                SendMessage(new Messages.RefreshNavigation());
+            }
         }
 
         private void addDatabaseCommand_Click(object? sender, EventArgs e)

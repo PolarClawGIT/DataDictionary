@@ -219,7 +219,6 @@
         private ContextMenuStrip transformToolStrip;
         private ToolStripMenuItem addTransformCommand;
         private ToolStripMenuItem removeTransformCommand;
-        private TableLayoutPanel transformLayout;
         private DataGridView transformNavigation;
         private BindingSource bindingTransform;
         private Controls.TextBoxData transformTitleData;
