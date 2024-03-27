@@ -57,7 +57,7 @@ namespace DataDictionary.BusinessLayer.Scripting
             schemtaValues = new SchemaData();
             elementValues = new ElementData();
             transformValues = new TransformData();
-            columnValues = new DataLayer.ScriptingData.Schema.ColumnCollection();
+            columnValues = new ColumnData();
         }
 
         /// <inheritdoc/>

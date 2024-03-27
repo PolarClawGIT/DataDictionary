@@ -11,7 +11,9 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// Interface component for the Scripting Engine Column
     /// </summary>
     public interface IColumnData: IBindingList<ColumnItem>
-    { }
+    {
+        void Load();
+    }
 
     /// <summary>
     /// Implementation component for the Scripting Engine Column

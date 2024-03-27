@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Forms.Scripting.ComboBoxList;
 using DataDictionary.Main.Messages;
 using Microsoft.VisualBasic;
 using System;
@@ -46,9 +47,25 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SchemaManager_Load(object sender, EventArgs e)
         {
-            ISchemaItem nameOf;
-            schemaTitleData.DataBindings.Add(new Binding(nameof(schemaTitleData.Text), bindingSchema, nameof(nameOf.SchemaTitle), false, DataSourceUpdateMode.OnPropertyChanged));
-            schemaDescriptionData.DataBindings.Add(new Binding(nameof(schemaDescriptionData.Text), bindingSchema, nameof(nameOf.SchemaDescription), false, DataSourceUpdateMode.OnPropertyChanged));
+            ISchemaItem schemaNames;
+            IElementItem elementNames;
+            schemaTitleData.DataBindings.Add(new Binding(nameof(schemaTitleData.Text), bindingSchema, nameof(schemaNames.SchemaTitle), false, DataSourceUpdateMode.OnPropertyChanged));
+            schemaDescriptionData.DataBindings.Add(new Binding(nameof(schemaDescriptionData.Text), bindingSchema, nameof(schemaNames.SchemaDescription), false, DataSourceUpdateMode.OnPropertyChanged));
+
+            scopeNameData.DataBindings.Add(new Binding(nameof(scopeNameData.Text), bindingElement, nameof(elementNames.ScopeName)));
+            columNameData.DataBindings.Add(new Binding(nameof(columNameData.Text), bindingElement, nameof(elementNames.ColumnName)));
+            elementNameData.DataBindings.Add(new Binding(nameof(elementNameData.Text), bindingElement, nameof(elementNames.ElementName), false, DataSourceUpdateMode.OnPropertyChanged));
+
+            SupportedTypeItem.Load(elementTypeData);
+            elementTypeData.DataBindings.Add(new Binding(nameof(elementTypeData.Text), bindingElement, nameof(elementNames.ElementType), false, DataSourceUpdateMode.OnPropertyChanged));
+
+            renderAsElement.DataBindings.Add(new Binding(nameof(renderAsElement.Checked), bindingElement, nameof(elementNames.AsElement), false, DataSourceUpdateMode.OnPropertyChanged));
+            renderAsAttribute.DataBindings.Add(new Binding(nameof(renderAsAttribute.Checked), bindingElement, nameof(elementNames.AsAttribute), false, DataSourceUpdateMode.OnPropertyChanged));
+            renderNillableTrue.DataBindings.Add(new Binding(nameof(renderNillableTrue.Checked), bindingElement, nameof(elementNames.ElementNillable), false, DataSourceUpdateMode.OnPropertyChanged));
+
+            renderDataAsText.DataBindings.Add(new Binding(nameof(renderDataAsText.Checked), bindingElement, nameof(elementNames.DataAsText), false, DataSourceUpdateMode.OnPropertyChanged));
+            renderDataAsCData.DataBindings.Add(new Binding(nameof(renderDataAsCData.Checked), bindingElement, nameof(elementNames.DataAsCData), false, DataSourceUpdateMode.OnPropertyChanged));
+            renderDataAsXml.DataBindings.Add(new Binding(nameof(renderDataAsXml.Checked), bindingElement, nameof(elementNames.DataAsXml), false, DataSourceUpdateMode.OnPropertyChanged));
 
             elementSelection.Groups.Clear();
             elementSelection.Items.Clear();
@@ -60,7 +77,16 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 foreach (ColumnItem column in groups)
                 {
+                    ListViewItem newItem = new ListViewItem(column.ColumnName, group);
+                    if (bindingElement.DataSource is IList<ElementItem> elements)
+                    {
+                        ColumnKey key = new ColumnKey(column);
+                        if (elements.FirstOrDefault(w => key.Equals(w)) is ElementItem)
+                        { newItem.Checked = true; }
+                    }
 
+                    elementSelection.Items.Add(newItem);
+                    columnItems.Add(newItem, column);
                 }
             }
 
@@ -81,5 +107,64 @@ namespace DataDictionary.Main.Forms.Scripting
 
         }
 
+        Dictionary<ListViewItem, ColumnItem> columnItems = new Dictionary<ListViewItem, ColumnItem>();
+        ColumnItem? addColumn = null; // Used to pass value to bindingElement.AddNew.
+        private void elementSelection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            addColumn = null;
+
+            if (elementSelection.SelectedItems.Count > 0 && columnItems.ContainsKey(elementSelection.SelectedItems[0]))
+            {
+                ListViewItem selected = elementSelection.SelectedItems[0];
+                ColumnItem current = columnItems[selected];
+                ColumnKey column = new ColumnKey(current);
+
+                if (bindingElement.DataSource is IList<ElementItem> elements)
+                {
+                    ElementItem? element = elements.FirstOrDefault(w => column.Equals(w));
+
+                    //TODO: Need to work on this logic to determine when to add and when remove
+                    if (element is ElementItem)
+                    { bindingElement.Position = elements.IndexOf(element); }
+                    else
+                    {
+                        if (selected.Checked)
+                        {
+                            addColumn = current;
+                            bindingElement.AddNew();
+                        }
+                        else
+                        { bindingElement.Remove(element); }
+
+                    }
+                }
+            }
+        }
+
+        private void bindingElement_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (bindingSchema.Current is SchemaItem schema)
+            {
+                ElementItem newElement = new ElementItem(schema);
+
+                if (addColumn is not null)
+                {
+                    newElement.ColumnName = addColumn.ColumnName;
+                    newElement.ElementName = addColumn.ColumnName;
+                    newElement.ScopeName = addColumn.ScopeName;
+                    newElement.AsElement = true;
+                    newElement.AsAttribute = false;
+                    newElement.DataAsText = true;
+                    newElement.DataAsCData = false;
+                    newElement.DataAsXml = false;
+                    newElement.ElementNillable = true;
+
+                    (string Name, Type NetType, bool IsSupported)? elementType = Enum.GetValues(typeof(XmlDataType)).Cast<XmlDataType>().Select(s => s.ToCrossReference()).Where(w => w.HasValue && w.Value.IsSupported && w.Value.NetType == addColumn.DataType).FirstOrDefault();
+                    if (elementType is not null && elementType.HasValue)
+                    { newElement.ElementType = elementType.Value.Name; }
+                }
+                e.NewObject = newElement;
+            }
+        }
     }
 }

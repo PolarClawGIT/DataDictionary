@@ -136,8 +136,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
             set { SetValue<Boolean>("DataAsXml", value); }
         }
 
-
-
         /// <summary>
         /// Constructor for Schema Element Items
         /// </summary>
@@ -164,13 +162,18 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("SchemaId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("ElementId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("TransformTitle", typeof(string)){ AllowDBNull = false},
-            new DataColumn("TransformDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("AsText", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("AsXml", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("TransformScript", typeof(string)){ AllowDBNull = true},
+            new DataColumn("SchemaId", typeof(Guid)){ AllowDBNull = false},
+            new DataColumn("ScopeName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("ColumnName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("ElementName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("ElementType", typeof(String)){ AllowDBNull = true},
+            new DataColumn("ElementNillable", typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn("AsElement", typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn("AsAttribute", typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn("DataAsText", typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn("DataAsCData", typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn("DataAsXml", typeof(Boolean)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

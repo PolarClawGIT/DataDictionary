@@ -47,18 +47,20 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
             Import(ScopeType.ModelAttributeProperty, () => new DomainData.Attribute.DomainAttributePropertyItem());
             //TODO: Add rest of supported scopes
 
-            void Import(ScopeType scope, Func<BindingTableRow> constructor)
+            void Import(ScopeType scope, Func<IBindingTableRow> constructor)
             {
-                this.AddRange(constructor()
-                .ColumnDefinitions()
-                .Select<TItem>(s => new()
+                foreach (DataColumn item in constructor().ColumnDefinitions())
                 {
-                    ScopeName = scope.ToScopeName(),
-                    ColumnName = s.ColumnName,
-                    AllowDBNull = s.AllowDBNull,
-                    DataType = s.DataType,
-                })
-                .Cast<TItem>());
+                    TItem newItem = new()
+                    {
+                        ScopeName = scope.ToScopeName(),
+                        ColumnName = item.ColumnName,
+                        AllowDBNull = item.AllowDBNull,
+                        DataType = item.DataType,
+                    };
+
+                    this.Add(newItem);
+                }
             }
         }
     }

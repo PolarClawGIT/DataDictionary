@@ -35,12 +35,12 @@
             ListViewGroup listViewGroup1 = new ListViewGroup("Scope Name 1", HorizontalAlignment.Left);
             ListViewItem listViewItem1 = new ListViewItem(new string[] { "Column Name 1", "Column 1" }, -1);
             TableLayoutPanel renderLayout;
-            GroupBox elementNillableGroup;
-            TableLayoutPanel elementNillableLayout;
             GroupBox elementRenderGroup;
             TableLayoutPanel renderAsLayout;
             GroupBox renderDataAsGroup;
             TableLayoutPanel renderDataAsLayout;
+            GroupBox elementNillableGroup;
+            TableLayoutPanel elementNillableLayout;
             schemaTitleData = new Controls.TextBoxData();
             schemaDescriptionData = new Controls.TextBoxData();
             elementSelection = new ListView();
@@ -48,42 +48,41 @@
             scopeNameData = new Controls.TextBoxData();
             columNameData = new Controls.TextBoxData();
             elementNameData = new Controls.TextBoxData();
+            renderAsAttribute = new CheckBox();
+            renderAsElement = new CheckBox();
+            renderDataAsText = new CheckBox();
+            renderDataAsCData = new CheckBox();
+            renderDataAsXml = new CheckBox();
             elementTypeData = new Controls.ComboBoxData();
-            ElementNillableTrue = new CheckBox();
-            ElementNillableFalse = new CheckBox();
+            renderNillableTrue = new CheckBox();
             bindingSchema = new BindingSource(components);
             schemaToolStrip = new ContextMenuStrip(components);
             addSchemaCommand = new ToolStripMenuItem();
             removeSchemaCommand = new ToolStripMenuItem();
             openSchemaElements = new ToolStripMenuItem();
-            renderAsElement = new RadioButton();
-            renderAsAttribute = new RadioButton();
-            renderDataAsText = new CheckBox();
-            renderDataAsCData = new CheckBox();
-            renderDataAsXml = new CheckBox();
             bindingElement = new BindingSource(components);
             schemaManagerLayout = new TableLayoutPanel();
             elementGroup = new GroupBox();
             elementLayout = new TableLayoutPanel();
             renderLayout = new TableLayoutPanel();
-            elementNillableGroup = new GroupBox();
-            elementNillableLayout = new TableLayoutPanel();
             elementRenderGroup = new GroupBox();
             renderAsLayout = new TableLayoutPanel();
             renderDataAsGroup = new GroupBox();
             renderDataAsLayout = new TableLayoutPanel();
+            elementNillableGroup = new GroupBox();
+            elementNillableLayout = new TableLayoutPanel();
             schemaManagerLayout.SuspendLayout();
             elementGroup.SuspendLayout();
             elementLayout.SuspendLayout();
             renderLayout.SuspendLayout();
-            elementNillableGroup.SuspendLayout();
-            elementNillableLayout.SuspendLayout();
             elementRenderGroup.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
-            schemaToolStrip.SuspendLayout();
             renderAsLayout.SuspendLayout();
             renderDataAsGroup.SuspendLayout();
             renderDataAsLayout.SuspendLayout();
+            elementNillableGroup.SuspendLayout();
+            elementNillableLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingSchema).BeginInit();
+            schemaToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingElement).BeginInit();
             SuspendLayout();
             // 
@@ -180,6 +179,7 @@
             elementSelection.TabIndex = 0;
             elementSelection.UseCompatibleStateImageBehavior = false;
             elementSelection.View = View.Details;
+            elementSelection.SelectedIndexChanged += elementSelection_SelectedIndexChanged;
             // 
             // columnName
             // 
@@ -222,19 +222,6 @@
             elementNameData.Size = new Size(468, 44);
             elementNameData.TabIndex = 2;
             // 
-            // elementTypeData
-            // 
-            elementTypeData.AutoSize = true;
-            elementTypeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            elementTypeData.Dock = DockStyle.Fill;
-            elementTypeData.DropDownStyle = ComboBoxStyle.DropDown;
-            elementTypeData.HeaderText = "render Type";
-            elementTypeData.Location = new Point(237, 3);
-            elementTypeData.Name = "elementTypeData";
-            elementTypeData.ReadOnly = false;
-            elementTypeData.Size = new Size(228, 47);
-            elementTypeData.TabIndex = 3;
-            // 
             // renderLayout
             // 
             renderLayout.AutoSize = true;
@@ -254,55 +241,6 @@
             renderLayout.Size = new Size(468, 106);
             renderLayout.TabIndex = 5;
             // 
-            // elementNillableGroup
-            // 
-            elementNillableGroup.AutoSize = true;
-            elementNillableGroup.Controls.Add(elementNillableLayout);
-            elementNillableGroup.Dock = DockStyle.Fill;
-            elementNillableGroup.Location = new Point(3, 56);
-            elementNillableGroup.Name = "elementNillableGroup";
-            elementNillableGroup.Size = new Size(228, 47);
-            elementNillableGroup.TabIndex = 4;
-            elementNillableGroup.TabStop = false;
-            elementNillableGroup.Text = "render Nillable";
-            // 
-            // elementNillableLayout
-            // 
-            elementNillableLayout.AutoSize = true;
-            elementNillableLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            elementNillableLayout.ColumnCount = 2;
-            elementNillableLayout.ColumnStyles.Add(new ColumnStyle());
-            elementNillableLayout.ColumnStyles.Add(new ColumnStyle());
-            elementNillableLayout.Controls.Add(ElementNillableTrue, 0, 0);
-            elementNillableLayout.Controls.Add(ElementNillableFalse, 1, 0);
-            elementNillableLayout.Dock = DockStyle.Fill;
-            elementNillableLayout.Location = new Point(3, 19);
-            elementNillableLayout.Name = "elementNillableLayout";
-            elementNillableLayout.RowCount = 1;
-            elementNillableLayout.RowStyles.Add(new RowStyle());
-            elementNillableLayout.Size = new Size(222, 25);
-            elementNillableLayout.TabIndex = 0;
-            // 
-            // ElementNillableTrue
-            // 
-            ElementNillableTrue.AutoSize = true;
-            ElementNillableTrue.Location = new Point(3, 3);
-            ElementNillableTrue.Name = "ElementNillableTrue";
-            ElementNillableTrue.Size = new Size(48, 19);
-            ElementNillableTrue.TabIndex = 0;
-            ElementNillableTrue.Text = "True";
-            ElementNillableTrue.UseVisualStyleBackColor = true;
-            // 
-            // ElementNillableFalse
-            // 
-            ElementNillableFalse.AutoSize = true;
-            ElementNillableFalse.Location = new Point(57, 3);
-            ElementNillableFalse.Name = "ElementNillableFalse";
-            ElementNillableFalse.Size = new Size(52, 19);
-            ElementNillableFalse.TabIndex = 1;
-            ElementNillableFalse.Text = "False";
-            ElementNillableFalse.UseVisualStyleBackColor = true;
-            // 
             // elementRenderGroup
             // 
             elementRenderGroup.AutoSize = true;
@@ -315,45 +253,16 @@
             elementRenderGroup.TabStop = false;
             elementRenderGroup.Text = "render As";
             // 
-            // schemaToolStrip
-            // 
-            schemaToolStrip.Items.AddRange(new ToolStripItem[] { addSchemaCommand, removeSchemaCommand, openSchemaElements });
-            schemaToolStrip.Name = "schemaToolStrip";
-            schemaToolStrip.Size = new Size(160, 70);
-            // 
-            // addSchemaCommand
-            // 
-            addSchemaCommand.Image = Properties.Resources.NewXMLSchema;
-            addSchemaCommand.Name = "addSchemaCommand";
-            addSchemaCommand.Size = new Size(159, 22);
-            addSchemaCommand.Text = "add Schema";
-            addSchemaCommand.Click += addSchemaCommand_Click;
-            // 
-            // removeSchemaCommand
-            // 
-            removeSchemaCommand.Image = Properties.Resources.DeleteXMLSchema;
-            removeSchemaCommand.Name = "removeSchemaCommand";
-            removeSchemaCommand.Size = new Size(159, 22);
-            removeSchemaCommand.Text = "remove Schema";
-            removeSchemaCommand.Click += removeSchemaCommand_Click;
-            // 
-            // openSchemaElements
-            // 
-            openSchemaElements.Image = Properties.Resources.XMLElement;
-            openSchemaElements.Name = "openSchemaElements";
-            openSchemaElements.Size = new Size(159, 22);
-            openSchemaElements.Text = "open Elements";
-            openSchemaElements.Click += openSchemaElements_Click;
-            // 
             // renderAsLayout
             // 
             renderAsLayout.AutoSize = true;
             renderAsLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            renderAsLayout.ColumnCount = 2;
+            renderAsLayout.ColumnCount = 3;
             renderAsLayout.ColumnStyles.Add(new ColumnStyle());
             renderAsLayout.ColumnStyles.Add(new ColumnStyle());
-            renderAsLayout.Controls.Add(renderAsElement, 0, 0);
+            renderAsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             renderAsLayout.Controls.Add(renderAsAttribute, 1, 0);
+            renderAsLayout.Controls.Add(renderAsElement, 0, 0);
             renderAsLayout.Dock = DockStyle.Fill;
             renderAsLayout.Location = new Point(3, 19);
             renderAsLayout.Name = "renderAsLayout";
@@ -362,27 +271,25 @@
             renderAsLayout.Size = new Size(222, 25);
             renderAsLayout.TabIndex = 0;
             // 
+            // renderAsAttribute
+            // 
+            renderAsAttribute.AutoSize = true;
+            renderAsAttribute.Location = new Point(78, 3);
+            renderAsAttribute.Name = "renderAsAttribute";
+            renderAsAttribute.Size = new Size(73, 19);
+            renderAsAttribute.TabIndex = 2;
+            renderAsAttribute.Text = "Attribute";
+            renderAsAttribute.UseVisualStyleBackColor = true;
+            // 
             // renderAsElement
             // 
             renderAsElement.AutoSize = true;
             renderAsElement.Location = new Point(3, 3);
             renderAsElement.Name = "renderAsElement";
-            renderAsElement.Size = new Size(68, 19);
-            renderAsElement.TabIndex = 0;
-            renderAsElement.TabStop = true;
+            renderAsElement.Size = new Size(69, 19);
+            renderAsElement.TabIndex = 3;
             renderAsElement.Text = "Element";
             renderAsElement.UseVisualStyleBackColor = true;
-            // 
-            // renderAsAttribute
-            // 
-            renderAsAttribute.AutoSize = true;
-            renderAsAttribute.Location = new Point(77, 3);
-            renderAsAttribute.Name = "renderAsAttribute";
-            renderAsAttribute.Size = new Size(72, 19);
-            renderAsAttribute.TabIndex = 1;
-            renderAsAttribute.TabStop = true;
-            renderAsAttribute.Text = "Attribute";
-            renderAsAttribute.UseVisualStyleBackColor = true;
             // 
             // renderDataAsGroup
             // 
@@ -445,6 +352,91 @@
             renderDataAsXml.Text = "XML";
             renderDataAsXml.UseVisualStyleBackColor = true;
             // 
+            // elementTypeData
+            // 
+            elementTypeData.AutoSize = true;
+            elementTypeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            elementTypeData.Dock = DockStyle.Fill;
+            elementTypeData.DropDownStyle = ComboBoxStyle.DropDown;
+            elementTypeData.HeaderText = "render Type";
+            elementTypeData.Location = new Point(237, 3);
+            elementTypeData.Name = "elementTypeData";
+            elementTypeData.ReadOnly = false;
+            elementTypeData.Size = new Size(228, 47);
+            elementTypeData.TabIndex = 3;
+            // 
+            // elementNillableGroup
+            // 
+            elementNillableGroup.AutoSize = true;
+            elementNillableGroup.Controls.Add(elementNillableLayout);
+            elementNillableGroup.Dock = DockStyle.Fill;
+            elementNillableGroup.Location = new Point(3, 56);
+            elementNillableGroup.Name = "elementNillableGroup";
+            elementNillableGroup.Size = new Size(228, 47);
+            elementNillableGroup.TabIndex = 4;
+            elementNillableGroup.TabStop = false;
+            elementNillableGroup.Text = "render Nillable";
+            // 
+            // elementNillableLayout
+            // 
+            elementNillableLayout.AutoSize = true;
+            elementNillableLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            elementNillableLayout.ColumnCount = 2;
+            elementNillableLayout.ColumnStyles.Add(new ColumnStyle());
+            elementNillableLayout.ColumnStyles.Add(new ColumnStyle());
+            elementNillableLayout.Controls.Add(renderNillableTrue, 0, 0);
+            elementNillableLayout.Dock = DockStyle.Fill;
+            elementNillableLayout.Location = new Point(3, 19);
+            elementNillableLayout.Name = "elementNillableLayout";
+            elementNillableLayout.RowCount = 1;
+            elementNillableLayout.RowStyles.Add(new RowStyle());
+            elementNillableLayout.Size = new Size(222, 25);
+            elementNillableLayout.TabIndex = 0;
+            // 
+            // renderNillableTrue
+            // 
+            renderNillableTrue.AutoSize = true;
+            renderNillableTrue.Location = new Point(3, 3);
+            renderNillableTrue.Name = "renderNillableTrue";
+            renderNillableTrue.Size = new Size(48, 19);
+            renderNillableTrue.TabIndex = 0;
+            renderNillableTrue.Text = "True";
+            renderNillableTrue.UseVisualStyleBackColor = true;
+            // 
+            // schemaToolStrip
+            // 
+            schemaToolStrip.Items.AddRange(new ToolStripItem[] { addSchemaCommand, removeSchemaCommand, openSchemaElements });
+            schemaToolStrip.Name = "schemaToolStrip";
+            schemaToolStrip.Size = new Size(160, 70);
+            // 
+            // addSchemaCommand
+            // 
+            addSchemaCommand.Image = Properties.Resources.NewXMLSchema;
+            addSchemaCommand.Name = "addSchemaCommand";
+            addSchemaCommand.Size = new Size(159, 22);
+            addSchemaCommand.Text = "add Schema";
+            addSchemaCommand.Click += addSchemaCommand_Click;
+            // 
+            // removeSchemaCommand
+            // 
+            removeSchemaCommand.Image = Properties.Resources.DeleteXMLSchema;
+            removeSchemaCommand.Name = "removeSchemaCommand";
+            removeSchemaCommand.Size = new Size(159, 22);
+            removeSchemaCommand.Text = "remove Schema";
+            removeSchemaCommand.Click += removeSchemaCommand_Click;
+            // 
+            // openSchemaElements
+            // 
+            openSchemaElements.Image = Properties.Resources.XMLElement;
+            openSchemaElements.Name = "openSchemaElements";
+            openSchemaElements.Size = new Size(159, 22);
+            openSchemaElements.Text = "open Elements";
+            openSchemaElements.Click += openSchemaElements_Click;
+            // 
+            // bindingElement
+            // 
+            bindingElement.AddingNew += bindingElement_AddingNew;
+            // 
             // SchemaManager
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -462,20 +454,20 @@
             elementLayout.PerformLayout();
             renderLayout.ResumeLayout(false);
             renderLayout.PerformLayout();
-            elementNillableGroup.ResumeLayout(false);
-            elementNillableGroup.PerformLayout();
-            elementNillableLayout.ResumeLayout(false);
-            elementNillableLayout.PerformLayout();
             elementRenderGroup.ResumeLayout(false);
             elementRenderGroup.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
-            schemaToolStrip.ResumeLayout(false);
             renderAsLayout.ResumeLayout(false);
             renderAsLayout.PerformLayout();
             renderDataAsGroup.ResumeLayout(false);
             renderDataAsGroup.PerformLayout();
             renderDataAsLayout.ResumeLayout(false);
             renderDataAsLayout.PerformLayout();
+            elementNillableGroup.ResumeLayout(false);
+            elementNillableGroup.PerformLayout();
+            elementNillableLayout.ResumeLayout(false);
+            elementNillableLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingSchema).EndInit();
+            schemaToolStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingElement).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -498,15 +490,14 @@
         private Controls.TextBoxData elementNameData;
         private Controls.ComboBoxData elementTypeData;
         private TableLayoutPanel elementNillableLayout;
-        private CheckBox ElementNillableTrue;
-        private CheckBox ElementNillableFalse;
+        private CheckBox renderNillableTrue;
         private TableLayoutPanel renderLayout;
         private GroupBox elementRenderGroup;
-        private RadioButton renderAsElement;
-        private RadioButton renderAsAttribute;
         private CheckBox renderDataAsText;
         private CheckBox renderDataAsCData;
         private CheckBox renderDataAsXml;
         private BindingSource bindingElement;
+        private CheckBox renderAsAttribute;
+        private CheckBox renderAsElement;
     }
 }

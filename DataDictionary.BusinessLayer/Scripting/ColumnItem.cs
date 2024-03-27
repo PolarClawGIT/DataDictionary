@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface IColumnItem : DataLayer.ScriptingData.Schema.IColumnItem
+    public interface IColumnItem : DataLayer.ScriptingData.Schema.IColumnItem, IColumnKey
     { }
 
     /// <inheritdoc/>

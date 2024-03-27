@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface IElementItem : DataLayer.ScriptingData.Schema.IElementItem
+    public interface IElementItem : DataLayer.ScriptingData.Schema.IElementItem, IColumnKey
     { }
 
     /// <inheritdoc/>
@@ -16,5 +16,8 @@ namespace DataDictionary.BusinessLayer.Scripting
     {
         /// <inheritdoc/>
         public ElementItem() : base() { }
+
+        /// <inheritdoc/>
+        public ElementItem(ISchemaKey key) : base(key) { }
     }
 }
