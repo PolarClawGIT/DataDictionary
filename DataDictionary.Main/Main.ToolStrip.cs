@@ -121,6 +121,6 @@ namespace DataDictionary.Main
         { Activate(() => new Forms.Scripting.TransformManager()); }
 
         private void schemaManagerCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.SchemaManager()); }
+        { Activate(() => new Forms.Scripting.SchemaManager(null)); }
     }
 }

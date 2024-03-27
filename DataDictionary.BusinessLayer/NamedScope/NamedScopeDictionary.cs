@@ -53,6 +53,9 @@
         /// <param name="isChild"></param>
         public virtual void Add(NamedScopeItem value, Boolean isChild = false)
         {
+            //TODO: Problem, Some items need to have multiple Parents. This currently restricts to a single parent.
+            //      The item itself is expected to be in the list once, but may appear in multiple Children lists.
+            //TODO: IsChild does not do anything. Need to be removed.
             if (this.ContainsKey(value.SystemKey)) { return; }
 
             if (value.SystemParentKey is NamedScopeKey parentKey)

@@ -3,6 +3,7 @@ using DataDictionary.DataLayer.DatabaseData.Catalog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +16,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>This list is expected to be static.</remarks>
-    public abstract class ColumnCollection<TItem> : BindingList<TItem>
-        where TItem : ColumnItem, IColumnItem, IColumnKey
+    public abstract class ColumnCollection<TItem> : BindingList<TItem>, IBindingList<TItem>
+        where TItem : ColumnItem, IColumnItem, IColumnKey, new()
     {
         /// <summary>
         /// Returns a list of Scopes that have column lists.
@@ -50,7 +51,13 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
             {
                 this.AddRange(constructor()
                 .ColumnDefinitions()
-                .Select(s => new ColumnItem(ScopeType.ModelAttribute, s))
+                .Select<TItem>(s => new()
+                {
+                    ScopeName = scope.ToScopeName(),
+                    ColumnName = s.ColumnName,
+                    AllowDBNull = s.AllowDBNull,
+                    DataType = s.DataType,
+                })
                 .Cast<TItem>());
             }
         }

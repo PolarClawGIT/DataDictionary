@@ -636,13 +636,13 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(180, 22);
+            customizeToolStripMenuItem.Size = new Size(135, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(180, 22);
+            optionsToolStripMenuItem.Size = new Size(135, 22);
             optionsToolStripMenuItem.Text = "&Options";
             optionsToolStripMenuItem.Click += optionsToolStripMenuItem_Click;
             // 
@@ -650,7 +650,7 @@
             // 
             applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { browsePropertiesCommand, browseHelpCommand });
             applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
-            applicationToolStripMenuItem.Size = new Size(180, 22);
+            applicationToolStripMenuItem.Size = new Size(135, 22);
             applicationToolStripMenuItem.Text = "Application";
             // 
             // browsePropertiesCommand
@@ -673,26 +673,26 @@
             // 
             unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem, testFormToolStripMenuItem, textEditorToolStripMenuItem });
             unitTestingToolStripMenuItem.Name = "unitTestingToolStripMenuItem";
-            unitTestingToolStripMenuItem.Size = new Size(180, 22);
+            unitTestingToolStripMenuItem.Size = new Size(135, 22);
             unitTestingToolStripMenuItem.Text = "Testing";
             // 
             // gridViewToolStripMenuItem
             // 
             gridViewToolStripMenuItem.Name = "gridViewToolStripMenuItem";
-            gridViewToolStripMenuItem.Size = new Size(180, 22);
+            gridViewToolStripMenuItem.Size = new Size(129, 22);
             gridViewToolStripMenuItem.Text = "Grid View";
             gridViewToolStripMenuItem.Click += gridViewToolStripMenuItem_Click;
             // 
             // testFormToolStripMenuItem
             // 
             testFormToolStripMenuItem.Name = "testFormToolStripMenuItem";
-            testFormToolStripMenuItem.Size = new Size(180, 22);
+            testFormToolStripMenuItem.Size = new Size(129, 22);
             testFormToolStripMenuItem.Text = "Test Form";
             // 
             // textEditorToolStripMenuItem
             // 
             textEditorToolStripMenuItem.Name = "textEditorToolStripMenuItem";
-            textEditorToolStripMenuItem.Size = new Size(180, 22);
+            textEditorToolStripMenuItem.Size = new Size(129, 22);
             textEditorToolStripMenuItem.Text = "Text Editor";
             textEditorToolStripMenuItem.Click += textEditorToolStripMenuItem_Click;
             // 
@@ -797,13 +797,13 @@
             scriptingContextMenu.Items.AddRange(new ToolStripItem[] { schemaManagerCommand, transformManagerCommand });
             scriptingContextMenu.Name = "scriptingContextMenu";
             scriptingContextMenu.OwnerItem = manageScriptingCommand;
-            scriptingContextMenu.Size = new Size(178, 48);
+            scriptingContextMenu.Size = new Size(181, 70);
             // 
             // schemaManagerCommand
             // 
-            schemaManagerCommand.Image = Properties.Resources.XMLSchema;
+            schemaManagerCommand.Image = Properties.Resources.NewXMLSchema;
             schemaManagerCommand.Name = "schemaManagerCommand";
-            schemaManagerCommand.Size = new Size(177, 22);
+            schemaManagerCommand.Size = new Size(180, 22);
             schemaManagerCommand.Text = "Schema Manager";
             schemaManagerCommand.Click += schemaManagerCommand_Click;
             // 
@@ -811,7 +811,7 @@
             // 
             transformManagerCommand.Image = Properties.Resources.XSLTransform;
             transformManagerCommand.Name = "transformManagerCommand";
-            transformManagerCommand.Size = new Size(177, 22);
+            transformManagerCommand.Size = new Size(180, 22);
             transformManagerCommand.Text = "Transform Manager";
             transformManagerCommand.Click += transformManagerCommand_Click;
             // 

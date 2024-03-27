@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.NameSpace;
+using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
@@ -90,5 +91,7 @@ namespace DataDictionary.Main
         void Activate(ModelItem modelItem)
         { Activate((data) => new Forms.Model.Model(modelItem), modelItem); }
 
+        void Activate(SchemaItem schemaItem)
+        { Activate((data) => new Forms.Scripting.SchemaManager(schemaItem), schemaItem); }
     }
 }

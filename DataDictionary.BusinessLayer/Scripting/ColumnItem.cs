@@ -12,5 +12,8 @@ namespace DataDictionary.BusinessLayer.Scripting
 
     /// <inheritdoc/>
     public class ColumnItem : DataLayer.ScriptingData.Schema.ColumnItem, IColumnItem
-    { }
+    {
+        /// <inheritdoc/>
+        public ColumnItem() : base() { }
+    }
 }
