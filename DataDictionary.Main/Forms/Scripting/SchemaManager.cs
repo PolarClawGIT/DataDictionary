@@ -26,6 +26,7 @@ namespace DataDictionary.Main.Forms.Scripting
             toolStrip.TransferItems(schemaToolStrip, 0);
         }
 
+
         public SchemaManager(ISchemaItem? schemaItem) : this()
         {
             if (schemaItem is null)
@@ -33,7 +34,6 @@ namespace DataDictionary.Main.Forms.Scripting
                 schemaItem = new SchemaItem();
                 BusinessData.ScriptingEngine.Schemta.Add(schemaItem);
                 BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, schemaItem));
-                SendMessage(new RefreshNavigation());
             }
 
             DataLayer.ScriptingData.Schema.SchemaKey key = new DataLayer.ScriptingData.Schema.SchemaKey(schemaItem);
@@ -42,11 +42,15 @@ namespace DataDictionary.Main.Forms.Scripting
             bindingSchema.Position = 0;
 
             bindingElement.DataSource = new BindingView<ElementItem>(BusinessData.ScriptingEngine.Elements, w => key.Equals(w));
+            bindingElement.SuspendBinding();
+            elementOptionsLayout.Enabled = false;
         }
 
 
         private void SchemaManager_Load(object sender, EventArgs e)
         {
+            SendMessage(new RefreshNavigation()); // Cannot do this in constructor because messengering is not yet hooked up.
+
             ISchemaItem schemaNames;
             IElementItem elementNames;
             schemaTitleData.DataBindings.Add(new Binding(nameof(schemaTitleData.Text), bindingSchema, nameof(schemaNames.SchemaTitle), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -102,17 +106,11 @@ namespace DataDictionary.Main.Forms.Scripting
 
         }
 
-        private void openSchemaElements_Click(object sender, EventArgs e)
-        {
 
-        }
-
-        Dictionary<ListViewItem, ColumnItem> columnItems = new Dictionary<ListViewItem, ColumnItem>();
+        Dictionary<ListViewItem, ColumnItem> columnItems = new Dictionary<ListViewItem, ColumnItem>(); // Used to cross reference ListViewItems to Columns
         ColumnItem? addColumn = null; // Used to pass value to bindingElement.AddNew.
         private void elementSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
-            addColumn = null;
-
             if (elementSelection.SelectedItems.Count > 0 && columnItems.ContainsKey(elementSelection.SelectedItems[0]))
             {
                 ListViewItem selected = elementSelection.SelectedItems[0];
@@ -123,22 +121,47 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     ElementItem? element = elements.FirstOrDefault(w => column.Equals(w));
 
-                    //TODO: Need to work on this logic to determine when to add and when remove
                     if (element is ElementItem)
-                    { bindingElement.Position = elements.IndexOf(element); }
+                    {
+                        bindingElement.ResumeBinding();
+                        bindingElement.Position = elements.IndexOf(element);
+                        elementOptionsLayout.Enabled = true;
+                    }
                     else
                     {
-                        if (selected.Checked)
-                        {
-                            addColumn = current;
-                            bindingElement.AddNew();
-                        }
-                        else
-                        { bindingElement.Remove(element); }
-
+                        bindingElement.SuspendBinding();
+                        elementOptionsLayout.Enabled = false;
                     }
                 }
             }
+        }
+
+        private void elementSelection_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            addColumn = null;
+
+            if (columnItems.ContainsKey(e.Item) && bindingElement.DataSource is IList<ElementItem> elements)
+            {
+                ColumnItem current = columnItems[e.Item];
+                ColumnKey key = new ColumnKey(current);
+                ElementItem? element = elements.FirstOrDefault(w => key.Equals(w));
+
+                if (e.Item.Checked && element is null)
+                {
+                    bindingElement.ResumeBinding();
+                    addColumn = current;
+                    bindingElement.AddNew();
+                    elementOptionsLayout.Enabled = true;
+                }
+
+                if (!e.Item.Checked && element is not null)
+                {
+                    bindingElement.SuspendBinding();
+                    bindingElement.Remove(element);
+                    elementOptionsLayout.Enabled = false;
+                }
+            }
+
         }
 
         private void bindingElement_AddingNew(object sender, AddingNewEventArgs e)
