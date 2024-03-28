@@ -52,10 +52,6 @@ namespace DataDictionary.Main.Forms.Model
         {
             InitializeComponent();
             this.Icon = Resources.Icon_SoftwareDefinitionModel;
-
-            openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click;
-            deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
-            saveToDatabaseCommand.Click += SaveToDatabaseCommand_Click;
         }
 
         private void ModelManager_Load(object sender, EventArgs e)
@@ -97,8 +93,9 @@ namespace DataDictionary.Main.Forms.Model
             modelBinding.DataSource = null;
         }
 
-        private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            base.DeleteFromDatabaseCommand_Click(sender, e);
             modelNavigation.EndEdit();
 
             if (modelBinding.Current is ModelManagerItem item)
@@ -124,8 +121,9 @@ namespace DataDictionary.Main.Forms.Model
             }
         }
 
-        private void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            base.OpenFromDatabaseCommand_Click(sender, e);
             modelNavigation.EndEdit();
 
             if (modelBinding.Current is ModelManagerItem item)
@@ -142,8 +140,9 @@ namespace DataDictionary.Main.Forms.Model
             }
         }
 
-        private void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            base.SaveToDatabaseCommand_Click(sender, e);
             modelNavigation.EndEdit();
 
             if (modelBinding.Current is ModelManagerItem item)
@@ -172,19 +171,11 @@ namespace DataDictionary.Main.Forms.Model
             }
         }
 
-        protected override void HandleMessage(OnlineStatusChanged message)
-        {
-            base.HandleMessage(message);
-            openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList && !inModelList;
-            deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
-            saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inModelList;
-        }
-
         private void modelBinding_CurrentChanged(object sender, EventArgs e)
         {
-            openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList && !inModelList;
-            deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
-            saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inModelList;
+            IsOpenDatabase = inDatabaseList && !inModelList;
+            IsSaveDatabase = inModelList;
+            IsDeleteDatabase = inDatabaseList;
         }
 
         private void BindingComplete(object sender, BindingCompleteEventArgs e)

@@ -2,6 +2,7 @@
 using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System;
 using System.Collections.Generic;
@@ -61,7 +62,7 @@ namespace DataDictionary.Main.Forms
         /// will throw errors when a child form is designed.
         /// This causes lots of issue with Visual Studio.
         /// </remarks>
-        public ApplicationData() :base()
+        public ApplicationData() : base()
         {
             InitializeComponent();
 
@@ -127,7 +128,7 @@ namespace DataDictionary.Main.Forms
         /// <param name="scope"></param>
         protected void Setup(BindingSource data, ScopeType scope = ScopeType.Null)
         {
-            if(data.Current is Object) { this.Text = data.ToString(); }
+            if (data.Current is Object) { this.Text = data.ToString(); }
 
             if (data.Current is IScopeKeyName scopeKey)
             { this.Icon = new ScopeKey(scopeKey).Scope.ToIcon(); }
@@ -140,7 +141,65 @@ namespace DataDictionary.Main.Forms
             }
         }
 
-        private void helpToolStripButton_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Exposes the Enabled/Disabled state of the OpenFromDatabase button.
+        /// </summary>
+        /// <remarks>Set verifies that the application is in an OnLine State and handles change to OnLine State</remarks>
+        protected Boolean IsOpenDatabase
+        {
+            get { return openFromDatabaseCommand.Enabled; }
+            set
+            {
+                openFromDatabaseCommand.Enabled = value && Settings.Default.IsOnLineMode;
+                isOpenDatabase = value;
+            }
+        }
+        Boolean isOpenDatabase = false; // Intended State
+
+        /// <summary>
+        /// Exposes the Enabled/Disabled state of the SaveToDatabase button
+        /// </summary>
+        /// <remarks>Set verifies that the application is in an OnLine State and handles change to OnLine State</remarks>
+        protected Boolean IsSaveDatabase
+        {
+            get { return saveToDatabaseCommand.Enabled; }
+            set
+            {
+                saveToDatabaseCommand.Enabled = value && Settings.Default.IsOnLineMode;
+                isSaveDatabase = value;
+            }
+        }
+        Boolean isSaveDatabase = false; // Intended State
+
+        /// <summary>
+        /// Exposes the Enabled/Disabled state of the DeleteFromDatabase button
+        /// </summary>
+        /// <remarks>Set verifies that the application is in an OnLine State and handles change to OnLine State</remarks>
+        protected Boolean IsDeleteDatabase
+        {
+            get { return deleteFromDatabaseCommand.Enabled; }
+            set { deleteFromDatabaseCommand.Enabled = value && Settings.Default.IsOnLineMode; isDeleteDatabase = value;  }
+        }
+        Boolean isDeleteDatabase = false; // Intended State
+
+        protected virtual void helpToolStripButton_Click(object sender, EventArgs e)
         { Activate(() => new ApplicationWide.HelpSubject(this)); }
+
+        protected virtual void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
+        { }
+
+        protected virtual void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
+        { }
+
+        protected virtual void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
+        { }
+
+        protected override void HandleMessage(OnlineStatusChanged message)
+        {
+            base.HandleMessage(message);
+            IsOpenDatabase = isOpenDatabase;
+            IsSaveDatabase = isSaveDatabase;
+            IsDeleteDatabase = isDeleteDatabase;
+        }
     }
 }

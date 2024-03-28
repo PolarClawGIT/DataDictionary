@@ -70,15 +70,9 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             // Setup Images for Tree Control
             SetImages(helpContentNavigation, helpContentImageItems.Values);
 
-            openFromDatabaseCommand.Enabled = true;
-            openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click;
-
-            saveToDatabaseCommand.Enabled = true;
-            saveToDatabaseCommand.Click += SaveToDatabaseCommand_Click;
-
-            deleteFromDatabaseCommand.Enabled = true;
-            deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
-
+            IsOpenDatabase = true;
+            IsSaveDatabase = true;
+            IsDeleteDatabase = true;
         }
 
 
@@ -489,8 +483,10 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             }
         }
 
-        private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            base.DeleteFromDatabaseCommand_Click(sender, e);
+
             if (helpBinding.Current is HelpItem current
                 && current.NameSpace is String
                 && current.NameSpace != Settings.Default.DefaultSubject) // Cannot Delete the Default Subject
@@ -518,8 +514,10 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             }
         }
 
-        private void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            base.SaveToDatabaseCommand_Click(sender, e);
+
             if (helpBinding.Current is HelpItem current)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
@@ -546,8 +544,10 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             }
         }
 
-        private void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            base.OpenFromDatabaseCommand_Click(sender, e);
+
             if (helpBinding.Current is HelpItem current)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();

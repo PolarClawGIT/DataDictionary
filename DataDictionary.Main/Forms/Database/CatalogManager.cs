@@ -59,10 +59,6 @@ namespace DataDictionary.Main.Forms.Database
             addDatabaseCommand.Enabled = true;
             removeDatabaseCommand.Enabled = false;
 
-            openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click;
-            deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
-            saveToDatabaseCommand.Click += SaveToDatabaseCommand_Click;
-
             this.Icon = Resources.Icon_Database;
         }
 
@@ -226,8 +222,9 @@ namespace DataDictionary.Main.Forms.Database
             DoLocalWork(work);
         }
 
-        private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            base.DeleteFromDatabaseCommand_Click(sender, e);
             catalogNavigation.EndEdit();
 
             if (catalogBinding.Current is CatalogManagerItem item)
@@ -254,8 +251,9 @@ namespace DataDictionary.Main.Forms.Database
             }
         }
 
-        private void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            base.OpenFromDatabaseCommand_Click(sender, e);
             catalogNavigation.EndEdit();
 
             if (catalogBinding.Current is CatalogManagerItem item)
@@ -274,8 +272,9 @@ namespace DataDictionary.Main.Forms.Database
             }
         }
 
-        private void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            base.SaveToDatabaseCommand_Click(sender, e);
             catalogNavigation.EndEdit();
 
             if (catalogBinding.Current is CatalogManagerItem item)
@@ -297,22 +296,13 @@ namespace DataDictionary.Main.Forms.Database
             }
         }
 
-        protected override void HandleMessage(OnlineStatusChanged message)
-        {
-            base.HandleMessage(message);
-            removeDatabaseCommand.Enabled = inModelList;
-            openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList && !inModelList;
-            deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
-            saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
-        }
-
         private void catalogBinding_CurrentChanged(object sender, EventArgs e)
         {
             removeDatabaseCommand.Enabled = inModelList;
-            openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList && !inModelList;
-            deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
-            saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
 
+            IsOpenDatabase = inDatabaseList && !inModelList;
+            IsSaveDatabase = true;
+            IsDeleteDatabase = inDatabaseList;
         }
     }
 }

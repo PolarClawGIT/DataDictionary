@@ -471,18 +471,13 @@
         private ContextMenuStrip schemaToolStrip;
         private ToolStripMenuItem addSchemaCommand;
         private ToolStripMenuItem removeSchemaCommand;
-        private GroupBox elementGroup;
         private ListView elementSelection;
         private ColumnHeader columnName;
-        private TableLayoutPanel elementLayout;
         private Controls.TextBoxData scopeNameData;
         private Controls.TextBoxData columNameData;
         private Controls.TextBoxData elementNameData;
         private Controls.ComboBoxData elementTypeData;
-        private TableLayoutPanel elementNillableLayout;
         private CheckBox renderNillableTrue;
-        private TableLayoutPanel renderLayout;
-        private GroupBox elementRenderGroup;
         private CheckBox renderDataAsText;
         private CheckBox renderDataAsCData;
         private CheckBox renderDataAsXml;

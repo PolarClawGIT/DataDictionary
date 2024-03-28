@@ -59,10 +59,6 @@ namespace DataDictionary.Main.Forms.Library
             InitializeComponent();
             toolStrip.TransferItems(libararyToolStrip, 0);
 
-            openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click; ;
-            deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
-            saveToDatabaseCommand.Click += SaveToDatabaseCommand_Click;
-
             this.Icon = Resources.Icon_Library;
         }
 
@@ -110,7 +106,7 @@ namespace DataDictionary.Main.Forms.Library
             libraryBinding.DataSource = null;
         }
 
-        private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
             libraryNavigation.EndEdit();
 
@@ -139,7 +135,7 @@ namespace DataDictionary.Main.Forms.Library
             }
         }
 
-        private void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
             libraryNavigation.EndEdit();
 
@@ -161,7 +157,7 @@ namespace DataDictionary.Main.Forms.Library
 
         }
 
-        private void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
         {
             libraryNavigation.EndEdit();
 
@@ -222,15 +218,6 @@ namespace DataDictionary.Main.Forms.Library
         private void BindingComplete(object sender, BindingCompleteEventArgs e)
         { if (sender is BindingSource binding) { binding.BindComplete(sender, e); } }
 
-        protected override void HandleMessage(OnlineStatusChanged message)
-        {
-            base.HandleMessage(message);
-
-            openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
-            saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
-            deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
-        }
-
         private void LibraryBinding_CurrentChanged(object sender, EventArgs e)
         {
             if (libraryBinding.Current is LibraryManagerItem item)
@@ -238,9 +225,9 @@ namespace DataDictionary.Main.Forms.Library
                 LibrarySourceKey key = new LibrarySourceKey(item);
 
                 removeLibraryComand.Enabled = inModelList;
-                openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
-                deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
-                saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
+                IsOpenDatabase = inDatabaseList;
+                IsSaveDatabase = true;
+                IsDeleteDatabase = inDatabaseList;
             }
         }
 

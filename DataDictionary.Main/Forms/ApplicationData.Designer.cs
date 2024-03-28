@@ -46,8 +46,9 @@
             openFromDatabaseCommand.Image = Properties.Resources.OpenTable;
             openFromDatabaseCommand.ImageTransparentColor = Color.Magenta;
             openFromDatabaseCommand.Name = "openFromDatabaseCommand";
-            openFromDatabaseCommand.Size = new Size(23, 20);
+            openFromDatabaseCommand.Size = new Size(23, 22);
             openFromDatabaseCommand.Text = "&Open from Database";
+            openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click;
             // 
             // saveToDatabaseCommand
             // 
@@ -56,8 +57,9 @@
             saveToDatabaseCommand.Image = Properties.Resources.SaveTable;
             saveToDatabaseCommand.ImageTransparentColor = Color.Magenta;
             saveToDatabaseCommand.Name = "saveToDatabaseCommand";
-            saveToDatabaseCommand.Size = new Size(23, 20);
+            saveToDatabaseCommand.Size = new Size(23, 22);
             saveToDatabaseCommand.Text = "&Save to Database";
+            saveToDatabaseCommand.Click += SaveToDatabaseCommand_Click;
             // 
             // deleteFromDatabaseCommand
             // 
@@ -66,8 +68,9 @@
             deleteFromDatabaseCommand.Image = Properties.Resources.DeleteTable;
             deleteFromDatabaseCommand.ImageTransparentColor = Color.Magenta;
             deleteFromDatabaseCommand.Name = "deleteFromDatabaseCommand";
-            deleteFromDatabaseCommand.Size = new Size(23, 20);
+            deleteFromDatabaseCommand.Size = new Size(23, 22);
             deleteFromDatabaseCommand.Text = "&Delete from Database";
+            deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
             // 
             // toolStrip
             // 
@@ -124,12 +127,12 @@
         }
 
         #endregion
-        protected ToolStripButton openFromDatabaseCommand;
-        protected ToolStripButton saveToDatabaseCommand;
-        protected ToolStripButton deleteFromDatabaseCommand;
         protected ToolStrip toolStrip;
         protected ToolStripButton helpToolStripButton;
         private ToolStripLabel rowStateCommand;
         private ToolStripButton helpCommand;
+        private ToolStripButton openFromDatabaseCommand;
+        private ToolStripButton saveToDatabaseCommand;
+        private ToolStripButton deleteFromDatabaseCommand;
     }
 }
