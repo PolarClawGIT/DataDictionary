@@ -20,12 +20,12 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class SchemaManager : ApplicationData
     {
+
         public SchemaManager() : base()
         {
             InitializeComponent();
             toolStrip.TransferItems(schemaToolStrip, 0);
         }
-
 
         public SchemaManager(ISchemaItem? schemaItem) : this()
         {
@@ -104,6 +104,21 @@ namespace DataDictionary.Main.Forms.Scripting
         private void removeSchemaCommand_Click(object sender, EventArgs e)
         {
 
+        }
+
+        protected override void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
+        {
+            base.OpenFromDatabaseCommand_Click(sender, e);
+        }
+
+        protected override void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
+        {
+            base.SaveToDatabaseCommand_Click(sender, e);
+        }
+
+        protected override void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
+        {
+            base.DeleteFromDatabaseCommand_Click(sender, e);
         }
 
 

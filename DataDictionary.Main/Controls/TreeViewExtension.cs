@@ -27,8 +27,17 @@ namespace DataDictionary.Main.Controls
             }
         }
 
+        /// <summary>
+        /// Used to hold the cross reference between the TreeNode and the NamedScope. Each tree has its own item.
+        /// </summary>
         static Dictionary<TreeView, Dictionary<TreeNode, NamedScopeItem>> treeNodes = new Dictionary<TreeView, Dictionary<TreeNode, NamedScopeItem>>();
 
+        /// <summary>
+        /// Creates work items to load the target TreeView with the data from NameScope.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static IEnumerable<WorkItem> Load(this TreeView target, NamedScopeDictionary data)
         {
             List<WorkItem> result = new List<WorkItem>();
@@ -36,6 +45,8 @@ namespace DataDictionary.Main.Controls
             Action<Int32, Int32> progress = (x, y) => { };
             Int32 totalWork = data.Count;
             Int32 completeWork = 0;
+
+            target.Disposed += Target_Disposed;
 
             if (!treeNodes.ContainsKey(target))
             { treeNodes.Add(target, new Dictionary<TreeNode, NamedScopeItem>()); }
@@ -69,7 +80,7 @@ namespace DataDictionary.Main.Controls
                         target.Enabled = false;
                         target.UseWaitCursor = true;
                         target.BeginUpdate();
-                        target.Nodes.Clear();
+                        target.Nodes.RemoveAll();
                     });
                 }
             });
@@ -167,13 +178,46 @@ namespace DataDictionary.Main.Controls
                     else { return null; }
                 }).OfType<NamedScopeItem>();
             }
+
+            void Target_Disposed(object? sender, EventArgs e)
+            {
+                if (treeNodes.ContainsKey(target))
+                { treeNodes.Remove(target); }
+
+                target.Disposed -= Target_Disposed; // Only need to call it once
+            }
         }
 
+        /// <summary>
+        /// Gets the NameScope from the TreeNode
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
         public static NamedScopeItem? GetItem(this TreeNode source)
         {
             if (treeNodes.ContainsKey(source.TreeView) && treeNodes[source.TreeView].ContainsKey(source))
             { return treeNodes[source.TreeView][source]; }
             else { return null; }
+        }
+
+        /// <summary>
+        /// Remove all nodes in the collection as well as the child nodes.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <remarks>
+        /// This is an alternative to Clear().
+        /// Unlike Clear(), it does not call Begin/End Update.
+        /// If called inside a Being/End Update, the tree will not redraw until EndUpdate.
+        /// If called by itself, the tree will redraw after each item is removed.
+        /// </remarks>
+        public static void RemoveAll(this TreeNodeCollection target)
+        {
+            while (target.Count > 0)
+            {
+                TreeNode item = target[0];
+                RemoveAll(item.Nodes);
+                item.Remove();
+            }
         }
     }
 }
