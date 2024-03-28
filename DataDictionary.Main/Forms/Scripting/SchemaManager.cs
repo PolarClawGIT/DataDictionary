@@ -20,6 +20,8 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class SchemaManager : ApplicationData
     {
+        public Boolean IsOpenItem(object? item)
+        { return bindingSchema.Current is ISchemaItem current && ReferenceEquals(current, item); }
 
         public SchemaManager() : base()
         {
@@ -40,6 +42,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             bindingSchema.DataSource = new BindingView<SchemaItem>(BusinessData.ScriptingEngine.Schemta, w => key.Equals(w));
             bindingSchema.Position = 0;
+
+            Setup(bindingSchema);
 
             bindingElement.DataSource = new BindingView<ElementItem>(BusinessData.ScriptingEngine.Elements, w => key.Equals(w));
             bindingElement.SuspendBinding();
@@ -94,6 +98,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSchema.Current is not ISchemaItem);
         }
 
         private void addSchemaCommand_Click(object sender, EventArgs e)
@@ -103,7 +108,18 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void removeSchemaCommand_Click(object sender, EventArgs e)
         {
+            if (bindingSchema.Current is SchemaItem item)
+            {
+                SchemaKey key = new SchemaKey(item);
 
+                //bindingElement.DataSource = null;
+                BusinessData.ScriptingEngine.Schemta.Remove(item);
+
+                foreach (ElementItem element in BusinessData.ScriptingEngine.Elements.Where(w => key.Equals(w)).ToList())
+                { BusinessData.ScriptingEngine.Elements.Remove(element); }
+
+                SendMessage(new RefreshNavigation());
+            }
         }
 
         protected override void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)

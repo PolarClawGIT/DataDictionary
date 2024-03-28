@@ -571,12 +571,17 @@ namespace DataDictionary.BusinessLayer.NamedScope
             { binding.PropertyChanged += OnPropertyChanged; }
         }
 
+        /// <summary>
+        /// Constructor for a NameScope, SchemaItem
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="data"></param>
         public NamedScopeItem(IModelKey parent, ISchemaItem data) : base()
         {
             SystemKey = new NamedScopeKey((ISchemaItem)data);
             SystemParentKey = new NamedScopeKey(parent);
             Source = data;
-            ScopeKey = new ScopeKey(ScopeType.ModelEntity);
+            ScopeKey = data.Scope;
 
             GetNameSpaceKey = () => new NameSpaceKey((ISchemaItem)data);
             GetTitle = () => data.SchemaTitle ?? String.Empty;
@@ -585,12 +590,17 @@ namespace DataDictionary.BusinessLayer.NamedScope
             { binding.PropertyChanged += OnPropertyChanged; }
         }
 
+        /// <summary>
+        /// Constructor for a NameScope, TransformItem
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="data"></param>
         public NamedScopeItem(IModelKey parent, ITransformItem data) : base()
         {
             SystemKey = new NamedScopeKey((ITransformItem)data);
             SystemParentKey = new NamedScopeKey(parent);
             Source = data;
-            ScopeKey = new ScopeKey(ScopeType.ModelEntity);
+            ScopeKey = data.Scope;
 
             GetNameSpaceKey = () => new NameSpaceKey((ITransformItem)data);
             GetTitle = () => data.TransformTitle ?? String.Empty;
