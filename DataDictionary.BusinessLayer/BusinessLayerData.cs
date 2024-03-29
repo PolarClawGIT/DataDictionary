@@ -120,6 +120,8 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(DatabaseModel.Remove());
             work.AddRange(LibraryModel.Remove());
 
+            work.AddRange(NameScope.Remove());
+
             work.AddRange(modelValues.Create());
 
             return work;

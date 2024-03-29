@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
@@ -29,7 +30,7 @@ namespace DataDictionary.Main.Forms.Model
                 if (modelBinding.Current is ModelManagerItem item)
                 {
                     ModelKey key = new ModelKey(item);
-                    return (BusinessData.Model is IModelItem);
+                    return (key.Equals(BusinessData.Model));
                 }
                 else { return false; }
             }
@@ -61,6 +62,8 @@ namespace DataDictionary.Main.Forms.Model
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
+                work.Add(new WorkItem() { WorkName = "Clear local data", DoWork = dbData.Clear });
+                work.AddRange(factory.CreateLoad(dbData).ToList());
                 this.DoWork(work, onCompleting);
             }
 
@@ -129,12 +132,16 @@ namespace DataDictionary.Main.Forms.Model
             if (modelBinding.Current is ModelManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
+                List<NamedScopeItem> names = new List<NamedScopeItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
 
                 ModelKey key = new ModelKey(item);
                 work.Add(factory.OpenConnection());
                 work.AddRange(BusinessData.Remove());
                 work.AddRange(BusinessData.Load(factory, key));
+
+                work.AddRange(BusinessData.Export(names));
+                work.AddRange(BusinessData.NameScope.Import(names));
 
                 DoLocalWork(work);
             }

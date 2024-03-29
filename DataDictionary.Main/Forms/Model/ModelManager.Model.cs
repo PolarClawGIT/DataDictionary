@@ -64,7 +64,8 @@ namespace DataDictionary.Main.Forms.Model
                 this.Clear();
 
                 // List of keys all keys
-                var modelItems = new List<IModelItem>() { modelItem };
+                List<IModelItem> modelItems = new List<IModelItem>() { modelItem };
+                ModelKey currentKey = new ModelKey(modelItem);
 
                 List<ModelKey> modelKeys = modelItems.Select(s => new ModelKey(s))
                     .Union(dbItems.Select(s => new ModelKey(s)))
@@ -89,7 +90,7 @@ namespace DataDictionary.Main.Forms.Model
 
                     if (item is ModelManagerItem)
                     {// Should always have a item at this point.
-                        item.InModel = (modelItem is ModelItem);
+                        item.InModel = (modelItem is ModelItem && currentKey.Equals(modelKey));
                         item.InDatabase = (dbItem is ModelItem);
                     }
                 }
