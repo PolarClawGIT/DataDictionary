@@ -3,7 +3,6 @@
 	[ParameterId]            UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseRoutineParameterId] DEFAULT (newid()),
 	[RoutineId]              UniqueIdentifier Not Null,
 	[ParameterName]          SysName Not Null,
-	[ScopeId]                Int Not Null,
 	[OrdinalPosition]        Int Not Null,
 	[DataType]               SysName Null,
 	[CharacterMaximumLength]  Int Null,
@@ -29,7 +28,6 @@
 	-- Keys
 	CONSTRAINT [PK_DatabaseRoutineParameter] PRIMARY KEY CLUSTERED ([ParameterId] ASC),
 	CONSTRAINT [FK_DatabaseRoutineParameterRoutine] FOREIGN KEY ([RoutineId]) REFERENCES [App_DataDictionary].[DatabaseRoutine] ([RoutineId]),
-	CONSTRAINT [FK_DatabaseRoutineParameterScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseRoutineParameter]

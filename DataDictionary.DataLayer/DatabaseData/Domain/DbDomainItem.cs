@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     /// <summary>
     /// Interface for the Database Domain Item.
     /// </summary>
-    public interface IDbDomainItem : IDbDomainKeyName, IDbDomainKey, IDbCatalogKey, IDbDomain, IScopeKeyName
+    public interface IDbDomainItem : IDbDomainKeyName, IDbDomainKey, IDbCatalogKey, IDbDomain, IScopeKey
     {
         /// <summary>
         /// The Default value for the Domain
@@ -39,9 +39,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
 
         /// <inheritdoc/>
         public string? DomainName { get { return GetValue("DomainName"); } }
-
-        /// <inheritdoc/>
-        public string? ScopeName { get { return GetValue("ScopeName"); } }
 
         /// <inheritdoc/>
         public string? DataType { get { return GetValue("DataType"); } }
@@ -86,7 +83,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
         public string? CollationName { get { return GetValue("CollationName"); } }
 
         /// <inheritdoc/>
-        //public DbObjectScope ObjectScope { get; } = DbObjectScope.Type;
+        public ScopeType Scope { get; } = ScopeType.DatabaseDomain;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -95,7 +92,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("DomainName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("DataType", typeof(string)){ AllowDBNull = true},
             new DataColumn("DomainDefault", typeof(string)){ AllowDBNull = true},
             new DataColumn("CharacterMaximumLength", typeof(int)){ AllowDBNull = true},
@@ -140,7 +136,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
             else
             {
                 Exception ex = new InvalidOperationException("Could not determine LevelType");
-                ex.Data.Add(nameof(ScopeName), ScopeName);
                 ex.Data.Add(nameof(DatabaseName), DatabaseName);
                 ex.Data.Add(nameof(SchemaName), SchemaName);
                 ex.Data.Add(nameof(DomainName), DomainName);

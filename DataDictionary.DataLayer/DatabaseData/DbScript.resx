@@ -161,7 +161,6 @@ From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS] T
 	[CONSTRAINT_SCHEMA] As [SchemaName],
 	[CONSTRAINT_NAME] As [ConstraintName],
 	[TABLE_NAME] As [TableName],
-	'Database.Schema.Table.Constraint' As [ScopeName],
 	[CONSTRAINT_TYPE] As [ConstraintType]
 From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS]</value>
     <comment>SQL Script to get data for DbConstraintItem.</comment>
@@ -172,7 +171,6 @@ From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS]</value>
 	[DOMAIN_CATALOG] As [DatabaseName],
 	[DOMAIN_SCHEMA] As [SchemaName],
 	[DOMAIN_NAME] As [DomainName],
-	'Database.Schema.Type' As [ScopeName],
 	[DATA_TYPE] As [DataType],
 	[DOMAIN_DEFAULT] As [DomainDefault],
 	[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
@@ -246,10 +244,6 @@ End Catch;</value>
 	[ROUTINE_CATALOG] As [DatabaseName],
 	[ROUTINE_SCHEMA] As [SchemaName],
 	[ROUTINE_NAME] As [RoutineName],
-	Case
-	When [ROUTINE_TYPE] In ('PROCEDURE') Then 'Database.Schema.Procedure'
-	When [ROUTINE_TYPE] In ('FUNCTION') Then 'Database.Schema.Function'
-	Else 'Error' End As [ScopeName],
 	[ROUTINE_TYPE] As [RoutineType]
 From	[INFORMATION_SCHEMA].[ROUTINES]</value>
     <comment>SQL Script to get data for DbRoutineItem.</comment>
@@ -260,11 +254,8 @@ From	[INFORMATION_SCHEMA].[ROUTINES]</value>
 	P.[SPECIFIC_CATALOG] As [DatabaseName],
 	P.[SPECIFIC_SCHEMA] As [SchemaName],
 	P.[SPECIFIC_NAME] As [RoutineName],
+	R.[ROUTINE_TYPE] As [RoutineType],
 	IIF(R.[ROUTINE_TYPE] IN ('FUNCTION') AND P.[ORDINAL_POSITION] = 0,'RETURN',P.[PARAMETER_NAME]) As [ParameterName],
-	Case
-	When R.[ROUTINE_TYPE] In ('PROCEDURE') Then 'Database.Schema.Procedure.Parameter'
-	When R.[ROUTINE_TYPE] In ('FUNCTION') Then 'Database.Schema.Function.Parameter'
-	Else 'Error' End As [ScopeName],
 	P.[ORDINAL_POSITION] As [OrdinalPosition],
 	P.[DATA_TYPE] As [DataType],
 	P.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
@@ -293,8 +284,7 @@ From	[INFORMATION_SCHEMA].[PARAMETERS] P
     <value>Select	@CatalogId As [CatalogId],
 	NewId() As [SchemaId],
 	[CATALOG_NAME] As [DatabaseName],
-	[SCHEMA_NAME] As [SchemaName],
-	'Database.Schema' As [ScopeName]
+	[SCHEMA_NAME] As [SchemaName]
 From [INFORMATION_SCHEMA].[SCHEMATA]</value>
     <comment>SQL Script to get data for DbSchemaItem.</comment>
   </data>

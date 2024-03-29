@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
     /// <summary>
     /// Interface for the Database Schema Item
     /// </summary>
-    public interface IDbSchemaItem : IDbSchemaKeyName, IDbSchemaKey, IDbCatalogKey, IDbCatalogScopeKey, IDbIsSystem, IScopeKeyName
+    public interface IDbSchemaItem : IDbSchemaKeyName, IDbSchemaKey, IDbCatalogKey, IDbCatalogScopeKey, IDbIsSystem, IScopeKey
     { }
 
     /// <summary>
@@ -32,9 +32,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
 
         /// <inheritdoc/>
         public string? SchemaName { get { return GetValue("SchemaName"); } }
-
-        /// <inheritdoc/>
-        public string? ScopeName { get { return GetValue("ScopeName"); } }
 
         /// <inheritdoc/>
         public bool IsSystem
@@ -59,13 +56,15 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
         /// <inheritdoc/>
         public DbCatalogScope CatalogScope { get; } = DbCatalogScope.Schema;
 
+        /// <inheritdoc/>
+        public ScopeType Scope { get; } = ScopeType.DatabaseSchema;
+
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
             new DataColumn("SchemaId", typeof(string)){ AllowDBNull = true},
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
         };
 
         /// <summary>
@@ -96,7 +95,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
             else
             {
                 Exception ex = new InvalidOperationException("Could not determine LevelType");
-                ex.Data.Add(nameof(ScopeName), ScopeName);
                 ex.Data.Add(nameof(DatabaseName), DatabaseName);
                 ex.Data.Add(nameof(SchemaName), SchemaName);
                 throw ex;

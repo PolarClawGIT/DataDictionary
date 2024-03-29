@@ -14,14 +14,12 @@ Select	S.[CatalogId],
 		S.[DatabaseName],
 		S.[SchemaName],
 		D.[RoutineName],
-		C.[ScopeName],
 		D.[RoutineType]
 From	[App_DataDictionary].[DatabaseRoutine] D
 		Inner Join [App_DataDictionary].[DatabaseSchema_AK] S
 		On	D.[SchemaId] = S.[SchemaId]
 		Left Join [App_DataDictionary].[ModelCatalog] A
 		On	S.[CatalogId] = A.[CatalogId]
-		Outer Apply [App_DataDictionary].[funcGetScopeName](D.[ScopeId]) C
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@CatalogId is Null or @CatalogId = S.[CatalogId]) And
 		(@DatabaseName is Null or @DatabaseName = S.[DatabaseName]) And

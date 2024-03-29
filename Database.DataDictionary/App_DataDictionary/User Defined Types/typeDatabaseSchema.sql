@@ -3,6 +3,5 @@
 	[CatalogId]              UniqueIdentifier Null,
 	[SchemaId]               UniqueIdentifier Null,
 	[DatabaseName]           SysName          Null,
-	[SchemaName]             SysName          Null,
-	[ScopeName]              [App_DataDictionary].[typeScopeName] Null
+	[SchemaName]             SysName          Null
 )

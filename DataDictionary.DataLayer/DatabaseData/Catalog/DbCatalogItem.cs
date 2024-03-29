@@ -67,7 +67,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Catalog
         public bool IsSystem { get { return DatabaseName is "tempdb" or "master" or "msdb" or "model"; } }
 
         /// <inheritdoc/>
-        public ScopeType Scope { get { return ScopeType.Database; } }
+        public ScopeType Scope { get; } = ScopeType.Database;
 
         /// <summary>
         /// Constructor for DbCatalogItem.

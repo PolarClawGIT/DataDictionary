@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for the Database Routine Parameter
     /// </summary>
-    public interface IDbRoutineParameterItem : IDbRoutineParameterKeyName, IDbRoutineParameterKey, IDbDomainReferenceKey, IDbColumn, IDbCatalogKey, IScopeKeyName
+    public interface IDbRoutineParameterItem : IDbRoutineParameterKeyName, IDbRoutineParameterKey, IDbDomainReferenceKey, IDbColumn, IDbCatalogKey, IDbRoutineType, IScopeKey
     { }
 
     /// <summary>
@@ -36,6 +36,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         /// <inheritdoc/>
         public string? RoutineName { get { return GetValue("RoutineName"); } }
+
+        /// <inheritdoc/>
+        public string? RoutineTypeName { get { return GetValue("RoutineType"); } }
 
         /// <inheritdoc/>
         public string? ParameterName { get { return GetValue("ParameterName"); } }
@@ -95,7 +98,22 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public string? DomainName { get { return GetValue("DomainName"); } }
 
         /// <inheritdoc/>
-        //public DbElementScope ElementScope { get; } = DbElementScope.Parameter;
+        public DbRoutineType RoutineType { get { return this.GetRoutineType(); } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope
+        {
+            get
+            {
+                switch (RoutineType)
+                {
+                    case DbRoutineType.Null: return ScopeType.Null;
+                    case DbRoutineType.Function: return ScopeType.DatabaseFunctionParameter;
+                    case DbRoutineType.Procedure: return ScopeType.DatabaseProcedureParameter;
+                    default: return ScopeType.Null;
+                }
+            }
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -104,8 +122,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("RoutineName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("RoutineType", typeof(string)){ AllowDBNull = false},
             new DataColumn("ParameterName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("OrdinalPosition", typeof(int)){ AllowDBNull = true},
             new DataColumn("DataType", typeof(string)){ AllowDBNull = true},
             new DataColumn("CharacterMaximumLength", typeof(int)){ AllowDBNull = true},
