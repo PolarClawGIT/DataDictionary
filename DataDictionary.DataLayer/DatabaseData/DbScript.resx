@@ -121,7 +121,6 @@
     <value>Select	@CatalogId As [CatalogId],
 	Db_Name() As [CatalogTitle],
 	Convert(NvarChar,Null) As [CatalogDescription],
-	'Database' As [ScopeName],
 	@Server As [SourceServerName],
 	Db_Name() As [SourceDatabaseName],
 	GetDate() As [SourceDate]</value>

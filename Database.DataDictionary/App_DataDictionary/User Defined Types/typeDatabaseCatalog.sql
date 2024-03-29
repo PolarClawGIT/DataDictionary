@@ -3,7 +3,6 @@
 	[CatalogId]            UniqueIdentifier Null,
 	[CatalogTitle]         [App_DataDictionary].[typeTitle] Null,
 	[CatalogDescription]   [App_DataDictionary].[typeDescription] Null,
-	[ScopeName]            [App_DataDictionary].[typeScopeName] Null,
 	[SourceServerName]     SysName          Null,
 	[SourceDatabaseName]   SysName          Null,
 	[SourceDate]           DateTime         Null

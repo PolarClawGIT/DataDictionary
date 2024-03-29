@@ -26,30 +26,21 @@ Begin Try
 		[CatalogId] UniqueIdentifier Not Null,
 		[CatalogTitle] [App_DataDictionary].[typeTitle] Not Null,
 		[CatalogDescription] [App_DataDictionary].[typeDescription] Null,
-		[ScopeId] Int Not Null,
 		[SourceServerName] SysName Not Null,
 		[SourceDatabaseName] SysName Not Null,
 		[SourceDate] DateTime Not Null,
 		Primary Key ([CatalogId]))
 	
-	;With [Scope] As (
-		Select	S.[ScopeId],
-				F.[ScopeName]
-		From	[App_DataDictionary].[ApplicationScope] S
-				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	X.[CatalogId],
 			NullIf(Trim(IsNull(D.[CatalogTitle], D.[SourceDatabaseName])),'') As [CatalogTitle],
 			NullIf(Trim(D.[CatalogDescription]), '') As [CatalogDescription],
-			S.[ScopeId],
 			NullIf(Trim(D.[SourceServerName]), '') As [SourceServerName],
 			NullIf(Trim(D.[SourceDatabaseName]), '') As [SourceDatabaseName],
 			IsNull(D.[SourceDate],GetDate()) As [SourceDate]
 	From	@Data D
 			Left Join [App_DataDictionary].[DatabaseCatalog_AK] A
 			On	D.[SourceDatabaseName] = A.[DatabaseName]
-			Left Join [Scope] S
-			On	D.[ScopeName] = S.[ScopeName]
 			Cross apply (
 				Select	Coalesce(A.[CatalogId], D.[CatalogId], @CatalogId, NewId()) As [CatalogId]) X
 	Where	@CatalogId is Null or
@@ -257,7 +248,6 @@ Begin Try
 		Select	[CatalogId],
 				[CatalogTitle],
 				[CatalogDescription],
-				[ScopeId],
 				[SourceServerName],
 				[SourceDatabaseName],
 				[SourceDate]
@@ -266,7 +256,6 @@ Begin Try
 		Select	[CatalogId],
 				[CatalogTitle],
 				[CatalogDescription],
-				[ScopeId],
 				[SourceServerName],
 				[SourceDatabaseName],
 				[SourceDate]
@@ -274,7 +263,6 @@ Begin Try
 	Update [App_DataDictionary].[DatabaseCatalog]
 	Set		[CatalogTitle] = S.[CatalogTitle],
 			[CatalogDescription] = S.[CatalogDescription],
-			[ScopeId] = S.[ScopeId],
 			[SourceServerName] = S.[SourceServerName],
 			[SourceDatabaseName] = S.[SourceDatabaseName],
 			[SourceDate] = S.[SourceDate]
@@ -287,14 +275,12 @@ Begin Try
 			[CatalogId],
 			[CatalogTitle],
 			[CatalogDescription],
-			[ScopeId],
 			[SourceServerName],
 			[SourceDatabaseName],
 			[SourceDate])
 	Select	S.[CatalogId],
 			S.[CatalogTitle],
 			S.[CatalogDescription],
-			S.[ScopeId],
 			S.[SourceServerName],
 			S.[SourceDatabaseName],
 			S.[SourceDate]

@@ -7,7 +7,6 @@
 	[CatalogId] UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseCatalogId] DEFAULT (newid()),
 	[CatalogTitle] [App_DataDictionary].[typeTitle] Not Null,
 	[CatalogDescription] [App_DataDictionary].[typeDescription] Null,
-	[ScopeId] Int Not Null,
 	[SourceServerName] SysName Not Null,
 	[SourceDatabaseName] SysName Not Null,
 	[SourceDate] DateTime Not Null,
@@ -18,7 +17,6 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_DatabaseCatalog] PRIMARY KEY CLUSTERED ([CatalogId] ASC),
-	CONSTRAINT [FK_DatabaseCatalogScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseCatalogTitle]

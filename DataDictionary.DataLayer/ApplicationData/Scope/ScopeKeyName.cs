@@ -10,6 +10,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// <summary>
     /// Interface for the Unique Scope Key
     /// </summary>
+    [Obsolete("This goes away once the name is removed from the Database")]
     public interface IScopeKeyName : IKey
     {
         /// <summary>
@@ -21,6 +22,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// <summary>
     /// Implementation for the Unique Scope Key
     /// </summary>
+    [Obsolete("This goes away once the name is removed from the Database")]
     public class ScopeKeyName : IScopeKeyName, IKeyComparable<IScopeKeyName>
     {
         /// <inheritdoc/>

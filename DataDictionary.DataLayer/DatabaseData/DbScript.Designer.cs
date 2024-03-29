@@ -64,7 +64,6 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
         ///	Db_Name() As [CatalogTitle],
         ///	Convert(NvarChar,Null) As [CatalogDescription],
-        ///	&apos;Database&apos; As [ScopeName],
         ///	@Server As [SourceServerName],
         ///	Db_Name() As [SourceDatabaseName],
         ///	GetDate() As [SourceDate].
