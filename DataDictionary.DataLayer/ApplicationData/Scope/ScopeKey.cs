@@ -216,6 +216,13 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         #endregion
 
         /// <summary>
+        /// Returns an IEnumerable of ScopeKey for each ScopeType.
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<ScopeKey> Items()
+        { return Enum.GetValues(typeof(ScopeType)).Cast<ScopeType>().Select(s => new ScopeKey(s)); }
+
+        /// <summary>
         /// Returns the ScopeName.
         /// </summary>
         /// <returns></returns>

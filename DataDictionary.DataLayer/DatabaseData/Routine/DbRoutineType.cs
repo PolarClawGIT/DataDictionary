@@ -222,6 +222,13 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         #endregion
 
         /// <summary>
+        /// Returns an IEnumerable of DbRoutineTypeKey for each DbRoutineType.
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<DbRoutineTypeKey> Items()
+        { return Enum.GetValues(typeof(DbRoutineType)).Cast<DbRoutineType>().Select(s => new DbRoutineTypeKey(s)); }
+
+        /// <summary>
         /// Returns the RoutineType Name.
         /// </summary>
         /// <returns></returns>

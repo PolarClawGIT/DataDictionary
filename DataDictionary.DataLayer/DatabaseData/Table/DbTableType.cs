@@ -127,7 +127,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         #region IEquatable
         /// <inheritdoc/>
-        public Boolean Equals(IDbTableTypeKey? other)
+        public virtual Boolean Equals(IDbTableTypeKey? other)
         {
             return other is IDbTableTypeKey
                 && this.TableType != DbTableType.Null
@@ -177,7 +177,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public override Int32 GetHashCode()
-        { return (TableType).GetHashCode(); }
+        { return TableType.GetHashCode(); }
         #endregion
 
         #region IParsable
@@ -233,6 +233,13 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             else { result = null; return false; }
         }
         #endregion
+
+        /// <summary>
+        /// Returns an IEnumerable of DbTableTypeKey for each DbTableType.
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<DbTableTypeKey> Items()
+        { return Enum.GetValues(typeof(DbTableType)).Cast<DbTableType>().Select(s => new DbTableTypeKey() { TableType = s}); }
 
         /// <summary>
         /// Returns the TableType Name.
