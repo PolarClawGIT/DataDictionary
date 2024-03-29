@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ApplicationData.Property;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Table;
@@ -184,7 +185,7 @@ namespace DataDictionary.BusinessLayer.Domain
                     aliasValues.Add(new DomainEntityAliasItem(entityKey)
                     {
                         AliasName = item.ToAliasName(),
-                        ScopeName = item.ScopeName
+                        Scope = item.Scope,
                     });
                 }
 

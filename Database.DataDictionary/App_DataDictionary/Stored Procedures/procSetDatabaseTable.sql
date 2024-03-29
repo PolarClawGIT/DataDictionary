@@ -28,20 +28,13 @@ Begin Try
 		[TableId]   UniqueIdentifier Not Null,
 		[SchemaId]  UniqueIdentifier Not Null,
 		[TableName] SysName Not Null,
-		[ScopeId]   Int Not Null,
 		[TableType] NVarChar(60) Null,
 		Primary Key ([TableId]))
 
-	;With [Scope] As (
-		Select	S.[ScopeId],
-				F.[ScopeName]
-		From	[App_DataDictionary].[ApplicationScope] S
-				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	X.[TableId],
 			X.[SchemaId],
 			NullIf(Trim(D.[TableName]),'') As [TableName],
-			S.[ScopeId],
 			NullIf(Trim(D.[TableType]),'') As [TableType]
 	From	@Data D
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
@@ -51,8 +44,6 @@ Begin Try
 			On	D.[DatabaseName] = A.[DatabaseName] And
 				D.[SchemaName] = A.[SchemaName] And
 				D.[TableName] = A.[TableName]
-			Left Join [Scope] S
-			On	D.[ScopeName] = S.[ScopeName]
 			Cross Apply (
 				Select	Coalesce(A.[TableId], D.[TableId], NewId()) As [TableId],
 						Coalesce(A.[SchemaId], P.[SchemaId]) As [SchemaId],
@@ -136,20 +127,17 @@ Begin Try
 		Select	[TableId],
 				[SchemaId],
 				[TableName],
-				[ScopeId],
 				[TableType]
 		From	@Values
 		Except
 		Select	[TableId],
 				[SchemaId],
 				[TableName],
-				[ScopeId],
 				[TableType]
 		From	[App_DataDictionary].[DatabaseTable])
 	Update [App_DataDictionary].[DatabaseTable]
 	Set		[SchemaId] = S.[SchemaId],
 			[TableName] = S.[TableName],
-			[ScopeId] = S.[ScopeId],
 			[TableType] = S.[TableType]
 	From	[App_DataDictionary].[DatabaseTable] T
 			Inner Join [Delta] S
@@ -160,12 +148,10 @@ Begin Try
 		[TableId],
 		[SchemaId],
 		[TableName],
-		[ScopeId],
 		[TableType])
 	Select	S.[TableId],
 			S.[SchemaId],
 			S.[TableName],
-			S.[ScopeId],
 			S.[TableType]
 	From	@Values S
 			Left Join [App_DataDictionary].[DatabaseTable] T

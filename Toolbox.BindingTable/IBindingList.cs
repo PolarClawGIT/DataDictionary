@@ -10,6 +10,8 @@ namespace Toolbox.BindingTable
     public interface IBindingList<TRow> : IBindingList, ICollection<TRow>, IList<TRow>, ICancelAddNew, IRaiseItemChangedEvents
         where TRow : class, IBindingPropertyChanged
     {
+        // This works but attempts to do the same thing with my own interfaces fails. I don't know why.
+
         /// <summary>
         /// Gets or sets the element at the specified index.
         /// </summary>

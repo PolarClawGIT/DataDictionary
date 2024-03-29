@@ -28,7 +28,6 @@ Begin Try
 		[ColumnId]              UniqueIdentifier Not Null,
 		[TableId]               UniqueIdentifier Not Null,
 		[ColumnName]            SysName Not Null,
-		[ScopeId]               Int Not Null,
 		[OrdinalPosition]       Int Not Null,
 		[IsNullable]            Bit Null,
 		[DataType]              SysName Null,
@@ -55,16 +54,10 @@ Begin Try
 		[GeneratedAlwayType]    NVarChar(60) Null,
 		Primary Key ([ColumnId]))
 
-	;With [Scope] As (
-		Select	S.[ScopeId],
-				F.[ScopeName]
-		From	[App_DataDictionary].[ApplicationScope] S
-				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	X.[ColumnId],
 			X.[TableId],
 			NullIf(Trim(D.[ColumnName]),'') As [ColumnName],
-			S.[ScopeId],
 			D.[OrdinalPosition],
 			D.[IsNullable],
 			NullIf(Trim(D.[DataType]),'') As [DataType],
@@ -99,8 +92,6 @@ Begin Try
 				D.[SchemaName] = A.[SchemaName] And
 				D.[TableName] = A.[TableName] And
 				D.[ColumnName] = A.[ColumnName]
-			Left Join [Scope] S
-			On	D.[ScopeName] = S.[ScopeName]
 			Cross Apply (
 				Select	Coalesce(A.[ColumnId], D.[ColumnId], NewId()) As [ColumnId],
 						Coalesce(A.[TableId], P.[TableId]) As [TableId],
@@ -153,7 +144,6 @@ Begin Try
 		Select	[ColumnId],
 				[TableId],
 				[ColumnName],
-				[ScopeId],
 				[OrdinalPosition],
 				[IsNullable],
 				[DataType],
@@ -183,7 +173,6 @@ Begin Try
 		Select	[ColumnId],
 				[TableId],
 				[ColumnName],
-				[ScopeId],
 				[OrdinalPosition],
 				[IsNullable],
 				[DataType],
@@ -212,7 +201,6 @@ Begin Try
 	Update [App_DataDictionary].[DatabaseTableColumn]
 	Set		[TableId] = S.[TableId],
 			[ColumnName] = S.[ColumnName],
-			[ScopeId] = S.[ScopeId],
 			[OrdinalPosition] = S.[OrdinalPosition],
 			[IsNullable] = S.[IsNullable],
 			[DataType] = S.[DataType],
@@ -246,7 +234,6 @@ Begin Try
 			[ColumnId],
 			[TableId],
 			[ColumnName],
-			[ScopeId],
 			[OrdinalPosition],
 			[IsNullable],
 			[DataType],
@@ -274,7 +261,6 @@ Begin Try
 	Select	S.[ColumnId],
 			S.[TableId],
 			S.[ColumnName],
-			S.[ScopeId],
 			S.[OrdinalPosition],
 			S.[IsNullable],
 			S.[DataType],

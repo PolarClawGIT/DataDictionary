@@ -4,6 +4,7 @@
 	-- This is a hierarchy that is expected to be static.
 	-- Reference: https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16
 	-- Reference: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/
+	-- TODO: Move to Application Only.
 	[ScopeId]             Int Not Null,
 	[ScopeParentId]       Int Null,	
 	[ScopeElement]        [App_DataDictionary].[typeScopeElement] Not Null,

@@ -239,14 +239,11 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	I.[TABLE_CATALOG] As [DatabaseName],
         ///	I.[TABLE_SCHEMA] As [SchemaName],
         ///	I.[TABLE_NAME] As [TableName],
-        ///	I.[COLUMN_NAME] As [ColumnName],
-        ///	Case 
-        ///	When T.[TABLE_TYPE] In (&apos;BASE TABLE&apos;) Then &apos;Database.Schema.Table.Column&apos;
-        ///	When T.[TABLE_TYPE] In (&apos;VIEW&apos;) Then &apos;Database.Schema.View.Column&apos;
-        ///	Else &apos;ERROR&apos; End [ScopeName],
-        ///	I.[ORDINAL_POSITION] As [OrdinalPosition],
-        ///	iif(I.[IS_NULLABLE] In (&apos;YES&apos;,&apos;TRUE&apos;,&apos;1&apos;),1,0) As [IsNullable],
-        ///	I.[DATA_TYPE [rest of string was truncated]&quot;;.
+        ///	Case
+        ///	When Exists(Select [history_table_id] From [Sys].[tables] Where [object_id] = C.[object_id] And [history_table_id] is Not Null) Then &apos;TEMPORAL TABLE&apos;
+        ///	When Exists(Select [object_id] From [Sys].[tables] Where [history_table_id] = C.[object_id] And [object_id] is Not Null) Then &apos;HISTORY TABLE&apos;
+        ///	Else T.[TABLE_TYPE]
+        ///	End As [TableType] [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbTableColumnItem {
             get {
@@ -260,16 +257,16 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	I.[TABLE_CATALOG] As [DatabaseName],
         ///	I.[TABLE_SCHEMA] As [SchemaName],
         ///	I.[TABLE_NAME] As [TableName],
-        ///	Case 
-        ///	When I.[TABLE_TYPE] In (&apos;BASE TABLE&apos;) Then &apos;Database.Schema.Table&apos;
-        ///	When I.[TABLE_TYPE] In (&apos;VIEW&apos;) Then &apos;Database.Schema.View&apos;
-        ///	Else &apos;ERROR&apos; End [ScopeName],
         ///	Case
         ///	When H.[object_id] is Not Null Then &apos;HISTORY TABLE&apos;
         ///	When T.[history_table_id] is Not Null Then &apos;TEMPORAL TABLE&apos;
         ///	Else I.[TABLE_TYPE]
         ///	End As [TableType]
-        ///From	[IN [rest of string was truncated]&quot;;.
+        ///From	[INFORMATION_SCHEMA].[TABLES] I
+        ///	Left Join [sys].[Tables] T
+        ///	On	I.[TABLE_SCHEMA] = Object_Schema_Name(T.[object_id]) And
+        ///		I.[TABLE_NAME] = Object_Name(T.[object_id])
+        ///	Le [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbTableItem {
             get {

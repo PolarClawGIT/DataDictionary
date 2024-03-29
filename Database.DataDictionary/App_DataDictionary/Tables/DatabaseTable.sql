@@ -8,7 +8,6 @@
 	[TableId]   UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseTableId] DEFAULT (newid()),
 	[SchemaId]  UniqueIdentifier Not Null,
 	[TableName] SysName Not Null,
-	[ScopeId]   Int Not Null,
 	[TableType] NVarChar(60) Null, -- BASE TABLE, VIEW, HISTORY TABLE, TEMPTORAL TABLE
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DatabaseTable_ModfiedBy] DEFAULT (original_login()),
@@ -18,7 +17,6 @@
 	-- Keys
 	CONSTRAINT [PK_DatabaseTable] PRIMARY KEY CLUSTERED ([TableId] ASC),
 	CONSTRAINT [FK_DatabaseTableSchema] FOREIGN KEY ([SchemaId]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([SchemaId]),
-	CONSTRAINT [FK_DatabaseTableScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseTable]
