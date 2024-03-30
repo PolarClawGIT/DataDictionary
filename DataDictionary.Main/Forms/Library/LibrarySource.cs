@@ -8,7 +8,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Library
 {
-    partial class LibrarySource : ApplicationBase, IApplicationDataForm
+    partial class LibrarySource : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return bindingSource.Current is ILibrarySourceItem current && ReferenceEquals(current, item); }
@@ -26,13 +26,7 @@ namespace DataDictionary.Main.Forms.Library
             bindingSource.DataSource = new BindingView<LibrarySourceItem>(BusinessData.LibraryModel.LibrarySources, w => key.Equals(w));
             bindingSource.Position = 0;
 
-            if (bindingSource.Current is ILibrarySourceItem current)
-            {
-                this.Icon = new ScopeKey(current).Scope.ToIcon();
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-            }
+            Setup(bindingSource);
         }
 
         private void LibrarySource_Load(object sender, EventArgs e)

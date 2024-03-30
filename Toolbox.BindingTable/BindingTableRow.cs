@@ -1,15 +1,6 @@
-﻿using System;
-
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlTypes;
-using System.Linq;
+﻿using System.Data;
 using System.Runtime.Serialization;
-using System.Security.Permissions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+using System.Xml.Linq;
 
 namespace Toolbox.BindingTable
 {
@@ -274,7 +265,7 @@ namespace Toolbox.BindingTable
         { }
 
         protected virtual void Table_RowChanged(object sender, DataRowChangeEventArgs e)
-        { OnRowStateChanged(); }
+        { IBindingRowState.OnRowStateChanged(this, RowStateChanged, ref lastRowState); }
 
         protected virtual void Table_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
@@ -288,7 +279,7 @@ namespace Toolbox.BindingTable
                 data.Table.ColumnChanged -= Table_ColumnChanged;
             }
 
-            OnRowStateChanged();
+            IBindingRowState.OnRowStateChanged(this, RowStateChanged, ref lastRowState);
         }
 
         protected virtual void Table_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -311,27 +302,7 @@ namespace Toolbox.BindingTable
                 && e.Column is not null)
             { OnPropertyChanged(e.Column.ColumnName); }
 
-            OnRowStateChanged();
-        }
-
-        /// <inheritdoc cref="DataRow.RowState"/>
-        public virtual DataRowState RowState()
-        {
-            if (data is DataRow row)
-            {
-                // For whatever reason, the row state can be unchanged but their is a Proposed row.
-                if (data.HasVersion(DataRowVersion.Proposed) && row.RowState == DataRowState.Unchanged)
-                { return DataRowState.Modified; }
-
-                if (bindingTable is null)
-                { return DataRowState.Detached; }
-                else if (row.RowState is DataRowState.Detached)
-                { return DataRowState.Detached; }
-                else if (bindingTable.Contains(this))
-                { return row.RowState; }
-                else { return DataRowState.Deleted; }
-            }
-            else { return DataRowState.Detached; }
+            IBindingRowState.OnRowStateChanged(this, RowStateChanged, ref lastRowState);
         }
 
         /// <inheritdoc cref="DataRow.RowError"/>
@@ -377,7 +348,7 @@ namespace Toolbox.BindingTable
         {
             if (data is DataRow row)
             { row.AcceptChanges(); }
-            OnRowStateChanged();
+            IBindingRowState.OnRowStateChanged(this, RowStateChanged, ref lastRowState);
         }
 
         /// <inheritdoc cref="DataRow.RejectChanges"/>
@@ -385,7 +356,7 @@ namespace Toolbox.BindingTable
         {
             if (data is DataRow row)
             { row.RejectChanges(); }
-            OnRowStateChanged();
+            IBindingRowState.OnRowStateChanged(this, RowStateChanged, ref lastRowState);
         }
         #endregion
 
@@ -435,43 +406,82 @@ namespace Toolbox.BindingTable
                 data.Table.ColumnChanged += Table_ColumnChanged;
             }
 
-            OnRowStateChanged();
+            IBindingRowState.OnRowStateChanged(this, RowStateChanged, ref lastRowState);
         }
 
         /// <summary>
+        /// Returns the internal DataRow as an XML Element
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>
+        /// Format:
+        ///     <{tableName}>
+        ///         <{columnName} DataType="{dataType}", AllowDBNull="{0|1}">
+        ///         {columnValue}
+        ///         </{columnName}>
+        ///     </{tableName}>
+        /// </remarks>
+        [Obsolete("Not used", true)]
+        public virtual XElement ToXElement()
+        {
+            String name = this.GetType().Name;
+            if (!String.IsNullOrWhiteSpace(data.Table.TableName))
+            { name = data.Table.TableName; }
+
+            XElement result = new XElement(name);
+
+            foreach (DataColumn item in data.Table.Columns)
+            {
+                XElement column;
+                if (data[item] is DBNull)
+                { column = new XElement(item.ColumnName); }
+                else
+                { column = new XElement(item.ColumnName, data[item]); }
+
+                column.Add(new XAttribute(nameof(item.DataType), item.DataType));
+                column.Add(new XAttribute(nameof(item.AllowDBNull), item.AllowDBNull));
+
+                result.Add(column);
+            }
+
+            return result;
+        }
+
+        #region IBindingRowState
+        /// <summary>
         /// Occurs when and event that can change the RowState occurs.
         /// </summary>
-        public event EventHandler? RowStateChanged;
+        public virtual event EventHandler<RowStateEventArgs>? RowStateChanged;
         private DataRowState lastRowState = DataRowState.Detached;
-        protected void OnRowStateChanged()
+
+        /// <inheritdoc cref="DataRow.RowState"/>
+        public virtual DataRowState RowState()
         {
-            if (RowStateChanged is EventHandler hander)
+            if (data is DataRow row)
             {
-                DataRowState currentState = this.RowState();
-                if (currentState != lastRowState)
-                {
-                    hander(this, EventArgs.Empty);
-                    lastRowState = currentState;
-                }
+                // For whatever reason, the row state can be unchanged but their is a Proposed row.
+                if (data.HasVersion(DataRowVersion.Proposed) && row.RowState == DataRowState.Unchanged)
+                { return DataRowState.Modified; }
+
+                if (bindingTable is null)
+                { return DataRowState.Detached; }
+                else if (row.RowState is DataRowState.Detached)
+                { return DataRowState.Detached; }
+                else if (bindingTable.Contains(this))
+                { return row.RowState; }
+                else { return DataRowState.Deleted; }
             }
+            else { return DataRowState.Detached; }
         }
+        #endregion
 
         #region INotifyPropertyChanged
         /// <inheritdoc/>
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public virtual event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
 
-        /// <inheritdoc cref="INotifyPropertyChanged.PropertyChanged"/>
-        /// <remarks>
-        /// The method assumes that the Property Name and the Column Name are identical.
-        /// The actual property changed event is raised on the Column change event, not the Set method.
-        /// This allows changes made directly to the table row to be captured.
-        /// </remarks>
-        public virtual void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged is PropertyChangedEventHandler handler)
-            { handler(this, new PropertyChangedEventArgs(propertyName)); }
-        }
 
+        public virtual void OnPropertyChanged(String propertyName)
+        { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, propertyName); }
         #endregion
 
         #region ISerializable

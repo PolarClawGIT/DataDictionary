@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
-    record class AttributeNameItem : IDomainAttributeKey, IDomainAttributeUniqueKey
+    record class AttributeNameItem : IDomainAttributeKey, IDomainAttributeKeyName
     {
         /// <inheritdoc/>
         public Guid? AttributeId { get; private set; } = Guid.Empty;
@@ -18,7 +18,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
         public String AttributeTitle { get; private set; } = String.Empty;
 
         public static void Load<T>(ComboBoxData control, IEnumerable<T> source, Guid? defaultAttributeId = null, String? defaultAttributeTitle = null)
-            where T : IDomainAttributeKey, IDomainAttributeUniqueKey
+            where T : IDomainAttributeKey, IDomainAttributeKeyName
         {
 
             AttributeNameItem propertyNameDataItem = new AttributeNameItem();

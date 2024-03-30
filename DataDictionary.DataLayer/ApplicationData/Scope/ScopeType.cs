@@ -43,9 +43,34 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         ModelAttribute,
 
         /// <summary>
+        /// Application Model Attribute Alias
+        /// </summary>
+        ModelAttributeAlias,
+
+        /// <summary>
+        /// Application Model Attribute Property
+        /// </summary>
+        ModelAttributeProperty,
+
+        /// <summary>
         /// Application Model Entity
         /// </summary>
         ModelEntity,
+
+        /// <summary>
+        /// Application Model Entity Alias
+        /// </summary>
+        ModelEntityAlias,
+
+        /// <summary>
+        /// Application Model Entity Property
+        /// </summary>
+        ModelEntityProperty,
+
+        /// <summary>
+        /// Application Model Attribute of an Entity
+        /// </summary>
+        ModelEntityAttribute,
 
         /// <summary>
         /// NameSpace item for the Model
@@ -156,7 +181,25 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// </summary>
         DatabaseFunctionParameter,
 
+        /// <summary>
+        /// Scripting Engine
+        /// </summary>
+        Scripting,
 
+        /// <summary>
+        /// Scripting Schema
+        /// </summary>
+        ScriptingSchema,
+
+        /// <summary>
+        /// Scripting Schema Element
+        /// </summary>
+        ScriptingSchemaElement,
+
+        /// <summary>
+        /// Scripting Transform
+        /// </summary>
+        ScriptingTransform,
     }
 
     /// <summary>

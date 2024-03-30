@@ -1,12 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.ApplicationData.Help;
-using DataDictionary.DataLayer.ApplicationData.Property;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -16,7 +9,7 @@ namespace DataDictionary.BusinessLayer.Application
     /// Interface representing Application data
     /// </summary>
     public interface IApplicationData:
-        ILoadData, ISaveData, IFileData
+        ILoadData, ISaveData
     {
         /// <summary>
         /// Wrapper for Application Help.
@@ -33,7 +26,7 @@ namespace DataDictionary.BusinessLayer.Application
     /// Implementation for Application data
     /// </summary>
     public class ApplicationData : IApplicationData,
-        ILoadData, ISaveData, IFileData
+        ILoadData, ISaveData, IDataTableFile
     {
         /// <inheritdoc/>
         public IHelpSubjectData HelpSubjects { get { return helpSubjectValues; } }
@@ -52,26 +45,7 @@ namespace DataDictionary.BusinessLayer.Application
             return work;
         }
 
-        /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Import(FileInfo file)
-        {
-            List<WorkItem> workItems = new List<WorkItem>
-            {
-                new WorkItem() { WorkName = "Load Application Data", DoWork = DoWork }
-            };
 
-            return workItems.AsReadOnly();
-
-            void DoWork()
-            {
-                using (System.Data.DataSet workSet = new System.Data.DataSet())
-                {
-                    workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
-                    helpSubjectValues.Load(workSet);
-                    propertyValues.Load(workSet);
-                }
-            }
-        }
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
@@ -83,25 +57,19 @@ namespace DataDictionary.BusinessLayer.Application
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Export(FileInfo file)
+        public IReadOnlyList<DataTable> Export()
         {
-            List<WorkItem> workItems = new List<WorkItem>();
-
-            workItems.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
-
-            return workItems.AsReadOnly();
-
-            void DoWork()
-            {
-                using (System.Data.DataSet workSet = new System.Data.DataSet())
-                {
-                    workSet.Tables.Add(HelpSubjects.ToDataTable());
-                    workSet.Tables.Add(Properties.ToDataTable());
-
-                    workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
-                }
-            }
+            List<System.Data.DataTable> result = new List<System.Data.DataTable>();
+            result.Add(helpSubjectValues.ToDataTable());
+            result.Add(propertyValues.ToDataTable());;
+            return result;
         }
 
+        /// <inheritdoc/>
+        public void Import(DataSet source)
+        {
+            helpSubjectValues.Load(source);
+            propertyValues.Load(source);
+        }
     }
 }

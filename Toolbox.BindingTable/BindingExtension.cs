@@ -17,23 +17,12 @@ namespace Toolbox.BindingTable
         }
 
         /// <summary>
-        /// Clones the data into a Data Table using CreateReader.
+        /// Copies BindingTableRows to a new Table using CopyToDataTable.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        static DataTable ToDataTable(this IBindingTable source)
-        {
-            using (DataTable data = new DataTable())
-            {
-                data.TableName = source.BindingName;
-                data.Load(source.CreateDataReader());
-                return data;
-            }
-        }
-
-        /// <inheritdoc cref="DataTableExtensions.CopyToDataTable"/>
-        /// <remarks>Handles enumerations of BindingTableRows</remarks>
+        /// <see cref="DataTableExtensions.CopyToDataTable"/>
         public static DataTable ToDataTable<T>(this IEnumerable<T> data)
             where T : BindingTableRow, new()
         {
@@ -47,9 +36,20 @@ namespace Toolbox.BindingTable
                 // CopyToDataTable returns a Invalid Operation Exception if there are no rows in the list.
                 // Return an empty table in that scenario.
                 using (result = new DataTable())
-                { result.AddColumns(dataColumns.ToArray()); }
+                {
+                    if (data is IBindingTable source)
+                    { result.TableName = source.BindingName; }
+
+                    result.AddColumns(dataColumns.ToArray()); 
+                }
             }
-            else { result = values.CopyToDataTable(); }
+            else
+            {
+                result = values.CopyToDataTable();
+
+                if (data is IBindingTable source)
+                { result.TableName = source.BindingName; }
+            }
 
 
             return result;

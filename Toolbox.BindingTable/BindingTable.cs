@@ -20,7 +20,7 @@ namespace Toolbox.BindingTable
     /// The added item then wrappers the copy of the row.
     /// </remarks>
     public class BindingTable<TBindingItem> : BindingList<TBindingItem>, IBindingTable<TBindingItem>, IBindingList<TBindingItem>
-        where TBindingItem : BindingTableRow, INotifyPropertyChanged, IBindingTableRow, new()
+        where TBindingItem : BindingTableRow, IBindingPropertyChanged, IBindingTableRow, new()
     {
         /// <summary>
         /// Name given to the Binding Table.

@@ -7,7 +7,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Interface for MS SQL ExtendedProperty as stored in the Application Database.
     /// </summary>
-    public interface IDbExtendedPropertyItem : IDbCatalogKeyName, IDbCatalogKey, IDbExtendedPropertyParameter, IDataItem
+    public interface IDbExtendedPropertyItem : IDbCatalogKeyName, IDbCatalogKey, IDbExtendedPropertyParameter
     {
         /// <summary>
         /// MS SQL ExtendedProperty Level 0 Type

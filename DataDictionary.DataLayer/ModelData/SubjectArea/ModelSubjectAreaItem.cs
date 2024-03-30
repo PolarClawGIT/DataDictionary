@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
     /// <summary>
     /// Interface for Model Subject Area Item
     /// </summary>
-    public interface IModelSubjectAreaItem : IModelSubjectAreaKey, IModelSubjectAreaUniqueKey, IDataItem
+    public interface IModelSubjectAreaItem : IModelSubjectAreaKey, IModelSubjectAreaUniqueKey
     {
         /// <summary>
         /// Description of the Subject Area

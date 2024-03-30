@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.Schema;
@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.Database
     class DomainData : DbDomainCollection, IDomainData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INameScopeData
+        IDatabaseModelItem, INamedScopeData
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -46,7 +46,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target)
+        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
         {
             List<WorkItem> work = new List<WorkItem>();
 
@@ -59,7 +59,7 @@ namespace DataDictionary.BusinessLayer.Database
                     {
                         DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
                         if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is IDbSchemaItem parent)
-                        { target.Add(new NameScopeItem(parent, item)); }
+                        { target.Add(new NamedScopeItem(parent, item)); }
                     }
                 }
             });

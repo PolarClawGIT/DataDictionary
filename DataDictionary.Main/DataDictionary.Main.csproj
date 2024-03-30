@@ -46,11 +46,6 @@ Allows entry of MS Description and custom properties for Entities and Attributes
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Update="TextTemplates\CreateExtendedProperty.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>CreateExtendedProperty.tt</DependentUpon>
-    </Compile>
     <Compile Update="VersionNumber.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -65,10 +60,6 @@ Allows entry of MS Description and custom properties for Entities and Attributes
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Update="TextTemplates\CreateExtendedProperty.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>CreateExtendedProperty.cs</LastGenOutput>
     </None>
     <None Update="VersionNumber.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

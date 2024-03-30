@@ -64,7 +64,6 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
         ///	Db_Name() As [CatalogTitle],
         ///	Convert(NvarChar,Null) As [CatalogDescription],
-        ///	&apos;Database&apos; As [ScopeName],
         ///	@Server As [SourceServerName],
         ///	Db_Name() As [SourceDatabaseName],
         ///	GetDate() As [SourceDate].
@@ -103,7 +102,6 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	[CONSTRAINT_SCHEMA] As [SchemaName],
         ///	[CONSTRAINT_NAME] As [ConstraintName],
         ///	[TABLE_NAME] As [TableName],
-        ///	&apos;Database.Schema.Table.Constraint&apos; As [ScopeName],
         ///	[CONSTRAINT_TYPE] As [ConstraintType]
         ///From	[INFORMATION_SCHEMA].[TABLE_CONSTRAINTS].
         /// </summary>
@@ -119,14 +117,14 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	[DOMAIN_CATALOG] As [DatabaseName],
         ///	[DOMAIN_SCHEMA] As [SchemaName],
         ///	[DOMAIN_NAME] As [DomainName],
-        ///	&apos;Database.Schema.Type&apos; As [ScopeName],
         ///	[DATA_TYPE] As [DataType],
         ///	[DOMAIN_DEFAULT] As [DomainDefault],
         ///	[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
         ///	[CHARACTER_OCTET_LENGTH] As [CharacterOctetLength],
         ///	[NUMERIC_PRECISION] As [NumericPrecision],
         ///	[NUMERIC_PRECISION_RADIX] As [NumericPrecisionRadix],
-        ///	[NUMERIC_SCALE] As [Num [rest of string was truncated]&quot;;.
+        ///	[NUMERIC_SCALE] As [NumericScale],
+        ///	[DATETIME_PRECISION] As [Da [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbDomainItem {
             get {
@@ -187,10 +185,6 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	[ROUTINE_CATALOG] As [DatabaseName],
         ///	[ROUTINE_SCHEMA] As [SchemaName],
         ///	[ROUTINE_NAME] As [RoutineName],
-        ///	Case
-        ///	When [ROUTINE_TYPE] In (&apos;PROCEDURE&apos;) Then &apos;Database.Schema.Procedure&apos;
-        ///	When [ROUTINE_TYPE] In (&apos;FUNCTION&apos;) Then &apos;Database.Schema.Function&apos;
-        ///	Else &apos;Error&apos; End As [ScopeName],
         ///	[ROUTINE_TYPE] As [RoutineType]
         ///From	[INFORMATION_SCHEMA].[ROUTINES].
         /// </summary>
@@ -206,12 +200,12 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	P.[SPECIFIC_CATALOG] As [DatabaseName],
         ///	P.[SPECIFIC_SCHEMA] As [SchemaName],
         ///	P.[SPECIFIC_NAME] As [RoutineName],
+        ///	R.[ROUTINE_TYPE] As [RoutineType],
         ///	IIF(R.[ROUTINE_TYPE] IN (&apos;FUNCTION&apos;) AND P.[ORDINAL_POSITION] = 0,&apos;RETURN&apos;,P.[PARAMETER_NAME]) As [ParameterName],
-        ///	Case
-        ///	When R.[ROUTINE_TYPE] In (&apos;PROCEDURE&apos;) Then &apos;Database.Schema.Procedure.Parameter&apos;
-        ///	When R.[ROUTINE_TYPE] In (&apos;FUNCTION&apos;) Then &apos;Database.Schema.Function.Parameter&apos;
-        ///	Else &apos;Error&apos; End As [ScopeName],
-        ///	P.[O [rest of string was truncated]&quot;;.
+        ///	P.[ORDINAL_POSITION] As [OrdinalPosition],
+        ///	P.[DATA_TYPE] As [DataType],
+        ///	P.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
+        ///	P.[CHARACTER_OCTET_LENGTH] As [Characte [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbRoutineParameterItem {
             get {
@@ -223,8 +217,7 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///   Looks up a localized string similar to Select	@CatalogId As [CatalogId],
         ///	NewId() As [SchemaId],
         ///	[CATALOG_NAME] As [DatabaseName],
-        ///	[SCHEMA_NAME] As [SchemaName],
-        ///	&apos;Database.Schema&apos; As [ScopeName]
+        ///	[SCHEMA_NAME] As [SchemaName]
         ///From [INFORMATION_SCHEMA].[SCHEMATA].
         /// </summary>
         internal static string DbSchemaItem {
@@ -239,14 +232,11 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	I.[TABLE_CATALOG] As [DatabaseName],
         ///	I.[TABLE_SCHEMA] As [SchemaName],
         ///	I.[TABLE_NAME] As [TableName],
-        ///	I.[COLUMN_NAME] As [ColumnName],
-        ///	Case 
-        ///	When T.[TABLE_TYPE] In (&apos;BASE TABLE&apos;) Then &apos;Database.Schema.Table.Column&apos;
-        ///	When T.[TABLE_TYPE] In (&apos;VIEW&apos;) Then &apos;Database.Schema.View.Column&apos;
-        ///	Else &apos;ERROR&apos; End [ScopeName],
-        ///	I.[ORDINAL_POSITION] As [OrdinalPosition],
-        ///	iif(I.[IS_NULLABLE] In (&apos;YES&apos;,&apos;TRUE&apos;,&apos;1&apos;),1,0) As [IsNullable],
-        ///	I.[DATA_TYPE [rest of string was truncated]&quot;;.
+        ///	Case
+        ///	When Exists(Select [history_table_id] From [Sys].[tables] Where [object_id] = C.[object_id] And [history_table_id] is Not Null) Then &apos;TEMPORAL TABLE&apos;
+        ///	When Exists(Select [object_id] From [Sys].[tables] Where [history_table_id] = C.[object_id] And [object_id] is Not Null) Then &apos;HISTORY TABLE&apos;
+        ///	Else T.[TABLE_TYPE]
+        ///	End As [TableType] [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbTableColumnItem {
             get {
@@ -260,16 +250,16 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	I.[TABLE_CATALOG] As [DatabaseName],
         ///	I.[TABLE_SCHEMA] As [SchemaName],
         ///	I.[TABLE_NAME] As [TableName],
-        ///	Case 
-        ///	When I.[TABLE_TYPE] In (&apos;BASE TABLE&apos;) Then &apos;Database.Schema.Table&apos;
-        ///	When I.[TABLE_TYPE] In (&apos;VIEW&apos;) Then &apos;Database.Schema.View&apos;
-        ///	Else &apos;ERROR&apos; End [ScopeName],
         ///	Case
         ///	When H.[object_id] is Not Null Then &apos;HISTORY TABLE&apos;
         ///	When T.[history_table_id] is Not Null Then &apos;TEMPORAL TABLE&apos;
         ///	Else I.[TABLE_TYPE]
         ///	End As [TableType]
-        ///From	[IN [rest of string was truncated]&quot;;.
+        ///From	[INFORMATION_SCHEMA].[TABLES] I
+        ///	Left Join [sys].[Tables] T
+        ///	On	I.[TABLE_SCHEMA] = Object_Schema_Name(T.[object_id]) And
+        ///		I.[TABLE_NAME] = Object_Name(T.[object_id])
+        ///	Le [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbTableItem {
             get {

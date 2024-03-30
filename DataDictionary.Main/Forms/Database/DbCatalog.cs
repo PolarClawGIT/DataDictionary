@@ -10,7 +10,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbCatalog : ApplicationBase, IApplicationDataForm
+    partial class DbCatalog : ApplicationData, IApplicationDataForm
     {
 
         public Boolean IsOpenItem(object? item)
@@ -19,11 +19,7 @@ namespace DataDictionary.Main.Forms.Database
         public DbCatalog() : base()
         {
             InitializeComponent();
-
-            importDataCommand.DropDown = importOptions;
-            importDataCommand.Enabled = true;
-            importDataCommand.ButtonClick += ImportDataCommand_Click;
-            importDataCommand.ToolTipText = "Import the Database to the Domain Model";
+            toolStrip.TransferItems(catalogToolStrip, 0);
         }
 
         public DbCatalog(IDbCatalogItem catalogItem) : this()
@@ -33,13 +29,7 @@ namespace DataDictionary.Main.Forms.Database
             bindingSource.DataSource = new BindingView<DbCatalogItem>(BusinessData.DatabaseModel.DbCatalogs, w => key.Equals(w));
             bindingSource.Position = 0;
 
-            if(bindingSource.Current is IDbCatalogItem current)
-            {
-                this.Icon = new ScopeKey(current).Scope.ToIcon();
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-            }
+            Setup(bindingSource);
         }
 
         private void DbCatalog_Load(object sender, EventArgs e)
@@ -54,12 +44,12 @@ namespace DataDictionary.Main.Forms.Database
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSource.Current is not IDbCatalogItem);
         }
 
-        private void ImportDataCommand_Click(object? sender, EventArgs e)
+        private void exportCommand_Click(object sender, EventArgs e)
         {
             if (bindingSource.Current is IDbCatalogItem current)
             {
-                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, current);
-                BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, current);
+                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+                BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
             }
         }
     }

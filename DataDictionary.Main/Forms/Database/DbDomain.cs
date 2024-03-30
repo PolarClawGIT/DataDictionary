@@ -18,7 +18,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbDomain : ApplicationBase, IApplicationDataForm
+    partial class DbDomain : ApplicationData, IApplicationDataForm
     {
 
         public Boolean IsOpenItem(object? item)
@@ -37,13 +37,10 @@ namespace DataDictionary.Main.Forms.Database
             bindingDomain.DataSource = new BindingView<DbDomainItem>(BusinessData.DatabaseModel.DbDomains, w => key.Equals(w));
             bindingDomain.Position = 0;
 
+            Setup(bindingDomain);
+
             if (bindingDomain.Current is IDbDomainItem current)
             {
-                this.Icon = new ScopeKey(current).Scope.ToIcon();
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-
                 bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }

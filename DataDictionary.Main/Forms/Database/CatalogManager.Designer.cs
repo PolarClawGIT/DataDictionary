@@ -31,20 +31,24 @@
             components = new System.ComponentModel.Container();
             TableLayoutPanel catalogManagerLayout;
             catalogNavigation = new DataGridView();
+            catalogTitleColumn = new DataGridViewTextBoxColumn();
+            databaseNameColumn = new DataGridViewTextBoxColumn();
+            inModelColumn = new DataGridViewCheckBoxColumn();
+            inDatabase = new DataGridViewCheckBoxColumn();
             catalogTitleData = new Controls.TextBoxData();
             catalogDescriptionData = new Controls.TextBoxData();
             sourceDateData = new Controls.TextBoxData();
             sourceServerNameData = new Controls.TextBoxData();
             sourceDatabaseNameData = new Controls.TextBoxData();
             catalogBinding = new BindingSource(components);
-            catalogTitleColumn = new DataGridViewTextBoxColumn();
-            databaseNameColumn = new DataGridViewTextBoxColumn();
-            inModelColumn = new DataGridViewCheckBoxColumn();
-            inDatabase = new DataGridViewCheckBoxColumn();
+            catalogContextMenu = new ContextMenuStrip(components);
+            addDatabaseCommand = new ToolStripMenuItem();
+            removeDatabaseCommand = new ToolStripMenuItem();
             catalogManagerLayout = new TableLayoutPanel();
             catalogManagerLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)catalogNavigation).BeginInit();
             ((System.ComponentModel.ISupportInitialize)catalogBinding).BeginInit();
+            catalogContextMenu.SuspendLayout();
             SuspendLayout();
             // 
             // catalogManagerLayout
@@ -80,9 +84,39 @@
             catalogNavigation.Dock = DockStyle.Fill;
             catalogNavigation.Location = new Point(3, 3);
             catalogNavigation.Name = "catalogNavigation";
-            catalogNavigation.RowTemplate.Height = 25;
             catalogNavigation.Size = new Size(605, 232);
             catalogNavigation.TabIndex = 0;
+            // 
+            // catalogTitleColumn
+            // 
+            catalogTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            catalogTitleColumn.DataPropertyName = "CatalogTitle";
+            catalogTitleColumn.HeaderText = "Catalog Title";
+            catalogTitleColumn.MinimumWidth = 150;
+            catalogTitleColumn.Name = "catalogTitleColumn";
+            // 
+            // databaseNameColumn
+            // 
+            databaseNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            databaseNameColumn.DataPropertyName = "SourceDatabaseName";
+            databaseNameColumn.HeaderText = "Database Name";
+            databaseNameColumn.MinimumWidth = 150;
+            databaseNameColumn.Name = "databaseNameColumn";
+            databaseNameColumn.ReadOnly = true;
+            // 
+            // inModelColumn
+            // 
+            inModelColumn.DataPropertyName = "InModel";
+            inModelColumn.HeaderText = "In Model";
+            inModelColumn.Name = "inModelColumn";
+            inModelColumn.ReadOnly = true;
+            // 
+            // inDatabase
+            // 
+            inDatabase.DataPropertyName = "InDatabase";
+            inDatabase.HeaderText = "In Database";
+            inDatabase.Name = "inDatabase";
+            inDatabase.ReadOnly = true;
             // 
             // catalogTitleData
             // 
@@ -150,36 +184,29 @@
             // 
             catalogBinding.CurrentChanged += catalogBinding_CurrentChanged;
             // 
-            // catalogTitleColumn
+            // catalogContextMenu
             // 
-            catalogTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            catalogTitleColumn.DataPropertyName = "CatalogTitle";
-            catalogTitleColumn.HeaderText = "Catalog Title";
-            catalogTitleColumn.MinimumWidth = 150;
-            catalogTitleColumn.Name = "catalogTitleColumn";
+            catalogContextMenu.Items.AddRange(new ToolStripItem[] { addDatabaseCommand, removeDatabaseCommand });
+            catalogContextMenu.Name = "catalogContextMenu";
+            catalogContextMenu.Size = new Size(169, 48);
             // 
-            // databaseNameColumn
+            // addDatabaseCommand
             // 
-            databaseNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            databaseNameColumn.DataPropertyName = "SourceDatabaseName";
-            databaseNameColumn.HeaderText = "Database Name";
-            databaseNameColumn.MinimumWidth = 150;
-            databaseNameColumn.Name = "databaseNameColumn";
-            databaseNameColumn.ReadOnly = true;
+            addDatabaseCommand.Image = Properties.Resources.NewDatabase;
+            addDatabaseCommand.Name = "addDatabaseCommand";
+            addDatabaseCommand.Size = new Size(168, 22);
+            addDatabaseCommand.Text = "Add Database";
+            addDatabaseCommand.ToolTipText = "Import a Catalog (Database Schema) into the Model";
+            addDatabaseCommand.Click += addDatabaseCommand_Click;
             // 
-            // inModelColumn
+            // removeDatabaseCommand
             // 
-            inModelColumn.DataPropertyName = "InModel";
-            inModelColumn.HeaderText = "In Model";
-            inModelColumn.Name = "inModelColumn";
-            inModelColumn.ReadOnly = true;
-            // 
-            // inDatabase
-            // 
-            inDatabase.DataPropertyName = "InDatabase";
-            inDatabase.HeaderText = "In Database";
-            inDatabase.Name = "inDatabase";
-            inDatabase.ReadOnly = true;
+            removeDatabaseCommand.Image = Properties.Resources.DeleteDatabase;
+            removeDatabaseCommand.Name = "removeDatabaseCommand";
+            removeDatabaseCommand.Size = new Size(168, 22);
+            removeDatabaseCommand.Text = "Remove Database";
+            removeDatabaseCommand.ToolTipText = "Removes the Catalog from the Model";
+            removeDatabaseCommand.Click += removeDatabaseCommand_Click;
             // 
             // CatalogManager
             // 
@@ -195,6 +222,7 @@
             catalogManagerLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)catalogNavigation).EndInit();
             ((System.ComponentModel.ISupportInitialize)catalogBinding).EndInit();
+            catalogContextMenu.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -212,5 +240,8 @@
         private DataGridViewTextBoxColumn databaseNameColumn;
         private DataGridViewCheckBoxColumn inModelColumn;
         private DataGridViewCheckBoxColumn inDatabase;
+        private ContextMenuStrip catalogContextMenu;
+        private ToolStripMenuItem addDatabaseCommand;
+        private ToolStripMenuItem removeDatabaseCommand;
     }
 }

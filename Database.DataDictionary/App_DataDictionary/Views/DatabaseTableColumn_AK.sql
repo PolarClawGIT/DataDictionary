@@ -9,6 +9,7 @@ Select	C.[CatalogId],
 		C.[SourceDatabaseName] As [DatabaseName],
 		S.[SchemaName],
 		T.[TableName],
+		T.[TableType],
 		O.[ColumnName]
 From	[App_DataDictionary].[DatabaseCatalog] C
 		Inner Join [App_DataDictionary].[DatabaseSchema] S

@@ -28,7 +28,6 @@ Begin Try
 		[SchemaId]   UniqueIdentifier Not Null,
 		[CatalogId]  UniqueIdentifier Not Null,
 		[SchemaName] SysName Not Null,
-		[ScopeId]    Int Not Null,
 		Primary Key ([SchemaId]))
 
 	;With [Scope] As (
@@ -39,16 +38,13 @@ Begin Try
 	Insert Into @Values
 	Select	X.[SchemaId],
 			X.[CatalogId],
-			NullIf(Trim(D.[SchemaName]),'') As [SchemaName],
-			S.[ScopeId]
+			NullIf(Trim(D.[SchemaName]),'') As [SchemaName]
 	From	@Data D
 			Inner Join [App_DataDictionary].[DatabaseCatalog_AK] P
 			On	D.[DatabaseName] = P.[DatabaseName]
 			Left Join [App_DataDictionary].[DatabaseSchema_AK] A
 			On	D.[DatabaseName] = A.[DatabaseName] And
 				D.[SchemaName] = A.[SchemaName]
-			Left Join [Scope] S
-			On	D.[ScopeName] = S.[ScopeName]
 			Cross apply (
 				Select	Coalesce(A.[SchemaId], D.[SchemaId], NewId()) As [SchemaId],
 						Coalesce(A.[CatalogId], P.[CatalogId], @CatalogId) As [CatalogId]) X
@@ -209,19 +205,16 @@ Begin Try
 	;With [Delta] As (
 		Select	[SchemaId],
 				[CatalogId],
-				[SchemaName],
-				[ScopeId]
+				[SchemaName]
 		From	@Values
 		Except
 		Select	[SchemaId],
 				[CatalogId],
-				[SchemaName],
-				[ScopeId]
+				[SchemaName]
 		From	[App_DataDictionary].[DatabaseSchema])
 	Update [App_DataDictionary].[DatabaseSchema]
 	Set		[CatalogId] = S.[CatalogId],
-			[SchemaName] = S.[SchemaName],
-			[ScopeId] = S.[ScopeId]
+			[SchemaName] = S.[SchemaName]
 	From	[Delta] S
 			Inner Join [App_DataDictionary].[DatabaseSchema] T
 			On	S.[SchemaId] = T.[SchemaId]
@@ -230,12 +223,10 @@ Begin Try
 	Insert Into [App_DataDictionary].[DatabaseSchema] (
 			[SchemaId],
 			[CatalogId],
-			[SchemaName],
-			[ScopeId])
+			[SchemaName])
 	Select	S.[SchemaId],
 			S.[CatalogId],
-			S.[SchemaName],
-			S.[ScopeId]
+			S.[SchemaName]
 	From	@Values S
 			Left Join [App_DataDictionary].[DatabaseSchema] T
 			On	S.[SchemaId] = T.[SchemaId]

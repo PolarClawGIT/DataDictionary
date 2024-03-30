@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
@@ -17,7 +18,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class ModelManager : ApplicationBase, IApplicationDataBind
+    partial class ModelManager : ApplicationData, IApplicationDataBind
     {
         ModelCollection dbData = new ModelCollection();
         ModelManagerCollection bindingData = new ModelManagerCollection();
@@ -29,7 +30,7 @@ namespace DataDictionary.Main.Forms.Model
                 if (modelBinding.Current is ModelManagerItem item)
                 {
                     ModelKey key = new ModelKey(item);
-                    return (BusinessData.Model is IModelItem);
+                    return (key.Equals(BusinessData.Model));
                 }
                 else { return false; }
             }
@@ -52,15 +53,6 @@ namespace DataDictionary.Main.Forms.Model
         {
             InitializeComponent();
             this.Icon = Resources.Icon_SoftwareDefinitionModel;
-
-            newItemCommand.Enabled = true;
-            newItemCommand.Click += NewItemCommand_Click;
-            newItemCommand.Image = Resources.NewDictionary;
-            newItemCommand.ToolTipText = "Create a empty Model";
-
-            openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click;
-            deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
-            saveToDatabaseCommand.Click += SaveToDatabaseCommand_Click;
         }
 
         private void ModelManager_Load(object sender, EventArgs e)
@@ -70,6 +62,8 @@ namespace DataDictionary.Main.Forms.Model
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
+                work.Add(new WorkItem() { WorkName = "Clear local data", DoWork = dbData.Clear });
+                work.AddRange(factory.CreateLoad(dbData).ToList());
                 this.DoWork(work, onCompleting);
             }
 
@@ -102,26 +96,17 @@ namespace DataDictionary.Main.Forms.Model
             modelBinding.DataSource = null;
         }
 
-        private void NewItemCommand_Click(object? sender, EventArgs e)
+        protected override void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(BusinessData.Remove()); 
-
-            DoLocalWork(work);
-        }
-
-
-        private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
-        {
+            base.DeleteFromDatabaseCommand_Click(sender, e);
             modelNavigation.EndEdit();
 
             if (modelBinding.Current is ModelManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                ModelKey key = new ModelKey(item);
-                
+                IModelKey key = new ModelKey(item);
+
                 work.Add(factory.OpenConnection());
 
                 if (inModelList)
@@ -129,19 +114,25 @@ namespace DataDictionary.Main.Forms.Model
                     work.AddRange(BusinessData.Remove());
                     work.AddRange(BusinessData.Save(factory, key));
                 }
-                else { work.AddRange(dbData.DeleteModel(factory, key)); }
+                else
+                {
+                    work.Add(new WorkItem() { DoWork = () => dbData.Remove(key) });
+                    work.Add(factory.CreateSave(dbData, key));
+                }
 
                 DoLocalWork(work);
             }
         }
 
-        private void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            base.OpenFromDatabaseCommand_Click(sender, e);
             modelNavigation.EndEdit();
 
             if (modelBinding.Current is ModelManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
+                List<NamedScopeItem> names = new List<NamedScopeItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
 
                 ModelKey key = new ModelKey(item);
@@ -149,12 +140,16 @@ namespace DataDictionary.Main.Forms.Model
                 work.AddRange(BusinessData.Remove());
                 work.AddRange(BusinessData.Load(factory, key));
 
+                work.AddRange(BusinessData.Export(names));
+                work.AddRange(BusinessData.NameScope.Import(names));
+
                 DoLocalWork(work);
             }
         }
 
-        private void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
+        protected override void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            base.SaveToDatabaseCommand_Click(sender, e);
             modelNavigation.EndEdit();
 
             if (modelBinding.Current is ModelManagerItem item)
@@ -177,27 +172,29 @@ namespace DataDictionary.Main.Forms.Model
             this.DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
-        }
-
-        protected override void HandleMessage(OnlineStatusChanged message)
-        {
-            base.HandleMessage(message);
-            openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList && !inModelList;
-            deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
-            saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inModelList;
+            { 
+                SendMessage(new Messages.DoBindData());
+                SendMessage(new Messages.RefreshNavigation());
+            }
         }
 
         private void modelBinding_CurrentChanged(object sender, EventArgs e)
         {
-            openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList && !inModelList;
-            deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
-            saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inModelList;
+            IsOpenDatabase = inDatabaseList && !inModelList;
+            IsSaveDatabase = inModelList;
+            IsDeleteDatabase = inDatabaseList;
         }
 
         private void BindingComplete(object sender, BindingCompleteEventArgs e)
         { if (sender is BindingSource binding) { binding.BindComplete(sender, e); } }
 
+        private void newModelCommand_Click(object sender, EventArgs e)
+        {
+            List<WorkItem> work = new List<WorkItem>();
 
+            work.AddRange(BusinessData.Remove());
+
+            DoLocalWork(work);
+        }
     }
 }

@@ -9,7 +9,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbSchema : ApplicationBase, IApplicationDataForm
+    partial class DbSchema : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return bindingSchema.Current is IDbSchemaItem current && ReferenceEquals(current, item); }
@@ -27,13 +27,10 @@ namespace DataDictionary.Main.Forms.Database
             bindingSchema.DataSource = new BindingView<DbSchemaItem>(BusinessData.DatabaseModel.DbSchemta, w => key.Equals(w));
             bindingSchema.Position = 0;
 
+            Setup(bindingSchema);
+
             if (bindingSchema.Current is IDbSchemaItem current)
             {
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-                this.Icon = new ScopeKey(current).Scope.ToIcon();
-
                 bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }

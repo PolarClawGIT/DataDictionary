@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.ModelData;

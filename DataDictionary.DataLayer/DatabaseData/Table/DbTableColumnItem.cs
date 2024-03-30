@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for the Database Table Column
     /// </summary>
-    public interface IDbTableColumnItem : IDbTableColumnKeyName, IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbColumn, IScopeKeyName, IDataItem
+    public interface IDbTableColumnItem : IDbTableColumnKeyName, IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbColumn, IDbTableType, IScopeKey
     {
         /// <summary>
         /// Is the Column Nullable
@@ -73,6 +73,9 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public string? TableName { get { return GetValue("TableName"); } }
+
+        /// <inheritdoc/>
+        public string? TableTypeName { get { return GetValue("TableType"); } }
 
         /// <inheritdoc/>
         public string? ColumnName { get { return GetValue("ColumnName"); } }
@@ -152,6 +155,27 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public string? GeneratedAlwayType { get { return GetValue("GeneratedAlwayType"); } }
 
+        /// <inheritdoc/>
+        public DbTableType TableType
+        { get { return this.GetTableType(); } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope
+        {
+            get
+            {
+                switch (TableType)
+                {
+                    case DbTableType.Null: return ScopeType.Null;
+                    case DbTableType.Table: return ScopeType.DatabaseTableColumn;
+                    case DbTableType.TemporalTable: return ScopeType.DatabaseTableColumn;
+                    case DbTableType.HistoryTable: return ScopeType.DatabaseTableColumn;
+                    case DbTableType.View: return ScopeType.DatabaseViewColumn;
+                    default: return ScopeType.Null;
+                }
+            }
+        }
+
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
@@ -159,8 +183,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("TableName", typeof(string)){ AllowDBNull = false},
+            new DataColumn("TableType", typeof(string)){ AllowDBNull = false},
             new DataColumn("ColumnName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("OrdinalPosition", typeof(int)){ AllowDBNull = false},
             new DataColumn("IsNullable", typeof(bool)){ AllowDBNull = true},
             new DataColumn("DataType", typeof(string)){ AllowDBNull = true},

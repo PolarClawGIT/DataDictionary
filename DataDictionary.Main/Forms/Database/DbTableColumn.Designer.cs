@@ -82,6 +82,8 @@
             columnNameData = new Controls.TextBoxData();
             bindingColumn = new BindingSource(components);
             bindingProperties = new BindingSource(components);
+            tableColumnToolStrip = new ContextMenuStrip(components);
+            exportCommand = new ToolStripMenuItem();
             dbTableLayout = new TableLayoutPanel();
             columnDetailLayout = new TabControl();
             columnsTab = new TabPage();
@@ -116,6 +118,7 @@
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingColumn).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
+            tableColumnToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // dbTableLayout
@@ -464,7 +467,7 @@
             characterDataTab.Location = new Point(4, 24);
             characterDataTab.Name = "characterDataTab";
             characterDataTab.Padding = new Padding(3);
-            characterDataTab.Size = new Size(617, 300);
+            characterDataTab.Size = new Size(192, 72);
             characterDataTab.TabIndex = 0;
             characterDataTab.Text = "Character";
             // 
@@ -490,7 +493,7 @@
             characterDataLayout.RowStyles.Add(new RowStyle());
             characterDataLayout.RowStyles.Add(new RowStyle());
             characterDataLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            characterDataLayout.Size = new Size(611, 294);
+            characterDataLayout.Size = new Size(186, 66);
             characterDataLayout.TabIndex = 3;
             // 
             // characterSetCatalogData
@@ -502,7 +505,7 @@
             characterSetCatalogData.Multiline = false;
             characterSetCatalogData.Name = "characterSetCatalogData";
             characterSetCatalogData.ReadOnly = true;
-            characterSetCatalogData.Size = new Size(605, 44);
+            characterSetCatalogData.Size = new Size(180, 44);
             characterSetCatalogData.TabIndex = 14;
             // 
             // characterSetSchemaData
@@ -514,7 +517,7 @@
             characterSetSchemaData.Multiline = false;
             characterSetSchemaData.Name = "characterSetSchemaData";
             characterSetSchemaData.ReadOnly = true;
-            characterSetSchemaData.Size = new Size(605, 44);
+            characterSetSchemaData.Size = new Size(180, 44);
             characterSetSchemaData.TabIndex = 15;
             // 
             // characterSetNameData
@@ -526,7 +529,7 @@
             characterSetNameData.Multiline = false;
             characterSetNameData.Name = "characterSetNameData";
             characterSetNameData.ReadOnly = true;
-            characterSetNameData.Size = new Size(605, 44);
+            characterSetNameData.Size = new Size(180, 44);
             characterSetNameData.TabIndex = 18;
             // 
             // collationCatalogData
@@ -538,7 +541,7 @@
             collationCatalogData.Multiline = false;
             collationCatalogData.Name = "collationCatalogData";
             collationCatalogData.ReadOnly = true;
-            collationCatalogData.Size = new Size(605, 44);
+            collationCatalogData.Size = new Size(180, 44);
             collationCatalogData.TabIndex = 19;
             // 
             // collationSchemaData
@@ -550,7 +553,7 @@
             collationSchemaData.Multiline = false;
             collationSchemaData.Name = "collationSchemaData";
             collationSchemaData.ReadOnly = true;
-            collationSchemaData.Size = new Size(605, 44);
+            collationSchemaData.Size = new Size(180, 44);
             collationSchemaData.TabIndex = 20;
             // 
             // collationNameData
@@ -562,7 +565,7 @@
             collationNameData.Multiline = false;
             collationNameData.Name = "collationNameData";
             collationNameData.ReadOnly = true;
-            collationNameData.Size = new Size(605, 44);
+            collationNameData.Size = new Size(180, 44);
             collationNameData.TabIndex = 21;
             // 
             // defaultComputedTab
@@ -572,7 +575,7 @@
             defaultComputedTab.Location = new Point(4, 24);
             defaultComputedTab.Name = "defaultComputedTab";
             defaultComputedTab.Padding = new Padding(3);
-            defaultComputedTab.Size = new Size(617, 300);
+            defaultComputedTab.Size = new Size(192, 72);
             defaultComputedTab.TabIndex = 4;
             defaultComputedTab.Text = "Default and Computed";
             // 
@@ -588,7 +591,7 @@
             defautComputedLayout.RowCount = 2;
             defautComputedLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             defautComputedLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            defautComputedLayout.Size = new Size(611, 294);
+            defautComputedLayout.Size = new Size(186, 66);
             defautComputedLayout.TabIndex = 0;
             // 
             // columnComputedData
@@ -597,11 +600,11 @@
             defautComputedLayout.SetColumnSpan(columnComputedData, 3);
             columnComputedData.Dock = DockStyle.Fill;
             columnComputedData.HeaderText = "Computed";
-            columnComputedData.Location = new Point(3, 150);
+            columnComputedData.Location = new Point(3, 36);
             columnComputedData.Multiline = true;
             columnComputedData.Name = "columnComputedData";
             columnComputedData.ReadOnly = true;
-            columnComputedData.Size = new Size(605, 141);
+            columnComputedData.Size = new Size(180, 27);
             columnComputedData.TabIndex = 16;
             // 
             // columnDefaultData
@@ -614,7 +617,7 @@
             columnDefaultData.Multiline = true;
             columnDefaultData.Name = "columnDefaultData";
             columnDefaultData.ReadOnly = true;
-            columnDefaultData.Size = new Size(605, 141);
+            columnDefaultData.Size = new Size(180, 27);
             columnDefaultData.TabIndex = 14;
             // 
             // otherDataTab
@@ -624,7 +627,7 @@
             otherDataTab.Location = new Point(4, 24);
             otherDataTab.Name = "otherDataTab";
             otherDataTab.Padding = new Padding(3);
-            otherDataTab.Size = new Size(617, 300);
+            otherDataTab.Size = new Size(192, 72);
             otherDataTab.TabIndex = 1;
             otherDataTab.Text = "Other";
             // 
@@ -647,7 +650,7 @@
             numericDataLayout.RowStyles.Add(new RowStyle());
             numericDataLayout.RowStyles.Add(new RowStyle());
             numericDataLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            numericDataLayout.Size = new Size(611, 294);
+            numericDataLayout.Size = new Size(186, 66);
             numericDataLayout.TabIndex = 3;
             // 
             // generatedAlwayTypeData
@@ -658,7 +661,7 @@
             generatedAlwayTypeData.Multiline = false;
             generatedAlwayTypeData.Name = "generatedAlwayTypeData";
             generatedAlwayTypeData.ReadOnly = true;
-            generatedAlwayTypeData.Size = new Size(126, 44);
+            generatedAlwayTypeData.Size = new Size(55, 44);
             generatedAlwayTypeData.TabIndex = 20;
             // 
             // domainCatalogData
@@ -671,7 +674,7 @@
             domainCatalogData.Multiline = false;
             domainCatalogData.Name = "domainCatalogData";
             domainCatalogData.ReadOnly = true;
-            domainCatalogData.Size = new Size(605, 44);
+            domainCatalogData.Size = new Size(180, 44);
             domainCatalogData.TabIndex = 21;
             // 
             // domainSchemaData
@@ -684,7 +687,7 @@
             domainSchemaData.Multiline = false;
             domainSchemaData.Name = "domainSchemaData";
             domainSchemaData.ReadOnly = true;
-            domainSchemaData.Size = new Size(605, 44);
+            domainSchemaData.Size = new Size(180, 44);
             domainSchemaData.TabIndex = 22;
             // 
             // domainNameData
@@ -697,7 +700,7 @@
             domainNameData.Multiline = false;
             domainNameData.Name = "domainNameData";
             domainNameData.ReadOnly = true;
-            domainNameData.Size = new Size(605, 44);
+            domainNameData.Size = new Size(180, 44);
             domainNameData.TabIndex = 23;
             // 
             // extendedPropertiesTab
@@ -789,6 +792,20 @@
             columnNameData.Size = new Size(639, 44);
             columnNameData.TabIndex = 13;
             // 
+            // tableColumnToolStrip
+            // 
+            tableColumnToolStrip.Items.AddRange(new ToolStripItem[] { exportCommand });
+            tableColumnToolStrip.Name = "tableColumnToolStrip";
+            tableColumnToolStrip.Size = new Size(219, 26);
+            // 
+            // exportCommand
+            // 
+            exportCommand.Image = Properties.Resources.ExportAttribute;
+            exportCommand.Name = "exportCommand";
+            exportCommand.Size = new Size(218, 22);
+            exportCommand.Text = "Export Column to Attribute";
+            exportCommand.Click += exportCommand_Click;
+            // 
             // DbTableColumn
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -831,6 +848,7 @@
             ((System.ComponentModel.ISupportInitialize)extendedPropertiesData).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingColumn).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
+            tableColumnToolStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -878,5 +896,7 @@
         private Controls.TextBoxData numericScaleData;
         private BindingSource bindingColumn;
         private BindingSource bindingProperties;
+        private ContextMenuStrip tableColumnToolStrip;
+        private ToolStripMenuItem exportCommand;
     }
 }

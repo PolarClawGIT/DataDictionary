@@ -7,7 +7,6 @@
 	[ColumnId]              UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseTableColumId] DEFAULT (newid()),
 	[TableId]               UniqueIdentifier Not Null,
 	[ColumnName]            SysName Not Null,
-	[ScopeId]               Int Not Null,
     [OrdinalPosition]       Int Not Null,
 	[IsNullable]            Bit Null,
 	[DataType]              SysName Null,
@@ -40,7 +39,6 @@
 	-- Keys
 	CONSTRAINT [PK_DatabaseTableColumn] PRIMARY KEY CLUSTERED ([ColumnId] ASC),
 	CONSTRAINT [FK_DatabaseTableColumnTable] FOREIGN KEY ([TableId]) REFERENCES [App_DataDictionary].[DatabaseTable] ([TableId]),
-	CONSTRAINT [FK_DatabaseTableColumnScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseTableColumn]

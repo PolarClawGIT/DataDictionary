@@ -9,19 +9,6 @@ namespace DataDictionary.Main
 {
     internal static class Program
     {
-        /// <summary>
-        /// Data used by the Application
-        /// </summary>
-        [Obsolete("Being Replaced with new Business Layer object")]
-        public static ModelData Data { get; } = new ModelData(new Context()
-        { //TODO: Can this be secured better?
-            ServerName = Settings.Default.AppServer,
-            DatabaseName = Settings.Default.AppDatabase,
-            ApplicationRole = Settings.Default.AppDbRole,
-            ApplicationRolePassword = Settings.Default.AppDbRolePassword,
-            ValidateCommand = true // TODO: Used for Debugging. Set to False when going live.
-        });
-
         static Program()
         { }
 
@@ -38,6 +25,9 @@ namespace DataDictionary.Main
             Application.ApplicationExit += Application_ApplicationExit;
 
             Worker.WorkException += WorkerQueue_WorkException;
+
+            // Static Data
+            BusinessData.ScriptingEngine.Columns.Load();
 
             Application.Run(new Main());
         }

@@ -7,7 +7,8 @@ Select	C.[CatalogId],
 		T.[RoutineId],
 		C.[SourceDatabaseName] As [DatabaseName],
 		S.[SchemaName],
-		T.[RoutineName]
+		T.[RoutineName],
+		T.[RoutineType]
 From	[App_DataDictionary].[DatabaseCatalog] C
 		Inner Join [App_DataDictionary].[DatabaseSchema] S
 		On	C.[CatalogId] = S.[CatalogId]

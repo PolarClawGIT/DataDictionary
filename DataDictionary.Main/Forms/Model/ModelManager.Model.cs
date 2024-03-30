@@ -15,7 +15,7 @@ namespace DataDictionary.Main.Forms.Model
         {
             private bool inModel = false;
             private bool inDatabase = false;
-            IModelItem data;
+            ModelItem data;
 
             public Boolean InModel { get { return inModel; } set { inModel = value; OnPropertyChanged(nameof(InModel)); } }
             public Boolean InDatabase { get { return inDatabase; } set { inDatabase = value; OnPropertyChanged(nameof(InDatabase)); } }
@@ -25,7 +25,7 @@ namespace DataDictionary.Main.Forms.Model
             public string? ModelDescription { get { return data.ModelDescription; } set { data.ModelDescription = value; } }
 
 
-            public ModelManagerItem(IModelItem source) : base()
+            public ModelManagerItem(ModelItem source) : base()
             {
                 data = source;
                 data.PropertyChanged += Data_PropertyChanged;
@@ -59,12 +59,13 @@ namespace DataDictionary.Main.Forms.Model
 
         class ModelManagerCollection : BindingList<ModelManagerItem>
         {
-            public void Build(IModelItem modelItem, IEnumerable<ModelItem> dbItems)
+            public void Build(ModelItem modelItem, IEnumerable<ModelItem> dbItems)
             {
                 this.Clear();
 
                 // List of keys all keys
-                var modelItems = new List<IModelItem>() { modelItem };
+                List<IModelItem> modelItems = new List<IModelItem>() { modelItem };
+                ModelKey currentKey = new ModelKey(modelItem);
 
                 List<ModelKey> modelKeys = modelItems.Select(s => new ModelKey(s))
                     .Union(dbItems.Select(s => new ModelKey(s)))
@@ -89,7 +90,7 @@ namespace DataDictionary.Main.Forms.Model
 
                     if (item is ModelManagerItem)
                     {// Should always have a item at this point.
-                        item.InModel = (modelItem is ModelItem);
+                        item.InModel = (modelItem is ModelItem && currentKey.Equals(modelKey));
                         item.InDatabase = (dbItem is ModelItem);
                     }
                 }

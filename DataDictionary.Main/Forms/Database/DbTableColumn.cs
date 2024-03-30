@@ -11,7 +11,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbTableColumn : ApplicationBase, IApplicationDataForm
+    partial class DbTableColumn : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return bindingColumn.Current is IDbTableColumnItem current && ReferenceEquals(current, item); }
@@ -19,13 +19,10 @@ namespace DataDictionary.Main.Forms.Database
         public DbTableColumn() : base()
         {
             InitializeComponent();
-
-            importDataCommand.Enabled = true;
-            importDataCommand.Click += ImportDataCommand_Click;
-            importDataCommand.ToolTipText = "Import the Table/View Column to the Domain Model";
+            toolStrip.TransferItems(tableColumnToolStrip, 0);
         }
 
-        public DbTableColumn(IDbTableColumnItem columnItem): this ()
+        public DbTableColumn(IDbTableColumnItem columnItem) : this()
         {
             DbTableColumnKeyName key = new DbTableColumnKeyName(columnItem);
             DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
@@ -33,13 +30,10 @@ namespace DataDictionary.Main.Forms.Database
             bindingColumn.DataSource = new BindingView<DbTableColumnItem>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
             bindingColumn.Position = 0;
 
+            Setup(bindingColumn);
+
             if (bindingColumn.Current is IDbTableColumnItem current)
             {
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-                this.Icon = new ScopeKey(current).Scope.ToIcon();
-
                 bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
 
@@ -88,12 +82,10 @@ namespace DataDictionary.Main.Forms.Database
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingColumn.Current is not IDbTableColumnItem);
         }
 
-        private void ImportDataCommand_Click(object? sender, EventArgs e)
+        private void exportCommand_Click(object sender, EventArgs e)
         {
-            if (bindingColumn.Current is IDbTableItem current)
-            {
-                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, current);
-            }
+            if (bindingColumn.Current is IDbTableColumnItem current)
+            {   BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current); }
         }
     }
 }

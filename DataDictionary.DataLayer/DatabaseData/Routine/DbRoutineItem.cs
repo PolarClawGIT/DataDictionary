@@ -11,13 +11,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for Database Routine (procedures and functions).
     /// </summary>
-    public interface IDbRoutineItem : IDbRoutineKeyName, IDbRoutineKey, IDbCatalogKey, IDbIsSystem, IScopeKeyName, IDataItem
-    {
-        /// <summary>
-        /// Type of Routine (such as procedure or function)
-        /// </summary>
-        String? RoutineType { get; }
-    }
+    public interface IDbRoutineItem : IDbRoutineKeyName, IDbRoutineKey, IDbCatalogKey, IDbIsSystem, IDbRoutineType, IScopeKey
+    { }
 
     /// <summary>
     /// Implementation for Database Routine (procedures and functions).
@@ -41,10 +36,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public string? RoutineName { get { return GetValue("RoutineName"); } }
 
         /// <inheritdoc/>
-        public string? ScopeName { get { return GetValue("ScopeName"); } }
-
-        /// <inheritdoc/>
-        public string? RoutineType { get { return GetValue("RoutineType"); } }
+        public string? RoutineTypeName { get { return GetValue("RoutineType"); } }
 
         /// <inheritdoc/>
         public bool IsSystem
@@ -64,15 +56,22 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        //public DbObjectScope ObjectScope
-        //{
-        //    get
-        //    {
-        //        if (Enum.TryParse(RoutineType, true, out DbObjectScope value))
-        //        { return value; }
-        //        else { return DbObjectScope.NULL; }
-        //    }
-        //}
+        public DbRoutineType RoutineType { get { return this.GetRoutineType(); } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope
+        {
+            get
+            {
+                switch (RoutineType)
+                {
+                    case DbRoutineType.Null: return ScopeType.Null;
+                    case DbRoutineType.Function: return ScopeType.DatabaseFunction;
+                    case DbRoutineType.Procedure: return ScopeType.DatabaseProcedure;
+                    default: return ScopeType.Null;
+                }
+            }
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -81,7 +80,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("RoutineName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("RoutineType", typeof(string)){ AllowDBNull = false},
         };
 
@@ -113,7 +111,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
             else
             {
                 Exception ex = new InvalidOperationException("Could not determine LevelType");
-                ex.Data.Add(nameof(ScopeName), ScopeName);
                 ex.Data.Add(nameof(DatabaseName), DatabaseName);
                 ex.Data.Add(nameof(SchemaName), SchemaName);
                 ex.Data.Add(nameof(RoutineName), RoutineName);

@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for Domain Entity Properties
     /// </summary>
-    public interface IDomainEntityPropertyItem : IDomainEntityPropertyKey, IDomainProperty, IDataItem
+    public interface IDomainEntityPropertyItem : IDomainEntityPropertyKey, IDomainProperty
     { }
 
     /// <summary>

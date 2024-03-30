@@ -10,7 +10,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Constraint Column
     /// </summary>
-    public interface IDbConstraintColumnItem : IDbConstraintKeyName, IDbCatalogKey, IDbColumnPosition, IDbTableColumnKeyName, IDbColumnReferenceKey, IDataItem
+    public interface IDbConstraintColumnItem : IDbConstraintKeyName, IDbCatalogKey, IDbColumnPosition, IDbTableColumnKeyName, IDbColumnReferenceKey
     { }
 
     /// <summary>

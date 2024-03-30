@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.DatabaseData.Catalog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -50,8 +51,8 @@ namespace DataDictionary.Main.Forms.Database
             public bool IsSystem
             { get { return data.IsSystem; } }
 
-            public string? ScopeName
-            { get { return data.ScopeName; } }
+            public ScopeType Scope 
+            { get { return data.Scope; } }
 
             public CatalogManagerItem(DbCatalogItem source) : base()
             {

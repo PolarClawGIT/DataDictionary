@@ -120,15 +120,6 @@
   <metadata name="toolStripSeparator.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
-  <metadata name="toolStripSeparator1.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
-  </metadata>
-  <metadata name="toolStripSeparator2.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
-  </metadata>
-  <metadata name="toolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="cutToolStripButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -159,18 +150,10 @@
         J5nBJhUlLbsqAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="helpToolStripButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEGSURBVDhPnZM9CsJAEIX3HjaexhPYay8eQA/hHTyDlVj4
-        U4hlrqCNiiIJxAQFXfNtdsJms4j44IGZmfeYmR2VjzzP+2marrIs06fkbshvYuRsWRNFsl0URst9onuL
-        k25NDzUSI0cNtVZWworj4frcEPocby+YxDUTXElI0WBz1cnjpQXP11tPotg3iYyYuWhNkhBBCJ3ZsapB
-        g1axHH9mQXdejiSQb4gGLe1XQaHgmwFEq3gmN+hytLtZaQl3BIj2q4GL+aHZqTEIjSAU+K0LzQihJf7C
-        aomhZxQKQh1Uzwg4itAVCnyD2iEBzrII/H/KwJr892dywVwspyg0WxYSI2fLLJT6APNuuLaBWKUFAAAA
-        AElFTkSuQmCC
-</value>
-  </data>
   <metadata name="toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>116, 17</value>
+  </metadata>
+  <metadata name="clipboardCommands.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>370, 17</value>
   </metadata>
 </root>

@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.WorkFlows;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Main.Controls;
@@ -20,7 +20,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Library
 {
-    partial class LibraryManager : ApplicationBase, IApplicationDataBind
+    partial class LibraryManager : ApplicationData, IApplicationDataBind
     {
         public Boolean IsOpenItem(object? item)
         { return true; }
@@ -57,20 +57,7 @@ namespace DataDictionary.Main.Forms.Library
         public LibraryManager()
         {
             InitializeComponent();
-
-            newItemCommand.Enabled = true;
-            newItemCommand.Click += NewItemCommand_Click;
-            newItemCommand.Image = Resources.NewLibrary;
-            newItemCommand.ToolTipText = "Import a Visual Studio XML Documentation file to the Model";
-
-            deleteItemCommand.Enabled = true;
-            deleteItemCommand.Click += DeleteItemCommand_Click;
-            deleteItemCommand.Image = Resources.DeleteLibrary;
-            deleteItemCommand.ToolTipText = "Removes the Library from the Model";
-
-            openFromDatabaseCommand.Click += OpenFromDatabaseCommand_Click; ;
-            deleteFromDatabaseCommand.Click += DeleteFromDatabaseCommand_Click;
-            saveToDatabaseCommand.Click += SaveToDatabaseCommand_Click;
+            toolStrip.TransferItems(libararyToolStrip, 0);
 
             this.Icon = Resources.Icon_Library;
         }
@@ -119,7 +106,132 @@ namespace DataDictionary.Main.Forms.Library
             libraryBinding.DataSource = null;
         }
 
-        private void NewItemCommand_Click(object? sender, EventArgs e)
+        protected override void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
+        {
+            libraryNavigation.EndEdit();
+
+            if (libraryBinding.Current is LibraryManagerItem item)
+            {
+                List<WorkItem> work = new List<WorkItem>();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+
+                ILibrarySourceKey key = new LibrarySourceKey(item);
+                work.Add(factory.OpenConnection());
+                Boolean inModelList = (BusinessData.LibraryModel.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
+
+                if (inModelList)
+                {
+                    work.AddRange(BusinessData.LibraryModel.Remove(key));
+                    work.AddRange(BusinessData.LibraryModel.Save(factory, key));
+                }
+                else
+                {
+                    work.Add(new WorkItem() { DoWork = () => { dbData.Remove(key); } });
+                    work.Add(factory.CreateSave(dbData, key));
+                }
+
+                work.AddRange(LoadLocalData(factory));
+                DoLocalWork(work);
+            }
+        }
+
+        protected override void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
+        {
+            libraryNavigation.EndEdit();
+
+            if (libraryBinding.Current is LibraryManagerItem item)
+            {
+                List<WorkItem> work = new List<WorkItem>();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                List<NamedScopeItem> names = new List<NamedScopeItem>();
+                work.Add(factory.OpenConnection());
+
+                LibrarySourceKey key = new LibrarySourceKey(item);
+                work.AddRange(BusinessData.LibraryModel.Load(factory, key));
+                work.AddRange(LoadLocalData(factory));
+                work.AddRange(BusinessData.LibraryModel.Export(names));
+                work.AddRange(BusinessData.NameScope.Import(names));
+                DoLocalWork(work);
+            }
+
+
+        }
+
+        protected override void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
+        {
+            libraryNavigation.EndEdit();
+
+            if (libraryBinding.Current is LibraryManagerItem item)
+            {
+                List<WorkItem> work = new List<WorkItem>();
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                ILibrarySourceKey key = new LibrarySourceKey(item);
+                work.Add(factory.OpenConnection());
+
+                if (inModelList)
+                { work.AddRange(BusinessData.LibraryModel.Save(factory, key)); }
+                else
+                { work.Add(factory.CreateSave(dbData, key)); }
+
+                work.AddRange(LoadLocalData(factory));
+
+                DoLocalWork(work);
+            }
+        }
+
+        private IReadOnlyList<WorkItem> LoadLocalData(IDatabaseWork factory)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem() { WorkName = "Clear local data", DoWork = dbData.Clear });
+            work.Add(factory.CreateLoad(dbData));
+
+            return work;
+        }
+
+        private void DoLocalWork(List<WorkItem> work)
+        {
+            SendMessage(new Messages.DoUnbindData());
+
+            this.DoWork(work, onCompleting);
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                SendMessage(new Messages.DoBindData());
+                SendMessage(new Messages.RefreshNavigation());
+            }
+        }
+
+        private void libraryTitleData_Validating(object sender, CancelEventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(libraryTitleData.Text))
+            { errorProvider.SetError(libraryTitleData.ErrorControl, "Library Title is required"); }
+            else { errorProvider.SetError(libraryTitleData.ErrorControl, String.Empty); }
+        }
+
+        private void asseblyNameData_Validating(object sender, CancelEventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(asseblyNameData.Text))
+            { errorProvider.SetError(asseblyNameData.ErrorControl, "Assembly Name is required"); }
+            else { errorProvider.SetError(asseblyNameData.ErrorControl, String.Empty); }
+        }
+
+        private void BindingComplete(object sender, BindingCompleteEventArgs e)
+        { if (sender is BindingSource binding) { binding.BindComplete(sender, e); } }
+
+        private void LibraryBinding_CurrentChanged(object sender, EventArgs e)
+        {
+            if (libraryBinding.Current is LibraryManagerItem item)
+            {
+                LibrarySourceKey key = new LibrarySourceKey(item);
+
+                removeLibraryComand.Enabled = inModelList;
+                IsOpenDatabase = inDatabaseList;
+                IsSaveDatabase = true;
+                IsDeleteDatabase = inDatabaseList;
+            }
+        }
+
+        private void AddLibraryCommand_Click(object sender, EventArgs e)
         {
             openFileDialog.Filter = "XML VS Documentation|*.XML";
             openFileDialog.Multiselect = true;
@@ -162,7 +274,7 @@ namespace DataDictionary.Main.Forms.Library
 
                 // Create the work items for each of the files selected
                 List<WorkItem> work = new List<WorkItem>();
-                List<NameScopeItem> names = new List<NameScopeItem>();
+                List<NamedScopeItem> names = new List<NamedScopeItem>();
 
                 foreach (String file in openFileDialog.FileNames)
                 {
@@ -176,7 +288,7 @@ namespace DataDictionary.Main.Forms.Library
             }
         }
 
-        private void DeleteItemCommand_Click(object? sender, EventArgs e)
+        private void RemoveLibraryComand_Click(object sender, EventArgs e)
         {
             libraryNavigation.EndEdit();
 
@@ -184,7 +296,7 @@ namespace DataDictionary.Main.Forms.Library
             {
                 List<WorkItem> work = new List<WorkItem>();
                 LibrarySourceKey key = new LibrarySourceKey(item);
-                NameScopeKey scopeKey = new NameScopeKey(item);
+                NamedScopeKey scopeKey = new NamedScopeKey(item);
 
                 work.AddRange(BusinessData.LibraryModel.Remove(key));
                 work.Add(
@@ -195,131 +307,6 @@ namespace DataDictionary.Main.Forms.Library
                     });
 
                 DoLocalWork(work);
-            }
-        }
-
-        private void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
-        {
-            libraryNavigation.EndEdit();
-
-            if (libraryBinding.Current is LibraryManagerItem item)
-            {
-                List<WorkItem> work = new List<WorkItem>();
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-
-                LibrarySourceKey key = new LibrarySourceKey(item);
-                work.Add(factory.OpenConnection());
-                Boolean inModelList = (BusinessData.LibraryModel.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
-
-                if (inModelList)
-                {
-                    work.AddRange(BusinessData.LibraryModel.Remove(key));
-                    work.AddRange(BusinessData.LibraryModel.Save(factory, key));
-                }
-                else { work.AddRange(dbData.DeleteLibrary(factory, key)); }
-
-                work.AddRange(LoadLocalData(factory));
-                DoLocalWork(work);
-            }
-        }
-
-        private void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
-        {
-            libraryNavigation.EndEdit();
-
-            if (libraryBinding.Current is LibraryManagerItem item)
-            {
-                List<WorkItem> work = new List<WorkItem>();
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<NameScopeItem> names = new List<NameScopeItem>();
-                work.Add(factory.OpenConnection());
-
-                LibrarySourceKey key = new LibrarySourceKey(item);
-                work.AddRange(BusinessData.LibraryModel.Load(factory, key));
-                work.AddRange(LoadLocalData(factory));
-                work.AddRange(BusinessData.LibraryModel.Export(names));
-                work.AddRange(BusinessData.NameScope.Import(names));
-                DoLocalWork(work);
-            }
-
-
-        }
-
-        private void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
-        {
-            libraryNavigation.EndEdit();
-
-            if (libraryBinding.Current is LibraryManagerItem item)
-            {
-                List<WorkItem> work = new List<WorkItem>();
-                IDatabaseWork factory = BusinessData.GetDbFactory();
-                LibrarySourceKey key = new LibrarySourceKey(item);
-                work.Add(factory.OpenConnection());
-
-                if (inModelList) { work.AddRange(BusinessData.LibraryModel.Save(factory, key)); }
-                else { work.AddRange(dbData.SaveLibrary(factory, key)); }
-
-                work.AddRange(LoadLocalData(factory));
-
-                DoLocalWork(work);
-            }
-        }
-
-        private IReadOnlyList<WorkItem> LoadLocalData(IDatabaseWork factory)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem() { WorkName = "Clear local data", DoWork = dbData.Clear });
-            work.AddRange(dbData.LoadLibrary(factory));
-
-            return work;
-        }
-
-        private void DoLocalWork(List<WorkItem> work)
-        {
-            SendMessage(new Messages.DoUnbindData());
-
-            this.DoWork(work, onCompleting);
-
-            void onCompleting(RunWorkerCompletedEventArgs args)
-            { SendMessage(new Messages.DoBindData()); }
-        }
-
-        private void libraryTitleData_Validating(object sender, CancelEventArgs e)
-        {
-            if (String.IsNullOrWhiteSpace(libraryTitleData.Text))
-            { errorProvider.SetError(libraryTitleData.ErrorControl, "Library Title is required"); }
-            else { errorProvider.SetError(libraryTitleData.ErrorControl, String.Empty); }
-        }
-
-        private void asseblyNameData_Validating(object sender, CancelEventArgs e)
-        {
-            if (String.IsNullOrWhiteSpace(asseblyNameData.Text))
-            { errorProvider.SetError(asseblyNameData.ErrorControl, "Assembly Name is required"); }
-            else { errorProvider.SetError(asseblyNameData.ErrorControl, String.Empty); }
-        }
-
-        private void BindingComplete(object sender, BindingCompleteEventArgs e)
-        { if (sender is BindingSource binding) { binding.BindComplete(sender, e); } }
-
-        protected override void HandleMessage(OnlineStatusChanged message)
-        {
-            base.HandleMessage(message);
-
-            openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
-            saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
-            deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
-        }
-
-        private void libraryBinding_CurrentChanged(object sender, EventArgs e)
-        {
-            if (libraryBinding.Current is LibraryManagerItem item)
-            {
-                LibrarySourceKey key = new LibrarySourceKey(item);
-
-                deleteItemCommand.Enabled = inModelList;
-                openFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
-                deleteFromDatabaseCommand.Enabled = Settings.Default.IsOnLineMode && inDatabaseList;
-                saveToDatabaseCommand.Enabled = Settings.Default.IsOnLineMode;
             }
         }
     }

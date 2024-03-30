@@ -5,5 +5,4 @@
     [SchemaName]           [sysname]                            NULL,
     [ConstraintName]       [sysname]                            NULL,
     [TableName]            [sysname]                            NULL,
-    [ScopeName]            [App_DataDictionary].[typeScopeName] NULL,
     [ConstraintType]       NVARCHAR (60)                        NULL);

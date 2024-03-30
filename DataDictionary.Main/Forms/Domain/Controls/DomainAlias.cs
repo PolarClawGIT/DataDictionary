@@ -1,33 +1,24 @@
-﻿using DataDictionary.BusinessLayer.NameScope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.NameSpace;
 using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DomainData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DataDictionary.Main.Forms.Domain.Controls
 {
     partial class DomainAlias : UserControl
     {
-        Func<IDomainAlias?> GetCurrent = () => { return null; };
 
-        Dictionary<ListViewItem, NameScopeKey> alaisViewItems = new Dictionary<ListViewItem, NameScopeKey>();
-        Stack<NameScopeKey> navigationStack = new Stack<NameScopeKey>();
+        Dictionary<ListViewItem, NamedScopeKey> alaisViewItems = new Dictionary<ListViewItem, NamedScopeKey>();
+        Stack<NamedScopeKey> navigationStack = new Stack<NamedScopeKey>();
 
         /// <summary>
-        /// The current Alias Item selected
+        /// The current Alias Item
         /// </summary>
-        public NameScopeItem? SelectedAlias { get; private set; }
+        public NameSpaceItem SelectedAlias { get; private set; } = new NameSpaceItem();
 
-        public DomainAlias()
+        public DomainAlias() :base()
         {
             InitializeComponent();
 
@@ -42,14 +33,11 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         public void BindData(BindingSource propertyBinding)
         {
             ScopeNameItem.Load(aliasScopeData);
-            IDomainAlias nameOfValues;
-            GetCurrent = () => { return propertyBinding.Current as IDomainAlias; };
-
-            aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), propertyBinding, nameof(nameOfValues.AliasName), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-            aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), propertyBinding, nameof(nameOfValues.Scope), true, DataSourceUpdateMode.OnPropertyChanged, ScopeType.Null));
-
+            INamedScopeItem nameOfValues;
             AliasListLoad();
-            RefreshControls();
+            
+            aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), SelectedAlias, nameof(nameOfValues.MemberFullName), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+            aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), SelectedAlias, nameof(nameOfValues.Scope), true, DataSourceUpdateMode.OnPropertyChanged, ScopeType.Null));
         }
 
         private void AliasListLoad()
@@ -57,26 +45,29 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             aliasBrowser.Items.Clear();
             alaisViewItems.Clear();
 
-            NameScopeItem parent = BusinessData.NameScope.RootItem;
-            NameScopeKey? parentKey = null;
+            NamedScopeItem parent = BusinessData.NameScope.RootItem;
+            NamedScopeKey? parentKey = null;
 
-            if (navigationStack.TryPeek(out parentKey) && parentKey is NameScopeKey)
+            if (navigationStack.TryPeek(out parentKey) && parentKey is NamedScopeKey)
             { parent = BusinessData.NameScope[parentKey]; }
 
-            foreach (NameScopeKey childKey in parent.Children)
+            foreach (NamedScopeKey childKey in parent.Children)
             {
-                NameScopeItem child = BusinessData.NameScope[childKey];
-                ListViewItem childItem = new ListViewItem(child.MemberName, child.Scope.ToScopeName());
-                childItem.ToolTipText = child.MemberFullName;
+                if (BusinessData.NameScope.ContainsKey(childKey))
+                {
+                    NamedScopeItem child = BusinessData.NameScope[childKey];
+                    ListViewItem childItem = new ListViewItem(child.MemberName, child.Scope.ToScopeName());
+                    childItem.ToolTipText = child.MemberFullName;
 
-                alaisViewItems.Add(childItem, childKey);
-                aliasBrowser.Items.Add(childItem);
+                    alaisViewItems.Add(childItem, childKey);
+                    aliasBrowser.Items.Add(childItem);
+                }
             }
             aliasBrowser.Sorting = SortOrder.Ascending;
             aliasBrowser.Sort();
             aliasBrowser.Sorting = SortOrder.None;
 
-            if (parentKey is NameScopeKey)
+            if (parentKey is NamedScopeKey)
             { // Doing custom hot Tracks
                 ListViewItem parentItem = new ListViewItem(parent.MemberName, parent.Scope.ToScopeName());
                 parentItem.Font = new Font(parentItem.Font, FontStyle.Underline);
@@ -89,30 +80,20 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             aliasBrowser.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
-        public void RefreshControls()
-        {
-            if (GetCurrent() is IDomainAlias currentRow)
-            {
-                aliasNameData.Enabled = true;
-                aliasScopeData.Enabled = true;
-                aliasBrowser.Enabled = true;
-            }
-            else
-            {
-                aliasNameData.Enabled = false;
-                aliasScopeData.Enabled = false;
-                aliasBrowser.Enabled = false;
-            }
-        }
-
         private void AliasBrowser_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (aliasBrowser.SelectedItems.Count > 0
                 && alaisViewItems.ContainsKey(aliasBrowser.SelectedItems[0]))
             {
-                NameScopeKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
+                NamedScopeKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
+                //SelectedAlias = BusinessData.NameScope[selectedKey];
 
-                if (navigationStack.TryPeek(out NameScopeKey? parentKey)
+                var x = BusinessData.NameScope[selectedKey];
+
+                aliasNameData.Text = BusinessData.NameScope[selectedKey].MemberFullName;
+                aliasScopeData.SelectedValue = BusinessData.NameScope[selectedKey].Scope;
+
+                if (navigationStack.TryPeek(out NamedScopeKey? parentKey)
                     && selectedKey.Equals(parentKey))
                 {
                     navigationStack.Pop();
@@ -144,10 +125,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             if (aliasBrowser.SelectedItems.Count > 0
                 && alaisViewItems.ContainsKey(aliasBrowser.SelectedItems[0]))
             {
-                NameScopeKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
-                aliasNameData.Text = BusinessData.NameScope[selectedKey].MemberFullName;
-                aliasScopeData.Text = BusinessData.NameScope[selectedKey].Scope.ToScopeName();
-
+                //NameScopeKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
                 AliasSelectedItemChanged(this, EventArgs.Empty);
             }
         }

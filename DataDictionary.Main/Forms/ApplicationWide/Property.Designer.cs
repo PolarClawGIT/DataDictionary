@@ -36,26 +36,29 @@
             propertyDescriptionColum = new DataGridViewTextBoxColumn();
             propertyTitleLayout = new TableLayoutPanel();
             propertyTitleData = new Controls.TextBoxData();
-            choicesHeader = new Label();
             isChoiceData = new CheckBox();
             isDefinitionData = new CheckBox();
             isExtendedPropertyData = new CheckBox();
             isFrameworkSummaryData = new CheckBox();
+            choicesHeader = new Label();
+            choiceData = new DataGridView();
+            choiceColumn = new DataGridViewTextBoxColumn();
             extendedPropertyData = new Controls.TextBoxData();
             propertyDescriptionData = new Controls.TextBoxData();
             errorProvider = new ErrorProvider(components);
             bindingSource = new BindingSource(components);
-            choiceColumn = new DataGridViewTextBoxColumn();
-            choiceData = new DataGridView();
+            propertyToolStrip = new ContextMenuStrip(components);
+            addPropertyComand = new ToolStripMenuItem();
             applicationPropertyLayout = new TableLayoutPanel();
             subTypeFlagsLayout = new TableLayoutPanel();
             applicationPropertyLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)propertyNavigation).BeginInit();
             propertyTitleLayout.SuspendLayout();
             subTypeFlagsLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)choiceData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingSource).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)choiceData).BeginInit();
+            propertyToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // applicationPropertyLayout
@@ -80,7 +83,6 @@
             propertyNavigation.Dock = DockStyle.Fill;
             propertyNavigation.Location = new Point(3, 3);
             propertyNavigation.Name = "propertyNavigation";
-            propertyNavigation.RowTemplate.Height = 25;
             propertyNavigation.Size = new Size(697, 198);
             propertyNavigation.TabIndex = 3;
             propertyNavigation.TabStop = false;
@@ -165,15 +167,6 @@
             subTypeFlagsLayout.Size = new Size(246, 294);
             subTypeFlagsLayout.TabIndex = 4;
             // 
-            // choicesHeader
-            // 
-            choicesHeader.AutoSize = true;
-            choicesHeader.Location = new Point(3, 120);
-            choicesHeader.Name = "choicesHeader";
-            choicesHeader.Size = new Size(49, 15);
-            choicesHeader.TabIndex = 5;
-            choicesHeader.Text = "Choices";
-            // 
             // isChoiceData
             // 
             isChoiceData.AutoSize = true;
@@ -216,6 +209,33 @@
             isFrameworkSummaryData.Text = "Framework Summary";
             isFrameworkSummaryData.UseVisualStyleBackColor = true;
             // 
+            // choicesHeader
+            // 
+            choicesHeader.AutoSize = true;
+            choicesHeader.Location = new Point(3, 120);
+            choicesHeader.Name = "choicesHeader";
+            choicesHeader.Size = new Size(49, 15);
+            choicesHeader.TabIndex = 5;
+            choicesHeader.Text = "Choices";
+            // 
+            // choiceData
+            // 
+            choiceData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            choiceData.Columns.AddRange(new DataGridViewColumn[] { choiceColumn });
+            choiceData.Dock = DockStyle.Fill;
+            choiceData.Location = new Point(3, 138);
+            choiceData.Name = "choiceData";
+            choiceData.Size = new Size(240, 153);
+            choiceData.TabIndex = 4;
+            choiceData.CellFormatting += ChoiceData_CellFormatting;
+            // 
+            // choiceColumn
+            // 
+            choiceColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            choiceColumn.DataPropertyName = "Choice";
+            choiceColumn.HeaderText = "Choice";
+            choiceColumn.Name = "choiceColumn";
+            // 
             // extendedPropertyData
             // 
             extendedPropertyData.AutoSize = true;
@@ -249,24 +269,19 @@
             bindingSource.AddingNew += bindingSource_AddingNew;
             bindingSource.BindingComplete += BindingComplete;
             // 
-            // choiceColumn
+            // propertyToolStrip
             // 
-            choiceColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            choiceColumn.DataPropertyName = "Choice";
-            choiceColumn.HeaderText = "Choice";
-            choiceColumn.Name = "choiceColumn";
+            propertyToolStrip.Items.AddRange(new ToolStripItem[] { addPropertyComand });
+            propertyToolStrip.Name = "propertyToolStrip";
+            propertyToolStrip.Size = new Size(143, 26);
             // 
-            // choiceData
+            // addPropertyComand
             // 
-            choiceData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            choiceData.Columns.AddRange(new DataGridViewColumn[] { choiceColumn });
-            choiceData.Dock = DockStyle.Fill;
-            choiceData.Location = new Point(3, 138);
-            choiceData.Name = "choiceData";
-            choiceData.RowTemplate.Height = 25;
-            choiceData.Size = new Size(240, 153);
-            choiceData.TabIndex = 4;
-            choiceData.CellFormatting += ChoiceData_CellFormatting;
+            addPropertyComand.Image = Properties.Resources.NewProperty;
+            addPropertyComand.Name = "addPropertyComand";
+            addPropertyComand.Size = new Size(142, 22);
+            addPropertyComand.Text = "add Property";
+            addPropertyComand.Click += addPropertyComand_Click;
             // 
             // Property
             // 
@@ -285,9 +300,10 @@
             propertyTitleLayout.PerformLayout();
             subTypeFlagsLayout.ResumeLayout(false);
             subTypeFlagsLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)choiceData).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingSource).EndInit();
-            ((System.ComponentModel.ISupportInitialize)choiceData).EndInit();
+            propertyToolStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -310,5 +326,7 @@
         private CheckBox isFrameworkSummaryData;
         private DataGridView choiceData;
         private DataGridViewTextBoxColumn choiceColumn;
+        private ContextMenuStrip propertyToolStrip;
+        private ToolStripMenuItem addPropertyComand;
     }
 }

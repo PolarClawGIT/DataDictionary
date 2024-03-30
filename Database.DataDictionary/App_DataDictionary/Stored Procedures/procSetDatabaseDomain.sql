@@ -28,7 +28,6 @@ Begin Try
 		[DomainId]              UniqueIdentifier Not Null,
 		[SchemaId]              UniqueIdentifier Not Null,
 		[DomainName]            SysName Not Null,
-		[ScopeId]               Int Not Null,
 		[DataType]              SysName Null,
 		[DomainDefault]         NVarChar(Max) Null,
 		[CharacterMaximumLength] Int Null,
@@ -45,16 +44,10 @@ Begin Try
 		[CollationName]         SysName Null,
 		Primary Key ([DomainId]))
 
-	;With [Scope] As (
-		Select	S.[ScopeId],
-				F.[ScopeName]
-		From	[App_DataDictionary].[ApplicationScope] S
-				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	X.[DomainId],
 			X.[SchemaId],
 			NullIf(Trim(D.[DomainName]),'') As [DomainName],
-			S.[ScopeId],
 			NullIf(Trim(D.[DataType]),'') As [DataType],
 			NullIf(Trim(D.[DomainDefault]),'') As [DomainDefault],
 			D.[CharacterMaximumLength],
@@ -77,8 +70,6 @@ Begin Try
 			On	D.[DatabaseName] = A.[DatabaseName] And
 				D.[SchemaName] = A.[SchemaName] And
 				D.[DomainName] = A.[DomainName]
-			Left Join [Scope] S
-			On	D.[ScopeName] = S.[ScopeName]
 			Cross Apply (
 				Select	Coalesce(A.[DomainId], D.[DomainId], NewId()) As [DomainId],
 						Coalesce(A.[SchemaId], P.[SchemaId]) As [SchemaId],
@@ -114,7 +105,6 @@ Begin Try
 		Select	[DomainId],
 				[SchemaId],
 				[DomainName],
-				[ScopeId],
 				[DataType],
 				[DomainDefault],
 				[CharacterMaximumLength],
@@ -134,7 +124,6 @@ Begin Try
 		Select	[DomainId],
 				[SchemaId],
 				[DomainName],
-				[ScopeId],
 				[DataType],
 				[DomainDefault],
 				[CharacterMaximumLength],
@@ -153,7 +142,6 @@ Begin Try
 	Update [App_DataDictionary].[DatabaseDomain]
 	Set		[SchemaId] = S.[SchemaId],
 			[DomainName] = S.[DomainName],
-			[ScopeId] = S.[ScopeId],
 			[DataType] = S.[DataType],
 			[DomainDefault] = S.[DomainDefault],
 			[CharacterMaximumLength] = S.[CharacterMaximumLength],
@@ -177,7 +165,6 @@ Begin Try
 			[DomainId],
 			[SchemaId],
 			[DomainName],
-			[ScopeId],
 			[DataType],
 			[DomainDefault],
 			[CharacterMaximumLength],
@@ -195,7 +182,6 @@ Begin Try
 	Select	S.[DomainId],
 			S.[SchemaId],
 			S.[DomainName],
-			S.[ScopeId],
 			S.[DataType],
 			S.[DomainDefault],
 			S.[CharacterMaximumLength],

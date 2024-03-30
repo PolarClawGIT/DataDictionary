@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NameScope;
+﻿using DataDictionary.BusinessLayer.Domain;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.DomainData.Entity;
@@ -10,7 +11,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain
 {
-    partial class ModelSubjectArea : ApplicationBase, IApplicationDataForm
+    partial class ModelSubjectArea : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return bindingSubject.Current is IModelSubjectAreaItem current && ReferenceEquals(current, item); }
@@ -18,11 +19,7 @@ namespace DataDictionary.Main.Forms.Domain
         public ModelSubjectArea() : base()
         {
             InitializeComponent();
-
-            deleteItemCommand.Click += DeleteItemCommand_Click;
-            deleteItemCommand.Enabled = true;
-            deleteItemCommand.Image = Resources.DeleteDiagram;
-            deleteItemCommand.ToolTipText = "Remove the Subject Area";
+            toolStrip.TransferItems(subjectAreaToolStrip,0);
         }
 
         public ModelSubjectArea(IModelSubjectAreaItem subjectAreaItem) : this()
@@ -32,15 +29,12 @@ namespace DataDictionary.Main.Forms.Domain
             bindingSubject.DataSource = new BindingView<ModelSubjectAreaItem>(BusinessData.ModelSubjectAreas, w => key.Equals(w));
             bindingSubject.Position = 0;
 
-            if(bindingSubject.Current is IModelSubjectAreaItem current)
-            {
-                this.Icon = ScopeType.ModelSubjectArea.ToIcon();
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
+            Setup(bindingSubject);
 
+            if (bindingSubject.Current is IModelSubjectAreaItem current)
+            {
                 List<DomainAttributeKey> attributeKeys = BusinessData.DomainModel.Attributes.SubjectAreas.Where(w => key.Equals(w)).Select(s => new DomainAttributeKey(s)).ToList();
-                bindingAttribute.DataSource = new BindingView<DomainAttributeItem>(BusinessData.DomainModel.Attributes, w => attributeKeys.Contains(new DomainAttributeKey(w)));
+                bindingAttribute.DataSource = new BindingView<AttributeItem>(BusinessData.DomainModel.Attributes, w => attributeKeys.Contains(new DomainAttributeKey(w)));
 
                 List<DomainEntityKey> entityKeys = BusinessData.DomainModel.Entities.SubjectAreas.Where(w => key.Equals(w)).Select(s => new DomainEntityKey(s)).ToList();
                 bindingEntity.DataSource = new BindingView<DomainEntityItem>(BusinessData.DomainModel.Entities, w => entityKeys.Contains(new DomainEntityKey(w)));
@@ -63,14 +57,15 @@ namespace DataDictionary.Main.Forms.Domain
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSubject.Current is not IModelSubjectAreaItem);
         }
 
-        private void DeleteItemCommand_Click(object? sender, EventArgs e)
+
+        private void RemoveSubjectAreaCommand_Click(object sender, EventArgs e)
         {
             if (bindingSubject.Current is ModelSubjectAreaItem current)
             {
                 this.IsLocked(true);
                 ModelSubjectAreaKey key = new ModelSubjectAreaKey(current);
 
-                NameScopeKey nameKey = new NameScopeKey(current);
+                NamedScopeKey nameKey = new NamedScopeKey(current);
                 BusinessData.NameScope.Remove(nameKey);
 
                 current.Remove();
@@ -80,6 +75,5 @@ namespace DataDictionary.Main.Forms.Domain
                 RowState = current.RowState();
             }
         }
-
     }
 }

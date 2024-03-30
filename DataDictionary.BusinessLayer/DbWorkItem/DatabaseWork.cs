@@ -315,7 +315,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
             where TCollection : IBindingTable, IWriteData<TKey>
         {
             return this.CreateWork(
-                workName: String.Format("Load {0}", target.BindingName),
+                workName: String.Format("Save {0}", target.BindingName),
                 command: (conn) => target.SaveCommand(conn, targetKey));
         }
 

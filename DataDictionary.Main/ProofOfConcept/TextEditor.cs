@@ -45,7 +45,6 @@ namespace DataDictionary.Main.ProofOfConcept
         public TextEditor()
         {
             InitializeComponent();
-            toolStrip.Hide(); // Hide base ToolStrip
 
 
             richText.PropertyChanged += RichTextControl_PropertyChanged;

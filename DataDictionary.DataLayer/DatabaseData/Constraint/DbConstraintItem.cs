@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     /// <summary>
     /// Interface for the Database Constraint Item.
     /// </summary>
-    public interface IDbConstraintItem : IDbConstraintKeyName, IDbConstraintKey, IDbCatalogKey,  IDbTableKeyName, IScopeKeyName, IDataItem
+    public interface IDbConstraintItem : IDbConstraintKeyName, IDbConstraintKey, IDbCatalogKey,  IDbTableKeyName, IScopeKey
     {
         /// <summary>
         /// Type of the Database Constraint.
@@ -42,16 +42,13 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public string? ConstraintName { get { return GetValue("ConstraintName"); } }
 
         /// <inheritdoc/>
-        public string? ScopeName { get { return GetValue("ScopeName"); } }
-
-        /// <inheritdoc/>
         public string? TableName { get { return GetValue("TableName"); } }
 
         /// <inheritdoc/>
         public string? ConstraintType { get { return GetValue("ConstraintType"); } }
 
         /// <inheritdoc/>
-        //public DbElementScope ElementScope { get; } = DbElementScope.Constraint;
+        public ScopeType Scope { get; } = ScopeType.DatabaseTableConstraint;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -61,7 +58,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("ConstraintName", typeof(string)){ AllowDBNull = false},
             new DataColumn("TableName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("ConstraintType", typeof(string)){ AllowDBNull = false},
         };
 
@@ -94,7 +90,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
                 else
                 {
                     Exception ex = new InvalidOperationException("Could not determine LevelType");
-                    ex.Data.Add(nameof(ScopeName), ScopeName);
                     ex.Data.Add(nameof(DatabaseName), DatabaseName);
                     ex.Data.Add(nameof(SchemaName), SchemaName);
                     ex.Data.Add(nameof(TableName), TableName);

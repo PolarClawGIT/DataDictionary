@@ -28,21 +28,14 @@ Begin Try
 		[ConstraintId]        UniqueIdentifier Not Null,
 		[SchemaId]            UniqueIdentifier Not Null,
 		[ConstraintName]      SysName Not Null,
-		[ScopeId]             Int Not Null,
 		[ParentTableId]       UniqueIdentifier Not Null,
 		[ConstraintType]      NVarChar(60) Null,
 		Primary Key ([ConstraintId]))
 
-	;With [Scope] As (
-		Select	S.[ScopeId],
-				F.[ScopeName]
-		From	[App_DataDictionary].[ApplicationScope] S
-				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	X.[ConstraintId],
 			X.[SchemaId],
 			NullIf(Trim(D.[ConstraintName]),'') As [ConstraintName],
-			S.[ScopeId],
 			R.[TableId] As [ParentTableId],
 			NullIf(Trim(D.[ConstraintType]),'') As [ConstraintType]
 	From	@Data D
@@ -57,8 +50,6 @@ Begin Try
 			On	D.[DatabaseName] = R.[DatabaseName] And
 				D.[SchemaName] = R.[SchemaName] And
 				D.[TableName] = R.[TableName]
-			Left Join [Scope] S
-			On	D.[ScopeName] = S.[ScopeName]
 			Cross Apply (
 				Select	Coalesce(A.[ConstraintId], D.[ConstraintId], NewId()) As [ConstraintId],
 						Coalesce(A.[SchemaId], P.[SchemaId]) As [SchemaId],
@@ -110,7 +101,6 @@ Begin Try
 		Select	[ConstraintId],
 				[SchemaId],
 				[ConstraintName],
-				[ScopeId],
 				[ParentTableId],
 				[ConstraintType]
 		From	@Values
@@ -118,14 +108,12 @@ Begin Try
 		Select	[ConstraintId],
 				[SchemaId],
 				[ConstraintName],
-				[ScopeId],
 				[ParentTableId],
 				[ConstraintType]
 		From	[App_DataDictionary].[DatabaseConstraint])
 	Update	[App_DataDictionary].[DatabaseConstraint]
 	Set		[SchemaId] = S.[SchemaId],
 			[ConstraintName] = S.[ConstraintName],
-			[ScopeId] = S.[ScopeId],
 			[ParentTableId] = S.[ParentTableId],
 			[ConstraintType] = S.[ConstraintType]
 	From	[App_DataDictionary].[DatabaseConstraint] T
@@ -137,13 +125,11 @@ Begin Try
 			[ConstraintId],	
 			[SchemaId],
 			[ConstraintName],
-			[ScopeId],
 			[ParentTableId],
 			[ConstraintType])
 	Select	S.[ConstraintId],	
 			S.[SchemaId],
 			S.[ConstraintName],
-			S.[ScopeId],
 			S.[ParentTableId],
 			S.[ConstraintType]
 	From	@Values S

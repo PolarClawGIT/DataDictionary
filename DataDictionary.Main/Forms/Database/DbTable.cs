@@ -12,7 +12,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbTable : ApplicationBase, IApplicationDataForm
+    partial class DbTable : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
         { return bindingTable.Current is IDbTableItem current && ReferenceEquals(current, item); }
@@ -20,14 +20,10 @@ namespace DataDictionary.Main.Forms.Database
         public DbTable() : base()
         {
             InitializeComponent();
-
-            importDataCommand.DropDown = importOptions;
-            importDataCommand.Enabled = true;
-            importDataCommand.ButtonClick += ImportDataCommand_Click;
-            importDataCommand.ToolTipText = "Import the Table/View to the Domain Model";
+            toolStrip.TransferItems(tableToolStrip, 0);
         }
 
-        public DbTable(IDbTableItem tableItem) :this()
+        public DbTable(IDbTableItem tableItem) : this()
         {
             DbTableKeyName key = new DbTableKeyName(tableItem);
             DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
@@ -35,13 +31,10 @@ namespace DataDictionary.Main.Forms.Database
             bindingTable.DataSource = new BindingView<DbTableItem>(BusinessData.DatabaseModel.DbTables, w => key.Equals(w));
             bindingTable.Position = 0;
 
+            Setup(bindingTable);
+
             if (bindingTable.Current is IDbTableItem current)
             {
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-                this.Icon = new ScopeKey(current).Scope.ToIcon();
-
                 bindingColumns.DataSource = new BindingView<DbTableColumnItem>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
                 bindingConstraints.DataSource = new BindingView<DbConstraintItem>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
                 bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
@@ -69,12 +62,12 @@ namespace DataDictionary.Main.Forms.Database
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingTable.Current is not IDbTableItem);
         }
 
-        private void ImportDataCommand_Click(object? sender, EventArgs e)
+        private void exportCommand_Click(object sender, EventArgs e)
         {
             if (bindingTable.Current is IDbTableItem current)
             {
-                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, current);
-                BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, current);
+                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+                BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
             }
         }
     }

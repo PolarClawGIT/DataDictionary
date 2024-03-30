@@ -1,10 +1,15 @@
-﻿using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.Application;
+using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ModelData;
+using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -14,8 +19,9 @@ namespace DataDictionary.BusinessLayer.Domain
     /// Interface component for the Model Attribute
     /// </summary>
     public interface IAttributeData :
-        IBindingData<DomainAttributeItem>,
-        ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>
+        IBindingData<AttributeItem>,
+        ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>,
+        ITableColumnImport
     {
         /// <summary>
         /// List of Domain Aliases for the Attributes within the Model.
@@ -31,18 +37,14 @@ namespace DataDictionary.BusinessLayer.Domain
         /// List of Model Attribute Subject Areas within the Model.
         /// </summary>
         IAttributeSubjectAreaData SubjectAreas { get; }
-
-        void Import(IDatabaseModel source, IDbCatalogKeyName key);
-
-        void Import(IDatabaseModel source, IDbTableKeyName key);
-
-        void Import(IDatabaseModel source, IDbTableColumnKeyName key);
     }
 
-    class AttributeData : DomainAttributeCollection, IAttributeData,
+    class AttributeData : DomainAttributeCollection<AttributeItem>, IAttributeData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile, INameScopeData<IModelKey>
+        IDataTableFile, INamedScopeData<IModelKey>
     {
+        public required IDomainModel DomainModel { get; init; }
+
         /// <inheritdoc/>
         public IAttributeAliasData Aliases { get { return aliasValues; } }
         private readonly AttributeAliasData aliasValues;
@@ -133,22 +135,88 @@ namespace DataDictionary.BusinessLayer.Domain
             subjectAreaValues.Load(source);
         }
 
-        public void Import(IDatabaseModel source, IDbCatalogKeyName key)
+        /// <inheritdoc/>
+        /// <remarks>Attribute by Catalog</remarks>
+        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, IDbCatalogKeyName key)
         {
-            throw new NotImplementedException();
+            DbCatalogKeyName nameKey = new DbCatalogKeyName(key);
+            foreach (DbTableItem item in source.DbTables.Where(w => nameKey.Equals(w)))
+            {
+                DbTableKeyName tableKey = new DbTableKeyName(item);
+                Import(source, propertyDefinition, tableKey);
+            }
         }
 
-        public void Import(IDatabaseModel source, IDbTableKeyName key)
+        /// <inheritdoc/>
+        /// <remarks>Attribute by Table</remarks>
+        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, IDbTableKeyName key)
         {
-            throw new NotImplementedException();
+            DbTableKeyName nameKey = new DbTableKeyName(key);
+            foreach (DbTableColumnItem item in source.DbTableColumns.Where(w => nameKey.Equals(w)))
+            {
+                DbTableColumnKeyName columKey = new DbTableColumnKeyName(item);
+                Import(source, propertyDefinition, columKey);
+            }
         }
 
-        public void Import(IDatabaseModel source, IDbTableColumnKeyName key)
+        /// <inheritdoc/>
+        /// <remarks>Attribute by Column</remarks>
+        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, IDbTableColumnKeyName key)
         {
-            throw new NotImplementedException();
+            DbTableColumnKeyName nameKey = new DbTableColumnKeyName(key);
+            foreach (DbTableColumnItem item in source.DbTableColumns.Where(w => nameKey.Equals(w)))
+            {
+                AliasKeyName alaisKey = new AliasKeyName(item);
+                AttributeKey attributeKey;
+                AttributeKeyName uniqueKey = new AttributeKeyName(item);
+                AliasKeyName aliasKey = new AliasKeyName(item);
+
+                // Create Attribute or get existing
+                if (aliasValues.FirstOrDefault(w => aliasKey.Equals(w)) is DomainAttributeAliasItem existingAlias)
+                { attributeKey = new AttributeKey(existingAlias); }
+                else if (this.FirstOrDefault(w => uniqueKey.Equals(w)) is DomainAttributeItem existing)
+                { attributeKey = new AttributeKey(existing); }
+                else
+                {
+                    AttributeItem newItem = new AttributeItem()
+                    {
+                        AttributeTitle = item.ColumnName,
+                        IsDerived = item.IsComputed ?? false,
+                        IsIntegral = !item.IsComputed ?? false,
+                        IsNullable = item.IsNullable ?? false,
+                        IsValued = !item.IsNullable ?? false,
+                    };
+                    this.Add(newItem);
+                    attributeKey = new AttributeKey(newItem);
+                }
+
+                // Create Alias
+                if (aliasValues.Count(w => alaisKey.Equals(w) && attributeKey.Equals(w)) == 0)
+                {
+                    aliasValues.Add(new AttributeAliasItem(attributeKey)
+                    {
+                        AliasName = item.ToAliasName(),
+                        ScopeName = item.ScopeName
+                    });
+                }
+
+                // Create Properties
+                DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(item);
+                foreach (DbExtendedPropertyItem property in source.DbExtendedProperties.Where(w => propertyKey.Equals(w)))
+                {
+                    PropertyKeyExtended appKey = new PropertyKeyExtended(property);
+
+                    if (propertyDefinition.FirstOrDefault(w =>
+                        appKey.Equals(w)) is Application.IPropertyItem appProperty
+                        && propertyValues.Count(w =>
+                            attributeKey.Equals(w)
+                            && new Application.PropertyKey(appProperty).Equals(w)) == 0)
+                    { propertyValues.Add(new AttributePropertyItem(attributeKey, appProperty, property)); }
+                }
+            }
         }
 
-        public IReadOnlyList<WorkItem> Export(IList<NameScopeItem> target, Func<IModelKey?> parent)
+        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<IModelKey?> parent)
         {
             return new WorkItem()
             {
@@ -158,7 +226,7 @@ namespace DataDictionary.BusinessLayer.Domain
                     if (parent() is IModelKey key)
                     {
                         foreach (DomainAttributeItem item in this)
-                        { target.Add(new NameScopeItem(key, item)); }
+                        { target.Add(new NamedScopeItem(key, item)); }
                     }
                 }
             }.ToList();

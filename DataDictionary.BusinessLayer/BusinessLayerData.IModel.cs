@@ -13,12 +13,12 @@ namespace DataDictionary.BusinessLayer
         /// Models for the application (expect 0 or 1)
         /// </summary>
         //public IModelData Models { get { return models; } }
-        private readonly Model.ModelData models = new Model.ModelData();
+        private readonly Model.ModelData modelValues;
 
         /// <summary>
         /// Subject Areas for the Model
         /// </summary>
-        public ISubjectAreaData ModelSubjectAreas { get { return subjectAreas; } }
-        private readonly SubjectAreaData subjectAreas = new SubjectAreaData();
+        public ISubjectAreaData ModelSubjectAreas { get { return subjectAreaValues; } }
+        private readonly SubjectAreaData subjectAreaValues;
     }
 }

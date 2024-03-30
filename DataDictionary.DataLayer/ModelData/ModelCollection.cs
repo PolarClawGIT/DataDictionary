@@ -17,7 +17,8 @@ namespace DataDictionary.DataLayer.ModelData
     public abstract class ModelCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<IModelKey>,
         IWriteData, IWriteData<IModelKey>,
-        IDeleteData<IModelKey>, IValidateList<ModelItem>
+        IDeleteData<IModelKey>, IValidateList<ModelItem>,
+        IRemoveItem<IModelKey>
         where TItem : ModelItem, new()
     {         
         /// <inheritdoc/>
@@ -82,6 +83,15 @@ namespace DataDictionary.DataLayer.ModelData
         }
 
         /// <inheritdoc/>
+        public virtual void Remove(IModelKey modelItem)
+        {
+            ModelKey key = new ModelKey(modelItem);
+
+            foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
+            { base.Remove(item); }
+        }
+
+        /// <inheritdoc/>
         public IReadOnlyList<ModelItem> Validate()
         {
             List<ModelItem> result = new List<ModelItem>();
@@ -95,8 +105,6 @@ namespace DataDictionary.DataLayer.ModelData
 
             return result;
         }
-
-
     }
 
     /// <summary>

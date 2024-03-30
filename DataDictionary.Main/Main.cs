@@ -1,6 +1,6 @@
 using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
@@ -22,11 +22,11 @@ namespace DataDictionary.Main
         {
             InitializeComponent();
             Icon = Resources.Icon_Application;
-            toolStrip.Hide(); // Hide base ToolStrip
+
             IsLocked(true);
 
             // Setup Images for Tree Control
-            contextNameNavigation.ImageList = ModelScopeExtension.ToImageList();
+            contextNameNavigation.ImageList = ScopeExtension.ToImageList();
 
 
             //Hook the WorkerQueue up to this forms UI thread for events.
@@ -56,9 +56,10 @@ namespace DataDictionary.Main
             SendMessage(new DoUnbindData());
 
             List<WorkItem> work = new List<WorkItem>();
-            List<NameScopeItem> names = new List<NameScopeItem>();
+            List<NamedScopeItem> names = new List<NamedScopeItem>();
             work.AddRange(BusinessData.Export(names));
             work.AddRange(BusinessData.NameScope.Import(names));
+            work.AddRange(contextNameNavigation.Load(BusinessData.NameScope));
 
             if (Settings.Default.IsOnLineMode)
             {
@@ -67,7 +68,7 @@ namespace DataDictionary.Main
                 work.AddRange(BusinessData.ApplicationData.Load(factory));
 
                 if (!appDataFile.Exists)
-                { work.AddRange(BusinessData.ApplicationData.Export(appDataFile)); }
+                { work.AddRange(BusinessData.ExportApplication(appDataFile)); }
 
                 this.DoWork(work, OnComplete);
             }
@@ -78,12 +79,15 @@ namespace DataDictionary.Main
             void FileLoad()
             {
                 if (appDataFile.Exists) // AppData already contains the Application Data File
-                { work.AddRange(BusinessData.ApplicationData.Import(appDataFile)); }
+                { work.AddRange(BusinessData.ImportApplication(appDataFile)); }
                 else if (appInstallFile.Exists)
                 { // AppData does not contain file but the install folder does (Copy it)
-                    work.AddRange(BusinessData.ApplicationData.Import(appInstallFile));
-                    work.AddRange(BusinessData.ApplicationData.Export(appDataFile));
+                    work.AddRange(BusinessData.ImportApplication(appInstallFile));
+                    work.AddRange(BusinessData.ExportApplication(appDataFile));
                 }
+
+                work.AddRange(contextNameNavigation.Load(BusinessData.NameScope));
+
                 this.DoWork(work, OnComplete);
             }
 
@@ -103,7 +107,6 @@ namespace DataDictionary.Main
                 }
                 else
                 {
-                    BuildTree();
                     SendMessage(new OnlineStatusChanged());
                     dataLoaded = true;
                     IsLocked(false);
@@ -168,19 +171,17 @@ namespace DataDictionary.Main
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             List<WorkItem> work = new List<WorkItem>();
-            List<NameScopeItem> names = new List<NameScopeItem>();
+            List<NamedScopeItem> names = new List<NamedScopeItem>();
             work.AddRange(BusinessData.Remove());
             work.AddRange(BusinessData.NameScope.Remove());
             work.AddRange(BusinessData.Export(names));
             work.AddRange(BusinessData.NameScope.Import(names));
+            work.AddRange(contextNameNavigation.Load(BusinessData.NameScope));
 
             DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            {
-                ClearTree();
-                BuildTree();
-            }
+            { }
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -197,9 +198,6 @@ namespace DataDictionary.Main
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         { SendMessage(new WindowsSelectAllCommand() { HandledBy = this.ActiveMdiChild }); }
-
-        private void extendedPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate(() => new Dialogs.ViewTextTemplate()); }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate(() => new ApplicationWide.ApplicationOptions()); }
@@ -223,7 +221,7 @@ namespace DataDictionary.Main
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             if (Settings.Default.IsOnLineMode)
-            { toolStripOnlineStatus.Text = String.Format("On-Line: {0}.{0}", BusinessData.Connection.ServerName, BusinessData.Connection.DatabaseName); }
+            { toolStripOnlineStatus.Text = String.Format("On-Line: [{0}].[{1}]", BusinessData.Connection.ServerName, BusinessData.Connection.DatabaseName); }
             else { toolStripOnlineStatus.Text = "Off-Line"; }
         }
         #endregion
@@ -260,7 +258,7 @@ namespace DataDictionary.Main
 
                 SendMessage(new Messages.DoUnbindData());
                 List<WorkItem> work = new List<WorkItem>();
-                work.AddRange(BusinessData.Import(openFile));
+                work.AddRange(BusinessData.ImportModel(openFile));
 
                 DoWork(work, onCompleting);
             }
@@ -274,7 +272,7 @@ namespace DataDictionary.Main
             if (BusinessData.ModelFile is FileInfo file)
             {
                 SendMessage(new Messages.DoUnbindData());
-                DoWork(BusinessData.Export(file), onCompleting);
+                DoWork(BusinessData.ExportModel(file), onCompleting);
             }
             else
             { saveAsToolStripMenuItem_Click(sender, e); }
@@ -307,12 +305,18 @@ namespace DataDictionary.Main
                 saveToolStripMenuItem.Enabled = true;
 
                 SendMessage(new Messages.DoUnbindData());
-                DoWork(BusinessData.Export(openFile), onCompleting);
+                DoWork(BusinessData.ExportModel(openFile), onCompleting);
             }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             { SendMessage(new Messages.DoBindData()); }
 
         }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        { Application.Exit(); }
+
+
+
     }
 }

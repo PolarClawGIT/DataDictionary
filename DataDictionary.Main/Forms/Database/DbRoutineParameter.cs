@@ -11,7 +11,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbRoutineParameter : ApplicationBase
+    partial class DbRoutineParameter : ApplicationData
     {
 
         public Boolean IsOpenItem(object? item)
@@ -30,13 +30,10 @@ namespace DataDictionary.Main.Forms.Database
             bindingParameter.DataSource = new BindingView<DbRoutineParameterItem>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
             bindingParameter.Position = 0;
 
+            Setup(bindingParameter);
+
             if (bindingParameter.Current is IDbRoutineParameterItem current)
             {
-                this.Icon = new ScopeKey(current).Scope.ToIcon();
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-
                 bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }

@@ -10,7 +10,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Database
 {
-    partial class DbConstraint : ApplicationBase, IApplicationDataForm
+    partial class DbConstraint : ApplicationData, IApplicationDataForm
     {
 
         public Boolean IsOpenItem(object? item)
@@ -29,13 +29,10 @@ namespace DataDictionary.Main.Forms.Database
             bindingConstraint.DataSource = new BindingView<DbConstraintItem>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
             bindingConstraint.Position = 0;
 
+            Setup(bindingConstraint);
+
             if (bindingConstraint.Current is IDbConstraintItem current)
             {
-                this.Icon = new ScopeKey(current).Scope.ToIcon();
-                RowState = current.RowState();
-                current.RowStateChanged += RowStateChanged;
-                this.Text = current.ToString();
-
                 bindingColumn.DataSource = new BindingView<DbConstraintColumnItem>(BusinessData.DatabaseModel.DbConstraintColumns, w => key.Equals(w));
                 bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }

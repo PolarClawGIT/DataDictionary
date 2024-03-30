@@ -28,20 +28,13 @@ Begin Try
 		[RoutineId]          UniqueIdentifier Not Null,
 		[SchemaId]           UniqueIdentifier Not Null,
 		[RoutineName]        SysName Not Null,
-		[ScopeId]            Int Not Null,
 		[RoutineType]        NVarChar(60) Null,
 		Primary Key ([RoutineId]))
 
-	;With [Scope] As (
-		Select	S.[ScopeId],
-				F.[ScopeName]
-		From	[App_DataDictionary].[ApplicationScope] S
-				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	X.[RoutineId],  
 			X.[SchemaId],
 			NullIf(Trim(D.[RoutineName]),'') As [RoutineName],
-			S.[ScopeId],
 			NullIf(Trim(D.[RoutineType]),'') As [RoutineType]
 	From	@Data D
 			Inner Join [App_DataDictionary].[DatabaseSchema_AK] P
@@ -51,8 +44,6 @@ Begin Try
 			On	D.[DatabaseName] = A.[DatabaseName] And
 				D.[SchemaName] = A.[SchemaName] And
 				D.[RoutineName] = A.[RoutineName]
-			Left Join [Scope] S
-			On	D.[ScopeName] = S.[ScopeName]
 			Cross Apply (
 				Select	Coalesce(A.[RoutineId], D.[RoutineId], NewId()) As [RoutineId],
 						Coalesce(A.[SchemaId], P.[SchemaId]) As [SchemaId],
@@ -120,20 +111,17 @@ Begin Try
 		Select	[RoutineId],
 				[SchemaId],
 				[RoutineName],
-				[ScopeId],
 				[RoutineType]
 		From	@Values
 		Except
 		Select	[RoutineId],
 				[SchemaId],
 				[RoutineName],
-				[ScopeId],
 				[RoutineType]
 		From	[App_DataDictionary].[DatabaseRoutine])
 	Update [App_DataDictionary].[DatabaseRoutine]
 	Set		[SchemaId] = S.[SchemaId],
 			[RoutineName] = S.[RoutineName],
-			[ScopeId] = S.[ScopeId],
 			[RoutineType] = S.[RoutineType]
 	From	[App_DataDictionary].[DatabaseRoutine] T
 			Inner Join [Delta] S
@@ -144,12 +132,10 @@ Begin Try
 		[RoutineId],
 		[SchemaId],
 		[RoutineName],
-		[ScopeId],
 		[RoutineType])
 	Select	S.[RoutineId],
 			S.[SchemaId],
 			S.[RoutineName],
-			S.[ScopeId],
 			S.[RoutineType]
 	From	@Values S
 			Left Join [App_DataDictionary].[DatabaseRoutine] T

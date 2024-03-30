@@ -31,17 +31,20 @@
             components = new System.ComponentModel.Container();
             TableLayoutPanel modelManagerLayout;
             modelNavigation = new DataGridView();
-            modelTitleData = new Controls.TextBoxData();
-            modelDescriptionData = new Controls.TextBoxData();
-            modelBinding = new BindingSource(components);
             modelTitlecolumn = new DataGridViewTextBoxColumn();
             modelDescriptionColumn = new DataGridViewTextBoxColumn();
             inModelColumn = new DataGridViewCheckBoxColumn();
             inDatabaseColumn = new DataGridViewCheckBoxColumn();
+            modelTitleData = new Controls.TextBoxData();
+            modelDescriptionData = new Controls.TextBoxData();
+            modelBinding = new BindingSource(components);
+            modelToolStrip = new ContextMenuStrip(components);
+            newModelCommand = new ToolStripMenuItem();
             modelManagerLayout = new TableLayoutPanel();
             modelManagerLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)modelNavigation).BeginInit();
             ((System.ComponentModel.ISupportInitialize)modelBinding).BeginInit();
+            modelToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // modelManagerLayout
@@ -70,38 +73,8 @@
             modelNavigation.Dock = DockStyle.Fill;
             modelNavigation.Location = new Point(3, 3);
             modelNavigation.Name = "modelNavigation";
-            modelNavigation.RowTemplate.Height = 25;
             modelNavigation.Size = new Size(556, 237);
             modelNavigation.TabIndex = 0;
-            // 
-            // modelTitleData
-            // 
-            modelTitleData.AutoSize = true;
-            modelTitleData.Dock = DockStyle.Fill;
-            modelTitleData.HeaderText = "Model Title";
-            modelTitleData.Location = new Point(3, 246);
-            modelTitleData.Multiline = false;
-            modelTitleData.Name = "modelTitleData";
-            modelTitleData.ReadOnly = false;
-            modelTitleData.Size = new Size(556, 44);
-            modelTitleData.TabIndex = 1;
-            // 
-            // modelDescriptionData
-            // 
-            modelDescriptionData.AutoSize = true;
-            modelDescriptionData.Dock = DockStyle.Fill;
-            modelDescriptionData.HeaderText = "Model Description";
-            modelDescriptionData.Location = new Point(3, 296);
-            modelDescriptionData.Multiline = true;
-            modelDescriptionData.Name = "modelDescriptionData";
-            modelDescriptionData.ReadOnly = false;
-            modelDescriptionData.Size = new Size(556, 99);
-            modelDescriptionData.TabIndex = 2;
-            // 
-            // modelBinding
-            // 
-            modelBinding.BindingComplete += BindingComplete;
-            modelBinding.CurrentChanged += modelBinding_CurrentChanged;
             // 
             // modelTitlecolumn
             // 
@@ -133,6 +106,49 @@
             inDatabaseColumn.Name = "inDatabaseColumn";
             inDatabaseColumn.ReadOnly = true;
             // 
+            // modelTitleData
+            // 
+            modelTitleData.AutoSize = true;
+            modelTitleData.Dock = DockStyle.Fill;
+            modelTitleData.HeaderText = "Model Title";
+            modelTitleData.Location = new Point(3, 246);
+            modelTitleData.Multiline = false;
+            modelTitleData.Name = "modelTitleData";
+            modelTitleData.ReadOnly = false;
+            modelTitleData.Size = new Size(556, 44);
+            modelTitleData.TabIndex = 1;
+            // 
+            // modelDescriptionData
+            // 
+            modelDescriptionData.AutoSize = true;
+            modelDescriptionData.Dock = DockStyle.Fill;
+            modelDescriptionData.HeaderText = "Model Description";
+            modelDescriptionData.Location = new Point(3, 296);
+            modelDescriptionData.Multiline = true;
+            modelDescriptionData.Name = "modelDescriptionData";
+            modelDescriptionData.ReadOnly = false;
+            modelDescriptionData.Size = new Size(556, 99);
+            modelDescriptionData.TabIndex = 2;
+            // 
+            // modelBinding
+            // 
+            modelBinding.BindingComplete += BindingComplete;
+            modelBinding.CurrentChanged += modelBinding_CurrentChanged;
+            // 
+            // modelToolStrip
+            // 
+            modelToolStrip.Items.AddRange(new ToolStripItem[] { newModelCommand });
+            modelToolStrip.Name = "modelToolStrip";
+            modelToolStrip.Size = new Size(134, 26);
+            // 
+            // newModelCommand
+            // 
+            newModelCommand.Image = Properties.Resources.NewSoftwareDefinitionModel;
+            newModelCommand.Name = "newModelCommand";
+            newModelCommand.Size = new Size(133, 22);
+            newModelCommand.Text = "new Model";
+            newModelCommand.Click += newModelCommand_Click;
+            // 
             // ModelManager
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -147,6 +163,7 @@
             modelManagerLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)modelNavigation).EndInit();
             ((System.ComponentModel.ISupportInitialize)modelBinding).EndInit();
+            modelToolStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -161,5 +178,7 @@
         private DataGridViewTextBoxColumn modelDescriptionColumn;
         private DataGridViewCheckBoxColumn inModelColumn;
         private DataGridViewCheckBoxColumn inDatabaseColumn;
+        private ContextMenuStrip modelToolStrip;
+        private ToolStripMenuItem newModelCommand;
     }
 }

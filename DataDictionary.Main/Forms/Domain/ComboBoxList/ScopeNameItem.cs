@@ -37,6 +37,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             control.ValueMember = nameof(scopeNameItem.ScopeType);
             control.DisplayMember = nameof(scopeNameItem.ScopeName);
         }
+
         public static void Load(DataGridViewComboBoxColumn control)
         {
             ScopeNameItem scopeNameItem = new ScopeNameItem();

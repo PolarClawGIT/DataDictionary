@@ -28,7 +28,6 @@ Begin Try
 		[ParameterId]            UniqueIdentifier Not Null,
 		[RoutineId]              UniqueIdentifier Not Null,
 		[ParameterName]          SysName Not Null,
-		[ScopeId]                Int Not Null,
 		[OrdinalPosition]        Int Not Null,
 		[DataType]               SysName Null,
 		[CharacterMaximumLength]  Int Null,
@@ -48,16 +47,10 @@ Begin Try
 		[DomainName]             SysName Null,
 		Primary Key ([ParameterId]))
 
-	;With [Scope] As (
-		Select	S.[ScopeId],
-				F.[ScopeName]
-		From	[App_DataDictionary].[ApplicationScope] S
-				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	X.[ParameterId],
 			X.[RoutineId],
 			NullIf(Trim(D.[ParameterName]),'') As [ParameterName],
-			S.[ScopeId],     
 			D.[OrdinalPosition],
 			NullIf(Trim(D.[DataType] ),'') As [DataType],
 			D.[CharacterMaximumLength],
@@ -85,8 +78,6 @@ Begin Try
 				D.[SchemaName] = A.[SchemaName] And
 				D.[RoutineName] = A.[RoutineName] And
 				D.[ParameterName] = A.[ParameterName]
-			Left Join [Scope] S
-			On	D.[ScopeName] = S.[ScopeName]
 			Cross Apply (
 				Select	Coalesce(A.[ParameterId], D.[ParameterId], NewId()) As [ParameterId],
 						Coalesce(A.[RoutineId], P.[RoutineId]) As [RoutineId],
@@ -123,7 +114,6 @@ Begin Try
 		Select	[ParameterId],
 				[RoutineId],
 				[ParameterName],
-				[ScopeId], 
 				[OrdinalPosition],
 				[DataType],
 				[CharacterMaximumLength],
@@ -146,7 +136,6 @@ Begin Try
 		Select	[ParameterId],
 				[RoutineId],
 				[ParameterName],
-				[ScopeId], 
 				[OrdinalPosition],
 				[DataType],
 				[CharacterMaximumLength],
@@ -168,7 +157,6 @@ Begin Try
 	Update [App_DataDictionary].[DatabaseRoutineParameter]
 	Set		[RoutineId] = S.[RoutineId],
 			[ParameterName] = S.[ParameterName],
-			[ScopeId] = S.[ScopeId], 
 			[OrdinalPosition] = S.[OrdinalPosition],
 			[DataType] = S.[DataType],
 			[CharacterMaximumLength] = S.[CharacterMaximumLength],
@@ -195,7 +183,6 @@ Begin Try
 			[ParameterId],
 			[RoutineId],
 			[ParameterName],
-			[ScopeId], 
 			[OrdinalPosition],
 			[DataType],
 			[CharacterMaximumLength],
@@ -216,7 +203,6 @@ Begin Try
 	Select	S.[ParameterId],
 			S.[RoutineId],
 			S.[ParameterName],
-			S.[ScopeId], 
 			S.[OrdinalPosition],
 			S.[DataType],
 			S.[CharacterMaximumLength],

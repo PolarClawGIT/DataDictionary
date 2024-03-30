@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NameScope;
+using DataDictionary.BusinessLayer.NamedScope;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Wrapper for NameScope Data (NameSpace)
         /// </summary>
-        public NameScopeDictionary NameScope { get; } = new NameScopeDictionary();
+        public NamedScopeDictionary NameScope { get; }
     }
 
     /// <summary>
@@ -28,10 +28,13 @@ namespace DataDictionary.BusinessLayer
         /// <param name="target"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> Import(this NameScopeDictionary target, IList<NameScopeItem> source)
+        public static IReadOnlyList<WorkItem> Import(this NamedScopeDictionary target, IList<NamedScopeItem> source)
         {
             return new WorkItem()
-            { WorkName = "Load NameScope", DoWork = () => target.AddRange(source) }.ToList();
+            {
+                WorkName = "Load NameScope",
+                DoWork = () => target.AddRange(source)
+            }.ToList();
         }
 
         /// <summary>
@@ -39,8 +42,8 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> Remove(this NameScopeDictionary target)
-        {   return new WorkItem() { WorkName = "Remove NameScope", DoWork = () => target.Clear() }.ToList(); }
+        public static IReadOnlyList<WorkItem> Remove(this NamedScopeDictionary target)
+        { return new WorkItem() { WorkName = "Remove NameScope", DoWork = () => target.Clear() }.ToList(); }
     }
 
 }

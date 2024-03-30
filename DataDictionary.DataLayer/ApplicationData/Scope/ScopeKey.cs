@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     public interface IScopeKey : IKey
     {
         /// <summary>
-        /// Primary Key ID for the Scope
+        /// ScopeType for the Item. Primary Key for ScopeItem
         /// </summary>
         ScopeType Scope { get; }
     }
@@ -23,9 +23,9 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// </summary>
     /// <remarks>
     /// This is a wrapper around the ScopeType enum.
-    /// Gives me better control and more consistent syntax then implementation with extension methods.
+    /// Gives better control and more consistent syntax then implementation with extension methods.
     /// </remarks>
-    public class ScopeKey : IScopeKey, IKeyComparable<IScopeKey>, IEquatable<ScopeType>, IParsable<ScopeKey>
+    public class ScopeKey : IScopeKey, IKeyComparable<IScopeKey>, IParsable<ScopeKey>
     {
         /// <inheritdoc/>
         public ScopeType Scope { get; init; } = ScopeType.Null;
@@ -60,13 +60,16 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         }
 
         /// <summary>
-        /// Converts a ScopeKey into a ScopeType.
+        /// Converts a ScopeType into a ScopeKey.
         /// </summary>
         /// <param name="source"></param>
         public static implicit operator ScopeKey(ScopeType source) { return new ScopeKey(source); }
 
-        // This cannot be done because it creates an ambiguous reference.
-        //public static implicit operator ScopeType (ScopeKey source) { return source.ScopeId; }
+        /// <summary>
+        /// Converts a ScopeKey into a ScopeType.
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator ScopeType (ScopeKey source) { return source.Scope; }
 
         #region IEquatable
         /// <inheritdoc/>
@@ -76,14 +79,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
                 && this.Scope != ScopeType.Null
                 && other.Scope != ScopeType.Null
                 && this.Scope.Equals(other.Scope);
-        }
-
-        /// <inheritdoc/>
-        public bool Equals(ScopeType other)
-        {
-            return this.Scope != ScopeType.Null &&
-                    other != ScopeType.Null &&
-                    this.Scope == other;
         }
 
         /// <inheritdoc/>
@@ -166,9 +161,20 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
 
             {ScopeType.Model,                     "Model" },
             {ScopeType.ModelAttribute,            "Model.Attribute" },
+            {ScopeType.ModelAttributeAlias,       "Model.Attribute.Alias" },
+            {ScopeType.ModelAttributeProperty,    "Model.Attribute.Property" },
             {ScopeType.ModelEntity,               "Model.Entity" },
+            {ScopeType.ModelEntityAlias,          "Model.Entity.Alias" },
+            {ScopeType.ModelEntityProperty,       "Model.Entity.Property" },
+            {ScopeType.ModelEntityAttribute,      "Model.Entity.Attribute" },
+
             {ScopeType.ModelSubjectArea,          "Model.SubjectArea" },
             {ScopeType.ModelNameSpace,            "Model.NameSpace" },
+
+            {ScopeType.Scripting,                  "Scripting" },
+            {ScopeType.ScriptingSchema,            "Scripting.Schema" },
+            {ScopeType.ScriptingSchemaElement,     "Scripting.Schema.Element" },
+            {ScopeType.ScriptingTransform,         "Scripting.Transform" },
         };
 
         /// <inheritdoc/>
@@ -208,6 +214,13 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             else { result = null; return false; }
         }
         #endregion
+
+        /// <summary>
+        /// Returns an IEnumerable of ScopeKey for each ScopeType.
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<ScopeKey> Items()
+        { return Enum.GetValues(typeof(ScopeType)).Cast<ScopeType>().Select(s => new ScopeKey(s)); }
 
         /// <summary>
         /// Returns the ScopeName.

@@ -20,7 +20,7 @@ namespace Toolbox.BindingTable
     /// Insert and Deletes are rigged to Insert and Update to both the base and the local list.
     /// </remarks>
     public class BindingView<TRow> : BindingList<TRow>
-        where TRow : class, INotifyPropertyChanged
+        where TRow : class, IBindingPropertyChanged
     {
         IBindingList<TRow> baseData;
 

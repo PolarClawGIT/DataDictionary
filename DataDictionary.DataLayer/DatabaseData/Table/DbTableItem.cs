@@ -12,13 +12,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for Database Column Item
     /// </summary>
-    public interface IDbTableItem : IDbTableKeyName, IDbTableKey, IDbCatalogKey, IDbIsSystem, IScopeKeyName, IDataItem
-    {
-        /// <summary>
-        /// Type of Table Object (Table, View, ...)
-        /// </summary>
-        String? TableType { get; }
-    }
+    public interface IDbTableItem : IDbTableKeyName, IDbTableKey, IDbCatalogKey, IDbIsSystem, IDbTableType, IScopeKey
+    { }
 
     /// <summary>
     /// Implementation of Database Column Item
@@ -31,7 +26,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public Guid? TableId { get { return GetValue<Guid>("TableId"); } }
-        
+
         /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
@@ -42,13 +37,31 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public string? TableName { get { return GetValue("TableName"); } }
 
         /// <inheritdoc/>
-        public string? ScopeName { get { return GetValue("ScopeName"); } }
-
-        /// <inheritdoc/>
-        public string? TableType { get { return GetValue("TableType"); } }
+        public string? TableTypeName { get { return GetValue("TableType"); } }
 
         /// <inheritdoc/>
         public bool IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
+
+        /// <inheritdoc/>
+        public DbTableType TableType
+        { get { return this.GetTableType(); } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope
+        {
+            get
+            {
+                switch (TableType)
+                {
+                    case DbTableType.Null: return ScopeType.Null;
+                    case DbTableType.Table: return ScopeType.DatabaseTable;
+                    case DbTableType.TemporalTable: return ScopeType.DatabaseTable;
+                    case DbTableType.HistoryTable: return ScopeType.DatabaseTable;
+                    case DbTableType.View: return ScopeType.DatabaseView;
+                    default: return ScopeType.Null;
+                }
+            }
+        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -57,7 +70,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
             new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
             new DataColumn("TableName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("TableType", typeof(string)){ AllowDBNull = false},
         };
 
@@ -90,7 +102,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             else
             {
                 Exception ex = new InvalidOperationException("Could not determine LevelType");
-                ex.Data.Add(nameof(ScopeName), ScopeName);
                 ex.Data.Add(nameof(DatabaseName), DatabaseName);
                 ex.Data.Add(nameof(SchemaName), SchemaName);
                 ex.Data.Add(nameof(TableName), TableName);

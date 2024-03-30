@@ -230,6 +230,21 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetModelEntity.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetModelEntity.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetSubjectAreaName.sql" />
+    <Build Include="App_DataDictionary\Tables\ScriptingTransform.sql" />
+    <Build Include="App_DataDictionary\Tables\ScriptingSchema.sql" />
+    <Build Include="App_DataDictionary\Tables\ScriptingSchemaElement.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeScriptingTransform.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeScriptingSchema.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeScriptingSchemaElement.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingTransform.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingTransform.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingSchema.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingSchema.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingSchemaElement.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingSchemaElement.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelScripting.sql" />
+    <Build Include="App_DataDictionary\Tables\ScriptingSelection.sql" />
+    <Build Include="App_DataDictionary\Tables\ScriptingSelectionItem.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

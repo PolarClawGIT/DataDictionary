@@ -6,7 +6,7 @@ To work around this:
   - 16x16 24bit
   - 32x32 24bit
   - 48x48 24bit
-  - 64x64 24bit
+  - 64x64 24bit (optional)
 - Remove all other image types
 - Build images in other editors or use a converter
 - Open then copy/paste the images into the correct resolutions

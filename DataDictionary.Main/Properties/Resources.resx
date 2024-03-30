@@ -184,6 +184,9 @@
   <data name="DeleteLibrary" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteLibrary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DeleteProcess" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteProcess.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="DeleteRelationship" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteRelationship.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -192,6 +195,12 @@
   </data>
   <data name="DeleteTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteXMLSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteXMLSchema.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteXSLTransform" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteXSLTransform.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Dependancy" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Dependancy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -210,6 +219,24 @@
   </data>
   <data name="Event" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Event.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExportAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExportAttribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExportData" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExportData.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExportDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExportDocument.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExportEntity" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExportEntity.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExportScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExportScript.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExportSoftwareDefinitionModel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExportSoftwareDefinitionModel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ExtendedProperty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ExtendedProperty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -292,6 +319,9 @@
   <data name="Icon_Procedure" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Procedure.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon_Process" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\Process.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Icon_Property" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Property.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -333,6 +363,18 @@
   </data>
   <data name="Icon_View" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\View.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_XMLElement" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\XMLElement.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_XmlFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\XmlFile.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_XMLSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\XMLSchema.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_XSLTransform" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\XSLTransform.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Import" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Import.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -388,11 +430,17 @@
   <data name="NewLibrary" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewLibrary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="NewProcess" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewProcess.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="NewProperty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewProperty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NewRelationship" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewRelationship.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NewSoftwareDefinitionModel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewSoftwareDefinitionModel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NewStatusHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewStatusHelp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -402,6 +450,12 @@
   </data>
   <data name="NewTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NewXMLSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewXMLSchema.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NewXSLTransform" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewXSLTransform.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="OpenFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\OpenFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -417,6 +471,9 @@
   </data>
   <data name="Procedure" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Procedure.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Process" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Process.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Property" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Property.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -456,6 +513,9 @@
   </data>
   <data name="SaveAs" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SaveAs.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SaveSoftwareDefinitionModel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SaveSoftwareDefinitionModel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SaveTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SaveTable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -531,5 +591,17 @@
   </data>
   <data name="View" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\View.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="XMLElement" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\XMLElement.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="XmlFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\XmlFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="XMLSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\XMLSchema.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="XSLTransform" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\XSLTransform.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
