@@ -17,6 +17,12 @@ namespace DataDictionary.DataLayer
         /// </summary>
         /// <param name="connection"></param>
         /// <returns></returns>
+        /// <example>
+        /// public Command SaveCommand(IConnection connection)
+        /// { return SaveCommand(connection); }
+        ///   Incorrect implementation.
+        ///   This will cause unintended recursion and a Stack Overflow and close the application without an exception or notification.
+        /// </example>
         Command SaveCommand(IConnection connection);
     }
 
@@ -24,7 +30,7 @@ namespace DataDictionary.DataLayer
     /// A data object capable of writing data by Key.
     /// </summary>
     public interface IWriteData<TKey>
-        where TKey: IKey
+        where TKey : IKey
     {
         /// <summary>
         /// Returns the Command to Save the Data with a specific key.

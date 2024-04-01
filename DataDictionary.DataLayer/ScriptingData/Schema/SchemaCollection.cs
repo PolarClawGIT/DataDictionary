@@ -43,21 +43,21 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
-        { return SaveCommand(connection); }
+        { return SaveCommand(connection, (null, null)); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, ISchemaKey key)
-        { return SaveCommand(connection, key.SchemaId); }
+        { return SaveCommand(connection, (null, key.SchemaId)); }
 
 
-        Command SaveCommand(IConnection connection, Guid? SchemaId)
+        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? schemaId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetScriptingSchema]";
-            command.AddParameter("@SchemaId", SchemaId);
+            command.AddParameter("@SchemaId", parameters.schemaId);
 
-            IEnumerable<TItem> data = this.Where(w => SchemaId is null || w.SchemaId == SchemaId);
+            IEnumerable<TItem> data = this.Where(w => parameters.schemaId is null || w.SchemaId == parameters.schemaId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeScriptingSchema]", data);
             return command;
         }

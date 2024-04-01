@@ -20,10 +20,10 @@ namespace DataDictionary.DataLayer.ModelData
         IDeleteData<IModelKey>, IValidateList<ModelItem>,
         IRemoveItem<IModelKey>
         where TItem : ModelItem, new()
-    {         
+    {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelIdentifier)
-        { return LoadCommand(connection, (modelIdentifier.ModelId, null, true)); }
+        { return LoadCommand(connection, (modelIdentifier.ModelId, null)); }
 
         /// <summary>
         /// Get all the Models from the Database.
@@ -31,9 +31,9 @@ namespace DataDictionary.DataLayer.ModelData
         /// <param name="connection"></param>
         /// <returns></returns>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null, true)); }
+        { return LoadCommand(connection, (null, null)); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, string? modelTitle, bool? obsolete) parameters)
+        Command LoadCommand(IConnection connection, (Guid? modelId, string? modelTitle) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
@@ -47,20 +47,20 @@ namespace DataDictionary.DataLayer.ModelData
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
-        { return SaveCommand(connection); }
+        { return SaveCommand(connection, (null, null)); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IModelKey key)
-        { return SaveCommand(connection, key.ModelId); }
+        { return SaveCommand(connection, (key.ModelId, null)); }
 
-        Command SaveCommand(IConnection connection, Guid? modelId)
+        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? dummy) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetModel]";
-            command.AddParameter("@ModelId", modelId);
+            command.AddParameter("@ModelId", parameters.modelId);
 
-            IEnumerable<TItem> data = this.Where(w => modelId is null || w.ModelId == modelId);
+            IEnumerable<TItem> data = this.Where(w => parameters.modelId is null || w.ModelId == parameters.modelId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeModel]", data);
 
             return command;

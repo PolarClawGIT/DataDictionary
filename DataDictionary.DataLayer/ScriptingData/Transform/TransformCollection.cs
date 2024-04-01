@@ -42,21 +42,21 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
-        { return SaveCommand(connection); }
+        { return SaveCommand(connection, (null,null)); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, ITransformKey key)
-        { return SaveCommand(connection, key.TransformId); }
+        { return SaveCommand(connection, (null, key.TransformId)); }
 
 
-        Command SaveCommand(IConnection connection, Guid? transformId)
+        Command SaveCommand(IConnection connection, (Guid? modelId, Guid? transformId) parameters )
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetScriptingTransform]";
-            command.AddParameter("@TransformId", transformId);
+            command.AddParameter("@TransformId", parameters.transformId);
 
-            IEnumerable<TItem> data = this.Where(w => transformId is null || w.TransformId == transformId);
+            IEnumerable<TItem> data = this.Where(w => parameters.transformId is null || w.TransformId == parameters.transformId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeScriptingTransform]", data);
             return command;
         }
