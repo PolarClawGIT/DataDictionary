@@ -57,6 +57,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             ISchemaItem schemaNames;
             IElementItem elementNames;
+            this.DataBindings.Add(new Binding(nameof(this.Text), bindingSchema, nameof(schemaNames.SchemaTitle)));
             schemaTitleData.DataBindings.Add(new Binding(nameof(schemaTitleData.Text), bindingSchema, nameof(schemaNames.SchemaTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             schemaDescriptionData.DataBindings.Add(new Binding(nameof(schemaDescriptionData.Text), bindingSchema, nameof(schemaNames.SchemaDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 

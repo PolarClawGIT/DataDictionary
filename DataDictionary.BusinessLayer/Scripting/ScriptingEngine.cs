@@ -11,7 +11,8 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// Interface representing Scripting Engine data
     /// </summary>
     public interface IScriptingEngine: 
-        ISaveData, ILoadData
+        ISaveData, ILoadData, IRemoveData,
+        ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
         /// List of Scripting Engine Schemta.
@@ -37,7 +38,8 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Implementation for Scripting Engine data
     /// </summary>
-    class ScriptingEngine : IScriptingEngine, IDataTableFile, INamedScopeData<IModelKey>
+    class ScriptingEngine : IScriptingEngine, IDataTableFile,
+        INamedScopeData<IModelKey>
     {
         /// <inheritdoc/>
         public ISchemaData Schemta { get { return schemtaValues; } }
@@ -115,6 +117,44 @@ namespace DataDictionary.BusinessLayer.Scripting
 
             work.AddRange(schemtaValues.Export(target, parent));
             work.AddRange(transformValues.Export(target, parent));
+
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Scripting (Currently load all)</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(schemtaValues.Load(factory));
+            work.AddRange(elementValues.Load(factory));
+            work.AddRange(transformValues.Load(factory));
+            work.Add(new WorkItem() { DoWork = columnValues.Load });
+
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Scripting (Currently saves all)</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(schemtaValues.Save(factory));
+            work.AddRange(elementValues.Save(factory));
+            work.AddRange(transformValues.Save(factory));
+
+            return work;
+        }
+
+        public IReadOnlyList<WorkItem> Remove()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem() { WorkName = "Remove Scripting Schemta", DoWork = () => { schemtaValues.Clear(); } });
+            work.Add(new WorkItem() { WorkName = "Remove Scripting Elements", DoWork = () => { elementValues.Clear(); } });
+            work.Add(new WorkItem() { WorkName = "Remove Scripting Transforms", DoWork = () => { transformValues.Clear(); } });
 
             return work;
         }

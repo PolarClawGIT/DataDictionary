@@ -15,10 +15,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// Database NameSpaces are represented by the fully qualified object name.
     /// Library NameSpaces are defined by the namespace or type and the element of the namespace or type.
     /// </summary>
-    /// <remarks>
-    /// This list mimics what is in the database but the Value (Int32) does not match.
-    /// Each Database Entry, is expected to have an entry here.
-    /// </remarks>
     /// <see cref="ScopeKey"/>
     public enum ScopeType
     {

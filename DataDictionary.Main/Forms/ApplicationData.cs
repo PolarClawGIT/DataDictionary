@@ -128,8 +128,6 @@ namespace DataDictionary.Main.Forms
         /// <param name="scope"></param>
         protected void Setup(BindingSource data, ScopeType scope = ScopeType.Null)
         {
-            if (data.Current is Object) { this.Text = data.ToString(); }
-
             if (data.Current is IScopeKey scopeKey)
             { this.Icon = new ScopeKey(scopeKey).Scope.ToIcon(); }
             else if (data.Current is IScopeKeyName scopeName)

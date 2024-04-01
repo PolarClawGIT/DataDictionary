@@ -89,6 +89,8 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(DatabaseModel.Load(factory, key));
             work.AddRange(LibraryModel.Load(factory, key));
 
+            work.AddRange(ScriptingEngine.Load(factory, key));
+
             return work;
         }
 
@@ -103,6 +105,8 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(DomainModel.Save(factory, key));
             work.AddRange(DatabaseModel.Save(factory, key));
             work.AddRange(LibraryModel.Save(factory, key));
+
+            work.AddRange(ScriptingEngine.Save(factory, key));
 
             return work;
         }
@@ -119,6 +123,8 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(DomainModel.Remove());
             work.AddRange(DatabaseModel.Remove());
             work.AddRange(LibraryModel.Remove());
+
+            work.AddRange(ScriptingEngine.Remove());
 
             work.AddRange(NameScope.Remove());
 
@@ -149,6 +155,8 @@ namespace DataDictionary.BusinessLayer
                     domainValue.Import(workSet);
                     databaseValue.Import(workSet);
                     libraryValue.Import(workSet);
+
+                    scriptingValue.Import(workSet);
                 }
 
                 ModelFile = file;
@@ -174,6 +182,9 @@ namespace DataDictionary.BusinessLayer
                     workSet.Tables.AddRange(domainValue.Export().ToArray());
                     workSet.Tables.AddRange(databaseValue.Export().ToArray());
                     workSet.Tables.AddRange(libraryValue.Export().ToArray());
+
+                    workSet.Tables.AddRange(scriptingValue.Export().ToArray());
+
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }
 

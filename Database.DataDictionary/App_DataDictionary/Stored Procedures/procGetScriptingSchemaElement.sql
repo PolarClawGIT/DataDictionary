@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procGetScriptingSchemaElement]
-		@ElementId UniqueIdentifier = Null,
-		@SchemaId UniqueIdentifier = Null
+		@SchemaId UniqueIdentifier = Null,
+		@ElementId UniqueIdentifier = Null
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
@@ -8,7 +8,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Select	D.[ElementId],
 		D.[SchemaId],
-		D.[ScopeId],
+		D.[ScopeName],
 		D.[ColumnName],
 		D.[ElementName],
 		D.[ElementType],
@@ -19,7 +19,6 @@ Select	D.[ElementId],
 		D.[DataAsCData],
 		D.[DataAsXml]
 From	[App_DataDictionary].[ScriptingSchemaElement] D
-		Outer Apply [App_DataDictionary].[funcGetScopeName](D.[ScopeId]) C
 Where	(@ElementId is Null or @ElementId = D.[ElementId]) And
 		(@SchemaId is Null or @SchemaId = D.[SchemaId]) 
 GO

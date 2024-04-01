@@ -2,7 +2,7 @@
 (
 	[ElementId]             UniqueIdentifier NOT NULL CONSTRAINT [DF_ScriptingSchemaColumnId] DEFAULT (newid()),
 	[SchemaId]              UniqueIdentifier NOT NULL,
-	[ScopeId]               Int Not Null, -- Scope to match to. In effect what is the Table/Sub-Type to render
+	[ScopeName]             [App_DataDictionary].[typeScopeName] Not Null, -- Application Scope to match to
 	[ColumnName]            SysName Not Null, -- Name Column to match too
 	-- XSD definition, example <xsd:element name="City" type="xsd:string"  minOccurs="1" nillable="true">
 	[ElementName]           SysName Null, -- Name of the data. Used as Attribute or Element name. If Null, Column Name is used.
@@ -21,9 +21,8 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_ScriptingSchemaElement] PRIMARY KEY CLUSTERED ([ElementId] ASC),
 	CONSTRAINT [FK_ScriptingSchemaElementSchema] FOREIGN KEY ([SchemaId]) REFERENCES [App_DataDictionary].[ScriptingSchema] ([SchemaId]),
-	CONSTRAINT [FK_ScriptingSchemaElementScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [AK_ScriptingSchemaElement]
-    ON [App_DataDictionary].[ScriptingSchemaElement]([SchemaId], [ScopeId], [ColumnName]);
+    ON [App_DataDictionary].[ScriptingSchemaElement]([SchemaId], [ScopeName], [ColumnName]);
 GO
