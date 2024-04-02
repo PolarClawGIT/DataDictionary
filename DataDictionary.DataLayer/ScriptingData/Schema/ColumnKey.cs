@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Interface for the Scripting Schema Column key.
     /// </summary>
-    public interface IColumnKey : IScopeKeyName
+    public interface IColumnKey : IScopeKey
     {
         /// <inheritdoc cref="DataColumn.ColumnName"/>
         String? ColumnName { get; }
@@ -20,23 +20,28 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Implementation for the Scripting Schema Column key.
     /// </summary>
-    public class ColumnKey : ScopeKeyName, IColumnKey, IKeyComparable<IColumnKey>
+    public class ColumnKey : IColumnKey, IKeyComparable<IColumnKey>
     {
         /// <inheritdoc/>
         public String ColumnName { get; init; } = string.Empty;
 
+        /// <inheritdoc/>
+        public ScopeType Scope { get; init; } = ScopeType.Null;
 
         /// <summary>
         /// Constructor for a blank Catalog Key
         /// </summary>
         protected internal ColumnKey() : base() { }
 
+
         /// <summary>
         /// Constructor for the Catalog Unique Key.
         /// </summary>
         /// <param name="source"></param>
-        public ColumnKey(IColumnKey source) : base(source)
+        public ColumnKey(IColumnKey source) : this()
         {
+            Scope = source.Scope;
+
             if (source.ColumnName is string) { ColumnName = source.ColumnName; }
             else { ColumnName = string.Empty; }
         }
@@ -47,7 +52,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         {
             return
                 other is IColumnKey &&
-                new ScopeKeyName(this).Equals(other) &&
+                Scope.Equals(other.Scope) &&
                 !string.IsNullOrEmpty(ColumnName) &&
                 !string.IsNullOrEmpty(other.ColumnName) &&
                 ColumnName.Equals(other.ColumnName, KeyExtension.CompareString);
@@ -61,12 +66,12 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         public virtual int CompareTo(IColumnKey? other)
         {
             if (other is null) { return 1; }
-            else if (new ScopeKeyName(this).CompareTo(other) is int value && value != 0) { return value; }
-            else { return string.Compare(ColumnName, other.ColumnName, true); }
+            else if (Scope.CompareTo(other.Scope) is int value && value != 0) { return value; }
+            else { return String.Compare(ColumnName, other.ColumnName, true); }
         }
 
         /// <inheritdoc/>
-        public override int CompareTo(object? obj)
+        public virtual int CompareTo(object? obj)
         { if (obj is IColumnKey value) { return CompareTo(new ColumnKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
@@ -100,6 +105,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
 
         /// <inheritdoc/>
         public override string ToString()
-        { return String.Format("{0}: {1}",base.ToString(),ColumnName); }
+        { return String.Format("{0}: {1}", Scope.ToName(), ColumnName); }
     }
 }

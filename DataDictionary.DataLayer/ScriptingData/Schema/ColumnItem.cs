@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     public class ColumnItem : IColumnItem, IBindingPropertyChanged
     {
         /// <inheritdoc/>
-        public String ScopeName { get; init; } = ScopeType.Null.ToScopeName();
+        public ScopeType Scope { get; init; } = ScopeType.Null;
 
         /// <inheritdoc/>
         public String ColumnName { get; init; } = String.Empty;
@@ -52,7 +52,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         /// </summary>
         public ColumnItem(ScopeType scope, DataColumn source) : this()
         {
-            ScopeName = scope.ToScopeName();
+            Scope = scope;
             ColumnName = source.ColumnName;
             AllowDBNull = source.AllowDBNull;
             DataType = source.DataType;
@@ -64,6 +64,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
 
         /// <inheritdoc/>
         public override string ToString()
-        { return String.Format("{0} {1}", ScopeName, ColumnName); }
+        { return String.Format("{0} {1}", Scope.ToName(), ColumnName); }
     }
 }

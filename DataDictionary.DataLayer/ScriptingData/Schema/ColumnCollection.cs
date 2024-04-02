@@ -32,7 +32,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         /// <param name="scope"></param>
         /// <returns></returns>
         public IEnumerable<IColumnItem> GetColumns(ScopeType scope)
-        { return this.Where(w => scope.ToScopeKey().Equals(w) && w is IColumnItem).Select(s => s as IColumnItem); }
+        { return this.Where(w => scope.Equals(w) && w is IColumnItem).Select(s => s as IColumnItem); }
 
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
                 {
                     TItem newItem = new()
                     {
-                        ScopeName = scope.ToScopeName(),
+                        Scope = scope,
                         ColumnName = item.ColumnName,
                         AllowDBNull = item.AllowDBNull,
                         DataType = item.DataType,

@@ -25,7 +25,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         /// <inheritdoc/>
         public Guid? RoutineId { get { return GetValue<Guid>("RoutineId"); } }
-        
+
         /// <inheritdoc/>
         public string? DatabaseName { get { return GetValue("DatabaseName"); } }
 
@@ -34,9 +34,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         /// <inheritdoc/>
         public string? RoutineName { get { return GetValue("RoutineName"); } }
-
-        /// <inheritdoc/>
-        public string? RoutineTypeName { get { return GetValue("RoutineType"); } }
 
         /// <inheritdoc/>
         public bool IsSystem
@@ -56,7 +53,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         }
 
         /// <inheritdoc/>
-        public DbRoutineType RoutineType { get { return this.GetRoutineType(); } }
+        public DbRoutineType RoutineType
+        { get { return DbRoutineTypeKey.Parse(GetValue("RoutineType") ?? String.Empty).RoutineType; } }
 
         /// <inheritdoc/>
         public ScopeType Scope

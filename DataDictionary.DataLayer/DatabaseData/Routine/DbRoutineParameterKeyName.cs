@@ -64,7 +64,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// <param name="source">A four part Alias name with a Scope of a Procedure/Function Parameter.</param>
         /// <returns>A Column Key or Null if a key could not be constructed.</returns>
         public static new DbRoutineParameterKeyName? TryCreate<T>(T source)
-            where T : IAliasKeyName, IScopeKeyName
+            where T : IAliasKeyName, IScopeKey
         {
             if (source.AliasName is null) { return null; }
 

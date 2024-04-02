@@ -190,7 +190,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         /// <param name="column"></param>
         public ElementItem(ISchemaKey key, IColumnItem column) : this(key)
         {
-            ScopeName = column.ScopeName;
+            ScopeName = column.Scope.ToName();
             ColumnName = column.ColumnName;
         }
 

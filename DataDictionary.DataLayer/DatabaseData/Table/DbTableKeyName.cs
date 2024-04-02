@@ -62,7 +62,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <param name="source">A four part Alias name with a Scope of a Table or View.</param>
         /// <returns>A Table Key or Null if a key could not be constructed.</returns>
         public static DbTableKeyName? TryCreate<T>(T source)
-            where T: IAliasKeyName, IScopeKeyName
+            where T: IAliasKeyName, IScopeKey
         {
             if (source.AliasName is null) { return null; }
 

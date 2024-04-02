@@ -75,9 +75,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public string? TableName { get { return GetValue("TableName"); } }
 
         /// <inheritdoc/>
-        public string? TableTypeName { get { return GetValue("TableType"); } }
-
-        /// <inheritdoc/>
         public string? ColumnName { get { return GetValue("ColumnName"); } }
 
         /// <inheritdoc/>
@@ -157,7 +154,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public DbTableType TableType
-        { get { return this.GetTableType(); } }
+        { get { return DbTableTypeKey.Parse(GetValue("TableType") ?? String.Empty).TableType; } }
 
         /// <inheritdoc/>
         public ScopeType Scope
@@ -166,7 +163,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             {
                 switch (TableType)
                 {
-                    case DbTableType.Null: return ScopeType.Null;
                     case DbTableType.Table: return ScopeType.DatabaseTableColumn;
                     case DbTableType.TemporalTable: return ScopeType.DatabaseTableColumn;
                     case DbTableType.HistoryTable: return ScopeType.DatabaseTableColumn;

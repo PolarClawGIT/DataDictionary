@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
     /// <summary>
     /// Interface for the Library Source Item
     /// </summary>
-    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyName, IScopeKeyName
+    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyName, IScopeKey
     {
         /// <summary>
         /// Title for the Library
@@ -57,13 +57,13 @@ namespace DataDictionary.DataLayer.LibraryData.Source
         public string? LibraryDescription { get { return GetValue("LibraryDescription"); } set { SetValue("LibraryDescription", value); } }
 
         /// <inheritdoc/>
-        public string? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }
-
-        /// <inheritdoc/>
         public string? SourceFile { get { return GetValue("SourceFile"); } set { SetValue("SourceFile", value); } }
 
         /// <inheritdoc/>
         public DateTime? SourceDate { get { return GetValue<DateTime>("SourceDate"); } set { SetValue("SourceDate", value); } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get; } = ScopeType.Library;
 
         /// <summary>
         /// Constructor for LibraryMemberItem

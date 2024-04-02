@@ -38,9 +38,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public string? RoutineName { get { return GetValue("RoutineName"); } }
 
         /// <inheritdoc/>
-        public string? RoutineTypeName { get { return GetValue("RoutineType"); } }
-
-        /// <inheritdoc/>
         public string? ParameterName { get { return GetValue("ParameterName"); } }
 
         /// <inheritdoc/>
@@ -98,7 +95,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public string? DomainName { get { return GetValue("DomainName"); } }
 
         /// <inheritdoc/>
-        public DbRoutineType RoutineType { get { return this.GetRoutineType(); } }
+        public DbRoutineType RoutineType
+        { get { return DbRoutineTypeKey.Parse(GetValue("RoutineType") ?? String.Empty).RoutineType; } }
 
         /// <inheritdoc/>
         public ScopeType Scope

@@ -208,15 +208,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static String ToScopeName(this ScopeType value)
+        public static String ToName(this ScopeType value)
         { return new ScopeKey(value).ToString(); }
-
-        /// <summary>
-        /// Translates a ScopeType to a ScopeKey.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static ScopeKey ToScopeKey(this ScopeType value)
-        { return new ScopeKey(value); }
     }
 }

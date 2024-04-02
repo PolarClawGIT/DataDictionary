@@ -16,13 +16,15 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     /// <summary>
     /// Interface for the Library Member Item
     /// </summary>
-    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, IScopeKeyName
+    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, ILibraryMemberType, IScopeKey
     {
+
         /// <summary>
         /// Data for the Member.
         /// This is expected to be a XML fragment when generated from Visual studio Document.
         /// </summary>
-        string? MemberData { get; }   
+        string? MemberData { get; }
+
     }
 
     /// <summary>
@@ -41,19 +43,42 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         public Guid? MemberParentId { get { return GetValue<Guid>("MemberParentId"); } set { SetValue("MemberParentId", value); } }
 
         /// <inheritdoc/>
-        public string? AssemblyName { get { return GetValue("AssemblyName"); } set { SetValue("AssemblyName", value); } }
+        public String? AssemblyName { get { return GetValue("AssemblyName"); } set { SetValue("AssemblyName", value); } }
 
         /// <inheritdoc/>
-        public string? NameSpace { get { return GetValue("NameSpace"); } set { SetValue("NameSpace", value); } }
+        public String? NameSpace { get { return GetValue("NameSpace"); } set { SetValue("NameSpace", value); } }
 
         /// <inheritdoc/>
-        public string? MemberName { get { return GetValue("MemberName"); } set { SetValue("MemberName", value); } }
+        public String? MemberName { get { return GetValue("MemberName"); } set { SetValue("MemberName", value); } }
 
         /// <inheritdoc/>
-        public string? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }
+        public String? MemberData { get { return GetValue("MemberData"); } set { SetValue("MemberData", value); } }
 
         /// <inheritdoc/>
-        public string? MemberData { get { return GetValue("MemberData"); } set { SetValue("MemberData", value); } }
+        public LibraryMemberType MemberType
+        {
+            get { return LibraryMemberTypeKey.Parse(GetValue("MemberType") ?? String.Empty).MemberType; }
+            set { SetValue("MemberType", value.ToName()); }
+        }
+
+        /// <inheritdoc/>
+        public ScopeType Scope
+        {
+            get
+            {
+                switch (MemberType)
+                {
+                    case LibraryMemberType.NameSpace: return ScopeType.LibraryNameSpace;
+                    case LibraryMemberType.Type: return ScopeType.LibraryType;
+                    case LibraryMemberType.Field: return ScopeType.LibraryField;
+                    case LibraryMemberType.Property: return ScopeType.LibraryProperty;
+                    case LibraryMemberType.Method: return ScopeType.LibraryMethod;
+                    case LibraryMemberType.Event: return ScopeType.LibraryEvent;
+                    case LibraryMemberType.Parameter: return ScopeType.LibraryParameter;
+                    default: return ScopeType.Null;
+                }
+            }
+        }
 
         /// <summary>
         /// Constructor for LibraryMemberItem
@@ -69,7 +94,6 @@ namespace DataDictionary.DataLayer.LibraryData.Member
             new DataColumn("AssemblyName", typeof(string)){ AllowDBNull = false},
             new DataColumn("NameSpace", typeof(string)){ AllowDBNull = true},
             new DataColumn("MemberName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = false},
             new DataColumn("MemberType", typeof(string)){ AllowDBNull = true},
             new DataColumn("MemberData", typeof(string)){ AllowDBNull = true},
         };
@@ -94,5 +118,5 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         { if (MemberName is not null) { return MemberName; } else { return string.Empty; } }
     }
 
-    
+
 }

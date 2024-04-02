@@ -40,7 +40,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// </summary>
         /// <param name="source"></param>
         public ScopeKey(ScopeType source) : this()
-        { Scope = source; } 
+        { Scope = source; }
 
         /// <summary>
         /// Constructor for the Scope Key.
@@ -48,16 +48,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <param name="source"></param>
         public ScopeKey(IScopeKey source) : this()
         { if (source is IScopeKey) { Scope = source.Scope; } }
-
-        /// <summary>
-        /// Constructor for the Scope Key.
-        /// </summary>
-        /// <param name="source"></param>
-        public ScopeKey(IScopeKeyName source) : this()
-        {
-            if (ScopeKey.TryParse(source.ScopeName, out ScopeKey? result))
-            { Scope = result.Scope; }
-        }
 
         /// <summary>
         /// Converts a ScopeType into a ScopeKey.
@@ -69,7 +59,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// Converts a ScopeKey into a ScopeType.
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator ScopeType (ScopeKey source) { return source.Scope; }
+        public static implicit operator ScopeType(ScopeKey source) { return source.Scope; }
 
         #region IEquatable
         /// <inheritdoc/>
@@ -178,7 +168,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         };
 
         /// <inheritdoc/>
-        public static ScopeKey Parse(String source, IFormatProvider? provider)
+        public static ScopeKey Parse(String source, IFormatProvider? provider = null)
         {
             if (String.IsNullOrEmpty(source))
             { throw new ArgumentNullException(nameof(source)); }
@@ -186,11 +176,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             if (ScopeKey.TryParse(source, provider, out ScopeKey? result))
             { return result; }
             else
-            {
-                Exception ex = new FormatException();
-                ex.Data.Add(nameof(source), source);
-                throw ex;
-            }
+            { return ScopeType.Null; }
         }
 
         /// <inheritdoc/>
