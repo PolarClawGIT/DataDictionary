@@ -5,5 +5,5 @@
 	[DatabaseName]           SysName Null,
 	[SchemaName]             SysName Null,
 	[RoutineName]            SysName Null,
-	[RoutineType]            NVarChar(60) Null
+	[RoutineType]            [App_DataDictionary].[typeObjectSubType] Null
 )

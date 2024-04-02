@@ -9,7 +9,8 @@ With [Data] As (
 			Convert(NVarChar(Max),
 				FormatMessage('[%s]',[AliasMember])) As [AliasName],
 			Convert(NVarChar(Max), Null) As [ParentAliasName],
-			[AliasMember]
+			[AliasMember],
+			[ScopeName]
 	From	[App_DataDictionary].[DomainAlias]
 	Where	[AliasId] = @AliasId
 	Union All
@@ -22,14 +23,16 @@ With [Data] As (
 				FormatMessage('[%s]',P.[AliasMember]),
 				FormatMessage('[%s].%s',P.[AliasMember], D.[ParentAliasName])))
 				As [ParentAliasName],
-			D.[AliasMember]
+			D.[AliasMember],
+			P.[ScopeName]
 	From	[Data] D
 			Inner Join [App_DataDictionary].[DomainAlias] P
 			On	D.[ParentAliasId] = P.[AliasId])
 Select	[AliasId],
 		[AliasName],
 		[ParentAliasName],
-		[AliasMember]
+		[AliasMember],
+		[ScopeName]
 From	[Data]
 Where	[ParentAliasId] is Null)
 GO

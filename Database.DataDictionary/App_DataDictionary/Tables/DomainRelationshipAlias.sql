@@ -2,7 +2,6 @@
 (
 	[RelationshipId]    UniqueIdentifier Not Null,
 	[AliasId]           UniqueIdentifier Not Null,
-	[ScopeId]           Int Not Null,
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DomainRelationshipAlias_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DomainRelationshipAlias_SysStart] DEFAULT (sysdatetime()),

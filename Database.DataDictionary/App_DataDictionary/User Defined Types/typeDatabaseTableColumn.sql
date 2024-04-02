@@ -5,7 +5,7 @@
 	[DatabaseName]           SysName          Null,
 	[SchemaName]             SysName          Null,
 	[TableName]              SysName          Null,
-	[TableType]              NVarChar(60)     Null,
+	[TableType]              [App_DataDictionary].[typeObjectSubType] Null,
 	[ColumnName]             SysName          Null,
     [OrdinalPosition]        Int              Null,
 	[IsNullable]             Bit              Null,

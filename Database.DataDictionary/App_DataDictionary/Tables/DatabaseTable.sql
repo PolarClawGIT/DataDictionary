@@ -5,10 +5,10 @@
 	-- but only a [INFORMATION_SCHEMA].[COLUMNS] representing columns from both.
 	-- For Referential Integrity purposes, the GetSchema approach is used where both views and tables are returned in a single list.
 	-- Temporal and History tables as different table types.
-	[TableId]   UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseTableId] DEFAULT (newid()),
-	[SchemaId]  UniqueIdentifier Not Null,
-	[TableName] SysName Not Null,
-	[TableType] NVarChar(60) Null, -- BASE TABLE, VIEW, HISTORY TABLE, TEMPTORAL TABLE
+	[TableId]             UniqueIdentifier Not Null CONSTRAINT [DF_DatabaseTableId] DEFAULT (newid()),
+	[SchemaId]            UniqueIdentifier Not Null,
+	[TableName]           SysName Not Null,
+	[TableType]           [App_DataDictionary].[typeObjectSubType] Null, -- BASE TABLE, VIEW, HISTORY TABLE, TEMPTORAL TABLE
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DatabaseTable_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DatabaseTable_SysStart] DEFAULT (sysdatetime()),
@@ -17,6 +17,7 @@
 	-- Keys
 	CONSTRAINT [PK_DatabaseTable] PRIMARY KEY CLUSTERED ([TableId] ASC),
 	CONSTRAINT [FK_DatabaseTableSchema] FOREIGN KEY ([SchemaId]) REFERENCES [App_DataDictionary].[DatabaseSchema] ([SchemaId]),
+	CONSTRAINT [CK_DatabaseTableType] CHECK ([TableType]='View' OR [TableType]='History Table' OR [TableType]='Temporal Table' OR [TableType]='Table' OR [TableType] IS NULL),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_DatabaseTable]
