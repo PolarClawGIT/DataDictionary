@@ -169,7 +169,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
                 && itemName.Key != LibraryMemberType.Null)
             { result = new LibraryMemberTypeKey(itemName.Key); return true; }
 
-            else if (parseName.FirstOrDefault(w => w.Value.Code.Equals(source))
+            else if (parseName.FirstOrDefault(w => source is String && source.Length > 0 && w.Value.Code.Equals(source[0]))
                 is KeyValuePair<LibraryMemberType, (Char Code, String Name)> itemCode
                 && itemCode.Key != LibraryMemberType.Null)
             { result = new LibraryMemberTypeKey(itemCode.Key); return true; }

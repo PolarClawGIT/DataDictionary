@@ -77,7 +77,6 @@ namespace DataDictionary.DataLayer.LibraryData.Source
             new DataColumn("LibraryTitle", typeof(string)){ AllowDBNull = true},
             new DataColumn("LibraryDescription", typeof(string)){ AllowDBNull = true},
             new DataColumn("AssemblyName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = true},
             new DataColumn("SourceFile", typeof(string)){ AllowDBNull = true},
             new DataColumn("SourceDate", typeof(DateTime)){ AllowDBNull = true},
         };
