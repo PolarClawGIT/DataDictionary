@@ -78,9 +78,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public string? ColumnName { get { return GetValue("ColumnName"); } }
 
         /// <inheritdoc/>
-        public string? ScopeName { get { return GetValue("ScopeName"); } }
-
-        /// <inheritdoc/>
         public int? OrdinalPosition { get { return GetValue<int>("OrdinalPosition"); } }
 
         /// <inheritdoc/>
@@ -219,7 +216,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            if (new ScopeKey(this).TryScope() is IDbElementScopeKey scopeKey)
+            if (this.Scope.ToDbLevel() is IDbLevelElementKey scopeKey)
             {
                 return new DbExtendedPropertyGetCommand(connection)
                 {
@@ -235,7 +232,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             else
             {
                 Exception ex = new InvalidOperationException("Could not determine LevelType");
-                ex.Data.Add(nameof(ScopeName), ScopeName);
                 ex.Data.Add(nameof(DatabaseName), DatabaseName);
                 ex.Data.Add(nameof(SchemaName), SchemaName);
                 ex.Data.Add(nameof(TableName), TableName);

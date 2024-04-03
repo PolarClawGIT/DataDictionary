@@ -93,7 +93,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            if (new ScopeKey(this).TryScope() is IDbObjectScopeKey scopeKey)
+            if (this.Scope.ToDbLevel() is IDbLevelObjectKey scopeKey)
             {
                 return new DbExtendedPropertyGetCommand(connection)
                 {

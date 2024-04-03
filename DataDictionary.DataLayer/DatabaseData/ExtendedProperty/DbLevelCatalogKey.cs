@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// Not all types are supported by the Application.
     /// </summary>
     /// <see href="https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16"/>
-    public enum DbCatalogScope
+    public enum DbLevelCatalog
     {
         /// <summary>
         /// Not defined, default value.
@@ -93,12 +93,12 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Interface for Level0 MS Extended Property Type.
     /// </summary>
-    public interface IDbCatalogScopeKey : IDbScopeKey
+    public interface IDbLevelCatalogKey : IDbLevelKey
     {
         /// <summary>
         /// Level0 MS Extended Property Type.
         /// </summary>
-        DbCatalogScope CatalogScope { get; }
+        DbLevelCatalog CatalogScope { get; }
     }
 
     /// <summary>
@@ -107,43 +107,43 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <remarks>
     /// Currently not used.
     /// </remarks>
-    public class DbCatalogScopeKey : IDbCatalogScopeKey, IKeyEquality<IDbCatalogScopeKey>
+    public class DbLevelCatalogKey : IDbLevelCatalogKey, IKeyEquality<IDbLevelCatalogKey>
     {
         /// <inheritdoc/>
-        public DbCatalogScope CatalogScope { get; init; } = DbCatalogScope.NULL;
+        public DbLevelCatalog CatalogScope { get; init; } = DbLevelCatalog.NULL;
 
         /// <summary>
         /// Constructor for a Catalog Scope.
         /// </summary>
-        internal protected DbCatalogScopeKey() : base() { }
+        internal protected DbLevelCatalogKey() : base() { }
 
         /// <summary>
         /// Constructor for a Catalog Scope.
         /// </summary>
-        public DbCatalogScopeKey(IDbCatalogScopeKey source) : this()
+        public DbLevelCatalogKey(IDbLevelCatalogKey source) : this()
         { CatalogScope = source.CatalogScope; }
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual bool Equals(IDbCatalogScopeKey? other)
+        public virtual bool Equals(IDbLevelCatalogKey? other)
         {
             return
-                other is IDbCatalogScopeKey
-                && CatalogScope != DbCatalogScope.NULL
-                && other.CatalogScope != DbCatalogScope.NULL
+                other is IDbLevelCatalogKey
+                && CatalogScope != DbLevelCatalog.NULL
+                && other.CatalogScope != DbLevelCatalog.NULL
                 && CatalogScope == other.CatalogScope;
         }
 
         /// <inheritdoc/>
         public override bool Equals(object? other)
-        { return other is IDbCatalogScopeKey value && Equals(new DbCatalogScopeKey(value)); }
+        { return other is IDbLevelCatalogKey value && Equals(new DbLevelCatalogKey(value)); }
 
         /// <inheritdoc/>
-        public static bool operator ==(DbCatalogScopeKey left, DbCatalogScopeKey right)
+        public static bool operator ==(DbLevelCatalogKey left, DbLevelCatalogKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(DbCatalogScopeKey left, DbCatalogScopeKey right)
+        public static bool operator !=(DbLevelCatalogKey left, DbLevelCatalogKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

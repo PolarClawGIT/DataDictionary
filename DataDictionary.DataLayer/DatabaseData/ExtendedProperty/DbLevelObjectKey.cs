@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// Not all types are supported by the Application.
     /// </summary>
     /// <see href="https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16"/>
-    public enum DbObjectScope
+    public enum DbLevelObject
     {
         /// <summary>
         /// Not defined, default value.
@@ -83,12 +83,12 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Interface for Level1 MS Extended Property Type.
     /// </summary>
-    public interface IDbObjectScopeKey: IDbCatalogScopeKey
+    public interface IDbLevelObjectKey: IDbLevelCatalogKey
     {
         /// <summary>
         /// Level1 MS Extended Property Type.
         /// </summary>
-        public DbObjectScope ObjectScope { get; }
+        public DbLevelObject ObjectScope { get; }
     }
 
     /// <summary>
@@ -97,44 +97,44 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <remarks>
     /// Currently not used.
     /// </remarks>
-    public class DbObjectScopeKey : DbCatalogScopeKey, IDbObjectScopeKey, IKeyEquality<IDbObjectScopeKey>
+    public class DbLevelObjectKey : DbLevelCatalogKey, IDbLevelObjectKey, IKeyEquality<IDbLevelObjectKey>
     {
         /// <inheritdoc/>
-        public DbObjectScope ObjectScope { get; init; } = DbObjectScope.NULL;
+        public DbLevelObject ObjectScope { get; init; } = DbLevelObject.NULL;
 
         /// <summary>
         /// Constructor for a Object Scope.
         /// </summary>
-        internal protected DbObjectScopeKey() : base() { }
+        internal protected DbLevelObjectKey() : base() { }
 
         /// <summary>
         /// Constructor for a Object Scope.
         /// </summary>
-        public DbObjectScopeKey(IDbObjectScopeKey source) : base (source)
+        public DbLevelObjectKey(IDbLevelObjectKey source) : base (source)
         { ObjectScope = source.ObjectScope; }
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual bool Equals(IDbObjectScopeKey? other)
+        public virtual bool Equals(IDbLevelObjectKey? other)
         {
             return
-                other is IDbObjectScopeKey
-                && new DbCatalogScopeKey(this).Equals(other)
-                && ObjectScope != DbObjectScope.NULL
-                && other.ObjectScope != DbObjectScope.NULL
+                other is IDbLevelObjectKey
+                && new DbLevelCatalogKey(this).Equals(other)
+                && ObjectScope != DbLevelObject.NULL
+                && other.ObjectScope != DbLevelObject.NULL
                 && ObjectScope == other.ObjectScope;
         }
 
         /// <inheritdoc/>
         public override bool Equals(object? other)
-        { return other is IDbObjectScopeKey value && Equals(new DbObjectScopeKey(value)); }
+        { return other is IDbLevelObjectKey value && Equals(new DbLevelObjectKey(value)); }
 
         /// <inheritdoc/>
-        public static bool operator ==(DbObjectScopeKey left, DbObjectScopeKey right)
+        public static bool operator ==(DbLevelObjectKey left, DbLevelObjectKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(DbObjectScopeKey left, DbObjectScopeKey right)
+        public static bool operator !=(DbLevelObjectKey left, DbLevelObjectKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

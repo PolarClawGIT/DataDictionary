@@ -185,7 +185,11 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	[ROUTINE_CATALOG] As [DatabaseName],
         ///	[ROUTINE_SCHEMA] As [SchemaName],
         ///	[ROUTINE_NAME] As [RoutineName],
-        ///	[ROUTINE_TYPE] As [RoutineType]
+        ///	Case
+        ///	When [ROUTINE_TYPE] In (&apos;PROCEDURE&apos;) Then &apos;Procedure&apos;
+        ///	When [ROUTINE_TYPE] In (&apos;FUNCTION&apos;) Then &apos;Function&apos;
+        ///	Else [ROUTINE_TYPE] 
+        ///	End As [RoutineType]
         ///From	[INFORMATION_SCHEMA].[ROUTINES].
         /// </summary>
         internal static string DbRoutineItem {
@@ -200,12 +204,14 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	P.[SPECIFIC_CATALOG] As [DatabaseName],
         ///	P.[SPECIFIC_SCHEMA] As [SchemaName],
         ///	P.[SPECIFIC_NAME] As [RoutineName],
-        ///	R.[ROUTINE_TYPE] As [RoutineType],
+        ///	Case
+        ///	When [ROUTINE_TYPE] In (&apos;PROCEDURE&apos;) Then &apos;Procedure&apos;
+        ///	When [ROUTINE_TYPE] In (&apos;FUNCTION&apos;) Then &apos;Function&apos;
+        ///	Else [ROUTINE_TYPE] 
+        ///	End As [RoutineType],
         ///	IIF(R.[ROUTINE_TYPE] IN (&apos;FUNCTION&apos;) AND P.[ORDINAL_POSITION] = 0,&apos;RETURN&apos;,P.[PARAMETER_NAME]) As [ParameterName],
         ///	P.[ORDINAL_POSITION] As [OrdinalPosition],
-        ///	P.[DATA_TYPE] As [DataType],
-        ///	P.[CHARACTER_MAXIMUM_LENGTH] As [CharacterMaximumLength],
-        ///	P.[CHARACTER_OCTET_LENGTH] As [Characte [rest of string was truncated]&quot;;.
+        ///	P.[ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbRoutineParameterItem {
             get {
@@ -233,10 +239,9 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	I.[TABLE_SCHEMA] As [SchemaName],
         ///	I.[TABLE_NAME] As [TableName],
         ///	Case
-        ///	When Exists(Select [history_table_id] From [Sys].[tables] Where [object_id] = C.[object_id] And [history_table_id] is Not Null) Then &apos;TEMPORAL TABLE&apos;
-        ///	When Exists(Select [object_id] From [Sys].[tables] Where [history_table_id] = C.[object_id] And [object_id] is Not Null) Then &apos;HISTORY TABLE&apos;
-        ///	Else T.[TABLE_TYPE]
-        ///	End As [TableType] [rest of string was truncated]&quot;;.
+        ///	When Exists(Select [history_table_id] From [Sys].[tables] Where [object_id] = C.[object_id] And [history_table_id] is Not Null) Then &apos;Temporal Table&apos;
+        ///	When Exists(Select [object_id] From [Sys].[tables] Where [history_table_id] = C.[object_id] And [object_id] is Not Null) Then &apos;History Table&apos;
+        ///	When T.[TABLE_TYPE] In (&apos;BASE TABLE&apos;) Th [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbTableColumnItem {
             get {
@@ -251,15 +256,15 @@ namespace DataDictionary.DataLayer.DatabaseData {
         ///	I.[TABLE_SCHEMA] As [SchemaName],
         ///	I.[TABLE_NAME] As [TableName],
         ///	Case
-        ///	When H.[object_id] is Not Null Then &apos;HISTORY TABLE&apos;
-        ///	When T.[history_table_id] is Not Null Then &apos;TEMPORAL TABLE&apos;
+        ///	When H.[object_id] is Not Null Then &apos;History Table&apos;
+        ///	When T.[history_table_id] is Not Null Then &apos;Temporal Table&apos;
+        ///	When I.[TABLE_TYPE] in (&apos;BASE TABLE&apos;) Then &apos;Table&apos;
+        ///	When I.[TABLE_TYPE] in (&apos;VIEW&apos;) Then &apos;View&apos;
         ///	Else I.[TABLE_TYPE]
         ///	End As [TableType]
         ///From	[INFORMATION_SCHEMA].[TABLES] I
         ///	Left Join [sys].[Tables] T
-        ///	On	I.[TABLE_SCHEMA] = Object_Schema_Name(T.[object_id]) And
-        ///		I.[TABLE_NAME] = Object_Name(T.[object_id])
-        ///	Le [rest of string was truncated]&quot;;.
+        ///	On	I.[TABLE_ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DbTableItem {
             get {

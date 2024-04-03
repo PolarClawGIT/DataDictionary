@@ -12,17 +12,17 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// <summary>
         /// MS SQL ExtendedProperty Level 0 Type
         /// </summary>
-        DbCatalogScope CatalogScope { get; }
+        DbLevelCatalog CatalogScope { get; }
 
         /// <summary>
         /// MS SQL ExtendedProperty Level 1 Type
         /// </summary>
-        DbObjectScope ObjectScope { get; }
+        DbLevelObject ObjectScope { get; }
 
         /// <summary>
         /// MS SQL ExtendedProperty Level 2 Type
         /// </summary>
-        DbElementScope ElementScope { get; }
+        DbLevelElement ElementScope { get; }
 
         /// <summary>
         /// Object Type returned sys.fn_listextendedproperty 
@@ -53,7 +53,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         public string? Level0Name { get { return GetValue("Level0Name"); } }
 
         /// <inheritdoc/>
-        public DbCatalogScope CatalogScope { get { return ExtendedPropertyExtension.GetCatalogScope(Level0Type); } }
+        public DbLevelCatalog CatalogScope { get { return ExtendedPropertyExtension.GetCatalogScope(Level0Type); } }
 
         /// <inheritdoc/>
         public string? Level1Type { get { return GetValue("Level1Type"); } }
@@ -62,7 +62,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         public string? Level1Name { get { return GetValue("Level1Name"); } }
 
         /// <inheritdoc/>
-        public DbObjectScope ObjectScope { get { return ExtendedPropertyExtension.GetObjectScope(Level1Type); } }
+        public DbLevelObject ObjectScope { get { return ExtendedPropertyExtension.GetObjectScope(Level1Type); } }
 
         /// <inheritdoc/>
         public string? Level2Type { get { return GetValue("Level2Type"); } }
@@ -71,7 +71,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         public string? Level2Name { get { return GetValue("Level2Name"); } }
 
         /// <inheritdoc/>
-        public DbElementScope ElementScope { get { return ExtendedPropertyExtension.GetItemScope(Level2Type); } }
+        public DbLevelElement ElementScope { get { return ExtendedPropertyExtension.GetItemScope(Level2Type); } }
 
         /// <inheritdoc/>
         public string? ObjectType { get { return GetValue("ObjType"); } }
@@ -121,73 +121,73 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// </summary>
     static class ExtendedPropertyExtension
     {
-        static Dictionary<DbCatalogScope, string> catalogScope = new Dictionary<DbCatalogScope, string>()
+        static Dictionary<DbLevelCatalog, string> catalogScope = new Dictionary<DbLevelCatalog, string>()
         {
-            {DbCatalogScope.Assembly,"ASSEMBLY" },
-            {DbCatalogScope.Contract,"CONTRACT"},
-            {DbCatalogScope.EventNotification,"EVENT NOTIFICATION"},
-            {DbCatalogScope.Filegroup,"FILEGROUP"},
-            {DbCatalogScope.MessageType,"MESSAGE TYPE"},
-            {DbCatalogScope.PartitionFunction,"PARTITION FUNCTION"},
-            {DbCatalogScope.PartitionScheme,"PARTITION SCHEME"},
-            {DbCatalogScope.RemoteServiceBinding,"REMOTE SERVICE BINDING"},
-            {DbCatalogScope.Route,"ROUTE"},
-            {DbCatalogScope.Schema,"SCHEMA"},
-            {DbCatalogScope.Service,"SERVICE"},
-            {DbCatalogScope.Trigger,"TRIGGER"},
-            {DbCatalogScope.Type,"TYPE"},
-            {DbCatalogScope.User,"USER"},
+            {DbLevelCatalog.Assembly,"ASSEMBLY" },
+            {DbLevelCatalog.Contract,"CONTRACT"},
+            {DbLevelCatalog.EventNotification,"EVENT NOTIFICATION"},
+            {DbLevelCatalog.Filegroup,"FILEGROUP"},
+            {DbLevelCatalog.MessageType,"MESSAGE TYPE"},
+            {DbLevelCatalog.PartitionFunction,"PARTITION FUNCTION"},
+            {DbLevelCatalog.PartitionScheme,"PARTITION SCHEME"},
+            {DbLevelCatalog.RemoteServiceBinding,"REMOTE SERVICE BINDING"},
+            {DbLevelCatalog.Route,"ROUTE"},
+            {DbLevelCatalog.Schema,"SCHEMA"},
+            {DbLevelCatalog.Service,"SERVICE"},
+            {DbLevelCatalog.Trigger,"TRIGGER"},
+            {DbLevelCatalog.Type,"TYPE"},
+            {DbLevelCatalog.User,"USER"},
         };
 
-        public static DbCatalogScope GetCatalogScope(string? value)
+        public static DbLevelCatalog GetCatalogScope(string? value)
         { return catalogScope.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)).Key; }
 
-        public static string GetScope(this DbCatalogScope value)
+        public static string GetScope(this DbLevelCatalog value)
         {
             if (catalogScope.ContainsKey(value)) { return catalogScope[value]; }
             else { return string.Empty; }
         }
 
-        static Dictionary<DbObjectScope, string> objectScope = new Dictionary<DbObjectScope, string>()
+        static Dictionary<DbLevelObject, string> objectScope = new Dictionary<DbLevelObject, string>()
         {
-            {DbObjectScope.Aggregate,"AGGREGATE"},
-            {DbObjectScope.Default,"DEFAULT"},
-            {DbObjectScope.Function,"FUNCTION"},
-            {DbObjectScope.LogicalFileName,"LOGICAL FILE NAME"},
-            {DbObjectScope.Procedure,"PROCEDURE"},
-            {DbObjectScope.Queue,"QUEUE"},
-            {DbObjectScope.Rule,"RULE"},
-            {DbObjectScope.Synonym,"SYNONYM"},
-            {DbObjectScope.Table,"TABLE"},
-            {DbObjectScope.Type,"TYPE"},
-            {DbObjectScope.View,"VIEW"},
-            {DbObjectScope.XmlSchemaCollection,"XML SCHEMA COLLECTION"},
+            {DbLevelObject.Aggregate,"AGGREGATE"},
+            {DbLevelObject.Default,"DEFAULT"},
+            {DbLevelObject.Function,"FUNCTION"},
+            {DbLevelObject.LogicalFileName,"LOGICAL FILE NAME"},
+            {DbLevelObject.Procedure,"PROCEDURE"},
+            {DbLevelObject.Queue,"QUEUE"},
+            {DbLevelObject.Rule,"RULE"},
+            {DbLevelObject.Synonym,"SYNONYM"},
+            {DbLevelObject.Table,"TABLE"},
+            {DbLevelObject.Type,"TYPE"},
+            {DbLevelObject.View,"VIEW"},
+            {DbLevelObject.XmlSchemaCollection,"XML SCHEMA COLLECTION"},
         };
 
-        public static DbObjectScope GetObjectScope(string? value)
+        public static DbLevelObject GetObjectScope(string? value)
         { return objectScope.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)).Key; }
 
-        public static string GetScope(this DbObjectScope value)
+        public static string GetScope(this DbLevelObject value)
         {
             if (objectScope.ContainsKey(value)) { return objectScope[value]; }
             else { return string.Empty; }
         }
 
-        static Dictionary<DbElementScope, string> itemScope = new Dictionary<DbElementScope, string>()
+        static Dictionary<DbLevelElement, string> itemScope = new Dictionary<DbLevelElement, string>()
         {
-            {DbElementScope.Default,"DEFAULT"},
-            {DbElementScope.Column,"COLUMN"},
-            {DbElementScope.Constraint,"CONSTRAINT"},
-            {DbElementScope.EventNotification,"EVENT NOTIFICATION"},
-            {DbElementScope.Index,"INDEX"},
-            {DbElementScope.Parameter,"PARAMETER"},
-            {DbElementScope.Trigger,"TRIGGER"},
+            {DbLevelElement.Default,"DEFAULT"},
+            {DbLevelElement.Column,"COLUMN"},
+            {DbLevelElement.Constraint,"CONSTRAINT"},
+            {DbLevelElement.EventNotification,"EVENT NOTIFICATION"},
+            {DbLevelElement.Index,"INDEX"},
+            {DbLevelElement.Parameter,"PARAMETER"},
+            {DbLevelElement.Trigger,"TRIGGER"},
         };
 
-        public static DbElementScope GetItemScope(string? value)
+        public static DbLevelElement GetItemScope(string? value)
         { return itemScope.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)).Key; }
 
-        public static string? GetScope(this DbElementScope value)
+        public static string? GetScope(this DbLevelElement value)
         {
             if (itemScope.ContainsKey(value)) { return itemScope[value]; }
             else { return null; }

@@ -244,7 +244,11 @@ End Catch;</value>
 	[ROUTINE_CATALOG] As [DatabaseName],
 	[ROUTINE_SCHEMA] As [SchemaName],
 	[ROUTINE_NAME] As [RoutineName],
-	[ROUTINE_TYPE] As [RoutineType]
+	Case
+	When [ROUTINE_TYPE] In ('PROCEDURE') Then 'Procedure'
+	When [ROUTINE_TYPE] In ('FUNCTION') Then 'Function'
+	Else [ROUTINE_TYPE] 
+	End As [RoutineType]
 From	[INFORMATION_SCHEMA].[ROUTINES]</value>
     <comment>SQL Script to get data for DbRoutineItem.</comment>
   </data>
@@ -254,7 +258,11 @@ From	[INFORMATION_SCHEMA].[ROUTINES]</value>
 	P.[SPECIFIC_CATALOG] As [DatabaseName],
 	P.[SPECIFIC_SCHEMA] As [SchemaName],
 	P.[SPECIFIC_NAME] As [RoutineName],
-	R.[ROUTINE_TYPE] As [RoutineType],
+	Case
+	When [ROUTINE_TYPE] In ('PROCEDURE') Then 'Procedure'
+	When [ROUTINE_TYPE] In ('FUNCTION') Then 'Function'
+	Else [ROUTINE_TYPE] 
+	End As [RoutineType],
 	IIF(R.[ROUTINE_TYPE] IN ('FUNCTION') AND P.[ORDINAL_POSITION] = 0,'RETURN',P.[PARAMETER_NAME]) As [ParameterName],
 	P.[ORDINAL_POSITION] As [OrdinalPosition],
 	P.[DATA_TYPE] As [DataType],
@@ -295,8 +303,10 @@ From [INFORMATION_SCHEMA].[SCHEMATA]</value>
 	I.[TABLE_SCHEMA] As [SchemaName],
 	I.[TABLE_NAME] As [TableName],
 	Case
-	When Exists(Select [history_table_id] From [Sys].[tables] Where [object_id] = C.[object_id] And [history_table_id] is Not Null) Then 'TEMPORAL TABLE'
-	When Exists(Select [object_id] From [Sys].[tables] Where [history_table_id] = C.[object_id] And [object_id] is Not Null) Then 'HISTORY TABLE'
+	When Exists(Select [history_table_id] From [Sys].[tables] Where [object_id] = C.[object_id] And [history_table_id] is Not Null) Then 'Temporal Table'
+	When Exists(Select [object_id] From [Sys].[tables] Where [history_table_id] = C.[object_id] And [object_id] is Not Null) Then 'History Table'
+	When T.[TABLE_TYPE] In ('BASE TABLE') Then 'Table'
+	When T.[TABLE_TYPE] In ('VIEW') Then 'View'
 	Else T.[TABLE_TYPE]
 	End As [TableType],
 	I.[COLUMN_NAME] As [ColumnName],
@@ -345,8 +355,10 @@ From	[INFORMATION_SCHEMA].[COLUMNS] I
 	I.[TABLE_SCHEMA] As [SchemaName],
 	I.[TABLE_NAME] As [TableName],
 	Case
-	When H.[object_id] is Not Null Then 'HISTORY TABLE'
-	When T.[history_table_id] is Not Null Then 'TEMPORAL TABLE'
+	When H.[object_id] is Not Null Then 'History Table'
+	When T.[history_table_id] is Not Null Then 'Temporal Table'
+	When I.[TABLE_TYPE] in ('BASE TABLE') Then 'Table'
+	When I.[TABLE_TYPE] in ('VIEW') Then 'View'
 	Else I.[TABLE_TYPE]
 	End As [TableType]
 From	[INFORMATION_SCHEMA].[TABLES] I

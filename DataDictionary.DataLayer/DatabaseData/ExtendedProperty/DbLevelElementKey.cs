@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// Not all types are supported by the Application.
     /// </summary>
     /// <see href="https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-addextendedproperty-transact-sql?view=sql-server-ver16"/>
-    public enum DbElementScope
+    public enum DbLevelElement
     {
         /// <summary>
         /// Not defined, default value.
@@ -58,12 +58,12 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <summary>
     /// Interface for Level2 MS Extended Property Type.
     /// </summary>
-    public interface IDbElementScopeKey: IDbObjectScopeKey
+    public interface IDbLevelElementKey: IDbLevelObjectKey
     {
         /// <summary>
         /// Level2 MS Extended Property Type.
         /// </summary>
-        public DbElementScope ElementScope { get; }
+        public DbLevelElement ElementScope { get; }
     }
 
     /// <summary>
@@ -72,44 +72,44 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     /// <remarks>
     /// Currently not used.
     /// </remarks>
-    public class DbElementScopeKey : DbObjectScopeKey, IDbElementScopeKey, IKeyEquality<IDbElementScopeKey>
+    public class DbLevelElementKey : DbLevelObjectKey, IDbLevelElementKey, IKeyEquality<IDbLevelElementKey>
     {
         /// <inheritdoc/>
-        public DbElementScope ElementScope { get; init; } = DbElementScope.NULL;
+        public DbLevelElement ElementScope { get; init; } = DbLevelElement.NULL;
 
         /// <summary>
         /// Constructor for a Element Scope.
         /// </summary>
-        internal protected DbElementScopeKey() : base() { }
+        internal protected DbLevelElementKey() : base() { }
 
         /// <summary>
         /// Constructor for a Element Scope.
         /// </summary>
-        public DbElementScopeKey(IDbElementScopeKey source) : base(source)
+        public DbLevelElementKey(IDbLevelElementKey source) : base(source)
         { ElementScope = source.ElementScope; }
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual bool Equals(IDbElementScopeKey? other)
+        public virtual bool Equals(IDbLevelElementKey? other)
         {
             return
-                other is IDbObjectScopeKey
-                && new DbObjectScopeKey(this).Equals(other)
-                && ObjectScope != DbObjectScope.NULL
-                && other.ObjectScope != DbObjectScope.NULL
+                other is IDbLevelObjectKey
+                && new DbLevelObjectKey(this).Equals(other)
+                && ObjectScope != DbLevelObject.NULL
+                && other.ObjectScope != DbLevelObject.NULL
                 && ObjectScope == other.ObjectScope;
         }
 
         /// <inheritdoc/>
         public override bool Equals(object? other)
-        { return other is IDbElementScopeKey value && Equals(new DbElementScopeKey(value)); }
+        { return other is IDbLevelElementKey value && Equals(new DbLevelElementKey(value)); }
 
         /// <inheritdoc/>
-        public static bool operator ==(DbElementScopeKey left, DbElementScopeKey right)
+        public static bool operator ==(DbLevelElementKey left, DbLevelElementKey right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(DbElementScopeKey left, DbElementScopeKey right)
+        public static bool operator !=(DbLevelElementKey left, DbLevelElementKey right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>

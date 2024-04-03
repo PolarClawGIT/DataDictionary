@@ -29,19 +29,19 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
         /// <inheritdoc/>
         public required Guid? CatalogId { get; init; }
 
-        public DbCatalogScope CatalogScope
+        public DbLevelCatalog CatalogScope
         {
             get { return ExtendedPropertyExtension.GetCatalogScope(Level0Type); }
             set { Level0Type = value.GetScope(); }
         }
 
-        public DbObjectScope ObjectScope
+        public DbLevelObject ObjectScope
         {
             get { return ExtendedPropertyExtension.GetObjectScope(Level1Type); }
             set { Level1Type = value.GetScope(); }
         }
 
-        public DbElementScope ItemScope
+        public DbLevelElement ItemScope
         {
             get { return ExtendedPropertyExtension.GetItemScope(Level2Type); }
             set { Level2Type = value.GetScope(); }
