@@ -18,6 +18,7 @@ namespace DataDictionary.BusinessLayer.Library
     /// </summary>
     class LibraryImport
     {
+        [Obsolete("Use LibraryMemberType", true)]
         static Dictionary<ScopeType, String> scopeTypeToNetCoding = new Dictionary<ScopeType, String>
         {
             { ScopeType.LibraryNameSpace, "N"},
@@ -28,6 +29,7 @@ namespace DataDictionary.BusinessLayer.Library
             { ScopeType.LibraryEvent,     "E"},
         };
 
+        [Obsolete("Use LibraryMemberType", true)]
         static ScopeType ToScopeType(String? value)
         {
             if (scopeTypeToNetCoding.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> keyValue && keyValue.Key != ScopeType.Null)
@@ -65,7 +67,6 @@ namespace DataDictionary.BusinessLayer.Library
                             AssemblyName = assemblyNode.InnerText,
                             SourceFile = file.Name,
                             SourceDate = file.LastWriteTime,
-                            ScopeName = ScopeType.Library.ToScopeName()
                         };
 
                         sourceKey = new LibrarySourceKeyName(sourceItem);
@@ -93,11 +94,12 @@ namespace DataDictionary.BusinessLayer.Library
                             else { throw new InvalidOperationException("Expected exactly one [name] node for each [member] node"); }
 
                             // Parse the Member Type
-                            String memberType = String.Empty;
+                            LibraryMemberType memberType = LibraryMemberType.Null;
+                            //String memberType = String.Empty;
                             if (parseString.Split(':') is String[] types && types.Length > 0)
                             {
-                                memberType = types[0];
-                                parseString = parseString.Substring(memberType.Length + 1);
+                                memberType = LibraryMemberTypeKey.Parse(types[0]);
+                                parseString = parseString.Substring(2);
                             }
 
                             String memberNameSpace = String.Empty;
@@ -122,8 +124,8 @@ namespace DataDictionary.BusinessLayer.Library
                                             LibraryId = sourceItem.LibraryId,
                                             AssemblyName = sourceItem.AssemblyName,
                                             MemberName = parseString.Substring(0, nextPeriod),
+                                            MemberType = LibraryMemberType.NameSpace,
                                             NameSpace = String.Empty,
-                                            ScopeName = ScopeType.LibraryNameSpace.ToScopeName()
                                         };
 
                                         libraryMembers.Add(nameSpaceItem);
@@ -143,8 +145,8 @@ namespace DataDictionary.BusinessLayer.Library
                                             MemberParentId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
                                             AssemblyName = sourceItem.AssemblyName,
                                             MemberName = parseString.Substring(0, nextPeriod),
+                                            MemberType = LibraryMemberType.NameSpace,
                                             NameSpace = memberNameSpace,
-                                            ScopeName = ScopeType.LibraryNameSpace.ToScopeName()
                                         };
 
                                         libraryMembers.Add(nameSpaceItem);
@@ -169,9 +171,9 @@ namespace DataDictionary.BusinessLayer.Library
                                         MemberParentId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
                                         AssemblyName = sourceItem.AssemblyName,
                                         MemberName = parseString,
+                                        MemberType = memberType,
                                         MemberData = memberNode.OuterXml,
                                         NameSpace = memberNameSpace,
-                                        ScopeName = ToScopeType(memberType).ToScopeName()
                                     };
 
                                     LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
@@ -188,9 +190,9 @@ namespace DataDictionary.BusinessLayer.Library
                                         MemberParentId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
                                         AssemblyName = sourceItem.AssemblyName,
                                         MemberName = parseString.Substring(0, parametersStart),
+                                        MemberType = memberType,
                                         MemberData = memberNode.OuterXml,
                                         NameSpace = memberNameSpace,
-                                        ScopeName = ToScopeType(memberType).ToScopeName()
                                     };
 
                                     libraryMembers.Add(memberItem);
@@ -262,7 +264,7 @@ namespace DataDictionary.BusinessLayer.Library
                                             MemberParentId = memberItem.MemberId,
                                             AssemblyName = sourceItem.AssemblyName,
                                             MemberName = memberName,
-                                            ScopeName = ScopeType.LibraryParameter.ToScopeName(),
+                                            MemberType = LibraryMemberType.Parameter,
                                             MemberData = memberData.ToString(),
                                             NameSpace = parseString.Substring(0, parametersStart)
                                         };

@@ -130,8 +130,6 @@ namespace DataDictionary.Main.Forms
         {
             if (data.Current is IScopeKey scopeKey)
             { this.Icon = new ScopeKey(scopeKey).Scope.ToIcon(); }
-            else if (data.Current is IScopeKeyName scopeName)
-            { this.Icon = new ScopeKey(scopeName).Scope.ToIcon(); }
             else { this.Icon = scope.ToIcon(); }
 
             if (data.Current is IBindingRowState binding)

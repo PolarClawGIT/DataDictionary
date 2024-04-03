@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.LibraryData;
 using DataDictionary.DataLayer.LibraryData.Source;
 using System;
@@ -16,26 +17,26 @@ namespace DataDictionary.Main.Forms.Library
     {
         class LibraryManagerItem : ILibrarySourceItem
         {
-            private bool inModel = false;
-            private bool inDatabase = false;
+            private Boolean inModel = false;
+            private Boolean inDatabase = false;
             public LibrarySourceItem data;
 
             public Guid? LibraryId
             { get { return data.LibraryId; } }
 
-            public string? LibraryTitle
+            public String? LibraryTitle
             {
                 get { return data.LibraryTitle; }
                 set { data.LibraryTitle = value; OnPropertyChanged(nameof(LibraryTitle)); }
             }
 
-            public string? LibraryDescription
+            public String? LibraryDescription
             {
                 get { return data.LibraryDescription; }
                 set { data.LibraryDescription = value; OnPropertyChanged(nameof(LibraryDescription)); }
             }
 
-            public string? SourceFile
+            public String? SourceFile
             {
                 get { return data.SourceFile; }
                 set { data.SourceFile = value; OnPropertyChanged(nameof(SourceFile)); }
@@ -47,7 +48,7 @@ namespace DataDictionary.Main.Forms.Library
                 set { data.SourceDate = value; OnPropertyChanged(nameof(SourceDate)); }
             }
 
-            public string? AssemblyName
+            public String? AssemblyName
             {
                 get { return data.AssemblyName; }
                 set { data.AssemblyName = value; OnPropertyChanged(nameof(AssemblyName)); }
@@ -59,17 +60,13 @@ namespace DataDictionary.Main.Forms.Library
                 set { inModel = value; OnPropertyChanged(nameof(InModel)); }
             }
 
-            public String? ScopeName
-            {
-                get { return data.ScopeName; }
-                set { data.ScopeName = value; OnPropertyChanged(nameof(ScopeName)); }
-            }
-
             public Boolean InDatabase
             {
                 get { return inDatabase; }
                 set { inDatabase = value; OnPropertyChanged(nameof(InDatabase)); }
             }
+
+            public ScopeType Scope { get { return data.Scope; } }
 
             public LibraryManagerItem(LibrarySourceItem source) : base()
             {

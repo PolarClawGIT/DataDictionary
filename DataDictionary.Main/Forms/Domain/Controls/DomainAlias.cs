@@ -24,7 +24,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
 
             ImageList aliasImages = new ImageList();
             foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
-            { aliasImages.Images.Add(item.ToScopeName(), item.ToImage()); }
+            { aliasImages.Images.Add(item.ToName(), item.ToImage()); }
 
             aliasBrowser.SmallImageList = aliasImages;
             aliasBrowser.Columns.Add("Alias");
@@ -56,7 +56,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
                 if (BusinessData.NameScope.ContainsKey(childKey))
                 {
                     NamedScopeItem child = BusinessData.NameScope[childKey];
-                    ListViewItem childItem = new ListViewItem(child.MemberName, child.Scope.ToScopeName());
+                    ListViewItem childItem = new ListViewItem(child.MemberName, child.Scope.ToName());
                     childItem.ToolTipText = child.MemberFullName;
 
                     alaisViewItems.Add(childItem, childKey);
@@ -69,7 +69,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
 
             if (parentKey is NamedScopeKey)
             { // Doing custom hot Tracks
-                ListViewItem parentItem = new ListViewItem(parent.MemberName, parent.Scope.ToScopeName());
+                ListViewItem parentItem = new ListViewItem(parent.MemberName, parent.Scope.ToName());
                 parentItem.Font = new Font(parentItem.Font, FontStyle.Underline);
                 parentItem.ForeColor = Color.Blue;
 

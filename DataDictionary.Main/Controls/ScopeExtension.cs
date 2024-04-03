@@ -80,7 +80,7 @@ namespace DataDictionary.Main.Controls
             ImageList result = new ImageList();
 
             foreach (KeyValuePair<ScopeType, (Image image, Icon icon)> item in images)
-            { result.Images.Add(item.Key.ToScopeName(), item.Value.image); }
+            { result.Images.Add(item.Key.ToName(), item.Value.image); }
 
             return result;
         }

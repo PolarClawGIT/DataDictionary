@@ -31,7 +31,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             ImageList scopeImages = new ImageList();
             foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
-            { scopeImages.Images.Add(item.ToScopeName(), item.ToImage()); }
+            { scopeImages.Images.Add(item.ToName(), item.ToImage()); }
             itemSelection.ImageList = scopeImages;
 
         }
@@ -49,8 +49,8 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 AttributeKey attributeKey = new AttributeKey(attributeItem);
                 TreeNode attributeNode = new TreeNode(attributeItem.AttributeTitle);
-                attributeNode.ImageKey = attributeItem.Scope.ToScopeName();
-                attributeNode.SelectedImageKey = attributeItem.Scope.ToScopeName();
+                attributeNode.ImageKey = attributeItem.Scope.ToName();
+                attributeNode.SelectedImageKey = attributeItem.Scope.ToName();
                 itemSelection.Nodes.Add(attributeNode);
                 itemSelectorValues.Add(attributeNode, () => attributeItem.GetXElement());
 
@@ -61,8 +61,8 @@ namespace DataDictionary.Main.Forms.Scripting
                     if (BusinessData.ApplicationData.Properties.FirstOrDefault(w => propertyKey.Equals(w)) is PropertyItem property)
                     {
                         TreeNode propertyNode = new TreeNode(property.PropertyTitle);
-                        propertyNode.ImageKey = ScopeType.ModelAttributeProperty.ToScopeName();
-                        propertyNode.SelectedImageKey = ScopeType.ModelAttributeProperty.ToScopeName();
+                        propertyNode.ImageKey = ScopeType.ModelAttributeProperty.ToName();
+                        propertyNode.SelectedImageKey = ScopeType.ModelAttributeProperty.ToName();
                         attributeNode.Nodes.Add(propertyNode);
 
                         itemSelectorValues.Add(propertyNode, () =>

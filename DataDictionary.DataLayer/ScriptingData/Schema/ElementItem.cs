@@ -29,6 +29,9 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         /// </summary>
         String? ElementType { get; }
 
+        /// <inheritdoc cref="ScopeTypeExtension.ToName(ScopeType)"/>
+        String? ScopeName { get; }
+
         /// <summary>
         /// The Nillable of the Element to be generated. If Null, do not generate the Nillable.
         /// </summary>
@@ -81,9 +84,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
             get { return GetValue<Guid>("ElementId"); }
             protected set { SetValue("ElementId", value); }
         }
-
-        /// <inheritdoc/>
-        public String? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }
 
         /// <inheritdoc/>
         public String? ColumnName { get { return GetValue("ColumnName"); } set { SetValue("ColumnName", value); } }
@@ -160,14 +160,13 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         }
 
         /// <inheritdoc/>
+        public String? ScopeName { get { return Scope.ToName(); } }
+
+        /// <inheritdoc/>
         public ScopeType Scope
         {
-            get
-            {
-                if (ScopeKey.TryParse(ScopeName, out ScopeKey? value))
-                { return value; }
-                else { return ScopeType.Null; }
-            }
+            get { return ScopeKey.Parse(GetValue("ScopeName") ?? String.Empty); }
+            set { SetValue("ScopeName", value.ToName()); OnPropertyChanged(nameof(Scope)); }
         }
 
         /// <summary>
@@ -190,7 +189,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         /// <param name="column"></param>
         public ElementItem(ISchemaKey key, IColumnItem column) : this(key)
         {
-            ScopeName = column.Scope.ToName();
+            Scope = column.Scope;
             ColumnName = column.ColumnName;
         }
 

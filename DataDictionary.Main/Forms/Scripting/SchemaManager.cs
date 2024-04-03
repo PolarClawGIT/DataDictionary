@@ -81,7 +81,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             foreach (IGrouping<ScopeType, ColumnItem> groups in BusinessData.ScriptingEngine.Columns.GroupBy(g => new ScopeKey(g).Scope))
             {
-                ListViewGroup group = new ListViewGroup(groups.Key.ToScopeName());
+                ListViewGroup group = new ListViewGroup(groups.Key.ToName());
                 elementSelection.Groups.Add(group);
 
                 foreach (ColumnItem column in groups)
@@ -206,7 +206,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     newElement.ColumnName = addColumn.ColumnName;
                     newElement.ElementName = addColumn.ColumnName;
-                    newElement.ScopeName = addColumn.ScopeName;
+                    newElement.Scope = addColumn.Scope;
                     newElement.AsElement = true;
                     newElement.AsAttribute = false;
                     newElement.DataAsText = true;

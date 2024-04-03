@@ -12,7 +12,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
-    record ScopeNameItem : IScopeKeyName
+    record ScopeNameItem
     {
         public ScopeType ScopeType { get; set; } = ScopeType.Null;
         public String ScopeName { get; init; } = String.Empty;
@@ -28,7 +28,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 
             foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
             {
-                String name = item.ToScopeName();
+                String name = item.ToName();
                 if (!String.IsNullOrEmpty(name))
                 { list.Add(new ScopeNameItem() { ScopeType = item, ScopeName = name }); }
             }
@@ -45,7 +45,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 
             foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
             {
-                String name = item.ToScopeName();
+                String name = item.ToName();
                 if (!String.IsNullOrEmpty(name))
                 { list.Add(new ScopeNameItem() { ScopeType = item, ScopeName = name }); }
             }

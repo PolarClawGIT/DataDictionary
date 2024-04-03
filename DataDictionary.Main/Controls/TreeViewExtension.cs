@@ -134,9 +134,9 @@ namespace DataDictionary.Main.Controls
                     {
                         TreeNode scopeNode = target.Invoke<TreeNode>(() =>
                         {
-                            TreeNode newNode = targetNodes.Add(scopeGroup.Key.ToScopeName().Split(".").Last());
-                            newNode.ImageKey = scopeGroup.Key.ToScopeName();
-                            newNode.SelectedImageKey = scopeGroup.Key.ToScopeName();
+                            TreeNode newNode = targetNodes.Add(scopeGroup.Key.ToName().Split(".").Last());
+                            newNode.ImageKey = scopeGroup.Key.ToName();
+                            newNode.SelectedImageKey = scopeGroup.Key.ToName();
                             newNode.NodeFont = new Font(newNode.TreeView.Font, FontStyle.Italic);
                             newNode.ToolTipText = String.Format("set of {0}", newNode.Text);
 
@@ -150,8 +150,8 @@ namespace DataDictionary.Main.Controls
                         TreeNode node = target.Invoke<TreeNode>(() =>
                         {
                             TreeNode newNode = nodes.Add(item.MemberTitle);
-                            newNode.ImageKey = item.Scope.ToScopeName();
-                            newNode.SelectedImageKey = item.Scope.ToScopeName();
+                            newNode.ImageKey = item.Scope.ToName();
+                            newNode.SelectedImageKey = item.Scope.ToName();
                             newNode.ToolTipText = item.MemberFullName;
                             item.PropertyChanged += Item_PropertyChanged;
                             treeNodes[target].Add(newNode, item);

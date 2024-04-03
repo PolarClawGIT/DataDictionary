@@ -12,6 +12,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// </summary>
     public interface IColumnData: IBindingList<ColumnItem>
     {
+        /// <inheritdoc cref="DataLayer.ScriptingData.Schema.ColumnCollection{TItem}.Load"/>
         void Load();
     }
 
