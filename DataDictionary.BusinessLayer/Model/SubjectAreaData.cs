@@ -23,9 +23,14 @@ namespace DataDictionary.BusinessLayer.Model
     { }
 
     class SubjectAreaData : ModelSubjectAreaCollection, ISubjectAreaData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile,
-        INamedScopeData<IModelKey>
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        IDataTableFile, INamedScopeData
     {
+        /// <summary>
+        /// Reference to the containing Model
+        /// </summary>
+        public required IModelData Models { get; init; }
+
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelSubjectAreaKey dataKey)
@@ -60,99 +65,31 @@ namespace DataDictionary.BusinessLayer.Model
         public IReadOnlyList<WorkItem> Remove()
         { return new WorkItem() { WorkName = "Remove Subject Area", DoWork = () => { Clear(); } }.ToList(); }
 
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<IModelKey?> parent)
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
         {
+            List<WorkItem> work = new List<WorkItem>();
 
-            return new WorkItem()
+            if(Models.FirstOrDefault() is IModelItem model)
             {
-                WorkName = "Load NameScope, Subject Areas",
-                DoWork = BuildList
-            }.ToList();
-
-            void BuildList()
-            {
-                List<NameSpaceKey> grouping = BuildNameSpace(this.Select(s => new NameSpaceKey(s))).Distinct().ToList();
-                List<NameSpaceItem> nameSpaces = new List<NameSpaceItem>();
-
-                if (parent() is IModelKey modelKey)
+                ModelKey key = new ModelKey(model);
+                work.Add(new WorkItem()
                 {
-                    foreach (NameSpaceKey item in grouping)
+                    WorkName = "Build NamedScope Subject Areas",
+                    DoWork = () =>
                     {
-                        List<ModelSubjectAreaItem> currentSubject = this.Where(w => item.Equals(new NameSpaceKey(w))).ToList();
-                        ModelSubjectAreaItem? parentSubject = this.FirstOrDefault(w => item.ParentKey is not null && item.ParentKey.Equals(new NameSpaceKey(w)));
-                        NameSpaceItem? parentNameSpace = nameSpaces.FirstOrDefault(w => item.ParentKey is not null && item.ParentKey.Equals(w));
-
-                        if (currentSubject.Count == 0 && parentNameSpace is null && parentSubject is null)
+                        foreach (ModelSubjectAreaItem item in this)
                         {
-                            NameSpaceItem newNameSpace = new NameSpaceItem(item);
-
-                            nameSpaces.Add(newNameSpace);
-                            target.Add(new NamedScopeItem(modelKey, newNameSpace));
-                        }
-                        else
-                        if (currentSubject.Count == 0 && parentNameSpace is null && parentSubject is not null)
-                        {
-                            NameSpaceItem newNameSpace = new NameSpaceItem(item);
-
-                            nameSpaces.Add(newNameSpace);
-                            target.Add(new NamedScopeItem(parentSubject, newNameSpace));
-                        }
-                        else
-                        if (currentSubject.Count == 0 && parentNameSpace is not null && parentSubject is null)
-                        {
-                            NameSpaceItem newNameSpace = new NameSpaceItem(item);
-
-                            nameSpaces.Add(newNameSpace);
-                            target.Add(new NamedScopeItem(parentNameSpace, newNameSpace));
-                        }
-                        else
-                        if (currentSubject.Count == 0 && parentNameSpace is not null && parentSubject is not null)
-                        {
-                            NameSpaceItem newNameSpace = new NameSpaceItem(item);
-
-                            nameSpaces.Add(newNameSpace);
-                            target.Add(new NamedScopeItem(parentNameSpace, newNameSpace));
-                        }
-                        else
-                        if (currentSubject.Count > 0 && parentNameSpace is null && parentSubject is null)
-                        {
-                            foreach (ModelSubjectAreaItem current in currentSubject)
-                            { target.Add(new NamedScopeItem(modelKey, current)); }
-                        }
-                        else
-                        if (currentSubject.Count > 0 && parentNameSpace is null && parentSubject is not null)
-                        {
-                            foreach (ModelSubjectAreaItem current in currentSubject)
-                            { target.Add(new NamedScopeItem(parentSubject, current)); }
-                        }
-                        else
-                        if (currentSubject.Count > 0 && parentNameSpace is not null && parentSubject is null)
-                        {
-                            foreach (ModelSubjectAreaItem current in currentSubject)
-                            { target.Add(new NamedScopeItem(parentNameSpace, current)); }
-                        }
-                        else
-                        if (currentSubject.Count > 0 && parentNameSpace is not null && parentSubject is not null)
-                        {
-                            foreach (ModelSubjectAreaItem current in currentSubject)
-                            { target.Add(new NamedScopeItem(parentSubject, current)); }
+                            target.Remove(new NamedScopeKey(item));
+                            target.Add(new NamedScopeItem(key, item));
                         }
                     }
-
-                }
-
-                IEnumerable<NameSpaceKey> BuildNameSpace(IEnumerable<NameSpaceKey> group)
-                {
-                    List<NameSpaceKey> result = new List<NameSpaceKey>();
-                    List<NameSpaceKey> data = group.Select(s => s.ParentKey).OfType<NameSpaceKey>().Distinct().ToList();
-
-                    if (data.Count > 0) { result.AddRange(BuildNameSpace(data)); }
-
-                    result.AddRange(group.Distinct());
-
-                    return result;
-                }
+                });
             }
+
+            return work;
         }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace DataDictionary.BusinessLayer.Model
     }
 
     class ModelData : ModelCollection, IModelData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile, INamedScopeData
     {
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
@@ -51,5 +52,28 @@ namespace DataDictionary.BusinessLayer.Model
 
         public IReadOnlyList<WorkItem> Create()
         { return new WorkItem() { WorkName = "Create Model", DoWork = () => { Add(new ModelItem()); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem()
+            {
+                WorkName = "Build NamedScope Models",
+                DoWork = () =>
+                {
+                    foreach (ModelItem item in this)
+                    {
+                        target.Remove(new NamedScopeKey(item));
+                        target.Add(new NamedScopeItem(item));
+                    }
+                }
+            });
+
+            return work;
+        }
+
     }
 }

@@ -60,7 +60,9 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
 
         /// <inheritdoc/>
         /// <remarks>Needed by BindingList but not invoked.</remarks>
+#pragma warning disable CS0067 // The event 'ColumnItem.PropertyChanged' is never used
         public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067 // The event 'ColumnItem.PropertyChanged' is never used
 
         /// <inheritdoc/>
         public override string ToString()

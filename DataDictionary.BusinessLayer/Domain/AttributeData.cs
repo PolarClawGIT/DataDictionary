@@ -9,6 +9,8 @@ using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.ModelData.Attribute;
+using DataDictionary.DataLayer.ModelData.SubjectArea;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -41,9 +43,9 @@ namespace DataDictionary.BusinessLayer.Domain
 
     class AttributeData : DomainAttributeCollection<AttributeItem>, IAttributeData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile, INamedScopeData<IModelKey>
+        IDataTableFile, INamedScopeData
     {
-        public required IDomainModel DomainModel { get; init; }
+        public required DomainModel DomainModel { get; init; }
 
         /// <inheritdoc/>
         public IAttributeAliasData Aliases { get { return aliasValues; } }
@@ -230,6 +232,53 @@ namespace DataDictionary.BusinessLayer.Domain
                     }
                 }
             }.ToList();
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            if (DomainModel.Models.FirstOrDefault() is IModelItem model)
+            {
+                ModelKey key = new ModelKey(model);
+                work.Add(new WorkItem()
+                {
+                    WorkName = "Build NamedScope Attributes",
+                    DoWork = () =>
+                    {
+                        List<IDomainAttributeItem> unhandled = this.Select(s => s as IDomainAttributeItem).Cast<IDomainAttributeItem>().ToList();
+
+                        foreach (IDomainAttributeItem item in unhandled)
+                        { target.Remove(new NamedScopeKey(item)); }
+
+                        foreach (IGrouping<ModelSubjectAreaKey, ModelAttributeItem> subject in SubjectAreas.GroupBy(g => new ModelSubjectAreaKey(g)))
+                        {
+                            NamedScopeKey subjectKey = new NamedScopeKey(subject.Key);
+                            ModelSubjectAreaKey subjectModelKey = new ModelSubjectAreaKey(subject.Key);
+
+                            if (target.ContainsKey(new NamedScopeKey(subjectKey)))
+                            {
+                                foreach (IDomainAttributeItem attribute in subject.Select(s => s as IDomainAttributeItem).Cast<IDomainAttributeItem>())
+                                {
+                                    //TODO: Possible Error if the attribute is in multiple subject areas
+                                    target.Add(new NamedScopeItem(subjectModelKey, attribute));
+                                    unhandled.Remove(attribute);
+                                }
+                            }
+                        }
+
+                        foreach (IDomainAttributeItem item in unhandled)
+                        {
+                            target.Remove(new NamedScopeKey( item));
+                            target.Add(new NamedScopeItem(key, item));
+                        }
+                    }
+                });
+            }
+
+            return work;
         }
     }
 }

@@ -45,20 +45,22 @@ namespace DataDictionary.BusinessLayer.Database
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Routine</remarks>
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
+        /// <remarks>Domain</remarks>
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             work.Add(new WorkItem()
             {
-                WorkName = "Load NameScope, Routine",
+                WorkName = "Build NamedScope Routine",
                 DoWork = () =>
                 {
                     foreach (DbRoutineItem item in this.Where(w => w.IsSystem == false))
                     {
+                        //target.Remove(new NamedScopeKey(item)); Done by Catalog
+
                         DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
-                        if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is IDbSchemaItem parent)
+                        if (Database.DbTables.FirstOrDefault(w => nameKey.Equals(w)) is IDbSchemaItem parent)
                         { target.Add(new NamedScopeItem(parent, item)); }
                     }
                 }

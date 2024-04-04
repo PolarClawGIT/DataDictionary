@@ -57,8 +57,7 @@ namespace DataDictionary.Main
 
             List<WorkItem> work = new List<WorkItem>();
             List<NamedScopeItem> names = new List<NamedScopeItem>();
-            work.AddRange(BusinessData.Export(names));
-            work.AddRange(BusinessData.NameScope.Import(names));
+            work.AddRange(BusinessData.Build(BusinessData.NameScope));
             work.AddRange(contextNameNavigation.Load(BusinessData.NameScope));
 
             if (Settings.Default.IsOnLineMode)
@@ -171,11 +170,8 @@ namespace DataDictionary.Main
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             List<WorkItem> work = new List<WorkItem>();
-            List<NamedScopeItem> names = new List<NamedScopeItem>();
             work.AddRange(BusinessData.Remove());
-            work.AddRange(BusinessData.NameScope.Remove());
-            work.AddRange(BusinessData.Export(names));
-            work.AddRange(BusinessData.NameScope.Import(names));
+            work.AddRange(BusinessData.Build(BusinessData.NameScope));
             work.AddRange(contextNameNavigation.Load(BusinessData.NameScope));
 
             DoWork(work, onCompleting);

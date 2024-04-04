@@ -132,7 +132,6 @@ namespace DataDictionary.Main.Forms.Model
             if (modelBinding.Current is ModelManagerItem item)
             {
                 List<WorkItem> work = new List<WorkItem>();
-                List<NamedScopeItem> names = new List<NamedScopeItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
 
                 ModelKey key = new ModelKey(item);
@@ -140,9 +139,7 @@ namespace DataDictionary.Main.Forms.Model
                 work.AddRange(BusinessData.Remove());
                 work.AddRange(BusinessData.Load(factory, key));
 
-                work.AddRange(BusinessData.Export(names));
-                work.AddRange(BusinessData.NameScope.Import(names));
-
+                work.AddRange(BusinessData.Build(BusinessData.NameScope));
                 DoLocalWork(work);
             }
         }

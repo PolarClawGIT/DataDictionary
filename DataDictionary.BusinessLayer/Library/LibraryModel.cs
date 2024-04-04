@@ -34,7 +34,7 @@ namespace DataDictionary.BusinessLayer.Library
         IReadOnlyList<WorkItem> Import(FileInfo source);
     }
 
-    class LibraryModel : ILibraryModel, IDataTableFile//, INameScopeData
+    class LibraryModel : ILibraryModel, IDataTableFile
     {
         /// <inheritdoc/>
         public ILibraryMemberData LibraryMembers { get { return members; } }
@@ -164,13 +164,14 @@ namespace DataDictionary.BusinessLayer.Library
             return work;
         }
 
-        /// <inheritdoc />
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
+        /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(sources.Export(target));
-            work.AddRange(members.Export(target));
+            work.AddRange(sources.Build(target));
+            work.AddRange(members.Build(target));
 
             return work;
         }

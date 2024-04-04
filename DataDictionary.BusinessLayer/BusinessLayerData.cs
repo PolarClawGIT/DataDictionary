@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer
     /// <summary>
     /// Main Data Container for all Business Data.
     /// </summary>
-    public partial class BusinessLayerData : 
+    public partial class BusinessLayerData :
         ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData, INamedScopeData
     {
         /// <summary>
@@ -36,7 +36,15 @@ namespace DataDictionary.BusinessLayer
         /// The Current Model being used by the application
         /// </summary>
         /// <remarks>There should always be exactly one Model</remarks>
-        public ModelItem Model { get { return modelValues.First(); } }
+        public ModelItem Model
+        {
+            get
+            {
+                if (modelValues.Count > 0)
+                { return modelValues.First(); }
+                else { throw new ArgumentException("No Model exists"); }
+            }
+        }
 
         /// <summary>
         /// Returns a new Default factory Database Worker.
@@ -63,17 +71,17 @@ namespace DataDictionary.BusinessLayer
             };
 
             modelValues = new Model.ModelData();
-            subjectAreaValues = new Model.SubjectAreaData();
+            subjectAreaValues = new Model.SubjectAreaData() { Models = modelValues };
             NameScope = new NamedScopeDictionary();
 
             modelValues.Add(new ModelItem());
             applicationValue = new Application.ApplicationData();
-            
-            domainValue = new Domain.DomainModel() { ModelProperty = applicationValue.Properties };
+
+            domainValue = new Domain.DomainModel() { Models = modelValues, ModelProperty = applicationValue.Properties };
             databaseValue = new Database.DatabaseModel();
             libraryValue = new Library.LibraryModel();
 
-            scriptingValue = new Scripting.ScriptingEngine();
+            scriptingValue = new Scripting.ScriptingEngine() { Models = modelValues };
         }
 
         /// <inheritdoc/>
@@ -244,29 +252,19 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
-        {
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        {// TODO: How do I move this inside of NamedScopeDictory? Design issue.
+
             List<WorkItem> work = new List<WorkItem>();
-            Func<ModelItem?> model = modelValues.FirstOrDefault;
 
-            work.Add(new WorkItem()
-            {
-                WorkName = "Load NameScope, Models",
-                DoWork = () =>
-                {
-                    if (model() is ModelItem modelItem)
-                    { target.Add(new NamedScopeItem(modelItem)); }
-                }
-            });
-
-            work.AddRange(subjectAreaValues.Export(target, model));
-            work.AddRange(domainValue.Export(target, model));
-            work.AddRange(scriptingValue.Export(target, model));
-            work.AddRange(databaseValue.Export(target));
-            work.AddRange(libraryValue.Export(target));
+            work.AddRange(modelValues.Build(target));
+            work.AddRange(subjectAreaValues.Build(target));
+            work.AddRange(domainValue.Build(target));
+            work.AddRange(scriptingValue.Build(target));
+            work.AddRange(databaseValue.Build(target));
+            work.AddRange(libraryValue.Build(target));
 
             return work;
-
         }
     }
 }

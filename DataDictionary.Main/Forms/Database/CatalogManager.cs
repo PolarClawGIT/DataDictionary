@@ -193,9 +193,7 @@ namespace DataDictionary.Main.Forms.Database
                     };
 
                     work.AddRange(BusinessData.DatabaseModel.Import(source));
-                    work.AddRange(BusinessData.DatabaseModel.Export(names));
-                    work.AddRange(BusinessData.NameScope.Import(names));
-
+                    work.AddRange(BusinessData.Build(BusinessData.NameScope));
                     DoLocalWork(work);
                 }
             }
@@ -260,13 +258,11 @@ namespace DataDictionary.Main.Forms.Database
             {
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<NamedScopeItem> names = new List<NamedScopeItem>();
 
                 DbCatalogKey key = new DbCatalogKey(item);
                 work.Add(factory.OpenConnection());
                 work.AddRange(BusinessData.DatabaseModel.Load(factory, key));
-                work.AddRange(BusinessData.DatabaseModel.Export(names));
-                work.AddRange(BusinessData.NameScope.Import(names));
+                work.AddRange(BusinessData.Build(BusinessData.NameScope));
 
                 DoLocalWork(work);
             }

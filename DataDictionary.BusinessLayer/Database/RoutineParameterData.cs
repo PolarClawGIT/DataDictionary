@@ -10,12 +10,12 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Interface representing Catalog RoutineParameter data
     /// </summary>
-    public interface IRoutineParameterData: IBindingData<DbRoutineParameterItem>
+    public interface IRoutineParameterData : IBindingData<DbRoutineParameterItem>
     {
 
     }
 
-    class RoutineParameterData: DbRoutineParameterCollection, IRoutineParameterData,
+    class RoutineParameterData : DbRoutineParameterCollection, IRoutineParameterData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, INamedScopeData
@@ -44,18 +44,20 @@ namespace DataDictionary.BusinessLayer.Database
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>TableColumn</remarks>
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
+        /// <remarks>RoutineParameter</remarks>
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             work.Add(new WorkItem()
             {
-                WorkName = "Load NameScope, Table Column",
+                WorkName = "Build NamedScope RoutineParameter",
                 DoWork = () =>
                 {
                     foreach (DbRoutineParameterItem item in this)
                     {
+                        //target.Remove(new NamedScopeKey(item)); Done by Catalog
+
                         DbRoutineKeyName nameKey = new DbRoutineKeyName(item);
                         if (Database.DbRoutines.FirstOrDefault(w => nameKey.Equals(w)) is IDbRoutineItem parent)
                         { target.Add(new NamedScopeItem(parent, item)); }

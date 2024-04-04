@@ -14,25 +14,10 @@ namespace DataDictionary.BusinessLayer.NamedScope
     public interface INamedScopeData
     {
         /// <summary>
-        /// Create Work Items that are used to load the NameScopeDictionary
+        /// Create WorkItems to build the NamedScope Dictionary.
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target);
-    }
-
-    /// <summary>
-    /// Interface for objects that contain NameScope Data
-    /// </summary>
-    public interface INamedScopeData<TKey>
-        where TKey : IKey
-    {
-        /// <summary>
-        /// Create Work Items that are used to load the NameScopeDictionary
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="parent"></param>
-        /// <returns></returns>
-        IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<TKey?> parent);
+        IReadOnlyList<WorkItem> Build(NamedScopeDictionary target);
     }
 }

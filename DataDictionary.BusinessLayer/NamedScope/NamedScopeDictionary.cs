@@ -1,4 +1,6 @@
-﻿namespace DataDictionary.BusinessLayer.NamedScope
+﻿using DataDictionary.BusinessLayer.Database;
+
+namespace DataDictionary.BusinessLayer.NamedScope
 {
     /// <summary>
     /// Collection of NameScope Items with hierarchy support.

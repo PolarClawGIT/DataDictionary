@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
 using Toolbox.Threading;
@@ -14,7 +15,7 @@ namespace DataDictionary.BusinessLayer.Domain
     /// </summary>
     public interface IDomainModel :
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IRemoveData
+        IRemoveData, INamedScopeData
 
     {
         /// <summary>
@@ -35,10 +36,15 @@ namespace DataDictionary.BusinessLayer.Domain
     }
 
     class DomainModel : IDomainModel,
-        IDataTableFile, INamedScopeData<IModelKey>
+        IDataTableFile, INamedScopeData
     {
         /// <inheritdoc/>
         public required IPropertyData ModelProperty { get; init; }
+
+        /// <summary>
+        /// Reference to the containing Model
+        /// </summary>
+        public required IModelData Models { get; init; }
 
         /// <inheritdoc/>
         public IAttributeData Attributes { get { return attributeValues; } }
@@ -115,6 +121,18 @@ namespace DataDictionary.BusinessLayer.Domain
 
             work.AddRange(attributeValues.Export(target, parent));
             work.AddRange(entityValues.Export(target, parent));
+
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Domain</remarks>
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(attributeValues.Build(target));
+            work.AddRange(entityValues.Build(target));
 
             return work;
         }
@@ -255,7 +273,6 @@ namespace DataDictionary.BusinessLayer.Domain
 
             return result;
         }
-
 
     }
 }

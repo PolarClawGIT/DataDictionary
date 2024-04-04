@@ -46,19 +46,21 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             work.Add(new WorkItem()
             {
-                WorkName = "Load NameScope, Domain",
+                WorkName = "Build NamedScope Domain",
                 DoWork = () =>
                 {
                     foreach (DbDomainItem item in this)
                     {
+                        //target.Remove(new NamedScopeKey(item)); Done by Catalog
+
                         DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
-                        if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is IDbSchemaItem parent)
+                        if (Database.DbTables.FirstOrDefault(w => nameKey.Equals(w)) is IDbSchemaItem parent)
                         { target.Add(new NamedScopeItem(parent, item)); }
                     }
                 }

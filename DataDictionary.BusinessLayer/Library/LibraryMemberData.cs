@@ -22,44 +22,51 @@ namespace DataDictionary.BusinessLayer.Library
 
     class LibraryMemberData : LibraryMemberCollection, ILibraryMemberData,
         ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        INamedScopeData
     {
         /// <inheritdoc/>
         public required ILibraryModel Library { get; init; }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>Library Member</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>Library Member</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>Library Member</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>Library Member</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
+
+
+        /// <inheritdoc/>
+        /// <remarks>Library Member</remarks>
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             work.Add(new WorkItem()
             {
-                WorkName = "Load NameScope, Library Members",
+                WorkName = "Build NamedScope Library Member",
                 DoWork = () =>
                 {
                     foreach (LibraryMemberItem item in this)
                     {
                         LibrarySourceKey sourceKey = new LibrarySourceKey(item);
                         LibraryMemberKeyParent keyParent = new LibraryMemberKeyParent(item);
+
+                        target.Remove(new NamedScopeKey((ILibraryMemberKey)item));
 
                         if (keyParent.HasValue)
                         { target.Add(new NamedScopeItem(keyParent, item)); }
@@ -70,5 +77,6 @@ namespace DataDictionary.BusinessLayer.Library
 
             return work;
         }
+
     }
 }

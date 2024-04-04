@@ -43,17 +43,19 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>TableColumn</remarks>
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             work.Add(new WorkItem()
             {
-                WorkName = "Load NameScope, Table Column",
+                WorkName = "Build NamedScope TableColumn",
                 DoWork = () =>
                 {
                     foreach (DbTableColumnItem item in this)
                     {
+                        //target.Remove(new NamedScopeKey(item)); Done by Catalog
+
                         DbTableKeyName nameKey = new DbTableKeyName(item);
                         if (Database.DbTables.FirstOrDefault(w => nameKey.Equals(w)) is IDbTableItem parent)
                         { target.Add(new NamedScopeItem(parent, item)); }
@@ -63,5 +65,6 @@ namespace DataDictionary.BusinessLayer.Database
 
             return work;
         }
+
     }
 }

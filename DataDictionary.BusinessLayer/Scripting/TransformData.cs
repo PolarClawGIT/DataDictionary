@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ScriptingData.Transform;
@@ -20,8 +21,13 @@ namespace DataDictionary.BusinessLayer.Scripting
         ISaveData, ISaveData<ITransformKey>
     { }
 
-    class TransformData : TransformCollection<TransformItem>, ITransformData, INamedScopeData<IModelKey>
+    class TransformData : TransformCollection<TransformItem>, ITransformData, INamedScopeData
     {
+        /// <summary>
+        /// Reference to the containing ScriptingEngine
+        /// </summary>
+        public required ScriptingEngine Scripting { get; init; }
+
         /// <inheritdoc/>
         /// <remarks>Transform</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ITransformKey dataKey)
@@ -44,20 +50,29 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Transform</remarks>
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<IModelKey?> parent)
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
         {
-            return new WorkItem()
+            List<WorkItem> work = new List<WorkItem>();
+
+            if (Scripting.Models.FirstOrDefault() is IModelItem model)
             {
-                WorkName = "Load NameScope, Scripting Transforms",
-                DoWork = () =>
+                ModelKey key = new ModelKey(model);
+                work.Add(new WorkItem()
                 {
-                    if (parent() is IModelKey key)
+                    WorkName = "Build NamedScope Scripting Transform",
+                    DoWork = () =>
                     {
                         foreach (TransformItem item in this)
-                        { target.Add(new NamedScopeItem(key, item)); }
+                        {
+                            target.Remove(new NamedScopeKey(item));
+                            target.Add(new NamedScopeItem(key, item));
+                        }
                     }
-                }
-            }.ToList();
+                });
+            }
+
+            return work;
         }
+
     }
 }

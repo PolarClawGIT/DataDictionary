@@ -149,8 +149,7 @@ namespace DataDictionary.Main.Forms.Library
                 LibrarySourceKey key = new LibrarySourceKey(item);
                 work.AddRange(BusinessData.LibraryModel.Load(factory, key));
                 work.AddRange(LoadLocalData(factory));
-                work.AddRange(BusinessData.LibraryModel.Export(names));
-                work.AddRange(BusinessData.NameScope.Import(names));
+                work.AddRange(BusinessData.Build(BusinessData.NameScope));
                 DoLocalWork(work);
             }
 
@@ -274,14 +273,12 @@ namespace DataDictionary.Main.Forms.Library
 
                 // Create the work items for each of the files selected
                 List<WorkItem> work = new List<WorkItem>();
-                List<NamedScopeItem> names = new List<NamedScopeItem>();
 
                 foreach (String file in openFileDialog.FileNames)
                 {
                     FileInfo fileInfo = new FileInfo(file);
                     work.AddRange(BusinessData.LibraryModel.Import(fileInfo));
-                    work.AddRange(BusinessData.LibraryModel.Export(names));
-                    work.AddRange(BusinessData.NameScope.Import(names));
+                    work.AddRange(BusinessData.Build(BusinessData.NameScope));
                 }
 
                 DoLocalWork(work);

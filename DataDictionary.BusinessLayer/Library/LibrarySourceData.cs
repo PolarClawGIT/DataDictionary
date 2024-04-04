@@ -20,45 +20,51 @@ namespace DataDictionary.BusinessLayer.Library
     /// <summary>
     /// Implementation for Library data
     /// </summary>
-    public class LibrarySourceData: LibrarySourceCollection, ILibrarySourceData,
+    public class LibrarySourceData : LibrarySourceCollection, ILibrarySourceData,
         ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        INamedScopeData
     {
         /// <inheritdoc/>
         public required ILibraryModel Library { get; init; }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>Library Source</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>Library Source</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>Library Source</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>Library Source</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
+
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
+        /// <remarks>Library Source</remarks>
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             work.Add(new WorkItem()
             {
-                WorkName = "Load NameScope, Library",
+                WorkName = "Build NamedScope Library Source",
                 DoWork = () =>
                 {
-                    foreach (LibrarySourceItem item in this)
-                    { target.Add(new NamedScopeItem(item)); }
+                    foreach (var item in this)
+                    {
+                        target.Remove(new NamedScopeKey(item));
+                        target.Add(new NamedScopeItem(item));
+                    }
                 }
             });
 

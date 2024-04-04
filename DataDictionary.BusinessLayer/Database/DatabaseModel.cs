@@ -456,23 +456,23 @@ namespace DataDictionary.BusinessLayer.Database
             return work;
         }
 
-
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
+        /// <remarks>Catalog</remarks>
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(catalogs.Export(target));
-            work.AddRange(schemta.Export(target));
-            work.AddRange(domains.Export(target));
+            work.AddRange(catalogs.Build(target));
+            work.AddRange(schemta.Build(target));
+            work.AddRange(domains.Build(target));
 
-            work.AddRange(tables.Export(target));
-            work.AddRange(tableColumns.Export(target));
+            work.AddRange(tables.Build(target));
+            work.AddRange(tableColumns.Build(target));
 
-            work.AddRange(routines.Export(target));
-            work.AddRange(routineParameters.Export(target));
+            work.AddRange(routines.Build(target));
+            work.AddRange(routineParameters.Build(target));
 
-            work.AddRange(constraints.Export(target));
+            work.AddRange(constraints.Build(target));
 
             return work;
         }

@@ -4,13 +4,14 @@ using Toolbox.Threading;
 using Toolbox.BindingTable;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
+using DataDictionary.BusinessLayer.Model;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <summary>
     /// Interface representing Scripting Engine data
     /// </summary>
-    public interface IScriptingEngine: 
+    public interface IScriptingEngine :
         ISaveData, ILoadData, IRemoveData,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
@@ -39,8 +40,13 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// Implementation for Scripting Engine data
     /// </summary>
     class ScriptingEngine : IScriptingEngine, IDataTableFile,
-        INamedScopeData<IModelKey>
+        INamedScopeData
     {
+        /// <summary>
+        /// Reference to the containing Model
+        /// </summary>
+        public required IModelData Models { get; init; }
+
         /// <inheritdoc/>
         public ISchemaData Schemta { get { return schemtaValues; } }
         private readonly SchemaData schemtaValues;
@@ -56,9 +62,9 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         public ScriptingEngine() : base()
         {
-            schemtaValues = new SchemaData();
+            schemtaValues = new SchemaData() { Scripting = this };
             elementValues = new ElementData();
-            transformValues = new TransformData();
+            transformValues = new TransformData() { Scripting = this };
             columnValues = new ColumnData();
         }
 
@@ -109,17 +115,6 @@ namespace DataDictionary.BusinessLayer.Scripting
             transformValues.Load(source);
         }
 
-        /// <inheritdoc/>
-        /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<IModelKey?> parent)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(schemtaValues.Export(target, parent));
-            work.AddRange(transformValues.Export(target, parent));
-
-            return work;
-        }
 
         /// <inheritdoc/>
         /// <remarks>Scripting (Currently load all)</remarks>
@@ -155,6 +150,16 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.Add(new WorkItem() { WorkName = "Remove Scripting Schemta", DoWork = () => { schemtaValues.Clear(); } });
             work.Add(new WorkItem() { WorkName = "Remove Scripting Elements", DoWork = () => { elementValues.Clear(); } });
             work.Add(new WorkItem() { WorkName = "Remove Scripting Transforms", DoWork = () => { transformValues.Clear(); } });
+
+            return work;
+        }
+
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(schemtaValues.Build(target));
+            work.AddRange(transformValues.Build(target));
 
             return work;
         }

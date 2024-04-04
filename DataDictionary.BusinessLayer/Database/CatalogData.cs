@@ -63,5 +63,27 @@ namespace DataDictionary.BusinessLayer.Database
             });
             return work;
         }
+
+        /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
+        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem()
+            {
+                WorkName = "Build NamedScope Catalog",
+                DoWork = () =>
+                {
+                    foreach (DbCatalogItem item in this.Where(w => w.IsSystem == false))
+                    {
+                        target.Remove(new NamedScopeKey(item));
+                        target.Add(new NamedScopeItem(item)); 
+                    }
+                }
+            });
+
+            return work;
+        }
     }
 }
