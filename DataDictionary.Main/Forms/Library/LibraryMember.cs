@@ -19,18 +19,15 @@ namespace DataDictionary.Main.Forms.Library
 
         public LibraryMember(ILibraryMemberItem libraryMember) : this()
         {
-            LibraryMemberKeyName nameKey = new LibraryMemberKeyName(libraryMember);
+            LibraryMemberKey key = new LibraryMemberKey(libraryMember);
 
-            bindingMember.DataSource = new BindingView<LibraryMemberItem>(BusinessData.LibraryModel.LibraryMembers, w => nameKey.Equals(w));
+            bindingMember.DataSource = new BindingView<LibraryMemberItem>(BusinessData.LibraryModel.LibraryMembers, w => key.Equals(new LibraryMemberKey(w)));
             bindingMember.Position = 0;
 
             Setup(bindingMember);
 
             if (bindingMember.Current is ILibraryMemberItem current)
-            {
-                LibraryMemberKey key = new LibraryMemberKey(current);
-                bindingChild.DataSource = new BindingView<LibraryMemberItem>(BusinessData.LibraryModel.LibraryMembers, w => new LibraryMemberKeyParent(w).Equals(key));
-            }
+            { bindingChild.DataSource = new BindingView<LibraryMemberItem>(BusinessData.LibraryModel.LibraryMembers, w => new LibraryMemberKeyParent(w).Equals(key)); }
         }
 
         private void LibraryMember_Load(object sender, EventArgs e)
