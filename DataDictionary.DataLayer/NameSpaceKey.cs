@@ -363,8 +363,8 @@ namespace DataDictionary.DataLayer
         /// <param name="source"></param>
         public NameSpaceKey(LibraryData.Member.ILibraryMemberKeyName source) : base()
         {
-            if (source.NameSpace is String)
-            { memberParts.AddRange(NameParts(source.NameSpace)); }
+            if (source.MemberNameSpace is String)
+            { memberParts.AddRange(NameParts(source.MemberNameSpace)); }
 
             if (source.MemberName is String)
             { memberParts.Add(source.MemberName); }

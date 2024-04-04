@@ -115,7 +115,7 @@ namespace DataDictionary.BusinessLayer.Library
                             {
                                 if (String.IsNullOrWhiteSpace(memberNameSpace))
                                 {
-                                    if (libraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && String.IsNullOrWhiteSpace(w.NameSpace) && w.MemberName == parseString.Substring(0, nextPeriod)) is LibraryMemberItem existing)
+                                    if (libraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && String.IsNullOrWhiteSpace(w.MemberNameSpace) && w.MemberName == parseString.Substring(0, nextPeriod)) is LibraryMemberItem existing)
                                     { nameSpaceItem = existing; }
                                     else
                                     {
@@ -125,7 +125,7 @@ namespace DataDictionary.BusinessLayer.Library
                                             AssemblyName = sourceItem.AssemblyName,
                                             MemberName = parseString.Substring(0, nextPeriod),
                                             MemberType = LibraryMemberType.NameSpace,
-                                            NameSpace = String.Empty,
+                                            MemberNameSpace = String.Empty,
                                         };
 
                                         libraryMembers.Add(nameSpaceItem);
@@ -135,7 +135,7 @@ namespace DataDictionary.BusinessLayer.Library
                                 }
                                 else
                                 {
-                                    if (libraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && w.NameSpace == memberNameSpace && w.MemberName == parseString.Substring(0, nextPeriod)) is LibraryMemberItem existing)
+                                    if (libraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && w.MemberNameSpace == memberNameSpace && w.MemberName == parseString.Substring(0, nextPeriod)) is LibraryMemberItem existing)
                                     { nameSpaceItem = existing; }
                                     else
                                     {
@@ -146,7 +146,7 @@ namespace DataDictionary.BusinessLayer.Library
                                             AssemblyName = sourceItem.AssemblyName,
                                             MemberName = parseString.Substring(0, nextPeriod),
                                             MemberType = LibraryMemberType.NameSpace,
-                                            NameSpace = memberNameSpace,
+                                            MemberNameSpace = memberNameSpace,
                                         };
 
                                         libraryMembers.Add(nameSpaceItem);
@@ -173,7 +173,7 @@ namespace DataDictionary.BusinessLayer.Library
                                         MemberName = parseString,
                                         MemberType = memberType,
                                         MemberData = memberNode.OuterXml,
-                                        NameSpace = memberNameSpace,
+                                        MemberNameSpace = memberNameSpace,
                                     };
 
                                     LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
@@ -192,7 +192,7 @@ namespace DataDictionary.BusinessLayer.Library
                                         MemberName = parseString.Substring(0, parametersStart),
                                         MemberType = memberType,
                                         MemberData = memberNode.OuterXml,
-                                        NameSpace = memberNameSpace,
+                                        MemberNameSpace = memberNameSpace,
                                     };
 
                                     libraryMembers.Add(memberItem);
@@ -266,7 +266,7 @@ namespace DataDictionary.BusinessLayer.Library
                                             MemberName = memberName,
                                             MemberType = LibraryMemberType.Parameter,
                                             MemberData = memberData.ToString(),
-                                            NameSpace = parseString.Substring(0, parametersStart)
+                                            MemberNameSpace = String.Format("{0}.{1}", memberItem.MemberNameSpace, memberItem.MemberName)
                                         };
 
                                         libraryMembers.Add(parmaterItem);

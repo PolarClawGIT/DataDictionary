@@ -37,7 +37,7 @@ namespace DataDictionary.Main.Forms.Library
         {
             ILibraryMemberItem bindingNames;
 
-            memberNameSpaceData.DataBindings.Add(new Binding(nameof(memberNameSpaceData.Text), bindingMember, nameof(bindingNames.NameSpace)));
+            memberNameSpaceData.DataBindings.Add(new Binding(nameof(memberNameSpaceData.Text), bindingMember, nameof(bindingNames.MemberNameSpace)));
             memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingMember, nameof(bindingNames.MemberName)));
             scopeData.DataBindings.Add(new Binding(nameof(scopeData.Text), bindingMember, nameof(bindingNames.MemberType)));
             memberData.DataBindings.Add(new Binding(nameof(memberData.Text), bindingMember, nameof(bindingNames.MemberData)));

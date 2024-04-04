@@ -15,12 +15,12 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// <summary>
         /// NameSpace that the Member is within
         /// </summary>
-        string? NameSpace { get; }
+        String? MemberNameSpace { get; }
 
         /// <summary>
         /// Name of the Member.
         /// </summary>
-        string? MemberName { get; }
+        String? MemberName { get; }
     }
 
     /// <summary>
@@ -34,10 +34,10 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// <returns></returns>
         public static String ToAliasName(this ILibraryMemberKeyName source)
         {
-            if (String.IsNullOrWhiteSpace(source.NameSpace))
+            if (String.IsNullOrWhiteSpace(source.MemberNameSpace))
             { return AliasExtension.FormatName(source.MemberName); }
             else
-            { return AliasExtension.FormatName(String.Format("{0}.{1}", source.NameSpace, source.MemberName)); }
+            { return AliasExtension.FormatName(String.Format("{0}.{1}", source.MemberNameSpace, source.MemberName)); }
         }
     }
 
@@ -47,10 +47,10 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     public class LibraryMemberKeyName : ILibraryMemberKeyName, IKeyComparable<ILibraryMemberKeyName>
     {
         /// <inheritdoc/>
-        public string NameSpace { get; init; } = String.Empty;
+        public String MemberNameSpace { get; init; } = String.Empty;
 
         /// <inheritdoc/>
-        public string MemberName { get; init; } = String.Empty;
+        public String MemberName { get; init; } = String.Empty;
 
         /// <summary>
         /// Constructor for the Library Member Alternate Key
@@ -58,7 +58,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// <param name="source"></param>
         public LibraryMemberKeyName(ILibraryMemberKeyName source) : base()
         {
-            if (source.NameSpace is String) { NameSpace = source.NameSpace; }
+            if (source.MemberNameSpace is String) { MemberNameSpace = source.MemberNameSpace; }
             if (source.MemberName is String) { MemberName = source.MemberName; }
         }
 
@@ -68,11 +68,11 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         {
             return
                 other is ILibraryMemberKeyName &&
-                !string.IsNullOrEmpty(NameSpace) &&
-                !string.IsNullOrEmpty(other.NameSpace) &&
+                !string.IsNullOrEmpty(MemberNameSpace) &&
+                !string.IsNullOrEmpty(other.MemberNameSpace) &&
                 !string.IsNullOrEmpty(MemberName) &&
                 !string.IsNullOrEmpty(other.MemberName) &&
-                NameSpace.Equals(other.NameSpace, KeyExtension.CompareString) &&
+                MemberNameSpace.Equals(other.MemberNameSpace, KeyExtension.CompareString) &&
                 MemberName.Equals(other.MemberName, KeyExtension.CompareString);
         }
 
@@ -84,7 +84,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         public int CompareTo(ILibraryMemberKeyName? other)
         {
             if (other is null) { return 1; }
-            else if (String.Compare(NameSpace, other.NameSpace, KeyExtension.CompareString) is int value && value != 0) { return value; }
+            else if (String.Compare(MemberNameSpace, other.MemberNameSpace, KeyExtension.CompareString) is int value && value != 0) { return value; }
             else { return String.Compare(MemberName, other.MemberName, KeyExtension.CompareString); }
         }
 
@@ -118,7 +118,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(NameSpace, MemberName); }
+        { return HashCode.Combine(MemberNameSpace, MemberName); }
         #endregion
 
         /// <inheritdoc/>

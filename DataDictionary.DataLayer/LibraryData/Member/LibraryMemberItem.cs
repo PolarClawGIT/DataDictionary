@@ -23,7 +23,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// Data for the Member.
         /// This is expected to be a XML fragment when generated from Visual studio Document.
         /// </summary>
-        string? MemberData { get; }
+        String? MemberData { get; }
 
     }
 
@@ -46,7 +46,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         public String? AssemblyName { get { return GetValue("AssemblyName"); } set { SetValue("AssemblyName", value); } }
 
         /// <inheritdoc/>
-        public String? NameSpace { get { return GetValue("NameSpace"); } set { SetValue("NameSpace", value); } }
+        public String? MemberNameSpace { get { return GetValue("MemberNameSpace"); } set { SetValue("MemberNameSpace", value); } }
 
         /// <inheritdoc/>
         public String? MemberName { get { return GetValue("MemberName"); } set { SetValue("MemberName", value); } }
@@ -91,11 +91,11 @@ namespace DataDictionary.DataLayer.LibraryData.Member
             new DataColumn("LibraryId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("MemberId", typeof(Guid)){ AllowDBNull = true},
             new DataColumn("MemberParentId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("AssemblyName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("NameSpace", typeof(string)){ AllowDBNull = true},
-            new DataColumn("MemberName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("MemberType", typeof(string)){ AllowDBNull = true},
-            new DataColumn("MemberData", typeof(string)){ AllowDBNull = true},
+            new DataColumn("AssemblyName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("MemberNameSpace", typeof(String)){ AllowDBNull = true},
+            new DataColumn("MemberName", typeof(String)){ AllowDBNull = false},
+            new DataColumn("MemberType", typeof(String)){ AllowDBNull = true},
+            new DataColumn("MemberData", typeof(String)){ AllowDBNull = true},
         };
 
 

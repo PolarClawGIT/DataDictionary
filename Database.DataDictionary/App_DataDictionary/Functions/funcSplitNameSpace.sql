@@ -75,11 +75,11 @@ RETURNS TABLE AS RETURN (
 		From	[Tree] T
 				Inner Join [Format] F
 				On	T.[NameSpaceChild] = F.[NameSpaceParent])
-Select	[NameSpace],
+Select	[NameSpace], -- Full name including Member
 		IIF(CharIndex('.', Reverse([NameSpace])) = 0,
 			Null,
 			Left([NameSpace], Len([NameSpace]) - CharIndex('[.',Reverse([NameSpace])) -1))
-			As [ParentNameSpace],
+			As [ParentNameSpace], -- Does not include Member
 		[NameSpaceMember],
 		[Level],
 		IIF(Row_Number() Over (Order By [NameSpace] Desc) = 1,1,0) As [IsBase]

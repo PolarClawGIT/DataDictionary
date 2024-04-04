@@ -29,36 +29,35 @@ Begin Try
 		[LibraryTitle]          [App_DataDictionary].[typeTitle] Not Null,
 		[LibraryDescription]    [App_DataDictionary].[typeDescription] Null,
 		[AssemblyName]          NVarChar(128) Not Null, -- Natural Key
-		[ScopeId]               Int Not Null,
 		[SourceFile]            NVarChar(500) Not Null, 
 		[SourceDate]            DateTime2 (7) Not Null,
 	Primary Key ([LibraryId]))
 
-	;With [Scope] As (
-		Select	S.[ScopeId],
-				F.[ScopeName]
-		From	[App_DataDictionary].[ApplicationScope] S
-				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	Coalesce(A.[LibraryId], D.[LibraryId], @LibraryId, NewId()) As [LibraryId],
 			NullIf(Trim(D.[LibraryTitle]),'') As [LibraryTitle],
 			NullIf(Trim(D.[LibraryDescription]),'') As [LibraryDescription],
 			NullIf(Trim(D.[AssemblyName]),'') As [AssemblyName],
-			S.[ScopeId],
 			NullIf(Trim(D.[SourceFile]),'') As [SourceFile],
 			D.[SourceDate]
 	From	@Data D
-			Left Join [Scope] S
-			On	D.[ScopeName] = S.[ScopeName]
 			Left Join [App_DataDictionary].[LibrarySource] A
 			On	D.[AssemblyName] = A.[AssemblyName]
 
 	-- Apply Changes
-	If @LibraryId is Not Null And Not Exists (
-		Select	[LibraryId]
-		From	@Values V
-		Where [LibraryId] = @LibraryId)
-		Exec [App_DataDictionary].[procSetLibraryMember] @LibraryId = @LibraryId -- Cascades Delete
+	Delete From [App_DataDictionary].[LibraryMember]
+	From	[App_DataDictionary].[LibraryMember] M
+			Left Join @Values S
+			On	M.[LibraryId] = S.[LibraryId]
+	Where	S.[LibraryId] is Null And
+			M.[LibraryId] In (
+				Select	A.[LibraryId]
+				From	[App_DataDictionary].[LibrarySource] A
+						Left Join [App_DataDictionary].[ModelLibrary] M
+						On	A.[LibraryId] = M.[LibraryId]
+				Where	(@LibraryId is Null or A.[LibraryId] = @LibraryId) And
+						(@ModelId is Null or M.[ModelId] = @ModelId))
+	Print FormatMessage ('Delete [App_DataDictionary].[LibraryMember]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Delete From [App_DataDictionary].[ModelLibrary]
 	From	[App_DataDictionary].[ModelLibrary] M
@@ -89,7 +88,6 @@ Begin Try
 				[LibraryTitle],
 				[LibraryDescription],
 				[AssemblyName],
-				[ScopeId],
 				[SourceFile],
 				[SourceDate]
 		From	@Values
@@ -98,7 +96,6 @@ Begin Try
 				[LibraryTitle],
 				[LibraryDescription],
 				[AssemblyName],
-				[ScopeId],
 				[SourceFile],
 				[SourceDate]
 		From	[App_DataDictionary].[LibrarySource])
@@ -106,7 +103,6 @@ Begin Try
 	Set		[LibraryTitle] = S.[LibraryTitle],
 			[LibraryDescription] = S.[LibraryDescription],
 			[AssemblyName] = S.[AssemblyName],
-			[ScopeId] = S.[ScopeId],
 			[SourceFile] = S.[SourceFile],
 			[SourceDate] = S.[SourceDate]
 	From	[App_DataDictionary].[LibrarySource] T
@@ -119,14 +115,12 @@ Begin Try
 			[LibraryTitle],
 			[LibraryDescription],
 			[AssemblyName],
-			[ScopeId],
 			[SourceFile],
 			[SourceDate])
 	Select	S.[LibraryId],   
 			S.[LibraryTitle],
 			S.[LibraryDescription],
 			S.[AssemblyName],
-			S.[ScopeId],
 			S.[SourceFile],
 			S.[SourceDate]
 	From	@Values S
