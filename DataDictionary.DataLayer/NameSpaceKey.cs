@@ -253,8 +253,11 @@ namespace DataDictionary.DataLayer
         /// Constructor for NameSpace Key from String
         /// </summary>
         /// <param name="source"></param>
-        public NameSpaceKey(string source) : this()
-        { memberParts.AddRange(NameParts(source)); }
+        public NameSpaceKey(String? source) : this()
+        {
+            if (source is String)
+            { memberParts.AddRange(NameParts(source)); }
+        }
 
         #region Constructors
         /// <summary>
