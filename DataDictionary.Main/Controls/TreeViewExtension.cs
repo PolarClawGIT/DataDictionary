@@ -38,7 +38,7 @@ namespace DataDictionary.Main.Controls
         /// <param name="target"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static IEnumerable<WorkItem> Load(this TreeView target, NamedScopeDictionary data)
+        public static IEnumerable<WorkItem> Load(this TreeView target, INamedScopeDictionary data)
         {
             List<WorkItem> result = new List<WorkItem>();
             List<NamedScopeKey> expandedNodes = new List<NamedScopeKey>();
@@ -89,7 +89,9 @@ namespace DataDictionary.Main.Controls
             {
                 WorkName = "Build Tree",
                 DoWork = () =>
-                { CreatNodes(target.Nodes, SelectItems(data.RootItem.Children)); }
+                { 
+                    CreatNodes(target.Nodes, SelectItems(data.RootItem.Children)); 
+                }
             };
             progress = buildTree.OnProgressChanged;
             result.Add(buildTree);

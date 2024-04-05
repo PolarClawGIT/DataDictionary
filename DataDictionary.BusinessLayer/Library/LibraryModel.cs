@@ -165,8 +165,8 @@ namespace DataDictionary.BusinessLayer.Library
         }
 
         /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        /// <remarks>Library</remarks>
+        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 

@@ -35,8 +35,7 @@ namespace DataDictionary.BusinessLayer.Domain
         IEntityData Entities { get; }
     }
 
-    class DomainModel : IDomainModel,
-        IDataTableFile, INamedScopeData
+    class DomainModel : IDomainModel, IDataTableFile
     {
         /// <inheritdoc/>
         public required IPropertyData ModelProperty { get; init; }
@@ -127,7 +126,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 

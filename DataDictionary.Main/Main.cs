@@ -57,8 +57,8 @@ namespace DataDictionary.Main
 
             List<WorkItem> work = new List<WorkItem>();
             List<NamedScopeItem> names = new List<NamedScopeItem>();
-            work.AddRange(BusinessData.Build(BusinessData.NameScope));
-            work.AddRange(contextNameNavigation.Load(BusinessData.NameScope));
+            work.AddRange(BusinessData.NamedScope.Build());
+            work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
 
             if (Settings.Default.IsOnLineMode)
             {
@@ -85,7 +85,7 @@ namespace DataDictionary.Main
                     work.AddRange(BusinessData.ExportApplication(appDataFile));
                 }
 
-                work.AddRange(contextNameNavigation.Load(BusinessData.NameScope));
+                work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
 
                 this.DoWork(work, OnComplete);
             }
@@ -171,8 +171,8 @@ namespace DataDictionary.Main
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(BusinessData.Remove());
-            work.AddRange(BusinessData.Build(BusinessData.NameScope));
-            work.AddRange(contextNameNavigation.Load(BusinessData.NameScope));
+            work.AddRange(BusinessData.NamedScope.Build());
+            work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
 
             DoWork(work, onCompleting);
 

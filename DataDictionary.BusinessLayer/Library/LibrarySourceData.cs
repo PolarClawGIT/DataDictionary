@@ -14,16 +14,16 @@ namespace DataDictionary.BusinessLayer.Library
     /// <summary>
     /// Interface representing Library data
     /// </summary>
-    public interface ILibrarySourceData : IBindingData<LibrarySourceItem>
+    public interface ILibrarySourceData : IBindingData<LibrarySourceItem>, INamedScopeData
     { }
 
     /// <summary>
     /// Implementation for Library data
     /// </summary>
-    public class LibrarySourceData : LibrarySourceCollection, ILibrarySourceData,
+    class LibrarySourceData : LibrarySourceCollection, ILibrarySourceData,
         ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeData
+        ILoadData<IModelKey>, ISaveData<IModelKey>
+        
     {
         /// <inheritdoc/>
         public required ILibraryModel Library { get; init; }
@@ -51,7 +51,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
-        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 

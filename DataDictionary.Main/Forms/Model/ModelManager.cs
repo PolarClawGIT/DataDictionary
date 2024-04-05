@@ -139,7 +139,7 @@ namespace DataDictionary.Main.Forms.Model
                 work.AddRange(BusinessData.Remove());
                 work.AddRange(BusinessData.Load(factory, key));
 
-                work.AddRange(BusinessData.Build(BusinessData.NameScope));
+                work.AddRange(BusinessData.NamedScope.Build());
                 DoLocalWork(work);
             }
         }

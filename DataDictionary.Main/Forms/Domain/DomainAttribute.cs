@@ -76,7 +76,7 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingAttribute.Current is IAttributeItem current)
             {
                 BusinessData.DomainModel.Attributes.Remove(current);
-                BusinessData.NameScope.Remove(new NamedScopeKey(current));
+                BusinessData.NamedScope.Remove(new NamedScopeKey(current));
             }
         }
 

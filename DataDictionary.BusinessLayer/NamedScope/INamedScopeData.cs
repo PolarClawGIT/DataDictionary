@@ -18,6 +18,6 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        IReadOnlyList<WorkItem> Build(NamedScopeDictionary target);
+        IReadOnlyList<WorkItem> Build(INamedScopeDictionary target);
     }
 }

@@ -35,7 +35,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 schemaItem = new SchemaItem();
                 BusinessData.ScriptingEngine.Schemta.Add(schemaItem);
-                BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, schemaItem));
+                BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, schemaItem));
             }
 
             DataLayer.ScriptingData.Schema.SchemaKey key = new DataLayer.ScriptingData.Schema.SchemaKey(schemaItem);

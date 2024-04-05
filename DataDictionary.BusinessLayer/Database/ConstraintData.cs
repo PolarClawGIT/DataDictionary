@@ -47,7 +47,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Constraint</remarks>
-        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 

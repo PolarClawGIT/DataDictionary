@@ -52,7 +52,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Schema</remarks>
-        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 

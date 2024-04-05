@@ -45,17 +45,17 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             aliasBrowser.Items.Clear();
             alaisViewItems.Clear();
 
-            NamedScopeItem parent = BusinessData.NameScope.RootItem;
+            NamedScopeItem parent = BusinessData.NamedScope.RootItem;
             NamedScopeKey? parentKey = null;
 
             if (navigationStack.TryPeek(out parentKey) && parentKey is NamedScopeKey)
-            { parent = BusinessData.NameScope[parentKey]; }
+            { parent = BusinessData.NamedScope[parentKey]; }
 
             foreach (NamedScopeKey childKey in parent.Children)
             {
-                if (BusinessData.NameScope.ContainsKey(childKey))
+                if (BusinessData.NamedScope.ContainsKey(childKey))
                 {
-                    NamedScopeItem child = BusinessData.NameScope[childKey];
+                    NamedScopeItem child = BusinessData.NamedScope[childKey];
                     ListViewItem childItem = new ListViewItem(child.MemberName, child.Scope.ToName());
                     childItem.ToolTipText = child.MemberFullName;
 
@@ -88,10 +88,10 @@ namespace DataDictionary.Main.Forms.Domain.Controls
                 NamedScopeKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
                 //SelectedAlias = BusinessData.NameScope[selectedKey];
 
-                var x = BusinessData.NameScope[selectedKey];
+                var x = BusinessData.NamedScope[selectedKey];
 
-                aliasNameData.Text = BusinessData.NameScope[selectedKey].MemberFullName;
-                aliasScopeData.SelectedValue = BusinessData.NameScope[selectedKey].Scope;
+                aliasNameData.Text = BusinessData.NamedScope[selectedKey].MemberFullName;
+                aliasScopeData.SelectedValue = BusinessData.NamedScope[selectedKey].Scope;
 
                 if (navigationStack.TryPeek(out NamedScopeKey? parentKey)
                     && selectedKey.Equals(parentKey))
@@ -100,7 +100,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
                     AliasListLoad();
                 }
 
-                else if (BusinessData.NameScope[selectedKey].Children.Count > 0)
+                else if (BusinessData.NamedScope[selectedKey].Children.Count > 0)
                 {
                     navigationStack.Push(selectedKey);
                     AliasListLoad();

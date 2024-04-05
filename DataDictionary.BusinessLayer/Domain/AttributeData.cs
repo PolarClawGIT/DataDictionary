@@ -236,7 +236,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
-        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 

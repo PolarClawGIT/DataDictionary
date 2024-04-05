@@ -15,7 +15,7 @@ namespace DataDictionary.BusinessLayer.Model
     /// Interface component for the Domain Model 
     /// </summary>
     public interface IModelData :
-        IBindingData<ModelItem>
+        IBindingData<ModelItem>, INamedScopeData
     {
         /// <summary>
         /// Create WorkItem that create a new Model instance.
@@ -25,7 +25,7 @@ namespace DataDictionary.BusinessLayer.Model
     }
 
     class ModelData : ModelCollection, IModelData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile, INamedScopeData
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
     {
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
@@ -55,7 +55,7 @@ namespace DataDictionary.BusinessLayer.Model
 
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
-        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 

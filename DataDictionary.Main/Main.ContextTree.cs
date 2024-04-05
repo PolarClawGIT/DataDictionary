@@ -30,11 +30,16 @@ namespace DataDictionary.Main
         protected override void HandleMessage(RefreshNavigation message)
         {
             base.HandleMessage(message);
-            this.DoWork(contextNameNavigation.Load(BusinessData.NameScope));
+            this.DoWork(contextNameNavigation.Load(BusinessData.NamedScope));
         }
 
         private void RefreshCommand_Click(object? sender, EventArgs e)
-        { this.DoWork(contextNameNavigation.Load(BusinessData.NameScope)); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(BusinessData.NamedScope.Build());
+            work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
+            this.DoWork(work);
+        }
 
         private void DataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {

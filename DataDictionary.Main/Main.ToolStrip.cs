@@ -25,7 +25,7 @@ namespace DataDictionary.Main
             AttributeItem item = new AttributeItem();
 
             BusinessData.DomainModel.Attributes.Add(item);
-            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
+            BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, item));
 
             Activate(item);
         }
@@ -35,7 +35,7 @@ namespace DataDictionary.Main
             DomainEntityItem item = new DomainEntityItem();
 
             BusinessData.DomainModel.Entities.Add(item);
-            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
+            BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, item));
 
             Activate(item);
         }
@@ -45,7 +45,7 @@ namespace DataDictionary.Main
             ModelSubjectAreaItem item = new ModelSubjectAreaItem();
 
             BusinessData.ModelSubjectAreas.Add(item);
-            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
+            BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, item));
 
             Activate(item);
         }

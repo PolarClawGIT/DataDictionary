@@ -149,7 +149,7 @@ namespace DataDictionary.Main.Forms.Library
                 LibrarySourceKey key = new LibrarySourceKey(item);
                 work.AddRange(BusinessData.LibraryModel.Load(factory, key));
                 work.AddRange(LoadLocalData(factory));
-                work.AddRange(BusinessData.Build(BusinessData.NameScope));
+                work.AddRange(BusinessData.NamedScope.Build());
                 DoLocalWork(work);
             }
 
@@ -278,7 +278,7 @@ namespace DataDictionary.Main.Forms.Library
                 {
                     FileInfo fileInfo = new FileInfo(file);
                     work.AddRange(BusinessData.LibraryModel.Import(fileInfo));
-                    work.AddRange(BusinessData.Build(BusinessData.NameScope));
+                    work.AddRange(BusinessData.NamedScope.Build());
                 }
 
                 DoLocalWork(work);
@@ -300,7 +300,7 @@ namespace DataDictionary.Main.Forms.Library
                     new WorkItem()
                     {
                         WorkName = "Remove NameScope",
-                        DoWork = () => { BusinessData.NameScope.Remove(scopeKey); }
+                        DoWork = () => { BusinessData.NamedScope.Remove(scopeKey); }
                     });
 
                 DoLocalWork(work);

@@ -46,7 +46,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 
@@ -60,7 +60,7 @@ namespace DataDictionary.BusinessLayer.Database
                         //target.Remove(new NamedScopeKey(item)); Done by Catalog
 
                         DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
-                        if (Database.DbTables.FirstOrDefault(w => nameKey.Equals(w)) is IDbSchemaItem parent)
+                        if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is IDbSchemaItem parent)
                         { target.Add(new NamedScopeItem(parent, item)); }
                     }
                 }

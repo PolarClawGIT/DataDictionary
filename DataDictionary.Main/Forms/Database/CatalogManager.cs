@@ -193,7 +193,7 @@ namespace DataDictionary.Main.Forms.Database
                     };
 
                     work.AddRange(BusinessData.DatabaseModel.Import(source));
-                    work.AddRange(BusinessData.Build(BusinessData.NameScope));
+                    work.AddRange(BusinessData.NamedScope.Build());
                     DoLocalWork(work);
                 }
             }
@@ -213,7 +213,7 @@ namespace DataDictionary.Main.Forms.Database
                     new WorkItem()
                     {
                         WorkName = "Remove NameScope",
-                        DoWork = () => { BusinessData.NameScope.Remove(scopeKey); }
+                        DoWork = () => { BusinessData.NamedScope.Remove(scopeKey); }
                     });
             }
 
@@ -262,7 +262,7 @@ namespace DataDictionary.Main.Forms.Database
                 DbCatalogKey key = new DbCatalogKey(item);
                 work.Add(factory.OpenConnection());
                 work.AddRange(BusinessData.DatabaseModel.Load(factory, key));
-                work.AddRange(BusinessData.Build(BusinessData.NameScope));
+                work.AddRange(BusinessData.NamedScope.Build());
 
                 DoLocalWork(work);
             }

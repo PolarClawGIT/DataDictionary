@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer
     /// Main Data Container for all Business Data.
     /// </summary>
     public partial class BusinessLayerData :
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData, INamedScopeData
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData
     {
         /// <summary>
         /// Database Context for accessing the Application Db.
@@ -72,7 +72,7 @@ namespace DataDictionary.BusinessLayer
 
             modelValues = new Model.ModelData();
             subjectAreaValues = new Model.SubjectAreaData() { Models = modelValues };
-            NameScope = new NamedScopeDictionary();
+            namedScopeValue = new NamedScopeDictionary() { Source = this };
 
             modelValues.Add(new ModelItem());
             applicationValue = new Application.ApplicationData();
@@ -134,7 +134,7 @@ namespace DataDictionary.BusinessLayer
 
             work.AddRange(ScriptingEngine.Remove());
 
-            work.AddRange(NameScope.Remove());
+            work.AddRange(NamedScope.Remove());
 
             work.AddRange(modelValues.Create());
 
@@ -249,22 +249,6 @@ namespace DataDictionary.BusinessLayer
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }
             }
-        }
-
-        /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
-        {// TODO: How do I move this inside of NamedScopeDictory? Design issue.
-
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(modelValues.Build(target));
-            work.AddRange(subjectAreaValues.Build(target));
-            work.AddRange(domainValue.Build(target));
-            work.AddRange(scriptingValue.Build(target));
-            work.AddRange(databaseValue.Build(target));
-            work.AddRange(libraryValue.Build(target));
-
-            return work;
         }
     }
 }

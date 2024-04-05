@@ -13,7 +13,8 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// </summary>
     public interface IScriptingEngine :
         ISaveData, ILoadData, IRemoveData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        INamedScopeData
     {
         /// <summary>
         /// List of Scripting Engine Schemta.
@@ -39,8 +40,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Implementation for Scripting Engine data
     /// </summary>
-    class ScriptingEngine : IScriptingEngine, IDataTableFile,
-        INamedScopeData
+    class ScriptingEngine : IScriptingEngine, IDataTableFile
     {
         /// <summary>
         /// Reference to the containing Model
@@ -154,7 +154,7 @@ namespace DataDictionary.BusinessLayer.Scripting
             return work;
         }
 
-        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 

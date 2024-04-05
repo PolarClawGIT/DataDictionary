@@ -15,13 +15,13 @@ namespace DataDictionary.BusinessLayer.Database
     /// Interface for the Wrapper of Catalog Data (The Database)
     /// </summary>
     public interface ICatalogData :
-        IBindingData<DbCatalogItem>
+        IBindingData<DbCatalogItem>, INamedScopeData
     { }
 
     class CatalogData : DbCatalogCollection, ICatalogData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
-        IDatabaseModelItem, INamedScopeData
+        IDatabaseModelItem
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -66,7 +66,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 

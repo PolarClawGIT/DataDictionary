@@ -19,12 +19,13 @@ namespace DataDictionary.BusinessLayer.Model
     /// </summary>
     public interface ISubjectAreaData :
         IBindingData<ModelSubjectAreaItem>,
-        ILoadData<IModelSubjectAreaKey>, ISaveData<IModelSubjectAreaKey>
+        ILoadData<IModelSubjectAreaKey>, ISaveData<IModelSubjectAreaKey>,
+        INamedScopeData
     { }
 
     class SubjectAreaData : ModelSubjectAreaCollection, ISubjectAreaData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile, INamedScopeData
+        IDataTableFile
     {
         /// <summary>
         /// Reference to the containing Model
@@ -67,7 +68,7 @@ namespace DataDictionary.BusinessLayer.Model
 
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
-        public IReadOnlyList<WorkItem> Build(NamedScopeDictionary target)
+        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 

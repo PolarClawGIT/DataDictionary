@@ -1,7 +1,33 @@
 ﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.DbWorkItem;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
+    /// <summary>
+    /// Interface for NameScope Items with hierarchy support.
+    /// </summary>
+    public interface INamedScopeDictionary : IDictionary<NamedScopeKey, NamedScopeItem>,
+        IRemoveData
+    {
+        /// <summary>
+        /// Adds an item to the collection.
+        /// </summary>
+        /// <param name="value"></param>
+        void Add(NamedScopeItem value);
+
+        /// <summary>
+        /// Build the NamedScope data
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyList<WorkItem> Build();
+
+        /// <summary>
+        /// Root key for the hierarchy.
+        /// </summary>
+        NamedScopeItem RootItem { get; }
+    }
+
     /// <summary>
     /// Collection of NameScope Items with hierarchy support.
     /// </summary>
@@ -19,12 +45,17 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// 
     /// NameScope is also called NameSpace, Alias Names and Context Names.
     /// NameScope was chosen to avoid naming collusions and reduce confusion.
+    /// 
+    /// TODO: The base class does not allow overriding of a number methods. Consider re-writing as a Wrapper.
     /// </remarks>
-    public class NamedScopeDictionary : SortedDictionary<NamedScopeKey, NamedScopeItem>
+    class NamedScopeDictionary : SortedDictionary<NamedScopeKey, NamedScopeItem>, INamedScopeDictionary
     {
         /// <summary>
-        /// Root key for the hierarchy.
+        /// Connection to the root of the Business Data.
         /// </summary>
+        public required BusinessLayerData Source { get; init; }
+
+        /// <inheritdoc/>
         public NamedScopeItem RootItem { get; private set; }
 
         /// <summary>
@@ -48,23 +79,21 @@ namespace DataDictionary.BusinessLayer.NamedScope
         public void Add(INamedScopeKey key, INamedScopeItem value)
         { throw new InvalidOperationException("Do not use. Use Add by ContextNameItem."); }
 
-        /// <summary>
-        /// Adds an item to the collection.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="isChild"></param>
-        public virtual void Add(NamedScopeItem value, Boolean isChild = false)
+        /// <inheritdoc/>
+        public virtual void Add(NamedScopeItem value)
         {
             //TODO: Problem, Some items need to have multiple Parents. This currently restricts to a single parent.
             //      The item itself is expected to be in the list once, but may appear in multiple Children lists.
-            //TODO: IsChild does not do anything. Need to be removed.
             if (this.ContainsKey(value.SystemKey)) { return; }
 
             if (value.SystemParentKey is NamedScopeKey parentKey)
             {
                 if (this.ContainsKey(parentKey))
                 { this[parentKey].Children.Add(value.SystemKey); }
-                else { this.RootItem.Children.Add(value.SystemKey); }
+                else
+                {
+                    this.RootItem.Children.Add(value.SystemKey);
+                }
             }
             else { this.RootItem.Children.Add(value.SystemKey); }
 
@@ -81,14 +110,18 @@ namespace DataDictionary.BusinessLayer.NamedScope
             { Add(item); }
         }
 
+        /// <inheritdoc/>
+        /// <remarks>
+        /// This method catches calls to the base.Remove and directs it to the correct method.
+        /// </remarks>
+        public new virtual Boolean Remove(NamedScopeKey key)
+        { return Remove((INamedScopeKey)key); }
+
         /// <summary>
         /// Removes an item and the children
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        /// <remarks>
-        /// This method is expected to catch calls to the base.Remove.
-        /// </remarks>
         public virtual Boolean Remove(INamedScopeKey key)
         {
             Boolean result = false;
@@ -107,6 +140,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
         protected virtual Boolean RemoveCore(INamedScopeKey key)
         {
             NamedScopeKey removeKey = new NamedScopeKey(key);
+
+
             if (this.ContainsKey(removeKey) && this[removeKey] is NamedScopeItem removeItem)
             {
                 List<NamedScopeKey> children = removeItem.Children.ToList();
@@ -190,6 +225,25 @@ namespace DataDictionary.BusinessLayer.NamedScope
             { success = this.Remove(this.First().Key); }
 
             base.Clear();
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Remove()
+        { return new WorkItem() { WorkName = "Remove NamedScope", DoWork = this.Clear }.ToList(); }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Build()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.AddRange(Source.Models.Build(this));
+            work.AddRange(Source.ModelSubjectAreas.Build(this));
+            work.AddRange(Source.DomainModel.Build(this));
+            work.AddRange(Source.ScriptingEngine.Build(this));
+            work.AddRange(Source.DatabaseModel.Build(this));
+            work.AddRange(Source.LibraryModel.Build(this));
+
+            return work;
         }
     }
 }

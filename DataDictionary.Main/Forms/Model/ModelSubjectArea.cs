@@ -66,7 +66,7 @@ namespace DataDictionary.Main.Forms.Domain
                 ModelSubjectAreaKey key = new ModelSubjectAreaKey(current);
 
                 NamedScopeKey nameKey = new NamedScopeKey(current);
-                BusinessData.NameScope.Remove(nameKey);
+                BusinessData.NamedScope.Remove(nameKey);
 
                 current.Remove();
                 bindingAttribute.Clear();
