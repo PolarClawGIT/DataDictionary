@@ -72,22 +72,43 @@ namespace DataDictionary.BusinessLayer.Model
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            if(Models.FirstOrDefault() is IModelItem model)
+            work.Add(new WorkItem()
             {
-                ModelKey key = new ModelKey(model);
-                work.Add(new WorkItem()
+                WorkName = "Build NamedScope Subject Areas",
+                DoWork = () =>
                 {
-                    WorkName = "Build NamedScope Subject Areas",
-                    DoWork = () =>
+                    if (Models.FirstOrDefault() is IModelItem model)
                     {
-                        foreach (ModelSubjectAreaItem item in this)
+                        ModelKey modelKey = new ModelKey(model);
+
+                        foreach (ModelSubjectAreaItem item in this.OrderBy(o => new NameSpaceKey(o).MemberPath))
                         {
                             target.Remove(new NamedScopeKey(item));
-                            target.Add(new NamedScopeItem(key, item));
+                            target.Add(new NamedScopeItem(modelKey, item));
                         }
+
+                        //TODO: Need to build this as a hierarchy, like how help subjects are done.
+                        /*
+                        var nameList = this.Select(s => new NameSpaceItem(new NameSpaceKey(s))).
+                            GroupBy(g => g.MemberPath).
+                            OrderBy(o => o.Key).
+                            ToList();
+
+                        foreach (ModelSubjectAreaItem item in this.OrderBy(o => new NameSpaceKey(o).MemberPath))
+                        {
+                            target.Remove(new NamedScopeKey(item));
+                            NameSpaceKey nameSpaceKey = new NameSpaceKey(item);
+
+                            if (this.FirstOrDefault(w => new NameSpaceKey(w).MemberFullName == nameSpaceKey.MemberPath) is ModelSubjectAreaItem parent)
+                            { target.Add(new NamedScopeItem(parent, item)); }
+
+                            // Handle name not in list
+
+                            else { target.Add(new NamedScopeItem(modelKey, item)); }*/
                     }
-                });
-            }
+                }
+
+            });
 
             return work;
         }

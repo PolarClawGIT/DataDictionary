@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         ISaveData, ISaveData<ISchemaKey>
     { }
 
-   
+
     class SchemaData : SchemaCollection<SchemaItem>, ISchemaData, INamedScopeData
     {
         /// <summary>
@@ -56,23 +56,23 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            if (Scripting.Models.FirstOrDefault() is IModelItem model)
+            work.Add(new WorkItem()
             {
-                ModelKey key = new ModelKey(model);
-                work.Add(new WorkItem()
+                WorkName = "Build NamedScope Scripting Schema",
+                DoWork = () =>
                 {
-                    WorkName = "Build NamedScope Scripting Schema",
-                    DoWork = () =>
+                    if (Scripting.Models.FirstOrDefault() is IModelItem model)
                     {
+                        ModelKey key = new ModelKey(model);
+
                         foreach (SchemaItem item in this)
                         {
                             target.Remove(new NamedScopeKey(item));
                             target.Add(new NamedScopeItem(key, item));
                         }
                     }
-                });
-            }
-
+                }
+            });
 
             return work;
         }

@@ -240,14 +240,14 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            if (DomainModel.Models.FirstOrDefault() is IModelItem model)
+            work.Add(new WorkItem()
             {
-                ModelKey key = new ModelKey(model);
-                work.Add(new WorkItem()
+                WorkName = "Build NamedScope Attributes",
+                DoWork = () =>
                 {
-                    WorkName = "Build NamedScope Attributes",
-                    DoWork = () =>
+                    if (DomainModel.Models.FirstOrDefault() is IModelItem model)
                     {
+                        ModelKey key = new ModelKey(model);
                         List<IDomainAttributeItem> unhandled = this.Select(s => s as IDomainAttributeItem).Cast<IDomainAttributeItem>().ToList();
 
                         foreach (IDomainAttributeItem item in unhandled)
@@ -271,12 +271,12 @@ namespace DataDictionary.BusinessLayer.Domain
 
                         foreach (IDomainAttributeItem item in unhandled)
                         {
-                            target.Remove(new NamedScopeKey( item));
+                            target.Remove(new NamedScopeKey(item));
                             target.Add(new NamedScopeItem(key, item));
                         }
                     }
-                });
-            }
+                }
+            });
 
             return work;
         }

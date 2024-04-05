@@ -237,14 +237,14 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            if (DomainModel.Models.FirstOrDefault() is IModelItem model)
+            work.Add(new WorkItem()
             {
-                ModelKey key = new ModelKey(model);
-                work.Add(new WorkItem()
+                WorkName = "Build NamedScope Entities",
+                DoWork = () =>
                 {
-                    WorkName = "Build NamedScope Entities",
-                    DoWork = () =>
+                    if (DomainModel.Models.FirstOrDefault() is IModelItem model)
                     {
+                        ModelKey key = new ModelKey(model);
                         List<IDomainEntityItem> unhandled = this.Select(s => s as IDomainEntityItem).Cast<IDomainEntityItem>().ToList();
 
                         foreach (IDomainEntityItem item in unhandled)
@@ -272,8 +272,8 @@ namespace DataDictionary.BusinessLayer.Domain
                             target.Add(new NamedScopeItem(key, item));
                         }
                     }
-                });
-            }
+                }
+            });
 
             return work;
         }

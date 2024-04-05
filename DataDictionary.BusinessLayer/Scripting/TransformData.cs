@@ -53,23 +53,23 @@ namespace DataDictionary.BusinessLayer.Scripting
         public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
-
-            if (Scripting.Models.FirstOrDefault() is IModelItem model)
+            work.Add(new WorkItem()
             {
-                ModelKey key = new ModelKey(model);
-                work.Add(new WorkItem()
+                WorkName = "Build NamedScope Scripting Transform",
+                DoWork = () =>
                 {
-                    WorkName = "Build NamedScope Scripting Transform",
-                    DoWork = () =>
+                    if (Scripting.Models.FirstOrDefault() is IModelItem model)
                     {
+                        ModelKey key = new ModelKey(model);
+
                         foreach (TransformItem item in this)
                         {
                             target.Remove(new NamedScopeKey(item));
                             target.Add(new NamedScopeItem(key, item));
                         }
                     }
-                });
-            }
+                }
+            });
 
             return work;
         }
