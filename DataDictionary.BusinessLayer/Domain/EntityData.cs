@@ -206,30 +206,6 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<IModelKey?> parent)
-        {
-            return new WorkItem()
-            {
-                WorkName = "Load NameScope, Entities",
-                DoWork = () =>
-                {
-                    if (parent() is IModelKey modelKey)
-                    {
-                        foreach (DomainEntityItem entity in this)
-                        {
-                            DomainEntityKey entityKey = new DomainEntityKey(entity);
-                            List<ModelEntityItem> subjects = subjectAreaValues.Where(w => entityKey.Equals(w)).ToList();
-
-                            foreach (ModelEntityItem subject in subjects)
-                            { target.Add(new NamedScopeItem(subject, entity)); }
-
-                            if (subjects.Count == 0)
-                            { target.Add(new NamedScopeItem(modelKey, entity)); }
-                        }
-                    }
-                }
-            }.ToList();
-        }
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>

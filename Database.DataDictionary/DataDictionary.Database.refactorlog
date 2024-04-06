@@ -595,4 +595,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[ElementNillable]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="073c4bb0-aaf5-4141-95c2-f2c7f74e9d43" ChangeDateTime="04/02/2024 16:19:21">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeScopeElement]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeObjectSubType]" />
+  </Operation>
 </Operations>

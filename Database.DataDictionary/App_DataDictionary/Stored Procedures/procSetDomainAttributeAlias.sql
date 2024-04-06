@@ -66,21 +66,14 @@ Begin Try
 	From	[Data]
 	Where	[RankIndex] = 1
  
-	;With [Scope] As (
-		Select	S.[ScopeId],
-				F.[ScopeName]
-		From	[App_DataDictionary].[ApplicationScope] S
-				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	Coalesce(D.[AttributeId], @AttributeId) As [AttributeId],
 			A.[AliasId],
-			S.[ScopeId],
+			D.[ScopeName],
 			A.[AliasElement],
 			A.[AliasName],
 			A.[ParentAliasName]
 	From	@Data D
-			Left Join [Scope] S
-			On	D.[ScopeName] = S.[ScopeName]
 			Left Join @Alias A
 			On	D.[AliasName] = A.[AliasName]
 
@@ -88,10 +81,12 @@ Begin Try
 	Insert Into [App_DataDictionary].[DomainAlias] (
 			[AliasId],
 			[ParentAliasId],
-			[AliasMember])
+			[AliasMember],
+			[ScopeName])
 	Select	V.[AliasId],
 			P.[AliasId] As [ParentAliasId],
-			V.[AliasElement]
+			V.[AliasElement],
+			V.[ScopeName]
 	From	@Alias V
 			Left Join @Alias P
 			On	V.[ParentAliasName] = P.[AliasName]
@@ -115,28 +110,10 @@ Begin Try
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DomainAttributeAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	;With [Delta] As (
-		Select	[AttributeId],
-				[AliasId],
-				[ScopeId]
-		From	@Values
-		Except
-		Select	[AttributeId],
-				[AliasId],
-				[ScopeId]
-		From	[App_DataDictionary].[DomainAttributeAlias])
-	Update [App_DataDictionary].[DomainAttributeAlias]
-	Set		[ScopeId] = S.[ScopeId]
-	From	[App_DataDictionary].[DomainAttributeAlias] T
-			Inner Join [Delta] S
-			On	T.[AttributeId] = S.[AttributeId] And
-				T.[AliasId] = S.[AliasId]
-	Print FormatMessage ('Update [App_DataDictionary].[DomainAttributeAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DomainAttributeAlias] ([AttributeId], [AliasId], [ScopeId])
+	Insert Into [App_DataDictionary].[DomainAttributeAlias] ([AttributeId], [AliasId])
 	Select	V.[AttributeId],
-			V.[AliasId],
-			V.[ScopeId]
+			V.[AliasId]
 	From	@Values V
 			Left Join [App_DataDictionary].[DomainAttributeAlias] T
 			On	V.[AttributeId] = T.[AttributeId] And

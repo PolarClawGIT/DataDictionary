@@ -65,26 +65,22 @@ Begin Try
 	From	[Data]
 	Where	[RankIndex] = 1
 
-	;With [Scope] As (
-		Select	S.[ScopeId],
-				F.[ScopeName]
-		From	[App_DataDictionary].[ApplicationScope] S
-				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	Coalesce(D.[EntityId], @EntityId) As [EntityId],
 			A.[AliasId],
-			S.[ScopeId],
+			S.[ScopeName],
 			A.[AliasElement],
 			A.[AliasName],
 			A.[ParentAliasName]
 	From	@Data D
-			Left Join [Scope] S
-			On	D.[ScopeName] = S.[ScopeName]
 			Left Join @Alias A
 			On	D.[AliasName] = A.[AliasName]
 
 	-- Apply Changes
-	Insert Into [App_DataDictionary].[DomainAlias] ([AliasId], [ParentAliasId], [AliasMember])
+	Insert Into [App_DataDictionary].[DomainAlias] (
+			[AliasId],
+			[ParentAliasId],
+			[AliasMember])
 	Select	V.[AliasId],
 			P.[AliasId] As [ParentAliasId],
 			V.[AliasElement]
@@ -111,28 +107,9 @@ Begin Try
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	;With [Delta] As (
-		Select	[EntityId],
-				[AliasId],
-				[ScopeId]
-		From	@Values
-		Except
-		Select	[EntityId],
-				[AliasId],
-				[ScopeId]
-		From	[App_DataDictionary].[DomainEntityAlias])
-	Update [App_DataDictionary].[DomainEntityAlias]
-	Set		[ScopeId] = S.[ScopeId]
-	From	[App_DataDictionary].[DomainEntityAlias] T
-			Inner Join [Delta] S
-			On	T.[EntityId] = S.[EntityId] And
-				T.[AliasId] = S.[AliasId]
-	Print FormatMessage ('Update [App_DataDictionary].[DomainEntityAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Insert Into [App_DataDictionary].[DomainEntityAlias] ([EntityId], [AliasId], [ScopeId])
+	Insert Into [App_DataDictionary].[DomainEntityAlias] ([EntityId], [AliasId])
 	Select	V.[EntityId],
-			V.[AliasId],
-			V.[ScopeId]
+			V.[AliasId]
 	From	@Values V
 			Left Join [App_DataDictionary].[DomainEntityAlias] T
 			On	V.[EntityId] = T.[EntityId] And

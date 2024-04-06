@@ -104,23 +104,9 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Remove()
         {
-            List<WorkItem> result = new List<WorkItem>();
-            attributeValues.Remove();
-            entityValues.Remove();
-
-            return result;
-        }
-
-
-        /// <inheritdoc/>
-        /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<IModelKey?> parent)
-        {
             List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(attributeValues.Export(target, parent));
-            work.AddRange(entityValues.Export(target, parent));
-
+            work.AddRange(attributeValues.Remove());
+            work.AddRange(entityValues.Remove());
             return work;
         }
 
@@ -129,10 +115,8 @@ namespace DataDictionary.BusinessLayer.Domain
         public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
-
             work.AddRange(attributeValues.Build(target));
             work.AddRange(entityValues.Build(target));
-
             return work;
         }
 

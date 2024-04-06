@@ -218,22 +218,6 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target, Func<IModelKey?> parent)
-        {
-            return new WorkItem()
-            {
-                WorkName = "Load NameScope, Attributes",
-                DoWork = () =>
-                {
-                    if (parent() is IModelKey key)
-                    {
-                        foreach (DomainAttributeItem item in this)
-                        { target.Add(new NamedScopeItem(key, item)); }
-                    }
-                }
-            }.ToList();
-        }
-
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
         public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
