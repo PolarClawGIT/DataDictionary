@@ -5,7 +5,7 @@
 	[AliasId]           UniqueIdentifier NOT NULL CONSTRAINT [DF_DomainAliasId] DEFAULT (newid()),
 	[ParentAliasId]     UniqueIdentifier NULL,
 	[AliasMember]       [App_DataDictionary].[typeNameSpaceMember] Not Null,
-	[ScopeName]         [App_DataDictionary].[typeScopeName] Not Null,  -- The Scope for the Application to look for the Alias within
+	[ScopeName]         [App_DataDictionary].[typeScopeName] Null,  -- The Scope for the Application to look for the Alias within
 	--[AliasCheckSum]     As (Binary_CheckSum([AliasMember])), -- Used for indexing. Not needed unless the index would exceed 1700 bytes.
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DomainAlias_ModfiedBy] DEFAULT (original_login()),

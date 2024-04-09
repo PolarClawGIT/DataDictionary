@@ -241,6 +241,8 @@
     <Build Include="App_DataDictionary\Tables\ScriptingSelection.sql" />
     <Build Include="App_DataDictionary\Tables\ScriptingSelectionItem.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetMemberNameSpace.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAlias.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

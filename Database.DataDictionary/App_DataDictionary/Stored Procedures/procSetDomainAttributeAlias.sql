@@ -20,81 +20,42 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean Data
+	Declare @Alias [App_DataDictionary].[typeDomainAlias]
+
 	Declare @Values Table (
 		[AttributeId]       UniqueIdentifier Not Null,
 		[AliasId]           UniqueIdentifier Not Null,
-		[ScopeId]           Int Not Null,
-		[AliasElement]		[App_DataDictionary].[typeNameSpaceMember] Not Null,
-		[AliasName]			[App_DataDictionary].[typeNameSpacePath] Not Null,
-		[ParentAliasName]	[App_DataDictionary].[typeNameSpaceMember] Null
+		[AliasName]	        [App_DataDictionary].[typeNameSpacePath] Not Null,
+		[ScopeName]         [App_DataDictionary].[typeScopeName] Null,
 		Primary Key ([AttributeId], [AliasId]))
 
-	Declare @Alias Table (
-		[AliasId]           UniqueIdentifier Not Null,
-		[AliasElement]		[App_DataDictionary].[typeNameSpaceMember] Not Null,
-		[AliasName]			[App_DataDictionary].[typeNameSpacePath] Not Null,
-		[ParentAliasName]	[App_DataDictionary].[typeNameSpaceMember] Null,
-		Primary Key ([AliasId]))
+	Insert Into @Alias
+	Select	[AliasName],
+			[ScopeName]
+	From	@Data
+	Group By [AliasName],
+			[ScopeName]
+
+	Exec [App_DataDictionary].[procSetDomainAlias] @Alias
 
 	;With [Alias] As (
-		Select	I.[AliasId],
-				I.[AliasMember],
+		Select	A.[AliasId],
 				F.[AliasName],
-				F.[ParentAliasName]
-		From	[App_DataDictionary].[DomainAlias] I
-				Cross Apply [App_DataDictionary].[funcGetAliasName](I.[AliasId]) F),
-	[Data] As (	
-		Select	Coalesce(A.[AliasId],NewId()) As [AliasId],
-				N.[NameSpaceMember] As [AliasElement],
-				N.[NameSpace] As [AliasName],
-				N.[ParentNameSpace] As [ParentAliasName],
-				Row_Number() Over (
-					Partition By 
-						IIF(A.[AliasId] is Null, 0,1),
-						A.[AliasId], N.[NameSpace]
-					Order By N.[NameSpace])
-					As [RankIndex]
-		From	@Data D
-				Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[AliasName]) N
-				Left Join [Alias] A
-				On	N.[NameSpace] = A.[AliasName])
-	Insert Into @Alias
-	Select	[AliasId],
-			[AliasElement],
-			[AliasName],
-			[ParentAliasName]
-	From	[Data]
-	Where	[RankIndex] = 1
- 
+				F.[ScopeName]
+		From	[App_DataDictionary].[DomainAlias] A
+				Cross Apply [App_DataDictionary].[funcGetAliasName](A.[AliasId]) F)
 	Insert Into @Values
-	Select	Coalesce(D.[AttributeId], @AttributeId) As [AttributeId],
+	Select	Coalesce(D.[AttributeId], @AttributeId, NewId()) As [AttributeId],
 			A.[AliasId],
-			D.[ScopeName],
-			A.[AliasElement],
 			A.[AliasName],
-			A.[ParentAliasName]
+			D.[ScopeName]
 	From	@Data D
-			Left Join @Alias A
-			On	D.[AliasName] = A.[AliasName]
+			Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[AliasName]) N
+			Left Join [Alias] A
+			On	N.[NameSpace] = A.[AliasName]
+	Where	N.[IsBase] = 1
 
 	-- Apply Changes
-	Insert Into [App_DataDictionary].[DomainAlias] (
-			[AliasId],
-			[ParentAliasId],
-			[AliasMember],
-			[ScopeName])
-	Select	V.[AliasId],
-			P.[AliasId] As [ParentAliasId],
-			V.[AliasElement],
-			V.[ScopeName]
-	From	@Alias V
-			Left Join @Alias P
-			On	V.[ParentAliasName] = P.[AliasName]
-			Left Join [App_DataDictionary].[DomainAlias] T
-			On	V.[AliasId] = T.[AliasId]
-	Where	T.[AliasId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[DomainAlias] (Attribute): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
 	Delete From [App_DataDictionary].[DomainAttributeAlias]
 	From	[App_DataDictionary].[DomainAttributeAlias] T
 			Left Join @Values V
@@ -109,7 +70,6 @@ Begin Try
 			Where	(@AttributeId is Null Or @AttributeId = A.[AttributeId]) And
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DomainAttributeAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
 
 	Insert Into [App_DataDictionary].[DomainAttributeAlias] ([AttributeId], [AliasId])
 	Select	V.[AttributeId],
@@ -161,3 +121,57 @@ Begin Catch
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
 GO
+
+/*
+Begin Try;
+	Begin Transaction;
+	Set NoCount On;
+
+declare @Model App_DataDictionary.typeModel
+insert into @Model values('D13DBF75-1C92-4ABE-B07D-A9C23835E43A',N'Sample Model',NULL)
+
+exec [App_DataDictionary].[procSetModel] @ModelId='D13DBF75-1C92-4ABE-B07D-A9C23835E43A',@Data=@Model
+
+declare @Attribute App_DataDictionary.typeDomainAttribute
+insert into @Attribute values('E8F4AFF5-DE14-4E4F-93BC-D1ED4C48C1CA',N'SampleAttribute',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)
+
+exec [App_DataDictionary].[procSetDomainAttribute] @ModelId='D13DBF75-1C92-4ABE-B07D-A9C23835E43A',@Data=@Attribute
+
+declare @Alias App_DataDictionary.typeDomainAttributeAlias
+insert into @Alias values('E8F4AFF5-DE14-4E4F-93BC-D1ED4C48C1CA',N'[SampleLibrary].[SampleClass].[SampleProperty]',N'Library.NameSpace.Type.Property')
+
+insert into @Alias values('E8F4AFF5-DE14-4E4F-93BC-D1ED4C48C1CA',N'[SampleLibrary].[SampleClass].[Dummy1].[Dummy2].[Dummy3].[Dummy4].[InnerClass].[SampleProperty]',N'Library.NameSpace.Type.Property')
+
+
+insert into @Alias values('E8F4AFF5-DE14-4E4F-93BC-D1ED4C48C1CA',N'[SampleLibrary].[SampleClass].[SampleMethod].[sampleParm01]',N'Library.NameSpace.Type.Parameter')
+insert into @Alias values('E8F4AFF5-DE14-4E4F-93BC-D1ED4C48C1CA',N'[SampleLibrary].[SampleClass].[SampleGenericMethod``1].[data]',N'Library.NameSpace.Type.Parameter')
+
+exec [App_DataDictionary].[procSetDomainAttributeAlias] @ModelId='D13DBF75-1C92-4ABE-B07D-A9C23835E43A',@Data=@Alias
+
+	-- By default, throw and error and exit without committing
+;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
+	
+	Commit Transaction;
+	Print 'Commit Issued';
+End Try
+Begin Catch
+	Print FormatMessage ('*** Error Report: %s ***', Object_Name(@@ProcID));
+	Print FormatMessage (' Message- %s', ERROR_MESSAGE());
+	Print FormatMessage (' Number- %i', ERROR_NUMBER());
+	Print FormatMessage (' Severity- %i', ERROR_SEVERITY());
+	Print FormatMessage (' State- %i', ERROR_STATE());
+	Print FormatMessage (' Procedure- %s', ERROR_PROCEDURE());
+	Print FormatMessage (' Line- %i', ERROR_LINE());
+	Print FormatMessage (' @@TranCount - %i', @@TranCount);
+	Print FormatMessage (' @@NestLevel - %i', @@NestLevel);
+	Print FormatMessage (' Original_Login - %s', Original_Login());
+	Print FormatMessage (' Current_User - %s', Current_User);
+	Print FormatMessage (' XAct_State - %i', XAct_State());
+	Print '--- Debug Data ---';
+
+	-- Rollback Transaction
+	Print 'Rollback Issued';
+	Rollback Transaction;
+	--Throw;
+End Catch;
+*/

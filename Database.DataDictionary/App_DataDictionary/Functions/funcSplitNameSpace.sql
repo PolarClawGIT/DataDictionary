@@ -82,7 +82,8 @@ Select	[NameSpace], -- Full name including Member
 			As [ParentNameSpace], -- Does not include Member
 		[NameSpaceMember],
 		[Level],
-		IIF(Row_Number() Over (Order By [NameSpace] Desc) = 1,1,0) As [IsBase]
+		IIF(Row_Number() Over (Order By [NameSpace] Desc) = 1,1,0) As [IsBase],
+		Count(*) Over (Partition by Null) As [TotalElements]
 From	[Tree])
 GO
 /*
