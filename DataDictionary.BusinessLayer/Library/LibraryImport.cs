@@ -18,24 +18,8 @@ namespace DataDictionary.BusinessLayer.Library
     /// </summary>
     class LibraryImport
     {
-        [Obsolete("Use LibraryMemberType", true)]
-        static Dictionary<ScopeType, String> scopeTypeToNetCoding = new Dictionary<ScopeType, String>
-        {
-            { ScopeType.LibraryNameSpace, "N"},
-            { ScopeType.LibraryType,      "T"},
-            { ScopeType.LibraryField,     "F"},
-            { ScopeType.LibraryProperty,  "P"},
-            { ScopeType.LibraryMethod,    "M"},
-            { ScopeType.LibraryEvent,     "E"},
-        };
-
-        [Obsolete("Use LibraryMemberType", true)]
-        static ScopeType ToScopeType(String? value)
-        {
-            if (scopeTypeToNetCoding.FirstOrDefault(w => w.Value.Equals(value, KeyExtension.CompareString)) is KeyValuePair<ScopeType, String> keyValue && keyValue.Key != ScopeType.Null)
-            { return keyValue.Key; }
-            else { return ScopeType.Null; }
-        }
+        // TODO: The Parser is not working as expected when building NameSpaces.
+        // I Think this needs to be re-written.
 
         public Action<Int32, Int32> Progress { get; set; } = (x, y) => { };
 
