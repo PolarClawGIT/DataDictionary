@@ -70,11 +70,11 @@ namespace DataDictionary.DataLayer.LibraryData.Member
                 {
                     case LibraryMemberType.NameSpace: return ScopeType.LibraryNameSpace;
                     case LibraryMemberType.Type: return ScopeType.LibraryType;
-                    case LibraryMemberType.Field: return ScopeType.LibraryField;
-                    case LibraryMemberType.Property: return ScopeType.LibraryProperty;
-                    case LibraryMemberType.Method: return ScopeType.LibraryMethod;
-                    case LibraryMemberType.Event: return ScopeType.LibraryEvent;
-                    case LibraryMemberType.Parameter: return ScopeType.LibraryParameter;
+                    case LibraryMemberType.Field: return ScopeType.LibraryTypeField;
+                    case LibraryMemberType.Property: return ScopeType.LibraryTypeProperty;
+                    case LibraryMemberType.Method: return ScopeType.LibraryTypeMethod;
+                    case LibraryMemberType.Event: return ScopeType.LibraryTypeEvent;
+                    case LibraryMemberType.Parameter: return ScopeType.LibraryMethodParameter;
                     default: return ScopeType.Null;
                 }
             }

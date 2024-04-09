@@ -19,12 +19,12 @@ namespace DataDictionary.Main.Controls
         {
             {ScopeType.Null,                             (Resources.UnknownMember, Resources.Icon_UnknownMember) },
             {ScopeType.Library,                          (Resources.Library, Resources.Icon_Library) },
-            {ScopeType.LibraryEvent,                     (Resources.Event, Resources.Icon_UnknownMember) },
-            {ScopeType.LibraryField,                     (Resources.Field, Resources.Icon_Field) },
-            {ScopeType.LibraryMethod,                    (Resources.Method, Resources.Icon_Method) },
+            {ScopeType.LibraryTypeEvent,                 (Resources.Event, Resources.Icon_UnknownMember) },
+            {ScopeType.LibraryTypeField,                 (Resources.Field, Resources.Icon_Field) },
+            {ScopeType.LibraryTypeMethod,                (Resources.Method, Resources.Icon_Method) },
             {ScopeType.LibraryNameSpace,                 (Resources.Namespace, Resources.Icon_Namespace) },
-            {ScopeType.LibraryProperty,                  (Resources.Property, Resources.Icon_Property) },
-            {ScopeType.LibraryParameter,                 (Resources.Parameter, Resources.Icon_Parameter) },
+            {ScopeType.LibraryTypeProperty,              (Resources.Property, Resources.Icon_Property) },
+            {ScopeType.LibraryMethodParameter,           (Resources.Parameter, Resources.Icon_Parameter) },
             {ScopeType.LibraryType,                      (Resources.Class, Resources.Icon_Class) },
 
             {ScopeType.Database,                         (Resources.Database, Resources.Icon_Database) },
@@ -53,10 +53,10 @@ namespace DataDictionary.Main.Controls
             {ScopeType.ModelEntityProperty,              (Resources.Property, Resources.Icon_Entities) },
             {ScopeType.ModelEntityAttribute,             (Resources.Attribute, Resources.Icon_Attribute) },
 
-            {ScopeType.Scripting,                       (Resources.XmlFile, Resources.Icon_XmlFile) },
-            {ScopeType.ScriptingSchema,                 (Resources.XMLSchema, Resources.Icon_XMLSchema) },
-            {ScopeType.ScriptingSchemaElement,          (Resources.XMLElement, Resources.Icon_XMLElement) },
-            {ScopeType.ScriptingTransform,              (Resources.XSLTransform, Resources.Icon_XSLTransform) },
+            {ScopeType.Scripting,                        (Resources.XmlFile, Resources.Icon_XmlFile) },
+            {ScopeType.ScriptingSchema,                  (Resources.XMLSchema, Resources.Icon_XMLSchema) },
+            {ScopeType.ScriptingSchemaElement,           (Resources.XMLElement, Resources.Icon_XMLElement) },
+            {ScopeType.ScriptingTransform,               (Resources.XSLTransform, Resources.Icon_XSLTransform) },
         };
 
         public static Image ToImage(this ScopeType scope)

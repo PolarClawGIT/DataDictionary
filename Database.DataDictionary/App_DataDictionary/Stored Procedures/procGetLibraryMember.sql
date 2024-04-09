@@ -8,7 +8,7 @@ Select	M.[LibraryId],
 		M.[MemberId],
 		M.[MemberParentId],
 		L.[AssemblyName],
-		N.[ParentNameSpace] As [MemberNameSpace],
+		N.[MemberNameSpace],
 		M.[MemberName],
 		M.[MemberType],
 		M.[MemberData]

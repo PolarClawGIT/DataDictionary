@@ -1,4 +1,5 @@
 ﻿// This NameSpace/Class is used for building a Sample XML Documentation file.
+// The Symbol information can be gotten from the PDB file but how to do this is not known.
 namespace SampleLibrary
 {
 
@@ -45,7 +46,7 @@ namespace SampleLibrary
         /// </summary>
         /// <param name="sampleParm01"></param>
         /// <returns></returns>
-        public Int32 SampleMethod (String sampleParm01) { throw new NotImplementedException(); }
+        public Int32 SampleFunction (String sampleParm01) { throw new NotImplementedException(); }
 
         /// <summary>
         /// Sample Event

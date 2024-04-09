@@ -74,22 +74,50 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDomainEntityKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateLoad(this, dataKey));
+            work.Add(factory.CreateLoad(aliasValues, dataKey));
+            work.Add(factory.CreateLoad(propertyValues, dataKey));
+            work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
+            return work;
+        }
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateLoad(this, dataKey).ToList(); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateLoad(this, dataKey));
+            work.Add(factory.CreateLoad(aliasValues, dataKey));
+            work.Add(factory.CreateLoad(propertyValues, dataKey));
+            work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
+            return work;
+        }
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainEntityKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateSave(this, dataKey));
+            work.Add(factory.CreateSave(aliasValues, dataKey));
+            work.Add(factory.CreateSave(propertyValues, dataKey));
+            work.Add(factory.CreateSave(subjectAreaValues, dataKey));
+            return work;
+        }
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
-        { return factory.CreateSave(this, dataKey).ToList(); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(factory.CreateSave(this, dataKey));
+            work.Add(factory.CreateSave(aliasValues, dataKey));
+            work.Add(factory.CreateSave(propertyValues, dataKey));
+            work.Add(factory.CreateSave(subjectAreaValues, dataKey));
+            return work;
+        }
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Remove()

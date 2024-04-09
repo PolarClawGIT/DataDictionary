@@ -128,13 +128,16 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.Null,                      "N/A" },
 
             {ScopeType.Library,                   "Library" },
-            {ScopeType.LibraryEvent,              "Library.Event" },
-            {ScopeType.LibraryField,              "Library.Field" },
-            {ScopeType.LibraryMethod,             "Library.Method" },
             {ScopeType.LibraryNameSpace,          "Library.NameSpace" },
-            {ScopeType.LibraryProperty,           "Library.Property" },
-            {ScopeType.LibraryParameter,          "Library.Parameter" },
-            {ScopeType.LibraryType,               "Library.Type" },
+            {ScopeType.LibraryType,               "Library.NameSpace.Type" },
+            {ScopeType.LibraryTypeEvent,          "Library.NameSpace.Type.Event" },
+            {ScopeType.LibraryTypeField,          "Library.NameSpace.Type.Field" },
+            {ScopeType.LibraryTypeMethod,         "Library.NameSpace.Type.Method" }, // Functions or Methods
+            {ScopeType.LibraryTypeProperty,       "Library.NameSpace.Type.Property" },
+            {ScopeType.LibraryMethodParameter,    "Library.NameSpace.Type.Method.Parameter" },
+            //{ScopeType.LibraryPropertyParameter,"Library.NameSpace.Type.Property.Parameter" }, // Example is an Indexer, Detected as Parameter.
+            //{ScopeType.LibraryDelegate,         "Library.NameSpace.Delegate" }, // Detected as a Type, cannot be distinguished
+            //{ScopeType.LibraryDelegateParameter,"Library.NameSpace.Delegate.Parameter" }, // Cannot be detected without Parms being specified in XML
 
             {ScopeType.Database,                  "Database" },
             {ScopeType.DatabaseSchema,            "Database.Schema" },

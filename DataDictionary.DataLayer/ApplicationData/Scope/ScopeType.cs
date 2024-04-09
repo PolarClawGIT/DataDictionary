@@ -79,39 +79,47 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         Library,
 
         /// <summary>
+        /// .Net Library NameSpace
+        /// </summary>
+        /// <remarks>NameSpace cannot be detected directly. Instead it must be inferred.</remarks>
+        LibraryNameSpace,
+
+        /// <summary>
+        /// .Net Library Type (Class, Enum, Delegates, ...)
+        /// </summary>
+        /// <remarks>The exact type cannot be determined using the Document file.</remarks>
+        LibraryType,
+
+        /// <summary>
         /// .Net Library Event
         /// </summary>
-        LibraryEvent,
+        LibraryTypeEvent,
 
         /// <summary>
         /// .Net Library Field
         /// </summary>
-        LibraryField,
+        LibraryTypeField,
 
         /// <summary>
         /// .Net Library Method
         /// </summary>
-        LibraryMethod,
-
-        /// <summary>
-        /// .Net Library NameSpace
-        /// </summary>
-        LibraryNameSpace,
+        LibraryTypeMethod,
 
         /// <summary>
         /// .Net Library Property
         /// </summary>
-        LibraryProperty,
+        LibraryTypeProperty,
 
         /// <summary>
-        /// .Net Library Parameter,
+        /// .Net Library Method Parameter
         /// </summary>
-        LibraryParameter,
+        LibraryMethodParameter,
 
         /// <summary>
-        /// .Net Library Type (Class, Enum, ...)
+        /// .Net Library Property Parameter, Indexer
         /// </summary>
-        LibraryType,
+        LibraryPropertyParameter,
+
 
         /// <summary>
         /// SQL Database
