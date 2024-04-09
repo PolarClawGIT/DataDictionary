@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Interface for the Scripting Schema Element data.
     /// </summary>
-    public interface IElementItem : ISchemaKey, IElementKey, IColumnKey, IScopeKey
+    public interface IElementItem : ISchemaKey, IElementKey, IScopeKey
     {
 
         /// <summary>
@@ -181,17 +181,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         /// <param name="key"></param>
         public ElementItem(ISchemaKey key) : this()
         { SchemaId = key.SchemaId; }
-
-        /// <summary>
-        /// Constructor for Schema Element Items
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="column"></param>
-        public ElementItem(ISchemaKey key, IColumnItem column) : this(key)
-        {
-            Scope = column.Scope;
-            ColumnName = column.ColumnName;
-        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
