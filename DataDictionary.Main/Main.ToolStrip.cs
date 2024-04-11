@@ -118,7 +118,7 @@ namespace DataDictionary.Main
 
 
         private void transformManagerCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.TransformManager()); }
+        { Activate(() => new Forms.Scripting.TransformManager(null)); }
 
         private void schemaManagerCommand_Click(object sender, EventArgs e)
         { Activate(() => new Forms.Scripting.SchemaManager(null)); }

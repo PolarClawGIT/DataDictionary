@@ -796,7 +796,6 @@
             // 
             scriptingContextMenu.Items.AddRange(new ToolStripItem[] { schemaManagerCommand, transformManagerCommand });
             scriptingContextMenu.Name = "scriptingContextMenu";
-            scriptingContextMenu.OwnerItem = manageScriptingCommand;
             scriptingContextMenu.Size = new Size(181, 70);
             // 
             // schemaManagerCommand
@@ -804,15 +803,15 @@
             schemaManagerCommand.Image = Properties.Resources.NewXMLSchema;
             schemaManagerCommand.Name = "schemaManagerCommand";
             schemaManagerCommand.Size = new Size(180, 22);
-            schemaManagerCommand.Text = "Schema Manager";
+            schemaManagerCommand.Text = "Schema (XSD)";
             schemaManagerCommand.Click += schemaManagerCommand_Click;
             // 
             // transformManagerCommand
             // 
-            transformManagerCommand.Image = Properties.Resources.XSLTransform;
+            transformManagerCommand.Image = Properties.Resources.NewXSLTransform;
             transformManagerCommand.Name = "transformManagerCommand";
             transformManagerCommand.Size = new Size(180, 22);
-            transformManagerCommand.Text = "Transform Manager";
+            transformManagerCommand.Text = "Transform (XSLT)";
             transformManagerCommand.Click += transformManagerCommand_Click;
             // 
             // toolStripSeparator7

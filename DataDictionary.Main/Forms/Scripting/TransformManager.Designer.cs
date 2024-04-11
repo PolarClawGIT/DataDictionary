@@ -32,101 +32,57 @@
             TableLayoutPanel transformLayout;
             GroupBox outputTypeGroup;
             TableLayoutPanel outputTypeLayout;
-            transformToolStrip = new ContextMenuStrip(components);
-            addTransformCommand = new ToolStripMenuItem();
-            removeTransformCommand = new ToolStripMenuItem();
-            transformNavigation = new DataGridView();
-            bindingTransform = new BindingSource(components);
-            transformTitleData = new Controls.TextBoxData();
             transformDescriptionData = new Controls.TextBoxData();
             outputAsTextData = new CheckBox();
             outputAsXmlData = new CheckBox();
             transformScriptData = new Controls.TextBoxData();
+            transformTitleData = new Controls.TextBoxData();
+            transformToolStrip = new ContextMenuStrip(components);
+            addTransformCommand = new ToolStripMenuItem();
+            removeTransformCommand = new ToolStripMenuItem();
+            bindingTransform = new BindingSource(components);
+            transformExceptionData = new Controls.TextBoxData();
             transformLayout = new TableLayoutPanel();
             outputTypeGroup = new GroupBox();
             outputTypeLayout = new TableLayoutPanel();
-            transformToolStrip.SuspendLayout();
             transformLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)transformNavigation).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)bindingTransform).BeginInit();
             outputTypeGroup.SuspendLayout();
             outputTypeLayout.SuspendLayout();
+            transformToolStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingTransform).BeginInit();
             SuspendLayout();
-            // 
-            // transformToolStrip
-            // 
-            transformToolStrip.Items.AddRange(new ToolStripItem[] { addTransformCommand, removeTransformCommand });
-            transformToolStrip.Name = "transformToolStrip";
-            transformToolStrip.Size = new Size(171, 48);
-            // 
-            // addTransformCommand
-            // 
-            addTransformCommand.Image = Properties.Resources.NewXSLTransform;
-            addTransformCommand.Name = "addTransformCommand";
-            addTransformCommand.Size = new Size(170, 22);
-            addTransformCommand.Text = "add Transform";
-            addTransformCommand.Click += addTransformCommand_Click;
-            // 
-            // removeTransformCommand
-            // 
-            removeTransformCommand.Image = Properties.Resources.DeleteXSLTransform;
-            removeTransformCommand.Name = "removeTransformCommand";
-            removeTransformCommand.Size = new Size(170, 22);
-            removeTransformCommand.Text = "remove Transform";
-            removeTransformCommand.Click += removeTransformCommand_Click;
             // 
             // transformLayout
             // 
             transformLayout.ColumnCount = 1;
             transformLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            transformLayout.Controls.Add(transformNavigation, 0, 0);
-            transformLayout.Controls.Add(transformTitleData, 0, 1);
-            transformLayout.Controls.Add(transformDescriptionData, 0, 2);
-            transformLayout.Controls.Add(outputTypeGroup, 0, 3);
-            transformLayout.Controls.Add(transformScriptData, 0, 4);
+            transformLayout.Controls.Add(transformTitleData, 0, 0);
+            transformLayout.Controls.Add(transformDescriptionData, 0, 1);
+            transformLayout.Controls.Add(outputTypeGroup, 0, 2);
+            transformLayout.Controls.Add(transformScriptData, 0, 3);
+            transformLayout.Controls.Add(transformExceptionData, 0, 4);
             transformLayout.Dock = DockStyle.Fill;
             transformLayout.Location = new Point(0, 25);
             transformLayout.Name = "transformLayout";
             transformLayout.RowCount = 5;
-            transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             transformLayout.RowStyles.Add(new RowStyle());
-            transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
             transformLayout.RowStyles.Add(new RowStyle());
             transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
             transformLayout.Size = new Size(452, 529);
             transformLayout.TabIndex = 5;
-            // 
-            // transformNavigation
-            // 
-            transformNavigation.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            transformNavigation.Dock = DockStyle.Fill;
-            transformNavigation.Location = new Point(3, 3);
-            transformNavigation.Name = "transformNavigation";
-            transformNavigation.Size = new Size(446, 121);
-            transformNavigation.TabIndex = 0;
-            // 
-            // transformTitleData
-            // 
-            transformTitleData.AutoSize = true;
-            transformTitleData.Dock = DockStyle.Fill;
-            transformTitleData.HeaderText = "Transform Title";
-            transformTitleData.Location = new Point(3, 130);
-            transformTitleData.Multiline = false;
-            transformTitleData.Name = "transformTitleData";
-            transformTitleData.ReadOnly = false;
-            transformTitleData.Size = new Size(446, 44);
-            transformTitleData.TabIndex = 1;
             // 
             // transformDescriptionData
             // 
             transformDescriptionData.AutoSize = true;
             transformDescriptionData.Dock = DockStyle.Fill;
             transformDescriptionData.HeaderText = "Transform Description";
-            transformDescriptionData.Location = new Point(3, 180);
+            transformDescriptionData.Location = new Point(3, 53);
             transformDescriptionData.Multiline = true;
             transformDescriptionData.Name = "transformDescriptionData";
             transformDescriptionData.ReadOnly = false;
-            transformDescriptionData.Size = new Size(446, 79);
+            transformDescriptionData.Size = new Size(446, 100);
             transformDescriptionData.TabIndex = 2;
             // 
             // outputTypeGroup
@@ -135,7 +91,7 @@
             outputTypeGroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             outputTypeGroup.Controls.Add(outputTypeLayout);
             outputTypeGroup.Dock = DockStyle.Fill;
-            outputTypeGroup.Location = new Point(3, 265);
+            outputTypeGroup.Location = new Point(3, 159);
             outputTypeGroup.Name = "outputTypeGroup";
             outputTypeGroup.Size = new Size(446, 47);
             outputTypeGroup.TabIndex = 3;
@@ -184,12 +140,58 @@
             transformScriptData.AutoSize = true;
             transformScriptData.Dock = DockStyle.Fill;
             transformScriptData.HeaderText = "Transform Script";
-            transformScriptData.Location = new Point(3, 318);
+            transformScriptData.Location = new Point(3, 212);
             transformScriptData.Multiline = true;
             transformScriptData.Name = "transformScriptData";
             transformScriptData.ReadOnly = false;
-            transformScriptData.Size = new Size(446, 208);
+            transformScriptData.Size = new Size(446, 207);
             transformScriptData.TabIndex = 4;
+            // 
+            // transformTitleData
+            // 
+            transformTitleData.AutoSize = true;
+            transformTitleData.Dock = DockStyle.Fill;
+            transformTitleData.HeaderText = "Transform Title";
+            transformTitleData.Location = new Point(3, 3);
+            transformTitleData.Multiline = false;
+            transformTitleData.Name = "transformTitleData";
+            transformTitleData.ReadOnly = false;
+            transformTitleData.Size = new Size(446, 44);
+            transformTitleData.TabIndex = 1;
+            // 
+            // transformToolStrip
+            // 
+            transformToolStrip.Items.AddRange(new ToolStripItem[] { addTransformCommand, removeTransformCommand });
+            transformToolStrip.Name = "transformToolStrip";
+            transformToolStrip.Size = new Size(171, 48);
+            // 
+            // addTransformCommand
+            // 
+            addTransformCommand.Image = Properties.Resources.NewXSLTransform;
+            addTransformCommand.Name = "addTransformCommand";
+            addTransformCommand.Size = new Size(170, 22);
+            addTransformCommand.Text = "add Transform";
+            addTransformCommand.Click += addTransformCommand_Click;
+            // 
+            // removeTransformCommand
+            // 
+            removeTransformCommand.Image = Properties.Resources.DeleteXSLTransform;
+            removeTransformCommand.Name = "removeTransformCommand";
+            removeTransformCommand.Size = new Size(170, 22);
+            removeTransformCommand.Text = "remove Transform";
+            removeTransformCommand.Click += removeTransformCommand_Click;
+            // 
+            // transformExceptionData
+            // 
+            transformExceptionData.AutoSize = true;
+            transformExceptionData.Dock = DockStyle.Fill;
+            transformExceptionData.HeaderText = "Transform Exception";
+            transformExceptionData.Location = new Point(3, 425);
+            transformExceptionData.Multiline = true;
+            transformExceptionData.Name = "transformExceptionData";
+            transformExceptionData.ReadOnly = true;
+            transformExceptionData.Size = new Size(446, 101);
+            transformExceptionData.TabIndex = 5;
             // 
             // TransformManager
             // 
@@ -201,15 +203,14 @@
             Text = "TransformManager";
             Load += TransformManager_Load;
             Controls.SetChildIndex(transformLayout, 0);
-            transformToolStrip.ResumeLayout(false);
             transformLayout.ResumeLayout(false);
             transformLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)transformNavigation).EndInit();
-            ((System.ComponentModel.ISupportInitialize)bindingTransform).EndInit();
             outputTypeGroup.ResumeLayout(false);
             outputTypeGroup.PerformLayout();
             outputTypeLayout.ResumeLayout(false);
             outputTypeLayout.PerformLayout();
+            transformToolStrip.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)bindingTransform).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -219,12 +220,12 @@
         private ContextMenuStrip transformToolStrip;
         private ToolStripMenuItem addTransformCommand;
         private ToolStripMenuItem removeTransformCommand;
-        private DataGridView transformNavigation;
         private BindingSource bindingTransform;
         private Controls.TextBoxData transformTitleData;
         private Controls.TextBoxData transformDescriptionData;
         private CheckBox outputAsTextData;
         private CheckBox outputAsXmlData;
         private Controls.TextBoxData transformScriptData;
+        private Controls.TextBoxData transformExceptionData;
     }
 }
