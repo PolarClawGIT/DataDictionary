@@ -120,7 +120,6 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <inheritdoc/>
-        /// <remarks>Automatically makes a new empty Model</remarks>
         public IReadOnlyList<WorkItem> Remove()
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -136,8 +135,19 @@ namespace DataDictionary.BusinessLayer
 
             work.AddRange(NamedScope.Remove());
 
-            work.AddRange(modelValues.Create());
+            return work;
+        }
 
+        /// <summary>
+        /// Creates a new empty Model (old model is removed).
+        /// </summary>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> Create()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(Remove());
+
+            work.AddRange(modelValues.Create());
             return work;
         }
 
@@ -148,7 +158,10 @@ namespace DataDictionary.BusinessLayer
         /// <returns></returns>
         public IReadOnlyList<WorkItem> ImportModel(FileInfo file)
         {
-            return new List<WorkItem>() { new WorkItem() { WorkName = "Load Model Data", DoWork = DoWork } };
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(Remove());
+            work.Add(new WorkItem() { WorkName = "Load Model Data", DoWork = DoWork });
+            return work;
 
             void DoWork()
             {
@@ -156,7 +169,6 @@ namespace DataDictionary.BusinessLayer
                 {
                     workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
 
-                    modelValues.Clear();
                     modelValues.Import(workSet);
                     subjectAreaValues.Import(workSet);
 

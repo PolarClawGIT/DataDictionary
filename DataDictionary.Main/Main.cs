@@ -55,7 +55,11 @@ namespace DataDictionary.Main
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 this.DoWork(factory.OpenConnection(), OnComplete);
             }
-            else { LoadData(OnLoadComplete); }
+            else
+            {
+                LoadData(OnLoadComplete);
+                SendMessage(new OnlineStatusChanged());
+            }
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             {
@@ -168,7 +172,7 @@ namespace DataDictionary.Main
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(BusinessData.Remove());
+            work.AddRange(BusinessData.Create());
             work.AddRange(BusinessData.NamedScope.Build());
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
 

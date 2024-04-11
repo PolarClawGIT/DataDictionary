@@ -109,9 +109,17 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <remarks>Scripting</remarks>
         public void Import(DataSet source)
         {
-            schemtaValues.Load(source);
-            elementValues.Load(source);
-            transformValues.Load(source);
+            if (source.Tables.Contains(schemtaValues.BindingName)
+                && source.Tables[schemtaValues.BindingName] is DataTable schemeTable)
+            { schemtaValues.Load(schemeTable.CreateDataReader()); }
+
+            if (source.Tables.Contains(elementValues.BindingName)
+                && source.Tables[elementValues.BindingName] is DataTable elementTable)
+            { elementValues.Load(elementTable.CreateDataReader()); }
+
+            if (source.Tables.Contains(transformValues.BindingName)
+                && source.Tables[transformValues.BindingName] is DataTable transformTable)
+            { transformValues.Load(transformTable.CreateDataReader()); }
         }
 
 
