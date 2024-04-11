@@ -42,9 +42,6 @@ namespace DataDictionary.Main
             Dialogs.AboutBox splashScreen = new Dialogs.AboutBox();
             Boolean dataLoaded = false;
             Boolean splashDone = false;
-            FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
-            FileInfo appInstallFile = new FileInfo(Settings.Default.AppDataFile);
-
             System.Timers.Timer splashTimer = new System.Timers.Timer();
             splashTimer.Interval = 5000; // 5 seconds
             splashTimer.Elapsed += MinTime_Elapsed;
@@ -52,13 +49,55 @@ namespace DataDictionary.Main
             splashTimer.Enabled = true; // Start
             splashScreen.Show();
 
-            // Setup the Data
             SendMessage(new DoUnbindData());
+            if (Settings.Default.IsOnLineMode)
+            {
+                IDatabaseWork factory = BusinessData.GetDbFactory();
+                this.DoWork(factory.OpenConnection(), OnComplete);
+            }
+            else { LoadData(OnLoadComplete); }
 
+            void OnComplete(RunWorkerCompletedEventArgs args)
+            {
+                if (args.Error is not null && Settings.Default.IsOnLineMode)
+                { // Could not load the data from the database for whatever reason.
+                  // Switch to off-line mode and load from file if possible.
+                    Settings.Default.IsOnLineMode = false;
+                    Settings.Default.Save();
+                }
+
+                SendMessage(new OnlineStatusChanged());
+                LoadData(OnLoadComplete);
+            }
+
+            // Handle Splash timer timed out.
+            void MinTime_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+            {
+                if (dataLoaded)
+                { this.Invoke(() => { splashScreen.Close(); }); }
+
+                splashTimer.Elapsed -= MinTime_Elapsed;
+                splashDone = true;
+            }
+
+            // Handle DataLoaded
+            void OnLoadComplete(RunWorkerCompletedEventArgs args)
+            {
+                if (splashDone)
+                { this.Invoke(() => { splashScreen.Close(); }); }
+
+                IsLocked(false);
+                dataLoaded = true;
+                SendMessage(new DoBindData());
+            }
+        }
+
+
+        private void LoadData(Action<RunWorkerCompletedEventArgs> onLoadComplete)
+        {
+            FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
+            FileInfo appInstallFile = new FileInfo(Settings.Default.AppDataFile);
             List<WorkItem> work = new List<WorkItem>();
-            List<NamedScopeItem> names = new List<NamedScopeItem>();
-            work.AddRange(BusinessData.NamedScope.Build());
-            work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
 
             if (Settings.Default.IsOnLineMode)
             {
@@ -68,14 +107,8 @@ namespace DataDictionary.Main
 
                 if (!appDataFile.Exists)
                 { work.AddRange(BusinessData.ExportApplication(appDataFile)); }
-
-                this.DoWork(work, OnComplete);
             }
             else
-            { FileLoad(); }
-
-            // Handles the Application Data File
-            void FileLoad()
             {
                 if (appDataFile.Exists) // AppData already contains the Application Data File
                 { work.AddRange(BusinessData.ImportApplication(appDataFile)); }
@@ -84,52 +117,16 @@ namespace DataDictionary.Main
                     work.AddRange(BusinessData.ImportApplication(appInstallFile));
                     work.AddRange(BusinessData.ExportApplication(appDataFile));
                 }
-
-                work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
-
-                this.DoWork(work, OnComplete);
             }
 
-            // Handle data load complete
+            work.AddRange(BusinessData.NamedScope.Build());
+            work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
+
+            this.DoWork(work, OnComplete);
+
             void OnComplete(RunWorkerCompletedEventArgs args)
-            {
-                if (splashDone)
-                { this.Invoke(() => splashScreen.Close()); }
-
-                if (args.Error is not null && Settings.Default.IsOnLineMode)
-                { // Could not load the data from the database for whatever reason.
-                  // Switch to off-line mode and load from file if possible.
-                    Settings.Default.IsOnLineMode = false;
-                    Settings.Default.Save();
-
-                    FileLoad();
-                }
-                else
-                {
-                    SendMessage(new OnlineStatusChanged());
-                    dataLoaded = true;
-                    IsLocked(false);
-                }
-            }
-
-            // Handle Splash timer timed out.
-            void MinTime_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
-            {
-                if (dataLoaded)
-                {
-                    this.Invoke(() =>
-                    {
-                        splashScreen.Close();
-                        IsLocked(false);
-                    });
-                }
-
-                splashDone = true;
-                splashTimer.Elapsed -= MinTime_Elapsed;
-
-            }
+            { onLoadComplete(args); }
         }
-
 
         private void Main_FormClosing(object? sender, FormClosingEventArgs e)
         { }

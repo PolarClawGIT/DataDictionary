@@ -253,6 +253,22 @@ namespace DataDictionary.Main.Forms
         }
 
         /// <summary>
+        /// Performs a single item of work on a background thread.
+        /// </summary>
+        /// <param name="work"></param>
+        /// <param name="onCompleting"></param>
+        protected void DoWork(WorkItem work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
+        {
+            Worker.Enqueue(work, completing);
+
+            void completing(RunWorkerCompletedEventArgs result)
+            {
+                if (result.Error is not null) { Program.ShowException(result.Error); }
+                if (onCompleting is not null) { onCompleting(result); }
+            }
+        }
+
+        /// <summary>
         /// Set and returns the Locked state of the form.
         /// </summary>
         /// <param name="newState"></param>
