@@ -295,9 +295,8 @@ namespace DataDictionary.Main.Forms.Database
         private void catalogBinding_CurrentChanged(object sender, EventArgs e)
         {
             removeDatabaseCommand.Enabled = inModelList;
-
             IsOpenDatabase = inDatabaseList && !inModelList;
-            IsSaveDatabase = true;
+            IsSaveDatabase = inModelList;
             IsDeleteDatabase = inDatabaseList;
         }
     }

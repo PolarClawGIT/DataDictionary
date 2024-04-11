@@ -217,19 +217,6 @@ namespace DataDictionary.Main.Forms.Library
         private void BindingComplete(object sender, BindingCompleteEventArgs e)
         { if (sender is BindingSource binding) { binding.BindComplete(sender, e); } }
 
-        private void LibraryBinding_CurrentChanged(object sender, EventArgs e)
-        {
-            if (libraryBinding.Current is LibraryManagerItem item)
-            {
-                LibrarySourceKey key = new LibrarySourceKey(item);
-
-                removeLibraryComand.Enabled = inModelList;
-                IsOpenDatabase = inDatabaseList;
-                IsSaveDatabase = true;
-                IsDeleteDatabase = inDatabaseList;
-            }
-        }
-
         private void AddLibraryCommand_Click(object sender, EventArgs e)
         {
             openFileDialog.Filter = "XML VS Documentation|*.XML";
@@ -305,6 +292,14 @@ namespace DataDictionary.Main.Forms.Library
 
                 DoLocalWork(work);
             }
+        }
+
+        private void LibraryBinding_CurrentChanged(object sender, EventArgs e)
+        {
+            removeLibraryComand.Enabled = inModelList;
+            IsOpenDatabase = inDatabaseList;
+            IsSaveDatabase = inModelList;
+            IsDeleteDatabase = inDatabaseList;
         }
     }
 }
