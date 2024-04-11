@@ -77,7 +77,6 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.AddRange(schemtaValues.Load(factory));
             work.AddRange(elementValues.Load(factory));
             work.AddRange(transformValues.Load(factory));
-            work.Add(new WorkItem() { DoWork = columnValues.Load });
 
             return work;
         }
@@ -125,7 +124,6 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.AddRange(schemtaValues.Load(factory));
             work.AddRange(elementValues.Load(factory));
             work.AddRange(transformValues.Load(factory));
-            work.Add(new WorkItem() { DoWork = columnValues.Load });
 
             return work;
         }

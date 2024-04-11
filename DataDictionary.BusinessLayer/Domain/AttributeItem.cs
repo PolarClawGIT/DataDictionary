@@ -77,8 +77,6 @@ namespace DataDictionary.BusinessLayer.Domain
               //new ColumnItem() {ColumnName = nameof(attributeNames.IsValued),             DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
             };
 
-            result.AddRange(AttributePropertyItem.GetXColumns());
-
             return result;
         }
     }
