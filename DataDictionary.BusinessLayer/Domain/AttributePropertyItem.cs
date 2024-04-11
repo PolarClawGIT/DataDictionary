@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Property;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using System.Xml.Linq;
@@ -7,7 +8,14 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public class AttributePropertyItem: DomainAttributePropertyItem, IScriptRow
+    public interface IAttributePropertyItem : IDomainAttributePropertyItem
+    {
+
+
+    }
+
+    /// <inheritdoc/>
+    public class AttributePropertyItem : DomainAttributePropertyItem, IAttributePropertyItem
     {
         /// <inheritdoc/>
         public AttributePropertyItem() : base() { }
@@ -21,12 +29,50 @@ namespace DataDictionary.BusinessLayer.Domain
                                      IDbExtendedPropertyItem value)
             : base(attributeKey, propertyKey, value) { }
 
-        /// <inheritdoc/>
-        public IEnumerable<ScriptRow> GetScriptDataRow()
-        { return ScriptRow.GetScriptDataRow(GetRow()); }
+        internal XElement? GetXElement(IPropertyItem property, IEnumerable<ElementItem>? options = null)
+        {
+            XElement? result = null;
+            IAttributePropertyItem attributeNames;
+            IPropertyItem propertyNames;
 
-        /// <inheritdoc/>
-        public XElement GetXElement(IEnumerable<ScriptRow>? options = null)
-        { return ScriptRow.GetXElement(GetRow(), options); }
+            if (options is not null)
+            {
+                foreach (ElementItem option in options)
+                {
+                    Object? value = null;
+
+                    switch (option.ColumnName)
+                    {
+                        case nameof(propertyNames.PropertyTitle): value = property.PropertyTitle; break;
+                        case nameof(propertyNames.ExtendedProperty): value = property.ExtendedProperty; break;
+                        case nameof(attributeNames.PropertyValue): value = PropertyValue; break;
+                        case nameof(attributeNames.DefinitionText): value = DefinitionText; break;
+                        default:
+                            break;
+                    }
+
+                    if (value is not null)
+                    { result = new XElement(Scope.ToName(), option.GetXElement(value)); }
+                }
+            }
+
+            return result;
+        }
+
+        internal static IReadOnlyList<ColumnItem> GetXColumns()
+        {
+            ScopeType scope = ScopeType.ModelAttributeProperty;
+            IAttributePropertyItem attributeNames;
+            IPropertyItem propertyNames;
+            List<ColumnItem> result = new List<ColumnItem>()
+            {
+                new ColumnItem() {ColumnName = nameof(propertyNames.PropertyTitle),    DataType = typeof(String), AllowDBNull = false, Scope = scope},
+                new ColumnItem() {ColumnName = nameof(propertyNames.ExtendedProperty), DataType = typeof(String), AllowDBNull = true,  Scope = scope},
+                new ColumnItem() {ColumnName = nameof(attributeNames.PropertyValue),   DataType = typeof(String), AllowDBNull = true,  Scope = scope},
+                new ColumnItem() {ColumnName = nameof(attributeNames.DefinitionText),  DataType = typeof(String), AllowDBNull = true,  Scope = scope},
+            };
+
+            return result;
+        }
     }
 }

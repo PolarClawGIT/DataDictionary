@@ -10,7 +10,7 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IAttributeAliasItem: IDomainAttributeAliasItem, IScriptRow
+    public interface IAttributeAliasItem: IDomainAttributeAliasItem
     { }
 
     /// <inheritdoc/>
@@ -21,13 +21,5 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         public AttributeAliasItem(IDomainAttributeKey key) : base(key) { }
-
-        /// <inheritdoc/>
-        public IEnumerable<ScriptRow> GetScriptDataRow()
-        { return ScriptRow.GetScriptDataRow(GetRow()); }
-
-        /// <inheritdoc/>
-        public XElement GetXElement(IEnumerable<ScriptRow>? options = null)
-        { return ScriptRow.GetXElement(GetRow(), options); }
     }
 }

@@ -1,4 +1,6 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.Application;
+using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ModelData;
 using System;
@@ -6,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -18,10 +21,12 @@ namespace DataDictionary.BusinessLayer.Domain
 
     }
 
-    class AttributePropertyData: DomainAttributePropertyCollection<AttributePropertyItem>, IAttributePropertyData,
+    class AttributePropertyData : DomainAttributePropertyCollection<AttributePropertyItem>, IAttributePropertyData,
         ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
+        public required AttributeData Attributes { get; init; }
+
         /// <inheritdoc/>
         /// <remarks>AttributeProperty</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDomainAttributeKey dataKey)
@@ -41,5 +46,6 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <remarks>AttributeProperty</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
+
     }
 }

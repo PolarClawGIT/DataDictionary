@@ -46,8 +46,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// </summary>
         public void Load()
         {
-            Load(new DataLayer.DomainData.Attribute.DomainAttributeItem());
-            Load(new DataLayer.DomainData.Attribute.DomainAttributePropertyItem());
+            Load(Domain.AttributeItem.GetXColumns());
+            Load(Domain.AttributePropertyItem.GetXColumns());
         }
 
         /// <summary>
@@ -72,7 +72,13 @@ namespace DataDictionary.BusinessLayer.Scripting
             }
         }
 
-
+        /// <summary>
+        /// Loads the collection using a list of Column Items.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <remarks>Because a Collection does not have AddRange</remarks>
+        public void Load(IEnumerable<ColumnItem> source)
+        { source.ToList().ForEach(i => Add(i)); }
 
     }
 }

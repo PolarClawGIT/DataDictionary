@@ -52,7 +52,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 attributeNode.ImageKey = attributeItem.Scope.ToName();
                 attributeNode.SelectedImageKey = attributeItem.Scope.ToName();
                 itemSelection.Nodes.Add(attributeNode);
-                itemSelectorValues.Add(attributeNode, () => attributeItem.GetXElement());
+                //itemSelectorValues.Add(attributeNode, () => attributeItem.GetXElement());
 
                 foreach (AttributePropertyItem propertyItem in BusinessData.DomainModel.Attributes.Properties.Where(w => attributeKey.Equals(w)))
                 {
@@ -67,8 +67,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
                         itemSelectorValues.Add(propertyNode, () =>
                         {
-                            XElement value = propertyItem.GetXElement();
-                            value.Add(property.GetXElement());
+                            //XElement value = propertyItem.GetXElement();
+                            XElement value = new XElement("Dummy");
+                            //value.Add(property.GetXElement());
 
                             return value;
                         });

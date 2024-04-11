@@ -8,9 +8,13 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public class AttributeKey : DomainAttributeKey
+    public interface IAttributeKey : IDomainAttributeKey
+    { }
+
+    /// <inheritdoc/>
+    public class AttributeKey : DomainAttributeKey, IAttributeKey
     {
         /// <inheritdoc/>
-        public AttributeKey(IDomainAttributeKey source): base(source) { }
+        public AttributeKey(IDomainAttributeKey source) : base(source) { }
     }
 }

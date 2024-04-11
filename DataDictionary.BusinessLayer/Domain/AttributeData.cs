@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
@@ -45,7 +46,7 @@ namespace DataDictionary.BusinessLayer.Domain
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDataTableFile, INamedScopeData
     {
-        public required DomainModel DomainModel { get; init; }
+        public required DomainModel Model { get; init; }
 
         /// <inheritdoc/>
         public IAttributeAliasData Aliases { get { return aliasValues; } }
@@ -62,7 +63,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public AttributeData() : base()
         {
             aliasValues = new AttributeAliasData();
-            propertyValues = new AttributePropertyData();
+            propertyValues = new AttributePropertyData() { Attributes = this };
             subjectAreaValues = new AttributeSubjectAreaData();
         }
 
@@ -257,7 +258,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 WorkName = "Build NamedScope Attributes",
                 DoWork = () =>
                 {
-                    if (DomainModel.Models.FirstOrDefault() is IModelItem model)
+                    if (Model.Models.FirstOrDefault() is IModelItem model)
                     {
                         ModelKey key = new ModelKey(model);
                         List<IDomainAttributeItem> unhandled = this.Select(s => s as IDomainAttributeItem).Cast<IDomainAttributeItem>().ToList();
@@ -291,6 +292,34 @@ namespace DataDictionary.BusinessLayer.Domain
             });
 
             return work;
+        }
+
+        public XElement? GetXElement(IAttributeKey key, IEnumerable<ElementItem>? options = null)
+        {
+            XElement? result = null;
+
+            AttributeKey attributeKey = new AttributeKey(key);
+            if (this.FirstOrDefault(w => attributeKey.Equals(w)) is AttributeItem attribute)
+            {
+                if (attribute.GetXElement(options) is XElement xAttribute)
+                {
+                    result = xAttribute;
+
+                    if (Properties.FirstOrDefault(w => attributeKey.Equals(w)) is AttributePropertyItem property)
+                    {
+                        Application.PropertyKey propertyKey = new Application.PropertyKey(property);
+                        if (Model.ModelProperty.FirstOrDefault((Object w) => propertyKey.Equals(w)) is Application.PropertyItem item)
+                        {
+                            if (property.GetXElement(item, options) is XElement xProperty)
+                            { result.Add(xProperty); }
+                        }
+                    }
+                }
+
+            }
+
+            return result;
+
         }
     }
 }
