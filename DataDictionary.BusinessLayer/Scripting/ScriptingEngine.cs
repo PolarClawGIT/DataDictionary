@@ -22,14 +22,24 @@ namespace DataDictionary.BusinessLayer.Scripting
         ISchemaData Schemta { get; }
 
         /// <summary>
-        /// List of Scripting Engine Schema Elements.
+        /// List of Scripting Engine Scheme Elements.
         /// </summary>
-        IElementData Elements { get; }
+        IElementData SchemeElements { get; }
 
         /// <summary>
         /// List of Scripting Engine Transforms.
         /// </summary>
         ITransformData Transforms { get; }
+
+        /// <summary>
+        /// List of Scripting Engine Selections.
+        /// </summary>
+        ISelectionData Selections { get; }
+
+        /// <summary>
+        /// List of Scripting Engine Selection Instances.
+        /// </summary>
+        IInstanceData SelectionInstances { get; }
 
         /// <summary>
         /// List of Scripting Engine Column definitions
@@ -47,15 +57,20 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// </summary>
         public required IModelData Models { get; init; }
 
-        /// <inheritdoc/>
         public ISchemaData Schemta { get { return schemtaValues; } }
         private readonly SchemaData schemtaValues;
 
-        public IElementData Elements { get { return elementValues; } }
+        public IElementData SchemeElements { get { return elementValues; } }
         private readonly ElementData elementValues;
 
         public ITransformData Transforms { get { return transformValues; } }
         private readonly TransformData transformValues;
+
+        public ISelectionData Selections { get { return selectionValues; } }
+        private readonly SelectionData selectionValues;
+
+        public IInstanceData SelectionInstances { get { return instanceValues; } }
+        private readonly InstanceData instanceValues;
 
         public IColumnData Columns { get { return columnValues; } }
         private readonly ColumnData columnValues;
@@ -66,6 +81,8 @@ namespace DataDictionary.BusinessLayer.Scripting
             elementValues = new ElementData();
             transformValues = new TransformData() { Scripting = this };
             columnValues = new ColumnData();
+            selectionValues = new SelectionData() { Scripting = this };
+            instanceValues = new InstanceData();
         }
 
         /// <inheritdoc/>
@@ -77,6 +94,9 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.AddRange(schemtaValues.Load(factory));
             work.AddRange(elementValues.Load(factory));
             work.AddRange(transformValues.Load(factory));
+
+            //work.AddRange(selectionValues.Load(factory));
+            //work.AddRange(instanceValues.Load(factory));
 
             return work;
         }
@@ -91,6 +111,9 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.AddRange(elementValues.Save(factory));
             work.AddRange(transformValues.Save(factory));
 
+            //work.AddRange(selectionValues.Save(factory));
+            //work.AddRange(instanceValues.Save(factory));
+
             return work;
         }
 
@@ -102,6 +125,9 @@ namespace DataDictionary.BusinessLayer.Scripting
             result.Add(schemtaValues.ToDataTable());
             result.Add(elementValues.ToDataTable());
             result.Add(transformValues.ToDataTable());
+
+            //result.Add(selectionValues.ToDataTable());
+            //result.Add(instanceValues.ToDataTable());
             return result;
         }
 
@@ -133,6 +159,9 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.AddRange(elementValues.Load(factory));
             work.AddRange(transformValues.Load(factory));
 
+            work.AddRange(selectionValues.Load(factory));
+            work.AddRange(instanceValues.Load(factory));
+
             return work;
         }
 
@@ -146,6 +175,9 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.AddRange(elementValues.Save(factory));
             work.AddRange(transformValues.Save(factory));
 
+            work.AddRange(selectionValues.Save(factory));
+            work.AddRange(instanceValues.Save(factory));
+
             return work;
         }
 
@@ -157,6 +189,9 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.Add(new WorkItem() { WorkName = "Remove Scripting Elements", DoWork = () => { elementValues.Clear(); } });
             work.Add(new WorkItem() { WorkName = "Remove Scripting Transforms", DoWork = () => { transformValues.Clear(); } });
 
+            work.Add(new WorkItem() { WorkName = "Remove Scripting Selection", DoWork = () => { selectionValues.Clear(); } });
+            work.Add(new WorkItem() { WorkName = "Remove Scripting Instance", DoWork = () => { instanceValues.Clear(); } });
+
             return work;
         }
 
@@ -166,6 +201,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
             work.AddRange(schemtaValues.Build(target));
             work.AddRange(transformValues.Build(target));
+            work.AddRange(selectionValues.Build(target));
 
             return work;
         }
