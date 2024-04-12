@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.Forms.ApplicationWide
+﻿namespace DataDictionary.Main.Forms.ProofOfConcept
 {
     partial class TransformEditor
     {

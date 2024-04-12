@@ -12,7 +12,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
 
-namespace DataDictionary.Main.Forms.ApplicationWide
+namespace DataDictionary.Main.Forms.ProofOfConcept
 {
     partial class TransformEditor : ApplicationBase
     {
