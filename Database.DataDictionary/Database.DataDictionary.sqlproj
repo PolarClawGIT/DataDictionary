@@ -237,12 +237,13 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingSchema.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingSchemaElement.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingSchemaElement.sql" />
-    <Build Include="App_DataDictionary\Tables\ModelScripting.sql" />
     <Build Include="App_DataDictionary\Tables\ScriptingSelection.sql" />
-    <Build Include="App_DataDictionary\Tables\ScriptingSelectionItem.sql" />
+    <Build Include="App_DataDictionary\Tables\ScriptingSelectionInstance.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetMemberNameSpace.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAlias.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeScriptingSelection.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeScriptingSelectionInstance.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

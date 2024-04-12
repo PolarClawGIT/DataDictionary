@@ -204,6 +204,16 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// Scripting Transform
         /// </summary>
         ScriptingTransform,
+
+        /// <summary>
+        /// Scripting Selection
+        /// </summary>
+        ScriptingSelection,
+
+        /// <summary>
+        /// Scripting Selection Instance
+        /// </summary>
+        ScriptingSelectionInstance,
     }
 
     /// <summary>

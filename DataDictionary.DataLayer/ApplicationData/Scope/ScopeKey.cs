@@ -168,6 +168,8 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.ScriptingSchema,            "Scripting.Schema" },
             {ScopeType.ScriptingSchemaElement,     "Scripting.Schema.Element" },
             {ScopeType.ScriptingTransform,         "Scripting.Transform" },
+            {ScopeType.ScriptingSelection,         "Scripting.Selection" },
+            {ScopeType.ScriptingSelectionInstance, "Scripting.Selection.Instance" },
         };
 
         /// <inheritdoc/>

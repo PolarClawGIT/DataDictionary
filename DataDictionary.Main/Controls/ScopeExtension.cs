@@ -57,6 +57,9 @@ namespace DataDictionary.Main.Controls
             {ScopeType.ScriptingSchema,                  (Resources.XMLSchema, Resources.Icon_XMLSchema) },
             {ScopeType.ScriptingSchemaElement,           (Resources.XMLElement, Resources.Icon_XMLElement) },
             {ScopeType.ScriptingTransform,               (Resources.XSLTransform, Resources.Icon_XSLTransform) },
+            //TODO: Need better image/icon for XML Data Selection
+            {ScopeType.ScriptingSelection,               (Resources.XMLSchema, Resources.Icon_XMLSchema) },
+            {ScopeType.ScriptingSelectionInstance,       (Resources.XMLElement, Resources.Icon_XMLElement) },
         };
 
         public static Image ToImage(this ScopeType scope)

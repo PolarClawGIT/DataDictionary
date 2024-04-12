@@ -45,7 +45,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             Setup(bindingSchema);
 
-            bindingElement.DataSource = new BindingView<ElementItem>(BusinessData.ScriptingEngine.Elements, w => key.Equals(w));
+            bindingElement.DataSource = new BindingView<ElementItem>(BusinessData.ScriptingEngine.SchemeElements, w => key.Equals(w));
             bindingElement.SuspendBinding();
             elementOptionsLayout.Enabled = false;
         }
@@ -116,8 +116,8 @@ namespace DataDictionary.Main.Forms.Scripting
                 //bindingElement.DataSource = null;
                 BusinessData.ScriptingEngine.Schemta.Remove(item);
 
-                foreach (ElementItem element in BusinessData.ScriptingEngine.Elements.Where(w => key.Equals(w)).ToList())
-                { BusinessData.ScriptingEngine.Elements.Remove(element); }
+                foreach (ElementItem element in BusinessData.ScriptingEngine.SchemeElements.Where(w => key.Equals(w)).ToList())
+                { BusinessData.ScriptingEngine.SchemeElements.Remove(element); }
 
                 SendMessage(new RefreshNavigation());
             }
