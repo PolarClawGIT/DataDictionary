@@ -10,17 +10,17 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <summary>
-    /// Interface component for the Scripting Engine Instance
+    /// Interface component for the Scripting Engine Selection Path
     /// </summary>
-    public interface IInstanceData :
-        IBindingData<InstanceItem>,
+    public interface ISelectionPathData :
+        IBindingData<SelectionPathValue>,
         ILoadData, ILoadData<ISelectionKey>,
         ISaveData, ISaveData<ISelectionKey>
     {
 
     }
 
-    class InstanceData : InstanceCollection<InstanceItem>, IInstanceData
+    class SelectionPathData : SelectionPathCollection<SelectionPathValue>, ISelectionPathData
     {
         /// <inheritdoc/>
         /// <remarks>Instance</remarks>

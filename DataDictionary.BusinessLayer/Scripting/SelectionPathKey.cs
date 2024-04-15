@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public class InstanceKey : DataLayer.ScriptingData.Selection.InstanceKey
+    public class SelectionPathKey : DataLayer.ScriptingData.Selection.SelectionPathKey
     {
         /// <inheritdoc/>
-        public InstanceKey(IInstanceKey source) : base(source) { }
+        public SelectionPathKey(ISelectionPathKey source) : base(source) { }
     }
 }

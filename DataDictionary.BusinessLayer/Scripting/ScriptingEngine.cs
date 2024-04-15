@@ -39,7 +39,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <summary>
         /// List of Scripting Engine Selection Instances.
         /// </summary>
-        IInstanceData SelectionInstances { get; }
+        ISelectionPathData SelectionInstances { get; }
 
         /// <summary>
         /// List of Scripting Engine Column definitions
@@ -69,8 +69,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         public ISelectionData Selections { get { return selectionValues; } }
         private readonly SelectionData selectionValues;
 
-        public IInstanceData SelectionInstances { get { return instanceValues; } }
-        private readonly InstanceData instanceValues;
+        public ISelectionPathData SelectionInstances { get { return instanceValues; } }
+        private readonly SelectionPathData instanceValues;
 
         public IColumnData Columns { get { return columnValues; } }
         private readonly ColumnData columnValues;
@@ -82,7 +82,7 @@ namespace DataDictionary.BusinessLayer.Scripting
             transformValues = new TransformData() { Scripting = this };
             columnValues = new ColumnData();
             selectionValues = new SelectionData() { Scripting = this };
-            instanceValues = new InstanceData();
+            instanceValues = new SelectionPathData();
         }
 
         /// <inheritdoc/>

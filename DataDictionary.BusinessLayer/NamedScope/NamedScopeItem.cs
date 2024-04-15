@@ -609,6 +609,21 @@ namespace DataDictionary.BusinessLayer.NamedScope
             { binding.PropertyChanged += OnPropertyChanged; }
         }
 
+        // TODO: has ambiguous references. Need to re-think.
+        //public NamedScopeItem(IModelKey parent, ISelectionItem data) : base()
+        //{
+        //    SystemKey = new NamedScopeKey((ISelectionKey)data);
+        //    SystemParentKey = new NamedScopeKey(parent);
+        //    Source = data;
+        //    ScopeKey = data.Scope;
+
+        //    GetNameSpaceKey = () => new NameSpaceKey((ISelectionItem)data);
+        //    GetTitle = () => data.TransformTitle ?? String.Empty;
+
+        //    if (data is IBindingPropertyChanged binding)
+        //    { binding.PropertyChanged += OnPropertyChanged; }
+        //}
+
         #endregion
 
         /// <inheritdoc/>

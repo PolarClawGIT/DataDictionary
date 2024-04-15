@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface IInstanceItem : DataLayer.ScriptingData.Selection.IInstanceItem
+    public interface ISelectionPathValue : DataLayer.ScriptingData.Selection.ISelectionPathItem
     { }
 
     /// <inheritdoc/>
-    public class InstanceItem : DataLayer.ScriptingData.Selection.InstanceItem, IInstanceItem
+    public class SelectionPathValue : DataLayer.ScriptingData.Selection.SelectionPathItem, ISelectionPathValue
     {
         /// <inheritdoc/>
-        public InstanceItem() : base() { }
+        public SelectionPathValue() : base() { }
     }
 }

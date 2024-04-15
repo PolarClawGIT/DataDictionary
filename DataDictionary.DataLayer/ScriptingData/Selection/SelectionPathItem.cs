@@ -11,24 +11,24 @@ using Toolbox.BindingTable;
 namespace DataDictionary.DataLayer.ScriptingData.Selection
 {
     /// <summary>
-    /// Interface for the Scripting Selection Instance data.
+    /// Interface for the Scripting Selection Path data.
     /// </summary>
-    public interface IInstanceItem :ISelectionKey, IInstanceKey, IInstanceKeyName, IScopeKey
+    public interface ISelectionPathItem :ISelectionKey, ISelectionPathKey, ISelectionPathKeyName, IScopeKey
     {
 
     }
 
     /// <summary>
-    /// Implementation for the Scripting Selection Instance data.
+    /// Implementation for the Scripting Selection Path data.
     /// </summary>
     [Serializable]
-    public class InstanceItem : BindingTableRow, IInstanceItem, ISerializable
+    public class SelectionPathItem : BindingTableRow, ISelectionPathItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? InstanceId
+        public Guid? SelectionPathId
         {
-            get { return GetValue<Guid>("InstanceId"); }
-            protected set { SetValue("InstanceId", value); }
+            get { return GetValue<Guid>("SelectionPathId"); }
+            protected set { SetValue("SelectionPathId", value); }
         }
 
         /// <inheritdoc/>
@@ -50,7 +50,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("InstanceId", typeof(Guid)){ AllowDBNull = false},
+            new DataColumn("SelectionPathId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("SelectionId", typeof(Guid)){ AllowDBNull = false},
             new DataColumn("ScopeName", typeof(String)){ AllowDBNull = false},
             new DataColumn("InstanceName", typeof(String)){ AllowDBNull = false},

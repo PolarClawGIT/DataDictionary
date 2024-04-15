@@ -172,7 +172,6 @@
 
         #endregion
 
-        private TableLayoutPanel selectionManagerLayout;
         private Controls.TextBoxData selectionTitleData;
         private Controls.TextBoxData selectionDescriptionData;
         private Controls.ComboBoxData schemaData;

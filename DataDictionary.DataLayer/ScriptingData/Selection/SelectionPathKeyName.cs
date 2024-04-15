@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace DataDictionary.DataLayer.ScriptingData.Selection
 {
     /// <summary>
-    /// Interface for the Scripting Instance Key
+    /// Interface for the Scripting Selection Path Key
     /// </summary>
-    public interface IInstanceKeyName : IKey
+    public interface ISelectionPathKeyName : IKey
     {
         /// <summary>
         /// Name of the Instance.
@@ -18,23 +18,23 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
     }
 
     /// <summary>
-    /// Implementation for the Scripting Instance Key
+    /// Implementation for the Scripting Selection Path Key
     /// </summary>
-    public class InstanceKeyName : IInstanceKeyName, IKeyComparable<IInstanceKeyName>
+    public class SelectionPathKeyName : ISelectionPathKeyName, IKeyComparable<ISelectionPathKeyName>
     {
         /// <inheritdoc/>
         public String InstanceName { get; init; } = string.Empty;
 
         /// <summary>
-        /// Constructor for the Scripting Instance Key
+        /// Constructor for the Scripting Selection Path Key
         /// </summary>
-        protected InstanceKeyName() : base() { }
+        protected SelectionPathKeyName() : base() { }
 
         /// <summary>
-        /// Constructor for the Scripting Instance Key
+        /// Constructor for the Scripting Selection Path Key
         /// </summary>
         /// <param name="source"></param>
-        public InstanceKeyName(IInstanceKeyName source) : this()
+        public SelectionPathKeyName(ISelectionPathKeyName source) : this()
         {
             if (source.InstanceName is string) { InstanceName = source.InstanceName; }
             else { InstanceName = string.Empty; }
@@ -42,10 +42,10 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public virtual bool Equals(IInstanceKeyName? other)
+        public virtual bool Equals(ISelectionPathKeyName? other)
         {
             return
-                other is IInstanceKeyName &&
+                other is ISelectionPathKeyName &&
                 !string.IsNullOrEmpty(InstanceName) &&
                 !string.IsNullOrEmpty(other.InstanceName) &&
                 InstanceName.Equals(other.InstanceName, KeyExtension.CompareString);
@@ -53,10 +53,10 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IInstanceKeyName value && Equals(new InstanceKeyName(value)); }
+        { return obj is ISelectionPathKeyName value && Equals(new SelectionPathKeyName(value)); }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(IInstanceKeyName? other)
+        public virtual int CompareTo(ISelectionPathKeyName? other)
         {
             if (other is null) { return 1; }
             else { return string.Compare(InstanceName, other.InstanceName, true); }
@@ -64,30 +64,30 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
 
         /// <inheritdoc/>
         public virtual int CompareTo(object? obj)
-        { if (obj is IInstanceKeyName value) { return CompareTo(new InstanceKeyName(value)); } else { return 1; } }
+        { if (obj is ISelectionPathKeyName value) { return CompareTo(new SelectionPathKeyName(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static bool operator ==(InstanceKeyName left, InstanceKeyName right)
+        public static bool operator ==(SelectionPathKeyName left, SelectionPathKeyName right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(InstanceKeyName left, InstanceKeyName right)
+        public static bool operator !=(SelectionPathKeyName left, SelectionPathKeyName right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(InstanceKeyName left, InstanceKeyName right)
+        public static bool operator <(SelectionPathKeyName left, SelectionPathKeyName right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(InstanceKeyName left, InstanceKeyName right)
+        public static bool operator <=(SelectionPathKeyName left, SelectionPathKeyName right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(InstanceKeyName left, InstanceKeyName right)
+        public static bool operator >(SelectionPathKeyName left, SelectionPathKeyName right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(InstanceKeyName left, InstanceKeyName right)
+        public static bool operator >=(SelectionPathKeyName left, SelectionPathKeyName right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>

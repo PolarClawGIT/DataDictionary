@@ -53,29 +53,30 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <remarks>Selection</remarks>
         public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
-            throw new NotImplementedException();
-            //List<WorkItem> work = new List<WorkItem>();
+            //TODO: Need to be reworked
+            //throw new NotImplementedException();
+            List<WorkItem> work = new List<WorkItem>();
 
-            //work.Add(new WorkItem()
-            //{
-            //    WorkName = "Build NamedScope Scripting Selection",
-            //    DoWork = () =>
-            //    {
-            //        if (Scripting.Models.FirstOrDefault() is IModelItem model)
-            //        {
-            //            ModelKey key = new ModelKey(model);
+            work.Add(new WorkItem()
+            {
+                WorkName = "Build NamedScope Scripting Selection",
+                DoWork = () =>
+                {
+                    if (Scripting.Models.FirstOrDefault() is IModelItem model)
+                    {
+                        ModelKey key = new ModelKey(model);
 
-            //            foreach (SelectionItem item in this)
-            //            {
-            //                SelectionKey selectionKey = new SelectionKey(item);
-            //                target.Remove(new NamedScopeKey(selectionKey));
-            //                target.Add(new NamedScopeItem(key, item));
-            //            }
-            //        }
-            //    }
-            //});
+                        foreach (SelectionItem item in this)
+                        {
+                            //ISelectionKey selectionKey = new SelectionKey(item);
+                            //target.Remove(new NamedScopeKey(selectionKey));
+                            //target.Add(new NamedScopeItem(key, item));
+                        }
+                    }
+                }
+            });
 
-            //return work;
+            return work;
         }
     }
 }
