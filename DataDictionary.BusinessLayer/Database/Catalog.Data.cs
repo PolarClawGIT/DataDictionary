@@ -4,9 +4,11 @@ using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.ModelData;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -14,14 +16,16 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Interface for the Wrapper of Catalog Data (The Database)
     /// </summary>
-    public interface ICatalogData :
-        IBindingData<DbCatalogItem>, INamedScopeData
+    public interface ICatalogData<TValue> :
+        IBindingData<TValue>, INamedScopeData
+        where TValue : ICatalogValue
     { }
 
-    class CatalogData : DbCatalogCollection, ICatalogData,
+    class CatalogData<TValue> : DbCatalogCollection<TValue>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
-        IDatabaseModelItem
+        IDatabaseModelItem, ICatalogData<TValue>
+        where TValue : CatalogValue, new()
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -66,6 +70,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
+        [Obsolete("Will need to change to NamedScopeData")]
         public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -78,7 +83,7 @@ namespace DataDictionary.BusinessLayer.Database
                     foreach (DbCatalogItem item in this.Where(w => w.IsSystem == false))
                     {
                         target.Remove(new NamedScopeKey(item));
-                        target.Add(new NamedScopeItem(item)); 
+                        target.Add(new NamedScopeItem(item));
                     }
                 }
             });

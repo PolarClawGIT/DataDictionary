@@ -36,6 +36,7 @@ namespace DataDictionary.DataLayer
     /// <summary>
     /// Implementation for the NameSpace Key.
     /// </summary>
+    [Obsolete("Moved to Business Layer as NameScopeKey", false)]
     public class NameSpaceKey : INameSpaceKey, IKeyComparable<INameSpaceKey>, IKeyComparable<NameSpaceKey>
     {
         /// <inheritdoc/>

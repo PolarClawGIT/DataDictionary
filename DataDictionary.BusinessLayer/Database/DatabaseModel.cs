@@ -23,7 +23,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Catalogs within the Model.
         /// </summary>
-        ICatalogData DbCatalogs { get; }
+        ICatalogData<ICatalogValue> DbCatalogs { get; }
 
         /// <summary>
         /// List of Database Schemta within the Model.
@@ -100,8 +100,8 @@ namespace DataDictionary.BusinessLayer.Database
     class DatabaseModel : IDatabaseModel, IDataTableFile
     {
         /// <inheritdoc/>
-        public ICatalogData DbCatalogs { get { return catalogs; } }
-        private readonly CatalogData catalogs;
+        public ICatalogData<ICatalogValue> DbCatalogs { get { return (ICatalogData<ICatalogValue>)catalogs; } }
+        private readonly CatalogData<CatalogValue> catalogs;
 
         /// <inheritdoc/>
         public ISchemaData DbSchemta { get { return schemta; } }
@@ -145,7 +145,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         public DatabaseModel() : base()
         {
-            catalogs = new CatalogData() { Database = this };
+            catalogs = new CatalogData<CatalogValue>() { Database = this };
             schemta = new SchemaData() { Database = this };
             domains = new DomainData() { Database = this };
 
