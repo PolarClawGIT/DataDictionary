@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.NameSpace;
@@ -54,7 +55,7 @@ namespace DataDictionary.Main
             }
         }
 
-        void Activate(DbCatalogItem catalogItem)
+        void Activate(ICatalogValue catalogItem)
         { Activate((data) => new Forms.Database.DbCatalog(catalogItem), catalogItem); }
 
         void Activate(DbSchemaItem schemaItem)

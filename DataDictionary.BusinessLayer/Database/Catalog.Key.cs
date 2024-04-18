@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class CatalogKey : DataLayer.DatabaseData.Catalog.DbCatalogKey
+    public class CatalogKey : DataLayer.DatabaseData.Catalog.DbCatalogKey, ICatalogKey
     {
         /// <summary>
         /// Constructor for the Catalog Key.

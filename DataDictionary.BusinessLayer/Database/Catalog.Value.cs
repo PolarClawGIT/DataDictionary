@@ -11,11 +11,12 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ICatalogValue : IDbCatalogItem, ICatalogKey, IBindingRowState, IBindingPropertyChanged
+    public interface ICatalogValue : IDbCatalogItem, ICatalogKey,
+        IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 
     /// <inheritdoc/>
-    class CatalogValue : DbCatalogItem, ICatalogValue, INamedScopeValue
+    public class CatalogValue : DbCatalogItem, ICatalogValue, INamedScopeValue
     {
         /// <summary>
         /// Constructor for a Catalog Value

@@ -21,7 +21,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             CatalogKey key = new CatalogKey(catalogItem);
 
-            bindingSource.DataSource = new BindingView<ICatalogValue>(BusinessData.DatabaseModel.DbCatalogs, w => key.Equals(w));
+            bindingSource.DataSource = new BindingView<CatalogValue>(BusinessData.DatabaseModel.DbCatalogs, w => key.Equals(w));
             bindingSource.Position = 0;
 
             Setup(bindingSource);

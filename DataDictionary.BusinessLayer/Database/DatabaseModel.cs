@@ -23,7 +23,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Catalogs within the Model.
         /// </summary>
-        ICatalogData<ICatalogValue> DbCatalogs { get; }
+        ICatalogData<CatalogValue> DbCatalogs { get; }
 
         /// <summary>
         /// List of Database Schemta within the Model.
@@ -100,7 +100,7 @@ namespace DataDictionary.BusinessLayer.Database
     class DatabaseModel : IDatabaseModel, IDataTableFile
     {
         /// <inheritdoc/>
-        public ICatalogData<ICatalogValue> DbCatalogs { get { return (ICatalogData<ICatalogValue>)catalogs; } }
+        public ICatalogData<CatalogValue> DbCatalogs { get { return catalogs; } }
         private readonly CatalogData<CatalogValue> catalogs;
 
         /// <inheritdoc/>
