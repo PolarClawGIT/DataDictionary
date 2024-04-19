@@ -151,7 +151,7 @@
             // 
             // catalogBinding
             // 
-            catalogBinding.CurrentChanged += catalogBinding_CurrentChanged;
+            catalogBinding.CurrentChanged += CatalogBinding_CurrentChanged;
             // 
             // catalogContextMenu
             // 
@@ -166,7 +166,7 @@
             addDatabaseCommand.Size = new Size(168, 22);
             addDatabaseCommand.Text = "Add Database";
             addDatabaseCommand.ToolTipText = "Import a Catalog (Database Schema) into the Model";
-            addDatabaseCommand.Click += addDatabaseCommand_Click;
+            addDatabaseCommand.Click += AddDatabaseCommand_Click;
             // 
             // removeDatabaseCommand
             // 
@@ -175,12 +175,12 @@
             removeDatabaseCommand.Size = new Size(168, 22);
             removeDatabaseCommand.Text = "Remove Database";
             removeDatabaseCommand.ToolTipText = "Removes the Catalog from the Model";
-            removeDatabaseCommand.Click += removeDatabaseCommand_Click;
+            removeDatabaseCommand.Click += RemoveDatabaseCommand_Click;
             // 
             // catalogTitleColumn
             // 
             catalogTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            catalogTitleColumn.DataPropertyName = "Title";
+            catalogTitleColumn.DataPropertyName = "CatalogTitle";
             catalogTitleColumn.HeaderText = "Catalog Title";
             catalogTitleColumn.MinimumWidth = 150;
             catalogTitleColumn.Name = "catalogTitleColumn";
@@ -188,7 +188,7 @@
             // databaseNameColumn
             // 
             databaseNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            databaseNameColumn.DataPropertyName = "Path";
+            databaseNameColumn.DataPropertyName = "DatabaseName";
             databaseNameColumn.HeaderText = "Database Name";
             databaseNameColumn.MinimumWidth = 150;
             databaseNameColumn.Name = "databaseNameColumn";

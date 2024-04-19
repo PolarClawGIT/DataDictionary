@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,69 +19,130 @@ namespace DataDictionary.BusinessLayer.Database
     /// </summary>
     public class CatalogSynchronizeValue : SynchronizeValue<CatalogValue>
     {
+        /// <inheritdoc cref="DbCatalogItem.CatalogTitle"/>
+        public String CatalogTitle
+        {
+            get { return Source.CatalogTitle ?? String.Empty; }
+            set { Source.CatalogTitle = value; }
+        }
+
+        /// <inheritdoc cref="DbCatalogItem.DatabaseName"/>
+        public String DatabaseName
+        { get { return Source.DatabaseName ?? String.Empty; } }
+
         /// <inheritdoc/>
-        public CatalogSynchronizeValue(CatalogValue data, Boolean inModel, Boolean inDatabase) : base(data, inModel, inDatabase)
+        public CatalogSynchronizeValue(CatalogValue data) : base(data)
         { }
+
+        /// <inheritdoc/>
+        protected override void Source_OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName is nameof(CatalogTitle) or nameof(DatabaseName))
+            { OnPropertyChanged(e.PropertyName); }
+        }
     }
 
     /// <summary>
     /// Catalog Synchronize to compare what Catalogs are in the Database vs the Model
     /// </summary>
-    public class CatalogSynchronize : BindingList<CatalogSynchronizeValue>
+    public class CatalogSynchronize : SynchronizeData<CatalogSynchronizeValue, CatalogValue, CatalogKey>
     {
-        class DatabaseData<TValue> : DbCatalogCollection<TValue>
+        /// <summary>
+        /// Concrete class for the Abstract DbCatalogCollection
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        class SourceCollection<TValue> : DbCatalogCollection<TValue>
             where TValue : CatalogValue, ICatalogValue, new()
         { }
 
-        DatabaseData<CatalogValue> databaseData = new DatabaseData<CatalogValue>();
-        IDatabaseModel modelData;
+        /// <inheritdoc/>
+        protected override IBindingList<CatalogValue> ModelData { get { return dbModel.DbCatalogs; } }
+        IDatabaseModel dbModel;
+
+        /// <inheritdoc/>
+        protected override IBindingList<CatalogValue> DatabaseData { get { return sourceData; } }
+        SourceCollection<CatalogValue> sourceData = new SourceCollection<CatalogValue>();
 
         /// <summary>
         /// Constructor 
         /// </summary>
-        /// <param name="modelData"></param>
-        public CatalogSynchronize(IDatabaseModel modelData) : base()
+        /// <param name="dbModel"></param>
+        public CatalogSynchronize(IDatabaseModel dbModel) : base()
         {
-            this.modelData = modelData;
+            this.dbModel = dbModel;
 
-            foreach (CatalogValue item in modelData.DbCatalogs)
-            { Add(new CatalogSynchronizeValue(item, true, false)); }
+            foreach (CatalogValue item in dbModel.DbCatalogs)
+            { Add(new CatalogSynchronizeValue(item) { InModel = true }); }
         }
 
+        /// <inheritdoc/>
+        protected override CatalogKey GetKey(CatalogValue data)
+        { return new CatalogKey(data); }
+
+        /// <inheritdoc/>
+        protected override CatalogSynchronizeValue GetValue(CatalogValue data)
+        { return new CatalogSynchronizeValue(data); }
+
+        /// <summary>
+        /// Clears then reloads the Catalog List from the Database.
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <returns></returns>
         public IReadOnlyList<WorkItem> GetCatalogs(IDatabaseWork factory)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem() { DoWork = databaseData.Clear });
-            work.Add(factory.CreateLoad(databaseData));
-            work.Add(new WorkItem() { DoWork = this.Refresh });
+            work.Add(new WorkItem() { DoWork = sourceData.Clear });
+            work.Add(factory.CreateLoad(sourceData));
             return work;
         }
 
+        /// <summary>
+        /// Loads a Schema from a Database into the Model
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
         public IReadOnlyList<WorkItem> ImportFromSchema(DbSchemaContext source)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(modelData.Import(source));
-            work.Add(new WorkItem() { DoWork = this.Refresh });
+            work.AddRange(dbModel.Import(source));
             return work;
         }
 
+        /// <summary>
+        /// Loads a Catalog from the Database (including all schema components)
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public IReadOnlyList<WorkItem> OpenFromDb(IDatabaseWork factory, ICatalogKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(modelData.Remove(key));
-            work.AddRange(modelData.Load(factory, key));
-            work.Add(new WorkItem() { DoWork = this.Refresh });
+            work.AddRange(dbModel.Remove(key));
+            work.AddRange(dbModel.Load(factory, key));
             return work;
         }
 
+        /// <summary>
+        /// Saves the Catalog to the Database (including all schema components)
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public IReadOnlyList<WorkItem> SaveToDb(IDatabaseWork factory, ICatalogKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(modelData.Save(factory, key));
+            work.AddRange(dbModel.Save(factory, key));
             work.AddRange(GetCatalogs(factory));
             return work;
         }
 
+        /// <summary>
+        /// Deletes a Catalog from the Database (including all schema components).
+        /// Copy in the Model is not removed.
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public IReadOnlyList<WorkItem> DeleteFromDb(IDatabaseWork factory, ICatalogKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -90,18 +152,15 @@ namespace DataDictionary.BusinessLayer.Database
             {
                 DoWork = () =>
                 {
-                    while (databaseData.FirstOrDefault(w => dbKey.Equals(w)) is CatalogValue item)
-                    { databaseData.Remove(item); }
+                    while (sourceData.FirstOrDefault(w => dbKey.Equals(w)) is CatalogValue item)
+                    { sourceData.Remove(item); }
                 }
             });
-            work.Add(factory.CreateSave(databaseData, dbKey));
+            work.Add(factory.CreateSave(sourceData, dbKey));
             return work;
         }
 
-        public void Refresh()
-        {
-            throw new NotImplementedException();
-        }
+
 
     }
 }
