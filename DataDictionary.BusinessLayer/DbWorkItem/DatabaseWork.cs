@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer;
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <param name="target"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        WorkItem CreateWork<TDbItem>(String workName, IBindingTable<DbExtendedPropertyItem> target, IBindingTable<TDbItem> source)
+        WorkItem CreateWork<TDbItem>(String workName, IBindingTable<ExtendedPropertyValue> target, IBindingTable<TDbItem> source)
             where TDbItem : class, IBindingTableRow, IDbExtendedProperty;
 
         /// <summary>
@@ -186,7 +187,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         }
 
         /// <inheritdoc/>
-        public WorkItem CreateWork<TDbItem>(String workName, IBindingTable<DbExtendedPropertyItem> target, IBindingTable<TDbItem> source)
+        public WorkItem CreateWork<TDbItem>(String workName, IBindingTable<ExtendedPropertyValue> target, IBindingTable<TDbItem> source)
             where TDbItem : class, IBindingTableRow, IDbExtendedProperty
         {
             Action<int, int> progress = (x, y) => { };

@@ -28,52 +28,52 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Schemta within the Model.
         /// </summary>
-        ISchemaData DbSchemta { get; }
+        ISchemaData<SchemaValue> DbSchemta { get; }
 
         /// <summary>
         /// List of Database Domains (types) within the Model.
         /// </summary>
-        IDomainData DbDomains { get; }
+        IDomainData<DomainValue> DbDomains { get; }
 
         /// <summary>
         /// List of Database Extended Properties within the Model.
         /// </summary>
-        IExtendedPropertyData DbExtendedProperties { get; }
+        IExtendedPropertyData<ExtendedPropertyValue> DbExtendedProperties { get; }
 
         /// <summary>
         /// List of Database Constraints (keys...) within the Model.
         /// </summary>
-        IConstraintData DbConstraints { get; }
+        IConstraintData<ConstraintValue> DbConstraints { get; }
 
         /// <summary>
         /// List of Database Constraint Columns within the Model.
         /// </summary>
-        IConstraintColumnData DbConstraintColumns { get; }
+        IConstraintColumnData<ConstraintColumnValue> DbConstraintColumns { get; }
 
         /// <summary>
         /// List of Database Routines (procedures, functions, ...) within the Model.
         /// </summary>
-        IRoutineData DbRoutines { get; }
+        IRoutineData<RoutineValue> DbRoutines { get; }
 
         /// <summary>
         /// List of Database Parameters for the Routines within the Model.
         /// </summary>
-        IRoutineParameterData DbRoutineParameters { get; }
+        IRoutineParameterData<RoutineParameterValue> DbRoutineParameters { get; }
 
         /// <summary>
         /// List of Database Dependencies for the Routines within the Model.
         /// </summary>
-        IRoutineDependencyData DbRoutineDependencies { get; }
+        IRoutineDependencyData<RoutineDependencyValue> DbRoutineDependencies { get; }
 
         /// <summary>
         /// List of Database Tables and Views within the Model.
         /// </summary>
-        ITableData DbTables { get; }
+        ITableData<TableValue> DbTables { get; }
 
         /// <summary>
         /// List of Database Columns for the Tables/Views within the Model.
         /// </summary>
-        ITableColumnData DbTableColumns { get; }
+        ITableColumnData<TableColumnValue> DbTableColumns { get; }
 
         /// <summary>
         /// Imports a Catalog from a Database Source
@@ -104,62 +104,62 @@ namespace DataDictionary.BusinessLayer.Database
         private readonly CatalogData<CatalogValue> catalogs;
 
         /// <inheritdoc/>
-        public ISchemaData DbSchemta { get { return schemta; } }
-        private readonly SchemaData schemta;
+        public ISchemaData<SchemaValue> DbSchemta { get { return schemta; } }
+        private readonly SchemaData<SchemaValue> schemta;
 
         /// <inheritdoc/>
-        public IDomainData DbDomains { get { return domains; } }
-        private readonly DomainData domains;
+        public IDomainData<DomainValue> DbDomains { get { return domains; } }
+        private readonly DomainData<DomainValue> domains;
 
         /// <inheritdoc/>
-        public IConstraintData DbConstraints { get { return constraints; } }
-        private readonly ConstraintData constraints;
+        public IConstraintData<ConstraintValue> DbConstraints { get { return constraints; } }
+        private readonly ConstraintData<ConstraintValue> constraints;
 
         /// <inheritdoc/>
-        public IConstraintColumnData DbConstraintColumns { get { return constraintColumns; } }
-        private readonly ConstraintColumnData constraintColumns;
+        public IConstraintColumnData<ConstraintColumnValue> DbConstraintColumns { get { return constraintColumns; } }
+        private readonly ConstraintColumnData<ConstraintColumnValue> constraintColumns;
 
         /// <inheritdoc/>
-        public IExtendedPropertyData DbExtendedProperties { get { return extendedProperties; } }
-        private readonly ExtendedPropertyData extendedProperties;
+        public IExtendedPropertyData<ExtendedPropertyValue> DbExtendedProperties { get { return extendedProperties; } }
+        private readonly ExtendedPropertyData<ExtendedPropertyValue> extendedProperties;
 
         /// <inheritdoc/>
-        public IRoutineData DbRoutines { get { return routines; } }
-        private readonly RoutineData routines;
+        public IRoutineData<RoutineValue> DbRoutines { get { return routines; } }
+        private readonly RoutineData<RoutineValue> routines;
 
         /// <inheritdoc/>
-        public IRoutineParameterData DbRoutineParameters { get { return routineParameters; } }
-        private readonly RoutineParameterData routineParameters;
+        public IRoutineParameterData<RoutineParameterValue> DbRoutineParameters { get { return routineParameters; } }
+        private readonly RoutineParameterData<RoutineParameterValue> routineParameters;
 
         /// <inheritdoc/>
-        public IRoutineDependencyData DbRoutineDependencies { get { return routineDependencies; } }
-        private readonly RoutineDependencyData routineDependencies;
+        public IRoutineDependencyData<RoutineDependencyValue> DbRoutineDependencies { get { return routineDependencies; } }
+        private readonly RoutineDependencyData<RoutineDependencyValue> routineDependencies;
 
         /// <inheritdoc/>
-        public ITableData DbTables { get { return tables; } }
-        private readonly TableData tables;
+        public ITableData<TableValue> DbTables { get { return tables; } }
+        private readonly TableData<TableValue> tables;
 
         /// <inheritdoc/>
-        public ITableColumnData DbTableColumns { get { return tableColumns; } }
-        private readonly TableColumnData tableColumns;
+        public ITableColumnData<TableColumnValue> DbTableColumns { get { return tableColumns; } }
+        private readonly TableColumnData<TableColumnValue> tableColumns;
 
         public DatabaseModel() : base()
         {
             catalogs = new CatalogData<CatalogValue>() { Database = this };
-            schemta = new SchemaData() { Database = this };
-            domains = new DomainData() { Database = this };
+            schemta = new SchemaData<SchemaValue>() { Database = this };
+            domains = new DomainData<DomainValue>() { Database = this };
 
-            tables = new TableData() { Database = this };
-            tableColumns = new TableColumnData() { Database = this };
+            tables = new TableData<TableValue>() { Database = this };
+            tableColumns = new TableColumnData<TableColumnValue>() { Database = this };
 
-            routines = new RoutineData() { Database = this };
-            routineParameters = new RoutineParameterData() { Database = this };
-            routineDependencies = new RoutineDependencyData() { Database = this };
+            routines = new RoutineData<RoutineValue>() { Database = this };
+            routineParameters = new RoutineParameterData<RoutineParameterValue>() { Database = this };
+            routineDependencies = new RoutineDependencyData<RoutineDependencyValue>() { Database = this };
 
-            constraints = new ConstraintData() { Database = this };
-            constraintColumns = new ConstraintColumnData() { Database = this };
+            constraints = new ConstraintData<ConstraintValue>() { Database = this };
+            constraintColumns = new ConstraintColumnData<ConstraintColumnValue>() { Database = this };
 
-            extendedProperties = new ExtendedPropertyData() { Database = this };
+            extendedProperties = new ExtendedPropertyData<ExtendedPropertyValue>() { Database = this };
         }
 
         /// <inheritdoc/>

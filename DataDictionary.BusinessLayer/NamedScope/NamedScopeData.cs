@@ -13,6 +13,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Interface for objects that contain NameScope Data
     /// </summary>
+    [Obsolete("Needs to be changed over to new version of NamedScope")]
     public interface INamedScopeData
     {
         /// <summary>

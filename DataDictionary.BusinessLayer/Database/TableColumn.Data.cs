@@ -1,7 +1,6 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.DbWorkItem;
+﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
@@ -9,56 +8,58 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <summary>
-    /// Interface representing Catalog Table data
+    /// Interface representing Catalog TableColumn data
     /// </summary>
-    public interface ITableData: IBindingData<DbTableItem>
+    public interface ITableColumnData<TValue> : IBindingData<TValue>
+        where TValue : TableColumnValue
     { }
 
-    class TableData : DbTableCollection, ITableData,
+    class TableColumnData<TValue> : DbTableColumnCollection<TValue>, ITableColumnData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, INamedScopeData
+        where TValue : TableColumnValue, new()
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>TableColumn</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDbCatalogKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>TableColumn</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>TableColumn</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDbCatalogKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>TableColumn</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Table</remarks>
+        /// <remarks>TableColumn</remarks>
         public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 
             work.Add(new WorkItem()
             {
-                WorkName = "Build NamedScope Table",
+                WorkName = "Build NamedScope TableColumn",
                 DoWork = () =>
                 {
-                    foreach (DbTableItem item in this.Where(w => w.IsSystem == false))
+                    foreach (DbTableColumnItem item in this)
                     {
                         //target.Remove(new NamedScopeKey(item)); Done by Catalog
 
-                        DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
-                        if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is IDbSchemaItem parent)
+                        DbTableKeyName nameKey = new DbTableKeyName(item);
+                        if (Database.DbTables.FirstOrDefault(w => nameKey.Equals(w)) is IDbTableItem parent)
                         { target.Add(new NamedScopeItem(parent, item)); }
                     }
                 }
@@ -66,5 +67,6 @@ namespace DataDictionary.BusinessLayer.Database
 
             return work;
         }
+
     }
 }

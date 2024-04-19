@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,16 +8,13 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ICatalogKey : DataLayer.DatabaseData.Catalog.IDbCatalogKey
+    public interface ICatalogKey : IDbCatalogKey
     { }
 
     /// <inheritdoc/>
-    public class CatalogKey : DataLayer.DatabaseData.Catalog.DbCatalogKey, ICatalogKey
+    public class CatalogKey : DbCatalogKey, ICatalogKey
     {
-        /// <summary>
-        /// Constructor for the Catalog Key.
-        /// </summary>
-        /// <param name="source"></param>
+        /// <inheritdoc cref="DbCatalogKey(IDbCatalogKey)"/>
         public CatalogKey(ICatalogKey source) : base(source) { }
     }
 }

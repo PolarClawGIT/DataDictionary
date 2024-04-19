@@ -19,9 +19,7 @@ namespace DataDictionary.BusinessLayer.Database
     /// <inheritdoc/>
     public class CatalogValue : DbCatalogItem, ICatalogValue, INamedScopeValue
     {
-        /// <summary>
-        /// Constructor for a Catalog Value
-        /// </summary>
+        /// <inheritdoc cref="DbCatalogItem()"/>
         public CatalogValue() : base()
         { PropertyChanged += CatalogValue_PropertyChanged; }
 

@@ -10,14 +10,16 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Interface representing Catalog ConstraintColumn data
     /// </summary>
-    public interface IConstraintColumnData :
-        IBindingData<DbConstraintColumnItem>
+    public interface IConstraintColumnData<TValue> :
+        IBindingData<TValue>
+        where TValue: IConstraintColumnValue
     { }
 
-    class ConstraintColumnData: DbConstraintColumnCollection, IConstraintColumnData,
+    class ConstraintColumnData<TValue> : DbConstraintColumnCollection<TValue>, IConstraintColumnData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem
+        where TValue : ConstraintColumnValue, new()
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }

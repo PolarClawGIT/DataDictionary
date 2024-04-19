@@ -10,10 +10,13 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Database
 {
+
+
     /// <summary>
     /// Interface representing Catalog ExtendedProperty data
     /// </summary>
-    public interface IExtendedPropertyData : IBindingData<DbExtendedPropertyItem>
+    public interface IExtendedPropertyData<TValue> : IBindingData<TValue>
+    where TValue : ExtendedPropertyValue
     {
 
         /// <summary>
@@ -60,10 +63,11 @@ namespace DataDictionary.BusinessLayer.Database
 
     }
 
-    class ExtendedPropertyData : DbExtendedPropertyCollection, IExtendedPropertyData,
+    class ExtendedPropertyData<TValue> : DbExtendedPropertyCollection<TValue>, IExtendedPropertyData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem
+        where TValue : ExtendedPropertyValue, new()
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
