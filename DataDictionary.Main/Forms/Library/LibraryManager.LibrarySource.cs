@@ -13,6 +13,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Library
 {
+    [Obsolete ("remove", true)]
     partial class LibraryManager
     {
         class LibraryManagerItem : ILibrarySourceItem

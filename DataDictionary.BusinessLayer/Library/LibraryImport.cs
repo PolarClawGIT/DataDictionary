@@ -23,11 +23,11 @@ namespace DataDictionary.BusinessLayer.Library
 
         public Action<Int32, Int32> Progress { get; set; } = (x, y) => { };
 
-        public IList<LibrarySourceItem> Sources { get { return librarySources; } }
-        List<LibrarySourceItem> librarySources = new List<LibrarySourceItem>();
+        public IList<LibrarySourceValue> Sources { get { return librarySources; } }
+        List<LibrarySourceValue> librarySources = new List<LibrarySourceValue>();
 
-        public IList<LibraryMemberItem> Members { get { return libraryMembers; } }
-        List<LibraryMemberItem> libraryMembers = new List<LibraryMemberItem>();
+        public IList<LibraryMemberValue> Members { get { return libraryMembers; } }
+        List<LibraryMemberValue> libraryMembers = new List<LibraryMemberValue>();
 
         public void Import(FileInfo file)
         {
@@ -40,12 +40,12 @@ namespace DataDictionary.BusinessLayer.Library
                 if (xmlData.DocumentElement is XmlElement root)
                 {
                     //String assemblyName = String.Empty; // Surrogate key for Library
-                    LibrarySourceItem sourceItem;
+                    LibrarySourceValue sourceItem;
 
                     // Parse the Assembly Node
                     if (root.ChildNodes.Cast<XmlNode>().FirstOrDefault(w => w.Name == "assembly") is XmlNode assemblyNode)
                     {
-                        sourceItem = new LibrarySourceItem()
+                        sourceItem = new LibrarySourceValue()
                         {
                             LibraryTitle = assemblyNode.InnerText,
                             AssemblyName = assemblyNode.InnerText,
@@ -55,7 +55,7 @@ namespace DataDictionary.BusinessLayer.Library
 
                         sourceKey = new LibrarySourceKeyName(sourceItem);
 
-                        if (librarySources.FirstOrDefault(w => sourceKey.Equals(w)) is LibrarySourceItem alreadyExists)
+                        if (librarySources.FirstOrDefault(w => sourceKey.Equals(w)) is LibrarySourceValue alreadyExists)
                         {
                             sourceItem.SourceFile = file.Name;
                             sourceItem.SourceDate = file.LastWriteTime;
@@ -87,7 +87,7 @@ namespace DataDictionary.BusinessLayer.Library
                             }
 
                             String memberNameSpace = String.Empty;
-                            LibraryMemberItem? nameSpaceItem = null;
+                            LibraryMemberValue? nameSpaceItem = null;
 
                             while (
                                 parseString.IndexOf(".") is int nextPeriod
@@ -99,11 +99,11 @@ namespace DataDictionary.BusinessLayer.Library
                             {
                                 if (String.IsNullOrWhiteSpace(memberNameSpace))
                                 {
-                                    if (libraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && String.IsNullOrWhiteSpace(w.MemberNameSpace) && w.MemberName == parseString.Substring(0, nextPeriod)) is LibraryMemberItem existing)
+                                    if (libraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && String.IsNullOrWhiteSpace(w.MemberNameSpace) && w.MemberName == parseString.Substring(0, nextPeriod)) is LibraryMemberValue existing)
                                     { nameSpaceItem = existing; }
                                     else
                                     {
-                                        nameSpaceItem = new LibraryMemberItem()
+                                        nameSpaceItem = new LibraryMemberValue()
                                         {
                                             LibraryId = sourceItem.LibraryId,
                                             AssemblyName = sourceItem.AssemblyName,
@@ -119,14 +119,14 @@ namespace DataDictionary.BusinessLayer.Library
                                 }
                                 else
                                 {
-                                    if (libraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && w.MemberNameSpace == memberNameSpace && w.MemberName == parseString.Substring(0, nextPeriod)) is LibraryMemberItem existing)
+                                    if (libraryMembers.FirstOrDefault(w => sourceKey.Equals(w) && w.MemberNameSpace == memberNameSpace && w.MemberName == parseString.Substring(0, nextPeriod)) is LibraryMemberValue existing)
                                     { nameSpaceItem = existing; }
                                     else
                                     {
-                                        nameSpaceItem = new LibraryMemberItem()
+                                        nameSpaceItem = new LibraryMemberValue()
                                         {
                                             LibraryId = sourceItem.LibraryId,
-                                            MemberParentId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
+                                            MemberParentId = (nameSpaceItem is LibraryMemberValue) ? nameSpaceItem.MemberId : null,
                                             AssemblyName = sourceItem.AssemblyName,
                                             MemberName = parseString.Substring(0, nextPeriod),
                                             MemberType = LibraryMemberType.NameSpace,
@@ -149,10 +149,10 @@ namespace DataDictionary.BusinessLayer.Library
 
                                 if (parametersStart <= 0) // No Parameters
                                 {
-                                    LibraryMemberItem memberItem = new LibraryMemberItem()
+                                    LibraryMemberValue memberItem = new LibraryMemberValue()
                                     {
                                         LibraryId = sourceItem.LibraryId,
-                                        MemberParentId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
+                                        MemberParentId = (nameSpaceItem is LibraryMemberValue) ? nameSpaceItem.MemberId : null,
                                         AssemblyName = sourceItem.AssemblyName,
                                         MemberName = parseString,
                                         MemberType = memberType,
@@ -168,10 +168,10 @@ namespace DataDictionary.BusinessLayer.Library
                                 {
                                     //TODO: Overloaded methods look identical. Need to specify the parent/child.
                                     //Same issue in the Database.
-                                    LibraryMemberItem memberItem = new LibraryMemberItem()
+                                    LibraryMemberValue memberItem = new LibraryMemberValue()
                                     {
                                         LibraryId = sourceItem.LibraryId,
-                                        MemberParentId = (nameSpaceItem is LibraryMemberItem) ? nameSpaceItem.MemberId : null,
+                                        MemberParentId = (nameSpaceItem is LibraryMemberValue) ? nameSpaceItem.MemberId : null,
                                         AssemblyName = sourceItem.AssemblyName,
                                         MemberName = parseString.Substring(0, parametersStart),
                                         MemberType = memberType,
@@ -242,7 +242,7 @@ namespace DataDictionary.BusinessLayer.Library
                                                 new XAttribute("type", paramterType));
                                         }
 
-                                        LibraryMemberItem parmaterItem = new LibraryMemberItem()
+                                        LibraryMemberValue parmaterItem = new LibraryMemberValue()
                                         {
                                             LibraryId = sourceItem.LibraryId,
                                             MemberParentId = memberItem.MemberId,

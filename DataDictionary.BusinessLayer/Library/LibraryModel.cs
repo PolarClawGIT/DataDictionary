@@ -19,12 +19,12 @@ namespace DataDictionary.BusinessLayer.Library
         /// <summary>
         /// List of .Net Library Members within the Model
         /// </summary>
-        ILibraryMemberData LibraryMembers { get; }
+        ILibraryMemberData<LibraryMemberValue> LibraryMembers { get; }
 
         /// <summary>
         /// List of .Net Libraries within the Model
         /// </summary>
-        ILibrarySourceData LibrarySources { get; }
+        ILibrarySourceData<LibrarySourceValue> LibrarySources { get; }
 
         /// <summary>
         /// Imports a Library from Visual Studio XML Documentation file.
@@ -37,17 +37,17 @@ namespace DataDictionary.BusinessLayer.Library
     class LibraryModel : ILibraryModel, IDataTableFile
     {
         /// <inheritdoc/>
-        public ILibraryMemberData LibraryMembers { get { return members; } }
-        private readonly LibraryMemberData members;
+        public ILibraryMemberData<LibraryMemberValue> LibraryMembers { get { return members; } }
+        private readonly LibraryMemberData<LibraryMemberValue> members;
 
         /// <inheritdoc/>
-        public ILibrarySourceData LibrarySources { get { return sources; } }
-        private readonly LibrarySourceData sources;
+        public ILibrarySourceData<LibrarySourceValue> LibrarySources { get { return sources; } }
+        private readonly LibrarySourceData<LibrarySourceValue> sources;
 
         public LibraryModel() : base()
         {
-            sources = new LibrarySourceData() { Library = this };
-            members = new LibraryMemberData() { Library = this };
+            sources = new LibrarySourceData<LibrarySourceValue>() { Library = this };
+            members = new LibraryMemberData<LibraryMemberValue>() { Library = this };
         }
 
         /// <inheritdoc/>

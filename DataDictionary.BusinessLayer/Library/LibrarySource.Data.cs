@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DbLayer = DataDictionary.DataLayer.LibraryData;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Library
@@ -14,23 +15,22 @@ namespace DataDictionary.BusinessLayer.Library
     /// <summary>
     /// Interface representing Library data
     /// </summary>
-    public interface ILibrarySourceData : IBindingData<LibrarySourceItem>, INamedScopeData
+    public interface ILibrarySourceData<TValue> : IBindingData<TValue>
+    where TValue : LibrarySourceValue
     { }
 
-    /// <summary>
-    /// Implementation for Library data
-    /// </summary>
-    class LibrarySourceData : LibrarySourceCollection, ILibrarySourceData,
-        ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
-        
+    class LibrarySourceData<TValue> : DbLayer.Source.LibrarySourceCollection<TValue>, ILibrarySourceData<TValue>,
+        ILoadData<DbLayer.Source.ILibrarySourceKey>, ISaveData<DbLayer.Source.ILibrarySourceKey>,
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        INamedScopeData
+        where TValue : LibrarySourceValue, new()
     {
         /// <inheritdoc/>
         public required ILibraryModel Library { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, DbLayer.Source.ILibrarySourceKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -40,7 +40,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, DbLayer.Source.ILibrarySourceKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>

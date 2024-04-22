@@ -153,7 +153,7 @@ namespace DataDictionary.BusinessLayer.Database
                 DoWork = () =>
                 {
                     while (sourceData.FirstOrDefault(w => dbKey.Equals(w)) is CatalogValue item)
-                    { sourceData.Remove(item); }
+                    { sourceData.Remove(dbKey); }
                 }
             });
             work.Add(factory.CreateSave(sourceData, dbKey));

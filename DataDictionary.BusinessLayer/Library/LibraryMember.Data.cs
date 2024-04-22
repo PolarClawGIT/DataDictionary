@@ -1,13 +1,12 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.LibraryData.Member;
-using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.DataLayer.ModelData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DbLayer = DataDictionary.DataLayer.LibraryData;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Library
@@ -15,22 +14,22 @@ namespace DataDictionary.BusinessLayer.Library
     /// <summary>
     /// Interface representing Library Member data
     /// </summary>
-    public interface ILibraryMemberData : IBindingData<LibraryMemberItem>
-    {
+    public interface ILibraryMemberData<TValue> : IBindingData<TValue>
+        where TValue : LibraryMemberValue
+    { }
 
-    }
-
-    class LibraryMemberData : LibraryMemberCollection, ILibraryMemberData,
-        ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>,
+    class LibraryMemberData<TValue> : DbLayer.Member.LibraryMemberCollection<TValue>, ILibraryMemberData<TValue>,
+        ILoadData<DbLayer.Source.ILibrarySourceKey>, ISaveData<DbLayer.Source.ILibrarySourceKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         INamedScopeData
+        where TValue : LibraryMemberValue, new()
     {
         /// <inheritdoc/>
         public required ILibraryModel Library { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>Library Member</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, DbLayer.Source.ILibrarySourceKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -40,7 +39,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library Member</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, DbLayer.Source.ILibrarySourceKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -56,24 +55,7 @@ namespace DataDictionary.BusinessLayer.Library
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.Add(new WorkItem()
-            {
-                WorkName = "Build NamedScope Library Member",
-                DoWork = () =>
-                {
-                    foreach (LibraryMemberItem item in this)
-                    {
-                        LibrarySourceKey sourceKey = new LibrarySourceKey(item);
-                        LibraryMemberKeyParent keyParent = new LibraryMemberKeyParent(item);
-
-                        target.Remove(new NamedScopeKey((ILibraryMemberKey)item));
-
-                        if (keyParent.HasValue)
-                        { target.Add(new NamedScopeItem(keyParent, item)); }
-                        else { target.Add(new NamedScopeItem(sourceKey, item)); }
-                    }
-                }
-            });
+           // TODO needs rewrite
 
             return work;
         }
