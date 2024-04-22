@@ -72,7 +72,7 @@ namespace DataDictionary.BusinessLayer
 
             modelValues = new Model.ModelData();
             subjectAreaValues = new Model.SubjectAreaData() { Models = modelValues };
-            namedScopeValue = new NamedScopeDictionary() { Source = this };
+            namedScopeValue = new NamedScopeData();
 
             modelValues.Add(new ModelItem());
             applicationValue = new Application.ApplicationData();
@@ -132,8 +132,6 @@ namespace DataDictionary.BusinessLayer
             work.AddRange(LibraryModel.Remove());
 
             work.AddRange(ScriptingEngine.Remove());
-
-            work.AddRange(NamedScope.Remove());
 
             return work;
         }

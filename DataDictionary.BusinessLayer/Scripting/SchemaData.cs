@@ -22,7 +22,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     { }
 
 
-    class SchemaData : SchemaCollection<SchemaItem>, ISchemaData, INamedScopeData
+    class SchemaData : SchemaCollection<SchemaItem>, ISchemaData
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine

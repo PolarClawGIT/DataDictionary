@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.Database
     class RoutineParameterData<TValue> : DbRoutineParameterCollection<TValue>, IRoutineParameterData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeData
+        IDatabaseModelItem
         where TValue : RoutineParameterValue, new()
 
     {

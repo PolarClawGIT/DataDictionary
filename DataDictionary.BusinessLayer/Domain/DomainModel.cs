@@ -15,7 +15,7 @@ namespace DataDictionary.BusinessLayer.Domain
     /// </summary>
     public interface IDomainModel :
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IRemoveData, INamedScopeData
+        IRemoveData
 
     {
         /// <summary>

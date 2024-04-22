@@ -21,8 +21,7 @@ namespace DataDictionary.BusinessLayer.Library
 
     class LibrarySourceData<TValue> : DbLayer.Source.LibrarySourceCollection<TValue>, ILibrarySourceData<TValue>,
         ILoadData<DbLayer.Source.ILibrarySourceKey>, ISaveData<DbLayer.Source.ILibrarySourceKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeData
+        ILoadData<IModelKey>, ISaveData<IModelKey>
         where TValue : LibrarySourceValue, new()
     {
         /// <inheritdoc/>

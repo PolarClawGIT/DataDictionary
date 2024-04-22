@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.Database
     class DomainData<TValue> : DbDomainCollection<TValue>, IDomainData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeData
+        IDatabaseModelItem
         where TValue: DomainValue, new()
     {
         /// <inheritdoc/>

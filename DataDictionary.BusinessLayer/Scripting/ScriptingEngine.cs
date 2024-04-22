@@ -13,8 +13,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// </summary>
     public interface IScriptingEngine :
         ISaveData, ILoadData, IRemoveData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeData
+        ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
         /// List of Scripting Engine Schemta.

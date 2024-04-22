@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.Database
     class ConstraintData<TValue> : DbConstraintCollection<TValue>, IConstraintData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeData
+        IDatabaseModelItem
         where TValue : ConstraintValue, new()
     {
         /// <inheritdoc/>

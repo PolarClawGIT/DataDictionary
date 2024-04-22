@@ -15,7 +15,7 @@ namespace DataDictionary.BusinessLayer.Model
     /// Interface component for the Domain Model 
     /// </summary>
     public interface IModelData :
-        IBindingData<ModelItem>, INamedScopeData
+        IBindingData<ModelItem>
     {
         /// <summary>
         /// Create WorkItem that create a new Model instance.

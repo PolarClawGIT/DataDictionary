@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     { }
 
 
-    class SelectionData : SelectionCollection<SelectionItem>, ISelectionData, INamedScopeData
+    class SelectionData : SelectionCollection<SelectionItem>, ISelectionData
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine

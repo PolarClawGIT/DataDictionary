@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         ISaveData, ISaveData<ITransformKey>
     { }
 
-    class TransformData : TransformCollection<TransformItem>, ITransformData, INamedScopeData
+    class TransformData : TransformCollection<TransformItem>, ITransformData
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine

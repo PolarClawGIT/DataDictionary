@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.Database
     class TableColumnData<TValue> : DbTableColumnCollection<TValue>, ITableColumnData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeData
+        IDatabaseModelItem
         where TValue : TableColumnValue, new()
     {
         /// <inheritdoc/>

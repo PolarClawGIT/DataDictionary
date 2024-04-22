@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.Database
     /// Interface for the Wrapper of Catalog Data (The Database)
     /// </summary>
     public interface ICatalogData<TValue> :
-        IBindingData<TValue>, INamedScopeData
+        IBindingData<TValue>
         where TValue : ICatalogValue
     { }
 
@@ -50,22 +50,18 @@ namespace DataDictionary.BusinessLayer.Database
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
-        /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
 
-            work.Add(new WorkItem()
+        public void Export (INamedScopeData target)
+        {
+            foreach (TValue item in this.Where(w => w.IsSystem == false))
             {
-                WorkName = "Load NameScope, Catalog",
-                DoWork = () =>
+                if(item is INamedScopeValue value)
                 {
-                    foreach (DbCatalogItem item in this.Where(w => w.IsSystem == false))
-                    { target.Add(new NamedScopeItem(item)); }
+                    NamedScopeKey key = value.GetSystemId();
+                    target.Remove(key);
+                    target.Add(value);
                 }
-            });
-            return work;
+            }
         }
 
         /// <inheritdoc/>

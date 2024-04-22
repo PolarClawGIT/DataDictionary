@@ -19,8 +19,7 @@ namespace DataDictionary.BusinessLayer.Model
     /// </summary>
     public interface ISubjectAreaData :
         IBindingData<ModelSubjectAreaItem>,
-        ILoadData<IModelSubjectAreaKey>, ISaveData<IModelSubjectAreaKey>,
-        INamedScopeData
+        ILoadData<IModelSubjectAreaKey>, ISaveData<IModelSubjectAreaKey>
     { }
 
     class SubjectAreaData : ModelSubjectAreaCollection, ISubjectAreaData,

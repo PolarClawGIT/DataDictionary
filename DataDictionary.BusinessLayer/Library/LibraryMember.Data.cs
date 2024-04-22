@@ -20,8 +20,7 @@ namespace DataDictionary.BusinessLayer.Library
 
     class LibraryMemberData<TValue> : DbLayer.Member.LibraryMemberCollection<TValue>, ILibraryMemberData<TValue>,
         ILoadData<DbLayer.Source.ILibrarySourceKey>, ISaveData<DbLayer.Source.ILibrarySourceKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeData
+        ILoadData<IModelKey>, ISaveData<IModelKey>
         where TValue : LibraryMemberValue, new()
     {
         /// <inheritdoc/>

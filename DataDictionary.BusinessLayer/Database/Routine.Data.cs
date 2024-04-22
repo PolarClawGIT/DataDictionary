@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.Database
     class RoutineData<TValue> : DbRoutineCollection<TValue>, IRoutineData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeData
+        IDatabaseModelItem
         where TValue: RoutineValue, new()
     {
         /// <inheritdoc/>

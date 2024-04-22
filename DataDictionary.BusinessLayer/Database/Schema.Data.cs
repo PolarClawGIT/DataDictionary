@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.Database
     class SchemaData<TValue> : DbSchemaCollection<TValue>, ISchemaData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeData
+        IDatabaseModelItem
         where TValue : SchemaValue, new()
     {
         /// <inheritdoc/>

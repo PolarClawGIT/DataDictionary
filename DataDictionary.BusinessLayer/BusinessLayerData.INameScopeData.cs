@@ -14,7 +14,7 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Wrapper for NameScope Data (NameSpace)
         /// </summary>
-        public INamedScopeDictionary NamedScope { get { return namedScopeValue; } }
-        private readonly INamedScopeDictionary namedScopeValue;
+        public INamedScopeData NamedScope { get { return namedScopeValue; } }
+        private readonly NamedScopeData namedScopeValue;
     }
 }

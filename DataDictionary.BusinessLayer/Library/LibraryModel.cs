@@ -13,8 +13,7 @@ namespace DataDictionary.BusinessLayer.Library
     /// </summary>
     public interface ILibraryModel :
         ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>, IRemoveData<ILibrarySourceKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeData
+        ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
         /// List of .Net Library Members within the Model

@@ -138,8 +138,6 @@ namespace DataDictionary.Main.Forms.Model
                 work.Add(factory.OpenConnection());
                 work.AddRange(BusinessData.Remove());
                 work.AddRange(BusinessData.Load(factory, key));
-
-                work.AddRange(BusinessData.NamedScope.Build());
                 DoLocalWork(work);
             }
         }

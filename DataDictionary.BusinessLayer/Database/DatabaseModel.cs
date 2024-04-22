@@ -17,8 +17,7 @@ namespace DataDictionary.BusinessLayer.Database
     /// </summary>
     public interface IDatabaseModel :
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>, IRemoveData<IDbCatalogKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeData
+        ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
         /// List of Database Catalogs within the Model.
