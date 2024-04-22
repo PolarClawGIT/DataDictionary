@@ -18,4 +18,15 @@ namespace DataDictionary.BusinessLayer.Database
         public RoutineParameterKey(IDbRoutineParameterKey source) : base(source)
         { }
     }
+
+    /// <inheritdoc/>
+    public interface IRoutineParameterKeyName : IDbRoutineParameterKeyName
+    { }
+
+    /// <inheritdoc/>
+    public class RoutineParameterKeyName : DbRoutineParameterKeyName, IRoutineParameterKeyName
+    {
+        /// <inheritdoc cref="DbRoutineParameterKeyName(IDbRoutineParameterKeyName)"/>
+        public RoutineParameterKeyName(IRoutineParameterKeyName source) : base(source) { }
+    }
 }

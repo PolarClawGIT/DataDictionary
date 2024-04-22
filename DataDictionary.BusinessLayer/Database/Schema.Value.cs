@@ -9,7 +9,7 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ISchemaValue : IDbSchemaItem, ISchemaKey,
+    public interface ISchemaValue : IDbSchemaItem, ISchemaKey, ISchemaKeyName,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 

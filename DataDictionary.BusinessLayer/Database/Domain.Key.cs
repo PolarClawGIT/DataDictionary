@@ -17,4 +17,15 @@ namespace DataDictionary.BusinessLayer.Database
         public DomainKey(IDomainKey source) : base(source)
         { }
     }
+
+    /// <inheritdoc/>
+    public interface IDomainKeyName : IDbDomainKeyName
+    { }
+
+    /// <inheritdoc/>
+    public class DomainKeyName : DbDomainKeyName, IDomainKeyName
+    {
+        /// <inheritdoc cref="DbDomainKeyName(IDbDomainKeyName)"/>
+        public DomainKeyName(IDomainKeyName source) : base(source) { }
+    }
 }

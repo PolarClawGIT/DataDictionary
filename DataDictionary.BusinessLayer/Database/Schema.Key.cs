@@ -18,4 +18,15 @@ namespace DataDictionary.BusinessLayer.Database
         public SchemaKey(IDbSchemaKey source) : base(source)
         { }
     }
+
+    /// <inheritdoc/>
+    public interface ISchemaKeyName : IDbSchemaKeyName
+    { }
+
+    /// <inheritdoc/>
+    public class SchemaKeyName : DbSchemaKeyName, ISchemaKeyName
+    {
+        /// <inheritdoc cref="DbSchemaKeyName(IDbSchemaKeyName)"/>
+        public SchemaKeyName(ISchemaKeyName source) : base(source) { }
+    }
 }

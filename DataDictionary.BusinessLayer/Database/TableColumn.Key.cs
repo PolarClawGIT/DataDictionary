@@ -18,4 +18,15 @@ namespace DataDictionary.BusinessLayer.Database
         public TableColumnKey(IDbTableColumnKey source) : base(source)
         { }
     }
+
+    /// <inheritdoc/>
+    public interface ITableColumnKeyName : IDbTableColumnKeyName
+    { }
+
+    /// <inheritdoc/>
+    public class TableColumnKeyName : DbTableColumnKeyName, ITableColumnKeyName
+    {
+        /// <inheritdoc cref="DbTableColumnKeyName(IDbTableColumnKeyName)"/>
+        public TableColumnKeyName(ITableColumnKeyName source) : base(source) { }
+    }
 }

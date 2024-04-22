@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
@@ -119,6 +120,16 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
             if (source.SchemaName is String) { Level0Name = source.SchemaName; }
         }
 
+        /// <summary>
+        /// Constructor for the Database Extended Property Name Key
+        /// </summary>
+        /// <param name="source"></param>
+        public DbExtendedPropertyKeyName(IDbDomainKeyName source) : base(source)
+        {
+            if (source.SchemaName is String) { Level0Name = source.SchemaName; }
+            if (source.DomainName is String) { Level1Name = source.DomainName; }
+        }
+
         #region IEquatable, IComparable
         /// <inheritdoc/>
         public bool Equals(IDbExtendedPropertyKeyName? other)
@@ -181,7 +192,8 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return HashCode.Combine(
+        {
+            return HashCode.Combine(
             base.GetHashCode(),
             Level0Name.GetHashCode(KeyExtension.CompareString),
             Level1Name.GetHashCode(KeyExtension.CompareString),

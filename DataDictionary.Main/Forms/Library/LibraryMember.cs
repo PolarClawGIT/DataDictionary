@@ -1,7 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.LibraryData.Member;
-using DataDictionary.Main.Controls;
-using DataDictionary.Main.Properties;
+﻿using DataDictionary.BusinessLayer.Library;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -10,29 +7,29 @@ namespace DataDictionary.Main.Forms.Library
     partial class LibraryMember : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return bindingMember.Current is ILibraryMemberItem current && ReferenceEquals(current, item); }
+        { return bindingMember.Current is ILibraryMemberValue current && ReferenceEquals(current, item); }
 
         public LibraryMember() : base()
         {
             InitializeComponent();
         }
 
-        public LibraryMember(ILibraryMemberItem libraryMember) : this()
+        public LibraryMember(ILibraryMemberValue libraryMember) : this()
         {
             LibraryMemberKey key = new LibraryMemberKey(libraryMember);
 
-            bindingMember.DataSource = new BindingView<LibraryMemberItem>(BusinessData.LibraryModel.LibraryMembers, w => key.Equals(new LibraryMemberKey(w)));
+            bindingMember.DataSource = new BindingView<LibraryMemberValue>(BusinessData.LibraryModel.LibraryMembers, w => key.Equals(new LibraryMemberKey(w)));
             bindingMember.Position = 0;
 
             Setup(bindingMember);
 
-            if (bindingMember.Current is ILibraryMemberItem current)
-            { bindingChild.DataSource = new BindingView<LibraryMemberItem>(BusinessData.LibraryModel.LibraryMembers, w => new LibraryMemberKeyParent(w).Equals(key)); }
+            if (bindingMember.Current is ILibraryMemberValue current)
+            { bindingChild.DataSource = new BindingView<LibraryMemberValue>(BusinessData.LibraryModel.LibraryMembers, w => new LibraryMemberKeyParent(w).Equals(key)); }
         }
 
         private void LibraryMember_Load(object sender, EventArgs e)
         {
-            ILibraryMemberItem bindingNames;
+            ILibraryMemberValue bindingNames;
 
             memberNameSpaceData.DataBindings.Add(new Binding(nameof(memberNameSpaceData.Text), bindingMember, nameof(bindingNames.MemberNameSpace)));
             memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingMember, nameof(bindingNames.MemberName)));
@@ -43,12 +40,12 @@ namespace DataDictionary.Main.Forms.Library
             childMemberData.AutoGenerateColumns = false;
             childMemberData.DataSource = bindingChild;
 
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingMember.Current is not ILibraryMemberItem);
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingMember.Current is not ILibraryMemberValue);
         }
 
         private void childMemberData_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (bindingChild.Current is LibraryMemberItem child)
+            if (bindingChild.Current is ILibraryMemberValue child)
             { Activate((data) => new LibraryMember(child), child); }
         }
 

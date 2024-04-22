@@ -8,10 +8,12 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Database
 {
-    public interface IRoutineParameterValue : IDbRoutineParameterItem,
+    /// <inheritdoc/>
+    public interface IRoutineParameterValue : IDbRoutineParameterItem, IRoutineParameterKeyName,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 
+    /// <inheritdoc/>
     public class RoutineParameterValue : DbRoutineParameterItem, IRoutineParameterValue
     {
     }

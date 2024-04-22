@@ -156,7 +156,6 @@
             // 
             // libraryBinding
             // 
-            libraryBinding.BindingComplete += BindingComplete;
             libraryBinding.CurrentChanged += LibraryBinding_CurrentChanged;
             // 
             // errorProvider

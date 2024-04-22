@@ -16,4 +16,15 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc cref="DbConstraintKey(IDbConstraintKey)"/>
         public ConstraintKey(IConstraintKey source) : base(source) { }
     }
+
+    /// <inheritdoc/>
+    public interface IConstraintKeyName : IDbConstraintKeyName
+    { }
+
+    /// <inheritdoc/>
+    public class ConstraintKeyName : DbConstraintKeyName, IConstraintKeyName
+    {
+        /// <inheritdoc cref="DbConstraintKeyName(IDbConstraintKeyName)"/>
+        public ConstraintKeyName(IConstraintKeyName source) : base(source) { }
+    }
 }

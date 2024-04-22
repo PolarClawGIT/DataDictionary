@@ -13,8 +13,6 @@ namespace DataDictionary.Main.Forms.Database
     {
         CatalogSynchronize catalogs = new CatalogSynchronize(BusinessData.DatabaseModel);
 
-
-
         public CatalogManager() : base()
         {
             InitializeComponent();
@@ -37,11 +35,16 @@ namespace DataDictionary.Main.Forms.Database
                 work.AddRange(catalogs.GetCatalogs(factory));
                 DoWork(work, onCompleting);
             }
+            else { BindData(); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
                 catalogs.Refresh();
+                BindData();
+            }
 
+            void BindData()
+            {
                 CatalogSynchronizeValue catalogNames;
                 catalogBinding.DataSource = catalogs;
                 Func<String, String> FormatName = (name) => { return String.Format("{0}.{1}", nameof(catalogNames.Source), name); };
@@ -124,7 +127,6 @@ namespace DataDictionary.Main.Forms.Database
                 IsLocked(false);
             }
         }
-
 
         private void RemoveDatabaseCommand_Click(object? sender, EventArgs e)
         {
@@ -214,7 +216,7 @@ namespace DataDictionary.Main.Forms.Database
 
                 if (GetInModel())
                 {
-                    work.AddRange(BusinessData.DatabaseModel.Save(factory, key));
+                    work.AddRange(catalogs.SaveToDb(factory, key));
                     work.AddRange(catalogs.GetCatalogs(factory));
                 }
 

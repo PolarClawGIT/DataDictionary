@@ -12,7 +12,7 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ICatalogValue : IDbCatalogItem, ICatalogKey,
+    public interface ICatalogValue : IDbCatalogItem, ICatalogKey, ICatalogKeyName,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 

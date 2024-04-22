@@ -17,4 +17,15 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc cref="DbCatalogKey(IDbCatalogKey)"/>
         public CatalogKey(ICatalogKey source) : base(source) { }
     }
+
+    /// <inheritdoc/>
+    public interface ICatalogKeyName : IDbCatalogKeyName
+    { }
+
+    /// <inheritdoc/>
+    public class CatalogKeyName : DbCatalogKeyName, ICatalogKeyName
+    {
+        /// <inheritdoc cref="DbCatalogKeyName(IDbCatalogKeyName)"/>
+        public CatalogKeyName(ICatalogKeyName source) : base(source) { }
+    }
 }

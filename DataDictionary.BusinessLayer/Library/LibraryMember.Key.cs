@@ -18,4 +18,16 @@ namespace DataDictionary.BusinessLayer.Library
         public LibraryMemberKey(ILibraryMemberKey source) : base(source)
         { }
     }
+
+    /// <inheritdoc/>
+    public interface ILibraryMemberKeyParent : DbLayer.ILibraryMemberKeyParent
+    { }
+
+    /// <inheritdoc/>
+    public class LibraryMemberKeyParent : DbLayer.LibraryMemberKeyParent
+    {
+        /// <inheritdoc cref="DbLayer.LibraryMemberKeyParent.LibraryMemberKeyParent(DbLayer.ILibraryMemberKeyParent)"/>
+        public LibraryMemberKeyParent (ILibraryMemberKeyParent source): base (source)
+        { }
+    }
 }
