@@ -41,6 +41,7 @@ namespace DataDictionary.Main.Forms.Database
             {
                 catalogs.Refresh();
                 BindData();
+                IsLocked(false);
             }
 
             void BindData()
@@ -57,8 +58,6 @@ namespace DataDictionary.Main.Forms.Database
                 sourceServerNameData.DataBindings.Add(new Binding(nameof(sourceServerNameData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.SourceServerName))));
                 sourceDatabaseNameData.DataBindings.Add(new Binding(nameof(sourceDatabaseNameData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.SourceDatabaseName))));
                 sourceDateData.DataBindings.Add(new Binding(nameof(sourceDateData.Text), catalogBinding, FormatName(nameof(catalogNames.Source.SourceDate))));
-
-                IsLocked(false);
             }
         }
 

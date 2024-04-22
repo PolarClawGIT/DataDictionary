@@ -37,6 +37,7 @@ namespace DataDictionary.Main.Forms.Library
             {
                 libraries.Refresh();
                 BindData();
+                IsLocked(false);
             }
 
             void BindData()
