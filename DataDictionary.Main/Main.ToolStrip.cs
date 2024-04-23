@@ -21,34 +21,13 @@ namespace DataDictionary.Main
         { Activate(() => new Forms.Database.CatalogManager()); }
 
         private void NewAttributeCommand_ButtonClick(object? sender, EventArgs e)
-        {
-            AttributeItem item = new AttributeItem();
-
-            BusinessData.DomainModel.Attributes.Add(item);
-            BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, item));
-
-            Activate(item);
-        }
+        { Activate(() => new Forms.Domain.DomainAttribute(null)); }
 
         private void NewEntityCommand_ButtonClick(object? sender, EventArgs e)
-        {
-            DomainEntityItem item = new DomainEntityItem();
-
-            BusinessData.DomainModel.Entities.Add(item);
-            BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, item));
-
-            Activate(item);
-        }
+        { Activate(() => new Forms.Domain.DomainEntity(null)); }
 
         private void NewSubjectAreaCommand_ButtonClick(object? sender, EventArgs e)
-        {
-            ModelSubjectAreaItem item = new ModelSubjectAreaItem();
-
-            BusinessData.ModelSubjectAreas.Add(item);
-            BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, item));
-
-            Activate(item);
-        }
+        { Activate(() => new Forms.Model.ModelSubjectArea(null)); }
 
         private void ManageModelCommand_ButtonClick(object? sender, EventArgs e)
         { Activate(() => new Forms.Model.ModelManager()); }

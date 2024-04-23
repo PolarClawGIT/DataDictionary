@@ -28,8 +28,14 @@ namespace DataDictionary.Main.Forms.Domain
             toolStrip.TransferItems(entityToolStrip, 0);
         }
 
-        public DomainEntity(IDomainEntityItem entityItem) : this()
+        public DomainEntity(IDomainEntityItem? entityItem) : this()
         {
+            if (entityItem is null)
+            {
+                entityItem = new DomainEntityItem();
+                BusinessData.DomainModel.Entities.Add(entityItem);
+            }
+
             DomainEntityKey key = new DomainEntityKey(entityItem);
             bindingEntity.DataSource = new BindingView<DomainEntityItem>(BusinessData.DomainModel.Entities, w => key.Equals(w));
             bindingEntity.Position = 0;

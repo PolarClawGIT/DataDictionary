@@ -9,7 +9,7 @@ using DataDictionary.Main.Properties;
 using System.Data;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Forms.Domain
+namespace DataDictionary.Main.Forms.Model
 {
     partial class ModelSubjectArea : ApplicationData, IApplicationDataForm
     {
@@ -22,8 +22,14 @@ namespace DataDictionary.Main.Forms.Domain
             toolStrip.TransferItems(subjectAreaToolStrip,0);
         }
 
-        public ModelSubjectArea(IModelSubjectAreaItem subjectAreaItem) : this()
+        public ModelSubjectArea(IModelSubjectAreaItem? subjectAreaItem) : this()
         {
+            if (subjectAreaItem is null)
+            {
+                subjectAreaItem = new ModelSubjectAreaItem();
+                BusinessData.ModelSubjectAreas.Add(subjectAreaItem);
+            }
+
             ModelSubjectAreaKey key = new ModelSubjectAreaKey(subjectAreaItem);
 
             bindingSubject.DataSource = new BindingView<ModelSubjectAreaItem>(BusinessData.ModelSubjectAreas, w => key.Equals(w));
