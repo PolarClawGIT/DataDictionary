@@ -210,7 +210,6 @@ namespace DataDictionary.BusinessLayer
             }
         }
 
-
         /// <summary>
         /// Imports the Application Data from a File
         /// </summary>
@@ -218,12 +217,12 @@ namespace DataDictionary.BusinessLayer
         /// <returns></returns>
         public IReadOnlyList<WorkItem> ImportApplication(FileInfo file)
         {
-            List<WorkItem> workItems = new List<WorkItem>
+            List<WorkItem> work = new List<WorkItem>
             {
                 new WorkItem() { WorkName = "Load Application Data", DoWork = DoWork }
             };
 
-            return workItems.AsReadOnly();
+            return work.AsReadOnly();
 
             void DoWork()
             {
@@ -243,11 +242,11 @@ namespace DataDictionary.BusinessLayer
         /// <returns></returns>
         public IReadOnlyList<WorkItem> ExportApplication(FileInfo file)
         {
-            List<WorkItem> workItems = new List<WorkItem>();
+            List<WorkItem> work = new List<WorkItem>();
 
-            workItems.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
+            work.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
 
-            return workItems.AsReadOnly();
+            return work.AsReadOnly();
 
             void DoWork()
             {
@@ -259,6 +258,16 @@ namespace DataDictionary.BusinessLayer
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }
             }
+        }
+
+        public IReadOnlyList<WorkItem> BuildNamedScope()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem() { DoWork = () => namedScopeValue.Clear() });
+            work.AddRange(databaseValue.BuildNamedScope(namedScopeValue));
+
+            return work.AsReadOnly();
         }
     }
 }

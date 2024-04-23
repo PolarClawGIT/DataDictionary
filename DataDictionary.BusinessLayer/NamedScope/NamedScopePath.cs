@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer;
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.DataLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,6 +75,13 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Constructor for a NamedScope Path
         /// </summary>
         /// <param name="source"></param>
+        protected NamedScopePath(String source) : this()
+        { pathParts.AddRange(Parse(source)); }
+
+        /// <summary>
+        /// Constructor for a NamedScope Path
+        /// </summary>
+        /// <param name="source"></param>
         public NamedScopePath(INamedScopePath source) : this()
         {
             if (source is NamedScopePath value)
@@ -81,12 +89,19 @@ namespace DataDictionary.BusinessLayer.NamedScope
             else { pathParts.AddRange(Parse(source.MemberFullPath)); }
         }
 
-        /// <summary>
-        /// Constructor for a NamedScope Path
-        /// </summary>
-        /// <param name="source"></param>
-        public NamedScopePath(String source) : this()
-        { pathParts.AddRange(Parse(source)); }
+        internal NamedScopePath(ICatalogKeyName source) : this()
+        {
+            if (!String.IsNullOrWhiteSpace(source.DatabaseName))
+            { pathParts.Add(source.DatabaseName); }
+        }
+
+        internal NamedScopePath(ISchemaKeyName source) : this((ICatalogKeyName)source)
+        {
+            if (!String.IsNullOrWhiteSpace(source.SchemaName))
+            { pathParts.Add(source.SchemaName); }
+        }
+
+
 
         /// <summary>
         /// Parses a String into Name Parts per the rules of a NamedScope Key.

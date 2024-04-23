@@ -133,6 +133,25 @@ namespace DataDictionary.BusinessLayer.NamedScope
             else { return new List<NamedScopeKey>().AsReadOnly(); }
         }
 
+        /// <summary>
+        /// Gets the list of Orphaned NameScopeKeys.
+        /// The Key exists in the Parent, Child or Root list but not in the main Data collection.
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>This is a deep scan and is primary intended as a debugging tool.</remarks>
+        public virtual IReadOnlyList<NamedScopeKey> OrphanedKeys()
+        {
+            List<NamedScopeKey> result = children.SelectMany(s => s.Value).
+                Union(children.Select(s => s.Key)).
+                Union(parents.SelectMany(s => s.Value)).
+                Union(parents.Select(s => s.Key)).
+                Union(roots).
+                Except(data.Select(s => s.Key)).
+                ToList();
+
+            return result;
+        }
+
 
         //public virtual IReadOnlyList<NamedScopeKey> PathKeys(NamedScopePath key)
         //{
@@ -185,13 +204,6 @@ namespace DataDictionary.BusinessLayer.NamedScope
             NamedScopeKey key = value.GetSystemId();
             //NamedScopePath path = value.GetPath();
 
-            if (data.ContainsKey(key))
-            {
-                Exception exception = new ArgumentException("An element with the same key already exists.");
-                exception.Data.Add(nameof(value.GetSystemId), key.SystemId);
-                throw exception;
-            }
-
             if (!children.ContainsKey(parent))
             { children.Add(parent, new List<NamedScopeKey>()); }
 
@@ -211,7 +223,18 @@ namespace DataDictionary.BusinessLayer.NamedScope
             //{ paths[path].Add(key); }
 
             value.OnTitleChanged += OnTitleChanged;
-            data.Add(key, value);
+
+            if (!data.ContainsKey(key))
+            { data.Add(key, value); }
+        }
+
+        public virtual void AddRange(IEnumerable<NamedScopePair> source)
+        {
+            foreach (NamedScopePair item in source)
+            {
+                if (item.ParentKey is null) { Add(item.Value); }
+                else { Add(item.ParentKey, item.Value); }
+            }
         }
 
         /// <inheritdoc/>

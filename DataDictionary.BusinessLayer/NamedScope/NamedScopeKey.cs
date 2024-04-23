@@ -20,6 +20,17 @@ using DataDictionary.DataLayer.ScriptingData.Transform;
 namespace DataDictionary.BusinessLayer.NamedScope
 {
     /// <summary>
+    /// 
+    /// </summary>
+    public interface INameScopeGetKey
+    {
+        /// <summary>
+        /// Method to get System Id of the Named Scope item.
+        /// </summary>
+        NamedScopeKey GetSystemId();
+    }
+
+    /// <summary>
     /// Interface for the NameScope Key
     /// </summary>
     public interface INamedScopeKey : IKey

@@ -455,14 +455,37 @@ namespace DataDictionary.BusinessLayer.Database
             return work;
         }
 
+        public IReadOnlyList<WorkItem> BuildNamedScope(NamedScopeData target)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            ProgressTracker progress = new ProgressTracker();
+
+            WorkItem workItem = new WorkItem()
+            {
+                //TODO: Continue building this out.
+                //TODO: Move GetSystemID to the interface for the Keys rather then the values.
+                //TODO: Make sure the DB Key Name are inherited by the child interfaces
+                WorkName = "Build NamedScope (Catalogs)",
+                DoWork = () => {
+                    target.AddRange(catalogs.GetNamedScopes());
+                    target.AddRange(schemta.GetNamedScopes());
+                }
+            };
+            progress.OnProgressChanged = workItem.OnProgressChanged;
+
+            work.Add(workItem);
+            return work;
+        }
+
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
+        [Obsolete("To be removed", true)]
         public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(catalogs.Build(target));
-            work.AddRange(schemta.Build(target));
+            //work.AddRange(catalogs.Build(target));
+            //work.AddRange(schemta.Build(target));
             work.AddRange(domains.Build(target));
 
             work.AddRange(tables.Build(target));
