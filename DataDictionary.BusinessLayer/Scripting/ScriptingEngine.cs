@@ -54,7 +54,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <summary>
         /// Reference to the containing Model
         /// </summary>
-        public required IModelData Models { get; init; }
+        public required IModelData<ModelValue> Models { get; init; }
 
         public ISchemaData Schemta { get { return schemtaValues; } }
         private readonly SchemaData schemtaValues;

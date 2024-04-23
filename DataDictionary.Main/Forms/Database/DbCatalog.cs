@@ -19,7 +19,7 @@ namespace DataDictionary.Main.Forms.Database
 
         public DbCatalog(ICatalogValue catalogItem) : this()
         {
-            CatalogKey key = new CatalogKey(catalogItem);
+            CatalogIndex key = new CatalogIndex(catalogItem);
 
             bindingSource.DataSource = new BindingView<CatalogValue>(BusinessData.DatabaseModel.DbCatalogs, w => key.Equals(w));
             bindingSource.Position = 0;

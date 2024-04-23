@@ -8,24 +8,24 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface IDomainKey : IDbDomainKey { }
+    public interface IDomainIndex : IDbDomainKey { }
 
     /// <inheritdoc/>
-    public class DomainKey : DbDomainKey, IDomainKey
+    public class DomainIndex : DbDomainKey, IDomainIndex
     {
         /// <inheritdoc cref="DbDomainKey(IDbDomainKey)"/>
-        public DomainKey(IDomainKey source) : base(source)
+        public DomainIndex(IDomainIndex source) : base(source)
         { }
     }
 
     /// <inheritdoc/>
-    public interface IDomainKeyName : IDbDomainKeyName
+    public interface IDomainIndexName : IDbDomainKeyName
     { }
 
     /// <inheritdoc/>
-    public class DomainKeyName : DbDomainKeyName, IDomainKeyName
+    public class DomainIndexName : DbDomainKeyName, IDomainIndexName
     {
         /// <inheritdoc cref="DbDomainKeyName(IDbDomainKeyName)"/>
-        public DomainKeyName(IDomainKeyName source) : base(source) { }
+        public DomainIndexName(IDomainIndexName source) : base(source) { }
     }
 }

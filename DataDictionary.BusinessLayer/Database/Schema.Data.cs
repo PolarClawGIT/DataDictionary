@@ -50,7 +50,7 @@ namespace DataDictionary.BusinessLayer.Database
 
             foreach (TValue item in this.Where(w => w.IsSystem == false))
             {
-                CatalogKeyName keyName = new CatalogKeyName(item);
+                CatalogIndexName keyName = new CatalogIndexName(item);
 
                 if (Database.DbCatalogs.FirstOrDefault(w => keyName.Equals(w)) is ICatalogValue catalog)
                 { result.Add(new NamedScopePair(new NamedScopeKey(catalog), item)); }

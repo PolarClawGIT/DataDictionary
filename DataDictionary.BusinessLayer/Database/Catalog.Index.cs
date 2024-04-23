@@ -9,24 +9,24 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ICatalogKey : IDbCatalogKey
+    public interface ICatalogIndex : IDbCatalogKey
     { }
 
     /// <inheritdoc/>
-    public class CatalogKey : DbCatalogKey, ICatalogKey
+    public class CatalogIndex : DbCatalogKey, ICatalogIndex
     {
         /// <inheritdoc cref="DbCatalogKey(IDbCatalogKey)"/>
-        public CatalogKey(ICatalogKey source) : base(source) { }
+        public CatalogIndex(ICatalogIndex source) : base(source) { }
     }
 
     /// <inheritdoc/>
-    public interface ICatalogKeyName : IDbCatalogKeyName
+    public interface ICatalogIndexName : IDbCatalogKeyName
     { }
 
     /// <inheritdoc/>
-    public class CatalogKeyName : DbCatalogKeyName, ICatalogKeyName
+    public class CatalogIndexName : DbCatalogKeyName, ICatalogIndexName
     {
         /// <inheritdoc cref="DbCatalogKeyName(IDbCatalogKeyName)"/>
-        public CatalogKeyName(ICatalogKeyName source) : base(source) { }
+        public CatalogIndexName(ICatalogIndexName source) : base(source) { }
     }
 }

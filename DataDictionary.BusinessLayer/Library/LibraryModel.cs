@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.Library
     /// Interface representing .Net Library Data
     /// </summary>
     public interface ILibraryModel :
-        ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>, IRemoveData<ILibrarySourceKey>,
+        ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>, IRemoveData<ILibrarySourceIndex>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
@@ -51,7 +51,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(sources.Load(factory, dataKey));
@@ -73,7 +73,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(sources.Save(factory, dataKey));
@@ -113,7 +113,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc />
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Remove(ILibrarySourceKey key)
+        public IReadOnlyList<WorkItem> Remove(ILibrarySourceIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
 

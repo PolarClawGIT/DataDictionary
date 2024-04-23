@@ -1,45 +1,39 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.ToolSet;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
+using DbLayer = DataDictionary.DataLayer.ModelData;
 
-namespace DataDictionary.BusinessLayer.Database
+namespace DataDictionary.BusinessLayer.Model
 {
     /// <inheritdoc/>
-    public interface ICatalogValue : IDbCatalogItem, ICatalogIndex, ICatalogIndexName,
+    public interface IModelValue : DbLayer.IModelItem, IModelIndex,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 
     /// <inheritdoc/>
-    public class CatalogValue : DbCatalogItem, ICatalogValue, INamedScopeValue
+    public class ModelValue : DbLayer.ModelItem, IModelValue, INamedScopeValue
     {
-        /// <inheritdoc cref="DbCatalogItem()"/>
-        public CatalogValue() : base()
+        /// <inheritdoc cref="DbLayer.ModelItem()"/>
+        public ModelValue() : base()
         { PropertyChanged += OnPropertyChanged; }
 
         /// <inheritdoc/>
         public NamedScopeKey GetSystemId()
-        { return new NamedScopeKey((IDbCatalogKey)this); }
+        { return new NamedScopeKey((IModelIndex)this); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(DatabaseName); }
+        { return new NamedScopePath(this); }
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return CatalogTitle ?? String.Empty; }
+        { return this.ModelTitle ?? String.Empty; }
 
         /// <inheritdoc/>
         public event EventHandler? OnTitleChanged;
         private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is nameof(CatalogTitle) or nameof(DatabaseName)
+            if (e.PropertyName is nameof(ModelTitle)
                 && OnTitleChanged is EventHandler handler)
             { handler(this, EventArgs.Empty); }
         }

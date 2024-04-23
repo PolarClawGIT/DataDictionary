@@ -9,7 +9,7 @@ using DbLayer = DataDictionary.DataLayer.LibraryData.Source;
 namespace DataDictionary.BusinessLayer.Library
 {
     /// <inheritdoc/>
-    public interface ILibrarySourceValue : DbLayer.ILibrarySourceItem, ILibrarySourceKey,
+    public interface ILibrarySourceValue : DbLayer.ILibrarySourceItem, ILibrarySourceIndex,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 

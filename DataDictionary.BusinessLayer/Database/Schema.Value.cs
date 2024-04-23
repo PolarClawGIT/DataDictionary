@@ -11,7 +11,7 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ISchemaValue : IDbSchemaItem, ISchemaKey, ISchemaKeyName, ICatalogKeyName,
+    public interface ISchemaValue : IDbSchemaItem, ISchemaIndex, ISchemaIndexName, ICatalogIndexName,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 
@@ -28,7 +28,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()
-        { return new NamedScopePath((ISchemaKeyName)this); }
+        { return new NamedScopePath(DatabaseName, SchemaName); }
 
         /// <inheritdoc/>
         public virtual String GetTitle()

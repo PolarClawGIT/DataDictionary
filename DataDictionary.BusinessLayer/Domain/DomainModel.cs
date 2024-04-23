@@ -43,7 +43,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <summary>
         /// Reference to the containing Model
         /// </summary>
-        public required IModelData Models { get; init; }
+        public required IModelData<ModelValue> Models { get; init; }
 
         /// <inheritdoc/>
         public IAttributeData Attributes { get { return attributeValues; } }

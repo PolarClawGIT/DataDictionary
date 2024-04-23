@@ -19,7 +19,7 @@ namespace DataDictionary.Main.Forms.Database
         public DbTable(ITableValue tableItem) : this()
         {
             TableKeyName key = new TableKeyName(tableItem);
-            ExtendedPropertyKeyName propertyKey = new ExtendedPropertyKeyName(key);
+            ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
 
             bindingTable.DataSource = new BindingView<TableValue>(BusinessData.DatabaseModel.DbTables, w => key.Equals(w));
             bindingTable.Position = 0;

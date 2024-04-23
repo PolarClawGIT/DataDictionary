@@ -8,23 +8,23 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface IConstraintKey : IDbConstraintKey { }
+    public interface IConstraintIndex : IDbConstraintKey { }
 
     /// <inheritdoc/>
-    public class ConstraintKey : DbConstraintKey
+    public class ConstraintIndex : DbConstraintKey
     {
         /// <inheritdoc cref="DbConstraintKey(IDbConstraintKey)"/>
-        public ConstraintKey(IConstraintKey source) : base(source) { }
+        public ConstraintIndex(IConstraintIndex source) : base(source) { }
     }
 
     /// <inheritdoc/>
-    public interface IConstraintKeyName : IDbConstraintKeyName
+    public interface IConstraintIndexName : IDbConstraintKeyName
     { }
 
     /// <inheritdoc/>
-    public class ConstraintKeyName : DbConstraintKeyName, IConstraintKeyName
+    public class ConstraintIndexName : DbConstraintKeyName, IConstraintIndexName
     {
         /// <inheritdoc cref="DbConstraintKeyName(IDbConstraintKeyName)"/>
-        public ConstraintKeyName(IConstraintKeyName source) : base(source) { }
+        public ConstraintIndexName(IConstraintIndexName source) : base(source) { }
     }
 }

@@ -2,13 +2,6 @@
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Database

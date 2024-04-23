@@ -13,42 +13,42 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface IExtendedPropertyKeyName : IDbExtendedPropertyKeyName
+    public interface IExtendedPropertyIndexName : IDbExtendedPropertyKeyName
     { }
 
     /// <inheritdoc/>
-    public class ExtendedPropertyKeyName : DbExtendedPropertyKeyName, IDbExtendedPropertyKeyName
+    public class ExtendedPropertyIndexName : DbExtendedPropertyKeyName, IDbExtendedPropertyKeyName
     {
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbExtendedPropertyKeyName)"/>
-        public ExtendedPropertyKeyName(IExtendedPropertyKeyName source): base(source)
+        public ExtendedPropertyIndexName(IExtendedPropertyIndexName source): base(source)
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbTableKeyName)"/>
-        public ExtendedPropertyKeyName(ITableKeyName source) : base(source)
+        public ExtendedPropertyIndexName(ITableKeyName source) : base(source)
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbTableColumnKeyName)"/>
-        public ExtendedPropertyKeyName(ITableColumnKeyName source) : base(source)
+        public ExtendedPropertyIndexName(ITableColumnKeyName source) : base(source)
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbRoutineKeyName)"/>
-        public ExtendedPropertyKeyName(IRoutineKeyName source) : base(source)
+        public ExtendedPropertyIndexName(IRoutineIndexName source) : base(source)
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbRoutineParameterKeyName)"/>
-        public ExtendedPropertyKeyName(IRoutineParameterKeyName source) : base(source)
+        public ExtendedPropertyIndexName(IRoutineParameterIndexName source) : base(source)
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbConstraintKeyName)"/>
-        public ExtendedPropertyKeyName(IConstraintKeyName source) : base(source)
+        public ExtendedPropertyIndexName(IConstraintIndexName source) : base(source)
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbSchemaKeyName)"/>
-        public ExtendedPropertyKeyName(ISchemaKeyName source) : base(source)
+        public ExtendedPropertyIndexName(ISchemaIndexName source) : base(source)
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbDomainKeyName)"/>
-        public ExtendedPropertyKeyName(IDomainKeyName source) : base(source)
+        public ExtendedPropertyIndexName(IDomainIndexName source) : base(source)
         { }
     }
 }

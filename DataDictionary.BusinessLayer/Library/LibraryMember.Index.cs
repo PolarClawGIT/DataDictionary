@@ -8,26 +8,26 @@ using DbLayer = DataDictionary.DataLayer.LibraryData.Member;
 namespace DataDictionary.BusinessLayer.Library
 {
     /// <inheritdoc/>
-    public interface ILibraryMemberKey : DbLayer.ILibraryMemberKey
+    public interface ILibraryMemberIndex : DbLayer.ILibraryMemberKey
     { }
 
     /// <inheritdoc/>
-    public class LibraryMemberKey : DbLayer.LibraryMemberKey, ILibraryMemberKey
+    public class LibraryMemberIndex : DbLayer.LibraryMemberKey, ILibraryMemberIndex
     {
         /// <inheritdoc cref="DbLayer.LibraryMemberKey.LibraryMemberKey(DbLayer.ILibraryMemberKey)"/>
-        public LibraryMemberKey(ILibraryMemberKey source) : base(source)
+        public LibraryMemberIndex(ILibraryMemberIndex source) : base(source)
         { }
     }
 
     /// <inheritdoc/>
-    public interface ILibraryMemberKeyParent : DbLayer.ILibraryMemberKeyParent
+    public interface ILibraryMemberIndexParent : DbLayer.ILibraryMemberKeyParent
     { }
 
     /// <inheritdoc/>
-    public class LibraryMemberKeyParent : DbLayer.LibraryMemberKeyParent
+    public class LibraryMemberIndexParent : DbLayer.LibraryMemberKeyParent
     {
         /// <inheritdoc cref="DbLayer.LibraryMemberKeyParent.LibraryMemberKeyParent(DbLayer.ILibraryMemberKeyParent)"/>
-        public LibraryMemberKeyParent (ILibraryMemberKeyParent source): base (source)
+        public LibraryMemberIndexParent (ILibraryMemberIndexParent source): base (source)
         { }
     }
 }

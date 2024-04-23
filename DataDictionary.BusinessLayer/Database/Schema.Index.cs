@@ -9,25 +9,25 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ISchemaKey : IDbSchemaKey
+    public interface ISchemaIndex : IDbSchemaKey
     { }
 
     /// <inheritdoc/>
-    public class SchemaKey : DbSchemaKey, ISchemaKey
+    public class SchemaIndex : DbSchemaKey, ISchemaIndex
     {
         /// <inheritdoc cref="DbSchemaKey(IDbSchemaKey)"/>
-        public SchemaKey(IDbSchemaKey source) : base(source)
+        public SchemaIndex(IDbSchemaKey source) : base(source)
         { }
     }
 
     /// <inheritdoc/>
-    public interface ISchemaKeyName : IDbSchemaKeyName, IDbCatalogKeyName, ICatalogKeyName
+    public interface ISchemaIndexName : IDbSchemaKeyName, IDbCatalogKeyName, ICatalogIndexName
     { }
 
     /// <inheritdoc/>
-    public class SchemaKeyName : DbSchemaKeyName, ISchemaKeyName
+    public class SchemaIndexName : DbSchemaKeyName, ISchemaIndexName
     {
         /// <inheritdoc cref="DbSchemaKeyName(IDbSchemaKeyName)"/>
-        public SchemaKeyName(ISchemaKeyName source) : base(source) { }
+        public SchemaIndexName(ISchemaIndexName source) : base(source) { }
     }
 }

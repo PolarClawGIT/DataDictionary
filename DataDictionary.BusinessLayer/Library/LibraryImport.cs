@@ -160,7 +160,7 @@ namespace DataDictionary.BusinessLayer.Library
                                         MemberNameSpace = memberNameSpace,
                                     };
 
-                                    LibraryMemberKey memberKey = new LibraryMemberKey(memberItem);
+                                    LibraryMemberIndex memberKey = new LibraryMemberIndex(memberItem);
 
                                     libraryMembers.Add(memberItem);
                                 }

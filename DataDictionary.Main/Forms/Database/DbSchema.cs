@@ -16,8 +16,8 @@ namespace DataDictionary.Main.Forms.Database
 
         public DbSchema(ISchemaValue schemaItem) : this()
         {
-            SchemaKeyName key = new SchemaKeyName(schemaItem);
-            ExtendedPropertyKeyName propertyKey = new ExtendedPropertyKeyName(key);
+            SchemaIndexName key = new SchemaIndexName(schemaItem);
+            ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
 
             bindingSchema.DataSource = new BindingView<SchemaValue>(BusinessData.DatabaseModel.DbSchemta, w => key.Equals(w));
             bindingSchema.Position = 0;

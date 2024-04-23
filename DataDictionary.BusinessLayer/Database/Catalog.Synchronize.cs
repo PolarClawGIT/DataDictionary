@@ -45,7 +45,7 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Catalog Synchronize to compare what Catalogs are in the Database vs the Model
     /// </summary>
-    public class CatalogSynchronize : SynchronizeData<CatalogSynchronizeValue, CatalogValue, CatalogKey>
+    public class CatalogSynchronize : SynchronizeData<CatalogSynchronizeValue, CatalogValue, CatalogIndex>
     {
         /// <summary>
         /// Concrete class for the Abstract DbCatalogCollection
@@ -76,8 +76,8 @@ namespace DataDictionary.BusinessLayer.Database
         }
 
         /// <inheritdoc/>
-        protected override CatalogKey GetKey(CatalogValue data)
-        { return new CatalogKey(data); }
+        protected override CatalogIndex GetKey(CatalogValue data)
+        { return new CatalogIndex(data); }
 
         /// <inheritdoc/>
         protected override CatalogSynchronizeValue GetValue(CatalogValue data)
@@ -114,7 +114,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <param name="factory"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> OpenFromDb(IDatabaseWork factory, ICatalogKey key)
+        public IReadOnlyList<WorkItem> OpenFromDb(IDatabaseWork factory, ICatalogIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(dbModel.Remove(key));
@@ -128,7 +128,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <param name="factory"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> SaveToDb(IDatabaseWork factory, ICatalogKey key)
+        public IReadOnlyList<WorkItem> SaveToDb(IDatabaseWork factory, ICatalogIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(dbModel.Save(factory, key));
@@ -143,7 +143,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <param name="factory"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> DeleteFromDb(IDatabaseWork factory, ICatalogKey key)
+        public IReadOnlyList<WorkItem> DeleteFromDb(IDatabaseWork factory, ICatalogIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
             IDbCatalogKey dbKey = new DbCatalogKey(key);

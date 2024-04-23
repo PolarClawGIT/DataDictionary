@@ -8,14 +8,14 @@ using DbLayer = DataDictionary.DataLayer.LibraryData.Source;
 namespace DataDictionary.BusinessLayer.Library
 {
     /// <inheritdoc/>
-    public interface ILibrarySourceKey : DbLayer.ILibrarySourceKey
+    public interface ILibrarySourceIndex : DbLayer.ILibrarySourceKey
     { }
 
     /// <inheritdoc/>
-    public class LibrarySourceKey : DbLayer.LibrarySourceKey, ILibrarySourceKey
+    public class LibrarySourceIndex : DbLayer.LibrarySourceKey, ILibrarySourceIndex
     {
         /// <inheritdoc cref="DbLayer.LibrarySourceKey.LibrarySourceKey(DbLayer.ILibrarySourceKey)"/>
-        public LibrarySourceKey(ILibrarySourceKey source) : base(source)
+        public LibrarySourceIndex(ILibrarySourceIndex source) : base(source)
         { }
     }
 }

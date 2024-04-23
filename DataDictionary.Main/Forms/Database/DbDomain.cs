@@ -17,8 +17,8 @@ namespace DataDictionary.Main.Forms.Database
 
         public DbDomain(IDomainValue domainItem) : this()
         {
-            DomainKeyName key = new DomainKeyName(domainItem);
-            ExtendedPropertyKeyName propertyKey = new ExtendedPropertyKeyName(key);
+            DomainIndexName key = new DomainIndexName(domainItem);
+            ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
 
             bindingDomain.DataSource = new BindingView<DomainValue>(BusinessData.DatabaseModel.DbDomains, w => key.Equals(w));
             bindingDomain.Position = 0;
