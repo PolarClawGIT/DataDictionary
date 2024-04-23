@@ -23,13 +23,13 @@ namespace DataDictionary.BusinessLayer.Model
     { }
 
     class SubjectAreaData : ModelSubjectAreaCollection, ISubjectAreaData,
-        ILoadData<IModelIndex>, ISaveData<IModelIndex>,
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDataTableFile
     {
         /// <summary>
         /// Reference to the containing Model
         /// </summary>
-        public required IModelData Models { get; init; }
+        public required IModelData<ModelValue> Models { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
@@ -38,7 +38,7 @@ namespace DataDictionary.BusinessLayer.Model
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelIndex dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -48,7 +48,7 @@ namespace DataDictionary.BusinessLayer.Model
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelIndex dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -78,7 +78,7 @@ namespace DataDictionary.BusinessLayer.Model
                 {
                     if (Models.FirstOrDefault() is IModelItem model)
                     {
-                        ModelIndex modelKey = new ModelKey(model);
+                        ModelKey modelKey = new ModelKey(model);
 
                         foreach (ModelSubjectAreaItem item in this.OrderBy(o => new NameSpaceKey(o).MemberPath))
                         {

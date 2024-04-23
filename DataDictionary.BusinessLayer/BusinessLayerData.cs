@@ -6,6 +6,7 @@ using DataDictionary.DataLayer.ModelData;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
 using Toolbox.DbContext;
+using DataDictionary.BusinessLayer.Model;
 
 
 namespace DataDictionary.BusinessLayer
@@ -70,11 +71,11 @@ namespace DataDictionary.BusinessLayer
                 ValidateCommand = true
             };
 
-            modelValues = new Model.ModelData();
+            modelValues = new Model.ModelData<ModelValue>();
             subjectAreaValues = new Model.SubjectAreaData() { Models = modelValues };
             namedScopeValue = new NamedScopeData();
 
-            modelValues.Add(new ModelItem());
+            modelValues.Add(new ModelValue());
             applicationValue = new Application.ApplicationData();
 
             domainValue = new Domain.DomainModel() { Models = modelValues, ModelProperty = applicationValue.Properties };
