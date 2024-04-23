@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer
         /// Models for the application (expect 0 or 1)
         /// </summary>
         public IModelData<ModelValue> Models { get { return modelValues; } }
-        private readonly Model.ModelData<ModelValue> modelValues;
+        internal readonly Model.ModelData<ModelValue> modelValues;
 
         /// <summary>
         /// Subject Areas for the Model

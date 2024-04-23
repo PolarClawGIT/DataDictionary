@@ -56,8 +56,8 @@ namespace DataDictionary.BusinessLayer.Database
         { }
 
         /// <inheritdoc/>
-        protected override IBindingList<CatalogValue> ModelData { get { return dbModel.DbCatalogs; } }
-        IDatabaseModel dbModel;
+        protected override IBindingList<CatalogValue> ModelData { get { return catalogData.DbCatalogs; } }
+        IDatabaseModel catalogData;
 
         /// <inheritdoc/>
         protected override IBindingList<CatalogValue> DatabaseData { get { return sourceData; } }
@@ -66,12 +66,12 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// Constructor 
         /// </summary>
-        /// <param name="dbModel"></param>
-        public CatalogSynchronize(IDatabaseModel dbModel) : base()
+        /// <param name="catalogs"></param>
+        public CatalogSynchronize(IDatabaseModel catalogs) : base()
         {
-            this.dbModel = dbModel;
+            this.catalogData = catalogs;
 
-            foreach (CatalogValue item in dbModel.DbCatalogs)
+            foreach (CatalogValue item in catalogs.DbCatalogs)
             { Add(new CatalogSynchronizeValue(item) { InModel = true }); }
         }
 
@@ -104,7 +104,7 @@ namespace DataDictionary.BusinessLayer.Database
         public IReadOnlyList<WorkItem> ImportFromSchema(DbSchemaContext source)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(dbModel.Import(source));
+            work.AddRange(catalogData.Import(source));
             return work;
         }
 
@@ -117,8 +117,8 @@ namespace DataDictionary.BusinessLayer.Database
         public IReadOnlyList<WorkItem> OpenFromDb(IDatabaseWork factory, ICatalogIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(dbModel.Remove(key));
-            work.AddRange(dbModel.Load(factory, key));
+            work.AddRange(catalogData.Remove(key));
+            work.AddRange(catalogData.Load(factory, key));
             return work;
         }
 
@@ -131,7 +131,7 @@ namespace DataDictionary.BusinessLayer.Database
         public IReadOnlyList<WorkItem> SaveToDb(IDatabaseWork factory, ICatalogIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(dbModel.Save(factory, key));
+            work.AddRange(catalogData.Save(factory, key));
             work.AddRange(GetCatalogs(factory));
             return work;
         }
@@ -159,8 +159,5 @@ namespace DataDictionary.BusinessLayer.Database
             work.Add(factory.CreateSave(sourceData, dbKey));
             return work;
         }
-
-
-
     }
 }
