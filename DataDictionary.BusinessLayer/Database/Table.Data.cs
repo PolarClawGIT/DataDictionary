@@ -1,7 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
@@ -12,13 +11,13 @@ namespace DataDictionary.BusinessLayer.Database
     /// Interface representing Catalog Table data
     /// </summary>
     public interface ITableData<TValue> : IBindingData<TValue>
-        where TValue : TableValue
+        where TValue : TableValue, ITableValue
     { }
 
     class TableData<TValue> : DbTableCollection<TValue>, ITableData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem
+        IDatabaseModelItem, IGetNamedScopes
         where TValue : TableValue, new()
     {
         /// <inheritdoc/>
@@ -46,27 +45,19 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Table</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
+            List<NamedScopePair> result = new List<NamedScopePair>();
 
-            work.Add(new WorkItem()
+            foreach (TValue item in this)
             {
-                WorkName = "Build NamedScope Table",
-                DoWork = () =>
-                {
-                    foreach (DbTableItem item in this.Where(w => w.IsSystem == false))
-                    {
-                        //target.Remove(new NamedScopeKey(item)); Done by Catalog
+                SchemaIndexName keyName = new SchemaIndexName(item);
 
-                        DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
-                        if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is IDbSchemaItem parent)
-                        { target.Add(new NamedScopeItem(parent, item)); }
-                    }
-                }
-            });
+                if (Database.DbSchemta.FirstOrDefault(w => keyName.Equals(w)) is SchemaValue schema)
+                { result.Add(new NamedScopePair(schema.GetSystemId(), item)); }
+            }
 
-            return work;
+            return result;
         }
     }
 }

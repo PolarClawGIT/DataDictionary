@@ -27,13 +27,13 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return SchemaName ?? String.Empty; }
+        { return DomainName ?? String.Empty; }
 
         /// <inheritdoc/>
         public event EventHandler? OnTitleChanged;
         private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is nameof(SchemaName) or nameof(DatabaseName)
+            if (e.PropertyName is nameof(SchemaName) or nameof(DatabaseName) or nameof(DomainName)
                 && OnTitleChanged is EventHandler handler)
             { handler(this, EventArgs.Empty); }
         }

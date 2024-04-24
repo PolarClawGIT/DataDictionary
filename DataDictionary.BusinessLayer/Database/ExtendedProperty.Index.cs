@@ -24,11 +24,11 @@ namespace DataDictionary.BusinessLayer.Database
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbTableKeyName)"/>
-        public ExtendedPropertyIndexName(ITableKeyName source) : base(source)
+        public ExtendedPropertyIndexName(ITableIndexName source) : base(source)
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbTableColumnKeyName)"/>
-        public ExtendedPropertyIndexName(ITableColumnKeyName source) : base(source)
+        public ExtendedPropertyIndexName(ITableColumnIndexName source) : base(source)
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbRoutineKeyName)"/>

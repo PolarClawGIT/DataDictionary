@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Domain;
+﻿using DataDictionary.DataLayer.DatabaseData.Domain;
 
 namespace DataDictionary.BusinessLayer.Database
 {
@@ -16,7 +15,7 @@ namespace DataDictionary.BusinessLayer.Database
     }
 
     /// <inheritdoc/>
-    public interface IDomainIndexName : IDbDomainKeyName, IDbCatalogKeyName, ISchemaIndexName
+    public interface IDomainIndexName : IDbDomainKeyName, ISchemaIndexName
     { }
 
     /// <inheritdoc/>

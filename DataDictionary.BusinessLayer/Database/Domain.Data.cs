@@ -2,7 +2,6 @@
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Domain;
-using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 
@@ -12,13 +11,13 @@ namespace DataDictionary.BusinessLayer.Database
     /// Interface representing Catalog Domain data
     /// </summary>
     public interface IDomainData<TValue> : IBindingData<TValue>
-        where TValue: IDomainValue
+        where TValue: DomainValue, IDomainValue
     { }
 
     class DomainData<TValue> : DbDomainCollection<TValue>, IDomainData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem
+        IDatabaseModelItem, IGetNamedScopes
         where TValue: DomainValue, new()
     {
         /// <inheritdoc/>

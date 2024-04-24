@@ -11,13 +11,13 @@ namespace DataDictionary.BusinessLayer.Database
     /// Interface representing Catalog TableColumn data
     /// </summary>
     public interface ITableColumnData<TValue> : IBindingData<TValue>
-        where TValue : TableColumnValue
+        where TValue : TableColumnValue, ITableColumnValue
     { }
 
     class TableColumnData<TValue> : DbTableColumnCollection<TValue>, ITableColumnData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem
+        IDatabaseModelItem, IGetNamedScopes
         where TValue : TableColumnValue, new()
     {
         /// <inheritdoc/>
@@ -45,28 +45,19 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>TableColumn</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
+            List<NamedScopePair> result = new List<NamedScopePair>();
 
-            work.Add(new WorkItem()
+            foreach (TValue item in this)
             {
-                WorkName = "Build NamedScope TableColumn",
-                DoWork = () =>
-                {
-                    foreach (DbTableColumnItem item in this)
-                    {
-                        //target.Remove(new NamedScopeKey(item)); Done by Catalog
+                TableIndexName keyName = new TableIndexName(item);
 
-                        DbTableKeyName nameKey = new DbTableKeyName(item);
-                        if (Database.DbTables.FirstOrDefault(w => nameKey.Equals(w)) is IDbTableItem parent)
-                        { target.Add(new NamedScopeItem(parent, item)); }
-                    }
-                }
-            });
+                if (Database.DbTables.FirstOrDefault(w => keyName.Equals(w)) is TableValue table)
+                { result.Add(new NamedScopePair(table.GetSystemId(), item)); }
+            }
 
-            return work;
+            return result;
         }
-
     }
 }
