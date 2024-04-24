@@ -268,6 +268,10 @@ namespace DataDictionary.BusinessLayer
             work.Add(new WorkItem() { DoWork = () => namedScopeValue.Clear() });
             work.AddRange(modelValues.BuildNamedScope(namedScopeValue));
             work.AddRange(databaseValue.BuildNamedScope(namedScopeValue));
+            work.AddRange(libraryValue.BuildNamedScope(namedScopeValue));
+
+            work.AddRange(domainValue.BuildNamedScope(namedScopeValue));
+            work.AddRange(scriptingValue.BuildNamedScope(namedScopeValue));
 
             return work.AsReadOnly();
         }

@@ -163,15 +163,23 @@ namespace DataDictionary.BusinessLayer.Library
             return work;
         }
 
-        /// <inheritdoc/>
-        /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        public IReadOnlyList<WorkItem> BuildNamedScope(NamedScopeData target)
         {
             List<WorkItem> work = new List<WorkItem>();
+            ProgressTracker progress = new ProgressTracker();
 
-            work.AddRange(sources.Build(target));
-            work.AddRange(members.Build(target));
+            WorkItem workItem = new WorkItem()
+            {
+                WorkName = "Build NamedScope (Libraries)",
+                DoWork = () =>
+                {
+                    target.AddRange(sources.GetNamedScopes());
+                    target.AddRange(members.GetNamedScopes());
+                }
+            };
+            progress.OnProgressChanged = workItem.OnProgressChanged;
 
+            work.Add(workItem);
             return work;
         }
     }

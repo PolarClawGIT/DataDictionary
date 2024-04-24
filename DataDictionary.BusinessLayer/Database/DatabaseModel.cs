@@ -462,8 +462,6 @@ namespace DataDictionary.BusinessLayer.Database
 
             WorkItem workItem = new WorkItem()
             {
-                //TODO: Continue building this out.
-                //TODO: Make sure the DB Key Name are inherited by the child interfaces
                 WorkName = "Build NamedScope (Catalogs)",
                 DoWork = () =>
                 {

@@ -109,5 +109,25 @@ namespace DataDictionary.BusinessLayer.Domain
             work.AddRange(entityValues.Remove());
             return work;
         }
+
+        public IReadOnlyList<WorkItem> BuildNamedScope(NamedScopeData target)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            ProgressTracker progress = new ProgressTracker();
+
+            WorkItem workItem = new WorkItem()
+            {
+                WorkName = "Build NamedScope (Domain)",
+                DoWork = () =>
+                {
+                    target.AddRange(attributeValues.GetNamedScopes());
+                    target.AddRange(entityValues.GetNamedScopes());
+                }
+            };
+            progress.OnProgressChanged = workItem.OnProgressChanged;
+
+            work.Add(workItem);
+            return work;
+        }
     }
 }

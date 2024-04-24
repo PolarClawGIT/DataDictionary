@@ -20,7 +20,8 @@ namespace DataDictionary.BusinessLayer.Library
 
     class LibraryMemberData<TValue> : DbLayer.Member.LibraryMemberCollection<TValue>, ILibraryMemberData<TValue>,
         ILoadData<DbLayer.Source.ILibrarySourceKey>, ISaveData<DbLayer.Source.ILibrarySourceKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        IGetNamedScopes
         where TValue : LibraryMemberValue, new()
     {
         /// <inheritdoc/>
@@ -46,17 +47,33 @@ namespace DataDictionary.BusinessLayer.Library
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
-
-
         /// <inheritdoc/>
         /// <remarks>Library Member</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
+            List<NamedScopePair> result = new List<NamedScopePair>();
 
-           // TODO needs rewrite
+            foreach (TValue item in this.Where(w => w.MemberParentId is null))
+            {
+                result.Add(new NamedScopePair(item));
+                result.AddRange(GetChildren(item));
+            }
 
-            return work;
+            return result;
+
+            IEnumerable<NamedScopePair> GetChildren(TValue child)
+            {
+                List<NamedScopePair> result = new List<NamedScopePair>();
+                LibraryMemberIndex key = new LibraryMemberIndex(child);
+
+                foreach (TValue item in this.Where(w => key.Equals(new LibraryMemberIndexParent(w))))
+                {
+                    result.Add(new NamedScopePair(item));
+                    result.AddRange(GetChildren(item));
+                }
+
+                return result;
+            }
         }
 
     }

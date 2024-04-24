@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DbLayer = DataDictionary.DataLayer.LibraryData.Source;
+﻿using DbLayer = DataDictionary.DataLayer.LibraryData.Source;
 
 namespace DataDictionary.BusinessLayer.Library
 {

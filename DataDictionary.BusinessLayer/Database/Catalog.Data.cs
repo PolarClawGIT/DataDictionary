@@ -44,6 +44,8 @@ namespace DataDictionary.BusinessLayer.Database
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
+        /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
         { return this.Where(w => w.IsSystem == false).Select(s => new NamedScopePair(s)); }
     }
