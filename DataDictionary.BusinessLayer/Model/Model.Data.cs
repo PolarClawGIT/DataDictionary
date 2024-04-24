@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.NamedScope;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 using DbLayer = DataDictionary.DataLayer.ModelData;
@@ -48,5 +49,19 @@ namespace DataDictionary.BusinessLayer.Model
 
         public IReadOnlyList<WorkItem> Create()
         { return new WorkItem() { WorkName = "Create Model", DoWork = () => { Add(new TValue()); } }.ToList(); }
+
+        public IReadOnlyList<WorkItem> BuildNamedScope(NamedScopeData target)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem()
+            {
+                WorkName = "Build NamedScope (Model)",
+                DoWork = () => { target.AddRange(GetNamedScopes()); }
+            });
+            return work;
+        }
+
+        public IEnumerable<NamedScopePair> GetNamedScopes()
+        { return this.Select(s => new NamedScopePair(s)); }
     }
 }

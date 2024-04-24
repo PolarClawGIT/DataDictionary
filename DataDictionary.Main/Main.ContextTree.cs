@@ -23,21 +23,17 @@ namespace DataDictionary.Main
         private void RefreshCommand_Click(object? sender, EventArgs e)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(BusinessData.NamedScope.Build());
+            work.AddRange(BusinessData.BuildNamedScope());
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
             this.DoWork(work);
         }
 
         private void DataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (contextNameNavigation.SelectedNode is TreeNode node)
+            if (contextNameNavigation.SelectedNode is TreeNode node && node.GetNamedScope() is INamedScopeValue item)
             {
-                NamedScopeItem? item = node.GetItem();
-                if (item is NamedScopeItem && item.Source is Object taget)
-                {
-                    dynamic dataNode = taget;
-                    Activate(dataNode);
-                }
+                dynamic dataNode = item;
+                Activate(dataNode);
             }
         }
 
@@ -78,7 +74,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Domain.DomainEntity(entityItem), entityItem); }
 
         void Activate(ModelSubjectAreaItem subjectItem)
-        { Activate((data) => new Forms.Domain.ModelSubjectArea(subjectItem), subjectItem); }
+        { Activate((data) => new Forms.Model.ModelSubjectArea(subjectItem), subjectItem); }
 
         void Activate(ModelItem modelItem)
         { Activate((data) => new Forms.Model.Model(modelItem), modelItem); }

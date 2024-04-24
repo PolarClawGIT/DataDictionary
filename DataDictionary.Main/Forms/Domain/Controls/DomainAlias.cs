@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Domain.Controls
 {
+    [Obsolete("Old Control")]
     partial class DomainAlias : UserControl
     {
 
@@ -42,70 +43,70 @@ namespace DataDictionary.Main.Forms.Domain.Controls
 
         private void AliasListLoad()
         {
-            aliasBrowser.Items.Clear();
-            alaisViewItems.Clear();
+            //aliasBrowser.Items.Clear();
+            //alaisViewItems.Clear();
 
-            NamedScopeItem parent = BusinessData.NamedScope.RootItem;
-            NamedScopeKey? parentKey = null;
+            //NamedScopeItem parent = BusinessData.NamedScope.RootItem;
+            //NamedScopeKey? parentKey = null;
 
-            if (navigationStack.TryPeek(out parentKey) && parentKey is NamedScopeKey)
-            { parent = BusinessData.NamedScope[parentKey]; }
+            //if (navigationStack.TryPeek(out parentKey) && parentKey is NamedScopeKey)
+            //{ parent = BusinessData.NamedScope[parentKey]; }
 
-            foreach (NamedScopeKey childKey in parent.Children)
-            {
-                if (BusinessData.NamedScope.ContainsKey(childKey))
-                {
-                    NamedScopeItem child = BusinessData.NamedScope[childKey];
-                    ListViewItem childItem = new ListViewItem(child.MemberName, child.Scope.ToName());
-                    childItem.ToolTipText = child.MemberFullName;
+            //foreach (NamedScopeKey childKey in parent.Children)
+            //{
+            //    if (BusinessData.NamedScope.ContainsKey(childKey))
+            //    {
+            //        NamedScopeItem child = BusinessData.NamedScope[childKey];
+            //        ListViewItem childItem = new ListViewItem(child.MemberName, child.Scope.ToName());
+            //        childItem.ToolTipText = child.MemberFullName;
 
-                    alaisViewItems.Add(childItem, childKey);
-                    aliasBrowser.Items.Add(childItem);
-                }
-            }
-            aliasBrowser.Sorting = SortOrder.Ascending;
-            aliasBrowser.Sort();
-            aliasBrowser.Sorting = SortOrder.None;
+            //        alaisViewItems.Add(childItem, childKey);
+            //        aliasBrowser.Items.Add(childItem);
+            //    }
+            //}
+            //aliasBrowser.Sorting = SortOrder.Ascending;
+            //aliasBrowser.Sort();
+            //aliasBrowser.Sorting = SortOrder.None;
 
-            if (parentKey is NamedScopeKey)
-            { // Doing custom hot Tracks
-                ListViewItem parentItem = new ListViewItem(parent.MemberName, parent.Scope.ToName());
-                parentItem.Font = new Font(parentItem.Font, FontStyle.Underline);
-                parentItem.ForeColor = Color.Blue;
+            //if (parentKey is NamedScopeKey)
+            //{ // Doing custom hot Tracks
+            //    ListViewItem parentItem = new ListViewItem(parent.MemberName, parent.Scope.ToName());
+            //    parentItem.Font = new Font(parentItem.Font, FontStyle.Underline);
+            //    parentItem.ForeColor = Color.Blue;
 
-                alaisViewItems.Add(parentItem, parentKey);
-                aliasBrowser.Items.Insert(0, parentItem);
-            }
+            //    alaisViewItems.Add(parentItem, parentKey);
+            //    aliasBrowser.Items.Insert(0, parentItem);
+            //}
 
-            aliasBrowser.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            //aliasBrowser.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
         private void AliasBrowser_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (aliasBrowser.SelectedItems.Count > 0
-                && alaisViewItems.ContainsKey(aliasBrowser.SelectedItems[0]))
-            {
-                NamedScopeKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
-                //SelectedAlias = BusinessData.NameScope[selectedKey];
+            //if (aliasBrowser.SelectedItems.Count > 0
+            //    && alaisViewItems.ContainsKey(aliasBrowser.SelectedItems[0]))
+            //{
+            //    NamedScopeKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
+            //    //SelectedAlias = BusinessData.NameScope[selectedKey];
 
-                var x = BusinessData.NamedScope[selectedKey];
+            //    var x = BusinessData.NamedScope[selectedKey];
 
-                aliasNameData.Text = BusinessData.NamedScope[selectedKey].MemberFullName;
-                aliasScopeData.SelectedValue = BusinessData.NamedScope[selectedKey].Scope;
+            //    aliasNameData.Text = BusinessData.NamedScope[selectedKey].MemberFullName;
+            //    aliasScopeData.SelectedValue = BusinessData.NamedScope[selectedKey].Scope;
 
-                if (navigationStack.TryPeek(out NamedScopeKey? parentKey)
-                    && selectedKey.Equals(parentKey))
-                {
-                    navigationStack.Pop();
-                    AliasListLoad();
-                }
+            //    if (navigationStack.TryPeek(out NamedScopeKey? parentKey)
+            //        && selectedKey.Equals(parentKey))
+            //    {
+            //        navigationStack.Pop();
+            //        AliasListLoad();
+            //    }
 
-                else if (BusinessData.NamedScope[selectedKey].Children.Count > 0)
-                {
-                    navigationStack.Push(selectedKey);
-                    AliasListLoad();
-                }
-            }
+            //    else if (BusinessData.NamedScope[selectedKey].Children.Count > 0)
+            //    {
+            //        navigationStack.Push(selectedKey);
+            //        AliasListLoad();
+            //    }
+            //}
         }
 
         public event EventHandler? SelectedItemChanged;

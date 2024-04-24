@@ -266,6 +266,7 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
 
             work.Add(new WorkItem() { DoWork = () => namedScopeValue.Clear() });
+            work.AddRange(modelValues.BuildNamedScope(namedScopeValue));
             work.AddRange(databaseValue.BuildNamedScope(namedScopeValue));
 
             return work.AsReadOnly();
