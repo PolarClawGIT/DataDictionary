@@ -463,39 +463,18 @@ namespace DataDictionary.BusinessLayer.Database
             WorkItem workItem = new WorkItem()
             {
                 //TODO: Continue building this out.
-                //TODO: Move GetSystemID to the interface for the Keys rather then the values.
                 //TODO: Make sure the DB Key Name are inherited by the child interfaces
                 WorkName = "Build NamedScope (Catalogs)",
-                DoWork = () => {
+                DoWork = () =>
+                {
                     target.AddRange(catalogs.GetNamedScopes());
                     target.AddRange(schemta.GetNamedScopes());
+                    target.AddRange(domains.GetNamedScopes());
                 }
             };
             progress.OnProgressChanged = workItem.OnProgressChanged;
 
             work.Add(workItem);
-            return work;
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
-        [Obsolete("To be removed", true)]
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            //work.AddRange(catalogs.Build(target));
-            //work.AddRange(schemta.Build(target));
-            work.AddRange(domains.Build(target));
-
-            work.AddRange(tables.Build(target));
-            work.AddRange(tableColumns.Build(target));
-
-            work.AddRange(routines.Build(target));
-            work.AddRange(routineParameters.Build(target));
-
-            work.AddRange(constraints.Build(target));
-
             return work;
         }
     }

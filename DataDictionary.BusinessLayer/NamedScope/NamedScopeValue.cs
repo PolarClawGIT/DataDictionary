@@ -39,6 +39,18 @@ namespace DataDictionary.BusinessLayer.NamedScope
     }
 
     /// <summary>
+    /// Interface for Named
+    /// </summary>
+    interface IGetNamedScopes
+    {
+        /// <summary>
+        /// Returns a list of NamedScopes
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<NamedScopePair> GetNamedScopes();
+    }
+
+    /// <summary>
     /// Class to build NamedScope Pairs (Parent Key and Value).
     /// </summary>
     /// <remarks>This is just for constructing a list of parameters needed to load the NamedScopeData.</remarks>

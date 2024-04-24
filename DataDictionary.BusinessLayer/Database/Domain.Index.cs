@@ -1,14 +1,11 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.DataLayer.DatabaseData.Domain;
 
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface IDomainIndex : IDbDomainKey { }
+    public interface IDomainIndex : IDbDomainKey
+    { }
 
     /// <inheritdoc/>
     public class DomainIndex : DbDomainKey, IDomainIndex
@@ -19,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Database
     }
 
     /// <inheritdoc/>
-    public interface IDomainIndexName : IDbDomainKeyName
+    public interface IDomainIndexName : IDbDomainKeyName, IDbCatalogKeyName, ISchemaIndexName
     { }
 
     /// <inheritdoc/>

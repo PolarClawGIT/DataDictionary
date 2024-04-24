@@ -1,12 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -25,7 +19,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public NamedScopeKey GetSystemId()
-        { return new NamedScopeKey((IDbCatalogKey)this); }
+        { return new NamedScopeKey(CatalogId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()

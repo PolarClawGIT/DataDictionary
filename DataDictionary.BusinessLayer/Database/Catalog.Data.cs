@@ -17,7 +17,8 @@ namespace DataDictionary.BusinessLayer.Database
     class CatalogData<TValue> : DbCatalogCollection<TValue>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
-        IDatabaseModelItem, ICatalogData<TValue>
+        IDatabaseModelItem, ICatalogData<TValue>,
+        IGetNamedScopes
         where TValue : CatalogValue, ICatalogValue, new()
     {
         /// <inheritdoc/>

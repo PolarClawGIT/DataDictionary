@@ -1,17 +1,12 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DatabaseData.Schema;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ISchemaValue : IDbSchemaItem, ISchemaIndex, ISchemaIndexName, ICatalogIndexName,
+    public interface ISchemaValue : IDbSchemaItem, ISchemaIndex, ISchemaIndexName,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 
@@ -24,7 +19,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public NamedScopeKey GetSystemId()
-        { return new NamedScopeKey((IDbSchemaKey)this); }
+        { return new NamedScopeKey(SchemaId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()

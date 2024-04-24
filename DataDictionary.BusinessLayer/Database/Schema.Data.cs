@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.Database
     class SchemaData<TValue> : DbSchemaCollection<TValue>, ISchemaData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem
+        IDatabaseModelItem, IGetNamedScopes
         where TValue : SchemaValue, ISchemaValue, new()
     {
         /// <inheritdoc/>
@@ -43,8 +43,9 @@ namespace DataDictionary.BusinessLayer.Database
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
-
-        public IReadOnlyList<NamedScopePair> GetNamedScopes()
+        /// <inheritdoc/>
+        /// <remarks>Schema</remarks>
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
 
@@ -52,8 +53,8 @@ namespace DataDictionary.BusinessLayer.Database
             {
                 CatalogIndexName keyName = new CatalogIndexName(item);
 
-                if (Database.DbCatalogs.FirstOrDefault(w => keyName.Equals(w)) is ICatalogValue catalog)
-                { result.Add(new NamedScopePair(new NamedScopeKey(catalog), item)); }
+                if (Database.DbCatalogs.FirstOrDefault(w => keyName.Equals(w)) is CatalogValue catalog)
+                { result.Add(new NamedScopePair(catalog.GetSystemId(), item)); }
             }
 
             return result;

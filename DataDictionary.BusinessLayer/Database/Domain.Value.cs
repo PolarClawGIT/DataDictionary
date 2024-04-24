@@ -1,9 +1,6 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.DatabaseData.Domain;
+using System.ComponentModel;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -14,6 +11,31 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class DomainValue : DbDomainItem, IDomainValue
-    { }
+    public class DomainValue : DbDomainItem, IDomainValue, INamedScopeValue
+    {
+        /// <inheritdoc cref="DbDomainItem()"/>
+        public DomainValue() : base()
+        { PropertyChanged += OnPropertyChanged; }
+
+        /// <inheritdoc/>
+        public NamedScopeKey GetSystemId()
+        { return new NamedScopeKey(DomainId); }
+
+        /// <inheritdoc/>
+        public virtual NamedScopePath GetPath()
+        { return new NamedScopePath(DatabaseName, SchemaName, DomainName); }
+
+        /// <inheritdoc/>
+        public virtual String GetTitle()
+        { return SchemaName ?? String.Empty; }
+
+        /// <inheritdoc/>
+        public event EventHandler? OnTitleChanged;
+        private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is nameof(SchemaName) or nameof(DatabaseName)
+                && OnTitleChanged is EventHandler handler)
+            { handler(this, EventArgs.Empty); }
+        }
+    }
 }

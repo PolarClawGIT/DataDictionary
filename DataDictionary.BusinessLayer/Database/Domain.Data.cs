@@ -46,27 +46,19 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
+            List<NamedScopePair> result = new List<NamedScopePair>();
 
-            work.Add(new WorkItem()
+            foreach (TValue item in this)
             {
-                WorkName = "Build NamedScope Domain",
-                DoWork = () =>
-                {
-                    foreach (DbDomainItem item in this)
-                    {
-                        //target.Remove(new NamedScopeKey(item)); Done by Catalog
+                SchemaIndexName keyName = new SchemaIndexName(item);
 
-                        DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
-                        if (Database.DbTables.FirstOrDefault(w => nameKey.Equals(w)) is IDbSchemaItem parent)
-                        { target.Add(new NamedScopeItem(parent, item)); }
-                    }
-                }
-            });
+                if (Database.DbSchemta.FirstOrDefault(w => keyName.Equals(w)) is SchemaValue schema)
+                { result.Add(new NamedScopePair(schema.GetSystemId(), item)); }
+            }
 
-            return work;
+            return result;
         }
     }
 }
