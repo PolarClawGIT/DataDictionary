@@ -1,9 +1,4 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Routine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.Database
 {
@@ -20,7 +15,7 @@ namespace DataDictionary.BusinessLayer.Database
     }
 
     /// <inheritdoc/>
-    public interface IRoutineParameterIndexName : IDbRoutineParameterKeyName
+    public interface IRoutineParameterIndexName : IDbRoutineParameterKeyName, IRoutineIndexName
     { }
 
     /// <inheritdoc/>

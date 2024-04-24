@@ -1,9 +1,4 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Constraint;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.Database
 {
@@ -18,11 +13,11 @@ namespace DataDictionary.BusinessLayer.Database
     }
 
     /// <inheritdoc/>
-    public interface IConstraintIndexName : IDbConstraintKeyName
+    public interface IConstraintIndexName : IDbConstraintKeyName, ITableIndexName
     { }
 
     /// <inheritdoc/>
-    public class ConstraintIndexName : DbConstraintKeyName, IConstraintIndexName
+    public class ConstraintIndexName : DbConstraintKeyName, ISchemaIndexName
     {
         /// <inheritdoc cref="DbConstraintKeyName(IDbConstraintKeyName)"/>
         public ConstraintIndexName(IConstraintIndexName source) : base(source) { }

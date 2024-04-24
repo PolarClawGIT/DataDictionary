@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.Database
     class RoutineParameterData<TValue> : DbRoutineParameterCollection<TValue>, IRoutineParameterData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem
+        IDatabaseModelItem, IGetNamedScopes
         where TValue : RoutineParameterValue, new()
 
     {
@@ -46,27 +46,19 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>RoutineParameter</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
+            List<NamedScopePair> result = new List<NamedScopePair>();
 
-            work.Add(new WorkItem()
+            foreach (TValue item in this)
             {
-                WorkName = "Build NamedScope RoutineParameter",
-                DoWork = () =>
-                {
-                    foreach (DbRoutineParameterItem item in this)
-                    {
-                        //target.Remove(new NamedScopeKey(item)); Done by Catalog
+                RoutineIndexName keyName = new RoutineIndexName(item);
 
-                        DbRoutineKeyName nameKey = new DbRoutineKeyName(item);
-                        if (Database.DbRoutines.FirstOrDefault(w => nameKey.Equals(w)) is IDbRoutineItem parent)
-                        { target.Add(new NamedScopeItem(parent, item)); }
-                    }
-                }
-            });
+                if (Database.DbRoutines.FirstOrDefault(w => keyName.Equals(w)) is RoutineValue routine)
+                { result.Add(new NamedScopePair(routine.GetSystemId(), item)); }
+            }
 
-            return work;
+            return result;
         }
     }
 }

@@ -471,8 +471,13 @@ namespace DataDictionary.BusinessLayer.Database
                     target.AddRange(schemta.GetNamedScopes());
                     target.AddRange(domains.GetNamedScopes());
 
+                    target.AddRange(constraints.GetNamedScopes());
+
                     target.AddRange(tables.GetNamedScopes());
                     target.AddRange(tableColumns.GetNamedScopes());
+
+                    target.AddRange(routines.GetNamedScopes());
+                    target.AddRange(routineParameters.GetNamedScopes());
                 }
             };
             progress.OnProgressChanged = workItem.OnProgressChanged;

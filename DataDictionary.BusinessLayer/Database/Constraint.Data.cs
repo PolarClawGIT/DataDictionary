@@ -2,7 +2,6 @@
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
@@ -20,7 +19,7 @@ namespace DataDictionary.BusinessLayer.Database
     class ConstraintData<TValue> : DbConstraintCollection<TValue>, IConstraintData<TValue>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem
+        IDatabaseModelItem, IGetNamedScopes
         where TValue : ConstraintValue, new()
     {
         /// <inheritdoc/>
@@ -48,27 +47,19 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Constraint</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
+            List<NamedScopePair> result = new List<NamedScopePair>();
 
-            work.Add(new WorkItem()
+            foreach (TValue item in this)
             {
-                WorkName = "Build NamedScope Constraint",
-                DoWork = () =>
-                {
-                    foreach (DbConstraintItem item in this)
-                    {
-                        //target.Remove(new NamedScopeKey(item)); Done by Catalog
+                TableIndexName keyName = new TableIndexName(item);
 
-                        DbTableKeyName nameKey = new DbTableKeyName(item);
-                        if (Database.DbTables.FirstOrDefault(w => nameKey.Equals(w)) is IDbTableItem parent)
-                        { target.Add(new NamedScopeItem(parent, item)); }
-                    }
-                }
-            });
+                if (Database.DbTables.FirstOrDefault(w => keyName.Equals(w)) is TableValue table)
+                { result.Add(new NamedScopePair(table.GetSystemId(), item)); }
+            }
 
-            return work;
+            return result;
         }
     }
 }
