@@ -238,10 +238,10 @@ namespace DataDictionary.BusinessLayer.Domain
                     PropertyKeyExtended appKey = new PropertyKeyExtended(property);
 
                     if (propertyDefinition.FirstOrDefault(w =>
-                        appKey.Equals(w)) is Application.IPropertyItem appProperty
+                        appKey.Equals(w)) is Application.IPropertyValue appProperty
                         && propertyValues.Count(w =>
                             attributeKey.Equals(w)
-                            && new Application.PropertyKey(appProperty).Equals(w)) == 0)
+                            && new Application.PropertyIndex(appProperty).Equals(w)) == 0)
                     { propertyValues.Add(new AttributePropertyItem(attributeKey, appProperty, property)); }
                 }
             }
@@ -307,8 +307,8 @@ namespace DataDictionary.BusinessLayer.Domain
 
                     if (Properties.FirstOrDefault(w => attributeKey.Equals(w)) is AttributePropertyItem property)
                     {
-                        Application.PropertyKey propertyKey = new Application.PropertyKey(property);
-                        if (Model.ModelProperty.FirstOrDefault((Object w) => propertyKey.Equals(w)) is Application.PropertyItem item)
+                        Application.PropertyIndex propertyKey = new Application.PropertyIndex(property);
+                        if (Model.ModelProperty.FirstOrDefault((Object w) => propertyKey.Equals(w)) is Application.PropertyValue item)
                         {
                             if (property.GetXElement(item, options) is XElement xProperty)
                             { result.Add(xProperty); }

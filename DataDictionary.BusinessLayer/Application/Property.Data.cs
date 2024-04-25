@@ -16,14 +16,14 @@ namespace DataDictionary.BusinessLayer.Application
     /// </summary>
     /// <remarks>Used to hide the DataLayer methods from the Application Layer.</remarks>
     public interface IPropertyData :
-        IBindingData<PropertyItem>,
+        IBindingData<PropertyValue>,
         ISaveData, ILoadData
     { }
 
     /// <summary>
     /// Wrapper Class for Application Properties.
     /// </summary>
-    class PropertyData : PropertyCollection<PropertyItem>, IPropertyData
+    class PropertyData : PropertyCollection<PropertyValue>, IPropertyData
     {
         /// <inheritdoc/>
         /// <remarks>Property</remarks>

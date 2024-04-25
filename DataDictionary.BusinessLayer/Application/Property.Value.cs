@@ -1,16 +1,17 @@
 ﻿using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.DataLayer.ApplicationData.Property;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.Application
 {
     /// <inheritdoc/>
-    public interface IPropertyItem : DataLayer.ApplicationData.Property.IPropertyItem 
+    public interface IPropertyValue : IPropertyItem 
     { }
 
     /// <inheritdoc/>
-    public class PropertyItem : DataLayer.ApplicationData.Property.PropertyItem
+    public class PropertyValue : PropertyItem
     {
         /// <inheritdoc/>
-        public PropertyItem() : base() { }
+        public PropertyValue() : base() { }
     }
 }

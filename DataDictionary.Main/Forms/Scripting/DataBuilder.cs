@@ -56,9 +56,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 foreach (AttributePropertyItem propertyItem in BusinessData.DomainModel.Attributes.Properties.Where(w => attributeKey.Equals(w)))
                 {
-                    PropertyKey propertyKey = new PropertyKey(propertyItem);
+                    PropertyIndex propertyKey = new PropertyIndex(propertyItem);
 
-                    if (BusinessData.ApplicationData.Properties.FirstOrDefault(w => propertyKey.Equals(w)) is PropertyItem property)
+                    if (BusinessData.ApplicationData.Properties.FirstOrDefault(w => propertyKey.Equals(w)) is PropertyValue property)
                     {
                         TreeNode propertyNode = new TreeNode(property.PropertyTitle);
                         propertyNode.ImageKey = ScopeType.ModelAttributeProperty.ToName();

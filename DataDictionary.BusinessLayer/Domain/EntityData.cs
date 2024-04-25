@@ -225,10 +225,10 @@ namespace DataDictionary.BusinessLayer.Domain
                     PropertyKeyExtended appKey = new PropertyKeyExtended(property);
 
                     if (propertyDefinition.FirstOrDefault(w =>
-                        appKey.Equals(w)) is Application.IPropertyItem appProperty
+                        appKey.Equals(w)) is Application.IPropertyValue appProperty
                         && propertyValues.Count(w =>
                             entityKey.Equals(w)
-                            && new Application.PropertyKey(appProperty).Equals(w)) == 0)
+                            && new Application.PropertyIndex(appProperty).Equals(w)) == 0)
                     { propertyValues.Add(new DomainEntityPropertyItem(entityKey, appProperty, property)); }
                 }
             }
