@@ -4,11 +4,6 @@ using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.Database
 {
@@ -24,11 +19,11 @@ namespace DataDictionary.BusinessLayer.Database
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbTableKeyName)"/>
-        public ExtendedPropertyIndexName(ITableKeyName source) : base(source)
+        public ExtendedPropertyIndexName(ITableIndexName source) : base(source)
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbTableColumnKeyName)"/>
-        public ExtendedPropertyIndexName(ITableColumnKeyName source) : base(source)
+        public ExtendedPropertyIndexName(ITableColumnIndexName source) : base(source)
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbRoutineKeyName)"/>

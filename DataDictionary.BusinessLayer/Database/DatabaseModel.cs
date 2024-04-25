@@ -37,7 +37,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Extended Properties within the Model.
         /// </summary>
-        IExtendedPropertyData<ExtendedPropertyValue> DbExtendedProperties { get; }
+        IExtendedPropertyData DbExtendedProperties { get; }
 
         /// <summary>
         /// List of Database Constraints (keys...) within the Model.
@@ -67,12 +67,12 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Tables and Views within the Model.
         /// </summary>
-        ITableData<TableValue> DbTables { get; }
+        ITableData DbTables { get; }
 
         /// <summary>
         /// List of Database Columns for the Tables/Views within the Model.
         /// </summary>
-        ITableColumnData<TableColumnValue> DbTableColumns { get; }
+        ITableColumnData DbTableColumns { get; }
 
         /// <summary>
         /// Imports a Catalog from a Database Source
@@ -119,8 +119,8 @@ namespace DataDictionary.BusinessLayer.Database
         private readonly ConstraintColumnData constraintColumns;
 
         /// <inheritdoc/>
-        public IExtendedPropertyData<ExtendedPropertyValue> DbExtendedProperties { get { return extendedProperties; } }
-        private readonly ExtendedPropertyData<ExtendedPropertyValue> extendedProperties;
+        public IExtendedPropertyData DbExtendedProperties { get { return extendedProperties; } }
+        private readonly ExtendedPropertyData extendedProperties;
 
         /// <inheritdoc/>
         public IRoutineData DbRoutines { get { return routines; } }
@@ -135,12 +135,12 @@ namespace DataDictionary.BusinessLayer.Database
         private readonly RoutineDependencyData routineDependencies;
 
         /// <inheritdoc/>
-        public ITableData<TableValue> DbTables { get { return tables; } }
-        private readonly TableData<TableValue> tables;
+        public ITableData DbTables { get { return tables; } }
+        private readonly TableData tables;
 
         /// <inheritdoc/>
-        public ITableColumnData<TableColumnValue> DbTableColumns { get { return tableColumns; } }
-        private readonly TableColumnData<TableColumnValue> tableColumns;
+        public ITableColumnData DbTableColumns { get { return tableColumns; } }
+        private readonly TableColumnData tableColumns;
 
         public DatabaseModel() : base()
         {
@@ -148,8 +148,8 @@ namespace DataDictionary.BusinessLayer.Database
             schemta = new SchemaData() { Database = this };
             domains = new DomainData() { Database = this };
 
-            tables = new TableData<TableValue>() { Database = this };
-            tableColumns = new TableColumnData<TableColumnValue>() { Database = this };
+            tables = new TableData() { Database = this };
+            tableColumns = new TableColumnData() { Database = this };
 
             routines = new RoutineData() { Database = this };
             routineParameters = new RoutineParameterData() { Database = this };
@@ -158,7 +158,7 @@ namespace DataDictionary.BusinessLayer.Database
             constraints = new ConstraintData() { Database = this };
             constraintColumns = new ConstraintColumnData() { Database = this };
 
-            extendedProperties = new ExtendedPropertyData<ExtendedPropertyValue>() { Database = this };
+            extendedProperties = new ExtendedPropertyData() { Database = this };
         }
 
         /// <inheritdoc/>
