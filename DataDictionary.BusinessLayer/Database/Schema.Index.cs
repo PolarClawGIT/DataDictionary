@@ -15,7 +15,7 @@ namespace DataDictionary.BusinessLayer.Database
     }
 
     /// <inheritdoc/>
-    public interface ISchemaIndexName : IDbSchemaKeyName
+    public interface ISchemaIndexName : IDbSchemaKeyName, ICatalogIndexName
     { }
 
     /// <inheritdoc/>

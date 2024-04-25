@@ -11,15 +11,13 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Interface representing Catalog Domain data
     /// </summary>
-    public interface IDomainData<TValue> : IBindingData<TValue>
-        where TValue: IDomainValue
+    public interface IDomainData : IBindingData<DomainValue>
     { }
 
-    class DomainData<TValue> : DbDomainCollection<TValue>, IDomainData<TValue>,
+    class DomainData : DbDomainCollection<DomainValue>, IDomainData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeData
-        where TValue: DomainValue, new()
+        IDatabaseModelItem, IGetNamedScopes
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -46,27 +44,18 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem()
+            List<NamedScopePair> result = new List<NamedScopePair>();
+            foreach (DomainValue item in this)
             {
-                WorkName = "Build NamedScope Domain",
-                DoWork = () =>
-                {
-                    foreach (DbDomainItem item in this)
-                    {
-                        //target.Remove(new NamedScopeKey(item)); Done by Catalog
+                DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
+                if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is SchemaValue parent)
+                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+            }
 
-                        DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
-                        if (Database.DbTables.FirstOrDefault(w => nameKey.Equals(w)) is IDbSchemaItem parent)
-                        { target.Add(new NamedScopeItem(parent, item)); }
-                    }
-                }
-            });
-
-            return work;
+            return result;
         }
+
     }
 }

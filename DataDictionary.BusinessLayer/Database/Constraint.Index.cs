@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer.Database
     }
 
     /// <inheritdoc/>
-    public interface IConstraintIndexName : IDbConstraintKeyName
+    public interface IConstraintIndexName : IDbConstraintKeyName, ISchemaIndexName
     { }
 
     /// <inheritdoc/>
