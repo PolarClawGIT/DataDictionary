@@ -23,7 +23,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Interface for a NameScope Item.
     /// </summary>
-    [Obsolete("Replaced by NameScopeValue")]
+    [Obsolete("To be deleted", true)]
     public interface INamedScopeItem : INamedScopeKey, INameSpaceKey, IScopeKey
     {
         /// <summary>
@@ -45,7 +45,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Implementation for NameScope Item.
     /// </summary>
-    [Obsolete("Replaced by NameScopeValue")]
+    [Obsolete("To be deleted", true)]
     public class NamedScopeItem : INamedScopeItem, INotifyPropertyChanged
     {
         /// <summary>

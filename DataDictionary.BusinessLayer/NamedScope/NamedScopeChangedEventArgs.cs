@@ -11,6 +11,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// List of supported ListChangeTypes
     /// </summary>
+    [Obsolete("To be deleted", true)]
     public enum NameScopedChangedType
     {
         /// <summary>
@@ -46,6 +47,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// Event Args for change in the NameScope list
     /// </summary>
     /// <remarks>Inspired by the IBindingList.ListChanged Event</remarks>
+    [Obsolete("To be deleted", true)]
     public class NamedScopeChangedEventArgs : EventArgs
     {
         /// <summary>

@@ -7,7 +7,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Interface for NameScope Items with hierarchy support.
     /// </summary>
-    [Obsolete("Replaced by NamedScopeData")]
+    [Obsolete("To be deleted", true)]
     public interface INamedScopeDictionary : IDictionary<NamedScopeKey, NamedScopeItem>,
         IRemoveData
     {
@@ -49,7 +49,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// 
     /// TODO: The base class does not allow overriding of a number methods. Consider re-writing as a Wrapper.
     /// </remarks>
-    [Obsolete("Replaced by NamedScopeData")]
+    [Obsolete("To be deleted", true)]
     class NamedScopeDictionary : SortedDictionary<NamedScopeKey, NamedScopeItem>, INamedScopeDictionary
     {
         /// <summary>
