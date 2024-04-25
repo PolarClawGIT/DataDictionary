@@ -9,10 +9,7 @@ namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
     public interface IAttributePropertyValue : IDomainAttributePropertyItem
-    {
-
-
-    }
+    { }
 
     /// <inheritdoc/>
     public class AttributePropertyValue : DomainAttributePropertyItem, IAttributePropertyValue
@@ -21,15 +18,15 @@ namespace DataDictionary.BusinessLayer.Domain
         public AttributePropertyValue() : base() { }
 
         /// <inheritdoc/>
-        public AttributePropertyValue(IDomainAttributeKey attributeKey) : base(attributeKey) { }
+        public AttributePropertyValue(IAttributeIndex attributeKey) : base(attributeKey) { }
 
         /// <inheritdoc/>
-        public AttributePropertyValue(IDomainAttributeKey attributeKey,
+        public AttributePropertyValue(IAttributeIndex attributeKey,
                                      IPropertyKey propertyKey,
                                      IDbExtendedPropertyItem value)
             : base(attributeKey, propertyKey, value) { }
 
-        internal XElement? GetXElement(IPropertyItem property, IEnumerable<ElementItem>? options = null)
+        internal XElement? GetXElement(IPropertyItem property, IEnumerable<ElementValue>? options = null)
         {
             XElement? result = null;
             IAttributePropertyValue attributeNames;
@@ -37,7 +34,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
             if (options is not null)
             {
-                foreach (ElementItem option in options)
+                foreach (ElementValue option in options)
                 {
                     Object? value = null;
 
@@ -59,17 +56,17 @@ namespace DataDictionary.BusinessLayer.Domain
             return result;
         }
 
-        internal static IReadOnlyList<ColumnItem> GetXColumns()
+        internal static IReadOnlyList<ColumnValue> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelAttributeProperty;
             IAttributePropertyValue attributeNames;
             IPropertyItem propertyNames;
-            List<ColumnItem> result = new List<ColumnItem>()
+            List<ColumnValue> result = new List<ColumnValue>()
             {
-                new ColumnItem() {ColumnName = nameof(propertyNames.PropertyTitle),    DataType = typeof(String), AllowDBNull = false, Scope = scope},
-                new ColumnItem() {ColumnName = nameof(propertyNames.ExtendedProperty), DataType = typeof(String), AllowDBNull = true,  Scope = scope},
-                new ColumnItem() {ColumnName = nameof(attributeNames.PropertyValue),   DataType = typeof(String), AllowDBNull = true,  Scope = scope},
-                new ColumnItem() {ColumnName = nameof(attributeNames.DefinitionText),  DataType = typeof(String), AllowDBNull = true,  Scope = scope},
+                new ColumnValue() {ColumnName = nameof(propertyNames.PropertyTitle),    DataType = typeof(String), AllowDBNull = false, Scope = scope},
+                new ColumnValue() {ColumnName = nameof(propertyNames.ExtendedProperty), DataType = typeof(String), AllowDBNull = true,  Scope = scope},
+                new ColumnValue() {ColumnName = nameof(attributeNames.PropertyValue),   DataType = typeof(String), AllowDBNull = true,  Scope = scope},
+                new ColumnValue() {ColumnName = nameof(attributeNames.DefinitionText),  DataType = typeof(String), AllowDBNull = true,  Scope = scope},
             };
 
             return result;

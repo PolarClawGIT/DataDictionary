@@ -48,7 +48,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
     class EntityData<TValue> : DomainEntityCollection<TValue>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IEntityData<TValue>, IDataTableFile
+        IEntityData<TValue>, IDataTableFile, IGetNamedScopes
         where TValue : EntityValue, IEntityValue, new()
     {
         public required DomainModel DomainModel { get; init; }
@@ -226,10 +226,10 @@ namespace DataDictionary.BusinessLayer.Domain
                     PropertyKeyExtended appKey = new PropertyKeyExtended(property);
 
                     if (propertyDefinition.FirstOrDefault(w =>
-                        appKey.Equals(w)) is Application.IPropertyItem appProperty
+                        appKey.Equals(w)) is Application.IPropertyValue appProperty
                         && propertyValues.Count(w =>
                             entityKey.Equals(w)
-                            && new Application.PropertyKey(appProperty).Equals(w)) == 0)
+                            && new Application.PropertyIndex(appProperty).Equals(w)) == 0)
                     { propertyValues.Add(new DomainEntityPropertyItem(entityKey, appProperty, property)); }
                 }
             }

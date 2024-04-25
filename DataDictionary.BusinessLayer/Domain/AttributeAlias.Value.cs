@@ -20,6 +20,6 @@ namespace DataDictionary.BusinessLayer.Domain
         public AttributeAliasValue() : base() { }
 
         /// <inheritdoc/>
-        public AttributeAliasValue(IDomainAttributeKey key) : base(key) { }
+        public AttributeAliasValue(IAttributeIndex key) : base(key) { }
     }
 }

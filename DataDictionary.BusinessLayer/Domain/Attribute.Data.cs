@@ -10,8 +10,6 @@ using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ModelData;
-using DataDictionary.DataLayer.ModelData.Attribute;
-using DataDictionary.DataLayer.ModelData.SubjectArea;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -22,7 +20,7 @@ namespace DataDictionary.BusinessLayer.Domain
     /// Interface component for the Model Attribute
     /// </summary>
     public interface IAttributeData<TValue> : IBindingData<TValue>,
-        ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>,
+        ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>,
         ITableColumnImport
         where TValue : AttributeValue, IAttributeValue
     {
@@ -34,7 +32,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <summary>
         /// List of Domain Properties for the Attributes within the Model.
         /// </summary>
-        IAttributePropertyData Properties { get; }
+        IAttributePropertyData<AttributePropertyValue> Properties { get; }
 
         /// <summary>
         /// List of Model Attribute Subject Areas within the Model.
@@ -44,7 +42,8 @@ namespace DataDictionary.BusinessLayer.Domain
 
     class AttributeData<TValue> : DomainAttributeCollection<TValue>, 
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IAttributeData<TValue>, IDataTableFile
+        ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>,
+        IAttributeData<TValue>, IDataTableFile, IGetNamedScopes
         where TValue : AttributeValue, IAttributeValue, new()
     {
         public required DomainModel Model { get; init; }
@@ -54,8 +53,8 @@ namespace DataDictionary.BusinessLayer.Domain
         private readonly AttributeAliasData aliasValues;
 
         /// <inheritdoc/>
-        public IAttributePropertyData Properties { get { return propertyValues; } }
-        private readonly AttributePropertyData propertyValues;
+        public IAttributePropertyData<AttributePropertyValue> Properties { get { return propertyValues; } }
+        private readonly AttributePropertyData<AttributePropertyValue> propertyValues;
 
         /// <inheritdoc/>
         public IAttributeSubjectAreaData SubjectAreas { get { return subjectAreaValues; } }
@@ -64,7 +63,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public AttributeData() : base()
         {
             aliasValues = new AttributeAliasData();
-            propertyValues = new AttributePropertyData() { Attributes = this };
+            propertyValues = new AttributePropertyData<AttributePropertyValue>();
             subjectAreaValues = new AttributeSubjectAreaData();
         }
 
@@ -94,6 +93,14 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex dataKey)
+        {
+            IDomainAttributeKey key = new AttributeIndex(dataKey);
+            return Load(factory, key);
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainAttributeKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -102,6 +109,14 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateSave(propertyValues, dataKey));
             work.Add(factory.CreateSave(subjectAreaValues, dataKey));
             return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IAttributeIndex dataKey)
+        {
+            IDomainAttributeKey key = new AttributeIndex(dataKey);
+            return Save(factory, key);
         }
 
         /// <inheritdoc/>
@@ -239,10 +254,10 @@ namespace DataDictionary.BusinessLayer.Domain
                     PropertyKeyExtended appKey = new PropertyKeyExtended(property);
 
                     if (propertyDefinition.FirstOrDefault(w =>
-                        appKey.Equals(w)) is Application.IPropertyItem appProperty
+                        appKey.Equals(w)) is Application.IPropertyValue appProperty
                         && propertyValues.Count(w =>
                             attributeKey.Equals(w)
-                            && new Application.PropertyKey(appProperty).Equals(w)) == 0)
+                            && new Application.PropertyIndex(appProperty).Equals(w)) == 0)
                     { propertyValues.Add(new AttributePropertyValue(attributeKey, appProperty, property)); }
                 }
             }
@@ -251,7 +266,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public IEnumerable<NamedScopePair> GetNamedScopes()
         { return this.Select(s => new NamedScopePair(s)); }
 
-        public XElement? GetXElement(IAttributeIndex key, IEnumerable<ElementItem>? options = null)
+        public XElement? GetXElement(IAttributeIndex key, IEnumerable<ElementValue>? options = null)
         {
             XElement? result = null;
 
@@ -264,8 +279,8 @@ namespace DataDictionary.BusinessLayer.Domain
 
                     if (Properties.FirstOrDefault(w => attributeKey.Equals(w)) is AttributePropertyValue property)
                     {
-                        Application.PropertyKey propertyKey = new Application.PropertyKey(property);
-                        if (Model.ModelProperty.FirstOrDefault((Object w) => propertyKey.Equals(w)) is Application.PropertyItem item)
+                        Application.PropertyIndex propertyKey = new Application.PropertyIndex(property);
+                        if (Model.ModelProperty.FirstOrDefault((Object w) => propertyKey.Equals(w)) is Application.PropertyValue item)
                         {
                             if (property.GetXElement(item, options) is XElement xProperty)
                             { result.Add(xProperty); }
@@ -278,5 +293,7 @@ namespace DataDictionary.BusinessLayer.Domain
             return result;
 
         }
+
+       
     }
 }
