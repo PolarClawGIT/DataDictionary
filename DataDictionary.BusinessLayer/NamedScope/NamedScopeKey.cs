@@ -20,6 +20,17 @@ using DataDictionary.DataLayer.ScriptingData.Transform;
 namespace DataDictionary.BusinessLayer.NamedScope
 {
     /// <summary>
+    /// 
+    /// </summary>
+    public interface INameScopeGetKey
+    {
+        /// <summary>
+        /// Method to get System Id of the Named Scope item.
+        /// </summary>
+        NamedScopeKey GetSystemId();
+    }
+
+    /// <summary>
     /// Interface for the NameScope Key
     /// </summary>
     public interface INamedScopeKey : IKey
@@ -48,25 +59,17 @@ namespace DataDictionary.BusinessLayer.NamedScope
         { SystemId = source.SystemId; }
 
         /// <summary>
+        /// Constructor for the NameScope Key
+        /// </summary>
+        internal NamedScopeKey(Guid? source) : this()
+        { SystemId = source ?? Guid.Empty; }
+
+        /// <summary>
         /// Constructor for the NameScope Key, Application Help
         /// </summary>
         /// <param name="source"></param>
         public NamedScopeKey(IHelpKey source) : this()
         { SystemId = source.HelpId ?? Guid.Empty; }
-
-        /// <summary>
-        /// Constructor for the NameScope Key, Catalog
-        /// </summary>
-        /// <param name="source">A Database Catalog</param>
-        public NamedScopeKey(IDbCatalogKey source) : this()
-        { SystemId = source.CatalogId ?? Guid.Empty; }
-
-        /// <summary>
-        /// Constructor for the NameScope Key, Schema
-        /// </summary>
-        /// <param name="source">A Database Schema</param>
-        public NamedScopeKey(IDbSchemaKey source) : this()
-        { SystemId = source.SchemaId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameScope Key, Table
@@ -81,13 +84,6 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <param name="source">A Database Table Column</param>
         public NamedScopeKey(IDbTableColumnKey source) : this()
         { SystemId = source.ColumnId ?? Guid.Empty; }
-
-        /// <summary>
-        /// Constructor for the NameScope Key, Domain
-        /// </summary>
-        /// <param name="source">A Database Domain</param>
-        public NamedScopeKey(IDbDomainKey source) : this()
-        { SystemId = source.DomainId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameScope Key, Routine

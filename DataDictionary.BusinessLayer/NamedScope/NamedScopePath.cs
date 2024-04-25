@@ -1,4 +1,8 @@
-﻿using DataDictionary.DataLayer;
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.BusinessLayer.Library;
+using DataDictionary.BusinessLayer.Model;
+using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,6 +78,13 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Constructor for a NamedScope Path
         /// </summary>
         /// <param name="source"></param>
+        protected NamedScopePath(String source) : this()
+        { pathParts.AddRange(Parse(source)); }
+
+        /// <summary>
+        /// Constructor for a NamedScope Path
+        /// </summary>
+        /// <param name="source"></param>
         public NamedScopePath(INamedScopePath source) : this()
         {
             if (source is NamedScopePath value)
@@ -85,18 +96,32 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Constructor for a NamedScope Path
         /// </summary>
         /// <param name="source"></param>
-        public NamedScopePath(String source) : this()
-        { pathParts.AddRange(Parse(source)); }
+        /// <remarks>This version does not parse the strings.</remarks>
+        internal NamedScopePath(params String?[] source)
+        {
+            foreach (String? item in source)
+            {
+                if (!String.IsNullOrWhiteSpace(item))
+                { pathParts.Add(item); }
+            }
+        }
+
+        /// <summary>
+        /// Constructor for a NamedScope Path
+        /// </summary>
+        /// <param name="source">IScopeKey</param>
+        internal NamedScopePath(IScopeKey source) : this()
+        { pathParts.AddRange(Parse(source.Scope.ToName())); }
 
         /// <summary>
         /// Parses a String into Name Parts per the rules of a NamedScope Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static List<String> Parse(string source)
+        public static List<String> Parse(String? source)
         {
             List<String> elements = new List<String>();
-            String parse = source;
+            String? parse = source;
 
             while (!String.IsNullOrWhiteSpace(parse))
             {

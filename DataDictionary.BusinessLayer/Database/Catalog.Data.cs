@@ -16,13 +16,13 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Wrapper of Catalog Data (The Database)
     /// </summary>
-    public interface ICatalogData: IBindingData<CatalogValue>, INamedScopeData
+    public interface ICatalogData: IBindingData<CatalogValue>
     { }
 
     class CatalogData: DbCatalogCollection<CatalogValue>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
-        IDatabaseModelItem, ICatalogData
+        IDatabaseModelItem, ICatalogData, IGetNamedScopes
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -49,43 +49,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem()
-            {
-                WorkName = "Load NameScope, Catalog",
-                DoWork = () =>
-                {
-                    foreach (DbCatalogItem item in this.Where(w => w.IsSystem == false))
-                    { target.Add(new NamedScopeItem(item)); }
-                }
-            });
-            return work;
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Catalog</remarks>
-        [Obsolete("Will need to change to NamedScopeData")]
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem()
-            {
-                WorkName = "Build NamedScope Catalog",
-                DoWork = () =>
-                {
-                    foreach (DbCatalogItem item in this.Where(w => w.IsSystem == false))
-                    {
-                        target.Remove(new NamedScopeKey(item));
-                        target.Add(new NamedScopeItem(item));
-                    }
-                }
-            });
-
-            return work;
-        }
+        public IEnumerable<NamedScopePair> GetNamedScopes()
+        {   return this.Where(w => w.IsSystem == false).Select(s => new NamedScopePair(s));}
     }
 }
