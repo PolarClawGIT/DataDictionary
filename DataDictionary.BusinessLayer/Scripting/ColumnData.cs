@@ -46,8 +46,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// </summary>
         public void Load()
         {
-            Load(Domain.AttributeItem.GetXColumns());
-            Load(Domain.AttributePropertyItem.GetXColumns());
+            Load(Domain.AttributeValue.GetXColumns());
+            Load(Domain.AttributePropertyValue.GetXColumns());
         }
 
         /// <summary>

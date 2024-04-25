@@ -40,7 +40,7 @@ namespace DataDictionary.Main.Forms.Model
             if (bindingSubject.Current is IModelSubjectAreaItem current)
             {
                 List<DomainAttributeKey> attributeKeys = BusinessData.DomainModel.Attributes.SubjectAreas.Where(w => key.Equals(w)).Select(s => new DomainAttributeKey(s)).ToList();
-                bindingAttribute.DataSource = new BindingView<AttributeItem>(BusinessData.DomainModel.Attributes, w => attributeKeys.Contains(new DomainAttributeKey(w)));
+                bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => attributeKeys.Contains(new DomainAttributeKey(w)));
 
                 List<DomainEntityKey> entityKeys = BusinessData.DomainModel.Entities.SubjectAreas.Where(w => key.Equals(w)).Select(s => new DomainEntityKey(s)).ToList();
                 bindingEntity.DataSource = new BindingView<DomainEntityItem>(BusinessData.DomainModel.Entities, w => entityKeys.Contains(new DomainEntityKey(w)));

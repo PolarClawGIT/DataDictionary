@@ -10,16 +10,16 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IAttributeAliasItem: IDomainAttributeAliasItem
+    public interface IAttributeAliasValue: IDomainAttributeAliasItem
     { }
 
     /// <inheritdoc/>
-    public class AttributeAliasItem : DomainAttributeAliasItem, IAttributeAliasItem
+    public class AttributeAliasValue : DomainAttributeAliasItem, IAttributeAliasValue
     {
         /// <inheritdoc/>
-        public AttributeAliasItem() : base() { }
+        public AttributeAliasValue() : base() { }
 
         /// <inheritdoc/>
-        public AttributeAliasItem(IDomainAttributeKey key) : base(key) { }
+        public AttributeAliasValue(IDomainAttributeKey key) : base(key) { }
     }
 }

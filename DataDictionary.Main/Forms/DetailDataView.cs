@@ -70,7 +70,7 @@ namespace DataDictionary.Main.Forms
             if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is ITableColumnValue columnItem)
             { Activate((data) => new Forms.Database.DbTableColumn(columnItem), columnItem); }
 
-            if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is AttributeItem attributeItem)
+            if (bindingTableValue.Rows[e.RowIndex].DataBoundItem is AttributeValue attributeItem)
             { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
 
         }

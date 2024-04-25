@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
@@ -7,7 +8,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for Domain Entity Item
     /// </summary>
-    public interface IDomainEntityItem : IDomainEntityKey, IDomainEntityUniqueKey
+    public interface IDomainEntityItem : IDomainEntityKey, IDomainEntityUniqueKey, IScopeKey
     {
         /// <summary>
         /// Description of the Domain Entity
@@ -65,6 +66,9 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             get { return GetValue("TypeOfEntityTitle"); }
             set { SetValue("TypeOfEntityTitle", value); }
         }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get { return ScopeType.ModelEntity; } }
 
         /// <summary>
         /// Constructor for Domain Entity Item

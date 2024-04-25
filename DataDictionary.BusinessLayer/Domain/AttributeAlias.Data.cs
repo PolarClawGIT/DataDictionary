@@ -9,10 +9,10 @@ namespace DataDictionary.BusinessLayer.Domain
     /// Interface component for the Model Attribute Alias
     /// </summary>
     public interface IAttributeAliasData :
-        IBindingData<AttributeAliasItem>
+        IBindingData<AttributeAliasValue>
     { }
 
-    class AttributeAliasData : DomainAttributeAliasCollection<AttributeAliasItem>, IAttributeAliasData,
+    class AttributeAliasData : DomainAttributeAliasCollection<AttributeAliasValue>, IAttributeAliasData,
         ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {

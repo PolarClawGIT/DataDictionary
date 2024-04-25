@@ -8,23 +8,23 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IAttributePropertyItem : IDomainAttributePropertyItem
+    public interface IAttributePropertyValue : IDomainAttributePropertyItem
     {
 
 
     }
 
     /// <inheritdoc/>
-    public class AttributePropertyItem : DomainAttributePropertyItem, IAttributePropertyItem
+    public class AttributePropertyValue : DomainAttributePropertyItem, IAttributePropertyValue
     {
         /// <inheritdoc/>
-        public AttributePropertyItem() : base() { }
+        public AttributePropertyValue() : base() { }
 
         /// <inheritdoc/>
-        public AttributePropertyItem(IDomainAttributeKey attributeKey) : base(attributeKey) { }
+        public AttributePropertyValue(IDomainAttributeKey attributeKey) : base(attributeKey) { }
 
         /// <inheritdoc/>
-        public AttributePropertyItem(IDomainAttributeKey attributeKey,
+        public AttributePropertyValue(IDomainAttributeKey attributeKey,
                                      IPropertyKey propertyKey,
                                      IDbExtendedPropertyItem value)
             : base(attributeKey, propertyKey, value) { }
@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.Domain
         internal XElement? GetXElement(IPropertyItem property, IEnumerable<ElementItem>? options = null)
         {
             XElement? result = null;
-            IAttributePropertyItem attributeNames;
+            IAttributePropertyValue attributeNames;
             IPropertyItem propertyNames;
 
             if (options is not null)
@@ -62,7 +62,7 @@ namespace DataDictionary.BusinessLayer.Domain
         internal static IReadOnlyList<ColumnItem> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelAttributeProperty;
-            IAttributePropertyItem attributeNames;
+            IAttributePropertyValue attributeNames;
             IPropertyItem propertyNames;
             List<ColumnItem> result = new List<ColumnItem>()
             {

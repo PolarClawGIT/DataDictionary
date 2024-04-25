@@ -2,10 +2,7 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.ModelData;
-using DataDictionary.DataLayer.ModelData.SubjectArea;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -27,12 +24,12 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <summary>
         /// List of Domain Attributes within the Model.
         /// </summary>
-        IAttributeData Attributes { get; }
+        IAttributeData<AttributeValue> Attributes { get; }
 
         /// <summary>
         /// List of Domain Entities within the Model.
         /// </summary>
-        IEntityData Entities { get; }
+        IEntityData<EntityValue> Entities { get; }
     }
 
     class DomainModel : IDomainModel, IDataTableFile
@@ -46,17 +43,17 @@ namespace DataDictionary.BusinessLayer.Domain
         public required IModelData<ModelValue> Models { get; init; }
 
         /// <inheritdoc/>
-        public IAttributeData Attributes { get { return attributeValues; } }
-        private readonly AttributeData attributeValues;
+        public IAttributeData<AttributeValue> Attributes { get { return attributeValues; } }
+        private readonly AttributeData<AttributeValue> attributeValues;
 
         /// <inheritdoc/>
-        public IEntityData Entities { get { return entityValues; } }
-        private readonly EntityData entityValues;
+        public IEntityData<EntityValue> Entities { get { return entityValues; } }
+        private readonly EntityData<EntityValue> entityValues;
 
         public DomainModel() : base()
         {
-            attributeValues = new AttributeData() { Model = this };
-            entityValues = new EntityData() { DomainModel = this };
+            attributeValues = new AttributeData<AttributeValue>() { Model = this };
+            entityValues = new EntityData<EntityValue>() { DomainModel = this };
         }
 
         /// <inheritdoc/>

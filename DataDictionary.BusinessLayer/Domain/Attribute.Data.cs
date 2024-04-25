@@ -21,10 +21,10 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface component for the Model Attribute
     /// </summary>
-    public interface IAttributeData :
-        IBindingData<AttributeItem>,
+    public interface IAttributeData<TValue> : IBindingData<TValue>,
         ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>,
         ITableColumnImport
+        where TValue : AttributeValue, IAttributeValue
     {
         /// <summary>
         /// List of Domain Aliases for the Attributes within the Model.
@@ -42,9 +42,10 @@ namespace DataDictionary.BusinessLayer.Domain
         IAttributeSubjectAreaData SubjectAreas { get; }
     }
 
-    class AttributeData : DomainAttributeCollection<AttributeItem>, IAttributeData,
+    class AttributeData<TValue> : DomainAttributeCollection<TValue>, 
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile
+        IAttributeData<TValue>, IDataTableFile
+        where TValue : AttributeValue, IAttributeValue, new()
     {
         public required DomainModel Model { get; init; }
 
@@ -198,18 +199,18 @@ namespace DataDictionary.BusinessLayer.Domain
             foreach (DbTableColumnItem item in source.DbTableColumns.Where(w => nameKey.Equals(w)))
             {
                 AliasKeyName alaisKey = new AliasKeyName(item);
-                AttributeKey attributeKey;
-                AttributeKeyName uniqueKey = new AttributeKeyName(item);
+                AttributeIndex attributeKey;
+                DomainAttributeKeyName uniqueKey = new DomainAttributeKeyName(item);
                 AliasKeyName aliasKey = new AliasKeyName(item);
 
                 // Create Attribute or get existing
                 if (aliasValues.FirstOrDefault(w => aliasKey.Equals(w)) is DomainAttributeAliasItem existingAlias)
-                { attributeKey = new AttributeKey(existingAlias); }
+                { attributeKey = new AttributeIndex(existingAlias); }
                 else if (this.FirstOrDefault(w => uniqueKey.Equals(w)) is DomainAttributeItem existing)
-                { attributeKey = new AttributeKey(existing); }
+                { attributeKey = new AttributeIndex(existing); }
                 else
                 {
-                    AttributeItem newItem = new AttributeItem()
+                    TValue newItem = new TValue()
                     {
                         AttributeTitle = item.ColumnName,
                         IsDerived = item.IsComputed ?? false,
@@ -218,13 +219,13 @@ namespace DataDictionary.BusinessLayer.Domain
                         IsValued = !item.IsNullable ?? false,
                     };
                     this.Add(newItem);
-                    attributeKey = new AttributeKey(newItem);
+                    attributeKey = new AttributeIndex(newItem);
                 }
 
                 // Create Alias
                 if (aliasValues.Count(w => alaisKey.Equals(w) && attributeKey.Equals(w)) == 0)
                 {
-                    aliasValues.Add(new AttributeAliasItem(attributeKey)
+                    aliasValues.Add(new AttributeAliasValue(attributeKey)
                     {
                         AliasName = item.ToAliasName(),
                         Scope = item.Scope
@@ -242,70 +243,26 @@ namespace DataDictionary.BusinessLayer.Domain
                         && propertyValues.Count(w =>
                             attributeKey.Equals(w)
                             && new Application.PropertyKey(appProperty).Equals(w)) == 0)
-                    { propertyValues.Add(new AttributePropertyItem(attributeKey, appProperty, property)); }
+                    { propertyValues.Add(new AttributePropertyValue(attributeKey, appProperty, property)); }
                 }
             }
         }
 
-        /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
+        public IEnumerable<NamedScopePair> GetNamedScopes()
+        { return this.Select(s => new NamedScopePair(s)); }
 
-            work.Add(new WorkItem()
-            {
-                WorkName = "Build NamedScope Attributes",
-                DoWork = () =>
-                {
-                    if (Model.Models.FirstOrDefault() is IModelItem model)
-                    {
-                        ModelKey key = new ModelKey(model);
-                        List<IDomainAttributeItem> unhandled = this.Select(s => s as IDomainAttributeItem).Cast<IDomainAttributeItem>().ToList();
-
-                        foreach (IDomainAttributeItem item in unhandled)
-                        { target.Remove(new NamedScopeKey(item)); }
-
-                        foreach (IGrouping<ModelSubjectAreaKey, ModelAttributeItem> subject in SubjectAreas.GroupBy(g => new ModelSubjectAreaKey(g)))
-                        {
-                            NamedScopeKey subjectKey = new NamedScopeKey(subject.Key);
-                            ModelSubjectAreaKey subjectModelKey = new ModelSubjectAreaKey(subject.Key);
-
-                            if (target.ContainsKey(new NamedScopeKey(subjectKey)))
-                            {
-                                foreach (IDomainAttributeItem attribute in subject.Select(s => s as IDomainAttributeItem).Cast<IDomainAttributeItem>())
-                                {
-                                    //TODO: Possible Error if the attribute is in multiple subject areas
-                                    target.Add(new NamedScopeItem(subjectModelKey, attribute));
-                                    unhandled.Remove(attribute);
-                                }
-                            }
-                        }
-
-                        foreach (IDomainAttributeItem item in unhandled)
-                        {
-                            target.Remove(new NamedScopeKey(item));
-                            target.Add(new NamedScopeItem(key, item));
-                        }
-                    }
-                }
-            });
-
-            return work;
-        }
-
-        public XElement? GetXElement(IAttributeKey key, IEnumerable<ElementItem>? options = null)
+        public XElement? GetXElement(IAttributeIndex key, IEnumerable<ElementItem>? options = null)
         {
             XElement? result = null;
 
-            AttributeKey attributeKey = new AttributeKey(key);
-            if (this.FirstOrDefault(w => attributeKey.Equals(w)) is AttributeItem attribute)
+            AttributeIndex attributeKey = new AttributeIndex(key);
+            if (this.FirstOrDefault(w => attributeKey.Equals(w)) is AttributeValue attribute)
             {
                 if (attribute.GetXElement(options) is XElement xAttribute)
                 {
                     result = xAttribute;
 
-                    if (Properties.FirstOrDefault(w => attributeKey.Equals(w)) is AttributePropertyItem property)
+                    if (Properties.FirstOrDefault(w => attributeKey.Equals(w)) is AttributePropertyValue property)
                     {
                         Application.PropertyKey propertyKey = new Application.PropertyKey(property);
                         if (Model.ModelProperty.FirstOrDefault((Object w) => propertyKey.Equals(w)) is Application.PropertyItem item)

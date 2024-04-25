@@ -25,10 +25,10 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface component for the Model Entity
     /// </summary>
-    public interface IEntityData :
-        IBindingData<DomainEntityItem>,
+    public interface IEntityData<TValue> : IBindingData<TValue>,
         ILoadData<IDomainEntityKey>, ISaveData<IDomainEntityKey>,
         ITableImport
+        where TValue : EntityValue, IEntityValue
     {
         /// <summary>
         /// List of Domain Aliases for the Entities within the Model.
@@ -46,9 +46,10 @@ namespace DataDictionary.BusinessLayer.Domain
         IEntitySubjectAreaData SubjectAreas { get; }
     }
 
-    class EntityData : DomainEntityCollection, IEntityData,
+    class EntityData<TValue> : DomainEntityCollection<TValue>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile
+        IEntityData<TValue>, IDataTableFile
+        where TValue : EntityValue, IEntityValue, new()
     {
         public required DomainModel DomainModel { get; init; }
 
@@ -202,7 +203,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 { entityKey = new DomainEntityKey(existing); }
                 else
                 {
-                    DomainEntityItem newItem = new DomainEntityItem()
+                    TValue newItem = new TValue()
                     { EntityTitle = item.TableName, };
                     this.Add(newItem);
                     entityKey = new DomainEntityKey(newItem);
@@ -234,52 +235,9 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
-
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem()
-            {
-                WorkName = "Build NamedScope Entities",
-                DoWork = () =>
-                {
-                    if (DomainModel.Models.FirstOrDefault() is IModelItem model)
-                    {
-                        ModelKey key = new ModelKey(model);
-                        List<IDomainEntityItem> unhandled = this.Select(s => s as IDomainEntityItem).Cast<IDomainEntityItem>().ToList();
-
-                        foreach (IDomainEntityItem item in unhandled)
-                        { target.Remove(new NamedScopeKey(item)); }
-
-                        foreach (IGrouping<ModelSubjectAreaKey, ModelEntityItem> subject in SubjectAreas.GroupBy(g => new ModelSubjectAreaKey(g)))
-                        {
-                            NamedScopeKey subjectKey = new NamedScopeKey(subject.Key);
-                            ModelSubjectAreaKey subjectModelKey = new ModelSubjectAreaKey(subject.Key);
-
-                            if (target.ContainsKey(new NamedScopeKey(subjectKey)))
-                            {
-                                foreach (IDomainEntityItem entity in subject.Select(s => s as IDomainEntityItem).Cast<IDomainEntityItem>())
-                                {
-                                    //TODO: Possible Error if the entity is in multiple subject areas
-                                    target.Add(new NamedScopeItem(subjectModelKey, entity));
-                                    unhandled.Remove(entity);
-                                }
-                            }
-                        }
-
-                        foreach (IDomainEntityItem item in unhandled)
-                        {
-                            target.Remove(new NamedScopeKey(item));
-                            target.Add(new NamedScopeItem(key, item));
-                        }
-                    }
-                }
-            });
-
-            return work;
-        }
+        public IEnumerable<NamedScopePair> GetNamedScopes()
+        { return this.Select(s => new NamedScopePair(s)); }
     }
 }
