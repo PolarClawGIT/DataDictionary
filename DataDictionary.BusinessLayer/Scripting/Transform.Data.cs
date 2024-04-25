@@ -1,13 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ScriptingData.Transform;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Scripting
@@ -15,13 +8,15 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Interface component for the Scripting Engine Transform
     /// </summary>
-    public interface ITransformData :
-        IBindingData<TransformItem>,
+    public interface ITransformData<TValue> : IBindingData<TValue>,
         ILoadData, ILoadData<ITransformKey>,
         ISaveData, ISaveData<ITransformKey>
+        where TValue : TransformValue, ITransformValue
     { }
 
-    class TransformData : TransformCollection<TransformItem>, ITransformData
+    class TransformData<TValue> : TransformCollection<TValue>,
+        ITransformData<TValue>, IGetNamedScopes
+        where TValue : TransformValue, ITransformValue, new()
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine
@@ -50,29 +45,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Transform</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem()
-            {
-                WorkName = "Build NamedScope Scripting Transform",
-                DoWork = () =>
-                {
-                    if (Scripting.Models.FirstOrDefault() is IModelItem model)
-                    {
-                        ModelKey key = new ModelKey(model);
-
-                        foreach (TransformItem item in this)
-                        {
-                            target.Remove(new NamedScopeKey(item));
-                            target.Add(new NamedScopeItem(key, item));
-                        }
-                    }
-                }
-            });
-
-            return work;
-        }
-
+        public IEnumerable<NamedScopePair> GetNamedScopes()
+        { return this.Select(s => new NamedScopePair(s)); }
     }
 }

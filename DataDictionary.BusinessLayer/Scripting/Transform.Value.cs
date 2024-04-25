@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ScriptingData.Transform;
+using System.ComponentModel;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
@@ -10,14 +8,36 @@ using System.Xml.Xsl;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface ITransformItem : DataLayer.ScriptingData.Transform.ITransformItem
+    public interface ITransformValue : ITransformItem, ITransformIndex
     { }
 
     /// <inheritdoc/>
-    public class TransformItem : DataLayer.ScriptingData.Transform.TransformItem, ITransformItem
+    public class TransformValue : TransformItem, ITransformValue, INamedScopeValue
     {
+        /// <inheritdoc cref="TransformItem()"/>
+        public TransformValue() : base()
+        { PropertyChanged += OnPropertyChanged; }
+
         /// <inheritdoc/>
-        public TransformItem() : base() { }
+        public NamedScopeKey GetSystemId()
+        { return new NamedScopeKey(TransformId); }
+
+        /// <inheritdoc/>
+        public virtual NamedScopePath GetPath()
+        { return new NamedScopePath(this); }
+
+        /// <inheritdoc/>
+        public virtual String GetTitle()
+        { return TransformTitle ?? String.Empty; }
+
+        /// <inheritdoc/>
+        public event EventHandler? OnTitleChanged;
+        private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is nameof(TransformTitle)
+                && OnTitleChanged is EventHandler handler)
+            { handler(this, EventArgs.Empty); }
+        }
 
         /// <summary>
         /// Use the XSLT Transform into a String

@@ -1,7 +1,9 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ScriptingData.Schema;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,17 +12,40 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface IElementItem : DataLayer.ScriptingData.Schema.IElementItem, IColumnKey
+    public interface IElementValue : IElementItem, IColumnIndex
     { }
 
     /// <inheritdoc/>
-    public class ElementItem : DataLayer.ScriptingData.Schema.ElementItem, IElementItem
+    public class ElementValue : ElementItem, IElementValue, INamedScopeValue
     {
         /// <inheritdoc/>
-        public ElementItem() : base() { }
+        public ElementValue() : base()
+        { PropertyChanged += OnPropertyChanged; }
 
         /// <inheritdoc/>
-        public ElementItem(ISchemaKey key) : base(key) { }
+        public ElementValue(ISchemaKey key) : base(key)
+        { PropertyChanged += OnPropertyChanged; }
+
+        /// <inheritdoc/>
+        public NamedScopeKey GetSystemId()
+        { return new NamedScopeKey(ElementId); }
+
+        /// <inheritdoc/>
+        public virtual NamedScopePath GetPath()
+        { return new NamedScopePath(this); }
+
+        /// <inheritdoc/>
+        public virtual String GetTitle()
+        { return ElementName ?? String.Empty; }
+
+        /// <inheritdoc/>
+        public event EventHandler? OnTitleChanged;
+        private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is nameof(ElementName)
+                && OnTitleChanged is EventHandler handler)
+            { handler(this, EventArgs.Empty); }
+        }
 
         /// <summary>
         /// Uses the value provided to generate an XML element.

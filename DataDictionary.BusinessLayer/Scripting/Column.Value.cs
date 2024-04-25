@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Interface for the Scripting Schema Column data.
     /// </summary>
-    public interface IColumnItem : IColumnKey
+    public interface IColumnValue : IColumnIndex
     {
         /// <inheritdoc cref="DataColumn.AllowDBNull"/>
         Boolean AllowDBNull { get; }
@@ -24,7 +24,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// Implementation for the Scripting Schema Column data.
     /// </summary>
     /// <remarks>The items are expected to be static.</remarks>
-    public class ColumnItem : IColumnItem
+    public class ColumnValue : IColumnValue
     {
         /// <inheritdoc/>
         public ScopeType Scope { get; init; } = ScopeType.Null;
@@ -41,13 +41,13 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <summary>
         /// Constructor for Schema Scripting Schema Column Items
         /// </summary>
-        public ColumnItem() : base()
+        public ColumnValue() : base()
         { }
 
         /// <summary>
         /// Constructor for Schema Scripting Schema Column Items
         /// </summary>
-        public ColumnItem(ScopeType scope, DataColumn source) : this()
+        public ColumnValue(ScopeType scope, DataColumn source) : this()
         {
             Scope = scope;
             ColumnName = source.ColumnName;

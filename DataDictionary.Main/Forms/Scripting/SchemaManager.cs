@@ -45,7 +45,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             Setup(bindingSchema);
 
-            bindingElement.DataSource = new BindingView<ElementItem>(BusinessData.ScriptingEngine.SchemeElements, w => key.Equals(w));
+            bindingElement.DataSource = new BindingView<ElementValue>(BusinessData.ScriptingEngine.SchemeElements, w => key.Equals(w));
             bindingElement.SuspendBinding();
             elementOptionsLayout.Enabled = false;
         }
@@ -56,7 +56,7 @@ namespace DataDictionary.Main.Forms.Scripting
             SendMessage(new RefreshNavigation()); // Cannot do this in constructor because messengering is not yet hooked up.
 
             ISchemaItem schemaNames;
-            IElementItem elementNames;
+            IElementValue elementNames;
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingSchema, nameof(schemaNames.SchemaTitle)));
             schemaTitleData.DataBindings.Add(new Binding(nameof(schemaTitleData.Text), bindingSchema, nameof(schemaNames.SchemaTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             schemaDescriptionData.DataBindings.Add(new Binding(nameof(schemaDescriptionData.Text), bindingSchema, nameof(schemaNames.SchemaDescription), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -79,18 +79,18 @@ namespace DataDictionary.Main.Forms.Scripting
             elementSelection.Groups.Clear();
             elementSelection.Items.Clear();
 
-            foreach (IGrouping<ScopeType, ColumnItem> groups in BusinessData.ScriptingEngine.Columns.GroupBy(g => new ScopeKey(g).Scope))
+            foreach (IGrouping<ScopeType, ColumnValue> groups in BusinessData.ScriptingEngine.Columns.GroupBy(g => new ScopeKey(g).Scope))
             {
                 ListViewGroup group = new ListViewGroup(groups.Key.ToName());
                 elementSelection.Groups.Add(group);
 
-                foreach (ColumnItem column in groups)
+                foreach (ColumnValue column in groups)
                 {
                     ListViewItem newItem = new ListViewItem(column.ColumnName, group);
-                    if (bindingElement.DataSource is IList<ElementItem> elements)
+                    if (bindingElement.DataSource is IList<ElementValue> elements)
                     {
-                        ColumnKey key = new ColumnKey(column);
-                        if (elements.FirstOrDefault(w => key.Equals(w)) is ElementItem)
+                        ColumnIndex key = new ColumnIndex(column);
+                        if (elements.FirstOrDefault(w => key.Equals(w)) is ElementValue)
                         { newItem.Checked = true; }
                     }
 
@@ -116,7 +116,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 //bindingElement.DataSource = null;
                 BusinessData.ScriptingEngine.Schemta.Remove(item);
 
-                foreach (ElementItem element in BusinessData.ScriptingEngine.SchemeElements.Where(w => key.Equals(w)).ToList())
+                foreach (ElementValue element in BusinessData.ScriptingEngine.SchemeElements.Where(w => key.Equals(w)).ToList())
                 { BusinessData.ScriptingEngine.SchemeElements.Remove(element); }
 
                 SendMessage(new RefreshNavigation());
@@ -139,21 +139,21 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
 
-        Dictionary<ListViewItem, ColumnItem> columnItems = new Dictionary<ListViewItem, ColumnItem>(); // Used to cross reference ListViewItems to Columns
-        ColumnItem? addColumn = null; // Used to pass value to bindingElement.AddNew.
+        Dictionary<ListViewItem, ColumnValue> columnItems = new Dictionary<ListViewItem, ColumnValue>(); // Used to cross reference ListViewItems to Columns
+        ColumnValue? addColumn = null; // Used to pass value to bindingElement.AddNew.
         private void elementSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (elementSelection.SelectedItems.Count > 0 && columnItems.ContainsKey(elementSelection.SelectedItems[0]))
             {
                 ListViewItem selected = elementSelection.SelectedItems[0];
-                ColumnItem current = columnItems[selected];
-                ColumnKey column = new ColumnKey(current);
+                ColumnValue current = columnItems[selected];
+                ColumnIndex column = new ColumnIndex(current);
 
-                if (bindingElement.DataSource is IList<ElementItem> elements)
+                if (bindingElement.DataSource is IList<ElementValue> elements)
                 {
-                    ElementItem? element = elements.FirstOrDefault(w => column.Equals(w));
+                    ElementValue? element = elements.FirstOrDefault(w => column.Equals(w));
 
-                    if (element is ElementItem)
+                    if (element is ElementValue)
                     {
                         bindingElement.ResumeBinding();
                         bindingElement.Position = elements.IndexOf(element);
@@ -172,11 +172,11 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             addColumn = null;
 
-            if (columnItems.ContainsKey(e.Item) && bindingElement.DataSource is IList<ElementItem> elements)
+            if (columnItems.ContainsKey(e.Item) && bindingElement.DataSource is IList<ElementValue> elements)
             {
-                ColumnItem current = columnItems[e.Item];
-                ColumnKey key = new ColumnKey(current);
-                ElementItem? element = elements.FirstOrDefault(w => key.Equals(w));
+                ColumnValue current = columnItems[e.Item];
+                ColumnIndex key = new ColumnIndex(current);
+                ElementValue? element = elements.FirstOrDefault(w => key.Equals(w));
 
                 if (e.Item.Checked && element is null)
                 {
@@ -200,7 +200,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (bindingSchema.Current is SchemaItem schema)
             {
-                ElementItem newElement = new ElementItem(schema);
+                ElementValue newElement = new ElementValue(schema);
 
                 if (addColumn is not null)
                 {
