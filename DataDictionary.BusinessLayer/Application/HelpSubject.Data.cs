@@ -10,15 +10,15 @@ namespace DataDictionary.BusinessLayer.Application
     /// </summary>
     /// <remarks>Used to hide the DataLayer methods from the Application Layer.</remarks>
     public interface IHelpSubjectData:
-        IBindingData<HelpItem>,
-        ILoadData, ILoadData<IHelpKey>,
-        ISaveData, ISaveData<IHelpKey>
+        IBindingData<HelpSubjectValue>,
+        ILoadData, ILoadData<IHelpSubjectIndex>,
+        ISaveData, ISaveData<IHelpSubjectIndex>
     { }
 
     /// <summary>
     /// Wrapper Class for Application Help.
     /// </summary>
-    class HelpSubjectData : HelpCollection, IHelpSubjectData
+    class HelpSubjectData : HelpCollection<HelpSubjectValue>, IHelpSubjectData
     {
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
@@ -27,8 +27,8 @@ namespace DataDictionary.BusinessLayer.Application
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
-        public virtual IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IHelpKey helpKey)
-        { return factory.CreateLoad(this, helpKey).ToList(); }
+        public virtual IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IHelpSubjectIndex helpKey)
+        { return factory.CreateLoad(this, (IHelpKey)helpKey).ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
@@ -37,8 +37,8 @@ namespace DataDictionary.BusinessLayer.Application
 
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
-        public virtual IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IHelpKey helpKey)
-        { return factory.CreateSave(this, helpKey).ToList(); }
+        public virtual IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IHelpSubjectIndex helpKey)
+        { return factory.CreateSave(this, (IHelpKey)helpKey).ToList(); }
 
 
     }

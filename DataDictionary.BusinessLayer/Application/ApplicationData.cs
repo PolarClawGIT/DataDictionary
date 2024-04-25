@@ -45,8 +45,6 @@ namespace DataDictionary.BusinessLayer.Application
             return work;
         }
 
-
-
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
         {
