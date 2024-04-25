@@ -8,25 +8,25 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface IRoutineParameterKey : IDbRoutineParameterKey
+    public interface IRoutineParameterIndex : IDbRoutineParameterKey
     { }
 
     /// <inheritdoc/>
-    public class RoutineParameterKey : DbRoutineParameterKey, IRoutineParameterKey
+    public class RoutineParameterIndex : DbRoutineParameterKey, IRoutineParameterIndex
     {
         /// <inheritdoc cref="DbRoutineParameterKey(IDbRoutineParameterKey)"/>
-        public RoutineParameterKey(IDbRoutineParameterKey source) : base(source)
+        public RoutineParameterIndex(IDbRoutineParameterKey source) : base(source)
         { }
     }
 
     /// <inheritdoc/>
-    public interface IRoutineParameterKeyName : IDbRoutineParameterKeyName
+    public interface IRoutineParameterIndexName : IDbRoutineParameterKeyName, IRoutineIndexName
     { }
 
     /// <inheritdoc/>
-    public class RoutineParameterKeyName : DbRoutineParameterKeyName, IRoutineParameterKeyName
+    public class RoutineParameterKeyName : DbRoutineParameterKeyName, IRoutineParameterIndexName
     {
         /// <inheritdoc cref="DbRoutineParameterKeyName(IDbRoutineParameterKeyName)"/>
-        public RoutineParameterKeyName(IRoutineParameterKeyName source) : base(source) { }
+        public RoutineParameterKeyName(IRoutineParameterIndexName source) : base(source) { }
     }
 }

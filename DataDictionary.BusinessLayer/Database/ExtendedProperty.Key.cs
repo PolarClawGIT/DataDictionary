@@ -32,11 +32,11 @@ namespace DataDictionary.BusinessLayer.Database
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbRoutineKeyName)"/>
-        public ExtendedPropertyKeyName(IRoutineKeyName source) : base(source)
+        public ExtendedPropertyKeyName(IRoutineIndexName source) : base(source)
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbRoutineParameterKeyName)"/>
-        public ExtendedPropertyKeyName(IRoutineParameterKeyName source) : base(source)
+        public ExtendedPropertyKeyName(IRoutineParameterIndexName source) : base(source)
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbConstraintKeyName)"/>

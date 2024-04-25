@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Domains (types) within the Model.
         /// </summary>
-        IDomainData<DomainValue> DbDomains { get; }
+        IDomainData DbDomains { get; }
 
         /// <summary>
         /// List of Database Extended Properties within the Model.
@@ -52,17 +52,17 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Routines (procedures, functions, ...) within the Model.
         /// </summary>
-        IRoutineData<RoutineValue> DbRoutines { get; }
+        IRoutineData DbRoutines { get; }
 
         /// <summary>
         /// List of Database Parameters for the Routines within the Model.
         /// </summary>
-        IRoutineParameterData<RoutineParameterValue> DbRoutineParameters { get; }
+        IRoutineParameterData DbRoutineParameters { get; }
 
         /// <summary>
         /// List of Database Dependencies for the Routines within the Model.
         /// </summary>
-        IRoutineDependencyData<RoutineDependencyValue> DbRoutineDependencies { get; }
+        IRoutineDependencyData DbRoutineDependencies { get; }
 
         /// <summary>
         /// List of Database Tables and Views within the Model.
@@ -107,8 +107,8 @@ namespace DataDictionary.BusinessLayer.Database
         private readonly SchemaData schemta;
 
         /// <inheritdoc/>
-        public IDomainData<DomainValue> DbDomains { get { return domains; } }
-        private readonly DomainData<DomainValue> domains;
+        public IDomainData DbDomains { get { return domains; } }
+        private readonly DomainData domains;
 
         /// <inheritdoc/>
         public IConstraintData DbConstraints { get { return constraints; } }
@@ -123,16 +123,16 @@ namespace DataDictionary.BusinessLayer.Database
         private readonly ExtendedPropertyData<ExtendedPropertyValue> extendedProperties;
 
         /// <inheritdoc/>
-        public IRoutineData<RoutineValue> DbRoutines { get { return routines; } }
-        private readonly RoutineData<RoutineValue> routines;
+        public IRoutineData DbRoutines { get { return routines; } }
+        private readonly RoutineData routines;
 
         /// <inheritdoc/>
-        public IRoutineParameterData<RoutineParameterValue> DbRoutineParameters { get { return routineParameters; } }
-        private readonly RoutineParameterData<RoutineParameterValue> routineParameters;
+        public IRoutineParameterData DbRoutineParameters { get { return routineParameters; } }
+        private readonly RoutineParameterData routineParameters;
 
         /// <inheritdoc/>
-        public IRoutineDependencyData<RoutineDependencyValue> DbRoutineDependencies { get { return routineDependencies; } }
-        private readonly RoutineDependencyData<RoutineDependencyValue> routineDependencies;
+        public IRoutineDependencyData DbRoutineDependencies { get { return routineDependencies; } }
+        private readonly RoutineDependencyData routineDependencies;
 
         /// <inheritdoc/>
         public ITableData<TableValue> DbTables { get { return tables; } }
@@ -146,14 +146,14 @@ namespace DataDictionary.BusinessLayer.Database
         {
             catalogs = new CatalogData() { Database = this };
             schemta = new SchemaData() { Database = this };
-            domains = new DomainData<DomainValue>() { Database = this };
+            domains = new DomainData() { Database = this };
 
             tables = new TableData<TableValue>() { Database = this };
             tableColumns = new TableColumnData<TableColumnValue>() { Database = this };
 
-            routines = new RoutineData<RoutineValue>() { Database = this };
-            routineParameters = new RoutineParameterData<RoutineParameterValue>() { Database = this };
-            routineDependencies = new RoutineDependencyData<RoutineDependencyValue>() { Database = this };
+            routines = new RoutineData() { Database = this };
+            routineParameters = new RoutineParameterData() { Database = this };
+            routineDependencies = new RoutineDependencyData() { Database = this };
 
             constraints = new ConstraintData() { Database = this };
             constraintColumns = new ConstraintColumnData() { Database = this };

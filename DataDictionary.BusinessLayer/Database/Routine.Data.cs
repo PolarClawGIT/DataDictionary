@@ -11,15 +11,13 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Interface representing Catalog Routine data
     /// </summary>
-    public interface IRoutineData<TValue> : IBindingData<TValue>
-        where TValue: RoutineValue
+    public interface IRoutineData: IBindingData<RoutineValue>
     { }
 
-    class RoutineData<TValue> : DbRoutineCollection<TValue>, IRoutineData<TValue>,
+    class RoutineData : DbRoutineCollection<RoutineValue>, IRoutineData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeData
-        where TValue: RoutineValue, new()
+        IDatabaseModelItem, IGetNamedScopes
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -45,28 +43,18 @@ namespace DataDictionary.BusinessLayer.Database
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        /// <remarks>Routine</remarks>
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem()
+            List<NamedScopePair> result = new List<NamedScopePair>();
+            foreach (RoutineValue item in this)
             {
-                WorkName = "Build NamedScope Routine",
-                DoWork = () =>
-                {
-                    foreach (DbRoutineItem item in this.Where(w => w.IsSystem == false))
-                    {
-                        //target.Remove(new NamedScopeKey(item)); Done by Catalog
+                DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
+                if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is SchemaValue parent)
+                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+            }
 
-                        DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
-                        if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is IDbSchemaItem parent)
-                        { target.Add(new NamedScopeItem(parent, item)); }
-                    }
-                }
-            });
-
-            return work;
+            return result;
         }
     }
 }

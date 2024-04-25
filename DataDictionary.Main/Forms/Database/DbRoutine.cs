@@ -18,7 +18,7 @@ namespace DataDictionary.Main.Forms.Database
 
         public DbRoutine(IRoutineValue routineItem): this()
         {
-            RoutineKeyName key = new RoutineKeyName(routineItem);
+            RoutineIndexName key = new RoutineIndexName(routineItem);
             ExtendedPropertyKeyName propertyKey = new ExtendedPropertyKeyName(key);
 
             bindingRoutine.DataSource = new BindingView<RoutineValue>(BusinessData.DatabaseModel.DbRoutines, w => key.Equals(w));

@@ -10,16 +10,13 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Interface representing Catalog RoutineParameter data
     /// </summary>
-    public interface IRoutineParameterData<TValue> : IBindingData<TValue>
-        where TValue : RoutineParameterValue
+    public interface IRoutineParameterData: IBindingData<RoutineParameterValue>
     { }
 
-    class RoutineParameterData<TValue> : DbRoutineParameterCollection<TValue>, IRoutineParameterData<TValue>,
+    class RoutineParameterData: DbRoutineParameterCollection<RoutineParameterValue>, IRoutineParameterData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeData
-        where TValue : RoutineParameterValue, new()
-
+        IDatabaseModelItem, IGetNamedScopes
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -46,27 +43,17 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>RoutineParameter</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem()
+            List<NamedScopePair> result = new List<NamedScopePair>();
+            foreach (RoutineParameterValue item in this)
             {
-                WorkName = "Build NamedScope RoutineParameter",
-                DoWork = () =>
-                {
-                    foreach (DbRoutineParameterItem item in this)
-                    {
-                        //target.Remove(new NamedScopeKey(item)); Done by Catalog
+                DbRoutineKeyName nameKey = new DbRoutineKeyName(item);
+                if (Database.DbRoutines.FirstOrDefault(w => nameKey.Equals(w)) is RoutineValue parent)
+                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+            }
 
-                        DbRoutineKeyName nameKey = new DbRoutineKeyName(item);
-                        if (Database.DbRoutines.FirstOrDefault(w => nameKey.Equals(w)) is IDbRoutineItem parent)
-                        { target.Add(new NamedScopeItem(parent, item)); }
-                    }
-                }
-            });
-
-            return work;
+            return result;
         }
     }
 }
