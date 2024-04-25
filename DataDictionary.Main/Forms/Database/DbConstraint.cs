@@ -18,7 +18,7 @@ namespace DataDictionary.Main.Forms.Database
         public DbConstraint(IConstraintValue constraintItem) : this()
         {
             ConstraintIndexName key = new ConstraintIndexName(constraintItem);
-            ExtendedPropertyKeyName propertyKey = new ExtendedPropertyKeyName(key);
+            ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
 
             bindingConstraint.DataSource = new BindingView<ConstraintValue>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
             bindingConstraint.Position = 0;
