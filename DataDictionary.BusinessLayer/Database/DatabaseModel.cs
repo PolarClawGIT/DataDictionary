@@ -17,8 +17,7 @@ namespace DataDictionary.BusinessLayer.Database
     /// </summary>
     public interface IDatabaseModel :
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>, IRemoveData<IDbCatalogKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeData
+        ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
         /// List of Database Catalogs within the Model.
@@ -28,7 +27,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Schemta within the Model.
         /// </summary>
-        ISchemaData<SchemaValue> DbSchemta { get; }
+        ISchemaData DbSchemta { get; }
 
         /// <summary>
         /// List of Database Domains (types) within the Model.
@@ -97,15 +96,15 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Implementation for Catalog data
     /// </summary>
-    class DatabaseModel : IDatabaseModel, IDataTableFile
+    class DatabaseModel : IDatabaseModel, IDataTableFile, IGetNamedScopes
     {
         /// <inheritdoc/>
         public ICatalogData DbCatalogs { get { return catalogs; } }
         private readonly CatalogData catalogs;
 
         /// <inheritdoc/>
-        public ISchemaData<SchemaValue> DbSchemta { get { return schemta; } }
-        private readonly SchemaData<SchemaValue> schemta;
+        public ISchemaData DbSchemta { get { return schemta; } }
+        private readonly SchemaData schemta;
 
         /// <inheritdoc/>
         public IDomainData<DomainValue> DbDomains { get { return domains; } }
@@ -146,7 +145,7 @@ namespace DataDictionary.BusinessLayer.Database
         public DatabaseModel() : base()
         {
             catalogs = new CatalogData() { Database = this };
-            schemta = new SchemaData<SchemaValue>() { Database = this };
+            schemta = new SchemaData() { Database = this };
             domains = new DomainData<DomainValue>() { Database = this };
 
             tables = new TableData<TableValue>() { Database = this };
@@ -458,23 +457,23 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
+            List<NamedScopePair> result = new List<NamedScopePair>();
+            result.AddRange(catalogs.GetNamedScopes());
+            result.AddRange(schemta.GetNamedScopes());
+            result.AddRange(domains.GetNamedScopes());
 
-            work.AddRange(catalogs.Build(target));
-            work.AddRange(schemta.Build(target));
-            work.AddRange(domains.Build(target));
+            result.AddRange(tables.GetNamedScopes());
+            result.AddRange(tableColumns.GetNamedScopes());
 
-            work.AddRange(tables.Build(target));
-            work.AddRange(tableColumns.Build(target));
+            result.AddRange(routines.GetNamedScopes());
+            result.AddRange(routineParameters.GetNamedScopes());
 
-            work.AddRange(routines.Build(target));
-            work.AddRange(routineParameters.Build(target));
+            result.AddRange(constraints.GetNamedScopes());
 
-            work.AddRange(constraints.Build(target));
-
-            return work;
+            return result;
+            
         }
     }
 }

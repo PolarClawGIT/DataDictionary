@@ -10,15 +10,13 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Interface representing Catalog Schema data
     /// </summary>
-    public interface ISchemaData<TValue> : IBindingData<TValue>
-        where TValue : SchemaValue
+    public interface ISchemaData : IBindingData<SchemaValue>
     { }
 
-    class SchemaData<TValue> : DbSchemaCollection<TValue>, ISchemaData<TValue>,
+    class SchemaData : DbSchemaCollection<SchemaValue>, ISchemaData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, INamedScopeData
-        where TValue : SchemaValue, new()
+        IDatabaseModelItem, IGetNamedScopes
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -45,27 +43,17 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Schema</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem()
+            List<NamedScopePair> result = new List<NamedScopePair>();
+            foreach (SchemaValue item in this.Where(w => w.IsSystem == false))
             {
-                WorkName = "Build NamedScope Schema",
-                DoWork = () =>
-                {
-                    foreach (DbSchemaItem item in this.Where(w => w.IsSystem == false))
-                    {
-                        //target.Remove(new NamedScopeKey(item)); Done by Catalog
+                DbCatalogKeyName nameKey = new DbCatalogKeyName(item);
+                if (Database.DbCatalogs.FirstOrDefault(w => nameKey.Equals(w)) is CatalogValue parent)
+                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+            }
 
-                        DbCatalogKeyName nameKey = new DbCatalogKeyName(item);
-                        if (Database.DbCatalogs.FirstOrDefault(w => nameKey.Equals(w)) is IDbCatalogItem parent)
-                        { target.Add(new NamedScopeItem(parent, item)); }
-                    }
-                }
-            });
-
-            return work;
+            return result;
         }
     }
 }

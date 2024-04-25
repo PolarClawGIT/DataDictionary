@@ -16,10 +16,10 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Wrapper of Catalog Data (The Database)
     /// </summary>
-    public interface ICatalogData: IBindingData<CatalogValue>
+    public interface ICatalogData : IBindingData<CatalogValue>
     { }
 
-    class CatalogData: DbCatalogCollection<CatalogValue>,
+    class CatalogData : DbCatalogCollection<CatalogValue>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         IDatabaseModelItem, ICatalogData, IGetNamedScopes
@@ -50,6 +50,6 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
-        {   return this.Where(w => w.IsSystem == false).Select(s => new NamedScopePair(s));}
+        { return this.Where(w => w.IsSystem == false).Select(s => new NamedScopePair(s)); }
     }
 }
