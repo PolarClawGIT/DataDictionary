@@ -2,7 +2,6 @@
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
@@ -10,18 +9,16 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <summary>
-    /// Interface representing Catalog Constraint data
+    /// Wrapper for Catalog Constraint data
     /// </summary>
-    public interface IConstraintData<TValue> :
-        IBindingData<TValue>
-        where TValue : IConstraintValue
+    public interface IConstraintData:
+        IBindingData<ConstraintValue>
     { }
 
-    class ConstraintData<TValue> : DbConstraintCollection<TValue>, IConstraintData<TValue>,
+    class ConstraintData: DbConstraintCollection<ConstraintValue>, IConstraintData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, INamedScopeData
-        where TValue : ConstraintValue, new()
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }

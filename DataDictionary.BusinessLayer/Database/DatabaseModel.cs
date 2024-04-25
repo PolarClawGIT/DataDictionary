@@ -23,7 +23,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Catalogs within the Model.
         /// </summary>
-        ICatalogData<CatalogValue> DbCatalogs { get; }
+        ICatalogData DbCatalogs { get; }
 
         /// <summary>
         /// List of Database Schemta within the Model.
@@ -43,7 +43,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Constraints (keys...) within the Model.
         /// </summary>
-        IConstraintData<ConstraintValue> DbConstraints { get; }
+        IConstraintData DbConstraints { get; }
 
         /// <summary>
         /// List of Database Constraint Columns within the Model.
@@ -100,8 +100,8 @@ namespace DataDictionary.BusinessLayer.Database
     class DatabaseModel : IDatabaseModel, IDataTableFile
     {
         /// <inheritdoc/>
-        public ICatalogData<CatalogValue> DbCatalogs { get { return catalogs; } }
-        private readonly CatalogData<CatalogValue> catalogs;
+        public ICatalogData DbCatalogs { get { return catalogs; } }
+        private readonly CatalogData catalogs;
 
         /// <inheritdoc/>
         public ISchemaData<SchemaValue> DbSchemta { get { return schemta; } }
@@ -112,8 +112,8 @@ namespace DataDictionary.BusinessLayer.Database
         private readonly DomainData<DomainValue> domains;
 
         /// <inheritdoc/>
-        public IConstraintData<ConstraintValue> DbConstraints { get { return constraints; } }
-        private readonly ConstraintData<ConstraintValue> constraints;
+        public IConstraintData DbConstraints { get { return constraints; } }
+        private readonly ConstraintData constraints;
 
         /// <inheritdoc/>
         public IConstraintColumnData<ConstraintColumnValue> DbConstraintColumns { get { return constraintColumns; } }
@@ -145,7 +145,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         public DatabaseModel() : base()
         {
-            catalogs = new CatalogData<CatalogValue>() { Database = this };
+            catalogs = new CatalogData() { Database = this };
             schemta = new SchemaData<SchemaValue>() { Database = this };
             domains = new DomainData<DomainValue>() { Database = this };
 
@@ -156,7 +156,7 @@ namespace DataDictionary.BusinessLayer.Database
             routineParameters = new RoutineParameterData<RoutineParameterValue>() { Database = this };
             routineDependencies = new RoutineDependencyData<RoutineDependencyValue>() { Database = this };
 
-            constraints = new ConstraintData<ConstraintValue>() { Database = this };
+            constraints = new ConstraintData() { Database = this };
             constraintColumns = new ConstraintColumnData<ConstraintColumnValue>() { Database = this };
 
             extendedProperties = new ExtendedPropertyData<ExtendedPropertyValue>() { Database = this };

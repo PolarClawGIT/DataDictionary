@@ -40,7 +40,7 @@ namespace DataDictionary.BusinessLayer.Database
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbConstraintKeyName)"/>
-        public ExtendedPropertyKeyName(IConstraintKeyName source) : base(source)
+        public ExtendedPropertyKeyName(IConstraintIndexName source) : base(source)
         { }
 
         /// <inheritdoc cref="DbExtendedPropertyKeyName(IDbSchemaKeyName)"/>

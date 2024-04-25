@@ -1,18 +1,12 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
-    public interface ICatalogValue : IDbCatalogItem, ICatalogKey, ICatalogKeyName,
+    public interface ICatalogValue : IDbCatalogItem, ICatalogIndex, ICatalogIndexName,
         IBindingTableRow, IBindingRowState, IBindingPropertyChanged
     { }
 

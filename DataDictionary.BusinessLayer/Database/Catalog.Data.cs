@@ -14,18 +14,15 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <summary>
-    /// Interface for the Wrapper of Catalog Data (The Database)
+    /// Wrapper of Catalog Data (The Database)
     /// </summary>
-    public interface ICatalogData<TValue> :
-        IBindingData<TValue>, INamedScopeData
-        where TValue : ICatalogValue
+    public interface ICatalogData: IBindingData<CatalogValue>, INamedScopeData
     { }
 
-    class CatalogData<TValue> : DbCatalogCollection<TValue>,
+    class CatalogData: DbCatalogCollection<CatalogValue>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
-        IDatabaseModelItem, ICatalogData<TValue>
-        where TValue : CatalogValue, new()
+        IDatabaseModelItem, ICatalogData
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }

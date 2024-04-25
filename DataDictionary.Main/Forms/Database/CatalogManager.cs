@@ -135,7 +135,7 @@ namespace DataDictionary.Main.Forms.Database
             if (catalogBinding.Current is CatalogSynchronizeValue value && value.Source is ICatalogValue item)
             {
                 IsLocked(true);
-                CatalogKey catalogKey = new CatalogKey(item);
+                CatalogIndex catalogKey = new CatalogIndex(item);
                 work.AddRange(BusinessData.DatabaseModel.Remove(catalogKey));
 
                 DoWork(work, onCompleting);
@@ -159,7 +159,7 @@ namespace DataDictionary.Main.Forms.Database
                 IsLocked(true);
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                CatalogKey key = new CatalogKey(item);
+                CatalogIndex key = new CatalogIndex(item);
 
                 work.Add(factory.OpenConnection());
                 work.AddRange(catalogs.DeleteFromDb(factory, key));
@@ -184,7 +184,7 @@ namespace DataDictionary.Main.Forms.Database
                 IsLocked(true);
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                CatalogKey key = new CatalogKey(item);
+                CatalogIndex key = new CatalogIndex(item);
                 work.Add(factory.OpenConnection());
                 work.AddRange(catalogs.OpenFromDb(factory, key));
 
@@ -209,7 +209,7 @@ namespace DataDictionary.Main.Forms.Database
                 IsLocked(true);
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                CatalogKey key = new CatalogKey(item);
+                CatalogIndex key = new CatalogIndex(item);
 
                 work.Add(factory.OpenConnection());
 
