@@ -19,11 +19,11 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public virtual NamedScopeKey GetSystemId()
-        { return new NamedScopeKey() { SystemId = CatalogId ?? Guid.Empty }; }
+        { return new NamedScopeKey(CatalogId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(DatabaseName ?? String.Empty); }
+        { return new NamedScopePath(DatabaseName); }
 
         /// <inheritdoc/>
         public virtual String GetTitle()

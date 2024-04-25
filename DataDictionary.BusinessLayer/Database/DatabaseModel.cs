@@ -47,7 +47,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// <summary>
         /// List of Database Constraint Columns within the Model.
         /// </summary>
-        IConstraintColumnData<ConstraintColumnValue> DbConstraintColumns { get; }
+        IConstraintColumnData DbConstraintColumns { get; }
 
         /// <summary>
         /// List of Database Routines (procedures, functions, ...) within the Model.
@@ -115,8 +115,8 @@ namespace DataDictionary.BusinessLayer.Database
         private readonly ConstraintData constraints;
 
         /// <inheritdoc/>
-        public IConstraintColumnData<ConstraintColumnValue> DbConstraintColumns { get { return constraintColumns; } }
-        private readonly ConstraintColumnData<ConstraintColumnValue> constraintColumns;
+        public IConstraintColumnData DbConstraintColumns { get { return constraintColumns; } }
+        private readonly ConstraintColumnData constraintColumns;
 
         /// <inheritdoc/>
         public IExtendedPropertyData<ExtendedPropertyValue> DbExtendedProperties { get { return extendedProperties; } }
@@ -156,7 +156,7 @@ namespace DataDictionary.BusinessLayer.Database
             routineDependencies = new RoutineDependencyData<RoutineDependencyValue>() { Database = this };
 
             constraints = new ConstraintData() { Database = this };
-            constraintColumns = new ConstraintColumnData<ConstraintColumnValue>() { Database = this };
+            constraintColumns = new ConstraintColumnData() { Database = this };
 
             extendedProperties = new ExtendedPropertyData<ExtendedPropertyValue>() { Database = this };
         }
