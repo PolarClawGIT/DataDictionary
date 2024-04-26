@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Forms.Library
 
         public LibrarySource(ILibrarySourceValue librarySource) : this ()
         {
-            LibrarySourceKey key = new LibrarySourceKey(librarySource);
+            LibrarySourceIndex key = new LibrarySourceIndex(librarySource);
 
             bindingSource.DataSource = new BindingView<LibrarySourceValue>(BusinessData.LibraryModel.LibrarySources, w => key.Equals(w));
             bindingSource.Position = 0;

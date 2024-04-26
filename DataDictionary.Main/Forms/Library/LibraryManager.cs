@@ -67,7 +67,7 @@ namespace DataDictionary.Main.Forms.Library
                 IsLocked(true);
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                LibrarySourceKey key = new LibrarySourceKey(item);
+                LibrarySourceIndex key = new LibrarySourceIndex(item);
 
                 work.Add(factory.OpenConnection());
                 work.AddRange(libraries.DeleteFromDb(factory, key));
@@ -92,7 +92,7 @@ namespace DataDictionary.Main.Forms.Library
                 IsLocked(true);
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                LibrarySourceKey key = new LibrarySourceKey(item);
+                LibrarySourceIndex key = new LibrarySourceIndex(item);
                 work.Add(factory.OpenConnection());
                 work.AddRange(libraries.OpenFromDb(factory, key));
 
@@ -117,7 +117,7 @@ namespace DataDictionary.Main.Forms.Library
                 IsLocked(true);
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                LibrarySourceKey key = new LibrarySourceKey(item);
+                LibrarySourceIndex key = new LibrarySourceIndex(item);
 
                 work.Add(factory.OpenConnection());
 
@@ -235,7 +235,7 @@ namespace DataDictionary.Main.Forms.Library
             if (libraryBinding.Current is LibrarySynchronizeValue value && value.Source is ILibrarySourceValue item)
             {
                 IsLocked(true);
-                LibrarySourceKey key = new LibrarySourceKey(item);
+                LibrarySourceIndex key = new LibrarySourceIndex(item);
                 work.AddRange(BusinessData.LibraryModel.Remove(key));
 
                 DoWork(work, onCompleting);

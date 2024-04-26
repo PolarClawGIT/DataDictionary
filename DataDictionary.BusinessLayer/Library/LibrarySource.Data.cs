@@ -22,7 +22,7 @@ namespace DataDictionary.BusinessLayer.Library
     class LibrarySourceData<TValue> : DbLayer.Source.LibrarySourceCollection<TValue>, ILibrarySourceData<TValue>,
         ILoadData<DbLayer.Source.ILibrarySourceKey>, ISaveData<DbLayer.Source.ILibrarySourceKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeData
+        IGetNamedScopes
         where TValue : LibrarySourceValue, new()
     {
         /// <inheritdoc/>
@@ -48,27 +48,9 @@ namespace DataDictionary.BusinessLayer.Library
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
-
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem()
-            {
-                WorkName = "Build NamedScope Library Source",
-                DoWork = () =>
-                {
-                    foreach (var item in this)
-                    {
-                        target.Remove(new NamedScopeKey(item));
-                        target.Add(new NamedScopeItem(item));
-                    }
-                }
-            });
-
-            return work;
-        }
+        public IEnumerable<NamedScopePair> GetNamedScopes()
+        { return this.Select(s => new NamedScopePair(s)); }
     }
 }

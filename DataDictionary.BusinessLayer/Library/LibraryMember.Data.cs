@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.Library
     class LibraryMemberData<TValue> : DbLayer.Member.LibraryMemberCollection<TValue>, ILibraryMemberData<TValue>,
         ILoadData<DbLayer.Source.ILibrarySourceKey>, ISaveData<DbLayer.Source.ILibrarySourceKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeData
+        IGetNamedScopes
         where TValue : LibraryMemberValue, new()
     {
         /// <inheritdoc/>
@@ -47,17 +47,39 @@ namespace DataDictionary.BusinessLayer.Library
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
-
-
         /// <inheritdoc/>
         /// <remarks>Library Member</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        /// <inheritdoc/>
+        /// <remarks>Library Source</remarks>
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
+            List<NamedScopePair> result = new List<NamedScopePair>();
 
-           // TODO needs rewrite
+            foreach (TValue root in this.Where(w => w.MemberParentId is null))
+            {
+                LibrarySourceIndex libraryKey = new LibrarySourceIndex(root);
+                if(Library.LibrarySources.Where(w => libraryKey.Equals(w)) is LibrarySourceValue library)
+                {
+                    result.Add(new NamedScopePair(library.GetSystemId(), root));
+                    result.AddRange(GetChildren(root));
+                }
+            }
 
-            return work;
+            return result;
+
+            IEnumerable<NamedScopePair> GetChildren(LibraryMemberValue parent)
+            {
+                List<NamedScopePair> result = new List<NamedScopePair>();
+                LibraryMemberIndex parentKey = new LibraryMemberIndex(parent);
+
+                foreach (TValue item in this.Where(w => parentKey.Equals(new LibraryMemberIndexParent(w))))
+                {
+                    result.Add(new NamedScopePair(parent.GetSystemId(), item));
+                    result.AddRange(GetChildren(item));
+                }
+
+                return result;
+            }
         }
 
     }

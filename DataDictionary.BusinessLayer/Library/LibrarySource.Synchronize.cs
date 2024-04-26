@@ -43,7 +43,7 @@ namespace DataDictionary.BusinessLayer.Library
     /// <summary>
     /// Library Synchronize to compare what Library's are in the Database vs the Model
     /// </summary>
-    public class LibrarySynchronize : SynchronizeData<LibrarySynchronizeValue, LibrarySourceValue, LibrarySourceKey>
+    public class LibrarySynchronize : SynchronizeData<LibrarySynchronizeValue, LibrarySourceValue, LibrarySourceIndex>
     {
         /// <summary>
         /// Concrete class for the Abstract SourceCollection
@@ -74,8 +74,8 @@ namespace DataDictionary.BusinessLayer.Library
         }
 
         /// <inheritdoc/>
-        protected override LibrarySourceKey GetKey(LibrarySourceValue data)
-        { return new LibrarySourceKey(data); }
+        protected override LibrarySourceIndex GetKey(LibrarySourceValue data)
+        { return new LibrarySourceIndex(data); }
 
         /// <inheritdoc/>
         protected override LibrarySynchronizeValue GetValue(LibrarySourceValue data)
@@ -112,7 +112,7 @@ namespace DataDictionary.BusinessLayer.Library
         /// <param name="factory"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> OpenFromDb(IDatabaseWork factory, ILibrarySourceKey key)
+        public IReadOnlyList<WorkItem> OpenFromDb(IDatabaseWork factory, ILibrarySourceIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(libraryModel.Remove(key));
@@ -126,7 +126,7 @@ namespace DataDictionary.BusinessLayer.Library
         /// <param name="factory"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> SaveToDb(IDatabaseWork factory, ILibrarySourceKey key)
+        public IReadOnlyList<WorkItem> SaveToDb(IDatabaseWork factory, ILibrarySourceIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(libraryModel.Save(factory, key));
@@ -141,7 +141,7 @@ namespace DataDictionary.BusinessLayer.Library
         /// <param name="factory"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> DeleteFromDb(IDatabaseWork factory, ILibrarySourceKey key)
+        public IReadOnlyList<WorkItem> DeleteFromDb(IDatabaseWork factory, ILibrarySourceIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
             DataLayer.LibraryData.Source.ILibrarySourceKey dbKey = new DataLayer.LibraryData.Source.LibrarySourceKey(key);

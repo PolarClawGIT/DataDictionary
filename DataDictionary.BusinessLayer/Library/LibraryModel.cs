@@ -12,9 +12,8 @@ namespace DataDictionary.BusinessLayer.Library
     /// Interface representing .Net Library Data
     /// </summary>
     public interface ILibraryModel :
-        ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>, IRemoveData<ILibrarySourceKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeData
+        ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>, IRemoveData<ILibrarySourceIndex>,
+        ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
         /// List of .Net Library Members within the Model
@@ -34,7 +33,7 @@ namespace DataDictionary.BusinessLayer.Library
         IReadOnlyList<WorkItem> Import(FileInfo source);
     }
 
-    class LibraryModel : ILibraryModel, IDataTableFile
+    class LibraryModel : ILibraryModel, IDataTableFile, IGetNamedScopes
     {
         /// <inheritdoc/>
         public ILibraryMemberData<LibraryMemberValue> LibraryMembers { get { return members; } }
@@ -52,7 +51,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(sources.Load(factory, dataKey));
@@ -74,7 +73,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(sources.Save(factory, dataKey));
@@ -114,7 +113,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc />
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Remove(ILibrarySourceKey key)
+        public IReadOnlyList<WorkItem> Remove(ILibrarySourceIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
 
@@ -166,14 +165,12 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(sources.Build(target));
-            work.AddRange(members.Build(target));
-
-            return work;
+            List<NamedScopePair> result = new List<NamedScopePair>();
+            result.AddRange(sources.GetNamedScopes());
+            result.AddRange(members.GetNamedScopes());
+            return result;
         }
     }
 }
