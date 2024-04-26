@@ -26,8 +26,8 @@ namespace DataDictionary.BusinessLayer.Domain
     /// Interface component for the Model Entity
     /// </summary>
     public interface IEntityData :
-        IBindingData<DomainEntityItem>,
-        ILoadData<IDomainEntityKey>, ISaveData<IDomainEntityKey>,
+        IBindingData<EntityValue>,
+        ILoadData<IEntityIndex>, ISaveData<IEntityIndex>,
         ITableImport
     {
         /// <summary>
@@ -39,16 +39,11 @@ namespace DataDictionary.BusinessLayer.Domain
         /// List of Domain Properties for the Entities within the Model.
         /// </summary>
         IEntityPropertyData Properties { get; }
-
-        /// <summary>
-        /// List of Model Entity Subject Areas within the Model.
-        /// </summary>
-        IEntitySubjectAreaData SubjectAreas { get; }
     }
 
-    class EntityData : DomainEntityCollection, IEntityData,
+    class EntityData : DomainEntityCollection<EntityValue>, IEntityData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile, INamedScopeData
+        IDataTableFile, IGetNamedScopes
     {
         public required DomainModel DomainModel { get; init; }
 
@@ -60,15 +55,10 @@ namespace DataDictionary.BusinessLayer.Domain
         public IEntityPropertyData Properties { get { return propertyValues; } }
         private readonly EntityPropertyData propertyValues;
 
-        /// <inheritdoc/>
-        public IEntitySubjectAreaData SubjectAreas { get { return subjectAreaValues; } }
-        private readonly EntitySubjectAreaData subjectAreaValues;
-
         public EntityData() : base()
         {
             aliasValues = new EntityAliasData();
             propertyValues = new EntityPropertyData();
-            subjectAreaValues = new EntitySubjectAreaData();
         }
 
         /// <inheritdoc/>
@@ -79,7 +69,6 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateLoad(this, dataKey));
             work.Add(factory.CreateLoad(aliasValues, dataKey));
             work.Add(factory.CreateLoad(propertyValues, dataKey));
-            work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
             return work;
         }
 
@@ -91,9 +80,13 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateLoad(this, dataKey));
             work.Add(factory.CreateLoad(aliasValues, dataKey));
             work.Add(factory.CreateLoad(propertyValues, dataKey));
-            work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
             return work;
         }
+
+        /// <inheritdoc/>
+        /// <remarks>Entity</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IEntityIndex dataKey)
+        {   return Load(factory, (IDomainEntityKey)dataKey); }
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
@@ -103,7 +96,6 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateSave(this, dataKey));
             work.Add(factory.CreateSave(aliasValues, dataKey));
             work.Add(factory.CreateSave(propertyValues, dataKey));
-            work.Add(factory.CreateSave(subjectAreaValues, dataKey));
             return work;
         }
 
@@ -115,9 +107,13 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateSave(this, dataKey));
             work.Add(factory.CreateSave(aliasValues, dataKey));
             work.Add(factory.CreateSave(propertyValues, dataKey));
-            work.Add(factory.CreateSave(subjectAreaValues, dataKey));
             return work;
         }
+
+        /// <inheritdoc/>
+        /// <remarks>Entity</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IEntityIndex dataKey)
+        { return Save(factory, (IDomainEntityKey)dataKey); }
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Remove()
@@ -131,7 +127,6 @@ namespace DataDictionary.BusinessLayer.Domain
                 {
                     aliasValues.Clear();
                     propertyValues.Clear();
-                    subjectAreaValues.Clear();
                     this.Clear();
                 }
             });
@@ -146,7 +141,6 @@ namespace DataDictionary.BusinessLayer.Domain
             DomainEntityKey key = new DomainEntityKey(entityItem);
             aliasValues.Remove(key);
             propertyValues.Remove(key);
-            subjectAreaValues.Remove(key);
         }
 
         /// <inheritdoc/>
@@ -157,7 +151,6 @@ namespace DataDictionary.BusinessLayer.Domain
             result.Add(this.ToDataTable());
             result.Add(aliasValues.ToDataTable());
             result.Add(propertyValues.ToDataTable());
-            result.Add(subjectAreaValues.ToDataTable());
             return result;
         }
 
@@ -168,59 +161,63 @@ namespace DataDictionary.BusinessLayer.Domain
             this.Load(source);
             aliasValues.Load(source);
             propertyValues.Load(source);
-            subjectAreaValues.Load(source);
         }
 
         /// <inheritdoc/>
         /// <remarks>Entity by Catalog</remarks>
-        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, IDbCatalogKeyName key)
+        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ICatalogIndex key)
         {
-            DbCatalogKeyName nameKey = new DbCatalogKeyName(key);
-            foreach (DbTableItem item in source.DbTables.Where(w => nameKey.Equals(w)))
+            CatalogIndex catalogKey = new CatalogIndex(key);
+            if (source.DbCatalogs.Where(w => catalogKey.Equals(w)) is CatalogValue catalog)
             {
-                DbTableKeyName tableKey = new DbTableKeyName(item);
-                Import(source, propertyDefinition, tableKey);
+                CatalogIndexName catalogName = new CatalogIndexName(catalog);
+
+                foreach (TableValue item in source.DbTables.Where(w => catalogName.Equals(w)))
+                {
+                    TableIndex tableKey = new TableIndex(item);
+                    Import(source, propertyDefinition, tableKey);
+                }
             }
         }
 
         /// <inheritdoc/>
         /// <remarks>Entity by Table</remarks>
-        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, IDbTableKeyName key)
+        public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableIndex key)
         {
-            DbTableKeyName nameKey = new DbTableKeyName(key);
-            foreach (IDbTableItem item in source.DbTables.Where(w => nameKey.Equals(w)))
+            TableIndex tableKey = new TableIndex(key);
+            foreach (TableValue item in source.DbTables.Where(w => tableKey.Equals(w)))
             {
-                AliasKeyName alaisKey = new AliasKeyName(item);
-                DomainEntityKey entityKey;
-                DomainEntityUniqueKey uniqueKey = new DomainEntityUniqueKey(item);
                 AliasKeyName aliasKey = new AliasKeyName(item);
+                EntityIndexName entityName = new EntityIndexName(item);
+                EntityIndex entityKey;
+
 
                 // Create Entity or get existing
-                if (aliasValues.FirstOrDefault(w => aliasKey.Equals(w)) is DomainEntityAliasItem existingAlias)
-                { entityKey = new DomainEntityKey(existingAlias); }
-                else if (this.FirstOrDefault(w => uniqueKey.Equals(w)) is DomainEntityItem existing)
-                { entityKey = new DomainEntityKey(existing); }
+                if (aliasValues.FirstOrDefault(w => aliasKey.Equals(w)) is EntityAliasValue existingAlias)
+                { entityKey = new EntityIndex(existingAlias); }
+                else if (this.FirstOrDefault(w => entityName.Equals(w)) is EntityValue existing)
+                { entityKey = new EntityIndex(existing); }
                 else
                 {
-                    DomainEntityItem newItem = new DomainEntityItem()
+                    EntityValue newItem = new EntityValue()
                     { EntityTitle = item.TableName, };
                     this.Add(newItem);
-                    entityKey = new DomainEntityKey(newItem);
+                    entityKey = new EntityIndex(newItem);
                 }
 
                 // Create Alias, if they do not exist
-                if (aliasValues.Count(w => alaisKey.Equals(w) && entityKey.Equals(w)) == 0)
+                if (aliasValues.Count(w => aliasKey.Equals(w) && entityKey.Equals(w)) == 0)
                 {
-                    aliasValues.Add(new DomainEntityAliasItem(entityKey)
+                    aliasValues.Add(new EntityAliasValue(entityKey)
                     {
                         AliasName = item.ToAliasName(),
                         Scope = item.Scope,
                     });
                 }
 
-                // Create Properties, if they do not exist
-                DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(item);
-                foreach (DbExtendedPropertyItem property in source.DbExtendedProperties.Where(w => propertyKey.Equals(w)))
+                // Create Properties
+                ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(item);
+                foreach (ExtendedPropertyValue property in source.DbExtendedProperties.Where(w => propertyKey.Equals(w)))
                 {
                     PropertyKeyExtended appKey = new PropertyKeyExtended(property);
 
@@ -229,7 +226,7 @@ namespace DataDictionary.BusinessLayer.Domain
                         && propertyValues.Count(w =>
                             entityKey.Equals(w)
                             && new Application.PropertyIndex(appProperty).Equals(w)) == 0)
-                    { propertyValues.Add(new DomainEntityPropertyItem(entityKey, appProperty, property)); }
+                    { propertyValues.Add(new EntityPropertyValue(entityKey, appProperty, property)); }
                 }
             }
         }
@@ -237,49 +234,9 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
+        public IEnumerable<NamedScopePair> GetNamedScopes()
+        { return this.Select(s => new NamedScopePair(s)); }
 
-            work.Add(new WorkItem()
-            {
-                WorkName = "Build NamedScope Entities",
-                DoWork = () =>
-                {
-                    if (DomainModel.Models.FirstOrDefault() is IModelItem model)
-                    {
-                        ModelKey key = new ModelKey(model);
-                        List<IDomainEntityItem> unhandled = this.Select(s => s as IDomainEntityItem).Cast<IDomainEntityItem>().ToList();
 
-                        foreach (IDomainEntityItem item in unhandled)
-                        { target.Remove(new NamedScopeKey(item)); }
-
-                        foreach (IGrouping<ModelSubjectAreaKey, ModelEntityItem> subject in SubjectAreas.GroupBy(g => new ModelSubjectAreaKey(g)))
-                        {
-                            NamedScopeKey subjectKey = new NamedScopeKey(subject.Key);
-                            ModelSubjectAreaKey subjectModelKey = new ModelSubjectAreaKey(subject.Key);
-
-                            if (target.ContainsKey(new NamedScopeKey(subjectKey)))
-                            {
-                                foreach (IDomainEntityItem entity in subject.Select(s => s as IDomainEntityItem).Cast<IDomainEntityItem>())
-                                {
-                                    //TODO: Possible Error if the entity is in multiple subject areas
-                                    target.Add(new NamedScopeItem(subjectModelKey, entity));
-                                    unhandled.Remove(entity);
-                                }
-                            }
-                        }
-
-                        foreach (IDomainEntityItem item in unhandled)
-                        {
-                            target.Remove(new NamedScopeKey(item));
-                            target.Add(new NamedScopeItem(key, item));
-                        }
-                    }
-                }
-            });
-
-            return work;
-        }
     }
 }

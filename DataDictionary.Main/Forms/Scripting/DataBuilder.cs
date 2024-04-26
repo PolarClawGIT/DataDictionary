@@ -45,16 +45,16 @@ namespace DataDictionary.Main.Forms.Scripting
         {
 
             // Load up Tree
-            foreach (AttributeItem attributeItem in BusinessData.DomainModel.Attributes)
+            foreach (AttributeValue attributeItem in BusinessData.DomainModel.Attributes)
             {
-                AttributeKey attributeKey = new AttributeKey(attributeItem);
+                AttributeIndex attributeKey = new AttributeIndex(attributeItem);
                 TreeNode attributeNode = new TreeNode(attributeItem.AttributeTitle);
                 attributeNode.ImageKey = attributeItem.Scope.ToName();
                 attributeNode.SelectedImageKey = attributeItem.Scope.ToName();
                 itemSelection.Nodes.Add(attributeNode);
                 //itemSelectorValues.Add(attributeNode, () => attributeItem.GetXElement());
 
-                foreach (AttributePropertyItem propertyItem in BusinessData.DomainModel.Attributes.Properties.Where(w => attributeKey.Equals(w)))
+                foreach (AttributePropertyValue propertyItem in BusinessData.DomainModel.Attributes.Properties.Where(w => attributeKey.Equals(w)))
                 {
                     PropertyIndex propertyKey = new PropertyIndex(propertyItem);
 

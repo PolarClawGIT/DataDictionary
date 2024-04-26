@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <param name="source"></param>
         /// <param name="propertyDefinition"></param>
         /// <param name="key"></param>
-        void Import(IDatabaseModel source, IPropertyData propertyDefinition, IDbCatalogKeyName key);
+        void Import(IDatabaseModel source, IPropertyData propertyDefinition, ICatalogIndex key);
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <param name="source"></param>
         /// <param name="propertyDefinition"></param>
         /// <param name="key"></param>
-        void Import(IDatabaseModel source, IPropertyData propertyDefinition, IDbTableKeyName key);
+        void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableIndex key);
     }
 
     /// <summary>
@@ -49,6 +49,6 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <param name="source"></param>
         /// <param name="propertyDefinition"></param>
         /// <param name="key"></param>
-        void Import(IDatabaseModel source, IPropertyData propertyDefinition, IDbTableColumnKeyName key);
+        void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableColumnIndex key);
     }
 }

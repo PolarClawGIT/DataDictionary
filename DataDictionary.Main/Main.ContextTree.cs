@@ -71,7 +71,7 @@ namespace DataDictionary.Main
         void Activate(ILibraryMemberValue memberItem)
         { Activate((data) => new Forms.Library.LibraryMember(memberItem), memberItem); }
 
-        void Activate(AttributeItem attributeItem)
+        void Activate(AttributeValue attributeItem)
         { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
 
         void Activate(DomainEntityItem entityItem)

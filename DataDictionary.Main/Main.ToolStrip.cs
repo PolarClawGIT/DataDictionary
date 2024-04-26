@@ -22,7 +22,7 @@ namespace DataDictionary.Main
 
         private void NewAttributeCommand_ButtonClick(object? sender, EventArgs e)
         {
-            AttributeItem item = new AttributeItem();
+            AttributeValue item = new AttributeValue();
 
             BusinessData.DomainModel.Attributes.Add(item);
             BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, item));

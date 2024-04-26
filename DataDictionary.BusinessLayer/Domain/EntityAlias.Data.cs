@@ -1,11 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -14,12 +9,10 @@ namespace DataDictionary.BusinessLayer.Domain
     /// Interface component for the Model Entity Alias
     /// </summary>
     public interface IEntityAliasData:
-        IBindingData<DomainEntityAliasItem>
-    {
+        IBindingData<EntityAliasValue>
+    { }
 
-    }
-
-    internal class EntityAliasData: DomainEntityAliasCollection, IEntityAliasData,
+    internal class EntityAliasData: DomainEntityAliasCollection<EntityAliasValue>, IEntityAliasData,
         ILoadData<IDomainEntityKey>, ISaveData<IDomainEntityKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {

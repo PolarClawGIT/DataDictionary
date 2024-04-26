@@ -1,19 +1,43 @@
-﻿using DataDictionary.BusinessLayer.Scripting;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using System.ComponentModel;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IAttributeItem : IDomainAttributeItem, IAttributeKey
+    public interface IAttributeValue : IDomainAttributeItem, IAttributeIndex
     { }
 
     /// <inheritdoc/>
-    public class AttributeItem : DomainAttributeItem, IAttributeItem
+    public class AttributeValue : DomainAttributeItem, IAttributeValue, INamedScopeValue
     {
+        /// <inheritdoc cref="DomainAttributeItem()"/>
+        public AttributeValue() : base()
+        { PropertyChanged += CatalogValue_PropertyChanged; }
+
         /// <inheritdoc/>
-        public AttributeItem() : base() { }
+        public virtual NamedScopeKey GetSystemId()
+        { return new NamedScopeKey(AttributeId); }
+
+        /// <inheritdoc/>
+        public virtual NamedScopePath GetPath()
+        { return new NamedScopePath(Scope); }
+
+        /// <inheritdoc/>
+        public virtual String GetTitle()
+        { return AttributeTitle ?? String.Empty; }
+
+        /// <inheritdoc/>
+        public event EventHandler? OnTitleChanged;
+        private void CatalogValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is nameof(AttributeTitle)
+                && OnTitleChanged is EventHandler handler)
+            { handler(this, EventArgs.Empty); }
+        }
 
         internal XElement? GetXElement(IEnumerable<ElementItem>? options = null)
         {
@@ -54,7 +78,7 @@ namespace DataDictionary.BusinessLayer.Domain
         internal static IReadOnlyList<ColumnItem> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelAttribute;
-            IAttributeItem attributeNames;
+            IAttributeValue attributeNames;
             List<ColumnItem> result = new List<ColumnItem>()
             {
                 new ColumnItem() {ColumnName = nameof(attributeNames.AttributeId),          DataType = typeof(Guid),    AllowDBNull = false, Scope = scope},

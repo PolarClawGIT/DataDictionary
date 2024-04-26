@@ -1,39 +1,38 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.DomainData.Entity;
+using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ModelData;
-using DataDictionary.DataLayer.ModelData.Entity;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <summary>
-    /// Interface component for the Model Entity Subject Areas
+    /// Interface component for the Model Attribute Alias
     /// </summary>
-    public interface IEntitySubjectAreaData :
-        IBindingData<ModelEntityItem>
+    public interface IAttributeAliasData :
+        IBindingData<AttributeAliasValue>
     { }
 
-    class EntitySubjectAreaData: ModelEntityCollection, IEntitySubjectAreaData,
-        ILoadData<IDomainEntityKey>, ISaveData<IDomainEntityKey>,
+    class AttributeAliasData : DomainAttributeAliasCollection<AttributeAliasValue>, IAttributeAliasData,
+        ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <inheritdoc/>
-        /// <remarks>ModelEntity</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDomainEntityKey dataKey)
+        /// <remarks>AttributeAlias</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDomainAttributeKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>ModelEntity</remarks>
+        /// <remarks>AttributeAlias</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>ModelEntity</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainEntityKey dataKey)
+        /// <remarks>AttributeAlias</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainAttributeKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>ModelEntity</remarks>
+        /// <remarks>AttributeAlias</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
     }

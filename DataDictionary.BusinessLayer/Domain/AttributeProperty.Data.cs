@@ -16,12 +16,12 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface component for the Model Attribute Property
     /// </summary>
-    public interface IAttributePropertyData : IBindingData<AttributePropertyItem>
+    public interface IAttributePropertyData : IBindingData<AttributePropertyValue>
     {
 
     }
 
-    class AttributePropertyData : DomainAttributePropertyCollection<AttributePropertyItem>, IAttributePropertyData,
+    class AttributePropertyData : DomainAttributePropertyCollection<AttributePropertyValue>, IAttributePropertyData,
         ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
