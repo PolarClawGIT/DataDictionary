@@ -27,7 +27,7 @@ namespace DataDictionary.BusinessLayer.Domain
                                      IExtendedPropertyValue value)
             : base(attributeKey, propertyKey, value) { }
 
-        internal XElement? GetXElement(IPropertyItem property, IEnumerable<ElementItem>? options = null)
+        internal XElement? GetXElement(IPropertyItem property, IEnumerable<SchemaElementValue>? options = null)
         {
             XElement? result = null;
             IAttributePropertyValue attributeNames;
@@ -35,7 +35,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
             if (options is not null)
             {
-                foreach (ElementItem option in options)
+                foreach (SchemaElementValue option in options)
                 {
                     Object? value = null;
 

@@ -1,26 +1,21 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ScriptingData.Schema;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface IElementItem : DataLayer.ScriptingData.Schema.IElementItem, IColumnIndex
+    public interface ISchemaElementValue : IElementItem, IColumnIndex
     { }
 
     /// <inheritdoc/>
-    public class ElementItem : DataLayer.ScriptingData.Schema.ElementItem, IElementItem
+    public class SchemaElementValue : ElementItem, ISchemaElementValue
     {
         /// <inheritdoc/>
-        public ElementItem() : base() { }
+        public SchemaElementValue() : base() { }
 
         /// <inheritdoc/>
-        public ElementItem(ISchemaKey key) : base(key) { }
+        public SchemaElementValue(ISchemaIndex key) : base(key) { }
 
         /// <summary>
         /// Uses the value provided to generate an XML element.

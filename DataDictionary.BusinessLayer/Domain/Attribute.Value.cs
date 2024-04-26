@@ -39,13 +39,13 @@ namespace DataDictionary.BusinessLayer.Domain
             { handler(this, EventArgs.Empty); }
         }
 
-        internal XElement? GetXElement(IEnumerable<ElementItem>? options = null)
+        internal XElement? GetXElement(IEnumerable<SchemaElementValue>? options = null)
         {
             XElement? result = new XElement(this.Scope.ToName());
 
             if (options is not null)
             {
-                foreach (ElementItem option in options)
+                foreach (SchemaElementValue option in options)
                 {
                     Object? value = null;
 

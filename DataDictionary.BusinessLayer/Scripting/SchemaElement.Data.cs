@@ -1,12 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.ScriptingData.Schema;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Scripting
@@ -14,15 +7,12 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Interface component for the Scripting Engine Element
     /// </summary>
-    public interface IElementData :
-        IBindingData<ElementItem>,
+    public interface ISchemaElementData : IBindingData<SchemaElementValue>
+    { }
+
+    class SchemaElementData : ElementCollection<SchemaElementValue>, ISchemaElementData,
         ILoadData, ILoadData<ISchemaKey>,
         ISaveData, ISaveData<ISchemaKey>
-    {
-
-    }
-
-    class ElementData : ElementCollection<ElementItem>, IElementData
     {
         /// <inheritdoc/>
         /// <remarks>Element</remarks>

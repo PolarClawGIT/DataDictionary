@@ -253,7 +253,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public IEnumerable<NamedScopePair> GetNamedScopes()
         { return this.Select(s => new NamedScopePair(s)); }
 
-        public XElement? GetXElement(IAttributeIndex key, IEnumerable<ElementItem>? options = null)
+        public XElement? GetXElement(IAttributeIndex key, IEnumerable<SchemaElementValue>? options = null)
         {
             XElement? result = null;
 

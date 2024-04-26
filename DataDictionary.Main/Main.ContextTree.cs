@@ -44,7 +44,7 @@ namespace DataDictionary.Main
         void Activate(ICatalogValue catalogItem)
         { Activate((data) => new Forms.Database.DbCatalog(catalogItem), catalogItem); }
 
-        void Activate(ISchemaValue schemaItem)
+        void Activate(BusinessLayer.Database.ISchemaValue schemaItem)
         { Activate((data) => new Forms.Database.DbSchema(schemaItem), schemaItem); }
 
         void Activate(ITableValue tableItem)
@@ -83,7 +83,7 @@ namespace DataDictionary.Main
         void Activate(ModelItem modelItem)
         { Activate((data) => new Forms.Model.Model(modelItem), modelItem); }
 
-        void Activate(SchemaItem schemaItem)
+        void Activate(BusinessLayer.Scripting.SchemaValue schemaItem)
         { Activate((data) => new Forms.Scripting.SchemaManager(schemaItem), schemaItem); }
     }
 }
