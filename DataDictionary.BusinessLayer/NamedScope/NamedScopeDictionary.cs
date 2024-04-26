@@ -238,12 +238,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(Source.Models.Build(this));
-            work.AddRange(Source.ModelSubjectAreas.Build(this));
-            work.AddRange(Source.DomainModel.Build(this));
-            work.AddRange(Source.ScriptingEngine.Build(this));
-            work.AddRange(Source.DatabaseModel.Build(this));
-            work.AddRange(Source.LibraryModel.Build(this));
+            //work.AddRange(Source.Models.Build(this));
+            //work.AddRange(Source.ModelSubjectAreas.Build(this));
+            //work.AddRange(Source.DomainModel.Build(this));
+            //work.AddRange(Source.ScriptingEngine.Build(this));
+            //work.AddRange(Source.DatabaseModel.Build(this));
+            //work.AddRange(Source.LibraryModel.Build(this));
 
             return work;
         }

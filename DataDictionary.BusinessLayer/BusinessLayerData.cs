@@ -46,11 +46,6 @@ namespace DataDictionary.BusinessLayer
             }
         }
 
-        /// <summary>
-        /// Returns a new Default factory Database Worker.
-        /// </summary>
-        public IDatabaseWork GetDbFactory()
-        { return new DatabaseWork(DbConnection); }
 
         /// <summary>
         /// Constructor for the Business Layer Data Object
@@ -72,7 +67,7 @@ namespace DataDictionary.BusinessLayer
 
             modelValues = new Model.ModelData();
             subjectAreaValues = new Model.SubjectAreaData() { Models = modelValues };
-            namedScopeValue = new NamedScopeDictionary() { Source = this };
+            namedScopeValue = new NamedScopeData();
 
             modelValues.Add(new ModelItem());
             applicationValue = new Application.ApplicationData();
@@ -83,6 +78,12 @@ namespace DataDictionary.BusinessLayer
 
             scriptingValue = new Scripting.ScriptingEngine() { Models = modelValues };
         }
+
+        /// <summary>
+        /// Returns a new Default factory Database Worker.
+        /// </summary>
+        public IDatabaseWork GetDbFactory()
+        { return new DatabaseWork(DbConnection); }
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey key)
@@ -133,7 +134,7 @@ namespace DataDictionary.BusinessLayer
 
             work.AddRange(ScriptingEngine.Remove());
 
-            work.AddRange(NamedScope.Remove());
+            work.Add(new WorkItem() { DoWork = namedScopeValue.Clear });
 
             return work;
         }
@@ -220,12 +221,12 @@ namespace DataDictionary.BusinessLayer
         /// <returns></returns>
         public IReadOnlyList<WorkItem> ImportApplication(FileInfo file)
         {
-            List<WorkItem> workItems = new List<WorkItem>
+            List<WorkItem> work = new List<WorkItem>
             {
                 new WorkItem() { WorkName = "Load Application Data", DoWork = DoWork }
             };
 
-            return workItems.AsReadOnly();
+            return work.AsReadOnly();
 
             void DoWork()
             {
@@ -245,11 +246,11 @@ namespace DataDictionary.BusinessLayer
         /// <returns></returns>
         public IReadOnlyList<WorkItem> ExportApplication(FileInfo file)
         {
-            List<WorkItem> workItems = new List<WorkItem>();
+            List<WorkItem> work = new List<WorkItem>();
 
-            workItems.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
+            work.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
 
-            return workItems.AsReadOnly();
+            return work.AsReadOnly();
 
             void DoWork()
             {
