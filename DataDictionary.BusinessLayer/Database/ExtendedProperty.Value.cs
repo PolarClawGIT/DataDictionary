@@ -9,6 +9,6 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class ExtendedPropertyValue : DbExtendedPropertyItem, IDbExtendedPropertyItem
+    public class ExtendedPropertyValue : DbExtendedPropertyItem, IExtendedPropertyValue
     { }
 }

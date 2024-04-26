@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class TableColumnValue : DbTableColumnItem, IDbTableColumnItem, INamedScopeValue
+    public class TableColumnValue : DbTableColumnItem, ITableColumnValue, INamedScopeValue
     {
         /// <inheritdoc cref="DbTableItem()"/>
         public TableColumnValue() : base()

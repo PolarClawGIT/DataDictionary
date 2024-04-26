@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class RoutineValue : DbRoutineItem, IDbRoutineItem, INamedScopeValue
+    public class RoutineValue : DbRoutineItem, IRoutineValue, INamedScopeValue
     {
         /// <inheritdoc cref="DbRoutineItem()"/>
         public RoutineValue() : base()

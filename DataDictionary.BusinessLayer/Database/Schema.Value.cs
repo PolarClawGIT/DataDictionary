@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class SchemaValue : DbSchemaItem, IDbSchemaItem, INamedScopeValue
+    public class SchemaValue : DbSchemaItem, ISchemaValue, INamedScopeValue
     {
         /// <inheritdoc cref="DbSchemaItem()"/>
         public SchemaValue() : base()

@@ -18,9 +18,9 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class CatalogKeyName : DbCatalogKeyName, ICatalogIndexName
+    public class CatalogIndexName : DbCatalogKeyName, ICatalogIndexName
     {
         /// <inheritdoc cref="DbCatalogKeyName(IDbCatalogKeyName)"/>
-        public CatalogKeyName(ICatalogIndexName source) : base(source) { }
+        public CatalogIndexName(ICatalogIndexName source) : base(source) { }
     }
 }

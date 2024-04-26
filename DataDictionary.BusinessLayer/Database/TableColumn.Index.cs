@@ -19,9 +19,9 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class TableColumnKeyName : DbTableColumnKeyName, ITableColumnIndexName
+    public class TableColumnIndexName : DbTableColumnKeyName, ITableColumnIndexName
     {
         /// <inheritdoc cref="DbTableColumnKeyName(IDbTableColumnKeyName)"/>
-        public TableColumnKeyName(ITableColumnIndexName source) : base(source) { }
+        public TableColumnIndexName(ITableColumnIndexName source) : base(source) { }
     }
 }

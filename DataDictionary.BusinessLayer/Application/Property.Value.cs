@@ -5,7 +5,7 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Application
 {
     /// <inheritdoc/>
-    public interface IPropertyValue : IPropertyItem
+    public interface IPropertyValue : IPropertyItem, IPropertyIndex
     { }
 
     /// <inheritdoc/>
