@@ -10,7 +10,7 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface IElementItem : DataLayer.ScriptingData.Schema.IElementItem, IColumnKey
+    public interface IElementItem : DataLayer.ScriptingData.Schema.IElementItem, IColumnIndex
     { }
 
     /// <inheritdoc/>

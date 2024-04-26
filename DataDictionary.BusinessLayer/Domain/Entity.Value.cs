@@ -70,15 +70,15 @@ namespace DataDictionary.BusinessLayer.Domain
             return result;
         }
 
-        internal static IReadOnlyList<ColumnItem> GetXColumns()
+        internal static IReadOnlyList<ColumnValue> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelEntity;
             IEntityValue EntityNames;
-            List<ColumnItem> result = new List<ColumnItem>()
+            List<ColumnValue> result = new List<ColumnValue>()
             {
-                new ColumnItem() {ColumnName = nameof(EntityNames.EntityId),          DataType = typeof(Guid),    AllowDBNull = false, Scope = scope},
-                new ColumnItem() {ColumnName = nameof(EntityNames.EntityTitle),       DataType = typeof(String),  AllowDBNull = false, Scope = scope},
-                new ColumnItem() {ColumnName = nameof(EntityNames.EntityDescription), DataType = typeof(String),  AllowDBNull = true,  Scope = scope},
+                new ColumnValue() {ColumnName = nameof(EntityNames.EntityId),          DataType = typeof(Guid),    AllowDBNull = false, Scope = scope},
+                new ColumnValue() {ColumnName = nameof(EntityNames.EntityTitle),       DataType = typeof(String),  AllowDBNull = false, Scope = scope},
+                new ColumnValue() {ColumnName = nameof(EntityNames.EntityDescription), DataType = typeof(String),  AllowDBNull = true,  Scope = scope},
             };
 
             return result;

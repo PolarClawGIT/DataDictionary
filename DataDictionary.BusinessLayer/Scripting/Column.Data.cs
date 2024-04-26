@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Interface component for the Scripting Engine Column
     /// </summary>
-    public interface IColumnData : IEnumerable<ColumnItem>
+    public interface IColumnData : IEnumerable<ColumnValue>
     {
         /// <summary>
         /// Default Load of the class.
@@ -24,7 +24,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Implementation component for the Scripting Engine Column
     /// </summary>
-    public class ColumnData : Collection<ColumnItem>, IColumnData
+    public class ColumnData : Collection<ColumnValue>, IColumnData
     {
         /// <summary>
         /// Returns a list of Scopes that have column lists.
@@ -38,8 +38,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
-        public IEnumerable<IColumnItem> GetColumns(ScopeType scope)
-        { return this.Where(w => scope.Equals(w) && w is IColumnItem).Select(s => s as IColumnItem); }
+        public IEnumerable<IColumnIValue> GetColumns(ScopeType scope)
+        { return this.Where(w => scope.Equals(w) && w is IColumnIValue).Select(s => s as IColumnIValue); }
 
         /// <summary>
         /// Default Load of the class.
@@ -60,7 +60,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             foreach (DataColumn item in source.ColumnDefinitions())
             {
-                ColumnItem newItem = new()
+                ColumnValue newItem = new()
                 {
                     Scope = source.Scope,
                     ColumnName = item.ColumnName,
@@ -77,7 +77,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// </summary>
         /// <param name="source"></param>
         /// <remarks>Because a Collection does not have AddRange</remarks>
-        public void Load(IEnumerable<ColumnItem> source)
+        public void Load(IEnumerable<ColumnValue> source)
         { source.ToList().ForEach(i => Add(i)); }
 
     }
