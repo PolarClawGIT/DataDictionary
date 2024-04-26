@@ -15,7 +15,7 @@ namespace DataDictionary.BusinessLayer.Model
     /// Interface component for the Domain Model 
     /// </summary>
     public interface IModelData :
-        IBindingData<ModelItem>, INamedScopeData
+        IBindingData<ModelValue>
     {
         /// <summary>
         /// Create WorkItem that create a new Model instance.
@@ -24,8 +24,8 @@ namespace DataDictionary.BusinessLayer.Model
         IReadOnlyList<WorkItem> Create();
     }
 
-    class ModelData : ModelCollection, IModelData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
+    class ModelData : ModelCollection<ModelValue>, IModelData,
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile, IGetNamedScopes
     {
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
@@ -51,29 +51,12 @@ namespace DataDictionary.BusinessLayer.Model
         { return new WorkItem() { WorkName = "Remove Model", DoWork = () => { Clear(); } }.ToList(); }
 
         public IReadOnlyList<WorkItem> Create()
-        { return new WorkItem() { WorkName = "Create Model", DoWork = () => { Add(new ModelItem()); } }.ToList(); }
+        { return new WorkItem() { WorkName = "Create Model", DoWork = () => { Add(new ModelValue()); } }.ToList(); }
 
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem()
-            {
-                WorkName = "Build NamedScope Models",
-                DoWork = () =>
-                {
-                    foreach (ModelItem item in this)
-                    {
-                        target.Remove(new NamedScopeKey(item));
-                        target.Add(new NamedScopeItem(item));
-                    }
-                }
-            });
-
-            return work;
-        }
+        public IEnumerable<NamedScopePair> GetNamedScopes()
+        { return this.Select(s => new NamedScopePair(s)); }
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,7 +15,7 @@ namespace DataDictionary.DataLayer.ModelData
     /// <summary>
     /// Interface for the Model.
     /// </summary>
-    public interface IModelItem : IModelKey
+    public interface IModelItem : IModelKey, IScopeKey
     {
         /// <summary>
         /// Title for the Model.
@@ -41,6 +42,9 @@ namespace DataDictionary.DataLayer.ModelData
 
         /// <inheritdoc/>
         public string? ModelDescription { get { return GetValue("ModelDescription"); } set { SetValue("ModelDescription", value); } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get; } = ScopeType.Model;
 
         /// <summary>
         /// Constructor for the Model data
