@@ -28,181 +28,6 @@ namespace DataDictionary.Main.Controls
         }
 
         /// <summary>
-        /// Used to hold the cross reference between the TreeNode and the NamedScope. Each tree has its own item.
-        /// </summary>
-        static Dictionary<TreeView, Dictionary<TreeNode, NamedScopeItem>> treeNodes = new Dictionary<TreeView, Dictionary<TreeNode, NamedScopeItem>>();
-
-        /// <summary>
-        /// Creates work items to load the target TreeView with the data from NameScope.
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static IEnumerable<WorkItem> Load(this TreeView target, INamedScopeDictionary data)
-        {
-            List<WorkItem> result = new List<WorkItem>();
-            List<NamedScopeKey> expandedNodes = new List<NamedScopeKey>();
-            Action<Int32, Int32> progress = (x, y) => { };
-            Int32 totalWork = data.Count;
-            Int32 completeWork = 0;
-
-            target.Disposed += Target_Disposed;
-
-            if (!treeNodes.ContainsKey(target))
-            { treeNodes.Add(target, new Dictionary<TreeNode, NamedScopeItem>()); }
-
-            result.Add(new WorkItem()
-            {
-                WorkName = "Store Expanded Nodes",
-                DoWork = () =>
-                {
-                    target.Invoke(() =>
-                    {
-                        expandedNodes.AddRange(treeNodes[target]
-                        .Where(w => w.Key.IsExpanded
-                            || (w.Key.Nodes.Count == 0
-                                && w.Key.Parent is not null
-                                && w.Key.Parent.IsExpanded))
-                        .Select(s => new NamedScopeKey(s.Value)));
-
-                        treeNodes[target].Clear();
-                    });
-                }
-            });
-
-            result.Add(new WorkItem()
-            {
-                WorkName = "Disable and Clear the Tree",
-                DoWork = () =>
-                {
-                    target.Invoke(() =>
-                    {
-                        target.Enabled = false;
-                        target.UseWaitCursor = true;
-                        target.BeginUpdate();
-                        target.Nodes.RemoveAll();
-                    });
-                }
-            });
-
-            WorkItem buildTree = new WorkItem()
-            {
-                WorkName = "Build Tree",
-                DoWork = () =>
-                { 
-                    CreatNodes(target.Nodes, SelectItems(data.RootItem.Children)); 
-                }
-            };
-            progress = buildTree.OnProgressChanged;
-            result.Add(buildTree);
-
-            result.Add(new WorkItem()
-            {
-                WorkName = "Expand Tree Nodes",
-                DoWork = () => target.Invoke(() =>
-                {
-                    foreach (NamedScopeKey item in expandedNodes)
-                    {
-                        var node = treeNodes[target].FirstOrDefault(w => item.Equals(w.Value));
-                        if (node.Key is not null && !node.Key.IsExpanded)
-                        { node.Key.ExpandParent(); }
-                    }
-                })
-            });
-
-            result.Add(new WorkItem()
-            {
-                WorkName = "Enable Tree",
-                DoWork = () =>
-                {
-                    target.Invoke(() =>
-                    {
-                        target.EndUpdate();
-                        target.UseWaitCursor = false;
-                        target.Enabled = true;
-                    });
-                }
-            });
-
-            return result;
-
-            void CreatNodes(TreeNodeCollection targetNodes, IEnumerable<NamedScopeItem> children)
-            {
-                foreach (IGrouping<ScopeType, NamedScopeItem> scopeGroup in children.GroupBy(g => g.Scope).OrderBy(o => o.Key))
-                {
-                    TreeNodeCollection nodes = targetNodes;
-
-                    if (scopeGroup.Count() > 1)
-                    {
-                        TreeNode scopeNode = target.Invoke<TreeNode>(() =>
-                        {
-                            TreeNode newNode = targetNodes.Add(scopeGroup.Key.ToName().Split(".").Last());
-                            newNode.ImageKey = scopeGroup.Key.ToName();
-                            newNode.SelectedImageKey = scopeGroup.Key.ToName();
-                            newNode.NodeFont = new Font(newNode.TreeView.Font, FontStyle.Italic);
-                            newNode.ToolTipText = String.Format("set of {0}", newNode.Text);
-
-                            nodes = newNode.Nodes;
-                            return newNode;
-                        });
-                    }
-
-                    foreach (NamedScopeItem item in scopeGroup.OrderBy(o => o.OrdinalPosition).ThenBy(o => o.MemberName))
-                    {
-                        TreeNode node = target.Invoke<TreeNode>(() =>
-                        {
-                            TreeNode newNode = nodes.Add(item.MemberTitle);
-                            newNode.ImageKey = item.Scope.ToName();
-                            newNode.SelectedImageKey = item.Scope.ToName();
-                            newNode.ToolTipText = item.MemberFullName;
-                            item.PropertyChanged += Item_PropertyChanged;
-                            treeNodes[target].Add(newNode, item);
-
-                            progress(completeWork++, totalWork);
-                            return newNode;
-
-                            void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-                            { newNode.Text = item.MemberName; }
-                        });
-
-
-                        if (item.Children.Count > 0)
-                        { CreatNodes(node.Nodes, SelectItems(item.Children)); }
-                    }
-                }
-            }
-
-            IEnumerable<NamedScopeItem> SelectItems(IEnumerable<NamedScopeKey> keys)
-            {
-                return keys.Select(s =>
-                {
-                    if (data.ContainsKey(s) && data[s] is not null) { return data[s]; }
-                    else { return null; }
-                }).OfType<NamedScopeItem>();
-            }
-
-            void Target_Disposed(object? sender, EventArgs e)
-            {
-                if (treeNodes.ContainsKey(target))
-                { treeNodes.Remove(target); }
-
-                target.Disposed -= Target_Disposed; // Only need to call it once
-            }
-        }
-
-        /// <summary>
-        /// Gets the NameScope from the TreeNode
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public static NamedScopeItem? GetItem(this TreeNode source)
-        {
-            if (treeNodes.ContainsKey(source.TreeView) && treeNodes[source.TreeView].ContainsKey(source))
-            { return treeNodes[source.TreeView][source]; }
-            else { return null; }
-        }
-
-        /// <summary>
         /// Remove all nodes in the collection as well as the child nodes.
         /// </summary>
         /// <param name="target"></param>
@@ -220,6 +45,187 @@ namespace DataDictionary.Main.Controls
                 RemoveAll(item.Nodes);
                 item.Remove();
             }
+        }
+
+        /// <summary>
+        /// Used to hold the cross reference between the TreeNode and the NamedScope. Each tree has its own item.
+        /// </summary>
+        static Dictionary<TreeView, Dictionary<TreeNode, INamedScopeValue>> treeNodeDictionary = new Dictionary<TreeView, Dictionary<TreeNode, INamedScopeValue>>();
+
+        /// <summary>
+        /// Creates work items to load the target TreeView with the data from NameScope.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static IEnumerable<WorkItem> Load(this TreeView target, INamedScopeData data)
+        {
+            List<WorkItem> result = new List<WorkItem>();
+            List<NamedScopeKey> expandedNodes = new List<NamedScopeKey>();
+            Dictionary<TreeNode, INamedScopeValue> valueNodes = new Dictionary<TreeNode, INamedScopeValue>();
+
+            if (treeNodeDictionary.ContainsKey(target))
+            { valueNodes = treeNodeDictionary[target]; }
+            else
+            {
+                treeNodeDictionary.Add(target, valueNodes);
+                target.Disposed += TreeViewDisposed;
+            }
+
+            // Store Expanded Nodes by Key
+            result.Add(new WorkItem()
+            {
+                WorkName = "Store Expanded Nodes",
+                DoWork = () =>
+                {
+                    target.Invoke(() =>
+                    {
+                        expandedNodes.AddRange(valueNodes
+                        .Where(w => w.Key.IsExpanded
+                            || (w.Key.Nodes.Count == 0
+                                && w.Key.Parent is not null
+                                && w.Key.Parent.IsExpanded))
+                        .Select(s => s.Value.GetSystemId()));
+
+                        valueNodes.Clear();
+                    });
+                }
+            });
+
+            // Clear the Tree
+            result.Add(new WorkItem()
+            {
+                WorkName = "Disable and Clear the Tree",
+                DoWork = () =>
+                {
+                    target.Invoke(() =>
+                    {
+                        target.Enabled = false;
+                        target.UseWaitCursor = true;
+                        target.BeginUpdate();
+                        target.Nodes.RemoveAll();
+                    });
+                }
+            });
+
+            result.Add(new WorkItem()
+            {
+                WorkName = "Build Tree",
+                DoWork = () =>
+                { CreateNodes(target.Nodes, data.RootKeys()); }
+            });
+
+            // Expanded the Nodes
+            result.Add(new WorkItem()
+            {
+                WorkName = "Expand Tree Nodes",
+                DoWork = () => target.Invoke(() =>
+                {
+                    foreach (NamedScopeKey item in expandedNodes)
+                    {
+                        var node = valueNodes.FirstOrDefault(w => item.Equals(w.Value));
+                        if (node.Key is not null && !node.Key.IsExpanded)
+                        { node.Key.ExpandParent(); }
+                    }
+                })
+            });
+
+            // Enable the Tree
+            result.Add(new WorkItem()
+            {
+                WorkName = "Enable Tree",
+                DoWork = () =>
+                {
+                    target.Invoke(() =>
+                    {
+                        target.EndUpdate();
+                        target.UseWaitCursor = false;
+                        target.Enabled = true;
+                    });
+                }
+            });
+
+            return result;
+
+            void TreeViewDisposed(Object? sender, EventArgs e)
+            {
+                if (treeNodeDictionary.ContainsKey(target))
+                { treeNodeDictionary.Remove(target); }
+
+                target.Disposed -= TreeViewDisposed; // Only need to call it once
+            }
+
+            void CreateNodes(TreeNodeCollection targetNodes, IEnumerable<NamedScopeKey> children)
+            {
+                foreach (IGrouping<ScopeType, NamedScopeKey> scopeGroup in children.GroupBy(g => data[g].Scope).OrderBy(o => o.Key))
+                {
+                    TreeNodeCollection nodes = targetNodes;
+
+                    // Build Scope Groups
+                    if (scopeGroup.Count() > 1 && scopeGroup.Key.Setting().GroupByScope)
+                    {
+                        TreeNode scopeNode = target.Invoke<TreeNode>(() =>
+                        {
+                            TreeNode newNode = targetNodes.Add(scopeGroup.Key.ToName().Split(".").Last());
+                            newNode.ImageKey = scopeGroup.Key.ToName();
+                            newNode.SelectedImageKey = scopeGroup.Key.ToName();
+                            newNode.NodeFont = new Font(newNode.TreeView.Font, FontStyle.Italic);
+                            newNode.ToolTipText = String.Format("set of {0}", newNode.Text);
+
+                            nodes = newNode.Nodes;
+                            return newNode;
+                        });
+                    }
+
+                    // Build Data Nodes
+                    foreach (NamedScopeKey item in scopeGroup.OrderBy(o => data[o].GetPosition()).ThenBy(o => data[o].GetTitle()))
+                    {
+                        TreeNode node = target.Invoke<TreeNode>(() =>
+                        {
+                            TreeNode newNode = nodes.Add(data[item].GetTitle());
+                            newNode.ImageKey = data[item].Scope.ToName();
+                            newNode.SelectedImageKey = data[item].Scope.ToName();
+                            newNode.ToolTipText = data[item].GetPath().MemberFullPath;
+                            data[item].OnTitleChanged += TreeViewExtension_OnTitleChanged; ;
+                            valueNodes.Add(newNode, data[item]);
+
+                            return newNode;
+
+                            // Handle 
+                            void TreeViewExtension_OnTitleChanged(Object? sender, EventArgs e)
+                            {
+                                if (sender is INamedScopeValue value)
+                                {
+                                    NamedScopeKey key = value.GetSystemId();
+
+                                    if (valueNodes.FirstOrDefault(w => key.Equals(w.Value.GetSystemId()))
+                                        is KeyValuePair<TreeNode, INamedScopeValue> nodeItem
+                                        && nodeItem.Key is not null)
+                                    {
+                                        nodeItem.Key.Text = nodeItem.Value.GetTitle();
+                                        nodeItem.Key.ToolTipText = nodeItem.Value.GetPath().MemberFullPath;
+                                    }
+                                }
+                            }
+                        });
+
+                        if (data.ChildrenKeys(item) is IList<NamedScopeKey> values && values.Count > 0)
+                        { CreateNodes(node.Nodes, values); }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the NameScope from the TreeNode
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static INamedScopeValue? GetNamedScope(this TreeNode source)
+        {
+            if (treeNodeDictionary.ContainsKey(source.TreeView) && treeNodeDictionary[source.TreeView].ContainsKey(source))
+            { return treeNodeDictionary[source.TreeView][source]; }
+            else { return null; }
         }
     }
 }
