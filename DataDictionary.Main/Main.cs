@@ -124,7 +124,7 @@ namespace DataDictionary.Main
                 }
             }
 
-            work.AddRange(BusinessData.NamedScope.Build());
+            work.AddRange(BusinessData.LoadNamedScope());
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
 
             this.DoWork(work, OnComplete);
@@ -173,7 +173,7 @@ namespace DataDictionary.Main
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(BusinessData.Create());
-            work.AddRange(BusinessData.NamedScope.Build());
+            work.AddRange(BusinessData.LoadNamedScope());
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
 
             DoWork(work, onCompleting);

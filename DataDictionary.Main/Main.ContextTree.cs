@@ -23,7 +23,7 @@ namespace DataDictionary.Main
         private void RefreshCommand_Click(object? sender, EventArgs e)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(BusinessData.NamedScope.Build());
+            work.AddRange(BusinessData.LoadNamedScope());
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
             this.DoWork(work);
         }
@@ -32,8 +32,8 @@ namespace DataDictionary.Main
         {
             if (contextNameNavigation.SelectedNode is TreeNode node)
             {
-                NamedScopeItem? item = node.GetItem();
-                if (item is NamedScopeItem && item.Source is Object taget)
+                INamedScopeValue? item = node.GetNamedScope();
+                if (item is INamedScopeValue taget)
                 {
                     dynamic dataNode = taget;
                     Activate(dataNode);
