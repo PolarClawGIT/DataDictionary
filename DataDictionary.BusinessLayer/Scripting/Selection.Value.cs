@@ -1,18 +1,18 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ScriptingData.Schema;
+using DataDictionary.DataLayer.ScriptingData.Selection;
 using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface ISchemaValue : ISchemaItem
+    public interface ISelectionValue : ISelectionItem, ISelectionIndex
     { }
 
     /// <inheritdoc/>
-    public class SchemaValue : SchemaItem, ISchemaValue, INamedScopeValue
+    public class SelectionValue : SelectionItem, ISelectionValue, INamedScopeValue
     {
         /// <inheritdoc/>
-        public SchemaValue() : base()
+        public SelectionValue() : base()
         { PropertyChanged += SchemaValue_PropertyChanged; }
 
         /// <inheritdoc/>
@@ -25,13 +25,13 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return SchemaTitle ?? String.Empty; }
+        { return SelectionTitle ?? String.Empty; }
 
         /// <inheritdoc/>
         public event EventHandler? OnTitleChanged;
         private void SchemaValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is nameof(SchemaTitle)
+            if (e.PropertyName is nameof(SelectionTitle)
                 && OnTitleChanged is EventHandler handler)
             { handler(this, EventArgs.Empty); }
         }

@@ -9,7 +9,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <inheritdoc/>
     public class SchemaIndex : SchemaKey, ISchemaIndex
     {
-        /// <inheritdoc/>
-        public SchemaIndex(ISchemaKey source) : base(source) { }
+        /// <inheritdoc cref="SchemaKey(ISchemaKey)"/>
+        public SchemaIndex(ISchemaIndex source) : base(source) { }
     }
 }
