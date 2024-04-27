@@ -25,16 +25,10 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface component for the Model Entity
     /// </summary>
-<<<<<<< HEAD
-    public interface IEntityData<TValue> : IBindingData<TValue>,
-        ILoadData<IDomainEntityKey>, ISaveData<IDomainEntityKey>,
-=======
     public interface IEntityData :
         IBindingData<EntityValue>,
         ILoadData<IEntityIndex>, ISaveData<IEntityIndex>,
->>>>>>> RenameIndexValue
         ITableImport
-        where TValue : EntityValue, IEntityValue
     {
         /// <summary>
         /// List of Domain Aliases for the Entities within the Model.
@@ -47,16 +41,9 @@ namespace DataDictionary.BusinessLayer.Domain
         IEntityPropertyData Properties { get; }
     }
 
-<<<<<<< HEAD
-    class EntityData<TValue> : DomainEntityCollection<TValue>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IEntityData<TValue>, IDataTableFile, IGetNamedScopes
-        where TValue : EntityValue, IEntityValue, new()
-=======
     class EntityData : DomainEntityCollection<EntityValue>, IEntityData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDataTableFile, IGetNamedScopes
->>>>>>> RenameIndexValue
     {
         public required DomainModel DomainModel { get; init; }
 
@@ -212,11 +199,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 { entityKey = new EntityIndex(existing); }
                 else
                 {
-<<<<<<< HEAD
-                    TValue newItem = new TValue()
-=======
                     EntityValue newItem = new EntityValue()
->>>>>>> RenameIndexValue
                     { EntityTitle = item.TableName, };
                     this.Add(newItem);
                     entityKey = new EntityIndex(newItem);
@@ -243,23 +226,17 @@ namespace DataDictionary.BusinessLayer.Domain
                         && propertyValues.Count(w =>
                             entityKey.Equals(w)
                             && new Application.PropertyIndex(appProperty).Equals(w)) == 0)
-<<<<<<< HEAD
-                    { propertyValues.Add(new DomainEntityPropertyItem(entityKey, appProperty, property)); }
-=======
                     { propertyValues.Add(new EntityPropertyValue(entityKey, appProperty, property)); }
->>>>>>> RenameIndexValue
                 }
             }
         }
+
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
         { return this.Select(s => new NamedScopePair(s)); }
-<<<<<<< HEAD
-=======
 
 
->>>>>>> RenameIndexValue
     }
 }

@@ -10,6 +10,8 @@ using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ModelData;
+using DataDictionary.DataLayer.ModelData.Attribute;
+using DataDictionary.DataLayer.ModelData.SubjectArea;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -19,15 +21,10 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface component for the Model Attribute
     /// </summary>
-<<<<<<< HEAD
-    public interface IAttributeData<TValue> : IBindingData<TValue>,
-=======
     public interface IAttributeData :
         IBindingData<AttributeValue>,
->>>>>>> RenameIndexValue
         ILoadData<IAttributeIndex>, ISaveData<IAttributeIndex>,
         ITableColumnImport
-        where TValue : AttributeValue, IAttributeValue
     {
         /// <summary>
         /// List of Domain Aliases for the Attributes within the Model.
@@ -37,28 +34,12 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <summary>
         /// List of Domain Properties for the Attributes within the Model.
         /// </summary>
-<<<<<<< HEAD
-        IAttributePropertyData<AttributePropertyValue> Properties { get; }
-
-        /// <summary>
-        /// List of Model Attribute Subject Areas within the Model.
-        /// </summary>
-        IAttributeSubjectAreaData SubjectAreas { get; }
-    }
-
-    class AttributeData<TValue> : DomainAttributeCollection<TValue>, 
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>,
-        IAttributeData<TValue>, IDataTableFile, IGetNamedScopes
-        where TValue : AttributeValue, IAttributeValue, new()
-=======
         IAttributePropertyData Properties { get; }
     }
 
     class AttributeData : DomainAttributeCollection<AttributeValue>, IAttributeData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDataTableFile, IGetNamedScopes
->>>>>>> RenameIndexValue
     {
         public required DomainModel Model { get; init; }
 
@@ -67,18 +48,13 @@ namespace DataDictionary.BusinessLayer.Domain
         private readonly AttributeAliasData aliasValues;
 
         /// <inheritdoc/>
-        public IAttributePropertyData<AttributePropertyValue> Properties { get { return propertyValues; } }
-        private readonly AttributePropertyData<AttributePropertyValue> propertyValues;
+        public IAttributePropertyData Properties { get { return propertyValues; } }
+        private readonly AttributePropertyData propertyValues;
 
         public AttributeData() : base()
         {
             aliasValues = new AttributeAliasData();
-<<<<<<< HEAD
-            propertyValues = new AttributePropertyData<AttributePropertyValue>();
-            subjectAreaValues = new AttributeSubjectAreaData();
-=======
             propertyValues = new AttributePropertyData() { Attributes = this };
->>>>>>> RenameIndexValue
         }
 
         /// <inheritdoc/>
@@ -110,14 +86,6 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex dataKey)
-        {
-            IDomainAttributeKey key = new AttributeIndex(dataKey);
-            return Load(factory, key);
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainAttributeKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -129,16 +97,8 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
-<<<<<<< HEAD
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IAttributeIndex dataKey)
-        {
-            IDomainAttributeKey key = new AttributeIndex(dataKey);
-            return Save(factory, key);
-        }
-=======
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IAttributeIndex dataKey)
         { return Load(factory, (IDomainAttributeKey)dataKey); }
->>>>>>> RenameIndexValue
 
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
@@ -239,26 +199,11 @@ namespace DataDictionary.BusinessLayer.Domain
             TableColumnIndex colunKey = new TableColumnIndex(key);
             foreach (TableColumnValue item in source.DbTableColumns.Where(w => colunKey.Equals(w)))
             {
-<<<<<<< HEAD
-                AliasKeyName alaisKey = new AliasKeyName(item);
-                AttributeIndex attributeKey;
-                DomainAttributeKeyName uniqueKey = new DomainAttributeKeyName(item);
-=======
->>>>>>> RenameIndexValue
                 AliasKeyName aliasKey = new AliasKeyName(item);
                 AttributeIndexName attributeName = new AttributeIndexName(item);
                 AttributeIndex attributeKey;
 
                 // Create Attribute or get existing
-<<<<<<< HEAD
-                if (aliasValues.FirstOrDefault(w => aliasKey.Equals(w)) is DomainAttributeAliasItem existingAlias)
-                { attributeKey = new AttributeIndex(existingAlias); }
-                else if (this.FirstOrDefault(w => uniqueKey.Equals(w)) is DomainAttributeItem existing)
-                { attributeKey = new AttributeIndex(existing); }
-                else
-                {
-                    TValue newItem = new TValue()
-=======
                 if (aliasValues.FirstOrDefault(w => aliasKey.Equals(w)) is AttributeAliasValue existingAlias)
                 { attributeKey = new AttributeIndex(existingAlias); }
                 else if (this.FirstOrDefault(w => attributeName.Equals(w)) is AttributeValue existing)
@@ -266,7 +211,6 @@ namespace DataDictionary.BusinessLayer.Domain
                 else
                 {
                     AttributeValue newItem = new AttributeValue()
->>>>>>> RenameIndexValue
                     {
                         AttributeTitle = item.ColumnName,
                         IsDerived = item.IsComputed ?? false,
@@ -304,19 +248,12 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
-<<<<<<< HEAD
-        public IEnumerable<NamedScopePair> GetNamedScopes()
-        { return this.Select(s => new NamedScopePair(s)); }
-
-        public XElement? GetXElement(IAttributeIndex key, IEnumerable<ElementValue>? options = null)
-=======
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
         { return this.Select(s => new NamedScopePair(s)); }
 
         public XElement? GetXElement(IAttributeIndex key, IEnumerable<SchemaElementValue>? options = null)
->>>>>>> RenameIndexValue
         {
             XElement? result = null;
 
@@ -329,13 +266,8 @@ namespace DataDictionary.BusinessLayer.Domain
 
                     if (Properties.FirstOrDefault(w => attributeKey.Equals(w)) is AttributePropertyValue property)
                     {
-<<<<<<< HEAD
-                        Application.PropertyIndex propertyKey = new Application.PropertyIndex(property);
-                        if (Model.ModelProperty.FirstOrDefault((Object w) => propertyKey.Equals(w)) is Application.PropertyValue item)
-=======
                         Application.PropertyIndex propertyKey = new PropertyIndex(property);
                         if (Model.ModelProperty.FirstOrDefault((Object w) => propertyKey.Equals(w)) is PropertyValue item)
->>>>>>> RenameIndexValue
                         {
                             if (property.GetXElement(item, options) is XElement xProperty)
                             { result.Add(xProperty); }
@@ -348,9 +280,5 @@ namespace DataDictionary.BusinessLayer.Domain
             return result;
         }
 
-<<<<<<< HEAD
-       
-=======
->>>>>>> RenameIndexValue
     }
 }

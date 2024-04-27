@@ -197,19 +197,11 @@ namespace DataDictionary.Main.Controls
                                 if (sender is INamedScopeValue value)
                                 {
                                     NamedScopeKey key = value.GetSystemId();
-<<<<<<< HEAD
-                                    
-                                    if (valueNodes.FirstOrDefault(w => key.Equals(w.Value.GetSystemId()))
-                                        is KeyValuePair<TreeNode, INamedScopeValue> nodeItem
-                                        && nodeItem.Key is not null)
-                                    { 
-=======
 
                                     if (valueNodes.FirstOrDefault(w => key.Equals(w.Value.GetSystemId()))
                                         is KeyValuePair<TreeNode, INamedScopeValue> nodeItem
                                         && nodeItem.Key is not null)
                                     {
->>>>>>> RenameIndexValue
                                         nodeItem.Key.Text = nodeItem.Value.GetTitle();
                                         nodeItem.Key.ToolTipText = nodeItem.Value.GetPath().MemberFullPath;
                                     }

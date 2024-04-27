@@ -38,13 +38,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
-<<<<<<< HEAD
-        public IEnumerable<IColumnValue> GetColumns(ScopeType scope)
-        { return this.Where(w => scope.Equals(w) && w is IColumnValue).Select(s => s as IColumnValue); }
-=======
         public IEnumerable<IColumnIValue> GetColumns(ScopeType scope)
         { return this.Where(w => scope.Equals(w) && w is IColumnIValue).Select(s => s as IColumnIValue); }
->>>>>>> RenameIndexValue
 
         /// <summary>
         /// Default Load of the class.

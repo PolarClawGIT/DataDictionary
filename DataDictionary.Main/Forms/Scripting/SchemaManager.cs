@@ -35,7 +35,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 schemaItem = new SchemaValue();
                 BusinessData.ScriptingEngine.Schemta.Add(schemaItem);
-                //BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, schemaItem));
+                BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, schemaItem));
             }
 
             DataLayer.ScriptingData.Schema.SchemaKey key = new DataLayer.ScriptingData.Schema.SchemaKey(schemaItem);
@@ -45,11 +45,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             Setup(bindingSchema);
 
-<<<<<<< HEAD
-            bindingElement.DataSource = new BindingView<ElementValue>(BusinessData.ScriptingEngine.SchemeElements, w => key.Equals(w));
-=======
             bindingElement.DataSource = new BindingView<SchemaElementValue>(BusinessData.ScriptingEngine.SchemeElements, w => key.Equals(w));
->>>>>>> RenameIndexValue
             bindingElement.SuspendBinding();
             elementOptionsLayout.Enabled = false;
         }
@@ -59,13 +55,8 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             SendMessage(new RefreshNavigation()); // Cannot do this in constructor because messengering is not yet hooked up.
 
-<<<<<<< HEAD
-            ISchemaItem schemaNames;
-            IElementValue elementNames;
-=======
             ISchemaValue schemaNames;
             ISchemaElementValue elementNames;
->>>>>>> RenameIndexValue
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingSchema, nameof(schemaNames.SchemaTitle)));
             schemaTitleData.DataBindings.Add(new Binding(nameof(schemaTitleData.Text), bindingSchema, nameof(schemaNames.SchemaTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             schemaDescriptionData.DataBindings.Add(new Binding(nameof(schemaDescriptionData.Text), bindingSchema, nameof(schemaNames.SchemaDescription), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -96,17 +87,10 @@ namespace DataDictionary.Main.Forms.Scripting
                 foreach (ColumnValue column in groups)
                 {
                     ListViewItem newItem = new ListViewItem(column.ColumnName, group);
-<<<<<<< HEAD
-                    if (bindingElement.DataSource is IList<ElementValue> elements)
-                    {
-                        ColumnIndex key = new ColumnIndex(column);
-                        if (elements.FirstOrDefault(w => key.Equals(w)) is ElementValue)
-=======
                     if (bindingElement.DataSource is IList<SchemaElementValue> elements)
                     {
                         ColumnIndex key = new ColumnIndex(column);
                         if (elements.FirstOrDefault(w => key.Equals(w)) is SchemaElementValue)
->>>>>>> RenameIndexValue
                         { newItem.Checked = true; }
                     }
 
@@ -132,11 +116,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 //bindingElement.DataSource = null;
                 BusinessData.ScriptingEngine.Schemta.Remove(item);
 
-<<<<<<< HEAD
-                foreach (ElementValue element in BusinessData.ScriptingEngine.SchemeElements.Where(w => key.Equals(w)).ToList())
-=======
                 foreach (SchemaElementValue element in BusinessData.ScriptingEngine.SchemeElements.Where(w => key.Equals(w)).ToList())
->>>>>>> RenameIndexValue
                 { BusinessData.ScriptingEngine.SchemeElements.Remove(element); }
 
                 SendMessage(new RefreshNavigation());
@@ -169,19 +149,11 @@ namespace DataDictionary.Main.Forms.Scripting
                 ColumnValue current = columnItems[selected];
                 ColumnIndex column = new ColumnIndex(current);
 
-<<<<<<< HEAD
-                if (bindingElement.DataSource is IList<ElementValue> elements)
-                {
-                    ElementValue? element = elements.FirstOrDefault(w => column.Equals(w));
-
-                    if (element is ElementValue)
-=======
                 if (bindingElement.DataSource is IList<SchemaElementValue> elements)
                 {
                     SchemaElementValue? element = elements.FirstOrDefault(w => column.Equals(w));
 
                     if (element is SchemaElementValue)
->>>>>>> RenameIndexValue
                     {
                         bindingElement.ResumeBinding();
                         bindingElement.Position = elements.IndexOf(element);
@@ -200,19 +172,11 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             addColumn = null;
 
-<<<<<<< HEAD
-            if (columnItems.ContainsKey(e.Item) && bindingElement.DataSource is IList<ElementValue> elements)
-            {
-                ColumnValue current = columnItems[e.Item];
-                ColumnIndex key = new ColumnIndex(current);
-                ElementValue? element = elements.FirstOrDefault(w => key.Equals(w));
-=======
             if (columnItems.ContainsKey(e.Item) && bindingElement.DataSource is IList<SchemaElementValue> elements)
             {
                 ColumnValue current = columnItems[e.Item];
                 ColumnIndex key = new ColumnIndex(current);
                 SchemaElementValue? element = elements.FirstOrDefault(w => key.Equals(w));
->>>>>>> RenameIndexValue
 
                 if (e.Item.Checked && element is null)
                 {
@@ -236,11 +200,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (bindingSchema.Current is SchemaValue schema)
             {
-<<<<<<< HEAD
-                ElementValue newElement = new ElementValue(schema);
-=======
                 SchemaElementValue newElement = new ElementValue(schema);
->>>>>>> RenameIndexValue
 
                 if (addColumn is not null)
                 {

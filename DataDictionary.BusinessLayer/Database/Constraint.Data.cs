@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Constraint;
+using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
@@ -18,10 +19,6 @@ namespace DataDictionary.BusinessLayer.Database
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, IGetNamedScopes
-<<<<<<< HEAD
-        where TValue : ConstraintValue, new()
-=======
->>>>>>> RenameIndexValue
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -51,17 +48,6 @@ namespace DataDictionary.BusinessLayer.Database
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
-<<<<<<< HEAD
-
-            foreach (TValue item in this)
-            {
-                TableIndexName keyName = new TableIndexName(item);
-
-                if (Database.DbTables.FirstOrDefault(w => keyName.Equals(w)) is TableValue table)
-                { result.Add(new NamedScopePair(table.GetSystemId(), item)); }
-            }
-
-=======
             foreach (ConstraintValue item in this)
             {
                 DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
@@ -69,7 +55,6 @@ namespace DataDictionary.BusinessLayer.Database
                 { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
             }
 
->>>>>>> RenameIndexValue
             return result;
         }
     }

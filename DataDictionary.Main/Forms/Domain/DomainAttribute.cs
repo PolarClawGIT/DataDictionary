@@ -20,19 +20,8 @@ namespace DataDictionary.Main.Forms.Domain
             toolStrip.TransferItems(attributeToolStrip, 0);
         }
 
-<<<<<<< HEAD
-        public DomainAttribute(IAttributeValue? attributeItem) : this()
-        {
-            if(attributeItem is null)
-            {
-                attributeItem = new AttributeValue();
-                BusinessData.DomainModel.Attributes.Add(attributeItem);
-            }
-
-=======
         public DomainAttribute(IAttributeValue attributeItem) : this()
         {
->>>>>>> RenameIndexValue
             AttributeIndex key = new AttributeIndex(attributeItem);
             bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => key.Equals(w));
             bindingAttribute.Position = 0;

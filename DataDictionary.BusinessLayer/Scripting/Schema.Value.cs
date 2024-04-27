@@ -1,28 +1,10 @@
-<<<<<<< HEAD
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-=======
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ScriptingData.Schema;
 using System.ComponentModel;
->>>>>>> RenameIndexValue
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-<<<<<<< HEAD
-    public interface ISchemaItem : DataLayer.ScriptingData.Schema.ISchemaItem
-    { }
-
-    /// <inheritdoc/>
-    public class SchemaItem : DataLayer.ScriptingData.Schema.SchemaItem, ISchemaItem
-    {
-        /// <inheritdoc/>
-        public SchemaItem() : base() { }
-=======
     public interface ISchemaValue : ISchemaItem
     { }
 
@@ -53,6 +35,5 @@ namespace DataDictionary.BusinessLayer.Scripting
                 && OnTitleChanged is EventHandler handler)
             { handler(this, EventArgs.Empty); }
         }
->>>>>>> RenameIndexValue
     }
 }

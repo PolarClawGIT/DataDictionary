@@ -163,26 +163,6 @@ namespace DataDictionary.BusinessLayer.Library
             return work;
         }
 
-<<<<<<< HEAD
-        public IReadOnlyList<WorkItem> BuildNamedScope(NamedScopeData target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            ProgressTracker progress = new ProgressTracker();
-
-            WorkItem workItem = new WorkItem()
-            {
-                WorkName = "Build NamedScope (Libraries)",
-                DoWork = () =>
-                {
-                    target.AddRange(sources.GetNamedScopes());
-                    target.AddRange(members.GetNamedScopes());
-                }
-            };
-            progress.OnProgressChanged = workItem.OnProgressChanged;
-
-            work.Add(workItem);
-            return work;
-=======
         /// <inheritdoc/>
         /// <remarks>Library</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
@@ -191,7 +171,6 @@ namespace DataDictionary.BusinessLayer.Library
             result.AddRange(sources.GetNamedScopes());
             result.AddRange(members.GetNamedScopes());
             return result;
->>>>>>> RenameIndexValue
         }
     }
 }

@@ -13,11 +13,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     { }
 
 
-<<<<<<< HEAD
-    class SelectionData : SelectionCollection<SelectionItem>, ISelectionData
-=======
     class SelectionData : SelectionCollection<SelectionValue>, ISelectionData, IGetNamedScopes
->>>>>>> RenameIndexValue
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine

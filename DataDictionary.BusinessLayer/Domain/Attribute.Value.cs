@@ -16,26 +16,15 @@ namespace DataDictionary.BusinessLayer.Domain
     {
         /// <inheritdoc cref="DomainAttributeItem()"/>
         public AttributeValue() : base()
-<<<<<<< HEAD
-        { PropertyChanged += OnPropertyChanged; }
-
-        /// <inheritdoc/>
-        public NamedScopeKey GetSystemId()
-=======
         { PropertyChanged += CatalogValue_PropertyChanged; }
 
         /// <inheritdoc/>
         public virtual NamedScopeKey GetSystemId()
->>>>>>> RenameIndexValue
         { return new NamedScopeKey(AttributeId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()
-<<<<<<< HEAD
-        { return new NamedScopePath(this); }
-=======
         { return new NamedScopePath(Scope); }
->>>>>>> RenameIndexValue
 
         /// <inheritdoc/>
         public virtual String GetTitle()
@@ -43,32 +32,20 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         public event EventHandler? OnTitleChanged;
-<<<<<<< HEAD
-        private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
-=======
         private void CatalogValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
->>>>>>> RenameIndexValue
         {
             if (e.PropertyName is nameof(AttributeTitle)
                 && OnTitleChanged is EventHandler handler)
             { handler(this, EventArgs.Empty); }
         }
 
-<<<<<<< HEAD
-        internal XElement? GetXElement(IEnumerable<ElementValue>? options = null)
-=======
         internal XElement? GetXElement(IEnumerable<SchemaElementValue>? options = null)
->>>>>>> RenameIndexValue
         {
             XElement? result = new XElement(this.Scope.ToName());
 
             if (options is not null)
             {
-<<<<<<< HEAD
-                foreach (ElementValue option in options)
-=======
                 foreach (SchemaElementValue option in options)
->>>>>>> RenameIndexValue
                 {
                     Object? value = null;
 

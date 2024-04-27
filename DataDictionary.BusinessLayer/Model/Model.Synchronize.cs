@@ -1,16 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.ToolSet;
 using DataDictionary.DataLayer.ModelData;
-<<<<<<< HEAD
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-=======
-using System.ComponentModel;
->>>>>>> RenameIndexValue
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 

@@ -17,13 +17,7 @@ namespace DataDictionary.BusinessLayer.Model
     /// <summary>
     /// Interface component for the Model SubjectArea
     /// </summary>
-<<<<<<< HEAD:DataDictionary.BusinessLayer/Model/SubjectAreaData.cs
-    public interface ISubjectAreaData :
-        IBindingData<ModelSubjectAreaItem>,
-        ILoadData<IModelSubjectAreaKey>, ISaveData<IModelSubjectAreaKey>
-=======
     public interface ISubjectAreaData : IBindingData<SubjectAreaValue>
->>>>>>> RenameIndexValue:DataDictionary.BusinessLayer/Model/SubjectArea.Data.cs
     { }
 
     class SubjectAreaData : ModelSubjectAreaCollection<SubjectAreaValue>, ISubjectAreaData,
@@ -33,7 +27,7 @@ namespace DataDictionary.BusinessLayer.Model
         /// <summary>
         /// Reference to the containing Model
         /// </summary>
-        public required IModelData<ModelValue> Models { get; init; }
+        public required IModelData Models { get; init; }
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>

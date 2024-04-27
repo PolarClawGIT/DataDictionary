@@ -455,35 +455,6 @@ namespace DataDictionary.BusinessLayer.Database
             return work;
         }
 
-<<<<<<< HEAD
-        public IReadOnlyList<WorkItem> BuildNamedScope(NamedScopeData target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            ProgressTracker progress = new ProgressTracker();
-
-            WorkItem workItem = new WorkItem()
-            {
-                WorkName = "Build NamedScope (Catalogs)",
-                DoWork = () =>
-                {
-                    target.AddRange(catalogs.GetNamedScopes());
-                    target.AddRange(schemta.GetNamedScopes());
-                    target.AddRange(domains.GetNamedScopes());
-
-                    target.AddRange(constraints.GetNamedScopes());
-
-                    target.AddRange(tables.GetNamedScopes());
-                    target.AddRange(tableColumns.GetNamedScopes());
-
-                    target.AddRange(routines.GetNamedScopes());
-                    target.AddRange(routineParameters.GetNamedScopes());
-                }
-            };
-            progress.OnProgressChanged = workItem.OnProgressChanged;
-
-            work.Add(workItem);
-            return work;
-=======
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
@@ -503,7 +474,6 @@ namespace DataDictionary.BusinessLayer.Database
 
             return result;
             
->>>>>>> RenameIndexValue
         }
     }
 }

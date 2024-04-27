@@ -13,19 +13,11 @@ namespace DataDictionary.BusinessLayer.Database
     }
 
     /// <inheritdoc/>
-<<<<<<< HEAD
-    public interface IConstraintIndexName : IDbConstraintKeyName, ITableIndexName
-    { }
-
-    /// <inheritdoc/>
-    public class ConstraintIndexName : DbConstraintKeyName, ISchemaIndexName
-=======
     public interface IConstraintIndexName : IDbConstraintKeyName, ISchemaIndexName
     { }
 
     /// <inheritdoc/>
     public class ConstraintIndexName : DbConstraintKeyName, IConstraintIndexName
->>>>>>> RenameIndexValue
     {
         /// <inheritdoc cref="DbConstraintKeyName(IDbConstraintKeyName)"/>
         public ConstraintIndexName(IConstraintIndexName source) : base(source) { }

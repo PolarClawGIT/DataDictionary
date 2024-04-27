@@ -5,10 +5,4 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.Model
-<<<<<<< HEAD
-{
-    //static class Model { }
-}
-=======
 { }
->>>>>>> RenameIndexValue

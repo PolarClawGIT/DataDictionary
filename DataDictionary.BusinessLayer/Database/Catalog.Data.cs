@@ -2,6 +2,13 @@
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.ModelData;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -9,25 +16,13 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Wrapper of Catalog Data (The Database)
     /// </summary>
-<<<<<<< HEAD
-    public interface ICatalogData<TValue> :
-        IBindingData<TValue>
-        where TValue : CatalogValue, ICatalogValue
-=======
     public interface ICatalogData : IBindingData<CatalogValue>
->>>>>>> RenameIndexValue
     { }
 
     class CatalogData : DbCatalogCollection<CatalogValue>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
-<<<<<<< HEAD
-        IDatabaseModelItem, ICatalogData<TValue>,
-        IGetNamedScopes
-        where TValue : CatalogValue, ICatalogValue, new()
-=======
         IDatabaseModelItem, ICatalogData, IGetNamedScopes
->>>>>>> RenameIndexValue
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }

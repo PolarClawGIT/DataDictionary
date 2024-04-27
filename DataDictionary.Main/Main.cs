@@ -124,11 +124,7 @@ namespace DataDictionary.Main
                 }
             }
 
-<<<<<<< HEAD
-            work.AddRange(BusinessData.BuildNamedScope());
-=======
             work.AddRange(BusinessData.LoadNamedScope());
->>>>>>> RenameIndexValue
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
 
             this.DoWork(work, OnComplete);
@@ -177,11 +173,7 @@ namespace DataDictionary.Main
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(BusinessData.Create());
-<<<<<<< HEAD
-            work.AddRange(BusinessData.BuildNamedScope());
-=======
             work.AddRange(BusinessData.LoadNamedScope());
->>>>>>> RenameIndexValue
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
 
             DoWork(work, onCompleting);

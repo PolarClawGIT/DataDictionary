@@ -49,21 +49,12 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library Member</remarks>
-<<<<<<< HEAD
-=======
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
->>>>>>> RenameIndexValue
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
 
-<<<<<<< HEAD
-            foreach (TValue item in this.Where(w => w.MemberParentId is null))
-            {
-                result.Add(new NamedScopePair(item));
-                result.AddRange(GetChildren(item));
-=======
             foreach (TValue root in this.Where(w => w.MemberParentId is null))
             {
                 LibrarySourceIndex libraryKey = new LibrarySourceIndex(root);
@@ -72,21 +63,10 @@ namespace DataDictionary.BusinessLayer.Library
                     result.Add(new NamedScopePair(library.GetSystemId(), root));
                     result.AddRange(GetChildren(root));
                 }
->>>>>>> RenameIndexValue
             }
 
             return result;
 
-<<<<<<< HEAD
-            IEnumerable<NamedScopePair> GetChildren(TValue child)
-            {
-                List<NamedScopePair> result = new List<NamedScopePair>();
-                LibraryMemberIndex key = new LibraryMemberIndex(child);
-
-                foreach (TValue item in this.Where(w => key.Equals(new LibraryMemberIndexParent(w))))
-                {
-                    result.Add(new NamedScopePair(item));
-=======
             IEnumerable<NamedScopePair> GetChildren(LibraryMemberValue parent)
             {
                 List<NamedScopePair> result = new List<NamedScopePair>();
@@ -95,7 +75,6 @@ namespace DataDictionary.BusinessLayer.Library
                 foreach (TValue item in this.Where(w => parentKey.Equals(new LibraryMemberIndexParent(w))))
                 {
                     result.Add(new NamedScopePair(parent.GetSystemId(), item));
->>>>>>> RenameIndexValue
                     result.AddRange(GetChildren(item));
                 }
 

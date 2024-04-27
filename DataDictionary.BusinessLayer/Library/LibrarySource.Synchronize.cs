@@ -64,12 +64,12 @@ namespace DataDictionary.BusinessLayer.Library
         /// <summary>
         /// Constructor 
         /// </summary>
-        /// <param name="libraries"></param>
-        public LibrarySynchronize(ILibraryModel libraries) : base()
+        /// <param name="libraryModel"></param>
+        public LibrarySynchronize(ILibraryModel libraryModel) : base()
         {
-            this.libraryModel = libraries;
+            this.libraryModel = libraryModel;
 
-            foreach (LibrarySourceValue item in libraries.LibrarySources)
+            foreach (LibrarySourceValue item in libraryModel.LibrarySources)
             { Add(new LibrarySynchronizeValue(item) { InModel = true }); }
         }
 

@@ -1,6 +1,13 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ScriptingData.Transform;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Scripting
@@ -8,24 +15,13 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Interface component for the Scripting Engine Transform
     /// </summary>
-<<<<<<< HEAD
-    public interface ITransformData<TValue> : IBindingData<TValue>,
-=======
     public interface ITransformData :
         IBindingData<TransformValue>,
->>>>>>> RenameIndexValue
         ILoadData, ILoadData<ITransformKey>,
         ISaveData, ISaveData<ITransformKey>
-        where TValue : TransformValue, ITransformValue
     { }
 
-<<<<<<< HEAD
-    class TransformData<TValue> : TransformCollection<TValue>,
-        ITransformData<TValue>, IGetNamedScopes
-        where TValue : TransformValue, ITransformValue, new()
-=======
     class TransformData : TransformCollection<TransformValue>, ITransformData, IGetNamedScopes
->>>>>>> RenameIndexValue
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine
@@ -56,9 +52,6 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <remarks>Transform</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
         { return this.Select(s => new NamedScopePair(s)); }
-<<<<<<< HEAD
-=======
 
->>>>>>> RenameIndexValue
     }
 }

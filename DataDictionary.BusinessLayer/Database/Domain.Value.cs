@@ -15,17 +15,10 @@ namespace DataDictionary.BusinessLayer.Database
     {
         /// <inheritdoc cref="DbDomainItem()"/>
         public DomainValue() : base()
-<<<<<<< HEAD
-        { PropertyChanged += OnPropertyChanged; }
-
-        /// <inheritdoc/>
-        public NamedScopeKey GetSystemId()
-=======
         { PropertyChanged += CatalogValue_PropertyChanged; }
 
         /// <inheritdoc/>
         public virtual NamedScopeKey GetSystemId()
->>>>>>> RenameIndexValue
         { return new NamedScopeKey(DomainId); }
 
         /// <inheritdoc/>
@@ -38,15 +31,9 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public event EventHandler? OnTitleChanged;
-<<<<<<< HEAD
-        private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is nameof(SchemaName) or nameof(DatabaseName) or nameof(DomainName)
-=======
         private void CatalogValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(DomainName)
->>>>>>> RenameIndexValue
                 && OnTitleChanged is EventHandler handler)
             { handler(this, EventArgs.Empty); }
         }

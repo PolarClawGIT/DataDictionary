@@ -18,11 +18,7 @@ namespace DataDictionary.Main.Forms.Database
 
         public DbTable(ITableValue tableItem) : this()
         {
-<<<<<<< HEAD
-            TableKeyName key = new TableKeyName(tableItem);
-=======
             TableIndexName key = new TableIndexName(tableItem);
->>>>>>> RenameIndexValue
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
 
             bindingTable.DataSource = new BindingView<TableValue>(BusinessData.DatabaseModel.DbTables, w => key.Equals(w));

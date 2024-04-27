@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Schema;
-=======
 ﻿using DataDictionary.DataLayer.DatabaseData.Schema;
->>>>>>> RenameIndexValue
 
 namespace DataDictionary.BusinessLayer.Database
 {
@@ -20,11 +15,7 @@ namespace DataDictionary.BusinessLayer.Database
     }
 
     /// <inheritdoc/>
-<<<<<<< HEAD
-    public interface ISchemaIndexName : IDbSchemaKeyName, IDbCatalogKeyName, ICatalogIndexName
-=======
     public interface ISchemaIndexName : IDbSchemaKeyName, ICatalogIndexName
->>>>>>> RenameIndexValue
     { }
 
     /// <inheritdoc/>

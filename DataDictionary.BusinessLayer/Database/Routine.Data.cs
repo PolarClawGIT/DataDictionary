@@ -18,10 +18,6 @@ namespace DataDictionary.BusinessLayer.Database
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, IGetNamedScopes
-<<<<<<< HEAD
-        where TValue: RoutineValue, new()
-=======
->>>>>>> RenameIndexValue
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -47,21 +43,6 @@ namespace DataDictionary.BusinessLayer.Database
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-<<<<<<< HEAD
-        /// <remarks>Domain</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
-        {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-
-            foreach (TValue item in this)
-            {
-                SchemaIndexName keyName = new SchemaIndexName(item);
-
-                if (Database.DbSchemta.FirstOrDefault(w => keyName.Equals(w)) is SchemaValue schema)
-                { result.Add(new NamedScopePair(schema.GetSystemId(), item)); }
-            }
-
-=======
         /// <remarks>Routine</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
@@ -73,7 +54,6 @@ namespace DataDictionary.BusinessLayer.Database
                 { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
             }
 
->>>>>>> RenameIndexValue
             return result;
         }
     }

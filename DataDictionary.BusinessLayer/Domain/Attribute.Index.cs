@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-﻿using DataDictionary.DataLayer.DomainData.Attribute;
-=======
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.DataLayer.DomainData.Attribute;
->>>>>>> RenameIndexValue
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -16,11 +12,6 @@ namespace DataDictionary.BusinessLayer.Domain
     {
         /// <inheritdoc cref="DomainAttributeKey(IDomainAttributeKey)"/>
         public AttributeIndex(IAttributeIndex source) : base(source) { }
-<<<<<<< HEAD
-
-        /// <inheritdoc/>
-        public AttributeIndex(IDomainAttributeKey source) : base(source) { }
-=======
     }
 
     /// <inheritdoc/>
@@ -38,6 +29,5 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc cref="DomainAttributeKeyName(DataLayer.DatabaseData.Routine.IDbRoutineParameterKeyName)"/>
         internal AttributeIndexName(IRoutineParameterIndexName source) : base(source) { }
->>>>>>> RenameIndexValue
     }
 }

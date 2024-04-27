@@ -17,8 +17,6 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         public INamedScopeData NamedScope { get { return namedScopeValue; } }
         private readonly NamedScopeData namedScopeValue;
-<<<<<<< HEAD
-=======
 
         /// <summary>
         /// Work Items to Clears then Load the NamedScope
@@ -43,6 +41,5 @@ namespace DataDictionary.BusinessLayer
 
             return work;
         }
->>>>>>> RenameIndexValue
     }
 }

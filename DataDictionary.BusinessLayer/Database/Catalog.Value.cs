@@ -15,14 +15,10 @@ namespace DataDictionary.BusinessLayer.Database
     {
         /// <inheritdoc cref="DbCatalogItem()"/>
         public CatalogValue() : base()
-        { PropertyChanged += OnPropertyChanged; }
+        { PropertyChanged += CatalogValue_PropertyChanged; }
 
         /// <inheritdoc/>
-<<<<<<< HEAD
-        public NamedScopeKey GetSystemId()
-=======
         public virtual NamedScopeKey GetSystemId()
->>>>>>> RenameIndexValue
         { return new NamedScopeKey(CatalogId); }
 
         /// <inheritdoc/>
@@ -35,7 +31,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public event EventHandler? OnTitleChanged;
-        private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
+        private void CatalogValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName is nameof(CatalogTitle) or nameof(DatabaseName)
                 && OnTitleChanged is EventHandler handler)

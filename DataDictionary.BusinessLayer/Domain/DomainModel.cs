@@ -24,12 +24,12 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <summary>
         /// List of Domain Attributes within the Model.
         /// </summary>
-        IAttributeData<AttributeValue> Attributes { get; }
+        IAttributeData Attributes { get; }
 
         /// <summary>
         /// List of Domain Entities within the Model.
         /// </summary>
-        IEntityData<EntityValue> Entities { get; }
+        IEntityData Entities { get; }
     }
 
     class DomainModel : IDomainModel, IDataTableFile, IGetNamedScopes
@@ -40,20 +40,20 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <summary>
         /// Reference to the containing Model
         /// </summary>
-        public required IModelData<ModelValue> Models { get; init; }
+        public required IModelData Models { get; init; }
 
         /// <inheritdoc/>
-        public IAttributeData<AttributeValue> Attributes { get { return attributeValues; } }
-        private readonly AttributeData<AttributeValue> attributeValues;
+        public IAttributeData Attributes { get { return attributeValues; } }
+        private readonly AttributeData attributeValues;
 
         /// <inheritdoc/>
-        public IEntityData<EntityValue> Entities { get { return entityValues; } }
-        private readonly EntityData<EntityValue> entityValues;
+        public IEntityData Entities { get { return entityValues; } }
+        private readonly EntityData entityValues;
 
         public DomainModel() : base()
         {
-            attributeValues = new AttributeData<AttributeValue>() { Model = this };
-            entityValues = new EntityData<EntityValue>() { DomainModel = this };
+            attributeValues = new AttributeData() { Model = this };
+            entityValues = new EntityData() { DomainModel = this };
         }
 
         /// <inheritdoc/>
@@ -107,26 +107,6 @@ namespace DataDictionary.BusinessLayer.Domain
             return work;
         }
 
-<<<<<<< HEAD
-        public IReadOnlyList<WorkItem> BuildNamedScope(NamedScopeData target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            ProgressTracker progress = new ProgressTracker();
-
-            WorkItem workItem = new WorkItem()
-            {
-                WorkName = "Build NamedScope (Domain)",
-                DoWork = () =>
-                {
-                    target.AddRange(attributeValues.GetNamedScopes());
-                    target.AddRange(entityValues.GetNamedScopes());
-                }
-            };
-            progress.OnProgressChanged = workItem.OnProgressChanged;
-
-            work.Add(workItem);
-            return work;
-=======
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
@@ -135,7 +115,6 @@ namespace DataDictionary.BusinessLayer.Domain
             result.AddRange(attributeValues.GetNamedScopes());
             result.AddRange(entityValues.GetNamedScopes());
             return result;
->>>>>>> RenameIndexValue
         }
     }
 }

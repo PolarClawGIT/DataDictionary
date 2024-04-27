@@ -1,8 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-<<<<<<< HEAD
-using DataDictionary.DataLayer.DomainData.Entity;
-using System.ComponentModel;
-=======
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Entity;
@@ -13,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
->>>>>>> RenameIndexValue
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -26,26 +21,15 @@ namespace DataDictionary.BusinessLayer.Domain
     {
         /// <inheritdoc cref="DomainEntityItem()"/>
         public EntityValue() : base()
-<<<<<<< HEAD
-        { PropertyChanged += OnPropertyChanged; }
-
-        /// <inheritdoc/>
-        public NamedScopeKey GetSystemId()
-=======
         { PropertyChanged += CatalogValue_PropertyChanged; }
 
         /// <inheritdoc/>
         public virtual NamedScopeKey GetSystemId()
->>>>>>> RenameIndexValue
         { return new NamedScopeKey(EntityId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()
-<<<<<<< HEAD
-        { return new NamedScopePath(this); }
-=======
         { return new NamedScopePath(Scope); }
->>>>>>> RenameIndexValue
 
         /// <inheritdoc/>
         public virtual String GetTitle()
@@ -53,18 +37,12 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         public event EventHandler? OnTitleChanged;
-<<<<<<< HEAD
-        private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
-=======
         private void CatalogValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
->>>>>>> RenameIndexValue
         {
             if (e.PropertyName is nameof(EntityTitle)
                 && OnTitleChanged is EventHandler handler)
             { handler(this, EventArgs.Empty); }
         }
-<<<<<<< HEAD
-=======
 
         internal XElement? GetXElement(IEnumerable<SchemaElementValue>? options = null)
         {
@@ -105,6 +83,5 @@ namespace DataDictionary.BusinessLayer.Domain
 
             return result;
         }
->>>>>>> RenameIndexValue
     }
 }

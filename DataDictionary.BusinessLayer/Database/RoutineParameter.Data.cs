@@ -17,11 +17,6 @@ namespace DataDictionary.BusinessLayer.Database
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, IGetNamedScopes
-<<<<<<< HEAD
-        where TValue : RoutineParameterValue, new()
-
-=======
->>>>>>> RenameIndexValue
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -51,17 +46,6 @@ namespace DataDictionary.BusinessLayer.Database
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
-<<<<<<< HEAD
-
-            foreach (TValue item in this)
-            {
-                RoutineIndexName keyName = new RoutineIndexName(item);
-
-                if (Database.DbRoutines.FirstOrDefault(w => keyName.Equals(w)) is RoutineValue routine)
-                { result.Add(new NamedScopePair(routine.GetSystemId(), item)); }
-            }
-
-=======
             foreach (RoutineParameterValue item in this)
             {
                 DbRoutineKeyName nameKey = new DbRoutineKeyName(item);
@@ -69,7 +53,6 @@ namespace DataDictionary.BusinessLayer.Database
                 { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
             }
 
->>>>>>> RenameIndexValue
             return result;
         }
     }

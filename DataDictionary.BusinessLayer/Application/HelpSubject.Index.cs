@@ -3,16 +3,6 @@
 namespace DataDictionary.BusinessLayer.Application
 {
     /// <inheritdoc/>
-<<<<<<< HEAD
-    public interface IHelpSubjectIndex : IHelpKey
-    { }
-
-    /// <inheritdoc/>
-    public class HelpSubjectIndex : HelpKey, IHelpSubjectIndex
-    {
-        /// <inheritdoc cref="HelpKey(IHelpKey)"/>
-        public HelpSubjectIndex(IHelpSubjectIndex source) : base(source) { }
-=======
     public interface IHelpSubjectIndex :IHelpKey
     { }
 
@@ -22,6 +12,5 @@ namespace DataDictionary.BusinessLayer.Application
         /// <inheritdoc cref="HelpKey.HelpKey(IHelpKey)"/>
         public HelpSubjectIndex(IHelpSubjectIndex source) : base(source)
         { }
->>>>>>> RenameIndexValue
     }
 }

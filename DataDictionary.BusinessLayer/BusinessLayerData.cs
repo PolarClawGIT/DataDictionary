@@ -66,7 +66,7 @@ namespace DataDictionary.BusinessLayer
                 ValidateCommand = true
             };
 
-            modelValues = new Model.ModelData<ModelValue>();
+            modelValues = new Model.ModelData();
             subjectAreaValues = new Model.SubjectAreaData() { Models = modelValues };
             namedScopeValue = new NamedScopeData();
 
@@ -135,11 +135,8 @@ namespace DataDictionary.BusinessLayer
 
             work.AddRange(ScriptingEngine.Remove());
 
-<<<<<<< HEAD
-=======
             work.Add(new WorkItem() { DoWork = namedScopeValue.Clear });
 
->>>>>>> RenameIndexValue
             return work;
         }
 
@@ -217,6 +214,7 @@ namespace DataDictionary.BusinessLayer
             }
         }
 
+
         /// <summary>
         /// Imports the Application Data from a File
         /// </summary>
@@ -265,21 +263,6 @@ namespace DataDictionary.BusinessLayer
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }
             }
-        }
-
-        public IReadOnlyList<WorkItem> BuildNamedScope()
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem() { DoWork = () => namedScopeValue.Clear() });
-            work.AddRange(modelValues.BuildNamedScope(namedScopeValue));
-            work.AddRange(databaseValue.BuildNamedScope(namedScopeValue));
-            work.AddRange(libraryValue.BuildNamedScope(namedScopeValue));
-
-            work.AddRange(domainValue.BuildNamedScope(namedScopeValue));
-            work.AddRange(scriptingValue.BuildNamedScope(namedScopeValue));
-
-            return work.AsReadOnly();
         }
     }
 }

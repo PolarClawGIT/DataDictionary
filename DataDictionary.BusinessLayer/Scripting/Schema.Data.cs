@@ -14,12 +14,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         ISaveData, ISaveData<ISchemaKey>
     { }
 
-<<<<<<< HEAD
-
-    class SchemaData : SchemaCollection<SchemaItem>, ISchemaData
-=======
     class SchemaData : SchemaCollection<SchemaValue>, ISchemaData, IGetNamedScopes
->>>>>>> RenameIndexValue
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine

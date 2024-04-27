@@ -35,9 +35,6 @@ namespace DataDictionary.DataLayer.ModelData
     public class ModelItem : BindingTableRow, IModelItem, ISerializable
     {
         /// <inheritdoc/>
-        public ScopeType Scope { get; } = ScopeType.Model;
-
-        /// <inheritdoc/>
         public Guid? ModelId { get { return GetValue<Guid>("ModelId"); } protected set { SetValue("ModelId", value); } }
 
         /// <inheritdoc/>

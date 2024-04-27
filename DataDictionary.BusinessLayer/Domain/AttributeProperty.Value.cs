@@ -9,11 +9,7 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-<<<<<<< HEAD
-    public interface IAttributePropertyValue : IDomainAttributePropertyItem
-=======
     public interface IAttributePropertyValue : IDomainAttributePropertyItem, IPropertyIndex
->>>>>>> RenameIndexValue
     { }
 
     /// <inheritdoc/>
@@ -27,19 +23,11 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         public AttributePropertyValue(IAttributeIndex attributeKey,
-<<<<<<< HEAD
-                                     IPropertyKey propertyKey,
-                                     IDbExtendedPropertyItem value)
-            : base(attributeKey, propertyKey, value) { }
-
-        internal XElement? GetXElement(IPropertyItem property, IEnumerable<ElementValue>? options = null)
-=======
                                      IPropertyIndex propertyKey,
                                      IExtendedPropertyValue value)
             : base(attributeKey, propertyKey, value) { }
 
         internal XElement? GetXElement(IPropertyItem property, IEnumerable<SchemaElementValue>? options = null)
->>>>>>> RenameIndexValue
         {
             XElement? result = null;
             IAttributePropertyValue attributeNames;
@@ -47,11 +35,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
             if (options is not null)
             {
-<<<<<<< HEAD
-                foreach (ElementValue option in options)
-=======
                 foreach (SchemaElementValue option in options)
->>>>>>> RenameIndexValue
                 {
                     Object? value = null;
 
