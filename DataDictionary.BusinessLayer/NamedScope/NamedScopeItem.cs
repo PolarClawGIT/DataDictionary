@@ -154,15 +154,15 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <param name="data"></param>
         public NamedScopeItem(IDbCatalogItem data) : base()
         {
-            SystemKey = new NamedScopeKey((IDbCatalogKey)data);
-            ScopeKey = new ScopeKey(data);
-            Source = data;
+            //SystemKey = new NamedScopeKey((IDbCatalogKey)data);
+            //ScopeKey = new ScopeKey(data);
+            //Source = data;
 
-            GetNameSpaceKey = () => new NameSpaceKey((IDbCatalogKeyName)data);
-            GetTitle = () => new DbCatalogKeyName(data).DatabaseName;
+            //GetNameSpaceKey = () => new NameSpaceKey((IDbCatalogKeyName)data);
+            //GetTitle = () => new DbCatalogKeyName(data).DatabaseName;
 
-            if (data is IBindingPropertyChanged binding)
-            { binding.PropertyChanged += OnPropertyChanged; }
+            //if (data is IBindingPropertyChanged binding)
+            //{ binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -172,16 +172,16 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <param name="data"></param>
         public NamedScopeItem(IDbCatalogKey parent, IDbSchemaItem data) : base()
         {
-            SystemKey = new NamedScopeKey((IDbSchemaKey)data);
-            SystemParentKey = new NamedScopeKey(parent);
-            ScopeKey = new ScopeKey(data);
-            Source = data;
+            //SystemKey = new NamedScopeKey((IDbSchemaKey)data);
+            //SystemParentKey = new NamedScopeKey(parent);
+            //ScopeKey = new ScopeKey(data);
+            //Source = data;
 
-            GetNameSpaceKey = () => new NameSpaceKey((IDbSchemaKeyName)data);
-            GetTitle = () => new DbSchemaKeyName(data).SchemaName;
+            //GetNameSpaceKey = () => new NameSpaceKey((IDbSchemaKeyName)data);
+            //GetTitle = () => new DbSchemaKeyName(data).SchemaName;
 
-            if (data is IBindingPropertyChanged binding)
-            { binding.PropertyChanged += OnPropertyChanged; }
+            //if (data is IBindingPropertyChanged binding)
+            //{ binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -191,16 +191,16 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <param name="data"></param>
         public NamedScopeItem(IDbSchemaKey parent, IDbTableItem data) : base()
         {
-            SystemKey = new NamedScopeKey((IDbTableKey)data);
-            SystemParentKey = new NamedScopeKey(parent);
-            ScopeKey = new ScopeKey(data);
-            Source = data;
+            //SystemKey = new NamedScopeKey((IDbTableKey)data);
+            //SystemParentKey = new NamedScopeKey(parent);
+            //ScopeKey = new ScopeKey(data);
+            //Source = data;
 
-            GetNameSpaceKey = () => new NameSpaceKey((IDbTableKeyName)data);
-            GetTitle = () => new DbTableKeyName(data).TableName;
+            //GetNameSpaceKey = () => new NameSpaceKey((IDbTableKeyName)data);
+            //GetTitle = () => new DbTableKeyName(data).TableName;
 
-            if (data is IBindingPropertyChanged binding)
-            { binding.PropertyChanged += OnPropertyChanged; }
+            //if (data is IBindingPropertyChanged binding)
+            //{ binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -249,16 +249,16 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <param name="data"></param>
         public NamedScopeItem(IDbSchemaKey parent, IDbRoutineItem data) : base()
         {
-            SystemKey = new NamedScopeKey((IDbRoutineKey)data);
-            SystemParentKey = new NamedScopeKey(parent);
-            ScopeKey = new ScopeKey(data);
-            Source = data;
+            //SystemKey = new NamedScopeKey((IDbRoutineKey)data);
+            //SystemParentKey = new NamedScopeKey(parent);
+            //ScopeKey = new ScopeKey(data);
+            //Source = data;
 
-            GetNameSpaceKey = () => new NameSpaceKey((IDbRoutineKeyName)data);
-            GetTitle = () => new DbRoutineKeyName(data).RoutineName;
+            //GetNameSpaceKey = () => new NameSpaceKey((IDbRoutineKeyName)data);
+            //GetTitle = () => new DbRoutineKeyName(data).RoutineName;
 
-            if (data is IBindingPropertyChanged binding)
-            { binding.PropertyChanged += OnPropertyChanged; }
+            //if (data is IBindingPropertyChanged binding)
+            //{ binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
@@ -288,16 +288,16 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <param name="data"></param>
         public NamedScopeItem(IDbSchemaKey parent, IDbDomainItem data) : base()
         {
-            SystemKey = new NamedScopeKey((IDbDomainKey)data);
-            SystemParentKey = new NamedScopeKey(parent);
-            Source = data;
-            ScopeKey = new ScopeKey(data);
+            //SystemKey = new NamedScopeKey((IDbDomainKey)data);
+            //SystemParentKey = new NamedScopeKey(parent);
+            //Source = data;
+            //ScopeKey = new ScopeKey(data);
 
-            GetNameSpaceKey = () => new NameSpaceKey((IDbDomainKeyName)data);
-            GetTitle = () => new DbDomainKeyName(data).DomainName;
+            //GetNameSpaceKey = () => new NameSpaceKey((IDbDomainKeyName)data);
+            //GetTitle = () => new DbDomainKeyName(data).DomainName;
 
-            if (data is IBindingPropertyChanged binding)
-            { binding.PropertyChanged += OnPropertyChanged; }
+            //if (data is IBindingPropertyChanged binding)
+            //{ binding.PropertyChanged += OnPropertyChanged; }
         }
 
         /// <summary>
