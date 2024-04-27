@@ -10,14 +10,14 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Properties
     /// </summary>
-    public interface IDomainAttributePropertyItem : IDomainAttributePropertyKey, IDomainProperty
+    public interface IDomainAttributePropertyItem : IDomainAttributePropertyKey, IDomainProperty, IScopeKey
     { }
 
     /// <summary>
     /// Implementation for Domain Attribute Properties
     /// </summary>
     [Serializable]
-    public class DomainAttributePropertyItem : BindingTableRow, IDomainAttributePropertyItem, IScopeKey, ISerializable
+    public class DomainAttributePropertyItem : BindingTableRow, IDomainAttributePropertyItem, ISerializable
     {
         /// <inheritdoc/>
         public Guid? AttributeId { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue("AttributeId", value); } }

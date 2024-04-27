@@ -9,6 +9,7 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer
 {
+
     partial class BusinessLayerData
     {
         /// <summary>
@@ -16,5 +17,32 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         public INamedScopeData NamedScope { get { return namedScopeValue; } }
         private readonly NamedScopeData namedScopeValue;
+<<<<<<< HEAD
+=======
+
+        /// <summary>
+        /// Work Items to Clears then Load the NamedScope
+        /// </summary>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> LoadNamedScope()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem()
+            {
+                WorkName = "Load NamedScope",
+                DoWork = () =>
+                {
+                    namedScopeValue.Clear();
+                    namedScopeValue.AddRange(domainValue.GetNamedScopes());
+                    namedScopeValue.AddRange(databaseValue.GetNamedScopes());
+                    namedScopeValue.AddRange(libraryValue.GetNamedScopes());
+                    namedScopeValue.AddRange(scriptingValue.GetNamedScopes());
+                }
+            });
+
+            return work;
+        }
+>>>>>>> RenameIndexValue
     }
 }

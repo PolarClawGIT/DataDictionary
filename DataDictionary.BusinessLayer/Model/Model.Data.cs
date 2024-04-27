@@ -9,8 +9,13 @@ namespace DataDictionary.BusinessLayer.Model
     /// <summary>
     /// Interface component for the Domain Model 
     /// </summary>
+<<<<<<< HEAD
     public interface IModelData<TValue> : IBindingData<TValue>
     where TValue : ModelValue, IModelValue
+=======
+    public interface IModelData :
+        IBindingData<ModelValue>
+>>>>>>> RenameIndexValue
     {
         /// <summary>
         /// Create WorkItem that create a new Model instance.
@@ -19,10 +24,15 @@ namespace DataDictionary.BusinessLayer.Model
         IReadOnlyList<WorkItem> Create();
     }
 
+<<<<<<< HEAD
     class ModelData<TValue> : DbLayer.ModelCollection<TValue>,
         ILoadData<DbLayer.IModelKey>, ISaveData<DbLayer.IModelKey>,
         IModelData<TValue>
         where TValue : ModelValue, IModelValue, new()
+=======
+    class ModelData : ModelCollection<ModelValue>, IModelData,
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile, IGetNamedScopes
+>>>>>>> RenameIndexValue
     {
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
@@ -48,6 +58,7 @@ namespace DataDictionary.BusinessLayer.Model
         { return new WorkItem() { WorkName = "Remove Model", DoWork = () => { Clear(); } }.ToList(); }
 
         public IReadOnlyList<WorkItem> Create()
+<<<<<<< HEAD
         { return new WorkItem() { WorkName = "Create Model", DoWork = () => { Add(new TValue()); } }.ToList(); }
 
         public IReadOnlyList<WorkItem> BuildNamedScope(NamedScopeData target)
@@ -60,6 +71,14 @@ namespace DataDictionary.BusinessLayer.Model
             });
             return work;
         }
+=======
+        { return new WorkItem() { WorkName = "Create Model", DoWork = () => { Add(new ModelValue()); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public IEnumerable<NamedScopePair> GetNamedScopes()
+        { return this.Select(s => new NamedScopePair(s)); }
+>>>>>>> RenameIndexValue
 
         public IEnumerable<NamedScopePair> GetNamedScopes()
         { return this.Select(s => new NamedScopePair(s)); }

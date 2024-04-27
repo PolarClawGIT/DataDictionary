@@ -1,10 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.ScriptingData.Selection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Scripting
@@ -16,9 +11,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         IBindingData<SelectionPathValue>,
         ILoadData, ILoadData<ISelectionKey>,
         ISaveData, ISaveData<ISelectionKey>
-    {
-
-    }
+    { }
 
     class SelectionPathData : SelectionPathCollection<SelectionPathValue>, ISelectionPathData
     {

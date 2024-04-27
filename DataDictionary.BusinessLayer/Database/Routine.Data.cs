@@ -11,15 +11,17 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Interface representing Catalog Routine data
     /// </summary>
-    public interface IRoutineData<TValue> : IBindingData<TValue>
-        where TValue: RoutineValue
+    public interface IRoutineData: IBindingData<RoutineValue>
     { }
 
-    class RoutineData<TValue> : DbRoutineCollection<TValue>, IRoutineData<TValue>,
+    class RoutineData : DbRoutineCollection<RoutineValue>, IRoutineData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, IGetNamedScopes
+<<<<<<< HEAD
         where TValue: RoutineValue, new()
+=======
+>>>>>>> RenameIndexValue
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -45,6 +47,7 @@ namespace DataDictionary.BusinessLayer.Database
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
+<<<<<<< HEAD
         /// <remarks>Domain</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
@@ -58,6 +61,19 @@ namespace DataDictionary.BusinessLayer.Database
                 { result.Add(new NamedScopePair(schema.GetSystemId(), item)); }
             }
 
+=======
+        /// <remarks>Routine</remarks>
+        public IEnumerable<NamedScopePair> GetNamedScopes()
+        {
+            List<NamedScopePair> result = new List<NamedScopePair>();
+            foreach (RoutineValue item in this)
+            {
+                DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
+                if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is SchemaValue parent)
+                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+            }
+
+>>>>>>> RenameIndexValue
             return result;
         }
     }

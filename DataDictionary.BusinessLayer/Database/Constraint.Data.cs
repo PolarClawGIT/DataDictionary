@@ -9,18 +9,19 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <summary>
-    /// Interface representing Catalog Constraint data
+    /// Wrapper for Catalog Constraint data
     /// </summary>
-    public interface IConstraintData<TValue> :
-        IBindingData<TValue>
-        where TValue : IConstraintValue
+    public interface IConstraintData: IBindingData<ConstraintValue>
     { }
 
-    class ConstraintData<TValue> : DbConstraintCollection<TValue>, IConstraintData<TValue>,
+    class ConstraintData: DbConstraintCollection<ConstraintValue>, IConstraintData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, IGetNamedScopes
+<<<<<<< HEAD
         where TValue : ConstraintValue, new()
+=======
+>>>>>>> RenameIndexValue
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -50,6 +51,7 @@ namespace DataDictionary.BusinessLayer.Database
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
+<<<<<<< HEAD
 
             foreach (TValue item in this)
             {
@@ -59,6 +61,15 @@ namespace DataDictionary.BusinessLayer.Database
                 { result.Add(new NamedScopePair(table.GetSystemId(), item)); }
             }
 
+=======
+            foreach (ConstraintValue item in this)
+            {
+                DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
+                if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is SchemaValue parent)
+                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+            }
+
+>>>>>>> RenameIndexValue
             return result;
         }
     }

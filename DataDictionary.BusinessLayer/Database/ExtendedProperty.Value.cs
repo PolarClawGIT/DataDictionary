@@ -1,9 +1,4 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -14,6 +9,6 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class ExtendedPropertyValue : DbExtendedPropertyItem, IDbExtendedPropertyItem
+    public class ExtendedPropertyValue : DbExtendedPropertyItem, IExtendedPropertyValue
     { }
 }

@@ -46,6 +46,9 @@ namespace DataDictionary.DataLayer.ModelData
         /// <inheritdoc/>
         public string? ModelDescription { get { return GetValue("ModelDescription"); } set { SetValue("ModelDescription", value); } }
 
+        /// <inheritdoc/>
+        public ScopeType Scope { get; } = ScopeType.Model;
+
         /// <summary>
         /// Constructor for the Model data
         /// </summary>

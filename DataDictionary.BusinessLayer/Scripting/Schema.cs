@@ -5,8 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.Scripting
+<<<<<<< HEAD
 {
     static class Schema
     {
     }
 }
+=======
+{ }
+>>>>>>> RenameIndexValue

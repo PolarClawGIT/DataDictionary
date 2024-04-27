@@ -23,7 +23,11 @@ namespace DataDictionary.Main
         private void RefreshCommand_Click(object? sender, EventArgs e)
         {
             List<WorkItem> work = new List<WorkItem>();
+<<<<<<< HEAD
             work.AddRange(BusinessData.BuildNamedScope());
+=======
+            work.AddRange(BusinessData.LoadNamedScope());
+>>>>>>> RenameIndexValue
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
             this.DoWork(work);
         }
@@ -32,15 +36,24 @@ namespace DataDictionary.Main
         {
             if (contextNameNavigation.SelectedNode is TreeNode node && node.GetNamedScope() is INamedScopeValue item)
             {
+<<<<<<< HEAD
                 dynamic dataNode = item;
                 Activate(dataNode);
+=======
+                INamedScopeValue? item = node.GetNamedScope();
+                if (item is INamedScopeValue taget)
+                {
+                    dynamic dataNode = taget;
+                    Activate(dataNode);
+                }
+>>>>>>> RenameIndexValue
             }
         }
 
         void Activate(ICatalogValue catalogItem)
         { Activate((data) => new Forms.Database.DbCatalog(catalogItem), catalogItem); }
 
-        void Activate(ISchemaValue schemaItem)
+        void Activate(BusinessLayer.Database.ISchemaValue schemaItem)
         { Activate((data) => new Forms.Database.DbSchema(schemaItem), schemaItem); }
 
         void Activate(ITableValue tableItem)
@@ -79,7 +92,7 @@ namespace DataDictionary.Main
         void Activate(ModelItem modelItem)
         { Activate((data) => new Forms.Model.Model(modelItem), modelItem); }
 
-        void Activate(SchemaItem schemaItem)
+        void Activate(BusinessLayer.Scripting.SchemaValue schemaItem)
         { Activate((data) => new Forms.Scripting.SchemaManager(schemaItem), schemaItem); }
     }
 }

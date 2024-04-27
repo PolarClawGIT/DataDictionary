@@ -9,15 +9,13 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Interface representing Catalog RoutineDependency data
     /// </summary>
-    public interface IRoutineDependencyData<TValue> : IBindingData<TValue>
-        where TValue: RoutineDependencyValue
+    public interface IRoutineDependencyData : IBindingData<RoutineDependencyValue>
     { }
 
-    class RoutineDependencyData<TValue> : DbRoutineDependencyCollection<TValue>, IRoutineDependencyData<TValue>,
+    class RoutineDependencyData : DbRoutineDependencyCollection<RoutineDependencyValue>, IRoutineDependencyData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem
-        where TValue : RoutineDependencyValue, new()
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }

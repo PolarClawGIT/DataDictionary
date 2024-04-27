@@ -1,6 +1,15 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ScriptingData.Transform;
+<<<<<<< HEAD
 using System.ComponentModel;
+=======
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+>>>>>>> RenameIndexValue
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
@@ -8,7 +17,11 @@ using System.Xml.Xsl;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
+<<<<<<< HEAD
     public interface ITransformValue : ITransformItem, ITransformIndex
+=======
+    public interface ITransformValue : ITransformItem
+>>>>>>> RenameIndexValue
     { }
 
     /// <inheritdoc/>
@@ -19,12 +32,24 @@ namespace DataDictionary.BusinessLayer.Scripting
         { PropertyChanged += OnPropertyChanged; }
 
         /// <inheritdoc/>
+<<<<<<< HEAD
         public NamedScopeKey GetSystemId()
+=======
+        public TransformValue() : base()
+        { PropertyChanged += SchemaValue_PropertyChanged; }
+
+        /// <inheritdoc/>
+        public virtual NamedScopeKey GetSystemId()
+>>>>>>> RenameIndexValue
         { return new NamedScopeKey(TransformId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()
+<<<<<<< HEAD
         { return new NamedScopePath(this); }
+=======
+        { return new NamedScopePath(Scope); }
+>>>>>>> RenameIndexValue
 
         /// <inheritdoc/>
         public virtual String GetTitle()
@@ -32,7 +57,11 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         public event EventHandler? OnTitleChanged;
+<<<<<<< HEAD
         private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
+=======
+        private void SchemaValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+>>>>>>> RenameIndexValue
         {
             if (e.PropertyName is nameof(TransformTitle)
                 && OnTitleChanged is EventHandler handler)

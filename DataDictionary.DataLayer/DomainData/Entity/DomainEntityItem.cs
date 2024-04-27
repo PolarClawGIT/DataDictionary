@@ -8,7 +8,11 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for Domain Entity Item
     /// </summary>
+<<<<<<< HEAD
     public interface IDomainEntityItem : IDomainEntityKey, IDomainEntityUniqueKey, IScopeKey
+=======
+    public interface IDomainEntityItem : IDomainEntityKey, IDomainEntityKeyName, IScopeKey
+>>>>>>> RenameIndexValue
     {
         /// <summary>
         /// Description of the Domain Entity
@@ -52,6 +56,9 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             get { return GetValue("EntityDescription"); }
             set { SetValue("EntityDescription", value); }
         }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get { return ScopeType.ModelEntity; } }
 
         /// <inheritdoc/>
         public Guid? TypeOfEntityId

@@ -7,19 +7,27 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <summary>
-    /// Interface for the Wrapper of Catalog Data (The Database)
+    /// Wrapper of Catalog Data (The Database)
     /// </summary>
+<<<<<<< HEAD
     public interface ICatalogData<TValue> :
         IBindingData<TValue>
         where TValue : CatalogValue, ICatalogValue
+=======
+    public interface ICatalogData : IBindingData<CatalogValue>
+>>>>>>> RenameIndexValue
     { }
 
-    class CatalogData<TValue> : DbCatalogCollection<TValue>,
+    class CatalogData : DbCatalogCollection<CatalogValue>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
+<<<<<<< HEAD
         IDatabaseModelItem, ICatalogData<TValue>,
         IGetNamedScopes
         where TValue : CatalogValue, ICatalogValue, new()
+=======
+        IDatabaseModelItem, ICatalogData, IGetNamedScopes
+>>>>>>> RenameIndexValue
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }

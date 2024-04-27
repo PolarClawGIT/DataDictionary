@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.Domain
         IEntityData<EntityValue> Entities { get; }
     }
 
-    class DomainModel : IDomainModel, IDataTableFile
+    class DomainModel : IDomainModel, IDataTableFile, IGetNamedScopes
     {
         /// <inheritdoc/>
         public required IPropertyData ModelProperty { get; init; }
@@ -107,6 +107,7 @@ namespace DataDictionary.BusinessLayer.Domain
             return work;
         }
 
+<<<<<<< HEAD
         public IReadOnlyList<WorkItem> BuildNamedScope(NamedScopeData target)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -125,6 +126,16 @@ namespace DataDictionary.BusinessLayer.Domain
 
             work.Add(workItem);
             return work;
+=======
+        /// <inheritdoc/>
+        /// <remarks>Domain</remarks>
+        public IEnumerable<NamedScopePair> GetNamedScopes()
+        {
+            List<NamedScopePair> result = new List<NamedScopePair>();
+            result.AddRange(attributeValues.GetNamedScopes());
+            result.AddRange(entityValues.GetNamedScopes());
+            return result;
+>>>>>>> RenameIndexValue
         }
     }
 }

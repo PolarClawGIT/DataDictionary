@@ -47,11 +47,6 @@ namespace DataDictionary.BusinessLayer
             }
         }
 
-        /// <summary>
-        /// Returns a new Default factory Database Worker.
-        /// </summary>
-        public IDatabaseWork GetDbFactory()
-        { return new DatabaseWork(DbConnection); }
 
         /// <summary>
         /// Constructor for the Business Layer Data Object
@@ -84,6 +79,12 @@ namespace DataDictionary.BusinessLayer
 
             scriptingValue = new Scripting.ScriptingEngine() { Models = modelValues };
         }
+
+        /// <summary>
+        /// Returns a new Default factory Database Worker.
+        /// </summary>
+        public IDatabaseWork GetDbFactory()
+        { return new DatabaseWork(DbConnection); }
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey key)
@@ -134,6 +135,11 @@ namespace DataDictionary.BusinessLayer
 
             work.AddRange(ScriptingEngine.Remove());
 
+<<<<<<< HEAD
+=======
+            work.Add(new WorkItem() { DoWork = namedScopeValue.Clear });
+
+>>>>>>> RenameIndexValue
             return work;
         }
 

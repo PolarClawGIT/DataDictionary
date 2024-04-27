@@ -3,8 +3,12 @@
 namespace DataDictionary.BusinessLayer.Database
 {
     /// <inheritdoc/>
+<<<<<<< HEAD
     public interface IDomainIndex : IDbDomainKey
     { }
+=======
+    public interface IDomainIndex : IDbDomainKey { }
+>>>>>>> RenameIndexValue
 
     /// <inheritdoc/>
     public class DomainIndex : DbDomainKey, IDomainIndex
@@ -15,7 +19,11 @@ namespace DataDictionary.BusinessLayer.Database
     }
 
     /// <inheritdoc/>
+<<<<<<< HEAD
     public interface IDomainIndexName : IDbDomainKeyName, ISchemaIndexName
+=======
+    public interface IDomainIndexName : IDbDomainKeyName
+>>>>>>> RenameIndexValue
     { }
 
     /// <inheritdoc/>

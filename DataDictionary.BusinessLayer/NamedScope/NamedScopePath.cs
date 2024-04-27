@@ -109,9 +109,15 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <summary>
         /// Constructor for a NamedScope Path
         /// </summary>
+<<<<<<< HEAD
         /// <param name="source">IScopeKey</param>
         internal NamedScopePath(IScopeKey source) : this()
         { pathParts.AddRange(Parse(source.Scope.ToName())); }
+=======
+        /// <param name="source"></param>
+        internal NamedScopePath(ScopeType source) : this()
+        { pathParts.AddRange(Parse(source.ToName())); }
+>>>>>>> RenameIndexValue
 
         /// <summary>
         /// Parses a String into Name Parts per the rules of a NamedScope Key.

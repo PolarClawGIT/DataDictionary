@@ -21,7 +21,18 @@ namespace DataDictionary.Main
         { Activate(() => new Forms.Database.CatalogManager()); }
 
         private void NewAttributeCommand_ButtonClick(object? sender, EventArgs e)
+<<<<<<< HEAD
         { Activate(() => new Forms.Domain.DomainAttribute(null)); }
+=======
+        {
+            AttributeValue item = new AttributeValue();
+
+            BusinessData.DomainModel.Attributes.Add(item);
+            BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, item));
+
+            Activate(item);
+        }
+>>>>>>> RenameIndexValue
 
         private void NewEntityCommand_ButtonClick(object? sender, EventArgs e)
         { Activate(() => new Forms.Domain.DomainEntity(null)); }

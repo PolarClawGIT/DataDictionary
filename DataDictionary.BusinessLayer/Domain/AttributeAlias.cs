@@ -5,8 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.Domain
+<<<<<<< HEAD
 {
     static class AttributeAlias
     {
     }
 }
+=======
+{ }
+>>>>>>> RenameIndexValue

@@ -23,7 +23,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <summary>
         /// List of Scripting Engine Scheme Elements.
         /// </summary>
-        IElementData SchemeElements { get; }
+        ISchemaElementData SchemeElements { get; }
 
         /// <summary>
         /// List of Scripting Engine Transforms.
@@ -49,7 +49,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Implementation for Scripting Engine data
     /// </summary>
-    class ScriptingEngine : IScriptingEngine, IDataTableFile
+    class ScriptingEngine : IScriptingEngine, IDataTableFile, IGetNamedScopes
     {
         /// <summary>
         /// Reference to the containing Model
@@ -59,8 +59,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         public ISchemaData Schemta { get { return schemtaValues; } }
         private readonly SchemaData schemtaValues;
 
-        public IElementData SchemeElements { get { return elementValues; } }
-        private readonly ElementData elementValues;
+        public ISchemaElementData SchemeElements { get { return elementValues; } }
+        private readonly SchemaElementData elementValues;
 
         public ITransformData Transforms { get { return transformValues; } }
         private readonly TransformData transformValues;
@@ -77,7 +77,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         public ScriptingEngine() : base()
         {
             schemtaValues = new SchemaData() { Scripting = this };
-            elementValues = new ElementData();
+            elementValues = new SchemaElementData();
             transformValues = new TransformData() { Scripting = this };
             columnValues = new ColumnData();
             selectionValues = new SelectionData() { Scripting = this };
@@ -194,15 +194,14 @@ namespace DataDictionary.BusinessLayer.Scripting
             return work;
         }
 
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
+            List<NamedScopePair> result = new List<NamedScopePair>();
+            result.AddRange(schemtaValues.GetNamedScopes());
+            result.AddRange(transformValues.GetNamedScopes());
+            result.AddRange(selectionValues.GetNamedScopes());
 
-            work.AddRange(schemtaValues.Build(target));
-            work.AddRange(transformValues.Build(target));
-            work.AddRange(selectionValues.Build(target));
-
-            return work;
+            return result;
         }
     }
 }

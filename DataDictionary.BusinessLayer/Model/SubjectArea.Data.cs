@@ -17,12 +17,16 @@ namespace DataDictionary.BusinessLayer.Model
     /// <summary>
     /// Interface component for the Model SubjectArea
     /// </summary>
+<<<<<<< HEAD:DataDictionary.BusinessLayer/Model/SubjectAreaData.cs
     public interface ISubjectAreaData :
         IBindingData<ModelSubjectAreaItem>,
         ILoadData<IModelSubjectAreaKey>, ISaveData<IModelSubjectAreaKey>
+=======
+    public interface ISubjectAreaData : IBindingData<SubjectAreaValue>
+>>>>>>> RenameIndexValue:DataDictionary.BusinessLayer/Model/SubjectArea.Data.cs
     { }
 
-    class SubjectAreaData : ModelSubjectAreaCollection, ISubjectAreaData,
+    class SubjectAreaData : ModelSubjectAreaCollection<SubjectAreaValue>, ISubjectAreaData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDataTableFile
     {
@@ -66,51 +70,9 @@ namespace DataDictionary.BusinessLayer.Model
         { return new WorkItem() { WorkName = "Remove Subject Area", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Model</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem()
-            {
-                WorkName = "Build NamedScope Subject Areas",
-                DoWork = () =>
-                {
-                    if (Models.FirstOrDefault() is IModelItem model)
-                    {
-                        ModelKey modelKey = new ModelKey(model);
-
-                        foreach (ModelSubjectAreaItem item in this.OrderBy(o => new NameSpaceKey(o).MemberPath))
-                        {
-                            target.Remove(new NamedScopeKey(item));
-                            target.Add(new NamedScopeItem(modelKey, item));
-                        }
-
-                        //TODO: Need to build this as a hierarchy, like how help subjects are done.
-                        /*
-                        var nameList = this.Select(s => new NameSpaceItem(new NameSpaceKey(s))).
-                            GroupBy(g => g.MemberPath).
-                            OrderBy(o => o.Key).
-                            ToList();
-
-                        foreach (ModelSubjectAreaItem item in this.OrderBy(o => new NameSpaceKey(o).MemberPath))
-                        {
-                            target.Remove(new NamedScopeKey(item));
-                            NameSpaceKey nameSpaceKey = new NameSpaceKey(item);
-
-                            if (this.FirstOrDefault(w => new NameSpaceKey(w).MemberFullName == nameSpaceKey.MemberPath) is ModelSubjectAreaItem parent)
-                            { target.Add(new NamedScopeItem(parent, item)); }
-
-                            // Handle name not in list
-
-                            else { target.Add(new NamedScopeItem(modelKey, item)); }*/
-                    }
-                }
-
-            });
-
-            return work;
-        }
+        /// <remarks>SubjectArea</remarks>
+        public IEnumerable<NamedScopePair> GetNamedScopes()
+        { return this.Select(s => new NamedScopePair(s)); }
 
     }
 }

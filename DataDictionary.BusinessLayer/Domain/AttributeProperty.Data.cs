@@ -8,11 +8,20 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface component for the Model Attribute Property
     /// </summary>
+<<<<<<< HEAD
     public interface IAttributePropertyData<TValue> : IBindingData<TValue>
         where TValue : AttributePropertyValue, IAttributePropertyValue
     { }
 
     class AttributePropertyData<TValue> : DomainAttributePropertyCollection<TValue>, IAttributePropertyData<TValue>,
+=======
+    public interface IAttributePropertyData : IBindingData<AttributePropertyValue>
+    {
+
+    }
+
+    class AttributePropertyData : DomainAttributePropertyCollection<AttributePropertyValue>, IAttributePropertyData,
+>>>>>>> RenameIndexValue
         ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
         where TValue : AttributePropertyValue, IAttributePropertyValue, new()

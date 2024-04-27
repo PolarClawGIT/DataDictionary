@@ -1,22 +1,15 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Schema;
-using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Database
 {
-
-
     /// <summary>
     /// Interface representing Catalog ExtendedProperty data
     /// </summary>
-    public interface IExtendedPropertyData<TValue> : IBindingData<TValue>
-    where TValue : ExtendedPropertyValue
+    public interface IExtendedPropertyData: IBindingData<ExtendedPropertyValue>
     {
 
         /// <summary>
@@ -24,50 +17,55 @@ namespace DataDictionary.BusinessLayer.Database
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IDbExtendedPropertyKeyName source);
+        IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IExtendedPropertyIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IDbTableColumnKeyName source);
+        IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(ITableColumnIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IDbTableKeyName source);
+        IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(ITableIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IDbRoutineParameterKeyName source);
+        IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IRoutineIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IDbConstraintKeyName source);
+        IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IRoutineParameterIndexName source);
 
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IDbSchemaKeyName source);
+        IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IConstraintIndexName source);
 
+        /// <summary>
+        /// Gets a list of Extended Properties given a Key.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(ISchemaIndexName source);
     }
 
-    class ExtendedPropertyData<TValue> : DbExtendedPropertyCollection<TValue>, IExtendedPropertyData<TValue>,
+    class ExtendedPropertyData : DbExtendedPropertyCollection<ExtendedPropertyValue>, IExtendedPropertyData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem
-        where TValue : ExtendedPropertyValue, new()
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -97,7 +95,7 @@ namespace DataDictionary.BusinessLayer.Database
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IDbExtendedPropertyKeyName source)
+        public IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IExtendedPropertyIndexName source)
         {
             DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
             return this.Where(w => key.Equals(w));
@@ -108,35 +106,42 @@ namespace DataDictionary.BusinessLayer.Database
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IDbTableColumnKeyName source)
+        public IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(ITableColumnIndexName source)
         {
             DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IDbTableKeyName source)
+        public IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(ITableIndexName source)
         {
             DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IDbRoutineParameterKeyName source)
+        public IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IRoutineIndexName source)
         {
             DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IDbConstraintKeyName source)
+        public IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IRoutineParameterIndexName source)
         {
             DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
             return this.Where(w => key.Equals(w));
         }
 
         /// <inheritdoc/>
-        public IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IDbSchemaKeyName source)
+        public IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(IConstraintIndexName source)
+        {
+            DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
+            return this.Where(w => key.Equals(w));
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<DbExtendedPropertyItem> GetExtendedProperty(ISchemaIndexName source)
         {
             DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
             return this.Where(w => key.Equals(w));

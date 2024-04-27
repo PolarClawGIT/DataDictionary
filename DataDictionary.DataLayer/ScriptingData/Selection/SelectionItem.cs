@@ -1,4 +1,5 @@
-﻿using DataDictionary.DataLayer.ScriptingData.Schema;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.ScriptingData.Schema;
 using DataDictionary.DataLayer.ScriptingData.Transform;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
     /// <summary>
     /// Interface for the Scripting Selection data.
     /// </summary>
-    public interface ISelectionItem : ISelectionKey, ITransformKey, ISchemaKey
+    public interface ISelectionItem : ISelectionKey, ITransformKey, ISchemaKey, IScopeKey
     {
         /// <summary>
         /// Title of the Selection.
@@ -45,6 +46,9 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
 
         /// <inheritdoc/>
         public String? SelectionDescription { get { return GetValue("SelectionDescription"); } set { SetValue("SelectionDescription", value); } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get { return ScopeType.ScriptingSelection; } }
 
         /// <inheritdoc/>
         public Guid? TransformId

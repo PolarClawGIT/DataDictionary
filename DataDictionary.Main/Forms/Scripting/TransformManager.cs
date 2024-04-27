@@ -18,7 +18,7 @@ namespace DataDictionary.Main.Forms.Scripting
     partial class TransformManager : ApplicationData
     {
         public Boolean IsOpenItem(object? item)
-        { return bindingTransform.Current is ISchemaItem current && ReferenceEquals(current, item); }
+        { return bindingTransform.Current is ISchemaValue current && ReferenceEquals(current, item); }
 
         public TransformManager() : base()
         {

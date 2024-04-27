@@ -10,15 +10,22 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Interface representing Catalog Domain data
     /// </summary>
+<<<<<<< HEAD
     public interface IDomainData<TValue> : IBindingData<TValue>
         where TValue: DomainValue, IDomainValue
+=======
+    public interface IDomainData : IBindingData<DomainValue>
+>>>>>>> RenameIndexValue
     { }
 
-    class DomainData<TValue> : DbDomainCollection<TValue>, IDomainData<TValue>,
+    class DomainData : DbDomainCollection<DomainValue>, IDomainData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDatabaseModelItem, IGetNamedScopes
+<<<<<<< HEAD
         where TValue: DomainValue, new()
+=======
+>>>>>>> RenameIndexValue
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -48,6 +55,7 @@ namespace DataDictionary.BusinessLayer.Database
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
+<<<<<<< HEAD
 
             foreach (TValue item in this)
             {
@@ -57,7 +65,17 @@ namespace DataDictionary.BusinessLayer.Database
                 { result.Add(new NamedScopePair(schema.GetSystemId(), item)); }
             }
 
+=======
+            foreach (DomainValue item in this)
+            {
+                DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
+                if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is SchemaValue parent)
+                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+            }
+
+>>>>>>> RenameIndexValue
             return result;
         }
+
     }
 }

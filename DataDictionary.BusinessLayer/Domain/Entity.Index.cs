@@ -1,4 +1,14 @@
+<<<<<<< HEAD
 ﻿using DataDictionary.DataLayer.DomainData.Entity;
+=======
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.DataLayer.DomainData.Entity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+>>>>>>> RenameIndexValue
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -11,8 +21,28 @@ namespace DataDictionary.BusinessLayer.Domain
     {
         /// <inheritdoc cref="DomainEntityKey(IDomainEntityKey)"/>
         public EntityIndex(IEntityIndex source) : base(source) { }
+<<<<<<< HEAD
 
         /// <inheritdoc/>
         public EntityIndex(IDomainEntityKey source) : base(source) { }
+=======
+    }
+
+    /// <inheritdoc/>
+    public interface IEntityIndexName : IDomainEntityKeyName
+    { }
+
+    /// <inheritdoc/>
+    public class EntityIndexName : DomainEntityKeyName
+    {
+        /// <inheritdoc cref="DomainEntityKeyName(IDomainEntityKeyName)"/>
+        public EntityIndexName(IEntityIndexName source) : base(source) { }
+
+        /// <inheritdoc cref="DomainEntityKeyName(DataLayer.DatabaseData.Table.IDbTableKeyName)"/>
+        internal EntityIndexName(ITableIndexName source) : base(source) { }
+
+        /// <inheritdoc cref="DomainEntityKeyName(DataLayer.DatabaseData.Routine.IDbRoutineKeyName)"/>
+        internal EntityIndexName(IRoutineIndexName source) : base(source) { }
+>>>>>>> RenameIndexValue
     }
 }
