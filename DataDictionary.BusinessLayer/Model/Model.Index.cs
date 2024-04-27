@@ -7,7 +7,7 @@ namespace DataDictionary.BusinessLayer.Model
     { }
 
     /// <inheritdoc/>
-    public class ModelIndex : ModelKey
+    public class ModelIndex : ModelKey, IModelIndex
     {
         /// <inheritdoc cref="ModelKey.ModelKey(IModelKey)"/>
         public ModelIndex(IModelIndex source) : base(source) { }

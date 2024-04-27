@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Main.Controls;
@@ -18,36 +19,9 @@ using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Model
 {
-    partial class ModelManager : ApplicationData, IApplicationDataBind
+    partial class ModelManager : ApplicationData
     {
-        ModelCollection dbData = new ModelCollection();
-        ModelManagerCollection bindingData = new ModelManagerCollection();
-
-        Boolean inModelList
-        {
-            get
-            {
-                if (modelBinding.Current is ModelManagerItem item)
-                {
-                    ModelKey key = new ModelKey(item);
-                    return (key.Equals(BusinessData.Model));
-                }
-                else { return false; }
-            }
-        }
-
-        Boolean inDatabaseList
-        {
-            get
-            {
-                if (modelBinding.Current is ModelManagerItem item)
-                {
-                    ModelKey key = new ModelKey(item);
-                    return (dbData.FirstOrDefault(w => key.Equals(w)) is IModelItem);
-                }
-                else { return false; }
-            }
-        }
+        ModelSynchronize models = new ModelSynchronize(BusinessData);
 
         public ModelManager()
         {
@@ -59,68 +33,57 @@ namespace DataDictionary.Main.Forms.Model
         {
             if (Settings.Default.IsOnLineMode)
             {
+                IsLocked(true);
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
-                work.Add(new WorkItem() { WorkName = "Clear local data", DoWork = dbData.Clear });
-                work.AddRange(factory.CreateLoad(dbData).ToList());
-                this.DoWork(work, onCompleting);
+                work.AddRange(models.GetModels(factory));
+                DoWork(work, onCompleting);
             }
+            else { BindData(); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { this.BindData(); }
+            {
+                models.Refresh();
+                BindData();
+                IsLocked(false);
+            }
+
+            void BindData()
+            {
+                ModelSynchronizeValue modelNames;
+                modelNavigation.AutoGenerateColumns = false;
+                modelNavigation.DataSource = modelBinding;
+                Func<String, String> FormatName = (name) => { return String.Format("{0}.{1}", nameof(modelNames.Source), name); };
+
+                modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), modelBinding, FormatName(nameof(modelNames.Source.ModelTitle)), false, DataSourceUpdateMode.OnPropertyChanged));
+                modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), modelBinding, FormatName(nameof(modelNames.Source.ModelDescription)), false, DataSourceUpdateMode.OnPropertyChanged));
+            }
         }
 
-        public bool BindDataCore()
-        {
-            bindingData.Build(BusinessData.Model, dbData);
-
-            modelBinding.DataSource = bindingData;
-
-            modelNavigation.AutoGenerateColumns = false;
-            modelNavigation.DataSource = modelBinding;
-
-            ModelManagerItem? nameOfValues;
-            modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), modelBinding, nameof(nameOfValues.ModelTitle)));
-            modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), modelBinding, nameof(nameOfValues.ModelDescription)));
-
-            return true;
-        }
-
-        public void UnbindDataCore()
-        {
-            modelTitleData.DataBindings.Clear();
-            modelDescriptionData.DataBindings.Clear();
-
-            modelNavigation.DataSource = null;
-            modelBinding.DataSource = null;
-        }
 
         protected override void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
             modelNavigation.EndEdit();
 
-            if (modelBinding.Current is ModelManagerItem item)
+            if (modelBinding.Current is ModelSynchronizeValue value && value.Source is IModelValue item)
             {
+                IsLocked(true);
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                IModelKey key = new ModelKey(item);
+                ModelIndex key = new ModelIndex(item);
 
                 work.Add(factory.OpenConnection());
+                work.AddRange(models.DeleteFromDb(factory, key));
+                work.AddRange(models.GetModels(factory));
+                DoWork(work, onCompleting);
+            }
 
-                if (inModelList)
-                {
-                    work.AddRange(BusinessData.Remove());
-                    work.AddRange(BusinessData.Save(factory, key));
-                }
-                else
-                {
-                    work.Add(new WorkItem() { DoWork = () => dbData.Remove(key) });
-                    work.Add(factory.CreateSave(dbData, key));
-                }
-
-                DoLocalWork(work);
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                models.Refresh();
+                IsLocked(false);
             }
         }
 
@@ -129,18 +92,24 @@ namespace DataDictionary.Main.Forms.Model
             base.OpenFromDatabaseCommand_Click(sender, e);
             modelNavigation.EndEdit();
 
-            if (modelBinding.Current is ModelManagerItem item)
+            if (modelBinding.Current is ModelSynchronizeValue value && value.Source is IModelValue item)
             {
+                IsLocked(true);
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
+                ModelIndex key = new ModelIndex(item);
 
-                ModelKey key = new ModelKey(item);
                 work.Add(factory.OpenConnection());
-                work.AddRange(BusinessData.Remove());
-                work.AddRange(BusinessData.Load(factory, key));
+                work.AddRange(models.OpenFromDb(factory, key));
 
-                work.AddRange(BusinessData.NamedScope.Build());
-                DoLocalWork(work);
+                DoWork(work, onCompleting);
+            }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                models.Refresh();
+                SendMessage(new RefreshNavigation());
+                IsLocked(false);
             }
         }
 
@@ -149,37 +118,52 @@ namespace DataDictionary.Main.Forms.Model
             base.SaveToDatabaseCommand_Click(sender, e);
             modelNavigation.EndEdit();
 
-            if (modelBinding.Current is ModelManagerItem item)
+
+            if (modelBinding.Current is ModelSynchronizeValue value && value.Source is IModelValue item)
             {
+                IsLocked(true);
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
+                ModelIndex key = new ModelIndex(item);
 
-                ModelKey key = new ModelKey(item);
                 work.Add(factory.OpenConnection());
-                work.AddRange(BusinessData.Save(factory, key));
 
-                DoLocalWork(work);
+                if (GetInModel())
+                {
+                    work.AddRange(models.SaveToDb(factory, key));
+                    work.AddRange(models.GetModels(factory));
+                }
+
+                DoWork(work, onCompleting);
             }
-        }
-
-        private void DoLocalWork(List<WorkItem> work)
-        {
-            SendMessage(new Messages.DoUnbindData());
-
-            this.DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { 
-                SendMessage(new Messages.DoBindData());
-                SendMessage(new Messages.RefreshNavigation());
+            {
+                models.Refresh();
+                IsLocked(false);
             }
+
+        }
+
+        private Boolean GetInModel()
+        {
+            if (modelBinding.Current is ModelSynchronizeValue item)
+            { return item.InModel == true; }
+            else { return false; }
+        }
+
+        private Boolean GetInDatabase()
+        {
+            if (modelBinding.Current is ModelSynchronizeValue item)
+            { return item.InDatabase == true; }
+            else { return false; }
         }
 
         private void modelBinding_CurrentChanged(object sender, EventArgs e)
         {
-            IsOpenDatabase = inDatabaseList && !inModelList;
-            IsSaveDatabase = inModelList;
-            IsDeleteDatabase = inDatabaseList;
+            IsOpenDatabase = GetInDatabase() && !GetInModel();
+            IsSaveDatabase = GetInModel();
+            IsDeleteDatabase = GetInDatabase();
         }
 
         private void BindingComplete(object sender, BindingCompleteEventArgs e)
@@ -187,11 +171,14 @@ namespace DataDictionary.Main.Forms.Model
 
         private void newModelCommand_Click(object sender, EventArgs e)
         {
-            List<WorkItem> work = new List<WorkItem>();
+            IsLocked(true);
+            DoWork(BusinessData.Remove(), onCompleting);
 
-            work.AddRange(BusinessData.Remove());
-
-            DoLocalWork(work);
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                models.Refresh();
+                IsLocked(false);
+            }
         }
     }
 }
