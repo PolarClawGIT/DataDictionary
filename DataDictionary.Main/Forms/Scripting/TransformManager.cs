@@ -26,18 +26,18 @@ namespace DataDictionary.Main.Forms.Scripting
             toolStrip.TransferItems(transformToolStrip, 0);
         }
 
-        public TransformManager(ITransformItem? transformItem): this()
+        public TransformManager(ITransformValue? transformItem): this()
         {
             if (transformItem is null)
             {
-                transformItem = new TransformItem();
+                transformItem = new TransformValue();
                 BusinessData.ScriptingEngine.Transforms.Add(transformItem);
                 BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, transformItem));
             }
 
-            TransformKey key = new TransformKey(transformItem);
+            TransformIndex key = new TransformIndex(transformItem);
 
-            bindingTransform.DataSource = new BindingView<TransformItem>(BusinessData.ScriptingEngine.Transforms, w => key.Equals(w));
+            bindingTransform.DataSource = new BindingView<TransformValue>(BusinessData.ScriptingEngine.Transforms, w => key.Equals(w));
             bindingTransform.Position = 0;
 
             Setup(bindingTransform);
@@ -46,7 +46,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void TransformManager_Load(object sender, EventArgs e)
         {
             SendMessage(new RefreshNavigation());
-            ITransformItem transformNames;
+            ITransformValue transformNames;
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingTransform, nameof(transformNames.TransformTitle)));
 
             transformTitleData.DataBindings.Add(new Binding(nameof(transformTitleData.Text), bindingTransform, nameof(transformNames.TransformTitle), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -64,9 +64,9 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void removeTransformCommand_Click(object sender, EventArgs e)
         {
-            if (bindingTransform.Current is TransformItem item)
+            if (bindingTransform.Current is TransformValue item)
             {
-                TransformKey key = new TransformKey(item);
+                TransformIndex key = new TransformIndex(item);
 
                 BusinessData.ScriptingEngine.Transforms.Remove(item);
 

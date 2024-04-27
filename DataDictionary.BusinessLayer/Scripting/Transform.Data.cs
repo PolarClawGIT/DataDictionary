@@ -16,12 +16,12 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// Interface component for the Scripting Engine Transform
     /// </summary>
     public interface ITransformData :
-        IBindingData<TransformItem>,
+        IBindingData<TransformValue>,
         ILoadData, ILoadData<ITransformKey>,
         ISaveData, ISaveData<ITransformKey>
     { }
 
-    class TransformData : TransformCollection<TransformItem>, ITransformData, INamedScopeData
+    class TransformData : TransformCollection<TransformValue>, ITransformData, IGetNamedScopes
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine
@@ -50,29 +50,8 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Transform</remarks>
-        public IReadOnlyList<WorkItem> Build(INamedScopeDictionary target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem()
-            {
-                WorkName = "Build NamedScope Scripting Transform",
-                DoWork = () =>
-                {
-                    if (Scripting.Models.FirstOrDefault() is IModelItem model)
-                    {
-                        ModelKey key = new ModelKey(model);
-
-                        foreach (TransformItem item in this)
-                        {
-                            target.Remove(new NamedScopeKey(item));
-                            target.Add(new NamedScopeItem(key, item));
-                        }
-                    }
-                }
-            });
-
-            return work;
-        }
+        public IEnumerable<NamedScopePair> GetNamedScopes()
+        { return this.Select(s => new NamedScopePair(s)); }
 
     }
 }
