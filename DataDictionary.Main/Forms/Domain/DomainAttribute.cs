@@ -102,8 +102,8 @@ namespace DataDictionary.Main.Forms.Domain
                 AttributeAliasValue newItem = new AttributeAliasValue(current);
                 e.NewObject = newItem;
 
-                newItem.AliasName = domainAlias.SelectedAlias.MemberFullName;
-                newItem.Scope = domainAlias.SelectedAlias.Scope;
+                //newItem.AliasName = domainAlias.SelectedAlias.MemberFullName;
+                //newItem.Scope = domainAlias.SelectedAlias.Scope;
             }
         }
 

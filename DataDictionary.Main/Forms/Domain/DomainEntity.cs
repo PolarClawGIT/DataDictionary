@@ -103,8 +103,8 @@ namespace DataDictionary.Main.Forms.Domain
                 EntityAliasValue newItem = new EntityAliasValue(current);
                 e.NewObject = newItem;
 
-                newItem.AliasName = domainAlias.SelectedAlias.MemberFullName;
-                newItem.Scope = domainAlias.SelectedAlias.Scope;
+                //newItem.AliasName = domainAlias.SelectedAlias.MemberFullName;
+                //newItem.Scope = domainAlias.SelectedAlias.Scope;
             }
         }
 

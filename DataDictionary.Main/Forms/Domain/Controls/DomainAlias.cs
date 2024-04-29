@@ -1,8 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.NameSpace;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.Main.Controls;
-using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Domain.Controls
@@ -17,7 +15,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         /// <summary>
         /// The current Alias Item
         /// </summary>
-        public NameSpaceItem SelectedAlias { get; private set; } = new NameSpaceItem();
+        //public NameSpaceItem SelectedAlias { get; private set; } = new NameSpaceItem();
 
         public DomainAlias() :base()
         {
