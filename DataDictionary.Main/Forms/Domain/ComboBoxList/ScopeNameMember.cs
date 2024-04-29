@@ -1,36 +1,28 @@
-﻿
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DatabaseData;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.Main.Controls;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
-    record ScopeNameItem
+    record ScopeNameMember
     {
         public ScopeType ScopeType { get; set; } = ScopeType.Null;
         public String ScopeName { get; init; } = String.Empty;
 
-        public static ScopeNameItem Empty { get; } = new ScopeNameItem();
+        public static ScopeNameMember Empty { get; } = new ScopeNameMember();
 
-        protected ScopeNameItem() : base() { }
+        protected ScopeNameMember() : base() { }
 
         public static void Load(ComboBoxData control)
         {
-            ScopeNameItem scopeNameItem = new ScopeNameItem();
-            BindingList<ScopeNameItem> list = new BindingList<ScopeNameItem>();
+            ScopeNameMember scopeNameItem = new ScopeNameMember();
+            BindingList<ScopeNameMember> list = new BindingList<ScopeNameMember>();
 
             foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
             {
                 String name = item.ToName();
                 if (!String.IsNullOrEmpty(name))
-                { list.Add(new ScopeNameItem() { ScopeType = item, ScopeName = name }); }
+                { list.Add(new ScopeNameMember() { ScopeType = item, ScopeName = name }); }
             }
 
             control.DataSource = list;
@@ -40,14 +32,14 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 
         public static void Load(DataGridViewComboBoxColumn control)
         {
-            ScopeNameItem scopeNameItem = new ScopeNameItem();
-            BindingList<ScopeNameItem> list = new BindingList<ScopeNameItem>();
+            ScopeNameMember scopeNameItem = new ScopeNameMember();
+            BindingList<ScopeNameMember> list = new BindingList<ScopeNameMember>();
 
             foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
             {
                 String name = item.ToName();
                 if (!String.IsNullOrEmpty(name))
-                { list.Add(new ScopeNameItem() { ScopeType = item, ScopeName = name }); }
+                { list.Add(new ScopeNameMember() { ScopeType = item, ScopeName = name }); }
             }
 
             control.DataSource = list;

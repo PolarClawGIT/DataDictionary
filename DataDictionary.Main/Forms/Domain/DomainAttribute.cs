@@ -39,7 +39,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             IAttributeValue nameOfValues;
             PropertyNameMember.Load(propertyIdColumn);
-            ScopeNameItem.Load(aliaseScopeColumn);
+            ScopeNameMember.Load(aliaseScopeColumn);
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingAttribute, nameof(nameOfValues.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingAttribute, nameof(nameOfValues.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));

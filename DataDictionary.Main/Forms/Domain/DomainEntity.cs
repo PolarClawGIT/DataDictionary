@@ -48,7 +48,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             IEntityValue nameOfValues;
             PropertyNameMember.Load(propertyIdColumn);
-            ScopeNameItem.Load(aliaseScopeColumn);
+            ScopeNameMember.Load(aliaseScopeColumn);
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));
