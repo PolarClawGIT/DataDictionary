@@ -32,7 +32,6 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 transformItem = new TransformValue();
                 BusinessData.ScriptingEngine.Transforms.Add(transformItem);
-                BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, transformItem));
             }
 
             TransformIndex key = new TransformIndex(transformItem);

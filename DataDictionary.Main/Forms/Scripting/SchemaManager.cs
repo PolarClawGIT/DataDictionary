@@ -35,7 +35,6 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 schemaItem = new SchemaValue();
                 BusinessData.ScriptingEngine.Schemta.Add(schemaItem);
-                BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, schemaItem));
             }
 
             DataLayer.ScriptingData.Schema.SchemaKey key = new DataLayer.ScriptingData.Schema.SchemaKey(schemaItem);
@@ -200,7 +199,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (bindingSchema.Current is SchemaValue schema)
             {
-                SchemaElementValue newElement = new ElementValue(schema);
+                SchemaElementValue newElement = new SchemaElementValue(schema);
 
                 if (addColumn is not null)
                 {

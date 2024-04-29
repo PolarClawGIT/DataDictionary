@@ -21,7 +21,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void SelectionManager_Load(object sender, EventArgs e)
         {
-
+            throw new NotImplementedException();
         }
 
         protected override void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)

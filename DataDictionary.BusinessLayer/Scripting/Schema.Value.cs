@@ -5,7 +5,7 @@ using System.ComponentModel;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface ISchemaValue : ISchemaItem
+    public interface ISchemaValue : ISchemaItem, ISchemaIndex
     { }
 
     /// <inheritdoc/>
