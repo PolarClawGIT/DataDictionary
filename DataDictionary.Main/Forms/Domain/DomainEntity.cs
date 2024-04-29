@@ -1,19 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
-using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain
@@ -21,7 +11,7 @@ namespace DataDictionary.Main.Forms.Domain
     partial class DomainEntity : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return bindingEntity.Current is IDomainEntityItem current && ReferenceEquals(current, item); }
+        { return bindingEntity.Current is IEntityValue current && ReferenceEquals(current, item); }
 
         public DomainEntity() : base()
         {
@@ -29,15 +19,21 @@ namespace DataDictionary.Main.Forms.Domain
             toolStrip.TransferItems(entityToolStrip, 0);
         }
 
-        public DomainEntity(IDomainEntityItem entityItem) : this()
+        public DomainEntity(IEntityValue? entityItem) : this()
         {
-            DomainEntityKey key = new DomainEntityKey(entityItem);
+            if (entityItem is null)
+            { 
+                entityItem = new EntityValue();
+                BusinessData.DomainModel.Entities.Add(entityItem);
+            }
+
+            EntityIndex key = new EntityIndex(entityItem);
             bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.DomainModel.Entities, w => key.Equals(w));
             bindingEntity.Position = 0;
 
-            Setup(bindingEntity, ScopeType.ModelEntity);
+            Setup(bindingEntity);
 
-            if (bindingEntity.Current is IDomainEntityItem current)
+            if (bindingEntity.Current is IEntityValue current)
             {
                 bindingProperty.DataSource = new BindingView<EntityPropertyValue>(BusinessData.DomainModel.Entities.Properties, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.DomainModel.Entities.Aliases, w => key.Equals(w));
@@ -65,7 +61,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.DataSource = bindingAlias;
             domainAlias.BindData(bindingAlias);
 
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingEntity.Current is not IDomainEntityItem);
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingEntity.Current is not IEntityValue);
         }
 
         private void NewItemCommand_Click(object? sender, EventArgs e)
@@ -84,7 +80,7 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
-            if (bindingEntity.Current is IDomainEntityItem current)
+            if (bindingEntity.Current is IEntityValue current)
             {
                 BusinessData.DomainModel.Entities.Remove(current);
                 BusinessData.NamedScope.Remove(new NamedScopeKey(current));
@@ -93,18 +89,18 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingEntity.Current is DomainEntityItem current)
+            if (bindingEntity.Current is IEntityValue current)
             {
-                DomainEntityPropertyItem newItem = new DomainEntityPropertyItem(current);
+                EntityPropertyValue newItem = new EntityPropertyValue(current);
                 e.NewObject = newItem;
             }
         }
 
         private void BindingAlias_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingEntity.Current is DomainEntityItem current)
+            if (bindingEntity.Current is IEntityValue current)
             {
-                DomainEntityAliasItem newItem = new DomainEntityAliasItem(current);
+                EntityAliasValue newItem = new EntityAliasValue(current);
                 e.NewObject = newItem;
 
                 newItem.AliasName = domainAlias.SelectedAlias.MemberFullName;

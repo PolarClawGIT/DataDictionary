@@ -2,18 +2,13 @@
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Entity;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IEntityValue : IDomainEntityItem, IEntityIndex
+    public interface IEntityValue : IDomainEntityItem, IEntityIndex, IEntityIndexName
     { }
 
     /// <inheritdoc/>

@@ -8,7 +8,7 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IAttributeValue : IDomainAttributeItem, IAttributeIndex
+    public interface IAttributeValue : IDomainAttributeItem, IAttributeIndex, IAttributeIndexName
     { }
 
     /// <inheritdoc/>

@@ -2,7 +2,6 @@
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
-using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
@@ -20,8 +19,14 @@ namespace DataDictionary.Main.Forms.Domain
             toolStrip.TransferItems(attributeToolStrip, 0);
         }
 
-        public DomainAttribute(IAttributeValue attributeItem) : this()
+        public DomainAttribute(IAttributeValue? attributeItem) : this()
         {
+            if (attributeItem is null)
+            {
+                attributeItem = new AttributeValue();
+                BusinessData.DomainModel.Attributes.Add(attributeItem);
+            }
+
             AttributeIndex key = new AttributeIndex(attributeItem);
             bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => key.Equals(w));
             bindingAttribute.Position = 0;
