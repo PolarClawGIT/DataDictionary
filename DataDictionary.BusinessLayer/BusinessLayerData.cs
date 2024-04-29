@@ -41,8 +41,8 @@ namespace DataDictionary.BusinessLayer
         {
             get
             {
-                if (modelValues.Count > 0)
-                { return modelValues.First(); }
+                if (modelValue.Count > 0)
+                { return modelValue.First(); }
                 else { throw new ArgumentException("No Model exists"); }
             }
         }
@@ -66,18 +66,18 @@ namespace DataDictionary.BusinessLayer
                 ValidateCommand = true
             };
 
-            modelValues = new Model.ModelData();
-            subjectAreaValues = new Model.SubjectAreaData() { Models = modelValues };
+            modelValue = new Model.ModelData();
+            subjectAreaValues = new Model.SubjectAreaData() { Models = modelValue };
             namedScopeValue = new NamedScopeData();
 
-            modelValues.Add(new ModelValue());
+            modelValue.Add(new ModelValue());
             applicationValue = new Application.ApplicationData();
 
-            domainValue = new Domain.DomainModel() { Models = modelValues, ModelProperty = applicationValue.Properties };
+            domainValue = new Domain.DomainModel() { Models = modelValue, ModelProperty = applicationValue.Properties };
             databaseValue = new Database.DatabaseModel();
             libraryValue = new Library.LibraryModel();
 
-            scriptingValue = new Scripting.ScriptingEngine() { Models = modelValues };
+            scriptingValue = new Scripting.ScriptingEngine() { Models = modelValue };
         }
 
         /// <summary>
@@ -91,8 +91,8 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValues.Remove());
-            work.AddRange(modelValues.Load(factory, key));
+            work.AddRange(modelValue.Remove());
+            work.AddRange(modelValue.Load(factory, key));
             work.AddRange(subjectAreaValues.Load(factory, key));
 
             work.AddRange(DomainModel.Load(factory, key));
@@ -109,7 +109,7 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValues.Save(factory, key));
+            work.AddRange(modelValue.Save(factory, key));
             work.AddRange(subjectAreaValues.Save(factory, key));
 
             work.AddRange(DomainModel.Save(factory, key));
@@ -126,7 +126,7 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValues.Remove());
+            work.AddRange(modelValue.Remove());
             work.AddRange(subjectAreaValues.Remove());
 
             work.AddRange(DomainModel.Remove());
@@ -149,7 +149,7 @@ namespace DataDictionary.BusinessLayer
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(Remove());
 
-            work.AddRange(modelValues.Create());
+            work.AddRange(modelValue.Create());
             return work;
         }
 
@@ -171,7 +171,7 @@ namespace DataDictionary.BusinessLayer
                 {
                     workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
 
-                    modelValues.Import(workSet);
+                    modelValue.Import(workSet);
                     subjectAreaValues.Import(workSet);
 
                     domainValue.Import(workSet);
@@ -198,7 +198,7 @@ namespace DataDictionary.BusinessLayer
             {
                 using (System.Data.DataSet workSet = new System.Data.DataSet())
                 {
-                    workSet.Tables.Add(modelValues.ToDataTable());
+                    workSet.Tables.Add(modelValue.ToDataTable());
                     workSet.Tables.Add(subjectAreaValues.ToDataTable());
 
                     workSet.Tables.AddRange(domainValue.Export().ToArray());

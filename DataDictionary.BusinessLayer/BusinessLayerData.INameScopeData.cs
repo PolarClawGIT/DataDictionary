@@ -32,6 +32,7 @@ namespace DataDictionary.BusinessLayer
                 DoWork = () =>
                 {
                     namedScopeValue.Clear();
+                    namedScopeValue.AddRange(modelValue.GetNamedScopes());
                     namedScopeValue.AddRange(domainValue.GetNamedScopes());
                     namedScopeValue.AddRange(databaseValue.GetNamedScopes());
                     namedScopeValue.AddRange(libraryValue.GetNamedScopes());
