@@ -50,9 +50,12 @@ namespace DataDictionary.BusinessLayer.Database
             List<NamedScopePair> result = new List<NamedScopePair>();
             foreach (ConstraintValue item in this)
             {
-                DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
-                if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is SchemaValue parent)
-                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+                DbTableKeyName tableKey = new DbTableKeyName(item);
+                DbSchemaKeyName schemaKey = new DbSchemaKeyName(item);
+                if (Database.DbTables.FirstOrDefault(w => tableKey.Equals(w)) is TableValue table)
+                { result.Add(new NamedScopePair(table.GetSystemId(), item)); }
+                else if (Database.DbSchemta.FirstOrDefault(w => tableKey.Equals(w)) is SchemaValue schema)
+                { result.Add(new NamedScopePair(schema.GetSystemId(), item)); }
             }
 
             return result;
