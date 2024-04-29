@@ -27,7 +27,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return TableName ?? String.Empty; }
+        { return ColumnName ?? String.Empty; }
 
         /// <inheritdoc/>
         public event EventHandler? OnTitleChanged;
