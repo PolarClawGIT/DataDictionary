@@ -1,11 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.Library;
+using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.DomainData.Entity;
-using DataDictionary.DataLayer.ModelData;
-using DataDictionary.DataLayer.ModelData.SubjectArea;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using Toolbox.Threading;
@@ -74,13 +71,13 @@ namespace DataDictionary.Main
         void Activate(AttributeValue attributeItem)
         { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
 
-        void Activate(DomainEntityItem entityItem)
+        void Activate(EntityValue entityItem)
         { Activate((data) => new Forms.Domain.DomainEntity(entityItem), entityItem); }
 
-        void Activate(ModelSubjectAreaItem subjectItem)
+        void Activate(SubjectAreaValue subjectItem)
         { Activate((data) => new Forms.Domain.ModelSubjectArea(subjectItem), subjectItem); }
 
-        void Activate(ModelItem modelItem)
+        void Activate(ModelValue modelItem)
         { Activate((data) => new Forms.Model.Model(modelItem), modelItem); }
 
         void Activate(BusinessLayer.Scripting.SchemaValue schemaItem)
