@@ -149,8 +149,12 @@
             contextNameNavigation.HideSelection = false;
             contextNameNavigation.Location = new Point(0, 0);
             contextNameNavigation.Name = "contextNameNavigation";
+            contextNameNavigation.ShowNodeToolTips = true;
             contextNameNavigation.Size = new Size(300, 591);
             contextNameNavigation.TabIndex = 0;
+            contextNameNavigation.BeforeCollapse += contextNameNavigation_BeforeCollapse;
+            contextNameNavigation.BeforeExpand += contextNameNavigation_BeforeExpand;
+            contextNameNavigation.NodeMouseClick += contextNameNavigation_NodeMouseClick;
             contextNameNavigation.NodeMouseDoubleClick += DataSourceNavigation_NodeMouseDoubleClick;
             // 
             // navigationSpliter
@@ -796,13 +800,14 @@
             // 
             scriptingContextMenu.Items.AddRange(new ToolStripItem[] { schemaManagerCommand, transformManagerCommand });
             scriptingContextMenu.Name = "scriptingContextMenu";
-            scriptingContextMenu.Size = new Size(181, 70);
+            scriptingContextMenu.OwnerItem = manageScriptingCommand;
+            scriptingContextMenu.Size = new Size(163, 48);
             // 
             // schemaManagerCommand
             // 
             schemaManagerCommand.Image = Properties.Resources.NewXMLSchema;
             schemaManagerCommand.Name = "schemaManagerCommand";
-            schemaManagerCommand.Size = new Size(180, 22);
+            schemaManagerCommand.Size = new Size(162, 22);
             schemaManagerCommand.Text = "Schema (XSD)";
             schemaManagerCommand.Click += schemaManagerCommand_Click;
             // 
@@ -810,7 +815,7 @@
             // 
             transformManagerCommand.Image = Properties.Resources.NewXSLTransform;
             transformManagerCommand.Name = "transformManagerCommand";
-            transformManagerCommand.Size = new Size(180, 22);
+            transformManagerCommand.Size = new Size(162, 22);
             transformManagerCommand.Text = "Transform (XSLT)";
             transformManagerCommand.Click += transformManagerCommand_Click;
             // 

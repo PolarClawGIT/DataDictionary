@@ -25,9 +25,31 @@ namespace DataDictionary.Main
             this.DoWork(work);
         }
 
+        /// <summary>
+        /// Used in determine if the code should expand the node or not.
+        /// </summary>
+        /// <remarks>
+        /// The code in NodeMouseClick (happens first) captures where the mouse was clicked
+        /// The code in Before Expand/Collapse ignores any click not on the +/-
+        /// The code in the NodeMouseDoubleClick (happens last) ignores the double click on the +/-
+        /// Normally, a double click anywhere on the node will expand/collapse the node.
+        /// This limits expand/collapse to the use of the +/- only.
+        /// </remarks>
+        TreeViewHitTestLocations treeViewHitTest = TreeViewHitTestLocations.None;
+
+        private void contextNameNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        { treeViewHitTest = e.Node.TreeView.HitTest(e.Location).Location; }
+
+        private void contextNameNavigation_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        { if (treeViewHitTest != TreeViewHitTestLocations.PlusMinus) { e.Cancel = true; } }
+
+        private void contextNameNavigation_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        { if (treeViewHitTest != TreeViewHitTestLocations.PlusMinus) { e.Cancel = true; } }
+
         private void DataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (contextNameNavigation.SelectedNode is TreeNode node)
+            if (treeViewHitTest != TreeViewHitTestLocations.PlusMinus // If the +/- was double clicked, ignore that.
+                && contextNameNavigation.SelectedNode is TreeNode node)
             {
                 INamedScopeValue? item = node.GetNamedScope();
                 if (item is INamedScopeValue taget)
