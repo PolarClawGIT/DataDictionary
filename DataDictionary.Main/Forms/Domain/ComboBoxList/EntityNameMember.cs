@@ -1,15 +1,10 @@
-﻿using DataDictionary.DataLayer.DomainData.Entity;
+﻿using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.Main.Controls;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
-    record EntityNameItem : IDomainEntityKey, IDomainEntityKeyName
+    record EntityNameMember : IEntityIndex, IEntityIndexName
     {
         /// <inheritdoc/>
         public Guid? EntityId { get; private set; } = Guid.Empty;
@@ -26,19 +21,19 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
         /// <param name="defaultEntityId"></param>
         /// <param name="defaultEntityTitle"></param>
         public static void Load<T>(ComboBoxData control, IEnumerable<T> source, Guid? defaultEntityId = null, String? defaultEntityTitle = null)
-            where T : IDomainEntityKey, IDomainEntityKeyName
+            where T : IEntityIndex, IEntityIndexName
         {
-            EntityNameItem propertyNameDataItem = new EntityNameItem();
-            BindingList<EntityNameItem> list = new BindingList<EntityNameItem>();
-            list.Add(new EntityNameItem() { EntityId = Guid.Empty, EntityTitle = "(not specified)" });
+            EntityNameMember propertyNameDataItem = new EntityNameMember();
+            BindingList<EntityNameMember> list = new BindingList<EntityNameMember>();
+            list.Add(new EntityNameMember() { EntityId = Guid.Empty, EntityTitle = "(not specified)" });
 
             if (defaultEntityId is Guid defaultId && defaultId != Guid.Empty && !String.IsNullOrWhiteSpace(defaultEntityTitle) && source.Count(w => defaultId.Equals(w.EntityId)) == 0)
-            { list.Add(new EntityNameItem() { EntityId = defaultId, EntityTitle = defaultEntityTitle }); }
+            { list.Add(new EntityNameMember() { EntityId = defaultId, EntityTitle = defaultEntityTitle }); }
 
             foreach (T item in source.OrderBy(o => o.EntityTitle))
             {
                 if (item.EntityId is Guid EntityId && EntityId != Guid.Empty && item.EntityTitle is String EntityTitle)
-                { list.Add(new EntityNameItem() { EntityId = EntityId, EntityTitle = EntityTitle }); }
+                { list.Add(new EntityNameMember() { EntityId = EntityId, EntityTitle = EntityTitle }); }
 
             }
 

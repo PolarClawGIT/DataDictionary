@@ -54,7 +54,7 @@ namespace DataDictionary.Main.Forms.Domain
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));
             descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingEntity, nameof(nameOfValues.EntityDescription)));
 
-            EntityNameItem.Load(typeOfEntityData, BusinessData.DomainModel.Entities);
+            EntityNameMember.Load(typeOfEntityData, BusinessData.DomainModel.Entities);
             typeOfEntityData.DataBindings.Add(new Binding(nameof(typeOfEntityData.SelectedValue), bindingEntity, nameof(nameOfValues.TypeOfEntityId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
 
             propertiesData.AutoGenerateColumns = false;
