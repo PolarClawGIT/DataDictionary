@@ -1,7 +1,8 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.Application;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Help;
+//using DataDictionary.DataLayer;
+//using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -17,7 +18,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         {
             public ListViewItem? ListItem { get; set; }
             public String ControlType { get; private set; }
-            public NameSpaceKey ControlName { get; private set; }
+            public HelpSubjectIndexPath ControlName { get; private set; }
             public Boolean IsForm { get; private set; }
 
             public ControlItem(Control source)
@@ -44,7 +45,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             }
 
             public override string ToString()
-            { return ControlName.MemberFullName; }
+            { return ControlName.MemberFullPath; }
         }
 
         BindingList<ControlItem> controlList = new BindingList<ControlItem>();
@@ -63,8 +64,8 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
             helpBinding.DataSource = BusinessData.ApplicationData.HelpSubjects;
 
-            if (helpBinding.DataSource is IList<HelpItem> subjects
-                && subjects.FirstOrDefault(w => w.NameSpace == Settings.Default.DefaultSubject) is HelpItem subject)
+            if (helpBinding.DataSource is IList<HelpSubjectValue> subjects
+                && subjects.FirstOrDefault(w => w.NameSpace == Settings.Default.DefaultSubject) is HelpSubjectValue subject)
             { helpBinding.Position = subjects.IndexOf(subject); }
 
             // Setup Images for Tree Control
@@ -78,7 +79,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
         public HelpSubject(Form targetForm) : this()
         {
-            NameSpaceKey key = targetForm.ToNameSpaceKey();
+            HelpSubjectIndexPath key = targetForm.ToNameSpaceKey();
 
             List<Control> values = targetForm.ToControlList()
                 .Where(w => !String.IsNullOrWhiteSpace(w.Name)
@@ -90,7 +91,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
             // Take care of current form
             ControlItem baseForm = new ControlItem(targetForm);
-            ListViewItem baseItem = new ListViewItem(baseForm.ControlName.MemberName);
+            ListViewItem baseItem = new ListViewItem(baseForm.ControlName.Member);
             baseForm.ListItem = baseItem;
             controlList.Add(baseForm);
             controlData.Items.Add(baseItem);
@@ -110,30 +111,30 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 controlData.Items.Add(newItem);
             }
 
-            if (helpBinding.DataSource is IList<HelpItem> subjects)
+            if (helpBinding.DataSource is IList<HelpSubjectValue> subjects)
             {
-                if (subjects.FirstOrDefault(w => key.Equals(new NameSpaceKey(w))) is HelpItem subject)
+                if (subjects.FirstOrDefault(w => key.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue subject)
                 { helpBinding.Position = subjects.IndexOf(subject); }
             }
         }
 
         public HelpSubject(String targetSubject) : this()
         {
-            if (helpBinding.DataSource is IList<HelpItem> subjects)
+            if (helpBinding.DataSource is IList<HelpSubjectValue> subjects)
             {
                 if (subjects.FirstOrDefault(w => w.HelpSubject is String
                     && w.HelpSubject.Equals(targetSubject, StringComparison.CurrentCultureIgnoreCase))
-                    is HelpItem subject)
+                    is HelpSubjectValue subject)
                 { helpBinding.Position = subjects.IndexOf(subject); }
                 else if (subjects.FirstOrDefault(w => w.NameSpace is not null
-                    && w.NameSpace == targetSubject) is HelpItem nameSpaceSubject)
+                    && w.NameSpace == targetSubject) is HelpSubjectValue nameSpaceSubject)
                 { helpBinding.Position = subjects.IndexOf(nameSpaceSubject); }
             }
         }
 
         private void HelpSubject_Load(object sender, EventArgs e)
         {
-            IHelpItem nameOfValues;
+            IHelpSubjectValue nameOfValues;
             helpSubjectData.DataBindings.Add(new Binding(nameof(helpSubjectData.Text), helpBinding, nameof(nameOfValues.HelpSubject), false, DataSourceUpdateMode.OnPropertyChanged));
             helpNameSpaceData.DataBindings.Add(new Binding(nameof(helpNameSpaceData.Text), helpBinding, nameof(nameOfValues.NameSpace), false, DataSourceUpdateMode.OnPropertyChanged));
             helpToolTipData.DataBindings.Add(new Binding(nameof(helpToolTipData.Text), helpBinding, nameof(nameOfValues.HelpToolTip), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -145,7 +146,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
         private void newHelpCommand_Click(object? sender, EventArgs e)
         {
-            if (helpBinding.AddNew() is HelpItem newItem)
+            if (helpBinding.AddNew() is HelpSubjectValue newItem)
             {
                 //TODO: Always added at end of list. Can it be added based on Name Space?
 
@@ -156,7 +157,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
         private void deleteHelpCommand_Click(object? sender, EventArgs e)
         {
-            if (helpBinding.Current is HelpItem current)
+            if (helpBinding.Current is HelpSubjectValue current)
             {
                 RemoveNode(current);
                 helpBinding.RemoveCurrent();
@@ -165,7 +166,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
 
         #region Help Content Tree
-        Dictionary<TreeNode, HelpItem> helpContentNodes = new Dictionary<TreeNode, HelpItem>();
+        Dictionary<TreeNode, HelpSubjectValue> helpContentNodes = new Dictionary<TreeNode, HelpSubjectValue>();
         enum helpContentImageIndex
         {
             HelpPage,
@@ -183,14 +184,14 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             helpContentNavigation.Nodes.Clear();
             helpContentNodes.Clear();
 
-            if (helpBinding.DataSource is IEnumerable<HelpItem> items)
+            if (helpBinding.DataSource is IEnumerable<HelpSubjectValue> items)
             { TreeGroup(helpContentNavigation.Nodes, items); }
 
-            void TreeGroup(TreeNodeCollection target, IEnumerable<HelpItem> source, String? groupLevel = null)
+            void TreeGroup(TreeNodeCollection target, IEnumerable<HelpSubjectValue> source, String? groupLevel = null)
             {
-                List<IGrouping<String, HelpItem>> grouping = source.
+                List<IGrouping<String, HelpSubjectValue>> grouping = source.
                     OrderBy(o => o.NameSpace != Settings.Default.DefaultSubject). // Make About first in the list
-                    ThenBy(o => new NameSpaceKey(o)).
+                    ThenBy(o => new HelpSubjectIndexPath(o)).
                     GroupBy(g =>
                     {
                         if (String.IsNullOrWhiteSpace(g.NameSpace)) { return String.Empty; }
@@ -209,13 +210,13 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
                 TreeNodeCollection parent = target;
 
-                foreach (IGrouping<String, HelpItem> group in grouping)
+                foreach (IGrouping<String, HelpSubjectValue> group in grouping)
                 {
-                    List<HelpItem> items = group.Where(w => w.NameSpace == groupLevel)
+                    List<HelpSubjectValue> items = group.Where(w => w.NameSpace == groupLevel)
                                                 .OrderBy(o => o.NameSpace)
                                                 .ThenBy(o => o.HelpSubject)
                                                 .ToList();
-                    List<HelpItem> subItems = group.Except(items).ToList();
+                    List<HelpSubjectValue> subItems = group.Except(items).ToList();
 
                     if (items.Count == 1)
                     {
@@ -226,7 +227,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                     {
                         TreeNode newNode = CreateNode(group.Key, helpContentImageIndex.HelpGroup, parent);
 
-                        foreach (HelpItem item in items)
+                        foreach (HelpSubjectValue item in items)
                         { CreateNode(item, helpContentImageIndex.HelpPage, newNode.Nodes); }
                     }
 
@@ -240,7 +241,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             }
         }
 
-        private TreeNode CreateNode(HelpItem source, helpContentImageIndex imageIndex, TreeNodeCollection? parentNode = null)
+        private TreeNode CreateNode(HelpSubjectValue source, helpContentImageIndex imageIndex, TreeNodeCollection? parentNode = null)
         {
             TreeNode result = new TreeNode(source.HelpSubject);
             result.ImageKey = helpContentImageItems[imageIndex].imageKey;
@@ -252,7 +253,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
             helpContentNodes.Add(result, source);
 
-            if (helpBinding.Current is HelpItem current && current == source)
+            if (helpBinding.Current is HelpSubjectValue current && current == source)
             { helpContentNavigation.SelectedNode = result; }
 
             source.PropertyChanged += Source_PropertyChanged;
@@ -273,11 +274,11 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             return result;
         }
 
-        private void RemoveNode(HelpItem source)
+        private void RemoveNode(HelpSubjectValue source)
         {
-            HelpKey key = new HelpKey(source);
+            HelpSubjectIndex key = new HelpSubjectIndex(source);
 
-            KeyValuePair<TreeNode, HelpItem> currentValue = helpContentNodes.FirstOrDefault(w => key.Equals(w.Value));
+            KeyValuePair<TreeNode, HelpSubjectValue> currentValue = helpContentNodes.FirstOrDefault(w => key.Equals(w.Value));
 
             if (currentValue.Key is TreeNode && currentValue.Key.Nodes.Count == 0)
             {
@@ -303,13 +304,13 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 { newNode.Nodes.Add(item); }
             }
 
-            if (helpBinding.DataSource is IList<HelpItem> subjects && subjects.Where(w => w.NameSpace == Settings.Default.DefaultSubject) is HelpItem subject)
+            if (helpBinding.DataSource is IList<HelpSubjectValue> subjects && subjects.Where(w => w.NameSpace == Settings.Default.DefaultSubject) is HelpSubjectValue subject)
             { helpBinding.Position = subjects.IndexOf(subject); }
         }
 
         private void Source_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (sender is HelpItem item && helpContentNodes.FirstOrDefault(w => w.Value == item).Key is TreeNode node)
+            if (sender is HelpSubjectValue item && helpContentNodes.FirstOrDefault(w => w.Value == item).Key is TreeNode node)
             {
                 //TODO: Currently only updates the Subject title.
                 // Can it update the tree based on NameSpace?
@@ -333,7 +334,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         {
             if (helpContentNodes.ContainsKey(e.Node))
             {
-                if (helpBinding.DataSource is IList<HelpItem> items && helpContentNodes[e.Node] is HelpItem target)
+                if (helpBinding.DataSource is IList<HelpSubjectValue> items && helpContentNodes[e.Node] is HelpSubjectValue target)
                 {
                     if (items.Contains(target))
                     { helpBinding.Position = items.IndexOf(target); }
@@ -386,12 +387,12 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
         private void helpBinding_AddingNew(object sender, AddingNewEventArgs e)
         {
-            HelpItem newItem = new HelpItem();
+            HelpSubjectValue newItem = new HelpSubjectValue();
 
             if (controlList.FirstOrDefault(w => w.IsForm) is ControlItem root)
             {
-                newItem.HelpSubject = root.ControlName.MemberName;
-                newItem.NameSpace = root.ControlName.MemberFullName;
+                newItem.HelpSubject = root.ControlName.Member;
+                newItem.NameSpace = root.ControlName.MemberFullPath;
             }
             else
             { newItem.HelpSubject = "(new Help Subject)"; }
@@ -399,12 +400,12 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             e.NewObject = newItem;
         }
 
-        HelpItem? lastHelpItem; // Used exclusively by CurrentChanged to get the prior current value.
+        HelpSubjectValue? lastHelpItem; // Used exclusively by CurrentChanged to get the prior current value.
         private void helpBinding_CurrentChanged(object sender, EventArgs e)
         {
-            if (helpBinding.Current is HelpItem current)
+            if (helpBinding.Current is HelpSubjectValue current)
             {
-                NameSpaceKey key = new NameSpaceKey(current);
+                HelpSubjectIndexPath key = new HelpSubjectIndexPath(current);
 
                 // The item(s) with the Default NameSpace cannot change NameSpaces. This is the About subject.
                 helpNameSpaceData.Enabled = !(current.NameSpace is String && current.NameSpace == Settings.Default.DefaultSubject);
@@ -433,7 +434,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
             void Current_RowStateChanged(object? sender, EventArgs e)
             {
-                if (helpBinding.Current is HelpItem current)
+                if (helpBinding.Current is HelpSubjectValue current)
                 { RowState = current.RowState(); }
             }
         }
@@ -470,12 +471,12 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                     { viewItem.Checked = false; }
                 }
 
-                if (helpBinding.Current is HelpItem current)
+                if (helpBinding.Current is HelpSubjectValue current)
                 {
-                    NameSpaceKey key = new NameSpaceKey(current);
+                    HelpSubjectIndexPath key = new HelpSubjectIndexPath(current);
                     if (controlList.FirstOrDefault(w => w.ListItem == e.Item) is ControlItem selected
                         && !key.Equals(selected.ControlName))
-                    { current.NameSpace = selected.ControlName.MemberFullName; }
+                    { current.NameSpace = selected.ControlName.MemberFullPath; }
 
                 }
 
@@ -487,7 +488,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         {
             base.DeleteFromDatabaseCommand_Click(sender, e);
 
-            if (helpBinding.Current is HelpItem current
+            if (helpBinding.Current is HelpSubjectValue current
                 && current.NameSpace is String
                 && current.NameSpace != Settings.Default.DefaultSubject) // Cannot Delete the Default Subject
             {
@@ -518,7 +519,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         {
             base.SaveToDatabaseCommand_Click(sender, e);
 
-            if (helpBinding.Current is HelpItem current)
+            if (helpBinding.Current is HelpSubjectValue current)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
@@ -548,11 +549,11 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         {
             base.OpenFromDatabaseCommand_Click(sender, e);
 
-            if (helpBinding.Current is HelpItem current)
+            if (helpBinding.Current is HelpSubjectValue current)
             {
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 List<WorkItem> work = new List<WorkItem>();
-                HelpKey key = new HelpKey(current);
+                HelpSubjectIndex key = new HelpSubjectIndex(current);
                 current.Remove();
 
                 work.Add(factory.OpenConnection());
@@ -572,9 +573,9 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                     if (args.Error is null)
                     { IsLocked(false); }
 
-                    if (helpBinding.DataSource is IList<HelpItem> subjects)
+                    if (helpBinding.DataSource is IList<HelpSubjectValue> subjects)
                     {
-                        if (subjects.FirstOrDefault(w => key.Equals(w)) is HelpItem subject)
+                        if (subjects.FirstOrDefault(w => key.Equals(w)) is HelpSubjectValue subject)
                         {
                             helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(subject.HelpText), false, DataSourceUpdateMode.OnPropertyChanged));
                             helpBinding.Position = subjects.IndexOf(subject);

@@ -265,7 +265,7 @@ namespace DataDictionary.DataLayer
         /// Constructor for NameSpace Key from Application Help
         /// </summary>
         /// <param name="source"></param>
-        public NameSpaceKey(ApplicationData.Help.IHelpKeyUnique source) : base()
+        public NameSpaceKey(ApplicationData.Help.IHelpKeyNameSpace source) : base()
         {
             if (source.NameSpace is String)
             { memberParts.AddRange(NameParts(source.NameSpace)); }

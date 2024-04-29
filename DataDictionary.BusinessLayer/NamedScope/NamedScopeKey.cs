@@ -176,13 +176,6 @@ namespace DataDictionary.BusinessLayer.NamedScope
         public NamedScopeKey(ISelectionKey source) : this()
         { SystemId = source.SelectionId ?? Guid.Empty; }
 
-        /// <summary>
-        /// Constructor for the NameSpace Key
-        /// </summary>
-        /// <param name="source"></param>
-        public NamedScopeKey(INameSpaceItem source) : this()
-        { SystemId = source.SystemId; }
-
         #region IEquatable, IComparable
         /// <inheritdoc/>
         public virtual bool Equals(INamedScopeKey? other)

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.Application;
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.Main.Controls;
@@ -227,8 +228,8 @@ namespace DataDictionary.Main.Forms
 
             String ToToolTipText(Control source)
             {
-                NameSpaceKey key = source.ToNameSpaceKey();
-                if (BusinessData.ApplicationData.HelpSubjects.FirstOrDefault(w => key.Equals(new NameSpaceKey(w))) is HelpItem item
+                HelpSubjectIndexPath key = source.ToNameSpaceKey();
+                if (BusinessData.ApplicationData.HelpSubjects.FirstOrDefault(w => key.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue item
                     && item.HelpToolTip is String toolTip)
                 { return toolTip; }
                 else { return String.Empty; }

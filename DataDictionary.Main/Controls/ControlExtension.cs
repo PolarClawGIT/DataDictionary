@@ -1,4 +1,6 @@
-﻿using DataDictionary.DataLayer;
+﻿using DataDictionary.BusinessLayer.Application;
+using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,23 +82,23 @@ namespace DataDictionary.Main.Controls
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static NameSpaceKey ToNameSpaceKey(this Control source)
+        public static HelpSubjectIndexPath ToNameSpaceKey(this Control source)
         {
-            String result;
+            List<String> parts = new List<String>();
             Control? current = source;
 
             if (source is Form && source.GetType().FullName is String formType)
-            { result = formType; current = null; }
-            else { result = source.Name; }
+            { parts.AddRange(NamedScopePath.Parse(formType)); current = null; }
+            else { parts.Add(source.Name); }
 
             while (current is not null)
             {
                 if (!String.IsNullOrWhiteSpace(current.Name))
                 {
                     if (current is UserControl && current != source)
-                    { result = String.Format("{0}.{1}", current.Name, result); }
+                    { parts.Insert(0, current.Name); }
                     else if (current is Form && current.GetType().FullName is String fullName)
-                    { result = String.Format("{0}.{1}", fullName, result); }
+                    { parts.AddRange(NamedScopePath.Parse(fullName)); }
                 }
 
                 if (current is Form)
@@ -104,7 +106,7 @@ namespace DataDictionary.Main.Controls
                 else { current = current.Parent; }
             }
 
-            return new NameSpaceKey(result);
+            return new HelpSubjectIndexPath(parts.ToArray());
         }
     }
 }

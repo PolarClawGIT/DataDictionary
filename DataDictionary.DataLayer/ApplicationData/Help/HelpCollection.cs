@@ -75,7 +75,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
             foreach (HelpItem item in
                 this.Where(w =>
                 {
-                    HelpKeyUnique key = new HelpKeyUnique(w);
+                    HelpKeyNameSpace key = new HelpKeyNameSpace(w);
                     return (this.Any(r => key.Equals(r) && !ReferenceEquals(w, r)));
                 }))
             { }

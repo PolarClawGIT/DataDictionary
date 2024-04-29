@@ -70,6 +70,23 @@ namespace DataDictionary.BusinessLayer.NamedScope
         { get { return string.Join(".", pathParts.Select(s => string.Format("[{0}]", s))); } }
 
         /// <summary>
+        /// Parent NameSpace Key for the current item.
+        /// </summary>
+        protected NamedScopePath? ParentKey
+        {
+            get
+            {
+                if (pathParts.Count > 1)
+                {
+                    NamedScopePath result = new NamedScopePath();
+                    result.pathParts.AddRange(pathParts.SkipLast(1));
+                    return result;
+                }
+                else { return null; }
+            }
+        }
+
+        /// <summary>
         /// Constructor for a NamedScope Path
         /// </summary>
         protected NamedScopePath() : base() { }
@@ -326,5 +343,52 @@ namespace DataDictionary.BusinessLayer.NamedScope
         public override int GetHashCode()
         { return MemberFullPath.GetHashCode(); }
         #endregion
+
+        /// <summary>
+        /// Allows formating of the NameSpace into a String.
+        /// </summary>
+        /// <param name="pattern">
+        /// Pattern for String.Format with a single parameter.
+        /// This qualifies each element of the name.
+        /// Default is "[{0}]"</param>
+        /// <param name="delimiter">
+        /// Delimiter placed between names.
+        /// Default is "."</param>
+        /// <returns></returns>
+        public virtual string Format(string pattern = "[{0}]", string delimiter = ".")
+        { return string.Join(delimiter, pathParts.Select(s => string.Format(pattern, s))); }
+
+        /// <summary>
+        /// Groups the NameSpaces based on Hierarchy.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IEnumerable<NamedScopePath> Group(IEnumerable<NamedScopePath> source)
+        {
+            List<NamedScopePath> result = new List<NamedScopePath>();
+
+            List<NamedScopePath> group = source.GroupBy(g => g).Select(s => s.Key).ToList();
+
+            foreach (NamedScopePath item in group)
+            {
+                if (!result.Contains(item))
+                { result.Add(item); }
+
+                NamedScopePath? key = item.ParentKey;
+
+                while (key is not null)
+                {
+                    if (!result.Contains(key))
+                    { result.Add(key); }
+
+                    key = key.ParentKey;
+                }
+            }
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        { return this.MemberFullPath; }
     }
 }

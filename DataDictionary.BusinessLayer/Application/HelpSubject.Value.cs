@@ -12,6 +12,6 @@ namespace DataDictionary.BusinessLayer.Application
     { }
 
     /// <inheritdoc/>
-    public class HelpSubjectValue : HelpItem, IHelpItem
+    public class HelpSubjectValue : HelpItem, IHelpItem, IHelpSubjectIndex, IHelpSubjectIndexNameSpace
     { }
 }
