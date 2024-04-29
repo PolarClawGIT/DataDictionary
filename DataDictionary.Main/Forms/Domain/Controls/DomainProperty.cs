@@ -23,7 +23,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         /// </remarks>
         public void BindData(BindingSource propertyBinding)
         {
-            PropertyNameItem.Load(propertyTypeData);
+            PropertyNameMember.Load(propertyTypeData);
             IDomainProperty nameOfValues;
             GetCurrent = () => { return propertyBinding.Current as IDomainProperty; };
 
@@ -34,7 +34,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
 
         public void RefreshControls()
         {
-            if (propertyTypeData.SelectedItem is PropertyNameItem selected
+            if (propertyTypeData.SelectedItem is PropertyNameMember selected
                 && GetCurrent() is IDomainProperty currentRow)
             {
                 if (BusinessData.ApplicationData.Properties.FirstOrDefault(w => w.PropertyId == selected.PropertyId) is PropertyItem property)

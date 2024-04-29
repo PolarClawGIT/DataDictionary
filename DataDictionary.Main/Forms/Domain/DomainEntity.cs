@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.Domain;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.Main.Controls;
@@ -31,22 +32,22 @@ namespace DataDictionary.Main.Forms.Domain
         public DomainEntity(IDomainEntityItem entityItem) : this()
         {
             DomainEntityKey key = new DomainEntityKey(entityItem);
-            bindingEntity.DataSource = new BindingView<DomainEntityItem>(BusinessData.DomainModel.Entities, w => key.Equals(w));
+            bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.DomainModel.Entities, w => key.Equals(w));
             bindingEntity.Position = 0;
 
             Setup(bindingEntity, ScopeType.ModelEntity);
 
             if (bindingEntity.Current is IDomainEntityItem current)
             {
-                bindingProperty.DataSource = new BindingView<DomainEntityPropertyItem>(BusinessData.DomainModel.Entities.Properties, w => key.Equals(w));
-                bindingAlias.DataSource = new BindingView<DomainEntityAliasItem>(BusinessData.DomainModel.Entities.Aliases, w => key.Equals(w));
+                bindingProperty.DataSource = new BindingView<EntityPropertyValue>(BusinessData.DomainModel.Entities.Properties, w => key.Equals(w));
+                bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.DomainModel.Entities.Aliases, w => key.Equals(w));
             }
         }
 
         private void Form_Load(object sender, EventArgs e)
         {
-            IDomainEntityItem nameOfValues;
-            PropertyNameItem.Load(propertyIdColumn);
+            IEntityValue nameOfValues;
+            PropertyNameMember.Load(propertyIdColumn);
             ScopeNameItem.Load(aliaseScopeColumn);
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));

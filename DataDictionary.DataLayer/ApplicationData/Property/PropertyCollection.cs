@@ -57,7 +57,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
             foreach (PropertyItem item in
                 this.Where(w =>
                 {
-                    PropertyKeyUnique key = new PropertyKeyUnique(w);
+                    PropertyKeyName key = new PropertyKeyName(w);
                     return (this.Any(r => key.Equals(r) && !ReferenceEquals(w, r)));
                 }))
             {

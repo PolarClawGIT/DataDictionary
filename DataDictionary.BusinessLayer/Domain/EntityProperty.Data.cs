@@ -14,12 +14,12 @@ namespace DataDictionary.BusinessLayer.Domain
     /// Interface component for the Model Entity Property
     /// </summary>
     public interface IEntityPropertyData:
-        IBindingData<DomainEntityPropertyItem>
+        IBindingData<EntityPropertyValue>
     {
 
     }
 
-    class EntityPropertyData : DomainEntityPropertyCollection, IEntityPropertyData,
+    class EntityPropertyData : DomainEntityPropertyCollection<EntityPropertyValue>, IEntityPropertyData,
         ILoadData<IDomainEntityKey>, ISaveData<IDomainEntityKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
