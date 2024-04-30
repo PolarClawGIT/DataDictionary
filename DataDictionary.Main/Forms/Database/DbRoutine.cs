@@ -1,6 +1,4 @@
 ﻿using DataDictionary.BusinessLayer.Database;
-//using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-//using DataDictionary.DataLayer.DatabaseData.Routine;
 using System.Data;
 using Toolbox.BindingTable;
 
