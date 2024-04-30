@@ -41,9 +41,11 @@ namespace DataDictionary.Main.Forms.Model
             void BindData()
             {
                 ModelSynchronizeValue modelNames;
+                modelBinding.DataSource = models;
+                Func<String, String> FormatName = (name) => { return String.Format("{0}.{1}", nameof(modelNames.Source), name); };
+
                 modelNavigation.AutoGenerateColumns = false;
                 modelNavigation.DataSource = modelBinding;
-                Func<String, String> FormatName = (name) => { return String.Format("{0}.{1}", nameof(modelNames.Source), name); };
 
                 modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), modelBinding, FormatName(nameof(modelNames.Source.ModelTitle)), false, DataSourceUpdateMode.OnPropertyChanged));
                 modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), modelBinding, FormatName(nameof(modelNames.Source.ModelDescription)), false, DataSourceUpdateMode.OnPropertyChanged));
