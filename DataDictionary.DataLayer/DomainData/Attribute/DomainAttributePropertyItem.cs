@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Property;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using System.Data;
 using System.Runtime.Serialization;
@@ -9,7 +10,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Properties
     /// </summary>
-    public interface IDomainAttributePropertyItem : IDomainAttributePropertyKey, IDomainProperty
+    public interface IDomainAttributePropertyItem : IDomainAttributePropertyKey, IDomainProperty, IScopeKey
     { }
 
     /// <summary>
@@ -29,6 +30,9 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
 
         /// <inheritdoc/>
         public string? DefinitionText { get { return GetValue("DefinitionText"); } set { SetValue("DefinitionText", value); } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get; } = ScopeType.ModelAttributeProperty;
 
         /// <summary>
         /// Constructor for Domain Attribute Properties

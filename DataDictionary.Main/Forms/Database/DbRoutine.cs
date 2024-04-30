@@ -1,47 +1,40 @@
-﻿using DataDictionary.BusinessLayer;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.Main.Controls;
-using DataDictionary.Main.Properties;
-using System.ComponentModel;
+﻿using DataDictionary.BusinessLayer.Database;
 using System.Data;
 using Toolbox.BindingTable;
-using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
     partial class DbRoutine : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return bindingRoutine.Current is IDbRoutineItem current && ReferenceEquals(current, item); }
+        { return bindingRoutine.Current is IRoutineValue current && ReferenceEquals(current, item); }
 
         public DbRoutine() : base()
         {
             InitializeComponent();
         }
 
-        public DbRoutine(IDbRoutineItem routineItem): this()
+        public DbRoutine(IRoutineValue routineItem): this()
         {
-            DbRoutineKeyName key = new DbRoutineKeyName(routineItem);
-            DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
+            RoutineIndexName key = new RoutineIndexName(routineItem);
+            ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
 
-            bindingRoutine.DataSource = new BindingView<DbRoutineItem>(BusinessData.DatabaseModel.DbRoutines, w => key.Equals(w));
+            bindingRoutine.DataSource = new BindingView<RoutineValue>(BusinessData.DatabaseModel.DbRoutines, w => key.Equals(w));
             bindingRoutine.Position = 0;
 
             Setup(bindingRoutine);
 
-            if (bindingRoutine.Current is IDbRoutineItem current)
+            if (bindingRoutine.Current is IRoutineValue current)
             {
-                bindingParameters.DataSource = new BindingView<DbRoutineParameterItem>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
-                bindingDependencies.DataSource = new BindingView<DbRoutineDependencyItem>(BusinessData.DatabaseModel.DbRoutineDependencies, w => key.Equals(w));
-                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
+                bindingParameters.DataSource = new BindingView<RoutineParameterValue>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
+                bindingDependencies.DataSource = new BindingView<RoutineDependencyValue>(BusinessData.DatabaseModel.DbRoutineDependencies, w => key.Equals(w));
+                bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }
 
         private void DbRoutine_Load(object sender, EventArgs e)
         {
-            IDbRoutineItem bindingNames;
+            IRoutineValue bindingNames;
             catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingRoutine, nameof(bindingNames.DatabaseName)));
             schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingRoutine, nameof(bindingNames.SchemaName)));
             routineNameData.DataBindings.Add(new Binding(nameof(routineNameData.Text), bindingRoutine, nameof(bindingNames.RoutineName)));
@@ -57,7 +50,7 @@ namespace DataDictionary.Main.Forms.Database
             dependenciesData.AutoGenerateColumns = false;
             dependenciesData.DataSource = bindingDependencies;
 
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingRoutine.Current is not IDbRoutineItem);
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingRoutine.Current is not IRoutineValue);
         }
     }
 }

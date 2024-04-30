@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Interface for the Scripting Schema Element data.
     /// </summary>
-    public interface IElementItem : ISchemaKey, IElementKey, IColumnKey, IScopeKeyName
+    public interface IElementItem : ISchemaKey, IElementKey, IScopeKey
     {
 
         /// <summary>
@@ -28,6 +28,9 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         /// Type of the Element to be generated. If Null/Empty, do not generate the Type. 
         /// </summary>
         String? ElementType { get; }
+
+        /// <inheritdoc cref="ScopeTypeExtension.ToName(ScopeType)"/>
+        String? ScopeName { get; }
 
         /// <summary>
         /// The Nillable of the Element to be generated. If Null, do not generate the Nillable.
@@ -83,57 +86,87 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         }
 
         /// <inheritdoc/>
-        public string? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }
+        public String? ColumnName { get { return GetValue("ColumnName"); } set { SetValue("ColumnName", value); } }
 
         /// <inheritdoc/>
-        public string? ColumnName { get { return GetValue("ColumnName"); } set { SetValue("ColumnName", value); } }
+        public String? ElementName { get { return GetValue("ElementName"); } set { SetValue("ElementName", value); } }
 
         /// <inheritdoc/>
-        public string? ElementName { get { return GetValue("ElementName"); } set { SetValue("ElementName", value); } }
+        public String? ElementType { get { return GetValue("ElementType"); } set { SetValue("ElementType", value); } }
 
         /// <inheritdoc/>
-        public string? ElementType { get { return GetValue("ElementType"); } set { SetValue("ElementType", value); } }
-
-        /// <inheritdoc/>
-        public bool? ElementNillable
+        public Boolean? ElementNillable
         {
             get { return GetValue<bool>("ElementNillable", BindingItemParsers.BooleanTryParse); }
             set { SetValue<Boolean>("ElementNillable", value); }
         }
 
         /// <inheritdoc/>
-        public bool? AsElement
+        public Boolean? AsElement
         {
             get { return GetValue<bool>("AsElement", BindingItemParsers.BooleanTryParse); }
-            set { SetValue<Boolean>("AsElement", value); }
+            set
+            {
+                SetValue<Boolean>("AsElement", value);
+                if (value == true) { SetValue<Boolean>("AsAttribute", !value); }
+            }
         }
 
         /// <inheritdoc/>
-        public bool? AsAttribute
+        public Boolean? AsAttribute
         {
             get { return GetValue<bool>("AsAttribute", BindingItemParsers.BooleanTryParse); }
-            set { SetValue<Boolean>("AsAttribute", value); }
+            set
+            {
+                if (value == true) { SetValue<Boolean>("AsElement", !value); }
+                SetValue<Boolean>("AsAttribute", value);
+            }
         }
 
         /// <inheritdoc/>
-        public bool? DataAsText
+        public Boolean? DataAsText
         {
             get { return GetValue<bool>("DataAsText", BindingItemParsers.BooleanTryParse); }
-            set { SetValue<Boolean>("DataAsText", value); }
+            set
+            {
+                if (value == true) { SetValue<Boolean>("DataAsCData", !value); }
+                SetValue<Boolean>("DataAsText", value);
+                if (value == true) { SetValue<Boolean>("DataAsXml", !value); }
+            }
         }
 
         /// <inheritdoc/>
-        public bool? DataAsCData
+        public Boolean? DataAsCData
         {
             get { return GetValue<bool>("DataAsCData", BindingItemParsers.BooleanTryParse); }
-            set { SetValue<Boolean>("DataAsCData", value); }
+            set
+            {
+                SetValue<Boolean>("DataAsCData", value);
+                if (value == true) { SetValue<Boolean>("DataAsText", !value); }
+                if (value == true) { SetValue<Boolean>("DataAsXml", !value); }
+            }
         }
 
         /// <inheritdoc/>
-        public bool? DataAsXml
+        public Boolean? DataAsXml
         {
             get { return GetValue<bool>("DataAsXml", BindingItemParsers.BooleanTryParse); }
-            set { SetValue<Boolean>("DataAsXml", value); }
+            set
+            {
+                if (value == true) { SetValue<Boolean>("DataAsCData", !value); }
+                if (value == true) { SetValue<Boolean>("DataAsText", !value); }
+                SetValue<Boolean>("DataAsXml", value);
+            }
+        }
+
+        /// <inheritdoc/>
+        public String? ScopeName { get { return Scope.ToName(); } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope
+        {
+            get { return ScopeKey.Parse(GetValue("ScopeName") ?? String.Empty); }
+            set { SetValue("ScopeName", value.ToName()); OnPropertyChanged(nameof(Scope)); }
         }
 
         /// <summary>
@@ -148,17 +181,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         /// <param name="key"></param>
         public ElementItem(ISchemaKey key) : this()
         { SchemaId = key.SchemaId; }
-
-        /// <summary>
-        /// Constructor for Schema Element Items
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="column"></param>
-        public ElementItem(ISchemaKey key, IColumnItem column) : this (key)
-        {
-            ScopeName = column.ScopeName;
-            ColumnName = column.ColumnName;
-        }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
@@ -194,6 +216,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
 
         /// <inheritdoc/>
         public override string ToString()
-        { return String.Format("{0} {1}",ScopeName, ColumnName); }
+        { return String.Format("{0} {1}", ScopeName, ColumnName); }
     }
 }

@@ -40,7 +40,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// </summary>
         /// <param name="source"></param>
         public ScopeKey(ScopeType source) : this()
-        { Scope = source; } 
+        { Scope = source; }
 
         /// <summary>
         /// Constructor for the Scope Key.
@@ -48,16 +48,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <param name="source"></param>
         public ScopeKey(IScopeKey source) : this()
         { if (source is IScopeKey) { Scope = source.Scope; } }
-
-        /// <summary>
-        /// Constructor for the Scope Key.
-        /// </summary>
-        /// <param name="source"></param>
-        public ScopeKey(IScopeKeyName source) : this()
-        {
-            if (ScopeKey.TryParse(source.ScopeName, out ScopeKey? result))
-            { Scope = result.Scope; }
-        }
 
         /// <summary>
         /// Converts a ScopeType into a ScopeKey.
@@ -69,7 +59,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// Converts a ScopeKey into a ScopeType.
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator ScopeType (ScopeKey source) { return source.Scope; }
+        public static implicit operator ScopeType(ScopeKey source) { return source.Scope; }
 
         #region IEquatable
         /// <inheritdoc/>
@@ -138,13 +128,16 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.Null,                      "N/A" },
 
             {ScopeType.Library,                   "Library" },
-            {ScopeType.LibraryEvent,              "Library.Event" },
-            {ScopeType.LibraryField,              "Library.Field" },
-            {ScopeType.LibraryMethod,             "Library.Method" },
             {ScopeType.LibraryNameSpace,          "Library.NameSpace" },
-            {ScopeType.LibraryProperty,           "Library.Property" },
-            {ScopeType.LibraryParameter,          "Library.Parameter" },
-            {ScopeType.LibraryType,               "Library.Type" },
+            {ScopeType.LibraryType,               "Library.NameSpace.Type" },
+            {ScopeType.LibraryTypeEvent,          "Library.NameSpace.Type.Event" },
+            {ScopeType.LibraryTypeField,          "Library.NameSpace.Type.Field" },
+            {ScopeType.LibraryTypeMethod,         "Library.NameSpace.Type.Method" }, // Functions or Methods
+            {ScopeType.LibraryTypeProperty,       "Library.NameSpace.Type.Property" },
+            {ScopeType.LibraryMethodParameter,    "Library.NameSpace.Type.Method.Parameter" },
+            //{ScopeType.LibraryPropertyParameter,"Library.NameSpace.Type.Property.Parameter" }, // Example is an Indexer, Detected as Parameter.
+            //{ScopeType.LibraryDelegate,         "Library.NameSpace.Delegate" }, // Detected as a Type, cannot be distinguished
+            //{ScopeType.LibraryDelegateParameter,"Library.NameSpace.Delegate.Parameter" }, // Cannot be detected without Parms being specified in XML
 
             {ScopeType.Database,                  "Database" },
             {ScopeType.DatabaseSchema,            "Database.Schema" },
@@ -175,10 +168,12 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.ScriptingSchema,            "Scripting.Schema" },
             {ScopeType.ScriptingSchemaElement,     "Scripting.Schema.Element" },
             {ScopeType.ScriptingTransform,         "Scripting.Transform" },
+            {ScopeType.ScriptingSelection,         "Scripting.Selection" },
+            {ScopeType.ScriptingSelectionInstance, "Scripting.Selection.Instance" },
         };
 
         /// <inheritdoc/>
-        public static ScopeKey Parse(String source, IFormatProvider? provider)
+        public static ScopeKey Parse(String source, IFormatProvider? provider = null)
         {
             if (String.IsNullOrEmpty(source))
             { throw new ArgumentNullException(nameof(source)); }
@@ -186,11 +181,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             if (ScopeKey.TryParse(source, provider, out ScopeKey? result))
             { return result; }
             else
-            {
-                Exception ex = new FormatException();
-                ex.Data.Add(nameof(source), source);
-                throw ex;
-            }
+            { return ScopeType.Null; }
         }
 
         /// <inheritdoc/>

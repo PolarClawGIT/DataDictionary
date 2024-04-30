@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Toolbox.BindingTable
 {
     public interface IBindingList<TRow> : IBindingList, ICollection<TRow>, IList<TRow>, ICancelAddNew, IRaiseItemChangedEvents
-        where TRow : class, IBindingPropertyChanged
+        where TRow : IBindingPropertyChanged
     {
         // This works but attempts to do the same thing with my own interfaces fails. I don't know why.
 

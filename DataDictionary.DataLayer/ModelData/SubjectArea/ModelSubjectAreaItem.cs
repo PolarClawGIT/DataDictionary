@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
     /// <summary>
     /// Interface for Model Subject Area Item
     /// </summary>
-    public interface IModelSubjectAreaItem : IModelSubjectAreaKey, IModelSubjectAreaUniqueKey
+    public interface IModelSubjectAreaItem : IModelSubjectAreaKey, IModelSubjectAreaUniqueKey, IScopeKey
     {
         /// <summary>
         /// Description of the Subject Area
@@ -42,6 +43,9 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
 
         /// <inheritdoc/>
         public String? SubjectAreaNameSpace { get { return GetValue("SubjectAreaNameSpace"); } set { SetValue("SubjectAreaNameSpace", value); } }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get; } = ScopeType.ModelSubjectArea;
 
         /// <summary>
         /// Constructor for Model Subject Area Item

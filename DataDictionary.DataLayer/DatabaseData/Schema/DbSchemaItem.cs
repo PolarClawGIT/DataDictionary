@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
     /// <summary>
     /// Interface for the Database Schema Item
     /// </summary>
-    public interface IDbSchemaItem : IDbSchemaKeyName, IDbSchemaKey, IDbCatalogKey, IDbCatalogScopeKey, IDbIsSystem, IScopeKey
+    public interface IDbSchemaItem : IDbSchemaKeyName, IDbSchemaKey, IDbCatalogKey, IDbLevelCatalogKey, IDbIsSystem, IScopeKey
     { }
 
     /// <summary>
@@ -54,7 +54,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
         }
 
         /// <inheritdoc/>
-        public DbCatalogScope CatalogScope { get; } = DbCatalogScope.Schema;
+        public DbLevelCatalog CatalogScope { get; } = DbLevelCatalog.Schema;
 
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.DatabaseSchema;
@@ -79,7 +79,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            if (new ScopeKey(this).TryScope() is IDbCatalogScopeKey scopeKey)
+            if (this.Scope.ToDbLevel() is IDbLevelCatalogKey scopeKey)
             {
                 return new DbExtendedPropertyGetCommand(connection)
                 {

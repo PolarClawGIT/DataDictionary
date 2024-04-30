@@ -9,41 +9,38 @@ using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer
 {
+
     partial class BusinessLayerData
     {
         /// <summary>
         /// Wrapper for NameScope Data (NameSpace)
         /// </summary>
-        public NamedScopeDictionary NameScope { get; }
-    }
+        public INamedScopeData NamedScope { get { return namedScopeValue; } }
+        private readonly NamedScopeData namedScopeValue;
 
-    /// <summary>
-    /// Extension class for NameScopeDictionary
-    /// </summary>
-    public static class BusinessLayerData_NameScope
-    {
         /// <summary>
-        /// Create WorkItems to Import a List of NameScopeItems to the NameScopeDictionary
+        /// Work Items to Clears then Load the NamedScope
         /// </summary>
-        /// <param name="target"></param>
-        /// <param name="source"></param>
         /// <returns></returns>
-        public static IReadOnlyList<WorkItem> Import(this NamedScopeDictionary target, IList<NamedScopeItem> source)
+        public IReadOnlyList<WorkItem> LoadNamedScope()
         {
-            return new WorkItem()
+            List<WorkItem> work = new List<WorkItem>();
+
+            work.Add(new WorkItem()
             {
-                WorkName = "Load NameScope",
-                DoWork = () => target.AddRange(source)
-            }.ToList();
+                WorkName = "Load NamedScope",
+                DoWork = () =>
+                {
+                    namedScopeValue.Clear();
+                    namedScopeValue.AddRange(modelValue.GetNamedScopes());
+                    namedScopeValue.AddRange(domainValue.GetNamedScopes());
+                    namedScopeValue.AddRange(databaseValue.GetNamedScopes());
+                    namedScopeValue.AddRange(libraryValue.GetNamedScopes());
+                    namedScopeValue.AddRange(scriptingValue.GetNamedScopes());
+                }
+            });
+
+            return work;
         }
-
-        /// <summary>
-        /// Create WorkItems to Remove all items from a NameScopeDictionary.
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public static IReadOnlyList<WorkItem> Remove(this NamedScopeDictionary target)
-        { return new WorkItem() { WorkName = "Remove NameScope", DoWork = () => target.Clear() }.ToList(); }
     }
-
 }

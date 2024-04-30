@@ -17,8 +17,7 @@ namespace DataDictionary.BusinessLayer.Database
     /// </summary>
     public interface IDatabaseModel :
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>, IRemoveData<IDbCatalogKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeData
+        ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
         /// List of Database Catalogs within the Model.
@@ -97,7 +96,7 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Implementation for Catalog data
     /// </summary>
-    class DatabaseModel : IDatabaseModel, IDataTableFile
+    class DatabaseModel : IDatabaseModel, IDataTableFile, IGetNamedScopes
     {
         /// <inheritdoc/>
         public ICatalogData DbCatalogs { get { return catalogs; } }
@@ -456,25 +455,25 @@ namespace DataDictionary.BusinessLayer.Database
             return work;
         }
 
-
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
+        /// <remarks>Catalog</remarks>
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
+            List<NamedScopePair> result = new List<NamedScopePair>();
+            result.AddRange(catalogs.GetNamedScopes());
+            result.AddRange(schemta.GetNamedScopes());
+            result.AddRange(domains.GetNamedScopes());
 
-            work.AddRange(catalogs.Export(target));
-            work.AddRange(schemta.Export(target));
-            work.AddRange(domains.Export(target));
+            result.AddRange(tables.GetNamedScopes());
+            result.AddRange(tableColumns.GetNamedScopes());
 
-            work.AddRange(tables.Export(target));
-            work.AddRange(tableColumns.Export(target));
+            result.AddRange(routines.GetNamedScopes());
+            result.AddRange(routineParameters.GetNamedScopes());
 
-            work.AddRange(routines.Export(target));
-            work.AddRange(routineParameters.Export(target));
+            result.AddRange(constraints.GetNamedScopes());
 
-            work.AddRange(constraints.Export(target));
-
-            return work;
+            return result;
+            
         }
     }
 }

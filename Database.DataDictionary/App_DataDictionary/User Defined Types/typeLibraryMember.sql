@@ -4,9 +4,8 @@
 	[MemberId]         UniqueIdentifier Null,
 	[MemberParentId]   UniqueIdentifier Null,
 	[AssemblyName]     NVarChar(1023) Null,
-	[NameSpace]        NVarChar(Max) Null,
+	[MemberNameSpace]  NVarChar(Max) Null,
 	[MemberName]       [App_DataDictionary].[typeNameSpaceMember] Not Null,
-	[ScopeName]        [App_DataDictionary].[typeScopeName] Null,
-	[MemberType]       NVarChar(50) Null, 
+	[MemberType]       NVarChar(10) Null, 
 	[MemberData]       XML Null
 )

@@ -1,58 +1,16 @@
-﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.WorkFlows;
-using DataDictionary.DataLayer.LibraryData.Source;
+﻿using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.Library;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Drawing.Text;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Library
 {
-    partial class LibraryManager : ApplicationData, IApplicationDataBind
+    partial class LibraryManager : ApplicationData
     {
-        public Boolean IsOpenItem(object? item)
-        { return true; }
-
-        LibrarySourceCollection dbData = new LibrarySourceCollection();
-        LibraryManagerCollection bindingData = new LibraryManagerCollection();
-
-        Boolean inModelList
-        {
-            get
-            {
-                if (libraryBinding.Current is LibraryManagerItem item)
-                {
-                    LibrarySourceKey key = new LibrarySourceKey(item);
-                    return (BusinessData.LibraryModel.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
-                }
-                else { return false; }
-            }
-        }
-
-        Boolean inDatabaseList
-        {
-            get
-            {
-                if (libraryBinding.Current is LibraryManagerItem item)
-                {
-                    LibrarySourceKey key = new LibrarySourceKey(item);
-                    return (dbData.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
-                }
-                else { return false; }
-            }
-        }
+        LibrarySynchronize libraries = new LibrarySynchronize(BusinessData.LibraryModel);
 
         public LibraryManager()
         {
@@ -66,140 +24,119 @@ namespace DataDictionary.Main.Forms.Library
         {
             if (Settings.Default.IsOnLineMode)
             {
+                IsLocked(true);
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
-                work.AddRange(LoadLocalData(factory));
-                this.DoWork(work, onCompleting);
+                work.AddRange(libraries.GetLibraries(factory));
+                DoWork(work, onCompleting);
             }
+            else { BindData(); }
 
             void onCompleting(RunWorkerCompletedEventArgs args)
-            { this.BindData(); }
-        }
+            {
+                libraries.Refresh();
+                BindData();
+                IsLocked(false);
+            }
 
-        public Boolean BindDataCore()
-        {
-            bindingData.Build(BusinessData.LibraryModel.LibrarySources, dbData);
-            libraryBinding.DataSource = bindingData;
+            void BindData()
+            {
+                LibrarySynchronizeValue libraryNames;
+                libraryBinding.DataSource = libraries;
+                Func<String, String> FormatName = (name) => { return String.Format("{0}.{1}", nameof(libraryNames.Source), name); };
 
-            libraryNavigation.AutoGenerateColumns = false;
-            libraryNavigation.DataSource = libraryBinding;
+                libraryNavigation.AutoGenerateColumns = false;
+                libraryNavigation.DataSource = libraryBinding;
 
-            LibraryManagerItem? nameOfValues;
-            libraryTitleData.DataBindings.Add(new Binding(nameof(libraryTitleData.Text), libraryBinding, nameof(nameOfValues.LibraryTitle)));
-            libraryDescriptionData.DataBindings.Add(new Binding(nameof(libraryDescriptionData.Text), libraryBinding, nameof(nameOfValues.LibraryDescription)));
-            asseblyNameData.DataBindings.Add(new Binding(nameof(asseblyNameData.Text), libraryBinding, nameof(nameOfValues.AssemblyName)));
-            sourceFileNameData.DataBindings.Add(new Binding(nameof(sourceFileNameData.Text), libraryBinding, nameof(nameOfValues.SourceFile)));
-            sourceFileDate.DataBindings.Add(new Binding(nameof(sourceFileDate.Text), libraryBinding, nameof(nameOfValues.SourceDate)));
-            return true;
-        }
-
-        public void UnbindDataCore()
-        {
-            libraryTitleData.DataBindings.Clear();
-            libraryDescriptionData.DataBindings.Clear();
-            asseblyNameData.DataBindings.Clear();
-            sourceFileNameData.DataBindings.Clear();
-            sourceFileDate.DataBindings.Clear();
-
-            libraryNavigation.DataSource = null;
-            libraryBinding.DataSource = null;
+                libraryTitleData.DataBindings.Add(new Binding(nameof(libraryTitleData.Text), libraryBinding, FormatName(nameof(libraryNames.Source.LibraryTitle)), false, DataSourceUpdateMode.OnPropertyChanged));
+                libraryDescriptionData.DataBindings.Add(new Binding(nameof(libraryDescriptionData.Text), libraryBinding, FormatName(nameof(libraryNames.Source.LibraryDescription)), false, DataSourceUpdateMode.OnPropertyChanged));
+                asseblyNameData.DataBindings.Add(new Binding(nameof(asseblyNameData.Text), libraryBinding, FormatName(nameof(libraryNames.Source.AssemblyName))));
+                sourceFileNameData.DataBindings.Add(new Binding(nameof(sourceFileNameData.Text), libraryBinding, FormatName(nameof(libraryNames.Source.SourceFile))));
+                sourceFileDate.DataBindings.Add(new Binding(nameof(sourceFileDate.Text), libraryBinding, FormatName(nameof(libraryNames.Source.SourceDate))));
+            }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            base.DeleteFromDatabaseCommand_Click(sender, e);
             libraryNavigation.EndEdit();
 
-            if (libraryBinding.Current is LibraryManagerItem item)
+            if (libraryBinding.Current is LibrarySynchronizeValue value && value.Source is ILibrarySourceValue item)
             {
+                IsLocked(true);
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
+                LibrarySourceIndex key = new LibrarySourceIndex(item);
 
-                ILibrarySourceKey key = new LibrarySourceKey(item);
                 work.Add(factory.OpenConnection());
-                Boolean inModelList = (BusinessData.LibraryModel.LibrarySources.FirstOrDefault(w => key.Equals(w)) is LibrarySourceItem);
+                work.AddRange(libraries.DeleteFromDb(factory, key));
+                work.AddRange(libraries.GetLibraries(factory));
+                DoWork(work, onCompleting);
+            }
 
-                if (inModelList)
-                {
-                    work.AddRange(BusinessData.LibraryModel.Remove(key));
-                    work.AddRange(BusinessData.LibraryModel.Save(factory, key));
-                }
-                else
-                {
-                    work.Add(new WorkItem() { DoWork = () => { dbData.Remove(key); } });
-                    work.Add(factory.CreateSave(dbData, key));
-                }
-
-                work.AddRange(LoadLocalData(factory));
-                DoLocalWork(work);
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                libraries.Refresh();
+                IsLocked(false);
             }
         }
 
         protected override void OpenFromDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            base.OpenFromDatabaseCommand_Click(sender, e);
             libraryNavigation.EndEdit();
 
-            if (libraryBinding.Current is LibraryManagerItem item)
+            if (libraryBinding.Current is LibrarySynchronizeValue value && value.Source is ILibrarySourceValue item)
             {
+                IsLocked(true);
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                List<NamedScopeItem> names = new List<NamedScopeItem>();
+                LibrarySourceIndex key = new LibrarySourceIndex(item);
                 work.Add(factory.OpenConnection());
+                work.AddRange(libraries.OpenFromDb(factory, key));
 
-                LibrarySourceKey key = new LibrarySourceKey(item);
-                work.AddRange(BusinessData.LibraryModel.Load(factory, key));
-                work.AddRange(LoadLocalData(factory));
-                work.AddRange(BusinessData.LibraryModel.Export(names));
-                work.AddRange(BusinessData.NameScope.Import(names));
-                DoLocalWork(work);
+                DoWork(work, onCompleting);
             }
 
-
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                libraries.Refresh();
+                SendMessage(new RefreshNavigation());
+                IsLocked(false);
+            }
         }
 
         protected override void SaveToDatabaseCommand_Click(object? sender, EventArgs e)
         {
+            base.SaveToDatabaseCommand_Click(sender, e);
             libraryNavigation.EndEdit();
 
-            if (libraryBinding.Current is LibraryManagerItem item)
+            if (libraryBinding.Current is LibrarySynchronizeValue value && value.Source is ILibrarySourceValue item)
             {
+                IsLocked(true);
                 List<WorkItem> work = new List<WorkItem>();
                 IDatabaseWork factory = BusinessData.GetDbFactory();
-                ILibrarySourceKey key = new LibrarySourceKey(item);
+                LibrarySourceIndex key = new LibrarySourceIndex(item);
+
                 work.Add(factory.OpenConnection());
 
-                if (inModelList)
-                { work.AddRange(BusinessData.LibraryModel.Save(factory, key)); }
-                else
-                { work.Add(factory.CreateSave(dbData, key)); }
+                if (GetInModel())
+                {
+                    work.AddRange(libraries.SaveToDb(factory, key));
+                    work.AddRange(libraries.GetLibraries(factory));
+                }
 
-                work.AddRange(LoadLocalData(factory));
-
-                DoLocalWork(work);
+                DoWork(work, onCompleting);
             }
-        }
-
-        private IReadOnlyList<WorkItem> LoadLocalData(IDatabaseWork factory)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            work.Add(new WorkItem() { WorkName = "Clear local data", DoWork = dbData.Clear });
-            work.Add(factory.CreateLoad(dbData));
-
-            return work;
-        }
-
-        private void DoLocalWork(List<WorkItem> work)
-        {
-            SendMessage(new Messages.DoUnbindData());
-
-            this.DoWork(work, onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {
-                SendMessage(new Messages.DoBindData());
-                SendMessage(new Messages.RefreshNavigation());
+                libraries.Refresh();
+                IsLocked(false);
             }
         }
+
 
         private void libraryTitleData_Validating(object sender, CancelEventArgs e)
         {
@@ -215,20 +152,18 @@ namespace DataDictionary.Main.Forms.Library
             else { errorProvider.SetError(asseblyNameData.ErrorControl, String.Empty); }
         }
 
-        private void BindingComplete(object sender, BindingCompleteEventArgs e)
-        { if (sender is BindingSource binding) { binding.BindComplete(sender, e); } }
-
-        private void LibraryBinding_CurrentChanged(object sender, EventArgs e)
+        private Boolean GetInModel()
         {
-            if (libraryBinding.Current is LibraryManagerItem item)
-            {
-                LibrarySourceKey key = new LibrarySourceKey(item);
+            if (libraryBinding.Current is LibrarySynchronizeValue item)
+            { return item.InModel == true; }
+            else { return false; }
+        }
 
-                removeLibraryComand.Enabled = inModelList;
-                IsOpenDatabase = inDatabaseList;
-                IsSaveDatabase = true;
-                IsDeleteDatabase = inDatabaseList;
-            }
+        private Boolean GetInDatabase()
+        {
+            if (libraryBinding.Current is LibrarySynchronizeValue item)
+            { return item.InDatabase == true; }
+            else { return false; }
         }
 
         private void AddLibraryCommand_Click(object sender, EventArgs e)
@@ -274,40 +209,52 @@ namespace DataDictionary.Main.Forms.Library
 
                 // Create the work items for each of the files selected
                 List<WorkItem> work = new List<WorkItem>();
-                List<NamedScopeItem> names = new List<NamedScopeItem>();
 
                 foreach (String file in openFileDialog.FileNames)
                 {
                     FileInfo fileInfo = new FileInfo(file);
-                    work.AddRange(BusinessData.LibraryModel.Import(fileInfo));
-                    work.AddRange(BusinessData.LibraryModel.Export(names));
-                    work.AddRange(BusinessData.NameScope.Import(names));
+                    work.AddRange(libraries.ImportFromFile(fileInfo));
                 }
 
-                DoLocalWork(work);
+                DoWork(work, onCompleting);
+            }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                libraries.Refresh();
+                SendMessage(new RefreshNavigation());
+                IsLocked(false);
             }
         }
 
         private void RemoveLibraryComand_Click(object sender, EventArgs e)
         {
             libraryNavigation.EndEdit();
+            List<WorkItem> work = new List<WorkItem>();
 
-            if (libraryBinding.Current is LibraryManagerItem item)
+            if (libraryBinding.Current is LibrarySynchronizeValue value && value.Source is ILibrarySourceValue item)
             {
-                List<WorkItem> work = new List<WorkItem>();
-                LibrarySourceKey key = new LibrarySourceKey(item);
-                NamedScopeKey scopeKey = new NamedScopeKey(item);
-
+                IsLocked(true);
+                LibrarySourceIndex key = new LibrarySourceIndex(item);
                 work.AddRange(BusinessData.LibraryModel.Remove(key));
-                work.Add(
-                    new WorkItem()
-                    {
-                        WorkName = "Remove NameScope",
-                        DoWork = () => { BusinessData.NameScope.Remove(scopeKey); }
-                    });
 
-                DoLocalWork(work);
+                DoWork(work, onCompleting);
             }
+
+            void onCompleting(RunWorkerCompletedEventArgs args)
+            {
+                libraries.Refresh();
+                SendMessage(new RefreshNavigation());
+                IsLocked(false);
+            }
+        }
+
+        private void LibraryBinding_CurrentChanged(object sender, EventArgs e)
+        {
+            removeLibraryComand.Enabled = GetInModel();
+            IsOpenDatabase = GetInDatabase() && !GetInModel();
+            IsSaveDatabase = GetInModel();
+            IsDeleteDatabase = GetInDatabase();
         }
     }
 }

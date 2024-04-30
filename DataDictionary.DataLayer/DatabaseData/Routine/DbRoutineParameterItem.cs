@@ -38,9 +38,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public string? RoutineName { get { return GetValue("RoutineName"); } }
 
         /// <inheritdoc/>
-        public string? RoutineTypeName { get { return GetValue("RoutineType"); } }
-
-        /// <inheritdoc/>
         public string? ParameterName { get { return GetValue("ParameterName"); } }
 
         /// <inheritdoc/>
@@ -98,7 +95,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public string? DomainName { get { return GetValue("DomainName"); } }
 
         /// <inheritdoc/>
-        public DbRoutineType RoutineType { get { return this.GetRoutineType(); } }
+        public DbRoutineType RoutineType
+        { get { return DbRoutineTypeKey.Parse(GetValue("RoutineType") ?? String.Empty).RoutineType; } }
 
         /// <inheritdoc/>
         public ScopeType Scope
@@ -156,7 +154,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         public virtual Command PropertyCommand(IConnection connection)
         {
             {
-                if (new ScopeKey(this).TryScope() is IDbElementScopeKey scopeKey)
+                if (this.Scope.ToDbLevel() is IDbLevelElementKey scopeKey)
                 {
                     return new DbExtendedPropertyGetCommand(connection)
                     {

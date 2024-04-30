@@ -2,7 +2,6 @@
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
-using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
@@ -12,7 +11,7 @@ namespace DataDictionary.Main.Forms.Domain
     partial class DomainAttribute : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return bindingAttribute.Current is IAttributeItem current && ReferenceEquals(current, item); }
+        { return bindingAttribute.Current is IAttributeValue current && ReferenceEquals(current, item); }
 
         public DomainAttribute() : base()
         {
@@ -20,32 +19,38 @@ namespace DataDictionary.Main.Forms.Domain
             toolStrip.TransferItems(attributeToolStrip, 0);
         }
 
-        public DomainAttribute(IAttributeItem attributeItem) : this()
+        public DomainAttribute(IAttributeValue? attributeItem) : this()
         {
-            AttributeKey key = new AttributeKey(attributeItem);
-            bindingAttribute.DataSource = new BindingView<AttributeItem>(BusinessData.DomainModel.Attributes, w => key.Equals(w));
+            if (attributeItem is null)
+            {
+                attributeItem = new AttributeValue();
+                BusinessData.DomainModel.Attributes.Add(attributeItem);
+            }
+
+            AttributeIndex key = new AttributeIndex(attributeItem);
+            bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => key.Equals(w));
             bindingAttribute.Position = 0;
 
             Setup(bindingAttribute);
 
-            if (bindingAttribute.Current is IAttributeItem current)
+            if (bindingAttribute.Current is IAttributeValue current)
             {
-                bindingProperty.DataSource = new BindingView<AttributePropertyItem>(BusinessData.DomainModel.Attributes.Properties, w => key.Equals(w));
-                bindingAlias.DataSource = new BindingView<AttributeAliasItem>(BusinessData.DomainModel.Attributes.Aliases, w => key.Equals(w));
+                bindingProperty.DataSource = new BindingView<AttributePropertyValue>(BusinessData.DomainModel.Attributes.Properties, w => key.Equals(w));
+                bindingAlias.DataSource = new BindingView<AttributeAliasValue>(BusinessData.DomainModel.Attributes.Aliases, w => key.Equals(w));
             }
         }
 
         private void Form_Load(object sender, EventArgs e)
         {
-            IAttributeItem nameOfValues;
-            PropertyNameItem.Load(propertyIdColumn);
-            ScopeNameItem.Load(aliaseScopeColumn);
+            IAttributeValue nameOfValues;
+            PropertyNameMember.Load(propertyIdColumn);
+            ScopeNameMember.Load(aliaseScopeColumn);
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingAttribute, nameof(nameOfValues.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingAttribute, nameof(nameOfValues.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingAttribute, nameof(nameOfValues.AttributeDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 
-            AttributeNameItem.Load(typeOfAttributeData, BusinessData.DomainModel.Attributes);
+            AttributeNameMember.Load(typeOfAttributeData, BusinessData.DomainModel.Attributes);
             typeOfAttributeData.DataBindings.Add(new Binding(nameof(typeOfAttributeData.SelectedValue), bindingAttribute, nameof(nameOfValues.TypeOfAttributeId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
 
             isSingleValueData.DataBindings.Add(new Binding(nameof(isSingleValueData.Checked), bindingAttribute, nameof(nameOfValues.IsSingleValue), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -67,24 +72,24 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.DataSource = bindingAlias;
             domainAlias.BindData(bindingAlias);
 
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeItem);
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
         }
 
 
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
-            if (bindingAttribute.Current is IAttributeItem current)
+            if (bindingAttribute.Current is IAttributeValue current)
             {
                 BusinessData.DomainModel.Attributes.Remove(current);
-                BusinessData.NameScope.Remove(new NamedScopeKey(current));
+                BusinessData.NamedScope.Remove(new NamedScopeKey(current));
             }
         }
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingAttribute.Current is AttributeItem current)
+            if (bindingAttribute.Current is AttributeValue current)
             {
-                AttributePropertyItem newItem = new AttributePropertyItem(current);
+                AttributePropertyValue newItem = new AttributePropertyValue(current);
 
                 e.NewObject = newItem;
             }
@@ -92,13 +97,13 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingAlias_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingAttribute.Current is AttributeItem current)
+            if (bindingAttribute.Current is AttributeValue current)
             {
-                AttributeAliasItem newItem = new AttributeAliasItem(current);
+                AttributeAliasValue newItem = new AttributeAliasValue(current);
                 e.NewObject = newItem;
 
-                newItem.AliasName = domainAlias.SelectedAlias.MemberFullName;
-                newItem.Scope = domainAlias.SelectedAlias.Scope;
+                //newItem.AliasName = domainAlias.SelectedAlias.MemberFullName;
+                //newItem.Scope = domainAlias.SelectedAlias.Scope;
             }
         }
 

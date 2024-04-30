@@ -35,13 +35,21 @@ Begin Try
 	Where	(@SchemaId is Null or D.[SchemaId] = @SchemaId)
 
 	-- Apply Changes
+	Delete From [App_DataDictionary].[ScriptingSchemaElement]
+	From	[App_DataDictionary].[ScriptingSchemaElement] T
+			Left Join @Values S
+			On	T.[SchemaId] = S.[SchemaId]
+	Where	S.[SchemaId] is Null And
+			(@SchemaId is Null or T.[SchemaId] = @SchemaId)
+	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingSchemaElement]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	Delete From [App_DataDictionary].[ScriptingSchema]
 	From	[App_DataDictionary].[ScriptingSchema] T
 			Left Join @Values S
 			On	T.[SchemaId] = S.[SchemaId]
 	Where	S.[SchemaId] is Null And
 			(@SchemaId is Null or T.[SchemaId] = @SchemaId)
-	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseTable]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingSchema]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[SchemaId],

@@ -1,17 +1,13 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.ModelData;
+﻿using DataDictionary.BusinessLayer.Model;
 using DataDictionary.Main.Controls;
-using DataDictionary.Main.Properties;
 using System.ComponentModel;
-using System.Data;
-using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Model
 {
     partial class Model : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return bindingModel.Current is IModelItem current && ReferenceEquals(current, item); }
+        { return bindingModel.Current is IModelValue current && ReferenceEquals(current, item); }
 
         public Model() : base()
         {
@@ -19,10 +15,10 @@ namespace DataDictionary.Main.Forms.Model
             toolStrip.TransferItems(modelToolStrip,0);
         }
 
-        public Model(IModelItem data) : this()
+        public Model(IModelValue data) : this()
         {
             bindingModel.AllowNew = false;
-            bindingModel.DataSource = new BindingList<IModelItem>() { data };
+            bindingModel.DataSource = new BindingList<IModelValue>() { data };
             bindingModel.Position = 0;
 
             Setup(bindingModel);
@@ -30,7 +26,7 @@ namespace DataDictionary.Main.Forms.Model
 
         private void Model_Load(object sender, EventArgs e)
         {
-            IModelItem nameBinding;
+            IModelValue nameBinding;
             DataBindings.Add(new Binding(nameof(Text), bindingModel, nameof(nameBinding.ModelTitle)));
             modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), bindingModel, nameof(nameBinding.ModelTitle)));
             modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), bindingModel, nameof(nameBinding.ModelDescription)));

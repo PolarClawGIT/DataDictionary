@@ -28,23 +28,20 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public Guid? TableId { get { return GetValue<Guid>("TableId"); } }
 
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue("DatabaseName"); } }
+        public String? DatabaseName { get { return GetValue("DatabaseName"); } }
 
         /// <inheritdoc/>
-        public string? SchemaName { get { return GetValue("SchemaName"); } }
+        public String? SchemaName { get { return GetValue("SchemaName"); } }
 
         /// <inheritdoc/>
-        public string? TableName { get { return GetValue("TableName"); } }
+        public String? TableName { get { return GetValue("TableName"); } }
 
         /// <inheritdoc/>
-        public string? TableTypeName { get { return GetValue("TableType"); } }
-
-        /// <inheritdoc/>
-        public bool IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
+        public Boolean IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
 
         /// <inheritdoc/>
         public DbTableType TableType
-        { get { return this.GetTableType(); } }
+        { get { return DbTableTypeKey.Parse(GetValue("TableType") ?? String.Empty).TableType; } }
 
         /// <inheritdoc/>
         public ScopeType Scope
@@ -53,7 +50,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             {
                 switch (TableType)
                 {
-                    case DbTableType.Null: return ScopeType.Null;
                     case DbTableType.Table: return ScopeType.DatabaseTable;
                     case DbTableType.TemporalTable: return ScopeType.DatabaseTable;
                     case DbTableType.HistoryTable: return ScopeType.DatabaseTable;
@@ -86,7 +82,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            if (new ScopeKey(this).TryScope() is IDbObjectScopeKey scopeKey)
+            if (this.Scope.ToDbLevel() is IDbLevelObjectKey scopeKey)
             {
                 return new DbExtendedPropertyGetCommand(connection)
                 {

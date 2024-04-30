@@ -46,7 +46,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
-        { return SaveCommand(connection); }
+        { return SaveCommand(connection, (null, null)); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, ISchemaKey key)
@@ -65,7 +65,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
             command.AddParameter("@SchemaId", parameters.SchemaId);
             command.AddParameter("@ElementId", parameters.ElementId);
 
-            IEnumerable<TItem> data = this.Where(w => 
+            IEnumerable<TItem> data = this.Where(w =>
                 (parameters.SchemaId is null || w.SchemaId == parameters.SchemaId)
                 && (parameters.ElementId is null || w.ElementId == parameters.ElementId));
             command.AddParameter("@Data", "[App_DataDictionary].[typeScriptingSchemaElement]", data);

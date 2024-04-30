@@ -11,7 +11,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Alias Items
     /// </summary>
-    public interface IDomainAttributeAliasItem : IDomainAttributeKey, IDomainAlias
+    public interface IDomainAttributeAliasItem : IDomainAttributeKey, IDomainAlias, IScopeKey
     { }
 
     /// <summary>
@@ -29,13 +29,10 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         public string? AliasName { get { return GetValue("AliasName"); } set { SetValue("AliasName", value); } }
 
         /// <inheritdoc/>
-        public string? ScopeName { get { return GetValue("ScopeName"); } set { SetValue("ScopeName", value); } }
-
-        /// <inheritdoc/>
         public ScopeType Scope
         {
-            get { return new ScopeKey((IScopeKeyName)this).Scope; }
-            set { ScopeName = value.ToScopeName(); OnPropertyChanged(nameof(Scope)); }
+            get { return ScopeKey.Parse(GetValue("ScopeName") ?? String.Empty).Scope; }
+            set { SetValue("ScopeName", value.ToName()); OnPropertyChanged(nameof(Scope)); }
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()

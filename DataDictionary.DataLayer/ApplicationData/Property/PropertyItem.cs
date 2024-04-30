@@ -15,7 +15,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// <summary>
     /// Interface for the Property data.
     /// </summary>
-    public interface IPropertyItem : IPropertyKey, IPropertyKeyExtended, IPropertyKeyUnique
+    public interface IPropertyItem : IPropertyKey, IPropertyKeyExtended, IPropertyKeyName
     {
         /// <summary>
         /// Description of the Property. How the property is used.

@@ -1,19 +1,5 @@
-﻿using DataDictionary.BusinessLayer;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DatabaseData.Domain;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.Main.Controls;
-using DataDictionary.Main.Messages;
-using DataDictionary.Main.Properties;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using DataDictionary.BusinessLayer.Database;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Database
@@ -22,32 +8,32 @@ namespace DataDictionary.Main.Forms.Database
     {
 
         public Boolean IsOpenItem(object? item)
-        { return bindingDomain.Current is IDbDomainItem current && ReferenceEquals(current, item); }
+        { return bindingDomain.Current is IDomainValue current && ReferenceEquals(current, item); }
 
         public DbDomain() : base()
         {
             InitializeComponent();
         }
 
-        public DbDomain(IDbDomainItem domainItem) : this()
+        public DbDomain(IDomainValue domainItem) : this()
         {
-            DbDomainKeyName key = new DbDomainKeyName(domainItem);
-            DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
+            DomainIndexName key = new DomainIndexName(domainItem);
+            ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
 
-            bindingDomain.DataSource = new BindingView<DbDomainItem>(BusinessData.DatabaseModel.DbDomains, w => key.Equals(w));
+            bindingDomain.DataSource = new BindingView<DomainValue>(BusinessData.DatabaseModel.DbDomains, w => key.Equals(w));
             bindingDomain.Position = 0;
 
             Setup(bindingDomain);
 
-            if (bindingDomain.Current is IDbDomainItem current)
+            if (bindingDomain.Current is IDomainValue current)
             {
-                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
+                bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }
 
         private void DbDomain_Load(object sender, EventArgs e)
         {
-            IDbDomainItem bindingNames;
+            IDomainValue bindingNames;
             catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingDomain, nameof(bindingNames.DatabaseName)));
             schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingDomain, nameof(bindingNames.SchemaName)));
             domainNameData.DataBindings.Add(new Binding(nameof(domainNameData.Text), bindingDomain, nameof(bindingNames.DomainName)));
@@ -72,7 +58,7 @@ namespace DataDictionary.Main.Forms.Database
             extendedPropertiesData.AutoGenerateColumns = false;
             extendedPropertiesData.DataSource = bindingProperties;
 
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingDomain.Current is not IDbDomainItem);
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingDomain.Current is not IDomainValue);
         }
     }
 }

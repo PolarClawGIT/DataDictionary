@@ -1,20 +1,14 @@
-﻿using DataDictionary.BusinessLayer;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.DataLayer.DatabaseData.Table;
+﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.Main.Controls;
-using DataDictionary.Main.Properties;
-using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
-using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Database
 {
     partial class DbTableColumn : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return bindingColumn.Current is IDbTableColumnItem current && ReferenceEquals(current, item); }
+        { return bindingColumn.Current is ITableColumnValue current && ReferenceEquals(current, item); }
 
         public DbTableColumn() : base()
         {
@@ -22,26 +16,26 @@ namespace DataDictionary.Main.Forms.Database
             toolStrip.TransferItems(tableColumnToolStrip, 0);
         }
 
-        public DbTableColumn(IDbTableColumnItem columnItem) : this()
+        public DbTableColumn(ITableColumnValue columnItem) : this()
         {
-            DbTableColumnKeyName key = new DbTableColumnKeyName(columnItem);
-            DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
+            TableColumnIndexName key = new TableColumnIndexName(columnItem);
+            ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
 
-            bindingColumn.DataSource = new BindingView<DbTableColumnItem>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
+            bindingColumn.DataSource = new BindingView<TableColumnValue>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
             bindingColumn.Position = 0;
 
             Setup(bindingColumn);
 
-            if (bindingColumn.Current is IDbTableColumnItem current)
+            if (bindingColumn.Current is ITableColumnValue current)
             {
-                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
+                bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
 
         }
 
         private void DbColumn_Load(object sender, EventArgs e)
         {
-            IDbTableColumnItem bindingNames;
+            ITableColumnValue bindingNames;
             catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingColumn, nameof(bindingNames.DatabaseName)));
             schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingColumn, nameof(bindingNames.SchemaName)));
             tableNameData.DataBindings.Add(new Binding(nameof(tableNameData.Text), bindingColumn, nameof(bindingNames.TableName)));
@@ -79,12 +73,12 @@ namespace DataDictionary.Main.Forms.Database
             extendedPropertiesData.AutoGenerateColumns = false;
             extendedPropertiesData.DataSource = bindingProperties;
 
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingColumn.Current is not IDbTableColumnItem);
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingColumn.Current is not ITableColumnValue);
         }
 
         private void exportCommand_Click(object sender, EventArgs e)
         {
-            if (bindingColumn.Current is IDbTableColumnItem current)
+            if (bindingColumn.Current is ITableColumnValue current)
             {   BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current); }
         }
     }

@@ -6,6 +6,7 @@ using DataDictionary.DataLayer.ModelData;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
 using Toolbox.DbContext;
+using DataDictionary.BusinessLayer.Model;
 
 
 namespace DataDictionary.BusinessLayer
@@ -13,8 +14,8 @@ namespace DataDictionary.BusinessLayer
     /// <summary>
     /// Main Data Container for all Business Data.
     /// </summary>
-    public partial class BusinessLayerData : 
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData, INamedScopeData
+    public partial class BusinessLayerData :
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData
     {
         /// <summary>
         /// Database Context for accessing the Application Db.
@@ -36,13 +37,16 @@ namespace DataDictionary.BusinessLayer
         /// The Current Model being used by the application
         /// </summary>
         /// <remarks>There should always be exactly one Model</remarks>
-        public ModelItem Model { get { return modelValues.First(); } }
+        public ModelItem Model
+        {
+            get
+            {
+                if (modelValue.Count > 0)
+                { return modelValue.First(); }
+                else { throw new ArgumentException("No Model exists"); }
+            }
+        }
 
-        /// <summary>
-        /// Returns a new Default factory Database Worker.
-        /// </summary>
-        public IDatabaseWork GetDbFactory()
-        { return new DatabaseWork(DbConnection); }
 
         /// <summary>
         /// Constructor for the Business Layer Data Object
@@ -62,32 +66,40 @@ namespace DataDictionary.BusinessLayer
                 ValidateCommand = true
             };
 
-            modelValues = new Model.ModelData();
-            subjectAreaValues = new Model.SubjectAreaData();
-            NameScope = new NamedScopeDictionary();
+            modelValue = new Model.ModelData();
+            subjectAreaValues = new Model.SubjectAreaData() { Models = modelValue };
+            namedScopeValue = new NamedScopeData();
 
-            modelValues.Add(new ModelItem());
+            modelValue.Add(new ModelValue());
             applicationValue = new Application.ApplicationData();
-            
-            domainValue = new Domain.DomainModel() { ModelProperty = applicationValue.Properties };
+
+            domainValue = new Domain.DomainModel() { Models = modelValue, ModelProperty = applicationValue.Properties };
             databaseValue = new Database.DatabaseModel();
             libraryValue = new Library.LibraryModel();
 
-            scriptingValue = new Scripting.ScriptingEngine();
+            scriptingValue = new Scripting.ScriptingEngine() { Models = modelValue };
         }
+
+        /// <summary>
+        /// Returns a new Default factory Database Worker.
+        /// </summary>
+        public IDatabaseWork GetDbFactory()
+        { return new DatabaseWork(DbConnection); }
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValues.Remove());
-            work.AddRange(modelValues.Load(factory, key));
+            work.AddRange(modelValue.Remove());
+            work.AddRange(modelValue.Load(factory, key));
             work.AddRange(subjectAreaValues.Load(factory, key));
 
             work.AddRange(DomainModel.Load(factory, key));
             work.AddRange(DatabaseModel.Load(factory, key));
             work.AddRange(LibraryModel.Load(factory, key));
+
+            work.AddRange(ScriptingEngine.Load(factory, key));
 
             return work;
         }
@@ -97,33 +109,47 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValues.Save(factory, key));
+            work.AddRange(modelValue.Save(factory, key));
             work.AddRange(subjectAreaValues.Save(factory, key));
 
             work.AddRange(DomainModel.Save(factory, key));
             work.AddRange(DatabaseModel.Save(factory, key));
             work.AddRange(LibraryModel.Save(factory, key));
 
+            work.AddRange(ScriptingEngine.Save(factory, key));
+
             return work;
         }
 
         /// <inheritdoc/>
-        /// <remarks>Automatically makes a new empty Model</remarks>
         public IReadOnlyList<WorkItem> Remove()
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValues.Remove());
+            work.AddRange(modelValue.Remove());
             work.AddRange(subjectAreaValues.Remove());
 
             work.AddRange(DomainModel.Remove());
             work.AddRange(DatabaseModel.Remove());
             work.AddRange(LibraryModel.Remove());
 
-            work.AddRange(NameScope.Remove());
+            work.AddRange(ScriptingEngine.Remove());
 
-            work.AddRange(modelValues.Create());
+            work.Add(new WorkItem() { DoWork = namedScopeValue.Clear });
 
+            return work;
+        }
+
+        /// <summary>
+        /// Creates a new empty Model (old model is removed).
+        /// </summary>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> Create()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(Remove());
+
+            work.AddRange(modelValue.Create());
             return work;
         }
 
@@ -134,7 +160,10 @@ namespace DataDictionary.BusinessLayer
         /// <returns></returns>
         public IReadOnlyList<WorkItem> ImportModel(FileInfo file)
         {
-            return new List<WorkItem>() { new WorkItem() { WorkName = "Load Model Data", DoWork = DoWork } };
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(Remove());
+            work.Add(new WorkItem() { WorkName = "Load Model Data", DoWork = DoWork });
+            return work;
 
             void DoWork()
             {
@@ -142,13 +171,14 @@ namespace DataDictionary.BusinessLayer
                 {
                     workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
 
-                    modelValues.Clear();
-                    modelValues.Import(workSet);
+                    modelValue.Import(workSet);
                     subjectAreaValues.Import(workSet);
 
                     domainValue.Import(workSet);
                     databaseValue.Import(workSet);
                     libraryValue.Import(workSet);
+
+                    scriptingValue.Import(workSet);
                 }
 
                 ModelFile = file;
@@ -168,12 +198,15 @@ namespace DataDictionary.BusinessLayer
             {
                 using (System.Data.DataSet workSet = new System.Data.DataSet())
                 {
-                    workSet.Tables.Add(modelValues.ToDataTable());
+                    workSet.Tables.Add(modelValue.ToDataTable());
                     workSet.Tables.Add(subjectAreaValues.ToDataTable());
 
                     workSet.Tables.AddRange(domainValue.Export().ToArray());
                     workSet.Tables.AddRange(databaseValue.Export().ToArray());
                     workSet.Tables.AddRange(libraryValue.Export().ToArray());
+
+                    workSet.Tables.AddRange(scriptingValue.Export().ToArray());
+
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }
 
@@ -189,12 +222,12 @@ namespace DataDictionary.BusinessLayer
         /// <returns></returns>
         public IReadOnlyList<WorkItem> ImportApplication(FileInfo file)
         {
-            List<WorkItem> workItems = new List<WorkItem>
+            List<WorkItem> work = new List<WorkItem>
             {
                 new WorkItem() { WorkName = "Load Application Data", DoWork = DoWork }
             };
 
-            return workItems.AsReadOnly();
+            return work.AsReadOnly();
 
             void DoWork()
             {
@@ -214,11 +247,11 @@ namespace DataDictionary.BusinessLayer
         /// <returns></returns>
         public IReadOnlyList<WorkItem> ExportApplication(FileInfo file)
         {
-            List<WorkItem> workItems = new List<WorkItem>();
+            List<WorkItem> work = new List<WorkItem>();
 
-            workItems.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
+            work.Add(new WorkItem() { WorkName = "Save Application Data", DoWork = DoWork });
 
-            return workItems.AsReadOnly();
+            return work.AsReadOnly();
 
             void DoWork()
             {
@@ -230,32 +263,6 @@ namespace DataDictionary.BusinessLayer
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }
             }
-        }
-
-        /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            Func<ModelItem?> model = modelValues.FirstOrDefault;
-
-            work.Add(new WorkItem()
-            {
-                WorkName = "Load NameScope, Models",
-                DoWork = () =>
-                {
-                    if (model() is ModelItem modelItem)
-                    { target.Add(new NamedScopeItem(modelItem)); }
-                }
-            });
-
-            work.AddRange(subjectAreaValues.Export(target, model));
-            work.AddRange(domainValue.Export(target, model));
-            work.AddRange(scriptingValue.Export(target, model));
-            work.AddRange(databaseValue.Export(target));
-            work.AddRange(libraryValue.Export(target));
-
-            return work;
-
         }
     }
 }

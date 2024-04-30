@@ -1,26 +1,10 @@
-﻿using DataDictionary.BusinessLayer;
+﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.Domain;
+using DataDictionary.BusinessLayer.Library;
+using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.NameSpace;
-using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.Domain;
-using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Schema;
-using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.DomainData.Entity;
-using DataDictionary.DataLayer.LibraryData.Member;
-using DataDictionary.DataLayer.LibraryData.Source;
-using DataDictionary.DataLayer.ModelData;
-using DataDictionary.DataLayer.ModelData.SubjectArea;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
-using DataDictionary.Main.Properties;
-using System.ComponentModel;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main
@@ -30,18 +14,48 @@ namespace DataDictionary.Main
         protected override void HandleMessage(RefreshNavigation message)
         {
             base.HandleMessage(message);
-            this.DoWork(contextNameNavigation.Load(BusinessData.NameScope));
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(BusinessData.LoadNamedScope());
+            work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
+            this.DoWork(work);
         }
 
         private void RefreshCommand_Click(object? sender, EventArgs e)
-        { this.DoWork(contextNameNavigation.Load(BusinessData.NameScope)); }
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(BusinessData.LoadNamedScope());
+            work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
+            this.DoWork(work);
+        }
+
+        /// <summary>
+        /// Used in determine if the code should expand the node or not.
+        /// </summary>
+        /// <remarks>
+        /// The code in NodeMouseClick (happens first) captures where the mouse was clicked
+        /// The code in Before Expand/Collapse ignores any click not on the +/-
+        /// The code in the NodeMouseDoubleClick (happens last) ignores the double click on the +/-
+        /// Normally, a double click anywhere on the node will expand/collapse the node.
+        /// This limits expand/collapse to the use of the +/- only.
+        /// </remarks>
+        TreeViewHitTestLocations treeViewHitTest = TreeViewHitTestLocations.None;
+
+        private void contextNameNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        { treeViewHitTest = e.Node.TreeView.HitTest(e.Location).Location; }
+
+        private void contextNameNavigation_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        { if (treeViewHitTest != TreeViewHitTestLocations.PlusMinus) { e.Cancel = true; } }
+
+        private void contextNameNavigation_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        { if (treeViewHitTest != TreeViewHitTestLocations.PlusMinus) { e.Cancel = true; } }
 
         private void DataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (contextNameNavigation.SelectedNode is TreeNode node)
+            if (treeViewHitTest != TreeViewHitTestLocations.PlusMinus // If the +/- was double clicked, ignore that.
+                && contextNameNavigation.SelectedNode is TreeNode node)
             {
-                NamedScopeItem? item = node.GetItem();
-                if (item is NamedScopeItem && item.Source is Object taget)
+                INamedScopeValue? item = node.GetNamedScope();
+                if (item is INamedScopeValue taget)
                 {
                     dynamic dataNode = taget;
                     Activate(dataNode);
@@ -49,49 +63,49 @@ namespace DataDictionary.Main
             }
         }
 
-        void Activate(DbCatalogItem catalogItem)
+        void Activate(ICatalogValue catalogItem)
         { Activate((data) => new Forms.Database.DbCatalog(catalogItem), catalogItem); }
 
-        void Activate(DbSchemaItem schemaItem)
+        void Activate(BusinessLayer.Database.ISchemaValue schemaItem)
         { Activate((data) => new Forms.Database.DbSchema(schemaItem), schemaItem); }
 
-        void Activate(DbTableItem tableItem)
+        void Activate(ITableValue tableItem)
         { Activate((data) => new Forms.Database.DbTable(tableItem), tableItem); }
 
-        void Activate(DbTableColumnItem columnItem)
+        void Activate(ITableColumnValue columnItem)
         { Activate((data) => new Forms.Database.DbTableColumn(columnItem), columnItem); }
 
-        void Activate(DbConstraintItem constraintItem)
+        void Activate(IConstraintValue constraintItem)
         { Activate((data) => new Forms.Database.DbConstraint(constraintItem), constraintItem); }
 
-        void Activate(DbRoutineItem routineItem)
+        void Activate(IRoutineValue routineItem)
         { Activate((data) => new Forms.Database.DbRoutine(routineItem), routineItem); }
 
-        void Activate(DbRoutineParameterItem routineParameterItem)
+        void Activate(IRoutineParameterValue routineParameterItem)
         { Activate((data) => new Forms.Database.DbRoutineParameter(routineParameterItem), routineParameterItem); }
 
-        void Activate(DbDomainItem domainItem)
+        void Activate(IDomainValue domainItem)
         { Activate((data) => new Forms.Database.DbDomain(domainItem), domainItem); }
 
-        void Activate(LibrarySourceItem sourceItem)
+        void Activate(ILibrarySourceValue sourceItem)
         { Activate((data) => new Forms.Library.LibrarySource(sourceItem), sourceItem); }
 
-        void Activate(LibraryMemberItem memberItem)
+        void Activate(ILibraryMemberValue memberItem)
         { Activate((data) => new Forms.Library.LibraryMember(memberItem), memberItem); }
 
-        void Activate(AttributeItem attributeItem)
+        void Activate(AttributeValue attributeItem)
         { Activate((data) => new Forms.Domain.DomainAttribute(attributeItem), attributeItem); }
 
-        void Activate(DomainEntityItem entityItem)
+        void Activate(EntityValue entityItem)
         { Activate((data) => new Forms.Domain.DomainEntity(entityItem), entityItem); }
 
-        void Activate(ModelSubjectAreaItem subjectItem)
+        void Activate(SubjectAreaValue subjectItem)
         { Activate((data) => new Forms.Domain.ModelSubjectArea(subjectItem), subjectItem); }
 
-        void Activate(ModelItem modelItem)
+        void Activate(ModelValue modelItem)
         { Activate((data) => new Forms.Model.Model(modelItem), modelItem); }
 
-        void Activate(SchemaItem schemaItem)
+        void Activate(BusinessLayer.Scripting.SchemaValue schemaItem)
         { Activate((data) => new Forms.Scripting.SchemaManager(schemaItem), schemaItem); }
     }
 }

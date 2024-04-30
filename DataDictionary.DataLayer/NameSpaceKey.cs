@@ -36,6 +36,7 @@ namespace DataDictionary.DataLayer
     /// <summary>
     /// Implementation for the NameSpace Key.
     /// </summary>
+    [Obsolete("Moved to Business Layer as NameScopeKey", false)]
     public class NameSpaceKey : INameSpaceKey, IKeyComparable<INameSpaceKey>, IKeyComparable<NameSpaceKey>
     {
         /// <inheritdoc/>
@@ -253,15 +254,18 @@ namespace DataDictionary.DataLayer
         /// Constructor for NameSpace Key from String
         /// </summary>
         /// <param name="source"></param>
-        public NameSpaceKey(string source) : this()
-        { memberParts.AddRange(NameParts(source)); }
+        public NameSpaceKey(String? source) : this()
+        {
+            if (source is String)
+            { memberParts.AddRange(NameParts(source)); }
+        }
 
         #region Constructors
         /// <summary>
         /// Constructor for NameSpace Key from Application Help
         /// </summary>
         /// <param name="source"></param>
-        public NameSpaceKey(ApplicationData.Help.IHelpKeyUnique source) : base()
+        public NameSpaceKey(ApplicationData.Help.IHelpKeyNameSpace source) : base()
         {
             if (source.NameSpace is String)
             { memberParts.AddRange(NameParts(source.NameSpace)); }
@@ -363,8 +367,8 @@ namespace DataDictionary.DataLayer
         /// <param name="source"></param>
         public NameSpaceKey(LibraryData.Member.ILibraryMemberKeyName source) : base()
         {
-            if (source.NameSpace is String)
-            { memberParts.AddRange(NameParts(source.NameSpace)); }
+            if (source.MemberNameSpace is String)
+            { memberParts.AddRange(NameParts(source.MemberNameSpace)); }
 
             if (source.MemberName is String)
             { memberParts.Add(source.MemberName); }

@@ -12,19 +12,18 @@ namespace DataDictionary.BusinessLayer.Library
     /// Interface representing .Net Library Data
     /// </summary>
     public interface ILibraryModel :
-        ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>, IRemoveData<ILibrarySourceKey>,
-        ILoadData<IModelKey>, ISaveData<IModelKey>,
-        INamedScopeData
+        ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>, IRemoveData<ILibrarySourceIndex>,
+        ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
         /// List of .Net Library Members within the Model
         /// </summary>
-        ILibraryMemberData LibraryMembers { get; }
+        ILibraryMemberData<LibraryMemberValue> LibraryMembers { get; }
 
         /// <summary>
         /// List of .Net Libraries within the Model
         /// </summary>
-        ILibrarySourceData LibrarySources { get; }
+        ILibrarySourceData<LibrarySourceValue> LibrarySources { get; }
 
         /// <summary>
         /// Imports a Library from Visual Studio XML Documentation file.
@@ -34,25 +33,25 @@ namespace DataDictionary.BusinessLayer.Library
         IReadOnlyList<WorkItem> Import(FileInfo source);
     }
 
-    class LibraryModel : ILibraryModel, IDataTableFile//, INameScopeData
+    class LibraryModel : ILibraryModel, IDataTableFile, IGetNamedScopes
     {
         /// <inheritdoc/>
-        public ILibraryMemberData LibraryMembers { get { return members; } }
-        private readonly LibraryMemberData members;
+        public ILibraryMemberData<LibraryMemberValue> LibraryMembers { get { return members; } }
+        private readonly LibraryMemberData<LibraryMemberValue> members;
 
         /// <inheritdoc/>
-        public ILibrarySourceData LibrarySources { get { return sources; } }
-        private readonly LibrarySourceData sources;
+        public ILibrarySourceData<LibrarySourceValue> LibrarySources { get { return sources; } }
+        private readonly LibrarySourceData<LibrarySourceValue> sources;
 
         public LibraryModel() : base()
         {
-            sources = new LibrarySourceData() { Library = this };
-            members = new LibraryMemberData() { Library = this };
+            sources = new LibrarySourceData<LibrarySourceValue>() { Library = this };
+            members = new LibraryMemberData<LibraryMemberValue>() { Library = this };
         }
 
         /// <inheritdoc/>
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(sources.Load(factory, dataKey));
@@ -74,7 +73,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceIndex dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(sources.Save(factory, dataKey));
@@ -114,7 +113,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc />
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Remove(ILibrarySourceKey key)
+        public IReadOnlyList<WorkItem> Remove(ILibrarySourceIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
 
@@ -164,15 +163,14 @@ namespace DataDictionary.BusinessLayer.Library
             return work;
         }
 
-        /// <inheritdoc />
-        public IReadOnlyList<WorkItem> Export(IList<NamedScopeItem> target)
+        /// <inheritdoc/>
+        /// <remarks>Library</remarks>
+        public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(sources.Export(target));
-            work.AddRange(members.Export(target));
-
-            return work;
+            List<NamedScopePair> result = new List<NamedScopePair>();
+            result.AddRange(sources.GetNamedScopes());
+            result.AddRange(members.GetNamedScopes());
+            return result;
         }
     }
 }

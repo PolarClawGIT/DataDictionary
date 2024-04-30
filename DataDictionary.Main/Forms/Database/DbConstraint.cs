@@ -1,10 +1,4 @@
-﻿using DataDictionary.BusinessLayer;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.Main.Controls;
-using DataDictionary.Main.Properties;
-using System.ComponentModel;
+﻿using DataDictionary.BusinessLayer.Database;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -14,33 +8,33 @@ namespace DataDictionary.Main.Forms.Database
     {
 
         public Boolean IsOpenItem(object? item)
-        { return bindingConstraint.Current is IDbConstraintItem current && ReferenceEquals(current, item); }
+        { return bindingConstraint.Current is IConstraintValue current && ReferenceEquals(current, item); }
 
         public DbConstraint() : base()
         {
             InitializeComponent();
         }
 
-        public DbConstraint(IDbConstraintItem constraintItem) : this()
+        public DbConstraint(IConstraintValue constraintItem) : this()
         {
-            DbConstraintKeyName key = new DbConstraintKeyName(constraintItem);
-            DbExtendedPropertyKeyName propertyKey = new DbExtendedPropertyKeyName(key);
+            ConstraintIndexName key = new ConstraintIndexName(constraintItem);
+            ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
 
-            bindingConstraint.DataSource = new BindingView<DbConstraintItem>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
+            bindingConstraint.DataSource = new BindingView<ConstraintValue>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
             bindingConstraint.Position = 0;
 
             Setup(bindingConstraint);
 
-            if (bindingConstraint.Current is IDbConstraintItem current)
+            if (bindingConstraint.Current is IConstraintValue current)
             {
-                bindingColumn.DataSource = new BindingView<DbConstraintColumnItem>(BusinessData.DatabaseModel.DbConstraintColumns, w => key.Equals(w));
-                bindingProperties.DataSource = new BindingView<DbExtendedPropertyItem>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
+                bindingColumn.DataSource = new BindingView<ConstraintColumnValue>(BusinessData.DatabaseModel.DbConstraintColumns, w => key.Equals(w));
+                bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }
 
         private void DbConstraint_Load(object sender, EventArgs e)
         {
-            IDbConstraintItem bindingNames;
+            IConstraintValue bindingNames;
             catalogNameData.DataBindings.Add(new Binding(nameof(catalogNameData.Text), bindingConstraint, nameof(bindingNames.DatabaseName)));
             schemaNameData.DataBindings.Add(new Binding(nameof(schemaNameData.Text), bindingConstraint, nameof(bindingNames.SchemaName)));
             constraintNameData.DataBindings.Add(new Binding(nameof(constraintNameData.Text), bindingConstraint, nameof(bindingNames.ConstraintName)));
@@ -53,7 +47,7 @@ namespace DataDictionary.Main.Forms.Database
             constraintColumnsData.AutoGenerateColumns = false;
             constraintColumnsData.DataSource = bindingColumn;
 
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingConstraint.Current is not IDbConstraintItem);
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingConstraint.Current is not IConstraintValue);
         }
     }
 }

@@ -12,13 +12,16 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Models for the application (expect 0 or 1)
         /// </summary>
-        //public IModelData Models { get { return models; } }
-        private readonly Model.ModelData modelValues;
+        public IModelData Models { get { return modelValue; } }
+        private readonly ModelData modelValue;
 
         /// <summary>
         /// Subject Areas for the Model
         /// </summary>
+        [Obsolete("May not be needed/supported")]
         public ISubjectAreaData ModelSubjectAreas { get { return subjectAreaValues; } }
+
+        [Obsolete("May not be needed/supported")]
         private readonly SubjectAreaData subjectAreaValues;
     }
 }

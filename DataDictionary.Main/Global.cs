@@ -16,7 +16,7 @@ namespace DataDictionary.Main
     internal static class Global
     {
         /// <summary>
-        /// Worker Queue (Background and Foreground). Singleton access point.
+        /// Worker Queue for Background work. Singleton access point.
         /// </summary>
         public static WorkerQueue Worker { get; } = new WorkerQueue();
 

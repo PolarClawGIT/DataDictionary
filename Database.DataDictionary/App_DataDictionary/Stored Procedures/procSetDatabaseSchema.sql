@@ -30,11 +30,6 @@ Begin Try
 		[SchemaName] SysName Not Null,
 		Primary Key ([SchemaId]))
 
-	;With [Scope] As (
-		Select	S.[ScopeId],
-				F.[ScopeName]
-		From	[App_DataDictionary].[ApplicationScope] S
-				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	X.[SchemaId],
 			X.[CatalogId],

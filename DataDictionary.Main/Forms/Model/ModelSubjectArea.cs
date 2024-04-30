@@ -1,20 +1,16 @@
-﻿using DataDictionary.BusinessLayer.Domain;
+﻿using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.DomainData.Entity;
-using DataDictionary.DataLayer.ModelData.SubjectArea;
 using DataDictionary.Main.Controls;
-using DataDictionary.Main.Properties;
 using System.Data;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Domain
 {
+    [Obsolete("Possibly removed")]
     partial class ModelSubjectArea : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return bindingSubject.Current is IModelSubjectAreaItem current && ReferenceEquals(current, item); }
+        { return bindingSubject.Current is ISubjectAreaValue current && ReferenceEquals(current, item); }
 
         public ModelSubjectArea() : base()
         {
@@ -22,28 +18,34 @@ namespace DataDictionary.Main.Forms.Domain
             toolStrip.TransferItems(subjectAreaToolStrip,0);
         }
 
-        public ModelSubjectArea(IModelSubjectAreaItem subjectAreaItem) : this()
+        public ModelSubjectArea(ISubjectAreaValue? subjectAreaItem) : this()
         {
-            ModelSubjectAreaKey key = new ModelSubjectAreaKey(subjectAreaItem);
+            if(subjectAreaItem is null)
+            {
+                subjectAreaItem = new SubjectAreaValue();
+                BusinessData.ModelSubjectAreas.Add(subjectAreaItem);
+            }
 
-            bindingSubject.DataSource = new BindingView<ModelSubjectAreaItem>(BusinessData.ModelSubjectAreas, w => key.Equals(w));
+            SubjectAreaIndex key = new SubjectAreaIndex(subjectAreaItem);
+
+            bindingSubject.DataSource = new BindingView<SubjectAreaValue>(BusinessData.ModelSubjectAreas, w => key.Equals(w));
             bindingSubject.Position = 0;
 
             Setup(bindingSubject);
 
-            if (bindingSubject.Current is IModelSubjectAreaItem current)
+            if (bindingSubject.Current is ISubjectAreaValue current)
             {
-                List<DomainAttributeKey> attributeKeys = BusinessData.DomainModel.Attributes.SubjectAreas.Where(w => key.Equals(w)).Select(s => new DomainAttributeKey(s)).ToList();
-                bindingAttribute.DataSource = new BindingView<AttributeItem>(BusinessData.DomainModel.Attributes, w => attributeKeys.Contains(new DomainAttributeKey(w)));
+                //List<AttributeIndex> attributeKeys = BusinessData.DomainModel.Attributes.SubjectAreas.Where(w => key.Equals(w)).Select(s => new AttributeIndex(s)).ToList();
+                //bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => attributeKeys.Contains(new AttributeIndex(w)));
 
-                List<DomainEntityKey> entityKeys = BusinessData.DomainModel.Entities.SubjectAreas.Where(w => key.Equals(w)).Select(s => new DomainEntityKey(s)).ToList();
-                bindingEntity.DataSource = new BindingView<DomainEntityItem>(BusinessData.DomainModel.Entities, w => entityKeys.Contains(new DomainEntityKey(w)));
+                //List<EntityIndex> entityKeys = BusinessData.DomainModel.Entities.SubjectAreas.Where(w => key.Equals(w)).Select(s => new DomainEntityKey(s)).ToList();
+                //bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.DomainModel.Entities, w => entityKeys.Contains(new DomainEntityKey(w)));
             }
         }
 
         private void DomainSubjectArea_Load(object sender, EventArgs e)
         {
-            IModelSubjectAreaItem bindingNames;
+            ISubjectAreaValue bindingNames;
             subjectAreaTitleData.DataBindings.Add(new Binding(nameof(subjectAreaTitleData.Text), bindingSubject, nameof(bindingNames.SubjectAreaTitle)));
             subjectAreaDescriptionData.DataBindings.Add(new Binding(nameof(subjectAreaDescriptionData.Text), bindingSubject, nameof(bindingNames.SubjectAreaDescription)));
             subjectAreaNameSpaceData.DataBindings.Add(new Binding(nameof(subjectAreaNameSpaceData.Text), bindingSubject, nameof(bindingNames.SubjectAreaNameSpace)));
@@ -54,19 +56,19 @@ namespace DataDictionary.Main.Forms.Domain
             entityData.AutoGenerateColumns = false;
             entityData.DataSource = bindingEntity;
 
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSubject.Current is not IModelSubjectAreaItem);
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSubject.Current is not ISubjectAreaValue);
         }
 
 
         private void RemoveSubjectAreaCommand_Click(object sender, EventArgs e)
         {
-            if (bindingSubject.Current is ModelSubjectAreaItem current)
+            if (bindingSubject.Current is SubjectAreaValue current)
             {
                 this.IsLocked(true);
-                ModelSubjectAreaKey key = new ModelSubjectAreaKey(current);
+                SubjectAreaIndex key = new SubjectAreaIndex(current);
 
                 NamedScopeKey nameKey = new NamedScopeKey(current);
-                BusinessData.NameScope.Remove(nameKey);
+                BusinessData.NamedScope.Remove(nameKey);
 
                 current.Remove();
                 bindingAttribute.Clear();

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.Application;
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.Main.Controls;
@@ -227,8 +228,8 @@ namespace DataDictionary.Main.Forms
 
             String ToToolTipText(Control source)
             {
-                NameSpaceKey key = source.ToNameSpaceKey();
-                if (BusinessData.ApplicationData.HelpSubjects.FirstOrDefault(w => key.Equals(new NameSpaceKey(w))) is HelpItem item
+                HelpSubjectIndexPath key = source.ToNameSpaceKey();
+                if (BusinessData.ApplicationData.HelpSubjects.FirstOrDefault(w => key.Equals(new HelpSubjectIndexPath(w))) is HelpSubjectValue item
                     && item.HelpToolTip is String toolTip)
                 { return toolTip; }
                 else { return String.Empty; }
@@ -242,6 +243,22 @@ namespace DataDictionary.Main.Forms
         /// <param name="onCompleting"></param>
         /// <remarks>The method calls LockForm and UnlockForm while work is being done.</remarks>
         protected void DoWork(IEnumerable<WorkItem> work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
+        {
+            Worker.Enqueue(work, completing);
+
+            void completing(RunWorkerCompletedEventArgs result)
+            {
+                if (result.Error is not null) { Program.ShowException(result.Error); }
+                if (onCompleting is not null) { onCompleting(result); }
+            }
+        }
+
+        /// <summary>
+        /// Performs a single item of work on a background thread.
+        /// </summary>
+        /// <param name="work"></param>
+        /// <param name="onCompleting"></param>
+        protected void DoWork(WorkItem work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
         {
             Worker.Enqueue(work, completing);
 

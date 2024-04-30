@@ -14,10 +14,22 @@ using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
 using DataDictionary.DataLayer.ScriptingData.Schema;
+using DataDictionary.DataLayer.ScriptingData.Selection;
 using DataDictionary.DataLayer.ScriptingData.Transform;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface INameScopeGetKey
+    {
+        /// <summary>
+        /// Method to get System Id of the Named Scope item.
+        /// </summary>
+        NamedScopeKey GetSystemId();
+    }
+
     /// <summary>
     /// Interface for the NameScope Key
     /// </summary>
@@ -47,25 +59,17 @@ namespace DataDictionary.BusinessLayer.NamedScope
         { SystemId = source.SystemId; }
 
         /// <summary>
+        /// Constructor for the NameScope Key
+        /// </summary>
+        internal NamedScopeKey(Guid? source) : this()
+        { SystemId = source ?? Guid.Empty; }
+
+        /// <summary>
         /// Constructor for the NameScope Key, Application Help
         /// </summary>
         /// <param name="source"></param>
         public NamedScopeKey(IHelpKey source) : this()
         { SystemId = source.HelpId ?? Guid.Empty; }
-
-        /// <summary>
-        /// Constructor for the NameScope Key, Catalog
-        /// </summary>
-        /// <param name="source">A Database Catalog</param>
-        public NamedScopeKey(IDbCatalogKey source) : this()
-        { SystemId = source.CatalogId ?? Guid.Empty; }
-
-        /// <summary>
-        /// Constructor for the NameScope Key, Schema
-        /// </summary>
-        /// <param name="source">A Database Schema</param>
-        public NamedScopeKey(IDbSchemaKey source) : this()
-        { SystemId = source.SchemaId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameScope Key, Table
@@ -80,13 +84,6 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <param name="source">A Database Table Column</param>
         public NamedScopeKey(IDbTableColumnKey source) : this()
         { SystemId = source.ColumnId ?? Guid.Empty; }
-
-        /// <summary>
-        /// Constructor for the NameScope Key, Domain
-        /// </summary>
-        /// <param name="source">A Database Domain</param>
-        public NamedScopeKey(IDbDomainKey source) : this()
-        { SystemId = source.DomainId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameScope Key, Routine
@@ -162,22 +159,22 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Constructor for the NameScope Key, Scripting Schema
         /// </summary>
         /// <param name="source">A Scripting Schema</param>
-        public NamedScopeKey(ISchemaItem source) : this()
+        public NamedScopeKey(ISchemaKey source) : this()
         { SystemId = source.SchemaId ?? Guid.Empty; }
 
         /// <summary>
         /// Constructor for the NameScope Key, Scripting Transform
         /// </summary>
         /// <param name="source">A Scripting Transform</param>
-        public NamedScopeKey(ITransformItem source) : this()
+        public NamedScopeKey(ITransformKey source) : this()
         { SystemId = source.TransformId ?? Guid.Empty; }
 
         /// <summary>
-        /// Constructor for the NameSpace Key
+        /// Constructor for the NameScope Key, Scripting Selection
         /// </summary>
-        /// <param name="source"></param>
-        public NamedScopeKey(INameSpaceItem source) : this()
-        { SystemId = source.SystemId; }
+        /// <param name="source">A Scripting Transform</param>
+        public NamedScopeKey(ISelectionKey source) : this()
+        { SystemId = source.SelectionId ?? Guid.Empty; }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>

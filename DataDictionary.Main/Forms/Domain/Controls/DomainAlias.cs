@@ -1,12 +1,11 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.NameSpace;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.Main.Controls;
-using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Domain.Controls
 {
+    [Obsolete("Need to rewrite")]
     partial class DomainAlias : UserControl
     {
 
@@ -16,7 +15,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         /// <summary>
         /// The current Alias Item
         /// </summary>
-        public NameSpaceItem SelectedAlias { get; private set; } = new NameSpaceItem();
+        //public NameSpaceItem SelectedAlias { get; private set; } = new NameSpaceItem();
 
         public DomainAlias() :base()
         {
@@ -24,88 +23,91 @@ namespace DataDictionary.Main.Forms.Domain.Controls
 
             ImageList aliasImages = new ImageList();
             foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
-            { aliasImages.Images.Add(item.ToScopeName(), item.ToImage()); }
+            { aliasImages.Images.Add(item.ToName(), item.ToImage()); }
 
             aliasBrowser.SmallImageList = aliasImages;
             aliasBrowser.Columns.Add("Alias");
         }
 
+        [Obsolete("Need to rewrite")]
         public void BindData(BindingSource propertyBinding)
         {
-            ScopeNameItem.Load(aliasScopeData);
-            INamedScopeItem nameOfValues;
-            AliasListLoad();
+            //ScopeNameItem.Load(aliasScopeData);
+            //INamedScopeItem nameOfValues;
+            //AliasListLoad();
             
-            aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), SelectedAlias, nameof(nameOfValues.MemberFullName), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-            aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), SelectedAlias, nameof(nameOfValues.Scope), true, DataSourceUpdateMode.OnPropertyChanged, ScopeType.Null));
+            //aliasNameData.DataBindings.Add(new Binding(nameof(aliasNameData.Text), SelectedAlias, nameof(nameOfValues.MemberFullName), true, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+            //aliasScopeData.DataBindings.Add(new Binding(nameof(aliasScopeData.SelectedValue), SelectedAlias, nameof(nameOfValues.Scope), true, DataSourceUpdateMode.OnPropertyChanged, ScopeType.Null));
         }
 
+        [Obsolete("Need to rewrite")]
         private void AliasListLoad()
         {
-            aliasBrowser.Items.Clear();
-            alaisViewItems.Clear();
+            //aliasBrowser.Items.Clear();
+            //alaisViewItems.Clear();
 
-            NamedScopeItem parent = BusinessData.NameScope.RootItem;
-            NamedScopeKey? parentKey = null;
+            //NamedScopeItem parent = BusinessData.NamedScope.RootItem;
+            //NamedScopeKey? parentKey = null;
 
-            if (navigationStack.TryPeek(out parentKey) && parentKey is NamedScopeKey)
-            { parent = BusinessData.NameScope[parentKey]; }
+            //if (navigationStack.TryPeek(out parentKey) && parentKey is NamedScopeKey)
+            //{ parent = BusinessData.NamedScope[parentKey]; }
 
-            foreach (NamedScopeKey childKey in parent.Children)
-            {
-                if (BusinessData.NameScope.ContainsKey(childKey))
-                {
-                    NamedScopeItem child = BusinessData.NameScope[childKey];
-                    ListViewItem childItem = new ListViewItem(child.MemberName, child.Scope.ToScopeName());
-                    childItem.ToolTipText = child.MemberFullName;
+            //foreach (NamedScopeKey childKey in parent.Children)
+            //{
+            //    if (BusinessData.NamedScope.ContainsKey(childKey))
+            //    {
+            //        NamedScopeItem child = BusinessData.NamedScope[childKey];
+            //        ListViewItem childItem = new ListViewItem(child.MemberName, child.Scope.ToName());
+            //        childItem.ToolTipText = child.MemberFullName;
 
-                    alaisViewItems.Add(childItem, childKey);
-                    aliasBrowser.Items.Add(childItem);
-                }
-            }
-            aliasBrowser.Sorting = SortOrder.Ascending;
-            aliasBrowser.Sort();
-            aliasBrowser.Sorting = SortOrder.None;
+            //        alaisViewItems.Add(childItem, childKey);
+            //        aliasBrowser.Items.Add(childItem);
+            //    }
+            //}
+            //aliasBrowser.Sorting = SortOrder.Ascending;
+            //aliasBrowser.Sort();
+            //aliasBrowser.Sorting = SortOrder.None;
 
-            if (parentKey is NamedScopeKey)
-            { // Doing custom hot Tracks
-                ListViewItem parentItem = new ListViewItem(parent.MemberName, parent.Scope.ToScopeName());
-                parentItem.Font = new Font(parentItem.Font, FontStyle.Underline);
-                parentItem.ForeColor = Color.Blue;
+            //if (parentKey is NamedScopeKey)
+            //{ // Doing custom hot Tracks
+            //    ListViewItem parentItem = new ListViewItem(parent.MemberName, parent.Scope.ToName());
+            //    parentItem.Font = new Font(parentItem.Font, FontStyle.Underline);
+            //    parentItem.ForeColor = Color.Blue;
 
-                alaisViewItems.Add(parentItem, parentKey);
-                aliasBrowser.Items.Insert(0, parentItem);
-            }
+            //    alaisViewItems.Add(parentItem, parentKey);
+            //    aliasBrowser.Items.Insert(0, parentItem);
+            //}
 
-            aliasBrowser.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            //aliasBrowser.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
+        [Obsolete("Need to rewrite")]
         private void AliasBrowser_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (aliasBrowser.SelectedItems.Count > 0
-                && alaisViewItems.ContainsKey(aliasBrowser.SelectedItems[0]))
-            {
-                NamedScopeKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
-                //SelectedAlias = BusinessData.NameScope[selectedKey];
+            //if (aliasBrowser.SelectedItems.Count > 0
+            //    && alaisViewItems.ContainsKey(aliasBrowser.SelectedItems[0]))
+            //{
+            //    NamedScopeKey selectedKey = alaisViewItems[aliasBrowser.SelectedItems[0]];
+            //    //SelectedAlias = BusinessData.NameScope[selectedKey];
 
-                var x = BusinessData.NameScope[selectedKey];
+            //    var x = BusinessData.NamedScope[selectedKey];
 
-                aliasNameData.Text = BusinessData.NameScope[selectedKey].MemberFullName;
-                aliasScopeData.SelectedValue = BusinessData.NameScope[selectedKey].Scope;
+            //    aliasNameData.Text = BusinessData.NamedScope[selectedKey].MemberFullName;
+            //    aliasScopeData.SelectedValue = BusinessData.NamedScope[selectedKey].Scope;
 
-                if (navigationStack.TryPeek(out NamedScopeKey? parentKey)
-                    && selectedKey.Equals(parentKey))
-                {
-                    navigationStack.Pop();
-                    AliasListLoad();
-                }
+            //    if (navigationStack.TryPeek(out NamedScopeKey? parentKey)
+            //        && selectedKey.Equals(parentKey))
+            //    {
+            //        navigationStack.Pop();
+            //        AliasListLoad();
+            //    }
 
-                else if (BusinessData.NameScope[selectedKey].Children.Count > 0)
-                {
-                    navigationStack.Push(selectedKey);
-                    AliasListLoad();
-                }
-            }
+            //    else if (BusinessData.NamedScope[selectedKey].Children.Count > 0)
+            //    {
+            //        navigationStack.Push(selectedKey);
+            //        AliasListLoad();
+            //    }
+            //}
         }
 
         public event EventHandler? SelectedItemChanged;

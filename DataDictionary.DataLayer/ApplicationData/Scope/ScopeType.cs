@@ -15,10 +15,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     /// Database NameSpaces are represented by the fully qualified object name.
     /// Library NameSpaces are defined by the namespace or type and the element of the namespace or type.
     /// </summary>
-    /// <remarks>
-    /// This list mimics what is in the database but the Value (Int32) does not match.
-    /// Each Database Entry, is expected to have an entry here.
-    /// </remarks>
     /// <see cref="ScopeKey"/>
     public enum ScopeType
     {
@@ -83,39 +79,47 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         Library,
 
         /// <summary>
+        /// .Net Library NameSpace
+        /// </summary>
+        /// <remarks>NameSpace cannot be detected directly. Instead it must be inferred.</remarks>
+        LibraryNameSpace,
+
+        /// <summary>
+        /// .Net Library Type (Class, Enum, Delegates, ...)
+        /// </summary>
+        /// <remarks>The exact type cannot be determined using the Document file.</remarks>
+        LibraryType,
+
+        /// <summary>
         /// .Net Library Event
         /// </summary>
-        LibraryEvent,
+        LibraryTypeEvent,
 
         /// <summary>
         /// .Net Library Field
         /// </summary>
-        LibraryField,
+        LibraryTypeField,
 
         /// <summary>
         /// .Net Library Method
         /// </summary>
-        LibraryMethod,
-
-        /// <summary>
-        /// .Net Library NameSpace
-        /// </summary>
-        LibraryNameSpace,
+        LibraryTypeMethod,
 
         /// <summary>
         /// .Net Library Property
         /// </summary>
-        LibraryProperty,
+        LibraryTypeProperty,
 
         /// <summary>
-        /// .Net Library Parameter,
+        /// .Net Library Method Parameter
         /// </summary>
-        LibraryParameter,
+        LibraryMethodParameter,
 
         /// <summary>
-        /// .Net Library Type (Class, Enum, ...)
+        /// .Net Library Property Parameter, Indexer
         /// </summary>
-        LibraryType,
+        LibraryPropertyParameter,
+
 
         /// <summary>
         /// SQL Database
@@ -200,6 +204,16 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// Scripting Transform
         /// </summary>
         ScriptingTransform,
+
+        /// <summary>
+        /// Scripting Selection
+        /// </summary>
+        ScriptingSelection,
+
+        /// <summary>
+        /// Scripting Selection Instance
+        /// </summary>
+        ScriptingSelectionInstance,
     }
 
     /// <summary>
@@ -212,15 +226,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static String ToScopeName(this ScopeType value)
+        public static String ToName(this ScopeType value)
         { return new ScopeKey(value).ToString(); }
-
-        /// <summary>
-        /// Translates a ScopeType to a ScopeKey.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static ScopeKey ToScopeKey(this ScopeType value)
-        { return new ScopeKey(value); }
     }
 }

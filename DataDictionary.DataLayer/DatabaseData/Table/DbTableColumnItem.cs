@@ -75,13 +75,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         public string? TableName { get { return GetValue("TableName"); } }
 
         /// <inheritdoc/>
-        public string? TableTypeName { get { return GetValue("TableType"); } }
-
-        /// <inheritdoc/>
         public string? ColumnName { get { return GetValue("ColumnName"); } }
-
-        /// <inheritdoc/>
-        public string? ScopeName { get { return GetValue("ScopeName"); } }
 
         /// <inheritdoc/>
         public int? OrdinalPosition { get { return GetValue<int>("OrdinalPosition"); } }
@@ -157,7 +151,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public DbTableType TableType
-        { get { return this.GetTableType(); } }
+        { get { return DbTableTypeKey.Parse(GetValue("TableType") ?? String.Empty).TableType; } }
 
         /// <inheritdoc/>
         public ScopeType Scope
@@ -166,7 +160,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             {
                 switch (TableType)
                 {
-                    case DbTableType.Null: return ScopeType.Null;
                     case DbTableType.Table: return ScopeType.DatabaseTableColumn;
                     case DbTableType.TemporalTable: return ScopeType.DatabaseTableColumn;
                     case DbTableType.HistoryTable: return ScopeType.DatabaseTableColumn;
@@ -223,7 +216,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <inheritdoc/>
         public virtual Command PropertyCommand(IConnection connection)
         {
-            if (new ScopeKey(this).TryScope() is IDbElementScopeKey scopeKey)
+            if (this.Scope.ToDbLevel() is IDbLevelElementKey scopeKey)
             {
                 return new DbExtendedPropertyGetCommand(connection)
                 {
@@ -239,7 +232,6 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
             else
             {
                 Exception ex = new InvalidOperationException("Could not determine LevelType");
-                ex.Data.Add(nameof(ScopeName), ScopeName);
                 ex.Data.Add(nameof(DatabaseName), DatabaseName);
                 ex.Data.Add(nameof(SchemaName), SchemaName);
                 ex.Data.Add(nameof(TableName), TableName);

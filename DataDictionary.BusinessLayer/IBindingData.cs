@@ -20,6 +20,6 @@ namespace DataDictionary.BusinessLayer
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface IBindingData<T> : IBindingData, IBindingList<T>
-        where T : class, IBindingRowState, IBindingPropertyChanged
+        where T : IBindingRowState, IBindingPropertyChanged
     { }
 }

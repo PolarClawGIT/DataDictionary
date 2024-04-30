@@ -31,10 +31,6 @@
             components = new System.ComponentModel.Container();
             TableLayoutPanel catalogManagerLayout;
             catalogNavigation = new DataGridView();
-            catalogTitleColumn = new DataGridViewTextBoxColumn();
-            databaseNameColumn = new DataGridViewTextBoxColumn();
-            inModelColumn = new DataGridViewCheckBoxColumn();
-            inDatabase = new DataGridViewCheckBoxColumn();
             catalogTitleData = new Controls.TextBoxData();
             catalogDescriptionData = new Controls.TextBoxData();
             sourceDateData = new Controls.TextBoxData();
@@ -44,6 +40,10 @@
             catalogContextMenu = new ContextMenuStrip(components);
             addDatabaseCommand = new ToolStripMenuItem();
             removeDatabaseCommand = new ToolStripMenuItem();
+            catalogTitleColumn = new DataGridViewTextBoxColumn();
+            databaseNameColumn = new DataGridViewTextBoxColumn();
+            inModelColumn = new DataGridViewCheckBoxColumn();
+            inDatabase = new DataGridViewCheckBoxColumn();
             catalogManagerLayout = new TableLayoutPanel();
             catalogManagerLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)catalogNavigation).BeginInit();
@@ -86,37 +86,6 @@
             catalogNavigation.Name = "catalogNavigation";
             catalogNavigation.Size = new Size(605, 232);
             catalogNavigation.TabIndex = 0;
-            // 
-            // catalogTitleColumn
-            // 
-            catalogTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            catalogTitleColumn.DataPropertyName = "CatalogTitle";
-            catalogTitleColumn.HeaderText = "Catalog Title";
-            catalogTitleColumn.MinimumWidth = 150;
-            catalogTitleColumn.Name = "catalogTitleColumn";
-            // 
-            // databaseNameColumn
-            // 
-            databaseNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            databaseNameColumn.DataPropertyName = "SourceDatabaseName";
-            databaseNameColumn.HeaderText = "Database Name";
-            databaseNameColumn.MinimumWidth = 150;
-            databaseNameColumn.Name = "databaseNameColumn";
-            databaseNameColumn.ReadOnly = true;
-            // 
-            // inModelColumn
-            // 
-            inModelColumn.DataPropertyName = "InModel";
-            inModelColumn.HeaderText = "In Model";
-            inModelColumn.Name = "inModelColumn";
-            inModelColumn.ReadOnly = true;
-            // 
-            // inDatabase
-            // 
-            inDatabase.DataPropertyName = "InDatabase";
-            inDatabase.HeaderText = "In Database";
-            inDatabase.Name = "inDatabase";
-            inDatabase.ReadOnly = true;
             // 
             // catalogTitleData
             // 
@@ -182,7 +151,7 @@
             // 
             // catalogBinding
             // 
-            catalogBinding.CurrentChanged += catalogBinding_CurrentChanged;
+            catalogBinding.CurrentChanged += CatalogBinding_CurrentChanged;
             // 
             // catalogContextMenu
             // 
@@ -197,7 +166,7 @@
             addDatabaseCommand.Size = new Size(168, 22);
             addDatabaseCommand.Text = "Add Database";
             addDatabaseCommand.ToolTipText = "Import a Catalog (Database Schema) into the Model";
-            addDatabaseCommand.Click += addDatabaseCommand_Click;
+            addDatabaseCommand.Click += AddDatabaseCommand_Click;
             // 
             // removeDatabaseCommand
             // 
@@ -206,7 +175,38 @@
             removeDatabaseCommand.Size = new Size(168, 22);
             removeDatabaseCommand.Text = "Remove Database";
             removeDatabaseCommand.ToolTipText = "Removes the Catalog from the Model";
-            removeDatabaseCommand.Click += removeDatabaseCommand_Click;
+            removeDatabaseCommand.Click += RemoveDatabaseCommand_Click;
+            // 
+            // catalogTitleColumn
+            // 
+            catalogTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            catalogTitleColumn.DataPropertyName = "CatalogTitle";
+            catalogTitleColumn.HeaderText = "Catalog Title";
+            catalogTitleColumn.MinimumWidth = 150;
+            catalogTitleColumn.Name = "catalogTitleColumn";
+            // 
+            // databaseNameColumn
+            // 
+            databaseNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            databaseNameColumn.DataPropertyName = "DatabaseName";
+            databaseNameColumn.HeaderText = "Database Name";
+            databaseNameColumn.MinimumWidth = 150;
+            databaseNameColumn.Name = "databaseNameColumn";
+            databaseNameColumn.ReadOnly = true;
+            // 
+            // inModelColumn
+            // 
+            inModelColumn.DataPropertyName = "InModel";
+            inModelColumn.HeaderText = "In Model";
+            inModelColumn.Name = "inModelColumn";
+            inModelColumn.ReadOnly = true;
+            // 
+            // inDatabase
+            // 
+            inDatabase.DataPropertyName = "InDatabase";
+            inDatabase.HeaderText = "In Database";
+            inDatabase.Name = "inDatabase";
+            inDatabase.ReadOnly = true;
             // 
             // CatalogManager
             // 
@@ -236,12 +236,12 @@
         private Controls.TextBoxData sourceDateData;
         private Controls.TextBoxData sourceServerNameData;
         private Controls.TextBoxData sourceDatabaseNameData;
+        private ContextMenuStrip catalogContextMenu;
+        private ToolStripMenuItem addDatabaseCommand;
+        private ToolStripMenuItem removeDatabaseCommand;
         private DataGridViewTextBoxColumn catalogTitleColumn;
         private DataGridViewTextBoxColumn databaseNameColumn;
         private DataGridViewCheckBoxColumn inModelColumn;
         private DataGridViewCheckBoxColumn inDatabase;
-        private ContextMenuStrip catalogContextMenu;
-        private ToolStripMenuItem addDatabaseCommand;
-        private ToolStripMenuItem removeDatabaseCommand;
     }
 }

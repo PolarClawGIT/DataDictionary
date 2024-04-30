@@ -11,13 +11,11 @@ Select	D.[LibraryId],
 		D.[LibraryTitle],
 		D.[LibraryDescription],
 		D.[AssemblyName],
-		C.[ScopeName],
 		D.[SourceFile],
 		D.[SourceDate]
 From	[App_DataDictionary].[LibrarySource] D
 		Left Join [App_DataDictionary].[ModelLibrary] A
 		On	D.[LibraryId] = A.[LibraryId]
-		Outer Apply [App_DataDictionary].[funcGetScopeName](D.[ScopeId]) C
 Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@LibraryId is Null or @LibraryId = D.[LibraryId]) And
 		(@AssemblyName is Null or @AssemblyName = D.[AssemblyName])

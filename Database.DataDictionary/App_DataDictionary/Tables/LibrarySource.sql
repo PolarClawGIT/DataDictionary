@@ -15,7 +15,6 @@
 	-- Each component is put into a separate row and the data is organized into a hierarchy.
 	-- Key size in TSQL is limited to 1700 characters. 128 is based on best practices.
 	[AssemblyName]          NVarChar(128) Not Null, -- Natural Key
-	[ScopeId]               Int Not Null,
 	[SourceFile]            NVarChar(500) Not Null, 
 	[SourceDate]            DateTime2 (7) Not Null,
 	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
@@ -25,7 +24,6 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_LibrarySource] PRIMARY KEY CLUSTERED ([LibraryId] ASC),
-	CONSTRAINT [FK_LibrarySourceScope] FOREIGN KEY ([ScopeId]) REFERENCES [App_DataDictionary].[ApplicationScope] ([ScopeId]),
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_LibrarySourceAssembly]

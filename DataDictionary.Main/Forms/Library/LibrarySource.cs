@@ -1,6 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.LibraryData.Source;
-using DataDictionary.Main.Controls;
+﻿using DataDictionary.BusinessLayer.Library;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
 using System.Data;
@@ -11,7 +9,7 @@ namespace DataDictionary.Main.Forms.Library
     partial class LibrarySource : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
-        { return bindingSource.Current is ILibrarySourceItem current && ReferenceEquals(current, item); }
+        { return bindingSource.Current is ILibrarySourceValue current && ReferenceEquals(current, item); }
 
         public LibrarySource() : base()
         {
@@ -19,11 +17,11 @@ namespace DataDictionary.Main.Forms.Library
             this.Icon = Resources.Icon_Library;
         }
 
-        public LibrarySource(ILibrarySourceItem librarySource) : this ()
+        public LibrarySource(ILibrarySourceValue librarySource) : this ()
         {
-            LibrarySourceKeyName key = new LibrarySourceKeyName(librarySource);
+            LibrarySourceIndex key = new LibrarySourceIndex(librarySource);
 
-            bindingSource.DataSource = new BindingView<LibrarySourceItem>(BusinessData.LibraryModel.LibrarySources, w => key.Equals(w));
+            bindingSource.DataSource = new BindingView<LibrarySourceValue>(BusinessData.LibraryModel.LibrarySources, w => key.Equals(w));
             bindingSource.Position = 0;
 
             Setup(bindingSource);
@@ -31,7 +29,7 @@ namespace DataDictionary.Main.Forms.Library
 
         private void LibrarySource_Load(object sender, EventArgs e)
         {
-            ILibrarySourceItem bindingNames;
+            ILibrarySourceValue bindingNames;
 
             libraryTitleData.DataBindings.Add(new Binding(nameof(libraryTitleData.Text), bindingSource, nameof(bindingNames.LibraryTitle)));
             libraryDescriptionData.DataBindings.Add(new Binding(nameof(libraryDescriptionData.Text), bindingSource, nameof(bindingNames.LibraryDescription)));
@@ -39,7 +37,7 @@ namespace DataDictionary.Main.Forms.Library
             sourceFileNameData.DataBindings.Add(new Binding(nameof(sourceFileNameData.Text), bindingSource, nameof(bindingNames.SourceFile)));
             sourceFileDate.DataBindings.Add(new Binding(nameof(sourceFileDate.Text), bindingSource, nameof(bindingNames.SourceDate)));
 
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSource.Current is not ILibrarySourceItem);
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSource.Current is not ILibrarySourceValue);
         }
 
         private void libraryTitleData_Validating(object sender, CancelEventArgs e)

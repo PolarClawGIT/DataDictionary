@@ -21,33 +21,20 @@ namespace DataDictionary.Main
         { Activate(() => new Forms.Database.CatalogManager()); }
 
         private void NewAttributeCommand_ButtonClick(object? sender, EventArgs e)
-        {
-            AttributeItem item = new AttributeItem();
-
-            BusinessData.DomainModel.Attributes.Add(item);
-            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
-
-            Activate(item);
-        }
+        { Activate(() => new Forms.Domain.DomainAttribute(null)); }
 
         private void NewEntityCommand_ButtonClick(object? sender, EventArgs e)
-        {
-            DomainEntityItem item = new DomainEntityItem();
-
-            BusinessData.DomainModel.Entities.Add(item);
-            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
-
-            Activate(item);
-        }
+        { Activate(() => new Forms.Domain.DomainEntity(null)); }
 
         private void NewSubjectAreaCommand_ButtonClick(object? sender, EventArgs e)
         {
-            ModelSubjectAreaItem item = new ModelSubjectAreaItem();
+            throw new NotImplementedException();
+            //ModelSubjectAreaItem item = new ModelSubjectAreaItem();
 
-            BusinessData.ModelSubjectAreas.Add(item);
-            BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, item));
+            //BusinessData.ModelSubjectAreas.Add(item);
+            //BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, item));
 
-            Activate(item);
+            //Activate(item);
         }
 
         private void ManageModelCommand_ButtonClick(object? sender, EventArgs e)
@@ -60,7 +47,10 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Attribute), BusinessData.DomainModel.Attributes); }
 
         private void subjectAreaToolStripMenuItem_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Diagram), BusinessData.ModelSubjectAreas); }
+        {
+            throw new NotImplementedException();
+            //Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Diagram), BusinessData.ModelSubjectAreas); 
+        }
 
         private void browseHelpCommand_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_HelpTableOfContent), BusinessData.ApplicationData.HelpSubjects); }
@@ -118,7 +108,7 @@ namespace DataDictionary.Main
 
 
         private void transformManagerCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.TransformManager()); }
+        { Activate(() => new Forms.Scripting.TransformManager(null)); }
 
         private void schemaManagerCommand_Click(object sender, EventArgs e)
         { Activate(() => new Forms.Scripting.SchemaManager(null)); }

@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     /// <summary>
     /// Interface for a Help Item used for Help Text.
     /// </summary>
-    public interface IHelpItem : IHelpKey, IHelpKeyUnique
+    public interface IHelpItem : IHelpKey, IHelpKeyNameSpace
     {
         /// <summary>
         /// Title/Subject of the Help Document.
@@ -124,7 +124,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
         /// <param name="source"></param>
         /// <param name="nameSpace"></param>
         /// <returns></returns>
-        public static IHelpItem? GetSubject(this IEnumerable<IHelpItem> source, IHelpKeyUnique nameSpace)
+        public static IHelpItem? GetSubject(this IEnumerable<IHelpItem> source, IHelpKeyNameSpace nameSpace)
         { return source.FirstOrDefault(w => nameSpace.Equals(w)); }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
         /// <param name="obj"></param>
         /// <returns></returns>
         public static IHelpItem? GetSubject(this IEnumerable<IHelpItem> source, object obj)
-        { return source.GetSubject(new HelpKeyUnique(obj)); }
+        { return source.GetSubject(new HelpKeyNameSpace(obj)); }
     }
 
 }

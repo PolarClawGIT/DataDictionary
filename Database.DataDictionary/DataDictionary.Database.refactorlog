@@ -595,4 +595,39 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[ElementNillable]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="073c4bb0-aaf5-4141-95c2-f2c7f74e9d43" ChangeDateTime="04/02/2024 16:19:21">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeScopeElement]" />
+    <Property Name="ElementType" Value="SqlUserDefinedDataType" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeObjectSubType]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d01436ce-cad9-4043-b230-7a6cdb997c6b" ChangeDateTime="04/12/2024 16:10:22">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ScriptingSelectionItem]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[ScriptingSelectionElement]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bbe69707-956a-4ed3-bf32-ee3b92c1a77b" ChangeDateTime="04/12/2024 16:12:24">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ScriptingSelectionElement]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[ScriptingSelectionObject]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1360d357-c5d2-4290-818f-df07cef60c8f" ChangeDateTime="04/12/2024 16:17:04">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ScriptingSelectionObject]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[ScriptingSelectionInstance]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="85246261-a7ef-466a-9932-abae7a76cadf" ChangeDateTime="04/12/2024 16:17:37">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ScriptingSelectionInstance].[SelectionItemId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[ScriptingSelectionInstance]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[InstanceId]" />
+  </Operation>
 </Operations>

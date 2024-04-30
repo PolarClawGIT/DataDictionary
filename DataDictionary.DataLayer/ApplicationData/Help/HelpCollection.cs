@@ -42,20 +42,20 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection)
-        { return SaveCommand(connection); }
+        { return SaveCommand(connection, (null, null)); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IHelpKey key)
-        { return SaveCommand(connection, key.HelpId); }
+        { return SaveCommand(connection, (key.HelpId, null)); }
 
-        Command SaveCommand(IConnection connection, Guid? helpId)
+        Command SaveCommand(IConnection connection, (Guid? helpId, Guid? dummy) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetApplicationHelp]";
-            command.AddParameter("@HelpId", helpId);
+            command.AddParameter("@HelpId", parameters.helpId);
 
-            IEnumerable<TItem> data = this.Where(w => helpId is null || w.HelpId == helpId);
+            IEnumerable<TItem> data = this.Where(w => parameters.helpId is null || w.HelpId == parameters.helpId);
             command.AddParameter("@Data", "[App_DataDictionary].[typeApplicationHelp]", data);
             return command;
         }
@@ -75,7 +75,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
             foreach (HelpItem item in
                 this.Where(w =>
                 {
-                    HelpKeyUnique key = new HelpKeyUnique(w);
+                    HelpKeyNameSpace key = new HelpKeyNameSpace(w);
                     return (this.Any(r => key.Equals(r) && !ReferenceEquals(w, r)));
                 }))
             { }

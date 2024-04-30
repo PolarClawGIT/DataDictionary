@@ -1,19 +1,10 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.Scripting;
+﻿using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Scripting.ComboBoxList;
 using DataDictionary.Main.Messages;
-using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -21,7 +12,7 @@ namespace DataDictionary.Main.Forms.Scripting
     partial class SchemaManager : ApplicationData
     {
         public Boolean IsOpenItem(object? item)
-        { return bindingSchema.Current is ISchemaItem current && ReferenceEquals(current, item); }
+        { return bindingSchema.Current is ISchemaValue current && ReferenceEquals(current, item); }
 
         public SchemaManager() : base()
         {
@@ -29,23 +20,22 @@ namespace DataDictionary.Main.Forms.Scripting
             toolStrip.TransferItems(schemaToolStrip, 0);
         }
 
-        public SchemaManager(ISchemaItem? schemaItem) : this()
+        public SchemaManager(ISchemaValue? schemaItem) : this()
         {
             if (schemaItem is null)
             {
-                schemaItem = new SchemaItem();
+                schemaItem = new SchemaValue();
                 BusinessData.ScriptingEngine.Schemta.Add(schemaItem);
-                BusinessData.NameScope.Add(new NamedScopeItem(BusinessData.Model, schemaItem));
             }
 
             DataLayer.ScriptingData.Schema.SchemaKey key = new DataLayer.ScriptingData.Schema.SchemaKey(schemaItem);
 
-            bindingSchema.DataSource = new BindingView<SchemaItem>(BusinessData.ScriptingEngine.Schemta, w => key.Equals(w));
+            bindingSchema.DataSource = new BindingView<SchemaValue>(BusinessData.ScriptingEngine.Schemta, w => key.Equals(w));
             bindingSchema.Position = 0;
 
             Setup(bindingSchema);
 
-            bindingElement.DataSource = new BindingView<ElementItem>(BusinessData.ScriptingEngine.Elements, w => key.Equals(w));
+            bindingElement.DataSource = new BindingView<SchemaElementValue>(BusinessData.ScriptingEngine.SchemeElements, w => key.Equals(w));
             bindingElement.SuspendBinding();
             elementOptionsLayout.Enabled = false;
         }
@@ -55,8 +45,9 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             SendMessage(new RefreshNavigation()); // Cannot do this in constructor because messengering is not yet hooked up.
 
-            ISchemaItem schemaNames;
-            IElementItem elementNames;
+            ISchemaValue schemaNames;
+            ISchemaElementValue elementNames;
+            this.DataBindings.Add(new Binding(nameof(this.Text), bindingSchema, nameof(schemaNames.SchemaTitle)));
             schemaTitleData.DataBindings.Add(new Binding(nameof(schemaTitleData.Text), bindingSchema, nameof(schemaNames.SchemaTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             schemaDescriptionData.DataBindings.Add(new Binding(nameof(schemaDescriptionData.Text), bindingSchema, nameof(schemaNames.SchemaDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 
@@ -78,18 +69,18 @@ namespace DataDictionary.Main.Forms.Scripting
             elementSelection.Groups.Clear();
             elementSelection.Items.Clear();
 
-            foreach (IGrouping<ScopeType, ColumnItem> groups in BusinessData.ScriptingEngine.Columns.GroupBy(g => new ScopeKey(g).Scope))
+            foreach (IGrouping<ScopeType, ColumnValue> groups in BusinessData.ScriptingEngine.Columns.GroupBy(g => new ScopeKey(g).Scope))
             {
-                ListViewGroup group = new ListViewGroup(groups.Key.ToScopeName());
+                ListViewGroup group = new ListViewGroup(groups.Key.ToName());
                 elementSelection.Groups.Add(group);
 
-                foreach (ColumnItem column in groups)
+                foreach (ColumnValue column in groups)
                 {
                     ListViewItem newItem = new ListViewItem(column.ColumnName, group);
-                    if (bindingElement.DataSource is IList<ElementItem> elements)
+                    if (bindingElement.DataSource is IList<SchemaElementValue> elements)
                     {
-                        ColumnKey key = new ColumnKey(column);
-                        if (elements.FirstOrDefault(w => key.Equals(w)) is ElementItem)
+                        ColumnIndex key = new ColumnIndex(column);
+                        if (elements.FirstOrDefault(w => key.Equals(w)) is SchemaElementValue)
                         { newItem.Checked = true; }
                     }
 
@@ -98,7 +89,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
 
-            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSchema.Current is not ISchemaItem);
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSchema.Current is not ISchemaValue);
         }
 
         private void addSchemaCommand_Click(object sender, EventArgs e)
@@ -108,15 +99,15 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void removeSchemaCommand_Click(object sender, EventArgs e)
         {
-            if (bindingSchema.Current is SchemaItem item)
+            if (bindingSchema.Current is SchemaValue item)
             {
-                SchemaKey key = new SchemaKey(item);
+                SchemaIndex key = new SchemaIndex(item);
 
                 //bindingElement.DataSource = null;
                 BusinessData.ScriptingEngine.Schemta.Remove(item);
 
-                foreach (ElementItem element in BusinessData.ScriptingEngine.Elements.Where(w => key.Equals(w)).ToList())
-                { BusinessData.ScriptingEngine.Elements.Remove(element); }
+                foreach (SchemaElementValue element in BusinessData.ScriptingEngine.SchemeElements.Where(w => key.Equals(w)).ToList())
+                { BusinessData.ScriptingEngine.SchemeElements.Remove(element); }
 
                 SendMessage(new RefreshNavigation());
             }
@@ -138,21 +129,21 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
 
-        Dictionary<ListViewItem, ColumnItem> columnItems = new Dictionary<ListViewItem, ColumnItem>(); // Used to cross reference ListViewItems to Columns
-        ColumnItem? addColumn = null; // Used to pass value to bindingElement.AddNew.
+        Dictionary<ListViewItem, ColumnValue> columnItems = new Dictionary<ListViewItem, ColumnValue>(); // Used to cross reference ListViewItems to Columns
+        ColumnValue? addColumn = null; // Used to pass value to bindingElement.AddNew.
         private void elementSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (elementSelection.SelectedItems.Count > 0 && columnItems.ContainsKey(elementSelection.SelectedItems[0]))
             {
                 ListViewItem selected = elementSelection.SelectedItems[0];
-                ColumnItem current = columnItems[selected];
-                ColumnKey column = new ColumnKey(current);
+                ColumnValue current = columnItems[selected];
+                ColumnIndex column = new ColumnIndex(current);
 
-                if (bindingElement.DataSource is IList<ElementItem> elements)
+                if (bindingElement.DataSource is IList<SchemaElementValue> elements)
                 {
-                    ElementItem? element = elements.FirstOrDefault(w => column.Equals(w));
+                    SchemaElementValue? element = elements.FirstOrDefault(w => column.Equals(w));
 
-                    if (element is ElementItem)
+                    if (element is SchemaElementValue)
                     {
                         bindingElement.ResumeBinding();
                         bindingElement.Position = elements.IndexOf(element);
@@ -171,11 +162,11 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             addColumn = null;
 
-            if (columnItems.ContainsKey(e.Item) && bindingElement.DataSource is IList<ElementItem> elements)
+            if (columnItems.ContainsKey(e.Item) && bindingElement.DataSource is IList<SchemaElementValue> elements)
             {
-                ColumnItem current = columnItems[e.Item];
-                ColumnKey key = new ColumnKey(current);
-                ElementItem? element = elements.FirstOrDefault(w => key.Equals(w));
+                ColumnValue current = columnItems[e.Item];
+                ColumnIndex key = new ColumnIndex(current);
+                SchemaElementValue? element = elements.FirstOrDefault(w => key.Equals(w));
 
                 if (e.Item.Checked && element is null)
                 {
@@ -197,15 +188,15 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void bindingElement_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingSchema.Current is SchemaItem schema)
+            if (bindingSchema.Current is SchemaValue schema)
             {
-                ElementItem newElement = new ElementItem(schema);
+                SchemaElementValue newElement = new SchemaElementValue(schema);
 
                 if (addColumn is not null)
                 {
                     newElement.ColumnName = addColumn.ColumnName;
                     newElement.ElementName = addColumn.ColumnName;
-                    newElement.ScopeName = addColumn.ScopeName;
+                    newElement.Scope = addColumn.Scope;
                     newElement.AsElement = true;
                     newElement.AsAttribute = false;
                     newElement.DataAsText = true;

@@ -23,7 +23,7 @@ Begin Try
 	Declare @Values Table (
 			[ElementId]             UniqueIdentifier NOT NULL,
 			[SchemaId]              UniqueIdentifier NOT NULL,
-			[ScopeId]               Int Not Null,
+			[ScopeName]             [App_DataDictionary].[typeScopeName] Not Null,
 			[ColumnName]            SysName Not Null,
 			[ElementName]           SysName Null,
 			[ElementType]           SysName Null,
@@ -34,15 +34,10 @@ Begin Try
 			[DataAsXml]             Bit Not Null,
 			Primary Key ([ElementId]))
 
-	;With [Scope] As (
-		Select	S.[ScopeId],
-				F.[ScopeName]
-		From	[App_DataDictionary].[ApplicationScope] S
-				Cross Apply [App_DataDictionary].[funcGetScopeName](S.[ScopeId]) F)
 	Insert Into @Values
 	Select	X.[ElementId],
 			X.[SchemaId],
-			S.[ScopeId],
+			D.[ScopeName],
 			D.[ColumnName],
 			D.[ElementName],
 			D.[ElementType],
@@ -52,8 +47,6 @@ Begin Try
 			D.[DataAsCData],
 			D.[DataAsXml]
 	From	@Data D
-			Left Join [Scope] S
-			On	D.[ScopeName] = S.[ScopeName]
 			Cross apply (
 				Select	Coalesce(D.[ElementId], @ElementId, NewId()) As [ElementId],
 						Coalesce(D.[SchemaId], @SchemaId) As [SchemaId]) X
@@ -72,7 +65,7 @@ Begin Try
 	;With [Delta] As (
 		Select	[ElementId],
 				[SchemaId],
-				[ScopeId],
+				[ScopeName],
 				[ColumnName],
 				[ElementName],
 				[ElementType],
@@ -85,7 +78,7 @@ Begin Try
 		Except
 		Select	[ElementId],
 				[SchemaId],
-				[ScopeId],
+				[ScopeName],
 				[ColumnName],
 				[ElementName],
 				[ElementType],
@@ -97,7 +90,7 @@ Begin Try
 		From	[App_DataDictionary].[ScriptingSchemaElement])
 	Update [App_DataDictionary].[ScriptingSchemaElement]
 	Set		[SchemaId] = S.[SchemaId],
-			[ScopeId] = S.[ScopeId],
+			[ScopeName] = S.[ScopeName],
 			[ColumnName] = S.[ColumnName],
 			[ElementName] = S.[ElementName],
 			[ElementType] = S.[ElementType],
@@ -114,7 +107,7 @@ Begin Try
 	Insert Into [App_DataDictionary].[ScriptingSchemaElement] (
 			[ElementId],
 			[SchemaId],
-			[ScopeId],
+			[ScopeName],
 			[ColumnName],
 			[ElementName],
 			[ElementType],
@@ -125,7 +118,7 @@ Begin Try
 			[DataAsXml])
 	Select	S.[ElementId],
 			S.[SchemaId],
-			S.[ScopeId],
+			S.[ScopeName],
 			S.[ColumnName],
 			S.[ElementName],
 			S.[ElementType],

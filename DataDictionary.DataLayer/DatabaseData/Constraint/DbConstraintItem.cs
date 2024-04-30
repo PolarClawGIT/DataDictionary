@@ -74,7 +74,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
         public virtual Command PropertyCommand(IConnection connection)
         {
             {
-                if (new ScopeKey(this).TryScope() is IDbElementScopeKey scopeKey)
+                if (this.Scope.ToDbLevel() is IDbLevelElementKey scopeKey)
                 {
                     return new DbExtendedPropertyGetCommand(connection)
                     {

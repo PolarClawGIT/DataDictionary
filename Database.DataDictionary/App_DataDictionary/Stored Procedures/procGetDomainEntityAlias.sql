@@ -8,12 +8,11 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Select	D.[EntityId],
 		A.[AliasName],
-		S.[ScopeName]
+		A.[ScopeName]
 From	[App_DataDictionary].[DomainEntityAlias] D
 		Left Join [App_DataDictionary].[ModelEntity] M
 		On	D.[EntityId] = M.[EntityId]
 		Outer Apply [App_DataDictionary].[funcGetAliasName](D.[AliasId]) A
-		Outer Apply [App_DataDictionary].[funcGetScopeName](D.[ScopeId]) S
 Where	(@ModelId is Null or @ModelId = M.[ModelId]) And
 		(@EntityId is Null or @EntityId = D.[EntityId])
 GO
