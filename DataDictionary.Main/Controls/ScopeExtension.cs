@@ -28,8 +28,8 @@ namespace DataDictionary.Main.Controls
             {ScopeType.LibraryMethodParameter,           new ScopeSetting(Resources.Parameter, Resources.Icon_Parameter) { GroupByScope = false}},
             {ScopeType.LibraryType,                      new ScopeSetting(Resources.Class, Resources.Icon_Class) {GroupByScope = false}},
 
-            {ScopeType.Database,                         new ScopeSetting(Resources.Database, Resources.Icon_Database) },
-            {ScopeType.DatabaseSchema,                   new ScopeSetting(Resources.Schema, Resources.Icon_Schema) },
+            {ScopeType.Database,                         new ScopeSetting(Resources.Database, Resources.Icon_Database) {GroupByScope = false} },
+            {ScopeType.DatabaseSchema,                   new ScopeSetting(Resources.Schema, Resources.Icon_Schema) {GroupByScope = false} },
             {ScopeType.DatabaseFunction,                 new ScopeSetting(Resources.ScalarFunction, Resources.Icon_ScalarFunction) },
             {ScopeType.DatabaseProcedure,                new ScopeSetting(Resources.Procedure, Resources.Icon_Procedure) },
             {ScopeType.DatabaseTable,                    new ScopeSetting(Resources.Table, Resources.Icon_Table) },

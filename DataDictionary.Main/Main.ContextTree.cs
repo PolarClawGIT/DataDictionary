@@ -14,7 +14,10 @@ namespace DataDictionary.Main
         protected override void HandleMessage(RefreshNavigation message)
         {
             base.HandleMessage(message);
-            this.DoWork(contextNameNavigation.Load(BusinessData.NamedScope));
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(BusinessData.LoadNamedScope());
+            work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
+            this.DoWork(work);
         }
 
         private void RefreshCommand_Click(object? sender, EventArgs e)
