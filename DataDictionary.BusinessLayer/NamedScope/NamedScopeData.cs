@@ -42,23 +42,29 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        IReadOnlyList<NamedScopeKey> ChildrenKeys(NamedScopeKey key);
+        IReadOnlyList<INamedScopeKey> ChildrenKeys(INamedScopeKey key);
 
         /// <summary>
         /// Returns the list of Parent Keys for the specified key or an empty list.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        IReadOnlyList<NamedScopeKey> ParentKeys(NamedScopeKey key);
+        IReadOnlyList<INamedScopeKey> ParentKeys(INamedScopeKey key);
 
-        //IReadOnlyList<NamedScopeKey> PathKeys(NamedScopePath key);
+        /// <summary>
+        /// Returns the list of Keys for the specified Path (NameSpace).
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        /// <remarks>This is scan of all item.</remarks>
+        IReadOnlyList<INamedScopeKey> PathKeys(INamedScopePath key);
 
         /// <summary>
         /// Returns the list of Values for the given list of keys or an empty list.
         /// </summary>
         /// <param name="keys"></param>
         /// <returns></returns>
-        IReadOnlyList<INamedScopeValue> Values(IEnumerable<NamedScopeKey> keys);
+        IReadOnlyList<INamedScopeValue> Values(IEnumerable<INamedScopeKey> keys);
 
         /// <summary>
         /// Adds an item to the Collection as a Root node.
@@ -98,7 +104,6 @@ namespace DataDictionary.BusinessLayer.NamedScope
         // Alternate Keys (not sure if Sorted Dictionary or normal Dictionary is better here). Because of the wrapper, it can be changed easy.
         SortedDictionary<NamedScopeKey, List<NamedScopeKey>> children = new SortedDictionary<NamedScopeKey, List<NamedScopeKey>>();
         SortedDictionary<NamedScopeKey, List<NamedScopeKey>> parents = new SortedDictionary<NamedScopeKey, List<NamedScopeKey>>();
-        //SortedDictionary<NamedScopePath, List<NamedScopeKey>> paths = new SortedDictionary<NamedScopePath, List<NamedScopeKey>>();
 
         // Root Nodes
         List<NamedScopeKey> roots = new List<NamedScopeKey>();
@@ -118,18 +123,20 @@ namespace DataDictionary.BusinessLayer.NamedScope
         { return roots.AsReadOnly(); }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<NamedScopeKey> ChildrenKeys(NamedScopeKey key)
+        public virtual IReadOnlyList<INamedScopeKey> ChildrenKeys(INamedScopeKey key)
         {
-            if (children.ContainsKey(key))
-            { return children[key].AsReadOnly(); }
+            NamedScopeKey target = new NamedScopeKey(key);
+            if (children.ContainsKey(target))
+            { return children[target].AsReadOnly(); }
             else { return new List<NamedScopeKey>().AsReadOnly(); }
         }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<NamedScopeKey> ParentKeys(NamedScopeKey key)
+        public virtual IReadOnlyList<INamedScopeKey> ParentKeys(INamedScopeKey key)
         {
-            if (parents.ContainsKey(key))
-            { return parents[key].AsReadOnly(); }
+            NamedScopeKey target = new NamedScopeKey(key);
+            if (parents.ContainsKey(target))
+            { return parents[target].AsReadOnly(); }
             else { return new List<NamedScopeKey>().AsReadOnly(); }
         }
 
@@ -139,7 +146,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <returns></returns>
         /// <remarks>This is a deep scan and is primary intended as a debugging tool.</remarks>
-        public virtual IReadOnlyList<NamedScopeKey> OrphanedKeys()
+        public virtual IReadOnlyList<INamedScopeKey> OrphanedKeys()
         {
             List<NamedScopeKey> result = children.SelectMany(s => s.Value).
                 Union(children.Select(s => s.Key)).
@@ -152,21 +159,23 @@ namespace DataDictionary.BusinessLayer.NamedScope
             return result;
         }
 
-
-        //public virtual IReadOnlyList<NamedScopeKey> PathKeys(NamedScopePath key)
-        //{
-        //    if (paths.ContainsKey(key))
-        //    { return paths[key].AsReadOnly(); }
-        //    else { return new List<NamedScopeKey>().AsReadOnly(); }
-        //}
+        /// <inheritdoc/>
+        public virtual IReadOnlyList<INamedScopeKey> PathKeys(INamedScopePath key)
+        {
+            NamedScopePath pathKey = new NamedScopePath(key);
+            return data.Where(w => pathKey.Equals(w.Value.GetPath())).Select(s => s.Key).ToList();
+        }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<INamedScopeValue> Values(IEnumerable<NamedScopeKey> keys)
+        public virtual IReadOnlyList<INamedScopeValue> Values(IEnumerable<INamedScopeKey> keys)
         {
             List<INamedScopeValue> result = new List<INamedScopeValue>();
 
-            foreach (NamedScopeKey item in keys)
-            { if (data.ContainsKey(item)) { result.Add(data[item]); } }
+            foreach (INamedScopeKey item in keys)
+            {
+                NamedScopeKey target = new NamedScopeKey(item);
+                if (data.ContainsKey(target)) { result.Add(data[target]); }
+            }
 
             return result;
         }
@@ -175,7 +184,6 @@ namespace DataDictionary.BusinessLayer.NamedScope
         public virtual void Add(INamedScopeValue value)
         {
             NamedScopeKey key = value.GetSystemId();
-            //NamedScopePath path = value.GetPath();
 
             if (data.ContainsKey(key))
             {
@@ -186,14 +194,6 @@ namespace DataDictionary.BusinessLayer.NamedScope
             else
             {
                 roots.Add(key);
-
-                //if (!paths.ContainsKey(path))
-                //{ paths.Add(path, new List<NamedScopeKey>()); }
-
-                //if (paths.ContainsKey(path) && !paths[path].Contains(key))
-                //{ paths[path].Add(key); }
-
-                value.OnTitleChanged += OnTitleChanged;
                 data.Add(key, value);
             }
         }
@@ -201,6 +201,10 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <inheritdoc/>
         public virtual void Add(NamedScopeKey parent, INamedScopeValue value)
         {
+            //TODO: Need a trap for infinite loop.
+            //      It is when the parent (or child) directly or indirectly points to itself.
+            //      Not sure how to detect that.
+
             NamedScopeKey key = value.GetSystemId();
             //NamedScopePath path = value.GetPath();
 
@@ -210,19 +214,11 @@ namespace DataDictionary.BusinessLayer.NamedScope
             if (!parents.ContainsKey(key))
             { parents.Add(key, new List<NamedScopeKey>()); }
 
-            //if (!paths.ContainsKey(path))
-            //{ paths.Add(path, new List<NamedScopeKey>()); }
-
             if (children.ContainsKey(parent) && !children[parent].Contains(key))
             { children[parent].Add(key); }
 
             if (parents.ContainsKey(key) && !parents[key].Contains(parent))
             { parents[key].Add(parent); }
-
-            //if (paths.ContainsKey(path) && !paths[path].Contains(key))
-            //{ paths[path].Add(key); }
-
-            value.OnTitleChanged += OnTitleChanged;
 
             if (!data.ContainsKey(key))
             { data.Add(key, value); }
@@ -262,41 +258,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             if (parents.ContainsKey(key))
             { parents.Remove(key); }
 
-            //foreach (KeyValuePair<NamedScopePath, List<NamedScopeKey>> item in paths.Where(w => w.Value.Contains(key)).ToList())
-            //{ //TODO: This may be costly. Normally there is only one item that matches but all paths must be searched.
-            //    item.Value.Remove(key);
-
-            //    if (item.Value.Count == 0)
-            //    { paths.Remove(item.Key); }
-            //}
-
-            if (data.ContainsKey(key))
-            { data[key].OnTitleChanged -= OnTitleChanged; }
-
             return data.Remove(key);
-        }
-
-        private void OnTitleChanged(Object? sender, EventArgs e)
-        {
-            if (sender is INamedScopeValue value)
-            {
-                //NamedScopeKey key = value.GetSystemId();
-                //NamedScopePath path = value.GetPath();
-
-                //foreach (KeyValuePair<NamedScopePath, List<NamedScopeKey>> item in paths.Where(w => w.Value.Contains(key)).ToList())
-                //{ //TODO: This may be costly. Normally there is only one item that matches but all paths must be searched.
-                //    item.Value.Remove(key);
-
-                //    if (item.Value.Count == 0)
-                //    { paths.Remove(item.Key); }
-                //}
-
-                //if (!paths.ContainsKey(path))
-                //{ paths.Add(path, new List<NamedScopeKey>()); }
-
-                //if (paths.ContainsKey(path) && !paths[path].Contains(key))
-                //{ paths[path].Add(key); }
-            }
         }
     }
 }
