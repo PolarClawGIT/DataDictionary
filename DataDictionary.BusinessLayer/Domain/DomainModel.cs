@@ -53,7 +53,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public DomainModel() : base()
         {
             attributeValues = new AttributeData() { Model = this };
-            entityValues = new EntityData() { DomainModel = this };
+            entityValues = new EntityData() { Model = this };
         }
 
         /// <inheritdoc/>

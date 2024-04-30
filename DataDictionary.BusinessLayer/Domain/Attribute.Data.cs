@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Application;
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Property;
@@ -164,7 +165,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ICatalogIndex key)
         {
             CatalogIndex catalogKey = new CatalogIndex(key);
-            if(source.DbCatalogs.Where(w => catalogKey.Equals(w)) is CatalogValue catalog)
+            if (source.DbCatalogs.Where(w => catalogKey.Equals(w)) is CatalogValue catalog)
             {
                 CatalogIndexName catalogName = new CatalogIndexName(catalog);
 
@@ -181,7 +182,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableIndex key)
         {
             TableIndex tableKey = new TableIndex(key);
-            if(source.DbTables.Where(w => tableKey.Equals(w)) is TableValue table)
+            if (source.DbTables.Where(w => tableKey.Equals(w)) is TableValue table)
             {
                 TableIndexName tableName = new TableIndexName(table);
                 foreach (TableColumnValue item in source.DbTableColumns.Where(w => tableName.Equals(w)))
@@ -251,7 +252,12 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
-        { return this.Select(s => new NamedScopePair(s)); }
+        {
+            if (Model.Models.FirstOrDefault() is ModelValue model)
+            { return this.Select(s => new NamedScopePair(model.GetSystemId(), s)); }
+            else { return this.Select(s => new NamedScopePair(s)); }
+        }
+
 
         public XElement? GetXElement(IAttributeIndex key, IEnumerable<SchemaElementValue>? options = null)
         {

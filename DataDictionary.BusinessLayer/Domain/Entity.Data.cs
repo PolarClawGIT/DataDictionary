@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Application;
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
+using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.ApplicationData.Scope;
@@ -45,7 +46,7 @@ namespace DataDictionary.BusinessLayer.Domain
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         IDataTableFile, IGetNamedScopes
     {
-        public required DomainModel DomainModel { get; init; }
+        public required DomainModel Model { get; init; }
 
         /// <inheritdoc/>
         public IEntityAliasData Aliases { get { return aliasValues; } }
@@ -86,7 +87,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IEntityIndex dataKey)
-        {   return Load(factory, (IDomainEntityKey)dataKey); }
+        { return Load(factory, (IDomainEntityKey)dataKey); }
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
@@ -235,8 +236,11 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
-        { return this.Select(s => new NamedScopePair(s)); }
-
+        {
+            if (Model.Models.FirstOrDefault() is ModelValue model)
+            { return this.Select(s => new NamedScopePair(model.GetSystemId(), s)); }
+            else { return this.Select(s => new NamedScopePair(s)); }
+        }
 
     }
 }
