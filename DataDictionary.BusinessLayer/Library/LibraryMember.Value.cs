@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         public virtual NamedScopeKey GetSystemId()
-        { return new NamedScopeKey(LibraryId); }
+        { return new NamedScopeKey(MemberId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()

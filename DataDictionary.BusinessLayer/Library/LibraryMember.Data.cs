@@ -55,31 +55,22 @@ namespace DataDictionary.BusinessLayer.Library
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
 
-            foreach (TValue root in this.Where(w => w.MemberParentId is null))
+            foreach (TValue item in this)
             {
-                LibrarySourceIndex libraryKey = new LibrarySourceIndex(root);
-                if(Library.LibrarySources.Where(w => libraryKey.Equals(w)) is LibrarySourceValue library)
-                {
-                    result.Add(new NamedScopePair(library.GetSystemId(), root));
-                    result.AddRange(GetChildren(root));
-                }
+                LibrarySourceIndex libraryKey = new LibrarySourceIndex(item);
+                LibraryMemberIndexParent parentKey = new LibraryMemberIndexParent(item);
+
+                LibrarySourceValue? library = Library.LibrarySources.FirstOrDefault(w => libraryKey.Equals(w));
+                TValue? parent = this.FirstOrDefault(w => parentKey.Equals(new LibraryMemberIndex(w)));
+
+                if (parent is null && library is not null)
+                { result.Add(new NamedScopePair(library.GetSystemId(), item)); }
+                else if (parent is not null)
+                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+                else { throw new InvalidOperationException("Could not determine Parent"); }
             }
 
             return result;
-
-            IEnumerable<NamedScopePair> GetChildren(LibraryMemberValue parent)
-            {
-                List<NamedScopePair> result = new List<NamedScopePair>();
-                LibraryMemberIndex parentKey = new LibraryMemberIndex(parent);
-
-                foreach (TValue item in this.Where(w => parentKey.Equals(new LibraryMemberIndexParent(w))))
-                {
-                    result.Add(new NamedScopePair(parent.GetSystemId(), item));
-                    result.AddRange(GetChildren(item));
-                }
-
-                return result;
-            }
         }
 
     }
