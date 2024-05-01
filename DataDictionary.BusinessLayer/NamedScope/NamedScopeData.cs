@@ -183,12 +183,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <inheritdoc/>
         public virtual void Add(INamedScopeValue value)
         {
-            NamedScopeKey key = value.GetSystemId();
+            NamedScopeKey key = value.GetKey();
 
             if (data.ContainsKey(key))
             {
                 Exception exception = new ArgumentException("An element with the same key already exists.");
-                exception.Data.Add(nameof(value.GetSystemId), key.SystemId);
+                exception.Data.Add(nameof(value.GetKey), key.SystemId);
                 throw exception;
             }
             else
@@ -205,7 +205,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             //      It is when the parent (or child) directly or indirectly points to itself.
             //      Not sure how to detect that.
 
-            NamedScopeKey key = value.GetSystemId();
+            NamedScopeKey key = value.GetKey();
             //NamedScopePath path = value.GetPath();
 
             if (!children.ContainsKey(parent))

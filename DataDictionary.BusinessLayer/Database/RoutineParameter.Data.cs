@@ -50,7 +50,7 @@ namespace DataDictionary.BusinessLayer.Database
             {
                 DbRoutineKeyName nameKey = new DbRoutineKeyName(item);
                 if (Database.DbRoutines.FirstOrDefault(w => nameKey.Equals(w)) is RoutineValue parent)
-                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+                { result.Add(new NamedScopePair(parent.GetKey(), item)); }
             }
 
             return result;

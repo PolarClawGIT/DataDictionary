@@ -50,7 +50,7 @@ namespace DataDictionary.BusinessLayer.Database
             {
                 DbCatalogKeyName nameKey = new DbCatalogKeyName(item);
                 if (Database.DbCatalogs.FirstOrDefault(w => nameKey.Equals(w)) is CatalogValue parent)
-                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+                { result.Add(new NamedScopePair(parent.GetKey(), item)); }
             }
 
             return result;

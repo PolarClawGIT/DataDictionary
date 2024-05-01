@@ -16,10 +16,10 @@ namespace DataDictionary.BusinessLayer.Domain
     {
         /// <inheritdoc cref="DomainAttributeItem()"/>
         public AttributeValue() : base()
-        { PropertyChanged += CatalogValue_PropertyChanged; }
+        { PropertyChanged += OnPropertyChanged; }
 
         /// <inheritdoc/>
-        public virtual NamedScopeKey GetSystemId()
+        public virtual NamedScopeKey GetKey()
         { return new NamedScopeKey(AttributeId); }
 
         /// <inheritdoc/>
@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         public event EventHandler? OnTitleChanged;
-        private void CatalogValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+        private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName is nameof(AttributeTitle)
                 && OnTitleChanged is EventHandler handler)

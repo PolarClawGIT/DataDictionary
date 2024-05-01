@@ -64,9 +64,9 @@ namespace DataDictionary.BusinessLayer.Library
                 TValue? parent = this.FirstOrDefault(w => parentKey.Equals(new LibraryMemberIndex(w)));
 
                 if (parent is null && library is not null)
-                { result.Add(new NamedScopePair(library.GetSystemId(), item)); }
+                { result.Add(new NamedScopePair(library.GetKey(), item)); }
                 else if (parent is not null)
-                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+                { result.Add(new NamedScopePair(parent.GetKey(), item)); }
                 else { throw new InvalidOperationException("Could not determine Parent"); }
             }
 

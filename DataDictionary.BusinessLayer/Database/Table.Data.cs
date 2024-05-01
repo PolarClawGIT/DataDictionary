@@ -51,7 +51,7 @@ namespace DataDictionary.BusinessLayer.Database
             {
                 DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
                 if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is SchemaValue parent)
-                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+                { result.Add(new NamedScopePair(parent.GetKey(), item)); }
             }
 
             return result;

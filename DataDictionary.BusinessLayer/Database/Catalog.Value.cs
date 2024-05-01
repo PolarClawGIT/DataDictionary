@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.Database
         { PropertyChanged += CatalogValue_PropertyChanged; }
 
         /// <inheritdoc/>
-        public virtual NamedScopeKey GetSystemId()
+        public virtual NamedScopeKey GetKey()
         { return new NamedScopeKey(CatalogId); }
 
         /// <inheritdoc/>

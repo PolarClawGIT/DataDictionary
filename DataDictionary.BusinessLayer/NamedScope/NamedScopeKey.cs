@@ -22,12 +22,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// 
     /// </summary>
-    public interface INameScopeGetKey
+    public interface IGetNamedScopeKey
     {
         /// <summary>
         /// Method to get System Id of the Named Scope item.
         /// </summary>
-        NamedScopeKey GetSystemId();
+        NamedScopeKey GetKey();
     }
 
     /// <summary>

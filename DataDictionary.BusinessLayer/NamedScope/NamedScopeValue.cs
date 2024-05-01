@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Interface for the methods needed to support NamedScope
     /// </summary>
-    public interface INamedScopeValue : IScopeKey, INameScopeGetKey
+    public interface INamedScopeValue : IScopeKey, IGetNamedScopeKey
     {
         /// <summary>
         /// Get the Title for the NamedScope
@@ -25,6 +25,11 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <returns></returns>
         NamedScopePath GetPath();
+
+        /// <summary>
+        /// Get the Path (NameSpace) for the NamedScope
+        /// </summary>
+        public NamedScopePath NamedPath { get { return GetPath(); } }
 
         /// <summary>
         /// Get the Position for the NamedScope. Default is zero.

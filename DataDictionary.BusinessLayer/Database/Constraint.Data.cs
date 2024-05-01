@@ -53,9 +53,9 @@ namespace DataDictionary.BusinessLayer.Database
                 DbTableKeyName tableKey = new DbTableKeyName(item);
                 DbSchemaKeyName schemaKey = new DbSchemaKeyName(item);
                 if (Database.DbTables.FirstOrDefault(w => tableKey.Equals(w)) is TableValue table)
-                { result.Add(new NamedScopePair(table.GetSystemId(), item)); }
+                { result.Add(new NamedScopePair(table.GetKey(), item)); }
                 else if (Database.DbSchemta.FirstOrDefault(w => tableKey.Equals(w)) is SchemaValue schema)
-                { result.Add(new NamedScopePair(schema.GetSystemId(), item)); }
+                { result.Add(new NamedScopePair(schema.GetKey(), item)); }
             }
 
             return result;

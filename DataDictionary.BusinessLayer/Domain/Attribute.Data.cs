@@ -254,7 +254,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             if (Model.Models.FirstOrDefault() is ModelValue model)
-            { return this.Select(s => new NamedScopePair(model.GetSystemId(), s)); }
+            { return this.Select(s => new NamedScopePair(model.GetKey(), s)); }
             else { return this.Select(s => new NamedScopePair(s)); }
         }
 

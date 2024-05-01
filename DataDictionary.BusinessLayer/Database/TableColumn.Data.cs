@@ -50,7 +50,7 @@ namespace DataDictionary.BusinessLayer.Database
             {
                 DbTableKeyName nameKey = new DbTableKeyName(item);
                 if (Database.DbTables.FirstOrDefault(w => nameKey.Equals(w)) is TableValue parent)
-                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+                { result.Add(new NamedScopePair(parent.GetKey(), item)); }
             }
 
             return result;
