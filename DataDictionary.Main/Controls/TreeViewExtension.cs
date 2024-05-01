@@ -85,7 +85,7 @@ namespace DataDictionary.Main.Controls
                             || (w.Key.Nodes.Count == 0
                                 && w.Key.Parent is not null
                                 && w.Key.Parent.IsExpanded))
-                        .Select(s => s.Value.GetSystemId()));
+                        .Select(s => s.Value.GetKey()));
 
                         valueNodes.Clear();
                     });
@@ -196,9 +196,9 @@ namespace DataDictionary.Main.Controls
                             {
                                 if (sender is INamedScopeValue value)
                                 {
-                                    NamedScopeKey key = value.GetSystemId();
+                                    NamedScopeKey key = value.GetKey();
 
-                                    if (valueNodes.FirstOrDefault(w => key.Equals(w.Value.GetSystemId()))
+                                    if (valueNodes.FirstOrDefault(w => key.Equals(w.Value.GetKey()))
                                         is KeyValuePair<TreeNode, INamedScopeValue> nodeItem
                                         && nodeItem.Key is not null)
                                     {

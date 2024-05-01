@@ -57,7 +57,7 @@
             aliasesData = new DataGridView();
             aliaseScopeColumn = new DataGridViewComboBoxColumn();
             aliasNameColumn = new DataGridViewTextBoxColumn();
-            domainAlias = new Controls.DomainAlias();
+            namedScopeData = new DataDictionary.Main.Controls.NamedScopeData();
             subjectAreaTab = new TabPage();
             entityTab = new TabPage();
             bindingAttribute = new BindingSource(components);
@@ -366,7 +366,7 @@
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(192, 72);
+            aliasTab.Size = new Size(412, 343);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
@@ -375,14 +375,14 @@
             aliaseLayout.ColumnCount = 1;
             aliaseLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             aliaseLayout.Controls.Add(aliasesData, 0, 0);
-            aliaseLayout.Controls.Add(domainAlias, 0, 1);
+            aliaseLayout.Controls.Add(namedScopeData, 0, 1);
             aliaseLayout.Dock = DockStyle.Fill;
             aliaseLayout.Location = new Point(3, 3);
             aliaseLayout.Name = "aliaseLayout";
             aliaseLayout.RowCount = 2;
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            aliaseLayout.Size = new Size(186, 66);
+            aliaseLayout.Size = new Size(406, 337);
             aliaseLayout.TabIndex = 1;
             // 
             // aliasesData
@@ -394,7 +394,7 @@
             aliasesData.Location = new Point(3, 3);
             aliasesData.Name = "aliasesData";
             aliasesData.ReadOnly = true;
-            aliasesData.Size = new Size(180, 20);
+            aliasesData.Size = new Size(400, 128);
             aliasesData.TabIndex = 0;
             // 
             // aliaseScopeColumn
@@ -414,13 +414,19 @@
             aliasNameColumn.Name = "aliasNameColumn";
             aliasNameColumn.ReadOnly = true;
             // 
-            // domainAlias
+            // namedScopeData
             // 
-            domainAlias.Dock = DockStyle.Fill;
-            domainAlias.Location = new Point(3, 29);
-            domainAlias.Name = "domainAlias";
-            domainAlias.Size = new Size(180, 34);
-            domainAlias.TabIndex = 0;
+            namedScopeData.ApplyImage = Properties.Resources.NewSynonym;
+            namedScopeData.ApplyText = "new Alias";
+            namedScopeData.Dock = DockStyle.Fill;
+            namedScopeData.HeaderText = "Alias";
+            namedScopeData.Location = new Point(3, 137);
+            namedScopeData.Name = "namedScopeData";
+            namedScopeData.ReadOnly = false;
+            namedScopeData.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
+            namedScopeData.Size = new Size(400, 197);
+            namedScopeData.TabIndex = 1;
+            namedScopeData.OnApply += NamedScopeData_OnApply;
             // 
             // subjectAreaTab
             // 
@@ -447,18 +453,19 @@
             // bindingAlias
             // 
             bindingAlias.AddingNew += BindingAlias_AddingNew;
+            bindingAlias.CurrentChanged += BindingAlias_CurrentChanged;
             // 
             // attributeToolStrip
             // 
             attributeToolStrip.Items.AddRange(new ToolStripItem[] { addPropertyCommand, addAliasCommand, removeAttributeCommand });
             attributeToolStrip.Name = "attributeContextMenu";
-            attributeToolStrip.Size = new Size(181, 92);
+            attributeToolStrip.Size = new Size(165, 70);
             // 
             // addPropertyCommand
             // 
             addPropertyCommand.Image = Properties.Resources.NewProperty;
             addPropertyCommand.Name = "addPropertyCommand";
-            addPropertyCommand.Size = new Size(180, 22);
+            addPropertyCommand.Size = new Size(164, 22);
             addPropertyCommand.Text = "add Property";
             addPropertyCommand.Click += AddPropertyCommand_Click;
             // 
@@ -466,7 +473,7 @@
             // 
             addAliasCommand.Image = Properties.Resources.NewSynonym;
             addAliasCommand.Name = "addAliasCommand";
-            addAliasCommand.Size = new Size(180, 22);
+            addAliasCommand.Size = new Size(164, 22);
             addAliasCommand.Text = "add Alias";
             addAliasCommand.Click += AddAliasCommand_Click;
             // 
@@ -474,7 +481,7 @@
             // 
             removeAttributeCommand.Image = Properties.Resources.DeleteAttribute;
             removeAttributeCommand.Name = "removeAttributeCommand";
-            removeAttributeCommand.Size = new Size(180, 22);
+            removeAttributeCommand.Size = new Size(164, 22);
             removeAttributeCommand.Text = "remove Attribute";
             removeAttributeCommand.Click += DeleteItemCommand_Click;
             // 
@@ -532,7 +539,6 @@
         private TabPage subjectAreaTab;
         private TabPage entityTab;
         private DataGridView aliasesData;
-        private Controls.DomainAlias domainAlias;
         private BindingSource bindingAlias;
         private DataGridViewComboBoxColumn aliaseScopeColumn;
         private DataGridViewTextBoxColumn aliasNameColumn;
@@ -545,5 +551,6 @@
         private ToolStripMenuItem addPropertyCommand;
         private ToolStripMenuItem addAliasCommand;
         private ToolStripMenuItem removeAttributeCommand;
+        private DataDictionary.Main.Controls.NamedScopeData namedScopeData;
     }
 }

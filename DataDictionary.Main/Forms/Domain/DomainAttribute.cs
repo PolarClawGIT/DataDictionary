@@ -70,7 +70,6 @@ namespace DataDictionary.Main.Forms.Domain
 
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
-            domainAlias.BindData(bindingAlias);
 
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
         }
@@ -90,7 +89,6 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingAttribute.Current is AttributeValue current)
             {
                 AttributePropertyValue newItem = new AttributePropertyValue(current);
-
                 e.NewObject = newItem;
             }
         }
@@ -100,10 +98,9 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingAttribute.Current is AttributeValue current)
             {
                 AttributeAliasValue newItem = new AttributeAliasValue(current);
+                newItem.AliasName = namedScopeData.ScopePath.MemberFullPath;
+                newItem.Scope = namedScopeData.Scope;
                 e.NewObject = newItem;
-
-                //newItem.AliasName = domainAlias.SelectedAlias.MemberFullName;
-                //newItem.Scope = domainAlias.SelectedAlias.Scope;
             }
         }
 
@@ -124,5 +121,20 @@ namespace DataDictionary.Main.Forms.Domain
             else
             { detailTabLayout.SelectedTab = aliasTab; }
         }
+
+        private void BindingAlias_CurrentChanged(object sender, EventArgs e)
+        {
+            if (bindingAlias.Current is AttributeAliasValue current)
+            {
+                NamedScopePath path = new NamedScopePath(current.AliasName);
+
+                namedScopeData.ScopePath = path;
+                namedScopeData.Scope = current.Scope;
+            }
+
+        }
+
+        private void NamedScopeData_OnApply(object sender, EventArgs e)
+        { bindingAlias.AddNew(); }
     }
 }
