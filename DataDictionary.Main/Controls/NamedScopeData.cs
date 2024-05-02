@@ -45,13 +45,8 @@ namespace DataDictionary.Main.Controls
 
         public Boolean ReadOnly
         {
-            get { return pathData.ReadOnly; }
-            set
-            {
-                pathData.ReadOnly = value;
-                scopeData.ReadOnly = value;
-                browser.Enabled = !value;
-            }
+            get { return !groupBox.Enabled; }
+            set { groupBox.Enabled = !value; }
         }
 
         /// <summary>
