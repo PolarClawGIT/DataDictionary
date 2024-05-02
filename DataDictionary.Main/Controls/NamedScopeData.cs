@@ -174,7 +174,7 @@ namespace DataDictionary.Main.Controls
         }
 
         public event EventHandler? OnApply;
-        private void applyCommand_Click(object sender, EventArgs e)
+        private void ApplyCommand_Click(object sender, EventArgs e)
         {
             if (OnApply is EventHandler handler)
             { handler(this, EventArgs.Empty); }

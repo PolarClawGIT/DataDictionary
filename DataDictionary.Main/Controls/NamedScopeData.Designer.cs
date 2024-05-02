@@ -101,10 +101,10 @@
             // 
             // applyCommand
             // 
+            applyCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             applyCommand.AutoSize = true;
             applyCommand.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            applyCommand.Dock = DockStyle.Bottom;
-            applyCommand.Image = Properties.Resources.Namespace;
+            applyCommand.Image = Properties.Resources.NewSynonym;
             applyCommand.Location = new Point(201, 72);
             applyCommand.Name = "applyCommand";
             applyCommand.Size = new Size(62, 25);
@@ -112,7 +112,7 @@
             applyCommand.Text = "apply";
             applyCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
             applyCommand.UseVisualStyleBackColor = true;
-            applyCommand.Click += applyCommand_Click;
+            applyCommand.Click += ApplyCommand_Click;
             // 
             // groupBox
             // 
