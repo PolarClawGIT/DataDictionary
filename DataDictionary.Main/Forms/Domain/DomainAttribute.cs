@@ -114,14 +114,6 @@ namespace DataDictionary.Main.Forms.Domain
             else { detailTabLayout.SelectedTab = propertyTab; }
         }
 
-        private void AddAliasCommand_Click(object sender, EventArgs e)
-        {
-            if (detailTabLayout.SelectedTab == aliasTab)
-            { bindingAlias.AddNew(); }
-            else
-            { detailTabLayout.SelectedTab = aliasTab; }
-        }
-
         private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {
             if (bindingAlias.Current is AttributeAliasValue current)

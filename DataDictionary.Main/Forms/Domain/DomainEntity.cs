@@ -22,7 +22,7 @@ namespace DataDictionary.Main.Forms.Domain
         public DomainEntity(IEntityValue? entityItem) : this()
         {
             if (entityItem is null)
-            { 
+            {
                 entityItem = new EntityValue();
                 BusinessData.DomainModel.Entities.Add(entityItem);
             }
@@ -59,23 +59,8 @@ namespace DataDictionary.Main.Forms.Domain
 
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
-            domainAlias.BindData(bindingAlias);
 
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingEntity.Current is not IEntityValue);
-        }
-
-        private void NewItemCommand_Click(object? sender, EventArgs e)
-        {
-            if (detailTabLayout.TabPages[detailTabLayout.SelectedIndex] == propertyTab)
-            {
-                bindingProperty.AddNew();
-                domainProperty.RefreshControls();
-            }
-            else if (detailTabLayout.TabPages[detailTabLayout.SelectedIndex] == aliasTab)
-            {
-                bindingAlias.AddNew();
-            }
-            else { }
         }
 
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
@@ -98,13 +83,12 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingAlias_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingEntity.Current is IEntityValue current)
+            if (bindingEntity.Current is EntityValue current)
             {
                 EntityAliasValue newItem = new EntityAliasValue(current);
+                newItem.AliasName = namedScopeData.ScopePath.MemberFullPath;
+                newItem.Scope = namedScopeData.Scope;
                 e.NewObject = newItem;
-
-                //newItem.AliasName = domainAlias.SelectedAlias.MemberFullName;
-                //newItem.Scope = domainAlias.SelectedAlias.Scope;
             }
         }
 
@@ -118,12 +102,19 @@ namespace DataDictionary.Main.Forms.Domain
             else { detailTabLayout.SelectedTab = propertyTab; }
         }
 
-        private void AddAliasCommand_Click(object sender, EventArgs e)
+        private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {
-            if (detailTabLayout.SelectedTab == aliasTab)
-            { bindingAlias.AddNew(); }
-            else
-            { detailTabLayout.SelectedTab = aliasTab; }
+            if (bindingAlias.Current is AttributeAliasValue current)
+            {
+                NamedScopePath path = new NamedScopePath(current.AliasName);
+
+                namedScopeData.ScopePath = path;
+                namedScopeData.Scope = current.Scope;
+            }
         }
+
+        private void NamedScopeData_OnApply(object sender, EventArgs e)
+        { bindingAlias.AddNew(); }
+
     }
 }

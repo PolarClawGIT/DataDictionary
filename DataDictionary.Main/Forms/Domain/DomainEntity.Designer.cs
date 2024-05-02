@@ -47,14 +47,13 @@
             aliasesData = new DataGridView();
             aliaseScopeColumn = new DataGridViewComboBoxColumn();
             aliasNameColumn = new DataGridViewTextBoxColumn();
-            domainAlias = new Controls.DomainAlias();
+            namedScopeData = new DataDictionary.Main.Controls.NamedScopeData();
             subjectAreaTab = new TabPage();
             bindingAlias = new BindingSource(components);
             bindingProperty = new BindingSource(components);
             bindingEntity = new BindingSource(components);
             entityToolStrip = new ContextMenuStrip(components);
             addPropertyCommand = new ToolStripMenuItem();
-            addAliasCommand = new ToolStripMenuItem();
             removeEntityComand = new ToolStripMenuItem();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
@@ -248,7 +247,7 @@
             aliaseLayout.ColumnCount = 1;
             aliaseLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             aliaseLayout.Controls.Add(aliasesData, 0, 0);
-            aliaseLayout.Controls.Add(domainAlias, 0, 1);
+            aliaseLayout.Controls.Add(namedScopeData, 0, 1);
             aliaseLayout.Dock = DockStyle.Fill;
             aliaseLayout.Location = new Point(3, 3);
             aliaseLayout.Name = "aliaseLayout";
@@ -287,13 +286,19 @@
             aliasNameColumn.Name = "aliasNameColumn";
             aliasNameColumn.ReadOnly = true;
             // 
-            // domainAlias
+            // namedScopeData
             // 
-            domainAlias.Dock = DockStyle.Fill;
-            domainAlias.Location = new Point(3, 29);
-            domainAlias.Name = "domainAlias";
-            domainAlias.Size = new Size(180, 34);
-            domainAlias.TabIndex = 0;
+            namedScopeData.ApplyImage = Properties.Resources.NewSynonym;
+            namedScopeData.ApplyText = "new Alias";
+            namedScopeData.Dock = DockStyle.Fill;
+            namedScopeData.HeaderText = "Alias";
+            namedScopeData.Location = new Point(3, 29);
+            namedScopeData.Name = "namedScopeData";
+            namedScopeData.ReadOnly = false;
+            namedScopeData.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
+            namedScopeData.Size = new Size(180, 34);
+            namedScopeData.TabIndex = 1;
+            namedScopeData.OnApply += NamedScopeData_OnApply;
             // 
             // subjectAreaTab
             // 
@@ -307,6 +312,7 @@
             // bindingAlias
             // 
             bindingAlias.AddingNew += BindingAlias_AddingNew;
+            bindingAlias.CurrentChanged += BindingAlias_CurrentChanged;
             // 
             // bindingProperty
             // 
@@ -314,9 +320,9 @@
             // 
             // entityToolStrip
             // 
-            entityToolStrip.Items.AddRange(new ToolStripItem[] { addPropertyCommand, addAliasCommand, removeEntityComand });
+            entityToolStrip.Items.AddRange(new ToolStripItem[] { addPropertyCommand, removeEntityComand });
             entityToolStrip.Name = "attributeContextMenu";
-            entityToolStrip.Size = new Size(148, 70);
+            entityToolStrip.Size = new Size(148, 48);
             // 
             // addPropertyCommand
             // 
@@ -325,14 +331,6 @@
             addPropertyCommand.Size = new Size(147, 22);
             addPropertyCommand.Text = "add Property";
             addPropertyCommand.Click += AddPropertyCommand_Click;
-            // 
-            // addAliasCommand
-            // 
-            addAliasCommand.Image = Properties.Resources.NewSynonym;
-            addAliasCommand.Name = "addAliasCommand";
-            addAliasCommand.Size = new Size(147, 22);
-            addAliasCommand.Text = "add Alias";
-            addAliasCommand.Click += AddAliasCommand_Click;
             // 
             // removeEntityComand
             // 
@@ -388,7 +386,6 @@
         private DataGridView aliasesData;
         private DataGridViewComboBoxColumn aliaseScopeColumn;
         private DataGridViewTextBoxColumn aliasNameColumn;
-        private Controls.DomainAlias domainAlias;
         private TabPage subjectAreaTab;
         private BindingSource bindingAlias;
         private BindingSource bindingProperty;
@@ -396,7 +393,7 @@
         private DataDictionary.Main.Controls.ComboBoxData typeOfEntityData;
         private ContextMenuStrip entityToolStrip;
         private ToolStripMenuItem addPropertyCommand;
-        private ToolStripMenuItem addAliasCommand;
         private ToolStripMenuItem removeEntityComand;
+        private DataDictionary.Main.Controls.NamedScopeData namedScopeData;
     }
 }
