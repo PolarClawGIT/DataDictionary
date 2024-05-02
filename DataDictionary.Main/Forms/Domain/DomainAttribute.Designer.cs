@@ -372,7 +372,7 @@
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(192, 72);
+            aliasTab.Size = new Size(412, 343);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
@@ -388,7 +388,7 @@
             aliaseLayout.RowCount = 2;
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            aliaseLayout.Size = new Size(186, 66);
+            aliaseLayout.Size = new Size(406, 337);
             aliaseLayout.TabIndex = 1;
             // 
             // aliasesData
@@ -400,7 +400,7 @@
             aliasesData.Location = new Point(3, 3);
             aliasesData.Name = "aliasesData";
             aliasesData.ReadOnly = true;
-            aliasesData.Size = new Size(180, 20);
+            aliasesData.Size = new Size(400, 128);
             aliasesData.TabIndex = 0;
             // 
             // aliaseScopeColumn
@@ -423,14 +423,14 @@
             // namedScopeData
             // 
             namedScopeData.ApplyImage = Properties.Resources.NewSynonym;
-            namedScopeData.ApplyText = "new Alias";
+            namedScopeData.ApplyText = "apply";
             namedScopeData.Dock = DockStyle.Fill;
             namedScopeData.HeaderText = "Alias";
-            namedScopeData.Location = new Point(3, 29);
+            namedScopeData.Location = new Point(3, 137);
             namedScopeData.Name = "namedScopeData";
             namedScopeData.ReadOnly = false;
             namedScopeData.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
-            namedScopeData.Size = new Size(180, 34);
+            namedScopeData.Size = new Size(400, 197);
             namedScopeData.TabIndex = 1;
             namedScopeData.OnApply += NamedScopeData_OnApply;
             // 
