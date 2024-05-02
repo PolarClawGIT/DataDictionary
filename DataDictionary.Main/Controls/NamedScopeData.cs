@@ -1,16 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Main.Forms.Domain.ComboBoxList;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DataDictionary.Main.Controls
 {
@@ -18,7 +9,6 @@ namespace DataDictionary.Main.Controls
     {
         INamedScopeData namedScope = BusinessData.NamedScope;
         Dictionary<ListViewItem, NamedScopeKey> crossRefrence = new Dictionary<ListViewItem, NamedScopeKey>();
-
 
         public String HeaderText { get { return groupBox.Text; } set { groupBox.Text = value; } }
         public String ApplyText { get { return applyCommand.Text; } set { applyCommand.Text = value; } }

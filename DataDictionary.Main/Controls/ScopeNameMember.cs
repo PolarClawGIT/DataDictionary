@@ -2,7 +2,7 @@
 using DataDictionary.Main.Controls;
 using System.ComponentModel;
 
-namespace DataDictionary.Main.Forms.Domain.ComboBoxList
+namespace DataDictionary.Main.Controls
 {
     record ScopeNameMember
     {
