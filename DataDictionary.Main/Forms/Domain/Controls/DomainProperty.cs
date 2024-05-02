@@ -7,6 +7,14 @@ namespace DataDictionary.Main.Forms.Domain.Controls
     partial class DomainProperty : UserControl
     {
         Func<IDomainProperty?> GetCurrent = () => { return null; };
+        public String ApplyText { get { return applyCommand.Text; } set { applyCommand.Text = value; } }
+        public Image? ApplyImage { get { return applyCommand.Image; } set { applyCommand.Image = value; } }
+
+        public Boolean ReadOnly
+        {
+            get { return !propertyLayout.Enabled; }
+            set { propertyLayout.Enabled = !value; }
+        }
 
         public DomainProperty()
         {
@@ -137,6 +145,13 @@ namespace DataDictionary.Main.Forms.Domain.Controls
 
             if (GetCurrent() is IDomainProperty current)
             { current.PropertyValue = value.Trim(); }
+        }
+
+        public event EventHandler? OnApply;
+        private void ApplyCommand_Click(object sender, EventArgs e)
+        {
+            if (OnApply is EventHandler handler)
+            { handler(this, EventArgs.Empty); }
         }
     }
 }
