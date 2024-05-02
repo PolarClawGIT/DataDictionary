@@ -32,6 +32,7 @@
             TableLayoutPanel mainLayout;
             TableLayoutPanel detailsLayout;
             TableLayoutPanel propertyLayout;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DomainEntity));
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             detailTabLayout = new TabControl();
@@ -53,7 +54,6 @@
             bindingProperty = new BindingSource(components);
             bindingEntity = new BindingSource(components);
             entityToolStrip = new ContextMenuStrip(components);
-            addPropertyCommand = new ToolStripMenuItem();
             removeEntityComand = new ToolStripMenuItem();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
@@ -174,7 +174,7 @@
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(192, 72);
+            propertyTab.Size = new Size(412, 343);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -190,7 +190,7 @@
             propertyLayout.RowCount = 2;
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            propertyLayout.Size = new Size(186, 66);
+            propertyLayout.Size = new Size(406, 337);
             propertyLayout.TabIndex = 0;
             // 
             // propertiesData
@@ -202,7 +202,7 @@
             propertiesData.Location = new Point(3, 3);
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
-            propertiesData.Size = new Size(180, 20);
+            propertiesData.Size = new Size(400, 128);
             propertiesData.TabIndex = 1;
             // 
             // propertyIdColumn
@@ -225,11 +225,18 @@
             // 
             // domainProperty
             // 
+            domainProperty.ApplyImage = (Image)resources.GetObject("domainProperty.ApplyImage");
+            domainProperty.ApplyText = "apply";
+            domainProperty.DefinitionText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
             domainProperty.Dock = DockStyle.Fill;
-            domainProperty.Location = new Point(3, 29);
+            domainProperty.Location = new Point(3, 137);
             domainProperty.Name = "domainProperty";
-            domainProperty.Size = new Size(180, 34);
+            domainProperty.PropertyId = new Guid("00000000-0000-0000-0000-000000000000");
+            domainProperty.PropertyValue = "";
+            domainProperty.ReadOnly = false;
+            domainProperty.Size = new Size(400, 197);
             domainProperty.TabIndex = 2;
+            domainProperty.OnApply += DomainProperty_OnApply;
             // 
             // aliasTab
             // 
@@ -317,20 +324,13 @@
             // bindingProperty
             // 
             bindingProperty.AddingNew += BindingProperty_AddingNew;
+            bindingProperty.CurrentChanged += BindingProperty_CurrentChanged;
             // 
             // entityToolStrip
             // 
-            entityToolStrip.Items.AddRange(new ToolStripItem[] { addPropertyCommand, removeEntityComand });
+            entityToolStrip.Items.AddRange(new ToolStripItem[] { removeEntityComand });
             entityToolStrip.Name = "attributeContextMenu";
-            entityToolStrip.Size = new Size(148, 48);
-            // 
-            // addPropertyCommand
-            // 
-            addPropertyCommand.Image = Properties.Resources.NewProperty;
-            addPropertyCommand.Name = "addPropertyCommand";
-            addPropertyCommand.Size = new Size(147, 22);
-            addPropertyCommand.Text = "add Property";
-            addPropertyCommand.Click += AddPropertyCommand_Click;
+            entityToolStrip.Size = new Size(148, 26);
             // 
             // removeEntityComand
             // 
@@ -392,7 +392,6 @@
         private BindingSource bindingEntity;
         private DataDictionary.Main.Controls.ComboBoxData typeOfEntityData;
         private ContextMenuStrip entityToolStrip;
-        private ToolStripMenuItem addPropertyCommand;
         private ToolStripMenuItem removeEntityComand;
         private DataDictionary.Main.Controls.NamedScopeData namedScopeData;
     }

@@ -3,7 +3,7 @@
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IAttributeAliasValue: IDomainAttributeAliasItem, IAttributeIndex
+    public interface IAttributeAliasValue: IDomainAttributeAliasItem, IAttributeIndex, IAliasValue
     { }
 
     /// <inheritdoc/>

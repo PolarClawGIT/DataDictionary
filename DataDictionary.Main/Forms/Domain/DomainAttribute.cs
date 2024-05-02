@@ -66,7 +66,6 @@ namespace DataDictionary.Main.Forms.Domain
 
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
-            domainProperty.BindData(bindingProperty);
 
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
@@ -89,6 +88,9 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingAttribute.Current is AttributeValue current)
             {
                 AttributePropertyValue newItem = new AttributePropertyValue(current);
+                newItem.PropertyId = domainProperty.PropertyId;
+                newItem.PropertyValue = domainProperty.PropertyValue;
+                newItem.DefinitionText = domainProperty.DefinitionText;
                 e.NewObject = newItem;
             }
         }
@@ -104,29 +106,50 @@ namespace DataDictionary.Main.Forms.Domain
             }
         }
 
-        private void AddPropertyCommand_Click(object sender, EventArgs e)
-        {
-            if (detailTabLayout.SelectedTab == propertyTab)
-            {
-                bindingProperty.AddNew();
-                domainProperty.RefreshControls();
-            }
-            else { detailTabLayout.SelectedTab = propertyTab; }
-        }
-
         private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {
-            if (bindingAlias.Current is AttributeAliasValue current)
+            if (bindingAlias.Current is IAliasValue current)
             {
                 NamedScopePath path = new NamedScopePath(current.AliasName);
 
                 namedScopeData.ScopePath = path;
                 namedScopeData.Scope = current.Scope;
             }
-
         }
 
         private void NamedScopeData_OnApply(object sender, EventArgs e)
-        { bindingAlias.AddNew(); }
+        {
+            if (bindingAlias.DataSource is IList<IAliasValue> aliases
+                && aliases.FirstOrDefault(
+                    w => w.Scope == namedScopeData.Scope
+                    && new NamedScopePath(w.AliasName) == namedScopeData.ScopePath)
+                is IAliasValue value)
+            { bindingAlias.Position = aliases.IndexOf(value); }
+            else { bindingAlias.AddNew(); }
+        }
+
+        private void BindingProperty_CurrentChanged(object sender, EventArgs e)
+        {
+            if (bindingProperty.Current is IPropertyValue current)
+            {
+                domainProperty.PropertyId = current.PropertyId ?? Guid.Empty;
+                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty; ;
+                domainProperty.DefinitionText = current.DefinitionText ?? String.Empty;
+            }
+        }
+
+        private void DomainProperty_OnApply(object sender, EventArgs e)
+        {
+            if (bindingProperty.DataSource is IList<IPropertyValue> properties
+                && properties.FirstOrDefault(
+                    w => w.PropertyId == domainProperty.PropertyId)
+                is IPropertyValue value)
+            {
+                value.PropertyValue = domainProperty.PropertyValue;
+                value.DefinitionText = domainProperty.DefinitionText;
+                bindingProperty.Position = properties.IndexOf(value);
+            }
+            else { bindingProperty.AddNew(); }
+        }
     }
 }

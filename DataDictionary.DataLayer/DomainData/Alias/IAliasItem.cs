@@ -1,17 +1,15 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DomainData.Alias;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.DomainData
+namespace DataDictionary.DataLayer.DomainData.Alias
 {
     /// <summary>
-    /// Common Interface for Domain Alias items
+    /// Interface common to Alias Items.
     /// </summary>
-    public interface IDomainAlias: IAliasKeyName, IScopeKey
-    {
-    }
+    public interface IAliasItem : IScopeKey, IAliasKeyName
+    { }
 }

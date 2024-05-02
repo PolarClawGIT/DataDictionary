@@ -9,7 +9,7 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IAttributePropertyValue : IDomainAttributePropertyItem, IPropertyIndex
+    public interface IAttributePropertyValue : IDomainAttributePropertyItem, IPropertyIndex, IPropertyValue
     { }
 
     /// <inheritdoc/>
