@@ -18,13 +18,13 @@ namespace DataDictionary.Main.Controls
         /// <param name="node"></param>
         public static void ExpandParent(this TreeNode node)
         {
-            node.Expand();
-
             if (node.Parent is TreeNode parentNode)
             {
-                parentNode.Expand();
                 parentNode.ExpandParent();
+                parentNode.Expand();
             }
+
+            node.Expand();
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace DataDictionary.Main.Controls
                 {
                     foreach (NamedScopeKey item in expandedNodes)
                     {
-                        var node = valueNodes.FirstOrDefault(w => item.Equals(w.Value));
+                        var node = valueNodes.FirstOrDefault(w => item.Equals(w.Value.GetKey()));
                         if (node.Key is not null && !node.Key.IsExpanded)
                         { node.Key.ExpandParent(); }
                     }
