@@ -630,4 +630,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[InstanceId]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="fbebb6ac-0d6e-4dfc-b012-2a09d7050407" ChangeDateTime="05/06/2024 17:15:18">
+    <Property Name="ElementName" Value="[App_DataDictionary].[funcGetMemberNameSpace]" />
+    <Property Name="ElementType" Value="SqlInlineTableValuedFunction" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[funcGetMemberName]" />
+  </Operation>
 </Operations>

@@ -51,7 +51,7 @@ Begin Try
 				N.[MemberNameSpace],
 				N.[ParentNameSpace]
 		From	[App_DataDictionary].[LibraryMember] M
-				Cross Apply [App_DataDictionary].[funcGetMemberNameSpace](M.[MemberId]) N
+				Cross Apply [App_DataDictionary].[funcGetMemberName](M.[MemberId]) N
 				Left Join [App_DataDictionary].[ModelLibrary] L
 				On	M.[LibraryId] = L.[LibraryId]
 		Where	(@LibraryId is Null Or @LibraryId = M.[LibraryId]) And

@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [App_DataDictionary].[funcGetMemberNameSpace] (@MemberId UniqueIdentifier)
+﻿CREATE FUNCTION [App_DataDictionary].[funcGetMemberName] (@MemberId UniqueIdentifier)
 -- This takes the Library Member Elements and rebuilds them into a fully Qualified Member NameSpace.
 -- NameSpace Name is qualified by square brackets and delimited by periods.
 -- This is based on the SQL Qualified Naming of objects.

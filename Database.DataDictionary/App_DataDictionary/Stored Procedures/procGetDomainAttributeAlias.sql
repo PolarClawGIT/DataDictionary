@@ -7,12 +7,12 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 /* Description: Performs Get on DomainAttributeAlias.
 */
 Select	D.[AttributeId],
-		A.[AliasName],
-		A.[ScopeName]
+		N.[NameSpace] As [AliasName],
+		D.[ScopeName]
 From	[App_DataDictionary].[DomainAttributeAlias] D
+		Cross Apply [App_DataDictionary].[funcGetNameSpace](D.[NameSpaceId]) N
 		Left Join [App_DataDictionary].[ModelAttribute] M
 		On	D.[AttributeId] = M.[AttributeId]
-		Outer Apply [App_DataDictionary].[funcGetAliasName](D.[AliasId]) A
 Where	(@ModelId is Null or @ModelId = M.[ModelId]) And
 		(@AttributeId is Null or @AttributeId = D.[AttributeId])
 GO
