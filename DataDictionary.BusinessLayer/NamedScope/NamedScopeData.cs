@@ -13,7 +13,6 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Interface for NamedScopeData
     /// </summary>
-    /// </summary>
     public interface INamedScopeData
     {
         /// <summary>

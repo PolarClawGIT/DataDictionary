@@ -89,24 +89,14 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <summary>
         /// Constructor for a NamedScope Path
         /// </summary>
-        protected NamedScopePath() : base() { }
+        /// <remarks>This is blank.</remarks>
+        public NamedScopePath() : base() { }
 
         /// <summary>
         /// Constructor for a NamedScope Path
         /// </summary>
         /// <param name="source"></param>
-        public NamedScopePath(INamedScopePath source) : this()
-        {
-            if (source is NamedScopePath value)
-            { pathParts.AddRange(value.pathParts); }
-            else { pathParts.AddRange(Parse(source.MemberFullPath)); }
-        }
-
-        /// <summary>
-        /// Constructor for a NamedScope Path
-        /// </summary>
-        /// <param name="source"></param>
-        /// <remarks>This version does not parse the strings.</remarks>
+        /// <remarks>This version takes pre-parsed strings to build the Path.</remarks>
         public NamedScopePath(params String?[] source)
         {
             foreach (String? item in source)
@@ -119,6 +109,17 @@ namespace DataDictionary.BusinessLayer.NamedScope
                     { pathParts.AddRange(Parse(item)); }
                 }
             }
+        }
+
+        /// <summary>
+        /// Constructor for a NamedScope Path
+        /// </summary>
+        /// <param name="source"></param>
+        /// <remarks>This version allows multiple paths to be combined.</remarks>
+        public NamedScopePath(params INamedScopePath[] source)
+        {
+            foreach (NamedScopePath item in source)
+            { this.pathParts.AddRange(item.pathParts); }
         }
 
         /// <summary>

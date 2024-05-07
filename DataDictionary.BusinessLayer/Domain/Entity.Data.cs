@@ -255,10 +255,40 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <remarks>Entity</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            if (Model.Models.FirstOrDefault() is ModelValue model)
-            { return this.Select(s => new NamedScopePair(model.GetKey(), s)); }
-            else { return this.Select(s => new NamedScopePair(s)); }
+            List<NamedScopePair> result = new List<NamedScopePair>();
+
+            ModelValue? model = Model.Models.FirstOrDefault();
+
+            foreach (EntityValue entity in this)
+            {
+                EntityIndex EntityKey = new EntityIndex(entity);
+                Boolean hasSubjectArea = false;
+
+                foreach (EntitySubjectAreaValue subjectArea in subjectAreaValues.Where(w => EntityKey.Equals(w)))
+                {
+                    hasSubjectArea = true;
+                    SubjectAreaIndex subjectKey = new SubjectAreaIndex(subjectArea);
+
+                    if (Model.SubjectAreas.FirstOrDefault(w => subjectKey.Equals(w)) is SubjectAreaValue subject)
+                    {
+                        result.Add(new NamedScopePair(subject.GetKey(), entity)
+                        { GetPath = () => { return new NamedScopePath(subject.GetPath(), entity.GetPath()); } });
+                    }
+                }
+
+                if (!hasSubjectArea && model is not null)
+                {
+                    result.Add(new NamedScopePair(model.GetKey(), entity)
+                    { GetPath = () => { return new NamedScopePath(model.GetPath(), entity.GetPath()); } });
+                }
+                else if (!hasSubjectArea && model is null)
+                { new NamedScopePair(entity); }
+
+            }
+
+            return result;
         }
+
 
     }
 }

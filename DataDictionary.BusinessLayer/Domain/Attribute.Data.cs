@@ -271,10 +271,40 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <remarks>Attribute</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
-            if (Model.Models.FirstOrDefault() is ModelValue model)
-            { return this.Select(s => new NamedScopePair(model.GetKey(), s)); }
-            else { return this.Select(s => new NamedScopePair(s)); }
+            List<NamedScopePair> result = new List<NamedScopePair>();
+
+            ModelValue? model = Model.Models.FirstOrDefault();
+
+            foreach (AttributeValue attribute in this)
+            {
+                AttributeIndex attributeKey = new AttributeIndex(attribute);
+                Boolean hasSubjectArea = false;
+
+                foreach (AttributeSubjectAreaValue subjectArea in subjectAreaValues.Where(w => attributeKey.Equals(w)))
+                {
+                    hasSubjectArea = true;
+                    SubjectAreaIndex subjectKey = new SubjectAreaIndex(subjectArea);
+
+                    if (Model.SubjectAreas.FirstOrDefault(w => subjectKey.Equals(w)) is SubjectAreaValue subject)
+                    {
+                        result.Add(new NamedScopePair(subject.GetKey(), attribute)
+                        { GetPath = () => { return new NamedScopePath(subject.GetPath(), attribute.GetPath()); } });
+                    }
+                }
+
+                if (!hasSubjectArea && model is not null)
+                {
+                    result.Add(new NamedScopePair(model.GetKey(), attribute)
+                    { GetPath = () => { return new NamedScopePath(model.GetPath(), attribute.GetPath()); } });
+                }
+                else if (!hasSubjectArea && model is null)
+                { new NamedScopePair(attribute); }
+
+            }
+
+            return result;
         }
+
 
 
         public XElement? GetXElement(IAttributeIndex key, IEnumerable<SchemaElementValue>? options = null)

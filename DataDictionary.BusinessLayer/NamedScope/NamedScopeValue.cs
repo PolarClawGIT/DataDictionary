@@ -63,9 +63,13 @@ namespace DataDictionary.BusinessLayer.NamedScope
     {
         public NamedScopeKey? ParentKey { get; } = null;
         public INamedScopeValue Value { get; }
+        public Func<NamedScopePath> GetPath { get; init; }
 
         public NamedScopePair(INamedScopeValue value)
-        { this.Value = value; }
+        {
+            this.Value = value;
+            GetPath = value.GetPath;
+        }
 
         public NamedScopePair(NamedScopeKey parent, INamedScopeValue value) : this(value)
         { this.ParentKey = parent; }
