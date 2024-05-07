@@ -36,6 +36,11 @@ namespace DataDictionary.BusinessLayer.Domain
         /// List of Domain Properties for the Attributes within the Model.
         /// </summary>
         IAttributePropertyData Properties { get; }
+
+        /// <summary>
+        /// List of Subject Areas for the Attributes within the Model.
+        /// </summary>
+        IAttributeSubjectAreaData SubjectArea { get; }
     }
 
     class AttributeData : DomainAttributeCollection<AttributeValue>, IAttributeData,
@@ -52,10 +57,15 @@ namespace DataDictionary.BusinessLayer.Domain
         public IAttributePropertyData Properties { get { return propertyValues; } }
         private readonly AttributePropertyData propertyValues;
 
+        /// <inheritdoc/>
+        public IAttributeSubjectAreaData SubjectArea { get { return subjectAreaValues; } }
+        private readonly AttributeSubjectAreaData subjectAreaValues;
+
         public AttributeData() : base()
         {
             aliasValues = new AttributeAliasData();
             propertyValues = new AttributePropertyData() { Attributes = this };
+            subjectAreaValues = new AttributeSubjectAreaData();
         }
 
         /// <inheritdoc/>
@@ -66,6 +76,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateLoad(this, dataKey));
             work.Add(factory.CreateLoad(aliasValues, dataKey));
             work.Add(factory.CreateLoad(propertyValues, dataKey));
+            work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
             return work;
         }
 
@@ -82,6 +93,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateLoad(this, dataKey));
             work.Add(factory.CreateLoad(aliasValues, dataKey));
             work.Add(factory.CreateLoad(propertyValues, dataKey));
+            work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
             return work;
         }
 
@@ -93,6 +105,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateSave(this, dataKey));
             work.Add(factory.CreateSave(aliasValues, dataKey));
             work.Add(factory.CreateSave(propertyValues, dataKey));
+            work.Add(factory.CreateSave(subjectAreaValues, dataKey));
             return work;
         }
 
@@ -109,6 +122,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateSave(this, dataKey));
             work.Add(factory.CreateSave(aliasValues, dataKey));
             work.Add(factory.CreateSave(propertyValues, dataKey));
+            work.Add(factory.CreateSave(subjectAreaValues, dataKey));
             return work;
         }
 
@@ -119,6 +133,7 @@ namespace DataDictionary.BusinessLayer.Domain
             DomainAttributeKey key = new DomainAttributeKey(attributeItem);
             aliasValues.Remove(key);
             propertyValues.Remove(key);
+            subjectAreaValues.Remove(key);
         }
 
         /// <inheritdoc/>
@@ -133,6 +148,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 {
                     aliasValues.Clear();
                     propertyValues.Clear();
+                    subjectAreaValues.Clear();
                     this.Clear();
                 }
             });
@@ -148,6 +164,7 @@ namespace DataDictionary.BusinessLayer.Domain
             result.Add(this.ToDataTable());
             result.Add(aliasValues.ToDataTable());
             result.Add(propertyValues.ToDataTable());
+            result.Add(subjectAreaValues.ToDataTable());
             return result;
         }
 
@@ -158,6 +175,7 @@ namespace DataDictionary.BusinessLayer.Domain
             this.Load(source);
             aliasValues.Load(source);
             propertyValues.Load(source);
+            subjectAreaValues.Load(source);
         }
 
         /// <inheritdoc/>

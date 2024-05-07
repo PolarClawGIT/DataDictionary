@@ -37,6 +37,9 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         public required IPropertyData ModelProperty { get; init; }
 
+        /// <inheritdoc/>
+        public required ISubjectAreaData SubjectAreas { get; init; }
+
         /// <summary>
         /// Reference to the containing Model
         /// </summary>
