@@ -17,4 +17,15 @@ namespace DataDictionary.BusinessLayer.Model
         /// <inheritdoc cref="ModelSubjectAreaKey(IModelSubjectAreaKey)"/>
         public SubjectAreaIndex(ISubjectAreaIndex source) : base(source) { }
     }
+
+    /// <inheritdoc/>
+    public interface ISubjectAreaIndexName :IModelSubjectAreaUniqueKey
+    { }
+
+    /// <inheritdoc/>
+    public class SubjectAreaIndexName : ModelSubjectAreaUniqueKey
+    {
+        /// <inheritdoc cref="ModelSubjectAreaUniqueKey(IModelSubjectAreaUniqueKey)"/>
+        public SubjectAreaIndexName(ISubjectAreaIndexName source) : base(source) { }
+    }
 }
