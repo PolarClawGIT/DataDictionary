@@ -1,11 +1,8 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
-using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.LibraryData.Member;
 using System.Data;
 using System.Runtime.Serialization;
-using System.Text;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.DomainData.Entity
@@ -24,23 +21,26 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     {
         /// <inheritdoc/>
         public Guid? EntityId
-        { get { return GetValue<Guid>("EntityId"); } protected set { SetValue("EntityId", value); } }
+        { get { return GetValue<Guid>(nameof(EntityId)); } protected set { SetValue(nameof(EntityId), value); } }
 
         /// <inheritdoc/>
-        public string? AliasName { get { return GetValue("AliasName"); } set { SetValue("AliasName", value); } }
+        public String? AliasName { get { return GetValue(nameof(AliasName)); } set { SetValue(nameof(AliasName), value); } }
 
         /// <inheritdoc/>
         public ScopeType Scope
         {
-            get { return ScopeKey.Parse(GetValue("ScopeName") ?? String.Empty).Scope; }
-            set {SetValue("ScopeName", value.ToName()); OnPropertyChanged(nameof(Scope)); }
+            get { return ScopeKey.Parse(ScopeName ?? String.Empty).Scope; }
+            set { ScopeName = value.ToName(); OnPropertyChanged(nameof(Scope)); }
         }
+
+        /// <inheritdoc cref="IScopeKey.Scope"/>
+        protected String? ScopeName { get { return GetValue(nameof(ScopeName)); } set { SetValue(nameof(ScopeName), value); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("EntityId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("AliasName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ScopeName", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(EntityId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(AliasName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ScopeName), typeof(String)){ AllowDBNull = true},
         };
 
         /// <summary>

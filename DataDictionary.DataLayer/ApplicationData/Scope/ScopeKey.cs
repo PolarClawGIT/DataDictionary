@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     public interface IScopeKey : IKey
     {
         /// <summary>
-        /// ScopeType for the Item. Primary Key for ScopeItem
+        /// ScopeType for the Item.
         /// </summary>
         ScopeType Scope { get; }
     }

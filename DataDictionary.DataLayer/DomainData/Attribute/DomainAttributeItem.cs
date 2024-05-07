@@ -90,22 +90,22 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// <inheritdoc/>
         public Guid? AttributeId
         {
-            get { return GetValue<Guid>("AttributeId"); }
-            protected set { SetValue("AttributeId", value); }
+            get { return GetValue<Guid>(nameof(AttributeId)); }
+            protected set { SetValue(nameof(AttributeId), value); }
         }
 
         /// <inheritdoc/>
         public string? AttributeTitle
         {
-            get { return GetValue("AttributeTitle"); }
-            set { SetValue("AttributeTitle", value); }
+            get { return GetValue(nameof(AttributeTitle)); }
+            set { SetValue(nameof(AttributeTitle), value); }
         }
 
         /// <inheritdoc/>
         public string? AttributeDescription
         {
-            get { return GetValue("AttributeDescription"); }
-            set { SetValue("AttributeDescription", value); }
+            get { return GetValue(nameof(AttributeDescription)); }
+            set { SetValue(nameof(AttributeDescription), value); }
         }
 
         /// <inheritdoc/>
@@ -114,15 +114,15 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// <inheritdoc/>
         public Guid? TypeOfAttributeId
         {
-            get { return GetValue<Guid>("TypeOfAttributeId"); }
-            set { SetValue("TypeOfAttributeId", value); }
+            get { return GetValue<Guid>(nameof(TypeOfAttributeId)); }
+            set { SetValue(nameof(TypeOfAttributeId), value); }
         }
 
         /// <inheritdoc/>
         public String? TypeOfAttributeTitle
         {
-            get { return GetValue("TypeOfAttributeTitle"); }
-            set { SetValue("TypeOfAttributeTitle", value); }
+            get { return GetValue(nameof(TypeOfAttributeTitle)); }
+            set { SetValue(nameof(TypeOfAttributeTitle), value); }
         }
 
         /// <inheritdoc/>
@@ -130,13 +130,13 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             get
             {
-                if (GetValue<bool>("IsSingleValue", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<bool>(nameof(IsSingleValue), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
             {
-                SetValue<Boolean>("IsSingleValue", value);
-                if (value == true) { SetValue<Boolean>("IsMultiValue", !value); }
+                SetValue<Boolean>(nameof(IsSingleValue), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsMultiValue), !value); }
             }
         }
 
@@ -145,13 +145,13 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             get
             {
-                if (GetValue<bool>("IsMultiValue", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<bool>(nameof(IsMultiValue), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
             {
-                SetValue<Boolean>("IsMultiValue", value);
-                if (value == true) { SetValue<Boolean>("IsSingleValue", !value); }
+                SetValue<Boolean>(nameof(IsMultiValue), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsSingleValue), !value); }
             }
         }
 
@@ -160,13 +160,13 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             get
             {
-                if (GetValue<bool>("IsSimpleType", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<bool>(nameof(IsSimpleType), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
             {
-                SetValue<Boolean>("IsSimpleType", value);
-                if (value == true) { SetValue<Boolean>("IsCompositeType", !value); }
+                SetValue<Boolean>(nameof(IsSimpleType), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsCompositeType), !value); }
             }
         }
 
@@ -175,13 +175,13 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             get
             {
-                if (GetValue<bool>("IsCompositeType", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<bool>(nameof(IsCompositeType), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
             {
-                SetValue<Boolean>("IsCompositeType", value);
-                if (value == true) { SetValue<Boolean>("IsSimpleType", !value); }
+                SetValue<Boolean>(nameof(IsCompositeType), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsSimpleType), !value); }
             }
         }
 
@@ -190,13 +190,13 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             get
             {
-                if (GetValue<bool>("IsIntegral", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<bool>(nameof(IsIntegral), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
             {
-                SetValue<Boolean>("IsIntegral", value);
-                if (value == true) { SetValue<Boolean>("IsDerived", !value); }
+                SetValue<Boolean>(nameof(IsIntegral), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsDerived), !value); }
             }
         }
 
@@ -205,13 +205,13 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             get
             {
-                if (GetValue<bool>("IsDerived", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<bool>(nameof(IsDerived), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
             {
-                SetValue<Boolean>("IsDerived", value);
-                if (value == true) { SetValue<Boolean>("IsIntegral", !value); }
+                SetValue<Boolean>(nameof(IsDerived), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsIntegral), !value); }
             }
         }
 
@@ -220,13 +220,13 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             get
             {
-                if (GetValue<bool>("IsValued", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<bool>(nameof(IsValued), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
             {
-                SetValue<Boolean>("IsValued", value);
-                if (value == true) { SetValue<Boolean>("IsNullable", !value); }
+                SetValue<Boolean>(nameof(IsValued), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsNullable), !value); }
             }
         }
 
@@ -235,13 +235,13 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             get
             {
-                if (GetValue<bool>("IsNullable", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<bool>(nameof(IsNullable), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
             {
-                SetValue<Boolean>("IsNullable", value);
-                if (value == true) { SetValue<Boolean>("IsValued", !value); }
+                SetValue<Boolean>(nameof(IsNullable), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsValued), !value); }
             }
         }
 
@@ -252,13 +252,13 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             get
             {
-                if (GetValue<bool>("IsKey", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<bool>(nameof(IsKey), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
             {
-                SetValue<Boolean>("IsKey", value);
-                if (value == true) { SetValue<Boolean>("IsNonKey", !value); }
+                SetValue<Boolean>(nameof(IsKey), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsNonKey), !value); }
             }
         }
 
@@ -267,13 +267,13 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             get
             {
-                if (GetValue<bool>("IsNonKey", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<bool>(nameof(IsNonKey), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
             {
-                SetValue<Boolean>("IsNonKey", value);
-                if (value == true) { SetValue<Boolean>("IsKey", !value); }
+                SetValue<Boolean>(nameof(IsNonKey), value);
+                if (value == true) { SetValue<Boolean>(nameof(IsKey), !value); }
             }
         }
 
@@ -288,21 +288,21 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("AttributeTitle", typeof(string)){ AllowDBNull = false},
-            new DataColumn("AttributeDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("TypeOfAttributeId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("TypeOfAttributeTitle", typeof(string)){ AllowDBNull = true},
-            new DataColumn("IsSingleValue", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsMultiValue", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsSimpleType", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsCompositeType", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsIntegral", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsDerived", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsValued", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsNullable", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsKey", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsNonKey", typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(AttributeTitle), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(AttributeDescription), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(TypeOfAttributeId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(TypeOfAttributeTitle), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(IsSingleValue), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsMultiValue), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsSimpleType), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsCompositeType), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsIntegral), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsDerived), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsValued), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsNullable), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsKey), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsNonKey), typeof(bool)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

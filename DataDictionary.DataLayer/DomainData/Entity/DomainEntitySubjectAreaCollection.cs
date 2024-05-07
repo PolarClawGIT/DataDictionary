@@ -11,30 +11,30 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.DomainData.Entity
 {
     /// <summary>
-    /// Generic Base class for Domain Entity's
+    /// Generic Base class for Domain Entity Subject Area
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DomainEntityCollection<TItem> : BindingTable<TItem>,
+    public abstract class DomainEntitySubjectAreaCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDomainEntityKey>,
         IWriteData<IModelKey>, IWriteData<IDomainEntityKey>,
-        IDeleteData<IDomainEntityKey>, IDeleteData<IModelKey>,
+        IDeleteData<IModelKey>, IDeleteData<IDomainEntityKey>,
         IRemoveItem<IDomainEntityKey>
-        where TItem : BindingTableRow, IDomainEntityItem, new()
+        where TItem : BindingTableRow, IDomainEntitySubjectAreaItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
         { return LoadCommand(connection, (modelId.ModelId, null)); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IDomainEntityKey entityKey)
-        { return LoadCommand(connection, (null, entityKey.EntityId)); }
+        public Command LoadCommand(IConnection connection, IDomainEntityKey EntityKey)
+        { return LoadCommand(connection, (null, EntityKey.EntityId)); }
 
         Command LoadCommand(IConnection connection, (Guid? modelId, Guid? EntityId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDomainEntity]";
+            command.CommandText = "[App_DataDictionary].[procGetDomainEntitySubjectArea]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@EntityId", parameters.EntityId);
             return command;
@@ -45,19 +45,19 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         { return SaveCommand(connection, (modelId.ModelId, null)); }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, IDomainEntityKey entityKey)
-        { return SaveCommand(connection, (null, entityKey.EntityId)); }
+        public Command SaveCommand(IConnection connection, IDomainEntityKey EntityKey)
+        { return SaveCommand(connection, (null, EntityKey.EntityId)); }
 
         Command SaveCommand(IConnection connection, (Guid? modelId, Guid? EntityId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDomainEntity]";
+            command.CommandText = "[App_DataDictionary].[procSetDomainEntitySubjectArea]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@EntityId", parameters.EntityId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.EntityId is null || w.EntityId == parameters.EntityId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainEntity]", data);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainEntitySubjectArea]", data);
             return command;
         }
 
@@ -67,13 +67,13 @@ namespace DataDictionary.DataLayer.DomainData.Entity
 
         /// <inheritdoc/>
         public Command DeleteCommand(IConnection connection, IModelKey parameters)
-        { return DeleteCommand(connection, (null, parameters.ModelId)); }
+        { return DeleteCommand(connection, (parameters.ModelId, null)); }
 
         Command DeleteCommand(IConnection connection, (Guid? modelId, Guid? EntityId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procDeleteDomainEntity]";
+            command.CommandText = "[App_DataDictionary].[procSetDomainEntity]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@EntityId", parameters.EntityId);
 
@@ -81,9 +81,9 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         }
 
         /// <inheritdoc/>
-        public virtual void Remove(IDomainEntityKey entityItem)
+        public virtual void Remove(IDomainEntityKey EntityItem)
         {
-            DomainEntityKey key = new DomainEntityKey(entityItem);
+            DomainEntityKey key = new DomainEntityKey(EntityItem);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

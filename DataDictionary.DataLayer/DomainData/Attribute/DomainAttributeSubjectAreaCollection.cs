@@ -6,33 +6,32 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.DomainData.Attribute
 {
     /// <summary>
-    /// Generic Base class for Domain Attributes
+    /// Generic Base class for Domain Attribute Subject Area
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DomainAttributeCollection<TItem> : BindingTable<TItem>,
+    public abstract class DomainAttributeSubjectAreaCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDomainAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IDomainAttributeKey>,
         IDeleteData<IModelKey>, IDeleteData<IDomainAttributeKey>,
         IRemoveItem<IDomainAttributeKey>
-        where TItem : BindingTableRow, IDomainAttributeItem, new()
+        where TItem : BindingTableRow, IDomainAttributeSubjectAreaItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
-        { return LoadCommand(connection, (modelId.ModelId, null, null)); }
+        { return LoadCommand(connection, (modelId.ModelId, null)); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IDomainAttributeKey attributeKey)
-        { return LoadCommand(connection, (null, attributeKey.AttributeId, null)); }
+        { return LoadCommand(connection, (null, attributeKey.AttributeId)); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? attributeId, string? attributeTitle) parameters)
+        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? attributeId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDomainAttribute]";
+            command.CommandText = "[App_DataDictionary].[procGetDomainAttributeSubjectArea]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@AttributeId", parameters.attributeId);
-            command.AddParameter("@AttributeTitle", parameters.attributeTitle);
             return command;
         }
 
@@ -48,12 +47,12 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDomainAttribute]";
+            command.CommandText = "[App_DataDictionary].[procSetDomainAttributeSubjectArea]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@AttributeId", parameters.attributeId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.attributeId is null || w.AttributeId == parameters.attributeId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttribute]", data);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttributeSubjectArea]", data);
             return command;
         }
 
