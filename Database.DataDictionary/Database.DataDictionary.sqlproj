@@ -246,6 +246,10 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetModelNameSpace.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttributeSubjectArea.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetDomainEntitySubjectArea.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainAttributeSubjectArea.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainEntitySubjectArea.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeSubjectArea.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntitySubjectArea.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

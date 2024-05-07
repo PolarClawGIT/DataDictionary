@@ -13,7 +13,8 @@ From	[App_DataDictionary].[ModelAttribute] D
 		Inner Join [App_DataDictionary].[ModelSubjectArea] S
 		On	D.[SubjectAreaId] = S.[SubjectAreaId]
 		Cross Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) N
-Where	(@ModelId is Null or @ModelId = D.[ModelId]) And
+Where	D.[SubjectAreaId] is Not Null And
+		(@ModelId is Null or @ModelId = D.[ModelId]) And
 		(@AttributeId is Null or @AttributeId = D.[AttributeId]) And
 		(@SubjectAreaId is Null or @SubjectAreaId = D.[SubjectAreaId])
 GO
