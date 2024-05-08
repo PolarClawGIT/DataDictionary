@@ -448,7 +448,7 @@
             subjectAreaTab.Controls.Add(subjectAreaData);
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
-            subjectAreaTab.Size = new Size(192, 72);
+            subjectAreaTab.Size = new Size(412, 343);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -459,11 +459,12 @@
             subjectAreaData.Dock = DockStyle.Fill;
             subjectAreaData.Location = new Point(0, 0);
             subjectAreaData.Name = "subjectAreaData";
-            subjectAreaData.Size = new Size(192, 72);
+            subjectAreaData.Size = new Size(412, 343);
             subjectAreaData.TabIndex = 0;
             subjectAreaData.UseCompatibleStateImageBehavior = false;
             subjectAreaData.View = View.Details;
             subjectAreaData.ItemChecked += SubjectAreaData_ItemChecked;
+            subjectAreaData.Resize += subjectAreaData_Resize;
             // 
             // subjectAreaColumn
             // 

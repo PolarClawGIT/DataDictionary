@@ -191,5 +191,11 @@ namespace DataDictionary.Main.Forms.Domain
                 e.NewObject = newItem;
             }
         }
+
+        private void subjectAreaData_Resize(object sender, EventArgs e)
+        {
+            subjectAreaColumn.Width = ((Int32)Math.Round(subjectAreaData.Width * 0.4));
+            subjectNameSpaceColumn.Width = ((Int32)Math.Round(subjectAreaData.Width * 0.6));
+        }
     }
 }
