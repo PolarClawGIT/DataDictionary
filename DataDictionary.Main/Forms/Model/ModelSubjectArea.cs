@@ -14,12 +14,12 @@ namespace DataDictionary.Main.Forms.Model
         public ModelSubjectArea() : base()
         {
             InitializeComponent();
-            toolStrip.TransferItems(subjectAreaToolStrip,0);
+            toolStrip.TransferItems(subjectAreaToolStrip, 0);
         }
 
         public ModelSubjectArea(ISubjectAreaValue? subjectAreaItem) : this()
         {
-            if(subjectAreaItem is null)
+            if (subjectAreaItem is null)
             {
                 subjectAreaItem = new SubjectAreaValue();
                 BusinessData.SubjectAreas.Add(subjectAreaItem);
@@ -75,6 +75,12 @@ namespace DataDictionary.Main.Forms.Model
 
                 RowState = current.RowState();
             }
+        }
+
+        private void SubjectAreaNameSpaceData_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(subjectAreaNameSpaceData.Text).ToArray());
+            subjectAreaNameSpaceData.Text = path.MemberFullPath;
         }
     }
 }

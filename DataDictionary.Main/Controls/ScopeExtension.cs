@@ -42,8 +42,8 @@ namespace DataDictionary.Main.Controls
             {ScopeType.DatabaseFunctionParameter,        new ScopeSetting(Resources.Parameter, Resources.Icon_Parameter) },
 
             {ScopeType.Model,                            new ScopeSetting(Resources.SoftwareDefinitionModel, Resources.Icon_SoftwareDefinitionModel) { GroupByScope = false}},
-            {ScopeType.ModelNameSpace,                   new ScopeSetting(Resources.Namespace, Resources.Icon_Namespace) },
-            {ScopeType.ModelSubjectArea,                 new ScopeSetting(Resources.Diagram, Resources.Icon_Diagram) },
+            {ScopeType.ModelNameSpace,                   new ScopeSetting(Resources.Namespace, Resources.Icon_Namespace) { GroupByScope = false}},
+            {ScopeType.ModelSubjectArea,                 new ScopeSetting(Resources.Diagram, Resources.Icon_Diagram) { GroupByScope = false}},
 
             {ScopeType.ModelAttribute,                   new ScopeSetting(Resources.Attribute, Resources.Icon_Attribute) },
             {ScopeType.ModelAttributeAlias,              new ScopeSetting(Resources.Synonym, Resources.Icon_Attribute) },

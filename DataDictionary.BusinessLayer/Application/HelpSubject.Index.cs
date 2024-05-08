@@ -26,7 +26,7 @@ namespace DataDictionary.BusinessLayer.Application
     /// <inheritdoc/>
     public class HelpSubjectIndexPath : NamedScopePath
     {
-        /// <inheritdoc cref="NamedScopePath(INamedScopePath)"/>
+        /// <inheritdoc cref="NamedScopePath.NamedScopePath(INamedScopePath[])"/>
         public HelpSubjectIndexPath(IHelpSubjectIndexPath source) : base(source) 
         { }
 

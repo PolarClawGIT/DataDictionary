@@ -28,7 +28,7 @@ namespace DataDictionary.BusinessLayer.Model
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(Scope); }
+        { return new NamedScopePath(NamedScopePath.Parse(SubjectAreaNameSpace).ToArray()); }
 
         /// <inheritdoc/>
         public virtual String GetTitle()

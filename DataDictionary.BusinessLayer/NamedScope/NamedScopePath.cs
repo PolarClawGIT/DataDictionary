@@ -72,7 +72,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <summary>
         /// Parent NameSpace Key for the current item.
         /// </summary>
-        protected NamedScopePath? ParentKey
+        public NamedScopePath? ParentKey
         {
             get
             {
@@ -97,6 +97,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <param name="source"></param>
         /// <remarks>This version takes pre-parsed strings to build the Path.</remarks>
+        /// <example>
+        /// var x new NamedScopePath(NamedScopePath.Parse(sourceString).ToArray())
+        /// </example>
         public NamedScopePath(params String?[] source)
         {
             foreach (String? item in source)
