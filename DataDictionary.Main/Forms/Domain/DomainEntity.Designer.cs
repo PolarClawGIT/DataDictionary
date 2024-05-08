@@ -33,6 +33,7 @@
             TableLayoutPanel detailsLayout;
             TableLayoutPanel propertyLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DomainEntity));
+            BusinessLayer.NamedScope.NamedScopePath namedScopePath2 = new BusinessLayer.NamedScope.NamedScopePath();
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             detailTabLayout = new TabControl();
@@ -50,11 +51,15 @@
             aliasNameColumn = new DataGridViewTextBoxColumn();
             namedScopeData = new DataDictionary.Main.Controls.NamedScopeData();
             subjectAreaTab = new TabPage();
+            subjectAreaData = new ListView();
+            subjectAreaColumn = new ColumnHeader();
+            subjectNameSpaceColumn = new ColumnHeader();
             bindingAlias = new BindingSource(components);
             bindingProperty = new BindingSource(components);
             bindingEntity = new BindingSource(components);
             entityToolStrip = new ContextMenuStrip(components);
             removeEntityComand = new ToolStripMenuItem();
+            bindingSubjectArea = new BindingSource(components);
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
@@ -68,10 +73,12 @@
             aliasTab.SuspendLayout();
             aliaseLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)aliasesData).BeginInit();
+            subjectAreaTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).BeginInit();
             entityToolStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).BeginInit();
             SuspendLayout();
             // 
             // mainLayout
@@ -174,7 +181,7 @@
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(412, 343);
+            propertyTab.Size = new Size(192, 72);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -190,7 +197,7 @@
             propertyLayout.RowCount = 2;
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            propertyLayout.Size = new Size(406, 337);
+            propertyLayout.Size = new Size(186, 66);
             propertyLayout.TabIndex = 0;
             // 
             // propertiesData
@@ -202,7 +209,7 @@
             propertiesData.Location = new Point(3, 3);
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
-            propertiesData.Size = new Size(400, 128);
+            propertiesData.Size = new Size(180, 20);
             propertiesData.TabIndex = 1;
             // 
             // propertyIdColumn
@@ -229,12 +236,12 @@
             domainProperty.ApplyText = "apply";
             domainProperty.DefinitionText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
             domainProperty.Dock = DockStyle.Fill;
-            domainProperty.Location = new Point(3, 137);
+            domainProperty.Location = new Point(3, 29);
             domainProperty.Name = "domainProperty";
             domainProperty.PropertyId = new Guid("00000000-0000-0000-0000-000000000000");
             domainProperty.PropertyValue = "";
             domainProperty.ReadOnly = false;
-            domainProperty.Size = new Size(400, 197);
+            domainProperty.Size = new Size(180, 34);
             domainProperty.TabIndex = 2;
             domainProperty.OnApply += DomainProperty_OnApply;
             // 
@@ -245,7 +252,7 @@
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(412, 343);
+            aliasTab.Size = new Size(192, 72);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
@@ -261,7 +268,7 @@
             aliaseLayout.RowCount = 2;
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            aliaseLayout.Size = new Size(406, 337);
+            aliaseLayout.Size = new Size(186, 66);
             aliaseLayout.TabIndex = 1;
             // 
             // aliasesData
@@ -273,7 +280,7 @@
             aliasesData.Location = new Point(3, 3);
             aliasesData.Name = "aliasesData";
             aliasesData.ReadOnly = true;
-            aliasesData.Size = new Size(400, 128);
+            aliasesData.Size = new Size(180, 20);
             aliasesData.TabIndex = 0;
             // 
             // aliaseScopeColumn
@@ -299,22 +306,46 @@
             namedScopeData.ApplyText = "apply";
             namedScopeData.Dock = DockStyle.Fill;
             namedScopeData.HeaderText = "Alias";
-            namedScopeData.Location = new Point(3, 137);
+            namedScopeData.Location = new Point(3, 29);
             namedScopeData.Name = "namedScopeData";
             namedScopeData.ReadOnly = false;
             namedScopeData.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
-            namedScopeData.Size = new Size(400, 197);
+            namedScopeData.ScopePath = namedScopePath2;
+            namedScopeData.Size = new Size(180, 34);
             namedScopeData.TabIndex = 1;
             namedScopeData.OnApply += NamedScopeData_OnApply;
             // 
             // subjectAreaTab
             // 
             subjectAreaTab.BackColor = SystemColors.Control;
+            subjectAreaTab.Controls.Add(subjectAreaData);
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
-            subjectAreaTab.Size = new Size(192, 72);
+            subjectAreaTab.Size = new Size(412, 343);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
+            // 
+            // subjectAreaData
+            // 
+            subjectAreaData.CheckBoxes = true;
+            subjectAreaData.Columns.AddRange(new ColumnHeader[] { subjectAreaColumn, subjectNameSpaceColumn });
+            subjectAreaData.Dock = DockStyle.Fill;
+            subjectAreaData.Location = new Point(0, 0);
+            subjectAreaData.Name = "subjectAreaData";
+            subjectAreaData.Size = new Size(412, 343);
+            subjectAreaData.TabIndex = 1;
+            subjectAreaData.UseCompatibleStateImageBehavior = false;
+            subjectAreaData.View = View.Details;
+            subjectAreaData.ItemChecked += subjectAreaData_ItemChecked;
+            subjectAreaData.Resize += subjectAreaData_Resize;
+            // 
+            // subjectAreaColumn
+            // 
+            subjectAreaColumn.Text = "Subject Area";
+            // 
+            // subjectNameSpaceColumn
+            // 
+            subjectNameSpaceColumn.Text = "NameSpace";
             // 
             // bindingAlias
             // 
@@ -340,6 +371,10 @@
             removeEntityComand.Text = "remove Entity";
             removeEntityComand.Click += DeleteItemCommand_Click;
             // 
+            // bindingSubjectArea
+            // 
+            bindingSubjectArea.AddingNew += bindingSubjectArea_AddingNew;
+            // 
             // DomainEntity
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -362,10 +397,12 @@
             aliasTab.ResumeLayout(false);
             aliaseLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)aliasesData).EndInit();
+            subjectAreaTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).EndInit();
             entityToolStrip.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -394,5 +431,9 @@
         private ContextMenuStrip entityToolStrip;
         private ToolStripMenuItem removeEntityComand;
         private DataDictionary.Main.Controls.NamedScopeData namedScopeData;
+        private ListView subjectAreaData;
+        private ColumnHeader subjectAreaColumn;
+        private ColumnHeader subjectNameSpaceColumn;
+        private BindingSource bindingSubjectArea;
     }
 }
