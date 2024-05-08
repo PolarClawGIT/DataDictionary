@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.Forms.Domain
+﻿namespace DataDictionary.Main.Forms.Model
 {
     partial class ModelSubjectArea
     {

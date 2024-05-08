@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Subject Areas for the Model
         /// </summary>
-        public ISubjectAreaData ModelSubjectAreas { get { return subjectAreaValues; } }
+        public ISubjectAreaData SubjectAreas { get { return subjectAreaValues; } }
         private readonly SubjectAreaData subjectAreaValues;
     }
 }

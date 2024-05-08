@@ -121,7 +121,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Domain.DomainEntity(entityItem), entityItem); }
 
         void Activate(SubjectAreaValue subjectItem)
-        { Activate((data) => new Forms.Domain.ModelSubjectArea(subjectItem), subjectItem); }
+        { Activate((data) => new Forms.Model.ModelSubjectArea(subjectItem), subjectItem); }
 
         void Activate(ModelValue modelItem)
         { Activate((data) => new Forms.Model.Model(modelItem), modelItem); }

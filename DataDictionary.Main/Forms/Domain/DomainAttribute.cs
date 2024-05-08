@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.Domain;
+using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
@@ -17,6 +18,9 @@ namespace DataDictionary.Main.Forms.Domain
         {
             InitializeComponent();
             toolStrip.TransferItems(attributeToolStrip, 0);
+
+            subjectAreaColumn.Width = ((Int32)Math.Round(subjectAreaData.Width * 0.4));
+            subjectNameSpaceColumn.Width = ((Int32)Math.Round(subjectAreaData.Width * 0.6));
         }
 
         public DomainAttribute(IAttributeValue? attributeItem) : this()
@@ -37,6 +41,7 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 bindingProperty.DataSource = new BindingView<AttributePropertyValue>(BusinessData.DomainModel.Attributes.Properties, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<AttributeAliasValue>(BusinessData.DomainModel.Attributes.Aliases, w => key.Equals(w));
+                bindingSubjectArea.DataSource = new BindingView<AttributeSubjectAreaValue>(BusinessData.DomainModel.Attributes.SubjectArea, w => key.Equals(w));
             }
         }
 
@@ -69,6 +74,15 @@ namespace DataDictionary.Main.Forms.Domain
 
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
+
+            // Handle the list view
+            foreach (SubjectAreaValue item in BusinessData.SubjectAreas.OrderBy(o => o.SubjectAreaTitle))
+            {
+                ListViewItem value = new ListViewItem(item.SubjectAreaTitle);
+                value.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = item.GetPath().MemberFullPath });
+                subjectItems.Add(value, item);
+                subjectAreaData.Items.Add(value);
+            }
 
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
         }
@@ -150,6 +164,32 @@ namespace DataDictionary.Main.Forms.Domain
                 bindingProperty.Position = properties.IndexOf(value);
             }
             else { bindingProperty.AddNew(); }
+        }
+
+        Dictionary<ListViewItem, SubjectAreaValue> subjectItems = new Dictionary<ListViewItem, SubjectAreaValue>();
+        SubjectAreaValue? selected = null;
+        private void SubjectAreaData_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            if (subjectItems.ContainsKey(e.Item) && bindingSubjectArea.DataSource is IList<AttributeSubjectAreaValue> subjects)
+            {
+                SubjectAreaIndex key = new SubjectAreaIndex(subjectItems[e.Item]);
+                selected = BusinessData.SubjectAreas.FirstOrDefault(w => key.Equals(w));
+                AttributeSubjectAreaValue? value = subjects.FirstOrDefault(w => key.Equals(w));
+
+                if (e.Item.Checked && value is null)
+                { bindingSubjectArea.AddNew(); }
+                else if (!e.Item.Checked && value is not null)
+                { bindingSubjectArea.Remove(value); }
+            }
+        }
+
+        private void BindingSubjectArea_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (selected is SubjectAreaValue subject && bindingAttribute.Current is AttributeValue attribute)
+            {
+                AttributeSubjectAreaValue newItem = new AttributeSubjectAreaValue(attribute, subject);
+                e.NewObject = newItem;
+            }
         }
     }
 }

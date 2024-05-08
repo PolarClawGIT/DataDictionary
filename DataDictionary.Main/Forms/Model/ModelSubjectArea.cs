@@ -4,9 +4,8 @@ using DataDictionary.Main.Controls;
 using System.Data;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Forms.Domain
+namespace DataDictionary.Main.Forms.Model
 {
-    [Obsolete("Possibly removed")]
     partial class ModelSubjectArea : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
@@ -23,12 +22,12 @@ namespace DataDictionary.Main.Forms.Domain
             if(subjectAreaItem is null)
             {
                 subjectAreaItem = new SubjectAreaValue();
-                BusinessData.ModelSubjectAreas.Add(subjectAreaItem);
+                BusinessData.SubjectAreas.Add(subjectAreaItem);
             }
 
             SubjectAreaIndex key = new SubjectAreaIndex(subjectAreaItem);
 
-            bindingSubject.DataSource = new BindingView<SubjectAreaValue>(BusinessData.ModelSubjectAreas, w => key.Equals(w));
+            bindingSubject.DataSource = new BindingView<SubjectAreaValue>(BusinessData.SubjectAreas, w => key.Equals(w));
             bindingSubject.Position = 0;
 
             Setup(bindingSubject);

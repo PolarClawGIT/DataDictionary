@@ -23,7 +23,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             BindingList<SubjectAreaNameMember> list = new BindingList<SubjectAreaNameMember>();
             list.Add(new SubjectAreaNameMember() { SubjectAreaId = Guid.Empty, SubjectAreaTitle = "(select subject area)" });
 
-            foreach (SubjectAreaValue item in BusinessData.ModelSubjectAreas)
+            foreach (SubjectAreaValue item in BusinessData.SubjectAreas)
             {
                 if (item.SubjectAreaId is Guid subjectId && item.SubjectAreaTitle is String subjectTitle)
                 { list.Add(new SubjectAreaNameMember() { SubjectAreaId = subjectId, SubjectAreaTitle = subjectTitle }); }
