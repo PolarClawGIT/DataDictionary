@@ -145,7 +145,6 @@
 
         private GroupBox groupBox;
         private ListView browser;
-        private TableLayoutPanel nameScopeLayout;
         private TextBoxData pathData;
         private ComboBoxData scopeData;
         private Button applyCommand;

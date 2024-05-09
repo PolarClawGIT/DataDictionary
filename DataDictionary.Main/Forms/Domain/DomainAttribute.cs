@@ -19,8 +19,6 @@ namespace DataDictionary.Main.Forms.Domain
             InitializeComponent();
             toolStrip.TransferItems(attributeToolStrip, 0);
 
-            subjectAreaColumn.Width = ((Int32)Math.Round(subjectAreaData.Width * 0.4));
-            subjectNameSpaceColumn.Width = ((Int32)Math.Round(subjectAreaData.Width * 0.6));
         }
 
         public DomainAttribute(IAttributeValue? attributeItem) : this()
@@ -75,14 +73,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
 
-            // Handle the list view
-            foreach (SubjectAreaValue item in BusinessData.SubjectAreas.OrderBy(o => o.SubjectAreaTitle))
-            {
-                ListViewItem value = new ListViewItem(item.SubjectAreaTitle);
-                value.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = item.GetPath().MemberFullPath });
-                subjectItems.Add(value, item);
-                subjectAreaData.Items.Add(value);
-            }
+            subjectArea.BindTo(bindingSubjectArea);
 
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
         }
@@ -166,36 +157,31 @@ namespace DataDictionary.Main.Forms.Domain
             else { bindingProperty.AddNew(); }
         }
 
-        Dictionary<ListViewItem, SubjectAreaValue> subjectItems = new Dictionary<ListViewItem, SubjectAreaValue>();
-        SubjectAreaValue? selected = null;
-        private void SubjectAreaData_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
-            if (subjectItems.ContainsKey(e.Item) && bindingSubjectArea.DataSource is IList<AttributeSubjectAreaValue> subjects)
-            {
-                SubjectAreaIndex key = new SubjectAreaIndex(subjectItems[e.Item]);
-                selected = BusinessData.SubjectAreas.FirstOrDefault(w => key.Equals(w));
-                AttributeSubjectAreaValue? value = subjects.FirstOrDefault(w => key.Equals(w));
-
-                if (e.Item.Checked && value is null)
-                { bindingSubjectArea.AddNew(); }
-                else if (!e.Item.Checked && value is not null)
-                { bindingSubjectArea.Remove(value); }
-            }
-        }
 
         private void BindingSubjectArea_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (selected is SubjectAreaValue subject && bindingAttribute.Current is AttributeValue attribute)
+            if (addingSubject is SubjectAreaValue subject && bindingAttribute.Current is AttributeValue attribute)
             {
                 AttributeSubjectAreaValue newItem = new AttributeSubjectAreaValue(attribute, subject);
                 e.NewObject = newItem;
             }
+            addingSubject = null;
         }
 
-        private void subjectAreaData_Resize(object sender, EventArgs e)
+        SubjectAreaValue? addingSubject = null;
+        private void subjectArea_OnSubjectAdd(object sender, SubjectAreaValue e)
         {
-            subjectAreaColumn.Width = ((Int32)Math.Round(subjectAreaData.Width * 0.4));
-            subjectNameSpaceColumn.Width = ((Int32)Math.Round(subjectAreaData.Width * 0.6));
+            addingSubject = e;
+            bindingSubjectArea.AddNew();
+        }
+
+        private void subjectArea_OnSubjectRemove(object sender, SubjectAreaValue e)
+        {
+            SubjectAreaIndex key = new SubjectAreaIndex(e);
+
+            if (bindingSubjectArea.DataSource is IEnumerable<ISubjectAreaIndex> data
+                && data.FirstOrDefault(w => key.Equals(w)) is AttributeSubjectAreaValue target)
+            { bindingSubjectArea.Remove(target); }
         }
     }
 }

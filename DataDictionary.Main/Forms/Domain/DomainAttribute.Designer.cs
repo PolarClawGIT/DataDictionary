@@ -61,9 +61,7 @@
             aliasNameColumn = new DataGridViewTextBoxColumn();
             namedScopeData = new DataDictionary.Main.Controls.NamedScopeData();
             subjectAreaTab = new TabPage();
-            subjectAreaData = new ListView();
-            subjectAreaColumn = new ColumnHeader();
-            subjectNameSpaceColumn = new ColumnHeader();
+            subjectArea = new Controls.SubjectArea();
             entityTab = new TabPage();
             bindingAttribute = new BindingSource(components);
             bindingProperty = new BindingSource(components);
@@ -445,34 +443,22 @@
             // subjectAreaTab
             // 
             subjectAreaTab.BackColor = SystemColors.Control;
-            subjectAreaTab.Controls.Add(subjectAreaData);
+            subjectAreaTab.Controls.Add(subjectArea);
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
             subjectAreaTab.Size = new Size(412, 343);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
-            // subjectAreaData
+            // subjectArea
             // 
-            subjectAreaData.CheckBoxes = true;
-            subjectAreaData.Columns.AddRange(new ColumnHeader[] { subjectAreaColumn, subjectNameSpaceColumn });
-            subjectAreaData.Dock = DockStyle.Fill;
-            subjectAreaData.Location = new Point(0, 0);
-            subjectAreaData.Name = "subjectAreaData";
-            subjectAreaData.Size = new Size(412, 343);
-            subjectAreaData.TabIndex = 0;
-            subjectAreaData.UseCompatibleStateImageBehavior = false;
-            subjectAreaData.View = View.Details;
-            subjectAreaData.ItemChecked += SubjectAreaData_ItemChecked;
-            subjectAreaData.Resize += subjectAreaData_Resize;
-            // 
-            // subjectAreaColumn
-            // 
-            subjectAreaColumn.Text = "Subject Area";
-            // 
-            // subjectNameSpaceColumn
-            // 
-            subjectNameSpaceColumn.Text = "NameSpace";
+            subjectArea.Dock = DockStyle.Fill;
+            subjectArea.Location = new Point(0, 0);
+            subjectArea.Name = "subjectArea";
+            subjectArea.Size = new Size(412, 343);
+            subjectArea.TabIndex = 0;
+            subjectArea.OnSubjectAdd += subjectArea_OnSubjectAdd;
+            subjectArea.OnSubjectRemove += subjectArea_OnSubjectRemove;
             // 
             // entityTab
             // 
@@ -578,9 +564,7 @@
         private ContextMenuStrip attributeToolStrip;
         private ToolStripMenuItem removeAttributeCommand;
         private DataDictionary.Main.Controls.NamedScopeData namedScopeData;
-        private ListView subjectAreaData;
-        private ColumnHeader subjectAreaColumn;
-        private ColumnHeader subjectNameSpaceColumn;
         private BindingSource bindingSubjectArea;
+        private Controls.SubjectArea subjectArea;
     }
 }
