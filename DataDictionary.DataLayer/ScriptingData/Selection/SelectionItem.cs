@@ -1,13 +1,8 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ScriptingData.Schema;
 using DataDictionary.DataLayer.ScriptingData.Transform;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.ScriptingData.Selection
@@ -37,15 +32,15 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
         /// <inheritdoc/>
         public Guid? SelectionId
         {
-            get { return GetValue<Guid>("SelectionId"); }
-            protected set { SetValue("SelectionId", value); }
+            get { return GetValue<Guid>(nameof(SelectionId)); }
+            protected set { SetValue(nameof(SelectionId), value); }
         }
 
         /// <inheritdoc/>
-        public String? SelectionTitle { get { return GetValue("SelectionTitle"); } set { SetValue("SelectionTitle", value); } }
+        public String? SelectionTitle { get { return GetValue(nameof(SelectionTitle)); } set { SetValue(nameof(SelectionTitle), value); } }
 
         /// <inheritdoc/>
-        public String? SelectionDescription { get { return GetValue("SelectionDescription"); } set { SetValue("SelectionDescription", value); } }
+        public String? SelectionDescription { get { return GetValue(nameof(SelectionDescription)); } set { SetValue(nameof(SelectionDescription), value); } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ScriptingSelection; } }
@@ -53,15 +48,15 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
         /// <inheritdoc/>
         public Guid? TransformId
         {
-            get { return GetValue<Guid>("TransformId"); }
-            set { SetValue("TransformId", value); }
+            get { return GetValue<Guid>(nameof(TransformId)); }
+            set { SetValue(nameof(TransformId), value); }
         }
 
         /// <inheritdoc/>
         public Guid? SchemaId
         {
-            get { return GetValue<Guid>("SchemaId"); }
-            set { SetValue("SchemaId", value); }
+            get { return GetValue<Guid>(nameof(SchemaId)); }
+            set { SetValue(nameof(SchemaId), value); }
         }
 
         /// <summary>
@@ -75,11 +70,11 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("SelectionId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("SelectionTitle", typeof(string)){ AllowDBNull = false},
-            new DataColumn("SelectionDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SchemaId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("TransformId", typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(SelectionId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(SelectionTitle), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(SelectionDescription), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(SchemaId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(TransformId), typeof(Guid)){ AllowDBNull = true},
         };
 
 

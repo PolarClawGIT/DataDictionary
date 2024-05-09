@@ -1,12 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.ScriptingData.Schema;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 
@@ -61,15 +55,15 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
         /// <inheritdoc/>
         public Guid? TransformId
         {
-            get { return GetValue<Guid>("TransformId"); }
-            protected set { SetValue("TransformId", value); }
+            get { return GetValue<Guid>(nameof(TransformId)); }
+            protected set { SetValue(nameof(TransformId), value); }
         }
 
         /// <inheritdoc/>
-        public String? TransformTitle { get { return GetValue("TransformTitle"); } set { SetValue("TransformTitle", value); } }
+        public String? TransformTitle { get { return GetValue(nameof(TransformTitle)); } set { SetValue(nameof(TransformTitle), value); } }
 
         /// <inheritdoc/>
-        public String? TransformDescription { get { return GetValue("TransformDescription"); } set { SetValue("TransformDescription", value); } }
+        public String? TransformDescription { get { return GetValue(nameof(TransformDescription)); } set { SetValue(nameof(TransformDescription), value); } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ScriptingTransform; } }
@@ -79,13 +73,13 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
         {
             get
             {
-                if (GetValue<bool>("AsText", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<bool>(nameof(AsText), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
             {
-                SetValue<Boolean>("AsText", value);
-                if (value == true) { SetValue<Boolean>("AsXml", !value); }
+                SetValue<Boolean>(nameof(AsText), value);
+                if (value == true) { SetValue<Boolean>(nameof(AsXml), !value); }
             }
         }
 
@@ -94,23 +88,23 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
         {
             get
             {
-                if (GetValue<bool>("AsXml", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<bool>(nameof(AsXml), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
             {
-                SetValue<Boolean>("AsXml", value);
-                if (value == true) { SetValue<Boolean>("AsText", !value); }
+                SetValue<Boolean>(nameof(AsXml), value);
+                if (value == true) { SetValue<Boolean>(nameof(AsText), !value); }
             }
         }
 
         /// <inheritdoc/>
         public String? TransformScript
         {
-            get { return GetValue("TransformScript"); }
+            get { return GetValue(nameof(TransformScript)); }
             set
             {
-                SetValue("TransformScript", value);
+                SetValue(nameof(TransformScript), value);
                 TransformException = null;
                 transformValue = null;
 
@@ -164,12 +158,12 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("TransformId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("TransformTitle", typeof(string)){ AllowDBNull = false},
-            new DataColumn("TransformDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("AsText", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("AsXml", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("TransformScript", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(TransformId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(TransformTitle), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(TransformDescription), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(AsText), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(AsXml), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(TransformScript), typeof(string)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -80,10 +75,4 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
             { base.Remove(item); }
         }
     }
-
-    /// <summary>
-    /// Default List/Collection of Scripting Selection Path Items.
-    /// </summary>
-    public class SelectionPathCollection : SelectionPathCollection<SelectionPathItem>
-    { }
 }

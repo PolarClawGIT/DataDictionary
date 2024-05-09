@@ -1,11 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.ScriptingData.Selection
@@ -27,15 +22,15 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
         /// <inheritdoc/>
         public Guid? SelectionPathId
         {
-            get { return GetValue<Guid>("SelectionPathId"); }
-            protected set { SetValue("SelectionPathId", value); }
+            get { return GetValue<Guid>(nameof(SelectionPathId)); }
+            protected set { SetValue(nameof(SelectionPathId), value); }
         }
 
         /// <inheritdoc/>
         public Guid? SelectionId
         {
-            get { return GetValue<Guid>("SelectionId"); }
-            protected set { SetValue("SelectionId", value); }
+            get { return GetValue<Guid>(nameof(SelectionId)); }
+            protected set { SetValue(nameof(SelectionId), value); }
         }
 
         /// <inheritdoc/>
@@ -44,16 +39,19 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
         /// <inheritdoc/>
         public ScopeType Scope
         {
-            get { return ScopeKey.Parse(GetValue("ScopeName") ?? String.Empty); }
-            set { SetValue("ScopeName", value.ToName()); OnPropertyChanged(nameof(Scope)); }
+            get { return ScopeKey.Parse(ScopeName ?? String.Empty).Scope; }
+            set { ScopeName = value.ToName(); OnPropertyChanged(nameof(Scope)); }
         }
+
+        /// <inheritdoc cref="IScopeKey.Scope"/>
+        protected String? ScopeName { get { return GetValue(nameof(ScopeName)); } set { SetValue(nameof(ScopeName), value); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("SelectionPathId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("SelectionId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("ScopeName", typeof(String)){ AllowDBNull = false},
-            new DataColumn("InstanceName", typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(SelectionPathId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(SelectionId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(ScopeName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(InstanceName), typeof(String)){ AllowDBNull = false},
         };
 
         /// <inheritdoc/>

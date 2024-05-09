@@ -284,6 +284,11 @@ namespace DataDictionary.BusinessLayer.Domain
 
                     if (Model.SubjectAreas.FirstOrDefault(w => subjectKey.Equals(w)) is SubjectAreaValue subject)
                     {
+                        // TODO: The GetPath = () => does not actually work.
+                        // An Attribute does not have a path. The Attribute/Subject has a full path.
+                        // This tries to assign the Attribute/Subject path to each copy of the attribute.
+                        // Consider creating a wrapper node around Attribute that holds the path for that Attribute/Subject.
+
                         result.Add(new NamedScopePair(subject.GetKey(), attribute)
                         { GetPath = () => { return new NamedScopePath(subject.GetPath(), attribute.GetPath()); } });
                     }

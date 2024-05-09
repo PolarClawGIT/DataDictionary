@@ -1,12 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.ScriptingData.Schema
@@ -36,15 +30,15 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         /// <inheritdoc/>
         public Guid? SchemaId
         {
-            get { return GetValue<Guid>("SchemaId"); }
-            protected set { SetValue("SchemaId", value); }
+            get { return GetValue<Guid>(nameof(SchemaId)); }
+            protected set { SetValue(nameof(SchemaId), value); }
         }
 
         /// <inheritdoc/>
-        public string? SchemaTitle { get { return GetValue("SchemaTitle"); } set { SetValue("SchemaTitle", value); } }
+        public string? SchemaTitle { get { return GetValue(nameof(SchemaTitle)); } set { SetValue(nameof(SchemaTitle), value); } }
 
         /// <inheritdoc/>
-        public string? SchemaDescription { get { return GetValue("SchemaDescription"); } set { SetValue("SchemaDescription", value); } }
+        public string? SchemaDescription { get { return GetValue(nameof(SchemaDescription)); } set { SetValue(nameof(SchemaDescription), value); } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ScriptingSchema; } }
@@ -60,9 +54,9 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("SchemaId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("SchemaTitle", typeof(string)){ AllowDBNull = false},
-            new DataColumn("SchemaDescription", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(SchemaId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(SchemaTitle), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(SchemaDescription), typeof(string)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>
