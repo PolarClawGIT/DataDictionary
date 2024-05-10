@@ -48,7 +48,7 @@ Begin Try
 			On	T.[TransformId] = S.[TransformId]
 	Where	S.[TransformId] is Null And
 			(@TransformId is Null or T.[TransformId] = @TransformId)
-	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseTable]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingTransform]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[TransformId],

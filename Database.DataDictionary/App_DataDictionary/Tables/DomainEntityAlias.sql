@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [App_DataDictionary].[DomainEntityAlias]
 (
 	[EntityId]          UniqueIdentifier NOT Null,
-	[NameSpaceId]       UniqueIdentifier NOT NULL, -- Make Not Null Later 
-	[ScopeName]         [App_DataDictionary].[typeScopeName] NULL,  -- The Scope for the Application to look for the Alias within
+	[NameSpaceId]       UniqueIdentifier NOT NULL,
+	[ScopeName]         [App_DataDictionary].[typeScopeName] NOT NULL,  -- The Scope for the Application to look for the Alias within
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DomainEntityAlias_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_DomainEntityAlias_SysStart] DEFAULT (sysdatetime()),

@@ -235,11 +235,11 @@
     <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingSchemaElement.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingSchemaElement.sql" />
     <Build Include="App_DataDictionary\Tables\ScriptingSelection.sql" />
-    <Build Include="App_DataDictionary\Tables\ScriptingSelectionInstance.sql" />
+    <Build Include="App_DataDictionary\Tables\ScriptingSelectionPath.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetMemberNameSpace.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeScriptingSelection.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeScriptingSelectionInstance.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeScriptingSelectionPath.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpace.sql" />
     <Build Include="App_DataDictionary\Tables\ModelNameSpace.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetNameSpace.sql" />
@@ -250,6 +250,11 @@
     <Build Include="App_DataDictionary\User Defined Types\typeDomainEntitySubjectArea.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeSubjectArea.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntitySubjectArea.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingSelection.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingSelectionPath.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingSelectionPath.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingSelection.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelScripting.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
