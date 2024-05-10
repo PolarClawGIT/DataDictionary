@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using DataDictionary.DataLayer.ModelData;
+using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -10,10 +11,10 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class SelectionPathCollection<TItem> : BindingTable<TItem>,
-        IReadData, IReadData<ISelectionKey>, IReadData<ISelectionPathKey>,
-        IWriteData, IWriteData<ISelectionKey>, IWriteData<ISelectionPathKey>,
-        IRemoveItem<ISelectionPathKey>
-        where TItem : BindingTableRow, ISelectionPathItem, ISelectionPathKey, new()
+        IReadData, IReadData<ISelectionKey>, IReadData<IModelKey>,
+        IWriteData, IWriteData<ISelectionKey>, IWriteData<IModelKey>,
+        IRemoveItem<ISelectionKey>
+        where TItem : BindingTableRow, ISelectionPathItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
@@ -24,16 +25,16 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
         { return LoadCommand(connection, (key.SelectionId, null)); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, ISelectionPathKey key)
-        { return LoadCommand(connection, (null, key.SelectionPathId)); }
+        public Command LoadCommand(IConnection connection, IModelKey key)
+        { return LoadCommand(connection, (null, key.ModelId)); }
 
-        Command LoadCommand(IConnection connection, (Guid? SelectionId, Guid? PathId) parameters)
+        Command LoadCommand(IConnection connection, (Guid? SelectionId, Guid? modelId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procGetScriptingSelectionPath]";
+            command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@SelectionId", parameters.SelectionId);
-            command.AddParameter("@SelectionPathId", parameters.PathId);
             
             return command;
         }
@@ -47,29 +48,28 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
         { return SaveCommand(connection, (key.SelectionId, null)); }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection, ISelectionPathKey key)
-        { return SaveCommand(connection, (null, key.SelectionPathId)); }
+        public Command SaveCommand(IConnection connection, IModelKey key)
+        { return SaveCommand(connection, (null, key.ModelId)); }
 
 
-        Command SaveCommand(IConnection connection, (Guid? SelectionId, Guid? PathId) parameters)
+        Command SaveCommand(IConnection connection, (Guid? SelectionId, Guid? modelId) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetScriptingSelectionPath]";
+            command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@SelectionId", parameters.SelectionId);
-            command.AddParameter("@SelectionPathId", parameters.PathId);
 
-            IEnumerable<TItem> data = this.Where(w => 
-                (parameters.SelectionId is null || w.SelectionId == parameters.SelectionId) &&
-                (parameters.PathId is null || w.SelectionPathId == parameters.PathId));
+            IEnumerable<TItem> data = this.Where(w =>
+                (parameters.SelectionId is null || w.SelectionId == parameters.SelectionId));
             command.AddParameter("@Data", "[App_DataDictionary].[typeScriptingSelectionPath]", data);
             return command;
         }
 
         /// <inheritdoc/>
-        public void Remove(ISelectionPathKey InstanceKey)
+        public void Remove(ISelectionKey InstanceKey)
         {
-            SelectionPathKey key = new SelectionPathKey(InstanceKey);
+            SelectionKey key = new SelectionKey(InstanceKey);
 
             foreach (TItem item in this.Where(w => key.Equals(w)).ToList())
             { base.Remove(item); }

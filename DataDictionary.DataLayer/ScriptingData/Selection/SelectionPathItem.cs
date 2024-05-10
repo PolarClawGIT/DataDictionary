@@ -8,9 +8,12 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
     /// <summary>
     /// Interface for the Scripting Selection Path data.
     /// </summary>
-    public interface ISelectionPathItem :ISelectionKey, ISelectionPathKey, ISelectionPathKeyName, IScopeKey
+    public interface ISelectionPathItem : ISelectionKey, IScopeKey
     {
-
+        /// <summary>
+        /// The NameSpace Path for the Selected item.
+        /// </summary>
+        String? SelectionPath { get; }
     }
 
     /// <summary>
@@ -20,13 +23,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
     public class SelectionPathItem : BindingTableRow, ISelectionPathItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? SelectionPathId
-        {
-            get { return GetValue<Guid>(nameof(SelectionPathId)); }
-            protected set { SetValue(nameof(SelectionPathId), value); }
-        }
-
-        /// <inheritdoc/>
         public Guid? SelectionId
         {
             get { return GetValue<Guid>(nameof(SelectionId)); }
@@ -34,7 +30,11 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
         }
 
         /// <inheritdoc/>
-        public String? InstanceName => throw new NotImplementedException();
+        public String? SelectionPath
+        {
+            get { return GetValue(nameof(SelectionPath)); }
+            set { SetValue(nameof(SelectionPath), value); }
+        }
 
         /// <inheritdoc/>
         public ScopeType Scope
@@ -48,10 +48,9 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn(nameof(SelectionPathId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(SelectionId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(ScopeName), typeof(String)){ AllowDBNull = false},
-            new DataColumn(nameof(InstanceName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(SelectionPath), typeof(String)){ AllowDBNull = false},
         };
 
         /// <inheritdoc/>
@@ -61,6 +60,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
 
         /// <inheritdoc/>
         public override string ToString()
-        { return InstanceName??String.Empty; }
+        { return SelectionPath ?? String.Empty; }
     }
 }
