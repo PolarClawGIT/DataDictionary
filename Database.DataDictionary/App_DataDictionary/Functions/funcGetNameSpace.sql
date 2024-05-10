@@ -7,27 +7,27 @@ With [Data] As (
 	Select	[NameSpaceId],
 			NullIf([ParentNameSpaceId], [NameSpaceId]) As [ParentNameSpaceId],
 			Convert(NVarChar(Max),
-				FormatMessage('[%s]',[NameSpaceMember])) As [NameSpace],
+				FormatMessage('[%s]',[MemberName])) As [NameSpace],
 			Convert(NVarChar(Max), Null) As [ParentNameSpace],
-			[NameSpaceMember]
+			[MemberName]
 	From	[App_DataDictionary].[ModelNameSpace]
 	Where	[NameSpaceId] = @NameSpaceId
 	Union All
 	Select	D.[NameSpaceId],
 			NullIf(P.[ParentNameSpaceId], D.[NameSpaceId]) As [ParentNameSpaceId],
 			Convert(NVarChar(Max),
-				FormatMessage('[%s].%s',P.[NameSpaceMember],D.[NameSpace])) As [NameSpace],
+				FormatMessage('[%s].%s',P.[MemberName],D.[NameSpace])) As [NameSpace],
 			Convert(NVarChar(Max),
 				IIF(D.[ParentNameSpace] is Null,
-				FormatMessage('[%s]',P.[NameSpaceMember]),
-				FormatMessage('[%s].%s',P.[NameSpaceMember], D.[ParentNameSpace])))
+				FormatMessage('[%s]',P.[MemberName]),
+				FormatMessage('[%s].%s',P.[MemberName], D.[ParentNameSpace])))
 				As [ParentNameSpace],
-			D.[NameSpaceMember]
+			D.[MemberName]
 	From	[Data] D
 			Inner Join [App_DataDictionary].[ModelNameSpace] P
 			On	D.[ParentNameSpaceId] = P.[NameSpaceId])
 Select	[NameSpaceId],
-		[NameSpaceMember],
+		[MemberName],
 		[NameSpace],
 		[ParentNameSpace]
 From	[Data]

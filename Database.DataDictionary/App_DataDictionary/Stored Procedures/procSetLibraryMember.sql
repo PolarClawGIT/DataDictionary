@@ -25,8 +25,8 @@ Begin Try
 
 	-- Clean the Data, helps performance
 	Declare @Values Table (
-		[MemberId]              UniqueIdentifier Not Null,
 		[LibraryId]             UniqueIdentifier Not Null,
+		[MemberId]              UniqueIdentifier Not Null,
 		[MemberParentId]        UniqueIdentifier Null,
 		[MemberName]            [App_DataDictionary].[typeNameSpaceMember] Not Null,
 		[MemberType]            [App_DataDictionary].[typeObjectSubType] Not Null,
@@ -34,107 +34,98 @@ Begin Try
 		Primary Key ([MemberId]))
 
 	Declare @NameSpace Table (
-		[MemberId]              UniqueIdentifier Not Null,
 		[LibraryId]             UniqueIdentifier Not Null,
+		[MemberId]              UniqueIdentifier Not Null,
 		[MemberName]		    [App_DataDictionary].[typeNameSpaceMember] Not Null,
-		[MemberType]			[App_DataDictionary].[typeObjectSubType] Not Null,
 		[MemberNameSpace]       [App_DataDictionary].[typeNameSpacePath] Null,
-		--[ParentNameSpace]       [App_DataDictionary].[typeNameSpacePath] Null,
+		[ParentNameSpace]       [App_DataDictionary].[typeNameSpacePath] Null,
 		Primary Key ([MemberId]))
 
-	;With [NameSpace] As (
-		-- Existing Values
-		Select	M.[MemberId],
-				M.[LibraryId],
-				M.[MemberName],
-				M.[MemberType],
-				N.[MemberNameSpace],
-				N.[ParentNameSpace]
-		From	[App_DataDictionary].[LibraryMember] M
-				Cross Apply [App_DataDictionary].[funcGetMemberName](M.[MemberId]) N
-				Left Join [App_DataDictionary].[ModelLibrary] L
-				On	M.[LibraryId] = L.[LibraryId]
-		Where	(@LibraryId is Null Or @LibraryId = M.[LibraryId]) And
-				(@ModelId is Null Or @ModelId = L.[ModelId])),
-	[Proposed] As (
-		Select	Coalesce(D.[LibraryId], @LibraryId) As [LibraryId],
-				IIF(X.[IsBase] = 1, D.[MemberId], Null) As [MemberId],
-				X.[NameSpaceMember] As [MemberName],
-				D.[MemberType],
-				X.[ParentNameSpace] as [MemberNameSpace],
-				Row_Number() Over (
-					Partition By 
-						Coalesce(D.[LibraryId], @LibraryId),
-						X.[NameSpaceMember],
-						X.[NameSpace]
-					Order By IIF(X.[IsBase] = 1,0,1))
-					As [RankIndex]
-		From	@Data D
-				Cross Apply [App_DataDictionary].[funcSplitNameSpace] (
-					IIF(D.[MemberNameSpace] is Null, D.[MemberName], FormatMessage('%s.%s',D.[MemberNameSpace], D.[MemberName]))) X
-				Left Join @Data P
-				On	Coalesce(D.[LibraryId], @LibraryId) = Coalesce(P.[LibraryId], @LibraryId) And
-					D.[MemberParentId] = P.[MemberId]
-		Where	Coalesce(D.[MemberType],'NameSpace') In ('NameSpace','Type'))
-	Insert Into @NameSpace
-	Select	[MemberId],
-			[LibraryId],
-			[MemberName],
-			[MemberType],
-			[MemberNameSpace]
-	From	[NameSpace]
-	Union
-	Select	Coalesce(N.[MemberId], P.[MemberId], NewId()) As [MemberId],
-			P.[LibraryId],
-			P.[MemberName],
-			P.[MemberType],
-			P.[MemberNameSpace]
-	From	[Proposed] P
-			Left Join [NameSpace] N
-			On	P.[LibraryId] = N.[LibraryId] And
-				P.[MemberName] = N.[MemberName] And
-				P.[MemberNameSpace] = N.[MemberNameSpace]
-	Where	P.[RankIndex] = 1
---Select	'@NameSpace', * From	@NameSpace
 
-	;With [Data] As (
-		Select	D.[MemberId],
-				D.[LibraryId],
-				D.[MemberParentId],
-				D.[AssemblyName],
+;With [Existing] As (
+	Select	M.[LibraryId],
+			N.[MemberId],
+			N.[MemberName],
+			N.[MemberNameSpace],
+			N.[ParentNameSpace]
+	From	[App_DataDictionary].[LibraryMember] M
+			Left Join [App_DataDictionary].[ModelLibrary] L
+			On	M.[LibraryId] = L.[LibraryId]
+			Cross Apply [App_DataDictionary].[funcGetMemberName](M.[MemberId]) N
+	Where	M.[MemberType] In ('NameSpace','Type') And
+			(@ModelId is Null or L.[ModelId] = @ModelId) And
+			(@LibraryId is Null or M.[LibraryId] = @LibraryId)),
+	[BaseData] As (
+		Select	Coalesce(D.[LibraryId], @LibraryId) As [LibraryId],
+				IIF(X.[IsBase] = 1, D.[MemberId], NewId()) As [MemberId],
+				X.[MemberName],
 				X.[NameSpace] As [MemberNameSpace],
-				D.[MemberName],
-				D.[MemberType],
-				D.[MemberData]
+				X.[ParentNameSpace],
+				Row_Number() Over (
+						Partition By 
+							Coalesce(D.[LibraryId], @LibraryId),
+							X.[MemberName],
+							X.[NameSpace]
+						Order By IIF(X.[IsBase] = 1,0,1))
+						As [RankIndex]
 		From	@Data D
 				Cross Apply [App_DataDictionary].[funcSplitNameSpace] (D.[MemberNameSpace]) X
-		Where	X.[IsBase] = 1),
-	[Combine] As ( -- Catches any missing NameSpaces
-		Select	Coalesce(D.[MemberId], N.[MemberId]) As [MemberId],
-				Coalesce(D.[LibraryId], N.[LibraryId]) As [LibraryId],
-				D.[MemberParentId],
-				Coalesce(D.[MemberNameSpace], N.[MemberNameSpace]) As [MemberNameSpace],
-				Coalesce(D.[MemberName], N.[MemberName]) As [MemberName],
-				Coalesce(D.[MemberType], N.[MemberType]) As [MemberType],
-				D.[MemberData]
-		From	[Data] D
-				Full Outer Join @NameSpace N
-				On	D.[LibraryId] = N.[LibraryId] And
-					D.[MemberNameSpace] = N.[MemberNameSpace] And
-					D.[MemberName] = N.[MemberName])
-	Insert Into @Values
-	Select	C.[MemberId],
-			C.[LibraryId],
-			IsNull(P.[MemberId], C.[MemberParentId]) As [MemberParentId],
-			--C.[MemberNameSpace],
-			C.[MemberName],
-			C.[MemberType],
-			C.[MemberData]
-	From	[Combine] C
+		Where	Coalesce(D.[MemberType],'NameSpace') In ('NameSpace','Type')),
+	[Data] As (
+		Select	[LibraryId],
+				[MemberId],
+				[MemberName],
+				[MemberNameSpace],
+				[ParentNameSpace]
+		From	[BaseData]
+		Where	[RankIndex] = 1)
+	Insert Into @NameSpace
+	Select	IsNull(X.[LibraryId], D.[LibraryId]) As [LibraryId],
+			IsNull(X.[MemberId], D.[MemberId]) As [MemberId],
+			IsNull(X.[MemberName], D.[MemberName]) As [MemberName],
+			IsNull(X.[MemberNameSpace], D.[MemberNameSpace]) As [MemberNameSpace],
+			IsNull(X.[ParentNameSpace], D.[ParentNameSpace]) As [ParentNameSpace]
+	From	[Existing] X
+			Full Outer Join [Data] D
+			On	X.[LibraryId] = D.[LibraryId] And
+				X.[MemberNameSpace] = D.[MemberNameSpace]
+
+;With [Data] As (
+	Select	Coalesce(D.[LibraryId], @LibraryId) As [LibraryId],
+			Coalesce(D.[MemberId], NewId()) As [MemberId],
+			Coalesce(P.[MemberId], R.[MemberId]) As [MemberParentId],
+			X.[NameSpace] As [MemberNameSpace],
+			X.[MemberName] As [MemberName],
+			D.[MemberType],
+			D.[MemberData]
+	From	@Data D
+			Cross Apply [App_DataDictionary].[funcSplitNameSpace] (D.[MemberNameSpace]) X
+			-- Possible Parents
+			Left Join @Data P
+			On	D.[MemberParentId] = P.[MemberId]
+			Left Join @NameSpace R
+			On	X.[ParentNameSpace] = R.[MemberNameSpace]
+	Where	X.[IsBase] = 1),
+[NameSpace] As (
+	Select	N.[LibraryId],
+			N.[MemberId],
+			P.[MemberId] As [MemberParentId],
+			N.[MemberNameSpace],
+			N.[MemberName]
+	From	@NameSpace N
 			Left Join @NameSpace P
-			On	C.[MemberNameSpace] = IIF(P.[MemberNameSpace] is Null,
-					FormatMessage('[%s]',P.[MemberName]), FormatMessage('%s.[%s]',P.[MemberNameSpace],P.[MemberName]))
---Select '@Values', * From @Values
+			On	N.[ParentNameSpace] = P.[MemberNameSpace])
+Insert Into @Values
+Select	IsNull(D.[LibraryId], N.[LibraryId]) As [LibraryId],
+		IsNull(D.[MemberId], N.[MemberId]) As [MemberId],
+		IsNull(D.[MemberParentId], N.[MemberParentId]) As [MemberParentId],
+		IsNull(D.[MemberName], N.[MemberName]) As [MemberName],
+		IsNull(D.[MemberType], 'NameSpace') As [MemberType],
+		D.[MemberData]
+From	[Data] D
+		Full Outer Join [NameSpace] N
+		On	D.[LibraryId] = N.[LibraryId] And
+			D.[MemberId] = N.[MemberId]
 
 	-- Apply Changes
 	Delete From [App_DataDictionary].[LibraryMember]
@@ -239,49 +230,41 @@ Begin Catch
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
 GO
-
-----------------------------------------------------------
 /*
+----------------------------------------------------------
 Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
-	declare @Lbirary App_DataDictionary.typeLibrarySource
-	insert into @Lbirary values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF',N'DataDictionary.DataLayer',NULL,N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.xml','2024-04-03 11:40:16.9306344')
-
-	exec [App_DataDictionary].[procSetLibrarySource] @LibraryId='CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF',@Data=@Lbirary
+	--Delete From [App_DataDictionary].[LibraryMember]
 
 
-	declare @Member App_DataDictionary.typeLibraryMember
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','F3099983-D9C7-4F7A-A63B-409C2C2AE19E',NULL,N'DataDictionary.DataLayer',NULL,N'DataDictionary',N'NameSpace',NULL)
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','33E30882-A691-43C7-B298-CE51B4488DD7','F3099983-D9C7-4F7A-A63B-409C2C2AE19E',N'DataDictionary.DataLayer',N'DataDictionary',N'DataLayer',N'NameSpace',NULL)
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','5A57EB1F-C7A6-4DAC-AA07-6CF070094A52','33E30882-A691-43C7-B298-CE51B4488DD7',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer',N'ApplicationData',N'NameSpace',NULL)
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','F9103FBD-4136-405E-8C7A-843E0AE39497','5A57EB1F-C7A6-4DAC-AA07-6CF070094A52',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData',N'Help',N'NameSpace',NULL)
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','66C1B111-F0F3-47CA-B203-29C141C47079','F9103FBD-4136-405E-8C7A-843E0AE39497',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help',N'HelpCollection`1',N'Type',N'&lt;member name="T:DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1"&gt;&lt;summary&gt;
-				Generic Base class for Help Items.
-				&lt;/summary&gt;&lt;typeparam name="TItem"&gt;&lt;/typeparam&gt;&lt;remarks&gt;Base class, implements the Read and Write.&lt;/remarks&gt;&lt;/member&gt;')
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','AC9CAEBD-047D-4E27-AC92-836CD9C2DA75','66C1B111-F0F3-47CA-B203-29C141C47079',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1',N'LoadCommand',N'Method',N'&lt;member name="M:DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1.LoadCommand(Toolbox.DbContext.IConnection,DataDictionary.DataLayer.ApplicationData.Help.IHelpKey)"&gt;&lt;inheritdoc /&gt;&lt;/member&gt;')
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','CA94003F-67F2-4C1C-A66C-E2411BE414A1','AC9CAEBD-047D-4E27-AC92-836CD9C2DA75',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1.LoadCommand',N'parameter00',N'Parameter',N'&lt;param type="Toolbox.DbContext.IConnection" /&gt;')
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','ED856F1C-13BB-4E0C-93AF-A147F5DDB5DA','AC9CAEBD-047D-4E27-AC92-836CD9C2DA75',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1.LoadCommand',N'parameter01',N'Parameter',N'&lt;param type="DataDictionary.DataLayer.ApplicationData.Help.IHelpKey" /&gt;')
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','16A468E9-58D8-4581-A62D-9C4549B6D34B','66C1B111-F0F3-47CA-B203-29C141C47079',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1',N'LoadCommand',N'Method',N'&lt;member name="M:DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1.LoadCommand(Toolbox.DbContext.IConnection)"&gt;&lt;inheritdoc /&gt;&lt;/member&gt;')
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','B96090F4-3C76-4502-9263-63C24418FD4C','16A468E9-58D8-4581-A62D-9C4549B6D34B',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1.LoadCommand',N'parameter00',N'Parameter',N'&lt;param type="Toolbox.DbContext.IConnection" /&gt;')
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','14E085A6-EAA6-441F-AC8D-D01162DF5DC3','66C1B111-F0F3-47CA-B203-29C141C47079',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1',N'SaveCommand',N'Method',N'&lt;member name="M:DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1.SaveCommand(Toolbox.DbContext.IConnection)"&gt;&lt;inheritdoc /&gt;&lt;/member&gt;')
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','0B89D4AF-89FA-486F-B524-1CA6DCFE4767','14E085A6-EAA6-441F-AC8D-D01162DF5DC3',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1.SaveCommand',N'parameter00',N'Parameter',N'&lt;param type="Toolbox.DbContext.IConnection" /&gt;')
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','0844F17B-59CE-452C-8FBD-A88A38340FB4','66C1B111-F0F3-47CA-B203-29C141C47079',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1',N'SaveCommand',N'Method',N'&lt;member name="M:DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1.SaveCommand(Toolbox.DbContext.IConnection,DataDictionary.DataLayer.ApplicationData.Help.IHelpKey)"&gt;&lt;inheritdoc /&gt;&lt;/member&gt;')
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','D358DEB7-44BD-479E-9138-E39514B0A307','0844F17B-59CE-452C-8FBD-A88A38340FB4',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1.SaveCommand',N'parameter00',N'Parameter',N'&lt;param type="Toolbox.DbContext.IConnection" /&gt;')
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','24FE0A5C-5CE9-4C6E-A7C6-6E667E064053','0844F17B-59CE-452C-8FBD-A88A38340FB4',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1.SaveCommand',N'parameter01',N'Parameter',N'&lt;param type="DataDictionary.DataLayer.ApplicationData.Help.IHelpKey" /&gt;')
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','93FB77B4-C1D6-4D58-877B-BF51EEEB8D0D','66C1B111-F0F3-47CA-B203-29C141C47079',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1',N'Validate',N'Method',N'&lt;member name="M:DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1.Validate"&gt;&lt;inheritdoc /&gt;&lt;/member&gt;')
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','0276E86D-5D4C-4012-956D-C414A07F54D4','66C1B111-F0F3-47CA-B203-29C141C47079',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1',N'Remove',N'Method',N'&lt;member name="M:DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1.Remove(DataDictionary.DataLayer.ApplicationData.Help.IHelpKey)"&gt;&lt;inheritdoc /&gt;&lt;/member&gt;')
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','5E4D937B-B019-4454-8AA2-1448C8A2AAC2','0276E86D-5D4C-4012-956D-C414A07F54D4',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help.HelpCollection`1.Remove',N'parameter00',N'Parameter',N'&lt;param type="DataDictionary.DataLayer.ApplicationData.Help.IHelpKey" /&gt;')
-	insert into @Member values('CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF','417E11D8-6FE9-40F2-A0CC-11CCD71489A4','F9103FBD-4136-405E-8C7A-843E0AE39497',N'DataDictionary.DataLayer',N'DataDictionary.DataLayer.ApplicationData.Help',N'HelpCollection',N'Type',N'&lt;member name="T:DataDictionary.DataLayer.ApplicationData.Help.HelpCollection"&gt;&lt;summary&gt;
-				Default List/Collection of Help Items.
-				&lt;/summary&gt;&lt;/member&gt;')
+	declare @p2 App_DataDictionary.typeLibraryMember
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','E5160896-7823-467E-8E5D-637E604EFAFB',NULL,N'Sample.Library',N'[SampleLibrary]',N'SampleLibrary',N'NameSpace',NULL)
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','EB23DDB6-A377-4A86-B972-6256009DFC63','E5160896-7823-467E-8E5D-637E604EFAFB',N'Sample.Library',N'[SampleLibrary].[ISampleArray]',N'ISampleArray',N'Type',N'<member name="T:SampleLibrary.ISampleArray"><summary>              Sample Interface.              </summary></member>')
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','56F00E84-C382-4AC9-9EEA-6CB0825630B5','E5160896-7823-467E-8E5D-637E604EFAFB',N'Sample.Library',N'[SampleLibrary].[SampleClass]',N'SampleClass',N'Type',N'<member name="T:SampleLibrary.SampleClass"><summary>              Sample Class              </summary></member>') 
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','D2B60C6E-651C-409A-A222-341AB0868302','56F00E84-C382-4AC9-9EEA-6CB0825630B5',N'Sample.Library',N'[SampleLibrary].[SampleClass].[InternalClass]',N'InternalClass',N'Type',N'<member name="T:SampleLibrary.SampleClass.InternalClass"><summary>              Internal Class              </summary></member>')  
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','4F561F5B-5DEE-4C48-87FD-56E6D73ACDFC','56F00E84-C382-4AC9-9EEA-6CB0825630B5',N'Sample.Library',N'[SampleLibrary].[SampleClass].[Item]',N'Item',N'Property',N'<member name="P:SampleLibrary.SampleClass.Item(System.Int32)"><summary>              Sample Indexer              </summary><param name="index" /><returns /></member>')  
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','B83C9AB3-1D14-4D0C-9E0D-3BF43F725D9C','4F561F5B-5DEE-4C48-87FD-56E6D73ACDFC',N'Sample.Library',N'[SampleLibrary].[SampleClass].[Item].[index]',N'index',N'Parameter',N'<param name="index" type="System.Int32" />')  
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','98825DAA-E792-4F7C-B17C-B9BA0B6F7621','56F00E84-C382-4AC9-9EEA-6CB0825630B5',N'Sample.Library',N'[SampleLibrary].[SampleClass].[SampleArray]',N'SampleArray',N'Field',N'<member name="F:SampleLibrary.SampleClass.SampleArray"><summary>              Sample Array/Field.              </summary></member>')  
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','DDDD1B2E-7978-4D6B-BD97-6ADF88E587EF','56F00E84-C382-4AC9-9EEA-6CB0825630B5',N'Sample.Library',N'[SampleLibrary].[SampleClass].[SampleClassDelgate]',N'SampleClassDelgate',N'Type',N'<member name="T:SampleLibrary.SampleClass.SampleClassDelgate"><summary>              Sample Class Delegate Function              </summary><param name="value" /><returns /></member>')  
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','BB9DE015-5104-4498-ACB4-B5FC9D2A82BE','56F00E84-C382-4AC9-9EEA-6CB0825630B5',N'Sample.Library',N'[SampleLibrary].[SampleClass].[SampleEvent]',N'SampleEvent',N'Event',N'<member name="E:SampleLibrary.SampleClass.SampleEvent"><summary>              Sample Event              </summary></member>')  
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','177713D1-EFFD-48FE-91CB-E07F1FA17F07','56F00E84-C382-4AC9-9EEA-6CB0825630B5',N'Sample.Library',N'[SampleLibrary].[SampleClass].[SampleGenericMethod``1]',N'SampleGenericMethod``1',N'Method',N'<member name="M:SampleLibrary.SampleClass.SampleGenericMethod``1(``0)"><summary>              Sample generic method              </summary><typeparam name="T" /><param name="data" /></member>')  
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','7052D5BA-01DC-4A94-B643-FDA3255D282F','177713D1-EFFD-48FE-91CB-E07F1FA17F07',N'Sample.Library',N'[SampleLibrary].[SampleClass].[SampleGenericMethod``1].[data]',N'data',N'Parameter',N'<param name="data" type="``0" />')  
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','BC8B4DD5-1D98-4B6A-9063-91888AA2CD7A','56F00E84-C382-4AC9-9EEA-6CB0825630B5',N'Sample.Library',N'[SampleLibrary].[SampleClass].[SampleMethod]',N'SampleMethod',N'Method',N'<member name="M:SampleLibrary.SampleClass.SampleMethod(System.String)"><summary>              Sample Function              </summary><param name="sampleParm01" /><returns /></member>') 
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','9F31ED73-0EB0-4CF9-B503-B0D4BC8CECD4','56F00E84-C382-4AC9-9EEA-6CB0825630B5',N'Sample.Library',N'[SampleLibrary].[SampleClass].[SampleMethod]',N'SampleMethod',N'Method',N'<member name="M:SampleLibrary.SampleClass.SampleMethod(System.String,System.String)"><summary>              Sample Method              </summary><param name="sampleParm01">Value 01</param><param name="samplePar02">Value 02</param></member>')  
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','3E40CD1E-F7D1-40BE-BB30-D0F6EEC0302E','9F31ED73-0EB0-4CF9-B503-B0D4BC8CECD4',N'Sample.Library',N'[SampleLibrary].[SampleClass].[SampleMethod].[samplePar02]',N'samplePar02',N'Parameter',N'<param name="samplePar02" type="System.String">Value 02</param>')  
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','6AFFEC7D-9729-4D72-B35C-873F6503C09D','BC8B4DD5-1D98-4B6A-9063-91888AA2CD7A',N'Sample.Library',N'[SampleLibrary].[SampleClass].[SampleMethod].[sampleParm01]',N'sampleParm01',N'Parameter',N'<param name="sampleParm01" type="System.String" />')  
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','7EB15981-FB1D-49AD-B7D3-06113978D696','9F31ED73-0EB0-4CF9-B503-B0D4BC8CECD4',N'Sample.Library',N'[SampleLibrary].[SampleClass].[SampleMethod].[sampleParm01]',N'sampleParm01',N'Parameter',N'<param name="sampleParm01" type="System.String">Value 01</param>')  
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','0E72A287-D303-4E14-9C0A-86B0CA4DCB1F','56F00E84-C382-4AC9-9EEA-6CB0825630B5',N'Sample.Library',N'[SampleLibrary].[SampleClass].[SampleProperty]',N'SampleProperty',N'Property',N'<member name="P:SampleLibrary.SampleClass.SampleProperty"><summary>              Sample Property              </summary></member>') 
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','48848F00-40A2-4CF2-853B-E13409D3508E','E5160896-7823-467E-8E5D-637E604EFAFB',N'Sample.Library',N'[SampleLibrary].[SampleDelegate]',N'SampleDelegate',N'Type',N'<member name="T:SampleLibrary.SampleDelegate"><summary>              Sample NameSpace Delegate method              </summary><param name="sampleParm" /></member>') 
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','5633FEDF-352A-49EF-BD90-BD497407CFCD','E5160896-7823-467E-8E5D-637E604EFAFB',N'Sample.Library',N'[SampleLibrary].[SampleDelegateNoParm]',N'SampleDelegateNoParm',N'Type',N'<member name="T:SampleLibrary.SampleDelegateNoParm"><summary>              Sample NameSpace Delegate method with No Parameters              </summary></member>')
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','BFBC3D16-E07B-4713-9377-23A42E481281','E5160896-7823-467E-8E5D-637E604EFAFB',N'Sample.Library',N'[SampleLibrary].[SampleFunctionDelegate]',N'SampleFunctionDelegate',N'Type',N'<member name="T:SampleLibrary.SampleFunctionDelegate"><summary>              Sample NameSpace Delegate Function              </summary><returns /></member>')  
+	insert into @p2 values('54C98BD6-9BD1-4D67-AB9D-7886276DF399','8A894442-F743-4F0C-AF31-360A7C2AB7D5','E5160896-7823-467E-8E5D-637E604EFAFB',N'Sample.Library',N'[SampleLibrary].[SampleGeneric`1]',N'SampleGeneric`1',N'Type',N'<member name="T:SampleLibrary.SampleGeneric`1"><summary>              Sample Generic Class              </summary><typeparam name="T" /></member>')  
+	
+	exec [App_DataDictionary].[procSetLibraryMember] @ModelId='71BFEB28-409E-456B-89AF-0260864837B5',@Data=@p2
 
-	exec [App_DataDictionary].[procSetLibraryMember] @LibraryId='CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF',@Data=@Member
-
-	Exec [App_DataDictionary].[procGetLibraryMember] @LibraryId='CB6BC858-6A6B-4CBD-AF7C-FCD0B579D4DF'
-
-
+	exec [App_DataDictionary].[procSetLibraryMember] @ModelId='71BFEB28-409E-456B-89AF-0260864837B5',@Data=@p2
 
 	-- By default, throw and error and exit without committing
 ;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
@@ -307,7 +290,6 @@ Begin Catch
 	-- Rollback Transaction
 	Print 'Rollback Issued';
 	Rollback Transaction;
-	--Throw;
+	Throw;
 End Catch;
-
 */

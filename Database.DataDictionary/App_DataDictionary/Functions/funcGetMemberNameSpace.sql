@@ -9,8 +9,7 @@ RETURNS TABLE AS RETURN (
 				Convert(NVarChar(Max),
 					FormatMessage('[%s]',[MemberName])) As [MemberNameSpace],
 				Convert(NVarChar(Max), Null) As [ParentNameSpace],
-				[MemberName],
-				[MemberType]
+				[MemberName]
 		From	[App_DataDictionary].[LibraryMember]
 		Where	[MemberId] = @MemberId
 		Union All
@@ -23,16 +22,14 @@ RETURNS TABLE AS RETURN (
 					FormatMessage('[%s]',P.[MemberName]),
 					FormatMessage('[%s].%s',P.[MemberName], D.[ParentNameSpace])))
 					As [ParentNameSpace],
-				D.[MemberName],
-				P.[MemberType]
+				D.[MemberName]
 		From	[Data] D
 				Inner Join [App_DataDictionary].[LibraryMember] P
 				On	D.[MemberParentId] = P.[MemberId])
 	Select	[MemberId],
 			[MemberNameSpace],
 			[ParentNameSpace],
-			[MemberName],
-			[MemberType]
+			[MemberName]
 	From	[Data]
 	Where	[MemberParentId] is Null)
 GO

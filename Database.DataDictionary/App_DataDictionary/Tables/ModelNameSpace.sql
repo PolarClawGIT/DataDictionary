@@ -11,7 +11,7 @@
 	[NameSpaceId]           UniqueIdentifier NOT NULL CONSTRAINT [DF_ModelNameSpaceId] DEFAULT (newid()),
 	[ModelId]               UniqueIdentifier NULL,
 	[ParentNameSpaceId]     UniqueIdentifier NULL,
-	[NameSpaceMember]       [App_DataDictionary].[typeNameSpaceMember] NOT NULL, -- 1600 bytes, NVarChar(800)
+	[MemberName]            [App_DataDictionary].[typeNameSpaceMember] NOT NULL, -- 1600 bytes, NVarChar(800)
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_ModelNameSpace_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_ModelNameSpace_SysStart] DEFAULT (sysdatetime()),
@@ -25,5 +25,5 @@
 )
 GO
 CREATE UNIQUE INDEX [AK_ModelNameSpace]
-    ON [App_DataDictionary].[ModelNameSpace]([ParentNameSpaceId] ASC, [NameSpaceMember] ASC)
+    ON [App_DataDictionary].[ModelNameSpace]([ParentNameSpaceId] ASC, [MemberName] ASC)
 GO

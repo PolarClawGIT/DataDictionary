@@ -637,4 +637,11 @@
     <Property Name="ParentElementType" Value="SqlSchema" />
     <Property Name="NewName" Value="[funcGetMemberName]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="b29acc25-e52a-4d98-945e-b924b05fd40b" ChangeDateTime="05/10/2024 18:40:01">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ModelNameSpace].[NameSpaceMember]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[ModelNameSpace]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[MemberName]" />
+  </Operation>
 </Operations>

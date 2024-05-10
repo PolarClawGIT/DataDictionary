@@ -9,7 +9,7 @@
 -- Columns:
 --   [NameSpace]      : Fully Qualified NameSpace formated like SQL Qualified Object Names. Includes the Element Name.
 --   [ParentNameSpace]: Fully Qualified NameSpaced formated like SQL Qualified Object Names without the Element Name.
---   [NameSpaceMember]: Element of the NameSpace without formating.
+--   [MemberName]     : Element of the NameSpace without formating.
 --   [IsBase]         : This row is the NameSpace passed to the function (not a parent row).
 --
 -- In: [DatabaseName].[SchemaName].[TableName].[ColumnName] or
@@ -55,22 +55,22 @@ RETURNS TABLE AS RETURN (
 						[NameSpaceChild],
 						Right([NameSpaceChild],Len([NameSpaceChild]) - Len([NameSpaceParent]) -1)),
 					'[',''),']','')
-					As [NameSpaceMember]
+					As [MemberName]
 		From	[Parse]
 		Where	[NameSpaceChild] is Not Null),
 	[Tree] As (
-		Select	[NameSpaceMember],
+		Select	[MemberName],
 				[NameSpaceParent],
 				[NameSpaceChild],
-				FormatMessage('[%s]',[NameSpaceMember]) As [NameSpace],
+				FormatMessage('[%s]',[MemberName]) As [NameSpace],
 				Convert(Int,1) As [Level]
 		From	[Format]
 		Where	[NameSpaceParent] is Null
 		Union All
-		Select	F.[NameSpaceMember],
+		Select	F.[MemberName],
 				F.[NameSpaceParent],
 				F.[NameSpaceChild],
-				FormatMessage('%s.[%s]',T.[NameSpace],F.[NameSpaceMember]) As [NameSpace],
+				FormatMessage('%s.[%s]',T.[NameSpace],F.[MemberName]) As [NameSpace],
 				T.[Level] + 1 As [Level]
 		From	[Tree] T
 				Inner Join [Format] F
@@ -80,7 +80,7 @@ Select	[NameSpace], -- Full name including Member
 			Null,
 			Left([NameSpace], Len([NameSpace]) - CharIndex('[.',Reverse([NameSpace])) -1))
 			As [ParentNameSpace], -- Does not include Member
-		[NameSpaceMember],
+		[MemberName],
 		[Level],
 		IIF(Row_Number() Over (Order By [NameSpace] Desc) = 1,1,0) As [IsBase],
 		Count(*) Over (Partition by Null) As [TotalElements]

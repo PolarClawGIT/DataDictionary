@@ -23,21 +23,21 @@ Begin Try
 	-- Clean the Data
 	Declare @Values Table (
 		[NameSpaceId]            UniqueIdentifier NOT NULL,
-		[NameSpaceMember]		 [App_DataDictionary].[typeNameSpaceMember] Not Null,
+		[MemberName]		 [App_DataDictionary].[typeNameSpaceMember] Not Null,
 		[NameSpace]              [App_DataDictionary].[typeNameSpacePath] Null,
 		[ParentNameSpace]        [App_DataDictionary].[typeNameSpacePath] Null,
 		Primary Key ([NameSpaceId]))
 
 	;With [NameSpace] As (
 		Select	S.[NameSpaceId],
-				S.[NameSpaceMember],
+				S.[MemberName],
 				N.[NameSpace]
 		From	[App_DataDictionary].[ModelNameSpace] S
 				Cross Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) N
 		Where	@ModelId is Null Or S.[ModelId] = @ModelId),
 		[Data] As (
 			Select	X.[NameSpaceId],
-					S.[NameSpaceMember],
+					S.[MemberName],
 					S.[NameSpace],
 					S.[ParentNameSpace],
 					S.[Level] As [NameSpaceLevel],
@@ -53,7 +53,7 @@ Begin Try
 					)
 		Insert Into @Values
 		Select	[NameSpaceId],
-				[NameSpaceMember],
+				[MemberName],
 				[NameSpace],
 				[ParentNameSpace]
 		From	[Data]
@@ -64,11 +64,11 @@ Begin Try
 			[NameSpaceId],
 			[ModelId],
 			[ParentNameSpaceId],
-			[NameSpaceMember])
+			[MemberName])
 	Select	V.[NameSpaceId],
 			@ModelId,
 			P.[NameSpaceId] As [ParentNameSpaceId],
-			V.[NameSpaceMember]
+			V.[MemberName]
 	From	@Values V
 			Left Join @Values P
 			On	V.[ParentNameSpace] = P.[NameSpace]
@@ -133,7 +133,7 @@ Begin Try;
 	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @Data
 
 	Select	S.[NameSpaceId],
-				S.[NameSpaceMember],
+				S.[MemberName],
 				N.[NameSpace]
 		From	[App_DataDictionary].[ModelNameSpace] S
 				Cross Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) N
@@ -146,7 +146,7 @@ Begin Try;
 	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @Data
 
 	Select	S.[NameSpaceId],
-				S.[NameSpaceMember],
+				S.[MemberName],
 				N.[NameSpace]
 		From	[App_DataDictionary].[ModelNameSpace] S
 				Cross Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) N
