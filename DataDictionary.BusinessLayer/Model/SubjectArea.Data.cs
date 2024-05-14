@@ -121,8 +121,8 @@ namespace DataDictionary.BusinessLayer.Model
 
             public event EventHandler? OnTitleChanged;
 
-            public NamedScopeKey GetKey()
-            { return new NamedScopeKey(SystemId); }
+            public NamedScopeIndex GetKey()
+            { return new NamedScopeIndex(SystemId); }
 
             public NamedScopePath GetPath()
             { return SystemPath; }

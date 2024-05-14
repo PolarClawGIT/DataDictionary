@@ -16,8 +16,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         { PropertyChanged += SchemaValue_PropertyChanged; }
 
         /// <inheritdoc/>
-        public virtual NamedScopeKey GetKey()
-        { return new NamedScopeKey(SchemaId); }
+        public virtual NamedScopeIndex GetKey()
+        { return new NamedScopeIndex(SchemaId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()

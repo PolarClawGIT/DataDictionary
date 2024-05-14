@@ -19,8 +19,8 @@ namespace DataDictionary.BusinessLayer.Domain
         { PropertyChanged += CatalogValue_PropertyChanged; }
 
         /// <inheritdoc/>
-        public virtual NamedScopeKey GetKey()
-        { return new NamedScopeKey(EntityId); }
+        public virtual NamedScopeIndex GetKey()
+        { return new NamedScopeIndex(EntityId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()

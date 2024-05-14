@@ -23,8 +23,8 @@ namespace DataDictionary.BusinessLayer.Database
         { PropertyChanged += CatalogValue_PropertyChanged; }
 
         /// <inheritdoc/>
-        public virtual NamedScopeKey GetKey()
-        { return new NamedScopeKey(RoutineId); }
+        public virtual NamedScopeIndex GetKey()
+        { return new NamedScopeIndex(RoutineId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()

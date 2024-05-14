@@ -23,8 +23,8 @@ namespace DataDictionary.BusinessLayer.Model
         { PropertyChanged += SubjectAreaValue_PropertyChanged; }
 
         /// <inheritdoc/>
-        public virtual NamedScopeKey GetKey()
-        { return new NamedScopeKey(SubjectAreaId); }
+        public virtual NamedScopeIndex GetKey()
+        { return new NamedScopeIndex(SubjectAreaId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()

@@ -27,13 +27,13 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <summary>
         /// Method to get System Id of the Named Scope item.
         /// </summary>
-        NamedScopeKey GetKey();
+        NamedScopeIndex GetKey();
     }
 
     /// <summary>
     /// Interface for the NameScope Key
     /// </summary>
-    public interface INamedScopeKey : IKey
+    public interface INamedScopeIndex : IKey
     {
         /// <summary>
         /// System Id of the Named Scope item.
@@ -44,41 +44,41 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Implementation for the Named Scope Key
     /// </summary>
-    public class NamedScopeKey : INamedScopeKey, IKeyComparable<INamedScopeKey>
+    public class NamedScopeIndex : INamedScopeIndex, IKeyComparable<INamedScopeIndex>
     {
         /// <inheritdoc/>
         public Guid SystemId { get; init; } = Guid.Empty;
 
-        internal NamedScopeKey() : base() { }
+        internal NamedScopeIndex() : base() { }
 
         /// <summary>
         /// Constructor for the NameScope Key
         /// </summary>
         /// <param name="source" >A ModelNameSpace</param>
-        public NamedScopeKey(INamedScopeKey source) : this()
+        public NamedScopeIndex(INamedScopeIndex source) : this()
         { SystemId = source.SystemId; }
 
         /// <summary>
         /// Constructor for the NameScope Key
         /// </summary>
-        internal NamedScopeKey(Guid? source) : this()
+        internal NamedScopeIndex(Guid? source) : this()
         { SystemId = source ?? Guid.Empty; }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public virtual bool Equals(INamedScopeKey? other)
+        public virtual bool Equals(INamedScopeIndex? other)
         {
             return
-                other is INamedScopeKey &&
+                other is INamedScopeIndex &&
                 SystemId.Equals(other.SystemId);
         }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is INamedScopeKey value && Equals(new NamedScopeKey(value)); }
+        { return obj is INamedScopeIndex value && Equals(new NamedScopeIndex(value)); }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(INamedScopeKey? other)
+        public virtual int CompareTo(INamedScopeIndex? other)
         {
             if (other is null) { return 1; }
             else { return SystemId.CompareTo(other.SystemId); }
@@ -86,30 +86,30 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         /// <inheritdoc/>
         public virtual int CompareTo(object? obj)
-        { if (obj is INamedScopeKey value) { return CompareTo(new NamedScopeKey(value)); } else { return 1; } }
+        { if (obj is INamedScopeIndex value) { return CompareTo(new NamedScopeIndex(value)); } else { return 1; } }
 
         /// <inheritdoc/>
-        public static bool operator ==(NamedScopeKey left, NamedScopeKey right)
+        public static bool operator ==(NamedScopeIndex left, NamedScopeIndex right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(NamedScopeKey left, NamedScopeKey right)
+        public static bool operator !=(NamedScopeIndex left, NamedScopeIndex right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(NamedScopeKey left, NamedScopeKey right)
+        public static bool operator <(NamedScopeIndex left, NamedScopeIndex right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(NamedScopeKey left, NamedScopeKey right)
+        public static bool operator <=(NamedScopeIndex left, NamedScopeIndex right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(NamedScopeKey left, NamedScopeKey right)
+        public static bool operator >(NamedScopeIndex left, NamedScopeIndex right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(NamedScopeKey left, NamedScopeKey right)
+        public static bool operator >=(NamedScopeIndex left, NamedScopeIndex right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>

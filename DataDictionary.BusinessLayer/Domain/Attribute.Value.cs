@@ -19,8 +19,8 @@ namespace DataDictionary.BusinessLayer.Domain
         { PropertyChanged += OnPropertyChanged; }
 
         /// <inheritdoc/>
-        public virtual NamedScopeKey GetKey()
-        { return new NamedScopeKey(AttributeId); }
+        public virtual NamedScopeIndex GetKey()
+        { return new NamedScopeIndex(AttributeId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()

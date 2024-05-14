@@ -61,7 +61,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <remarks>This is just for constructing a list of parameters needed to load the NamedScopeData.</remarks>
     struct NamedScopePair
     {
-        public NamedScopeKey? ParentKey { get; } = null;
+        public NamedScopeIndex? ParentKey { get; } = null;
         public INamedScopeValue Value { get; }
         public Func<NamedScopePath> GetPath { get; init; }
 
@@ -71,7 +71,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetPath = value.GetPath;
         }
 
-        public NamedScopePair(NamedScopeKey parent, INamedScopeValue value) : this(value)
+        public NamedScopePair(NamedScopeIndex parent, INamedScopeValue value) : this(value)
         { this.ParentKey = parent; }
     }
 }

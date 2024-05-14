@@ -8,14 +8,14 @@ namespace DataDictionary.Main.Controls
     partial class NamedScopeData : UserControl
     {
         INamedScopeData namedScope = BusinessData.NamedScope;
-        Dictionary<ListViewItem, NamedScopeKey> crossRefrence = new Dictionary<ListViewItem, NamedScopeKey>();
+        Dictionary<ListViewItem, NamedScopeIndex> crossRefrence = new Dictionary<ListViewItem, NamedScopeIndex>();
 
         public String HeaderText { get { return groupBox.Text; } set { groupBox.Text = value; } }
         public String ApplyText { get { return applyCommand.Text; } set { applyCommand.Text = value; } }
         public Image? ApplyImage { get { return applyCommand.Image; } set { applyCommand.Image = value; } }
 
         [Browsable(false)]
-        public NamedScopeKey? ScopeKey { get; private set; }
+        public NamedScopeIndex? ScopeKey { get; private set; }
 
         [Browsable(false)]
         public NamedScopePath ScopePath
@@ -63,7 +63,7 @@ namespace DataDictionary.Main.Controls
             crossRefrence.Clear();
             ScopeKey = null;
 
-            foreach (NamedScopeKey item in namedScope.RootKeys())
+            foreach (NamedScopeIndex item in namedScope.RootKeys())
             {
                 INamedScopeValue value = namedScope[item];
 
@@ -76,14 +76,14 @@ namespace DataDictionary.Main.Controls
             }
         }
 
-        void SetNamedScope(NamedScopeKey key)
+        void SetNamedScope(NamedScopeIndex key)
         {
             browser.Items.Clear();
             crossRefrence.Clear();
 
             // Parent Nodes
             foreach (INamedScopeValue value in namedScope.ParentKeys(key)
-                .Select(s => namedScope[new NamedScopeKey(s)])
+                .Select(s => namedScope[new NamedScopeIndex(s)])
                 .OrderBy(o => o.GetPosition())
                 .ThenBy(o => o.GetTitle()))
             {
@@ -99,7 +99,7 @@ namespace DataDictionary.Main.Controls
             {
                 foreach (INamedScopeValue value in namedScope.RootKeys()
                     .Where(w => !key.Equals(w))
-                    .Select(s => namedScope[new NamedScopeKey(s)])
+                    .Select(s => namedScope[new NamedScopeIndex(s)])
                     .OrderBy(o => o.GetPosition())
                     .ThenBy(o => o.GetTitle()))
                 {
@@ -125,7 +125,7 @@ namespace DataDictionary.Main.Controls
 
             // Child Nodes
             foreach (INamedScopeValue value in namedScope.ChildrenKeys(key)
-                .Select(s => namedScope[new NamedScopeKey(s)]).
+                .Select(s => namedScope[new NamedScopeIndex(s)]).
                 OrderBy(o => o.Scope).
                 ThenBy(o => o.GetPosition()).
                 ThenBy(o => o.GetTitle()))
@@ -148,7 +148,7 @@ namespace DataDictionary.Main.Controls
 
         void SetNamedScope(NamedScopePath path)
         {
-            if (namedScope.PathKeys(path).FirstOrDefault() is NamedScopeKey key)
+            if (namedScope.PathKeys(path).FirstOrDefault() is NamedScopeIndex key)
             { SetNamedScope(key); }
             else { ScopeKey = null; ScopePath = path; }
         }
@@ -158,7 +158,7 @@ namespace DataDictionary.Main.Controls
             if (browser.SelectedItems.Count > 0
                 && crossRefrence.ContainsKey(browser.SelectedItems[0]))
             {
-                NamedScopeKey key = crossRefrence[browser.SelectedItems[0]];
+                NamedScopeIndex key = crossRefrence[browser.SelectedItems[0]];
                 SetNamedScope(key);
             }
         }

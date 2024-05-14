@@ -61,7 +61,7 @@ namespace DataDictionary.Main.Controls
         public static IEnumerable<WorkItem> Load(this TreeView target, INamedScopeData data)
         {
             List<WorkItem> result = new List<WorkItem>();
-            List<NamedScopeKey> expandedNodes = new List<NamedScopeKey>();
+            List<NamedScopeIndex> expandedNodes = new List<NamedScopeIndex>();
             Dictionary<TreeNode, INamedScopeValue> valueNodes = new Dictionary<TreeNode, INamedScopeValue>();
 
             if (treeNodeDictionary.ContainsKey(target))
@@ -121,7 +121,7 @@ namespace DataDictionary.Main.Controls
                 WorkName = "Expand Tree Nodes",
                 DoWork = () => target.Invoke(() =>
                 {
-                    foreach (NamedScopeKey item in expandedNodes)
+                    foreach (NamedScopeIndex item in expandedNodes)
                     {
                         var node = valueNodes.FirstOrDefault(w => item.Equals(w.Value.GetKey()));
                         if (node.Key is not null && !node.Key.IsExpanded)
@@ -155,9 +155,9 @@ namespace DataDictionary.Main.Controls
                 target.Disposed -= TreeViewDisposed; // Only need to call it once
             }
 
-            void CreateNodes(TreeNodeCollection targetNodes, IEnumerable<NamedScopeKey> children)
+            void CreateNodes(TreeNodeCollection targetNodes, IEnumerable<NamedScopeIndex> children)
             {
-                foreach (IGrouping<ScopeType, NamedScopeKey> scopeGroup in children.GroupBy(g => data[g].Scope).OrderBy(o => o.Key))
+                foreach (IGrouping<ScopeType, NamedScopeIndex> scopeGroup in children.GroupBy(g => data[g].Scope).OrderBy(o => o.Key))
                 {
                     TreeNodeCollection nodes = targetNodes;
 
@@ -178,7 +178,7 @@ namespace DataDictionary.Main.Controls
                     }
 
                     // Build Data Nodes
-                    foreach (NamedScopeKey item in scopeGroup.OrderBy(o => data[o].GetPosition()).ThenBy(o => data[o].GetTitle()))
+                    foreach (NamedScopeIndex item in scopeGroup.OrderBy(o => data[o].GetPosition()).ThenBy(o => data[o].GetTitle()))
                     {
                         TreeNode node = target.Invoke<TreeNode>(() =>
                         {
@@ -196,7 +196,7 @@ namespace DataDictionary.Main.Controls
                             {
                                 if (sender is INamedScopeValue value)
                                 {
-                                    NamedScopeKey key = value.GetKey();
+                                    NamedScopeIndex key = value.GetKey();
 
                                     if (valueNodes.FirstOrDefault(w => key.Equals(w.Value.GetKey()))
                                         is KeyValuePair<TreeNode, INamedScopeValue> nodeItem
@@ -209,7 +209,7 @@ namespace DataDictionary.Main.Controls
                             }
                         });
 
-                        if (data.ChildrenKeys(item) is IList<NamedScopeKey> values && values.Count > 0)
+                        if (data.ChildrenKeys(item) is IList<NamedScopeIndex> values && values.Count > 0)
                         { CreateNodes(node.Nodes, values); }
                     }
                 }
