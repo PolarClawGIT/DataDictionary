@@ -50,7 +50,7 @@ namespace DataDictionary.Main.Controls
         /// <summary>
         /// Used to hold the cross reference between the TreeNode and the NamedScope. Each tree has its own item.
         /// </summary>
-        static Dictionary<TreeView, Dictionary<TreeNode, INamedScopeValue>> treeNodeDictionary = new Dictionary<TreeView, Dictionary<TreeNode, INamedScopeValue>>();
+        static Dictionary<TreeView, Dictionary<TreeNode, INamedScopeSource>> treeNodeDictionary = new Dictionary<TreeView, Dictionary<TreeNode, INamedScopeSource>>();
 
         /// <summary>
         /// Creates work items to load the target TreeView with the data from NameScope.
@@ -62,7 +62,7 @@ namespace DataDictionary.Main.Controls
         {
             List<WorkItem> result = new List<WorkItem>();
             List<NamedScopeIndex> expandedNodes = new List<NamedScopeIndex>();
-            Dictionary<TreeNode, INamedScopeValue> valueNodes = new Dictionary<TreeNode, INamedScopeValue>();
+            Dictionary<TreeNode, INamedScopeSource> valueNodes = new Dictionary<TreeNode, INamedScopeSource>();
 
             if (treeNodeDictionary.ContainsKey(target))
             { valueNodes = treeNodeDictionary[target]; }
@@ -194,12 +194,12 @@ namespace DataDictionary.Main.Controls
                             // Handle 
                             void TreeViewExtension_OnTitleChanged(Object? sender, EventArgs e)
                             {
-                                if (sender is INamedScopeValue value)
+                                if (sender is INamedScopeSource value)
                                 {
                                     NamedScopeIndex key = value.GetKey();
 
                                     if (valueNodes.FirstOrDefault(w => key.Equals(w.Value.GetKey()))
-                                        is KeyValuePair<TreeNode, INamedScopeValue> nodeItem
+                                        is KeyValuePair<TreeNode, INamedScopeSource> nodeItem
                                         && nodeItem.Key is not null)
                                     {
                                         nodeItem.Key.Text = nodeItem.Value.GetTitle();
@@ -221,7 +221,7 @@ namespace DataDictionary.Main.Controls
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static INamedScopeValue? GetNamedScope(this TreeNode source)
+        public static INamedScopeSource? GetNamedScope(this TreeNode source)
         {
             if (treeNodeDictionary.ContainsKey(source.TreeView) && treeNodeDictionary[source.TreeView].ContainsKey(source))
             { return treeNodeDictionary[source.TreeView][source]; }

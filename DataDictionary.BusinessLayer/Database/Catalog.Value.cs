@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class CatalogValue : DbCatalogItem, ICatalogValue, INamedScopeValue
+    public class CatalogValue : DbCatalogItem, ICatalogValue, INamedScopeSource
     {
         /// <inheritdoc cref="DbCatalogItem()"/>
         public CatalogValue() : base()

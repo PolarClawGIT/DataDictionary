@@ -106,7 +106,7 @@ namespace DataDictionary.BusinessLayer.Model
         /// <summary>
         /// Represents NameSpace items within the Subject that do not have Subject associated with them.
         /// </summary>
-        class SubjectNameSpace : INamedScopeValue
+        class SubjectNameSpace : INamedScopeSource
         {
             protected Guid SystemId;
             protected NamedScopePath SystemPath;

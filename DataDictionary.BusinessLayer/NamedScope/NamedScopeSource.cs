@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Interface for the methods needed to support NamedScope
     /// </summary>
-    public interface INamedScopeValue : IScopeKey, IGetNamedScopeKey
+    public interface INamedScopeSource : IScopeKey, IGetNamedScopeKey
     {
         /// <summary>
         /// Get the Title for the NamedScope
@@ -62,16 +62,16 @@ namespace DataDictionary.BusinessLayer.NamedScope
     struct NamedScopePair
     {
         public NamedScopeIndex? ParentKey { get; } = null;
-        public INamedScopeValue Value { get; }
+        public INamedScopeSource Value { get; }
         public Func<NamedScopePath> GetPath { get; init; }
 
-        public NamedScopePair(INamedScopeValue value)
+        public NamedScopePair(INamedScopeSource value)
         {
             this.Value = value;
             GetPath = value.GetPath;
         }
 
-        public NamedScopePair(NamedScopeIndex parent, INamedScopeValue value) : this(value)
+        public NamedScopePair(NamedScopeIndex parent, INamedScopeSource value) : this(value)
         { this.ParentKey = parent; }
     }
 }

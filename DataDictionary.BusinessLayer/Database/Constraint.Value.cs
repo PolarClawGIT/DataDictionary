@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class ConstraintValue : DbConstraintItem, IConstraintValue, INamedScopeValue
+    public class ConstraintValue : DbConstraintItem, IConstraintValue, INamedScopeSource
     {
         /// <inheritdoc cref="DbConstraintItem()"/>
         public ConstraintValue() : base()

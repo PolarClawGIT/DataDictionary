@@ -75,8 +75,8 @@ namespace DataDictionary.Main
 
             if (!isPlusMinus && contextNameNavigation.SelectedNode is TreeNode node)
             {
-                INamedScopeValue? item = node.GetNamedScope();
-                if (item is INamedScopeValue taget)
+                INamedScopeSource? item = node.GetNamedScope();
+                if (item is INamedScopeSource taget)
                 {
                     dynamic dataNode = taget;
                     Activate(dataNode);

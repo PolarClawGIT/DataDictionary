@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.Library
     { }
 
     /// <inheritdoc/>
-    public class LibraryMemberValue : LibraryMemberItem, ILibraryMemberValue, INamedScopeValue
+    public class LibraryMemberValue : LibraryMemberItem, ILibraryMemberValue, INamedScopeSource
     {
         /// <inheritdoc cref="LibraryMemberItem()"/>
         public LibraryMemberValue() : base()

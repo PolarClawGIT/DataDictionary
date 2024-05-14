@@ -65,7 +65,7 @@ namespace DataDictionary.Main.Controls
 
             foreach (NamedScopeIndex item in namedScope.RootKeys())
             {
-                INamedScopeValue value = namedScope[item];
+                INamedScopeSource value = namedScope[item];
 
                 ListViewItem browserItem = new ListViewItem(value.GetTitle(), value.Scope.ToName());
                 browserItem.ToolTipText = value.NamedPath.MemberFullPath;
@@ -82,7 +82,7 @@ namespace DataDictionary.Main.Controls
             crossRefrence.Clear();
 
             // Parent Nodes
-            foreach (INamedScopeValue value in namedScope.ParentKeys(key)
+            foreach (INamedScopeSource value in namedScope.ParentKeys(key)
                 .Select(s => namedScope[new NamedScopeIndex(s)])
                 .OrderBy(o => o.GetPosition())
                 .ThenBy(o => o.GetTitle()))
@@ -97,7 +97,7 @@ namespace DataDictionary.Main.Controls
             // Root nodes if no parents
             if (namedScope.ParentKeys(key).Count == 0)
             {
-                foreach (INamedScopeValue value in namedScope.RootKeys()
+                foreach (INamedScopeSource value in namedScope.RootKeys()
                     .Where(w => !key.Equals(w))
                     .Select(s => namedScope[new NamedScopeIndex(s)])
                     .OrderBy(o => o.GetPosition())
@@ -113,7 +113,7 @@ namespace DataDictionary.Main.Controls
             }
 
             // Current Node
-            INamedScopeValue currentValue = namedScope[key];
+            INamedScopeSource currentValue = namedScope[key];
             ListViewItem currentItem = new ListViewItem(currentValue.GetTitle(), currentValue.Scope.ToName());
             currentItem.ToolTipText = currentValue.NamedPath.MemberFullPath;
             currentItem.Font = new Font(currentItem.Font, FontStyle.Underline);
@@ -124,7 +124,7 @@ namespace DataDictionary.Main.Controls
             ScopeKey = currentValue.GetKey();
 
             // Child Nodes
-            foreach (INamedScopeValue value in namedScope.ChildrenKeys(key)
+            foreach (INamedScopeSource value in namedScope.ChildrenKeys(key)
                 .Select(s => namedScope[new NamedScopeIndex(s)]).
                 OrderBy(o => o.Scope).
                 ThenBy(o => o.GetPosition()).
@@ -139,7 +139,7 @@ namespace DataDictionary.Main.Controls
             }
 
             // Update form to match selected item
-            if (ScopeKey is not null && namedScope.ContainsKey(ScopeKey) && namedScope[ScopeKey] is INamedScopeValue setValue)
+            if (ScopeKey is not null && namedScope.ContainsKey(ScopeKey) && namedScope[ScopeKey] is INamedScopeSource setValue)
             {
                 ScopePath = setValue.NamedPath;
                 Scope = setValue.Scope;

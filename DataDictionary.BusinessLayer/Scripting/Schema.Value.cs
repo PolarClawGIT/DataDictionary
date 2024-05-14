@@ -9,7 +9,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     { }
 
     /// <inheritdoc/>
-    public class SchemaValue : SchemaItem, ISchemaValue, INamedScopeValue
+    public class SchemaValue : SchemaItem, ISchemaValue, INamedScopeSource
     {
         /// <inheritdoc/>
         public SchemaValue() : base()

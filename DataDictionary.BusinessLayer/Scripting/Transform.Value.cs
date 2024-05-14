@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     { }
 
     /// <inheritdoc/>
-    public class TransformValue : TransformItem, ITransformValue, INamedScopeValue
+    public class TransformValue : TransformItem, ITransformValue, INamedScopeSource
     {
         /// <inheritdoc/>
         public TransformValue() : base()

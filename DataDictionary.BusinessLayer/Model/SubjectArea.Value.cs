@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Model
     { }
 
     /// <inheritdoc/>
-    public class SubjectAreaValue : ModelSubjectAreaItem, ISubjectAreaValue, INamedScopeValue
+    public class SubjectAreaValue : ModelSubjectAreaItem, ISubjectAreaValue, INamedScopeSource
     {
         /// <inheritdoc cref="ModelSubjectAreaItem()"/>
         public SubjectAreaValue() : base()

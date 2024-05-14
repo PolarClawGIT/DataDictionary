@@ -22,7 +22,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <returns>The element with the specified key.</returns>
         /// <exception cref="System.ArgumentNullException">key is null</exception> 
         /// <exception cref="System.Collections.Generic.KeyNotFoundException">The property is retrieved and key is not found.</exception> 
-        INamedScopeValue this[NamedScopeIndex key] { get; }
+        INamedScopeSource this[NamedScopeIndex key] { get; }
 
         /// <inheritdoc cref="ICollection.Count"/>
         Int32 Count { get; }
@@ -63,7 +63,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <param name="keys"></param>
         /// <returns></returns>
-        IReadOnlyList<INamedScopeValue> Values(IEnumerable<INamedScopeIndex> keys);
+        IReadOnlyList<INamedScopeSource> Values(IEnumerable<INamedScopeIndex> keys);
 
         /// <summary>
         /// Adds an item to the Collection as a Root node.
@@ -72,7 +72,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <exception cref="System.ArgumentException">
         /// An element with the same key already exists.
         /// </exception>
-        void Add(INamedScopeValue value);
+        void Add(INamedScopeSource value);
 
         /// <summary>
         /// Adds an item to the Collection as a Child of the specified Parent.
@@ -80,7 +80,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <param name="parent"></param>
         /// <param name="value"></param>
         /// <exception cref="NotImplementedException"></exception>
-        void Add(NamedScopeIndex parent, INamedScopeValue value);
+        void Add(NamedScopeIndex parent, INamedScopeSource value);
 
         /// <inheritdoc cref="IList.Clear"/>
         void Clear();
@@ -98,7 +98,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     class NamedScopeData : INamedScopeData
     {
         // Primary Data
-        SortedDictionary<NamedScopeIndex, INamedScopeValue> data = new SortedDictionary<NamedScopeIndex, INamedScopeValue>();
+        SortedDictionary<NamedScopeIndex, INamedScopeSource> data = new SortedDictionary<NamedScopeIndex, INamedScopeSource>();
 
         // Alternate Keys (not sure if Sorted Dictionary or normal Dictionary is better here). Because of the wrapper, it can be changed easy.
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> children = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
@@ -108,7 +108,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         List<NamedScopeIndex> roots = new List<NamedScopeIndex>();
 
         /// <inheritdoc/>
-        public virtual INamedScopeValue this[NamedScopeIndex key]
+        public virtual INamedScopeSource this[NamedScopeIndex key]
         { get { return data[key]; } }
 
         /// <inheritdoc/>
@@ -166,9 +166,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<INamedScopeValue> Values(IEnumerable<INamedScopeIndex> keys)
+        public virtual IReadOnlyList<INamedScopeSource> Values(IEnumerable<INamedScopeIndex> keys)
         {
-            List<INamedScopeValue> result = new List<INamedScopeValue>();
+            List<INamedScopeSource> result = new List<INamedScopeSource>();
 
             foreach (INamedScopeIndex item in keys)
             {
@@ -180,7 +180,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public virtual void Add(INamedScopeValue value)
+        public virtual void Add(INamedScopeSource value)
         {
             NamedScopeIndex key = value.GetKey();
 
@@ -198,7 +198,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public virtual void Add(NamedScopeIndex parent, INamedScopeValue value)
+        public virtual void Add(NamedScopeIndex parent, INamedScopeSource value)
         {
             //TODO: Need a trap for infinite loop.
             //      It is when the parent (or child) directly or indirectly points to itself.

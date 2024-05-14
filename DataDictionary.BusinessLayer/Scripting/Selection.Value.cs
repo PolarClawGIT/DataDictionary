@@ -9,7 +9,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     { }
 
     /// <inheritdoc/>
-    public class SelectionValue : SelectionItem, ISelectionValue, INamedScopeValue
+    public class SelectionValue : SelectionItem, ISelectionValue, INamedScopeSource
     {
         /// <inheritdoc/>
         public SelectionValue() : base()
