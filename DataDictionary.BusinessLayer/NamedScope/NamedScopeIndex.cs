@@ -1,53 +1,25 @@
-﻿using DataDictionary.BusinessLayer.NameSpace;
-using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Help;
-using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Constraint;
-using DataDictionary.DataLayer.DatabaseData.Domain;
-using DataDictionary.DataLayer.DatabaseData.Routine;
-using DataDictionary.DataLayer.DatabaseData.Schema;
-using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.DomainData.Entity;
-using DataDictionary.DataLayer.LibraryData.Member;
-using DataDictionary.DataLayer.LibraryData.Source;
-using DataDictionary.DataLayer.ModelData;
-using DataDictionary.DataLayer.ModelData.SubjectArea;
-using DataDictionary.DataLayer.ScriptingData.Schema;
-using DataDictionary.DataLayer.ScriptingData.Selection;
-using DataDictionary.DataLayer.ScriptingData.Transform;
+﻿using DataDictionary.DataLayer;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
     /// <summary>
-    /// 
-    /// </summary>
-    public interface IGetNamedScopeKey
-    {
-        /// <summary>
-        /// Method to get System Id of the Named Scope item.
-        /// </summary>
-        NamedScopeIndex GetKey();
-    }
-
-    /// <summary>
-    /// Interface for the NameScope Key
+    /// Interface for the NameScope Index
     /// </summary>
     public interface INamedScopeIndex : IKey
     {
         /// <summary>
         /// System Id of the Named Scope item.
         /// </summary>
-        public Guid SystemId { get; }
+        public Guid NamedScopeId { get; }
     }
 
     /// <summary>
-    /// Implementation for the Named Scope Key
+    /// Implementation for the Named Scope Index
     /// </summary>
     public class NamedScopeIndex : INamedScopeIndex, IKeyComparable<INamedScopeIndex>
     {
         /// <inheritdoc/>
-        public Guid SystemId { get; init; } = Guid.Empty;
+        public Guid NamedScopeId { get; init; } = Guid.Empty;
 
         internal NamedScopeIndex() : base() { }
 
@@ -56,13 +28,13 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <param name="source" >A ModelNameSpace</param>
         public NamedScopeIndex(INamedScopeIndex source) : this()
-        { SystemId = source.SystemId; }
+        { NamedScopeId = source.NamedScopeId; }
 
         /// <summary>
         /// Constructor for the NameScope Key
         /// </summary>
         internal NamedScopeIndex(Guid? source) : this()
-        { SystemId = source ?? Guid.Empty; }
+        { NamedScopeId = source ?? Guid.Empty; }
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
@@ -70,7 +42,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         {
             return
                 other is INamedScopeIndex &&
-                SystemId.Equals(other.SystemId);
+                NamedScopeId.Equals(other.NamedScopeId);
         }
 
         /// <inheritdoc/>
@@ -81,7 +53,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         public virtual int CompareTo(INamedScopeIndex? other)
         {
             if (other is null) { return 1; }
-            else { return SystemId.CompareTo(other.SystemId); }
+            else { return NamedScopeId.CompareTo(other.NamedScopeId); }
         }
 
         /// <inheritdoc/>
@@ -114,7 +86,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         /// <inheritdoc/>
         public override int GetHashCode()
-        { return SystemId.GetHashCode(); }
+        { return NamedScopeId.GetHashCode(); }
         #endregion
 
         /// <summary>
@@ -123,7 +95,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <returns></returns>
         public override String? ToString()
         {
-            if (SystemId is Guid value) { return value.ToString(); }
+            if (NamedScopeId is Guid value) { return value.ToString(); }
             else { return base.ToString(); }
         }
     }

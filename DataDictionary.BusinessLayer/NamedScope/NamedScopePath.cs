@@ -1,13 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.Library;
-using DataDictionary.BusinessLayer.Model;
-using DataDictionary.DataLayer;
+﻿using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Scope;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
