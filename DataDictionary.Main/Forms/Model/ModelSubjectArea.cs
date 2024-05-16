@@ -66,9 +66,6 @@ namespace DataDictionary.Main.Forms.Model
                 this.IsLocked(true);
                 SubjectAreaIndex key = new SubjectAreaIndex(current);
 
-                NamedScopeIndex nameKey = new NamedScopeKey(current);
-                BusinessData.NamedScope.Remove(nameKey);
-
                 current.Remove();
                 bindingAttribute.Clear();
                 bindingEntity.Clear();

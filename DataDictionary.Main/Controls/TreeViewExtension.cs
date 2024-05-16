@@ -50,7 +50,7 @@ namespace DataDictionary.Main.Controls
         /// <summary>
         /// Used to hold the cross reference between the TreeNode and the NamedScope. Each tree has its own item.
         /// </summary>
-        static Dictionary<TreeView, Dictionary<TreeNode, INamedScopeSource>> treeNodeDictionary = new Dictionary<TreeView, Dictionary<TreeNode, INamedScopeSource>>();
+        static Dictionary<TreeView, Dictionary<TreeNode, NamedScopeIndex>> treeNodeDictionary = new Dictionary<TreeView, Dictionary<TreeNode, NamedScopeIndex>>();
 
         /// <summary>
         /// Creates work items to load the target TreeView with the data from NameScope.
@@ -62,7 +62,7 @@ namespace DataDictionary.Main.Controls
         {
             List<WorkItem> result = new List<WorkItem>();
             List<NamedScopeIndex> expandedNodes = new List<NamedScopeIndex>();
-            Dictionary<TreeNode, INamedScopeSource> valueNodes = new Dictionary<TreeNode, INamedScopeSource>();
+            Dictionary<TreeNode, NamedScopeIndex> valueNodes = new Dictionary<TreeNode, NamedScopeIndex>();
 
             if (treeNodeDictionary.ContainsKey(target))
             { valueNodes = treeNodeDictionary[target]; }
@@ -85,7 +85,7 @@ namespace DataDictionary.Main.Controls
                             || (w.Key.Nodes.Count == 0
                                 && w.Key.Parent is not null
                                 && w.Key.Parent.IsExpanded))
-                        .Select(s => s.Value.GetKey()));
+                        .Select(s => s.Value));
 
                         valueNodes.Clear();
                     });
@@ -123,7 +123,7 @@ namespace DataDictionary.Main.Controls
                 {
                     foreach (NamedScopeIndex item in expandedNodes)
                     {
-                        var node = valueNodes.FirstOrDefault(w => item.Equals(w.Value.GetKey()));
+                        var node = valueNodes.FirstOrDefault(w => item.Equals(w.Value));
                         if (node.Key is not null && !node.Key.IsExpanded)
                         { node.Key.ExpandParent(); }
                     }
@@ -157,7 +157,7 @@ namespace DataDictionary.Main.Controls
 
             void CreateNodes(TreeNodeCollection targetNodes, IEnumerable<NamedScopeIndex> children)
             {
-                foreach (IGrouping<ScopeType, NamedScopeIndex> scopeGroup in children.GroupBy(g => data[g].Scope).OrderBy(o => o.Key))
+                foreach (IGrouping<ScopeType, NamedScopeIndex> scopeGroup in children.GroupBy(g => data.GetValue(g).Scope).OrderBy(o => o.Key))
                 {
                     TreeNodeCollection nodes = targetNodes;
 
@@ -178,32 +178,31 @@ namespace DataDictionary.Main.Controls
                     }
 
                     // Build Data Nodes
-                    foreach (NamedScopeIndex item in scopeGroup.OrderBy(o => data[o].GetPosition()).ThenBy(o => data[o].GetTitle()))
+                    foreach (NamedScopeIndex item in scopeGroup.OrderBy(o => data.GetValue(o).OrdinalPosition).ThenBy(o => data.GetValue(o).Title))
                     {
                         TreeNode node = target.Invoke<TreeNode>(() =>
                         {
-                            TreeNode newNode = nodes.Add(data[item].GetTitle());
-                            newNode.ImageKey = data[item].Scope.ToName();
-                            newNode.SelectedImageKey = data[item].Scope.ToName();
-                            newNode.ToolTipText = data[item].GetPath().MemberFullPath;
-                            data[item].OnTitleChanged += TreeViewExtension_OnTitleChanged; ;
-                            valueNodes.Add(newNode, data[item]);
+                            TreeNode newNode = nodes.Add(data.GetValue(item).Title);
+                            newNode.ImageKey = data.GetValue(item).Scope.ToName();
+                            newNode.SelectedImageKey = data.GetValue(item).Scope.ToName();
+                            newNode.ToolTipText = data.GetValue(item).NamedPath.MemberFullPath;
+                            data.GetValue(item).OnTitleChanged += TreeViewExtension_OnTitleChanged; ;
+                            valueNodes.Add(newNode, item);
 
                             return newNode;
 
                             // Handle 
                             void TreeViewExtension_OnTitleChanged(Object? sender, EventArgs e)
                             {
-                                if (sender is INamedScopeSource value)
+                                if (sender is INamedScopeValue value)
                                 {
-                                    NamedScopeIndex key = value.GetKey();
-
-                                    if (valueNodes.FirstOrDefault(w => key.Equals(w.Value.GetKey()))
-                                        is KeyValuePair<TreeNode, INamedScopeSource> nodeItem
+                                    
+                                    if (valueNodes.FirstOrDefault(w => value.Index.Equals(w.Value))
+                                        is KeyValuePair<TreeNode, NamedScopeIndex> nodeItem
                                         && nodeItem.Key is not null)
                                     {
-                                        nodeItem.Key.Text = nodeItem.Value.GetTitle();
-                                        nodeItem.Key.ToolTipText = nodeItem.Value.GetPath().MemberFullPath;
+                                        nodeItem.Key.Text = value.Title;
+                                        nodeItem.Key.ToolTipText = value.NamedPath.MemberFullPath;
                                     }
                                 }
                             }
@@ -221,10 +220,14 @@ namespace DataDictionary.Main.Controls
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static INamedScopeSource? GetNamedScope(this TreeNode source)
+        public static INamedScopeSourceValue? GetNamedScope(this TreeNode source)
         {
             if (treeNodeDictionary.ContainsKey(source.TreeView) && treeNodeDictionary[source.TreeView].ContainsKey(source))
-            { return treeNodeDictionary[source.TreeView][source]; }
+            {
+                NamedScopeIndex index = treeNodeDictionary[source.TreeView][source];
+                INamedScopeSourceValue result = BusinessData.NamedScope.GetData(index);
+                return result;
+            }
             else { return null; }
         }
     }

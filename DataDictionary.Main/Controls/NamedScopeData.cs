@@ -65,12 +65,12 @@ namespace DataDictionary.Main.Controls
 
             foreach (NamedScopeIndex item in namedScope.RootKeys())
             {
-                INamedScopeSource value = namedScope[item];
+                INamedScopeValue value = namedScope.GetValue(item);
 
-                ListViewItem browserItem = new ListViewItem(value.GetTitle(), value.Scope.ToName());
+                ListViewItem browserItem = new ListViewItem(value.Title, value.Scope.ToName());
                 browserItem.ToolTipText = value.NamedPath.MemberFullPath;
 
-                if (ScopeKey is null) { ScopeKey = value.GetKey(); }
+                if (ScopeKey is null) { ScopeKey = value.Index; }
                 browser.Items.Add(browserItem);
                 crossRefrence.Add(browserItem, item);
             }
@@ -82,64 +82,64 @@ namespace DataDictionary.Main.Controls
             crossRefrence.Clear();
 
             // Parent Nodes
-            foreach (INamedScopeSource value in namedScope.ParentKeys(key)
-                .Select(s => namedScope[new NamedScopeIndex(s)])
-                .OrderBy(o => o.GetPosition())
-                .ThenBy(o => o.GetTitle()))
+            foreach (INamedScopeValue value in namedScope.ParentKeys(key).
+                Select(s => namedScope.GetValue(s)).
+                OrderBy(o => o.OrdinalPosition).
+                ThenBy(o => o.Title))
             {
-                ListViewItem browserItem = new ListViewItem(value.GetTitle(), value.Scope.ToName());
+                ListViewItem browserItem = new ListViewItem(value.Title, value.Scope.ToName());
                 browserItem.ToolTipText = value.NamedPath.MemberFullPath;
 
                 browser.Items.Add(browserItem);
-                crossRefrence.Add(browserItem, value.GetKey());
+                crossRefrence.Add(browserItem, value.Index);
             }
 
             // Root nodes if no parents
             if (namedScope.ParentKeys(key).Count == 0)
             {
-                foreach (INamedScopeSource value in namedScope.RootKeys()
-                    .Where(w => !key.Equals(w))
-                    .Select(s => namedScope[new NamedScopeIndex(s)])
-                    .OrderBy(o => o.GetPosition())
-                    .ThenBy(o => o.GetTitle()))
+                foreach (INamedScopeValue value in namedScope.RootKeys().
+                    Where(w => !key.Equals(w)).
+                    Select(s => namedScope.GetValue(s)).
+                    OrderBy(o => o.OrdinalPosition).
+                    ThenBy(o => o.Title))
                 {
-                    ListViewItem browserItem = new ListViewItem(value.GetTitle(), value.Scope.ToName());
+                    ListViewItem browserItem = new ListViewItem(value.Title, value.Scope.ToName());
                     browserItem.ToolTipText = value.NamedPath.MemberFullPath;
 
-                    if (ScopeKey is null) { ScopeKey = value.GetKey(); }
+                    if (ScopeKey is null) { ScopeKey = value.Index; }
                     browser.Items.Add(browserItem);
-                    crossRefrence.Add(browserItem, value.GetKey());
+                    crossRefrence.Add(browserItem, value.Index);
                 }
             }
 
             // Current Node
-            INamedScopeSource currentValue = namedScope[key];
-            ListViewItem currentItem = new ListViewItem(currentValue.GetTitle(), currentValue.Scope.ToName());
+            INamedScopeValue currentValue = namedScope.GetValue(key);
+            ListViewItem currentItem = new ListViewItem(currentValue.Title, currentValue.Scope.ToName());
             currentItem.ToolTipText = currentValue.NamedPath.MemberFullPath;
             currentItem.Font = new Font(currentItem.Font, FontStyle.Underline);
             currentItem.ForeColor = Color.Blue;
 
             browser.Items.Add(currentItem);
             crossRefrence.Add(currentItem, key);
-            ScopeKey = currentValue.GetKey();
+            ScopeKey = currentValue.Index;
 
             // Child Nodes
-            foreach (INamedScopeSource value in namedScope.ChildrenKeys(key)
-                .Select(s => namedScope[new NamedScopeIndex(s)]).
+            foreach (var value in namedScope.ChildrenKeys(key).
+                Select(s => namedScope.GetValue(s)).
                 OrderBy(o => o.Scope).
-                ThenBy(o => o.GetPosition()).
-                ThenBy(o => o.GetTitle()))
+                ThenBy(o => o.OrdinalPosition).
+                ThenBy(o => o.Title))
             {
-                ListViewItem browserItem = new ListViewItem(value.GetTitle(), value.Scope.ToName());
+                ListViewItem browserItem = new ListViewItem(value.Title, value.Scope.ToName());
                 browserItem.ToolTipText = value.NamedPath.MemberFullPath;
                 browserItem.IndentCount = 1;
 
                 browser.Items.Add(browserItem);
-                crossRefrence.Add(browserItem, value.GetKey());
+                crossRefrence.Add(browserItem, value.Index);
             }
 
             // Update form to match selected item
-            if (ScopeKey is not null && namedScope.ContainsKey(ScopeKey) && namedScope[ScopeKey] is INamedScopeSource setValue)
+            if (ScopeKey is not null && namedScope.ContainsKey(ScopeKey) && namedScope.GetValue(ScopeKey) is INamedScopeValue setValue)
             {
                 ScopePath = setValue.NamedPath;
                 Scope = setValue.Scope;

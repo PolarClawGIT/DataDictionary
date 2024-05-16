@@ -5,8 +5,13 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Interface for the NamedScope Value.
     /// </summary>
-    public interface INamedScopeValue : IScopeKey
+    public interface INamedScopeValue : IScopeKey, IOnTitleChanged
     {
+        /// <summary>
+        /// The Index for the NamedScopeValue.
+        /// </summary>
+        NamedScopeIndex Index { get; }
+
         /// <summary>
         /// The NamedPath for the Value
         /// </summary>
@@ -29,6 +34,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
     public abstract class NamedScopeValue : INamedScopeValue
     {
         /// <inheritdoc/>
+        public NamedScopeIndex Index { get; } = new NamedScopeIndex(Guid.NewGuid());
+
+        /// <inheritdoc/>
         public ScopeType Scope { get; init; } = ScopeType.Null;
 
         /// <inheritdoc/>
@@ -39,18 +47,25 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         /// <inheritdoc/>
         public virtual Int32 OrdinalPosition { get; init; } = 0;
+
+        /// <inheritdoc/>
+        public event EventHandler? OnTitleChanged;
+
+        /// <summary>
+        /// Trigger the OnTitleChanged event.
+        /// </summary>
+        public virtual void TitleChanged()
+        {
+            if (OnTitleChanged is EventHandler handler)
+            { handler(this, EventArgs.Empty); }
+        }
     }
 
     /// <summary>
     /// Internal structure of a NamedScopeValue
     /// </summary>
-    class NamedScopeValueCore : NamedScopeValue, IOnTitleChanged
+    class NamedScopeValueCore : NamedScopeValue
     {
-        /// <summary>
-        /// Internal Index for the NameScopeValue
-        /// </summary>
-        public NamedScopeIndex Index = new NamedScopeIndex(Guid.NewGuid());
-
         /// <summary>
         /// Get the current Path of the Value
         /// </summary>
@@ -82,24 +97,17 @@ namespace DataDictionary.BusinessLayer.NamedScope
             GetPath = source.GetPath;
         }
 
-        /// <summary>
-        /// Updates the Title and Path of the NamedScope Value.
-        /// </summary>
+        /// <inheritdoc/>
         /// <remarks>
-        /// Call this method when the source title or path changes.
-        /// Triggers OnTitleChanged
-        /// Can be Triggered by Source, such as when hooked up to PropertyChanged.
+        /// Title and NamedPath are updated.
+        /// May be called by Source of the Value.
         /// </remarks>
-        public void TitleChanged()
+        public override void TitleChanged()
         {
+            base.TitleChanged();
+
             Title = Source.Title;
             NamedPath = GetPath();
-
-            if (OnTitleChanged is EventHandler handler)
-            { handler(this, EventArgs.Empty); }
         }
-
-        /// <inheritdoc/>
-        public event EventHandler? OnTitleChanged;
     }
 }

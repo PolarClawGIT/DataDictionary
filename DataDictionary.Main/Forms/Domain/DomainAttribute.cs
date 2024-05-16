@@ -82,10 +82,7 @@ namespace DataDictionary.Main.Forms.Domain
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
             if (bindingAttribute.Current is IAttributeValue current)
-            {
-                BusinessData.DomainModel.Attributes.Remove(current);
-                BusinessData.NamedScope.Remove(new NamedScopeKey(current));
-            }
+            { BusinessData.DomainModel.Attributes.Remove(current); }
         }
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
