@@ -11,7 +11,6 @@ namespace DataDictionary.BusinessLayer.Database
     /// </summary>
     public interface IExtendedPropertyData: IBindingData<ExtendedPropertyValue>
     {
-
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>

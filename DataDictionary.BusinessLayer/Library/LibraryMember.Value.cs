@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.LibraryData.Member;
 using System.ComponentModel;
 using Toolbox.BindingTable;
@@ -11,31 +12,22 @@ namespace DataDictionary.BusinessLayer.Library
     { }
 
     /// <inheritdoc/>
-    public class LibraryMemberValue : LibraryMemberItem, ILibraryMemberValue, INamedScopeSource
+    public class LibraryMemberValue : LibraryMemberItem, ILibraryMemberValue, INamedScopeSourceValue
     {
         /// <inheritdoc cref="LibraryMemberItem()"/>
         public LibraryMemberValue() : base()
-        { PropertyChanged += CatalogValue_PropertyChanged; }
+        { }
 
         /// <inheritdoc/>
-        public virtual NamedScopeIndex GetKey()
-        { return new NamedScopeIndex(MemberId); }
+        public DataLayerIndex GetIndex()
+        { return new DataLayerIndex(MemberId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(MemberNameSpace); }
+        { return new NamedScopePath(NamedScopePath.Parse(MemberNameSpace).ToArray()); }
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return MemberName ?? String.Empty; }
-
-        /// <inheritdoc/>
-        public event EventHandler? OnTitleChanged;
-        private void CatalogValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is nameof(MemberName) or nameof(MemberNameSpace)
-                && OnTitleChanged is EventHandler handler)
-            { handler(this, EventArgs.Empty); }
-        }
+        { return MemberName ?? Scope.ToName(); }
     }
 }

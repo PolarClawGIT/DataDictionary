@@ -96,7 +96,7 @@ namespace DataDictionary.BusinessLayer.Database
     /// <summary>
     /// Implementation for Catalog data
     /// </summary>
-    class DatabaseModel : IDatabaseModel, IDataTableFile, IGetNamedScopes
+    class DatabaseModel : IDatabaseModel, IDataTableFile
     {
         /// <inheritdoc/>
         public ICatalogData DbCatalogs { get { return catalogs; } }

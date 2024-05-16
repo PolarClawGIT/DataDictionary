@@ -9,6 +9,7 @@ using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.DataLayer.ModelData;
+using System.ComponentModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
 
@@ -40,7 +41,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
     class EntityData : DomainEntityCollection<EntityValue>, IEntityData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile, IGetNamedScopes
+        IDataTableFile, INamedScopeSource
     {
         public required DomainModel Model { get; init; }
 
@@ -261,25 +262,63 @@ namespace DataDictionary.BusinessLayer.Domain
                     SubjectAreaIndex subjectKey = new SubjectAreaIndex(subjectArea);
 
                     if (Model.SubjectAreas.FirstOrDefault(w => subjectKey.Equals(w)) is SubjectAreaValue subject)
-                    {
-                        result.Add(new NamedScopePair(subject.GetKey(), entity)
-                        { GetPath = () => { return new NamedScopePath(subject.GetPath(), entity.GetPath()); } });
-                    }
+                    { result.Add(new NamedScopePair(subject.GetIndex(), GetSubjectValue(entity, subject))); }
                 }
 
                 if (!hasSubjectArea && model is not null)
-                {
-                    result.Add(new NamedScopePair(model.GetKey(), entity)
-                    { GetPath = () => { return new NamedScopePath(model.GetPath(), entity.GetPath()); } });
-                }
+                { result.Add(new NamedScopePair(model.GetIndex(), GetModelValue(entity, model))); }
                 else if (!hasSubjectArea && model is null)
-                { new NamedScopePair(entity); }
+                { result.Add(new NamedScopePair(GetValue(entity))); } // Should not occur.
 
             }
 
             return result;
+
+            NamedScopeValueCore GetValue(EntityValue source)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                source.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is nameof(source.EntityTitle))
+                    { result.TitleChanged(); }
+                }
+            }
+
+            NamedScopeValueCore GetSubjectValue(EntityValue source, SubjectAreaValue subject)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source)
+                { GetPath = () => new NamedScopePath(subject.GetPath(), source.GetPath()) };
+                source.PropertyChanged += Source_PropertyChanged;
+                subject.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is nameof(source.EntityTitle) or nameof(subject.SubjectAreaNameSpace))
+                    { result.TitleChanged(); }
+                }
+            }
+
+            NamedScopeValueCore GetModelValue(EntityValue source, ModelValue model)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source)
+                { GetPath = () => new NamedScopePath(model.GetPath(), source.GetPath()) };
+                source.PropertyChanged += Source_PropertyChanged;
+                model.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is nameof(source.EntityTitle) or nameof(model.ModelTitle))
+                    { result.TitleChanged(); }
+                }
+            }
         }
-
-
     }
 }

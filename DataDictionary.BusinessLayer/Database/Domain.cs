@@ -5,8 +5,4 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.Database
-{
-    static class Domain
-    {
-    }
-}
+{ }

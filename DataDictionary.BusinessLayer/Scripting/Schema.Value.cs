@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ScriptingData.Schema;
-using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
@@ -9,15 +9,16 @@ namespace DataDictionary.BusinessLayer.Scripting
     { }
 
     /// <inheritdoc/>
-    public class SchemaValue : SchemaItem, ISchemaValue, INamedScopeSource
+    public class SchemaValue : SchemaItem, ISchemaValue, INamedScopeSourceValue
     {
         /// <inheritdoc/>
         public SchemaValue() : base()
-        { PropertyChanged += SchemaValue_PropertyChanged; }
+        { }
 
         /// <inheritdoc/>
-        public virtual NamedScopeIndex GetKey()
-        { return new NamedScopeIndex(SchemaId); }
+        public DataLayerIndex GetIndex()
+        { return new DataLayerIndex(SchemaId); }
+
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()
@@ -25,15 +26,6 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return SchemaTitle ?? String.Empty; }
-
-        /// <inheritdoc/>
-        public event EventHandler? OnTitleChanged;
-        private void SchemaValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is nameof(SchemaTitle)
-                && OnTitleChanged is EventHandler handler)
-            { handler(this, EventArgs.Empty); }
-        }
+        { return SchemaTitle ?? Scope.ToName(); }
     }
 }

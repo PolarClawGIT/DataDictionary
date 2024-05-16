@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ScriptingData.Transform;
-using System.ComponentModel;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
@@ -12,15 +12,15 @@ namespace DataDictionary.BusinessLayer.Scripting
     { }
 
     /// <inheritdoc/>
-    public class TransformValue : TransformItem, ITransformValue, INamedScopeSource
+    public class TransformValue : TransformItem, ITransformValue, INamedScopeSourceValue
     {
         /// <inheritdoc/>
         public TransformValue() : base()
-        { PropertyChanged += SchemaValue_PropertyChanged; }
+        { }
 
         /// <inheritdoc/>
-        public virtual NamedScopeIndex GetKey()
-        { return new NamedScopeIndex(TransformId); }
+        public DataLayerIndex GetIndex()
+        { return new DataLayerIndex(TransformId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()
@@ -28,16 +28,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return TransformTitle ?? String.Empty; }
-
-        /// <inheritdoc/>
-        public event EventHandler? OnTitleChanged;
-        private void SchemaValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is nameof(TransformTitle)
-                && OnTitleChanged is EventHandler handler)
-            { handler(this, EventArgs.Empty); }
-        }
+        { return TransformTitle ?? Scope.ToName(); }
 
         /// <summary>
         /// Use the XSLT Transform into a String

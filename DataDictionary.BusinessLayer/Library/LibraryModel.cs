@@ -18,12 +18,12 @@ namespace DataDictionary.BusinessLayer.Library
         /// <summary>
         /// List of .Net Library Members within the Model
         /// </summary>
-        ILibraryMemberData<LibraryMemberValue> LibraryMembers { get; }
+        ILibraryMemberData LibraryMembers { get; }
 
         /// <summary>
         /// List of .Net Libraries within the Model
         /// </summary>
-        ILibrarySourceData<LibrarySourceValue> LibrarySources { get; }
+        ILibrarySourceData LibrarySources { get; }
 
         /// <summary>
         /// Imports a Library from Visual Studio XML Documentation file.
@@ -33,20 +33,20 @@ namespace DataDictionary.BusinessLayer.Library
         IReadOnlyList<WorkItem> Import(FileInfo source);
     }
 
-    class LibraryModel : ILibraryModel, IDataTableFile, IGetNamedScopes
+    class LibraryModel : ILibraryModel, IDataTableFile
     {
         /// <inheritdoc/>
-        public ILibraryMemberData<LibraryMemberValue> LibraryMembers { get { return members; } }
-        private readonly LibraryMemberData<LibraryMemberValue> members;
+        public ILibraryMemberData LibraryMembers { get { return members; } }
+        private readonly LibraryMemberData members;
 
         /// <inheritdoc/>
-        public ILibrarySourceData<LibrarySourceValue> LibrarySources { get { return sources; } }
-        private readonly LibrarySourceData<LibrarySourceValue> sources;
+        public ILibrarySourceData LibrarySources { get { return sources; } }
+        private readonly LibrarySourceData sources;
 
         public LibraryModel() : base()
         {
-            sources = new LibrarySourceData<LibrarySourceValue>() { Library = this };
-            members = new LibraryMemberData<LibraryMemberValue>() { Library = this };
+            sources = new LibrarySourceData() { Library = this };
+            members = new LibraryMemberData() { Library = this };
         }
 
         /// <inheritdoc/>

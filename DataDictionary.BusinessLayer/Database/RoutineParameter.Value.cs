@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using System.ComponentModel;
 using Toolbox.BindingTable;
@@ -11,15 +12,15 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class RoutineParameterValue : DbRoutineParameterItem, IRoutineParameterValue, INamedScopeSource
+    public class RoutineParameterValue : DbRoutineParameterItem, IRoutineParameterValue, INamedScopeSourceValue
     {
         /// <inheritdoc cref="DbRoutineParameterItem()"/>
         public RoutineParameterValue() : base()
-        { PropertyChanged += CatalogValue_PropertyChanged; }
+        {  }
 
         /// <inheritdoc/>
-        public virtual NamedScopeIndex GetKey()
-        { return new NamedScopeIndex(ParameterId); }
+        public DataLayerIndex GetIndex()
+        { return new DataLayerIndex(ParameterId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()
@@ -27,15 +28,6 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return ParameterName ?? String.Empty; }
-
-        /// <inheritdoc/>
-        public event EventHandler? OnTitleChanged;
-        private void CatalogValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(RoutineName) or nameof(ParameterName)
-                && OnTitleChanged is EventHandler handler)
-            { handler(this, EventArgs.Empty); }
-        }
+        { return ParameterName ?? Scope.ToName(); }
     }
 }

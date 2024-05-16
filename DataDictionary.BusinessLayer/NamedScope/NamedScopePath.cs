@@ -64,7 +64,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <summary>
         /// Parent NameSpace Key for the current item.
         /// </summary>
-        public NamedScopePath? ParentKey
+        public NamedScopePath? ParentPath
         {
             get
             {
@@ -97,12 +97,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             foreach (String? item in source)
             {
                 if (!String.IsNullOrWhiteSpace(item))
-                {
-                    if (source.Length > 1)
-                    { pathParts.Add(String.Join(".", Parse(item).Select(s => s))); }
-                    else
-                    { pathParts.AddRange(Parse(item)); }
-                }
+                { pathParts.Add(String.Join(".", Parse(item).Select(s => s))); }
             }
         }
 
@@ -368,14 +363,14 @@ namespace DataDictionary.BusinessLayer.NamedScope
                 if (!result.Contains(item))
                 { result.Add(item); }
 
-                NamedScopePath? key = item.ParentKey;
+                NamedScopePath? key = item.ParentPath;
 
                 while (key is not null)
                 {
                     if (!result.Contains(key))
                     { result.Add(key); }
 
-                    key = key.ParentKey;
+                    key = key.ParentPath;
                 }
             }
             return result;

@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.Model;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
@@ -12,32 +13,24 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class AttributeValue : DomainAttributeItem, IAttributeValue, INamedScopeSource
+    public class AttributeValue : DomainAttributeItem, IAttributeValue, INamedScopeSourceValue
     {
         /// <inheritdoc cref="DomainAttributeItem()"/>
         public AttributeValue() : base()
-        { PropertyChanged += OnPropertyChanged; }
+        { }
 
         /// <inheritdoc/>
-        public virtual NamedScopeIndex GetKey()
-        { return new NamedScopeIndex(AttributeId); }
+        public DataLayerIndex GetIndex()
+        { return new DataLayerIndex(AttributeId); }
 
         /// <inheritdoc/>
-        public virtual NamedScopePath GetPath()
+        public String GetTitle()
+        { return AttributeTitle ?? Scope.ToName(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Partial Path</remarks>
+        public NamedScopePath GetPath()
         { return new NamedScopePath(AttributeTitle); }
-
-        /// <inheritdoc/>
-        public virtual String GetTitle()
-        { return AttributeTitle ?? String.Empty; }
-
-        /// <inheritdoc/>
-        public event EventHandler? OnTitleChanged;
-        private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is nameof(AttributeTitle)
-                && OnTitleChanged is EventHandler handler)
-            { handler(this, EventArgs.Empty); }
-        }
 
         internal XElement? GetXElement(IEnumerable<SchemaElementValue>? options = null)
         {
@@ -103,5 +96,6 @@ namespace DataDictionary.BusinessLayer.Domain
 
             return result;
         }
+
     }
 }

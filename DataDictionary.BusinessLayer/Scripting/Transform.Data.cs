@@ -5,6 +5,7 @@ using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ScriptingData.Transform;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         ISaveData, ISaveData<ITransformKey>
     { }
 
-    class TransformData : TransformCollection<TransformValue>, ITransformData, IGetNamedScopes
+    class TransformData : TransformCollection<TransformValue>, ITransformData, INamedScopeSource
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine
@@ -51,7 +52,24 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <inheritdoc/>
         /// <remarks>Transform</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
-        { return this.Select(s => new NamedScopePair(s)); }
+        {
+            return this.Select(s => new NamedScopePair(GetValue(s)));
+
+            NamedScopeValueCore GetValue(TransformValue source)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                source.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is
+                        nameof(source.TransformTitle))
+                    { result.TitleChanged(); }
+                }
+            }
+        }
 
     }
 }

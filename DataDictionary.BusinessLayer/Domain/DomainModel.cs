@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.Domain
         IEntityData Entities { get; }
     }
 
-    class DomainModel : IDomainModel, IDataTableFile, IGetNamedScopes
+    class DomainModel : IDomainModel, IDataTableFile
     {
         /// <inheritdoc/>
         public required IPropertyData ModelProperty { get; init; }

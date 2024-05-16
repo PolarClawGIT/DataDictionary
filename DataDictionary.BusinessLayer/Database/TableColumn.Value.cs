@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using System.ComponentModel;
 using Toolbox.BindingTable;
@@ -11,15 +12,15 @@ namespace DataDictionary.BusinessLayer.Database
     { }
 
     /// <inheritdoc/>
-    public class TableColumnValue : DbTableColumnItem, ITableColumnValue, INamedScopeSource
+    public class TableColumnValue : DbTableColumnItem, ITableColumnValue, INamedScopeSourceValue
     {
         /// <inheritdoc cref="DbTableItem()"/>
         public TableColumnValue() : base()
-        { PropertyChanged += CatalogValue_PropertyChanged; }
+        { }
 
         /// <inheritdoc/>
-        public virtual NamedScopeIndex GetKey()
-        { return new NamedScopeIndex(ColumnId); }
+        public DataLayerIndex GetIndex()
+        { return new DataLayerIndex(ColumnId); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()
@@ -27,15 +28,6 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return ColumnName ?? String.Empty; }
-
-        /// <inheritdoc/>
-        public event EventHandler? OnTitleChanged;
-        private void CatalogValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is nameof(DatabaseName) or nameof(SchemaName) or nameof(TableName) or nameof(ColumnName)
-                && OnTitleChanged is EventHandler handler)
-            { handler(this, EventArgs.Empty); }
-        }
+        { return ColumnName ?? Scope.ToName(); }
     }
 }

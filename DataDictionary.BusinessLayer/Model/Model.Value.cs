@@ -1,11 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Model
@@ -16,31 +11,22 @@ namespace DataDictionary.BusinessLayer.Model
     { }
 
     /// <inheritdoc/>
-    public class ModelValue : ModelItem, IModelValue, INamedScopeSource
+    public class ModelValue : ModelItem, IModelValue, INamedScopeSourceValue
     {
         /// <inheritdoc cref="ModelItem()"/>
         public ModelValue() : base()
-        { PropertyChanged += ModelValue_PropertyChanged; }
+        { }
 
         /// <inheritdoc/>
-        public virtual NamedScopeIndex GetKey()
-        { return new NamedScopeIndex(ModelId); }
+        public DataLayerIndex GetIndex()
+        { return new DataLayerIndex(ModelId); }
 
         /// <inheritdoc/>
-        public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(Scope); }
+        public String GetTitle()
+        { return ModelTitle ?? Scope.ToName(); }
 
         /// <inheritdoc/>
-        public virtual String GetTitle()
-        { return ModelTitle ?? String.Empty; }
-
-        /// <inheritdoc/>
-        public event EventHandler? OnTitleChanged;
-        private void ModelValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is nameof(ModelTitle)
-                && OnTitleChanged is EventHandler handler)
-            { handler(this, EventArgs.Empty); }
-        }
+        public NamedScopePath GetPath()
+        { return new NamedScopePath(Scope.ToName()); }
     }
 }

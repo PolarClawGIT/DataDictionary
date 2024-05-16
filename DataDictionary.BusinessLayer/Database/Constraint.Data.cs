@@ -5,6 +5,7 @@ using DataDictionary.DataLayer.DatabaseData.Constraint;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
+using System.ComponentModel;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -18,7 +19,7 @@ namespace DataDictionary.BusinessLayer.Database
     class ConstraintData: DbConstraintCollection<ConstraintValue>, IConstraintData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, IGetNamedScopes
+        IDatabaseModelItem, INamedScopeSource
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -53,12 +54,29 @@ namespace DataDictionary.BusinessLayer.Database
                 DbTableKeyName tableKey = new DbTableKeyName(item);
                 DbSchemaKeyName schemaKey = new DbSchemaKeyName(item);
                 if (Database.DbTables.FirstOrDefault(w => tableKey.Equals(w)) is TableValue table)
-                { result.Add(new NamedScopePair(table.GetKey(), item)); }
+                { result.Add(new NamedScopePair(table.GetIndex(), GetValue(item))); }
                 else if (Database.DbSchemta.FirstOrDefault(w => tableKey.Equals(w)) is SchemaValue schema)
-                { result.Add(new NamedScopePair(schema.GetKey(), item)); }
+                { result.Add(new NamedScopePair(schema.GetIndex(), GetValue(item))); }
             }
 
             return result;
+
+            NamedScopeValueCore GetValue(ConstraintValue source)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                source.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is
+                        nameof(source.DatabaseName) or 
+                        nameof(source.SchemaName) or
+                        nameof(source.ConstraintName))
+                    { result.TitleChanged(); }
+                }
+            }
         }
     }
 }

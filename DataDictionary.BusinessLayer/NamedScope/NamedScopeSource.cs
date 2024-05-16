@@ -27,45 +27,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
     }
 
     /// <summary>
-    /// Interface for Data objects that generate a NamedScope value for when the parent is known.
-    /// </summary>
-    /// <typeparam name="TValue"></typeparam>
-    interface INamedScopeSource<TValue> : INamedScopeSource
-        where TValue : INamedScopeSourceValue
-    {
-        /// <summary>
-        /// Gets a NamedScope Value from a given source.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        NamedScopeValueCore GetNamedScopeValue(TValue source);
-    }
-
-    /// <summary>
-    /// Interface for Data objects that generate a NamedScope value for when the parent needs to be specified.
-    /// </summary>
-    /// <typeparam name="TValue"></typeparam>
-    /// <typeparam name="TParent"></typeparam>
-    interface INamedScopeSource<TValue, TParent> : INamedScopeSource<TValue>
-        where TValue : INamedScopeSourceValue
-        where TParent : INamedScopeSourceValue
-    {
-        /// <summary>
-        /// Gets a NamedScope Value from the given source and parent
-        /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        NamedScopeValueCore GetNamedScopeValue(TParent parent, TValue source);
-    }
-
-    /// <summary>
     /// Interface for the NamedScope Source Value.
     /// </summary>
     /// <remarks>
     /// Returned to the UI layer.
     /// </remarks>
-    public interface INamedScopeSourceValue : IBindingTableRow, IScopeKey, IBindingRowState, IBindingPropertyChanged
+    public interface INamedScopeSourceValue : IScopeKey
     {
         // Properties and Methods with default implementation are "hidden" in classes that inherit the interface.
 

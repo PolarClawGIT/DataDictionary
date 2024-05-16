@@ -10,6 +10,7 @@ using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ModelData;
+using System.ComponentModel;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -42,7 +43,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
     class AttributeData : DomainAttributeCollection<AttributeValue>, IAttributeData,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDataTableFile, IGetNamedScopes
+        INamedScopeSource, IDataTableFile
     {
         public required DomainModel Model { get; init; }
 
@@ -283,31 +284,64 @@ namespace DataDictionary.BusinessLayer.Domain
                     SubjectAreaIndex subjectKey = new SubjectAreaIndex(subjectArea);
 
                     if (Model.SubjectAreas.FirstOrDefault(w => subjectKey.Equals(w)) is SubjectAreaValue subject)
-                    {
-                        // TODO: The GetPath = () => does not actually work.
-                        // An Attribute does not have a path. The Attribute/Subject has a full path.
-                        // This tries to assign the Attribute/Subject path to each copy of the attribute.
-                        // Consider creating a wrapper node around Attribute that holds the path for that Attribute/Subject.
-
-                        result.Add(new NamedScopePair(subject.GetKey(), attribute)
-                        { GetPath = () => { return new NamedScopePath(subject.GetPath(), attribute.GetPath()); } });
-                    }
+                    { result.Add(new NamedScopePair(subject.GetIndex(), GetSubjectValue(attribute, subject))); }
                 }
 
                 if (!hasSubjectArea && model is not null)
-                {
-                    result.Add(new NamedScopePair(model.GetKey(), attribute)
-                    { GetPath = () => { return new NamedScopePath(model.GetPath(), attribute.GetPath()); } });
-                }
+                { result.Add(new NamedScopePair(model.GetIndex(), GetModelValue(attribute, model))); }
                 else if (!hasSubjectArea && model is null)
-                { new NamedScopePair(attribute); }
+                { result.Add(new NamedScopePair(GetValue(attribute))); } // Should not occur.
 
             }
 
             return result;
+
+            NamedScopeValueCore GetValue(AttributeValue source)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                source.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is nameof(source.AttributeTitle))
+                    { result.TitleChanged(); }
+                }
+            }
+
+            NamedScopeValueCore GetSubjectValue(AttributeValue source, SubjectAreaValue subject)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source)
+                { GetPath = () => new NamedScopePath(subject.GetPath(), source.GetPath()) };
+                source.PropertyChanged += Source_PropertyChanged;
+                subject.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is nameof(source.AttributeTitle) or nameof(subject.SubjectAreaNameSpace))
+                    { result.TitleChanged(); }
+                }
+            }
+
+            NamedScopeValueCore GetModelValue(AttributeValue source, ModelValue model)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source)
+                { GetPath = () => new NamedScopePath(model.GetPath(), source.GetPath()) };
+                source.PropertyChanged += Source_PropertyChanged;
+                model.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is nameof(source.AttributeTitle) or nameof(model.ModelTitle))
+                    { result.TitleChanged(); }
+                }
+            }
         }
-
-
 
         public XElement? GetXElement(IAttributeIndex key, IEnumerable<SchemaElementValue>? options = null)
         {

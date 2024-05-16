@@ -49,7 +49,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Implementation for Scripting Engine data
     /// </summary>
-    class ScriptingEngine : IScriptingEngine, IDataTableFile, IGetNamedScopes
+    class ScriptingEngine : IScriptingEngine, IDataTableFile
     {
         /// <summary>
         /// Reference to the containing Model
