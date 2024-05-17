@@ -1,5 +1,6 @@
 ﻿// Ignore Spelling: indices
 
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using System.Collections;
 
 namespace DataDictionary.BusinessLayer.NamedScope
@@ -76,8 +77,6 @@ namespace DataDictionary.BusinessLayer.NamedScope
         // Alternate Keys (not sure if Sorted Dictionary or normal Dictionary is better here). Because of the wrapper, it can be changed easy.
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> children = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> parents = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
-
-        SortedDictionary<DataLayerIndex, List<NamedScopeIndex>> crossWalkIndex = new SortedDictionary<DataLayerIndex, List<NamedScopeIndex>>();
 
         // Root Nodes
         List<NamedScopeIndex> roots = new List<NamedScopeIndex>();
@@ -165,44 +164,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
             }
             else
             {
-                if (!crossWalkIndex.ContainsKey(value.Source.Index))
-                { crossWalkIndex.Add(value.Source.Index, new List<NamedScopeIndex>()); }
-                crossWalkIndex[value.Source.Index].Add(key);
-
                 roots.Add(key);
                 data.Add(key, value);
             }
-        }
-
-        [Obsolete("Use new method", true)]
-        internal virtual void Add(NamedScopeIndex item, NamedScopeValueCore value)
-        {
-            //TODO: Need a trap for infinite loop.
-            //      It is when the parent (or child) directly or indirectly points to itself.
-            //      Not sure how to detect that.
-
-            NamedScopeIndex key = value.Index;
-
-            if (!children.ContainsKey(item))
-            { children.Add(item, new List<NamedScopeIndex>()); }
-
-            if (!parents.ContainsKey(key))
-            { parents.Add(key, new List<NamedScopeIndex>()); }
-
-            if (!crossWalkIndex.ContainsKey(value.Source.Index))
-            { crossWalkIndex.Add(value.Source.Index, new List<NamedScopeIndex>()); }
-
-            if (children.ContainsKey(item) && !children[item].Contains(key))
-            { children[item].Add(key); }
-
-            if (parents.ContainsKey(key) && !parents[key].Contains(item))
-            { parents[key].Add(item); }
-
-            if (crossWalkIndex.ContainsKey(value.Source.Index) && !crossWalkIndex[value.Source.Index].Contains(item))
-            { crossWalkIndex[value.Source.Index].Add(key); }
-
-            if (!data.ContainsKey(key))
-            { data.Add(key, value); }
         }
 
         internal virtual void Add(DataLayerIndex parent, NamedScopeValueCore value)
@@ -211,37 +175,34 @@ namespace DataDictionary.BusinessLayer.NamedScope
             //      It is when the parent (or child) directly or indirectly points to itself.
             //      Not sure how to detect that.
 
-            if (!crossWalkIndex.ContainsKey(parent))
-            { crossWalkIndex.Add(parent, new List<NamedScopeIndex>() { value.Index }); }
 
-            if (crossWalkIndex.ContainsKey(parent))
+            List<NamedScopeValueCore> parentValues = data.Values.Where(w => parent.Equals(w.Source.Index)).ToList();
+
+            if(parentValues.Count == 0)
             {
-                foreach (NamedScopeIndex item in crossWalkIndex[parent])
-                {
-                    NamedScopeIndex key = value.Index;
+                Exception ex = new InvalidOperationException("Add parent first");
+                ex.Data.Add(nameof(value.Title), value.Title);
+                ex.Data.Add(nameof(value.Scope), value.Scope.ToName());
+                ex.Data.Add(nameof(value.NamedPath), value.NamedPath.MemberFullPath);
+                throw ex;
+            }
 
-                    if (!children.ContainsKey(item))
-                    { children.Add(item, new List<NamedScopeIndex>()); }
+            foreach (NamedScopeValueCore parentValue in parentValues)
+            {
+                if (!children.ContainsKey(parentValue.Index))
+                { children.Add(parentValue.Index, new List<NamedScopeIndex>()); }
 
-                    if (!parents.ContainsKey(key))
-                    { parents.Add(key, new List<NamedScopeIndex>()); }
+                if (!parents.ContainsKey(value.Index))
+                { parents.Add(value.Index, new List<NamedScopeIndex>()); }
 
-                    if (!crossWalkIndex.ContainsKey(value.Source.Index))
-                    { crossWalkIndex.Add(value.Source.Index, new List<NamedScopeIndex>()); }
+                if (children.ContainsKey(parentValue.Index) && !children[parentValue.Index].Contains(value.Index))
+                { children[parentValue.Index].Add(value.Index); }
 
-                    if (children.ContainsKey(item) && !children[item].Contains(key))
-                    { children[item].Add(key); }
+                if (parents.ContainsKey(value.Index) && !parents[value.Index].Contains(parentValue.Index))
+                { parents[value.Index].Add(parentValue.Index); }
 
-                    if (parents.ContainsKey(key) && !parents[key].Contains(item))
-                    { parents[key].Add(item); }
-
-                    if (crossWalkIndex.ContainsKey(value.Source.Index) && !crossWalkIndex[value.Source.Index].Contains(item))
-                    { crossWalkIndex[value.Source.Index].Add(key); }
-
-                    if (!data.ContainsKey(key))
-                    { data.Add(key, value); }
-
-                }
+                if (!data.ContainsKey(value.Index))
+                { data.Add(value.Index, value); }
             }
         }
 

@@ -15,7 +15,7 @@ namespace DataDictionary.Main
         {
             base.HandleMessage(message);
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(BusinessData.LoadNamedScope());
+            //work.AddRange(BusinessData.LoadNamedScope());
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
             this.DoWork(work);
         }
@@ -23,7 +23,7 @@ namespace DataDictionary.Main
         private void RefreshCommand_Click(object? sender, EventArgs e)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(BusinessData.LoadNamedScope());
+            //work.AddRange(BusinessData.LoadNamedScope());
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
             this.DoWork(work);
         }

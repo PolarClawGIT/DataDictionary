@@ -124,7 +124,6 @@ namespace DataDictionary.Main
                 }
             }
 
-            work.AddRange(BusinessData.LoadNamedScope());
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
 
             this.DoWork(work, OnComplete);

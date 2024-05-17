@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using System;
 using System.Collections.Generic;
@@ -61,7 +62,7 @@ namespace DataDictionary.Main.Controls
         public static IEnumerable<WorkItem> Load(this TreeView target, INamedScopeData data)
         {
             List<WorkItem> result = new List<WorkItem>();
-            List<NamedScopeIndex> expandedNodes = new List<NamedScopeIndex>();
+            List<DataLayerIndex> expandedNodes = new List<DataLayerIndex>();
             Dictionary<TreeNode, NamedScopeIndex> valueNodes = new Dictionary<TreeNode, NamedScopeIndex>();
 
             if (treeNodeDictionary.ContainsKey(target))
@@ -80,13 +81,13 @@ namespace DataDictionary.Main.Controls
                 {
                     target.Invoke(() =>
                     {
-                        expandedNodes.AddRange(valueNodes
-                        .Where(w => w.Key.IsExpanded
-                            || (w.Key.Nodes.Count == 0
-                                && w.Key.Parent is not null
-                                && w.Key.Parent.IsExpanded))
-                        .Select(s => s.Value));
-
+                        expandedNodes.AddRange(valueNodes.Where(w => w.Key.IsExpanded
+                                    || (w.Key.Nodes.Count == 0
+                                        && w.Key.Parent is not null
+                                        && w.Key.Parent.IsExpanded)).
+                                        Select(s => s.Value). // Get the NamedScope Index
+                                        Distinct().
+                                        Select(s => data.GetData(s).Index)); // Translate to DataLayer Index
                         valueNodes.Clear();
                     });
                 }
@@ -108,11 +109,18 @@ namespace DataDictionary.Main.Controls
                 }
             });
 
+            //Reload the NamedScope
+            result.AddRange(BusinessData.LoadNamedScope());
+
+            // Build the Tree
             result.Add(new WorkItem()
             {
                 WorkName = "Build Tree",
                 DoWork = () =>
-                { CreateNodes(target.Nodes, data.RootKeys()); }
+                {
+                    target.Invoke(() =>
+                    { CreateNodes(target.Nodes, data.RootKeys()); });
+                }
             });
 
             // Expanded the Nodes
@@ -121,12 +129,11 @@ namespace DataDictionary.Main.Controls
                 WorkName = "Expand Tree Nodes",
                 DoWork = () => target.Invoke(() =>
                 {
-                    foreach (NamedScopeIndex item in expandedNodes)
-                    {
-                        var node = valueNodes.FirstOrDefault(w => item.Equals(w.Value));
-                        if (node.Key is not null && !node.Key.IsExpanded)
-                        { node.Key.ExpandParent(); }
-                    }
+                    foreach (KeyValuePair<TreeNode, NamedScopeIndex> node in expandedNodes.
+                        SelectMany(item => valueNodes.
+                            Where(w => item.Equals(data.GetData(w.Value).Index)).
+                            Where(node => node.Key is not null && !node.Key.IsExpanded)))
+                    { node.Key.ExpandParent(); }
                 })
             });
 
@@ -164,52 +171,43 @@ namespace DataDictionary.Main.Controls
                     // Build Scope Groups
                     if (scopeGroup.Count() > 1 && scopeGroup.Key.Setting().GroupByScope)
                     {
-                        TreeNode scopeNode = target.Invoke<TreeNode>(() =>
-                        {
-                            TreeNode newNode = targetNodes.Add(scopeGroup.Key.ToName().Split(".").Last());
-                            newNode.ImageKey = scopeGroup.Key.ToName();
-                            newNode.SelectedImageKey = scopeGroup.Key.ToName();
-                            newNode.NodeFont = new Font(newNode.TreeView.Font, FontStyle.Italic);
-                            newNode.ToolTipText = String.Format("set of {0}", newNode.Text);
+                        TreeNode newNode = targetNodes.Add(scopeGroup.Key.ToName().Split(".").Last());
+                        newNode.ImageKey = scopeGroup.Key.ToName();
+                        newNode.SelectedImageKey = scopeGroup.Key.ToName();
+                        newNode.NodeFont = new Font(newNode.TreeView.Font, FontStyle.Italic);
+                        newNode.ToolTipText = String.Format("set of {0}", newNode.Text);
 
-                            nodes = newNode.Nodes;
-                            return newNode;
-                        });
+                        nodes = newNode.Nodes;
                     }
 
                     // Build Data Nodes
                     foreach (NamedScopeIndex item in scopeGroup.OrderBy(o => data.GetValue(o).OrdinalPosition).ThenBy(o => data.GetValue(o).Title))
                     {
-                        TreeNode node = target.Invoke<TreeNode>(() =>
+                        TreeNode newNode = nodes.Add(data.GetValue(item).Title);
+                        newNode.ImageKey = data.GetValue(item).Scope.ToName();
+                        newNode.SelectedImageKey = data.GetValue(item).Scope.ToName();
+                        newNode.ToolTipText = data.GetValue(item).NamedPath.MemberFullPath;
+                        data.GetValue(item).OnTitleChanged += TreeViewExtension_OnTitleChanged; ;
+                        valueNodes.Add(newNode, item);
+
+                        // Handle 
+                        void TreeViewExtension_OnTitleChanged(Object? sender, EventArgs e)
                         {
-                            TreeNode newNode = nodes.Add(data.GetValue(item).Title);
-                            newNode.ImageKey = data.GetValue(item).Scope.ToName();
-                            newNode.SelectedImageKey = data.GetValue(item).Scope.ToName();
-                            newNode.ToolTipText = data.GetValue(item).NamedPath.MemberFullPath;
-                            data.GetValue(item).OnTitleChanged += TreeViewExtension_OnTitleChanged; ;
-                            valueNodes.Add(newNode, item);
-
-                            return newNode;
-
-                            // Handle 
-                            void TreeViewExtension_OnTitleChanged(Object? sender, EventArgs e)
+                            if (sender is INamedScopeValue value)
                             {
-                                if (sender is INamedScopeValue value)
+
+                                if (valueNodes.FirstOrDefault(w => value.Index.Equals(w.Value))
+                                    is KeyValuePair<TreeNode, NamedScopeIndex> nodeItem
+                                    && nodeItem.Key is not null)
                                 {
-                                    
-                                    if (valueNodes.FirstOrDefault(w => value.Index.Equals(w.Value))
-                                        is KeyValuePair<TreeNode, NamedScopeIndex> nodeItem
-                                        && nodeItem.Key is not null)
-                                    {
-                                        nodeItem.Key.Text = value.Title;
-                                        nodeItem.Key.ToolTipText = value.NamedPath.MemberFullPath;
-                                    }
+                                    nodeItem.Key.Text = value.Title;
+                                    nodeItem.Key.ToolTipText = value.NamedPath.MemberFullPath;
                                 }
                             }
-                        });
+                        }
 
                         if (data.ChildrenKeys(item) is IList<NamedScopeIndex> values && values.Count > 0)
-                        { CreateNodes(node.Nodes, values); }
+                        { CreateNodes(newNode.Nodes, values); }
                     }
                 }
             }
