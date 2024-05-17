@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Controls
             {ScopeType.Null,                             new ScopeSetting(Resources.UnknownMember, Resources.Icon_UnknownMember) },
 
             {ScopeType.Library,                          new ScopeSetting(Resources.Library, Resources.Icon_Library) {GroupByScope = false} },
-            {ScopeType.LibraryTypeEvent,                 new ScopeSetting(Resources.Event, Resources.Icon_UnknownMember) {GroupByScope = false}},
+            {ScopeType.LibraryTypeEvent,                 new ScopeSetting(Resources.Event, Resources.Icon_Event) {GroupByScope = false}},
             {ScopeType.LibraryTypeField,                 new ScopeSetting(Resources.Field, Resources.Icon_Field) {GroupByScope = false}},
             {ScopeType.LibraryTypeMethod,                new ScopeSetting(Resources.Method, Resources.Icon_Method) {GroupByScope = false}},
             {ScopeType.LibraryNameSpace,                 new ScopeSetting(Resources.Namespace, Resources.Icon_Namespace) {GroupByScope = false}},
