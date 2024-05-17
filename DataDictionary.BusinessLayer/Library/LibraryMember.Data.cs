@@ -10,7 +10,7 @@ namespace DataDictionary.BusinessLayer.Library
     /// <summary>
     /// Interface representing Library Member data
     /// </summary>
-    public interface ILibraryMemberData: IBindingData<LibraryMemberValue>
+    public interface ILibraryMemberData : IBindingData<LibraryMemberValue>
     { }
 
     class LibraryMemberData : DbLayer.Member.LibraryMemberCollection<LibraryMemberValue>, ILibraryMemberData,
@@ -49,13 +49,18 @@ namespace DataDictionary.BusinessLayer.Library
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
 
+            // Performance. Put the items into a Lookup.
+            // Dictionary or SortedDictionary would also work.
+            // All are faster then doing a FirstOrDefault on each item.
+            ILookup<LibraryMemberIndex, LibraryMemberValue> members = this.ToLookup(a => new LibraryMemberIndex(a), b => b);
+            
             foreach (LibraryMemberValue item in this)
             {
                 LibrarySourceIndex libraryKey = new LibrarySourceIndex(item);
-                LibraryMemberIndexParent parentKey = new LibraryMemberIndexParent(item);
-
+                LibraryMemberIndex parentKey = new LibraryMemberIndex(new LibraryMemberIndexParent(item));
                 LibrarySourceValue? library = Library.LibrarySources.FirstOrDefault(w => libraryKey.Equals(w));
-                LibraryMemberValue? parent = this.FirstOrDefault(w => parentKey.Equals(new LibraryMemberIndex(w)));
+                LibraryMemberValue? parent = null;
+                if (members.Contains(parentKey)) { parent = members[parentKey].First(); }
 
                 if (parent is null && library is not null)
                 { result.Add(new NamedScopePair(library.GetIndex(), GetValue(item))); }

@@ -7,11 +7,23 @@ namespace DataDictionary.BusinessLayer.Library
     { }
 
     /// <inheritdoc/>
-    public class LibraryMemberIndex : LibraryMemberKey, ILibraryMemberIndex
+    public class LibraryMemberIndex : LibraryMemberKey, ILibraryMemberIndex, IComparable<ILibraryMemberIndex>
     {
         /// <inheritdoc cref="LibraryMemberKey(ILibraryMemberKey)"/>
         public LibraryMemberIndex(ILibraryMemberIndex source) : base(source)
         { }
+
+        /// <inheritdoc cref="LibraryMemberKey(ILibraryMemberKeyParent)"/>
+        public LibraryMemberIndex(LibraryMemberIndexParent source): base(source)
+        { }
+
+        /// <inheritdoc/>
+        public Int32 CompareTo(ILibraryMemberIndex? other)
+        {
+            if(other is LibraryMemberIndex && other.MemberId is Guid otherItem && MemberId is Guid item)
+            { return item.CompareTo(otherItem); }
+            else { return -1; }
+        }
     }
 
     /// <inheritdoc/>
