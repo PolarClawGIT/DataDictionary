@@ -78,6 +78,8 @@ namespace DataDictionary.BusinessLayer.NamedScope
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> children = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> parents = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
 
+        SortedDictionary<DataLayerIndex, List<NamedScopeIndex>> crossWalk = new SortedDictionary<DataLayerIndex, List<NamedScopeIndex>>();
+
         // Root Nodes
         List<NamedScopeIndex> roots = new List<NamedScopeIndex>();
 
@@ -151,21 +153,29 @@ namespace DataDictionary.BusinessLayer.NamedScope
             return result;
         }
 
-
         internal virtual void Add(NamedScopeValueCore value)
         {
-            NamedScopeIndex key = value.Index;
-
-            if (data.ContainsKey(key))
+            if (data.ContainsKey(value.Index))
             {
-                Exception exception = new ArgumentException("An element with the same key already exists.");
-                exception.Data.Add(nameof(value.Index), key.NamedScopeId);
-                throw exception;
+                Exception ex = new ArgumentException("An element with the same key already exists.");
+                ex.Data.Add(nameof(value.Title), value.Title);
+                ex.Data.Add(nameof(value.Scope), value.Scope.ToName());
+                ex.Data.Add(nameof(value.NamedPath), value.NamedPath.MemberFullPath);
+                throw ex;
             }
             else
             {
-                roots.Add(key);
-                data.Add(key, value);
+                if (!crossWalk.ContainsKey(value.Source.Index))
+                { crossWalk.Add(value.Source.Index, new List<NamedScopeIndex>()); }
+
+                if (!crossWalk[value.Source.Index].Contains(value.Index))
+                { crossWalk[value.Source.Index].Add(value.Index); }
+
+                if (!data.ContainsKey(value.Index))
+                { data.Add(value.Index, value); }
+
+                if (!roots.Contains(value.Index))
+                { roots.Add(value.Index); }
             }
         }
 
@@ -175,34 +185,39 @@ namespace DataDictionary.BusinessLayer.NamedScope
             //      It is when the parent (or child) directly or indirectly points to itself.
             //      Not sure how to detect that.
 
+            if (!crossWalk.ContainsKey(value.Source.Index))
+            { crossWalk.Add(value.Source.Index, new List<NamedScopeIndex>()); }
 
-            List<NamedScopeValueCore> parentValues = data.Values.Where(w => parent.Equals(w.Source.Index)).ToList();
+            if (!crossWalk[value.Source.Index].Contains(value.Index))
+            { crossWalk[value.Source.Index].Add(value.Index); }
 
-            if(parentValues.Count == 0)
+            if (!data.ContainsKey(value.Index))
+            { data.Add(value.Index, value); }
+
+            if (crossWalk.ContainsKey(parent) && crossWalk[parent].Count > 0)
             {
-                Exception ex = new InvalidOperationException("Add parent first");
+                foreach (NamedScopeIndex index in crossWalk[parent])
+                {
+                    if (!children.ContainsKey(index))
+                    { children.Add(index, new List<NamedScopeIndex>()); }
+
+                    if (!parents.ContainsKey(value.Index))
+                    { parents.Add(value.Index, new List<NamedScopeIndex>()); }
+
+                    if (children.ContainsKey(index) && !children[index].Contains(value.Index))
+                    { children[index].Add(value.Index); }
+
+                    if (parents.ContainsKey(value.Index) && !parents[value.Index].Contains(index))
+                    { parents[value.Index].Add(index); }
+                }
+            }
+            else
+            {
+                Exception ex = new InvalidOperationException("Could not find parent for value passed");
                 ex.Data.Add(nameof(value.Title), value.Title);
                 ex.Data.Add(nameof(value.Scope), value.Scope.ToName());
                 ex.Data.Add(nameof(value.NamedPath), value.NamedPath.MemberFullPath);
                 throw ex;
-            }
-
-            foreach (NamedScopeValueCore parentValue in parentValues)
-            {
-                if (!children.ContainsKey(parentValue.Index))
-                { children.Add(parentValue.Index, new List<NamedScopeIndex>()); }
-
-                if (!parents.ContainsKey(value.Index))
-                { parents.Add(value.Index, new List<NamedScopeIndex>()); }
-
-                if (children.ContainsKey(parentValue.Index) && !children[parentValue.Index].Contains(value.Index))
-                { children[parentValue.Index].Add(value.Index); }
-
-                if (parents.ContainsKey(value.Index) && !parents[value.Index].Contains(parentValue.Index))
-                { parents[value.Index].Add(parentValue.Index); }
-
-                if (!data.ContainsKey(value.Index))
-                { data.Add(value.Index, value); }
             }
         }
 
@@ -221,6 +236,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             data.Clear();
             children.Clear();
             parents.Clear();
+            crossWalk.Clear();
             roots.Clear();
         }
 
