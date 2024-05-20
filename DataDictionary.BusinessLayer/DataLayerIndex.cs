@@ -48,6 +48,9 @@ namespace DataDictionary.BusinessLayer
         internal DataLayerIndex(Guid? source) : this()
         { BusinessLayerId = source ?? Guid.Empty; }
 
+        /// <inheritdoc cref="Nullable{T}.HasValue"/>
+        public Boolean HasValue { get { return BusinessLayerId != Guid.Empty; } }
+
         #region IEquatable, IComparable
         /// <inheritdoc/>
         public virtual bool Equals(IDataLayerIndex? other)

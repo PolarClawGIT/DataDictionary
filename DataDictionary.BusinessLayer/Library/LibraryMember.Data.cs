@@ -49,23 +49,15 @@ namespace DataDictionary.BusinessLayer.Library
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
 
-            // Performance. Put the items into a Lookup.
-            // Dictionary or SortedDictionary would also work.
-            // All are faster then doing a FirstOrDefault on each item.
-            ILookup<LibraryMemberIndex, LibraryMemberValue> members = this.ToLookup(a => new LibraryMemberIndex(a), b => b);
-            
             foreach (LibraryMemberValue item in this)
             {
-                LibrarySourceIndex libraryKey = new LibrarySourceIndex(item);
-                LibraryMemberIndex parentKey = new LibraryMemberIndex(new LibraryMemberIndexParent(item));
-                LibrarySourceValue? library = Library.LibrarySources.FirstOrDefault(w => libraryKey.Equals(w));
-                LibraryMemberValue? parent = null;
-                if (members.Contains(parentKey)) { parent = members[parentKey].First(); }
+                DataLayerIndex libraryKey = new LibrarySourceIndex(item);
+                DataLayerIndex parentKey = new LibraryMemberIndexParent(item);
 
-                if (parent is null && library is not null)
-                { result.Add(new NamedScopePair(library.GetIndex(), GetValue(item))); }
-                else if (parent is not null)
-                { result.Add(new NamedScopePair(parent.GetIndex(), GetValue(item))); }
+                if (libraryKey.HasValue)
+                { result.Add(new NamedScopePair(libraryKey, GetValue(item))); }
+                else if (parentKey.HasValue)
+                { result.Add(new NamedScopePair(parentKey, GetValue(item))); }
                 else { throw new InvalidOperationException("Could not determine Parent"); }
             }
 

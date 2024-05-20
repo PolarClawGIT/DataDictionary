@@ -14,13 +14,20 @@ namespace DataDictionary.BusinessLayer.Library
         { }
 
         /// <inheritdoc cref="LibraryMemberKey(ILibraryMemberKeyParent)"/>
-        public LibraryMemberIndex(LibraryMemberIndexParent source): base(source)
+        public LibraryMemberIndex(LibraryMemberIndexParent source) : base(source)
         { }
+
+        /// <summary>
+        /// Convert LibraryMemberIndex to a DataLayerIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator DataLayerIndex(LibraryMemberIndex source)
+        { return new DataLayerIndex() { BusinessLayerId = source.MemberId ?? Guid.Empty }; }
 
         /// <inheritdoc/>
         public Int32 CompareTo(ILibraryMemberIndex? other)
         {
-            if(other is LibraryMemberIndex && other.MemberId is Guid otherItem && MemberId is Guid item)
+            if (other is LibraryMemberIndex && other.MemberId is Guid otherItem && MemberId is Guid item)
             { return item.CompareTo(otherItem); }
             else { return -1; }
         }
@@ -34,7 +41,14 @@ namespace DataDictionary.BusinessLayer.Library
     public class LibraryMemberIndexParent : LibraryMemberKeyParent
     {
         /// <inheritdoc cref="LibraryMemberKeyParent(ILibraryMemberKeyParent)"/>
-        public LibraryMemberIndexParent (ILibraryMemberIndexParent source): base (source)
+        public LibraryMemberIndexParent(ILibraryMemberIndexParent source) : base(source)
         { }
+
+        /// <summary>
+        /// Convert LibraryMemberIndexParent to a DataLayerIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator DataLayerIndex(LibraryMemberIndexParent source)
+        { return new DataLayerIndex() { BusinessLayerId = source.MemberParentId ?? Guid.Empty }; }
     }
 }
