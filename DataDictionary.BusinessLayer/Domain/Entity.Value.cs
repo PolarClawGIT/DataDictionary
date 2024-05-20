@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         public DataLayerIndex GetIndex()
-        { return new DataLayerIndex(EntityId); }
+        { return new EntityIndex(this); }
 
         /// <inheritdoc/>
         /// <remarks>Partial Path</remarks>

@@ -17,6 +17,13 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc cref="DbRoutineParameterKey(IDbRoutineParameterKey)"/>
         public RoutineParameterIndex(IDbRoutineParameterKey source) : base(source)
         { }
+
+        /// <summary>
+        /// Convert RoutineParameterIndex to a DataLayerIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator DataLayerIndex(RoutineParameterIndex source)
+        { return new DataLayerIndex() { BusinessLayerId = source.ParameterId ?? Guid.Empty }; }
     }
 
     /// <inheritdoc/>

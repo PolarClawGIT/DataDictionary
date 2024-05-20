@@ -19,7 +19,7 @@ namespace DataDictionary.BusinessLayer.Model
 
         /// <inheritdoc/>
         public DataLayerIndex GetIndex()
-        { return new DataLayerIndex(ModelId); }
+        { return new ModelIndex(this); }
 
         /// <inheritdoc/>
         public String GetTitle()

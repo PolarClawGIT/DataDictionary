@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         public DataLayerIndex GetIndex()
-        { return new DataLayerIndex(SchemaId); }
+        { return new SchemaIndex(this); }
 
 
         /// <inheritdoc/>

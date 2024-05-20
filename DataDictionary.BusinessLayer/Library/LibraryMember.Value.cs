@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         public DataLayerIndex GetIndex()
-        { return new DataLayerIndex(MemberId); }
+        { return new LibraryMemberIndex(this); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()

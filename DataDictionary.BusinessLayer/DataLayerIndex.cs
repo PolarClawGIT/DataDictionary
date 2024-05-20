@@ -31,7 +31,7 @@ namespace DataDictionary.BusinessLayer
     public partial class DataLayerIndex : IDataLayerIndex, IKeyComparable<IDataLayerIndex>
     {
         /// <inheritdoc/>
-        public Guid BusinessLayerId { get; init; } = Guid.Empty;
+        public Guid BusinessLayerId { get; internal init; } = Guid.Empty;
 
         internal DataLayerIndex() : base() { }
 
@@ -41,12 +41,6 @@ namespace DataDictionary.BusinessLayer
         /// <param name="source" >A ModelNameSpace</param>
         public DataLayerIndex(IDataLayerIndex source) : this()
         { BusinessLayerId = source.BusinessLayerId; }
-
-        /// <summary>
-        /// Constructor for the NameScope Key
-        /// </summary>
-        internal DataLayerIndex(Guid? source) : this()
-        { BusinessLayerId = source ?? Guid.Empty; }
 
         /// <inheritdoc cref="Nullable{T}.HasValue"/>
         public Boolean HasValue { get { return BusinessLayerId != Guid.Empty; } }

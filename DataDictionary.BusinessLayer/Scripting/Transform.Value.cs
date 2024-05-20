@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         public DataLayerIndex GetIndex()
-        { return new DataLayerIndex(TransformId); }
+        { return new TransformIndex(this); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()

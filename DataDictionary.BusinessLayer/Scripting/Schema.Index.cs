@@ -11,5 +11,12 @@ namespace DataDictionary.BusinessLayer.Scripting
     {
         /// <inheritdoc cref="SchemaKey(ISchemaKey)"/>
         public SchemaIndex(ISchemaIndex source) : base(source) { }
+
+        /// <summary>
+        /// Convert SchemaIndex to a DataLayerIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator DataLayerIndex(SchemaIndex source)
+        { return new DataLayerIndex() { BusinessLayerId = source.SchemaId ?? Guid.Empty }; }
     }
 }

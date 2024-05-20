@@ -20,7 +20,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public DataLayerIndex GetIndex()
-        { return new DataLayerIndex(ColumnId); }
+        { return new TableColumnIndex(this); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()

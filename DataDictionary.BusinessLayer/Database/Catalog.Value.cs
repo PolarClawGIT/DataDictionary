@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         public DataLayerIndex GetIndex()
-        { return new DataLayerIndex(CatalogId); }
+        { return new CatalogIndex(this); }
 
         /// <inheritdoc/>
         public NamedScopePath GetPath()

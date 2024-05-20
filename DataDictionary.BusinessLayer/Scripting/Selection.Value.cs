@@ -17,7 +17,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         public DataLayerIndex GetIndex()
-        { return new DataLayerIndex(SelectionId); }
+        { return new SelectionIndex(this); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()

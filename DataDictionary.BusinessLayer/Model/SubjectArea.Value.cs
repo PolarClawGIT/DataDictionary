@@ -25,7 +25,7 @@ namespace DataDictionary.BusinessLayer.Model
 
         /// <inheritdoc/>
         public DataLayerIndex GetIndex()
-        { return new DataLayerIndex(SubjectAreaId); }
+        { return new SubjectAreaIndex(this); }
 
         /// <inheritdoc/>
         public String GetTitle()

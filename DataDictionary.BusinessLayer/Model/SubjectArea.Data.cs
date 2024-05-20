@@ -119,9 +119,8 @@ namespace DataDictionary.BusinessLayer.Model
             protected NamedScopePath SystemPath;
             public ScopeType Scope { get; } = ScopeType.ModelNameSpace;
 
-
             public DataLayerIndex GetIndex()
-            { return new DataLayerIndex(SystemId); }
+            { return new DataLayerIndex() { BusinessLayerId = SystemId}; }
 
             public NamedScopePath GetPath()
             { return SystemPath; }

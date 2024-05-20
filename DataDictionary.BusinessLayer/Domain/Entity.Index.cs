@@ -17,6 +17,13 @@ namespace DataDictionary.BusinessLayer.Domain
     {
         /// <inheritdoc cref="DomainEntityKey(IDomainEntityKey)"/>
         public EntityIndex(IEntityIndex source) : base(source) { }
+
+        /// <summary>
+        /// Convert EntityIndex to a DataLayerIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator DataLayerIndex(EntityIndex source)
+        { return new DataLayerIndex() { BusinessLayerId = source.EntityId ?? Guid.Empty }; }
     }
 
     /// <inheritdoc/>

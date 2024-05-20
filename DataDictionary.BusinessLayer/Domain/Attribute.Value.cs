@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         public DataLayerIndex GetIndex()
-        { return new DataLayerIndex(AttributeId); }
+        { return new AttributeIndex(this); }
 
         /// <inheritdoc/>
         public String GetTitle()
