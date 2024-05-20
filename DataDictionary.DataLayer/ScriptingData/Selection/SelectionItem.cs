@@ -10,13 +10,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
     /// <summary>
     /// Interface for the Scripting Selection data.
     /// </summary>
-    public interface ISelectionItem : ISelectionKey, ITransformKey, ISchemaKey, IScopeKey
+    public interface ISelectionItem : ISelectionKey, ITransformKey, ISchemaKey, ISelectionKeyName, IScopeKey
     {
-        /// <summary>
-        /// Title of the Selection.
-        /// </summary>
-        String? SelectionTitle { get; }
-
         /// <summary>
         /// Description of the Selection.
         /// </summary>

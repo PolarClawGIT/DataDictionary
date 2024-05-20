@@ -11,5 +11,8 @@ namespace DataDictionary.BusinessLayer.Scripting
     {
         /// <inheritdoc/>
         public SelectionPathValue() : base() { }
+
+        /// <inheritdoc cref="SelectionPathItem(ISelectionIndex)"/>
+        public SelectionPathValue(ISelectionIndex key) : base(key) { }
     }
 }

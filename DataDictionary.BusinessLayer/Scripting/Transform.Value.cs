@@ -8,7 +8,7 @@ using System.Xml.Xsl;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface ITransformValue : ITransformItem, ITransformIndex
+    public interface ITransformValue : ITransformItem, ITransformIndex, ITransformIndexName
     { }
 
     /// <inheritdoc/>

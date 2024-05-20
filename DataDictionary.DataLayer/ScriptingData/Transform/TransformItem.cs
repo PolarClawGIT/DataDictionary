@@ -9,13 +9,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
     /// <summary>
     /// Interface for the Scripting Transform data.
     /// </summary>
-    public interface ITransformItem : ITransformKey, IScopeKey
+    public interface ITransformItem : ITransformKey, ITransformKeyName, IScopeKey
     {
-        /// <summary>
-        /// Title of the Transform.
-        /// </summary>
-        String? TransformTitle { get; }
-
         /// <summary>
         /// Description of the Transform. How the Transform is used.
         /// </summary>

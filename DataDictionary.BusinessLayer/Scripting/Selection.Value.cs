@@ -5,7 +5,7 @@ using DataDictionary.DataLayer.ScriptingData.Selection;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface ISelectionValue : ISelectionItem, ISelectionIndex
+    public interface ISelectionValue : ISelectionItem, ISelectionIndex, ISelectionIndexName
     { }
 
     /// <inheritdoc/>

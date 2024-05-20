@@ -19,4 +19,15 @@ namespace DataDictionary.BusinessLayer.Scripting
         public static implicit operator DataLayerIndex(TransformIndex source)
         { return new DataLayerIndex() { BusinessLayerId = source.TransformId ?? Guid.Empty }; }
     }
+
+    /// <inheritdoc/>
+    public interface ITransformIndexName : ITransformKeyName
+    { }
+
+    /// <inheritdoc/>
+    public class TransformIndexName : TransformKeyName, ITransformIndexName
+    {
+        /// <inheritdoc cref="TransformKeyName(ITransformKeyName)"/>
+        public TransformIndexName(ITransformIndexName source) : base(source) { }
+    }
 }

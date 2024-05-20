@@ -8,13 +8,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Interface for the Scripting Schema data.
     /// </summary>
-    public interface ISchemaItem : ISchemaKey, IScopeKey
+    public interface ISchemaItem : ISchemaKey, ISchemaKeyName, IScopeKey
     {
-        /// <summary>
-        /// Title of the Schema.
-        /// </summary>
-        String? SchemaTitle { get; }
-
         /// <summary>
         /// Description of the Schema.
         /// </summary>

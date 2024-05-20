@@ -211,9 +211,9 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         ScriptingSelection,
 
         /// <summary>
-        /// Scripting Selection Instance
+        /// Scripting Selection Path
         /// </summary>
-        ScriptingSelectionInstance,
+        ScriptingSelectionPath,
     }
 
     /// <summary>

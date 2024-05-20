@@ -46,6 +46,19 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
         /// <inheritdoc cref="IScopeKey.Scope"/>
         protected String? ScopeName { get { return GetValue(nameof(ScopeName)); } set { SetValue(nameof(ScopeName), value); } }
 
+        /// <summary>
+        /// Constructor for Scripting Selection Path
+        /// </summary>
+        public SelectionPathItem() : base() { }
+
+        /// <summary>
+        /// Constructor for Scripting Selection Path
+        /// </summary>
+        /// <param name="key"></param>
+        public SelectionPathItem(ISelectionKey key) : this()
+        { SelectionId = key.SelectionId; }
+
+
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(SelectionId), typeof(Guid)){ AllowDBNull = false},

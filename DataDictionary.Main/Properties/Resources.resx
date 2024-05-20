@@ -199,6 +199,9 @@
   <data name="DeleteXMLSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteXMLSchema.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DeleteXPath" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteXPath.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="DeleteXSLTransform" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteXSLTransform.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -376,6 +379,9 @@
   <data name="Icon_XMLSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\XMLSchema.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon_XPath" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\XPath.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Icon_XSLTransform" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\XSLTransform.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -456,6 +462,9 @@
   </data>
   <data name="NewXMLSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewXMLSchema.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NewXPath" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewXPath.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NewXSLTransform" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewXSLTransform.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -603,6 +612,9 @@
   </data>
   <data name="XMLSchema" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\XMLSchema.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="XPath" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\XPath.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="XSLTransform" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\XSLTransform.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

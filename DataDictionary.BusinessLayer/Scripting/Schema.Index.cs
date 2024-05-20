@@ -19,4 +19,15 @@ namespace DataDictionary.BusinessLayer.Scripting
         public static implicit operator DataLayerIndex(SchemaIndex source)
         { return new DataLayerIndex() { BusinessLayerId = source.SchemaId ?? Guid.Empty }; }
     }
+
+    /// <inheritdoc/>
+    public interface ISchemaIndexName : ISchemaKeyName
+    { }
+
+    /// <inheritdoc/>
+    public class SchemaIndexName : SchemaKeyName, ISchemaIndexName
+    {
+        /// <inheritdoc cref="SchemaKeyName(ISchemaKeyName)"/>
+        public SchemaIndexName(ISchemaIndexName source) : base(source) { }
+    }
 }

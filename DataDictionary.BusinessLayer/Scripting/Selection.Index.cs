@@ -19,4 +19,15 @@ namespace DataDictionary.BusinessLayer.Scripting
         public static implicit operator DataLayerIndex(SelectionIndex source)
         { return new DataLayerIndex() { BusinessLayerId = source.SelectionId ?? Guid.Empty }; }
     }
+
+    /// <inheritdoc/>
+    public interface ISelectionIndexName : ISelectionKeyName
+    { }
+
+    /// <inheritdoc/>
+    public class SelectionIndexName : SelectionKeyName, ISelectionIndexName
+    {
+        /// <inheritdoc cref="SelectionKeyName(ISelectionKeyName)"/>
+        public SelectionIndexName(ISelectionIndexName source) : base(source) { }
+    }
 }
