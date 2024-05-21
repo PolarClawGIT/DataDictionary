@@ -123,6 +123,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap BuildDefinition {
+            get {
+                object obj = ResourceManager.GetObject("BuildDefinition", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap BulletList {
             get {
                 object obj = ResourceManager.GetObject("BulletList", resourceCulture);
@@ -316,6 +326,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap DeleteTable {
             get {
                 object obj = ResourceManager.GetObject("DeleteTable", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DeleteXmlFile {
+            get {
+                object obj = ResourceManager.GetObject("DeleteXmlFile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1196,6 +1216,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap NewTable {
             get {
                 object obj = ResourceManager.GetObject("NewTable", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap NewXmlFile {
+            get {
+                object obj = ResourceManager.GetObject("NewXmlFile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

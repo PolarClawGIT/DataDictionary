@@ -95,6 +95,9 @@ namespace DataDictionary.Main
         private void entityAliasToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.Entities.Aliases); }
 
+        private void manageScriptingCommand_ButtonClick(object sender, EventArgs e)
+        { Activate(() => new Forms.Scripting.Document()); }
+
         private void transformManagerCommand_Click(object sender, EventArgs e)
         { Activate(() => new Forms.Scripting.TransformManager(null)); }
 

@@ -130,5 +130,8 @@ namespace DataDictionary.Main
 
         void Activate(BusinessLayer.Scripting.SelectionValue selectionItem)
         { Activate((data) => new Forms.Scripting.SelectionManager(selectionItem), selectionItem); }
+
+        void Activate(BusinessLayer.Scripting.TransformValue transformItem)
+        { Activate((data) => new Forms.Scripting.TransformManager(transformItem), transformItem); }
     }
 }

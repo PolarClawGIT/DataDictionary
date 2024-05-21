@@ -117,10 +117,10 @@
             manageScriptingCommand = new ToolStripSplitButton();
             scriptingContextMenu = new ContextMenuStrip(components);
             schemaManagerCommand = new ToolStripMenuItem();
+            selectionPathCommand = new ToolStripMenuItem();
             transformManagerCommand = new ToolStripMenuItem();
             toolStripSeparator7 = new ToolStripSeparator();
             refreshCommand = new ToolStripButton();
-            selectionPathCommand = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
@@ -796,11 +796,13 @@
             manageScriptingCommand.Name = "manageScriptingCommand";
             manageScriptingCommand.Size = new Size(32, 22);
             manageScriptingCommand.Text = "Scripting manager";
+            manageScriptingCommand.ButtonClick += manageScriptingCommand_ButtonClick;
             // 
             // scriptingContextMenu
             // 
             scriptingContextMenu.Items.AddRange(new ToolStripItem[] { schemaManagerCommand, selectionPathCommand, transformManagerCommand });
             scriptingContextMenu.Name = "scriptingContextMenu";
+            scriptingContextMenu.OwnerItem = manageScriptingCommand;
             scriptingContextMenu.Size = new Size(181, 92);
             // 
             // schemaManagerCommand
@@ -810,6 +812,14 @@
             schemaManagerCommand.Size = new Size(180, 22);
             schemaManagerCommand.Text = "Schema (XSD)";
             schemaManagerCommand.Click += schemaManagerCommand_Click;
+            // 
+            // selectionPathCommand
+            // 
+            selectionPathCommand.Image = Properties.Resources.NewXPath;
+            selectionPathCommand.Name = "selectionPathCommand";
+            selectionPathCommand.Size = new Size(180, 22);
+            selectionPathCommand.Text = "Selection (XPath)";
+            selectionPathCommand.Click += selectionPathCommand_Click;
             // 
             // transformManagerCommand
             // 
@@ -833,14 +843,6 @@
             refreshCommand.Size = new Size(23, 22);
             refreshCommand.Text = "Refresh navigation tree";
             refreshCommand.Click += RefreshCommand_Click;
-            // 
-            // selectionPathCommand
-            // 
-            selectionPathCommand.Image = Properties.Resources.NewXPath;
-            selectionPathCommand.Name = "selectionPathCommand";
-            selectionPathCommand.Size = new Size(180, 22);
-            selectionPathCommand.Text = "Selection (XPath)";
-            selectionPathCommand.Click += selectionPathCommand_Click;
             // 
             // Main
             // 
