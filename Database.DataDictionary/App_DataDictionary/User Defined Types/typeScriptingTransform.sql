@@ -5,5 +5,5 @@
 	[TransformDescription]    [App_DataDictionary].[typeDescription] Null,
 	[AsText]                  Bit Null,
 	[AsXml]                   Bit Null,
-	[TransformScript]         XML Null -- C# code will use String and convert to XElement
+	[TransformScript]         NVarChar(Max) Null -- C# code will use String and convert to XElement
 )

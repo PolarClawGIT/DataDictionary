@@ -101,13 +101,11 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
             {
                 SetValue(nameof(TransformScript), value);
                 TransformException = null;
-                transformValue = null;
 
                 try
                 {
                     if (!String.IsNullOrWhiteSpace(value))
-                    { transformValue = XDocument.Parse(value); }
-
+                    { TransformDocument = XDocument.Parse(value); }
                 }
                 catch (Exception ex)
                 {
@@ -115,8 +113,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
                     TransformException = ex;
                     base.OnPropertyChanged(nameof(TransformException));
                 }
-
-                base.OnPropertyChanged(nameof(TransformDocument));
             }
         }
 
@@ -130,9 +126,17 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
                 TransformException = null;
                 String? data;
                 if (value is null) { data = null; }
-                else { data = value.ToString(); }
+                else
+                {
+                    if (value.Declaration is XDeclaration)
+                    { // Remove the encoding.
+                        value.Declaration = null;
+                        TransformException = new ArgumentException("Encoding Removed (using UTF-16)");
+                    }
+                    data = value.ToString();
+                }
 
-                SetValue("TransformScript", data);
+                SetValue(nameof(TransformScript), data);
                 base.OnPropertyChanged(nameof(TransformDocument));
             }
         }
@@ -154,11 +158,11 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(TransformId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(TransformTitle), typeof(string)){ AllowDBNull = false},
-            new DataColumn(nameof(TransformDescription), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(TransformTitle), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(TransformDescription), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(AsText), typeof(bool)){ AllowDBNull = true},
             new DataColumn(nameof(AsXml), typeof(bool)){ AllowDBNull = true},
-            new DataColumn(nameof(TransformScript), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(TransformScript), typeof(String)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>
@@ -177,6 +181,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
 
         /// <inheritdoc/>
         public override string ToString()
-        { return TransformTitle??String.Empty; }
+        { return TransformTitle ?? String.Empty; }
     }
 }
