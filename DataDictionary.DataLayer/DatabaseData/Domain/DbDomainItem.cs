@@ -26,86 +26,86 @@ namespace DataDictionary.DataLayer.DatabaseData.Domain
     public class DbDomainItem : BindingTableRow, IDbDomainItem, IDbExtendedProperty, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
 
         /// <inheritdoc/>
-        public Guid? DomainId { get { return GetValue<Guid>("DomainId"); } }
+        public Guid? DomainId { get { return GetValue<Guid>(nameof(DomainId)); } }
 
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue("DatabaseName"); } }
+        public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
 
         /// <inheritdoc/>
-        public string? SchemaName { get { return GetValue("SchemaName"); } }
+        public string? SchemaName { get { return GetValue(nameof(SchemaName)); } }
 
         /// <inheritdoc/>
-        public string? DomainName { get { return GetValue("DomainName"); } }
+        public string? DomainName { get { return GetValue(nameof(DomainName)); } }
 
         /// <inheritdoc/>
-        public string? DataType { get { return GetValue("DataType"); } }
+        public string? DataType { get { return GetValue(nameof(DataType)); } }
 
         /// <inheritdoc/>
-        public string? DomainDefault { get { return GetValue("DomainDefault"); } }
+        public string? DomainDefault { get { return GetValue(nameof(DomainDefault)); } }
 
         /// <inheritdoc/>
-        public int? CharacterMaximumLength { get { return GetValue<int>("CharacterMaximumLength"); } }
+        public int? CharacterMaximumLength { get { return GetValue<int>(nameof(CharacterMaximumLength)); } }
 
         /// <inheritdoc/>
-        public int? CharacterOctetLength { get { return GetValue<int>("CharacterOctetLength"); } }
+        public int? CharacterOctetLength { get { return GetValue<int>(nameof(CharacterOctetLength)); } }
 
         /// <inheritdoc/>
-        public byte? NumericPrecision { get { return GetValue<byte>("NumericPrecision"); } }
+        public byte? NumericPrecision { get { return GetValue<byte>(nameof(NumericPrecision)); } }
 
         /// <inheritdoc/>
-        public short? NumericPrecisionRadix { get { return GetValue<short>("NumericPrecisionRadix"); } }
+        public short? NumericPrecisionRadix { get { return GetValue<short>(nameof(NumericPrecisionRadix)); } }
 
         /// <inheritdoc/>
-        public int? NumericScale { get { return GetValue<int>("NumericScale"); } }
+        public int? NumericScale { get { return GetValue<int>(nameof(NumericScale)); } }
 
         /// <inheritdoc/>
-        public short? DateTimePrecision { get { return GetValue<short>("DateTimePrecision"); } }
+        public short? DateTimePrecision { get { return GetValue<short>(nameof(DateTimePrecision)); } }
 
         /// <inheritdoc/>
-        public string? CharacterSetCatalog { get { return GetValue("CharacterSetCatalog"); } }
+        public string? CharacterSetCatalog { get { return GetValue(nameof(CharacterSetCatalog)); } }
 
         /// <inheritdoc/>
-        public string? CharacterSetSchema { get { return GetValue("CharacterSetSchema"); } }
+        public string? CharacterSetSchema { get { return GetValue(nameof(CharacterSetSchema)); } }
 
         /// <inheritdoc/>
-        public string? CharacterSetName { get { return GetValue("CharacterSetName"); } }
+        public string? CharacterSetName { get { return GetValue(nameof(CharacterSetName)); } }
 
         /// <inheritdoc/>
-        public string? CollationCatalog { get { return GetValue("CollationCatalog"); } }
+        public string? CollationCatalog { get { return GetValue(nameof(CollationCatalog)); } }
 
         /// <inheritdoc/>
-        public string? CollationSchema { get { return GetValue("CollationSchema"); } }
+        public string? CollationSchema { get { return GetValue(nameof(CollationSchema)); } }
 
         /// <inheritdoc/>
-        public string? CollationName { get { return GetValue("CollationName"); } }
+        public string? CollationName { get { return GetValue(nameof(CollationName)); } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.DatabaseDomain;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DomainId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("DomainName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("DataType", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DomainDefault", typeof(string)){ AllowDBNull = true},
-            new DataColumn("CharacterMaximumLength", typeof(int)){ AllowDBNull = true},
-            new DataColumn("CharacterOctetLength", typeof(int)){ AllowDBNull = true},
-            new DataColumn("NumericPrecision", typeof(byte)){ AllowDBNull = true},
-            new DataColumn("NumericPrecisionRadix", typeof(short)){ AllowDBNull = true},
-            new DataColumn("NumericScale", typeof(int)){ AllowDBNull = true},
-            new DataColumn("DateTimePrecision", typeof(short)){ AllowDBNull = true},
-            new DataColumn("CharacterSetCatalog", typeof(string)){ AllowDBNull = true},
-            new DataColumn("CharacterSetSchema", typeof(string)){ AllowDBNull = true},
-            new DataColumn("CharacterSetName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("CollationCatalog", typeof(string)){ AllowDBNull = true},
-            new DataColumn("CollationSchema", typeof(string)){ AllowDBNull = true},
-            new DataColumn("CollationName", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DomainId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(DomainName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(DataType), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DomainDefault), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterMaximumLength), typeof(int)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterOctetLength), typeof(int)){ AllowDBNull = true},
+            new DataColumn(nameof(NumericPrecision), typeof(byte)){ AllowDBNull = true},
+            new DataColumn(nameof(NumericPrecisionRadix), typeof(short)){ AllowDBNull = true},
+            new DataColumn(nameof(NumericScale), typeof(int)){ AllowDBNull = true},
+            new DataColumn(nameof(DateTimePrecision), typeof(short)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterSetCatalog), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterSetSchema), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterSetName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CollationCatalog), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CollationSchema), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CollationName), typeof(string)){ AllowDBNull = true},
         };
 
         /// <summary>

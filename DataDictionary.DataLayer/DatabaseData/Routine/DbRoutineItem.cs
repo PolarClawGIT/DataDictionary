@@ -21,19 +21,19 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     public class DbRoutineItem : BindingTableRow, IDbRoutineItem, IDbExtendedProperty, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
 
         /// <inheritdoc/>
-        public Guid? RoutineId { get { return GetValue<Guid>("RoutineId"); } }
+        public Guid? RoutineId { get { return GetValue<Guid>(nameof(RoutineId)); } }
 
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue("DatabaseName"); } }
+        public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
 
         /// <inheritdoc/>
-        public string? SchemaName { get { return GetValue("SchemaName"); } }
+        public string? SchemaName { get { return GetValue(nameof(SchemaName)); } }
 
         /// <inheritdoc/>
-        public string? RoutineName { get { return GetValue("RoutineName"); } }
+        public string? RoutineName { get { return GetValue(nameof(RoutineName)); } }
 
         /// <inheritdoc/>
         public bool IsSystem
@@ -54,7 +54,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         /// <inheritdoc/>
         public DbRoutineType RoutineType
-        { get { return DbRoutineTypeKey.Parse(GetValue("RoutineType") ?? String.Empty).RoutineType; } }
+        { get { return DbRoutineTypeKey.Parse(GetValue(nameof(RoutineType)) ?? String.Empty).RoutineType; } }
 
         /// <inheritdoc/>
         public ScopeType Scope
@@ -73,12 +73,12 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("RoutineId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("RoutineName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("RoutineType", typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(RoutineId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(RoutineName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(RoutineType), typeof(string)){ AllowDBNull = false},
         };
 
         /// <summary>

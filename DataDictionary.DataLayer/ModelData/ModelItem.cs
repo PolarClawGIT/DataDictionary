@@ -35,13 +35,13 @@ namespace DataDictionary.DataLayer.ModelData
     public class ModelItem : BindingTableRow, IModelItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? ModelId { get { return GetValue<Guid>("ModelId"); } protected set { SetValue("ModelId", value); } }
+        public Guid? ModelId { get { return GetValue<Guid>(nameof(ModelId)); } protected set { SetValue(nameof(ModelId), value); } }
 
         /// <inheritdoc/>
-        public string? ModelTitle { get { return GetValue("ModelTitle"); } set { SetValue("ModelTitle", value); } }
+        public string? ModelTitle { get { return GetValue(nameof(ModelTitle)); } set { SetValue(nameof(ModelTitle), value); } }
 
         /// <inheritdoc/>
-        public string? ModelDescription { get { return GetValue("ModelDescription"); } set { SetValue("ModelDescription", value); } }
+        public string? ModelDescription { get { return GetValue(nameof(ModelDescription)); } set { SetValue(nameof(ModelDescription), value); } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.Model;
@@ -57,9 +57,9 @@ namespace DataDictionary.DataLayer.ModelData
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("ModelId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("ModelTitle", typeof(string)){ AllowDBNull = false},
-            new DataColumn("ModelDescription", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(ModelId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(ModelTitle), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(ModelDescription), typeof(string)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

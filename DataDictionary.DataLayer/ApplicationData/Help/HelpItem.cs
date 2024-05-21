@@ -41,31 +41,31 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     public class HelpItem : BindingTableRow, IHelpItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? HelpId { get { return GetValue<Guid>("HelpId"); } protected set { SetValue("HelpId", value); } }
+        public Guid? HelpId { get { return GetValue<Guid>(nameof(HelpId)); } protected set { SetValue(nameof(HelpId), value); } }
 
         // Obsolete, Use NameSpace instead
         //public Guid? HelpParentId { get { return GetValue<Guid>("HelpParentId"); } protected set { SetValue("HelpParentId", value); } }
 
         /// <inheritdoc/>
-        public string? HelpSubject { get { return GetValue("HelpSubject"); } set { SetValue("HelpSubject", value); } }
+        public string? HelpSubject { get { return GetValue(nameof(HelpSubject)); } set { SetValue(nameof(HelpSubject), value); } }
 
         /// <inheritdoc/>
-        public string? HelpToolTip { get { return GetValue("HelpToolTip"); } set { SetValue("HelpToolTip", value); } }
+        public string? HelpToolTip { get { return GetValue(nameof(HelpToolTip)); } set { SetValue(nameof(HelpToolTip), value); } }
 
         /// <inheritdoc/>
         public string? HelpText
         {
-            get { return GetValue("HelpText"); }
+            get { return GetValue(nameof(HelpText)); }
             set
             {
                 // The Rich Text control is specifically aggressive about changing the value outside of what the user does.
                 if (HelpText == value) { }
-                else { SetValue("HelpText", value); }
+                else { SetValue(nameof(HelpText), value); }
             }
         }
 
         /// <inheritdoc/>
-        public string? NameSpace { get { return GetValue("NameSpace"); } set { SetValue("NameSpace", value); } }
+        public string? NameSpace { get { return GetValue(nameof(NameSpace)); } set { SetValue(nameof(NameSpace), value); } }
 
         /// <summary>
         /// Creates an Instance of a Help Document Item.
@@ -77,11 +77,11 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("HelpId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("HelpSubject", typeof(string)){ AllowDBNull = false},
-            new DataColumn("HelpToolTip", typeof(string)){ AllowDBNull = true},
-            new DataColumn("HelpText", typeof(string)){ AllowDBNull = true},
-            new DataColumn("NameSpace", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(HelpId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(HelpSubject), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(HelpToolTip), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(HelpText), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(NameSpace), typeof(string)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

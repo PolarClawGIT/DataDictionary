@@ -60,98 +60,98 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     public class DbTableColumnItem : BindingTableRow, IDbTableColumnItem, INotifyPropertyChanged, IDbExtendedProperty, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
 
         /// <inheritdoc/>
-        public Guid? ColumnId { get { return GetValue<Guid>("ColumnId"); } }
+        public Guid? ColumnId { get { return GetValue<Guid>(nameof(ColumnId)); } }
         
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue("DatabaseName"); } }
+        public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
 
         /// <inheritdoc/>
-        public string? SchemaName { get { return GetValue("SchemaName"); } }
+        public string? SchemaName { get { return GetValue(nameof(SchemaName)); } }
 
         /// <inheritdoc/>
-        public string? TableName { get { return GetValue("TableName"); } }
+        public string? TableName { get { return GetValue(nameof(TableName)); } }
 
         /// <inheritdoc/>
-        public string? ColumnName { get { return GetValue("ColumnName"); } }
+        public string? ColumnName { get { return GetValue(nameof(ColumnName)); } }
 
         /// <inheritdoc/>
-        public int? OrdinalPosition { get { return GetValue<int>("OrdinalPosition"); } }
+        public int? OrdinalPosition { get { return GetValue<int>(nameof(OrdinalPosition)); } }
 
         /// <inheritdoc/>
-        public bool? IsNullable { get { return GetValue<bool>("IsNullable", BindingItemParsers.BooleanTryParse); } }
+        public bool? IsNullable { get { return GetValue<bool>(nameof(IsNullable), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
-        public string? DataType { get { return GetValue("DataType"); } }
+        public string? DataType { get { return GetValue(nameof(DataType)); } }
 
         /// <inheritdoc/>
-        public string? ColumnDefault { get { return GetValue("ColumnDefault"); } }
+        public string? ColumnDefault { get { return GetValue(nameof(ColumnDefault)); } }
 
         /// <inheritdoc/>
-        public int? CharacterMaximumLength { get { return GetValue<int>("CharacterMaximumLength"); } }
+        public int? CharacterMaximumLength { get { return GetValue<int>(nameof(CharacterMaximumLength)); } }
 
         /// <inheritdoc/>
-        public int? CharacterOctetLength { get { return GetValue<int>("CharacterOctetLength"); } }
+        public int? CharacterOctetLength { get { return GetValue<int>(nameof(CharacterOctetLength)); } }
 
         /// <inheritdoc/>
-        public byte? NumericPrecision { get { return GetValue<byte>("NumericPrecision"); } }
+        public byte? NumericPrecision { get { return GetValue<byte>(nameof(NumericPrecision)); } }
 
         /// <inheritdoc/>
-        public short? NumericPrecisionRadix { get { return GetValue<short>("NumericPrecisionRadix"); } }
+        public short? NumericPrecisionRadix { get { return GetValue<short>(nameof(NumericPrecisionRadix)); } }
 
         /// <inheritdoc/>
-        public int? NumericScale { get { return GetValue<int>("NumericScale"); } }
+        public int? NumericScale { get { return GetValue<int>(nameof(NumericScale)); } }
 
         /// <inheritdoc/>
-        public short? DateTimePrecision { get { return GetValue<short>("DateTimePrecision"); } }
+        public short? DateTimePrecision { get { return GetValue<short>(nameof(DateTimePrecision)); } }
 
         /// <inheritdoc/>
-        public string? CharacterSetCatalog { get { return GetValue("CharacterSetCatalog"); } }
+        public string? CharacterSetCatalog { get { return GetValue(nameof(CharacterSetCatalog)); } }
 
         /// <inheritdoc/>
-        public string? CharacterSetSchema { get { return GetValue("CharacterSetSchema"); } }
+        public string? CharacterSetSchema { get { return GetValue(nameof(CharacterSetSchema)); } }
 
         /// <inheritdoc/>
-        public string? CharacterSetName { get { return GetValue("CharacterSetName"); } }
+        public string? CharacterSetName { get { return GetValue(nameof(CharacterSetName)); } }
 
         /// <inheritdoc/>
-        public string? CollationCatalog { get { return GetValue("CollationCatalog"); } }
+        public string? CollationCatalog { get { return GetValue(nameof(CollationCatalog)); } }
 
         /// <inheritdoc/>
-        public string? CollationSchema { get { return GetValue("CollationSchema"); } }
+        public string? CollationSchema { get { return GetValue(nameof(CollationSchema)); } }
 
         /// <inheritdoc/>
-        public string? CollationName { get { return GetValue("CollationName"); } }
+        public string? CollationName { get { return GetValue(nameof(CollationName)); } }
 
         /// <inheritdoc/>
-        public string? DomainCatalog { get { return GetValue("DomainCatalog"); } }
+        public string? DomainCatalog { get { return GetValue(nameof(DomainCatalog)); } }
 
         /// <inheritdoc/>
-        public string? DomainSchema { get { return GetValue("DomainSchema"); } }
+        public string? DomainSchema { get { return GetValue(nameof(DomainSchema)); } }
 
         /// <inheritdoc/>
-        public string? DomainName { get { return GetValue("DomainName"); } }
+        public string? DomainName { get { return GetValue(nameof(DomainName)); } }
 
         /// <inheritdoc/>
-        public bool? IsIdentity { get { return GetValue<bool>("IsIdentity", BindingItemParsers.BooleanTryParse); } }
+        public bool? IsIdentity { get { return GetValue<bool>(nameof(IsIdentity), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
-        public bool? IsHidden { get { return GetValue<bool>("IsHidden", BindingItemParsers.BooleanTryParse); } }
+        public bool? IsHidden { get { return GetValue<bool>(nameof(IsHidden), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
-        public bool? IsComputed { get { return GetValue<bool>("IsComputed", BindingItemParsers.BooleanTryParse); } }
+        public bool? IsComputed { get { return GetValue<bool>(nameof(IsComputed), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
-        public string? ComputedDefinition { get { return GetValue("ComputedDefinition"); } }
+        public string? ComputedDefinition { get { return GetValue(nameof(ComputedDefinition)); } }
 
         /// <inheritdoc/>
-        public string? GeneratedAlwayType { get { return GetValue("GeneratedAlwayType"); } }
+        public string? GeneratedAlwayType { get { return GetValue(nameof(GeneratedAlwayType)); } }
 
         /// <inheritdoc/>
         public DbTableType TableType
-        { get { return DbTableTypeKey.Parse(GetValue("TableType") ?? String.Empty).TableType; } }
+        { get { return DbTableTypeKey.Parse(GetValue(nameof(TableType)) ?? String.Empty).TableType; } }
 
         /// <inheritdoc/>
         public ScopeType Scope
@@ -171,37 +171,37 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ColumnId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("TableName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("TableType", typeof(string)){ AllowDBNull = false},
-            new DataColumn("ColumnName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("OrdinalPosition", typeof(int)){ AllowDBNull = false},
-            new DataColumn("IsNullable", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("DataType", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ColumnDefault", typeof(string)){ AllowDBNull = true},
-            new DataColumn("CharacterMaximumLength", typeof(int)){ AllowDBNull = true},
-            new DataColumn("CharacterOctetLength", typeof(int)){ AllowDBNull = true},
-            new DataColumn("NumericPrecision", typeof(byte)){ AllowDBNull = true},
-            new DataColumn("NumericPrecisionRadix", typeof(short)){ AllowDBNull = true},
-            new DataColumn("NumericScale", typeof(int)){ AllowDBNull = true},
-            new DataColumn("DateTimePrecision", typeof(short)){ AllowDBNull = true},
-            new DataColumn("CharacterSetCatalog", typeof(string)){ AllowDBNull = true},
-            new DataColumn("CharacterSetSchema", typeof(string)){ AllowDBNull = true},
-            new DataColumn("CharacterSetName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("CollationCatalog", typeof(string)){ AllowDBNull = true},
-            new DataColumn("CollationSchema", typeof(string)){ AllowDBNull = true},
-            new DataColumn("CollationName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DomainCatalog", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DomainSchema", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DomainName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("IsIdentity", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsHidden", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsComputed", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("ComputedDefinition", typeof(string)){ AllowDBNull = true},
-            new DataColumn("GeneratedAlwayType", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(ColumnId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(TableName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(TableType), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(ColumnName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(OrdinalPosition), typeof(int)){ AllowDBNull = false},
+            new DataColumn(nameof(IsNullable), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(DataType), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(ColumnDefault), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterMaximumLength), typeof(int)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterOctetLength), typeof(int)){ AllowDBNull = true},
+            new DataColumn(nameof(NumericPrecision), typeof(byte)){ AllowDBNull = true},
+            new DataColumn(nameof(NumericPrecisionRadix), typeof(short)){ AllowDBNull = true},
+            new DataColumn(nameof(NumericScale), typeof(int)){ AllowDBNull = true},
+            new DataColumn(nameof(DateTimePrecision), typeof(short)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterSetCatalog), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterSetSchema), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CharacterSetName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CollationCatalog), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CollationSchema), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CollationName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DomainCatalog), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DomainSchema), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DomainName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(IsIdentity), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsHidden), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsComputed), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(ComputedDefinition), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(GeneratedAlwayType), typeof(string)){ AllowDBNull = true},
         };
 
         /// <summary>

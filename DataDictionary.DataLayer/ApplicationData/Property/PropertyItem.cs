@@ -56,31 +56,31 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     public class PropertyItem : BindingTableRow, IPropertyItem, ISerializable, IValidateItem<PropertyItem>
     {
         /// <inheritdoc/>
-        public Nullable<Guid> PropertyId { get { return GetValue<Guid>("PropertyId"); } protected set { SetValue<Guid>("PropertyId", value); } }
+        public Nullable<Guid> PropertyId { get { return GetValue<Guid>(nameof(PropertyId)); } protected set { SetValue<Guid>(nameof(PropertyId), value); } }
 
         /// <inheritdoc/>
-        public String? PropertyTitle { get { return GetValue("PropertyTitle"); } set { SetValue("PropertyTitle", value); } }
+        public String? PropertyTitle { get { return GetValue(nameof(PropertyTitle)); } set { SetValue(nameof(PropertyTitle), value); } }
 
         /// <inheritdoc/>
-        public String? PropertyDescription { get { return GetValue("PropertyDescription"); } set { SetValue("PropertyDescription", value); } }
+        public String? PropertyDescription { get { return GetValue(nameof(PropertyDescription)); } set { SetValue(nameof(PropertyDescription), value); } }
 
         /// <inheritdoc/>
-        public Nullable<Boolean> IsDefinition { get { return GetValue<Boolean>("IsDefinition", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("IsDefinition", value); } }
+        public Nullable<Boolean> IsDefinition { get { return GetValue<Boolean>(nameof(IsDefinition), BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>(nameof(IsDefinition), value); } }
 
         /// <inheritdoc/>
-        public Nullable<Boolean> IsExtendedProperty { get { return GetValue<Boolean>("IsExtendedProperty", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("IsExtendedProperty", value); } }
+        public Nullable<Boolean> IsExtendedProperty { get { return GetValue<Boolean>(nameof(IsExtendedProperty), BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>(nameof(IsExtendedProperty), value); } }
 
         /// <inheritdoc/>
-        public Nullable<Boolean> IsFrameworkSummary { get { return GetValue<Boolean>("IsFrameworkSummary", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("IsFrameworkSummary", value); } }
+        public Nullable<Boolean> IsFrameworkSummary { get { return GetValue<Boolean>(nameof(IsFrameworkSummary), BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>(nameof(IsFrameworkSummary), value); } }
 
         /// <inheritdoc/>
-        public Nullable<Boolean> IsChoice { get { return GetValue<Boolean>("IsChoice", BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>("IsChoice", value); } }
+        public Nullable<Boolean> IsChoice { get { return GetValue<Boolean>(nameof(IsChoice), BindingItemParsers.BooleanTryParse); } set { SetValue<Boolean>(nameof(IsChoice), value); } }
 
         /// <inheritdoc/>
-        public String? ExtendedProperty { get { return GetValue("ExtendedProperty"); } set { SetValue("ExtendedProperty", value); } }
+        public String? ExtendedProperty { get { return GetValue(nameof(ExtendedProperty)); } set { SetValue(nameof(ExtendedProperty), value); } }
 
         /// <inheritdoc/>
-        protected String? ChoiceList { get { return GetValue("ChoiceList"); } set { SetValue("ChoiceList", value); } }
+        protected String? ChoiceList { get { return GetValue(nameof(ChoiceList)); } set { SetValue(nameof(ChoiceList), value); } }
 
         /// <summary>
         /// The Choice Item used to present a List of Choices.
@@ -155,15 +155,15 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("PropertyTitle", typeof(String)){ AllowDBNull = true},
-            new DataColumn("PropertyDescription", typeof(String)){ AllowDBNull = true},
-            new DataColumn("IsDefinition", typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn("IsExtendedProperty", typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn("IsFrameworkSummary", typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn("IsChoice", typeof(Boolean)){ AllowDBNull = true},
-            new DataColumn("ExtendedProperty", typeof(String)){ AllowDBNull = true},
-            new DataColumn("ChoiceList", typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(PropertyId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(PropertyTitle), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(PropertyDescription), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(IsDefinition), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsExtendedProperty), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsFrameworkSummary), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(IsChoice), typeof(Boolean)){ AllowDBNull = true},
+            new DataColumn(nameof(ExtendedProperty), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ChoiceList), typeof(String)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>
