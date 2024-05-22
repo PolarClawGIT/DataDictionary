@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class AttributeValue : DomainAttributeItem, IAttributeValue, INamedScopeSourceValue
+    public class AttributeValue : DomainAttributeItem, IAttributeValue, INamedScopeSourceValue, IScripting
     {
         /// <inheritdoc cref="DomainAttributeItem()"/>
         public AttributeValue() : base()
@@ -32,11 +32,12 @@ namespace DataDictionary.BusinessLayer.Domain
         public NamedScopePath GetPath()
         { return new NamedScopePath(AttributeTitle); }
 
-        internal XElement? GetXElement(IEnumerable<SchemaElementValue>? options = null)
+        /// <inheritdoc/>
+        public XElement GetXElement(IEnumerable<SchemaElementValue>? options = null)
         {
-            XElement? result = new XElement(this.Scope.ToName());
+            XElement result = new XElement(this.Scope.ToName());
 
-            if (options is not null)
+            if (options is not null && options.Count() > 0)
             {
                 foreach (SchemaElementValue option in options)
                 {

@@ -96,7 +96,19 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
         /// <inheritdoc/>
         public String? TransformScript
         {
-            get { return GetValue(nameof(TransformScript)); }
+            get
+            {
+                String? value = GetValue(nameof(TransformScript));
+
+                if (transformValue is null && !String.IsNullOrWhiteSpace(value))
+                {
+                    TransformDocument = XDocument.Parse(value);
+                    if (TransformException is null)
+                    { value = TransformDocument.ToString(); }
+                }
+
+                return value;
+            }
             set
             {
                 SetValue(nameof(TransformScript), value);
@@ -105,7 +117,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
                 try
                 {
                     if (!String.IsNullOrWhiteSpace(value))
-                    { TransformDocument = XDocument.Parse(value); }
+                    { TransformDocument = XDocument.Parse(value, LoadOptions.PreserveWhitespace); }
                 }
                 catch (Exception ex)
                 {

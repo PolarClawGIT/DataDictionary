@@ -1,9 +1,10 @@
-﻿using DataDictionary.DataLayer.ScriptingData.Selection;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ScriptingData.Selection;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface ISelectionPathValue : ISelectionPathItem
+    public interface ISelectionPathValue : ISelectionPathItem, ISelectionIndex
     { }
 
     /// <inheritdoc/>
@@ -12,7 +13,11 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <inheritdoc/>
         public SelectionPathValue() : base() { }
 
-        /// <inheritdoc cref="SelectionPathItem(ISelectionIndex)"/>
+        /// <inheritdoc cref="SelectionPathItem(ISelectionKey)"/>
         public SelectionPathValue(ISelectionIndex key) : base(key) { }
+
+        /// <inheritdoc cref="INamedScopeSourceValue.GetPath"/>
+        public NamedScopePath GetPath()
+        { return new NamedScopePath(NamedScopePath.Parse(this.SelectionPath).ToArray()); }
     }
 }

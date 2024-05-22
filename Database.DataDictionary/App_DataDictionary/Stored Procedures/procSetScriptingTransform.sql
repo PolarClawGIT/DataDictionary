@@ -37,8 +37,8 @@ Begin Try
 				Else Null End As [AsText],
 			-- Application is expected to remove the encoding. This takes care of the encoding if it exists.
 			IIF(D.[TransformScript] Like '%encoding="utf-8"%',
-				Convert(Xml,Convert(VarChar(Max),D.[TransformScript])), -- UTF-8 must be formated as VarChar
-				Convert(Xml,Convert(NVarChar(Max),D.[TransformScript]))) -- UTF-16 must be formated as NVarChar
+				Convert(Xml,Convert(VarChar(Max),D.[TransformScript]),1), -- UTF-8 must be formated as VarChar
+				Convert(Xml,Convert(NVarChar(Max),D.[TransformScript]),1)) -- UTF-16 must be formated as NVarChar
 	From	@Data D
 			Cross apply (
 				Select	Coalesce(D.[TransformId], @TransformId, NewId()) As [TransformId]) X

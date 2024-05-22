@@ -42,7 +42,7 @@ Begin Try
 					S.[ParentNameSpace],
 					S.[Level] As [NameSpaceLevel],
 					ROW_NUMBER() Over (
-						Partition By D.[NameSpace]
+						Partition By S.[NameSpace]
 						Order By S.[NameSpace] Desc) As [RankIndex]
 			From	@Data D
 					Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[NameSpace]) S

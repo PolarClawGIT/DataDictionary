@@ -1,4 +1,7 @@
-﻿using DataDictionary.BusinessLayer.Scripting;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Scripting.ComboBoxList;
 using DataDictionary.Main.Properties;
 using System;
@@ -38,7 +41,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 set { selectionId = value; OnPropertyChanged(nameof(SelectionId)); }
             }
             private Guid? selectionId;
-            
+
 
             public event PropertyChangedEventHandler? PropertyChanged;
             void OnPropertyChanged(String propertyName)
@@ -52,7 +55,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 get { return inputData; }
                 set { inputData = value; OnPropertyChanged(nameof(InputData)); }
             }
-            private XDocument inputData = new XDocument();
+            private XDocument inputData = new XDocument(new XElement(ScopeType.Model.ToName()));
 
             public String InputException
             {
@@ -74,6 +77,12 @@ namespace DataDictionary.Main.Forms.Scripting
                 set { outputException = value; OnPropertyChanged(nameof(OutputException)); }
             }
             private String outputException = String.Empty;
+
+            public FormData() : base()
+            { inputData.Changed += InputData_Changed; }
+
+            private void InputData_Changed(Object? sender, XObjectChangeEventArgs e)
+            { OnPropertyChanged(nameof(InputData)); }
         }
 
         BindingList<FormData> data = new BindingList<FormData>() { new FormData() };
@@ -84,6 +93,7 @@ namespace DataDictionary.Main.Forms.Scripting
             bindingDocument.DataSource = data;
             bindingDocument.Position = 0;
             this.Icon = Resources.Icon_XmlFile;
+            toolStrip.TransferItems(documentCommands, 0);
         }
 
 
@@ -100,15 +110,63 @@ namespace DataDictionary.Main.Forms.Scripting
             SelectionNameMember.Load(selectionData, BusinessData.ScriptingEngine.Selections);
             selectionData.DataBindings.Add(new Binding(nameof(selectionData.SelectedValue), bindingDocument, nameof(nameOfValue.SelectionId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
 
-            inputData.DataBindings.Add(new Binding(nameof(inputData.Text), bindingDocument, nameof(nameOfValue.InputData), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
-            inputExceptionData.DataBindings.Add(new Binding(nameof(inputData.Text), bindingDocument, nameof(nameOfValue.InputException), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
-            outputData.DataBindings.Add(new Binding(nameof(inputData.Text), bindingDocument, nameof(nameOfValue.OutputData), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
-            outputExecptionData.DataBindings.Add(new Binding(nameof(inputData.Text), bindingDocument, nameof(nameOfValue.OutputException), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
+            inputData.DataBindings.Add(new Binding(nameof(inputData.Text), bindingDocument, nameof(nameOfValue.InputData), true, DataSourceUpdateMode.OnPropertyChanged));
+            inputExceptionData.DataBindings.Add(new Binding(nameof(inputData.Text), bindingDocument, nameof(nameOfValue.InputException), true, DataSourceUpdateMode.OnPropertyChanged));
+            outputData.DataBindings.Add(new Binding(nameof(inputData.Text), bindingDocument, nameof(nameOfValue.OutputData), true, DataSourceUpdateMode.OnPropertyChanged));
+            outputExecptionData.DataBindings.Add(new Binding(nameof(inputData.Text), bindingDocument, nameof(nameOfValue.OutputException), true, DataSourceUpdateMode.OnPropertyChanged));
         }
 
         private void BuildCommand_Click(object sender, EventArgs e)
         {
+            if (bindingDocument.Current is FormData data && data.InputData.Root is not null)
+            {
+                XElement root = data.InputData.Root;
+                root.RemoveAll();
 
+                SelectionIndex selectionIndex = new SelectionIndex(data);
+                IEnumerable<SelectionPathValue> selections = BusinessData.ScriptingEngine.SelectionPaths.Where(w => selectionIndex.Equals(w));
+
+                foreach (SelectionPathValue selected in selections)
+                {
+                    foreach (NamedScopeIndex index in BusinessData.NamedScope.PathKeys(selected.GetPath()))
+                    {
+                        INamedScopeSourceValue source = BusinessData.NamedScope.GetData(index);
+
+                        if (source is IScripting scripting)
+                        {
+                            SchemaIndex schemaIndex = new SchemaIndex(data);
+                            IEnumerable<SchemaElementValue> schemaElement = BusinessData.ScriptingEngine.SchemeElements.Where(w => schemaIndex.Equals(w));
+                            XElement item = scripting.GetXElement(schemaElement);
+                            root.Add(item);
+                        }
+                    }
+                }
+
+                TransformIndex transformIndex = new TransformIndex(data);
+                if (BusinessData.ScriptingEngine.Transforms.FirstOrDefault(w => transformIndex.Equals(w)) is TransformValue transform)
+                {
+                    if (transform.AsXml)
+                    {
+                        (XDocument result, Exception? exception) transformXml = transform.TransformToXml(data.InputData);
+                        data.OutputData = transformXml.result.ToString();
+
+                        if (transformXml.exception is not null)
+                        { data.OutputException = transformXml.exception.Message; }
+                        else { data.OutputException = String.Empty; }
+                    }
+                    else
+                    {
+                        (String result, Exception? exception) transformText = transform.TransformToText(data.InputData);
+
+                        data.OutputData = transformText.result;
+
+                        if (transformText.exception is not null)
+                        { data.OutputException = transformText.exception.Message; }
+                        else { data.OutputException = String.Empty; }
+                    }
+                }
+
+            }
         }
     }
 }

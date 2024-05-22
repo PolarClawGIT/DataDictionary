@@ -228,13 +228,13 @@
             // 
             documentCommands.Items.AddRange(new ToolStripItem[] { buildCommand });
             documentCommands.Name = "documentCommands";
-            documentCommands.Size = new Size(161, 26);
+            documentCommands.Size = new Size(181, 48);
             // 
             // buildCommand
             // 
             buildCommand.Image = Properties.Resources.BuildDefinition;
             buildCommand.Name = "buildCommand";
-            buildCommand.Size = new Size(160, 22);
+            buildCommand.Size = new Size(180, 22);
             buildCommand.Text = "Build Document";
             buildCommand.ToolTipText = "Build Document";
             buildCommand.Click += BuildCommand_Click;
