@@ -38,14 +38,6 @@ Begin Try
 	From	@Data D
 			Cross apply (
 				Select	Coalesce(D.[SelectionId], @SelectionId, NewId()) As [SelectionId]) X
-	Where	X.[SelectionId] = @SelectionId or
-			X.[SelectionId] In (
-			Select	A.[SelectionId]
-			From	[App_DataDictionary].[ScriptingSelection] A
-					Left Join [App_DataDictionary].[ModelScripting] C
-					On	A.[SelectionId] = C.[SelectionId]
-			Where	(@SelectionId is Null Or @SelectionId = A.[SelectionId]) And
-					(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
 	Delete From [App_DataDictionary].[ModelScripting]

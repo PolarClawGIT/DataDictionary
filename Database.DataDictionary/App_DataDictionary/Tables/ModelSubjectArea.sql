@@ -4,7 +4,7 @@
 	[SubjectAreaTitle]       [App_DataDictionary].[typeTitle] NULL,
 	[SubjectAreaDescription] [App_DataDictionary].[typeDescription] NULL,
 	[ModelId]                UniqueIdentifier NOT NULL,
-	[NameSpaceId]            UniqueIdentifier NOT NULL,
+	[NameSpaceId]            UniqueIdentifier NULL,
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy] SysName NOT NULL CONSTRAINT [DF_ModelSubjectArea_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_ModelSubjectArea_SysStart] DEFAULT (sysdatetime()),

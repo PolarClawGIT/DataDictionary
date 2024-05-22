@@ -24,7 +24,7 @@ Begin Try
 		[SubjectAreaId]          UniqueIdentifier NOT NULL,
 		[SubjectAreaTitle]       [App_DataDictionary].[typeTitle] Not NULL,
 		[SubjectAreaDescription] [App_DataDictionary].[typeDescription] NULL,
-		[NameSpaceId]            UniqueIdentifier NOT NULL,
+		[NameSpaceId]            UniqueIdentifier NULL,
 		Primary Key ([SubjectAreaId]))
 
 	Declare @NameSpace [App_DataDictionary].[typeNameSpace]
@@ -54,7 +54,7 @@ Begin Try
 			D.[SubjectAreaDescription],
 			N.[NameSpaceId]
 	From	@Data D
-			Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[SubjectAreaNameSpace]) C
+			Outer Apply [App_DataDictionary].[funcSplitNameSpace](D.[SubjectAreaNameSpace]) C
 			Left Join [NameSpace] N
 			On	C.[NameSpace] = N.[NameSpace] And
 				C.[IsBase] = 1
@@ -74,54 +74,6 @@ Begin Try
 			From	[App_DataDictionary].[ModelSubjectArea] A
 			Where	(@SubjectAreaId is Null Or @SubjectAreaId = A.[SubjectAreaId]) And
 					(@ModelId is Null Or @ModelId = A.[ModelId]))
-
-/*
-	;With [Existing] As (
-		Select	S.[SubjectAreaId],
-				X.[SubjectAreaNameSpace]
-		From	[App_DataDictionary].[ModelSubjectArea] S
-				Cross Apply [App_DataDictionary].[funcGetSubjectAreaName](S.[SubjectAreaId]) X),
-	[Data] As (
-		Select	N.[SubjectAreaId],
-				IIF(X.[IsBase] = 1,NullIf(Trim(s.[SubjectAreaTitle]), ''),Null) As [SubjectAreaTitle],
-				NullIf(Trim(S.[SubjectAreaDescription]), '') As [SubjectAreaDescription],
-				X.[ParentNameSpace] As [ParentNameSpace],
-				X.[NameSpace] As [SubjectAreaNameSpace],
-				X.[NameSpaceMember] As [SubjectAreaMember],
-				Row_Number() Over (
-					Partition By X.[NameSpaceMember]
-					Order By IIF(X.[IsBase] = 1,0,1),
-							X.[NameSpaceMember])
-					As [RankIndex]
-		From	@Data S
-				Cross apply [App_DataDictionary].[funcSplitNameSpace](S.[SubjectAreaNameSpace]) X
-				Left Join [Existing] T
-				On	X.[NameSpace] = T.[SubjectAreaNameSpace]
-				Cross Apply (Select	Coalesce(T.[SubjectAreaId], S.[SubjectAreaId], @SubjectAreaId, NewId()) As [SubjectAreaId]) N
-		Where	@SubjectAreaId is Null or
-				N.[SubjectAreaId] = @SubjectAreaId)
-	Insert Into @Values
-	Select	[SubjectAreaId],
-			IsNull([SubjectAreaTitle], [SubjectAreaMember]) As [SubjectAreaTitle],
-			[SubjectAreaDescription],
-			[ParentNameSpace],
-			[SubjectAreaNameSpace],
-			[SubjectAreaMember]
-	From	[Data]
-	Where	[RankIndex] = 1
-
-	Insert Into @Delete
-	Select	T.[SubjectAreaId]
-	From	[App_DataDictionary].[ModelSubjectArea] T
-			Left Join @Values S
-			On	S.[SubjectAreaId] = T.[SubjectAreaId]
-	Where	S.[SubjectAreaId] is Null And
-			T.[SubjectAreaId] In (
-			Select	A.[SubjectAreaId]
-			From	[App_DataDictionary].[ModelSubjectArea] A
-			Where	(@SubjectAreaId is Null Or @SubjectAreaId = A.[SubjectAreaId]) And
-					(@ModelId is Null Or @ModelId = A.[ModelId]))
-*/
 
 	-- Apply Changes
 	Delete From [App_DataDictionary].[ModelAttribute]
