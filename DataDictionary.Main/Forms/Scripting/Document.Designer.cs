@@ -266,7 +266,6 @@
 
         #endregion
 
-        private TableLayoutPanel documentLayout;
         private Controls.ComboBoxData selectionData;
         private Controls.ComboBoxData schemaData;
         private ContextMenuStrip documentCommands;

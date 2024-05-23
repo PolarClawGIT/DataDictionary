@@ -29,34 +29,34 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         /// <summary>
         /// The Nillable of the Element to be generated. If Null, do not generate the Nillable.
         /// </summary>
-        Boolean? ElementNillable { get; }
+        Boolean ElementNillable { get; }
 
         /// <summary>
         /// Generate the Element as an XML Element (not Attribute)
         /// </summary>
         /// <remarks>if AsElement and AsAttribute are both null, the item is not generated</remarks>
-        Boolean? AsElement { get; }
+        Boolean AsElement { get; }
 
         /// <summary>
         /// Generate the Element as an XML Attribute (not Element)
         /// </summary>
         /// <remarks>if AsElement and AsAttribute are both null, the item is not generated</remarks>
-        Boolean? AsAttribute { get; }
+        Boolean AsAttribute { get; }
 
         /// <summary>
         /// Generate the data as Text. Attribute generate with "Data=" name.
         /// </summary>
-        Boolean? DataAsText { get; }
+        Boolean DataAsText { get; }
 
         /// <summary>
         /// Generate the data as CData. 
         /// </summary>
-        Boolean? DataAsCData { get; }
+        Boolean DataAsCData { get; }
 
         /// <summary>
         /// Generate the data as an XML fragment. This will be added as an Element.
         /// </summary>
-        Boolean? DataAsXml { get; }
+        Boolean DataAsXml { get; }
     }
 
     /// <summary>
@@ -89,16 +89,16 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         public String? ElementType { get { return GetValue(nameof(ElementType)); } set { SetValue(nameof(ElementType), value); } }
 
         /// <inheritdoc/>
-        public Boolean? ElementNillable
+        public Boolean ElementNillable
         {
-            get { return GetValue<Boolean>(nameof(ElementNillable), BindingItemParsers.BooleanTryParse); }
+            get { return GetValue<bool>(nameof(ElementNillable), BindingItemParsers.BooleanTryParse) == true; }
             set { SetValue<Boolean>(nameof(ElementNillable), value); }
         }
 
         /// <inheritdoc/>
-        public Boolean? AsElement
+        public Boolean AsElement
         {
-            get { return GetValue<Boolean>(nameof(AsElement), BindingItemParsers.BooleanTryParse); }
+            get { return GetValue<bool>(nameof(AsElement), BindingItemParsers.BooleanTryParse) == true; }
             set
             {
                 SetValue<Boolean>(nameof(AsElement), value);
@@ -107,20 +107,20 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         }
 
         /// <inheritdoc/>
-        public Boolean? AsAttribute
+        public Boolean AsAttribute
         {
-            get { return GetValue<Boolean>(nameof(AsAttribute), BindingItemParsers.BooleanTryParse); }
+            get { return GetValue<bool>(nameof(AsAttribute), BindingItemParsers.BooleanTryParse) == true; }
             set
             {
-                if (value == true) { SetValue<Boolean>(nameof(AsElement), !value); }
                 SetValue<Boolean>(nameof(AsAttribute), value);
+                if (value == true) { SetValue<Boolean>(nameof(AsElement), !value); }
             }
         }
 
         /// <inheritdoc/>
-        public Boolean? DataAsText
+        public Boolean DataAsText
         {
-            get { return GetValue<Boolean>(nameof(DataAsText), BindingItemParsers.BooleanTryParse); }
+            get { return GetValue<bool>(nameof(DataAsText), BindingItemParsers.BooleanTryParse) == true; }
             set
             {
                 if (value == true) { SetValue<Boolean>(nameof(DataAsCData), !value); }
@@ -130,9 +130,9 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         }
 
         /// <inheritdoc/>
-        public Boolean? DataAsCData
+        public Boolean DataAsCData
         {
-            get { return GetValue<bool>("DataAsCData", BindingItemParsers.BooleanTryParse); }
+            get { return GetValue<bool>(nameof(DataAsCData), BindingItemParsers.BooleanTryParse) == true; }
             set
             {
                 SetValue<Boolean>(nameof(DataAsCData), value);
@@ -142,9 +142,9 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         }
 
         /// <inheritdoc/>
-        public Boolean? DataAsXml
+        public Boolean DataAsXml
         {
-            get { return GetValue<Boolean>(nameof(DataAsXml), BindingItemParsers.BooleanTryParse); }
+            get { return GetValue<bool>(nameof(DataAsXml), BindingItemParsers.BooleanTryParse) == true; }
             set
             {
                 if (value == true) { SetValue<Boolean>(nameof(DataAsCData), !value); }

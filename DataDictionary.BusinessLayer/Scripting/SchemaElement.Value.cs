@@ -39,10 +39,8 @@ namespace DataDictionary.BusinessLayer.Scripting
 
             try // Parse the value. Leave as Null if not XML.
             { xmlValue = XDocument.Parse(stringValue); }
-            catch (Exception ex)
-            {// It is not XML
-                //xmlException = ex; 
-            }
+            catch (Exception)
+            { } // It is not XML
 
             XElement result;
             if (value is not null)
@@ -60,8 +58,8 @@ namespace DataDictionary.BusinessLayer.Scripting
             else
             { result = new XElement(elementName); }
 
-            if (ElementNillable.HasValue)
-            { result.Add(new XAttribute("nill", ElementNillable.HasValue)); }
+            if (ElementNillable)
+            { result.Add(new XAttribute("nill", ElementNillable)); }
 
             if (!String.IsNullOrWhiteSpace(ElementType))
             { result.Add(new XAttribute("type", ElementType)); }
