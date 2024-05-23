@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ScriptingData.Transform;
+using System.ComponentModel;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
@@ -9,14 +10,64 @@ namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
     public interface ITransformValue : ITransformItem, ITransformIndex, ITransformIndexName
-    { }
+    {
+        /// <summary>
+        /// Transform Script as an XML Document, if possible.
+        /// </summary>
+        XDocument? TransformDocument { get; }
+
+        /// <summary>
+        /// Exception encountered when converting to XML Document.
+        /// </summary>
+        Exception? TransformException { get; }
+    }
 
     /// <inheritdoc/>
     public class TransformValue : TransformItem, ITransformValue, INamedScopeSourceValue
     {
+
+        /// <inheritdoc/>
+        public XDocument? TransformDocument { get; protected set; }
+
+        /// <inheritdoc/>
+        public Exception? TransformException { get; protected set; }
+
+
         /// <inheritdoc/>
         public TransformValue() : base()
-        { }
+        {
+            PropertyChanged += TransformValue_PropertyChanged;
+        }
+
+        private void TransformValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is nameof(TransformScript))
+            {
+                TransformException = null;
+
+                try
+                {
+                    if (String.IsNullOrWhiteSpace(TransformScript))
+                    { TransformDocument = null; }
+                    else
+                    {
+                        LoadOptions options = LoadOptions.None;
+                        if (this.AsText) { options = LoadOptions.PreserveWhitespace; }
+
+                        TransformDocument = XDocument.Parse(TransformScript, options);
+                        OnPropertyChanged(nameof(TransformDocument));
+                        OnPropertyChanged(nameof(TransformException));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    TransformException = ex;
+                    TransformDocument = null;
+                    OnPropertyChanged(nameof(TransformDocument));
+                    OnPropertyChanged(nameof(TransformException));
+                }
+            }
+        }
 
         /// <inheritdoc/>
         public DataLayerIndex GetIndex()

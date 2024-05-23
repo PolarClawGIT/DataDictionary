@@ -1,16 +1,8 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.BusinessLayer.Scripting;
+﻿using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using DataDictionary.Main.Properties;
+using System.Xml.Linq;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -26,7 +18,7 @@ namespace DataDictionary.Main.Forms.Scripting
             toolStrip.TransferItems(transformToolStrip, 0);
         }
 
-        public TransformManager(ITransformValue? transformItem): this()
+        public TransformManager(ITransformValue? transformItem) : this()
         {
             if (transformItem is null)
             {
@@ -50,16 +42,20 @@ namespace DataDictionary.Main.Forms.Scripting
 
             transformTitleData.DataBindings.Add(new Binding(nameof(transformTitleData.Text), bindingTransform, nameof(transformNames.TransformTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             transformDescriptionData.DataBindings.Add(new Binding(nameof(transformDescriptionData.Text), bindingTransform, nameof(transformNames.TransformDescription), false, DataSourceUpdateMode.OnPropertyChanged));
-            outputAsTextData.DataBindings.Add(new Binding(nameof(outputAsTextData.Checked), bindingTransform, nameof(transformNames.AsText), false, DataSourceUpdateMode.OnPropertyChanged));
-            outputAsXmlData.DataBindings.Add(new Binding(nameof(outputAsXmlData.Checked), bindingTransform, nameof(transformNames.AsXml), false, DataSourceUpdateMode.OnPropertyChanged));
+            //outputAsTextData.DataBindings.Add(new Binding(nameof(outputAsTextData.Checked), bindingTransform, nameof(transformNames.AsText), false, DataSourceUpdateMode.OnPropertyChanged));
+            //outputAsXmlData.DataBindings.Add(new Binding(nameof(outputAsXmlData.Checked), bindingTransform, nameof(transformNames.AsXml), false, DataSourceUpdateMode.OnPropertyChanged));
             transformScriptData.DataBindings.Add(new Binding(nameof(transformScriptData.Text), bindingTransform, nameof(transformNames.TransformScript), false, DataSourceUpdateMode.OnPropertyChanged));
-            transformExceptionData.DataBindings.Add(new Binding(nameof(transformExceptionData.Text), bindingTransform, String.Format("{0}.{1}",nameof(transformNames.TransformException),nameof(transformNames.TransformException.Message)), false, DataSourceUpdateMode.OnPropertyChanged));
+            transformExceptionData.DataBindings.Add(new Binding(nameof(transformExceptionData.Text), bindingTransform, String.Format("{0}.{1}", nameof(transformNames.TransformException), nameof(transformNames.TransformException.Message)), false, DataSourceUpdateMode.OnPropertyChanged));
+
+            transformScriptAsXml.DataBindings.Add(new Binding(nameof(transformScriptAsXml.Checked), bindingTransform, nameof(transformNames.AsXml), false, DataSourceUpdateMode.OnPropertyChanged));
+            transformScriptAsText.DataBindings.Add(new Binding(nameof(transformScriptAsText.Checked), bindingTransform, nameof(transformNames.AsText), false, DataSourceUpdateMode.OnPropertyChanged));
+
+            SetOutputButtonColor();
         }
 
         private void addTransformCommand_Click(object sender, EventArgs e)
-        {
+        { }
 
-        }
 
         private void removeTransformCommand_Click(object sender, EventArgs e)
         {
@@ -71,6 +67,41 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 SendMessage(new RefreshNavigation());
             }
+        }
+
+        protected override void SaveToDatabaseCommand_Click(Object? sender, EventArgs e)
+        { base.SaveToDatabaseCommand_Click(sender, e); }
+
+        protected override void OpenFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        { base.OpenFromDatabaseCommand_Click(sender, e); }
+
+        protected override void DeleteFromDatabaseCommand_Click(Object? sender, EventArgs e)
+        { base.DeleteFromDatabaseCommand_Click(sender, e); }
+
+
+        private void FormatScriptCommand_Click(object sender, EventArgs e)
+        {
+            if (bindingTransform.Current is TransformValue item)
+            {
+                if (item.TransformDocument is XDocument value)
+                { transformScriptData.Text = value.ToString(); }
+            }
+        }
+
+        private void TransformScriptOutputAs_Click(object sender, EventArgs e)
+        { SetOutputButtonColor(); }
+
+        private void SetOutputButtonColor()
+        {
+            // Using the Back Color does not work. Back Color is an "ambient" which calculated.
+            transformScriptAsXml.BackgroundImage = null;
+            transformScriptAsText.BackgroundImage = null;
+
+            if (transformScriptAsText.Checked && transformScriptAsText.Enabled)
+            { transformScriptAsText.BackgroundImage = Resources.ButtonGreen; }
+
+            if (transformScriptAsXml.Checked && transformScriptAsXml.Enabled)
+            { transformScriptAsXml.BackgroundImage = Resources.ButtonGreen; }
         }
     }
 }

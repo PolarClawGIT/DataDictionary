@@ -30,16 +30,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
         /// Raw XSLT Transform Script (linked to TransformDocument)
         /// </summary>
         String? TransformScript { get; }
-
-        /// <summary>
-        /// The XSLT Transform Document (linked to TransformScript)
-        /// </summary>
-        XDocument? TransformDocument { get; }
-
-        /// <summary>
-        /// Exception was generated when parsing the TransformScript.
-        /// </summary>
-        Exception? TransformException { get; }
     }
 
     /// <summary>
@@ -96,67 +86,10 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
         /// <inheritdoc/>
         public String? TransformScript
         {
-            get
-            {
-                String? value = GetValue(nameof(TransformScript));
-
-                if (transformValue is null && !String.IsNullOrWhiteSpace(value))
-                {
-                    TransformDocument = XDocument.Parse(value);
-                    if (TransformException is null)
-                    { value = TransformDocument.ToString(); }
-                }
-
-                return value;
-            }
-            set
-            {
-                SetValue(nameof(TransformScript), value);
-                TransformException = null;
-
-                try
-                {
-                    if (!String.IsNullOrWhiteSpace(value))
-                    { TransformDocument = XDocument.Parse(value, LoadOptions.PreserveWhitespace); }
-                }
-                catch (Exception ex)
-                {
-                    ex.Data.Add(nameof(TransformScript), value);
-                    TransformException = ex;
-                    base.OnPropertyChanged(nameof(TransformException));
-                }
-            }
+            get { return GetValue(nameof(TransformScript)); }
+            set { SetValue(nameof(TransformScript), value); }
         }
 
-        /// <inheritdoc/>
-        public XDocument? TransformDocument
-        {
-            get { return transformValue; }
-            set
-            {
-                transformValue = value;
-                TransformException = null;
-                String? data;
-                if (value is null) { data = null; }
-                else
-                {
-                    if (value.Declaration is XDeclaration)
-                    { // Remove the encoding.
-                        value.Declaration = null;
-                        TransformException = new ArgumentException("Encoding Removed (using UTF-16)");
-                    }
-                    data = value.ToString();
-                }
-
-                SetValue(nameof(TransformScript), data);
-                base.OnPropertyChanged(nameof(TransformDocument));
-            }
-        }
-        private XDocument? transformValue = null;
-
-
-        /// <inheritdoc/>
-        public Exception? TransformException { get; protected set; }
 
         /// <summary>
         /// Constructor for Scripting Transform
