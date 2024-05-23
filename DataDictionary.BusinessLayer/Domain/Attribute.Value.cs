@@ -45,19 +45,19 @@ namespace DataDictionary.BusinessLayer.Domain
 
                     switch (option.ColumnName)
                     {
-                        case nameof(this.AttributeId): value = AttributeId.ToString(); break;
-                        case nameof(this.AttributeTitle): value = AttributeTitle; break;
-                        case nameof(this.AttributeDescription): value = AttributeDescription; break;
-                        case nameof(this.IsCompositeType): value = IsCompositeType; break;
-                        case nameof(this.IsDerived): value = IsDerived; break;
-                        case nameof(this.IsIntegral): value = IsIntegral; break;
-                        case nameof(this.IsKey): value = IsKey; break;
-                        case nameof(this.IsMultiValue): value = IsMultiValue; break;
-                        case nameof(this.IsNonKey): value = IsNonKey; break;
-                        case nameof(this.IsNullable): value = IsNullable; break;
-                        case nameof(this.IsSimpleType): value = IsSimpleType; break;
-                        case nameof(this.IsSingleValue): value = IsSingleValue; break;
-                        case nameof(this.IsValued): value = IsValued; break;
+                        case nameof(AttributeId): value = AttributeId.ToString(); break;
+                        case nameof(AttributeTitle): value = AttributeTitle; break;
+                        case nameof(AttributeDescription): value = AttributeDescription; break;
+                        case nameof(IsCompositeType): value = IsCompositeType; break;
+                        case nameof(IsDerived): value = IsDerived; break;
+                        case nameof(IsIntegral): value = IsIntegral; break;
+                        case nameof(IsKey): value = IsKey; break;
+                        case nameof(IsMultiValue): value = IsMultiValue; break;
+                        case nameof(IsNonKey): value = IsNonKey; break;
+                        case nameof(IsNullable): value = IsNullable; break;
+                        case nameof(IsSimpleType): value = IsSimpleType; break;
+                        case nameof(IsSingleValue): value = IsSingleValue; break;
+                        case nameof(IsValued): value = IsValued; break;
                         default:
                             break;
                     }

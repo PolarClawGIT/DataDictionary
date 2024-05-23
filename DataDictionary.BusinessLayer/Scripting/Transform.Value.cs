@@ -27,7 +27,21 @@ namespace DataDictionary.BusinessLayer.Scripting
     {
 
         /// <inheritdoc/>
-        public XDocument? TransformDocument { get; protected set; }
+        public XDocument? TransformDocument
+        {
+            get
+            {
+                if (isDocumentInitialized) { return transformDocument; }
+                else
+                { // Must wait until TransformScript has a value, then do this once.
+                    SetTransformDocument();
+                    isDocumentInitialized = true;
+                    return transformDocument;
+                }
+            }
+        }
+        Boolean isDocumentInitialized = false;
+        XDocument? transformDocument = null;
 
         /// <inheritdoc/>
         public Exception? TransformException { get; protected set; }
@@ -35,37 +49,40 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         public TransformValue() : base()
-        {
-            PropertyChanged += TransformValue_PropertyChanged;
-        }
+        { PropertyChanged += TransformValue_PropertyChanged; }
 
         private void TransformValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName is nameof(TransformScript))
+            { SetTransformDocument(); }
+        }
+
+        private void SetTransformDocument()
+        {
+            // Cannot do this until after the class has been loaded.
+
+            TransformException = null;
+
+            try
             {
-                TransformException = null;
-
-                try
+                if (String.IsNullOrWhiteSpace(TransformScript))
+                { transformDocument = null; }
+                else
                 {
-                    if (String.IsNullOrWhiteSpace(TransformScript))
-                    { TransformDocument = null; }
-                    else
-                    {
-                        LoadOptions options = LoadOptions.None;
-                        if (this.AsText) { options = LoadOptions.PreserveWhitespace; }
+                    LoadOptions options = LoadOptions.None;
+                    if (this.AsText) { options = LoadOptions.PreserveWhitespace; }
 
-                        TransformDocument = XDocument.Parse(TransformScript, options);
-                        OnPropertyChanged(nameof(TransformDocument));
-                        OnPropertyChanged(nameof(TransformException));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    TransformException = ex;
-                    TransformDocument = null;
+                    transformDocument = XDocument.Parse(TransformScript, options);
                     OnPropertyChanged(nameof(TransformDocument));
                     OnPropertyChanged(nameof(TransformException));
                 }
+            }
+            catch (Exception ex)
+            {
+                TransformException = ex;
+                transformDocument = null;
+                OnPropertyChanged(nameof(TransformDocument));
+                OnPropertyChanged(nameof(TransformException));
             }
         }
 
