@@ -165,12 +165,12 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.ModelSubjectArea,          "Model.SubjectArea" },
             {ScopeType.ModelNameSpace,            "Model.NameSpace" },
 
-            {ScopeType.Scripting,                  "Scripting" },
-            {ScopeType.ScriptingSchema,            "Scripting.Schema" },
-            {ScopeType.ScriptingSchemaElement,     "Scripting.Schema.Element" },
-            {ScopeType.ScriptingTransform,         "Scripting.Transform" },
-            {ScopeType.ScriptingSelection,         "Scripting.Selection" },
-            {ScopeType.ScriptingSelectionPath, "Scripting.Selection.Instance" },
+            {ScopeType.Scripting,                 "Scripting" },
+            {ScopeType.ScriptingSchema,           "Scripting.Schema" },
+            {ScopeType.ScriptingSchemaElement,    "Scripting.Schema.Element" },
+            {ScopeType.ScriptingTransform,        "Scripting.Transform" },
+            {ScopeType.ScriptingSelection,        "Scripting.Selection" },
+            {ScopeType.ScriptingSelectionPath,    "Scripting.Selection.Path" },
         };
 
         /// <inheritdoc/>
