@@ -33,17 +33,14 @@ namespace DataDictionary.BusinessLayer.Domain
         { return new NamedScopePath(AttributeTitle); }
 
         /// <inheritdoc/>
-        public XElement GetXElement(IDomainData data, IEnumerable<SchemaElementValue>? options)
+        public XElement? GetXElement(IDomainData data, IEnumerable<SchemaElementValue>? options)
         {
-            // TODO: How do I get the Alias, Properties and Subject Areas?
-            // The Data knows about them, but the Value does not.
-
-            
-
-            XElement result = new XElement(this.Scope.ToName());
+            XElement? result = null;
 
             if (options is not null && options.Count() > 0)
             {
+                AttributeIndex key = new AttributeIndex(this);
+
                 foreach (SchemaElementValue option in options)
                 {
                     Object? value = null;
@@ -67,7 +64,20 @@ namespace DataDictionary.BusinessLayer.Domain
                             break;
                     }
 
-                    result.Add(option.GetXElement(value));
+                    if (value is not null)
+                    {
+                        if (result is null) { result = new XElement(this.Scope.ToName()); }
+                        result.Add(option.GetXElement(value));
+                    }
+                }
+
+                foreach (AttributePropertyValue item in data.DomainModel.Attributes.Properties.Where(w => key.Equals(w)))
+                {
+                    if(item.GetXElement(data.DomainModel.ModelProperty, options) is XElement value)
+                    {
+                        if (result is null) { result = new XElement(this.Scope.ToName()); }
+                        result.Add(value);
+                    }
                 }
             }
 

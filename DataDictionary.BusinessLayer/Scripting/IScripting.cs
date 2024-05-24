@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <param name="data"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        XElement GetXElement(IBusinessLayerData data, IEnumerable<SchemaElementValue>? options);
+        XElement? GetXElement(IBusinessLayerData data, IEnumerable<SchemaElementValue>? options);
     }
 
     /// <inheritdoc/>
@@ -27,7 +27,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     {   // This allows the UI layer to reference the generic IBusinessLayerData
         // but call the type specific implementation of GetXElement.
 
-        XElement IScripting.GetXElement(IBusinessLayerData data, IEnumerable<SchemaElementValue>? options)
+        XElement? IScripting.GetXElement(IBusinessLayerData data, IEnumerable<SchemaElementValue>? options)
         {   // Override the base GetXElement to cast the call into TSource
 
             if (data is TSource value)
@@ -43,6 +43,6 @@ namespace DataDictionary.BusinessLayer.Scripting
         }
 
         /// <inheritdoc cref="IScripting.GetXElement"/>
-        XElement GetXElement(TSource data, IEnumerable<SchemaElementValue>? options);
+        XElement? GetXElement(TSource data, IEnumerable<SchemaElementValue>? options);
     }
 }

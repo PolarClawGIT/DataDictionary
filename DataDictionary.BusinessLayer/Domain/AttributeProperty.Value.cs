@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class AttributePropertyValue : DomainAttributePropertyItem, IAttributePropertyValue
+    public class AttributePropertyValue : DomainAttributePropertyItem, IAttributePropertyValue, IScripting<IPropertyData>
     {
         /// <inheritdoc/>
         public AttributePropertyValue() : base() { }
@@ -26,6 +26,44 @@ namespace DataDictionary.BusinessLayer.Domain
                                      IPropertyIndex propertyKey,
                                      IExtendedPropertyValue value)
             : base(attributeKey, propertyKey, value) { }
+
+
+        /// <inheritdoc/>
+        public XElement? GetXElement(IPropertyData data, IEnumerable<SchemaElementValue>? options)
+        {
+            XElement result = new XElement(this.Scope.ToName());
+
+            if (options is not null && options.Count() > 0)
+            {
+                PropertyIndex key = new PropertyIndex(this);
+
+                if (data.FirstOrDefault(w => key.Equals(w)) is PropertyValue property)
+                {
+                    foreach (SchemaElementValue option in options)
+                    {
+                        Object? value = null;
+
+                        switch (option.ColumnName)
+                        {
+                            case nameof(property.PropertyTitle): value = property.PropertyTitle; break;
+                            case nameof(property.ExtendedProperty): value = property.ExtendedProperty; break;
+                            case nameof(PropertyValue): value = PropertyValue; break;
+                            case nameof(DefinitionText): value = DefinitionText; break;
+                            default:
+                                break;
+                        }
+
+                        if (value is not null)
+                        {
+                            if (result is null) { result = new XElement(this.Scope.ToName()); }
+                            result.Add(option.GetXElement(value));
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
 
         internal XElement? GetXElement(IPropertyItem property, IEnumerable<SchemaElementValue>? options = null)
         {
@@ -72,5 +110,6 @@ namespace DataDictionary.BusinessLayer.Domain
 
             return result;
         }
+
     }
 }
