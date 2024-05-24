@@ -122,10 +122,11 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// The Int32 of ScopeType does not need to match what is in the Database.
         /// The Text must match what is in the database.
         /// Each Level within the structure is delimited by a Period.
+        /// Values must be XML complaint (but no spaces or special characters, except period).
         /// </summary>
         static Dictionary<ScopeType, String> parseName = new Dictionary<ScopeType, string>()
         {
-            {ScopeType.Null,                      "N/A" },
+            {ScopeType.Null,                      "Null" },
 
             {ScopeType.Library,                   "Library" },
             {ScopeType.LibraryNameSpace,          "Library.NameSpace" },
