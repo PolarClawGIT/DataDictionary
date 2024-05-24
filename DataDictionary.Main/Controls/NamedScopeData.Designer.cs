@@ -98,6 +98,7 @@
             scopeData.ReadOnly = false;
             scopeData.Size = new Size(192, 44);
             scopeData.TabIndex = 1;
+            scopeData.SelectedIndexChanged += scopeData_SelectedIndexChanged;
             // 
             // applyCommand
             // 

@@ -96,7 +96,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingAlias.Current is AttributeAliasValue current)
             {
-                NamedScopePath path = new NamedScopePath(current.AliasName);
+                NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(current.AliasName).ToArray());
 
                 namedScopeData.ScopePath = path;
                 namedScopeData.Scope = current.Scope;
@@ -108,7 +108,7 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingAlias.DataSource is IList<IAliasValue> aliases
                 && aliases.FirstOrDefault(
                     w => w.Scope == namedScopeData.Scope
-                    && new NamedScopePath(w.AliasName) == namedScopeData.ScopePath)
+                    && new NamedScopePath(NamedScopePath.Parse(w.AliasName).ToArray()) == namedScopeData.ScopePath)
                 is IAliasValue value)
             { bindingAlias.Position = aliases.IndexOf(value); }
             else { bindingAlias.AddNew(); }

@@ -182,5 +182,10 @@ namespace DataDictionary.Main.Controls
 
         }
 
+        private void scopeData_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (scopeData.SelectedValue is ScopeType value)
+            { Scope = value; }
+        }
     }
 }
