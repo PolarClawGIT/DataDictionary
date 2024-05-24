@@ -48,6 +48,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             Load(Domain.AttributeValue.GetXColumns());
             Load(Domain.AttributePropertyValue.GetXColumns());
+            Load(Domain.AttributeAliasValue.GetXColumns());
         }
 
         /// <summary>

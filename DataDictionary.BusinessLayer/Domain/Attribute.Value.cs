@@ -79,6 +79,15 @@ namespace DataDictionary.BusinessLayer.Domain
                         result.Add(value);
                     }
                 }
+
+                foreach (AttributeAliasValue item in data.DomainModel.Attributes.Aliases.Where(w => key.Equals(w)))
+                {
+                    if (item.GetXElement(this, options) is XElement value)
+                    {
+                        if (result is null) { result = new XElement(this.Scope.ToName()); }
+                        result.Add(value);
+                    }
+                }
             }
 
             return result;

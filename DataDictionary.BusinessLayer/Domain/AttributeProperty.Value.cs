@@ -31,7 +31,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         public XElement? GetXElement(IPropertyData data, IEnumerable<SchemaElementValue>? options)
         {
-            XElement result = new XElement(this.Scope.ToName());
+            XElement? result = null;
 
             if (options is not null && options.Count() > 0)
             {
@@ -59,36 +59,6 @@ namespace DataDictionary.BusinessLayer.Domain
                             result.Add(option.GetXElement(value));
                         }
                     }
-                }
-            }
-
-            return result;
-        }
-
-        internal XElement? GetXElement(IPropertyItem property, IEnumerable<SchemaElementValue>? options = null)
-        {
-            XElement? result = null;
-            IAttributePropertyValue attributeNames;
-            IPropertyItem propertyNames;
-
-            if (options is not null)
-            {
-                foreach (SchemaElementValue option in options)
-                {
-                    Object? value = null;
-
-                    switch (option.ColumnName)
-                    {
-                        case nameof(propertyNames.PropertyTitle): value = property.PropertyTitle; break;
-                        case nameof(propertyNames.ExtendedProperty): value = property.ExtendedProperty; break;
-                        case nameof(attributeNames.PropertyValue): value = PropertyValue; break;
-                        case nameof(attributeNames.DefinitionText): value = DefinitionText; break;
-                        default:
-                            break;
-                    }
-
-                    if (value is not null)
-                    { result = new XElement(Scope.ToName(), option.GetXElement(value)); }
                 }
             }
 
