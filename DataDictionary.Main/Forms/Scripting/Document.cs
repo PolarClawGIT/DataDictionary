@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.Main.Controls;
@@ -136,7 +137,7 @@ namespace DataDictionary.Main.Forms.Scripting
                         {
                             SchemaIndex schemaIndex = new SchemaIndex(data);
                             IEnumerable<SchemaElementValue> schemaElement = BusinessData.ScriptingEngine.SchemeElements.Where(w => schemaIndex.Equals(w));
-                            XElement item = scripting.GetXElement(schemaElement);
+                            XElement item = scripting.GetXElement(BusinessData, schemaElement);
                             root.Add(item);
                         }
                     }

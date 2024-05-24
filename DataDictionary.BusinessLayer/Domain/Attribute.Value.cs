@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class AttributeValue : DomainAttributeItem, IAttributeValue, INamedScopeSourceValue, IScripting
+    public class AttributeValue : DomainAttributeItem, IAttributeValue, INamedScopeSourceValue, IScripting<IDomainData>
     {
         /// <inheritdoc cref="DomainAttributeItem()"/>
         public AttributeValue() : base()
@@ -33,8 +33,13 @@ namespace DataDictionary.BusinessLayer.Domain
         { return new NamedScopePath(AttributeTitle); }
 
         /// <inheritdoc/>
-        public XElement GetXElement(IEnumerable<SchemaElementValue>? options = null)
+        public XElement GetXElement(IDomainData data, IEnumerable<SchemaElementValue>? options)
         {
+            // TODO: How do I get the Alias, Properties and Subject Areas?
+            // The Data knows about them, but the Value does not.
+
+            
+
             XElement result = new XElement(this.Scope.ToName());
 
             if (options is not null && options.Count() > 0)

@@ -343,32 +343,5 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
-        public XElement? GetXElement(IAttributeIndex key, IEnumerable<SchemaElementValue>? options = null)
-        {
-            XElement? result = null;
-
-            AttributeIndex attributeKey = new AttributeIndex(key);
-            if (this.FirstOrDefault(w => attributeKey.Equals(w)) is AttributeValue attribute)
-            {
-                if (attribute.GetXElement(options) is XElement xAttribute)
-                {
-                    result = xAttribute;
-
-                    if (Properties.FirstOrDefault(w => attributeKey.Equals(w)) is AttributePropertyValue property)
-                    {
-                        Application.PropertyIndex propertyKey = new PropertyIndex(property);
-                        if (Model.ModelProperty.FirstOrDefault((Object w) => propertyKey.Equals(w)) is PropertyValue item)
-                        {
-                            if (property.GetXElement(item, options) is XElement xProperty)
-                            { result.Add(xProperty); }
-                        }
-                    }
-                }
-
-            }
-
-            return result;
-        }
-
     }
 }
