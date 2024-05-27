@@ -23,7 +23,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <summary>
         /// List of Scripting Engine Scheme Elements.
         /// </summary>
-        ISchemaElementData SchemeElements { get; }
+        IDefinitionElementData SchemeElements { get; }
 
         /// <summary>
         /// List of Scripting Engine Transforms.
@@ -59,8 +59,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         public ISchemaData Schemta { get { return schemtaValues; } }
         private readonly SchemaData schemtaValues;
 
-        public ISchemaElementData SchemeElements { get { return elementValues; } }
-        private readonly SchemaElementData elementValues;
+        public IDefinitionElementData SchemeElements { get { return elementValues; } }
+        private readonly DefinitionElementData elementValues;
 
         public ITransformData Transforms { get { return transformValues; } }
         private readonly TransformData transformValues;
@@ -77,7 +77,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         public ScriptingEngine() : base()
         {
             schemtaValues = new SchemaData() { Scripting = this };
-            elementValues = new SchemaElementData();
+            elementValues = new DefinitionElementData();
             transformValues = new TransformData() { Scripting = this };
             columnValues = new ColumnData();
             selectionValues = new SelectionData() { Scripting = this };

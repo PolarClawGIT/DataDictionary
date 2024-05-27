@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Forms.Scripting
 {
     partial class Document : ApplicationData
     {
-        class FormData : ISelectionIndex, ISchemaIndex, ITransformIndex, INotifyPropertyChanged
+        class FormData : ISelectionIndex, IDefinitionIndex, ITransformIndex, INotifyPropertyChanged
         {
             public Guid? TransformId
             {
@@ -105,7 +105,7 @@ namespace DataDictionary.Main.Forms.Scripting
             TransformNameMember.Load(transformData, BusinessData.ScriptingEngine.Transforms);
             transformData.DataBindings.Add(new Binding(nameof(transformData.SelectedValue), bindingDocument, nameof(nameOfValue.TransformId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
 
-            SchemaNameMember.Load(schemaData, BusinessData.ScriptingEngine.Schemta);
+            DefinitionNameMember.Load(schemaData, BusinessData.ScriptingEngine.Schemta);
             schemaData.DataBindings.Add(new Binding(nameof(schemaData.SelectedValue), bindingDocument, nameof(nameOfValue.SchemaId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
 
             SelectionNameMember.Load(selectionData, BusinessData.ScriptingEngine.Selections);
@@ -135,8 +135,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
                         if (source is IScripting scripting)
                         {
-                            SchemaIndex schemaIndex = new SchemaIndex(data);
-                            IEnumerable<SchemaElementValue> schemaElement = BusinessData.ScriptingEngine.SchemeElements.Where(w => schemaIndex.Equals(w));
+                            DefinitionIndex schemaIndex = new DefinitionIndex(data);
+                            IEnumerable<DefinitionElementValue> schemaElement = BusinessData.ScriptingEngine.SchemeElements.Where(w => schemaIndex.Equals(w));
                             XElement item = scripting.GetXElement(BusinessData, schemaElement);
                             root.Add(item);
                         }

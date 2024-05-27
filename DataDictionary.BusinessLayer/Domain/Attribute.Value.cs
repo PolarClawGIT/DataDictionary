@@ -33,7 +33,7 @@ namespace DataDictionary.BusinessLayer.Domain
         { return new NamedScopePath(AttributeTitle); }
 
         /// <inheritdoc/>
-        public XElement? GetXElement(IDomainData data, IEnumerable<SchemaElementValue>? options)
+        public XElement? GetXElement(IDomainData data, IEnumerable<DefinitionElementValue>? options)
         {
             XElement? result = null;
 
@@ -41,7 +41,7 @@ namespace DataDictionary.BusinessLayer.Domain
             {
                 AttributeIndex key = new AttributeIndex(this);
 
-                foreach (SchemaElementValue option in options)
+                foreach (DefinitionElementValue option in options)
                 {
                     Object? value = null;
 

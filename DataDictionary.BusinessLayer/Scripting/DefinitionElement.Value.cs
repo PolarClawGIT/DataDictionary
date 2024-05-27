@@ -5,17 +5,17 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface ISchemaElementValue : IElementItem, IColumnIndex
+    public interface IDefinitionElementValue : IElementItem, IColumnIndex
     { }
 
     /// <inheritdoc/>
-    public class SchemaElementValue : ElementItem, ISchemaElementValue
+    public class DefinitionElementValue : ElementItem, IDefinitionElementValue
     {
         /// <inheritdoc/>
-        public SchemaElementValue() : base() { }
+        public DefinitionElementValue() : base() { }
 
         /// <inheritdoc/>
-        public SchemaElementValue(ISchemaIndex key) : base(key) { }
+        public DefinitionElementValue(IDefinitionIndex key) : base(key) { }
 
         /// <summary>
         /// Uses the value provided to generate an XML element.

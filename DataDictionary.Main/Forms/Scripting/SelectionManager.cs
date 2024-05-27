@@ -57,7 +57,7 @@ namespace DataDictionary.Main.Forms.Scripting
             TransformNameMember.Load(transformData, BusinessData.ScriptingEngine.Transforms);
             transformData.DataBindings.Add(new Binding(nameof(transformData.SelectedValue), bindingSelection, nameof(nameOfValue.TransformId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
 
-            SchemaNameMember.Load(schemaData, BusinessData.ScriptingEngine.Schemta);
+            DefinitionNameMember.Load(schemaData, BusinessData.ScriptingEngine.Schemta);
             schemaData.DataBindings.Add(new Binding(nameof(schemaData.SelectedValue), bindingSelection, nameof(nameOfValue.SchemaId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
 
             selectionItemData.AutoGenerateColumns = false;

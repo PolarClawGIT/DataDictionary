@@ -125,7 +125,7 @@ namespace DataDictionary.Main
         void Activate(ModelValue modelItem)
         { Activate((data) => new Forms.Model.Model(modelItem), modelItem); }
 
-        void Activate(BusinessLayer.Scripting.SchemaValue schemaItem)
+        void Activate(BusinessLayer.Scripting.DefinitionValue schemaItem)
         { Activate((data) => new Forms.Scripting.SchemaManager(schemaItem), schemaItem); }
 
         void Activate(BusinessLayer.Scripting.SelectionValue selectionItem)

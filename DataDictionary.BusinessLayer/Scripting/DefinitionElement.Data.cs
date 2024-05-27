@@ -7,10 +7,10 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Interface component for the Scripting Engine Element
     /// </summary>
-    public interface ISchemaElementData : IBindingData<SchemaElementValue>
+    public interface IDefinitionElementData : IBindingData<DefinitionElementValue>
     { }
 
-    class SchemaElementData : ElementCollection<SchemaElementValue>, ISchemaElementData,
+    class DefinitionElementData : ElementCollection<DefinitionElementValue>, IDefinitionElementData,
         ILoadData, ILoadData<ISchemaKey>,
         ISaveData, ISaveData<ISchemaKey>
     {

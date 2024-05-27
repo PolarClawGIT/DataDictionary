@@ -3,13 +3,13 @@
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface ISchemaElementIndex : IElementKey
+    public interface IDefinitionElementIndex : IElementKey
     { }
 
     /// <inheritdoc/>
-    public class SchemaElementIndex : ElementKey, ISchemaElementIndex
+    public class DefinitionElementIndex : ElementKey, IDefinitionElementIndex
     {
         /// <inheritdoc cref="ElementKey(IElementKey)"/>
-        public SchemaElementIndex(ISchemaElementIndex source) : base(source) { }
+        public DefinitionElementIndex(IDefinitionElementIndex source) : base(source) { }
     }
 }

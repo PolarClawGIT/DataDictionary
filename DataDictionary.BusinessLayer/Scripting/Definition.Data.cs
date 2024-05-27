@@ -10,12 +10,12 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// Interface component for the Scripting Engine Schema
     /// </summary>
     public interface ISchemaData :
-        IBindingData<SchemaValue>,
+        IBindingData<DefinitionValue>,
         ILoadData, ILoadData<ISchemaKey>,
         ISaveData, ISaveData<ISchemaKey>
     { }
 
-    class SchemaData : SchemaCollection<SchemaValue>, ISchemaData, INamedScopeSource
+    class SchemaData : SchemaCollection<DefinitionValue>, ISchemaData, INamedScopeSource
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine
@@ -49,7 +49,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             return this.Select(s => new NamedScopePair(GetValue(s)));
 
-            NamedScopeValueCore GetValue(SchemaValue source)
+            NamedScopeValueCore GetValue(DefinitionValue source)
             {
                 NamedScopeValueCore result = new NamedScopeValueCore(source);
                 source.PropertyChanged += Source_PropertyChanged;
