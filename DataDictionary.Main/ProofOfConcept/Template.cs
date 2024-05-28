@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DataDictionary.Main.Forms.Scripting
+namespace DataDictionary.Main.Forms.ProofOfConcept
 {
     partial class Template : ApplicationData
     {

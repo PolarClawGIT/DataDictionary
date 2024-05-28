@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Xml.Linq;
 
-namespace DataDictionary.Main.Forms.Scripting
+namespace DataDictionary.Main.Forms.ProofOfConcept
 {
     partial class DataBuilder : ApplicationData, IApplicationDataForm
     {
