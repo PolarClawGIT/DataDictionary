@@ -81,6 +81,8 @@
             documentNameSuffix = new Controls.TextBoxData();
             previewData = new TextBox();
             previewDocumentXML = new DataGridView();
+            documentElementColumn = new DataGridViewTextBoxColumn();
+            documentFileName = new DataGridViewTextBoxColumn();
             transformTab = new TabPage();
             transformCommands = new ToolStrip();
             transformFormat = new ToolStripButton();
@@ -105,8 +107,6 @@
             deleteTemplateCommand = new ToolStripMenuItem();
             folderBrowserDialog = new FolderBrowserDialog();
             saveFileDialog = new SaveFileDialog();
-            documentElementColumn = new DataGridViewTextBoxColumn();
-            documentFileName = new DataGridViewTextBoxColumn();
             templateLayout = new TableLayoutPanel();
             elementLayout = new TableLayoutPanel();
             elementRenderGroup = new GroupBox();
@@ -219,7 +219,7 @@
             definitionTab.Padding = new Padding(3);
             definitionTab.Size = new Size(774, 431);
             definitionTab.TabIndex = 0;
-            definitionTab.Text = "Element Definitions";
+            definitionTab.Text = "Element Definition (XSD)";
             // 
             // elementDefinitionSplit
             // 
@@ -495,7 +495,7 @@
             pathTab.Location = new Point(4, 24);
             pathTab.Name = "pathTab";
             pathTab.Padding = new Padding(3);
-            pathTab.Size = new Size(192, 72);
+            pathTab.Size = new Size(774, 431);
             pathTab.TabIndex = 1;
             pathTab.Text = "Element Paths";
             // 
@@ -511,7 +511,7 @@
             elementPathLayout.RowCount = 2;
             elementPathLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             elementPathLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            elementPathLayout.Size = new Size(186, 66);
+            elementPathLayout.Size = new Size(768, 425);
             elementPathLayout.TabIndex = 0;
             // 
             // namedScopeData
@@ -520,12 +520,12 @@
             namedScopeData.ApplyText = "apply";
             namedScopeData.Dock = DockStyle.Fill;
             namedScopeData.HeaderText = "Selected Item";
-            namedScopeData.Location = new Point(3, 36);
+            namedScopeData.Location = new Point(3, 215);
             namedScopeData.Name = "namedScopeData";
             namedScopeData.ReadOnly = false;
             namedScopeData.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
             namedScopeData.ScopePath = namedScopePath2;
-            namedScopeData.Size = new Size(180, 27);
+            namedScopeData.Size = new Size(762, 207);
             namedScopeData.TabIndex = 6;
             // 
             // selectionItemData
@@ -536,7 +536,7 @@
             selectionItemData.Dock = DockStyle.Fill;
             selectionItemData.Location = new Point(3, 3);
             selectionItemData.Name = "selectionItemData";
-            selectionItemData.Size = new Size(180, 27);
+            selectionItemData.Size = new Size(762, 206);
             selectionItemData.TabIndex = 5;
             // 
             // scopeNameData
@@ -578,8 +578,8 @@
             dataPreviewLayout.RowCount = 4;
             dataPreviewLayout.RowStyles.Add(new RowStyle());
             dataPreviewLayout.RowStyles.Add(new RowStyle());
-            dataPreviewLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
-            dataPreviewLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+            dataPreviewLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+            dataPreviewLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
             dataPreviewLayout.Size = new Size(774, 431);
             dataPreviewLayout.TabIndex = 0;
             // 
@@ -736,12 +736,12 @@
             // previewData
             // 
             previewData.Dock = DockStyle.Fill;
-            previewData.Location = new Point(3, 239);
+            previewData.Location = new Point(3, 267);
             previewData.Multiline = true;
             previewData.Name = "previewData";
             previewData.ReadOnly = true;
             previewData.ScrollBars = ScrollBars.Both;
-            previewData.Size = new Size(768, 189);
+            previewData.Size = new Size(768, 161);
             previewData.TabIndex = 1;
             previewData.WordWrap = false;
             // 
@@ -753,8 +753,21 @@
             previewDocumentXML.Dock = DockStyle.Fill;
             previewDocumentXML.Location = new Point(3, 156);
             previewDocumentXML.Name = "previewDocumentXML";
-            previewDocumentXML.Size = new Size(768, 77);
+            previewDocumentXML.Size = new Size(768, 105);
             previewDocumentXML.TabIndex = 10;
+            // 
+            // documentElementColumn
+            // 
+            documentElementColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            documentElementColumn.FillWeight = 50F;
+            documentElementColumn.HeaderText = "Element Name";
+            documentElementColumn.Name = "documentElementColumn";
+            // 
+            // documentFileName
+            // 
+            documentFileName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            documentFileName.HeaderText = "Document File Name";
+            documentFileName.Name = "documentFileName";
             // 
             // transformTab
             // 
@@ -764,7 +777,7 @@
             transformTab.Name = "transformTab";
             transformTab.Size = new Size(774, 431);
             transformTab.TabIndex = 2;
-            transformTab.Text = "XSL Transform";
+            transformTab.Text = "Transform (XSL)";
             // 
             // tranformsLayout
             // 
@@ -939,7 +952,7 @@
             documentsBuild.Image = Properties.Resources.BuildDefinition;
             documentsBuild.ImageTransparentColor = Color.Magenta;
             documentsBuild.Name = "documentsBuild";
-            documentsBuild.Size = new Size(23, 22);
+            documentsBuild.Size = new Size(23, 24);
             documentsBuild.Text = "Build Documents";
             documentsBuild.Click += documentsBuild_Click;
             // 
@@ -949,7 +962,7 @@
             documentSave.Image = Properties.Resources.Save;
             documentSave.ImageTransparentColor = Color.Magenta;
             documentSave.Name = "documentSave";
-            documentSave.Size = new Size(23, 22);
+            documentSave.Size = new Size(23, 24);
             documentSave.Text = "Save Document";
             documentSave.Click += documentSave_Click;
             // 
@@ -959,7 +972,7 @@
             documentSaveAs.Image = Properties.Resources.SaveAs;
             documentSaveAs.ImageTransparentColor = Color.Magenta;
             documentSaveAs.Name = "documentSaveAs";
-            documentSaveAs.Size = new Size(23, 22);
+            documentSaveAs.Size = new Size(23, 24);
             documentSaveAs.Text = "Save As";
             documentSaveAs.Click += documentSaveAs_Click;
             // 
@@ -977,7 +990,7 @@
             documentDirectorySet.Image = Properties.Resources.FolderOpened;
             documentDirectorySet.ImageTransparentColor = Color.Magenta;
             documentDirectorySet.Name = "documentDirectorySet";
-            documentDirectorySet.Size = new Size(23, 22);
+            documentDirectorySet.Size = new Size(23, 24);
             documentDirectorySet.Text = "Set Document Directory";
             documentDirectorySet.Click += documentDirectorySet_Click;
             // 
@@ -987,7 +1000,7 @@
             documentSaveAll.Image = Properties.Resources.SaveAll;
             documentSaveAll.ImageTransparentColor = Color.Magenta;
             documentSaveAll.Name = "documentSaveAll";
-            documentSaveAll.Size = new Size(23, 22);
+            documentSaveAll.Size = new Size(23, 24);
             documentSaveAll.Text = "Save All";
             documentSaveAll.Click += documentSaveAll_Click;
             // 
@@ -1004,19 +1017,6 @@
             deleteTemplateCommand.Size = new Size(158, 22);
             deleteTemplateCommand.Text = "Delete Template";
             deleteTemplateCommand.Click += deleteTemplateCommand_Click;
-            // 
-            // documentElementColumn
-            // 
-            documentElementColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            documentElementColumn.FillWeight = 50F;
-            documentElementColumn.HeaderText = "Element Name";
-            documentElementColumn.Name = "documentElementColumn";
-            // 
-            // documentFileName
-            // 
-            documentFileName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            documentFileName.HeaderText = "Document File Name";
-            documentFileName.Name = "documentFileName";
             // 
             // Template
             // 
