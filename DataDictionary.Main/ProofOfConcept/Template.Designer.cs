@@ -30,8 +30,8 @@
         {
             components = new System.ComponentModel.Container();
             TableLayoutPanel templateLayout;
-            ListViewGroup listViewGroup3 = new ListViewGroup("Scope Name 1", HorizontalAlignment.Left);
-            ListViewItem listViewItem3 = new ListViewItem(new string[] { "Column Name 1", "Column 1" }, -1);
+            ListViewGroup listViewGroup2 = new ListViewGroup("Scope Name 1", HorizontalAlignment.Left);
+            ListViewItem listViewItem2 = new ListViewItem(new string[] { "Column Name 1", "Column 1" }, -1);
             TableLayoutPanel elementLayout;
             GroupBox elementRenderGroup;
             TableLayoutPanel renderAsLayout;
@@ -39,12 +39,12 @@
             TableLayoutPanel renderDataAsLayout;
             GroupBox renderTypeGroup;
             TableLayoutPanel renderTypeLayout;
+            TableLayoutPanel elementPathLayout;
+            BusinessLayer.NamedScope.NamedScopePath namedScopePath2 = new BusinessLayer.NamedScope.NamedScopePath();
+            TableLayoutPanel dataPreviewLayout;
             GroupBox documentOptionGroup;
             TableLayoutPanel documentOptionLayout;
-            Label documentNameBase;
-            TableLayoutPanel elementPathLayout;
-            BusinessLayer.NamedScope.NamedScopePath namedScopePath3 = new BusinessLayer.NamedScope.NamedScopePath();
-            TableLayoutPanel dataPreviewLayout;
+            Label documentNameElement;
             TableLayoutPanel tranformsLayout;
             TableLayoutPanel documentLayout;
             templateTitleData = new Controls.TextBoxData();
@@ -64,19 +64,23 @@
             renderDataAsXml = new CheckBox();
             renderIsTypeData = new CheckBox();
             elementTypeData = new Controls.ComboBoxData();
-            documentBreakData = new CheckBox();
-            documentNamePrefixData = new Controls.TextBoxData();
-            documentNameExtension = new Controls.TextBoxData();
-            documentNameSuffix = new Controls.TextBoxData();
             pathTab = new TabPage();
             namedScopeData = new Controls.NamedScopeData();
             selectionItemData = new DataGridView();
+            scopeNameData = new DataGridViewTextBoxColumn();
+            selectionMemberData = new DataGridViewTextBoxColumn();
             dataPreviewTab = new TabPage();
             dataPreviewCommands = new ToolStrip();
             dataPrevieweBuild = new ToolStripButton();
             dataPreviewSave = new ToolStripButton();
+            documentBreakData = new CheckBox();
+            documentScopeData = new Controls.ComboBoxData();
+            documentNamePrefixData = new Controls.TextBoxData();
+            documentXmlExtension = new Controls.TextBoxData();
+            documentNameExtension = new Controls.TextBoxData();
+            documentNameSuffix = new Controls.TextBoxData();
             previewData = new TextBox();
-            previewExceptionData = new Controls.TextBoxData();
+            previewDocumentXML = new DataGridView();
             transformTab = new TabPage();
             transformCommands = new ToolStrip();
             transformFormat = new ToolStripButton();
@@ -86,6 +90,8 @@
             transformException = new Controls.TextBoxData();
             documentTab = new TabPage();
             documentData = new DataGridView();
+            elementNameColumn = new DataGridViewTextBoxColumn();
+            documentNameColumn = new DataGridViewTextBoxColumn();
             textBoxData1 = new Controls.TextBoxData();
             documentPreview = new TextBox();
             documentCommands = new ToolStrip();
@@ -99,10 +105,8 @@
             deleteTemplateCommand = new ToolStripMenuItem();
             folderBrowserDialog = new FolderBrowserDialog();
             saveFileDialog = new SaveFileDialog();
-            elementNameColumn = new DataGridViewTextBoxColumn();
-            documentNameColumn = new DataGridViewTextBoxColumn();
-            scopeNameData = new DataGridViewTextBoxColumn();
-            selectionMemberData = new DataGridViewTextBoxColumn();
+            documentElementColumn = new DataGridViewTextBoxColumn();
+            documentFileName = new DataGridViewTextBoxColumn();
             templateLayout = new TableLayoutPanel();
             elementLayout = new TableLayoutPanel();
             elementRenderGroup = new GroupBox();
@@ -111,11 +115,11 @@
             renderDataAsLayout = new TableLayoutPanel();
             renderTypeGroup = new GroupBox();
             renderTypeLayout = new TableLayoutPanel();
-            documentOptionGroup = new GroupBox();
-            documentOptionLayout = new TableLayoutPanel();
-            documentNameBase = new Label();
             elementPathLayout = new TableLayoutPanel();
             dataPreviewLayout = new TableLayoutPanel();
+            documentOptionGroup = new GroupBox();
+            documentOptionLayout = new TableLayoutPanel();
+            documentNameElement = new Label();
             tranformsLayout = new TableLayoutPanel();
             documentLayout = new TableLayoutPanel();
             templateLayout.SuspendLayout();
@@ -132,14 +136,15 @@
             renderDataAsLayout.SuspendLayout();
             renderTypeGroup.SuspendLayout();
             renderTypeLayout.SuspendLayout();
-            documentOptionGroup.SuspendLayout();
-            documentOptionLayout.SuspendLayout();
             pathTab.SuspendLayout();
             elementPathLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)selectionItemData).BeginInit();
             dataPreviewTab.SuspendLayout();
             dataPreviewLayout.SuspendLayout();
             dataPreviewCommands.SuspendLayout();
+            documentOptionGroup.SuspendLayout();
+            documentOptionLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)previewDocumentXML).BeginInit();
             transformTab.SuspendLayout();
             tranformsLayout.SuspendLayout();
             transformCommands.SuspendLayout();
@@ -238,12 +243,12 @@
             elementSelection.CheckBoxes = true;
             elementSelection.Columns.AddRange(new ColumnHeader[] { columnName });
             elementSelection.Dock = DockStyle.Fill;
-            listViewGroup3.Header = "Scope Name 1";
-            listViewGroup3.Name = "sampleScope";
-            elementSelection.Groups.AddRange(new ListViewGroup[] { listViewGroup3 });
-            listViewItem3.Group = listViewGroup3;
-            listViewItem3.StateImageIndex = 0;
-            elementSelection.Items.AddRange(new ListViewItem[] { listViewItem3 });
+            listViewGroup2.Header = "Scope Name 1";
+            listViewGroup2.Name = "sampleScope";
+            elementSelection.Groups.AddRange(new ListViewGroup[] { listViewGroup2 });
+            listViewItem2.Group = listViewGroup2;
+            listViewItem2.StateImageIndex = 0;
+            elementSelection.Items.AddRange(new ListViewItem[] { listViewItem2 });
             elementSelection.Location = new Point(0, 0);
             elementSelection.MultiSelect = false;
             elementSelection.Name = "elementSelection";
@@ -268,7 +273,6 @@
             elementLayout.Controls.Add(elementNameData, 0, 2);
             elementLayout.Controls.Add(renderDataAsGroup, 0, 4);
             elementLayout.Controls.Add(renderTypeGroup, 1, 3);
-            elementLayout.Controls.Add(documentOptionGroup, 0, 5);
             elementLayout.Dock = DockStyle.Fill;
             elementLayout.Location = new Point(0, 0);
             elementLayout.Name = "elementLayout";
@@ -484,96 +488,6 @@
             elementTypeData.Size = new Size(236, 47);
             elementTypeData.TabIndex = 4;
             // 
-            // documentOptionGroup
-            // 
-            documentOptionGroup.AutoSize = true;
-            elementLayout.SetColumnSpan(documentOptionGroup, 2);
-            documentOptionGroup.Controls.Add(documentOptionLayout);
-            documentOptionGroup.Dock = DockStyle.Fill;
-            documentOptionGroup.Location = new Point(3, 259);
-            documentOptionGroup.Name = "documentOptionGroup";
-            documentOptionGroup.Size = new Size(502, 97);
-            documentOptionGroup.TabIndex = 9;
-            documentOptionGroup.TabStop = false;
-            documentOptionGroup.Text = "Document Option";
-            // 
-            // documentOptionLayout
-            // 
-            documentOptionLayout.AutoSize = true;
-            documentOptionLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            documentOptionLayout.ColumnCount = 4;
-            documentOptionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            documentOptionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            documentOptionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            documentOptionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            documentOptionLayout.Controls.Add(documentBreakData, 0, 0);
-            documentOptionLayout.Controls.Add(documentNamePrefixData, 0, 1);
-            documentOptionLayout.Controls.Add(documentNameExtension, 3, 1);
-            documentOptionLayout.Controls.Add(documentNameSuffix, 2, 1);
-            documentOptionLayout.Controls.Add(documentNameBase, 1, 1);
-            documentOptionLayout.Dock = DockStyle.Fill;
-            documentOptionLayout.Location = new Point(3, 19);
-            documentOptionLayout.Name = "documentOptionLayout";
-            documentOptionLayout.RowCount = 2;
-            documentOptionLayout.RowStyles.Add(new RowStyle());
-            documentOptionLayout.RowStyles.Add(new RowStyle());
-            documentOptionLayout.Size = new Size(496, 75);
-            documentOptionLayout.TabIndex = 0;
-            // 
-            // documentBreakData
-            // 
-            documentBreakData.AutoSize = true;
-            documentBreakData.Location = new Point(3, 3);
-            documentBreakData.Name = "documentBreakData";
-            documentBreakData.Size = new Size(114, 19);
-            documentBreakData.TabIndex = 0;
-            documentBreakData.Text = "Document Break";
-            documentBreakData.UseVisualStyleBackColor = true;
-            // 
-            // documentNamePrefixData
-            // 
-            documentNamePrefixData.AutoSize = true;
-            documentNamePrefixData.HeaderText = "Prefix";
-            documentNamePrefixData.Location = new Point(3, 28);
-            documentNamePrefixData.Multiline = false;
-            documentNamePrefixData.Name = "documentNamePrefixData";
-            documentNamePrefixData.ReadOnly = false;
-            documentNamePrefixData.Size = new Size(118, 44);
-            documentNamePrefixData.TabIndex = 1;
-            // 
-            // documentNameExtension
-            // 
-            documentNameExtension.AutoSize = true;
-            documentNameExtension.HeaderText = "Extension";
-            documentNameExtension.Location = new Point(375, 28);
-            documentNameExtension.Multiline = false;
-            documentNameExtension.Name = "documentNameExtension";
-            documentNameExtension.ReadOnly = false;
-            documentNameExtension.Size = new Size(118, 44);
-            documentNameExtension.TabIndex = 4;
-            // 
-            // documentNameSuffix
-            // 
-            documentNameSuffix.AutoSize = true;
-            documentNameSuffix.HeaderText = "Suffix";
-            documentNameSuffix.Location = new Point(251, 28);
-            documentNameSuffix.Multiline = false;
-            documentNameSuffix.Name = "documentNameSuffix";
-            documentNameSuffix.ReadOnly = false;
-            documentNameSuffix.Size = new Size(118, 44);
-            documentNameSuffix.TabIndex = 3;
-            // 
-            // documentNameBase
-            // 
-            documentNameBase.AutoSize = true;
-            documentNameBase.Dock = DockStyle.Fill;
-            documentNameBase.Location = new Point(127, 25);
-            documentNameBase.Name = "documentNameBase";
-            documentNameBase.Size = new Size(118, 50);
-            documentNameBase.TabIndex = 5;
-            documentNameBase.Text = "<Element Name>";
-            documentNameBase.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // pathTab
             // 
             pathTab.BackColor = SystemColors.Control;
@@ -581,7 +495,7 @@
             pathTab.Location = new Point(4, 24);
             pathTab.Name = "pathTab";
             pathTab.Padding = new Padding(3);
-            pathTab.Size = new Size(774, 431);
+            pathTab.Size = new Size(192, 72);
             pathTab.TabIndex = 1;
             pathTab.Text = "Element Paths";
             // 
@@ -597,7 +511,7 @@
             elementPathLayout.RowCount = 2;
             elementPathLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             elementPathLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            elementPathLayout.Size = new Size(768, 425);
+            elementPathLayout.Size = new Size(186, 66);
             elementPathLayout.TabIndex = 0;
             // 
             // namedScopeData
@@ -606,12 +520,12 @@
             namedScopeData.ApplyText = "apply";
             namedScopeData.Dock = DockStyle.Fill;
             namedScopeData.HeaderText = "Selected Item";
-            namedScopeData.Location = new Point(3, 215);
+            namedScopeData.Location = new Point(3, 36);
             namedScopeData.Name = "namedScopeData";
             namedScopeData.ReadOnly = false;
             namedScopeData.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
-            namedScopeData.ScopePath = namedScopePath3;
-            namedScopeData.Size = new Size(762, 207);
+            namedScopeData.ScopePath = namedScopePath2;
+            namedScopeData.Size = new Size(180, 27);
             namedScopeData.TabIndex = 6;
             // 
             // selectionItemData
@@ -622,8 +536,23 @@
             selectionItemData.Dock = DockStyle.Fill;
             selectionItemData.Location = new Point(3, 3);
             selectionItemData.Name = "selectionItemData";
-            selectionItemData.Size = new Size(762, 206);
+            selectionItemData.Size = new Size(180, 27);
             selectionItemData.TabIndex = 5;
+            // 
+            // scopeNameData
+            // 
+            scopeNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            scopeNameData.DataPropertyName = "Scope";
+            scopeNameData.FillWeight = 50F;
+            scopeNameData.HeaderText = "Scope";
+            scopeNameData.Name = "scopeNameData";
+            // 
+            // selectionMemberData
+            // 
+            selectionMemberData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            selectionMemberData.DataPropertyName = "SelectionPath";
+            selectionMemberData.HeaderText = "Path";
+            selectionMemberData.Name = "selectionMemberData";
             // 
             // dataPreviewTab
             // 
@@ -640,15 +569,17 @@
             dataPreviewLayout.ColumnCount = 1;
             dataPreviewLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             dataPreviewLayout.Controls.Add(dataPreviewCommands, 0, 0);
-            dataPreviewLayout.Controls.Add(previewData, 0, 1);
-            dataPreviewLayout.Controls.Add(previewExceptionData, 0, 2);
+            dataPreviewLayout.Controls.Add(documentOptionGroup, 0, 1);
+            dataPreviewLayout.Controls.Add(previewData, 0, 3);
+            dataPreviewLayout.Controls.Add(previewDocumentXML, 0, 2);
             dataPreviewLayout.Dock = DockStyle.Fill;
             dataPreviewLayout.Location = new Point(0, 0);
             dataPreviewLayout.Name = "dataPreviewLayout";
-            dataPreviewLayout.RowCount = 3;
+            dataPreviewLayout.RowCount = 4;
             dataPreviewLayout.RowStyles.Add(new RowStyle());
-            dataPreviewLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+            dataPreviewLayout.RowStyles.Add(new RowStyle());
             dataPreviewLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+            dataPreviewLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
             dataPreviewLayout.Size = new Size(774, 431);
             dataPreviewLayout.TabIndex = 0;
             // 
@@ -683,29 +614,147 @@
             dataPreviewSave.Text = "Save Preview";
             dataPreviewSave.Click += dataPreviewSave_Click;
             // 
+            // documentOptionGroup
+            // 
+            documentOptionGroup.AutoSize = true;
+            documentOptionGroup.Controls.Add(documentOptionLayout);
+            documentOptionGroup.Dock = DockStyle.Fill;
+            documentOptionGroup.Location = new Point(3, 28);
+            documentOptionGroup.Name = "documentOptionGroup";
+            documentOptionGroup.Size = new Size(768, 122);
+            documentOptionGroup.TabIndex = 9;
+            documentOptionGroup.TabStop = false;
+            documentOptionGroup.Text = "Document Option";
+            // 
+            // documentOptionLayout
+            // 
+            documentOptionLayout.AutoSize = true;
+            documentOptionLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            documentOptionLayout.ColumnCount = 4;
+            documentOptionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            documentOptionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
+            documentOptionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            documentOptionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            documentOptionLayout.Controls.Add(documentBreakData, 0, 0);
+            documentOptionLayout.Controls.Add(documentScopeData, 1, 0);
+            documentOptionLayout.Controls.Add(documentNamePrefixData, 0, 1);
+            documentOptionLayout.Controls.Add(documentXmlExtension, 3, 0);
+            documentOptionLayout.Controls.Add(documentNameExtension, 3, 1);
+            documentOptionLayout.Controls.Add(documentNameSuffix, 2, 1);
+            documentOptionLayout.Controls.Add(documentNameElement, 1, 1);
+            documentOptionLayout.Dock = DockStyle.Fill;
+            documentOptionLayout.Location = new Point(3, 19);
+            documentOptionLayout.Name = "documentOptionLayout";
+            documentOptionLayout.RowCount = 2;
+            documentOptionLayout.RowStyles.Add(new RowStyle());
+            documentOptionLayout.RowStyles.Add(new RowStyle());
+            documentOptionLayout.Size = new Size(762, 100);
+            documentOptionLayout.TabIndex = 0;
+            // 
+            // documentBreakData
+            // 
+            documentBreakData.AutoSize = true;
+            documentBreakData.Location = new Point(3, 3);
+            documentBreakData.Name = "documentBreakData";
+            documentBreakData.Size = new Size(114, 19);
+            documentBreakData.TabIndex = 0;
+            documentBreakData.Text = "Document Break";
+            documentBreakData.UseVisualStyleBackColor = true;
+            // 
+            // documentScopeData
+            // 
+            documentScopeData.AutoSize = true;
+            documentScopeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            documentOptionLayout.SetColumnSpan(documentScopeData, 2);
+            documentScopeData.Dock = DockStyle.Fill;
+            documentScopeData.DropDownStyle = ComboBoxStyle.DropDown;
+            documentScopeData.HeaderText = "Break on Scope";
+            documentScopeData.Location = new Point(193, 3);
+            documentScopeData.Name = "documentScopeData";
+            documentScopeData.ReadOnly = false;
+            documentScopeData.Size = new Size(412, 44);
+            documentScopeData.TabIndex = 6;
+            // 
+            // documentNamePrefixData
+            // 
+            documentNamePrefixData.AutoSize = true;
+            documentNamePrefixData.Dock = DockStyle.Fill;
+            documentNamePrefixData.HeaderText = "File Prefix";
+            documentNamePrefixData.Location = new Point(3, 53);
+            documentNamePrefixData.Multiline = false;
+            documentNamePrefixData.Name = "documentNamePrefixData";
+            documentNamePrefixData.ReadOnly = false;
+            documentNamePrefixData.Size = new Size(184, 44);
+            documentNamePrefixData.TabIndex = 1;
+            // 
+            // documentXmlExtension
+            // 
+            documentXmlExtension.AutoSize = true;
+            documentXmlExtension.Dock = DockStyle.Fill;
+            documentXmlExtension.HeaderText = "XML Extension";
+            documentXmlExtension.Location = new Point(611, 3);
+            documentXmlExtension.Multiline = false;
+            documentXmlExtension.Name = "documentXmlExtension";
+            documentXmlExtension.ReadOnly = false;
+            documentXmlExtension.Size = new Size(148, 44);
+            documentXmlExtension.TabIndex = 7;
+            // 
+            // documentNameExtension
+            // 
+            documentNameExtension.AutoSize = true;
+            documentNameExtension.Dock = DockStyle.Fill;
+            documentNameExtension.HeaderText = "Document Extension";
+            documentNameExtension.Location = new Point(611, 53);
+            documentNameExtension.Multiline = false;
+            documentNameExtension.Name = "documentNameExtension";
+            documentNameExtension.ReadOnly = false;
+            documentNameExtension.Size = new Size(148, 44);
+            documentNameExtension.TabIndex = 4;
+            // 
+            // documentNameSuffix
+            // 
+            documentNameSuffix.AutoSize = true;
+            documentNameSuffix.Dock = DockStyle.Fill;
+            documentNameSuffix.HeaderText = "File Suffix";
+            documentNameSuffix.Location = new Point(421, 53);
+            documentNameSuffix.Multiline = false;
+            documentNameSuffix.Name = "documentNameSuffix";
+            documentNameSuffix.ReadOnly = false;
+            documentNameSuffix.Size = new Size(184, 44);
+            documentNameSuffix.TabIndex = 3;
+            // 
+            // documentNameElement
+            // 
+            documentNameElement.Anchor = AnchorStyles.None;
+            documentNameElement.AutoSize = true;
+            documentNameElement.Location = new Point(253, 67);
+            documentNameElement.Name = "documentNameElement";
+            documentNameElement.Size = new Size(101, 15);
+            documentNameElement.TabIndex = 8;
+            documentNameElement.Text = "<Element Name>";
+            // 
             // previewData
             // 
             previewData.Dock = DockStyle.Fill;
-            previewData.Location = new Point(3, 28);
+            previewData.Location = new Point(3, 239);
             previewData.Multiline = true;
             previewData.Name = "previewData";
             previewData.ReadOnly = true;
             previewData.ScrollBars = ScrollBars.Both;
-            previewData.Size = new Size(768, 278);
+            previewData.Size = new Size(768, 189);
             previewData.TabIndex = 1;
             previewData.WordWrap = false;
             // 
-            // previewExceptionData
+            // previewDocumentXML
             // 
-            previewExceptionData.AutoSize = true;
-            previewExceptionData.Dock = DockStyle.Fill;
-            previewExceptionData.HeaderText = "Exception/Warning";
-            previewExceptionData.Location = new Point(3, 312);
-            previewExceptionData.Multiline = true;
-            previewExceptionData.Name = "previewExceptionData";
-            previewExceptionData.ReadOnly = true;
-            previewExceptionData.Size = new Size(768, 116);
-            previewExceptionData.TabIndex = 2;
+            previewDocumentXML.AllowUserToAddRows = false;
+            previewDocumentXML.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            previewDocumentXML.Columns.AddRange(new DataGridViewColumn[] { documentElementColumn, documentFileName });
+            previewDocumentXML.Dock = DockStyle.Fill;
+            previewDocumentXML.Location = new Point(3, 156);
+            previewDocumentXML.Name = "previewDocumentXML";
+            previewDocumentXML.Size = new Size(768, 77);
+            previewDocumentXML.TabIndex = 10;
             // 
             // transformTab
             // 
@@ -837,6 +886,20 @@
             documentData.Size = new Size(768, 115);
             documentData.TabIndex = 0;
             // 
+            // elementNameColumn
+            // 
+            elementNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            elementNameColumn.FillWeight = 50F;
+            elementNameColumn.HeaderText = "Element Name";
+            elementNameColumn.Name = "elementNameColumn";
+            // 
+            // documentNameColumn
+            // 
+            documentNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            documentNameColumn.HeaderText = "Document Name";
+            documentNameColumn.Name = "documentNameColumn";
+            documentNameColumn.ReadOnly = true;
+            // 
             // textBoxData1
             // 
             textBoxData1.AutoSize = true;
@@ -862,6 +925,7 @@
             // 
             // documentCommands
             // 
+            documentCommands.GripStyle = ToolStripGripStyle.Hidden;
             documentCommands.Items.AddRange(new ToolStripItem[] { documentsBuild, documentSave, documentSaveAs, documentDirectory, documentDirectorySet, documentSaveAll });
             documentCommands.Location = new Point(0, 0);
             documentCommands.Name = "documentCommands";
@@ -941,34 +1005,18 @@
             deleteTemplateCommand.Text = "Delete Template";
             deleteTemplateCommand.Click += deleteTemplateCommand_Click;
             // 
-            // elementNameColumn
+            // documentElementColumn
             // 
-            elementNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            elementNameColumn.FillWeight = 50F;
-            elementNameColumn.HeaderText = "Element Name";
-            elementNameColumn.Name = "elementNameColumn";
+            documentElementColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            documentElementColumn.FillWeight = 50F;
+            documentElementColumn.HeaderText = "Element Name";
+            documentElementColumn.Name = "documentElementColumn";
             // 
-            // documentNameColumn
+            // documentFileName
             // 
-            documentNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            documentNameColumn.HeaderText = "Document Name";
-            documentNameColumn.Name = "documentNameColumn";
-            documentNameColumn.ReadOnly = true;
-            // 
-            // scopeNameData
-            // 
-            scopeNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            scopeNameData.DataPropertyName = "Scope";
-            scopeNameData.FillWeight = 50F;
-            scopeNameData.HeaderText = "Scope";
-            scopeNameData.Name = "scopeNameData";
-            // 
-            // selectionMemberData
-            // 
-            selectionMemberData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            selectionMemberData.DataPropertyName = "SelectionPath";
-            selectionMemberData.HeaderText = "Path";
-            selectionMemberData.Name = "selectionMemberData";
+            documentFileName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            documentFileName.HeaderText = "Document File Name";
+            documentFileName.Name = "documentFileName";
             // 
             // Template
             // 
@@ -1001,10 +1049,6 @@
             renderTypeGroup.ResumeLayout(false);
             renderTypeLayout.ResumeLayout(false);
             renderTypeLayout.PerformLayout();
-            documentOptionGroup.ResumeLayout(false);
-            documentOptionGroup.PerformLayout();
-            documentOptionLayout.ResumeLayout(false);
-            documentOptionLayout.PerformLayout();
             pathTab.ResumeLayout(false);
             elementPathLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)selectionItemData).EndInit();
@@ -1013,6 +1057,11 @@
             dataPreviewLayout.PerformLayout();
             dataPreviewCommands.ResumeLayout(false);
             dataPreviewCommands.PerformLayout();
+            documentOptionGroup.ResumeLayout(false);
+            documentOptionGroup.PerformLayout();
+            documentOptionLayout.ResumeLayout(false);
+            documentOptionLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)previewDocumentXML).EndInit();
             transformTab.ResumeLayout(false);
             tranformsLayout.ResumeLayout(false);
             tranformsLayout.PerformLayout();
@@ -1062,12 +1111,8 @@
         private ToolStripButton dataPrevieweBuild;
         private ToolStripButton dataPreviewSave;
         private TextBox previewData;
-        private Controls.TextBoxData previewExceptionData;
         private TableLayoutPanel documentOptionLayout;
         private CheckBox documentBreakData;
-        private Controls.TextBoxData documentNamePrefixData;
-        private Controls.TextBoxData documentNameSuffix;
-        private Controls.TextBoxData documentNameExtension;
         private TableLayoutPanel tranformsLayout;
         private ToolStrip transformCommands;
         private ToolStripButton transformFormat;
@@ -1094,5 +1139,13 @@
         private DataGridViewTextBoxColumn documentNameColumn;
         private DataGridViewTextBoxColumn scopeNameData;
         private DataGridViewTextBoxColumn selectionMemberData;
+        private Controls.ComboBoxData documentScopeData;
+        private DataGridView previewDocumentXML;
+        private Controls.TextBoxData documentXmlExtension;
+        private Controls.TextBoxData documentNamePrefixData;
+        private Controls.TextBoxData documentNameExtension;
+        private Controls.TextBoxData documentNameSuffix;
+        private DataGridViewTextBoxColumn documentElementColumn;
+        private DataGridViewTextBoxColumn documentFileName;
     }
 }
