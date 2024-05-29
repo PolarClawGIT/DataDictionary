@@ -258,6 +258,11 @@
     <Build Include="App_DataDictionary\Tables\ScriptingTemplate.sql" />
     <Build Include="App_DataDictionary\Tables\ScriptingElement.sql" />
     <Build Include="App_DataDictionary\Tables\ScriptingPath.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainDefinition.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainAttributeDefinition.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainEntityDefinition.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainProcessDefinition.sql" />
+    <Build Include="App_DataDictionary\Tables\DomainProperty.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
