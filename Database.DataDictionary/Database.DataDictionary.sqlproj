@@ -72,7 +72,7 @@
   <ItemGroup>
     <None Include="Schema.scmp" />
     <None Include="dbo\Extended Property query.sql" />
-    <None Include="App_DataDictionary\ExtendedProperty Data.sql" />
+    <None Include="App_DataDictionary\Static Data.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Security\App_DataDictionary.sql" />
@@ -198,7 +198,6 @@
     <Build Include="App_DataDictionary\Views\DatabaseConstraint_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseConstraintColumn_AK.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeApplicationScope.sql" />
-    <Build Include="App_DataDictionary\Tables\DomainAliasItem.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeObjectSubType.sql" />
     <None Include="App_DataDictionary\ApplicationScope Data.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntityAlias.sql" />

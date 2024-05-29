@@ -11,7 +11,7 @@
 	-- This is the only place these values are hard coded and it is just for initializing data.
 
 	-- Business Values
-	Insert Into @Data Values (
+/*	Insert Into @Data Values (
 		'00000000-0000-0000-0010-000000000010',
 		'Business Definition',
 		'Definition of the item in Business Terms.',
@@ -20,7 +20,7 @@
 		'00000000-0000-0000-0020-000000000010',
 		'Technical Definition',
 		'Definition of the item in Technical Terms.',
-		1,0,0,0,null,null)
+		1,0,0,0,null,null)*/
 	Insert Into @Data Values (
 		'00000000-0000-0000-0010-000000000020',
 		'MS Description',
