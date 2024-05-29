@@ -12,6 +12,13 @@ namespace DataDictionary.BusinessLayer.Database
         /// <inheritdoc cref="DbTableKey(IDbTableKey)"/>
         public TableIndex(IDbTableKey source) : base(source)
         { }
+
+        /// <summary>
+        /// Convert TableIndex to a DataLayerIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator DataLayerIndex(TableIndex source)
+        { return new DataLayerIndex() { BusinessLayerId = source.TableId ?? Guid.Empty }; }
     }
 
     /// <inheritdoc/>

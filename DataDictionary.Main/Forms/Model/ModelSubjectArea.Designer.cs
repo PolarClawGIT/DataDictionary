@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.Main.Forms.Domain
+﻿namespace DataDictionary.Main.Forms.Model
 {
     partial class ModelSubjectArea
     {
@@ -31,8 +31,8 @@
             components = new System.ComponentModel.Container();
             TableLayoutPanel subjectAreaLayout;
             TabControl subjectAreaTab;
-            subjectAreaTitleData = new DataDictionary.Main.Controls.TextBoxData();
-            subjectAreaDescriptionData = new DataDictionary.Main.Controls.TextBoxData();
+            subjectAreaTitleData = new Controls.TextBoxData();
+            subjectAreaDescriptionData = new Controls.TextBoxData();
             attributeTab = new TabPage();
             attributeData = new DataGridView();
             attributeTitleColumn = new DataGridViewTextBoxColumn();
@@ -41,7 +41,7 @@
             entityData = new DataGridView();
             entityTitleColumn = new DataGridViewTextBoxColumn();
             entityDescriptionColumn = new DataGridViewTextBoxColumn();
-            subjectAreaNameSpaceData = new DataDictionary.Main.Controls.TextBoxData();
+            subjectAreaNameSpaceData = new Controls.TextBoxData();
             bindingSubject = new BindingSource(components);
             bindingEntity = new BindingSource(components);
             bindingAttribute = new BindingSource(components);
@@ -204,6 +204,7 @@
             subjectAreaNameSpaceData.ReadOnly = false;
             subjectAreaNameSpaceData.Size = new Size(373, 44);
             subjectAreaNameSpaceData.TabIndex = 3;
+            subjectAreaNameSpaceData.Validating += SubjectAreaNameSpaceData_Validating;
             // 
             // subjectAreaToolStrip
             // 

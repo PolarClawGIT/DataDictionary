@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ScriptingData.Schema;
+using System.ComponentModel;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Scripting
@@ -14,7 +15,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         ISaveData, ISaveData<ISchemaKey>
     { }
 
-    class SchemaData : SchemaCollection<SchemaValue>, ISchemaData, IGetNamedScopes
+    class SchemaData : SchemaCollection<SchemaValue>, ISchemaData, INamedScopeSource
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine
@@ -45,6 +46,23 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <inheritdoc/>
         /// <remarks>Schema</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
-        { return this.Select(s => new NamedScopePair(s)); }
+        {
+            return this.Select(s => new NamedScopePair(GetValue(s)));
+
+            NamedScopeValueCore GetValue(SchemaValue source)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                source.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is
+                        nameof(source.SchemaTitle))
+                    { result.TitleChanged(); }
+                }
+            }
+        }
     }
 }

@@ -5,15 +5,15 @@ using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.NameSpace
 {
-    /// <summary>
-    /// Interface for a NameSpace item within a NameScope
-    /// </summary>
+    // <summary>
+    // Interface for a NameSpace item within a NameScope
+    // </summary>
     //public interface INameSpaceItem : INamedScopeKey, INameSpaceKey, IScopeKey
     //{ }
 
-    /// <summary>
-    /// Implementation for a NameSpace item within a NameScope
-    /// </summary>
+    // <summary>
+    // Implementation for a NameSpace item within a NameScope
+    // </summary>
     //public class NameSpaceItem : NameSpaceKey, INameSpaceItem, INotifyPropertyChanged
     //{
     //    /// <inheritdoc/>

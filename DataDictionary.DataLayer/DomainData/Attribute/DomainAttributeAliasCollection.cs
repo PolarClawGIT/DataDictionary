@@ -70,10 +70,4 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             { base.Remove(item); }
         }
     }
-
-    /// <summary>
-    /// Default List/Collection of Domain Attribute Aliases
-    /// </summary>
-    public class DomainAttributeAliasCollection : DomainAttributeAliasCollection<DomainAttributeAliasItem>
-    { }
 }

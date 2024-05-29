@@ -124,7 +124,6 @@ namespace DataDictionary.Main
                 }
             }
 
-            work.AddRange(BusinessData.LoadNamedScope());
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
 
             this.DoWork(work, OnComplete);
@@ -313,7 +312,6 @@ namespace DataDictionary.Main
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         { Application.Exit(); }
-
 
     }
 }

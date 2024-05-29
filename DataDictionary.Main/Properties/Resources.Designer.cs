@@ -123,9 +123,39 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap BuildDefinition {
+            get {
+                object obj = ResourceManager.GetObject("BuildDefinition", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap BulletList {
             get {
                 object obj = ResourceManager.GetObject("BulletList", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ButtonGreen {
+            get {
+                object obj = ResourceManager.GetObject("ButtonGreen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ButtonRed {
+            get {
+                object obj = ResourceManager.GetObject("ButtonRed", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -323,9 +353,29 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DeleteXmlFile {
+            get {
+                object obj = ResourceManager.GetObject("DeleteXmlFile", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DeleteXMLSchema {
             get {
                 object obj = ResourceManager.GetObject("DeleteXMLSchema", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DeleteXPath {
+            get {
+                object obj = ResourceManager.GetObject("DeleteXPath", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -633,6 +683,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_Event {
+            get {
+                object obj = ResourceManager.GetObject("Icon_Event", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_ExtendedProperty {
             get {
                 object obj = ResourceManager.GetObject("Icon_ExtendedProperty", resourceCulture);
@@ -913,6 +973,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon Icon_XPath {
+            get {
+                object obj = ResourceManager.GetObject("Icon_XPath", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Icon_XSLTransform {
             get {
                 object obj = ResourceManager.GetObject("Icon_XSLTransform", resourceCulture);
@@ -1173,9 +1243,29 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap NewXmlFile {
+            get {
+                object obj = ResourceManager.GetObject("NewXmlFile", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap NewXMLSchema {
             get {
                 object obj = ResourceManager.GetObject("NewXMLSchema", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap NewXPath {
+            get {
+                object obj = ResourceManager.GetObject("NewXPath", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1666,6 +1756,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap XMLSchema {
             get {
                 object obj = ResourceManager.GetObject("XMLSchema", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap XPath {
+            get {
+                object obj = ResourceManager.GetObject("XPath", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

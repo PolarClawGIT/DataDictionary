@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ScriptingData.Selection;
+using System.ComponentModel;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Scripting
@@ -13,7 +14,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     { }
 
 
-    class SelectionData : SelectionCollection<SelectionValue>, ISelectionData, IGetNamedScopes
+    class SelectionData : SelectionCollection<SelectionValue>, ISelectionData, INamedScopeSource
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine
@@ -44,6 +45,23 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <inheritdoc/>
         /// <remarks>Selection</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
-        { return this.Select(s => new NamedScopePair(s)); }
+        {
+            return this.Select(s => new NamedScopePair(GetValue(s)));
+
+            NamedScopeValueCore GetValue(SelectionValue source)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                source.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is
+                        nameof(source.SelectionTitle))
+                    { result.TitleChanged(); }
+                }
+            }
+        }
     }
 }

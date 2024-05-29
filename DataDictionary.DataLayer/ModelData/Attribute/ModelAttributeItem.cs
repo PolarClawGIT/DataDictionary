@@ -25,16 +25,16 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
     public class ModelAttributeItem : BindingTableRow, IModelAttributeItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? AttributeId { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue("AttributeId", value); } }
+        public Guid? AttributeId { get { return GetValue<Guid>(nameof(AttributeId)); } protected set { SetValue(nameof(AttributeId), value); } }
 
         /// <inheritdoc/>
-        public string? AttributeTitle { get { return GetValue("AttributeTitle"); } }
+        public string? AttributeTitle { get { return GetValue(nameof(AttributeTitle)); } }
 
         /// <inheritdoc/>
-        public Guid? SubjectAreaId { get { return GetValue<Guid>("SubjectAreaId"); } protected set { SetValue("SubjectAreaId", value); } }
+        public Guid? SubjectAreaId { get { return GetValue<Guid>(nameof(SubjectAreaId)); } protected set { SetValue(nameof(SubjectAreaId), value); } }
 
         /// <inheritdoc/>
-        public string? SubjectAreaTitle { get { return GetValue("SubjectAreaTitle"); } }
+        public string? SubjectAreaTitle { get { return GetValue(nameof(SubjectAreaTitle)); } }
 
         /// <summary>
         /// Constructor for Model Attribute Item
@@ -56,10 +56,10 @@ namespace DataDictionary.DataLayer.ModelData.Attribute
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("AttributeTitle", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SubjectAreaId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("SubjectAreaTitle", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(AttributeTitle), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(SubjectAreaId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(SubjectAreaTitle), typeof(string)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

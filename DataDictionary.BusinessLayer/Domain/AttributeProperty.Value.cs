@@ -9,11 +9,11 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IAttributePropertyValue : IDomainAttributePropertyItem, IPropertyIndex
+    public interface IAttributePropertyValue : IDomainAttributePropertyItem, IPropertyIndex, IPropertyValue
     { }
 
     /// <inheritdoc/>
-    public class AttributePropertyValue : DomainAttributePropertyItem, IAttributePropertyValue
+    public class AttributePropertyValue : DomainAttributePropertyItem, IAttributePropertyValue, IScripting<IPropertyData>
     {
         /// <inheritdoc/>
         public AttributePropertyValue() : base() { }
@@ -27,30 +27,38 @@ namespace DataDictionary.BusinessLayer.Domain
                                      IExtendedPropertyValue value)
             : base(attributeKey, propertyKey, value) { }
 
-        internal XElement? GetXElement(IPropertyItem property, IEnumerable<SchemaElementValue>? options = null)
+
+        /// <inheritdoc/>
+        public XElement? GetXElement(IPropertyData data, IEnumerable<SchemaElementValue>? options)
         {
             XElement? result = null;
-            IAttributePropertyValue attributeNames;
-            IPropertyItem propertyNames;
 
-            if (options is not null)
+            if (options is not null && options.Count() > 0)
             {
-                foreach (SchemaElementValue option in options)
+                PropertyIndex key = new PropertyIndex(this);
+
+                if (data.FirstOrDefault(w => key.Equals(w)) is PropertyValue property)
                 {
-                    Object? value = null;
-
-                    switch (option.ColumnName)
+                    foreach (SchemaElementValue option in options)
                     {
-                        case nameof(propertyNames.PropertyTitle): value = property.PropertyTitle; break;
-                        case nameof(propertyNames.ExtendedProperty): value = property.ExtendedProperty; break;
-                        case nameof(attributeNames.PropertyValue): value = PropertyValue; break;
-                        case nameof(attributeNames.DefinitionText): value = DefinitionText; break;
-                        default:
-                            break;
-                    }
+                        Object? value = null;
 
-                    if (value is not null)
-                    { result = new XElement(Scope.ToName(), option.GetXElement(value)); }
+                        switch (option.ColumnName)
+                        {
+                            case nameof(property.PropertyTitle): value = property.PropertyTitle; break;
+                            case nameof(property.ExtendedProperty): value = property.ExtendedProperty; break;
+                            case nameof(PropertyValue): value = PropertyValue; break;
+                            case nameof(DefinitionText): value = DefinitionText; break;
+                            default:
+                                break;
+                        }
+
+                        if (value is not null)
+                        {
+                            if (result is null) { result = new XElement(this.Scope.ToName()); }
+                            result.Add(option.GetXElement(value));
+                        }
+                    }
                 }
             }
 
@@ -72,5 +80,6 @@ namespace DataDictionary.BusinessLayer.Domain
 
             return result;
         }
+
     }
 }

@@ -69,10 +69,4 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             { base.Remove(item); }
         }
     }
-
-    /// <summary>
-    /// Default List/Collection of Domain Entity Aliases
-    /// </summary>
-    public class DomainEntityAliasCollection : DomainEntityAliasCollection<DomainEntityAliasItem>
-    { }
 }

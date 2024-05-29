@@ -34,31 +34,31 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     public class LibraryMemberItem : BindingTableRow, ILibraryMemberItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? LibraryId { get { return GetValue<Guid>("LibraryId"); } set { SetValue("LibraryId", value); } }
+        public Guid? LibraryId { get { return GetValue<Guid>(nameof(LibraryId)); } set { SetValue(nameof(LibraryId), value); } }
 
         /// <inheritdoc/>
-        public Guid? MemberId { get { return GetValue<Guid>("MemberId"); } set { SetValue("MemberId", value); } }
+        public Guid? MemberId { get { return GetValue<Guid>(nameof(MemberId)); } set { SetValue(nameof(MemberId), value); } }
 
         /// <inheritdoc/>
-        public Guid? MemberParentId { get { return GetValue<Guid>("MemberParentId"); } set { SetValue("MemberParentId", value); } }
+        public Guid? MemberParentId { get { return GetValue<Guid>(nameof(MemberParentId)); } set { SetValue(nameof(MemberParentId), value); } }
 
         /// <inheritdoc/>
-        public String? AssemblyName { get { return GetValue("AssemblyName"); } set { SetValue("AssemblyName", value); } }
+        public String? AssemblyName { get { return GetValue(nameof(AssemblyName)); } set { SetValue(nameof(AssemblyName), value); } }
 
         /// <inheritdoc/>
-        public String? MemberNameSpace { get { return GetValue("MemberNameSpace"); } set { SetValue("MemberNameSpace", value); } }
+        public String? MemberNameSpace { get { return GetValue(nameof(MemberNameSpace)); } set { SetValue(nameof(MemberNameSpace), value); } }
 
         /// <inheritdoc/>
-        public String? MemberName { get { return GetValue("MemberName"); } set { SetValue("MemberName", value); } }
+        public String? MemberName { get { return GetValue(nameof(MemberName)); } set { SetValue(nameof(MemberName), value); } }
 
         /// <inheritdoc/>
-        public String? MemberData { get { return GetValue("MemberData"); } set { SetValue("MemberData", value); } }
+        public String? MemberData { get { return GetValue(nameof(MemberData)); } set { SetValue(nameof(MemberData), value); } }
 
         /// <inheritdoc/>
         public LibraryMemberType MemberType
         {
-            get { return LibraryMemberTypeKey.Parse(GetValue("MemberType") ?? String.Empty).MemberType; }
-            set { SetValue("MemberType", value.ToName()); }
+            get { return LibraryMemberTypeKey.Parse(GetValue(nameof(MemberType)) ?? String.Empty).MemberType; }
+            set { SetValue(nameof(MemberType), value.ToName()); }
         }
 
         /// <inheritdoc/>
@@ -88,14 +88,14 @@ namespace DataDictionary.DataLayer.LibraryData.Member
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("LibraryId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("MemberId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("MemberParentId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("AssemblyName", typeof(String)){ AllowDBNull = false},
-            new DataColumn("MemberNameSpace", typeof(String)){ AllowDBNull = true},
-            new DataColumn("MemberName", typeof(String)){ AllowDBNull = false},
-            new DataColumn("MemberType", typeof(String)){ AllowDBNull = true},
-            new DataColumn("MemberData", typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(LibraryId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(MemberId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(MemberParentId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(AssemblyName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(MemberNameSpace), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(MemberName), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(MemberType), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(MemberData), typeof(String)){ AllowDBNull = true},
         };
 
 

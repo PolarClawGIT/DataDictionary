@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
     public interface IScopeKey : IKey
     {
         /// <summary>
-        /// ScopeType for the Item. Primary Key for ScopeItem
+        /// ScopeType for the Item.
         /// </summary>
         ScopeType Scope { get; }
     }
@@ -122,10 +122,11 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// The Int32 of ScopeType does not need to match what is in the Database.
         /// The Text must match what is in the database.
         /// Each Level within the structure is delimited by a Period.
+        /// Values must be XML complaint (but no spaces or special characters, except period).
         /// </summary>
         static Dictionary<ScopeType, String> parseName = new Dictionary<ScopeType, string>()
         {
-            {ScopeType.Null,                      "N/A" },
+            {ScopeType.Null,                      "Null" },
 
             {ScopeType.Library,                   "Library" },
             {ScopeType.LibraryNameSpace,          "Library.NameSpace" },
@@ -164,12 +165,12 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.ModelSubjectArea,          "Model.SubjectArea" },
             {ScopeType.ModelNameSpace,            "Model.NameSpace" },
 
-            {ScopeType.Scripting,                  "Scripting" },
-            {ScopeType.ScriptingSchema,            "Scripting.Schema" },
-            {ScopeType.ScriptingSchemaElement,     "Scripting.Schema.Element" },
-            {ScopeType.ScriptingTransform,         "Scripting.Transform" },
-            {ScopeType.ScriptingSelection,         "Scripting.Selection" },
-            {ScopeType.ScriptingSelectionInstance, "Scripting.Selection.Instance" },
+            {ScopeType.Scripting,                 "Scripting" },
+            {ScopeType.ScriptingSchema,           "Scripting.Schema" },
+            {ScopeType.ScriptingSchemaElement,    "Scripting.Schema.Element" },
+            {ScopeType.ScriptingTransform,        "Scripting.Transform" },
+            {ScopeType.ScriptingSelection,        "Scripting.Selection" },
+            {ScopeType.ScriptingSelectionPath,    "Scripting.Selection.Path" },
         };
 
         /// <inheritdoc/>

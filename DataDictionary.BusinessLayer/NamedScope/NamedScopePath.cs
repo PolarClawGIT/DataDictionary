@@ -1,13 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.Library;
-using DataDictionary.BusinessLayer.Model;
-using DataDictionary.DataLayer;
+﻿using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Scope;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
@@ -60,7 +52,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             get
             {
                 if (pathParts.Count > 1)
-                { return string.Join(".", pathParts.Select(s => string.Format("[{0}]", s)).SkipLast(1)); }
+                { return String.Join(".", pathParts.Select(s => string.Format("[{0}]", s)).SkipLast(1)); }
                 else { return string.Empty; }
             }
         }
@@ -72,7 +64,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <summary>
         /// Parent NameSpace Key for the current item.
         /// </summary>
-        protected NamedScopePath? ParentKey
+        public NamedScopePath? ParentPath
         {
             get
             {
@@ -89,38 +81,35 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <summary>
         /// Constructor for a NamedScope Path
         /// </summary>
-        protected NamedScopePath() : base() { }
+        /// <remarks>This is blank.</remarks>
+        public NamedScopePath() : base() { }
 
         /// <summary>
         /// Constructor for a NamedScope Path
         /// </summary>
         /// <param name="source"></param>
-        protected NamedScopePath(String source) : this()
-        { pathParts.AddRange(Parse(source)); }
-
-        /// <summary>
-        /// Constructor for a NamedScope Path
-        /// </summary>
-        /// <param name="source"></param>
-        public NamedScopePath(INamedScopePath source) : this()
+        /// <remarks>This version takes pre-parsed strings to build the Path.</remarks>
+        /// <example>
+        /// var x new NamedScopePath(NamedScopePath.Parse(sourceString).ToArray())
+        /// </example>
+        public NamedScopePath(params String?[] source)
         {
-            if (source is NamedScopePath value)
-            { pathParts.AddRange(value.pathParts); }
-            else { pathParts.AddRange(Parse(source.MemberFullPath)); }
+            foreach (String? item in source)
+            {
+                if (!String.IsNullOrWhiteSpace(item))
+                { pathParts.Add(String.Join(".", Parse(item).Select(s => s))); }
+            }
         }
 
         /// <summary>
         /// Constructor for a NamedScope Path
         /// </summary>
         /// <param name="source"></param>
-        /// <remarks>This version does not parse the strings.</remarks>
-        internal NamedScopePath(params String?[] source)
+        /// <remarks>This version allows multiple paths to be combined.</remarks>
+        public NamedScopePath(params INamedScopePath[] source)
         {
-            foreach (String? item in source)
-            {
-                if (!String.IsNullOrWhiteSpace(item))
-                { pathParts.Add(item); }
-            }
+            foreach (NamedScopePath item in source)
+            { this.pathParts.AddRange(item.pathParts); }
         }
 
         /// <summary>
@@ -374,14 +363,14 @@ namespace DataDictionary.BusinessLayer.NamedScope
                 if (!result.Contains(item))
                 { result.Add(item); }
 
-                NamedScopePath? key = item.ParentKey;
+                NamedScopePath? key = item.ParentPath;
 
                 while (key is not null)
                 {
                     if (!result.Contains(key))
                     { result.Add(key); }
 
-                    key = key.ParentKey;
+                    key = key.ParentPath;
                 }
             }
             return result;

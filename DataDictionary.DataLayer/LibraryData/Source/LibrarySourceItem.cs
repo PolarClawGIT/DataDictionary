@@ -45,22 +45,22 @@ namespace DataDictionary.DataLayer.LibraryData.Source
     public class LibrarySourceItem : BindingTableRow, ILibrarySourceItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? LibraryId { get { return GetValue<Guid>("LibraryId"); } protected set { SetValue("LibraryId", value); } }
+        public Guid? LibraryId { get { return GetValue<Guid>(nameof(LibraryId)); } protected set { SetValue(nameof(LibraryId), value); } }
 
         /// <inheritdoc/>
-        public string? AssemblyName { get { return GetValue("AssemblyName"); } set { SetValue("AssemblyName", value); } }
+        public string? AssemblyName { get { return GetValue(nameof(AssemblyName)); } set { SetValue(nameof(AssemblyName), value); } }
 
         /// <inheritdoc/>
-        public string? LibraryTitle { get { return GetValue("LibraryTitle"); } set { SetValue("LibraryTitle", value); } }
+        public string? LibraryTitle { get { return GetValue(nameof(LibraryTitle)); } set { SetValue(nameof(LibraryTitle), value); } }
 
         /// <inheritdoc/>
-        public string? LibraryDescription { get { return GetValue("LibraryDescription"); } set { SetValue("LibraryDescription", value); } }
+        public string? LibraryDescription { get { return GetValue(nameof(LibraryDescription)); } set { SetValue(nameof(LibraryDescription), value); } }
 
         /// <inheritdoc/>
-        public string? SourceFile { get { return GetValue("SourceFile"); } set { SetValue("SourceFile", value); } }
+        public string? SourceFile { get { return GetValue(nameof(SourceFile)); } set { SetValue(nameof(SourceFile), value); } }
 
         /// <inheritdoc/>
-        public DateTime? SourceDate { get { return GetValue<DateTime>("SourceDate"); } set { SetValue("SourceDate", value); } }
+        public DateTime? SourceDate { get { return GetValue<DateTime>(nameof(SourceDate)); } set { SetValue(nameof(SourceDate), value); } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.Library;
@@ -73,12 +73,12 @@ namespace DataDictionary.DataLayer.LibraryData.Source
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("LibraryId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("LibraryTitle", typeof(string)){ AllowDBNull = true},
-            new DataColumn("LibraryDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("AssemblyName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SourceFile", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SourceDate", typeof(DateTime)){ AllowDBNull = true},
+            new DataColumn(nameof(LibraryId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(LibraryTitle), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(LibraryDescription), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(AssemblyName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(SourceFile), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(SourceDate), typeof(DateTime)){ AllowDBNull = true},
         };
 
 

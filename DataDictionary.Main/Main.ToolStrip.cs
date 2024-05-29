@@ -27,15 +27,7 @@ namespace DataDictionary.Main
         { Activate(() => new Forms.Domain.DomainEntity(null)); }
 
         private void NewSubjectAreaCommand_ButtonClick(object? sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-            //ModelSubjectAreaItem item = new ModelSubjectAreaItem();
-
-            //BusinessData.ModelSubjectAreas.Add(item);
-            //BusinessData.NamedScope.Add(new NamedScopeItem(BusinessData.Model, item));
-
-            //Activate(item);
-        }
+        { Activate(() => new Forms.Model.ModelSubjectArea(null)); }
 
         private void ManageModelCommand_ButtonClick(object? sender, EventArgs e)
         { Activate(() => new Forms.Model.ModelManager()); }
@@ -47,10 +39,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Attribute), BusinessData.DomainModel.Attributes); }
 
         private void subjectAreaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-            //Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Diagram), BusinessData.ModelSubjectAreas); 
-        }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Diagram), BusinessData.SubjectAreas); }
 
         private void browseHelpCommand_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_HelpTableOfContent), BusinessData.ApplicationData.HelpSubjects); }
@@ -106,11 +95,17 @@ namespace DataDictionary.Main
         private void entityAliasToolStripMenuItem_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.Entities.Aliases); }
 
+        private void manageScriptingCommand_ButtonClick(object sender, EventArgs e)
+        { Activate(() => new Forms.Scripting.Document()); }
 
         private void transformManagerCommand_Click(object sender, EventArgs e)
         { Activate(() => new Forms.Scripting.TransformManager(null)); }
 
         private void schemaManagerCommand_Click(object sender, EventArgs e)
         { Activate(() => new Forms.Scripting.SchemaManager(null)); }
+
+        private void selectionPathCommand_Click(object sender, EventArgs e)
+        { Activate(() => new Forms.Scripting.SelectionManager(null)); }
+
     }
 }

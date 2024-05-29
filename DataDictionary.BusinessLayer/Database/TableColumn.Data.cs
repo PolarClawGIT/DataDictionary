@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.ModelData;
+using System.ComponentModel;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -16,7 +17,7 @@ namespace DataDictionary.BusinessLayer.Database
     class TableColumnData : DbTableColumnCollection<TableColumnValue>, ITableColumnData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, IGetNamedScopes
+        IDatabaseModelItem, INamedScopeSource
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -50,11 +51,28 @@ namespace DataDictionary.BusinessLayer.Database
             {
                 DbTableKeyName nameKey = new DbTableKeyName(item);
                 if (Database.DbTables.FirstOrDefault(w => nameKey.Equals(w)) is TableValue parent)
-                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+                { result.Add(new NamedScopePair(parent.GetIndex(), GetValue(item))); }
             }
 
             return result;
-        }
 
+            NamedScopeValueCore GetValue(TableColumnValue source)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                source.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is
+                        nameof(source.DatabaseName) or
+                        nameof(source.SchemaName) or
+                        nameof(source.TableName) or
+                        nameof(source.ColumnName))
+                    { result.TitleChanged(); }
+                }
+            }
+        }
     }
 }

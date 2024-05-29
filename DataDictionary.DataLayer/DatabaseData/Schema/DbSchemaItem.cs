@@ -22,16 +22,16 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
     public class DbSchemaItem : BindingTableRow, IDbSchemaItem, INotifyPropertyChanged, IDbExtendedProperty, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
 
         /// <inheritdoc/>
-        public Guid? SchemaId { get { return GetValue<Guid>("SchemaId"); } }
+        public Guid? SchemaId { get { return GetValue<Guid>(nameof(SchemaId)); } }
 
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue("DatabaseName"); } }
+        public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
 
         /// <inheritdoc/>
-        public string? SchemaName { get { return GetValue("SchemaName"); } }
+        public string? SchemaName { get { return GetValue(nameof(SchemaName)); } }
 
         /// <inheritdoc/>
         public bool IsSystem
@@ -61,10 +61,10 @@ namespace DataDictionary.DataLayer.DatabaseData.Schema
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SchemaId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(SchemaId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
         };
 
         /// <summary>

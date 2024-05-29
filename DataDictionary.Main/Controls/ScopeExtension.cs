@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Controls
             {ScopeType.Null,                             new ScopeSetting(Resources.UnknownMember, Resources.Icon_UnknownMember) },
 
             {ScopeType.Library,                          new ScopeSetting(Resources.Library, Resources.Icon_Library) {GroupByScope = false} },
-            {ScopeType.LibraryTypeEvent,                 new ScopeSetting(Resources.Event, Resources.Icon_UnknownMember) {GroupByScope = false}},
+            {ScopeType.LibraryTypeEvent,                 new ScopeSetting(Resources.Event, Resources.Icon_Event) {GroupByScope = false}},
             {ScopeType.LibraryTypeField,                 new ScopeSetting(Resources.Field, Resources.Icon_Field) {GroupByScope = false}},
             {ScopeType.LibraryTypeMethod,                new ScopeSetting(Resources.Method, Resources.Icon_Method) {GroupByScope = false}},
             {ScopeType.LibraryNameSpace,                 new ScopeSetting(Resources.Namespace, Resources.Icon_Namespace) {GroupByScope = false}},
@@ -42,8 +42,8 @@ namespace DataDictionary.Main.Controls
             {ScopeType.DatabaseFunctionParameter,        new ScopeSetting(Resources.Parameter, Resources.Icon_Parameter) },
 
             {ScopeType.Model,                            new ScopeSetting(Resources.SoftwareDefinitionModel, Resources.Icon_SoftwareDefinitionModel) { GroupByScope = false}},
-            {ScopeType.ModelNameSpace,                   new ScopeSetting(Resources.Namespace, Resources.Icon_Namespace) },
-            {ScopeType.ModelSubjectArea,                 new ScopeSetting(Resources.Diagram, Resources.Icon_Diagram) },
+            {ScopeType.ModelNameSpace,                   new ScopeSetting(Resources.Namespace, Resources.Icon_Namespace) { GroupByScope = false}},
+            {ScopeType.ModelSubjectArea,                 new ScopeSetting(Resources.Diagram, Resources.Icon_Diagram) { GroupByScope = false}},
 
             {ScopeType.ModelAttribute,                   new ScopeSetting(Resources.Attribute, Resources.Icon_Attribute) },
             {ScopeType.ModelAttributeAlias,              new ScopeSetting(Resources.Synonym, Resources.Icon_Attribute) },
@@ -58,9 +58,8 @@ namespace DataDictionary.Main.Controls
             {ScopeType.ScriptingSchema,                  new ScopeSetting(Resources.XMLSchema, Resources.Icon_XMLSchema) },
             {ScopeType.ScriptingSchemaElement,           new ScopeSetting(Resources.XMLElement, Resources.Icon_XMLElement) },
             {ScopeType.ScriptingTransform,               new ScopeSetting(Resources.XSLTransform, Resources.Icon_XSLTransform) },
-            //TODO: Need better image/icon for XML Data Selection
-            {ScopeType.ScriptingSelection,               new ScopeSetting(Resources.XMLSchema, Resources.Icon_XMLSchema) },
-            {ScopeType.ScriptingSelectionInstance,       new ScopeSetting(Resources.XMLElement, Resources.Icon_XMLElement) },
+            {ScopeType.ScriptingSelection,               new ScopeSetting(Resources.XPath, Resources.Icon_XPath) },
+            {ScopeType.ScriptingSelectionPath,           new ScopeSetting(Resources.XPath, Resources.Icon_XPath) },
         };
 
         public static Image ToImage(this ScopeType scope)

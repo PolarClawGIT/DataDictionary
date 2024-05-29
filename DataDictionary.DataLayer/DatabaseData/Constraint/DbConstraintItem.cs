@@ -27,38 +27,38 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     public class DbConstraintItem : BindingTableRow, IDbConstraintItem, IDbExtendedProperty, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
 
         /// <inheritdoc/>
-        public Guid? ConstraintId { get { return GetValue<Guid>("ConstraintId"); } }
+        public Guid? ConstraintId { get { return GetValue<Guid>(nameof(ConstraintId)); } }
 
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue("DatabaseName"); } }
+        public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
 
         /// <inheritdoc/>
-        public string? SchemaName { get { return GetValue("SchemaName"); } }
+        public string? SchemaName { get { return GetValue(nameof(SchemaName)); } }
 
         /// <inheritdoc/>
-        public string? ConstraintName { get { return GetValue("ConstraintName"); } }
+        public string? ConstraintName { get { return GetValue(nameof(ConstraintName)); } }
 
         /// <inheritdoc/>
-        public string? TableName { get { return GetValue("TableName"); } }
+        public string? TableName { get { return GetValue(nameof(TableName)); } }
 
         /// <inheritdoc/>
-        public string? ConstraintType { get { return GetValue("ConstraintType"); } }
+        public string? ConstraintType { get { return GetValue(nameof(ConstraintType)); } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.DatabaseTableConstraint;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ConstraintId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("ConstraintName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("TableName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ConstraintType", typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(ConstraintId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(ConstraintName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(TableName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(ConstraintType), typeof(string)){ AllowDBNull = false},
         };
 
         /// <summary>

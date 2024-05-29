@@ -20,51 +20,56 @@ namespace DataDictionary.DataLayer.DatabaseData.Constraint
     public class DbConstraintColumnItem : BindingTableRow, IDbConstraintColumnItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
 
         /// <inheritdoc/>
-        public Guid? ConstraintColumnId { get { return GetValue<Guid>("ConstraintColumnId"); } }
+        public Guid? ConstraintColumnId { get { return GetValue<Guid>(nameof(ConstraintColumnId)); } }
         
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue("DatabaseName"); } }
+        public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
 
         /// <inheritdoc/>
-        public string? SchemaName { get { return GetValue("SchemaName"); } }
+        public string? SchemaName { get { return GetValue(nameof(SchemaName)); } }
 
         /// <inheritdoc/>
-        public string? ConstraintName { get { return GetValue("ConstraintName"); } }
+        public string? ConstraintName { get { return GetValue(nameof(ConstraintName)); } }
 
         /// <inheritdoc/>
-        public string? TableName { get { return GetValue("TableName"); } }
+        public string? TableName { get { return GetValue(nameof(TableName)); } }
 
         /// <inheritdoc/>
-        public string? ColumnName { get { return GetValue("ColumnName"); } }
+        public string? ColumnName { get { return GetValue(nameof(ColumnName)); } }
 
         /// <inheritdoc/>
-        public int? OrdinalPosition { get { return GetValue<int>("OrdinalPosition"); } }
+        public int? OrdinalPosition { get { return GetValue<int>(nameof(OrdinalPosition)); } }
 
         /// <inheritdoc/>
-        public string? ReferenceSchemaName { get { return GetValue("ReferenceSchemaName"); } }
+        public string? ReferenceSchemaName { get { return GetValue(nameof(ReferenceSchemaName)); } }
+
+        /// <summary>
+        /// Alis of ReferenceObjectName
+        /// </summary>
+        String? ReferenceTableName { get { return GetValue(nameof(ReferenceTableName)); } }
 
         /// <inheritdoc/>
-        public string? ReferenceObjectName { get { return GetValue("ReferenceTableName"); } }
+        public string? ReferenceObjectName { get { return ReferenceTableName; } }
 
         /// <inheritdoc/>
-        public string? ReferenceColumnName { get { return GetValue("ReferenceColumnName"); } }
+        public string? ReferenceColumnName { get { return GetValue(nameof(ReferenceColumnName)); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ConstraintColumnId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("ConstraintName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("TableName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("ColumnName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("OrdinalPosition", typeof(int)){ AllowDBNull = true},
-            new DataColumn("ReferenceSchemaName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ReferenceTableName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ReferenceColumnName", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(ConstraintColumnId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(ConstraintName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(TableName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(ColumnName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(OrdinalPosition), typeof(int)){ AllowDBNull = true},
+            new DataColumn(nameof(ReferenceSchemaName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(ReferenceTableName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(ReferenceColumnName), typeof(string)){ AllowDBNull = true},
         };
 
         /// <summary>

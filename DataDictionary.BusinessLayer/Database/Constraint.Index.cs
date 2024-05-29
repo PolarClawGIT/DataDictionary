@@ -10,6 +10,13 @@ namespace DataDictionary.BusinessLayer.Database
     {
         /// <inheritdoc cref="DbConstraintKey(IDbConstraintKey)"/>
         public ConstraintIndex(IConstraintIndex source) : base(source) { }
+
+        /// <summary>
+        /// Convert ConstraintIndex to a DataLayerIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator DataLayerIndex(ConstraintIndex source)
+        { return new DataLayerIndex() { BusinessLayerId = source.ConstraintId ?? Guid.Empty }; }
     }
 
     /// <inheritdoc/>

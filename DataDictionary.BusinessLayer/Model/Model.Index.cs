@@ -11,5 +11,12 @@ namespace DataDictionary.BusinessLayer.Model
     {
         /// <inheritdoc cref="ModelKey.ModelKey(IModelKey)"/>
         public ModelIndex(IModelIndex source) : base(source) { }
+
+        /// <summary>
+        /// Convert ModelIndex to a DataLayerIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator DataLayerIndex(ModelIndex source)
+        { return new DataLayerIndex() { BusinessLayerId = source.ModelId ?? Guid.Empty }; }
     }
 }

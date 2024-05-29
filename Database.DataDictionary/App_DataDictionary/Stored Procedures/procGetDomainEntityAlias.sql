@@ -7,12 +7,12 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 /* Description: Performs Get on DomainEntityAlias.
 */
 Select	D.[EntityId],
-		A.[AliasName],
-		A.[ScopeName]
+		N.[NameSpace] As [AliasName],
+		D.[ScopeName]
 From	[App_DataDictionary].[DomainEntityAlias] D
+		Cross Apply [App_DataDictionary].[funcGetNameSpace](D.[NameSpaceId]) N
 		Left Join [App_DataDictionary].[ModelEntity] M
 		On	D.[EntityId] = M.[EntityId]
-		Outer Apply [App_DataDictionary].[funcGetAliasName](D.[AliasId]) A
 Where	(@ModelId is Null or @ModelId = M.[ModelId]) And
 		(@EntityId is Null or @EntityId = D.[EntityId])
 GO

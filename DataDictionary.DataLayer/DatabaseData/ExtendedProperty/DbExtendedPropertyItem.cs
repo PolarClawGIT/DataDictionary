@@ -41,49 +41,59 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
     public class DbExtendedPropertyItem : BindingTableRow, IDbExtendedPropertyItem
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
 
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue("DatabaseName"); } }
+        public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
 
         /// <inheritdoc/>
-        public string? Level0Type { get { return GetValue("Level0Type"); } }
+        public string? Level0Type { get { return GetValue(nameof(Level0Type)); } }
 
         /// <inheritdoc/>
-        public string? Level0Name { get { return GetValue("Level0Name"); } }
+        public string? Level0Name { get { return GetValue(nameof(Level0Name)); } }
 
         /// <inheritdoc/>
         public DbLevelCatalog CatalogScope { get { return ExtendedPropertyExtension.GetCatalogScope(Level0Type); } }
 
         /// <inheritdoc/>
-        public string? Level1Type { get { return GetValue("Level1Type"); } }
+        public string? Level1Type { get { return GetValue(nameof(Level1Type)); } }
 
         /// <inheritdoc/>
-        public string? Level1Name { get { return GetValue("Level1Name"); } }
+        public string? Level1Name { get { return GetValue(nameof(Level1Name)); } }
 
         /// <inheritdoc/>
         public DbLevelObject ObjectScope { get { return ExtendedPropertyExtension.GetObjectScope(Level1Type); } }
 
         /// <inheritdoc/>
-        public string? Level2Type { get { return GetValue("Level2Type"); } }
+        public string? Level2Type { get { return GetValue(nameof(Level2Type)); } }
 
         /// <inheritdoc/>
-        public string? Level2Name { get { return GetValue("Level2Name"); } }
+        public string? Level2Name { get { return GetValue(nameof(Level2Name)); } }
 
         /// <inheritdoc/>
         public DbLevelElement ElementScope { get { return ExtendedPropertyExtension.GetItemScope(Level2Type); } }
 
-        /// <inheritdoc/>
-        public string? ObjectType { get { return GetValue("ObjType"); } }
+        /// <summary>
+        /// Alias of ObjectType
+        /// </summary>
+        protected String? ObjType { get { return GetValue(nameof(ObjType)); } }
 
         /// <inheritdoc/>
-        public string? ObjectName { get { return GetValue("ObjName"); } }
+        public string? ObjectType { get { return ObjType; } }
+
+        /// <summary>
+        /// Alias of ObjectName
+        /// </summary>
+        protected String? ObjName { get { return GetValue(nameof(ObjName)); } }
 
         /// <inheritdoc/>
-        public string? PropertyName { get { return GetValue("PropertyName"); } }
+        public string? ObjectName { get { return ObjName; } }
 
         /// <inheritdoc/>
-        public string? PropertyValue { get { return GetValue("PropertyValue"); } }
+        public string? PropertyName { get { return GetValue(nameof(PropertyName)); } }
+
+        /// <inheritdoc/>
+        public string? PropertyValue { get { return GetValue(nameof(PropertyValue)); } }
 
         /// <summary>
         /// Constructor for DbExtendedPropertyItem.
@@ -93,19 +103,19 @@ namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("CatalogId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("Level0Type", typeof(string)){ AllowDBNull = true},
-            new DataColumn("Level0Name", typeof(string)){ AllowDBNull = true},
-            new DataColumn("Level1Type", typeof(string)){ AllowDBNull = true},
-            new DataColumn("Level1Name", typeof(string)){ AllowDBNull = true},
-            new DataColumn("Level2Type", typeof(string)){ AllowDBNull = true},
-            new DataColumn("Level2Name", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(CatalogId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(Level0Type), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(Level0Name), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(Level1Type), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(Level1Name), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(Level2Type), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(Level2Name), typeof(string)){ AllowDBNull = true},
 
-            new DataColumn("ObjType", typeof(string)){ AllowDBNull = false},
-            new DataColumn("ObjName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("PropertyName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("PropertyValue", typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(ObjType), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(ObjName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(PropertyName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(PropertyValue), typeof(string)){ AllowDBNull = false},
         };
 
         /// <inheritdoc/>

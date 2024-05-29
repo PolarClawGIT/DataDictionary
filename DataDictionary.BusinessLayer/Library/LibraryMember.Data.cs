@@ -1,28 +1,22 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DbLayer = DataDictionary.DataLayer.LibraryData;
 using Toolbox.Threading;
+using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.Library
 {
     /// <summary>
     /// Interface representing Library Member data
     /// </summary>
-    public interface ILibraryMemberData<TValue> : IBindingData<TValue>
-        where TValue : LibraryMemberValue
+    public interface ILibraryMemberData : IBindingData<LibraryMemberValue>
     { }
 
-    class LibraryMemberData<TValue> : DbLayer.Member.LibraryMemberCollection<TValue>, ILibraryMemberData<TValue>,
+    class LibraryMemberData : DbLayer.Member.LibraryMemberCollection<LibraryMemberValue>, ILibraryMemberData,
         ILoadData<DbLayer.Source.ILibrarySourceKey>, ISaveData<DbLayer.Source.ILibrarySourceKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IGetNamedScopes
-        where TValue : LibraryMemberValue, new()
+        INamedScopeSource
     {
         /// <inheritdoc/>
         public required ILibraryModel Library { get; init; }
@@ -55,22 +49,35 @@ namespace DataDictionary.BusinessLayer.Library
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
 
-            foreach (TValue item in this)
+            foreach (LibraryMemberValue item in this)
             {
-                LibrarySourceIndex libraryKey = new LibrarySourceIndex(item);
-                LibraryMemberIndexParent parentKey = new LibraryMemberIndexParent(item);
+                DataLayerIndex libraryKey = new LibrarySourceIndex(item);
+                DataLayerIndex parentKey = new LibraryMemberIndexParent(item);
 
-                LibrarySourceValue? library = Library.LibrarySources.FirstOrDefault(w => libraryKey.Equals(w));
-                TValue? parent = this.FirstOrDefault(w => parentKey.Equals(new LibraryMemberIndex(w)));
-
-                if (parent is null && library is not null)
-                { result.Add(new NamedScopePair(library.GetSystemId(), item)); }
-                else if (parent is not null)
-                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+                if (libraryKey.HasValue)
+                { result.Add(new NamedScopePair(libraryKey, GetValue(item))); }
+                else if (parentKey.HasValue)
+                { result.Add(new NamedScopePair(parentKey, GetValue(item))); }
                 else { throw new InvalidOperationException("Could not determine Parent"); }
             }
 
             return result;
+
+            NamedScopeValueCore GetValue(LibraryMemberValue source)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                source.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is
+                        nameof(source.MemberName) or
+                        nameof(source.MemberNameSpace))
+                    { result.TitleChanged(); }
+                }
+            }
         }
 
     }

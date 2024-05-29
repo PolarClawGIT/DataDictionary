@@ -1,10 +1,5 @@
 ﻿using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -24,13 +19,13 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
-        { return LoadCommand(connection, (modelId.ModelId, null, null, null)); }
+        { return LoadCommand(connection, (modelId.ModelId, null, null)); }
 
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IDomainAttributeKey attributeKey)
-        { return LoadCommand(connection, (null, attributeKey.AttributeId, null, null)); }
+        { return LoadCommand(connection, (null, attributeKey.AttributeId, null)); }
 
-        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? attributeId, string? attributeTitle, bool? obsolete) parameters)
+        Command LoadCommand(IConnection connection, (Guid? modelId, Guid? attributeId, string? attributeTitle) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
@@ -90,10 +85,4 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             { base.Remove(item); }
         }
     }
-
-    /// <summary>
-    /// Default List/Collection of Domain Attributes
-    /// </summary>
-    public class DomainAttributeCollection: DomainAttributeCollection<DomainAttributeItem>
-    { }
 }

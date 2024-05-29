@@ -89,10 +89,4 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             { base.Remove(item); }
         }
     }
-
-    /// <summary>
-    /// Default List/Collection of Domain Entity's
-    /// </summary>
-    public class DomainEntityCollection : DomainEntityCollection<DomainEntityItem>
-    { }
 }

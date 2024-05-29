@@ -20,16 +20,16 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     public class DomainAttributePropertyItem : BindingTableRow, IDomainAttributePropertyItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? AttributeId { get { return GetValue<Guid>("AttributeId"); } protected set { SetValue("AttributeId", value); } }
+        public Guid? AttributeId { get { return GetValue<Guid>(nameof(AttributeId)); } protected set { SetValue(nameof(AttributeId), value); } }
 
         /// <inheritdoc/>
-        public Guid? PropertyId { get { return GetValue<Guid>("PropertyId"); } set { SetValue("PropertyId", value); } }
+        public Guid? PropertyId { get { return GetValue<Guid>(nameof(PropertyId)); } set { SetValue(nameof(PropertyId), value); } }
 
         /// <inheritdoc/>
-        public string? PropertyValue { get { return GetValue("PropertyValue"); } set { SetValue("PropertyValue", value); } }
+        public string? PropertyValue { get { return GetValue(nameof(PropertyValue)); } set { SetValue(nameof(PropertyValue), value); } }
 
         /// <inheritdoc/>
-        public string? DefinitionText { get { return GetValue("DefinitionText"); } set { SetValue("DefinitionText", value); } }
+        public string? DefinitionText { get { return GetValue(nameof(DefinitionText)); } set { SetValue(nameof(DefinitionText), value); } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.ModelAttributeProperty;
@@ -61,10 +61,10 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("AttributeId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("PropertyId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("PropertyValue", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DefinitionText", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(PropertyId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(PropertyValue), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DefinitionText), typeof(string)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

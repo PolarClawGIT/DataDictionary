@@ -1,68 +1,113 @@
-﻿using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
     /// <summary>
-    /// Interface for the methods needed to support NamedScope
+    /// Interface for the NamedScope Value.
     /// </summary>
-    public interface INamedScopeValue : IScopeKey, INameScopeGetKey
+    public interface INamedScopeValue : IScopeKey, IOnTitleChanged
     {
         /// <summary>
-        /// Get the Title for the NamedScope
+        /// The Index for the NamedScopeValue.
         /// </summary>
-        /// <returns></returns>
-        String GetTitle();
+        NamedScopeIndex Index { get; }
 
         /// <summary>
-        /// Get the Path (NameSpace) for the NamedScope
+        /// The NamedPath for the Value
         /// </summary>
-        /// <returns></returns>
-        NamedScopePath GetPath();
+        NamedScopePath NamedPath { get; }
 
         /// <summary>
-        /// Get the Position for the NamedScope. Default is zero.
+        /// The Title for the Value
         /// </summary>
-        /// <returns></returns>
-        Int32 GetPosition() { return 0; }
+        String Title { get; }
 
         /// <summary>
-        /// Event to fire when the Title or Path changes
+        /// The Position to place the value. Overrides order by Title.
         /// </summary>
-        event EventHandler? OnTitleChanged;
+        Int32 OrdinalPosition { get; }
     }
 
     /// <summary>
-    /// Interface for Named
+    /// Value for a NamedScope
     /// </summary>
-    interface IGetNamedScopes
+    public abstract class NamedScopeValue : INamedScopeValue
     {
+        /// <inheritdoc/>
+        public NamedScopeIndex Index { get; } = new NamedScopeIndex(Guid.NewGuid());
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get; init; } = ScopeType.Null;
+
+        /// <inheritdoc/>
+        public virtual NamedScopePath NamedPath { get; protected set; } = new NamedScopePath();
+
+        /// <inheritdoc/>
+        public virtual String Title { get; protected set; } = String.Empty;
+
+        /// <inheritdoc/>
+        public virtual Int32 OrdinalPosition { get; init; } = 0;
+
+        /// <inheritdoc/>
+        public event EventHandler? OnTitleChanged;
+
         /// <summary>
-        /// Returns a list of NamedScopes
+        /// Trigger the OnTitleChanged event.
         /// </summary>
-        /// <returns></returns>
-        IEnumerable<NamedScopePair> GetNamedScopes();
+        public virtual void TitleChanged()
+        {
+            if (OnTitleChanged is EventHandler handler)
+            { handler(this, EventArgs.Empty); }
+        }
     }
 
     /// <summary>
-    /// Class to build NamedScope Pairs (Parent Key and Value).
+    /// Internal structure of a NamedScopeValue
     /// </summary>
-    /// <remarks>This is just for constructing a list of parameters needed to load the NamedScopeData.</remarks>
-    struct NamedScopePair
+    class NamedScopeValueCore : NamedScopeValue
     {
-        public NamedScopeKey? ParentKey { get; } = null;
-        public INamedScopeValue Value { get; }
+        /// <summary>
+        /// Get the current Path of the Value
+        /// </summary>
+        /// <remarks>
+        /// Allows for overriding how NamedPath is created.
+        /// NamedPath is updated when GetPath is set or on TitleChanged is called.
+        /// </remarks>
+        public Func<NamedScopePath> GetPath
+        { 
+            get { return getPath; }
+            init { getPath = value; NamedPath = value(); }
+        }
+        Func<NamedScopePath> getPath = () => new NamedScopePath();
 
-        public NamedScopePair(INamedScopeValue value)
-        { this.Value = value; }
+        /// <summary>
+        /// The Data used to create the NamedScope Value
+        /// </summary>
+        public INamedScopeSourceValue Source { get; }
 
-        public NamedScopePair(NamedScopeKey parent, INamedScopeValue value) : this(value)
-        { this.ParentKey = parent; }
+        /// <summary>
+        /// Constructor for NamedScope Value.
+        /// </summary>
+        /// <param name="source"></param>
+        public NamedScopeValueCore(INamedScopeSourceValue source) : base()
+        {
+            Scope = source.Scope;
+            Source = source;
+            Title = source.Title;
+            GetPath = source.GetPath;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>
+        /// Title and NamedPath are updated.
+        /// May be called by Source of the Value.
+        /// </remarks>
+        public override void TitleChanged()
+        {
+            base.TitleChanged();
+
+            Title = Source.Title;
+            NamedPath = GetPath();
+        }
     }
 }

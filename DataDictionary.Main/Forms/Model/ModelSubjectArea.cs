@@ -4,9 +4,8 @@ using DataDictionary.Main.Controls;
 using System.Data;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.Main.Forms.Domain
+namespace DataDictionary.Main.Forms.Model
 {
-    [Obsolete("Possibly removed")]
     partial class ModelSubjectArea : ApplicationData, IApplicationDataForm
     {
         public Boolean IsOpenItem(object? item)
@@ -15,20 +14,20 @@ namespace DataDictionary.Main.Forms.Domain
         public ModelSubjectArea() : base()
         {
             InitializeComponent();
-            toolStrip.TransferItems(subjectAreaToolStrip,0);
+            toolStrip.TransferItems(subjectAreaToolStrip, 0);
         }
 
         public ModelSubjectArea(ISubjectAreaValue? subjectAreaItem) : this()
         {
-            if(subjectAreaItem is null)
+            if (subjectAreaItem is null)
             {
                 subjectAreaItem = new SubjectAreaValue();
-                BusinessData.ModelSubjectAreas.Add(subjectAreaItem);
+                BusinessData.SubjectAreas.Add(subjectAreaItem);
             }
 
             SubjectAreaIndex key = new SubjectAreaIndex(subjectAreaItem);
 
-            bindingSubject.DataSource = new BindingView<SubjectAreaValue>(BusinessData.ModelSubjectAreas, w => key.Equals(w));
+            bindingSubject.DataSource = new BindingView<SubjectAreaValue>(BusinessData.SubjectAreas, w => key.Equals(w));
             bindingSubject.Position = 0;
 
             Setup(bindingSubject);
@@ -67,15 +66,18 @@ namespace DataDictionary.Main.Forms.Domain
                 this.IsLocked(true);
                 SubjectAreaIndex key = new SubjectAreaIndex(current);
 
-                NamedScopeKey nameKey = new NamedScopeKey(current);
-                BusinessData.NamedScope.Remove(nameKey);
-
                 current.Remove();
                 bindingAttribute.Clear();
                 bindingEntity.Clear();
 
                 RowState = current.RowState();
             }
+        }
+
+        private void SubjectAreaNameSpaceData_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(subjectAreaNameSpaceData.Text).ToArray());
+            subjectAreaNameSpaceData.Text = path.MemberFullPath;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
+﻿using DataDictionary.BusinessLayer.Model;
+using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
@@ -12,63 +13,80 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class AttributeValue : DomainAttributeItem, IAttributeValue, INamedScopeValue
+    public class AttributeValue : DomainAttributeItem, IAttributeValue, INamedScopeSourceValue, IScripting<IDomainData>
     {
         /// <inheritdoc cref="DomainAttributeItem()"/>
         public AttributeValue() : base()
-        { PropertyChanged += CatalogValue_PropertyChanged; }
+        { }
 
         /// <inheritdoc/>
-        public virtual NamedScopeKey GetSystemId()
-        { return new NamedScopeKey(AttributeId); }
+        public DataLayerIndex GetIndex()
+        { return new AttributeIndex(this); }
 
         /// <inheritdoc/>
-        public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(Scope); }
+        public String GetTitle()
+        { return AttributeTitle ?? Scope.ToName(); }
 
         /// <inheritdoc/>
-        public virtual String GetTitle()
-        { return AttributeTitle ?? String.Empty; }
+        /// <remarks>Partial Path</remarks>
+        public NamedScopePath GetPath()
+        { return new NamedScopePath(AttributeTitle); }
 
         /// <inheritdoc/>
-        public event EventHandler? OnTitleChanged;
-        private void CatalogValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+        public XElement? GetXElement(IDomainData data, IEnumerable<SchemaElementValue>? options)
         {
-            if (e.PropertyName is nameof(AttributeTitle)
-                && OnTitleChanged is EventHandler handler)
-            { handler(this, EventArgs.Empty); }
-        }
+            XElement? result = null;
 
-        internal XElement? GetXElement(IEnumerable<SchemaElementValue>? options = null)
-        {
-            XElement? result = new XElement(this.Scope.ToName());
-
-            if (options is not null)
+            if (options is not null && options.Count() > 0)
             {
+                AttributeIndex key = new AttributeIndex(this);
+
                 foreach (SchemaElementValue option in options)
                 {
                     Object? value = null;
 
                     switch (option.ColumnName)
                     {
-                        case nameof(this.AttributeId): value = AttributeId.ToString(); break;
-                        case nameof(this.AttributeTitle): value = AttributeTitle; break;
-                        case nameof(this.AttributeDescription): value = AttributeDescription; break;
-                        case nameof(this.IsCompositeType): value = IsCompositeType; break;
-                        case nameof(this.IsDerived): value = IsDerived; break;
-                        case nameof(this.IsIntegral): value = IsIntegral; break;
-                        case nameof(this.IsKey): value = IsKey; break;
-                        case nameof(this.IsMultiValue): value = IsMultiValue; break;
-                        case nameof(this.IsNonKey): value = IsNonKey; break;
-                        case nameof(this.IsNullable): value = IsNullable; break;
-                        case nameof(this.IsSimpleType): value = IsSimpleType; break;
-                        case nameof(this.IsSingleValue): value = IsSingleValue; break;
-                        case nameof(this.IsValued): value = IsValued; break;
+                        case nameof(AttributeId): value = AttributeId.ToString(); break;
+                        case nameof(AttributeTitle): value = AttributeTitle; break;
+                        case nameof(AttributeDescription): value = AttributeDescription; break;
+                        case nameof(IsCompositeType): value = IsCompositeType; break;
+                        case nameof(IsDerived): value = IsDerived; break;
+                        case nameof(IsIntegral): value = IsIntegral; break;
+                        case nameof(IsKey): value = IsKey; break;
+                        case nameof(IsMultiValue): value = IsMultiValue; break;
+                        case nameof(IsNonKey): value = IsNonKey; break;
+                        case nameof(IsNullable): value = IsNullable; break;
+                        case nameof(IsSimpleType): value = IsSimpleType; break;
+                        case nameof(IsSingleValue): value = IsSingleValue; break;
+                        case nameof(IsValued): value = IsValued; break;
                         default:
                             break;
                     }
 
-                    result.Add(option.GetXElement(value));
+                    if (value is not null)
+                    {
+                        if (result is null) { result = new XElement(this.Scope.ToName()); }
+                        result.Add(option.GetXElement(value));
+                    }
+                }
+
+                foreach (AttributePropertyValue item in data.DomainModel.Attributes.Properties.Where(w => key.Equals(w)))
+                {
+                    if(item.GetXElement(data.DomainModel.ModelProperty, options) is XElement value)
+                    {
+                        if (result is null) { result = new XElement(this.Scope.ToName()); }
+                        result.Add(value);
+                    }
+                }
+
+                foreach (AttributeAliasValue item in data.DomainModel.Attributes.Aliases.Where(w => key.Equals(w)))
+                {
+                    if (item.GetXElement(this, options) is XElement value)
+                    {
+                        if (result is null) { result = new XElement(this.Scope.ToName()); }
+                        result.Add(value);
+                    }
                 }
             }
 
@@ -103,5 +121,6 @@ namespace DataDictionary.BusinessLayer.Domain
 
             return result;
         }
+
     }
 }

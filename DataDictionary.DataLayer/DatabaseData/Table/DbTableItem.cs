@@ -22,26 +22,26 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     public class DbTableItem : BindingTableRow, IDbTableItem, INotifyPropertyChanged, IDbExtendedProperty, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
 
         /// <inheritdoc/>
-        public Guid? TableId { get { return GetValue<Guid>("TableId"); } }
+        public Guid? TableId { get { return GetValue<Guid>(nameof(TableId)); } }
 
         /// <inheritdoc/>
-        public String? DatabaseName { get { return GetValue("DatabaseName"); } }
+        public String? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
 
         /// <inheritdoc/>
-        public String? SchemaName { get { return GetValue("SchemaName"); } }
+        public String? SchemaName { get { return GetValue(nameof(SchemaName)); } }
 
         /// <inheritdoc/>
-        public String? TableName { get { return GetValue("TableName"); } }
+        public String? TableName { get { return GetValue(nameof(TableName)); } }
 
         /// <inheritdoc/>
         public Boolean IsSystem { get { return TableName is "__RefactorLog" or "sysdiagrams"; } }
 
         /// <inheritdoc/>
         public DbTableType TableType
-        { get { return DbTableTypeKey.Parse(GetValue("TableType") ?? String.Empty).TableType; } }
+        { get { return DbTableTypeKey.Parse(GetValue(nameof(TableType)) ?? String.Empty).TableType; } }
 
         /// <inheritdoc/>
         public ScopeType Scope
@@ -61,12 +61,12 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("TableId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("TableName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("TableType", typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(TableId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(TableName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(TableType), typeof(string)){ AllowDBNull = false},
         };
 
         /// <summary>

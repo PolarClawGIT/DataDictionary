@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,8 @@ namespace DataDictionary.BusinessLayer.Model
     }
 
     class ModelData : ModelCollection<ModelValue>, IModelData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile, IGetNamedScopes
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile,
+        INamedScopeSource
     {
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
@@ -56,7 +58,24 @@ namespace DataDictionary.BusinessLayer.Model
         /// <inheritdoc/>
         /// <remarks>Model</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
-        { return this.Select(s => new NamedScopePair(s)); }
+        {
+            return this.Select(s => new NamedScopePair(GetValue(s)));
+
+            NamedScopeValueCore GetValue(ModelValue source)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                source.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is
+                        nameof(source.ModelTitle))
+                    { result.TitleChanged(); }
+                }
+            }
+        }
 
     }
 }

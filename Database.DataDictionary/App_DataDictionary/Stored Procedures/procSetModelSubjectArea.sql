@@ -24,48 +24,44 @@ Begin Try
 		[SubjectAreaId]          UniqueIdentifier NOT NULL,
 		[SubjectAreaTitle]       [App_DataDictionary].[typeTitle] Not NULL,
 		[SubjectAreaDescription] [App_DataDictionary].[typeDescription] NULL,
-		[ParentNameSpace]        [App_DataDictionary].[typeNameSpacePath] Null,
-		[SubjectAreaNameSpace]   [App_DataDictionary].[typeNameSpacePath] Null,
-		[SubjectAreaMember]		 [App_DataDictionary].[typeNameSpaceMember] Not Null,
+		[NameSpaceId]            UniqueIdentifier NULL,
 		Primary Key ([SubjectAreaId]))
+
+	Declare @NameSpace [App_DataDictionary].[typeNameSpace]
 
 	Declare @Delete Table (
 		[SubjectAreaId] UniqueIdentifier Not Null,
 		Primary Key ([SubjectAreaId]))
 
-	;With [Existing] As (
-		Select	S.[SubjectAreaId],
-				X.[SubjectAreaNameSpace]
-		From	[App_DataDictionary].[ModelSubjectArea] S
-				Cross Apply [App_DataDictionary].[funcGetSubjectAreaName](S.[SubjectAreaId]) X),
-	[Data] As (
-		Select	N.[SubjectAreaId],
-				IIF(X.[IsBase] = 1,NullIf(Trim(s.[SubjectAreaTitle]), ''),Null) As [SubjectAreaTitle],
-				NullIf(Trim(S.[SubjectAreaDescription]), '') As [SubjectAreaDescription],
-				X.[ParentNameSpace] As [ParentNameSpace],
-				X.[NameSpace] As [SubjectAreaNameSpace],
-				X.[NameSpaceMember] As [SubjectAreaMember],
-				Row_Number() Over (
-					Partition By X.[NameSpaceMember]
-					Order By IIF(X.[IsBase] = 1,0,1),
-							X.[NameSpaceMember])
-					As [RankIndex]
-		From	@Data S
-				Cross apply [App_DataDictionary].[funcSplitNameSpace](S.[SubjectAreaNameSpace]) X
-				Left Join [Existing] T
-				On	X.[NameSpace] = T.[SubjectAreaNameSpace]
-				Cross Apply (Select	Coalesce(T.[SubjectAreaId], S.[SubjectAreaId], @SubjectAreaId, NewId()) As [SubjectAreaId]) N
-		Where	@SubjectAreaId is Null or
-				N.[SubjectAreaId] = @SubjectAreaId)
+	Insert Into @NameSpace
+	Select	Null As [NameSpaceId],
+			[SubjectAreaNameSpace] As [NameSpace]
+	From	@Data
+	Group By [SubjectAreaNameSpace]
+
+	-- Need to create & assign the NameSpaceID's
+	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @NameSpace
+
+	;With [NameSpace] As (
+		Select	M.[NameSpaceId],
+				N.[NameSpace]
+		From	[App_DataDictionary].[ModelNameSpace] M
+				Cross Apply [App_DataDictionary].[funcGetNameSpace](M.[NameSpaceId]) N
+		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
-	Select	[SubjectAreaId],
-			IsNull([SubjectAreaTitle], [SubjectAreaMember]) As [SubjectAreaTitle],
-			[SubjectAreaDescription],
-			[ParentNameSpace],
-			[SubjectAreaNameSpace],
-			[SubjectAreaMember]
-	From	[Data]
-	Where	[RankIndex] = 1
+	Select	S.[SubjectAreaId],
+			D.[SubjectAreaTitle],
+			D.[SubjectAreaDescription],
+			N.[NameSpaceId]
+	From	@Data D
+			Outer Apply [App_DataDictionary].[funcSplitNameSpace](D.[SubjectAreaNameSpace]) C
+			Left Join [NameSpace] N
+			On	C.[NameSpace] = N.[NameSpace] And
+				C.[IsBase] = 1
+			Left Join [App_DataDictionary].[ModelSubjectArea] T
+			On	T.[ModelId] = @ModelId And
+				N.[NameSpaceId] = T.[NameSpaceId]
+			Cross Apply (Select	Coalesce(T.[SubjectAreaId], D.[SubjectAreaId], @SubjectAreaId, NewId()) As [SubjectAreaId]) S
 
 	Insert Into @Delete
 	Select	T.[SubjectAreaId]
@@ -104,13 +100,6 @@ Begin Try
 				From	@Delete)
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelRelationship]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	--Update [App_DataDictionary].[ModelSubjectArea]
-	--Set		[SubjectAreaParentId] = null
-	--Where	[SubjectAreaParentId] In (
-	--			Select	[SubjectAreaId]
-	--			From	@Delete)
-	--Print FormatMessage ('Update [App_DataDictionary].[ModelSubjectArea] (Parent): %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
 	Delete From [App_DataDictionary].[ModelSubjectArea]
 	Where	[SubjectAreaId] In (
 				Select	[SubjectAreaId]
@@ -118,47 +107,38 @@ Begin Try
 	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
-		Select	S.[SubjectAreaId],
-				P.[SubjectAreaId] As [SubjectAreaParentId],
-				S.[SubjectAreaMember],
-				S.[SubjectAreaTitle],
-				S.[SubjectAreaDescription]
+		Select	[SubjectAreaId],
+				[SubjectAreaTitle],
+				[SubjectAreaDescription],
+				[NameSpaceId]
 		From	@Values S
-				Left Join @Values P
-				On	S.[ParentNameSpace] = P.[SubjectAreaNameSpace]
 		Except
 		Select	[SubjectAreaId],
-				[SubjectAreaParentId],
-				[SubjectAreaMember],
 				[SubjectAreaTitle],
-				[SubjectAreaDescription]
+				[SubjectAreaDescription],
+				[NameSpaceId]
 		From	[App_DataDictionary].[ModelSubjectArea])
 	Update [App_DataDictionary].[ModelSubjectArea]
-	Set		[SubjectAreaParentId] = S.[SubjectAreaParentId],
-			[SubjectAreaMember] = S.[SubjectAreaMember],
-			[SubjectAreaTitle] = S.[SubjectAreaTitle],
-			[SubjectAreaDescription] = S.[SubjectAreaDescription]
+	Set		[SubjectAreaTitle] = S.[SubjectAreaTitle],
+			[SubjectAreaDescription] = S.[SubjectAreaDescription],
+			[NameSpaceId] = S.[NameSpaceId]
 	From	[Delta] S
 			Inner Join [App_DataDictionary].[ModelSubjectArea] T
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]
 	Print FormatMessage ('Update [App_DataDictionary].[ModelSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [App_DataDictionary].[ModelSubjectArea] (
-			[ModelId],
 			[SubjectAreaId],
-			[SubjectAreaParentId],
-			[SubjectAreaMember],
 			[SubjectAreaTitle],
-			[SubjectAreaDescription])
-	Select	@ModelId As [ModelId],
-			S.[SubjectAreaId],
-			P.[SubjectAreaId] As [SubjectAreaParentId],
-			S.[SubjectAreaMember],
+			[SubjectAreaDescription],
+			[ModelId],
+			[NameSpaceId])
+	Select	S.[SubjectAreaId],
 			S.[SubjectAreaTitle],
-			S.[SubjectAreaDescription]
+			S.[SubjectAreaDescription],
+			@ModelId As [ModelId],
+			S.[NameSpaceId]
 	From	@Values S
-			Left Join @Values P
-				On	S.[ParentNameSpace] = P.[SubjectAreaNameSpace]
 			Left Join [App_DataDictionary].[ModelSubjectArea] T
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]
 	Where	T.[SubjectAreaId] is Null
@@ -204,3 +184,4 @@ Begin Catch
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
 GO
+

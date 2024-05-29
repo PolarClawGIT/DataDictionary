@@ -1,88 +1,103 @@
-﻿using DataDictionary.DataLayer.DomainData;
+﻿using DataDictionary.BusinessLayer.Application;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
-using DataDictionary.DataLayer.ApplicationData.Property;
+using System.ComponentModel;
+using IPropertyValue = DataDictionary.BusinessLayer.Domain.IPropertyValue;
 
 namespace DataDictionary.Main.Forms.Domain.Controls
 {
     partial class DomainProperty : UserControl
     {
-        Func<IDomainProperty?> GetCurrent = () => { return null; };
+        //Func<IPropertyValue?> GetCurrent = () => { return null; };
+        public String ApplyText { get { return applyCommand.Text; } set { applyCommand.Text = value; } }
+        public Image? ApplyImage { get { return applyCommand.Image; } set { applyCommand.Image = value; } }
+
+        [Browsable(false)]
+        public Guid PropertyId
+        {
+            get
+            {
+                if (propertyTypeData.SelectedValue is Guid value)
+                { return value; }
+                else { return Guid.Empty; }
+            }
+            set { propertyTypeData.SelectedValue = value; }
+        }
+
+        [Browsable(false)]
+        public String PropertyValue
+        {
+            get { return propertyValueData.Text; }
+            set { propertyValueData.Text = value; }
+        }
+
+        [Browsable(false)]
+        public String DefinitionText
+        {
+            get { return propertyDefinitionData.Rtf ?? propertyDefinitionData.Text; }
+            set { propertyDefinitionData.Rtf = value; }
+        }
+        public Boolean ReadOnly
+        {
+            get { return !propertyLayout.Enabled; }
+            set { propertyLayout.Enabled = !value; }
+        }
 
         public DomainProperty()
         {
             InitializeComponent();
-        }
-
-        /// <summary>
-        /// Performs the Bind of the Data fields.
-        /// </summary>
-        /// <remarks>
-        /// UserControl.Load event is fired at DESIGN time.
-        /// This causes issues with Data Binding.
-        /// Call this method to bind the data
-        /// </remarks>
-        public void BindData(BindingSource propertyBinding)
-        {
             PropertyNameMember.Load(propertyTypeData);
-            IDomainProperty nameOfValues;
-            GetCurrent = () => { return propertyBinding.Current as IDomainProperty; };
-
-            propertyTypeData.DataBindings.Add(new Binding(nameof(propertyTypeData.SelectedValue), propertyBinding, nameof(nameOfValues.PropertyId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
-            propertyValueData.DataBindings.Add(new Binding(nameof(propertyValueData.Text), propertyBinding, nameof(nameOfValues.PropertyValue)));
-            propertyDefinitionData.DataBindings.Add(new Binding(nameof(propertyDefinitionData.Rtf), propertyBinding, nameof(nameOfValues.DefinitionText)));
         }
 
         public void RefreshControls()
         {
             if (propertyTypeData.SelectedItem is PropertyNameMember selected
-                && GetCurrent() is IDomainProperty currentRow)
+                && new PropertyIndex(selected) is PropertyIndex key
+                && BusinessData.ApplicationData.Properties.FirstOrDefault(w => key.Equals(w)) is PropertyValue property)
             {
-                if (BusinessData.ApplicationData.Properties.FirstOrDefault(w => w.PropertyId == selected.PropertyId) is PropertyItem property)
+                // Setup the Choice check-boxes
+                List<String> selectedChoices = new List<String>();
+                if (!String.IsNullOrWhiteSpace(propertyValueData.Text))
+                { selectedChoices.AddRange(propertyValueData.Text.Split(",")); }
+
+                foreach (PropertyValue.ChoiceItem choice in property.Choices)
                 {
-                    // Cleanup not performed by Binding
-                    propertyChoiceData.Items.Clear();
-                    propertyValueData.Text = String.Empty;
-
-                    // Setup the Choice check-boxes
-                    List<String> selectedChoices = new List<String>();
-                    if (currentRow.PropertyValue is not null)
-                    { selectedChoices.AddRange(currentRow.PropertyValue.Split(",")); }
-
-                    foreach (PropertyItem.ChoiceItem choice in property.Choices)
-                    {
-                        String newItem = choice.Choice;
-                        propertyChoiceData.Items.Add(newItem);
-                        Int32 index = propertyChoiceData.Items.IndexOf(newItem);
-                        Boolean isChecked = selectedChoices.Contains(newItem);
-                        propertyChoiceData.SetItemChecked(index, isChecked);
-                    }
-
-                    // Enabled or Disable controls based on select item
-                    propertyTypeData.Enabled = true;
-                    propertyChoiceData.Enabled = (property.IsChoice == true);
-                    propertyValueData.Enabled = (property.IsExtendedProperty == true || property.IsFrameworkSummary == true);
-                    propertyDefinitionData.Enabled = (property.IsDefinition == true);
+                    String newItem = choice.Choice;
+                    propertyChoiceData.Items.Add(newItem);
+                    Int32 index = propertyChoiceData.Items.IndexOf(newItem);
+                    Boolean isChecked = selectedChoices.Contains(newItem);
+                    propertyChoiceData.SetItemChecked(index, isChecked);
                 }
-                else
-                {
-                    propertyTypeData.Enabled = true;
-                    propertyChoiceData.Enabled = false;
-                    propertyValueData.Enabled = false;
-                    propertyDefinitionData.Enabled = false;
-                }
+
+                // Enabled or Disable controls based on select item
+                propertyTypeData.Enabled = true;
+                propertyValueData.Enabled = (property.IsExtendedProperty == true || property.IsFrameworkSummary == true);
+                propertyChoiceData.Enabled = (property.IsChoice == true);
+                propertyDefinitionData.Enabled = (property.IsDefinition == true);
+                applyCommand.Enabled = true;
+
+                if (propertyValueData.Enabled) { propertyTabs.SelectedTab = propertyValueTab; }
+                else if (propertyChoiceData.Enabled) { propertyTabs.SelectedTab = propertyChoiceTab; }
+                else if (propertyDefinitionData.Enabled) { propertyTabs.SelectedTab = propertyDefinitionTab; }
             }
             else
             {
-                propertyChoiceData.Items.Clear();
-                propertyTypeData.Enabled = false;
-                propertyChoiceData.Enabled = false;
+                propertyTypeData.Enabled = true;
                 propertyValueData.Enabled = false;
+                propertyChoiceData.Enabled = false;
                 propertyDefinitionData.Enabled = false;
+                applyCommand.Enabled = false;
             }
         }
 
         private void propertyTypeData_SelectedIndexChanged(object sender, EventArgs e)
-        { RefreshControls(); }
+        {
+            // Cleanup not performed by Binding
+            propertyChoiceData.Items.Clear();
+            propertyValueData.Text = String.Empty;
+            propertyDefinitionData.Text = String.Empty;
+
+            RefreshControls();
+        }
 
         private void PropertyChoiceData_ItemCheck(object sender, ItemCheckEventArgs e)
         {
@@ -105,8 +120,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
                 { values.Remove(deletValue); }
             }
 
-            if (GetCurrent() is IDomainProperty current)
-            { current.PropertyValue = String.Join(", ", values); }
+            propertyValueData.Text = String.Join(", ", values);
         }
 
         private void PropertyChoiceData_EnabledChanged(object sender, EventArgs e)
@@ -127,16 +141,22 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             Int32 lastSpace = value.Substring(0, maxCutOff).LastIndexOf(" ");
 
             if (firstBreak > 0) { value = value.Substring(0, firstBreak); }
-            else if (lastReturn > 0) { value = value.Substring(0, lastReturn); }
-            else if (lastSpace > 0) { value = value.Substring(0, lastSpace); }
+            else if (lastReturn > 0 && value.Length > maxCutOff) { value = value.Substring(0, lastReturn); }
+            else if (lastSpace > 0 && value.Length > maxCutOff) { value = value.Substring(0, lastSpace); }
             else { value = value.Substring(0, maxCutOff); }
 
             value = value.Replace(Environment.NewLine, " ");
             value = value.Replace("\t", " ");
             value = value.Replace("\n", " ");
 
-            if (GetCurrent() is IDomainProperty current)
-            { current.PropertyValue = value.Trim(); }
+            propertyValueData.Text = value.Trim();
+        }
+
+        public event EventHandler? OnApply;
+        private void ApplyCommand_Click(object sender, EventArgs e)
+        {
+            if (OnApply is EventHandler handler)
+            { handler(this, EventArgs.Empty); }
         }
     }
 }

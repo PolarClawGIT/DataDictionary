@@ -4,6 +4,7 @@ using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.ModelData;
+using System.ComponentModel;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Database
@@ -17,7 +18,7 @@ namespace DataDictionary.BusinessLayer.Database
     class DomainData : DbDomainCollection<DomainValue>, IDomainData,
         ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IDatabaseModelItem, IGetNamedScopes
+        IDatabaseModelItem, INamedScopeSource
     {
         /// <inheritdoc/>
         public required IDatabaseModel Database { get; init; }
@@ -51,11 +52,27 @@ namespace DataDictionary.BusinessLayer.Database
             {
                 DbSchemaKeyName nameKey = new DbSchemaKeyName(item);
                 if (Database.DbSchemta.FirstOrDefault(w => nameKey.Equals(w)) is SchemaValue parent)
-                { result.Add(new NamedScopePair(parent.GetSystemId(), item)); }
+                { result.Add(new NamedScopePair(parent.GetIndex(), GetValue(item))); }
             }
 
             return result;
-        }
 
+            NamedScopeValueCore GetValue(DomainValue source)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                source.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is
+                        nameof(source.DatabaseName) or
+                        nameof(source.SchemaName) or 
+                        nameof(source.DomainName))
+                    { result.TitleChanged(); }
+                }
+            }
+        }
     }
 }

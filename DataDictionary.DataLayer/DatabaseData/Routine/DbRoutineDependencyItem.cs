@@ -65,75 +65,75 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     public class DbRoutineDependencyItem : BindingTableRow, IDbRoutineDependencyItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? CatalogId { get { return GetValue<Guid>("CatalogId"); } }
+        public Guid? CatalogId { get { return GetValue<Guid>(nameof(CatalogId)); } }
 
         /// <inheritdoc/>
-        public Guid? DependencyId { get { return GetValue<Guid>("DependencyId"); } }
+        public Guid? DependencyId { get { return GetValue<Guid>(nameof(DependencyId)); } }
 
         /// <inheritdoc/>
-        public string? DatabaseName { get { return GetValue("DatabaseName"); } }
+        public string? DatabaseName { get { return GetValue(nameof(DatabaseName)); } }
 
         /// <inheritdoc/>
-        public string? SchemaName { get { return GetValue("SchemaName"); } }
+        public string? SchemaName { get { return GetValue(nameof(SchemaName)); } }
 
         /// <inheritdoc/>
-        public string? RoutineName { get { return GetValue("RoutineName"); } }
+        public string? RoutineName { get { return GetValue(nameof(RoutineName)); } }
 
         /// <inheritdoc/>
-        public string? ReferenceSchemaName { get { return GetValue("ReferenceSchemaName"); } }
+        public string? ReferenceSchemaName { get { return GetValue(nameof(ReferenceSchemaName)); } }
 
         /// <inheritdoc/>
-        public string? ReferenceObjectName { get { return GetValue("ReferenceObjectName"); } }
+        public string? ReferenceObjectName { get { return GetValue(nameof(ReferenceObjectName)); } }
 
         /// <inheritdoc/>
-        public string? ReferenceObjectType { get { return GetValue("ReferenceObjectType"); } }
+        public string? ReferenceObjectType { get { return GetValue(nameof(ReferenceObjectType)); } }
 
         /// <inheritdoc/>
-        public string? ReferenceColumnName { get { return GetValue("ReferenceColumnName"); } }
+        public string? ReferenceColumnName { get { return GetValue(nameof(ReferenceColumnName)); } }
 
         /// <inheritdoc/>
-        public bool? IsCallerDependent { get { return GetValue<bool>("IsCallerDependent", BindingItemParsers.BooleanTryParse); } }
+        public bool? IsCallerDependent { get { return GetValue<bool>(nameof(IsCallerDependent), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
-        public bool? IsAmbiguous { get { return GetValue<bool>("IsAmbiguous", BindingItemParsers.BooleanTryParse); } }
+        public bool? IsAmbiguous { get { return GetValue<bool>(nameof(IsAmbiguous), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
-        public bool? IsSelected { get { return GetValue<bool>("IsSelected", BindingItemParsers.BooleanTryParse); } }
+        public bool? IsSelected { get { return GetValue<bool>(nameof(IsSelected), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
-        public bool? IsUpdated { get { return GetValue<bool>("IsUpdated", BindingItemParsers.BooleanTryParse); } }
+        public bool? IsUpdated { get { return GetValue<bool>(nameof(IsUpdated), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
-        public bool? IsSelectAll { get { return GetValue<bool>("IsSelectAll", BindingItemParsers.BooleanTryParse); } }
+        public bool? IsSelectAll { get { return GetValue<bool>(nameof(IsSelectAll), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
-        public bool? IsAllColumnsFound { get { return GetValue<bool>("IsAllColumnsFound", BindingItemParsers.BooleanTryParse); } }
+        public bool? IsAllColumnsFound { get { return GetValue<bool>(nameof(IsAllColumnsFound), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
-        public bool? IsInsertAll { get { return GetValue<bool>("IsInsertAll", BindingItemParsers.BooleanTryParse); } }
+        public bool? IsInsertAll { get { return GetValue<bool>(nameof(IsInsertAll), BindingItemParsers.BooleanTryParse); } }
 
         /// <inheritdoc/>
-        public bool? IsIncomplete { get { return GetValue<bool>("IsIncomplete", BindingItemParsers.BooleanTryParse); } }
+        public bool? IsIncomplete { get { return GetValue<bool>(nameof(IsIncomplete), BindingItemParsers.BooleanTryParse); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("CatalogId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DependencyId", typeof(string)){ AllowDBNull = true},
-            new DataColumn("DatabaseName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("SchemaName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("RoutineName", typeof(string)){ AllowDBNull = false},
-            new DataColumn("ReferenceSchemaName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ReferenceObjectName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ReferenceObjectType", typeof(string)){ AllowDBNull = true},
-            new DataColumn("ReferenceColumnName", typeof(string)){ AllowDBNull = true},
-            new DataColumn("IsCallerDependent", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsAmbiguous", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsSelected", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsUpdated", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsSelectAll", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsAllColumnsFound", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsInsertAll", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("IsIncomplete", typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(CatalogId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DependencyId), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(DatabaseName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(SchemaName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(RoutineName), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(ReferenceSchemaName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(ReferenceObjectName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(ReferenceObjectType), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(ReferenceColumnName), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(IsCallerDependent), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsAmbiguous), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsSelected), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsUpdated), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsSelectAll), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsAllColumnsFound), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsInsertAll), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(IsIncomplete), typeof(bool)){ AllowDBNull = true},
         };
 
         /// <summary>

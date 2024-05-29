@@ -35,22 +35,22 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// <inheritdoc/>
         public Guid? EntityId
         {
-            get { return GetValue<Guid>("EntityId"); }
-            protected set { SetValue("EntityId", value); }
+            get { return GetValue<Guid>(nameof(EntityId)); }
+            protected set { SetValue(nameof(EntityId), value); }
         }
 
         /// <inheritdoc/>
-        public string? EntityTitle
+        public String? EntityTitle
         {
-            get { return GetValue("EntityTitle"); }
-            set { SetValue("EntityTitle", value); }
+            get { return GetValue(nameof(EntityTitle)); }
+            set { SetValue(nameof(EntityTitle), value); }
         }
 
         /// <inheritdoc/>
-        public string? EntityDescription
+        public String? EntityDescription
         {
-            get { return GetValue("EntityDescription"); }
-            set { SetValue("EntityDescription", value); }
+            get { return GetValue(nameof(EntityDescription)); }
+            set { SetValue(nameof(EntityDescription), value); }
         }
 
         /// <inheritdoc/>
@@ -59,15 +59,15 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// <inheritdoc/>
         public Guid? TypeOfEntityId
         {
-            get { return GetValue<Guid>("TypeOfEntityId"); }
-            set { SetValue("TypeOfEntityId", value); }
+            get { return GetValue<Guid>(nameof(TypeOfEntityId)); }
+            set { SetValue(nameof(TypeOfEntityId), value); }
         }
 
         /// <inheritdoc/>
-        public string? TypeOfEntityTitle
+        public String? TypeOfEntityTitle
         {
-            get { return GetValue("TypeOfEntityTitle"); }
-            set { SetValue("TypeOfEntityTitle", value); }
+            get { return GetValue(nameof(TypeOfEntityTitle)); }
+            set { SetValue(nameof(TypeOfEntityTitle), value); }
         }
 
         /// <summary>
@@ -81,11 +81,11 @@ namespace DataDictionary.DataLayer.DomainData.Entity
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("EntityId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("EntityTitle", typeof(string)){ AllowDBNull = false},
-            new DataColumn("EntityDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("TypeOfEntityId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("TypeOfEntityTitle", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(EntityId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(EntityTitle), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(EntityDescription), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(TypeOfEntityId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(TypeOfEntityTitle), typeof(String)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>
@@ -104,7 +104,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         #endregion
 
         /// <inheritdoc/>
-        public override string ToString()
+        public override String ToString()
         { if (EntityTitle is not null) { return EntityTitle; } else { return string.Empty; } }
     }
 }

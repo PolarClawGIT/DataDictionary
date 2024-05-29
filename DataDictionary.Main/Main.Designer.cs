@@ -117,6 +117,7 @@
             manageScriptingCommand = new ToolStripSplitButton();
             scriptingContextMenu = new ContextMenuStrip(components);
             schemaManagerCommand = new ToolStripMenuItem();
+            selectionPathCommand = new ToolStripMenuItem();
             transformManagerCommand = new ToolStripMenuItem();
             toolStripSeparator7 = new ToolStripSeparator();
             refreshCommand = new ToolStripButton();
@@ -795,27 +796,36 @@
             manageScriptingCommand.Name = "manageScriptingCommand";
             manageScriptingCommand.Size = new Size(32, 22);
             manageScriptingCommand.Text = "Scripting manager";
+            manageScriptingCommand.ButtonClick += manageScriptingCommand_ButtonClick;
             // 
             // scriptingContextMenu
             // 
-            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { schemaManagerCommand, transformManagerCommand });
+            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { schemaManagerCommand, selectionPathCommand, transformManagerCommand });
             scriptingContextMenu.Name = "scriptingContextMenu";
             scriptingContextMenu.OwnerItem = manageScriptingCommand;
-            scriptingContextMenu.Size = new Size(163, 48);
+            scriptingContextMenu.Size = new Size(181, 92);
             // 
             // schemaManagerCommand
             // 
             schemaManagerCommand.Image = Properties.Resources.NewXMLSchema;
             schemaManagerCommand.Name = "schemaManagerCommand";
-            schemaManagerCommand.Size = new Size(162, 22);
+            schemaManagerCommand.Size = new Size(180, 22);
             schemaManagerCommand.Text = "Schema (XSD)";
             schemaManagerCommand.Click += schemaManagerCommand_Click;
+            // 
+            // selectionPathCommand
+            // 
+            selectionPathCommand.Image = Properties.Resources.NewXPath;
+            selectionPathCommand.Name = "selectionPathCommand";
+            selectionPathCommand.Size = new Size(180, 22);
+            selectionPathCommand.Text = "Selection (XPath)";
+            selectionPathCommand.Click += selectionPathCommand_Click;
             // 
             // transformManagerCommand
             // 
             transformManagerCommand.Image = Properties.Resources.NewXSLTransform;
             transformManagerCommand.Name = "transformManagerCommand";
-            transformManagerCommand.Size = new Size(162, 22);
+            transformManagerCommand.Size = new Size(180, 22);
             transformManagerCommand.Text = "Transform (XSLT)";
             transformManagerCommand.Click += transformManagerCommand_Click;
             // 
@@ -961,5 +971,6 @@
         private ToolStripMenuItem transformManagerCommand;
         private ToolStripSplitButton newRelationshipCommand;
         private ToolStripSplitButton newProcessCommand;
+        private ToolStripMenuItem selectionPathCommand;
     }
 }

@@ -1,29 +1,22 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DbLayer = DataDictionary.DataLayer.LibraryData;
 using Toolbox.Threading;
+using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.Library
 {
     /// <summary>
     /// Interface representing Library data
     /// </summary>
-    public interface ILibrarySourceData<TValue> : IBindingData<TValue>
-    where TValue : LibrarySourceValue
+    public interface ILibrarySourceData: IBindingData<LibrarySourceValue>
     { }
 
-    class LibrarySourceData<TValue> : DbLayer.Source.LibrarySourceCollection<TValue>, ILibrarySourceData<TValue>,
+    class LibrarySourceData: DbLayer.Source.LibrarySourceCollection<LibrarySourceValue>, ILibrarySourceData,
         ILoadData<DbLayer.Source.ILibrarySourceKey>, ISaveData<DbLayer.Source.ILibrarySourceKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IGetNamedScopes
-        where TValue : LibrarySourceValue, new()
+        INamedScopeSource
     {
         /// <inheritdoc/>
         public required ILibraryModel Library { get; init; }
@@ -51,6 +44,24 @@ namespace DataDictionary.BusinessLayer.Library
         /// <inheritdoc/>
         /// <remarks>Library Source</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
-        { return this.Select(s => new NamedScopePair(s)); }
+        {
+            return this.Select(s => new NamedScopePair(GetValue(s)));
+
+            NamedScopeValueCore GetValue(LibrarySourceValue source)
+            {
+                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                source.PropertyChanged += Source_PropertyChanged;
+
+                return result;
+
+                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+                {
+                    if (e.PropertyName is
+                        nameof(source.LibraryTitle) or
+                        nameof(source.AssemblyName))
+                    { result.TitleChanged(); }
+                }
+            }
+        }
     }
 }

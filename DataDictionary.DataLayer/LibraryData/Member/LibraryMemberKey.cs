@@ -39,6 +39,16 @@ namespace DataDictionary.DataLayer.LibraryData.Member
             else { MemberId = Guid.Empty; }
         }
 
+        /// <summary>
+        /// Constructor for the Library Member Key
+        /// </summary>
+        /// <param name="source"></param>
+        public LibraryMemberKey(ILibraryMemberKeyParent source) : base(source)
+        {
+            if (source.MemberParentId is Guid) { MemberId = source.MemberParentId; }
+            else { MemberId = Guid.Empty; }
+        }
+
         #region IEquatable
         /// <inheritdoc/>
         public bool Equals(ILibraryMemberKey? other)

@@ -1,55 +1,51 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using System;
+﻿// Ignore Spelling: indices
+
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
     /// <summary>
     /// Interface for NamedScopeData
     /// </summary>
-    /// </summary>
     public interface INamedScopeData
     {
         /// <summary>
-        /// Gets the element with the specified key.
+        /// Gets the NamedScopeValue for the specified Index.
         /// </summary>
-        /// <param name="key">The key of the element to get.</param>
-        /// <returns>The element with the specified key.</returns>
-        /// <exception cref="System.ArgumentNullException">key is null</exception> 
-        /// <exception cref="System.Collections.Generic.KeyNotFoundException">The property is retrieved and key is not found.</exception> 
-        INamedScopeValue this[NamedScopeKey key] { get; }
+        /// <param name="index"></param>
+        /// <returns></returns>
+        INamedScopeValue GetValue(NamedScopeIndex index);
+
+        /// <summary>
+        /// Gets the Data for the specified index;
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        INamedScopeSourceValue GetData(NamedScopeIndex index);
 
         /// <inheritdoc cref="ICollection.Count"/>
         Int32 Count { get; }
-
-        /// <inheritdoc cref="IDictionary.Keys"/>
-        IReadOnlyList<NamedScopeKey> Keys { get; }
 
         /// <summary>
         /// Returns the list of Root Keys.
         /// </summary>
         /// <returns></returns>
-        IReadOnlyList<NamedScopeKey> RootKeys();
+        IReadOnlyList<NamedScopeIndex> RootKeys();
 
         /// <summary>
         /// Returns the list of Child Keys for the specified key or an empty list.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        IReadOnlyList<INamedScopeKey> ChildrenKeys(INamedScopeKey key);
+        IReadOnlyList<NamedScopeIndex> ChildrenKeys(NamedScopeIndex key);
 
         /// <summary>
         /// Returns the list of Parent Keys for the specified key or an empty list.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        IReadOnlyList<INamedScopeKey> ParentKeys(INamedScopeKey key);
+        IReadOnlyList<NamedScopeIndex> ParentKeys(NamedScopeIndex key);
 
         /// <summary>
         /// Returns the list of Keys for the specified Path (NameSpace).
@@ -57,40 +53,17 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <param name="key"></param>
         /// <returns></returns>
         /// <remarks>This is scan of all item.</remarks>
-        IReadOnlyList<INamedScopeKey> PathKeys(INamedScopePath key);
+        IReadOnlyList<NamedScopeIndex> PathKeys(INamedScopePath key);
 
         /// <summary>
         /// Returns the list of Values for the given list of keys or an empty list.
         /// </summary>
         /// <param name="keys"></param>
         /// <returns></returns>
-        IReadOnlyList<INamedScopeValue> Values(IEnumerable<INamedScopeKey> keys);
-
-        /// <summary>
-        /// Adds an item to the Collection as a Root node.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <exception cref="System.ArgumentException">
-        /// An element with the same key already exists.
-        /// </exception>
-        void Add(INamedScopeValue value);
-
-        /// <summary>
-        /// Adds an item to the Collection as a Child of the specified Parent.
-        /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="value"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        void Add(NamedScopeKey parent, INamedScopeValue value);
-
-        /// <inheritdoc cref="IList.Clear"/>
-        void Clear();
+        IReadOnlyList<INamedScopeSourceValue> Values(IEnumerable<NamedScopeIndex> keys);
 
         /// <inheritdoc cref="IDictionary{TKey, TValue}.ContainsKey(TKey)"/>
-        Boolean ContainsKey(NamedScopeKey key);
-
-        /// <inheritdoc cref="IDictionary{TKey, TValue}.Remove(TKey)"/>
-        Boolean Remove(NamedScopeKey key);
+        Boolean ContainsKey(NamedScopeIndex key);
     }
 
     /// <summary>
@@ -99,45 +72,50 @@ namespace DataDictionary.BusinessLayer.NamedScope
     class NamedScopeData : INamedScopeData
     {
         // Primary Data
-        SortedDictionary<NamedScopeKey, INamedScopeValue> data = new SortedDictionary<NamedScopeKey, INamedScopeValue>();
+        SortedDictionary<NamedScopeIndex, NamedScopeValueCore> data = new SortedDictionary<NamedScopeIndex, NamedScopeValueCore>();
 
         // Alternate Keys (not sure if Sorted Dictionary or normal Dictionary is better here). Because of the wrapper, it can be changed easy.
-        SortedDictionary<NamedScopeKey, List<NamedScopeKey>> children = new SortedDictionary<NamedScopeKey, List<NamedScopeKey>>();
-        SortedDictionary<NamedScopeKey, List<NamedScopeKey>> parents = new SortedDictionary<NamedScopeKey, List<NamedScopeKey>>();
+        SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> children = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
+        SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> parents = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
+
+        SortedDictionary<DataLayerIndex, List<NamedScopeIndex>> crossWalk = new SortedDictionary<DataLayerIndex, List<NamedScopeIndex>>();
 
         // Root Nodes
-        List<NamedScopeKey> roots = new List<NamedScopeKey>();
+        List<NamedScopeIndex> roots = new List<NamedScopeIndex>();
 
         /// <inheritdoc/>
-        public virtual INamedScopeValue this[NamedScopeKey key]
-        { get { return data[key]; } }
+        public virtual INamedScopeValue GetValue(NamedScopeIndex index)
+        { return data[index]; }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<NamedScopeKey> Keys { get { return data.Keys.ToList().AsReadOnly(); } }
+        public virtual INamedScopeSourceValue GetData(NamedScopeIndex index)
+        {
+            if(!data.ContainsKey(index))
+            { throw new Exception("Not suppose to happen"); }
+            return data[index].Source;
+        }
 
         /// <inheritdoc/>
         public virtual Int32 Count { get { return data.Count; } }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<NamedScopeKey> RootKeys()
+        public virtual IReadOnlyList<NamedScopeIndex> RootKeys()
         { return roots.AsReadOnly(); }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<INamedScopeKey> ChildrenKeys(INamedScopeKey key)
+        public virtual IReadOnlyList<NamedScopeIndex> ChildrenKeys(NamedScopeIndex index)
         {
-            NamedScopeKey target = new NamedScopeKey(key);
-            if (children.ContainsKey(target))
-            { return children[target].AsReadOnly(); }
-            else { return new List<NamedScopeKey>().AsReadOnly(); }
+            if (children.ContainsKey(index))
+            { return children[index].AsReadOnly(); }
+            else { return new List<NamedScopeIndex>().AsReadOnly(); }
         }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<INamedScopeKey> ParentKeys(INamedScopeKey key)
+        public virtual IReadOnlyList<NamedScopeIndex> ParentKeys(NamedScopeIndex index)
         {
-            NamedScopeKey target = new NamedScopeKey(key);
-            if (parents.ContainsKey(target))
-            { return parents[target].AsReadOnly(); }
-            else { return new List<NamedScopeKey>().AsReadOnly(); }
+            if (parents.ContainsKey(index))
+            { return parents[index].AsReadOnly(); }
+            else { return new List<NamedScopeIndex>().AsReadOnly(); }
         }
 
         /// <summary>
@@ -146,9 +124,9 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <returns></returns>
         /// <remarks>This is a deep scan and is primary intended as a debugging tool.</remarks>
-        public virtual IReadOnlyList<INamedScopeKey> OrphanedKeys()
+        public virtual IReadOnlyList<NamedScopeIndex> OrphanedKeys()
         {
-            List<NamedScopeKey> result = children.SelectMany(s => s.Value).
+            List<NamedScopeIndex> result = children.SelectMany(s => s.Value).
                 Union(children.Select(s => s.Key)).
                 Union(parents.SelectMany(s => s.Value)).
                 Union(parents.Select(s => s.Key)).
@@ -160,71 +138,92 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<INamedScopeKey> PathKeys(INamedScopePath key)
+        public virtual IReadOnlyList<NamedScopeIndex> PathKeys(INamedScopePath key)
         {
             NamedScopePath pathKey = new NamedScopePath(key);
-            return data.Where(w => pathKey.Equals(w.Value.GetPath())).Select(s => s.Key).ToList();
+            return data.Where(w => pathKey.Equals(w.Value.NamedPath)).Select(s => s.Key).ToList();
         }
 
         /// <inheritdoc/>
-        public virtual IReadOnlyList<INamedScopeValue> Values(IEnumerable<INamedScopeKey> keys)
+        public virtual IReadOnlyList<INamedScopeSourceValue> Values(IEnumerable<NamedScopeIndex> indices)
         {
-            List<INamedScopeValue> result = new List<INamedScopeValue>();
+            List<INamedScopeSourceValue> result = new List<INamedScopeSourceValue>();
 
-            foreach (INamedScopeKey item in keys)
-            {
-                NamedScopeKey target = new NamedScopeKey(item);
-                if (data.ContainsKey(target)) { result.Add(data[target]); }
-            }
+            foreach (NamedScopeIndex item in indices)
+            { if (data.ContainsKey(item)) { result.Add(data[item].Source); } }
 
             return result;
         }
 
-        /// <inheritdoc/>
-        public virtual void Add(INamedScopeValue value)
+        internal virtual void Add(NamedScopeValueCore value)
         {
-            NamedScopeKey key = value.GetSystemId();
-
-            if (data.ContainsKey(key))
+            if (data.ContainsKey(value.Index))
             {
-                Exception exception = new ArgumentException("An element with the same key already exists.");
-                exception.Data.Add(nameof(value.GetSystemId), key.SystemId);
-                throw exception;
+                Exception ex = new ArgumentException("An element with the same key already exists.");
+                ex.Data.Add(nameof(value.Title), value.Title);
+                ex.Data.Add(nameof(value.Scope), value.Scope.ToName());
+                ex.Data.Add(nameof(value.NamedPath), value.NamedPath.MemberFullPath);
+                throw ex;
             }
             else
             {
-                roots.Add(key);
-                data.Add(key, value);
+                if (!crossWalk.ContainsKey(value.Source.Index))
+                { crossWalk.Add(value.Source.Index, new List<NamedScopeIndex>()); }
+
+                if (!crossWalk[value.Source.Index].Contains(value.Index))
+                { crossWalk[value.Source.Index].Add(value.Index); }
+
+                if (!data.ContainsKey(value.Index))
+                { data.Add(value.Index, value); }
+
+                if (!roots.Contains(value.Index))
+                { roots.Add(value.Index); }
             }
         }
 
-        /// <inheritdoc/>
-        public virtual void Add(NamedScopeKey parent, INamedScopeValue value)
+        internal virtual void Add(DataLayerIndex parent, NamedScopeValueCore value)
         {
             //TODO: Need a trap for infinite loop.
             //      It is when the parent (or child) directly or indirectly points to itself.
             //      Not sure how to detect that.
 
-            NamedScopeKey key = value.GetSystemId();
-            //NamedScopePath path = value.GetPath();
+            if (!crossWalk.ContainsKey(value.Source.Index))
+            { crossWalk.Add(value.Source.Index, new List<NamedScopeIndex>()); }
 
-            if (!children.ContainsKey(parent))
-            { children.Add(parent, new List<NamedScopeKey>()); }
+            if (!crossWalk[value.Source.Index].Contains(value.Index))
+            { crossWalk[value.Source.Index].Add(value.Index); }
 
-            if (!parents.ContainsKey(key))
-            { parents.Add(key, new List<NamedScopeKey>()); }
+            if (!data.ContainsKey(value.Index))
+            { data.Add(value.Index, value); }
 
-            if (children.ContainsKey(parent) && !children[parent].Contains(key))
-            { children[parent].Add(key); }
+            if (crossWalk.ContainsKey(parent) && crossWalk[parent].Count > 0)
+            {
+                foreach (NamedScopeIndex index in crossWalk[parent])
+                {
+                    if (!children.ContainsKey(index))
+                    { children.Add(index, new List<NamedScopeIndex>()); }
 
-            if (parents.ContainsKey(key) && !parents[key].Contains(parent))
-            { parents[key].Add(parent); }
+                    if (!parents.ContainsKey(value.Index))
+                    { parents.Add(value.Index, new List<NamedScopeIndex>()); }
 
-            if (!data.ContainsKey(key))
-            { data.Add(key, value); }
+                    if (children.ContainsKey(index) && !children[index].Contains(value.Index))
+                    { children[index].Add(value.Index); }
+
+                    if (parents.ContainsKey(value.Index) && !parents[value.Index].Contains(index))
+                    { parents[value.Index].Add(index); }
+                }
+            }
+            else
+            {
+                Exception ex = new InvalidOperationException("Could not find parent for value passed");
+                ex.Data.Add(nameof(value.Title), value.Title);
+                ex.Data.Add(nameof(value.Scope), value.Scope.ToName());
+                ex.Data.Add(nameof(value.NamedPath), value.NamedPath.MemberFullPath);
+                throw ex;
+            }
         }
 
-        public virtual void AddRange(IEnumerable<NamedScopePair> source)
+        internal virtual void AddRange(IEnumerable<NamedScopePair> source)
         {
             foreach (NamedScopePair item in source)
             {
@@ -234,20 +233,21 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public virtual void Clear()
+        internal virtual void Clear()
         {
             data.Clear();
             children.Clear();
             parents.Clear();
+            crossWalk.Clear();
             roots.Clear();
         }
 
         /// <inheritdoc/>
-        public virtual Boolean ContainsKey(NamedScopeKey key)
+        public virtual Boolean ContainsKey(NamedScopeIndex key)
         { return data.ContainsKey(key); }
 
         /// <inheritdoc/>
-        public virtual Boolean Remove(NamedScopeKey key)
+        internal virtual Boolean Remove(NamedScopeIndex key)
         {
             if (roots.Contains(key))
             { roots.Remove(key); }

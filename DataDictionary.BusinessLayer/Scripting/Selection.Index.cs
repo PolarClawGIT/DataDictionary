@@ -11,5 +11,23 @@ namespace DataDictionary.BusinessLayer.Scripting
     {
         /// <inheritdoc cref="SelectionKey(ISelectionKey)"/>
         public SelectionIndex(ISelectionIndex source) : base(source) { }
+
+        /// <summary>
+        /// Convert SelectionIndex to a DataLayerIndex
+        /// </summary>
+        /// <param name="source"></param>
+        public static implicit operator DataLayerIndex(SelectionIndex source)
+        { return new DataLayerIndex() { BusinessLayerId = source.SelectionId ?? Guid.Empty }; }
+    }
+
+    /// <inheritdoc/>
+    public interface ISelectionIndexName : ISelectionKeyName
+    { }
+
+    /// <inheritdoc/>
+    public class SelectionIndexName : SelectionKeyName, ISelectionIndexName
+    {
+        /// <inheritdoc cref="SelectionKeyName(ISelectionKeyName)"/>
+        public SelectionIndexName(ISelectionIndexName source) : base(source) { }
     }
 }

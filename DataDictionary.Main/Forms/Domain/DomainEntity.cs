@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.Domain;
+using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
@@ -22,7 +23,7 @@ namespace DataDictionary.Main.Forms.Domain
         public DomainEntity(IEntityValue? entityItem) : this()
         {
             if (entityItem is null)
-            { 
+            {
                 entityItem = new EntityValue();
                 BusinessData.DomainModel.Entities.Add(entityItem);
             }
@@ -37,6 +38,7 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 bindingProperty.DataSource = new BindingView<EntityPropertyValue>(BusinessData.DomainModel.Entities.Properties, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.DomainModel.Entities.Aliases, w => key.Equals(w));
+                bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.DomainModel.Entities.SubjectArea, w => key.Equals(w));
             }
         }
 
@@ -55,36 +57,19 @@ namespace DataDictionary.Main.Forms.Domain
 
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
-            domainProperty.BindData(bindingProperty);
 
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
-            domainAlias.BindData(bindingAlias);
+
+            subjectArea.BindTo(bindingSubjectArea);
 
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingEntity.Current is not IEntityValue);
-        }
-
-        private void NewItemCommand_Click(object? sender, EventArgs e)
-        {
-            if (detailTabLayout.TabPages[detailTabLayout.SelectedIndex] == propertyTab)
-            {
-                bindingProperty.AddNew();
-                domainProperty.RefreshControls();
-            }
-            else if (detailTabLayout.TabPages[detailTabLayout.SelectedIndex] == aliasTab)
-            {
-                bindingAlias.AddNew();
-            }
-            else { }
         }
 
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
             if (bindingEntity.Current is IEntityValue current)
-            {
-                BusinessData.DomainModel.Entities.Remove(current);
-                BusinessData.NamedScope.Remove(new NamedScopeKey(current));
-            }
+            { BusinessData.DomainModel.Entities.Remove(current); }
         }
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
@@ -98,32 +83,85 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingAlias_AddingNew(object sender, AddingNewEventArgs e)
         {
-            if (bindingEntity.Current is IEntityValue current)
+            if (bindingEntity.Current is EntityValue current)
             {
                 EntityAliasValue newItem = new EntityAliasValue(current);
+                newItem.AliasName = namedScopeData.ScopePath.MemberFullPath;
+                newItem.Scope = namedScopeData.Scope;
                 e.NewObject = newItem;
-
-                //newItem.AliasName = domainAlias.SelectedAlias.MemberFullName;
-                //newItem.Scope = domainAlias.SelectedAlias.Scope;
             }
         }
 
-        private void AddPropertyCommand_Click(object sender, EventArgs e)
+        private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {
-            if (detailTabLayout.SelectedTab == propertyTab)
+            if (bindingAlias.Current is AttributeAliasValue current)
             {
-                bindingProperty.AddNew();
-                domainProperty.RefreshControls();
+                NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(current.AliasName).ToArray());
+
+                namedScopeData.ScopePath = path;
+                namedScopeData.Scope = current.Scope;
             }
-            else { detailTabLayout.SelectedTab = propertyTab; }
         }
 
-        private void AddAliasCommand_Click(object sender, EventArgs e)
+        private void NamedScopeData_OnApply(object sender, EventArgs e)
         {
-            if (detailTabLayout.SelectedTab == aliasTab)
-            { bindingAlias.AddNew(); }
-            else
-            { detailTabLayout.SelectedTab = aliasTab; }
+            if (bindingAlias.DataSource is IList<IAliasValue> aliases
+                && aliases.FirstOrDefault(
+                    w => w.Scope == namedScopeData.Scope
+                    && new NamedScopePath(NamedScopePath.Parse(w.AliasName).ToArray()) == namedScopeData.ScopePath)
+                is IAliasValue value)
+            { bindingAlias.Position = aliases.IndexOf(value); }
+            else { bindingAlias.AddNew(); }
+        }
+
+        private void BindingProperty_CurrentChanged(object sender, EventArgs e)
+        {
+            if (bindingProperty.Current is IPropertyValue current)
+            {
+                domainProperty.PropertyId = current.PropertyId ?? Guid.Empty;
+                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty; ;
+                domainProperty.DefinitionText = current.DefinitionText ?? String.Empty;
+            }
+        }
+
+        private void DomainProperty_OnApply(object sender, EventArgs e)
+        {
+            if (bindingProperty.DataSource is IList<IPropertyValue> properties
+                && properties.FirstOrDefault(
+                    w => w.PropertyId == domainProperty.PropertyId)
+                is IPropertyValue value)
+            {
+                value.PropertyValue = domainProperty.PropertyValue;
+                value.DefinitionText = domainProperty.DefinitionText;
+                bindingProperty.Position = properties.IndexOf(value);
+            }
+            else { bindingProperty.AddNew(); }
+        }
+
+        private void BindingSubjectArea_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (addingSubject is SubjectAreaValue subject && bindingEntity.Current is EntityValue entity)
+            {
+                EntitySubjectAreaValue newItem = new EntitySubjectAreaValue(entity, subject);
+                e.NewObject = newItem;
+            }
+            addingSubject = null;
+        }
+
+        SubjectAreaValue? addingSubject = null;
+        private void SubjectArea_OnSubjectAdd(object sender, SubjectAreaValue e)
+        {
+            addingSubject = e;
+            bindingSubjectArea.AddNew();
+        }
+
+        private void SubjectArea_OnSubjectRemove(object sender, SubjectAreaValue e)
+        {
+            SubjectAreaIndex key = new SubjectAreaIndex(e);
+
+            if (bindingSubjectArea.DataSource is IEnumerable<ISubjectAreaIndex> data
+                && data.FirstOrDefault(w => key.Equals(w)) is EntitySubjectAreaValue target)
+            { bindingSubjectArea.Remove(target); }
         }
     }
 }

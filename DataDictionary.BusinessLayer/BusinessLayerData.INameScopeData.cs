@@ -33,6 +33,7 @@ namespace DataDictionary.BusinessLayer
                 {
                     namedScopeValue.Clear();
                     namedScopeValue.AddRange(modelValue.GetNamedScopes());
+                    namedScopeValue.AddRange(subjectAreaValues.GetNamedScopes());
                     namedScopeValue.AddRange(domainValue.GetNamedScopes());
                     namedScopeValue.AddRange(databaseValue.GetNamedScopes());
                     namedScopeValue.AddRange(libraryValue.GetNamedScopes());

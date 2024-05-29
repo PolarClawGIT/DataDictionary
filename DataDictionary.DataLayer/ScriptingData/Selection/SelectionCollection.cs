@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -30,6 +25,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
 
         Command LoadCommand(IConnection connection, (Guid? SelectionId, String? SelectionTitle) parameters)
         {
+            //TODO: Stored procedure does not exist. Need to look at design.
+
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procGetScriptingSelection]";
@@ -69,10 +66,4 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
             { base.Remove(item); }
         }
     }
-
-    /// <summary>
-    /// Default List/Collection of Scripting Selection Items.
-    /// </summary>
-    public class SelectionCollection : SelectionCollection<SelectionItem>
-    { }
 }

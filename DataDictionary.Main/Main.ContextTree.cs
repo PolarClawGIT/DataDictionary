@@ -15,7 +15,7 @@ namespace DataDictionary.Main
         {
             base.HandleMessage(message);
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(BusinessData.LoadNamedScope());
+            //work.AddRange(BusinessData.LoadNamedScope());
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
             this.DoWork(work);
         }
@@ -23,41 +23,61 @@ namespace DataDictionary.Main
         private void RefreshCommand_Click(object? sender, EventArgs e)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(BusinessData.LoadNamedScope());
+            //work.AddRange(BusinessData.LoadNamedScope());
             work.AddRange(contextNameNavigation.Load(BusinessData.NamedScope));
             this.DoWork(work);
         }
 
         /// <summary>
-        /// Used in determine if the code should expand the node or not.
+        /// Used in determine if the node should expand the node or not.
         /// </summary>
         /// <remarks>
-        /// The code in NodeMouseClick (happens first) captures where the mouse was clicked
-        /// The code in Before Expand/Collapse ignores any click not on the +/-
-        /// The code in the NodeMouseDoubleClick (happens last) ignores the double click on the +/-
         /// Normally, a double click anywhere on the node will expand/collapse the node.
-        /// This limits expand/collapse to the use of the +/- only.
+        /// 
+        /// The code Event NodeMouseClick (happens first), captures what was clicked (to be passed to Expand/Collapse).
+        /// The code Events Before Expand/Collapse, depending on if +/- clicked cancel the action.
+        /// The code Events After Expand/Collapse, reset the flag back to null (the event hand been handled).
+        /// The code Event NodeMouseDoubleClick (happens last), determine if +/- was clicked an ignore the event if so.
+        ///   Null = Click was not fired. Node.Expanded() or Node.Collapse() is used. Expand/Collapse reset to Null.
+        ///   True = +/- of the node was clicked (possibly double clicked).
+        ///   False = Something other then the +/- of the node was clicked (possibly double clicked).
         /// </remarks>
-        TreeViewHitTestLocations treeViewHitTest = TreeViewHitTestLocations.None;
+        Boolean? isTreeNodePlusMinus = null;
 
         private void contextNameNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        { treeViewHitTest = e.Node.TreeView.HitTest(e.Location).Location; }
+        {
+            isTreeNodePlusMinus = e.Node.TreeView.HitTest(e.Location).Location == TreeViewHitTestLocations.PlusMinus;
+            if (e.Clicks > 1) { throw new NotImplementedException(); } // This never occurs even on a double click.
+        }
 
         private void contextNameNavigation_BeforeExpand(object sender, TreeViewCancelEventArgs e)
-        { if (treeViewHitTest != TreeViewHitTestLocations.PlusMinus) { e.Cancel = true; } }
+        {
+            if (isTreeNodePlusMinus == false) { e.Cancel = true; } // AfterExpanded does not fire
+            else if (isTreeNodePlusMinus == true) { e.Cancel = false; }
+            else { } // Was not triggered by Click event
+
+            isTreeNodePlusMinus = null; // Reset to undetermined avoid calling above logic
+        }
 
         private void contextNameNavigation_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
-        { if (treeViewHitTest != TreeViewHitTestLocations.PlusMinus) { e.Cancel = true; } }
+        {
+            if (isTreeNodePlusMinus == false) { e.Cancel = true; } // AfterCollapse does not fire
+            else if (isTreeNodePlusMinus == true) { e.Cancel = false; }
+            else { } // Was not triggered by Click event
+
+            isTreeNodePlusMinus = null; // Reset to undetermined avoid calling above logic
+        }
 
         private void DataSourceNavigation_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (treeViewHitTest != TreeViewHitTestLocations.PlusMinus // If the +/- was double clicked, ignore that.
-                && contextNameNavigation.SelectedNode is TreeNode node)
+            // Need to get the Hit Location itself because the flag may have been reset.
+            Boolean isPlusMinus = e.Node.TreeView.HitTest(e.Location).Location == TreeViewHitTestLocations.PlusMinus;
+
+            if (!isPlusMinus && contextNameNavigation.SelectedNode is TreeNode node)
             {
-                INamedScopeValue? item = node.GetNamedScope();
-                if (item is INamedScopeValue taget)
+                if (node.GetNamedScope() is INamedScopeSourceValue target)
                 {
-                    dynamic dataNode = taget;
+                    dynamic dataNode = target;
                     Activate(dataNode);
                 }
             }
@@ -100,12 +120,18 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.Domain.DomainEntity(entityItem), entityItem); }
 
         void Activate(SubjectAreaValue subjectItem)
-        { Activate((data) => new Forms.Domain.ModelSubjectArea(subjectItem), subjectItem); }
+        { Activate((data) => new Forms.Model.ModelSubjectArea(subjectItem), subjectItem); }
 
         void Activate(ModelValue modelItem)
         { Activate((data) => new Forms.Model.Model(modelItem), modelItem); }
 
         void Activate(BusinessLayer.Scripting.SchemaValue schemaItem)
         { Activate((data) => new Forms.Scripting.SchemaManager(schemaItem), schemaItem); }
+
+        void Activate(BusinessLayer.Scripting.SelectionValue selectionItem)
+        { Activate((data) => new Forms.Scripting.SelectionManager(selectionItem), selectionItem); }
+
+        void Activate(BusinessLayer.Scripting.TransformValue transformItem)
+        { Activate((data) => new Forms.Scripting.TransformManager(transformItem), transformItem); }
     }
 }

@@ -1,12 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.ScriptingData.Schema;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
 
@@ -15,13 +9,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
     /// <summary>
     /// Interface for the Scripting Transform data.
     /// </summary>
-    public interface ITransformItem : ITransformKey, IScopeKey
+    public interface ITransformItem : ITransformKey, ITransformKeyName, IScopeKey
     {
-        /// <summary>
-        /// Title of the Transform.
-        /// </summary>
-        String? TransformTitle { get; }
-
         /// <summary>
         /// Description of the Transform. How the Transform is used.
         /// </summary>
@@ -41,16 +30,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
         /// Raw XSLT Transform Script (linked to TransformDocument)
         /// </summary>
         String? TransformScript { get; }
-
-        /// <summary>
-        /// The XSLT Transform Document (linked to TransformScript)
-        /// </summary>
-        XDocument? TransformDocument { get; }
-
-        /// <summary>
-        /// Exception was generated when parsing the TransformScript.
-        /// </summary>
-        Exception? TransformException { get; }
     }
 
     /// <summary>
@@ -61,15 +40,15 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
         /// <inheritdoc/>
         public Guid? TransformId
         {
-            get { return GetValue<Guid>("TransformId"); }
-            protected set { SetValue("TransformId", value); }
+            get { return GetValue<Guid>(nameof(TransformId)); }
+            protected set { SetValue(nameof(TransformId), value); }
         }
 
         /// <inheritdoc/>
-        public String? TransformTitle { get { return GetValue("TransformTitle"); } set { SetValue("TransformTitle", value); } }
+        public String? TransformTitle { get { return GetValue(nameof(TransformTitle)); } set { SetValue(nameof(TransformTitle), value); } }
 
         /// <inheritdoc/>
-        public String? TransformDescription { get { return GetValue("TransformDescription"); } set { SetValue("TransformDescription", value); } }
+        public String? TransformDescription { get { return GetValue(nameof(TransformDescription)); } set { SetValue(nameof(TransformDescription), value); } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ScriptingTransform; } }
@@ -79,13 +58,13 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
         {
             get
             {
-                if (GetValue<bool>("AsText", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<bool>(nameof(AsText), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
             {
-                SetValue<Boolean>("AsText", value);
-                if (value == true) { SetValue<Boolean>("AsXml", !value); }
+                SetValue<Boolean>(nameof(AsText), value);
+                if (value == true) { SetValue<Boolean>(nameof(AsXml), !value); }
             }
         }
 
@@ -94,64 +73,23 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
         {
             get
             {
-                if (GetValue<bool>("AsXml", BindingItemParsers.BooleanTryParse) == true) { return true; }
+                if (GetValue<bool>(nameof(AsXml), BindingItemParsers.BooleanTryParse) == true) { return true; }
                 else { return false; }
             }
             set
             {
-                SetValue<Boolean>("AsXml", value);
-                if (value == true) { SetValue<Boolean>("AsText", !value); }
+                SetValue<Boolean>(nameof(AsXml), value);
+                if (value == true) { SetValue<Boolean>(nameof(AsText), !value); }
             }
         }
 
         /// <inheritdoc/>
         public String? TransformScript
         {
-            get { return GetValue("TransformScript"); }
-            set
-            {
-                SetValue("TransformScript", value);
-                TransformException = null;
-                transformValue = null;
-
-                try
-                {
-                    if (!String.IsNullOrWhiteSpace(value))
-                    { transformValue = XDocument.Parse(value); }
-
-                }
-                catch (Exception ex)
-                {
-                    ex.Data.Add(nameof(TransformScript), value);
-                    TransformException = ex;
-                    base.OnPropertyChanged(nameof(TransformException));
-                }
-
-                base.OnPropertyChanged(nameof(TransformDocument));
-            }
+            get { return GetValue(nameof(TransformScript)); }
+            set { SetValue(nameof(TransformScript), value); }
         }
 
-        /// <inheritdoc/>
-        public XDocument? TransformDocument
-        {
-            get { return transformValue; }
-            set
-            {
-                transformValue = value;
-                TransformException = null;
-                String? data;
-                if (value is null) { data = null; }
-                else { data = value.ToString(); }
-
-                SetValue("TransformScript", data);
-                base.OnPropertyChanged(nameof(TransformDocument));
-            }
-        }
-        private XDocument? transformValue = null;
-
-
-        /// <inheritdoc/>
-        public Exception? TransformException { get; protected set; }
 
         /// <summary>
         /// Constructor for Scripting Transform
@@ -164,12 +102,12 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("TransformId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("TransformTitle", typeof(string)){ AllowDBNull = false},
-            new DataColumn("TransformDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("AsText", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("AsXml", typeof(bool)){ AllowDBNull = true},
-            new DataColumn("TransformScript", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(TransformId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(TransformTitle), typeof(String)){ AllowDBNull = false},
+            new DataColumn(nameof(TransformDescription), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(AsText), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(AsXml), typeof(bool)){ AllowDBNull = true},
+            new DataColumn(nameof(TransformScript), typeof(String)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>
@@ -188,6 +126,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
 
         /// <inheritdoc/>
         public override string ToString()
-        { return TransformTitle??String.Empty; }
+        { return TransformTitle ?? String.Empty; }
     }
 }

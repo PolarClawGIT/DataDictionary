@@ -12,32 +12,24 @@ namespace DataDictionary.BusinessLayer.Domain
     { }
 
     /// <inheritdoc/>
-    public class EntityValue : DomainEntityItem, IEntityValue, INamedScopeValue
+    public class EntityValue : DomainEntityItem, IEntityValue, INamedScopeSourceValue
     {
         /// <inheritdoc cref="DomainEntityItem()"/>
         public EntityValue() : base()
-        { PropertyChanged += CatalogValue_PropertyChanged; }
+        { }
 
         /// <inheritdoc/>
-        public virtual NamedScopeKey GetSystemId()
-        { return new NamedScopeKey(EntityId); }
+        public DataLayerIndex GetIndex()
+        { return new EntityIndex(this); }
 
         /// <inheritdoc/>
+        /// <remarks>Partial Path</remarks>
         public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(Scope); }
+        { return new NamedScopePath(EntityTitle); }
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return EntityTitle ?? String.Empty; }
-
-        /// <inheritdoc/>
-        public event EventHandler? OnTitleChanged;
-        private void CatalogValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is nameof(EntityTitle)
-                && OnTitleChanged is EventHandler handler)
-            { handler(this, EventArgs.Empty); }
-        }
+        { return EntityTitle ?? Scope.ToName(); }
 
         internal XElement? GetXElement(IEnumerable<SchemaElementValue>? options = null)
         {

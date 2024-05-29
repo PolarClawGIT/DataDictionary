@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
 using System;
 using System.Collections.Generic;
@@ -16,31 +17,22 @@ namespace DataDictionary.BusinessLayer.Model
     { }
 
     /// <inheritdoc/>
-    public class SubjectAreaValue : ModelSubjectAreaItem, ISubjectAreaValue, INamedScopeValue
+    public class SubjectAreaValue : ModelSubjectAreaItem, ISubjectAreaValue, INamedScopeSourceValue
     {
         /// <inheritdoc cref="ModelSubjectAreaItem()"/>
         public SubjectAreaValue() : base()
-        { PropertyChanged += SubjectAreaValue_PropertyChanged; }
+        { }
 
         /// <inheritdoc/>
-        public virtual NamedScopeKey GetSystemId()
-        { return new NamedScopeKey(SubjectAreaId); }
+        public DataLayerIndex GetIndex()
+        { return new SubjectAreaIndex(this); }
 
         /// <inheritdoc/>
-        public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(Scope); }
+        public String GetTitle()
+        { return SubjectAreaTitle ?? Scope.ToName(); }
 
         /// <inheritdoc/>
-        public virtual String GetTitle()
-        { return SubjectAreaTitle ?? String.Empty; }
-
-        /// <inheritdoc/>
-        public event EventHandler? OnTitleChanged;
-        private void SubjectAreaValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is nameof(SubjectAreaTitle)
-                && OnTitleChanged is EventHandler handler)
-            { handler(this, EventArgs.Empty); }
-        }
+        public NamedScopePath GetPath()
+        { return new NamedScopePath(new NamedScopePath(NamedScopePath.Parse(this.SubjectAreaNameSpace).ToArray())); }
     }
 }

@@ -11,11 +11,15 @@ using DataDictionary.BusinessLayer.Model;
 
 namespace DataDictionary.BusinessLayer
 {
+    public partial interface IBusinessLayerData
+    { }
+
     /// <summary>
     /// Main Data Container for all Business Data.
     /// </summary>
     public partial class BusinessLayerData :
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData,
+        IBusinessLayerData
     {
         /// <summary>
         /// Database Context for accessing the Application Db.
@@ -73,7 +77,7 @@ namespace DataDictionary.BusinessLayer
             modelValue.Add(new ModelValue());
             applicationValue = new Application.ApplicationData();
 
-            domainValue = new Domain.DomainModel() { Models = modelValue, ModelProperty = applicationValue.Properties };
+            domainValue = new Domain.DomainModel() { Models = modelValue, ModelProperty = applicationValue.Properties, SubjectAreas = subjectAreaValues };
             databaseValue = new Database.DatabaseModel();
             libraryValue = new Library.LibraryModel();
 

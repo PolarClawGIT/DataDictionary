@@ -98,7 +98,7 @@ namespace DataDictionary.Main.Controls
                     if (current is UserControl && current != source)
                     { parts.Insert(0, current.Name); }
                     else if (current is Form && current.GetType().FullName is String fullName)
-                    { parts.AddRange(NamedScopePath.Parse(fullName)); }
+                    { parts.InsertRange(0, NamedScopePath.Parse(fullName)); }
                 }
 
                 if (current is Form)

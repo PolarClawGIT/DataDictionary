@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
-    record class AttributeNameMember : IAttributeIndex, IAttributeIndexName
+    record AttributeNameMember : IAttributeIndex, IAttributeIndexName
     {
         /// <inheritdoc/>
         public Guid? AttributeId { get; private set; } = Guid.Empty;
@@ -16,7 +16,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             where T : IAttributeIndex, IAttributeIndexName
         {
 
-            AttributeNameMember propertyNameDataItem = new AttributeNameMember();
+            AttributeNameMember memberItem = new AttributeNameMember();
             BindingList<AttributeNameMember> list = new BindingList<AttributeNameMember>();
             list.Add(new AttributeNameMember() { AttributeId = Guid.Empty, AttributeTitle = "(not specified)" });
 
@@ -31,8 +31,8 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             }
 
             control.DataSource = list;
-            control.ValueMember = nameof(propertyNameDataItem.AttributeId);
-            control.DisplayMember = nameof(propertyNameDataItem.AttributeTitle);
+            control.ValueMember = nameof(memberItem.AttributeId);
+            control.DisplayMember = nameof(memberItem.AttributeTitle);
         }
     }
 }

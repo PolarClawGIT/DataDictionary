@@ -35,7 +35,10 @@ Begin Try
 				When D.[AsText] = 1 Then 1
 				When D.[AsXml] = 1 Then 0
 				Else Null End As [AsText],
-			D.[TransformScript]
+			-- Application is expected to remove the encoding. This takes care of the encoding if it exists.
+			IIF(D.[TransformScript] Like '%encoding="utf-8"%',
+				Convert(Xml,Convert(VarChar(Max),D.[TransformScript]),1), -- UTF-8 must be formated as VarChar
+				Convert(Xml,Convert(NVarChar(Max),D.[TransformScript]),1)) -- UTF-16 must be formated as NVarChar
 	From	@Data D
 			Cross apply (
 				Select	Coalesce(D.[TransformId], @TransformId, NewId()) As [TransformId]) X
@@ -48,7 +51,7 @@ Begin Try
 			On	T.[TransformId] = S.[TransformId]
 	Where	S.[TransformId] is Null And
 			(@TransformId is Null or T.[TransformId] = @TransformId)
-	Print FormatMessage ('Delete [App_DataDictionary].[DatabaseTable]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingTransform]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[TransformId],

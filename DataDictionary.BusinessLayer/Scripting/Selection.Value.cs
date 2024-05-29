@@ -1,23 +1,23 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ScriptingData.Selection;
-using System.ComponentModel;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface ISelectionValue : ISelectionItem, ISelectionIndex
+    public interface ISelectionValue : ISelectionItem, ISelectionIndex, ISelectionIndexName
     { }
 
     /// <inheritdoc/>
-    public class SelectionValue : SelectionItem, ISelectionValue, INamedScopeValue
+    public class SelectionValue : SelectionItem, ISelectionValue, INamedScopeSourceValue
     {
         /// <inheritdoc/>
         public SelectionValue() : base()
-        { PropertyChanged += SchemaValue_PropertyChanged; }
+        { }
 
         /// <inheritdoc/>
-        public virtual NamedScopeKey GetSystemId()
-        { return new NamedScopeKey(SchemaId); }
+        public DataLayerIndex GetIndex()
+        { return new SelectionIndex(this); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()
@@ -25,15 +25,6 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return SelectionTitle ?? String.Empty; }
-
-        /// <inheritdoc/>
-        public event EventHandler? OnTitleChanged;
-        private void SchemaValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is nameof(SelectionTitle)
-                && OnTitleChanged is EventHandler handler)
-            { handler(this, EventArgs.Empty); }
-        }
+        { return SelectionTitle ?? Scope.ToName(); }
     }
 }

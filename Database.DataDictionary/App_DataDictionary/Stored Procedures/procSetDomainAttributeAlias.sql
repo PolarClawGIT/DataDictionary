@@ -20,47 +20,45 @@ Begin Try
 	  End; -- Begin Transaction
 
 	-- Clean Data
-	Declare @Alias [App_DataDictionary].[typeDomainAlias]
-
 	Declare @Values Table (
 		[AttributeId]       UniqueIdentifier Not Null,
-		[AliasId]           UniqueIdentifier Not Null,
-		[AliasName]	        [App_DataDictionary].[typeNameSpacePath] Not Null,
+		[NameSpaceId]		UniqueIdentifier Not Null,
 		[ScopeName]         [App_DataDictionary].[typeScopeName] Null,
-		Primary Key ([AttributeId], [AliasId]))
+		Primary Key ([AttributeId], [NameSpaceId]))
 
-	Insert Into @Alias
-	Select	[AliasName],
-			[ScopeName]
+	Declare @NameSpace [App_DataDictionary].[typeNameSpace]
+
+	Insert Into @NameSpace
+	Select	Null As [NameSpaceId],
+			[AliasName] As [NameSpace]
 	From	@Data
-	Group By [AliasName],
-			[ScopeName]
+	Group By [AliasName]
 
-	Exec [App_DataDictionary].[procSetDomainAlias] @Alias
+	-- Need to create & assign the NameSpaceID's
+	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @NameSpace
 
-	;With [Alias] As (
-		Select	A.[AliasId],
-				F.[AliasName],
-				F.[ScopeName]
-		From	[App_DataDictionary].[DomainAlias] A
-				Cross Apply [App_DataDictionary].[funcGetAliasName](A.[AliasId]) F)
+	;With [NameSpace] As (
+		Select	M.[NameSpaceId],
+				N.[NameSpace]
+		From	[App_DataDictionary].[ModelNameSpace] M
+				Cross Apply [App_DataDictionary].[funcGetNameSpace](M.[NameSpaceId]) N
+		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
 	Select	Coalesce(D.[AttributeId], @AttributeId, NewId()) As [AttributeId],
-			A.[AliasId],
-			A.[AliasName],
+			N.[NameSpaceId],
 			D.[ScopeName]
 	From	@Data D
-			Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[AliasName]) N
-			Left Join [Alias] A
-			On	N.[NameSpace] = A.[AliasName]
-	Where	N.[IsBase] = 1
+			Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[AliasName]) C
+			Inner Join [NameSpace] N
+			On	C.[NameSpace] = N.[NameSpace] And
+				C.[IsBase] = 1
 
 	-- Apply Changes
 	Delete From [App_DataDictionary].[DomainAttributeAlias]
 	From	[App_DataDictionary].[DomainAttributeAlias] T
 			Left Join @Values V
 			On	T.[AttributeId] = V.[AttributeId] And
-				T.[AliasId] = V.[AliasId]
+				T.[NameSpaceId] = V.[NameSpaceId]
 	Where	V.[AttributeId] is Null And
 			T.[AttributeId] In (
 			Select	A.[AttributeId]
@@ -71,13 +69,32 @@ Begin Try
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DomainAttributeAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DomainAttributeAlias] ([AttributeId], [AliasId])
+	;With [Delta] As (
+		Select	[AttributeId],
+				[NameSpaceId],
+				[ScopeName]
+		From	@Values S
+		Except
+		Select	[AttributeId],
+				[NameSpaceId],
+				[ScopeName]
+		From	[App_DataDictionary].[DomainAttributeAlias])
+	Update	[App_DataDictionary].[DomainAttributeAlias]
+	Set		[ScopeName] = S.[ScopeName]
+	From	[Delta] S
+			Inner Join [App_DataDictionary].[DomainAttributeAlias] T
+			On	S.[AttributeId] = T.[AttributeId] And
+				S.[NameSpaceId] = T.[NameSpaceId]
+	Print FormatMessage ('Update [App_DataDictionary].[DomainAttributeAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[DomainAttributeAlias] ([AttributeId], [NameSpaceId], [ScopeName])
 	Select	V.[AttributeId],
-			V.[AliasId]
+			V.[NameSpaceId],
+			V.[ScopeName]
 	From	@Values V
 			Left Join [App_DataDictionary].[DomainAttributeAlias] T
 			On	V.[AttributeId] = T.[AttributeId] And
-				V.[AliasId] = T.[AliasId]
+				V.[NameSpaceId] = T.[NameSpaceId]
 	Where	T.[AttributeId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainAttributeAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 

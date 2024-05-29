@@ -33,16 +33,16 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
     public class ModelSubjectAreaItem : BindingTableRow, IModelSubjectAreaItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? SubjectAreaId { get { return GetValue<Guid>("SubjectAreaId"); } protected set { SetValue("SubjectAreaId", value); } }
+        public Guid? SubjectAreaId { get { return GetValue<Guid>(nameof(SubjectAreaId)); } protected set { SetValue(nameof(SubjectAreaId), value); } }
 
         /// <inheritdoc/>
-        public String? SubjectAreaTitle { get { return GetValue("SubjectAreaTitle"); } set { SetValue("SubjectAreaTitle", value); } }
+        public String? SubjectAreaTitle { get { return GetValue(nameof(SubjectAreaTitle)); } set { SetValue(nameof(SubjectAreaTitle), value); } }
 
         /// <inheritdoc/>
-        public String? SubjectAreaDescription { get { return GetValue("SubjectAreaDescription"); } set { SetValue("SubjectAreaDescription", value); } }
+        public String? SubjectAreaDescription { get { return GetValue(nameof(SubjectAreaDescription)); } set { SetValue(nameof(SubjectAreaDescription), value); } }
 
         /// <inheritdoc/>
-        public String? SubjectAreaNameSpace { get { return GetValue("SubjectAreaNameSpace"); } set { SetValue("SubjectAreaNameSpace", value); } }
+        public String? SubjectAreaNameSpace { get { return GetValue(nameof(SubjectAreaNameSpace)); } set { SetValue(nameof(SubjectAreaNameSpace), value); } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.ModelSubjectArea;
@@ -58,10 +58,10 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("SubjectAreaId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("SubjectAreaTitle", typeof(string)){ AllowDBNull = false},
-            new DataColumn("SubjectAreaDescription", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SubjectAreaNameSpace", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(SubjectAreaId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(SubjectAreaTitle), typeof(string)){ AllowDBNull = false},
+            new DataColumn(nameof(SubjectAreaDescription), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(SubjectAreaNameSpace), typeof(string)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

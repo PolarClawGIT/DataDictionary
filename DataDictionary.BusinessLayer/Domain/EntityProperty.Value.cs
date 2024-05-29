@@ -14,7 +14,7 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IEntityPropertyValue : IDomainEntityPropertyItem, IPropertyIndex
+    public interface IEntityPropertyValue : IDomainEntityPropertyItem, IPropertyIndex, IPropertyValue
     { }
 
     /// <inheritdoc/>

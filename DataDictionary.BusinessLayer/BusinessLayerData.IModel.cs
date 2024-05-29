@@ -18,10 +18,7 @@ namespace DataDictionary.BusinessLayer
         /// <summary>
         /// Subject Areas for the Model
         /// </summary>
-        [Obsolete("May not be needed/supported")]
-        public ISubjectAreaData ModelSubjectAreas { get { return subjectAreaValues; } }
-
-        [Obsolete("May not be needed/supported")]
+        public ISubjectAreaData SubjectAreas { get { return subjectAreaValues; } }
         private readonly SubjectAreaData subjectAreaValues;
     }
 }

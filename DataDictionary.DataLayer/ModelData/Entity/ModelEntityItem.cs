@@ -25,16 +25,16 @@ namespace DataDictionary.DataLayer.ModelData.Entity
     public class ModelEntityItem : BindingTableRow, IModelEntityItem, ISerializable
     {
         /// <inheritdoc/>
-        public Guid? EntityId { get { return GetValue<Guid>("EntityId"); } protected set { SetValue("EntityId", value); } }
+        public Guid? EntityId { get { return GetValue<Guid>(nameof(EntityId)); } protected set { SetValue(nameof(EntityId), value); } }
 
         /// <inheritdoc/>
-        public string? EntityTitle { get { return GetValue("EntityTitle"); } }
+        public string? EntityTitle { get { return GetValue(nameof(EntityTitle)); } }
 
         /// <inheritdoc/>
-        public Guid? SubjectAreaId { get { return GetValue<Guid>("SubjectAreaId"); } protected set { SetValue("SubjectAreaId", value); } }
+        public Guid? SubjectAreaId { get { return GetValue<Guid>(nameof(SubjectAreaId)); } protected set { SetValue(nameof(SubjectAreaId), value); } }
 
         /// <inheritdoc/>
-        public string? SubjectAreaTitle { get { return GetValue("SubjectAreaTitle"); } }
+        public string? SubjectAreaTitle { get { return GetValue(nameof(SubjectAreaTitle)); } }
 
         /// <summary>
         /// Constructor for Model Entity Item
@@ -56,10 +56,10 @@ namespace DataDictionary.DataLayer.ModelData.Entity
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn("EntityId", typeof(Guid)){ AllowDBNull = false},
-            new DataColumn("EntityTitle", typeof(string)){ AllowDBNull = true},
-            new DataColumn("SubjectAreaId", typeof(Guid)){ AllowDBNull = true},
-            new DataColumn("SubjectAreaTitle", typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(EntityId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(EntityTitle), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(SubjectAreaId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(SubjectAreaTitle), typeof(string)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

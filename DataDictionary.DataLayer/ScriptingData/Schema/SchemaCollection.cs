@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
@@ -72,10 +67,4 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
         }
 
     }
-
-    /// <summary>
-    /// Default List/Collection of Scripting Schema Items.
-    /// </summary>
-    public class SchemaCollection : SchemaCollection<SchemaItem>
-    { }
 }

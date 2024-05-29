@@ -36,9 +36,9 @@ namespace DataDictionary.BusinessLayer.Scripting
         ISelectionData Selections { get; }
 
         /// <summary>
-        /// List of Scripting Engine Selection Instances.
+        /// List of Scripting Engine Selection Paths.
         /// </summary>
-        ISelectionPathData SelectionInstances { get; }
+        ISelectionPathData SelectionPaths { get; }
 
         /// <summary>
         /// List of Scripting Engine Column definitions
@@ -49,7 +49,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Implementation for Scripting Engine data
     /// </summary>
-    class ScriptingEngine : IScriptingEngine, IDataTableFile, IGetNamedScopes
+    class ScriptingEngine : IScriptingEngine, IDataTableFile
     {
         /// <summary>
         /// Reference to the containing Model
@@ -68,8 +68,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         public ISelectionData Selections { get { return selectionValues; } }
         private readonly SelectionData selectionValues;
 
-        public ISelectionPathData SelectionInstances { get { return instanceValues; } }
-        private readonly SelectionPathData instanceValues;
+        public ISelectionPathData SelectionPaths { get { return selectionPathValues; } }
+        private readonly SelectionPathData selectionPathValues;
 
         public IColumnData Columns { get { return columnValues; } }
         private readonly ColumnData columnValues;
@@ -81,7 +81,7 @@ namespace DataDictionary.BusinessLayer.Scripting
             transformValues = new TransformData() { Scripting = this };
             columnValues = new ColumnData();
             selectionValues = new SelectionData() { Scripting = this };
-            instanceValues = new SelectionPathData();
+            selectionPathValues = new SelectionPathData();
         }
 
         /// <inheritdoc/>
@@ -159,7 +159,7 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.AddRange(transformValues.Load(factory));
 
             work.AddRange(selectionValues.Load(factory));
-            work.AddRange(instanceValues.Load(factory));
+            work.AddRange(selectionPathValues.Load(factory));
 
             return work;
         }
@@ -175,7 +175,7 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.AddRange(transformValues.Save(factory));
 
             work.AddRange(selectionValues.Save(factory));
-            work.AddRange(instanceValues.Save(factory));
+            work.AddRange(selectionPathValues.Save(factory));
 
             return work;
         }
@@ -189,7 +189,7 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.Add(new WorkItem() { WorkName = "Remove Scripting Transforms", DoWork = () => { transformValues.Clear(); } });
 
             work.Add(new WorkItem() { WorkName = "Remove Scripting Selection", DoWork = () => { selectionValues.Clear(); } });
-            work.Add(new WorkItem() { WorkName = "Remove Scripting Instance", DoWork = () => { instanceValues.Clear(); } });
+            work.Add(new WorkItem() { WorkName = "Remove Scripting Instance", DoWork = () => { selectionPathValues.Clear(); } });
 
             return work;
         }

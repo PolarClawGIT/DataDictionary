@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ScriptingData.Transform;
 using System.ComponentModel;
 using System.Xml;
@@ -8,19 +9,86 @@ using System.Xml.Xsl;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface ITransformValue : ITransformItem, ITransformIndex
-    { }
+    public interface ITransformValue : ITransformItem, ITransformIndex, ITransformIndexName
+    {
+        /// <summary>
+        /// Transform Script as an XML Document, if possible.
+        /// </summary>
+        XDocument? TransformDocument { get; }
+
+        /// <summary>
+        /// Exception encountered when converting to XML Document.
+        /// </summary>
+        Exception? TransformException { get; }
+    }
 
     /// <inheritdoc/>
-    public class TransformValue : TransformItem, ITransformValue, INamedScopeValue
+    public class TransformValue : TransformItem, ITransformValue, INamedScopeSourceValue
     {
-        /// <inheritdoc/>
-        public TransformValue() : base()
-        { PropertyChanged += SchemaValue_PropertyChanged; }
 
         /// <inheritdoc/>
-        public virtual NamedScopeKey GetSystemId()
-        { return new NamedScopeKey(TransformId); }
+        public XDocument? TransformDocument
+        {
+            get
+            {
+                if (isDocumentInitialized) { return transformDocument; }
+                else
+                { // Must wait until TransformScript has a value, then do this once.
+                    SetTransformDocument();
+                    isDocumentInitialized = true;
+                    return transformDocument;
+                }
+            }
+        }
+        Boolean isDocumentInitialized = false;
+        XDocument? transformDocument = null;
+
+        /// <inheritdoc/>
+        public Exception? TransformException { get; protected set; }
+
+
+        /// <inheritdoc/>
+        public TransformValue() : base()
+        { PropertyChanged += TransformValue_PropertyChanged; }
+
+        private void TransformValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is nameof(TransformScript))
+            { SetTransformDocument(); }
+        }
+
+        private void SetTransformDocument()
+        {
+            // Cannot do this until after the class has been loaded.
+
+            TransformException = null;
+
+            try
+            {
+                if (String.IsNullOrWhiteSpace(TransformScript))
+                { transformDocument = null; }
+                else
+                {
+                    LoadOptions options = LoadOptions.None;
+                    if (this.AsText) { options = LoadOptions.PreserveWhitespace; }
+
+                    transformDocument = XDocument.Parse(TransformScript, options);
+                    OnPropertyChanged(nameof(TransformDocument));
+                    OnPropertyChanged(nameof(TransformException));
+                }
+            }
+            catch (Exception ex)
+            {
+                TransformException = ex;
+                transformDocument = null;
+                OnPropertyChanged(nameof(TransformDocument));
+                OnPropertyChanged(nameof(TransformException));
+            }
+        }
+
+        /// <inheritdoc/>
+        public DataLayerIndex GetIndex()
+        { return new TransformIndex(this); }
 
         /// <inheritdoc/>
         public virtual NamedScopePath GetPath()
@@ -28,16 +96,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return TransformTitle ?? String.Empty; }
-
-        /// <inheritdoc/>
-        public event EventHandler? OnTitleChanged;
-        private void SchemaValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is nameof(TransformTitle)
-                && OnTitleChanged is EventHandler handler)
-            { handler(this, EventArgs.Empty); }
-        }
+        { return TransformTitle ?? Scope.ToName(); }
 
         /// <summary>
         /// Use the XSLT Transform into a String
