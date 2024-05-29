@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
 {
-    record SchemaNameMember : ISchemaIndex, ISchemaIndexName
+    record DefinitionNameMember : IDefinitionIndex, IDefinitionIndexName
     {
         /// <inheritdoc/>
         public Guid? SchemaId { get; private set; } = Guid.Empty;
@@ -13,20 +13,20 @@ namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
         public String SchemaTitle { get; private set; } = String.Empty;
 
         public static void Load<T>(ComboBoxData control, IEnumerable<T> source, Guid? defaultSchemaId = null, String? defaultSchemaTitle = null)
-            where T : ISchemaIndex, ISchemaIndexName
+            where T : IDefinitionIndex, IDefinitionIndexName
         {
 
-            SchemaNameMember memberItem = new SchemaNameMember();
-            BindingList<SchemaNameMember> list = new BindingList<SchemaNameMember>();
-            list.Add(new SchemaNameMember() { SchemaId = Guid.Empty, SchemaTitle = "(not specified)" });
+            DefinitionNameMember memberItem = new DefinitionNameMember();
+            BindingList<DefinitionNameMember> list = new BindingList<DefinitionNameMember>();
+            list.Add(new DefinitionNameMember() { SchemaId = Guid.Empty, SchemaTitle = "(not specified)" });
 
             if (defaultSchemaId is Guid defaultId && defaultId != Guid.Empty && !String.IsNullOrWhiteSpace(defaultSchemaTitle) && source.Count(w => defaultId.Equals(w.SchemaId)) == 0)
-            { list.Add(new SchemaNameMember() { SchemaId = defaultId, SchemaTitle = defaultSchemaTitle }); }
+            { list.Add(new DefinitionNameMember() { SchemaId = defaultId, SchemaTitle = defaultSchemaTitle }); }
 
             foreach (T item in source.OrderBy(o => o.SchemaTitle))
             {
                 if (item.SchemaId is Guid SchemaId && SchemaId != Guid.Empty && item.SchemaTitle is String SchemaTitle)
-                { list.Add(new SchemaNameMember() { SchemaId = SchemaId, SchemaTitle = SchemaTitle }); }
+                { list.Add(new DefinitionNameMember() { SchemaId = SchemaId, SchemaTitle = SchemaTitle }); }
 
             }
 

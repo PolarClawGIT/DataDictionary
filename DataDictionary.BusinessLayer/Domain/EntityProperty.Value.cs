@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.Domain
                                      IExtendedPropertyValue value)
             : base(EntityKey, propertyKey, value) { }
 
-        internal XElement? GetXElement(IPropertyItem property, IEnumerable<SchemaElementValue>? options = null)
+        internal XElement? GetXElement(IPropertyItem property, IEnumerable<DefinitionElementValue>? options = null)
         {
             XElement? result = null;
             IEntityPropertyValue EntityNames;
@@ -40,7 +40,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
             if (options is not null)
             {
-                foreach (SchemaElementValue option in options)
+                foreach (DefinitionElementValue option in options)
                 {
                     Object? value = null;
 

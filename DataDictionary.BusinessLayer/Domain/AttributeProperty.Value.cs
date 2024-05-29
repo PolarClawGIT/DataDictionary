@@ -29,7 +29,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
 
         /// <inheritdoc/>
-        public XElement? GetXElement(IPropertyData data, IEnumerable<SchemaElementValue>? options)
+        public XElement? GetXElement(IPropertyData data, IEnumerable<DefinitionElementValue>? options)
         {
             XElement? result = null;
 
@@ -39,7 +39,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
                 if (data.FirstOrDefault(w => key.Equals(w)) is PropertyValue property)
                 {
-                    foreach (SchemaElementValue option in options)
+                    foreach (DefinitionElementValue option in options)
                     {
                         Object? value = null;
 

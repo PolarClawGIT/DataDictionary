@@ -31,13 +31,13 @@ namespace DataDictionary.BusinessLayer.Domain
         public virtual String GetTitle()
         { return EntityTitle ?? Scope.ToName(); }
 
-        internal XElement? GetXElement(IEnumerable<SchemaElementValue>? options = null)
+        internal XElement? GetXElement(IEnumerable<DefinitionElementValue>? options = null)
         {
             XElement? result = new XElement(this.Scope.ToName());
 
             if (options is not null)
             {
-                foreach (SchemaElementValue option in options)
+                foreach (DefinitionElementValue option in options)
                 {
                     Object? value = null;
 

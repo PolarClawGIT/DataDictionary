@@ -5,19 +5,19 @@ using DataDictionary.DataLayer.ScriptingData.Schema;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface ISchemaValue : ISchemaItem, ISchemaIndex, ISchemaIndexName, ISchemaKeyName
+    public interface IDefinitionValue : ISchemaItem, IDefinitionIndex, IDefinitionIndexName, ISchemaKeyName
     { }
 
     /// <inheritdoc/>
-    public class SchemaValue : SchemaItem, ISchemaValue, INamedScopeSourceValue
+    public class DefinitionValue : SchemaItem, IDefinitionValue, INamedScopeSourceValue
     {
         /// <inheritdoc/>
-        public SchemaValue() : base()
+        public DefinitionValue() : base()
         { }
 
         /// <inheritdoc/>
         public DataLayerIndex GetIndex()
-        { return new SchemaIndex(this); }
+        { return new DefinitionIndex(this); }
 
 
         /// <inheritdoc/>
