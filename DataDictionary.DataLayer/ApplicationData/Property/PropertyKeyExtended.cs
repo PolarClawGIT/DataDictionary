@@ -11,6 +11,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// <summary>
     /// Interface for the MS SQL Extended Property of the Property Item
     /// </summary>
+    [Obsolete("Replace Domain Property", true)]
     public interface IPropertyKeyExtended : IKey
     {
         /// <summary>
@@ -22,6 +23,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// <summary>
     /// Implementation for the MS SQL Extended Property of the Property Item
     /// </summary>
+    [Obsolete("Replace Domain Property", true)]
     public class PropertyKeyExtended: IPropertyKeyExtended, IKeyComparable<IPropertyKeyExtended>, IKeyEquality<IDbExtendedPropertyKey>
     {
         /// <inheritdoc/>

@@ -4,7 +4,7 @@
 	[PropertyId]             UniqueIdentifier NOT NULL CONSTRAINT [DF_DomainPropertyId] DEFAULT (newid()),
 	[PropertyTitle]          [App_DataDictionary].[typeTitle] Not Null, -- Title of the Property as it appears in the application. This may contain the Property Name but must be unique for each type of Extended Property it applies to.
 	[PropertyDescription]    [App_DataDictionary].[typeDescription] Null,
-	[PropertyType]           NVarChar(20) Not Null, -- Sub-Type of the Property. Types are defined in Application.
+	[DataType]               NVarChar(20) Not Null, -- Sub-Type of the Property. Types are defined in Application.
 	-- Known: String, Integer, List, XML, MS_Description
 	[PropertyData]           NVarChar(2000) Null, -- Data based on Type. Example is Procedure Name or Choice List. Managed by Application.
 	-- TODO: Add System Version later once the schema is locked down

@@ -1,16 +1,11 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Property;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataDictionary.DataLayer.DomainData.Property;
 
 namespace DataDictionary.DataLayer.DomainData.Entity
 {
     /// <summary>
     /// Interface for the Domain Entity Property Key
     /// </summary>
-    public interface IDomainEntityPropertyKey : IDomainEntityKey, IPropertyKey
+    public interface IDomainEntityPropertyKey : IDomainEntityKey, IDomainPropertyKey
     { }
 
     /// <summary>

@@ -6,15 +6,15 @@ using Toolbox.DbContext;
 namespace DataDictionary.DataLayer.DomainData.Attribute
 {
     /// <summary>
-    /// Generic Base class for Domain Attribute Aliases
+    /// Generic Base class for Domain Attribute Definitions
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DomainAttributeAliasCollection<TItem> : BindingTable<TItem>,
+    public abstract class DomainAttributeDefinitionCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDomainAttributeKey>,
         IWriteData<IModelKey>, IWriteData<IDomainAttributeKey>,
         IRemoveItem<IDomainAttributeKey>
-        where TItem : BindingTableRow, IDomainAttributeAliasItem, new()
+        where TItem : BindingTableRow, IDomainAttributeDefinitionItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
@@ -29,7 +29,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDomainAttributeAlias]";
+            command.CommandText = "[App_DataDictionary].[procGetDomainAttributeDefinition]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@AttributeId", parameters.attributeId);
             return command;
@@ -47,12 +47,12 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDomainAttributeAlias]";
+            command.CommandText = "[App_DataDictionary].[procSetDomainAttributeDefinition]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@AttributeId", parameters.attributeId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.attributeId is null || w.AttributeId == parameters.attributeId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttributeAlias]", data);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainAttributeDefinition]", data);
             return command;
         }
 

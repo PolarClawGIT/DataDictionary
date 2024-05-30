@@ -9,7 +9,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 Select	[PropertyId],
 		[PropertyTitle],
 		[PropertyDescription],
-		[PropertyType],
+		[DataType],
 		[PropertyData]
 From	[App_DataDictionary].[DomainProperty]
 Where	(@PropertyId is Null Or @PropertyId = [PropertyId]) And

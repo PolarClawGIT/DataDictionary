@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// <summary>
     /// Interface for the Unique Key for the Property.
     /// </summary>
+    [Obsolete("Replace Domain Property", true)]
     public interface IPropertyKeyName: IKey
     {
         /// <summary>
@@ -20,6 +21,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// <summary>
     /// Implementation of the Unique Key for the Property.
     /// </summary>
+    [Obsolete("Replace Domain Property", true)]
     public class PropertyKeyName : IPropertyKeyName, IKeyComparable<IPropertyKeyName>
     {
         /// <inheritdoc/>

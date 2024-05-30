@@ -23,7 +23,7 @@ Begin Try
 		[PropertyId]             UniqueIdentifier NOT NULL,
 		[PropertyTitle]          [App_DataDictionary].[typeTitle] Not Null,
 		[PropertyDescription]    [App_DataDictionary].[typeDescription] Null,
-		[PropertyType]           NVarChar(20) Not Null,
+		[DataType]               NVarChar(20) Not Null,
 		[PropertyData]           NVarChar(2000) Null,
 		Primary Key ([PropertyId]))
 
@@ -32,13 +32,13 @@ Begin Try
 				String_Agg(NullIf(Trim(L.[value]),''),', ') Within Group (Order By L.[value]) As [ChoiceList]
 		From	@Data D
 				Cross Apply String_Split(D.[PropertyData],',') L
-		Where	[PropertyType] In ('List')
+		Where	[DataType] In ('List')
 		Group By D.[PropertyId])
 	Insert Into @Values
 	Select	X.[PropertyId],
 			NullIf(Trim(D.[PropertyTitle]),'') As [PropertyTitle],
 			NullIf(Trim(D.[PropertyDescription]),'') As [PropertyDescription],
-			NullIf(Trim(D.[PropertyType]),'') As [PropertyType],
+			NullIf(Trim(D.[DataType]),'') As [PropertyType],
 			IsNull(C.[ChoiceList], D.[PropertyData]) As [PropertyData]
 	From	@Data D
 			Cross apply (
@@ -59,20 +59,20 @@ Begin Try
 		Select	[PropertyId],
 				[PropertyTitle],
 				[PropertyDescription],
-				[PropertyType],
+				[DataType],
 				[PropertyData]
 		From	@Values
 		Except
 		Select	[PropertyId],
 				[PropertyTitle],
 				[PropertyDescription],
-				[PropertyType],
+				[DataType],
 				[PropertyData]
 		From	[App_DataDictionary].[DomainProperty])
 	Update [App_DataDictionary].[DomainProperty]
 	Set		[PropertyTitle] = S.[PropertyTitle],
 			[PropertyDescription] = S.[PropertyDescription],
-			[PropertyType] = S.[PropertyType],
+			[DataType] = S.[DataType],
 			[PropertyData] = S.[PropertyData]
 	From	[App_DataDictionary].[DomainProperty] T
 			Inner Join [Delta] S
@@ -83,12 +83,12 @@ Begin Try
 			[PropertyId],
 			[PropertyTitle],
 			[PropertyDescription],
-			[PropertyType],
+			[DataType],
 			[PropertyData])
 	Select	S.[PropertyId],
 			S.[PropertyTitle],
 			S.[PropertyDescription],
-			S.[PropertyType],
+			S.[DataType],
 			S.[PropertyData]
 	From	@Values S
 			Left Join [App_DataDictionary].[DomainProperty] T
@@ -145,9 +145,9 @@ Begin Try;
 
 	Insert Into @Data Values (
 		'00000000-0000-0000-0010-000000000010',
-		'MS Description',
+		'MS SQL Description',
 		'Commonly used by Microsoft tools to store the user defined Description of the element.',
-		'MS_Description', 'MS_Description')
+		'MS_ExtendedProperty', 'MS_Description')
 	Insert Into @Data Values (
 		'00000000-0000-0000-0020-000000000010',
 		'.Net Summary',
@@ -178,7 +178,7 @@ Begin Try;
 	From	[App_DataDictionary].[DomainProperty]
 
 	-- By default, throw and error and exit without committing
-;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
+--;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
 	
 	Commit Transaction;
 	Print 'Commit Issued';

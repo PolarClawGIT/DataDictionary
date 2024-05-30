@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Property;
+﻿using DataDictionary.DataLayer.DomainData.Property;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using System.Data;
@@ -52,7 +52,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// <param name="EntityKey"></param>
         /// <param name="propertyKey"></param>
         /// <param name="value"></param>
-        public DomainEntityPropertyItem(IDomainEntityKey EntityKey, IPropertyKey propertyKey, IDbExtendedPropertyItem value) : this()
+        public DomainEntityPropertyItem(IDomainEntityKey EntityKey, IDomainPropertyKey propertyKey, IDbExtendedPropertyItem value) : this()
         {
             EntityId = EntityKey.EntityId;
             PropertyId = propertyKey.PropertyId;

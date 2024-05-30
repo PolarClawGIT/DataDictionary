@@ -1,6 +1,6 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Property;
-using DataDictionary.DataLayer.ApplicationData.Scope;
+﻿using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+using DataDictionary.DataLayer.DomainData.Property;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -52,7 +52,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// <param name="attributeKey"></param>
         /// <param name="propertyKey"></param>
         /// <param name="value"></param>
-        public DomainAttributePropertyItem(IDomainAttributeKey attributeKey, IPropertyKey propertyKey, IDbExtendedPropertyItem value) : this()
+        public DomainAttributePropertyItem(IDomainAttributeKey attributeKey, IDomainPropertyKey propertyKey, IDbExtendedPropertyItem value) : this()
         {
             AttributeId = attributeKey.AttributeId;
             PropertyId = propertyKey.PropertyId;

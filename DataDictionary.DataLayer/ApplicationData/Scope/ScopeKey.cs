@@ -154,12 +154,16 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.DatabaseFunctionParameter, "Database.Schema.Function.Parameter" },
 
             {ScopeType.Model,                     "Model" },
+            {ScopeType.ModelProperty,             "Model.Property" },
+            {ScopeType.ModelDefinition,           "Model.Definition" },
             {ScopeType.ModelAttribute,            "Model.Attribute" },
             {ScopeType.ModelAttributeAlias,       "Model.Attribute.Alias" },
             {ScopeType.ModelAttributeProperty,    "Model.Attribute.Property" },
+            {ScopeType.ModelAttributeDefinition,  "Model.Attribute.Definition" },
             {ScopeType.ModelEntity,               "Model.Entity" },
             {ScopeType.ModelEntityAlias,          "Model.Entity.Alias" },
             {ScopeType.ModelEntityProperty,       "Model.Entity.Property" },
+            {ScopeType.ModelEntityDefinition,     "Model.Entity.Definition," },
             {ScopeType.ModelEntityAttribute,      "Model.Entity.Attribute" },
 
             {ScopeType.ModelSubjectArea,          "Model.SubjectArea" },

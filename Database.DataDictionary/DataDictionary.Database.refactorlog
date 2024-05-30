@@ -644,4 +644,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[MemberName]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="72c5246a-26dc-4b6d-b3e7-c62e7b620a13" ChangeDateTime="05/30/2024 17:08:05">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DomainProperty].[PropertyType]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[DomainProperty]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[DataType]" />
+  </Operation>
 </Operations>
