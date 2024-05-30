@@ -121,11 +121,11 @@ Begin Try;
 	Declare @Data [App_DataDictionary].[typeDomainDefinition]
 
 	Insert Into @Data Values (
-		'00000000-0000-0000-0010-000000000010',
+		'00000000-0000-0000-0010-000000000020',
 		'Business Definition',
 		'Definition of the item in Business Terms.')
 	Insert Into @Data Values (
-		'00000000-0000-0000-0020-000000000010',
+		'00000000-0000-0000-0020-000000000020',
 		'Technical Definition',
 		'Definition of the item in Technical Terms.')
 
