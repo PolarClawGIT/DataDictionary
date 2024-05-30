@@ -101,19 +101,6 @@ Begin Try
 	Where	T.[SelectionId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[ScriptingSelection]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[ModelScripting] ([ModelId], [SelectionId], [SchemaId], [TransformId])
-	Select	@ModelId As [ModelId],
-			S.[SelectionId],
-			S.[SchemaId],
-			S.[TransformId]
-	from	@Values S
-			Left Join [App_DataDictionary].[ModelScripting] T
-			On	S.[SelectionId] = T.[SelectionId] And
-				@ModelId = T.[ModelId]
-	Where	T.[ModelId] is Null And
-			@ModelId is Not Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ModelScripting]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
 	  Begin -- If this is the outer transaction, commit it

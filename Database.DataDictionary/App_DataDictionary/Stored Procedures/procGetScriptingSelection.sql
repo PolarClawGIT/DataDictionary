@@ -10,12 +10,10 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 Select	D.[SelectionId],
 		D.[SelectionTitle],
 		D.[SelectionDescription],
-		A.[SchemaId],
-		A.[TransformId]
+		Convert(UniqueIdentifier, Null) As [SchemaId],
+		Convert(UniqueIdentifier, Null) As [TransformId]
 From	[App_DataDictionary].[ScriptingSelection] D
-		Left Join [App_DataDictionary].[ModelScripting] A
-		On	D.[SelectionId] = A.[SelectionId]
-Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
+Where	--(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@SelectionId is Null or @SelectionId = D.[SelectionId]) And
 		(@SelectionTitle is Null or @SelectionTitle = D.[SelectionDescription])
 GO

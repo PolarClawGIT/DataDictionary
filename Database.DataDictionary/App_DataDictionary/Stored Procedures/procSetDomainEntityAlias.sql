@@ -23,7 +23,7 @@ Begin Try
 	Declare @Values Table (
 		[EntityId]          UniqueIdentifier Not Null,
 		[NameSpaceId]       UniqueIdentifier Not Null,
-		[ScopeName]         [App_DataDictionary].[typeScopeName] Null,
+		[AliasScope]        [App_DataDictionary].[typeScopeName] Null,
 		Primary Key ([EntityId], [NameSpaceId]))
 
 	Declare @NameSpace [App_DataDictionary].[typeNameSpace]
@@ -46,7 +46,7 @@ Begin Try
 	Insert Into @Values
 	Select	Coalesce(D.[EntityId], @EntityId, NewId()) As [EntityId],
 			N.[NameSpaceId],
-			D.[ScopeName]
+			D.[AliasScope]
 	From	@Data D
 			Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[AliasName]) C
 			Inner Join [NameSpace] N
@@ -73,25 +73,25 @@ Begin Try
 	;With [Delta] As (
 		Select	[EntityId],
 				[NameSpaceId],
-				[ScopeName]
+				[AliasScope]
 		From	@Values S
 		Except
 		Select	[EntityId],
 				[NameSpaceId],
-				[ScopeName]
+				[AliasScope]
 		From	[App_DataDictionary].[DomainEntityAlias])
 	Update	[App_DataDictionary].[DomainEntityAlias]
-	Set		[ScopeName] = S.[ScopeName]
+	Set		[AliasScope] = S.[AliasScope]
 	From	[Delta] S
 			Inner Join [App_DataDictionary].[DomainEntityAlias] T
 			On	S.[EntityId] = T.[EntityId] And
 				S.[NameSpaceId] = T.[NameSpaceId]
 	Print FormatMessage ('Update [App_DataDictionary].[DomainEntityAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DomainEntityAlias] ([EntityId], [NameSpaceId], [ScopeName])
+	Insert Into [App_DataDictionary].[DomainEntityAlias] ([EntityId], [NameSpaceId], [AliasScope])
 	Select	V.[EntityId],
 			V.[NameSpaceId],
-			V.[ScopeName]
+			V.[AliasScope]
 	From	@Values V
 			Left Join [App_DataDictionary].[DomainEntityAlias] T
 			On	V.[EntityId] = T.[EntityId] And

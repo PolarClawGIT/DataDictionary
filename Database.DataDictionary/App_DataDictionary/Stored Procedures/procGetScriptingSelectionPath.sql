@@ -12,9 +12,7 @@ Select	D.[SelectionId],
 		N.[NameSpace] As [SelectionPath]
 From	[App_DataDictionary].[ScriptingSelectionPath] D
 		Cross Apply [App_DataDictionary].[funcGetNameSpace](D.[NameSpaceId]) N
-		Left Join [App_DataDictionary].[ModelScripting] A
-		On	D.[SelectionId] = A.[SelectionId]
-Where	(@ModelId is Null or @ModelId = A.[ModelId]) And
+Where	--(@ModelId is Null or @ModelId = A.[ModelId]) And
 		(@SelectionId is Null or @SelectionId = D.[SelectionId]) And
 		(@SelectionPath is Null or @SelectionPath = N.[NameSpace])
 GO

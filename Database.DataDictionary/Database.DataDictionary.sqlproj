@@ -78,7 +78,6 @@
     <Build Include="Security\Permissions.sql" />
     <Build Include="Security\History_DataDictionary.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttribute.sql" />
-    <Build Include="App_DataDictionary\Tables\ApplicationProperty.sql" />
     <Build Include="App_DataDictionary\Tables\DomainAttributeProperty.sql" />
     <Build Include="App_DataDictionary\Tables\SecurityPrinciple.sql" />
     <Build Include="App_DataDictionary\Tables\SecurityRole.sql" />
@@ -133,8 +132,6 @@
     <Build Include="App_DataDictionary\Tables\DatabaseRoutineParameter.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseRoutineDependency.sql" />
     <Build Include="App_DataDictionary\Tables\DatabaseDomain.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetApplicationProperty.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeApplicationProperty.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseDomain.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraint.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseConstraintColumn.sql" />
@@ -156,7 +153,6 @@
     <Build Include="App_DataDictionary\User Defined Types\typeDatabaseCatalogObject.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeTitle.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDescription.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetApplicationProperty.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainEntityProperty.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainEntityAlias.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainEntity.sql" />
@@ -196,7 +192,6 @@
     <Build Include="App_DataDictionary\Views\DatabaseDomain_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseConstraint_AK.sql" />
     <Build Include="App_DataDictionary\Views\DatabaseConstraintColumn_AK.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeApplicationScope.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeObjectSubType.sql" />
     <None Include="App_DataDictionary\ApplicationScope Data.sql" />
     <Build Include="App_DataDictionary\Tables\DomainEntityAlias.sql" />

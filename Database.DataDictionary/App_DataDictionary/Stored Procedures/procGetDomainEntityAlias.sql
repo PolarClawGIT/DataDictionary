@@ -8,7 +8,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Select	D.[EntityId],
 		N.[NameSpace] As [AliasName],
-		D.[ScopeName]
+		D.[AliasScope]
 From	[App_DataDictionary].[DomainEntityAlias] D
 		Cross Apply [App_DataDictionary].[funcGetNameSpace](D.[NameSpaceId]) N
 		Left Join [App_DataDictionary].[ModelEntity] M

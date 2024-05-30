@@ -2,6 +2,5 @@
 	-- TIP: This matches the C# DataTable structure
     [AttributeId]           UNIQUEIDENTIFIER NULL,
 	[PropertyId]            UNIQUEIDENTIFIER NULL,
-	[PropertyValue]         NVarChar(4000)  NULL,
-	[DefinitionText]        NVarChar(Max) Null
-	);
+	[PropertyValue]         NVarChar(4000)  NULL
+);
