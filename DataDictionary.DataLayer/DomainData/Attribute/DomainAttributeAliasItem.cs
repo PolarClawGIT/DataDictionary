@@ -27,21 +27,23 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// <inheritdoc/>
         public String? AliasName { get { return GetValue(nameof(AliasName)); } set { SetValue(nameof(AliasName), value); } }
 
+        /// <summary>
+        /// Scope Name for the Alias.
+        /// </summary>
+        protected String? AliasScope { get { return GetValue(nameof(AliasScope)); } set { SetValue(nameof(AliasScope), value); } }
+
         /// <inheritdoc/>
         public ScopeType Scope
         {
-            get { return ScopeKey.Parse(ScopeName ?? String.Empty).Scope; }
-            set { ScopeName = value.ToName(); OnPropertyChanged(nameof(Scope)); }
+            get { return ScopeKey.Parse(AliasScope ?? String.Empty).Scope; }
+            set { AliasScope = value.ToName(); OnPropertyChanged(nameof(Scope)); }
         }
-
-        /// <inheritdoc cref="IScopeKey.Scope"/>
-        protected String? ScopeName { get { return GetValue(nameof(ScopeName)); } set { SetValue(nameof(ScopeName), value); } }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(AliasName), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(ScopeName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(AliasScope), typeof(String)){ AllowDBNull = true},
         };
 
         /// <summary>
