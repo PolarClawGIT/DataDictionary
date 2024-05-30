@@ -4,16 +4,9 @@
 	[PropertyId]             UniqueIdentifier NOT NULL CONSTRAINT [DF_DomainPropertyId] DEFAULT (newid()),
 	[PropertyTitle]          [App_DataDictionary].[typeTitle] Not Null, -- Title of the Property as it appears in the application. This may contain the Property Name but must be unique for each type of Extended Property it applies to.
 	[PropertyDescription]    [App_DataDictionary].[typeDescription] Null,
-	-- Properties are sub-typed. 
-	-- The flags below represent the different sub-types supported.
-	-- This is a de-normalization choice to better accommodate the application.
-	-- The application cannot handle creating new sub-types without code changes.
-		[IsExtendedProperty] As (Convert([Bit], case when [ExtendedProperty] is Null then (0) else (1) end)), -- Helper Flag for code
-		[IsFrameworkSummary] Bit Null, -- Null or 0, do not use as .Net Framework Summary
-		[IsChoice]           AS (Convert([Bit], Case When [ChoiceList] is Null then (0) else (1) End)), -- Helper Flag for code
-		[ExtendedProperty]   SysName Null, -- Null do not populate an MS Extended Property. Name for the Extended property. Most interested in: MS_Description
-		[ChoiceList]         NVarChar(Max) Null, -- Null = no choices. Comma Separated List of Choices allowed (cannot not be verified)
-	-- End of Sub-Types
+	[PropertyType]           NVarChar(20) Not Null, -- Sub-Type of the Property. Types are defined in Application.
+	-- Known: String, Integer, List, XML, MS_Description
+	[PropertyData]           NVarChar(2000) Null, -- Data based on Type. Example is Procedure Name or Choice List. Managed by Application.
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_DomainPropertyModfiedBy] DEFAULT (ORIGINAL_LOGIN()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL Constraint [DF_DomainProperty_SysStart] Default (sysdatetime()),
