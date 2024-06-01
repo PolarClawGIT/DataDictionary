@@ -11,8 +11,8 @@ namespace DataDictionary.DataLayer.DomainData.Definition
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class DomainDefinitionCollection<TItem> : BindingTable<TItem>,
-        IReadData<IDomainDefinitionKey>,
-        IWriteData<IDomainDefinitionKey>,
+        IReadData, IReadData<IDomainDefinitionKey>,
+        IWriteData, IWriteData<IDomainDefinitionKey>,
         IDeleteData<IDomainDefinitionKey>,
         IRemoveItem<IDomainDefinitionKey>
         where TItem : BindingTableRow, IDomainDefinitionItem, new()
@@ -34,6 +34,10 @@ namespace DataDictionary.DataLayer.DomainData.Definition
             command.AddParameter("@DefinitionTitle", parameters.DefinitionTitle);
             return command;
         }
+
+        /// <inheritdoc/>
+        public Command SaveCommand(IConnection connection)
+        { return SaveCommand(connection, (null, null)); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IModelKey modelId)
