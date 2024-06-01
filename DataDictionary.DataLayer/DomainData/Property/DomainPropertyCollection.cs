@@ -11,47 +11,49 @@ namespace DataDictionary.DataLayer.DomainData.Property
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class DomainPropertyCollection<TItem> : BindingTable<TItem>,
-        IReadData, IReadData<IDomainPropertyKey>,
-        IWriteData, IWriteData<IDomainPropertyKey>,
+        IReadData, IReadData<IModelKey>, IReadData<IDomainPropertyKey>,
+        IWriteData<IModelKey>, IWriteData<IDomainPropertyKey>,
         IDeleteData<IDomainPropertyKey>,
         IRemoveItem<IDomainPropertyKey>
         where TItem : BindingTableRow, IDomainPropertyItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null)); }
+        { return LoadCommand(connection, (null, null, null)); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IDomainPropertyKey PropertyKey)
-        { return LoadCommand(connection, (PropertyKey.PropertyId, null)); }
+        public Command LoadCommand(IConnection connection, IModelKey modelKey)
+        { return LoadCommand(connection, (modelKey.ModelId, null, null)); }
 
-        Command LoadCommand(IConnection connection, (Guid? PropertyId, string? PropertyTitle) parameters)
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IDomainPropertyKey propertyKey)
+        { return LoadCommand(connection, (null, propertyKey.PropertyId, null)); }
+
+        Command LoadCommand(IConnection connection, (Guid? ModelId, Guid? PropertyId, string? PropertyTitle) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procGetDomainProperty]";
+            command.AddParameter("@ModelId", parameters.ModelId);
             command.AddParameter("@PropertyId", parameters.PropertyId);
             command.AddParameter("@PropertyTitle", parameters.PropertyTitle);
             return command;
         }
 
         /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection)
-        { return SaveCommand(connection, (null, null)); }
-
-        /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IModelKey modelId)
-        { return SaveCommand(connection, (modelId.ModelId, null)); }
+        { return SaveCommand(connection, (modelId.ModelId, null, null)); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IDomainPropertyKey PropertyKey)
-        { return SaveCommand(connection, (PropertyKey.PropertyId, null)); }
+        { return SaveCommand(connection, (null, PropertyKey.PropertyId, null)); }
 
-        Command SaveCommand(IConnection connection, (Guid? PropertyId, String? dummy) parameters)
+        Command SaveCommand(IConnection connection, (Guid? ModelId, Guid? PropertyId, String? dummy) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procSetDomainProperty]";
+            command.AddParameter("@ModelId", parameters.ModelId);
             command.AddParameter("@PropertyId", parameters.PropertyId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.PropertyId is null || w.PropertyId == parameters.PropertyId);

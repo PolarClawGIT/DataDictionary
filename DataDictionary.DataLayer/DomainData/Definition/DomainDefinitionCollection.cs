@@ -11,33 +11,34 @@ namespace DataDictionary.DataLayer.DomainData.Definition
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public abstract class DomainDefinitionCollection<TItem> : BindingTable<TItem>,
-        IReadData, IReadData<IDomainDefinitionKey>,
-        IWriteData, IWriteData<IDomainDefinitionKey>,
+        IReadData, IReadData<IModelKey>, IReadData<IDomainDefinitionKey>,
+        IWriteData<IModelKey>, IWriteData<IDomainDefinitionKey>,
         IDeleteData<IDomainDefinitionKey>,
         IRemoveItem<IDomainDefinitionKey>
         where TItem : BindingTableRow, IDomainDefinitionItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
-        { return LoadCommand(connection, (null, null)); }
+        { return LoadCommand(connection, (null, null, null)); }
 
         /// <inheritdoc/>
-        public Command LoadCommand(IConnection connection, IDomainDefinitionKey DefinitionKey)
-        { return LoadCommand(connection, (DefinitionKey.DefinitionId, null)); }
+        public Command LoadCommand(IConnection connection, IModelKey modelKey)
+        { return LoadCommand(connection, (modelKey.ModelId, null, null)); }
 
-        Command LoadCommand(IConnection connection, (Guid? DefinitionId, string? DefinitionTitle) parameters)
+        /// <inheritdoc/>
+        public Command LoadCommand(IConnection connection, IDomainDefinitionKey definitionKey)
+        { return LoadCommand(connection, (null, definitionKey.DefinitionId, null)); }
+
+        Command LoadCommand(IConnection connection, (Guid? ModelId, Guid? DefinitionId, string? DefinitionTitle) parameters)
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[App_DataDictionary].[procGetDomainDefinition]";
+            command.AddParameter("@ModelId", parameters.ModelId);
             command.AddParameter("@DefinitionId", parameters.DefinitionId);
             command.AddParameter("@DefinitionTitle", parameters.DefinitionTitle);
             return command;
         }
-
-        /// <inheritdoc/>
-        public Command SaveCommand(IConnection connection)
-        { return SaveCommand(connection, (null, null)); }
 
         /// <inheritdoc/>
         public Command SaveCommand(IConnection connection, IModelKey modelId)
