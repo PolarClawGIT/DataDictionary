@@ -1,4 +1,5 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainDefinition]
+		@ModelId UniqueIdentifier = Null,
 		@DefinitionId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeDomainDefinition] ReadOnly
 As
@@ -34,12 +35,27 @@ Begin Try
 				Select	Coalesce(D.[DefinitionId], @DefinitionId, NewId()) As [DefinitionId]) X
 
 	-- Apply Changes
+	Delete From [App_DataDictionary].[ModelDefinition]
+	From	@Values S
+			Left Join [App_DataDictionary].[ModelDefinition] T
+			On	S.[DefinitionId] = T.[DefinitionId]
+	Where	@ModelId = T.[ModelId] And
+			T.[DefinitionId] is Null
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	Delete From [App_DataDictionary].[DomainDefinition]
 	From	[App_DataDictionary].[DomainDefinition] T
 			Left Join @Values S
 			On	T.[DefinitionId] = S.[DefinitionId]
-	Where	@DefinitionId = T.[DefinitionId] or
-			(@DefinitionId is Null And S.[DefinitionId] is Null)
+	Where	S.[DefinitionId] is Null And
+			T.[IsCommon] = 0 And
+			T.[DefinitionId] In (
+				Select	A.[DefinitionId]
+				From	[App_DataDictionary].[DomainDefinition] A
+						Left Join [App_DataDictionary].[ModelDefinition] C
+						On	A.[DefinitionId] = C.[DefinitionId]
+				Where	(@DefinitionId is Null Or @DefinitionId = A.[DefinitionId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DomainDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
@@ -58,6 +74,7 @@ Begin Try
 	From	[App_DataDictionary].[DomainDefinition] T
 			Inner Join [Delta] S
 			On	T.[DefinitionId] = S.[DefinitionId]
+	Where	T.[IsCommon] = 0 -- Common Definitions cannot be altered by this procedure
 	Print FormatMessage ('Update [App_DataDictionary].[DomainDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [App_DataDictionary].[DomainDefinition] (
@@ -72,6 +89,19 @@ Begin Try
 			On	S.[DefinitionId] = T.[DefinitionId]
 	Where	T.[DefinitionId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[ModelDefinition] (
+			[ModelId],
+			[DefinitionId])
+	Select	@ModelId,
+			S.[DefinitionId]
+	From	@Values S
+			Left Join [App_DataDictionary].[ModelDefinition] T
+			On	@ModelId = T.[ModelId] And
+				S.[DefinitionId] = T.[DefinitionId]
+	Where	T.[DefinitionId] is Null And
+			@ModelId is Not Null
+	Print FormatMessage ('Insert [App_DataDictionary].[ModelDefinition]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -130,6 +160,9 @@ Begin Try;
 		'Definition of the item in Technical Terms.')
 
 	Exec [App_DataDictionary].[procSetDomainDefinition] @Data = @Data
+
+	update [App_DataDictionary].[DomainDefinition]
+	Set		[IsCommon] = 1
 
 	Select	*
 	From	[App_DataDictionary].[DomainDefinition]

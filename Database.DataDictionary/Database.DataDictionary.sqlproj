@@ -262,6 +262,8 @@
     <Build Include="App_DataDictionary\User Defined Types\typeDomainProperty.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainDefinition.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainProperty.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelDefinition.sql" />
+    <Build Include="App_DataDictionary\Tables\ModelProperty.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

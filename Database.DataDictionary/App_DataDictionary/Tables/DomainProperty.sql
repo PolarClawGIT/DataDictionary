@@ -4,6 +4,9 @@
 	[PropertyId]             UniqueIdentifier NOT NULL CONSTRAINT [DF_DomainPropertyId] DEFAULT (newid()),
 	[PropertyTitle]          [App_DataDictionary].[typeTitle] Not Null, -- Title of the Property as it appears in the application. This may contain the Property Name but must be unique for each type of Extended Property it applies to.
 	[PropertyDescription]    [App_DataDictionary].[typeDescription] Null,
+	[IsCommon]               Bit Not Null DEFAULT(0), -- Common Properties are shared by all Models.
+	-- Note: IsCommon Properties cannot be deleted or updated using the stored procedures. They must be modified directly.
+	--       IsCommon flag must also be set directly. This avoids the application accidentally changing these.
 	[DataType]               NVarChar(20) Not Null, -- Sub-Type of the Property. Types are defined in Application.
 	-- Known: String, Integer, List, XML, MS_Description
 	[PropertyData]           NVarChar(2000) Null, -- Data based on Type. Example is Procedure Name or Choice List. Managed by Application.

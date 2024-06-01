@@ -1,4 +1,5 @@
 ﻿CREATE PROCEDURE [App_DataDictionary].[procSetDomainProperty]
+		@ModelId UniqueIdentifier = Null,
 		@PropertyId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeDomainProperty] ReadOnly
 As
@@ -47,12 +48,27 @@ Begin Try
 			On	D.[PropertyId] = C.[PropertyId]
 
 	-- Apply Changes
+	Delete From [App_DataDictionary].[ModelProperty]
+	From	@Values S
+			Left Join [App_DataDictionary].[ModelProperty] T
+			On	S.[PropertyId] = T.[PropertyId]
+	Where	@ModelId = T.[ModelId] And
+			T.[PropertyId] is Null
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	Delete From [App_DataDictionary].[DomainProperty]
 	From	[App_DataDictionary].[DomainProperty] T
 			Left Join @Values S
 			On	T.[PropertyId] = S.[PropertyId]
-	Where	@PropertyId = T.[PropertyId] or
-			(@PropertyId is Null And S.[PropertyId] is Null)
+	Where	S.[PropertyId] is Null And
+			T.[IsCommon] = 0 And
+			T.[PropertyId] In (
+				Select	A.[PropertyId]
+				From	[App_DataDictionary].[DomainProperty] A
+						Left Join [App_DataDictionary].[ModelProperty] C
+						On	A.[PropertyId] = C.[PropertyId]
+				Where	(@PropertyId is Null Or @PropertyId = A.[PropertyId]) And
+						(@ModelId is Null Or @ModelId = C.[ModelId]))
 	Print FormatMessage ('Delete [App_DataDictionary].[DomainProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
@@ -77,6 +93,7 @@ Begin Try
 	From	[App_DataDictionary].[DomainProperty] T
 			Inner Join [Delta] S
 			On	T.[PropertyId] = S.[PropertyId]
+	Where	T.[IsCommon] = 0 -- Common Definitions cannot be altered by this procedure
 	Print FormatMessage ('Update [App_DataDictionary].[DomainProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [App_DataDictionary].[DomainProperty] (
@@ -95,6 +112,19 @@ Begin Try
 			On	S.[PropertyId] = T.[PropertyId]
 	Where	T.[PropertyId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[ModelProperty] (
+			[ModelId],
+			[PropertyId])
+	Select	@ModelId,
+			S.[PropertyId]
+	From	@Values S
+			Left Join [App_DataDictionary].[ModelProperty] T
+			On	@ModelId = T.[ModelId] And
+				S.[PropertyId] = T.[PropertyId]
+	Where	T.[PropertyId] is Null And
+			@ModelId is Not Null
+	Print FormatMessage ('Insert [App_DataDictionary].[ModelProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -173,6 +203,9 @@ Begin Try;
 		'Integer',Null)
 
 	Exec [App_DataDictionary].[procSetDomainProperty] @Data = @Data
+
+	update [App_DataDictionary].[DomainProperty]
+	Set		[IsCommon] = 1
 
 	Select	*
 	From	[App_DataDictionary].[DomainProperty]
