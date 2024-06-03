@@ -34,6 +34,11 @@ namespace DataDictionary.BusinessLayer.Domain
         IEntityPropertyData Properties { get; }
 
         /// <summary>
+        /// List of Domain Definitions for the Entities within the Model.
+        /// </summary>
+        IEntityDefinitionData Definitions { get; }
+
+        /// <summary>
         /// List of Subject Areas for the Entities within the Model.
         /// </summary>
         IEntitySubjectAreaData SubjectArea { get; }
@@ -49,6 +54,11 @@ namespace DataDictionary.BusinessLayer.Domain
         public IEntityAliasData Aliases { get { return aliasValues; } }
         private readonly EntityAliasData aliasValues;
 
+
+        /// <inheritdoc/>
+        public IEntityDefinitionData Definitions { get { return definitionValues; } }
+        private readonly EntityDefinitionData definitionValues;
+
         /// <inheritdoc/>
         public IEntityPropertyData Properties { get { return propertyValues; } }
         private readonly EntityPropertyData propertyValues;
@@ -61,6 +71,7 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             aliasValues = new EntityAliasData();
             propertyValues = new EntityPropertyData();
+            definitionValues = new EntityDefinitionData();
             subjectAreaValues = new EntitySubjectAreaData();
         }
 
@@ -72,6 +83,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateLoad(this, dataKey));
             work.Add(factory.CreateLoad(aliasValues, dataKey));
             work.Add(factory.CreateLoad(propertyValues, dataKey));
+            work.Add(factory.CreateLoad(definitionValues, dataKey));
             work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
             return work;
         }
@@ -84,6 +96,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateLoad(this, dataKey));
             work.Add(factory.CreateLoad(aliasValues, dataKey));
             work.Add(factory.CreateLoad(propertyValues, dataKey));
+            work.Add(factory.CreateLoad(definitionValues, dataKey));
             work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
             return work;
         }
@@ -101,6 +114,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateSave(this, dataKey));
             work.Add(factory.CreateSave(aliasValues, dataKey));
             work.Add(factory.CreateSave(propertyValues, dataKey));
+            work.Add(factory.CreateSave(definitionValues, dataKey));
             work.Add(factory.CreateSave(subjectAreaValues, dataKey));
             return work;
         }
@@ -113,6 +127,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateSave(this, dataKey));
             work.Add(factory.CreateSave(aliasValues, dataKey));
             work.Add(factory.CreateSave(propertyValues, dataKey));
+            work.Add(factory.CreateSave(definitionValues, dataKey));
             work.Add(factory.CreateSave(subjectAreaValues, dataKey));
             return work;
         }
@@ -123,23 +138,18 @@ namespace DataDictionary.BusinessLayer.Domain
         { return Save(factory, (IDomainEntityKey)dataKey); }
 
         /// <inheritdoc/>
+        /// <remarks>Entity</remarks>
         public IReadOnlyList<WorkItem> Remove()
         {
-            List<WorkItem> result = new List<WorkItem>();
+            List<WorkItem> work = new List<WorkItem>();
 
-            result.Add(new WorkItem()
-            {
-                WorkName = "Remove Entities",
-                DoWork = () =>
-                {
-                    aliasValues.Clear();
-                    propertyValues.Clear();
-                    subjectAreaValues.Clear();
-                    this.Clear();
-                }
-            });
+            work.Add(new WorkItem() { WorkName = "Remove Entity", DoWork = () => { this.Clear(); } });
+            work.AddRange(aliasValues.Remove());
+            work.AddRange(propertyValues.Remove());
+            work.AddRange(definitionValues.Remove());
+            work.AddRange(subjectAreaValues.Remove());
 
-            return result;
+            return work;
         }
 
         /// <inheritdoc/>
@@ -149,6 +159,7 @@ namespace DataDictionary.BusinessLayer.Domain
             DomainEntityKey key = new DomainEntityKey(entityItem);
             aliasValues.Remove(key);
             propertyValues.Remove(key);
+            definitionValues.Remove(key);
             subjectAreaValues.Remove(key);
         }
 
@@ -160,6 +171,7 @@ namespace DataDictionary.BusinessLayer.Domain
             result.Add(this.ToDataTable());
             result.Add(aliasValues.ToDataTable());
             result.Add(propertyValues.ToDataTable());
+            result.Add(definitionValues.ToDataTable());
             result.Add(subjectAreaValues.ToDataTable());
             return result;
         }
@@ -171,6 +183,7 @@ namespace DataDictionary.BusinessLayer.Domain
             this.Load(source);
             aliasValues.Load(source);
             propertyValues.Load(source);
+            definitionValues.Load(source);
             subjectAreaValues.Load(source);
         }
 

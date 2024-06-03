@@ -36,6 +36,11 @@ namespace DataDictionary.BusinessLayer.Domain
         IAttributePropertyData Properties { get; }
 
         /// <summary>
+        /// List of Domain Definitions for the Attributes within the Model.
+        /// </summary>
+        IAttributeDefinitionData Definitions { get; }
+
+        /// <summary>
         /// List of Subject Areas for the Attributes within the Model.
         /// </summary>
         IAttributeSubjectAreaData SubjectArea { get; }
@@ -56,6 +61,10 @@ namespace DataDictionary.BusinessLayer.Domain
         private readonly AttributePropertyData propertyValues;
 
         /// <inheritdoc/>
+        public IAttributeDefinitionData Definitions { get { return definitionValues; } }
+        private readonly AttributeDefinitionData definitionValues;
+
+        /// <inheritdoc/>
         public IAttributeSubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly AttributeSubjectAreaData subjectAreaValues;
 
@@ -63,6 +72,7 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             aliasValues = new AttributeAliasData();
             propertyValues = new AttributePropertyData() { Attributes = this };
+            definitionValues = new AttributeDefinitionData();
             subjectAreaValues = new AttributeSubjectAreaData();
         }
 
@@ -74,6 +84,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateLoad(this, dataKey));
             work.Add(factory.CreateLoad(aliasValues, dataKey));
             work.Add(factory.CreateLoad(propertyValues, dataKey));
+            work.Add(factory.CreateLoad(definitionValues, dataKey));
             work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
             return work;
         }
@@ -91,6 +102,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateLoad(this, dataKey));
             work.Add(factory.CreateLoad(aliasValues, dataKey));
             work.Add(factory.CreateLoad(propertyValues, dataKey));
+            work.Add(factory.CreateLoad(definitionValues, dataKey));
             work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
             return work;
         }
@@ -103,6 +115,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateSave(this, dataKey));
             work.Add(factory.CreateSave(aliasValues, dataKey));
             work.Add(factory.CreateSave(propertyValues, dataKey));
+            work.Add(factory.CreateSave(definitionValues, dataKey));
             work.Add(factory.CreateSave(subjectAreaValues, dataKey));
             return work;
         }
@@ -120,36 +133,34 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateSave(this, dataKey));
             work.Add(factory.CreateSave(aliasValues, dataKey));
             work.Add(factory.CreateSave(propertyValues, dataKey));
+            work.Add(factory.CreateSave(definitionValues, dataKey));
             work.Add(factory.CreateSave(subjectAreaValues, dataKey));
             return work;
         }
 
         /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
         public override void Remove(IDomainAttributeKey attributeItem)
         {
             base.Remove(attributeItem);
             DomainAttributeKey key = new DomainAttributeKey(attributeItem);
             aliasValues.Remove(key);
             propertyValues.Remove(key);
+            definitionValues.Remove(key);
             subjectAreaValues.Remove(key);
         }
 
         /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
         public IReadOnlyList<WorkItem> Remove()
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.Add(new WorkItem()
-            {
-                WorkName = "Remove Attributes",
-                DoWork = () =>
-                {
-                    aliasValues.Clear();
-                    propertyValues.Clear();
-                    subjectAreaValues.Clear();
-                    this.Clear();
-                }
-            });
+            work.Add(new WorkItem() { WorkName = "Remove Attribute", DoWork = () => { this.Clear(); } });
+            work.AddRange(aliasValues.Remove());
+            work.AddRange(propertyValues.Remove());
+            work.AddRange(definitionValues.Remove());
+            work.AddRange(subjectAreaValues.Remove());
 
             return work;
         }
@@ -162,6 +173,7 @@ namespace DataDictionary.BusinessLayer.Domain
             result.Add(this.ToDataTable());
             result.Add(aliasValues.ToDataTable());
             result.Add(propertyValues.ToDataTable());
+            result.Add(definitionValues.ToDataTable());
             result.Add(subjectAreaValues.ToDataTable());
             return result;
         }
@@ -173,6 +185,7 @@ namespace DataDictionary.BusinessLayer.Domain
             this.Load(source);
             aliasValues.Load(source);
             propertyValues.Load(source);
+            definitionValues.Load(source);
             subjectAreaValues.Load(source);
         }
 
@@ -342,6 +355,5 @@ namespace DataDictionary.BusinessLayer.Domain
                 }
             }
         }
-
     }
 }

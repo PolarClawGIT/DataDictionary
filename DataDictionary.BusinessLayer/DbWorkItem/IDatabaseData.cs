@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
     /// <summary>
     /// Interface for Create WorkItems that loads data from the Database
     /// </summary>
-    public interface ILoadData
+    public interface ILoadData: IRemoveData
     {
         /// <summary>
         /// Create WorkItems that loads data from the Database
@@ -26,7 +26,7 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
     /// Interface for Create WorkItems that loads data from the Database by Key
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
-    public interface ILoadData<TKey>
+    public interface ILoadData<TKey>: IRemoveData
         where TKey : IKey
     {
         /// <summary>
@@ -93,6 +93,4 @@ namespace DataDictionary.BusinessLayer.DbWorkItem
         /// <returns></returns>
         IReadOnlyList<WorkItem> Remove(TKey dataKey);
     }
-
-
 }

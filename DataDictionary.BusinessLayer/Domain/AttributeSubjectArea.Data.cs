@@ -20,22 +20,27 @@ namespace DataDictionary.BusinessLayer.Domain
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <inheritdoc/>
-        /// <remarks>AttributeProperty</remarks>
+        /// <remarks>AttributeSubjectArea</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDomainAttributeKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>AttributeProperty</remarks>
+        /// <remarks>AttributeSubjectArea</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>AttributeProperty</remarks>
+        /// <remarks>AttributeSubjectArea</remarks>
+        public IReadOnlyList<WorkItem> Remove()
+        { return new WorkItem() { WorkName = "Remove AttributeSubjectArea", DoWork = () => { this.Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>AttributeSubjectArea</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainAttributeKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>AttributeProperty</remarks>
+        /// <remarks>AttributeSubjectArea</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
     }

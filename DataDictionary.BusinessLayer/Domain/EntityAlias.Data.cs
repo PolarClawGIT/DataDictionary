@@ -28,6 +28,11 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>EntityAlias</remarks>
+        public IReadOnlyList<WorkItem> Remove()
+        { return new WorkItem() { WorkName = "Remove EntityAlias", DoWork = () => { this.Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>EntityAlias</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainEntityKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
