@@ -1,5 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.DomainData.Definition;
+using DataDictionary.DataLayer.ModelData;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -10,11 +12,12 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <remarks>Used to hide the DataLayer methods from the Application Layer.</remarks>
     public interface IDefinitionData :
         IBindingData<DefinitionValue>,
-        ISaveData, ILoadData
+        ILoadData, ILoadData<IDefinitionIndex>, ISaveData<IDefinitionIndex>
     { }
 
     /// <inheritdoc/>
-    class DefinitionData : DomainDefinitionCollection<DefinitionValue>, IDefinitionData
+    class DefinitionData : DomainDefinitionCollection<DefinitionValue>, IDefinitionData,
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile
     {
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
@@ -23,7 +26,47 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Definition</remarks>
-        public virtual IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
-        { return factory.CreateSave(this).ToList(); }
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDefinitionIndex dataKey)
+        { return Load(factory, (IDomainDefinitionKey)dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>Definition</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDomainDefinitionKey dataKey)
+        { return factory.CreateLoad(this, dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Definition</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDefinitionIndex dataKey)
+        { return Save(factory, (IDomainDefinitionKey)dataKey); }
+
+        /// <inheritdoc/>
+        /// <remarks>Definition</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainDefinitionKey dataKey)
+        { return factory.CreateSave(this, dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Definition</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
+        { return factory.CreateLoad(this, dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Definition</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
+        { return factory.CreateSave(this, dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Definition</remarks>
+        public IReadOnlyList<System.Data.DataTable> Export()
+        { return this.ToDataTable().ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Definition</remarks>
+        public void Import(System.Data.DataSet source)
+        { this.Load(source); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public IReadOnlyList<WorkItem> Remove()
+        { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { this.Clear(); } }.ToList(); }
     }
 }
