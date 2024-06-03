@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// Interface representing Scripting Engine data
     /// </summary>
     public interface IScriptingEngine :
-        ISaveData, ILoadData, IRemoveData,
+        ISaveData, ILoadData, IDeleteData,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
@@ -180,7 +180,7 @@ namespace DataDictionary.BusinessLayer.Scripting
             return work;
         }
 
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
 

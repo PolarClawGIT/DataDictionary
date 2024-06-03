@@ -16,7 +16,7 @@ namespace DataDictionary.BusinessLayer.Database
     /// Interface representing Catalog data
     /// </summary>
     public interface IDatabaseModel :
-        ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>, IRemoveData<IDbCatalogKey>,
+        ILoadData<IDbCatalogKey>, ISaveData<IDbCatalogKey>, IDeleteData<IDbCatalogKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
@@ -408,49 +408,46 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
-        public IReadOnlyList<WorkItem> Remove(IDbCatalogKey key)
+        public IReadOnlyList<WorkItem> Delete(IDbCatalogKey key)
         {
             List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(catalogs.Delete(key));
+            work.AddRange(schemta.Delete(key));
+            work.AddRange(domains.Delete(key));
 
-            work.Add(new WorkItem() { WorkName = "Remove Catalog", DoWork = () => { catalogs.Remove(key); } });
-            work.Add(new WorkItem() { WorkName = "Remove Schemta", DoWork = () => { schemta.Remove(key); } });
-            work.Add(new WorkItem() { WorkName = "Remove Domains", DoWork = () => { domains.Remove(key); } });
+            work.AddRange(tables.Delete(key));
+            work.AddRange(tableColumns.Delete(key));
 
-            work.Add(new WorkItem() { WorkName = "Remove Tables", DoWork = () => { tables.Remove(key); } });
-            work.Add(new WorkItem() { WorkName = "Remove Table Columns", DoWork = () => { tableColumns.Remove(key); } });
+            work.AddRange(routines.Delete(key));
+            work.AddRange(routineParameters.Delete(key));
+            work.AddRange(routineDependencies.Delete(key));
 
-            work.Add(new WorkItem() { WorkName = "Remove Routines", DoWork = () => { routines.Remove(key); } });
-            work.Add(new WorkItem() { WorkName = "Remove Routine Parameters", DoWork = () => { routineParameters.Remove(key); } });
-            work.Add(new WorkItem() { WorkName = "Remove Routine Dependencies", DoWork = () => { routineDependencies.Remove(key); } });
+            work.AddRange(constraints.Delete(key));
+            work.AddRange(constraintColumns.Delete(key));
 
-            work.Add(new WorkItem() { WorkName = "Remove Constraints", DoWork = () => { constraints.Remove(key); } });
-            work.Add(new WorkItem() { WorkName = "Remove Constraint Columns", DoWork = () => { constraintColumns.Remove(key); } });
-
-            work.Add(new WorkItem() { WorkName = "Remove Extended Properties", DoWork = () => { extendedProperties.Remove(key); } });
+            work.AddRange(extendedProperties.Delete(key));
             return work;
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(catalogs.Delete());
+            work.AddRange(schemta.Delete());
+            work.AddRange(domains.Delete());
 
-            work.Add(new WorkItem() { WorkName = "Remove Catalog", DoWork = () => { catalogs.Clear(); } });
-            work.Add(new WorkItem() { WorkName = "Remove Schemta", DoWork = () => { schemta.Clear(); } });
-            work.Add(new WorkItem() { WorkName = "Remove Domains", DoWork = () => { domains.Clear(); } });
+            work.AddRange(tables.Delete());
+            work.AddRange(tableColumns.Delete());
 
-            work.Add(new WorkItem() { WorkName = "Remove Tables", DoWork = () => { tables.Clear(); } });
-            work.Add(new WorkItem() { WorkName = "Remove Table Columns", DoWork = () => { tableColumns.Clear(); } });
+            work.AddRange(routines.Delete());
+            work.AddRange(routineParameters.Delete());
+            work.AddRange(routineDependencies.Delete());
 
-            work.Add(new WorkItem() { WorkName = "Remove Routines", DoWork = () => { routines.Clear(); } });
-            work.Add(new WorkItem() { WorkName = "Remove Routine Parameters", DoWork = () => { routineParameters.Clear(); } });
-            work.Add(new WorkItem() { WorkName = "Remove Routine Dependencies", DoWork = () => { routineDependencies.Clear(); } });
+            work.AddRange(constraints.Delete());
+            work.AddRange(constraintColumns.Delete());
 
-            work.Add(new WorkItem() { WorkName = "Remove Constraints", DoWork = () => { constraints.Clear(); } });
-            work.Add(new WorkItem() { WorkName = "Remove Constraint Columns", DoWork = () => { constraintColumns.Clear(); } });
-
-            work.Add(new WorkItem() { WorkName = "Remove Extended Properties", DoWork = () => { extendedProperties.Clear(); } });
-
+            work.AddRange(extendedProperties.Delete());
 
             return work;
         }

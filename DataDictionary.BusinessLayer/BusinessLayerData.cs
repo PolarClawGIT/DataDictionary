@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer
     /// Main Data Container for all Business Data.
     /// </summary>
     public partial class BusinessLayerData :
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData,
+        ILoadData<IModelKey>, ISaveData<IModelKey>, IDeleteData,
         IBusinessLayerData
     {
         /// <summary>
@@ -95,7 +95,7 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValue.Remove());
+            work.AddRange(modelValue.Delete());
             work.AddRange(modelValue.Load(factory, key));
             work.AddRange(subjectAreaValues.Load(factory, key));
 
@@ -126,18 +126,18 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValue.Remove());
-            work.AddRange(subjectAreaValues.Remove());
+            work.AddRange(modelValue.Delete());
+            work.AddRange(subjectAreaValues.Delete());
 
-            work.AddRange(DomainModel.Remove());
-            work.AddRange(DatabaseModel.Remove());
-            work.AddRange(LibraryModel.Remove());
+            work.AddRange(DomainModel.Delete());
+            work.AddRange(DatabaseModel.Delete());
+            work.AddRange(LibraryModel.Delete());
 
-            work.AddRange(ScriptingEngine.Remove());
+            work.AddRange(ScriptingEngine.Delete());
 
             work.Add(new WorkItem() { DoWork = namedScopeValue.Clear });
 
@@ -151,7 +151,7 @@ namespace DataDictionary.BusinessLayer
         public IReadOnlyList<WorkItem> Create()
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(Remove());
+            work.AddRange(Delete());
 
             work.AddRange(modelValue.Create());
             return work;
@@ -165,7 +165,7 @@ namespace DataDictionary.BusinessLayer
         public IReadOnlyList<WorkItem> ImportModel(FileInfo file)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(Remove());
+            work.AddRange(Delete());
             work.Add(new WorkItem() { WorkName = "Load Model Data", DoWork = DoWork });
             return work;
 

@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.Domain
     /// </summary>
     public interface IDomainModel :
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IRemoveData
+        IDeleteData
 
     {
         /// <summary>
@@ -117,13 +117,13 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(attributeValues.Remove());
-            work.AddRange(entityValues.Remove());
-            work.AddRange(propertyValues.Remove());
-            work.AddRange(definitionValues.Remove());
+            work.AddRange(attributeValues.Delete());
+            work.AddRange(entityValues.Delete());
+            work.AddRange(propertyValues.Delete());
+            work.AddRange(definitionValues.Delete());
             return work;
         }
 

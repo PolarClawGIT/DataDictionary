@@ -152,18 +152,28 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
 
             work.Add(new WorkItem() { WorkName = "Remove Attribute", DoWork = () => { this.Clear(); } });
-            work.AddRange(aliasValues.Remove());
-            work.AddRange(propertyValues.Remove());
-            work.AddRange(definitionValues.Remove());
-            work.AddRange(subjectAreaValues.Remove());
+            work.AddRange(aliasValues.Delete());
+            work.AddRange(propertyValues.Delete());
+            work.AddRange(definitionValues.Delete());
+            work.AddRange(subjectAreaValues.Delete());
 
             return work;
         }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Delete(IAttributeIndex dataKey)
+        { return new WorkItem() { WorkName = "Remove Attribute", DoWork = () => { Remove((IDomainAttributeKey)dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
 
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
@@ -355,5 +365,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 }
             }
         }
+
+
     }
 }

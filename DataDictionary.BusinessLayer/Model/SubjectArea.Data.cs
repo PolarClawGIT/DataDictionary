@@ -54,7 +54,7 @@ namespace DataDictionary.BusinessLayer.Model
         public void Import(System.Data.DataSet source)
         { Load(source); }
 
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         { return new WorkItem() { WorkName = "Remove Subject Area", DoWork = () => { Clear(); } }.ToList(); }
 
         /// <inheritdoc/>

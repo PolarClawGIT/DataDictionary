@@ -236,7 +236,7 @@ namespace DataDictionary.Main.Forms.Library
             {
                 IsLocked(true);
                 LibrarySourceIndex key = new LibrarySourceIndex(item);
-                work.AddRange(BusinessData.LibraryModel.Remove(key));
+                work.AddRange(BusinessData.LibraryModel.Delete(key));
 
                 DoWork(work, onCompleting);
             }

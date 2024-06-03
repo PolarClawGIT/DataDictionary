@@ -35,7 +35,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>EntityProperty</remarks>
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         { return new WorkItem() { WorkName = "Remove EntityProperty", DoWork = () => { this.Clear(); } }.ToList(); }
 
         /// <inheritdoc/>

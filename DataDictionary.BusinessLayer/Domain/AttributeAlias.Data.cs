@@ -28,7 +28,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>AttributeAlias</remarks>
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         { return new WorkItem() { WorkName = "Remove AttributeAlias", DoWork = () => { this.Clear(); } }.ToList(); }
 
         /// <inheritdoc/>

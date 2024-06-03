@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.Library
     /// Interface representing .Net Library Data
     /// </summary>
     public interface ILibraryModel :
-        ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>, IRemoveData<ILibrarySourceIndex>,
+        ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>, IDeleteData<ILibrarySourceIndex>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
@@ -113,7 +113,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc />
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Remove(ILibrarySourceIndex key)
+        public IReadOnlyList<WorkItem> Delete(ILibrarySourceIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
 
@@ -125,7 +125,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc />
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
 

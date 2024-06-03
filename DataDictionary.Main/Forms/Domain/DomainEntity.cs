@@ -69,7 +69,7 @@ namespace DataDictionary.Main.Forms.Domain
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
             if (bindingEntity.Current is IEntityValue current)
-            { BusinessData.DomainModel.Entities.Remove(current); }
+            { BusinessData.DomainModel.Entities.Delete(current); }
         }
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)

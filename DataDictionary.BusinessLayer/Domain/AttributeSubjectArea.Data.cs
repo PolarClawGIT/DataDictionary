@@ -31,7 +31,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>AttributeSubjectArea</remarks>
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         { return new WorkItem() { WorkName = "Remove AttributeSubjectArea", DoWork = () => { this.Clear(); } }.ToList(); }
 
         /// <inheritdoc/>

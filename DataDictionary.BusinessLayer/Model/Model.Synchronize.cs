@@ -96,7 +96,7 @@ namespace DataDictionary.BusinessLayer.Model
             List<WorkItem> work = new List<WorkItem>();
             IModelKey model = new ModelKey(key);
 
-            work.AddRange(businessData.Remove());
+            work.AddRange(businessData.Delete());
             work.AddRange(businessData.Load(factory, key));
             return work;
         }

@@ -26,7 +26,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>EntitySubjectArea</remarks>
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         { return new WorkItem() { WorkName = "Remove EntitySubjectArea", DoWork = () => { this.Clear(); } }.ToList(); }
 
         /// <inheritdoc/>

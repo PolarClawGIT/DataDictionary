@@ -139,20 +139,21 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
 
             work.Add(new WorkItem() { WorkName = "Remove Entity", DoWork = () => { this.Clear(); } });
-            work.AddRange(aliasValues.Remove());
-            work.AddRange(propertyValues.Remove());
-            work.AddRange(definitionValues.Remove());
-            work.AddRange(subjectAreaValues.Remove());
+            work.AddRange(aliasValues.Delete());
+            work.AddRange(propertyValues.Delete());
+            work.AddRange(definitionValues.Delete());
+            work.AddRange(subjectAreaValues.Delete());
 
             return work;
         }
 
         /// <inheritdoc/>
+        /// <remarks>Entity</remarks>
         public override void Remove(IDomainEntityKey entityItem)
         {
             base.Remove(entityItem);
@@ -162,6 +163,16 @@ namespace DataDictionary.BusinessLayer.Domain
             definitionValues.Remove(key);
             subjectAreaValues.Remove(key);
         }
+
+        /// <inheritdoc/>
+        /// <remarks>Entity</remarks>
+        public IReadOnlyList<WorkItem> Delete(IEntityIndex dataKey)
+        { return new WorkItem() { WorkName = "Remove Entity", DoWork = () => { this.Remove((IDomainEntityKey)dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
 
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
@@ -186,6 +197,7 @@ namespace DataDictionary.BusinessLayer.Domain
             definitionValues.Load(source);
             subjectAreaValues.Load(source);
         }
+
 
         /// <inheritdoc/>
         /// <remarks>Entity by Catalog</remarks>

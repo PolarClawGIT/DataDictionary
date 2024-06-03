@@ -37,7 +37,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>AttributeProperty</remarks>
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         { return new WorkItem() { WorkName = "Remove AttributeProperty", DoWork = () => { this.Clear(); } }.ToList(); }
 
         /// <inheritdoc/>
