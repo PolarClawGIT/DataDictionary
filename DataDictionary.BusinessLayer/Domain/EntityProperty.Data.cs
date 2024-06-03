@@ -13,7 +13,7 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface component for the Model Entity Property
     /// </summary>
-    public interface IEntityPropertyData:
+    public interface IEntityPropertyData :
         IBindingData<EntityPropertyValue>
     {
 
@@ -35,11 +35,6 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>EntityProperty</remarks>
-        public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove EntityProperty", DoWork = () => { this.Clear(); } }.ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>EntityProperty</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainEntityKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
@@ -47,5 +42,20 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <remarks>EntityProperty</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>EntityProperty</remarks>
+        public IReadOnlyList<WorkItem> Delete()
+        { return new WorkItem() { WorkName = "Remove EntityProperty", DoWork = () => { this.Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>EntityProperty</remarks>
+        public IReadOnlyList<WorkItem> Delete(IDomainEntityKey dataKey)
+        { return new WorkItem() { WorkName = "Remove EntityProperty", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>EntityProperty</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
     }
 }

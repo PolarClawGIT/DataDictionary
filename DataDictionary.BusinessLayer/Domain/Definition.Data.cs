@@ -65,8 +65,18 @@ namespace DataDictionary.BusinessLayer.Domain
         { this.Load(source); }
 
         /// <inheritdoc/>
-        /// <remarks>Property</remarks>
+        /// <remarks>Definition</remarks>
         public IReadOnlyList<WorkItem> Delete()
         { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { this.Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Definition</remarks>
+        public IReadOnlyList<WorkItem> Delete(IDefinitionIndex dataKey)
+        { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Definition</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
     }
 }

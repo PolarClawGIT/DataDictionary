@@ -66,11 +66,11 @@ namespace DataDictionary.BusinessLayer.Application
         /// <inheritdoc/>
         public IReadOnlyList<DataTable> Export()
         {
-            List<System.Data.DataTable> result = new List<System.Data.DataTable>();
-            result.Add(helpSubjectValues.ToDataTable());
-            result.Add(propertyValues.ToDataTable());
-            result.Add(definitionValues.ToDataTable()); ;
-            return result;
+            List<System.Data.DataTable> work = new List<System.Data.DataTable>();
+            work.Add(helpSubjectValues.ToDataTable());
+            work.Add(propertyValues.ToDataTable());
+            work.Add(definitionValues.ToDataTable());
+            return work;
         }
 
         /// <inheritdoc/>
@@ -79,6 +79,16 @@ namespace DataDictionary.BusinessLayer.Application
             helpSubjectValues.Load(source);
             propertyValues.Load(source);
             definitionValues.Load(source);
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Delete()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(HelpSubjects.Delete());
+            work.AddRange(Properties.Delete());
+            work.AddRange(Definitions.Delete());
+            return work;
         }
     }
 }

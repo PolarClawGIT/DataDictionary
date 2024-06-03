@@ -64,5 +64,15 @@ namespace DataDictionary.BusinessLayer.Scripting
                 }
             }
         }
+
+        public IReadOnlyList<WorkItem> Delete(ISchemaKey dataKey)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IReadOnlyList<WorkItem> Delete()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

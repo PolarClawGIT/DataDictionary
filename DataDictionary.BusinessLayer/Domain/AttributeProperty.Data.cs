@@ -37,11 +37,6 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>AttributeProperty</remarks>
-        public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove AttributeProperty", DoWork = () => { this.Clear(); } }.ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>AttributeProperty</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainAttributeKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
@@ -50,5 +45,19 @@ namespace DataDictionary.BusinessLayer.Domain
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
+        /// <inheritdoc/>
+        /// <remarks>AttributeProperty</remarks>
+        public IReadOnlyList<WorkItem> Delete()
+        { return new WorkItem() { WorkName = "Remove AttributeProperty", DoWork = () => { this.Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>AttributeProperty</remarks>
+        public IReadOnlyList<WorkItem> Delete(IDomainAttributeKey dataKey)
+        { return new WorkItem() { WorkName = "Remove AttributeProperty", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>AttributeProperty</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
     }
 }

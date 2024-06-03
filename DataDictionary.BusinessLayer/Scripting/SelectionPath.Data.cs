@@ -16,6 +16,21 @@ namespace DataDictionary.BusinessLayer.Scripting
 
     class SelectionPathData : SelectionPathCollection<SelectionPathValue>, ISelectionPathData
     {
+        public IReadOnlyList<WorkItem> Delete(ISelectionKey dataKey)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IReadOnlyList<WorkItem> Delete()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc/>
         /// <remarks>Selection Path</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)

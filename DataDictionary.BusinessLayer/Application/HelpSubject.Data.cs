@@ -20,6 +20,8 @@ namespace DataDictionary.BusinessLayer.Application
     /// </summary>
     class HelpSubjectData : HelpCollection<HelpSubjectValue>, IHelpSubjectData
     {
+
+
         /// <inheritdoc/>
         /// <remarks>HelpSubject</remarks>
         public virtual IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
@@ -40,6 +42,15 @@ namespace DataDictionary.BusinessLayer.Application
         public virtual IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IHelpSubjectIndex helpKey)
         { return factory.CreateSave(this, (IHelpKey)helpKey).ToList(); }
 
+        /// <inheritdoc/>
+        /// <remarks>HelpSubject</remarks>
+        public IReadOnlyList<WorkItem> Delete(IHelpSubjectIndex dataKey)
+        { return new WorkItem() { WorkName = "Remove HelpSubject", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>HelpSubject</remarks>
+        public IReadOnlyList<WorkItem> Delete()
+        { return new WorkItem() { WorkName = "Remove HelpSubject", DoWork = () => { this.Clear(); } }.ToList(); }
 
     }
 }

@@ -54,8 +54,15 @@ namespace DataDictionary.BusinessLayer.Model
         public void Import(System.Data.DataSet source)
         { Load(source); }
 
+        /// <inheritdoc/>
+        /// <remarks>SubjectArea</remarks>
         public IReadOnlyList<WorkItem> Delete()
         { return new WorkItem() { WorkName = "Remove Subject Area", DoWork = () => { Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>SubjectArea</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
 
         /// <inheritdoc/>
         /// <remarks>SubjectArea</remarks>
@@ -110,6 +117,8 @@ namespace DataDictionary.BusinessLayer.Model
             }
         }
 
+
+
         /// <summary>
         /// Represents NameSpace items within the Subject that do not have Subject associated with them.
         /// </summary>
@@ -120,7 +129,7 @@ namespace DataDictionary.BusinessLayer.Model
             public ScopeType Scope { get; } = ScopeType.ModelNameSpace;
 
             public DataLayerIndex GetIndex()
-            { return new DataLayerIndex() { BusinessLayerId = SystemId}; }
+            { return new DataLayerIndex() { BusinessLayerId = SystemId }; }
 
             public NamedScopePath GetPath()
             { return SystemPath; }

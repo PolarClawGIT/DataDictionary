@@ -1,20 +1,13 @@
-﻿using DataDictionary.BusinessLayer.Application;
-using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IEntityPropertyValue : IDomainEntityPropertyItem, IPropertyIndex, IPropertyValue
+    public interface IEntityPropertyValue : IDomainEntityPropertyItem, IPropertyIndex
     { }
 
     /// <inheritdoc/>

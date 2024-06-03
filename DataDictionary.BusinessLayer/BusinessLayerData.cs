@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer
     /// Main Data Container for all Business Data.
     /// </summary>
     public partial class BusinessLayerData :
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IDeleteData,
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
         IBusinessLayerData
     {
         /// <summary>
@@ -144,6 +144,10 @@ namespace DataDictionary.BusinessLayer
             return work;
         }
 
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
+
         /// <summary>
         /// Creates a new empty Model (old model is removed).
         /// </summary>
@@ -268,5 +272,7 @@ namespace DataDictionary.BusinessLayer
                 }
             }
         }
+
+
     }
 }

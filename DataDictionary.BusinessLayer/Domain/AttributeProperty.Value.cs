@@ -1,7 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Application;
-using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using System.Xml.Linq;

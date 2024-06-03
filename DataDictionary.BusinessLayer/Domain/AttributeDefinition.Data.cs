@@ -11,8 +11,9 @@ namespace DataDictionary.BusinessLayer.Domain
     public interface IAttributeDefinitionData : IBindingData<AttributeDefinitionValue>
     { }
 
-    class AttributeDefinitionData : DomainAttributeDefinitionCollection<AttributeDefinitionValue>, IAttributeDefinitionData, 
-        ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>, ILoadData<IModelKey>, ISaveData<IModelKey>
+    class AttributeDefinitionData : DomainAttributeDefinitionCollection<AttributeDefinitionValue>, IAttributeDefinitionData,
+        ILoadData<IDomainAttributeKey>, ISaveData<IDomainAttributeKey>,
+        ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <inheritdoc/>
         /// <remarks>AttributeDefinition</remarks>
@@ -26,11 +27,6 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>AttributeDefinition</remarks>
-        public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove AttributeDefinition", DoWork = () => { this.Clear(); } }.ToList(); }
-
-        /// <inheritdoc/>
-        /// <remarks>AttributeDefinition</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainAttributeKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
@@ -38,5 +34,20 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <remarks>AttributeDefinition</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>AttributeDefinition</remarks>
+        public IReadOnlyList<WorkItem> Delete()
+        { return new WorkItem() { WorkName = "Remove AttributeDefinition", DoWork = () => { this.Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>AttributeDefinition</remarks>
+        public IReadOnlyList<WorkItem> Delete(IDomainAttributeKey dataKey)
+        { return new WorkItem() { WorkName = "Remove AttributeDefinition", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>AttributeDefinition</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
     }
 }

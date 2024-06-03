@@ -68,5 +68,15 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <remarks>Property</remarks>
         public IReadOnlyList<WorkItem> Delete()
         { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { this.Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public IReadOnlyList<WorkItem> Delete(IPropertyIndex dataKey)
+        { return new WorkItem() { WorkName = "Remove Property", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Property</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
     }
 }

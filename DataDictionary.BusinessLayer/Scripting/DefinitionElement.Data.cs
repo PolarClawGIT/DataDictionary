@@ -14,6 +14,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         ILoadData, ILoadData<ISchemaKey>,
         ISaveData, ISaveData<ISchemaKey>
     {
+
+
         /// <inheritdoc/>
         /// <remarks>Element</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ISchemaKey dataKey)
@@ -33,6 +35,16 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <remarks>Element</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
         { return factory.CreateSave(this).ToList(); }
+
+        public IReadOnlyList<WorkItem> Delete()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IReadOnlyList<WorkItem> Delete(ISchemaKey dataKey)
+        {
+            throw new NotImplementedException();
+        }
 
     }
 }

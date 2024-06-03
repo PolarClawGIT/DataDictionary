@@ -430,6 +430,7 @@ namespace DataDictionary.BusinessLayer.Database
         }
 
         /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
         public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -454,6 +455,11 @@ namespace DataDictionary.BusinessLayer.Database
 
         /// <inheritdoc/>
         /// <remarks>Catalog</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        {   return Delete(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Catalog</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
@@ -472,5 +478,7 @@ namespace DataDictionary.BusinessLayer.Database
             return result;
             
         }
+
+
     }
 }

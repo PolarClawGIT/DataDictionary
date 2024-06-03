@@ -27,6 +27,11 @@ namespace DataDictionary.BusinessLayer.Application
     [Obsolete("Replace Domain Property", true)]
     class PropertyData : PropertyCollection<PropertyValue>, IPropertyData
     {
+        public IReadOnlyList<WorkItem> Delete()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc/>
         /// <remarks>Property</remarks>
         public virtual IReadOnlyList<WorkItem> Load(IDatabaseWork factory)

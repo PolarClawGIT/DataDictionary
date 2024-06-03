@@ -194,6 +194,9 @@ namespace DataDictionary.BusinessLayer.Scripting
             return work;
         }
 
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
+
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
@@ -203,5 +206,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
             return result;
         }
+
+
     }
 }

@@ -129,6 +129,11 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        {   return Delete(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Domain</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
@@ -136,5 +141,6 @@ namespace DataDictionary.BusinessLayer.Domain
             result.AddRange(entityValues.GetNamedScopes());
             return result;
         }
+
     }
 }

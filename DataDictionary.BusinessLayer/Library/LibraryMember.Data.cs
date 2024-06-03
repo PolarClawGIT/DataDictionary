@@ -1,9 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
-using DbLayer = DataDictionary.DataLayer.LibraryData;
 using Toolbox.Threading;
 using System.ComponentModel;
+using DataDictionary.DataLayer.LibraryData.Member;
+using DataDictionary.DataLayer.LibraryData.Source;
 
 namespace DataDictionary.BusinessLayer.Library
 {
@@ -13,8 +14,8 @@ namespace DataDictionary.BusinessLayer.Library
     public interface ILibraryMemberData : IBindingData<LibraryMemberValue>
     { }
 
-    class LibraryMemberData : DbLayer.Member.LibraryMemberCollection<LibraryMemberValue>, ILibraryMemberData,
-        ILoadData<DbLayer.Source.ILibrarySourceKey>, ISaveData<DbLayer.Source.ILibrarySourceKey>,
+    class LibraryMemberData : LibraryMemberCollection<LibraryMemberValue>, ILibraryMemberData,
+        ILoadData<ILibrarySourceKey>, ISaveData<ILibrarySourceKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
         INamedScopeSource
     {
@@ -23,7 +24,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library Member</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, DbLayer.Source.ILibrarySourceKey dataKey)
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, ILibrarySourceKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -33,7 +34,7 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc/>
         /// <remarks>Library Member</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, DbLayer.Source.ILibrarySourceKey dataKey)
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, ILibrarySourceKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
         /// <inheritdoc/>
@@ -79,6 +80,21 @@ namespace DataDictionary.BusinessLayer.Library
                 }
             }
         }
+
+        /// <inheritdoc/>
+        /// <remarks>Library Member</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Library Member</remarks>
+        public IReadOnlyList<WorkItem> Delete()
+        { return new WorkItem() { WorkName = "Remove Library Member", DoWork = () => { this.Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Library Member</remarks>
+        public IReadOnlyList<WorkItem> Delete(ILibrarySourceKey dataKey)
+        { return new WorkItem() { WorkName = "Remove Library Member", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
 
     }
 }

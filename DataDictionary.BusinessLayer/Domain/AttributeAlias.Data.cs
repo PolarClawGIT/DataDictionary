@@ -26,11 +26,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
-        /// <inheritdoc/>
-        /// <remarks>AttributeAlias</remarks>
-        public IReadOnlyList<WorkItem> Delete()
-        { return new WorkItem() { WorkName = "Remove AttributeAlias", DoWork = () => { this.Clear(); } }.ToList(); }
-
+ 
         /// <inheritdoc/>
         /// <remarks>AttributeAlias</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainAttributeKey dataKey)
@@ -40,5 +36,20 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <remarks>AttributeAlias</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>AttributeAlias</remarks>
+        public IReadOnlyList<WorkItem> Delete()
+        { return new WorkItem() { WorkName = "Remove AttributeAlias", DoWork = () => { this.Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>AttributeAlias</remarks>
+        public IReadOnlyList<WorkItem> Delete(IDomainAttributeKey dataKey)
+        { return new WorkItem() { WorkName = "Remove AttributeAlias", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>AttributeAlias</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        {   return Delete(); }
     }
 }
