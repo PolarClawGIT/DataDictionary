@@ -255,13 +255,13 @@ namespace DataDictionary.BusinessLayer.Domain
                 ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(item);
                 foreach (ExtendedPropertyValue property in source.DbExtendedProperties.Where(w => propertyKey.Equals(w)))
                 {
-                    PropertyKeyExtended appKey = new PropertyKeyExtended(property);
+                    PropertyIndexValue appKey = new PropertyIndexValue(property);
 
                     if (propertyDefinition.FirstOrDefault(w =>
-                        appKey.Equals(w)) is Application.IPropertyValue appProperty
+                        appKey.Equals(w)) is IPropertyValue appProperty
                         && propertyValues.Count(w =>
                             entityKey.Equals(w)
-                            && new Application.PropertyIndex(appProperty).Equals(w)) == 0)
+                            && new PropertyIndexValue(appProperty).Equals(w)) == 0)
                     { propertyValues.Add(new EntityPropertyValue(entityKey, appProperty, property)); }
                 }
             }

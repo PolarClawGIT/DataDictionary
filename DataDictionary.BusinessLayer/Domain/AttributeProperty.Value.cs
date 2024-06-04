@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.DomainData.Property;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -44,9 +45,9 @@ namespace DataDictionary.BusinessLayer.Domain
                         switch (option.ColumnName)
                         {
                             case nameof(property.PropertyTitle): value = property.PropertyTitle; break;
-                            case nameof(property.ExtendedProperty): value = property.ExtendedProperty; break;
+                            case nameof(property.PropertyType): value = property.PropertyType.ToName(); break;
+                            case nameof(property.PropertyData): value = property.PropertyData; break;
                             case nameof(PropertyValue): value = PropertyValue; break;
-                            case nameof(DefinitionText): value = DefinitionText; break;
                             default:
                                 break;
                         }
@@ -67,13 +68,13 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             ScopeType scope = ScopeType.ModelAttributeProperty;
             IAttributePropertyValue attributeNames;
-            IPropertyItem propertyNames;
+            IPropertyValue propertyNames;
             List<ColumnValue> result = new List<ColumnValue>()
             {
-                new ColumnValue() {ColumnName = nameof(propertyNames.PropertyTitle),    DataType = typeof(String), AllowDBNull = false, Scope = scope},
-                new ColumnValue() {ColumnName = nameof(propertyNames.ExtendedProperty), DataType = typeof(String), AllowDBNull = true,  Scope = scope},
-                new ColumnValue() {ColumnName = nameof(attributeNames.PropertyValue),   DataType = typeof(String), AllowDBNull = true,  Scope = scope},
-                new ColumnValue() {ColumnName = nameof(attributeNames.DefinitionText),  DataType = typeof(String), AllowDBNull = true,  Scope = scope},
+                new ColumnValue() {ColumnName = nameof(propertyNames.PropertyTitle),  DataType = typeof(String), AllowDBNull = false, Scope = scope},
+                new ColumnValue() {ColumnName = nameof(propertyNames.PropertyType),   DataType = typeof(String), AllowDBNull = true,  Scope = scope},
+                new ColumnValue() {ColumnName = nameof(propertyNames.PropertyData),   DataType = typeof(String), AllowDBNull = true,  Scope = scope},
+                new ColumnValue() {ColumnName = nameof(attributeNames.PropertyValue), DataType = typeof(String), AllowDBNull = true,  Scope = scope},
             };
 
             return result;

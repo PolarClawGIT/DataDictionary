@@ -73,7 +73,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
                 foreach (AttributePropertyValue item in data.DomainModel.Attributes.Properties.Where(w => key.Equals(w)))
                 {
-                    if(item.GetXElement(data.DomainModel.ModelProperty, options) is XElement value)
+                    if(item.GetXElement(data.DomainModel.Properties, options) is XElement value)
                     {
                         if (result is null) { result = new XElement(this.Scope.ToName()); }
                         result.Add(value);

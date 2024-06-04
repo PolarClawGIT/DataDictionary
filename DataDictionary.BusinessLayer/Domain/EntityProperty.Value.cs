@@ -24,51 +24,5 @@ namespace DataDictionary.BusinessLayer.Domain
                                      IPropertyIndex propertyKey,
                                      IExtendedPropertyValue value)
             : base(EntityKey, propertyKey, value) { }
-
-        internal XElement? GetXElement(IPropertyItem property, IEnumerable<DefinitionElementValue>? options = null)
-        {
-            XElement? result = null;
-            IEntityPropertyValue EntityNames;
-            IPropertyItem propertyNames;
-
-            if (options is not null)
-            {
-                foreach (DefinitionElementValue option in options)
-                {
-                    Object? value = null;
-
-                    switch (option.ColumnName)
-                    {
-                        case nameof(propertyNames.PropertyTitle): value = property.PropertyTitle; break;
-                        case nameof(propertyNames.ExtendedProperty): value = property.ExtendedProperty; break;
-                        case nameof(EntityNames.PropertyValue): value = PropertyValue; break;
-                        case nameof(EntityNames.DefinitionText): value = DefinitionText; break;
-                        default:
-                            break;
-                    }
-
-                    if (value is not null)
-                    { result = new XElement(Scope.ToName(), option.GetXElement(value)); }
-                }
-            }
-
-            return result;
-        }
-
-        internal static IReadOnlyList<ColumnValue> GetXColumns()
-        {
-            ScopeType scope = ScopeType.ModelEntityProperty;
-            IEntityPropertyValue EntityNames;
-            IPropertyItem propertyNames;
-            List<ColumnValue> result = new List<ColumnValue>()
-            {
-                new ColumnValue() {ColumnName = nameof(propertyNames.PropertyTitle),    DataType = typeof(String), AllowDBNull = false, Scope = scope},
-                new ColumnValue() {ColumnName = nameof(propertyNames.ExtendedProperty), DataType = typeof(String), AllowDBNull = true,  Scope = scope},
-                new ColumnValue() {ColumnName = nameof(EntityNames.PropertyValue),   DataType = typeof(String), AllowDBNull = true,  Scope = scope},
-                new ColumnValue() {ColumnName = nameof(EntityNames.DefinitionText),  DataType = typeof(String), AllowDBNull = true,  Scope = scope},
-            };
-
-            return result;
-        }
     }
 }

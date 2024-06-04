@@ -8,15 +8,21 @@ using System.Threading.Tasks;
 namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 {
     /// <summary>
-    /// Interface for the Database Extended Property Key
+    /// Interface for the Database Extended Property Name
     /// </summary>
-    public interface IDbExtendedPropertyKey : IDbExtendedPropertyKeyName
+    public interface IDbExtendedPropertyName
     {
         /// <summary>
         /// Name of the Extended Property.
         /// </summary>
-        string? PropertyName { get; }
+        String? PropertyName { get; }
     }
+
+    /// <summary>
+    /// Interface for the Database Extended Property Key
+    /// </summary>
+    public interface IDbExtendedPropertyKey : IDbExtendedPropertyKeyName, IDbExtendedPropertyName
+    { }
 
     /// <summary>
     /// Implementation for the Database Extended Property Key

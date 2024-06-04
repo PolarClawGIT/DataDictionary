@@ -1,4 +1,7 @@
-﻿using DataDictionary.DataLayer.DomainData.Property;
+﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.DataLayer;
+using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
+using DataDictionary.DataLayer.DomainData.Property;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -30,4 +33,5 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc cref="DomainPropertyKeyName(IDomainPropertyKeyName)"/>
         public PropertyIndexName(IPropertyIndexName source) : base(source) { }
     }
+
 }

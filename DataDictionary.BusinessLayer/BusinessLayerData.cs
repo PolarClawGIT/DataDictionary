@@ -77,7 +77,7 @@ namespace DataDictionary.BusinessLayer
             modelValue.Add(new ModelValue());
             applicationValue = new Application.ApplicationData();
 
-            domainValue = new Domain.DomainModel() { Models = modelValue, ModelProperty = applicationValue.Properties, SubjectAreas = subjectAreaValues };
+            domainValue = new Domain.DomainModel() { Models = modelValue, SubjectAreas = subjectAreaValues };
             databaseValue = new Database.DatabaseModel();
             libraryValue = new Library.LibraryModel();
 

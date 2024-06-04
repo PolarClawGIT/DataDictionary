@@ -9,6 +9,7 @@ using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.DomainData.Property;
 using DataDictionary.DataLayer.ModelData;
 using System.ComponentModel;
 using System.Xml.Linq;
@@ -276,13 +277,13 @@ namespace DataDictionary.BusinessLayer.Domain
                 ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(item);
                 foreach (ExtendedPropertyValue property in source.DbExtendedProperties.Where(w => propertyKey.Equals(w)))
                 {
-                    PropertyKeyExtended appKey = new PropertyKeyExtended(property);
+                    PropertyIndexValue appKey = new PropertyIndexValue(property);
 
                     if (propertyDefinition.FirstOrDefault(w =>
-                        appKey.Equals(w)) is Application.IPropertyValue appProperty
+                        appKey.Equals(w)) is IPropertyValue appProperty
                         && propertyValues.Count(w =>
                             attributeKey.Equals(w)
-                            && new Application.PropertyIndex(appProperty).Equals(w)) == 0)
+                            && new PropertyIndexValue(appProperty).Equals(w)) == 0)
                     { propertyValues.Add(new AttributePropertyValue(attributeKey, appProperty, property)); }
                 }
             }
