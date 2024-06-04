@@ -29,9 +29,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         public string? PropertyValue { get { return GetValue(nameof(PropertyValue)); } set { SetValue(nameof(PropertyValue), value); } }
 
         /// <inheritdoc/>
-        public string? DefinitionText { get { return GetValue(nameof(DefinitionText)); } set { SetValue(nameof(DefinitionText), value); } }
-
-        /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.ModelAttributeProperty;
 
         /// <summary>
@@ -64,7 +61,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(PropertyId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(PropertyValue), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(DefinitionText), typeof(string)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

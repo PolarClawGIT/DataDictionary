@@ -1093,7 +1093,6 @@
 
         #endregion
 
-        private TableLayoutPanel templateLayout;
         private Controls.TextBoxData templateTitleData;
         private Controls.TextBoxData templateDescriptionData;
         private TabControl templateTabs;
@@ -1110,20 +1109,16 @@
         private CheckBox renderDataAsText;
         private CheckBox renderDataAsCData;
         private CheckBox renderDataAsXml;
-        private GroupBox renderTypeGroup;
-        private TableLayoutPanel renderTypeLayout;
         private CheckBox renderIsTypeData;
         private Controls.ComboBoxData elementTypeData;
         private ListView elementSelection;
         private ColumnHeader columnName;
-        private TableLayoutPanel elementPathLayout;
         private DataGridView selectionItemData;
         private Controls.NamedScopeData namedScopeData;
         private ToolStrip dataPreviewCommands;
         private ToolStripButton dataPrevieweBuild;
         private ToolStripButton dataPreviewSave;
         private TextBox previewData;
-        private TableLayoutPanel tranformsLayout;
         private ToolStrip transformCommands;
         private ToolStripButton transformFormat;
         private ToolStripButton transformRenderXML;

@@ -1,5 +1,4 @@
-﻿using DataDictionary.BusinessLayer.Application;
-using DataDictionary.DataLayer.ApplicationData.Property;
+﻿using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.Main.Controls;
 using System.ComponentModel;
 
@@ -19,7 +18,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             BindingList<PropertyNameMember> list = new BindingList<PropertyNameMember>();
             list.Add(new PropertyNameMember() { PropertyId = Guid.Empty, PropertyTitle = "(select property Type)" });
 
-            foreach (PropertyItem item in BusinessData.ApplicationData.Properties)
+            foreach (PropertyValue item in BusinessData.DomainModel.Properties)
             {
                 if (item.PropertyId is Guid propertyId && item.PropertyTitle is String propertyTitle)
                 { list.Add(new PropertyNameMember() { PropertyId = propertyId, PropertyTitle = propertyTitle }); }
@@ -36,7 +35,7 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             BindingList<PropertyNameMember> list = new BindingList<PropertyNameMember>();
             list.Add(new PropertyNameMember() { PropertyId = Guid.Empty, PropertyTitle = "(select property Type)" });
 
-            foreach (PropertyItem item in BusinessData.ApplicationData.Properties)
+            foreach (PropertyValue item in BusinessData.DomainModel.Properties)
             {
                 if (item.PropertyId is Guid propertyId && item.PropertyTitle is String propertyTitle)
                 { list.Add(new PropertyNameMember() { PropertyId = propertyId, PropertyTitle = propertyTitle }); }

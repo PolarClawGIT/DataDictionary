@@ -166,7 +166,7 @@ namespace DataDictionary.Main
         }
 
         private void browsePropertiesCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.ApplicationWide.Property()); }
+        { throw new NotImplementedException(); }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {

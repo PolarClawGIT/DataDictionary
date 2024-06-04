@@ -116,23 +116,21 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingProperty_CurrentChanged(object sender, EventArgs e)
         {
-            if (bindingProperty.Current is IPropertyValue current)
+            if (bindingProperty.Current is EntityPropertyValue current)
             {
                 domainProperty.PropertyId = current.PropertyId ?? Guid.Empty;
-                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty; ;
-                domainProperty.DefinitionText = current.DefinitionText ?? String.Empty;
+                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty; 
             }
         }
 
         private void DomainProperty_OnApply(object sender, EventArgs e)
         {
-            if (bindingProperty.DataSource is IList<IPropertyValue> properties
+            if (bindingProperty.DataSource is IList<EntityPropertyValue> properties
                 && properties.FirstOrDefault(
                     w => w.PropertyId == domainProperty.PropertyId)
-                is IPropertyValue value)
+                is EntityPropertyValue value)
             {
                 value.PropertyValue = domainProperty.PropertyValue;
-                value.DefinitionText = domainProperty.DefinitionText;
                 bindingProperty.Position = properties.IndexOf(value);
             }
             else { bindingProperty.AddNew(); }

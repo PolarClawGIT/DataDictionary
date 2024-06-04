@@ -92,7 +92,6 @@ namespace DataDictionary.Main.Forms.Domain
                 AttributePropertyValue newItem = new AttributePropertyValue(current);
                 newItem.PropertyId = domainProperty.PropertyId;
                 newItem.PropertyValue = domainProperty.PropertyValue;
-                newItem.DefinitionText = domainProperty.DefinitionText;
                 e.NewObject = newItem;
             }
         }
@@ -132,23 +131,21 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingProperty_CurrentChanged(object sender, EventArgs e)
         {
-            if (bindingProperty.Current is IPropertyValue current)
+            if (bindingProperty.Current is AttributePropertyValue current)
             {
                 domainProperty.PropertyId = current.PropertyId ?? Guid.Empty;
-                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty; ;
-                domainProperty.DefinitionText = current.DefinitionText ?? String.Empty;
+                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty;
             }
         }
 
         private void DomainProperty_OnApply(object sender, EventArgs e)
         {
-            if (bindingProperty.DataSource is IList<IPropertyValue> properties
+            if (bindingProperty.DataSource is IList<AttributePropertyValue> properties
                 && properties.FirstOrDefault(
                     w => w.PropertyId == domainProperty.PropertyId)
-                is IPropertyValue value)
+                is AttributePropertyValue value)
             {
                 value.PropertyValue = domainProperty.PropertyValue;
-                value.DefinitionText = domainProperty.DefinitionText;
                 bindingProperty.Position = properties.IndexOf(value);
             }
             else { bindingProperty.AddNew(); }

@@ -1,13 +1,12 @@
-﻿using DataDictionary.BusinessLayer.Application;
+﻿using DataDictionary.BusinessLayer.Domain;
+using DataDictionary.DataLayer.DomainData.Property;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using System.ComponentModel;
-using IPropertyValue = DataDictionary.BusinessLayer.Domain.IPropertyValue;
 
 namespace DataDictionary.Main.Forms.Domain.Controls
 {
     partial class DomainProperty : UserControl
     {
-        //Func<IPropertyValue?> GetCurrent = () => { return null; };
         public String ApplyText { get { return applyCommand.Text; } set { applyCommand.Text = value; } }
         public Image? ApplyImage { get { return applyCommand.Image; } set { applyCommand.Image = value; } }
 
@@ -30,12 +29,6 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             set { propertyValueData.Text = value; }
         }
 
-        [Browsable(false)]
-        public String DefinitionText
-        {
-            get { return propertyDefinitionData.Rtf ?? propertyDefinitionData.Text; }
-            set { propertyDefinitionData.Rtf = value; }
-        }
         public Boolean ReadOnly
         {
             get { return !propertyLayout.Enabled; }
@@ -52,39 +45,35 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         {
             if (propertyTypeData.SelectedItem is PropertyNameMember selected
                 && new PropertyIndex(selected) is PropertyIndex key
-                && BusinessData.ApplicationData.Properties.FirstOrDefault(w => key.Equals(w)) is PropertyValue property)
+                && BusinessData.DomainModel.Properties.FirstOrDefault(w => key.Equals(w)) is PropertyValue property)
             {
                 // Setup the Choice check-boxes
                 List<String> selectedChoices = new List<String>();
                 if (!String.IsNullOrWhiteSpace(propertyValueData.Text))
                 { selectedChoices.AddRange(propertyValueData.Text.Split(",")); }
 
-                foreach (PropertyValue.ChoiceItem choice in property.Choices)
+                foreach (String value in property.Choices)
                 {
-                    String newItem = choice.Choice;
-                    propertyChoiceData.Items.Add(newItem);
-                    Int32 index = propertyChoiceData.Items.IndexOf(newItem);
-                    Boolean isChecked = selectedChoices.Contains(newItem);
+                    propertyChoiceData.Items.Add(value);
+                    Int32 index = propertyChoiceData.Items.IndexOf(value);
+                    Boolean isChecked = selectedChoices.Contains(value);
                     propertyChoiceData.SetItemChecked(index, isChecked);
                 }
 
                 // Enabled or Disable controls based on select item
                 propertyTypeData.Enabled = true;
-                propertyValueData.Enabled = (property.IsExtendedProperty == true || property.IsFrameworkSummary == true);
-                propertyChoiceData.Enabled = (property.IsChoice == true);
-                propertyDefinitionData.Enabled = (property.IsDefinition == true);
+                propertyValueData.Enabled = !(property.PropertyType is DomainPropertyType.List);
+                propertyChoiceData.Enabled = (property.PropertyType is DomainPropertyType.List);
                 applyCommand.Enabled = true;
 
                 if (propertyValueData.Enabled) { propertyTabs.SelectedTab = propertyValueTab; }
                 else if (propertyChoiceData.Enabled) { propertyTabs.SelectedTab = propertyChoiceTab; }
-                else if (propertyDefinitionData.Enabled) { propertyTabs.SelectedTab = propertyDefinitionTab; }
             }
             else
             {
                 propertyTypeData.Enabled = true;
                 propertyValueData.Enabled = false;
                 propertyChoiceData.Enabled = false;
-                propertyDefinitionData.Enabled = false;
                 applyCommand.Enabled = false;
             }
         }
@@ -94,7 +83,6 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             // Cleanup not performed by Binding
             propertyChoiceData.Items.Clear();
             propertyValueData.Text = String.Empty;
-            propertyDefinitionData.Text = String.Empty;
 
             RefreshControls();
         }
@@ -128,28 +116,6 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             if (propertyChoiceData.Enabled)
             { propertyChoiceData.ResetBackColor(); }
             else { propertyChoiceData.BackColor = SystemColors.Control; }
-        }
-
-        private void PropertyDefinitionData_Validated(object sender, EventArgs e)
-        {
-            String value = propertyDefinitionData.Text.Trim();
-            Int32 maxCutOff = value.Length;
-            if (maxCutOff > 4000) { maxCutOff = 4000; }
-
-            Int32 firstBreak = value.Substring(0, maxCutOff).IndexOf("\n\n");
-            Int32 lastReturn = value.Substring(0, maxCutOff).LastIndexOf("\n");
-            Int32 lastSpace = value.Substring(0, maxCutOff).LastIndexOf(" ");
-
-            if (firstBreak > 0) { value = value.Substring(0, firstBreak); }
-            else if (lastReturn > 0 && value.Length > maxCutOff) { value = value.Substring(0, lastReturn); }
-            else if (lastSpace > 0 && value.Length > maxCutOff) { value = value.Substring(0, lastSpace); }
-            else { value = value.Substring(0, maxCutOff); }
-
-            value = value.Replace(Environment.NewLine, " ");
-            value = value.Replace("\t", " ");
-            value = value.Replace("\n", " ");
-
-            propertyValueData.Text = value.Trim();
         }
 
         public event EventHandler? OnApply;

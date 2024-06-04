@@ -1,8 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Entity;
-using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
