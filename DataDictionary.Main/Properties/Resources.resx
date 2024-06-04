@@ -220,6 +220,9 @@
   <data name="Dependancy" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Dependancy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DescriptionViewer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DescriptionViewer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Diagram" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Diagram.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -297,6 +300,9 @@
   </data>
   <data name="Icon_Dependancy" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Dependancy.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_DescriptionViewer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\DescriptionViewer.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Icon_Diagram" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Diagram.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

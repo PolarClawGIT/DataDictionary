@@ -74,7 +74,6 @@ namespace DataDictionary.BusinessLayer
             subjectAreaValues = new Model.SubjectAreaData() { Models = modelValue };
             namedScopeValue = new NamedScopeData();
 
-            modelValue.Add(new ModelValue());
             applicationValue = new Application.ApplicationData();
 
             domainValue = new Domain.DomainModel() { Models = modelValue, SubjectAreas = subjectAreaValues };
@@ -156,8 +155,8 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(Delete());
-
             work.AddRange(modelValue.Create());
+            work.AddRange(domainValue.Create(applicationValue));
             return work;
         }
 

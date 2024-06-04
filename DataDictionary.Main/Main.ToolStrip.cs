@@ -86,13 +86,19 @@ namespace DataDictionary.Main
         private void menuAttributeAlaises_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.Attributes.Aliases); }
 
-        private void entitiesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void menuAttributeDefinitions_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_DescriptionViewer), BusinessData.DomainModel.Attributes.Definitions); }
+
+        private void menuEntities_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Entities), BusinessData.DomainModel.Entities); }
 
-        private void entityPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void menuEntityProperties_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainModel.Entities.Properties); }
 
-        private void entityAliasToolStripMenuItem_Click(object sender, EventArgs e)
+        private void menuEntityDefinitions_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_DescriptionViewer), BusinessData.DomainModel.Entities.Definitions); }
+
+        private void menuEntityAlias_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.Entities.Aliases); }
 
         private void manageScriptingCommand_ButtonClick(object sender, EventArgs e)
@@ -107,5 +113,10 @@ namespace DataDictionary.Main
         private void selectionPathCommand_Click(object sender, EventArgs e)
         { Activate(() => new Forms.Scripting.SelectionManager(null)); }
 
+        private void menuModelProperty_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainModel.Properties); }
+
+        private void menuModelDefinition_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_DescriptionViewer), BusinessData.DomainModel.Definitions); }
     }
 }

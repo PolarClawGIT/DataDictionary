@@ -69,6 +69,20 @@ namespace DataDictionary.BusinessLayer.Domain
             entityValues = new EntityData() { Model = this };
         }
 
+        /// <summary>
+        /// Sets up the Domain Model by importing application common data.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> Create(IApplicationData source)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem() { DoWork = () => propertyValues.Load(source.Properties.CreateDataReader()) });
+            work.Add(new WorkItem() { DoWork = () => definitionValues.Load(source.Definitions.CreateDataReader()) });
+
+            return work;
+        }
+
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)

@@ -109,6 +109,7 @@ namespace DataDictionary.Main
                 work.Add(factory.OpenConnection());
                 work.AddRange(BusinessData.ApplicationData.Load(factory));
                 work.AddRange(BusinessData.ScriptingEngine.Load(factory));
+                work.AddRange(BusinessData.Create());
 
                 if (!appDataFile.Exists)
                 { work.AddRange(BusinessData.ExportApplication(appDataFile)); }
