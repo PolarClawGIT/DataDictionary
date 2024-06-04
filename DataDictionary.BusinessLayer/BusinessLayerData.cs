@@ -243,7 +243,6 @@ namespace DataDictionary.BusinessLayer
                 {
                     workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
                     applicationValue.Import(workSet);
-                    scriptingValue.Import(workSet);
                 }
             }
         }
@@ -266,7 +265,6 @@ namespace DataDictionary.BusinessLayer
                 using (System.Data.DataSet workSet = new System.Data.DataSet())
                 {
                     workSet.Tables.AddRange(applicationValue.Export().ToArray());
-                    workSet.Tables.AddRange(scriptingValue.Export().ToArray());
 
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }
