@@ -68,6 +68,7 @@
     <Folder Include="dbo\Views" />
     <Folder Include="App_DataDictionary\Views" />
     <Folder Include="App_DataDictionary\Functions\" />
+    <Folder Include="Obsolete" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema.scmp" />
@@ -215,24 +216,8 @@
     <Build Include="App_DataDictionary\User Defined Types\typeModelEntity.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetModelEntity.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetModelEntity.sql" />
-    <Build Include="App_DataDictionary\Tables\ScriptingTransform.sql" />
-    <Build Include="App_DataDictionary\Tables\ScriptingSchema.sql" />
-    <Build Include="App_DataDictionary\Tables\ScriptingSchemaElement.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeScriptingTransform.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeScriptingSchema.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeScriptingSchemaElement.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingTransform.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingTransform.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingSchema.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingSchema.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingSchemaElement.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingSchemaElement.sql" />
-    <Build Include="App_DataDictionary\Tables\ScriptingSelection.sql" />
-    <Build Include="App_DataDictionary\Tables\ScriptingSelectionPath.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetMemberNameSpace.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeDomainAlias.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeScriptingSelection.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeScriptingSelectionPath.sql" />
     <Build Include="App_DataDictionary\User Defined Types\typeNameSpace.sql" />
     <Build Include="App_DataDictionary\Tables\ModelNameSpace.sql" />
     <Build Include="App_DataDictionary\Functions\funcGetNameSpace.sql" />
@@ -243,10 +228,6 @@
     <Build Include="App_DataDictionary\User Defined Types\typeDomainEntitySubjectArea.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeSubjectArea.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntitySubjectArea.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingSelection.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingSelectionPath.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingSelectionPath.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingSelection.sql" />
     <Build Include="App_DataDictionary\Tables\ModelScripting.sql" />
     <Build Include="App_DataDictionary\Tables\ScriptingTemplate.sql" />
     <Build Include="App_DataDictionary\Tables\ScriptingElement.sql" />
@@ -264,6 +245,26 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainProperty.sql" />
     <Build Include="App_DataDictionary\Tables\ModelDefinition.sql" />
     <Build Include="App_DataDictionary\Tables\ModelProperty.sql" />
+    <Build Include="Obsolete\typeScriptingSchema.sql" />
+    <Build Include="Obsolete\typeScriptingSchemaElement.sql" />
+    <Build Include="Obsolete\typeScriptingSelection.sql" />
+    <Build Include="Obsolete\typeScriptingSelectionPath.sql" />
+    <Build Include="Obsolete\typeScriptingTransform.sql" />
+    <Build Include="Obsolete\ScriptingSchema.sql" />
+    <Build Include="Obsolete\ScriptingSchemaElement.sql" />
+    <Build Include="Obsolete\ScriptingSelection.sql" />
+    <Build Include="Obsolete\ScriptingSelectionPath.sql" />
+    <Build Include="Obsolete\ScriptingTransform.sql" />
+    <Build Include="Obsolete\procSetScriptingSchema.sql" />
+    <Build Include="Obsolete\procSetScriptingSchemaElement.sql" />
+    <Build Include="Obsolete\procSetScriptingSelection.sql" />
+    <Build Include="Obsolete\procSetScriptingSelectionPath.sql" />
+    <Build Include="Obsolete\procSetScriptingTransform.sql" />
+    <Build Include="Obsolete\procGetScriptingSchema.sql" />
+    <Build Include="Obsolete\procGetScriptingSchemaElement.sql" />
+    <Build Include="Obsolete\procGetScriptingSelection.sql" />
+    <Build Include="Obsolete\procGetScriptingSelectionPath.sql" />
+    <Build Include="Obsolete\procGetScriptingTransform.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
