@@ -265,6 +265,15 @@
     <Build Include="Obsolete\procGetScriptingSelection.sql" />
     <Build Include="Obsolete\procGetScriptingSelectionPath.sql" />
     <Build Include="Obsolete\procGetScriptingTransform.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeScriptingTemplate.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeScriptingPath.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeScriptingElement.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingTemplate.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingPath.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingElement.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingTemplate.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingPath.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingElement.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
