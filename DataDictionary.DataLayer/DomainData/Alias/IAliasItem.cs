@@ -10,6 +10,11 @@ namespace DataDictionary.DataLayer.DomainData.Alias
     /// <summary>
     /// Interface common to Alias Items.
     /// </summary>
-    public interface IAliasItem : IScopeKey, IAliasKeyName
-    { }
+    public interface IAliasItem : IAliasKeyName
+    { 
+        /// <summary>
+        /// Application Scope of the Alias.
+        /// </summary>
+        ScopeType AliasScope { get; }
+    }
 }
