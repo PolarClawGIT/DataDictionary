@@ -233,6 +233,22 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// Scripting Selection Path
         /// </summary>
         ScriptingSelectionPath,
+
+        /// <summary>
+        /// Scripting Template
+        /// </summary>
+        ScriptingTemplate,
+
+        /// <summary>
+        /// Scripting Template Path
+        /// </summary>
+        ScriptingTemplatePath,
+
+        /// <summary>
+        /// Scripting Template Element
+        /// </summary>
+        ScriptingTemplateElement,
+
     }
 
     /// <summary>

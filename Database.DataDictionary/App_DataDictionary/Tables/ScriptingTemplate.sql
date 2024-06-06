@@ -6,7 +6,6 @@
 	-- Transform Settings, refers to the XSLT and the document produced.
 	[BreakOnScope]			[App_DataDictionary].[typeScopeName] NULL,  -- The Scope to have a document break on. Null = no break.
 	[TransformScript]		XML Null , -- XSLT Transform Script. Not sure how to specify this is xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	[TransformAsText]       Bit Null, -- The result is expected to be plain text. true = Text, false = XML.
 	-- Document Settings, refers to the XML documents and scripting files that is built.
 	-- Concept: The database would not store the files.
 	--          Instead, they are generated and written to the Visual Studio solution directory.
@@ -22,13 +21,13 @@
 	--          Extension: The extension to be used. The Default is either .XML or .TXT depending on TransformOnText.
 	--          A simple viewer would exist within the application to preview the data with "Save As" feature.
 	--          The application can search for files based on the Template settings and display them in the navigation tree.
-	[RootDirectory]         NVarChar(100) Null,
-	[SolutionDirectory]		NVarChar(250) Null,
-	[DocumentDirectory]		NVarChar(250) Null,
+	[RootDirectory]         NVarChar(100) Null, -- Name of the Special Directory used as the Root
+	[DocumentDirectory]		NVarChar(250) Null, -- From Root, the directory for the XML files.
 	[DocumentPrefix]		NVarChar(50) Null,
 	[DocumentSuffix]		NVarChar(50) Null,
 	[DocumentExtension]		NVarChar(10) Null,
-	[ScriptDirectory]		NVarChar(250) Null,
+	[ScriptAs]				NVarChar(10) Not Null, -- The type of Document the script produces. Text or XML
+	[ScriptDirectory]		NVarChar(250) Null, -- From Root, the directory for the Script files.
 	[ScriptPrefix]			NVarChar(50) Null,
 	[ScriptSuffix]			NVarChar(50) Null,
 	[ScriptExtension]		NVarChar(10) Null,
@@ -38,5 +37,5 @@
 	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_ScriptingTemplate_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
 	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_ScriptingTemplate] PRIMARY KEY CLUSTERED ([TemplateId] ASC),
-	
+	CONSTRAINT [CK_ScriptingTemplateScriptAs] CHECK ([ScriptAs]='XML' OR [ScriptAs]='Text'),
 )

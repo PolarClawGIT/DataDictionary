@@ -18,7 +18,7 @@
 	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_ScriptingElement] PRIMARY KEY CLUSTERED ([ElementId] ASC),
 	CONSTRAINT [FK_ScriptingElementTemplate] FOREIGN KEY ([TemplateId]) REFERENCES [App_DataDictionary].[ScriptingTemplate] ([TemplateId]),
-	CONSTRAINT [CK_ScriptingElementDataAs] CHECK ([DataAs] In ('Text','CData','XML'))
+	CONSTRAINT [CK_ScriptingElementDataAs] CHECK ([DataAs]='XML' OR [DataAs]='CData' OR [DataAs]='Text'),
 )
 GO
 -- Nulls are possible for references. 

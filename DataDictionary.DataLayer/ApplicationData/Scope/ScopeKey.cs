@@ -175,6 +175,10 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.ScriptingTransform,        "Scripting.Transform" },
             {ScopeType.ScriptingSelection,        "Scripting.Selection" },
             {ScopeType.ScriptingSelectionPath,    "Scripting.Selection.Path" },
+
+            {ScopeType.ScriptingTemplate,         "Scripting.Template" },
+            {ScopeType.ScriptingTemplatePath,     "Scripting.Template.Path" },
+            {ScopeType.ScriptingTemplateElement,  "Scripting.Template.Element" },
         };
 
         /// <inheritdoc/>
