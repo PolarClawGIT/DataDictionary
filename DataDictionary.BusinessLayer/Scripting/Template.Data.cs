@@ -21,6 +21,11 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// List of Scripting Paths for the Template
         /// </summary>
         ITemplatePathData Paths { get; }
+
+        /// <summary>
+        /// List of Scripting Documents (output) for the Template
+        /// </summary>
+        ITemplateDocumentData Documents { get; }
     }
 
     class TemplateData : ScriptingTemplateCollection<TemplateValue>, ITemplateData, INamedScopeSource,
@@ -40,10 +45,15 @@ namespace DataDictionary.BusinessLayer.Scripting
         public ITemplatePathData Paths { get { return pathValues; } }
         private readonly TemplatePathData pathValues;
 
+        /// <inheritdoc/>
+        public ITemplateDocumentData Documents { get { return documentValues; } }
+        private readonly TemplateDocumentData documentValues;
+
         public TemplateData() : base()
         {
             elementValues = new TemplateElementData();
             pathValues = new TemplatePathData();
+            documentValues = new TemplateDocumentData();
         }
 
         /// <inheritdoc/>
