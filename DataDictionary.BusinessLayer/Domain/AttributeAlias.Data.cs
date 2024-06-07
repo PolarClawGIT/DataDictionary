@@ -26,7 +26,6 @@ namespace DataDictionary.BusinessLayer.Domain
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
- 
         /// <inheritdoc/>
         /// <remarks>AttributeAlias</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainAttributeKey dataKey)
@@ -50,6 +49,6 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>AttributeAlias</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
-        {   return Delete(); }
+        { return Delete(); }
     }
 }

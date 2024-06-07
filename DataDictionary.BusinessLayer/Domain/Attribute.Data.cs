@@ -269,7 +269,7 @@ namespace DataDictionary.BusinessLayer.Domain
                     aliasValues.Add(new AttributeAliasValue(attributeKey)
                     {
                         AliasName = item.ToAliasName(),
-                        Scope = item.Scope
+                        AliasScope = item.Scope
                     });
                 }
 

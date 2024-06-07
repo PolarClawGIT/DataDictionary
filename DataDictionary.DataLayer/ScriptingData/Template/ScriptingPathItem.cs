@@ -53,10 +53,14 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <summary>
         /// Constructor for Scripting Transform Element
         /// </summary>
-        public ScriptingPathItem(IScriptingTemplateKey template) : base()
-        {
-            TemplateId = template.TemplateId;
-        }
+        public ScriptingPathItem() : base()
+        { }
+
+        /// <summary>
+        /// Constructor for Scripting Transform Element
+        /// </summary>
+        public ScriptingPathItem(IScriptingTemplateKey template) : this()
+        { TemplateId = template.TemplateId; }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {

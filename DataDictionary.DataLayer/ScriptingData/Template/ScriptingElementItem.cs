@@ -130,10 +130,14 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <summary>
         /// Constructor for Scripting Transform Element
         /// </summary>
-        public ScriptingElementItem(IScriptingTemplateKey template) : base()
+        public ScriptingElementItem() : base() { }
+
+        /// <summary>
+        /// Constructor for Scripting Transform Element
+        /// </summary>
+        public ScriptingElementItem(IScriptingTemplateKey template) : this()
         {
             TemplateId = template.TemplateId;
-
             if (ElementId is null) { ElementId = Guid.NewGuid(); }
         }
 
