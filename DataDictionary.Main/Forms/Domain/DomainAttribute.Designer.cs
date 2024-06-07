@@ -57,8 +57,6 @@
             aliasTab = new TabPage();
             aliaseLayout = new TableLayoutPanel();
             aliasesData = new DataGridView();
-            aliaseScopeColumn = new DataGridViewComboBoxColumn();
-            aliasNameColumn = new DataGridViewTextBoxColumn();
             namedScopeData = new DataDictionary.Main.Controls.NamedScopeData();
             subjectAreaTab = new TabPage();
             subjectArea = new Controls.SubjectArea();
@@ -69,6 +67,8 @@
             attributeToolStrip = new ContextMenuStrip(components);
             removeAttributeCommand = new ToolStripMenuItem();
             bindingSubjectArea = new BindingSource(components);
+            aliaseScopeColumn = new DataGridViewComboBoxColumn();
+            aliasNameColumn = new DataGridViewTextBoxColumn();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
@@ -407,23 +407,6 @@
             aliasesData.Size = new Size(400, 128);
             aliasesData.TabIndex = 0;
             // 
-            // aliaseScopeColumn
-            // 
-            aliaseScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliaseScopeColumn.DataPropertyName = "Scope";
-            aliaseScopeColumn.FillWeight = 50F;
-            aliaseScopeColumn.HeaderText = "Scope";
-            aliaseScopeColumn.Name = "aliaseScopeColumn";
-            aliaseScopeColumn.ReadOnly = true;
-            // 
-            // aliasNameColumn
-            // 
-            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliasNameColumn.DataPropertyName = "AliasName";
-            aliasNameColumn.HeaderText = "Alias Name";
-            aliasNameColumn.Name = "aliasNameColumn";
-            aliasNameColumn.ReadOnly = true;
-            // 
             // namedScopeData
             // 
             namedScopeData.ApplyImage = Properties.Resources.NewSynonym;
@@ -496,6 +479,23 @@
             // 
             bindingSubjectArea.AddingNew += BindingSubjectArea_AddingNew;
             // 
+            // aliaseScopeColumn
+            // 
+            aliaseScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliaseScopeColumn.DataPropertyName = "AliasScope";
+            aliaseScopeColumn.FillWeight = 50F;
+            aliaseScopeColumn.HeaderText = "Scope";
+            aliaseScopeColumn.Name = "aliaseScopeColumn";
+            aliaseScopeColumn.ReadOnly = true;
+            // 
+            // aliasNameColumn
+            // 
+            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliasNameColumn.DataPropertyName = "AliasName";
+            aliasNameColumn.HeaderText = "Alias Name";
+            aliasNameColumn.Name = "aliasNameColumn";
+            aliasNameColumn.ReadOnly = true;
+            // 
             // DomainAttribute
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -553,8 +553,6 @@
         private TabPage entityTab;
         private DataGridView aliasesData;
         private BindingSource bindingAlias;
-        private DataGridViewComboBoxColumn aliaseScopeColumn;
-        private DataGridViewTextBoxColumn aliasNameColumn;
         private DataGridView propertiesData;
         private DataGridViewComboBoxColumn propertyIdColumn;
         private DataGridViewTextBoxColumn propertyValueColumn;
@@ -565,5 +563,7 @@
         private DataDictionary.Main.Controls.NamedScopeData namedScopeData;
         private BindingSource bindingSubjectArea;
         private Controls.SubjectArea subjectArea;
+        private DataGridViewComboBoxColumn aliaseScopeColumn;
+        private DataGridViewTextBoxColumn aliasNameColumn;
     }
 }

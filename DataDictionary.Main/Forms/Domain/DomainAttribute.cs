@@ -102,7 +102,7 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 AttributeAliasValue newItem = new AttributeAliasValue(current);
                 newItem.AliasName = namedScopeData.ScopePath.MemberFullPath;
-                newItem.Scope = namedScopeData.Scope;
+                newItem.AliasScope = namedScopeData.Scope;
                 e.NewObject = newItem;
             }
         }
@@ -114,7 +114,7 @@ namespace DataDictionary.Main.Forms.Domain
                 NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(current.AliasName).ToArray());
 
                 namedScopeData.ScopePath = path;
-                namedScopeData.Scope = current.Scope;
+                namedScopeData.Scope = current.AliasScope;
             }
         }
 
@@ -122,7 +122,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingAlias.DataSource is IList<IAliasValue> aliases
                 && aliases.FirstOrDefault(
-                    w => w.Scope == namedScopeData.Scope
+                    w => w.AliasScope == namedScopeData.Scope
                     && new NamedScopePath(NamedScopePath.Parse(w.AliasName).ToArray()) == namedScopeData.ScopePath)
                 is IAliasValue value)
             { bindingAlias.Position = aliases.IndexOf(value); }
