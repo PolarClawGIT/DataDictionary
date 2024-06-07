@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Interface for the Scripting Schema Name
     /// </summary>
+    [Obsolete("To be removed", true)]
     public interface ISchemaKeyName : IKey
     {
         /// <summary>
@@ -20,6 +21,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Implementation for Scripting Schema Name
     /// </summary>
+    [Obsolete("To be removed", true)]
     public class SchemaKeyName : ISchemaKeyName, IKeyComparable<ISchemaKeyName>
     {
         /// <inheritdoc/>

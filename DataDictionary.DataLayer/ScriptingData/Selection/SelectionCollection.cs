@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
+    [Obsolete("To be removed", true)]
     public abstract class SelectionCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<ISelectionKey>,
         IWriteData, IWriteData<ISelectionKey>,

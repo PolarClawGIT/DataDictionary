@@ -8,6 +8,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
     /// <summary>
     /// Interface for the Scripting Selection Path data.
     /// </summary>
+    [Obsolete("To be removed", true)]
     public interface ISelectionPathItem : ISelectionKey, IScopeKey
     {
         /// <summary>
@@ -20,6 +21,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
     /// Implementation for the Scripting Selection Path data.
     /// </summary>
     [Serializable]
+    [Obsolete("To be removed", true)]
     public class SelectionPathItem : BindingTableRow, ISelectionPathItem, ISerializable
     {
         /// <inheritdoc/>

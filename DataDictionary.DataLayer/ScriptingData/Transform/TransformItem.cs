@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
     /// <summary>
     /// Interface for the Scripting Transform data.
     /// </summary>
+    [Obsolete("To be removed", true)]
     public interface ITransformItem : ITransformKey, ITransformKeyName, IScopeKey
     {
         /// <summary>
@@ -35,6 +36,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
     /// <summary>
     /// Implementation for the Scripting Transform data.
     /// </summary>
+    [Obsolete("To be removed", true)]
     public class TransformItem : BindingTableRow, ITransformItem, ISerializable
     {
         /// <inheritdoc/>

@@ -9,12 +9,14 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Interface component for the Scripting Engine Schema
     /// </summary>
+    [Obsolete("To be removed", true)]
     public interface ISchemaData :
         IBindingData<DefinitionValue>,
         ILoadData, ILoadData<ISchemaKey>,
         ISaveData, ISaveData<ISchemaKey>
     { }
 
+    [Obsolete("To be removed", true)]
     class SchemaData : SchemaCollection<DefinitionValue>, ISchemaData, INamedScopeSource
     {
         /// <summary>

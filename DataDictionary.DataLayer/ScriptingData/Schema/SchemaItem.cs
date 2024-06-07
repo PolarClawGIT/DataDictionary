@@ -8,6 +8,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Interface for the Scripting Schema data.
     /// </summary>
+    [Obsolete("To be removed", true)]
     public interface ISchemaItem : ISchemaKey, ISchemaKeyName, IScopeKey
     {
         /// <summary>
@@ -20,6 +21,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// Implementation for the Scripting Schema data.
     /// </summary>
     [Serializable]
+    [Obsolete("To be removed", true)]
     public class SchemaItem: BindingTableRow, ISchemaItem, ISerializable
     {
         /// <inheritdoc/>

@@ -10,6 +10,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
     /// <summary>
     /// Interface for the Scripting Selection data.
     /// </summary>
+    [Obsolete("To be removed", true)]
     public interface ISelectionItem : ISelectionKey, ITransformKey, ISchemaKey, ISelectionKeyName, IScopeKey
     {
         /// <summary>
@@ -22,6 +23,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
     /// Implementation for the Scripting Selection data.
     /// </summary>
     [Serializable]
+    [Obsolete("To be removed", true)]
     public class SelectionItem : BindingTableRow, ISelectionItem, ISerializable
     {
         /// <inheritdoc/>

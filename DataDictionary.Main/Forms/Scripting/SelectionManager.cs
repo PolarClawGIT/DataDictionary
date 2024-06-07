@@ -15,6 +15,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
+    [Obsolete("To be removed", true)]
     partial class SelectionManager : ApplicationData
     {
         public Boolean IsOpenItem(object? item)

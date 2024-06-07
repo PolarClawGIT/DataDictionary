@@ -3,10 +3,12 @@
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public interface IDefinitionIndex : ISchemaKey
     { }
 
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public class DefinitionIndex : SchemaKey, IDefinitionIndex
     {
         /// <inheritdoc cref="SchemaKey(ISchemaKey)"/>
@@ -21,10 +23,12 @@ namespace DataDictionary.BusinessLayer.Scripting
     }
 
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public interface IDefinitionIndexName : ISchemaKeyName
     { }
 
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public class DefinitionIndexName : SchemaKeyName, IDefinitionIndexName
     {
         /// <inheritdoc cref="SchemaKeyName(ISchemaKeyName)"/>

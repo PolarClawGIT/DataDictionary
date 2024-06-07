@@ -3,10 +3,12 @@
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public interface ITransformIndex : ITransformKey
     { }
 
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public class TransformIndex : TransformKey, ITransformIndex
     {
         /// <inheritdoc cref="TransformKey(ITransformKey)"/>
@@ -21,10 +23,12 @@ namespace DataDictionary.BusinessLayer.Scripting
     }
 
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public interface ITransformIndexName : ITransformKeyName
     { }
 
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public class TransformIndexName : TransformKeyName, ITransformIndexName
     {
         /// <inheritdoc cref="TransformKeyName(ITransformKeyName)"/>

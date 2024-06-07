@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
     /// <summary>
     /// Interface for the Scripting Transform Name
     /// </summary>
+    [Obsolete("To be removed", true)]
     public interface ITransformKeyName : IKey
     {
         /// <summary>
@@ -20,6 +21,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
     /// <summary>
     /// Implementation for Scripting Transform Name
     /// </summary>
+    [Obsolete("To be removed", true)]
     public class TransformKeyName : ITransformKeyName, IKeyComparable<ITransformKeyName>
     {
         /// <inheritdoc/>

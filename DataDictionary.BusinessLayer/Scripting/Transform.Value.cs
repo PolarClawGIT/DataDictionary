@@ -9,6 +9,7 @@ using System.Xml.Xsl;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public interface ITransformValue : ITransformItem, ITransformIndex, ITransformIndexName
     {
         /// <summary>
@@ -23,6 +24,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     }
 
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public class TransformValue : TransformItem, ITransformValue, INamedScopeSourceValue
     {
 

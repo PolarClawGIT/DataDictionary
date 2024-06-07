@@ -18,6 +18,7 @@ using System.Xml.Linq;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
+    [Obsolete("To be removed", true)]
     partial class Document : ApplicationData
     {
         class FormData : ISelectionIndex, IDefinitionIndex, ITransformIndex, INotifyPropertyChanged

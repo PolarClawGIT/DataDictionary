@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Transform
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
+    [Obsolete("To be removed", true)]
     public abstract class TransformCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<ITransformKey>,
         IWriteData, IWriteData<ITransformKey>,

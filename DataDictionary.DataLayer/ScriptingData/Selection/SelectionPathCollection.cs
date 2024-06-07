@@ -10,6 +10,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
+    [Obsolete("To be removed", true)]
     public abstract class SelectionPathCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<ISelectionKey>, IReadData<IModelKey>,
         IWriteData, IWriteData<ISelectionKey>, IWriteData<IModelKey>,

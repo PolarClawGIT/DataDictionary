@@ -9,11 +9,12 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Interface component for the Scripting Engine Selection
     /// </summary>
+    [Obsolete("To be removed", true)]
     public interface ISelectionData :
         IBindingData<SelectionValue>
     { }
 
-
+    [Obsolete("To be removed", true)]
     class SelectionData : SelectionCollection<SelectionValue>, ISelectionData, INamedScopeSource
     {
         /// <summary>

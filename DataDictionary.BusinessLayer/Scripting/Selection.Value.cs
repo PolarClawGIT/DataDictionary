@@ -5,10 +5,12 @@ using DataDictionary.DataLayer.ScriptingData.Selection;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public interface ISelectionValue : ISelectionItem, ISelectionIndex, ISelectionIndexName
     { }
 
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public class SelectionValue : SelectionItem, ISelectionValue, INamedScopeSourceValue
     {
         /// <inheritdoc/>

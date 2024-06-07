@@ -5,10 +5,12 @@ using System.Xml.Linq;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public interface IDefinitionElementValue : IElementItem, IColumnIndex
     { }
 
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public class DefinitionElementValue : ElementItem, IDefinitionElementValue
     {
         /// <inheritdoc/>

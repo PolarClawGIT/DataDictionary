@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
     /// <summary>
     /// Interface for the Scripting Selection Name
     /// </summary>
+    [Obsolete("To be removed", true)]
     public interface ISelectionKeyName : IKey
     {
         /// <summary>
@@ -20,6 +21,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Selection
     /// <summary>
     /// Implementation for Scripting Selection Name
     /// </summary>
+    [Obsolete("To be removed", true)]
     public class SelectionKeyName : ISelectionKeyName, IKeyComparable<ISelectionKeyName>
     {
         /// <inheritdoc/>

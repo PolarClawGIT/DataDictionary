@@ -10,6 +10,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
+    [Obsolete("To be removed", true)]
     public abstract class SchemaCollection<TItem> : BindingTable<TItem>,
         IReadData, IReadData<ISchemaKey>,
         IWriteData, IWriteData<ISchemaKey>,

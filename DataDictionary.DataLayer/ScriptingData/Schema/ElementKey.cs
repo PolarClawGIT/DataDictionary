@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Interface for the Primary Key for the Scripting Schema Element.
     /// </summary>
+    [Obsolete("To be removed", true)]
     public interface IElementKey : IKey
     {
         /// <summary>
@@ -20,6 +21,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Schema
     /// <summary>
     /// Implementation of the Primary Key of the Scripting Schema Element.
     /// </summary>
+    [Obsolete("To be removed", true)]
     public class ElementKey : IElementKey, IKeyEquality<IElementKey>
     {
         /// <inheritdoc/>

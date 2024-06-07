@@ -16,12 +16,14 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Interface component for the Scripting Engine Transform
     /// </summary>
+    [Obsolete("To be removed", true)]
     public interface ITransformData :
         IBindingData<TransformValue>,
         ILoadData, ILoadData<ITransformKey>,
         ISaveData, ISaveData<ITransformKey>
     { }
 
+    [Obsolete("To be removed", true)]
     class TransformData : TransformCollection<TransformValue>, ITransformData, INamedScopeSource
     {
         /// <summary>

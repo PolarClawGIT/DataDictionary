@@ -7,9 +7,11 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Interface component for the Scripting Engine Element
     /// </summary>
+    [Obsolete("To be removed", true)]
     public interface IDefinitionElementData : IBindingData<DefinitionElementValue>
     { }
 
+    [Obsolete("To be removed", true)]
     class DefinitionElementData : ElementCollection<DefinitionElementValue>, IDefinitionElementData,
         ILoadData, ILoadData<ISchemaKey>,
         ISaveData, ISaveData<ISchemaKey>

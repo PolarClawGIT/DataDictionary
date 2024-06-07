@@ -3,10 +3,12 @@
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public interface ISelectionIndex : ISelectionKey
     { }
 
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public class SelectionIndex : SelectionKey, ISelectionIndex
     {
         /// <inheritdoc cref="SelectionKey(ISelectionKey)"/>
@@ -21,10 +23,12 @@ namespace DataDictionary.BusinessLayer.Scripting
     }
 
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public interface ISelectionIndexName : ISelectionKeyName
     { }
 
     /// <inheritdoc/>
+    [Obsolete("To be removed", true)]
     public class SelectionIndexName : SelectionKeyName, ISelectionIndexName
     {
         /// <inheritdoc cref="SelectionKeyName(ISelectionKeyName)"/>

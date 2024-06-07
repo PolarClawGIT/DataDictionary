@@ -8,12 +8,14 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Interface component for the Scripting Engine Selection Path
     /// </summary>
+    [Obsolete("To be removed", true)]
     public interface ISelectionPathData :
         IBindingData<SelectionPathValue>,
         ILoadData, ILoadData<ISelectionKey>, ILoadData<IModelKey>,
         ISaveData, ISaveData<ISelectionKey>, ISaveData<IModelKey>
     { }
 
+    [Obsolete("To be removed", true)]
     class SelectionPathData : SelectionPathCollection<SelectionPathValue>, ISelectionPathData
     {
         public IReadOnlyList<WorkItem> Delete(ISelectionKey dataKey)

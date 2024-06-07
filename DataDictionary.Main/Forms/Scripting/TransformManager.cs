@@ -7,6 +7,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
+    [Obsolete("To be removed", true)]
     partial class TransformManager : ApplicationData
     {
         public Boolean IsOpenItem(object? item)
