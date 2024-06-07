@@ -45,18 +45,18 @@ namespace DataDictionary.BusinessLayer.Domain
         }
 
         /// <inheritdoc/>
-        public XElement? GetXElement(IAttributeValue data, IEnumerable<DefinitionElementValue>? options)
+        public XElement? GetXElement(IAttributeValue data, IEnumerable<TemplateElementValue>? options)
         {
             XElement? result = null;
 
             if (options is not null && options.Count() > 0)
             {
 
-                foreach (DefinitionElementValue option in options)
+                foreach (TemplateElementValue option in options)
                 {
                     Object? value = null;
 
-                    switch (option.ColumnName)
+                    switch (option.PropertyName)
                     {
                         case nameof(Scope): value = Scope.ToName(); break;
                         case nameof(AliasName): value = AliasName; break;
@@ -71,7 +71,7 @@ namespace DataDictionary.BusinessLayer.Domain
                     }
 
                     // Special Handling needed for AliasParts
-                    if (option.ColumnName is nameof(AliasParts))
+                    if (option.PropertyName is nameof(AliasParts))
                     {
                         XElement? aliasElement = null;
                         List<String> scopeParts = NamedScopePath.Parse(Scope.ToName());

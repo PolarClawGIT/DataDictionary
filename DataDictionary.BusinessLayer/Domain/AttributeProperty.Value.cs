@@ -28,7 +28,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
 
         /// <inheritdoc/>
-        public XElement? GetXElement(IPropertyData data, IEnumerable<DefinitionElementValue>? options)
+        public XElement? GetXElement(IPropertyData data, IEnumerable<TemplateElementValue>? options)
         {
             XElement? result = null;
 
@@ -38,11 +38,11 @@ namespace DataDictionary.BusinessLayer.Domain
 
                 if (data.FirstOrDefault(w => key.Equals(w)) is PropertyValue property)
                 {
-                    foreach (DefinitionElementValue option in options)
+                    foreach (TemplateElementValue option in options)
                     {
                         Object? value = null;
 
-                        switch (option.ColumnName)
+                        switch (option.PropertyName)
                         {
                             case nameof(property.PropertyTitle): value = property.PropertyTitle; break;
                             case nameof(property.PropertyType): value = property.PropertyType.ToName(); break;

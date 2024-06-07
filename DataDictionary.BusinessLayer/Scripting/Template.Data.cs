@@ -3,6 +3,8 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ScriptingData.Template;
 using System.ComponentModel;
+using System.Data;
+using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Scripting
@@ -30,7 +32,8 @@ namespace DataDictionary.BusinessLayer.Scripting
 
     class TemplateData : ScriptingTemplateCollection<TemplateValue>, ITemplateData, INamedScopeSource,
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        ILoadData<IScriptingTemplateKey>, ISaveData<IScriptingTemplateKey>
+        ILoadData<IScriptingTemplateKey>, ISaveData<IScriptingTemplateKey>,
+        IDataTableFile
     {
         /// <summary>
         /// Reference to the containing ScriptingEngine
@@ -147,6 +150,34 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         /// <remarks>Template</remarks>
+        public void Import(DataSet source)
+        {
+            if (source.Tables.Contains(this.BindingName)
+                && source.Tables[this.BindingName] is DataTable transformTable)
+            { this.Load(transformTable.CreateDataReader()); }
+
+            if (source.Tables.Contains(elementValues.BindingName)
+                && source.Tables[elementValues.BindingName] is DataTable elementTable)
+            { elementValues.Load(elementTable.CreateDataReader()); }
+
+            if (source.Tables.Contains(pathValues.BindingName)
+                && source.Tables[pathValues.BindingName] is DataTable pathTable)
+            { pathValues.Load(pathTable.CreateDataReader()); }
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Template</remarks>
+        public IReadOnlyList<DataTable> Export()
+        {
+            List<System.Data.DataTable> result = new List<System.Data.DataTable>();
+            result.Add(this.ToDataTable());
+            result.Add(elementValues.ToDataTable());
+            result.Add(pathValues.ToDataTable());
+            return result;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Template</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             return this.Select(s => new NamedScopePair(GetValue(s)));
@@ -166,9 +197,6 @@ namespace DataDictionary.BusinessLayer.Scripting
                 }
             }
         }
-
-
-
 
     }
 }

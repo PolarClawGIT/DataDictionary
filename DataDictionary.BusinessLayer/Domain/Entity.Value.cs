@@ -31,17 +31,17 @@ namespace DataDictionary.BusinessLayer.Domain
         public virtual String GetTitle()
         { return EntityTitle ?? Scope.ToName(); }
 
-        internal XElement? GetXElement(IEnumerable<DefinitionElementValue>? options = null)
+        internal XElement? GetXElement(IEnumerable<TemplateElementValue>? options = null)
         {
             XElement? result = new XElement(this.Scope.ToName());
 
             if (options is not null)
             {
-                foreach (DefinitionElementValue option in options)
+                foreach (TemplateElementValue option in options)
                 {
                     Object? value = null;
 
-                    switch (option.ColumnName)
+                    switch (option.PropertyName)
                     {
                         case nameof(this.EntityId): value = EntityId.ToString(); break;
                         case nameof(this.EntityTitle): value = EntityTitle; break;
