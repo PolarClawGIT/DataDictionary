@@ -249,6 +249,11 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// </summary>
         ScriptingTemplateElement,
 
+        /// <summary>
+        /// Scripting Template Document
+        /// </summary>
+        ScriptingTemplateDocument,
+
     }
 
     /// <summary>

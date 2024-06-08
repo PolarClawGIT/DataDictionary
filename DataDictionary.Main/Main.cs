@@ -108,7 +108,6 @@ namespace DataDictionary.Main
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
                 work.AddRange(BusinessData.ApplicationData.Load(factory));
-                work.AddRange(BusinessData.ScriptingEngine.Load(factory));
                 work.AddRange(BusinessData.Create());
 
                 if (!appDataFile.Exists)

@@ -121,9 +121,10 @@
             toolStripSeparator6 = new ToolStripSeparator();
             manageScriptingCommand = new ToolStripSplitButton();
             scriptingContextMenu = new ContextMenuStrip(components);
-            schemaManagerCommand = new ToolStripMenuItem();
-            selectionPathCommand = new ToolStripMenuItem();
-            transformManagerCommand = new ToolStripMenuItem();
+            menuScriptingTransform = new ToolStripMenuItem();
+            menuScriptingElement = new ToolStripMenuItem();
+            menuScriptingPath = new ToolStripMenuItem();
+            menuScriptingDocument = new ToolStripMenuItem();
             toolStripSeparator7 = new ToolStripSeparator();
             refreshCommand = new ToolStripButton();
             navigationPanel = new Panel();
@@ -792,13 +793,13 @@
             modelContextMenu.Items.AddRange(new ToolStripItem[] { menuModelProperty, menuModelDefinition });
             modelContextMenu.Name = "modelContextMenu";
             modelContextMenu.OwnerItem = manageModelCommand;
-            modelContextMenu.Size = new Size(181, 70);
+            modelContextMenu.Size = new Size(173, 48);
             // 
             // menuModelProperty
             // 
             menuModelProperty.Image = Properties.Resources.Property;
             menuModelProperty.Name = "menuModelProperty";
-            menuModelProperty.Size = new Size(180, 22);
+            menuModelProperty.Size = new Size(172, 22);
             menuModelProperty.Text = "browse Properties";
             menuModelProperty.Click += menuModelProperty_Click;
             // 
@@ -806,7 +807,7 @@
             // 
             menuModelDefinition.Image = Properties.Resources.DescriptionViewer;
             menuModelDefinition.Name = "menuModelDefinition";
-            menuModelDefinition.Size = new Size(180, 22);
+            menuModelDefinition.Size = new Size(172, 22);
             menuModelDefinition.Text = "browse Definitions";
             menuModelDefinition.Click += menuModelDefinition_Click;
             // 
@@ -842,38 +843,45 @@
             manageScriptingCommand.Name = "manageScriptingCommand";
             manageScriptingCommand.Size = new Size(32, 22);
             manageScriptingCommand.Text = "Scripting manager";
-            manageScriptingCommand.ButtonClick += manageScriptingCommand_ButtonClick;
             // 
             // scriptingContextMenu
             // 
-            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { schemaManagerCommand, selectionPathCommand, transformManagerCommand });
+            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTransform, menuScriptingElement, menuScriptingPath, menuScriptingDocument });
             scriptingContextMenu.Name = "scriptingContextMenu";
             scriptingContextMenu.OwnerItem = manageScriptingCommand;
-            scriptingContextMenu.Size = new Size(165, 70);
+            scriptingContextMenu.Size = new Size(228, 114);
             // 
-            // schemaManagerCommand
+            // menuScriptingTransform
             // 
-            schemaManagerCommand.Image = Properties.Resources.NewXMLSchema;
-            schemaManagerCommand.Name = "schemaManagerCommand";
-            schemaManagerCommand.Size = new Size(164, 22);
-            schemaManagerCommand.Text = "Schema (XSD)";
-            schemaManagerCommand.Click += schemaManagerCommand_Click;
+            menuScriptingTransform.Image = Properties.Resources.XSLTransform;
+            menuScriptingTransform.Name = "menuScriptingTransform";
+            menuScriptingTransform.Size = new Size(227, 22);
+            menuScriptingTransform.Text = "browse Transforms";
+            menuScriptingTransform.Click += menuScriptingTransform_Click;
             // 
-            // selectionPathCommand
+            // menuScriptingElement
             // 
-            selectionPathCommand.Image = Properties.Resources.NewXPath;
-            selectionPathCommand.Name = "selectionPathCommand";
-            selectionPathCommand.Size = new Size(164, 22);
-            selectionPathCommand.Text = "Selection (XPath)";
-            selectionPathCommand.Click += selectionPathCommand_Click;
+            menuScriptingElement.Image = Properties.Resources.XMLSchema;
+            menuScriptingElement.Name = "menuScriptingElement";
+            menuScriptingElement.Size = new Size(227, 22);
+            menuScriptingElement.Text = "browse Template Elements";
+            menuScriptingElement.Click += menuScriptingElement_Click;
             // 
-            // transformManagerCommand
+            // menuScriptingPath
             // 
-            transformManagerCommand.Image = Properties.Resources.NewXSLTransform;
-            transformManagerCommand.Name = "transformManagerCommand";
-            transformManagerCommand.Size = new Size(164, 22);
-            transformManagerCommand.Text = "Transform (XSLT)";
-            transformManagerCommand.Click += transformManagerCommand_Click;
+            menuScriptingPath.Image = Properties.Resources.XPath;
+            menuScriptingPath.Name = "menuScriptingPath";
+            menuScriptingPath.Size = new Size(227, 22);
+            menuScriptingPath.Text = "browse Template Paths";
+            menuScriptingPath.Click += menuScriptingPath_Click;
+            // 
+            // menuScriptingDocument
+            // 
+            menuScriptingDocument.Image = Properties.Resources.XmlFile;
+            menuScriptingDocument.Name = "menuScriptingDocument";
+            menuScriptingDocument.Size = new Size(227, 22);
+            menuScriptingDocument.Text = "browse Template Documents";
+            menuScriptingDocument.Click += menuScriptingDocument_Click;
             // 
             // toolStripSeparator7
             // 
@@ -1013,16 +1021,17 @@
         private ToolStripButton refreshCommand;
         private ToolStripSplitButton manageScriptingCommand;
         private ContextMenuStrip scriptingContextMenu;
-        private ToolStripMenuItem schemaManagerCommand;
-        private ToolStripMenuItem transformManagerCommand;
         private ToolStripSplitButton newRelationshipCommand;
         private ToolStripSplitButton newProcessCommand;
-        private ToolStripMenuItem selectionPathCommand;
         private ToolStripSplitButton manageModelCommand;
         private ToolStripMenuItem menuAttributeDefinitions;
         private ToolStripMenuItem menuEntityDefinitions;
         private ContextMenuStrip modelContextMenu;
         private ToolStripMenuItem menuModelProperty;
         private ToolStripMenuItem menuModelDefinition;
+        private ToolStripMenuItem menuScriptingTransform;
+        private ToolStripMenuItem menuScriptingElement;
+        private ToolStripMenuItem menuScriptingPath;
+        private ToolStripMenuItem menuScriptingDocument;
     }
 }

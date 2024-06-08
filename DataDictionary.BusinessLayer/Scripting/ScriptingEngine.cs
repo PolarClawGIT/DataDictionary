@@ -47,8 +47,6 @@ namespace DataDictionary.BusinessLayer.Scripting
             columnValues = new ColumnData();
         }
 
-
-
         /// <inheritdoc/>
         /// <remarks>Scripting</remarks>
         public IReadOnlyList<DataTable> Export()

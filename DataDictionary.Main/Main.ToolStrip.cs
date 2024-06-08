@@ -101,22 +101,22 @@ namespace DataDictionary.Main
         private void menuEntityAlias_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.Entities.Aliases); }
 
-        private void manageScriptingCommand_ButtonClick(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.Document()); }
-
-        private void transformManagerCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.TransformManager(null)); }
-
-        private void schemaManagerCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.SchemaManager(null)); }
-
-        private void selectionPathCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.SelectionManager(null)); }
-
         private void menuModelProperty_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainModel.Properties); }
 
         private void menuModelDefinition_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_DescriptionViewer), BusinessData.DomainModel.Definitions); }
+
+        private void menuScriptingTransform_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XSLTransform), BusinessData.ScriptingEngine.Templates); }
+
+        private void menuScriptingElement_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XMLSchema), BusinessData.ScriptingEngine.Templates.Elements); }
+
+        private void menuScriptingPath_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XPath), BusinessData.ScriptingEngine.Templates.Paths); }
+
+        private void menuScriptingDocument_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XmlFile), BusinessData.ScriptingEngine.Templates.Documents); }
     }
 }

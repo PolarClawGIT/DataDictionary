@@ -64,6 +64,11 @@ namespace DataDictionary.Main.Controls
             {ScopeType.ScriptingTransform,               new ScopeSetting(Resources.XSLTransform, Resources.Icon_XSLTransform) },
             {ScopeType.ScriptingSelection,               new ScopeSetting(Resources.XPath, Resources.Icon_XPath) },
             {ScopeType.ScriptingSelectionPath,           new ScopeSetting(Resources.XPath, Resources.Icon_XPath) },
+
+            {ScopeType.ScriptingTemplate,                new ScopeSetting(Resources.XSLTransform, Resources.Icon_XSLTransform) },
+            {ScopeType.ScriptingTemplateElement,         new ScopeSetting(Resources.XMLSchema, Resources.Icon_XMLSchema) },
+            {ScopeType.ScriptingTemplatePath,            new ScopeSetting(Resources.XPath, Resources.Icon_XPath) },
+            {ScopeType.ScriptingTemplateDocument,        new ScopeSetting(Resources.XmlFile, Resources.Icon_XSLTransform) },
         };
 
         public static Image ToImage(this ScopeType scope)
