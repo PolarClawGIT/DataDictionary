@@ -13,6 +13,9 @@ From	[App_DataDictionary].[ScriptingPath] D
 		Cross Apply [App_DataDictionary].[funcGetNameSpace](D.[NameSpaceId]) N
 		Left Join [App_DataDictionary].[ModelScripting] M
 		On	D.[TemplateId] = M.[TemplateId]
-Where	(@ModelId is Null or @ModelId = M.[ModelId]) And
+		Left Join [App_DataDictionary].[ModelNameSpace] S
+		On	D.[NameSpaceId] = S.[NameSpaceId] And
+			M.[ModelId] = S.[ModelId]
+Where	(@ModelId is Null or (@ModelId = M.[ModelId] And @ModelId = S.[ModelId])) And -- NameSpace must also be for the Model Specified
 		(@TemplateId is Null or @TemplateId = D.[TemplateId])
 GO
