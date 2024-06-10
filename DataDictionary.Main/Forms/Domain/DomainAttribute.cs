@@ -38,6 +38,7 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingAttribute.Current is IAttributeValue current)
             {
                 bindingProperty.DataSource = new BindingView<AttributePropertyValue>(BusinessData.DomainModel.Attributes.Properties, w => key.Equals(w));
+                bindingDefinition.DataSource = new BindingView<AttributeDefinitionValue>(BusinessData.DomainModel.Attributes.Definitions, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<AttributeAliasValue>(BusinessData.DomainModel.Attributes.Aliases, w => key.Equals(w));
                 bindingSubjectArea.DataSource = new BindingView<AttributeSubjectAreaValue>(BusinessData.DomainModel.Attributes.SubjectArea, w => key.Equals(w));
             }
@@ -47,6 +48,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             IAttributeValue nameOfValues;
             PropertyNameMember.Load(propertyIdColumn);
+            DefinitionNameMember.Load(definitionColumn);
             ScopeNameMember.Load(aliaseScopeColumn);
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingAttribute, nameof(nameOfValues.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -69,6 +71,9 @@ namespace DataDictionary.Main.Forms.Domain
 
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
+
+            definitionData.AutoGenerateColumns = false;
+            definitionData.DataSource = bindingDefinition;
 
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
@@ -152,6 +157,42 @@ namespace DataDictionary.Main.Forms.Domain
         }
 
 
+        private void DomainDefinition_OnApply(object sender, EventArgs e)
+        {
+            if (bindingDefinition.DataSource is IList<AttributeDefinitionValue> definition
+                && definition.FirstOrDefault(
+                    w => w.DefinitionId == domainDefinition.DefinitionId)
+                is AttributeDefinitionValue value)
+            {
+                value.DefinitionSummary = domainDefinition.DefinitionSummary;
+                value.DefinitionText = domainDefinition.DefinitionText;
+                bindingDefinition.Position = definition.IndexOf(value);
+            }
+            else { bindingDefinition.AddNew(); }
+        }
+
+        private void BindingDefinition_CurrentChanged(object sender, EventArgs e)
+        {
+            if (bindingDefinition.Current is AttributeDefinitionValue current)
+            {
+                domainDefinition.DefinitionId = current.DefinitionId ?? Guid.Empty;
+                domainDefinition.DefinitionText = current.DefinitionText;
+                domainDefinition.DefinitionSummary = current.DefinitionSummary??String.Empty;
+            }
+        }
+
+        private void BindingDefinition_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (bindingAttribute.Current is AttributeValue current)
+            {
+                AttributeDefinitionValue newItem = new AttributeDefinitionValue(current);
+                newItem.DefinitionId = domainDefinition.DefinitionId;
+                newItem.DefinitionSummary = domainDefinition.DefinitionSummary;
+                newItem.DefinitionText = domainDefinition.DefinitionText;
+                e.NewObject = newItem;
+            }
+        }
+
         private void BindingSubjectArea_AddingNew(object sender, AddingNewEventArgs e)
         {
             if (addingSubject is SubjectAreaValue subject && bindingAttribute.Current is AttributeValue attribute)
@@ -177,5 +218,7 @@ namespace DataDictionary.Main.Forms.Domain
                 && data.FirstOrDefault(w => key.Equals(w)) is AttributeSubjectAreaValue target)
             { bindingSubjectArea.Remove(target); }
         }
+
+
     }
 }

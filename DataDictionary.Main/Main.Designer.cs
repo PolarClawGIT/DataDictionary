@@ -206,7 +206,7 @@
             // 
             // menuAttributeDefinitions
             // 
-            menuAttributeDefinitions.Image = Properties.Resources.DescriptionViewer;
+            menuAttributeDefinitions.Image = Properties.Resources.RichTextBox;
             menuAttributeDefinitions.Name = "menuAttributeDefinitions";
             menuAttributeDefinitions.Size = new Size(222, 22);
             menuAttributeDefinitions.Text = "browse Attribute &Definitions";
@@ -256,7 +256,7 @@
             // 
             // menuEntityDefinitions
             // 
-            menuEntityDefinitions.Image = Properties.Resources.DescriptionViewer;
+            menuEntityDefinitions.Image = Properties.Resources.RichTextBox;
             menuEntityDefinitions.Name = "menuEntityDefinitions";
             menuEntityDefinitions.Size = new Size(205, 22);
             menuEntityDefinitions.Text = "browse Entity &Definitions";
@@ -805,7 +805,7 @@
             // 
             // menuModelDefinition
             // 
-            menuModelDefinition.Image = Properties.Resources.DescriptionViewer;
+            menuModelDefinition.Image = Properties.Resources.RichTextBox;
             menuModelDefinition.Name = "menuModelDefinition";
             menuModelDefinition.Size = new Size(172, 22);
             menuModelDefinition.Text = "browse Definitions";

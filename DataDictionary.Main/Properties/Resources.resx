@@ -199,6 +199,9 @@
   <data name="DeleteRelationship" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteRelationship.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DeleteRichTextBox" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DeleteRichTextBox.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="DeleteStatusHelp" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteStatusHelp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -219,9 +222,6 @@
   </data>
   <data name="Dependancy" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Dependancy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DescriptionViewer" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\DescriptionViewer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Diagram" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Diagram.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -301,9 +301,6 @@
   <data name="Icon_Dependancy" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Dependancy.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Icon_DescriptionViewer" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icon\DescriptionViewer.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Icon_Diagram" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Diagram.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -354,6 +351,9 @@
   </data>
   <data name="Icon_Relationship" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\Relationship.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_RichTextBox" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\RichTextBox.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Icon_SaveTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\SaveTable.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -469,6 +469,9 @@
   <data name="NewRelationship" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewRelationship.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="NewRichTextBox" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NewRichTextBox.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="NewSoftwareDefinitionModel" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NewSoftwareDefinitionModel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -528,6 +531,9 @@
   </data>
   <data name="RemoveLink" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\RemoveLink.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RichTextBox" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\RichTextBox.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Row" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Row.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

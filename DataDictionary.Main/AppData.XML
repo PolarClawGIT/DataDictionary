@@ -299,12 +299,12 @@ The application can also save data to its own installation folder (AppData.XML).
     <DataType>Integer</DataType>
   </PropertyValue>
   <DefinitionValue>
-    <DefinitionId>00000000-0000-0000-0010-000000000010</DefinitionId>
+    <DefinitionId>00000000-0000-0000-0010-000000000020</DefinitionId>
     <DefinitionTitle>Business Definition</DefinitionTitle>
     <DefinitionDescription>Definition of the item in Business Terms.</DefinitionDescription>
   </DefinitionValue>
   <DefinitionValue>
-    <DefinitionId>00000000-0000-0000-0020-000000000010</DefinitionId>
+    <DefinitionId>00000000-0000-0000-0020-000000000020</DefinitionId>
     <DefinitionTitle>Technical Definition</DefinitionTitle>
     <DefinitionDescription>Definition of the item in Technical Terms.</DefinitionDescription>
   </DefinitionValue>

@@ -87,7 +87,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.Attributes.Aliases); }
 
         private void menuAttributeDefinitions_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_DescriptionViewer), BusinessData.DomainModel.Attributes.Definitions); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_RichTextBox), BusinessData.DomainModel.Attributes.Definitions); }
 
         private void menuEntities_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Entities), BusinessData.DomainModel.Entities); }
@@ -96,7 +96,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainModel.Entities.Properties); }
 
         private void menuEntityDefinitions_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_DescriptionViewer), BusinessData.DomainModel.Entities.Definitions); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_RichTextBox), BusinessData.DomainModel.Entities.Definitions); }
 
         private void menuEntityAlias_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.Entities.Aliases); }
@@ -105,7 +105,7 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainModel.Properties); }
 
         private void menuModelDefinition_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_DescriptionViewer), BusinessData.DomainModel.Definitions); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_RichTextBox), BusinessData.DomainModel.Definitions); }
 
         private void menuScriptingTransform_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XSLTransform), BusinessData.ScriptingEngine.Templates); }

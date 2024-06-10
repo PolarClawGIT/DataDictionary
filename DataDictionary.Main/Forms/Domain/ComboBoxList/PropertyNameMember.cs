@@ -24,9 +24,9 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
                 { list.Add(new PropertyNameMember() { PropertyId = propertyId, PropertyTitle = propertyTitle }); }
             }
 
-            control.DataSource = list;
             control.ValueMember = nameof(propertyNameDataItem.PropertyId);
             control.DisplayMember = nameof(propertyNameDataItem.PropertyTitle);
+            control.DataSource = list;
         }
 
         public static void Load(DataGridViewComboBoxColumn control)
@@ -41,9 +41,9 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
                 { list.Add(new PropertyNameMember() { PropertyId = propertyId, PropertyTitle = propertyTitle }); }
             }
 
-            control.DataSource = list;
             control.ValueMember = nameof(propertyNameDataItem.PropertyId);
             control.DisplayMember = nameof(propertyNameDataItem.PropertyTitle);
+            control.DataSource = list;
         }
     }
 }

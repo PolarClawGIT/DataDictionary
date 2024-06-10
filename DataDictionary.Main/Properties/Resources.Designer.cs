@@ -333,6 +333,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DeleteRichTextBox {
+            get {
+                object obj = ResourceManager.GetObject("DeleteRichTextBox", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DeleteStatusHelp {
             get {
                 object obj = ResourceManager.GetObject("DeleteStatusHelp", resourceCulture);
@@ -396,16 +406,6 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap Dependancy {
             get {
                 object obj = ResourceManager.GetObject("Dependancy", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap DescriptionViewer {
-            get {
-                object obj = ResourceManager.GetObject("DescriptionViewer", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -673,16 +673,6 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon Icon_DescriptionViewer {
-            get {
-                object obj = ResourceManager.GetObject("Icon_DescriptionViewer", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
         internal static System.Drawing.Icon Icon_Diagram {
             get {
                 object obj = ResourceManager.GetObject("Icon_Diagram", resourceCulture);
@@ -846,6 +836,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Icon Icon_Relationship {
             get {
                 object obj = ResourceManager.GetObject("Icon_Relationship", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Icon_RichTextBox {
+            get {
+                object obj = ResourceManager.GetObject("Icon_RichTextBox", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -1233,6 +1233,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap NewRichTextBox {
+            get {
+                object obj = ResourceManager.GetObject("NewRichTextBox", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap NewSoftwareDefinitionModel {
             get {
                 object obj = ResourceManager.GetObject("NewSoftwareDefinitionModel", resourceCulture);
@@ -1426,6 +1436,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap RemoveLink {
             get {
                 object obj = ResourceManager.GetObject("RemoveLink", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RichTextBox {
+            get {
+                object obj = ResourceManager.GetObject("RichTextBox", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

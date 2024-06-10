@@ -33,6 +33,7 @@
             TableLayoutPanel detailsLayout;
             TableLayoutPanel propertyLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DomainAttribute));
+            TableLayoutPanel definitionLayout;
             BusinessLayer.NamedScope.NamedScopePath namedScopePath1 = new BusinessLayer.NamedScope.NamedScopePath();
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
@@ -54,9 +55,16 @@
             propertyIdColumn = new DataGridViewComboBoxColumn();
             propertyValueColumn = new DataGridViewTextBoxColumn();
             domainProperty = new Controls.DomainProperty();
+            definitionTab = new TabPage();
+            definitionData = new DataGridView();
+            definitionColumn = new DataGridViewComboBoxColumn();
+            definitionSummaryColumn = new DataGridViewTextBoxColumn();
+            domainDefinition = new Controls.DomainDefinition();
             aliasTab = new TabPage();
             aliaseLayout = new TableLayoutPanel();
             aliasesData = new DataGridView();
+            aliaseScopeColumn = new DataGridViewComboBoxColumn();
+            aliasNameColumn = new DataGridViewTextBoxColumn();
             namedScopeData = new DataDictionary.Main.Controls.NamedScopeData();
             subjectAreaTab = new TabPage();
             subjectArea = new Controls.SubjectArea();
@@ -67,11 +75,11 @@
             attributeToolStrip = new ContextMenuStrip(components);
             removeAttributeCommand = new ToolStripMenuItem();
             bindingSubjectArea = new BindingSource(components);
-            aliaseScopeColumn = new DataGridViewComboBoxColumn();
-            aliasNameColumn = new DataGridViewTextBoxColumn();
+            bindingDefinition = new BindingSource(components);
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
+            definitionLayout = new TableLayoutPanel();
             mainLayout.SuspendLayout();
             detailTabLayout.SuspendLayout();
             detailTab.SuspendLayout();
@@ -79,6 +87,9 @@
             propertyTab.SuspendLayout();
             propertyLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)propertiesData).BeginInit();
+            definitionTab.SuspendLayout();
+            definitionLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)definitionData).BeginInit();
             aliasTab.SuspendLayout();
             aliaseLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)aliasesData).BeginInit();
@@ -88,6 +99,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
             attributeToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDefinition).BeginInit();
             SuspendLayout();
             // 
             // mainLayout
@@ -135,6 +147,7 @@
             // 
             detailTabLayout.Controls.Add(detailTab);
             detailTabLayout.Controls.Add(propertyTab);
+            detailTabLayout.Controls.Add(definitionTab);
             detailTabLayout.Controls.Add(aliasTab);
             detailTabLayout.Controls.Add(subjectAreaTab);
             detailTabLayout.Controls.Add(entityTab);
@@ -306,7 +319,7 @@
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(192, 72);
+            propertyTab.Size = new Size(412, 343);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -322,7 +335,7 @@
             propertyLayout.RowCount = 2;
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            propertyLayout.Size = new Size(186, 66);
+            propertyLayout.Size = new Size(406, 337);
             propertyLayout.TabIndex = 0;
             // 
             // propertiesData
@@ -334,7 +347,7 @@
             propertiesData.Location = new Point(3, 3);
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
-            propertiesData.Size = new Size(180, 13);
+            propertiesData.Size = new Size(400, 95);
             propertiesData.TabIndex = 1;
             // 
             // propertyIdColumn
@@ -360,14 +373,81 @@
             domainProperty.ApplyImage = (Image)resources.GetObject("domainProperty.ApplyImage");
             domainProperty.ApplyText = "apply";
             domainProperty.Dock = DockStyle.Fill;
-            domainProperty.Location = new Point(3, 22);
+            domainProperty.Location = new Point(3, 104);
             domainProperty.Name = "domainProperty";
             domainProperty.PropertyId = new Guid("00000000-0000-0000-0000-000000000000");
             domainProperty.PropertyValue = "";
             domainProperty.ReadOnly = false;
-            domainProperty.Size = new Size(180, 41);
+            domainProperty.Size = new Size(400, 230);
             domainProperty.TabIndex = 2;
             domainProperty.OnApply += DomainProperty_OnApply;
+            // 
+            // definitionTab
+            // 
+            definitionTab.BackColor = SystemColors.Control;
+            definitionTab.Controls.Add(definitionLayout);
+            definitionTab.Location = new Point(4, 24);
+            definitionTab.Name = "definitionTab";
+            definitionTab.Size = new Size(412, 343);
+            definitionTab.TabIndex = 5;
+            definitionTab.Text = "Definition";
+            // 
+            // definitionLayout
+            // 
+            definitionLayout.ColumnCount = 1;
+            definitionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            definitionLayout.Controls.Add(definitionData, 0, 0);
+            definitionLayout.Controls.Add(domainDefinition, 0, 1);
+            definitionLayout.Dock = DockStyle.Fill;
+            definitionLayout.Location = new Point(0, 0);
+            definitionLayout.Name = "definitionLayout";
+            definitionLayout.Padding = new Padding(3);
+            definitionLayout.RowCount = 2;
+            definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+            definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+            definitionLayout.Size = new Size(412, 343);
+            definitionLayout.TabIndex = 0;
+            // 
+            // definitionData
+            // 
+            definitionData.AllowUserToAddRows = false;
+            definitionData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            definitionData.Columns.AddRange(new DataGridViewColumn[] { definitionColumn, definitionSummaryColumn });
+            definitionData.Dock = DockStyle.Fill;
+            definitionData.Location = new Point(6, 6);
+            definitionData.Name = "definitionData";
+            definitionData.Size = new Size(400, 95);
+            definitionData.TabIndex = 0;
+            // 
+            // definitionColumn
+            // 
+            definitionColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            definitionColumn.DataPropertyName = "DefinitionId";
+            definitionColumn.FillWeight = 50F;
+            definitionColumn.HeaderText = "Definition";
+            definitionColumn.Name = "definitionColumn";
+            // 
+            // definitionSummaryColumn
+            // 
+            definitionSummaryColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            definitionSummaryColumn.DataPropertyName = "DefinitionSummary";
+            definitionSummaryColumn.HeaderText = "Definition Summary";
+            definitionSummaryColumn.Name = "definitionSummaryColumn";
+            // 
+            // domainDefinition
+            // 
+            domainDefinition.ApplyImage = Properties.Resources.NewRichTextBox;
+            domainDefinition.ApplyText = "apply";
+            domainDefinition.DefinitionId = new Guid("00000000-0000-0000-0000-000000000000");
+            domainDefinition.DefinitionSummary = "";
+            domainDefinition.DefinitionText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
+            domainDefinition.Dock = DockStyle.Fill;
+            domainDefinition.Location = new Point(6, 107);
+            domainDefinition.Name = "domainDefinition";
+            domainDefinition.ReadOnly = false;
+            domainDefinition.Size = new Size(400, 230);
+            domainDefinition.TabIndex = 1;
+            domainDefinition.OnApply += DomainDefinition_OnApply;
             // 
             // aliasTab
             // 
@@ -376,7 +456,7 @@
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(412, 343);
+            aliasTab.Size = new Size(192, 72);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
@@ -392,7 +472,7 @@
             aliaseLayout.RowCount = 2;
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            aliaseLayout.Size = new Size(406, 337);
+            aliaseLayout.Size = new Size(186, 66);
             aliaseLayout.TabIndex = 1;
             // 
             // aliasesData
@@ -404,8 +484,25 @@
             aliasesData.Location = new Point(3, 3);
             aliasesData.Name = "aliasesData";
             aliasesData.ReadOnly = true;
-            aliasesData.Size = new Size(400, 128);
+            aliasesData.Size = new Size(180, 20);
             aliasesData.TabIndex = 0;
+            // 
+            // aliaseScopeColumn
+            // 
+            aliaseScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliaseScopeColumn.DataPropertyName = "AliasScope";
+            aliaseScopeColumn.FillWeight = 50F;
+            aliaseScopeColumn.HeaderText = "Scope";
+            aliaseScopeColumn.Name = "aliaseScopeColumn";
+            aliaseScopeColumn.ReadOnly = true;
+            // 
+            // aliasNameColumn
+            // 
+            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            aliasNameColumn.DataPropertyName = "AliasName";
+            aliasNameColumn.HeaderText = "Alias Name";
+            aliasNameColumn.Name = "aliasNameColumn";
+            aliasNameColumn.ReadOnly = true;
             // 
             // namedScopeData
             // 
@@ -413,12 +510,12 @@
             namedScopeData.ApplyText = "apply";
             namedScopeData.Dock = DockStyle.Fill;
             namedScopeData.HeaderText = "Alias";
-            namedScopeData.Location = new Point(3, 137);
+            namedScopeData.Location = new Point(3, 29);
             namedScopeData.Name = "namedScopeData";
             namedScopeData.ReadOnly = false;
             namedScopeData.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
             namedScopeData.ScopePath = namedScopePath1;
-            namedScopeData.Size = new Size(400, 197);
+            namedScopeData.Size = new Size(180, 34);
             namedScopeData.TabIndex = 1;
             namedScopeData.OnApply += NamedScopeData_OnApply;
             // 
@@ -479,22 +576,10 @@
             // 
             bindingSubjectArea.AddingNew += BindingSubjectArea_AddingNew;
             // 
-            // aliaseScopeColumn
+            // bindingDefinition
             // 
-            aliaseScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliaseScopeColumn.DataPropertyName = "AliasScope";
-            aliaseScopeColumn.FillWeight = 50F;
-            aliaseScopeColumn.HeaderText = "Scope";
-            aliaseScopeColumn.Name = "aliaseScopeColumn";
-            aliaseScopeColumn.ReadOnly = true;
-            // 
-            // aliasNameColumn
-            // 
-            aliasNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliasNameColumn.DataPropertyName = "AliasName";
-            aliasNameColumn.HeaderText = "Alias Name";
-            aliasNameColumn.Name = "aliasNameColumn";
-            aliasNameColumn.ReadOnly = true;
+            bindingDefinition.AddingNew += BindingDefinition_AddingNew;
+            bindingDefinition.CurrentChanged += BindingDefinition_CurrentChanged;
             // 
             // DomainAttribute
             // 
@@ -515,6 +600,9 @@
             propertyTab.ResumeLayout(false);
             propertyLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)propertiesData).EndInit();
+            definitionTab.ResumeLayout(false);
+            definitionLayout.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)definitionData).EndInit();
             aliasTab.ResumeLayout(false);
             aliaseLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)aliasesData).EndInit();
@@ -524,6 +612,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
             attributeToolStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDefinition).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -565,5 +654,11 @@
         private Controls.SubjectArea subjectArea;
         private DataGridViewComboBoxColumn aliaseScopeColumn;
         private DataGridViewTextBoxColumn aliasNameColumn;
+        private TabPage definitionTab;
+        private DataGridView definitionData;
+        private BindingSource bindingDefinition;
+        private DataGridViewComboBoxColumn definitionColumn;
+        private DataGridViewTextBoxColumn definitionSummaryColumn;
+        private Controls.DomainDefinition domainDefinition;
     }
 }
