@@ -9,7 +9,7 @@
 	-- Fields of this type exceed the limits of a SQL Index (900 bytes for Clustered, 1700 bytes for non-clustered).
 	-- This structure allows for much longer NameSpaces then normally could be handled.
 	[NameSpaceId]           UniqueIdentifier NOT NULL CONSTRAINT [DF_ModelNameSpaceId] DEFAULT (newid()),
-	[ModelId]               UniqueIdentifier NULL,
+	[ModelId]               UniqueIdentifier NOT NULL,
 	[ParentNameSpaceId]     UniqueIdentifier NULL,
 	[MemberName]            [App_DataDictionary].[typeNameSpaceMember] NOT NULL, -- 1600 bytes, NVarChar(800)
 	-- TODO: Add System Version later once the schema is locked down
@@ -19,11 +19,11 @@
    	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	CONSTRAINT [PK_ModelNameSpace] PRIMARY KEY CLUSTERED ([NameSpaceId] ASC),
 --	CONSTRAINT [FK_ModelNameSpaceParent] FOREIGN KEY ([ParentNameSpaceId]) REFERENCES [App_DataDictionary].[ModelNameSpace] ([NameSpaceId]),
-	CONSTRAINT [FK_ModelNameSpaceParent] FOREIGN KEY ([ModelId], [ParentNameSpaceId]) REFERENCES [App_DataDictionary].[ModelNameSpace] ([ModelId], [NameSpaceId]),
 	CONSTRAINT [FK_ModelNameSpaceModel] FOREIGN KEY ([ModelId]) REFERENCES [App_DataDictionary].[Model] ([ModelId]),
-	CONSTRAINT [UK_ModelNameSpaceModel] UNIQUE ([ModelId] ASC, [NameSpaceId] ASC), -- FK's can use this.
+	CONSTRAINT [UK_ModelNameSpaceModel] UNIQUE ([ModelId] ASC, [NameSpaceId] ASC),
+	CONSTRAINT [FK_ModelNameSpaceParent] FOREIGN KEY ([ModelId], [ParentNameSpaceId]) REFERENCES [App_DataDictionary].[ModelNameSpace] ([ModelId], [NameSpaceId]),
 )
 GO
 CREATE UNIQUE INDEX [AK_ModelNameSpace]
-    ON [App_DataDictionary].[ModelNameSpace]([ParentNameSpaceId] ASC, [MemberName] ASC)
+    ON [App_DataDictionary].[ModelNameSpace]([ModelId], [ParentNameSpaceId] ASC, [MemberName] ASC)
 GO
