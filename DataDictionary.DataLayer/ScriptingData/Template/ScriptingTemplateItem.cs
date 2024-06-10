@@ -220,6 +220,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
             new DataColumn(nameof(ScriptAs), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ScriptDirectory), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ScriptPrefix), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(ScriptSuffix), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(ScriptExtension), typeof(String)){ AllowDBNull = true},
         };
 

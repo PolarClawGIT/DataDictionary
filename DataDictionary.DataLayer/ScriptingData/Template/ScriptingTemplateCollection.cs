@@ -30,7 +30,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetScriptingTransform]";
+            command.CommandText = "[App_DataDictionary].[procGetScriptingTemplate]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@TemplateId", parameters.templateId);
             return command;
@@ -48,7 +48,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetScriptingTransform]";
+            command.CommandText = "[App_DataDictionary].[procSetScriptingTemplate]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@TemplateId", parameters.templateId);
 
