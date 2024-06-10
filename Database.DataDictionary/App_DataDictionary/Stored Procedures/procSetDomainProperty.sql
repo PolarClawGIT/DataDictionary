@@ -61,7 +61,7 @@ Begin Try
 			Left Join @Values S
 			On	T.[PropertyId] = S.[PropertyId]
 	Where	S.[PropertyId] is Null And
-			T.[IsCommon] = 0 And
+			T.[IsCommon] = 0 And -- Common Properties cannot be altered by this procedure
 			T.[PropertyId] In (
 				Select	A.[PropertyId]
 				From	[App_DataDictionary].[DomainProperty] A
@@ -93,7 +93,7 @@ Begin Try
 	From	[App_DataDictionary].[DomainProperty] T
 			Inner Join [Delta] S
 			On	T.[PropertyId] = S.[PropertyId]
-	Where	T.[IsCommon] = 0 -- Common Definitions cannot be altered by this procedure
+	Where	T.[IsCommon] = 0 -- Common Properties cannot be altered by this procedure
 	Print FormatMessage ('Update [App_DataDictionary].[DomainProperty]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	Insert Into [App_DataDictionary].[DomainProperty] (

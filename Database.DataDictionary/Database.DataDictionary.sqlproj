@@ -254,6 +254,13 @@
     <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingTemplate.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingPath.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingElement.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainAttributeDefinition.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainEntityDefinition.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainAttributeDefinition.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainEntityDefinition.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeRichText.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeDefinition.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntityDefinition.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

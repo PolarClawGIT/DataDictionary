@@ -48,7 +48,7 @@ Begin Try
 			Left Join @Values S
 			On	T.[DefinitionId] = S.[DefinitionId]
 	Where	S.[DefinitionId] is Null And
-			T.[IsCommon] = 0 And
+			T.[IsCommon] = 0 And -- Common Definitions cannot be altered by this procedure
 			T.[DefinitionId] In (
 				Select	A.[DefinitionId]
 				From	[App_DataDictionary].[DomainDefinition] A
