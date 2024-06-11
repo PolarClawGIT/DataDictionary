@@ -58,7 +58,8 @@
             // label
             // 
             label.AutoSize = true;
-            label.Location = new Point(3, 0);
+            label.Location = new Point(0, 0);
+            label.Margin = new Padding(0);
             label.Name = "label";
             label.Size = new Size(32, 15);
             label.TabIndex = 0;
