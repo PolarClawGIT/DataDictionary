@@ -1,4 +1,5 @@
-﻿using DataDictionary.Main.Forms.Domain.ComboBoxList;
+﻿using DataDictionary.BusinessLayer.Domain;
+using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,15 +18,33 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         public Image? ApplyImage { get { return applyCommand.Image; } set { applyCommand.Image = value; } }
 
         [Browsable(false)]
-        public Guid DefinitionId
+        public IDefinitionIndex? Definition
         {
             get
             {
-                if (definitionData.SelectedValue is Guid value)
+                if (definitionData.SelectedItem is IDefinitionIndex value)
                 { return value; }
-                else { return Guid.Empty; }
+                else { return null; }
             }
-            set { definitionData.SelectedValue = value; }
+        }
+
+        [Browsable(false)]
+        public Guid? DefinitionId
+        {
+            get
+            {
+                if (definitionData.SelectedItem is IDefinitionIndex item)
+                { return item.DefinitionId; }
+                else { return null; }
+            }
+            set
+            {
+                if (definitionData.DataSource is IList<IDefinitionIndex> items)
+                {
+                    if (items.FirstOrDefault(w => w.DefinitionId == value) is DefinitionNameMember item)
+                    { definitionData.SelectedItem = item; }
+                }
+            }
         }
 
         [Browsable(false)]

@@ -37,6 +37,7 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingEntity.Current is IEntityValue current)
             {
                 bindingProperty.DataSource = new BindingView<EntityPropertyValue>(BusinessData.DomainModel.Entities.Properties, w => key.Equals(w));
+                bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.DomainModel.Entities.Definitions, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.DomainModel.Entities.Aliases, w => key.Equals(w));
                 bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.DomainModel.Entities.SubjectArea, w => key.Equals(w));
             }
@@ -46,6 +47,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             IEntityValue nameOfValues;
             PropertyNameMember.Load(propertyIdColumn);
+            DefinitionNameMember.Load(definitionColumn);
             ScopeNameMember.Load(aliaseScopeColumn);
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));
@@ -57,6 +59,9 @@ namespace DataDictionary.Main.Forms.Domain
 
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
+
+            definitionData.AutoGenerateColumns = false;
+            definitionData.DataSource = bindingDefinition;
 
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
@@ -119,7 +124,7 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingProperty.Current is EntityPropertyValue current)
             {
                 domainProperty.PropertyId = current.PropertyId ?? Guid.Empty;
-                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty; 
+                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty;
             }
         }
 
@@ -160,6 +165,45 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingSubjectArea.DataSource is IEnumerable<ISubjectAreaIndex> data
                 && data.FirstOrDefault(w => key.Equals(w)) is EntitySubjectAreaValue target)
             { bindingSubjectArea.Remove(target); }
+        }
+
+        private void BindingDefinition_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (bindingEntity.Current is EntityValue current)
+            {
+                EntityDefinitionValue newItem = new EntityDefinitionValue(current);
+                newItem.DefinitionId = domainDefinition.DefinitionId;
+                newItem.DefinitionSummary = domainDefinition.DefinitionSummary;
+                newItem.DefinitionText = domainDefinition.DefinitionText;
+                e.NewObject = newItem;
+            }
+        }
+
+        private void BindingDefinition_CurrentChanged(object sender, EventArgs e)
+        {
+            var x = bindingDefinition.DataSource;
+
+            if (bindingDefinition.Current is EntityDefinitionValue current)
+            {
+                domainDefinition.DefinitionId = current.DefinitionId ?? Guid.Empty;
+                domainDefinition.DefinitionText = current.DefinitionText;
+                domainDefinition.DefinitionSummary = current.DefinitionSummary ?? String.Empty;
+            }
+        }
+
+        private void DomainDefinition_OnApply(object sender, EventArgs e)
+        {
+            if (bindingDefinition.DataSource is IList<EntityDefinitionValue> definition
+                && definition.FirstOrDefault(
+                    w => domainDefinition.Definition is IDefinitionIndex
+                    && domainDefinition.Definition.Equals(w))
+                is EntityDefinitionValue value)
+            {
+                value.DefinitionSummary = domainDefinition.DefinitionSummary;
+                value.DefinitionText = domainDefinition.DefinitionText;
+                bindingDefinition.Position = definition.IndexOf(value);
+            }
+            else { bindingDefinition.AddNew(); }
         }
     }
 }

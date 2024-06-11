@@ -416,6 +416,7 @@
             definitionData.Dock = DockStyle.Fill;
             definitionData.Location = new Point(6, 6);
             definitionData.Name = "definitionData";
+            definitionData.ReadOnly = true;
             definitionData.Size = new Size(400, 95);
             definitionData.TabIndex = 0;
             // 
@@ -426,6 +427,7 @@
             definitionColumn.FillWeight = 50F;
             definitionColumn.HeaderText = "Definition";
             definitionColumn.Name = "definitionColumn";
+            definitionColumn.ReadOnly = true;
             // 
             // definitionSummaryColumn
             // 
@@ -433,6 +435,7 @@
             definitionSummaryColumn.DataPropertyName = "DefinitionSummary";
             definitionSummaryColumn.HeaderText = "Definition Summary";
             definitionSummaryColumn.Name = "definitionSummaryColumn";
+            definitionSummaryColumn.ReadOnly = true;
             // 
             // domainDefinition
             // 

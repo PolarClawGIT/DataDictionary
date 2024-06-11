@@ -160,9 +160,10 @@ namespace DataDictionary.Main.Forms.Domain
         private void DomainDefinition_OnApply(object sender, EventArgs e)
         {
             if (bindingDefinition.DataSource is IList<AttributeDefinitionValue> definition
-                && definition.FirstOrDefault(
-                    w => w.DefinitionId == domainDefinition.DefinitionId)
-                is AttributeDefinitionValue value)
+                    && definition.FirstOrDefault(
+                        w => domainDefinition.Definition is IDefinitionIndex
+                        && domainDefinition.Definition.Equals(w))
+                    is AttributeDefinitionValue value)
             {
                 value.DefinitionSummary = domainDefinition.DefinitionSummary;
                 value.DefinitionText = domainDefinition.DefinitionText;
@@ -177,7 +178,7 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 domainDefinition.DefinitionId = current.DefinitionId ?? Guid.Empty;
                 domainDefinition.DefinitionText = current.DefinitionText;
-                domainDefinition.DefinitionSummary = current.DefinitionSummary??String.Empty;
+                domainDefinition.DefinitionSummary = current.DefinitionSummary ?? String.Empty;
             }
         }
 
