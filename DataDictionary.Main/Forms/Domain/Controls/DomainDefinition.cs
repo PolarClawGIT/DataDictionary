@@ -102,8 +102,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         {
             if (definitionData.SelectedValue is Guid value && value == Guid.Empty)
             { applyCommand.Enabled = false; }
-            else
-            { applyCommand.Enabled = true; }
+            else { applyCommand.Enabled = true; }
         }
 
         private void definitionData_SelectedIndexChanged(object sender, EventArgs e)
@@ -112,5 +111,8 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             { applyCommand.Enabled = true; }
             else { applyCommand.Enabled = false; }
         }
+
+        private void Sync_Click(object sender, EventArgs e)
+        { definitionSummaryData.Text = CleanUpText(definitionTextData.Text); }
     }
 }

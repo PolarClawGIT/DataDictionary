@@ -25,15 +25,24 @@ namespace DataDictionary.Main.Controls
     partial class RichTextBoxData : UserControl, ISupportEditMenu
     {
 
-        // Expose Header Properties
+        /// <summary>
+        /// Gets/Sets the Text for the Header.
+        /// </summary>
         public String HeaderText { get { return label.Text; } set { label.Text = value; } }
 
         // Override of default properties
         public new ControlBindingsCollection DataBindings { get { return richTextBox.DataBindings; } }
         public new String Text { get { return richTextBox.Text; } set { richTextBox.Text = value; } }
 
-        // Expose Control Properties
+        /// <summary>
+        /// Makes the control ReadOnly or Read/Write. Changes the color of the control.
+        /// </summary>
         public Boolean ReadOnly { get { return richTextBox.ReadOnly; } set { richTextBox.ReadOnly = value; } }
+
+        /// <summary>
+        /// Makes the Header Visible or hidden
+        /// </summary>
+        public Boolean HeaderVisible { get { return label.Visible; } set { label.Visible = value; } }
 
         /// <summary>
         /// Exposes the Rich Text attribute.

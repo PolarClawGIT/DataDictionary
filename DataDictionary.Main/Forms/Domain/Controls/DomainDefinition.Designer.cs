@@ -29,31 +29,58 @@
         private void InitializeComponent()
         {
             TabControl definitionTab;
-            definitionSummaryTab = new TabPage();
-            definitionSummaryData = new TextBox();
             definitionTextTab = new TabPage();
             definitionTextData = new DataDictionary.Main.Controls.RichTextBoxData();
+            definitionSummaryTab = new TabPage();
+            definitionSummaryData = new TextBox();
             definitionLayout = new TableLayoutPanel();
-            applyCommand = new Button();
             definitionData = new DataDictionary.Main.Controls.ComboBoxData();
+            applyCommand = new Button();
+            Sync = new Button();
             definitionTab = new TabControl();
             definitionTab.SuspendLayout();
-            definitionSummaryTab.SuspendLayout();
             definitionTextTab.SuspendLayout();
+            definitionSummaryTab.SuspendLayout();
             definitionLayout.SuspendLayout();
             SuspendLayout();
             // 
             // definitionTab
             // 
-            definitionLayout.SetColumnSpan(definitionTab, 2);
-            definitionTab.Controls.Add(definitionSummaryTab);
+            definitionLayout.SetColumnSpan(definitionTab, 3);
             definitionTab.Controls.Add(definitionTextTab);
+            definitionTab.Controls.Add(definitionSummaryTab);
             definitionTab.Dock = DockStyle.Fill;
             definitionTab.Location = new Point(3, 53);
             definitionTab.Name = "definitionTab";
             definitionTab.SelectedIndex = 0;
             definitionTab.Size = new Size(324, 184);
             definitionTab.TabIndex = 2;
+            // 
+            // definitionTextTab
+            // 
+            definitionTextTab.BackColor = SystemColors.Control;
+            definitionTextTab.Controls.Add(definitionTextData);
+            definitionTextTab.Location = new Point(4, 24);
+            definitionTextTab.Name = "definitionTextTab";
+            definitionTextTab.Padding = new Padding(3);
+            definitionTextTab.Size = new Size(316, 156);
+            definitionTextTab.TabIndex = 1;
+            definitionTextTab.Text = "Full Text";
+            // 
+            // definitionTextData
+            // 
+            definitionTextData.AutoSize = true;
+            definitionTextData.Dock = DockStyle.Fill;
+            definitionTextData.HeaderText = "Definition";
+            definitionTextData.HeaderVisible = false;
+            definitionTextData.Location = new Point(3, 3);
+            definitionTextData.Name = "definitionTextData";
+            definitionTextData.ReadOnly = false;
+            definitionTextData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
+            definitionTextData.Size = new Size(310, 150);
+            definitionTextData.TabIndex = 0;
+            definitionTextData.Validated += DefinitionTextData_Validated;
+            definitionTextData.Enter += DefinitionTextData_Enter;
             // 
             // definitionSummaryTab
             // 
@@ -76,39 +103,16 @@
             definitionSummaryData.Size = new Size(310, 150);
             definitionSummaryData.TabIndex = 0;
             // 
-            // definitionTextTab
-            // 
-            definitionTextTab.BackColor = SystemColors.Control;
-            definitionTextTab.Controls.Add(definitionTextData);
-            definitionTextTab.Location = new Point(4, 24);
-            definitionTextTab.Name = "definitionTextTab";
-            definitionTextTab.Padding = new Padding(3);
-            definitionTextTab.Size = new Size(316, 156);
-            definitionTextTab.TabIndex = 1;
-            definitionTextTab.Text = "Full Text";
-            // 
-            // definitionTextData
-            // 
-            definitionTextData.AutoSize = true;
-            definitionTextData.Dock = DockStyle.Fill;
-            definitionTextData.HeaderText = "Definition";
-            definitionTextData.Location = new Point(3, 3);
-            definitionTextData.Name = "definitionTextData";
-            definitionTextData.ReadOnly = false;
-            definitionTextData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
-            definitionTextData.Size = new Size(310, 150);
-            definitionTextData.TabIndex = 0;
-            definitionTextData.Validated += DefinitionTextData_Validated;
-            definitionTextData.Enter += DefinitionTextData_Enter;
-            // 
             // definitionLayout
             // 
-            definitionLayout.ColumnCount = 2;
+            definitionLayout.ColumnCount = 3;
             definitionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             definitionLayout.ColumnStyles.Add(new ColumnStyle());
-            definitionLayout.Controls.Add(applyCommand, 1, 0);
+            definitionLayout.ColumnStyles.Add(new ColumnStyle());
             definitionLayout.Controls.Add(definitionData, 0, 0);
             definitionLayout.Controls.Add(definitionTab, 0, 1);
+            definitionLayout.Controls.Add(applyCommand, 2, 0);
+            definitionLayout.Controls.Add(Sync, 1, 0);
             definitionLayout.Dock = DockStyle.Fill;
             definitionLayout.Location = new Point(0, 0);
             definitionLayout.Name = "definitionLayout";
@@ -117,6 +121,21 @@
             definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             definitionLayout.Size = new Size(330, 240);
             definitionLayout.TabIndex = 0;
+            // 
+            // definitionData
+            // 
+            definitionData.AutoSize = true;
+            definitionData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            definitionData.Dock = DockStyle.Fill;
+            definitionData.DropDownStyle = ComboBoxStyle.DropDown;
+            definitionData.HeaderText = "Definition type";
+            definitionData.Location = new Point(3, 3);
+            definitionData.Name = "definitionData";
+            definitionData.ReadOnly = false;
+            definitionData.Size = new Size(193, 44);
+            definitionData.TabIndex = 0;
+            definitionData.SelectedIndexChanged += definitionData_SelectedIndexChanged;
+            definitionData.Validated += DefinitionData_Validated;
             // 
             // applyCommand
             // 
@@ -133,20 +152,20 @@
             applyCommand.UseVisualStyleBackColor = true;
             applyCommand.Click += ApplyCommand_Click;
             // 
-            // definitionData
+            // Sync
             // 
-            definitionData.AutoSize = true;
-            definitionData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            definitionData.Dock = DockStyle.Fill;
-            definitionData.DropDownStyle = ComboBoxStyle.DropDown;
-            definitionData.HeaderText = "Definition type";
-            definitionData.Location = new Point(3, 3);
-            definitionData.Name = "definitionData";
-            definitionData.ReadOnly = false;
-            definitionData.Size = new Size(256, 44);
-            definitionData.TabIndex = 0;
-            definitionData.SelectedIndexChanged += definitionData_SelectedIndexChanged;
-            definitionData.Validated += DefinitionData_Validated;
+            Sync.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            Sync.AutoSize = true;
+            Sync.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Sync.Image = Properties.Resources.SyncContent;
+            Sync.Location = new Point(202, 22);
+            Sync.Name = "Sync";
+            Sync.Size = new Size(57, 25);
+            Sync.TabIndex = 6;
+            Sync.Text = "sync";
+            Sync.TextImageRelation = TextImageRelation.ImageBeforeText;
+            Sync.UseVisualStyleBackColor = true;
+            Sync.Click += Sync_Click;
             // 
             // DomainDefinition
             // 
@@ -156,10 +175,10 @@
             Name = "DomainDefinition";
             Size = new Size(330, 240);
             definitionTab.ResumeLayout(false);
-            definitionSummaryTab.ResumeLayout(false);
-            definitionSummaryTab.PerformLayout();
             definitionTextTab.ResumeLayout(false);
             definitionTextTab.PerformLayout();
+            definitionSummaryTab.ResumeLayout(false);
+            definitionSummaryTab.PerformLayout();
             definitionLayout.ResumeLayout(false);
             definitionLayout.PerformLayout();
             ResumeLayout(false);
@@ -174,5 +193,6 @@
         private Button applyCommand;
         private TextBox definitionSummaryData;
         private DataDictionary.Main.Controls.RichTextBoxData definitionTextData;
+        private Button Sync;
     }
 }

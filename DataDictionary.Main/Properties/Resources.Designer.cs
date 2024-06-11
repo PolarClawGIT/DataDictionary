@@ -1673,6 +1673,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SyncContent {
+            get {
+                object obj = ResourceManager.GetObject("SyncContent", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Synonym {
             get {
                 object obj = ResourceManager.GetObject("Synonym", resourceCulture);
