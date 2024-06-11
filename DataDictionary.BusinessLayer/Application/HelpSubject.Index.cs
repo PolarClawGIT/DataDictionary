@@ -31,7 +31,7 @@ namespace DataDictionary.BusinessLayer.Application
         { }
 
         /// <inheritdoc cref="HelpKeyNameSpace(IHelpKeyNameSpace)"/>
-        public HelpSubjectIndexPath(IHelpSubjectIndexNameSpace source) : base(source.NameSpace ?? String.Empty)
+        public HelpSubjectIndexPath(IHelpSubjectIndexNameSpace source) : base(NamedScopePath.Parse(source.NameSpace).ToArray())
         { }
 
         /// <inheritdoc cref="NamedScopePath(String?[])"/>

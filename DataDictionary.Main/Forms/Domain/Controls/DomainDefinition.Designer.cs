@@ -36,7 +36,7 @@
             definitionLayout = new TableLayoutPanel();
             definitionData = new DataDictionary.Main.Controls.ComboBoxData();
             applyCommand = new Button();
-            Sync = new Button();
+            syncSummaryTextCommand = new Button();
             definitionTab = new TabControl();
             definitionTab.SuspendLayout();
             definitionTextTab.SuspendLayout();
@@ -112,7 +112,7 @@
             definitionLayout.Controls.Add(definitionData, 0, 0);
             definitionLayout.Controls.Add(definitionTab, 0, 1);
             definitionLayout.Controls.Add(applyCommand, 2, 0);
-            definitionLayout.Controls.Add(Sync, 1, 0);
+            definitionLayout.Controls.Add(syncSummaryTextCommand, 1, 0);
             definitionLayout.Dock = DockStyle.Fill;
             definitionLayout.Location = new Point(0, 0);
             definitionLayout.Name = "definitionLayout";
@@ -152,20 +152,20 @@
             applyCommand.UseVisualStyleBackColor = true;
             applyCommand.Click += ApplyCommand_Click;
             // 
-            // Sync
+            // syncSummaryTextCommand
             // 
-            Sync.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            Sync.AutoSize = true;
-            Sync.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Sync.Image = Properties.Resources.SyncContent;
-            Sync.Location = new Point(202, 22);
-            Sync.Name = "Sync";
-            Sync.Size = new Size(57, 25);
-            Sync.TabIndex = 6;
-            Sync.Text = "sync";
-            Sync.TextImageRelation = TextImageRelation.ImageBeforeText;
-            Sync.UseVisualStyleBackColor = true;
-            Sync.Click += Sync_Click;
+            syncSummaryTextCommand.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            syncSummaryTextCommand.AutoSize = true;
+            syncSummaryTextCommand.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            syncSummaryTextCommand.Image = Properties.Resources.SyncContent;
+            syncSummaryTextCommand.Location = new Point(202, 22);
+            syncSummaryTextCommand.Name = "syncSummaryTextCommand";
+            syncSummaryTextCommand.Size = new Size(57, 25);
+            syncSummaryTextCommand.TabIndex = 6;
+            syncSummaryTextCommand.Text = "sync";
+            syncSummaryTextCommand.TextImageRelation = TextImageRelation.ImageBeforeText;
+            syncSummaryTextCommand.UseVisualStyleBackColor = true;
+            syncSummaryTextCommand.Click += Sync_Click;
             // 
             // DomainDefinition
             // 
@@ -193,6 +193,6 @@
         private Button applyCommand;
         private TextBox definitionSummaryData;
         private DataDictionary.Main.Controls.RichTextBoxData definitionTextData;
-        private Button Sync;
+        private Button syncSummaryTextCommand;
     }
 }
