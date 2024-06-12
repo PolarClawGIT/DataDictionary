@@ -10,6 +10,7 @@ namespace DataDictionary.Main.Controls
         public String ScopeName { get; init; } = String.Empty;
 
         public static ScopeNameList Empty { get; } = new ScopeNameList();
+        public static ScopeType NullValue { get; } = ScopeType.Null;
 
         protected ScopeNameList() : base() { }
 
