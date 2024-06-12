@@ -54,8 +54,8 @@ namespace DataDictionary.Main.Forms.Scripting
             templateTitleData.DataBindings.Add(new Binding(nameof(templateTitleData.Text), bindingTemplate, nameof(nameOfValues.TemplateTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             templateDescriptionData.DataBindings.Add(new Binding(nameof(templateDescriptionData.Text), bindingTemplate, nameof(nameOfValues.TemplateDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 
-            SupportedFolderList.Load(rootDirectoryData);
-            rootDirectoryData.DataBindings.Add(new Binding(nameof(rootDirectoryData.SelectedValue), bindingTemplate, nameof(nameOfValues.RootDirectory), true, DataSourceUpdateMode.OnPropertyChanged, SupportedFolderList.NullValue));
+            DirectoryNameList.Load(rootDirectoryData);
+            rootDirectoryData.DataBindings.Add(new Binding(nameof(rootDirectoryData.SelectedValue), bindingTemplate, nameof(nameOfValues.RootDirectory), false, DataSourceUpdateMode.OnPropertyChanged, DirectoryNameList.NullValue));
 
             ScopeNameList.Load(breakOnScopeData);
             breakOnScopeData.DataBindings.Add(new Binding(nameof(breakOnScopeData.SelectedValue), bindingTemplate, nameof(nameOfValues.BreakOnScope), false, DataSourceUpdateMode.OnPropertyChanged, ScopeNameList.NullValue));
@@ -78,7 +78,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void rootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (rootDirectoryData.SelectedItem is SupportedFolderList value)
+            if (rootDirectoryData.SelectedItem is DirectoryNameList value)
             {
                 if (value.Directory is null)
                 { rootDirectoryExpanded.Text = String.Empty; }

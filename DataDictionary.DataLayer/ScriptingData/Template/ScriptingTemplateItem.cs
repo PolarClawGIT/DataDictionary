@@ -28,7 +28,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <summary>
         /// Root Directory to place documents in (must be a Special Folder).
         /// </summary>
-        Environment.SpecialFolder? RootDirectory { get; }
+        DirectoryType RootDirectory { get; }
 
         /// <summary>
         /// From the RootDirectory, the location where the XML Document(s) are to be placed.  
@@ -117,18 +117,19 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         }
 
         /// <inheritdoc/>
-        public Environment.SpecialFolder? RootDirectory
+        public DirectoryType RootDirectory
         {
             get
             {
                 String? value = GetValue(nameof(RootDirectory));
-                if (Enum.TryParse(value, true, out Environment.SpecialFolder folder))
+                if (Enum.TryParse(value, true, out DirectoryType folder))
                 { return folder; }
-                else { return null; }
+                else { return DirectoryType.Null; }
             }
             set
             {
-                if (value is null) { SetValue(nameof(RootDirectory), null); }
+                if (value is DirectoryType.Null)
+                { SetValue(nameof(RootDirectory), null); }
                 else { SetValue(nameof(RootDirectory), value.ToString()); }
             }
         }

@@ -31,13 +31,14 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             get
             {
-                if(templateValue.RootDirectory is Environment.SpecialFolder root)
+                if(templateValue.RootDirectory is DirectoryType root &&
+                    new DirectoryTypeKey(root).ToDirectoryInfo() is DirectoryInfo folder)
                 {
-                    var directoryName =
+                    String directoryName =
                         Path.Combine(
-                            Environment.GetFolderPath(root),
+                            folder.FullName,
                             templateValue.DocumentDirectory ?? String.Empty);
-                    var fileName = String.Format("{0}{1}{2}.{3}",
+                    String fileName = String.Format("{0}{1}{2}.{3}",
                         templateValue.DocumentPrefix ?? String.Empty,
                         ElementName,
                         templateValue.DocumentSuffix ?? String.Empty,
@@ -56,11 +57,12 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             get
             {
-                if (templateValue.RootDirectory is Environment.SpecialFolder root)
+                if (templateValue.RootDirectory is DirectoryType root &&
+                    new DirectoryTypeKey(root).ToDirectoryInfo() is DirectoryInfo folder)
                 {
                     var directoryName =
                         Path.Combine(
-                            Environment.GetFolderPath(root),
+                            folder.FullName,
                             templateValue.ScriptDirectory ?? String.Empty);
                     var fileName = String.Format("{0}{1}{2}.{3}",
                         templateValue.ScriptPrefix ?? String.Empty,

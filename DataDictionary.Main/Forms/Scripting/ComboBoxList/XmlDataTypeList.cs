@@ -3,7 +3,7 @@ using DataDictionary.Main.Controls;
 
 namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
 {
-    record SupportedTypeList
+    record XmlDataTypeList
     {
         public XmlDataType DataType { get; set; } = XmlDataType.xs_string;
         public String DataName
@@ -16,11 +16,11 @@ namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
             }
         }
 
-        protected SupportedTypeList() : base() { }
+        protected XmlDataTypeList() : base() { }
 
         public static void Load(ComboBoxData control)
         {
-            List<SupportedTypeList> values = new List<SupportedTypeList>();
+            List<XmlDataTypeList> values = new List<XmlDataTypeList>();
 
             values.AddRange(
                 Enum.GetValues(typeof(XmlDataType)).
@@ -30,9 +30,9 @@ namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
                         var item = w.ToCrossReference();
                         return item.HasValue && item.Value.IsSupported;
                     }).
-                    Select(s => new SupportedTypeList() { DataType = s }));
+                    Select(s => new XmlDataTypeList() { DataType = s }));
 
-            SupportedTypeList names;
+            XmlDataTypeList names;
             control.DisplayMember = nameof(names.DataName);
             control.DataSource = values;
         }
