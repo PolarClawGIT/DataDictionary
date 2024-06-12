@@ -27,7 +27,16 @@ namespace DataDictionary.Main.Controls
         public new String Text { get { return comboBox.Text; } set { comboBox.Text = value; } }
 
         // Expose Control Properties
-        public Boolean ReadOnly { get { return !comboBox.Enabled; } set { comboBox.Enabled = !value; } }
+        public Boolean ReadOnly
+        {
+            get { return !comboBox.Enabled; }
+            set
+            {
+                comboBox.Enabled = !value;
+                if (value) { controlLayout.BackColor = SystemColors.Control; }
+                else { controlLayout.BackColor = SystemColors.ControlDarkDark; }
+            }
+        }
         public ComboBoxStyle DropDownStyle { get { return comboBox.DropDownStyle; } set { comboBox.DropDownStyle = value; } }
 
         [Browsable(false)]
