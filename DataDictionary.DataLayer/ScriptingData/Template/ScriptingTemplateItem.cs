@@ -16,14 +16,14 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         String? TemplateDescription { get; }
 
         /// <summary>
-        /// The Scope to do a Document Break on.
-        /// </summary>
-        ScopeType BreakOnScope { get; }
-
-        /// <summary>
         /// The XSL Script used to perform the Transform
         /// </summary>
         String? TransformScript { get; }
+
+        /// <summary>
+        /// The Scope to do a Document Break on.
+        /// </summary>
+        ScopeType BreakOnScope { get; }
 
         /// <summary>
         /// Root Directory to place documents in (must be a Special Folder).
@@ -127,7 +127,10 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
                 else { return null; }
             }
             set
-            { SetValue(nameof(RootDirectory), value.ToString()); }
+            {
+                if (value is null) { SetValue(nameof(RootDirectory), null); }
+                else { SetValue(nameof(RootDirectory), value.ToString()); }
+            }
         }
 
         /// <inheritdoc/>

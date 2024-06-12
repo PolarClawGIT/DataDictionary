@@ -107,7 +107,10 @@ namespace DataDictionary.Main
         private void menuModelDefinition_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_RichTextBox), BusinessData.DomainModel.Definitions); }
 
-        private void menuScriptingTransform_Click(object sender, EventArgs e)
+        private void manageScriptingCommand_ButtonClick(object sender, EventArgs e)
+        { Activate(() => new Forms.Scripting.ScriptingTemplate(null)); }
+
+        private void menuScriptingTemplates_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XSLTransform), BusinessData.ScriptingEngine.Templates); }
 
         private void menuScriptingElement_Click(object sender, EventArgs e)

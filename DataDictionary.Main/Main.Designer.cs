@@ -121,7 +121,7 @@
             toolStripSeparator6 = new ToolStripSeparator();
             manageScriptingCommand = new ToolStripSplitButton();
             scriptingContextMenu = new ContextMenuStrip(components);
-            menuScriptingTransform = new ToolStripMenuItem();
+            menuScriptingTemplate = new ToolStripMenuItem();
             menuScriptingElement = new ToolStripMenuItem();
             menuScriptingPath = new ToolStripMenuItem();
             menuScriptingDocument = new ToolStripMenuItem();
@@ -838,26 +838,27 @@
             // 
             manageScriptingCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageScriptingCommand.DropDown = scriptingContextMenu;
-            manageScriptingCommand.Image = Properties.Resources.XmlFile;
+            manageScriptingCommand.Image = Properties.Resources.NewXSLTransform;
             manageScriptingCommand.ImageTransparentColor = Color.Magenta;
             manageScriptingCommand.Name = "manageScriptingCommand";
             manageScriptingCommand.Size = new Size(32, 22);
             manageScriptingCommand.Text = "Scripting manager";
+            manageScriptingCommand.ButtonClick += manageScriptingCommand_ButtonClick;
             // 
             // scriptingContextMenu
             // 
-            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTransform, menuScriptingElement, menuScriptingPath, menuScriptingDocument });
+            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingElement, menuScriptingPath, menuScriptingDocument });
             scriptingContextMenu.Name = "scriptingContextMenu";
             scriptingContextMenu.OwnerItem = manageScriptingCommand;
             scriptingContextMenu.Size = new Size(228, 114);
             // 
-            // menuScriptingTransform
+            // menuScriptingTemplate
             // 
-            menuScriptingTransform.Image = Properties.Resources.XSLTransform;
-            menuScriptingTransform.Name = "menuScriptingTransform";
-            menuScriptingTransform.Size = new Size(227, 22);
-            menuScriptingTransform.Text = "browse Transforms";
-            menuScriptingTransform.Click += menuScriptingTransform_Click;
+            menuScriptingTemplate.Image = Properties.Resources.XSLTransform;
+            menuScriptingTemplate.Name = "menuScriptingTemplate";
+            menuScriptingTemplate.Size = new Size(227, 22);
+            menuScriptingTemplate.Text = "browse Templates";
+            menuScriptingTemplate.Click += menuScriptingTemplates_Click;
             // 
             // menuScriptingElement
             // 
@@ -1029,7 +1030,7 @@
         private ContextMenuStrip modelContextMenu;
         private ToolStripMenuItem menuModelProperty;
         private ToolStripMenuItem menuModelDefinition;
-        private ToolStripMenuItem menuScriptingTransform;
+        private ToolStripMenuItem menuScriptingTemplate;
         private ToolStripMenuItem menuScriptingElement;
         private ToolStripMenuItem menuScriptingPath;
         private ToolStripMenuItem menuScriptingDocument;

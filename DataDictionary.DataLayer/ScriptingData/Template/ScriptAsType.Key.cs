@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
     public class ScriptAsTypeKey : IScriptAsType, IKeyComparable<IScriptAsType>, IParsable<ScriptAsTypeKey>
     {
         /// <inheritdoc/>
-        public ScriptAsType ScriptAs { get; init; } = ScriptAsType.Null;
+        public ScriptAsType ScriptAs { get; init; } = ScriptAsType.none;
 
         /// <summary>
         /// Basic Constructor for the Script As Key.
@@ -51,8 +51,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         public virtual Boolean Equals(IScriptAsType? other)
         {
             return other is IScriptAsType
-                && this.ScriptAs != ScriptAsType.Null
-                && other.ScriptAs != ScriptAsType.Null
+                && this.ScriptAs != ScriptAsType.none
+                && other.ScriptAs != ScriptAsType.none
                 && this.ScriptAs.Equals(other.ScriptAs);
         }
 
@@ -114,13 +114,10 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <inheritdoc/>
         public static ScriptAsTypeKey Parse(String source, IFormatProvider? provider = null)
         {
-            if (String.IsNullOrEmpty(source))
-            { throw new ArgumentNullException(nameof(source)); }
-
             if (ScriptAsTypeKey.TryParse(source, provider, out ScriptAsTypeKey? result))
             { return result; }
             else
-            { return ScriptAsType.Null; }
+            { return ScriptAsType.none; }
         }
 
         /// <inheritdoc/>
@@ -137,7 +134,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         {
             if (parseName.FirstOrDefault(w => w.Value.Equals(source, KeyExtension.CompareString))
                 is KeyValuePair<ScriptAsType, String> dbItem
-                && dbItem.Key != ScriptAsType.Null)
+                && dbItem.Key != ScriptAsType.none)
             { result = new ScriptAsTypeKey() { ScriptAs = dbItem.Key }; return true; }
             else { result = null; return false; }
         }

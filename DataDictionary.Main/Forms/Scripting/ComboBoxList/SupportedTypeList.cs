@@ -1,14 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.Main.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
 {
-    record SupportedTypeItem
+    record SupportedTypeList
     {
         public XmlDataType DataType { get; set; } = XmlDataType.xs_string;
         public String DataName
@@ -21,11 +16,11 @@ namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
             }
         }
 
-        protected SupportedTypeItem() : base() { }
+        protected SupportedTypeList() : base() { }
 
         public static void Load(ComboBoxData control)
         {
-            List<SupportedTypeItem> values = new List<SupportedTypeItem>();
+            List<SupportedTypeList> values = new List<SupportedTypeList>();
 
             values.AddRange(
                 Enum.GetValues(typeof(XmlDataType)).
@@ -35,9 +30,9 @@ namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
                         var item = w.ToCrossReference();
                         return item.HasValue && item.Value.IsSupported;
                     }).
-                    Select(s => new SupportedTypeItem() { DataType = s }));
+                    Select(s => new SupportedTypeList() { DataType = s }));
 
-            SupportedTypeItem names;
+            SupportedTypeList names;
             control.DisplayMember = nameof(names.DataName);
             control.DataSource = values;
         }

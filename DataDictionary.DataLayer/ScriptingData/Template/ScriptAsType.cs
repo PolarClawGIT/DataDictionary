@@ -13,9 +13,9 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
     public enum ScriptAsType
     {
         /// <summary>
-        /// Unknown Script Type
+        /// Not Scripted
         /// </summary>
-        Null,
+        none,
 
         /// <summary>
         /// Script as Text

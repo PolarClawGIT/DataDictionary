@@ -184,9 +184,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// <inheritdoc/>
         public static ScopeKey Parse(String source, IFormatProvider? provider = null)
         {
-            if (String.IsNullOrEmpty(source))
-            { throw new ArgumentNullException(nameof(source)); }
-
             if (ScopeKey.TryParse(source, provider, out ScopeKey? result))
             { return result; }
             else
