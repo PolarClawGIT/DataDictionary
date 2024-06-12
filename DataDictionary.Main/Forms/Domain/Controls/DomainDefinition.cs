@@ -41,7 +41,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
             {
                 if (definitionData.DataSource is IList<IDefinitionIndex> items)
                 {
-                    if (items.FirstOrDefault(w => w.DefinitionId == value) is DefinitionNameMember item)
+                    if (items.FirstOrDefault(w => w.DefinitionId == value) is DefinitionNameList item)
                     { definitionData.SelectedItem = item; }
                 }
             }
@@ -70,7 +70,7 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         public DomainDefinition()
         {
             InitializeComponent();
-            DefinitionNameMember.Load(definitionData);
+            DefinitionNameList.Load(definitionData);
         }
 
         public event EventHandler? OnApply;

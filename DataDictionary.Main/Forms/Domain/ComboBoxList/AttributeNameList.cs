@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
-    record AttributeNameMember : IAttributeIndex, IAttributeIndexName
+    record AttributeNameList : IAttributeIndex, IAttributeIndexName
     {
         /// <inheritdoc/>
         public Guid? AttributeId { get; private set; } = Guid.Empty;
@@ -16,17 +16,17 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
             where T : IAttributeIndex, IAttributeIndexName
         {
 
-            AttributeNameMember memberItem = new AttributeNameMember();
-            BindingList<AttributeNameMember> list = new BindingList<AttributeNameMember>();
-            list.Add(new AttributeNameMember() { AttributeId = Guid.Empty, AttributeTitle = "(not specified)" });
+            AttributeNameList memberItem = new AttributeNameList();
+            BindingList<AttributeNameList> list = new BindingList<AttributeNameList>();
+            list.Add(new AttributeNameList() { AttributeId = Guid.Empty, AttributeTitle = "(not specified)" });
 
             if (defaultAttributeId is Guid defaultId && defaultId != Guid.Empty && !String.IsNullOrWhiteSpace(defaultAttributeTitle) && source.Count(w => defaultId.Equals(w.AttributeId)) == 0)
-            { list.Add(new AttributeNameMember() { AttributeId = defaultId, AttributeTitle = defaultAttributeTitle }); }
+            { list.Add(new AttributeNameList() { AttributeId = defaultId, AttributeTitle = defaultAttributeTitle }); }
 
             foreach (T item in source.OrderBy(o => o.AttributeTitle))
             {
                 if (item.AttributeId is Guid attributeId && attributeId != Guid.Empty && item.AttributeTitle is String attributeTitle)
-                { list.Add(new AttributeNameMember() { AttributeId = attributeId, AttributeTitle = attributeTitle }); }
+                { list.Add(new AttributeNameList() { AttributeId = attributeId, AttributeTitle = attributeTitle }); }
 
             }
 

@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
-    record PropertyNameMember : IPropertyIndex, IPropertyIndexName
+    record PropertyNameList : IPropertyIndex, IPropertyIndexName
     {
         /// <inheritdoc/>
         public Guid? PropertyId { get; set; } = Guid.Empty;
@@ -14,14 +14,14 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 
         public static void Load(ComboBoxData control)
         {
-            PropertyNameMember propertyNameDataItem = new PropertyNameMember();
-            BindingList<PropertyNameMember> list = new BindingList<PropertyNameMember>();
-            list.Add(new PropertyNameMember() { PropertyId = Guid.Empty, PropertyTitle = "(select property Type)" });
+            PropertyNameList propertyNameDataItem = new PropertyNameList();
+            BindingList<PropertyNameList> list = new BindingList<PropertyNameList>();
+            list.Add(new PropertyNameList() { PropertyId = Guid.Empty, PropertyTitle = "(select property Type)" });
 
             foreach (PropertyValue item in BusinessData.DomainModel.Properties)
             {
                 if (item.PropertyId is Guid propertyId && item.PropertyTitle is String propertyTitle)
-                { list.Add(new PropertyNameMember() { PropertyId = propertyId, PropertyTitle = propertyTitle }); }
+                { list.Add(new PropertyNameList() { PropertyId = propertyId, PropertyTitle = propertyTitle }); }
             }
 
             control.ValueMember = nameof(propertyNameDataItem.PropertyId);
@@ -31,14 +31,14 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 
         public static void Load(DataGridViewComboBoxColumn control)
         {
-            PropertyNameMember propertyNameDataItem = new PropertyNameMember();
-            BindingList<PropertyNameMember> list = new BindingList<PropertyNameMember>();
-            list.Add(new PropertyNameMember() { PropertyId = Guid.Empty, PropertyTitle = "(select property Type)" });
+            PropertyNameList propertyNameDataItem = new PropertyNameList();
+            BindingList<PropertyNameList> list = new BindingList<PropertyNameList>();
+            list.Add(new PropertyNameList() { PropertyId = Guid.Empty, PropertyTitle = "(select property Type)" });
 
             foreach (PropertyValue item in BusinessData.DomainModel.Properties)
             {
                 if (item.PropertyId is Guid propertyId && item.PropertyTitle is String propertyTitle)
-                { list.Add(new PropertyNameMember() { PropertyId = propertyId, PropertyTitle = propertyTitle }); }
+                { list.Add(new PropertyNameList() { PropertyId = propertyId, PropertyTitle = propertyTitle }); }
             }
 
             control.ValueMember = nameof(propertyNameDataItem.PropertyId);

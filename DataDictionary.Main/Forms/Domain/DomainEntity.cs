@@ -46,15 +46,15 @@ namespace DataDictionary.Main.Forms.Domain
         private void Form_Load(object sender, EventArgs e)
         {
             IEntityValue nameOfValues;
-            PropertyNameMember.Load(propertyIdColumn);
-            DefinitionNameMember.Load(definitionColumn);
-            ScopeNameMember.Load(aliaseScopeColumn);
+            PropertyNameList.Load(propertyIdColumn);
+            DefinitionNameList.Load(definitionColumn);
+            ScopeNameList.Load(aliaseScopeColumn);
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));
             descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingEntity, nameof(nameOfValues.EntityDescription)));
 
-            EntityNameMember.Load(typeOfEntityData, BusinessData.DomainModel.Entities);
+            EntityNameList.Load(typeOfEntityData, BusinessData.DomainModel.Entities);
             typeOfEntityData.DataBindings.Add(new Binding(nameof(typeOfEntityData.SelectedValue), bindingEntity, nameof(nameOfValues.TypeOfEntityId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
 
             propertiesData.AutoGenerateColumns = false;

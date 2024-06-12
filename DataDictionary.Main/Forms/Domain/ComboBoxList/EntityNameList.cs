@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
-    record EntityNameMember : IEntityIndex, IEntityIndexName
+    record EntityNameList : IEntityIndex, IEntityIndexName
     {
         /// <inheritdoc/>
         public Guid? EntityId { get; private set; } = Guid.Empty;
@@ -23,17 +23,17 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
         public static void Load<T>(ComboBoxData control, IEnumerable<T> source, Guid? defaultEntityId = null, String? defaultEntityTitle = null)
             where T : IEntityIndex, IEntityIndexName
         {
-            EntityNameMember propertyNameDataItem = new EntityNameMember();
-            BindingList<EntityNameMember> list = new BindingList<EntityNameMember>();
-            list.Add(new EntityNameMember() { EntityId = Guid.Empty, EntityTitle = "(not specified)" });
+            EntityNameList propertyNameDataItem = new EntityNameList();
+            BindingList<EntityNameList> list = new BindingList<EntityNameList>();
+            list.Add(new EntityNameList() { EntityId = Guid.Empty, EntityTitle = "(not specified)" });
 
             if (defaultEntityId is Guid defaultId && defaultId != Guid.Empty && !String.IsNullOrWhiteSpace(defaultEntityTitle) && source.Count(w => defaultId.Equals(w.EntityId)) == 0)
-            { list.Add(new EntityNameMember() { EntityId = defaultId, EntityTitle = defaultEntityTitle }); }
+            { list.Add(new EntityNameList() { EntityId = defaultId, EntityTitle = defaultEntityTitle }); }
 
             foreach (T item in source.OrderBy(o => o.EntityTitle))
             {
                 if (item.EntityId is Guid EntityId && EntityId != Guid.Empty && item.EntityTitle is String EntityTitle)
-                { list.Add(new EntityNameMember() { EntityId = EntityId, EntityTitle = EntityTitle }); }
+                { list.Add(new EntityNameList() { EntityId = EntityId, EntityTitle = EntityTitle }); }
 
             }
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 {
-    record class SubjectAreaNameMember : ISubjectAreaIndex, ISubjectAreaIndexName
+    record class SubjectAreaNameList : ISubjectAreaIndex, ISubjectAreaIndexName
     {
         /// <inheritdoc/>
         public Guid? SubjectAreaId { get; private set; } = Guid.Empty;
@@ -19,14 +19,14 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
 
         public static void Load(ComboBoxData control)
         {
-            SubjectAreaNameMember propertyNameDataItem = new SubjectAreaNameMember();
-            BindingList<SubjectAreaNameMember> list = new BindingList<SubjectAreaNameMember>();
-            list.Add(new SubjectAreaNameMember() { SubjectAreaId = Guid.Empty, SubjectAreaTitle = "(select subject area)" });
+            SubjectAreaNameList propertyNameDataItem = new SubjectAreaNameList();
+            BindingList<SubjectAreaNameList> list = new BindingList<SubjectAreaNameList>();
+            list.Add(new SubjectAreaNameList() { SubjectAreaId = Guid.Empty, SubjectAreaTitle = "(select subject area)" });
 
             foreach (SubjectAreaValue item in BusinessData.SubjectAreas)
             {
                 if (item.SubjectAreaId is Guid subjectId && item.SubjectAreaTitle is String subjectTitle)
-                { list.Add(new SubjectAreaNameMember() { SubjectAreaId = subjectId, SubjectAreaTitle = subjectTitle }); }
+                { list.Add(new SubjectAreaNameList() { SubjectAreaId = subjectId, SubjectAreaTitle = subjectTitle }); }
             }
 
             control.DataSource = list;

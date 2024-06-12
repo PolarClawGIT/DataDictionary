@@ -4,25 +4,25 @@ using System.ComponentModel;
 
 namespace DataDictionary.Main.Controls
 {
-    record ScopeNameMember
+    record ScopeNameList
     {
         public ScopeType ScopeType { get; set; } = ScopeType.Null;
         public String ScopeName { get; init; } = String.Empty;
 
-        public static ScopeNameMember Empty { get; } = new ScopeNameMember();
+        public static ScopeNameList Empty { get; } = new ScopeNameList();
 
-        protected ScopeNameMember() : base() { }
+        protected ScopeNameList() : base() { }
 
         public static void Load(ComboBoxData control)
         {
-            ScopeNameMember scopeNameItem = new ScopeNameMember();
-            BindingList<ScopeNameMember> list = new BindingList<ScopeNameMember>();
+            ScopeNameList scopeNameItem = new ScopeNameList();
+            BindingList<ScopeNameList> list = new BindingList<ScopeNameList>();
 
             foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
             {
                 String name = item.ToName();
                 if (!String.IsNullOrEmpty(name))
-                { list.Add(new ScopeNameMember() { ScopeType = item, ScopeName = name }); }
+                { list.Add(new ScopeNameList() { ScopeType = item, ScopeName = name }); }
             }
 
             control.DataSource = list;
@@ -32,14 +32,14 @@ namespace DataDictionary.Main.Controls
 
         public static void Load(DataGridViewComboBoxColumn control)
         {
-            ScopeNameMember scopeNameItem = new ScopeNameMember();
-            BindingList<ScopeNameMember> list = new BindingList<ScopeNameMember>();
+            ScopeNameList scopeNameItem = new ScopeNameList();
+            BindingList<ScopeNameList> list = new BindingList<ScopeNameList>();
 
             foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
             {
                 String name = item.ToName();
                 if (!String.IsNullOrEmpty(name))
-                { list.Add(new ScopeNameMember() { ScopeType = item, ScopeName = name }); }
+                { list.Add(new ScopeNameList() { ScopeType = item, ScopeName = name }); }
             }
 
             control.DataSource = list;

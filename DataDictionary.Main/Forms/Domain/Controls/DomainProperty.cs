@@ -38,12 +38,12 @@ namespace DataDictionary.Main.Forms.Domain.Controls
         public DomainProperty()
         {
             InitializeComponent();
-            PropertyNameMember.Load(propertyTypeData);
+            PropertyNameList.Load(propertyTypeData);
         }
 
         public void RefreshControls()
         {
-            if (propertyTypeData.SelectedItem is PropertyNameMember selected
+            if (propertyTypeData.SelectedItem is PropertyNameList selected
                 && new PropertyIndex(selected) is PropertyIndex key
                 && BusinessData.DomainModel.Properties.FirstOrDefault(w => key.Equals(w)) is PropertyValue property)
             {

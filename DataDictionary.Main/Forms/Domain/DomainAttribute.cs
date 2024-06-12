@@ -47,15 +47,15 @@ namespace DataDictionary.Main.Forms.Domain
         private void Form_Load(object sender, EventArgs e)
         {
             IAttributeValue nameOfValues;
-            PropertyNameMember.Load(propertyIdColumn);
-            DefinitionNameMember.Load(definitionColumn);
-            ScopeNameMember.Load(aliaseScopeColumn);
+            PropertyNameList.Load(propertyIdColumn);
+            DefinitionNameList.Load(definitionColumn);
+            ScopeNameList.Load(aliaseScopeColumn);
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingAttribute, nameof(nameOfValues.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingAttribute, nameof(nameOfValues.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingAttribute, nameof(nameOfValues.AttributeDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 
-            AttributeNameMember.Load(typeOfAttributeData, BusinessData.DomainModel.Attributes);
+            AttributeNameList.Load(typeOfAttributeData, BusinessData.DomainModel.Attributes);
             typeOfAttributeData.DataBindings.Add(new Binding(nameof(typeOfAttributeData.SelectedValue), bindingAttribute, nameof(nameOfValues.TypeOfAttributeId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
 
             isSingleValueData.DataBindings.Add(new Binding(nameof(isSingleValueData.Checked), bindingAttribute, nameof(nameOfValues.IsSingleValue), false, DataSourceUpdateMode.OnPropertyChanged));
