@@ -18,6 +18,22 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         none,
 
         /// <summary>
+        /// Microsoft C# code
+        /// </summary>
+        CSharp,
+
+        /// <summary>
+        /// Microsoft Visual Basic code
+        /// </summary>
+        VBNet,
+
+
+        /// <summary>
+        /// Microsoft SQL script
+        /// </summary>
+        MsSql,
+
+        /// <summary>
         /// Script as Text
         /// </summary>
         Text,

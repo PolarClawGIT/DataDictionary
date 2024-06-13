@@ -207,6 +207,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         {
             if (TemplateId is null) { TemplateId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(TemplateTitle)) { TemplateTitle = "(new Template)"; }
+            if (String.IsNullOrWhiteSpace(DocumentExtension)) { DocumentExtension = "xml"; }
+            if (RootDirectory is DirectoryType.Null) { RootDirectory = DirectoryType.MySources; }
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()

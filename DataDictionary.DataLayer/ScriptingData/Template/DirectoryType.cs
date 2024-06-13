@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DataDictionary.DataLayer.ScriptingData.Template
 {
     /// <summary>
-    /// Subset of Environment.SpecialFolder that are supported
+    /// Supported Folders
     /// </summary>
     public enum DirectoryType
     {
@@ -16,11 +16,18 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// </summary>
         Null,
 
+        /// <summary>
+        /// Default Location Visual Studio places Source files.
+        /// </summary>
+        MySources,
+
         /// <inheritdoc cref="Environment.SpecialFolder.MyDocuments"/>
         MyDocuments,
 
-        /// <inheritdoc cref="Environment.SpecialFolder.ApplicationData"/>
-        ApplicationData
+        /// <summary>
+        /// Default Location of the User Downloads.
+        /// </summary>
+        MyDownloads
     }
 
     /// <summary>

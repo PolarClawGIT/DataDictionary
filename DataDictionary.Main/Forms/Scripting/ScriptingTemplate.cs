@@ -1,4 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.DataLayer.ScriptingData.Template;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Scripting.ComboBoxList;
 using System;
@@ -10,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Linq;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Scripting
@@ -24,6 +27,12 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             InitializeComponent();
             toolStrip.TransferItems(templateToolStrip, 0);
+
+            transformFilePath.Width = transformToolStrip.Width -
+                transformToolStrip.Items.
+                Cast<ToolStripItem>().
+                Where(w => w != transformFilePath).
+                Sum(s => s.Width) - 3;
         }
 
         public ScriptingTemplate(ITemplateValue? templateItem) : this()
@@ -78,14 +87,131 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void rootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (rootDirectoryData.SelectedItem is DirectoryNameList value)
+            if (rootDirectoryData.SelectedItem is DirectoryNameList value
+                && bindingTemplate.Current is TemplateValue current)
             {
                 if (value.Directory is null)
-                { rootDirectoryExpanded.Text = String.Empty; }
+                {
+                    rootDirectoryExpanded.Text = String.Empty;
+                    current.DocumentDirectory = null;
+                    current.ScriptDirectory = null;
+                }
                 else
-                { rootDirectoryExpanded.Text = value.Directory.FullName; }
+                {
+                    rootDirectoryExpanded.Text = value.Directory.FullName;
+                    current.DocumentDirectory = null;
+                    current.ScriptDirectory = null;
+                }
             }
             else { rootDirectoryExpanded.Text = String.Empty; }
+        }
+
+        private void DeleteTemplateCommand_Click(object sender, EventArgs e)
+        {
+            if (bindingTemplate.Current is TemplateValue current)
+            { BusinessData.ScriptingEngine.Templates.Delete(current); }
+        }
+
+        private void DocumentDirectoryPicker_Click(object sender, EventArgs e)
+        {
+            if (bindingTemplate.Current is TemplateValue current
+                && new DirectoryTypeKey(current.RootDirectory).ToDirectoryInfo() is DirectoryInfo directory)
+            {
+                folderBrowserDialog.InitialDirectory = Path.Combine(directory.FullName, current.DocumentDirectory ?? String.Empty);
+                if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
+                {
+                    if (folderBrowserDialog.SelectedPath.Length > directory.FullName.Length
+                        && String.Equals(folderBrowserDialog.SelectedPath.Substring(0, directory.FullName.Length), directory.FullName, StringComparison.CurrentCultureIgnoreCase))
+                    { current.DocumentDirectory = folderBrowserDialog.SelectedPath.Substring(directory.FullName.Length + 1); }
+                }
+            }
+        }
+
+        private void scriptingDirectoryPicker_Click(object sender, EventArgs e)
+        {
+            if (bindingTemplate.Current is TemplateValue current
+                && new DirectoryTypeKey(current.RootDirectory).ToDirectoryInfo() is DirectoryInfo directory)
+            {
+                folderBrowserDialog.InitialDirectory = Path.Combine(directory.FullName, current.ScriptDirectory ?? String.Empty);
+                if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
+                {
+                    if (folderBrowserDialog.SelectedPath.Length > directory.FullName.Length
+                        && String.Equals(folderBrowserDialog.SelectedPath.Substring(0, directory.FullName.Length), directory.FullName, StringComparison.CurrentCultureIgnoreCase))
+                    { current.ScriptDirectory = folderBrowserDialog.SelectedPath.Substring(directory.FullName.Length + 1); }
+                }
+            }
+        }
+
+        private void ScriptAsData_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (bindingTemplate.Current is TemplateValue current)
+            { current.ScriptExtension = new ScriptAsTypeKey(current).ToExtension(); }
+        }
+
+        private void transformParseCommand_Click(object sender, EventArgs e)
+        {
+            if (bindingTemplate.Current is TemplateValue current)
+            {
+                if (current.TransformException is null && current.TransformXml is not null)
+                {
+                    XDocument value = new XDocument(current.TransformXml);
+                    if (value.Declaration is not null)
+                    { value.Declaration.Encoding = String.Empty; }
+
+                    current.TransformScript = current.TransformXml.ToString();
+                }
+            }
+        }
+
+        private void transformImportCommand_Click(object sender, EventArgs e)
+        {
+            if (bindingTemplate.Current is TemplateValue current)
+            {
+                if (new DirectoryTypeKey(current.RootDirectory).ToDirectoryInfo() is DirectoryInfo directory)
+                { openFileDialog.InitialDirectory = directory.FullName; }
+
+                openFileDialog.DefaultExt = "xslt";
+                openFileDialog.Filter = "XML Transformation (*.xslt)|*.xslt|XML (*.xml)|*.xml|All files (*.*)|*.*";
+
+                if (openFileDialog.ShowDialog() is DialogResult.OK)
+                {
+                    transformFilePath.Text = openFileDialog.FileName;
+                    XDocument file = XDocument.Load(openFileDialog.OpenFile());
+                    if (file.Root is XElement)
+                    { current.TransformScript = file.Root.ToString(); }
+                }
+            }
+        }
+
+        private void transformExportCommand_Click(object sender, EventArgs e)
+        {
+            if (bindingTemplate.Current is TemplateValue current)
+            {
+                if (new DirectoryTypeKey(current.RootDirectory).ToDirectoryInfo() is DirectoryInfo directory)
+                { saveFileDialog.InitialDirectory = directory.FullName; }
+
+                if (String.IsNullOrWhiteSpace(transformFilePath.Text))
+                { saveFileDialog.FileName = current.TemplateTitle; }
+                else { saveFileDialog.FileName = transformFilePath.Text; }
+
+                saveFileDialog.DefaultExt = "xslt";
+                saveFileDialog.Filter = "XML Transformation (*.xslt)|*.xslt|XML (*.xml)|*.xml|All files (*.*)|*.*";
+
+                if (saveFileDialog.ShowDialog() is DialogResult.OK && current.TransformXml is not null)
+                {
+                    XDocument file = new XDocument(current.TransformXml);
+                    file.Save(saveFileDialog.FileName);
+                }
+            }
+        }
+
+        private void TransformToolStrip_Resize(object sender, EventArgs e)
+        {
+            transformFilePath.Width = transformToolStrip.Width -
+                transformToolStrip.Items.
+                Cast<ToolStripItem>().
+                Where(w => w != transformFilePath).
+                Sum(s => s.Width) - 3;
         }
     }
 }

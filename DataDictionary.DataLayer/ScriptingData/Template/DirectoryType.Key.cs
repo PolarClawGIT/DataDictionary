@@ -55,7 +55,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         public DirectoryInfo? ToDirectoryInfo()
         {
             if (parseName.ContainsKey(RootDirectory))
-            { return new DirectoryInfo(Environment.GetFolderPath(parseName[RootDirectory])); }
+            { return parseName[RootDirectory]; }
             else { return null; }
         }
 
@@ -118,10 +118,12 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <summary>
         /// This is the list that translates the DirectoryType Enum to what the Database uses as TableType Name.
         /// </summary>
-        static Dictionary<DirectoryType, Environment.SpecialFolder> parseName = new Dictionary<DirectoryType, Environment.SpecialFolder>()
+        static Dictionary<DirectoryType, DirectoryInfo> parseName = new Dictionary<DirectoryType, DirectoryInfo>()
         {
-            { DirectoryType.MyDocuments,     Environment.SpecialFolder.MyDocuments},
-            { DirectoryType.ApplicationData, Environment.SpecialFolder.ApplicationData},
+            { DirectoryType.MySources,    new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "source","repos")) },
+            { DirectoryType.MyDocuments,  new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)) },
+            { DirectoryType.MyDownloads,  new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads")) },
+
         };
 
         /// <inheritdoc/>
@@ -129,7 +131,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         {
             if (String.IsNullOrEmpty(source))
             { throw new ArgumentNullException(nameof(source)); }
-
+            
             if (DirectoryTypeKey.TryParse(source, provider, out DirectoryTypeKey? result))
             { return result; }
             else
@@ -149,7 +151,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         public static bool TryParse([NotNullWhen(true)] String? source, [MaybeNullWhen(false)] out DirectoryTypeKey result)
         {
             if (parseName.FirstOrDefault(w => String.Equals(w.Value.ToString(), source, KeyExtension.CompareString))
-                is KeyValuePair<DirectoryType, Environment.SpecialFolder> dbItem
+                is KeyValuePair<DirectoryType, DirectoryInfo> dbItem
                 && dbItem.Key != DirectoryType.Null)
             { result = new DirectoryTypeKey() { RootDirectory = dbItem.Key }; return true; }
             else { result = null; return false; }

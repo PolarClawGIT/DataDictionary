@@ -46,6 +46,17 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <param name="source"></param>
         public static implicit operator ScriptAsType(ScriptAsTypeKey source) { return source.ScriptAs; }
 
+        /// <summary>
+        /// Returns the extension used by the Script type.
+        /// </summary>
+        /// <returns></returns>
+        public String? ToExtension()
+        {
+            if (parseName.ContainsKey(ScriptAs))
+            { return parseName[ScriptAs].Extension; }
+            else { return null; }
+        }
+
         #region IEquatable
         /// <inheritdoc/>
         public virtual Boolean Equals(IScriptAsType? other)
@@ -105,10 +116,13 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <summary>
         /// This is the list that translates the ScriptAsType Enum to what the Database uses as TableType Name.
         /// </summary>
-        static Dictionary<ScriptAsType, String> parseName = new Dictionary<ScriptAsType, String>()
+        static Dictionary<ScriptAsType, (String Display, String Extension)> parseName = new Dictionary<ScriptAsType, (String Display, String Extension)>()
         {
-            { ScriptAsType.Text, "Text"},
-            { ScriptAsType.XML,  "XML"},
+            { ScriptAsType.CSharp, ("C#",     "cs")},
+            { ScriptAsType.VBNet,  ("VB.Net", "vb")},
+            { ScriptAsType.MsSql,  ("Ms SQL", "sql")},
+            { ScriptAsType.Text,   ("Text",   "txt")},
+            { ScriptAsType.XML,    ("XML",    "xml")},
         };
 
         /// <inheritdoc/>
@@ -132,8 +146,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <returns>true if s was successfully parsed; otherwise, false.</returns>
         public static bool TryParse([NotNullWhen(true)] String? source, [MaybeNullWhen(false)] out ScriptAsTypeKey result)
         {
-            if (parseName.FirstOrDefault(w => w.Value.Equals(source, KeyExtension.CompareString))
-                is KeyValuePair<ScriptAsType, String> dbItem
+            if (parseName.FirstOrDefault(w => w.Value.Display.Equals(source, KeyExtension.CompareString))
+                is KeyValuePair<ScriptAsType, (String Display, String Extension)> dbItem
                 && dbItem.Key != ScriptAsType.none)
             { result = new ScriptAsTypeKey() { ScriptAs = dbItem.Key }; return true; }
             else { result = null; return false; }
@@ -153,7 +167,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <returns></returns>
         public override string ToString()
         {
-            if (parseName.ContainsKey(ScriptAs)) { return parseName[ScriptAs]; }
+            if (parseName.ContainsKey(ScriptAs)) { return parseName[ScriptAs].Display; }
             else { return ScriptAs.ToString(); }
         }
     }
