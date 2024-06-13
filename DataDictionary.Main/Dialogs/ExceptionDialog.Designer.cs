@@ -96,8 +96,10 @@
             exceptionStackTraceData.Multiline = true;
             exceptionStackTraceData.Name = "exceptionStackTraceData";
             exceptionStackTraceData.ReadOnly = true;
+            exceptionStackTraceData.ScrollBars = ScrollBars.Both;
             exceptionStackTraceData.Size = new Size(312, 271);
             exceptionStackTraceData.TabIndex = 12;
+            exceptionStackTraceData.WordWrap = false;
             // 
             // exceptionSenderLayout
             // 
@@ -336,7 +338,6 @@
             exceptionData.Dock = DockStyle.Fill;
             exceptionData.Location = new Point(0, 0);
             exceptionData.Name = "exceptionData";
-            exceptionData.RowTemplate.Height = 25;
             exceptionData.Size = new Size(318, 277);
             exceptionData.TabIndex = 0;
             // 
@@ -374,7 +375,6 @@
             exceptionSqlErrors.Dock = DockStyle.Fill;
             exceptionSqlErrors.Location = new Point(0, 0);
             exceptionSqlErrors.Name = "exceptionSqlErrors";
-            exceptionSqlErrors.RowTemplate.Height = 25;
             exceptionSqlErrors.Size = new Size(318, 277);
             exceptionSqlErrors.TabIndex = 0;
             // 
