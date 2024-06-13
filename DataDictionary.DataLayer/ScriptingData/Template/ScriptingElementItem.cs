@@ -143,8 +143,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
-            new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(ElementId), typeof(Guid)){ AllowDBNull = false},
+            new DataColumn(nameof(TemplateId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(PropertyScope), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(PropertyName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(AsElement), typeof(Boolean)){ AllowDBNull = true},
