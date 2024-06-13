@@ -81,10 +81,12 @@ namespace DataDictionary.Main.Controls
                 {
                     target.Invoke(() =>
                     {
-                        expandedNodes.AddRange(valueNodes.Where(w => w.Key.IsExpanded
+                        expandedNodes.AddRange(valueNodes.Where(w => 
+                                    (w.Key.IsExpanded && data.ContainsKey(w.Value))
                                     || (w.Key.Nodes.Count == 0
                                         && w.Key.Parent is not null
-                                        && w.Key.Parent.IsExpanded)).
+                                        && w.Key.Parent.IsExpanded)
+                                        && data.ContainsKey(w.Value)).
                                         Select(s => s.Value). // Get the NamedScope Index
                                         Distinct().
                                         Select(s => data.GetData(s).Index)); // Translate to DataLayer Index
@@ -131,7 +133,7 @@ namespace DataDictionary.Main.Controls
                 {
                     foreach (KeyValuePair<TreeNode, NamedScopeIndex> node in expandedNodes.
                         SelectMany(item => valueNodes.
-                            Where(w => item.Equals(data.GetData(w.Value).Index)).
+                            Where(w => data.ContainsKey(w.Value) && item.Equals(data.GetData(w.Value).Index)).
                             Where(node => node.Key is not null && !node.Key.IsExpanded)))
                     { node.Key.ExpandParent(); }
                 })

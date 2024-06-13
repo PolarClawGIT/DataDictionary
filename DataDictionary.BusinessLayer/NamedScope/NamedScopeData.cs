@@ -90,8 +90,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <inheritdoc/>
         public virtual INamedScopeSourceValue GetData(NamedScopeIndex index)
         {
-            if(!data.ContainsKey(index))
-            { throw new Exception("Not suppose to happen"); }
+            if (!data.ContainsKey(index))
+            { 
+                Exception ex = new IndexOutOfRangeException();
+                ex.Data.Add(nameof(index), index);
+                throw ex;
+            }
             return data[index].Source;
         }
 
