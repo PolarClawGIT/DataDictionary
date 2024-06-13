@@ -82,6 +82,8 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingEntity.Current is IEntityValue current)
             {
                 EntityPropertyValue newItem = new EntityPropertyValue(current);
+                newItem.PropertyId = domainProperty.PropertyId;
+                newItem.PropertyValue = domainProperty.PropertyValue;
                 e.NewObject = newItem;
             }
         }
