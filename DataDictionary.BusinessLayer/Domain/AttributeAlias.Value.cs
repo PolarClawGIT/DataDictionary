@@ -45,7 +45,7 @@ namespace DataDictionary.BusinessLayer.Domain
         }
 
         /// <inheritdoc/>
-        public XElement? GetXElement(IAttributeValue data, IEnumerable<TemplateElementValue>? options)
+/*        public XElement? GetXElement(IAttributeValue data, IEnumerable<TemplateElementValue>? options)
         {
             XElement? result = null;
 
@@ -105,6 +105,6 @@ namespace DataDictionary.BusinessLayer.Domain
             }
 
             return result;
-        }
+        }*/
     }
 }

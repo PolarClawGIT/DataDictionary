@@ -122,7 +122,6 @@
             manageScriptingCommand = new ToolStripSplitButton();
             scriptingContextMenu = new ContextMenuStrip(components);
             menuScriptingTemplate = new ToolStripMenuItem();
-            menuScriptingElement = new ToolStripMenuItem();
             menuScriptingPath = new ToolStripMenuItem();
             menuScriptingDocument = new ToolStripMenuItem();
             toolStripSeparator7 = new ToolStripSeparator();
@@ -847,10 +846,9 @@
             // 
             // scriptingContextMenu
             // 
-            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingElement, menuScriptingPath, menuScriptingDocument });
+            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingPath, menuScriptingDocument });
             scriptingContextMenu.Name = "scriptingContextMenu";
-            scriptingContextMenu.OwnerItem = manageScriptingCommand;
-            scriptingContextMenu.Size = new Size(228, 114);
+            scriptingContextMenu.Size = new Size(228, 92);
             // 
             // menuScriptingTemplate
             // 
@@ -859,14 +857,6 @@
             menuScriptingTemplate.Size = new Size(227, 22);
             menuScriptingTemplate.Text = "browse Templates";
             menuScriptingTemplate.Click += menuScriptingTemplates_Click;
-            // 
-            // menuScriptingElement
-            // 
-            menuScriptingElement.Image = Properties.Resources.XMLSchema;
-            menuScriptingElement.Name = "menuScriptingElement";
-            menuScriptingElement.Size = new Size(227, 22);
-            menuScriptingElement.Text = "browse Template Elements";
-            menuScriptingElement.Click += menuScriptingElement_Click;
             // 
             // menuScriptingPath
             // 
@@ -1031,7 +1021,6 @@
         private ToolStripMenuItem menuModelProperty;
         private ToolStripMenuItem menuModelDefinition;
         private ToolStripMenuItem menuScriptingTemplate;
-        private ToolStripMenuItem menuScriptingElement;
         private ToolStripMenuItem menuScriptingPath;
         private ToolStripMenuItem menuScriptingDocument;
     }

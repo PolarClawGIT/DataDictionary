@@ -28,7 +28,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
 
         /// <inheritdoc/>
-        public XElement? GetXElement(IPropertyData data, IEnumerable<TemplateElementValue>? options)
+        /*public XElement? GetXElement(IPropertyData data, IEnumerable<TemplateElementValue>? options)
         {
             XElement? result = null;
 
@@ -63,7 +63,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
             return result;
         }
-
+        */
         internal static IReadOnlyList<ColumnValue> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelAttributeProperty;

@@ -113,9 +113,6 @@ namespace DataDictionary.Main
         private void menuScriptingTemplates_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XSLTransform), BusinessData.ScriptingEngine.Templates); }
 
-        private void menuScriptingElement_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XMLSchema), BusinessData.ScriptingEngine.Templates.Elements); }
-
         private void menuScriptingPath_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XPath), BusinessData.ScriptingEngine.Templates.Paths); }
 

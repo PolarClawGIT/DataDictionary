@@ -31,7 +31,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public virtual String GetTitle()
         { return EntityTitle ?? Scope.ToName(); }
 
-        internal XElement? GetXElement(IEnumerable<TemplateElementValue>? options = null)
+        /*internal XElement? GetXElement(IEnumerable<TemplateElementValue>? options = null)
         {
             XElement? result = new XElement(this.Scope.ToName());
 
@@ -56,7 +56,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
             return result;
         }
-
+        */
         internal static IReadOnlyList<ColumnValue> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelEntity;

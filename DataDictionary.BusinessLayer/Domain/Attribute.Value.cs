@@ -33,8 +33,10 @@ namespace DataDictionary.BusinessLayer.Domain
         { return new NamedScopePath(AttributeTitle); }
 
         /// <inheritdoc/>
-        public XElement? GetXElement(IDomainData data, IEnumerable<TemplateElementValue>? options)
+        /*public XElement? GetXElement(IDomainData data, IEnumerable<TemplateElementValue>? options)
         {
+            throw new NotImplementedException();
+            
             XElement? result = null;
 
             if (options is not null && options.Count() > 0)
@@ -91,7 +93,7 @@ namespace DataDictionary.BusinessLayer.Domain
             }
 
             return result;
-        }
+        }*/
 
         internal static IReadOnlyList<ColumnValue> GetXColumns()
         {

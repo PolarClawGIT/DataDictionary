@@ -32,9 +32,12 @@
             TableLayoutPanel templateLayoutPanel;
             TableLayoutPanel documentLayout;
             TableLayoutPanel documentGroupLayout;
+            ListViewGroup listViewGroup2 = new ListViewGroup("Scope Name 1", HorizontalAlignment.Left);
+            ListViewItem listViewItem2 = new ListViewItem(new string[] { "Property Name 1", "Column 1" }, -1);
             TableLayoutPanel elementPathLayout;
             BusinessLayer.NamedScope.NamedScopePath namedScopePath2 = new BusinessLayer.NamedScope.NamedScopePath();
             TableLayoutPanel transformLayout;
+            GroupBox attributeGroup;
             templateTitleData = new Controls.TextBoxData();
             templateDescriptionData = new Controls.TextBoxData();
             templateTabs = new TabControl();
@@ -56,12 +59,20 @@
             scriptingDirectoryData = new Controls.TextBoxData();
             scriptAsData = new Controls.ComboBoxData();
             scriptingDirectoryPicker = new Button();
-            elementTab = new TabPage();
+            nodeDefinitionTab = new TabPage();
+            schemaDefinitionLayout = new SplitContainer();
+            elementSelection = new ListView();
+            columnName = new ColumnHeader();
+            schemaDefinitionElementLayout = new TableLayoutPanel();
+            propertyScopeData = new Controls.TextBoxData();
+            propertyNameData = new Controls.TextBoxData();
+            nodeNameData = new Controls.TextBoxData();
+            nodeDataAsData = new Controls.ComboBoxData();
             dataSelectionTab = new TabPage();
-            templatePathSelect = new Controls.NamedScopeData();
             templatePathData = new DataGridView();
             scopeNameData = new DataGridViewTextBoxColumn();
             selectionMemberData = new DataGridViewTextBoxColumn();
+            templatePathSelect = new Controls.NamedScopeData();
             transformTab = new TabPage();
             transformToolStrip = new ToolStrip();
             transformParseCommand = new ToolStripButton();
@@ -79,11 +90,18 @@
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
             bindingPath = new BindingSource(components);
+            bindingNode = new BindingSource(components);
+            attributeData = new DataGridView();
+            attributeNameColumn = new DataGridViewTextBoxColumn();
+            attributePropertyColumn = new DataGridViewComboBoxColumn();
+            attributeValueColumn = new DataGridViewTextBoxColumn();
+            bindingNodeAttribute = new BindingSource(components);
             templateLayoutPanel = new TableLayoutPanel();
             documentLayout = new TableLayoutPanel();
             documentGroupLayout = new TableLayoutPanel();
             elementPathLayout = new TableLayoutPanel();
             transformLayout = new TableLayoutPanel();
+            attributeGroup = new GroupBox();
             templateLayoutPanel.SuspendLayout();
             templateTabs.SuspendLayout();
             documentSettingTab.SuspendLayout();
@@ -92,6 +110,12 @@
             documentGroupLayout.SuspendLayout();
             scriptingGroup.SuspendLayout();
             scriptingGroupLayout.SuspendLayout();
+            nodeDefinitionTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)schemaDefinitionLayout).BeginInit();
+            schemaDefinitionLayout.Panel1.SuspendLayout();
+            schemaDefinitionLayout.Panel2.SuspendLayout();
+            schemaDefinitionLayout.SuspendLayout();
+            schemaDefinitionElementLayout.SuspendLayout();
             dataSelectionTab.SuspendLayout();
             elementPathLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)templatePathData).BeginInit();
@@ -101,6 +125,10 @@
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
             templateToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingPath).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingNode).BeginInit();
+            attributeGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)attributeData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingNodeAttribute).BeginInit();
             SuspendLayout();
             // 
             // templateLayoutPanel
@@ -147,7 +175,7 @@
             // templateTabs
             // 
             templateTabs.Controls.Add(documentSettingTab);
-            templateTabs.Controls.Add(elementTab);
+            templateTabs.Controls.Add(nodeDefinitionTab);
             templateTabs.Controls.Add(dataSelectionTab);
             templateTabs.Controls.Add(transformTab);
             templateTabs.Controls.Add(documentsTab);
@@ -438,14 +466,130 @@
             scriptingDirectoryPicker.UseVisualStyleBackColor = true;
             scriptingDirectoryPicker.Click += ScriptingDirectoryPicker_Click;
             // 
-            // elementTab
+            // nodeDefinitionTab
             // 
-            elementTab.BackColor = SystemColors.Control;
-            elementTab.Location = new Point(4, 24);
-            elementTab.Name = "elementTab";
-            elementTab.Size = new Size(849, 414);
-            elementTab.TabIndex = 2;
-            elementTab.Text = "Schema Definition (XSD)";
+            nodeDefinitionTab.BackColor = SystemColors.Control;
+            nodeDefinitionTab.Controls.Add(schemaDefinitionLayout);
+            nodeDefinitionTab.Location = new Point(4, 24);
+            nodeDefinitionTab.Name = "nodeDefinitionTab";
+            nodeDefinitionTab.Size = new Size(849, 414);
+            nodeDefinitionTab.TabIndex = 2;
+            nodeDefinitionTab.Text = "Node Definition (XSD)";
+            // 
+            // schemaDefinitionLayout
+            // 
+            schemaDefinitionLayout.BorderStyle = BorderStyle.FixedSingle;
+            schemaDefinitionLayout.Dock = DockStyle.Fill;
+            schemaDefinitionLayout.Location = new Point(0, 0);
+            schemaDefinitionLayout.Name = "schemaDefinitionLayout";
+            // 
+            // schemaDefinitionLayout.Panel1
+            // 
+            schemaDefinitionLayout.Panel1.Controls.Add(elementSelection);
+            // 
+            // schemaDefinitionLayout.Panel2
+            // 
+            schemaDefinitionLayout.Panel2.Controls.Add(schemaDefinitionElementLayout);
+            schemaDefinitionLayout.Size = new Size(849, 414);
+            schemaDefinitionLayout.SplitterDistance = 283;
+            schemaDefinitionLayout.TabIndex = 1;
+            // 
+            // elementSelection
+            // 
+            elementSelection.CheckBoxes = true;
+            elementSelection.Columns.AddRange(new ColumnHeader[] { columnName });
+            elementSelection.Dock = DockStyle.Fill;
+            listViewGroup2.Header = "Scope Name 1";
+            listViewGroup2.Name = "sampleScope";
+            elementSelection.Groups.AddRange(new ListViewGroup[] { listViewGroup2 });
+            listViewItem2.Group = listViewGroup2;
+            listViewItem2.StateImageIndex = 0;
+            elementSelection.Items.AddRange(new ListViewItem[] { listViewItem2 });
+            elementSelection.Location = new Point(0, 0);
+            elementSelection.MultiSelect = false;
+            elementSelection.Name = "elementSelection";
+            elementSelection.Size = new Size(281, 412);
+            elementSelection.TabIndex = 2;
+            elementSelection.UseCompatibleStateImageBehavior = false;
+            elementSelection.View = View.Details;
+            // 
+            // columnName
+            // 
+            columnName.Text = "Column";
+            columnName.Width = 300;
+            // 
+            // schemaDefinitionElementLayout
+            // 
+            schemaDefinitionElementLayout.ColumnCount = 2;
+            schemaDefinitionElementLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60F));
+            schemaDefinitionElementLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+            schemaDefinitionElementLayout.Controls.Add(propertyScopeData, 0, 0);
+            schemaDefinitionElementLayout.Controls.Add(propertyNameData, 0, 1);
+            schemaDefinitionElementLayout.Controls.Add(nodeNameData, 0, 2);
+            schemaDefinitionElementLayout.Controls.Add(nodeDataAsData, 1, 2);
+            schemaDefinitionElementLayout.Controls.Add(attributeGroup, 0, 4);
+            schemaDefinitionElementLayout.Dock = DockStyle.Fill;
+            schemaDefinitionElementLayout.Location = new Point(0, 0);
+            schemaDefinitionElementLayout.Name = "schemaDefinitionElementLayout";
+            schemaDefinitionElementLayout.RowCount = 5;
+            schemaDefinitionElementLayout.RowStyles.Add(new RowStyle());
+            schemaDefinitionElementLayout.RowStyles.Add(new RowStyle());
+            schemaDefinitionElementLayout.RowStyles.Add(new RowStyle());
+            schemaDefinitionElementLayout.RowStyles.Add(new RowStyle());
+            schemaDefinitionElementLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            schemaDefinitionElementLayout.Size = new Size(560, 412);
+            schemaDefinitionElementLayout.TabIndex = 0;
+            // 
+            // propertyScopeData
+            // 
+            propertyScopeData.AutoSize = true;
+            schemaDefinitionElementLayout.SetColumnSpan(propertyScopeData, 2);
+            propertyScopeData.Dock = DockStyle.Fill;
+            propertyScopeData.HeaderText = "Property Scope";
+            propertyScopeData.Location = new Point(3, 3);
+            propertyScopeData.Multiline = false;
+            propertyScopeData.Name = "propertyScopeData";
+            propertyScopeData.ReadOnly = true;
+            propertyScopeData.Size = new Size(554, 44);
+            propertyScopeData.TabIndex = 0;
+            // 
+            // propertyNameData
+            // 
+            propertyNameData.AutoSize = true;
+            schemaDefinitionElementLayout.SetColumnSpan(propertyNameData, 2);
+            propertyNameData.Dock = DockStyle.Fill;
+            propertyNameData.HeaderText = "Property Name";
+            propertyNameData.Location = new Point(3, 53);
+            propertyNameData.Multiline = false;
+            propertyNameData.Name = "propertyNameData";
+            propertyNameData.ReadOnly = true;
+            propertyNameData.Size = new Size(554, 44);
+            propertyNameData.TabIndex = 1;
+            // 
+            // nodeNameData
+            // 
+            nodeNameData.AutoSize = true;
+            nodeNameData.Dock = DockStyle.Fill;
+            nodeNameData.HeaderText = "Element Name";
+            nodeNameData.Location = new Point(3, 103);
+            nodeNameData.Multiline = false;
+            nodeNameData.Name = "nodeNameData";
+            nodeNameData.ReadOnly = false;
+            nodeNameData.Size = new Size(330, 46);
+            nodeNameData.TabIndex = 2;
+            // 
+            // nodeDataAsData
+            // 
+            nodeDataAsData.AutoSize = true;
+            nodeDataAsData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            nodeDataAsData.Dock = DockStyle.Fill;
+            nodeDataAsData.DropDownStyle = ComboBoxStyle.DropDownList;
+            nodeDataAsData.HeaderText = "render Data as";
+            nodeDataAsData.Location = new Point(339, 103);
+            nodeDataAsData.Name = "nodeDataAsData";
+            nodeDataAsData.ReadOnly = false;
+            nodeDataAsData.Size = new Size(218, 46);
+            nodeDataAsData.TabIndex = 5;
             // 
             // dataSelectionTab
             // 
@@ -472,21 +616,6 @@
             elementPathLayout.Size = new Size(849, 414);
             elementPathLayout.TabIndex = 1;
             // 
-            // templatePathSelect
-            // 
-            templatePathSelect.ApplyImage = Properties.Resources.NewXPath;
-            templatePathSelect.ApplyText = "apply";
-            templatePathSelect.Dock = DockStyle.Fill;
-            templatePathSelect.HeaderText = "Selected Path";
-            templatePathSelect.Location = new Point(427, 3);
-            templatePathSelect.Name = "templatePathSelect";
-            templatePathSelect.ReadOnly = false;
-            templatePathSelect.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
-            templatePathSelect.ScopePath = namedScopePath2;
-            templatePathSelect.Size = new Size(419, 408);
-            templatePathSelect.TabIndex = 6;
-            templatePathSelect.OnApply += NamedScopeData_OnApply;
-            // 
             // templatePathData
             // 
             templatePathData.AllowUserToAddRows = false;
@@ -512,6 +641,21 @@
             selectionMemberData.DataPropertyName = "PathName";
             selectionMemberData.HeaderText = "Path";
             selectionMemberData.Name = "selectionMemberData";
+            // 
+            // templatePathSelect
+            // 
+            templatePathSelect.ApplyImage = Properties.Resources.NewXPath;
+            templatePathSelect.ApplyText = "apply";
+            templatePathSelect.Dock = DockStyle.Fill;
+            templatePathSelect.HeaderText = "Selected Path";
+            templatePathSelect.Location = new Point(427, 3);
+            templatePathSelect.Name = "templatePathSelect";
+            templatePathSelect.ReadOnly = false;
+            templatePathSelect.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
+            templatePathSelect.ScopePath = namedScopePath2;
+            templatePathSelect.Size = new Size(419, 408);
+            templatePathSelect.TabIndex = 6;
+            templatePathSelect.OnApply += NamedScopeData_OnApply;
             // 
             // transformTab
             // 
@@ -559,7 +703,7 @@
             transformParseCommand.Image = Properties.Resources.XSLTransform;
             transformParseCommand.ImageTransparentColor = Color.Magenta;
             transformParseCommand.Name = "transformParseCommand";
-            transformParseCommand.Size = new Size(23, 24);
+            transformParseCommand.Size = new Size(23, 22);
             transformParseCommand.Text = "Parse Transform";
             transformParseCommand.Click += TransformParseCommand_Click;
             // 
@@ -569,7 +713,7 @@
             transformImportCommand.Image = Properties.Resources.OpenFile;
             transformImportCommand.ImageTransparentColor = Color.Magenta;
             transformImportCommand.Name = "transformImportCommand";
-            transformImportCommand.Size = new Size(23, 24);
+            transformImportCommand.Size = new Size(23, 22);
             transformImportCommand.Text = "Import File";
             transformImportCommand.Click += TransformImportCommand_Click;
             // 
@@ -579,7 +723,7 @@
             transformExportCommand.Image = Properties.Resources.Save;
             transformExportCommand.ImageTransparentColor = Color.Magenta;
             transformExportCommand.Name = "transformExportCommand";
-            transformExportCommand.Size = new Size(23, 24);
+            transformExportCommand.Size = new Size(23, 22);
             transformExportCommand.Text = "Export File";
             transformExportCommand.Click += TransformExportCommand_Click;
             // 
@@ -618,7 +762,7 @@
             documentsTab.BackColor = SystemColors.Control;
             documentsTab.Location = new Point(4, 24);
             documentsTab.Name = "documentsTab";
-            documentsTab.Size = new Size(192, 72);
+            documentsTab.Size = new Size(849, 414);
             documentsTab.TabIndex = 4;
             documentsTab.Text = "Documents (XML)";
             // 
@@ -627,7 +771,7 @@
             scriptsTab.BackColor = SystemColors.Control;
             scriptsTab.Location = new Point(4, 24);
             scriptsTab.Name = "scriptsTab";
-            scriptsTab.Size = new Size(192, 72);
+            scriptsTab.Size = new Size(849, 414);
             scriptsTab.TabIndex = 5;
             scriptsTab.Text = "Scripts (txt ...)";
             // 
@@ -649,6 +793,51 @@
             // 
             bindingPath.AddingNew += BindingPath_AddingNew;
             bindingPath.CurrentChanged += BindingPath_CurrentChanged;
+            // 
+            // attributeGroup
+            // 
+            schemaDefinitionElementLayout.SetColumnSpan(attributeGroup, 2);
+            attributeGroup.Controls.Add(attributeData);
+            attributeGroup.Dock = DockStyle.Fill;
+            attributeGroup.Location = new Point(3, 155);
+            attributeGroup.Name = "attributeGroup";
+            attributeGroup.Size = new Size(554, 254);
+            attributeGroup.TabIndex = 6;
+            attributeGroup.TabStop = false;
+            attributeGroup.Text = "Attributes";
+            // 
+            // attributeData
+            // 
+            attributeData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            attributeData.Columns.AddRange(new DataGridViewColumn[] { attributeNameColumn, attributePropertyColumn, attributeValueColumn });
+            attributeData.Dock = DockStyle.Fill;
+            attributeData.Location = new Point(3, 19);
+            attributeData.Name = "attributeData";
+            attributeData.Size = new Size(548, 232);
+            attributeData.TabIndex = 0;
+            // 
+            // attributeNameColumn
+            // 
+            attributeNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            attributeNameColumn.DataPropertyName = "AttributeName";
+            attributeNameColumn.FillWeight = 50F;
+            attributeNameColumn.HeaderText = "Attribute Name";
+            attributeNameColumn.Name = "attributeNameColumn";
+            // 
+            // attributePropertyColumn
+            // 
+            attributePropertyColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            attributePropertyColumn.DataPropertyName = "PropertyId";
+            attributePropertyColumn.FillWeight = 50F;
+            attributePropertyColumn.HeaderText = "use Property Value";
+            attributePropertyColumn.Name = "attributePropertyColumn";
+            // 
+            // attributeValueColumn
+            // 
+            attributeValueColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            attributeValueColumn.DataPropertyName = "AttributeValue";
+            attributeValueColumn.HeaderText = "use Fixed Value";
+            attributeValueColumn.Name = "attributeValueColumn";
             // 
             // ScriptingTemplate
             // 
@@ -672,6 +861,13 @@
             scriptingGroup.ResumeLayout(false);
             scriptingGroupLayout.ResumeLayout(false);
             scriptingGroupLayout.PerformLayout();
+            nodeDefinitionTab.ResumeLayout(false);
+            schemaDefinitionLayout.Panel1.ResumeLayout(false);
+            schemaDefinitionLayout.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)schemaDefinitionLayout).EndInit();
+            schemaDefinitionLayout.ResumeLayout(false);
+            schemaDefinitionElementLayout.ResumeLayout(false);
+            schemaDefinitionElementLayout.PerformLayout();
             dataSelectionTab.ResumeLayout(false);
             elementPathLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)templatePathData).EndInit();
@@ -683,6 +879,10 @@
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
             templateToolStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingPath).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingNode).EndInit();
+            attributeGroup.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)attributeData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingNodeAttribute).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -724,7 +924,7 @@
         private ToolStripButton transformImportCommand;
         private ToolStripButton transformExportCommand;
         private ToolStripTextBox transformFilePath;
-        private TabPage elementTab;
+        private TabPage nodeDefinitionTab;
         private TabPage dataSelectionTab;
         private TabPage documentsTab;
         private TabPage scriptsTab;
@@ -737,5 +937,19 @@
         private BindingSource bindingPath;
         private DataGridViewTextBoxColumn scopeNameData;
         private DataGridViewTextBoxColumn selectionMemberData;
+        private ListView elementSelection;
+        private ColumnHeader columnName;
+        private SplitContainer schemaDefinitionLayout;
+        private TableLayoutPanel schemaDefinitionElementLayout;
+        private Controls.TextBoxData propertyScopeData;
+        private Controls.TextBoxData propertyNameData;
+        private Controls.TextBoxData nodeNameData;
+        private Controls.ComboBoxData nodeDataAsData;
+        private BindingSource bindingNode;
+        private DataGridView attributeData;
+        private DataGridViewTextBoxColumn attributeNameColumn;
+        private DataGridViewComboBoxColumn attributePropertyColumn;
+        private DataGridViewTextBoxColumn attributeValueColumn;
+        private BindingSource bindingNodeAttribute;
     }
 }

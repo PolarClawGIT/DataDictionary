@@ -35,9 +35,6 @@ Allows entry of MS Description and custom properties for Entities and Attributes
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ProofOfConcept\Template.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
