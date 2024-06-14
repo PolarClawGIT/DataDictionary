@@ -728,4 +728,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[NodeTypeAttribute]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="7891dbd1-4d13-4fc6-85fc-87e4c4b5d02f" ChangeDateTime="06/14/2024 18:04:39">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ScriptingNodeAttribute]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[ScriptingAttribute]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b16e0be0-75dd-4677-9440-79fd9a687fb4" ChangeDateTime="06/14/2024 18:05:02">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeScriptingNodeAttribute]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeScriptingAttribute]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ed5685d6-f140-4550-99f3-e5b1615719b8" ChangeDateTime="06/14/2024 18:06:04">
+    <Property Name="ElementName" Value="[App_DataDictionary].[procGetScriptingNodeAttribute]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procGetScriptingAttribute]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7cbad787-7634-4382-a8eb-a3e035e4e033" ChangeDateTime="06/14/2024 18:06:22">
+    <Property Name="ElementName" Value="[App_DataDictionary].[procSetScriptingNodeAttribute]" />
+    <Property Name="ElementType" Value="SqlProcedure" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[procSetScriptingAttribute]" />
+  </Operation>
 </Operations>

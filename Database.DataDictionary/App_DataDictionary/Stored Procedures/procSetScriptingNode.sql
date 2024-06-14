@@ -39,9 +39,9 @@ Begin Try
 			Cross apply (Select	Coalesce(D.[NodeId], NewId()) As [NodeId]) X
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[ScriptingNodeAttribute]
+	Delete From [App_DataDictionary].[ScriptingAttribute]
 	From	[App_DataDictionary].[ScriptingNode] P
-			Inner Join [App_DataDictionary].[ScriptingNodeAttribute] T
+			Inner Join [App_DataDictionary].[ScriptingAttribute] T
 			On	P.[NodeId] = T.[NodeId]
 			Left Join @Values S
 			On	T.[NodeId] = S.[NodeId]

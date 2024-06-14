@@ -1,4 +1,4 @@
-﻿CREATE TABLE [App_DataDictionary].[ScriptingNodeAttribute]
+﻿CREATE TABLE [App_DataDictionary].[ScriptingAttribute]
 (	-- Key/Value pairs to add as Attributes to an XML Node.
 	[AttributeId]			UniqueIdentifier NOT NULL CONSTRAINT [DF_ScriptingNodeAttribute] DEFAULT (newid()),
 	[NodeId]	            UniqueIdentifier NOT NULL, -- ID of the Template Node this attribute is to be assigned to
@@ -16,5 +16,5 @@
 )
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [UX_ScriptingNodeAttribute]
-    ON [App_DataDictionary].[ScriptingNodeAttribute]([NodeId], [AttributeName] ASC);
+    ON [App_DataDictionary].[ScriptingAttribute]([NodeId], [AttributeName] ASC);
 GO

@@ -1,4 +1,4 @@
-﻿CREATE TYPE [App_DataDictionary].[typeScriptingNodeAttribute] AS TABLE
+﻿CREATE TYPE [App_DataDictionary].[typeScriptingAttribute] AS TABLE
 (
 	[TemplateId]            UniqueIdentifier NULL,
 	[NodeId]	            UniqueIdentifier NULL,

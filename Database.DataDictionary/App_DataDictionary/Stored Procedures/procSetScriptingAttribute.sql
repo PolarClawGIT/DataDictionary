@@ -1,11 +1,11 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetScriptingNodeAttribute]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetScriptingAttribute]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeScriptingNodeAttribute] ReadOnly
+		@Data [App_DataDictionary].[typeScriptingAttribute] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on ScriptingNodeAttribute.
+/* Description: Performs Set on ScriptingAttribute.
 */
 
 -- Transaction Handling
@@ -37,9 +37,9 @@ Begin Try
 			Cross apply (Select	Coalesce(D.[AttributeId], NewId()) As [AttributeId]) X
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[ScriptingNodeAttribute]
+	Delete From [App_DataDictionary].[ScriptingAttribute]
 	From	[App_DataDictionary].[ScriptingNode] P
-			Inner Join [App_DataDictionary].[ScriptingNodeAttribute] T
+			Inner Join [App_DataDictionary].[ScriptingAttribute] T
 			On	P.[NodeId] = T.[NodeId]
 			Left Join @Values S
 			On	T.[AttributeId] = S.[AttributeId]
@@ -51,7 +51,7 @@ Begin Try
 				Union
 				Select	@TemplateId As [TemplateId]
 				Where	@TemplateId is Not Null)
-	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingNodeAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[AttributeId],
@@ -66,17 +66,17 @@ Begin Try
 				[AttributeName],
 				[AttributeValue],
 				[PropertyId]
-		From	[App_DataDictionary].[ScriptingNodeAttribute])
-	Update [App_DataDictionary].[ScriptingNodeAttribute]
+		From	[App_DataDictionary].[ScriptingAttribute])
+	Update [App_DataDictionary].[ScriptingAttribute]
 	Set		[AttributeName] = S.[AttributeName],
 			[AttributeValue] = S.[AttributeValue],
 			[PropertyId] = S.[PropertyId]
-	From	[App_DataDictionary].[ScriptingNodeAttribute] T
+	From	[App_DataDictionary].[ScriptingAttribute] T
 			Inner Join [Delta] S
 			On	T.[AttributeId] = S.[AttributeId]
-	Print FormatMessage ('Update [App_DataDictionary].[ScriptingNodeAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Update [App_DataDictionary].[ScriptingAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[ScriptingNodeAttribute] (
+	Insert Into [App_DataDictionary].[ScriptingAttribute] (
 			[AttributeId],
 			[NodeId],
 			[AttributeName],
@@ -88,10 +88,10 @@ Begin Try
 			S.[AttributeValue],
 			S.[PropertyId]
 	From	@Values S
-			Left Join [App_DataDictionary].[ScriptingNodeAttribute] T
+			Left Join [App_DataDictionary].[ScriptingAttribute] T
 			On	S.[AttributeId] = T.[AttributeId]
 	Where	T.[AttributeId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ScriptingNodeAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [App_DataDictionary].[ScriptingAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

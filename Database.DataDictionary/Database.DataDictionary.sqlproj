@@ -261,10 +261,10 @@
     <Build Include="App_DataDictionary\User Defined Types\typeRichText.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainAttributeDefinition.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntityDefinition.sql" />
-    <Build Include="App_DataDictionary\Tables\ScriptingNodeAttribute.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeScriptingNodeAttribute.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingNodeAttribute.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingNodeAttribute.sql" />
+    <Build Include="App_DataDictionary\Tables\ScriptingAttribute.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeScriptingAttribute.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetScriptingAttribute.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetScriptingAttribute.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
