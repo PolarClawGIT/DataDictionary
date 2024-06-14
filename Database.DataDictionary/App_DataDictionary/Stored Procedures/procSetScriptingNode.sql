@@ -1,11 +1,11 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetScriptingElement]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetScriptingNode]
 		@ModelId UniqueIdentifier = Null,
 		@TemplateId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeScriptingElement] ReadOnly
+		@Data [App_DataDictionary].[typeScriptingNode] ReadOnly
 As
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on ScriptingElement.
+/* Description: Performs Set on ScriptingNode.
 */
 
 -- Transaction Handling
@@ -20,34 +20,46 @@ Begin Try
 	  End; -- Begin Transaction
 
 	Declare @Values Table (
-		[ElementId]             UniqueIdentifier Not NULL,
-		[TemplateId]            UniqueIdentifier Not NULL,
-		[PropertyScope]         [App_DataDictionary].[typeScopeName] Not Null,
-		[PropertyName]          [App_DataDictionary].[typeNameSpaceMember] Not Null,
-		[AsElement]             Bit Null,
-		[ElementName]           [App_DataDictionary].[typeNameSpaceMember] Null,
-		[ElementType]           NVarChar(50) Null,
-		[DataAs]                NVarChar(10) Null,
-		Primary Key ([ElementId]))
+		[NodeId]				UniqueIdentifier NOT NULL,
+		[TemplateId]            UniqueIdentifier NOT NULL,
+		[PropertyScope]         [App_DataDictionary].[typeScopeName] NOT NULL,
+		[PropertyName]          [App_DataDictionary].[typeNameSpaceMember] NOT NULL,
+		[NodeName]				[App_DataDictionary].[typeNameSpaceMember] NOT Null,
+		[NodeValueAs]			NVarChar(50) Not Null,
+		Primary Key ([NodeId]))
 
 	Insert Into @Values
-	Select	X.[ElementId],
+	Select	X.[NodeId],
 			[TemplateId],
 			NullIf(Trim([PropertyScope]),'') As [PropertyScope],
 			NullIf(Trim([PropertyName]),'') As [PropertyName],
-			[AsElement],
-			NullIf(Trim([ElementName]),'') As [ElementName],
-			NullIf(Trim([ElementType]),'') As [ElementType],
-			NullIf(Trim([DataAs]),'') As [DataAs]
+			NullIf(Trim([NodeName]),'') As [NodeName],
+			NullIf(Trim([NodeValueAs]),'') As [NodeValueAs]
 	From	@Data D
-			Cross apply (Select	Coalesce(D.[ElementId], NewId()) As [ElementId]) X
+			Cross apply (Select	Coalesce(D.[NodeId], NewId()) As [NodeId]) X
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[ScriptingElement]
-	From	[App_DataDictionary].[ScriptingElement] T
+	Delete From [App_DataDictionary].[ScriptingNodeAttribute]
+	From	[App_DataDictionary].[ScriptingNode] P
+			Inner Join [App_DataDictionary].[ScriptingNodeAttribute] T
+			On	P.[NodeId] = T.[NodeId]
 			Left Join @Values S
-			On	T.[ElementId] = S.[ElementId]
-	Where	S.[ElementId] is Null And
+			On	T.[NodeId] = S.[NodeId]
+	Where	S.[NodeId] is Null And
+			P.[TemplateId] In (
+				Select	[TemplateId]
+				From	[App_DataDictionary].[ModelScripting]
+				Where	[ModelId] = @ModelId
+				Union
+				Select	@TemplateId As [TemplateId]
+				Where	@TemplateId is Not Null)
+	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingNodeAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Delete From [App_DataDictionary].[ScriptingNode]
+	From	[App_DataDictionary].[ScriptingNode] T
+			Left Join @Values S
+			On	T.[NodeId] = S.[NodeId]
+	Where	S.[NodeId] is Null And
 			T.[TemplateId] In (
 				Select	[TemplateId]
 				From	[App_DataDictionary].[ModelScripting]
@@ -55,60 +67,52 @@ Begin Try
 				Union
 				Select	@TemplateId As [TemplateId]
 				Where	@TemplateId is Not Null)
-	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingElement]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
-		Select	[ElementId],
+		Select	[NodeId],
+				[TemplateId],
 				[PropertyScope],
 				[PropertyName],
-				[AsElement],
-				[ElementName],
-				[ElementType],
-				[DataAs]
+				[NodeName],
+				[NodeValueAs]
 		From	@Values
 		Except
-		Select	[ElementId],
+		Select	[NodeId],
+				[TemplateId],
 				[PropertyScope],
 				[PropertyName],
-				[AsElement],
-				[ElementName],
-				[ElementType],
-				[DataAs]
-		From	[App_DataDictionary].[ScriptingElement])
-	Update [App_DataDictionary].[ScriptingElement]
+				[NodeName],
+				[NodeValueAs]
+		From	[App_DataDictionary].[ScriptingNode])
+	Update [App_DataDictionary].[ScriptingNode]
 	Set		[PropertyScope] = S.[PropertyScope],
 			[PropertyName] = S.[PropertyName],
-			[AsElement] = S.[AsElement],
-			[ElementName] = S.[ElementName],
-			[ElementType] = S.[ElementType],
-			[DataAs] = S.[DataAs]
-	From	[App_DataDictionary].[ScriptingElement] T
+			[NodeName] = S.[NodeName],
+			[NodeValueAs] = S.[NodeValueAs]
+	From	[App_DataDictionary].[ScriptingNode] T
 			Inner Join [Delta] S
-			On	T.[ElementId] = S.[ElementId]
-	Print FormatMessage ('Update [App_DataDictionary].[ScriptingElement]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			On	T.[NodeId] = S.[NodeId]
+	Print FormatMessage ('Update [App_DataDictionary].[ScriptingNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[ScriptingElement] (
+	Insert Into [App_DataDictionary].[ScriptingNode] (
+			[NodeId],
 			[TemplateId],
-			[ElementId],
 			[PropertyScope],
 			[PropertyName],
-			[AsElement],
-			[ElementName],
-			[ElementType],
-			[DataAs])
-	Select	S.[TemplateId],
-			S.[ElementId],
+			[NodeName],
+			[NodeValueAs])
+	Select	S.[NodeId],
+			S.[TemplateId],
 			S.[PropertyScope],
 			S.[PropertyName],
-			S.[AsElement],
-			S.[ElementName],
-			S.[ElementType],
-			S.[DataAs]
+			S.[NodeName],
+			S.[NodeValueAs]
 	From	@Values S
-			Left Join [App_DataDictionary].[ScriptingElement] T
-			On	S.[ElementId] = T.[ElementId]
+			Left Join [App_DataDictionary].[ScriptingNode] T
+			On	S.[NodeId] = T.[NodeId]
 	Where	T.[TemplateId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ScriptingElement]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Insert [App_DataDictionary].[ScriptingNode]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -157,12 +161,12 @@ Begin Try;
 
 	Declare @ModelID UniqueIdentifier = (Select [ModelId] from [App_DataDictionary].[Model] Where [ModelTitle] = 'Unit Test')
 	Declare @Data [App_DataDictionary].[typeScriptingTemplate]
-	Declare @Element [App_DataDictionary].[typeScriptingElement]
+	Declare @Element [App_DataDictionary].[typeScriptingNode]
 
 	Insert Into @Data ([TemplateId], [TemplateTitle])
 	Values (NewId(),'Test Template')
 
-	Insert into @Element ([ElementId], [TemplateId], [PropertyScope], [PropertyName],[DataAs])
+	Insert into @Element ([NodeId], [TemplateId], [PropertyScope], [PropertyName],[DataAs])
 	Select	NewId(),
 			D.[TemplateId],
 			'Dummy','Dummy',
@@ -170,12 +174,12 @@ Begin Try;
 	From	@Data D
 
 	Exec [App_DataDictionary].[procSetScriptingTemplate] @ModelID = @ModelID, @Data = @Data
-	Exec [App_DataDictionary].[procSetScriptingElement] @ModelID = @ModelID, @Data = @Element
+	Exec [App_DataDictionary].[procSetScriptingNode] @ModelID = @ModelID, @Data = @Element
 
 	Update @Element
 	Set	[ElementName] = 'Fun'
 
-	Exec [App_DataDictionary].[procSetScriptingElement] @ModelID = @ModelID, @Data = @Element
+	Exec [App_DataDictionary].[procSetScriptingNode] @ModelID = @ModelID, @Data = @Element
 
 	Delete From @Data
 

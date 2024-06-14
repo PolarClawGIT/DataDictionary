@@ -89,8 +89,8 @@ Begin Try
 				From	@Delete)
 	Print FormatMessage ('Delete [App_DataDictionary].[ScriptingPath]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ScriptingElement]
-	From	[App_DataDictionary].[ScriptingElement] T
+	Delete From [App_DataDictionary].[ScriptingNode]
+	From	[App_DataDictionary].[ScriptingNode] T
 			Left Join @Values S
 			On	T.[TemplateId] = S.[TemplateId]
 	Where	S.[TemplateId] is Null And

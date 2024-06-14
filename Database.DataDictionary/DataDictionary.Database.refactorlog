@@ -672,4 +672,60 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[ScriptAsText]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="9aec2491-0ac1-4b39-81af-8f9ea69851fd" ChangeDateTime="06/14/2024 15:35:48">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ScriptingElement]" />
+    <Property Name="ElementType" Value="SqlTable" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[ScriptingNode]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9c0893d3-14c9-4dee-8bec-6f3053779840" ChangeDateTime="06/14/2024 15:36:00">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ScriptingNode].[ElementId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[ScriptingNode]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[NodeId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0769678b-268f-4a31-ba61-c634bb9e8350" ChangeDateTime="06/14/2024 15:36:14">
+    <Property Name="ElementName" Value="[App_DataDictionary].[DF_ScriptingElementId]" />
+    <Property Name="ElementType" Value="SqlDefaultConstraint" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[ScriptingNode]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[DF_ScriptingNoded]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9945915f-01fb-4c61-b525-f68defd113cb" ChangeDateTime="06/14/2024 15:36:37">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ScriptingNode].[ElementName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[ScriptingNode]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[NodeName]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d57d4ce5-84ca-47a0-9dc1-a55cacfbac52" ChangeDateTime="06/14/2024 15:36:55">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ScriptingNode].[ElementType]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[ScriptingNode]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[NodeType]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="964798a3-a144-4d4b-8f32-e7087f1be976" ChangeDateTime="06/14/2024 15:37:54">
+    <Property Name="ElementName" Value="[App_DataDictionary].[typeScriptingElement]" />
+    <Property Name="ElementType" Value="SqlTableType" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary]" />
+    <Property Name="ParentElementType" Value="SqlSchema" />
+    <Property Name="NewName" Value="[typeScriptingNode]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ecc2b0a3-723a-4365-9515-3d84b5817ff0" ChangeDateTime="06/14/2024 15:39:00">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ScriptingNode].[NodeType]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[ScriptingNode]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[NodeAttributeType]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6e6123d1-561c-4394-aa48-636207d1d75b" ChangeDateTime="06/14/2024 15:39:30">
+    <Property Name="ElementName" Value="[App_DataDictionary].[ScriptingNode].[NodeAttributeType]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[App_DataDictionary].[ScriptingNode]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[NodeTypeAttribute]" />
+  </Operation>
 </Operations>
