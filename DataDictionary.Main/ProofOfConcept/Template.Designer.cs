@@ -68,12 +68,12 @@
             selectionMemberData = new DataGridViewTextBoxColumn();
             documentOptionTab = new TabPage();
             tableLayoutPanel1 = new TableLayoutPanel();
-            solutionDirectoryData = new Controls.TextBoxData();
             tableLayoutPanel2 = new TableLayoutPanel();
-            comboBox1 = new ComboBox();
             documentBreakData = new CheckBox();
+            comboBox1 = new ComboBox();
             checkBox1 = new CheckBox();
             checkBox2 = new CheckBox();
+            solutionDirectoryData = new Controls.TextBoxData();
             scriptDirectoryData = new Controls.TextBoxData();
             relativeSolutionPath = new Controls.TextBoxData();
             solutionFolderCommand = new Button();
@@ -488,7 +488,7 @@
             pathTab.Location = new Point(4, 24);
             pathTab.Name = "pathTab";
             pathTab.Padding = new Padding(3);
-            pathTab.Size = new Size(192, 72);
+            pathTab.Size = new Size(774, 431);
             pathTab.TabIndex = 1;
             pathTab.Text = "Element Paths";
             // 
@@ -504,7 +504,7 @@
             elementPathLayout.RowCount = 2;
             elementPathLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             elementPathLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            elementPathLayout.Size = new Size(186, 66);
+            elementPathLayout.Size = new Size(768, 425);
             elementPathLayout.TabIndex = 0;
             // 
             // namedScopeData
@@ -513,12 +513,12 @@
             namedScopeData.ApplyText = "apply";
             namedScopeData.Dock = DockStyle.Fill;
             namedScopeData.HeaderText = "Selected Item";
-            namedScopeData.Location = new Point(3, 36);
+            namedScopeData.Location = new Point(3, 215);
             namedScopeData.Name = "namedScopeData";
             namedScopeData.ReadOnly = false;
             namedScopeData.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
             namedScopeData.ScopePath = namedScopePath1;
-            namedScopeData.Size = new Size(180, 27);
+            namedScopeData.Size = new Size(762, 207);
             namedScopeData.TabIndex = 6;
             // 
             // selectionItemData
@@ -529,7 +529,7 @@
             selectionItemData.Dock = DockStyle.Fill;
             selectionItemData.Location = new Point(3, 3);
             selectionItemData.Name = "selectionItemData";
-            selectionItemData.Size = new Size(180, 27);
+            selectionItemData.Size = new Size(762, 206);
             selectionItemData.TabIndex = 5;
             // 
             // scopeNameData
@@ -596,19 +596,6 @@
             tableLayoutPanel1.Size = new Size(186, 66);
             tableLayoutPanel1.TabIndex = 3;
             // 
-            // solutionDirectoryData
-            // 
-            solutionDirectoryData.AutoSize = true;
-            tableLayoutPanel1.SetColumnSpan(solutionDirectoryData, 3);
-            solutionDirectoryData.Dock = DockStyle.Fill;
-            solutionDirectoryData.HeaderText = "Solution Folder";
-            solutionDirectoryData.Location = new Point(102, 53);
-            solutionDirectoryData.Multiline = false;
-            solutionDirectoryData.Name = "solutionDirectoryData";
-            solutionDirectoryData.ReadOnly = false;
-            solutionDirectoryData.Size = new Size(52, 50);
-            solutionDirectoryData.TabIndex = 0;
-            // 
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.ColumnCount = 3;
@@ -630,16 +617,6 @@
             tableLayoutPanel2.Size = new Size(93, 100);
             tableLayoutPanel2.TabIndex = 4;
             // 
-            // comboBox1
-            // 
-            tableLayoutPanel2.SetColumnSpan(comboBox1, 3);
-            comboBox1.Dock = DockStyle.Fill;
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(3, 28);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(87, 23);
-            comboBox1.TabIndex = 1;
-            // 
             // documentBreakData
             // 
             documentBreakData.AutoSize = true;
@@ -649,6 +626,16 @@
             documentBreakData.TabIndex = 0;
             documentBreakData.Text = "Break on Scope";
             documentBreakData.UseVisualStyleBackColor = true;
+            // 
+            // comboBox1
+            // 
+            tableLayoutPanel2.SetColumnSpan(comboBox1, 3);
+            comboBox1.Dock = DockStyle.Fill;
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(3, 28);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(87, 23);
+            comboBox1.TabIndex = 1;
             // 
             // checkBox1
             // 
@@ -669,6 +656,19 @@
             checkBox2.TabIndex = 3;
             checkBox2.Text = "script as Text";
             checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // solutionDirectoryData
+            // 
+            solutionDirectoryData.AutoSize = true;
+            tableLayoutPanel1.SetColumnSpan(solutionDirectoryData, 3);
+            solutionDirectoryData.Dock = DockStyle.Fill;
+            solutionDirectoryData.HeaderText = "Solution Folder";
+            solutionDirectoryData.Location = new Point(102, 53);
+            solutionDirectoryData.Multiline = false;
+            solutionDirectoryData.Name = "solutionDirectoryData";
+            solutionDirectoryData.ReadOnly = false;
+            solutionDirectoryData.Size = new Size(52, 50);
+            solutionDirectoryData.TabIndex = 0;
             // 
             // scriptDirectoryData
             // 
@@ -938,7 +938,7 @@
             transformTab.Controls.Add(tranformsLayout);
             transformTab.Location = new Point(4, 24);
             transformTab.Name = "transformTab";
-            transformTab.Size = new Size(774, 431);
+            transformTab.Size = new Size(192, 72);
             transformTab.TabIndex = 2;
             transformTab.Text = "Transform (XSL)";
             // 
@@ -956,7 +956,7 @@
             tranformsLayout.RowStyles.Add(new RowStyle());
             tranformsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
             tranformsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
-            tranformsLayout.Size = new Size(774, 431);
+            tranformsLayout.Size = new Size(192, 72);
             tranformsLayout.TabIndex = 0;
             // 
             // transformCommands
@@ -965,7 +965,7 @@
             transformCommands.Items.AddRange(new ToolStripItem[] { transformFormat, transformRenderXML, transformRenderText });
             transformCommands.Location = new Point(0, 0);
             transformCommands.Name = "transformCommands";
-            transformCommands.Size = new Size(774, 25);
+            transformCommands.Size = new Size(192, 25);
             transformCommands.TabIndex = 0;
             transformCommands.Text = "transform Tools";
             // 
@@ -1006,7 +1006,7 @@
             transformScriptData.Multiline = true;
             transformScriptData.Name = "transformScriptData";
             transformScriptData.ScrollBars = ScrollBars.Both;
-            transformScriptData.Size = new Size(768, 278);
+            transformScriptData.Size = new Size(186, 26);
             transformScriptData.TabIndex = 1;
             transformScriptData.WordWrap = false;
             // 
@@ -1015,24 +1015,24 @@
             transformException.AutoSize = true;
             transformException.Dock = DockStyle.Fill;
             transformException.HeaderText = "Exception/Warning";
-            transformException.Location = new Point(3, 312);
+            transformException.Location = new Point(3, 60);
             transformException.Multiline = true;
             transformException.Name = "transformException";
             transformException.ReadOnly = true;
-            transformException.Size = new Size(768, 116);
+            transformException.Size = new Size(186, 9);
             transformException.TabIndex = 2;
             // 
             // templateCommands
             // 
             templateCommands.Items.AddRange(new ToolStripItem[] { deleteTemplateCommand });
             templateCommands.Name = "templateCommands";
-            templateCommands.Size = new Size(181, 48);
+            templateCommands.Size = new Size(159, 26);
             // 
             // deleteTemplateCommand
             // 
             deleteTemplateCommand.Image = Properties.Resources.DeleteXMLSchema;
             deleteTemplateCommand.Name = "deleteTemplateCommand";
-            deleteTemplateCommand.Size = new Size(180, 22);
+            deleteTemplateCommand.Size = new Size(158, 22);
             deleteTemplateCommand.Text = "Delete Template";
             deleteTemplateCommand.Click += deleteTemplateCommand_Click;
             // 

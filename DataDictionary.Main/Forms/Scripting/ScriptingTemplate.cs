@@ -1,4 +1,5 @@
-﻿using DataDictionary.BusinessLayer.Scripting;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ScriptingData.Template;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Scripting.ComboBoxList;
@@ -51,7 +52,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (bindingTemplate.Current is ITemplateValue current)
             {
-                //bindingProperty.DataSource = new BindingView<AttributePropertyValue>(BusinessData.DomainModel.Attributes.Properties, w => key.Equals(w));
+                bindingPath.DataSource = new BindingView<TemplatePathValue>(BusinessData.ScriptingEngine.Templates.Paths, w => key.Equals(w));
             }
         }
 
@@ -83,9 +84,12 @@ namespace DataDictionary.Main.Forms.Scripting
 
             transformScriptData.DataBindings.Add(new Binding(nameof(transformScriptData.Text), bindingTemplate, nameof(nameOfValues.TransformScript), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
             transformExceptionData.DataBindings.Add(new Binding(nameof(transformExceptionData.Text), bindingTemplate, nameof(nameOfValues.TransformException), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+
+            templatePathData.AutoGenerateColumns = false;
+            templatePathData.DataSource = bindingPath;
         }
 
-        private void rootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
+        private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (rootDirectoryData.SelectedItem is DirectoryNameList value
                 && bindingTemplate.Current is TemplateValue current)
@@ -127,7 +131,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        private void scriptingDirectoryPicker_Click(object sender, EventArgs e)
+        private void ScriptingDirectoryPicker_Click(object sender, EventArgs e)
         {
             if (bindingTemplate.Current is TemplateValue current
                 && new DirectoryTypeKey(current.RootDirectory).ToDirectoryInfo() is DirectoryInfo directory)
@@ -148,7 +152,7 @@ namespace DataDictionary.Main.Forms.Scripting
             { current.ScriptExtension = new ScriptAsTypeKey(current).ToExtension(); }
         }
 
-        private void transformParseCommand_Click(object sender, EventArgs e)
+        private void TransformParseCommand_Click(object sender, EventArgs e)
         {
             if (bindingTemplate.Current is TemplateValue current)
             {
@@ -163,7 +167,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        private void transformImportCommand_Click(object sender, EventArgs e)
+        private void TransformImportCommand_Click(object sender, EventArgs e)
         {
             if (bindingTemplate.Current is TemplateValue current)
             {
@@ -183,7 +187,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        private void transformExportCommand_Click(object sender, EventArgs e)
+        private void TransformExportCommand_Click(object sender, EventArgs e)
         {
             if (bindingTemplate.Current is TemplateValue current)
             {
@@ -212,6 +216,40 @@ namespace DataDictionary.Main.Forms.Scripting
                 Cast<ToolStripItem>().
                 Where(w => w != transformFilePath).
                 Sum(s => s.Width) - 3;
+        }
+
+        private void NamedScopeData_OnApply(object sender, EventArgs e)
+        {
+            if (bindingTemplate.Current is TemplateValue current) { }
+
+            if (bindingPath.DataSource is IList<ITemplatePathValue> path
+                && path.FirstOrDefault(
+                    w => w.PathScope == templatePathSelect.Scope
+                    && new NamedScopePath(NamedScopePath.Parse(w.PathName).ToArray()) == templatePathSelect.ScopePath)
+                is ITemplatePathValue value)
+            { bindingPath.Position = path.IndexOf(value); }
+            else { bindingPath.AddNew(); }
+        }
+
+        private void BindingPath_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (bindingTemplate.Current is TemplateValue current)
+            {
+                TemplatePathValue newItem = new TemplatePathValue(current);
+                newItem.PathName = templatePathSelect.ScopePath.MemberFullPath;
+                newItem.PathScope = templatePathSelect.Scope;
+                e.NewObject = newItem;
+            }
+        }
+
+        private void BindingPath_CurrentChanged(object sender, EventArgs e)
+        {
+            if (bindingPath.Current is TemplatePathValue current)
+            {
+                NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(current.PathName).ToArray());
+                templatePathSelect.ScopePath = path;
+                templatePathSelect.Scope = current.PathScope;
+            }
         }
     }
 }

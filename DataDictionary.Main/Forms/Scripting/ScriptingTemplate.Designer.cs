@@ -32,6 +32,8 @@
             TableLayoutPanel templateLayoutPanel;
             TableLayoutPanel documentLayout;
             TableLayoutPanel documentGroupLayout;
+            TableLayoutPanel elementPathLayout;
+            BusinessLayer.NamedScope.NamedScopePath namedScopePath2 = new BusinessLayer.NamedScope.NamedScopePath();
             TableLayoutPanel transformLayout;
             templateTitleData = new Controls.TextBoxData();
             templateDescriptionData = new Controls.TextBoxData();
@@ -56,6 +58,10 @@
             scriptingDirectoryPicker = new Button();
             elementTab = new TabPage();
             dataSelectionTab = new TabPage();
+            templatePathSelect = new Controls.NamedScopeData();
+            templatePathData = new DataGridView();
+            scopeNameData = new DataGridViewTextBoxColumn();
+            selectionMemberData = new DataGridViewTextBoxColumn();
             transformTab = new TabPage();
             transformToolStrip = new ToolStrip();
             transformParseCommand = new ToolStripButton();
@@ -72,9 +78,11 @@
             folderBrowserDialog = new FolderBrowserDialog();
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
+            bindingPath = new BindingSource(components);
             templateLayoutPanel = new TableLayoutPanel();
             documentLayout = new TableLayoutPanel();
             documentGroupLayout = new TableLayoutPanel();
+            elementPathLayout = new TableLayoutPanel();
             transformLayout = new TableLayoutPanel();
             templateLayoutPanel.SuspendLayout();
             templateTabs.SuspendLayout();
@@ -84,11 +92,15 @@
             documentGroupLayout.SuspendLayout();
             scriptingGroup.SuspendLayout();
             scriptingGroupLayout.SuspendLayout();
+            dataSelectionTab.SuspendLayout();
+            elementPathLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)templatePathData).BeginInit();
             transformTab.SuspendLayout();
             transformLayout.SuspendLayout();
             transformToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
             templateToolStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)bindingPath).BeginInit();
             SuspendLayout();
             // 
             // templateLayoutPanel
@@ -300,7 +312,7 @@
             rootDirectoryData.ReadOnly = false;
             rootDirectoryData.Size = new Size(415, 46);
             rootDirectoryData.TabIndex = 1;
-            rootDirectoryData.SelectedIndexChanged += rootDirectoryData_SelectedIndexChanged;
+            rootDirectoryData.SelectedIndexChanged += RootDirectoryData_SelectedIndexChanged;
             // 
             // rootDirectoryExpanded
             // 
@@ -424,25 +436,82 @@
             scriptingDirectoryPicker.Text = "Select";
             scriptingDirectoryPicker.TextImageRelation = TextImageRelation.ImageBeforeText;
             scriptingDirectoryPicker.UseVisualStyleBackColor = true;
-            scriptingDirectoryPicker.Click += scriptingDirectoryPicker_Click;
+            scriptingDirectoryPicker.Click += ScriptingDirectoryPicker_Click;
             // 
             // elementTab
             // 
             elementTab.BackColor = SystemColors.Control;
             elementTab.Location = new Point(4, 24);
             elementTab.Name = "elementTab";
-            elementTab.Size = new Size(192, 72);
+            elementTab.Size = new Size(849, 414);
             elementTab.TabIndex = 2;
             elementTab.Text = "Schema Definition (XSD)";
             // 
             // dataSelectionTab
             // 
             dataSelectionTab.BackColor = SystemColors.Control;
+            dataSelectionTab.Controls.Add(elementPathLayout);
             dataSelectionTab.Location = new Point(4, 24);
             dataSelectionTab.Name = "dataSelectionTab";
-            dataSelectionTab.Size = new Size(192, 72);
+            dataSelectionTab.Size = new Size(849, 414);
             dataSelectionTab.TabIndex = 3;
             dataSelectionTab.Text = "Data Selection (XPath)";
+            // 
+            // elementPathLayout
+            // 
+            elementPathLayout.ColumnCount = 2;
+            elementPathLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            elementPathLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            elementPathLayout.Controls.Add(templatePathData, 0, 0);
+            elementPathLayout.Controls.Add(templatePathSelect, 1, 0);
+            elementPathLayout.Dock = DockStyle.Fill;
+            elementPathLayout.Location = new Point(0, 0);
+            elementPathLayout.Name = "elementPathLayout";
+            elementPathLayout.RowCount = 1;
+            elementPathLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            elementPathLayout.Size = new Size(849, 414);
+            elementPathLayout.TabIndex = 1;
+            // 
+            // templatePathSelect
+            // 
+            templatePathSelect.ApplyImage = Properties.Resources.NewXPath;
+            templatePathSelect.ApplyText = "apply";
+            templatePathSelect.Dock = DockStyle.Fill;
+            templatePathSelect.HeaderText = "Selected Path";
+            templatePathSelect.Location = new Point(427, 3);
+            templatePathSelect.Name = "templatePathSelect";
+            templatePathSelect.ReadOnly = false;
+            templatePathSelect.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
+            templatePathSelect.ScopePath = namedScopePath2;
+            templatePathSelect.Size = new Size(419, 408);
+            templatePathSelect.TabIndex = 6;
+            templatePathSelect.OnApply += NamedScopeData_OnApply;
+            // 
+            // templatePathData
+            // 
+            templatePathData.AllowUserToAddRows = false;
+            templatePathData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            templatePathData.Columns.AddRange(new DataGridViewColumn[] { scopeNameData, selectionMemberData });
+            templatePathData.Dock = DockStyle.Fill;
+            templatePathData.Location = new Point(3, 3);
+            templatePathData.Name = "templatePathData";
+            templatePathData.Size = new Size(418, 408);
+            templatePathData.TabIndex = 5;
+            // 
+            // scopeNameData
+            // 
+            scopeNameData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            scopeNameData.DataPropertyName = "PathScope";
+            scopeNameData.FillWeight = 50F;
+            scopeNameData.HeaderText = "Scope";
+            scopeNameData.Name = "scopeNameData";
+            // 
+            // selectionMemberData
+            // 
+            selectionMemberData.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            selectionMemberData.DataPropertyName = "PathName";
+            selectionMemberData.HeaderText = "Path";
+            selectionMemberData.Name = "selectionMemberData";
             // 
             // transformTab
             // 
@@ -490,9 +559,9 @@
             transformParseCommand.Image = Properties.Resources.XSLTransform;
             transformParseCommand.ImageTransparentColor = Color.Magenta;
             transformParseCommand.Name = "transformParseCommand";
-            transformParseCommand.Size = new Size(23, 22);
+            transformParseCommand.Size = new Size(23, 24);
             transformParseCommand.Text = "Parse Transform";
-            transformParseCommand.Click += transformParseCommand_Click;
+            transformParseCommand.Click += TransformParseCommand_Click;
             // 
             // transformImportCommand
             // 
@@ -500,9 +569,9 @@
             transformImportCommand.Image = Properties.Resources.OpenFile;
             transformImportCommand.ImageTransparentColor = Color.Magenta;
             transformImportCommand.Name = "transformImportCommand";
-            transformImportCommand.Size = new Size(23, 22);
+            transformImportCommand.Size = new Size(23, 24);
             transformImportCommand.Text = "Import File";
-            transformImportCommand.Click += transformImportCommand_Click;
+            transformImportCommand.Click += TransformImportCommand_Click;
             // 
             // transformExportCommand
             // 
@@ -510,9 +579,9 @@
             transformExportCommand.Image = Properties.Resources.Save;
             transformExportCommand.ImageTransparentColor = Color.Magenta;
             transformExportCommand.Name = "transformExportCommand";
-            transformExportCommand.Size = new Size(23, 22);
+            transformExportCommand.Size = new Size(23, 24);
             transformExportCommand.Text = "Export File";
-            transformExportCommand.Click += transformExportCommand_Click;
+            transformExportCommand.Click += TransformExportCommand_Click;
             // 
             // transformFilePath
             // 
@@ -576,6 +645,11 @@
             deleteTemplateCommand.Text = "Delete Template";
             deleteTemplateCommand.Click += DeleteTemplateCommand_Click;
             // 
+            // bindingPath
+            // 
+            bindingPath.AddingNew += BindingPath_AddingNew;
+            bindingPath.CurrentChanged += BindingPath_CurrentChanged;
+            // 
             // ScriptingTemplate
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -598,6 +672,9 @@
             scriptingGroup.ResumeLayout(false);
             scriptingGroupLayout.ResumeLayout(false);
             scriptingGroupLayout.PerformLayout();
+            dataSelectionTab.ResumeLayout(false);
+            elementPathLayout.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)templatePathData).EndInit();
             transformTab.ResumeLayout(false);
             transformLayout.ResumeLayout(false);
             transformLayout.PerformLayout();
@@ -605,6 +682,7 @@
             transformToolStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
             templateToolStrip.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)bindingPath).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -654,5 +732,10 @@
         private FolderBrowserDialog folderBrowserDialog;
         private OpenFileDialog openFileDialog;
         private SaveFileDialog saveFileDialog;
+        private Controls.NamedScopeData templatePathSelect;
+        private DataGridView templatePathData;
+        private BindingSource bindingPath;
+        private DataGridViewTextBoxColumn scopeNameData;
+        private DataGridViewTextBoxColumn selectionMemberData;
     }
 }
