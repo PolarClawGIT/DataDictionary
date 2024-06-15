@@ -245,9 +245,14 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         ScriptingTemplatePath,
 
         /// <summary>
-        /// Scripting Template Element
+        /// Scripting Template Node
         /// </summary>
-        ScriptingTemplateElement,
+        ScriptingTemplateNode,
+
+        /// <summary>
+        /// Scripting Template Node Attribute
+        /// </summary>
+        ScriptingTemplateAttribute,
 
         /// <summary>
         /// Scripting Template Document

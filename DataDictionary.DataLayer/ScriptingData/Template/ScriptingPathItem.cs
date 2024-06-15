@@ -40,24 +40,20 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         public ScopeType PathScope
         {
             get { return ScopeKey.Parse(GetValue(nameof(PathScope)) ?? String.Empty).Scope; }
-            set
-            {
-                if (value is ScopeType.Null) { SetValue(nameof(PathScope), null); }
-                else { SetValue(nameof(PathScope), value.ToName()); }
-            }
+            set { SetValue(nameof(PathScope), new ScopeKey(value).ToString()); }
         }
 
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.ScriptingTemplatePath;
 
         /// <summary>
-        /// Constructor for Scripting Transform Element
+        /// Constructor for Scripting Template Path
         /// </summary>
-        public ScriptingPathItem() : base()
+        protected ScriptingPathItem() : base()
         { }
 
         /// <summary>
-        /// Constructor for Scripting Transform Element
+        /// Constructor for Scripting Template Path
         /// </summary>
         public ScriptingPathItem(IScriptingTemplateKey template) : this()
         { TemplateId = template.TemplateId; }

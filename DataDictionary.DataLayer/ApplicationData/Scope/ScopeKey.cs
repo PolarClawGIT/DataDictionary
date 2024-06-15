@@ -178,7 +178,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
 
             {ScopeType.ScriptingTemplate,         "Scripting.Template" },
             {ScopeType.ScriptingTemplatePath,     "Scripting.Template.Path" },
-            {ScopeType.ScriptingTemplateElement,  "Scripting.Template.Element" },
+            {ScopeType.ScriptingTemplateNode,  "Scripting.Template.Element" },
         };
 
         /// <inheritdoc/>

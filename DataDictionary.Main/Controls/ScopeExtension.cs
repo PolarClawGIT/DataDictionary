@@ -66,7 +66,8 @@ namespace DataDictionary.Main.Controls
             {ScopeType.ScriptingSelectionPath,           new ScopeSetting(Resources.XPath, Resources.Icon_XPath) },
 
             {ScopeType.ScriptingTemplate,                new ScopeSetting(Resources.XSLTransform, Resources.Icon_XSLTransform) },
-            {ScopeType.ScriptingTemplateElement,         new ScopeSetting(Resources.XMLSchema, Resources.Icon_XMLSchema) },
+            {ScopeType.ScriptingTemplateNode,            new ScopeSetting(Resources.XMLSchema, Resources.Icon_XMLSchema) },
+            {ScopeType.ScriptingTemplateAttribute,       new ScopeSetting(Resources.XMLElement, Resources.Icon_XMLElement) },
             {ScopeType.ScriptingTemplatePath,            new ScopeSetting(Resources.XPath, Resources.Icon_XPath) },
             {ScopeType.ScriptingTemplateDocument,        new ScopeSetting(Resources.XmlFile, Resources.Icon_XSLTransform) },
         };
