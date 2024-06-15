@@ -15,6 +15,16 @@ namespace DataDictionary.BusinessLayer.Scripting
     public interface ITemplateData : IBindingData<TemplateValue>, ILoadData<ITemplateIndex>, ISaveData<ITemplateIndex>
     {
         /// <summary>
+        /// List of Scripting Nodes for the Template
+        /// </summary>
+        ITemplateNodeData Nodes { get; }
+
+        /// <summary>
+        /// List of Scripting Attributes for the Template
+        /// </summary>
+        ITemplateAttributeData Attributes { get; }
+
+        /// <summary>
         /// List of Scripting Paths for the Template
         /// </summary>
         ITemplatePathData Paths { get; }
@@ -23,6 +33,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// List of Scripting Documents (output) for the Template
         /// </summary>
         ITemplateDocumentData Documents { get; }
+
+
     }
 
     class TemplateData : ScriptingTemplateCollection<TemplateValue>, ITemplateData, INamedScopeSource,
@@ -36,6 +48,14 @@ namespace DataDictionary.BusinessLayer.Scripting
         public required ScriptingEngine Scripting { get; init; }
 
         /// <inheritdoc/>
+        public ITemplateNodeData Nodes { get { return nodeValues; } }
+        private readonly TemplateNodeData nodeValues;
+
+        /// <inheritdoc/>
+        public ITemplateAttributeData Attributes { get { return attributeValues; } }
+        private readonly TemplateAttributeData attributeValues;
+
+        /// <inheritdoc/>
         public ITemplatePathData Paths { get { return pathValues; } }
         private readonly TemplatePathData pathValues;
 
@@ -47,6 +67,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             pathValues = new TemplatePathData();
             documentValues = new TemplateDocumentData();
+            nodeValues = new TemplateNodeData();
+            attributeValues = new TemplateAttributeData();
         }
 
         /// <inheritdoc/>
@@ -61,6 +83,8 @@ namespace DataDictionary.BusinessLayer.Scripting
             List<WorkItem> work = new List<WorkItem>();
             work.Add(factory.CreateLoad(this, dataKey));
             work.Add(factory.CreateLoad(pathValues, dataKey));
+            work.Add(factory.CreateLoad(nodeValues, dataKey));
+            work.Add(factory.CreateLoad(attributeValues, dataKey));
             return work;
         }
 
@@ -71,6 +95,8 @@ namespace DataDictionary.BusinessLayer.Scripting
             List<WorkItem> work = new List<WorkItem>();
             work.Add(factory.CreateLoad(this, dataKey));
             work.Add(factory.CreateLoad(pathValues, dataKey));
+            work.Add(factory.CreateLoad(nodeValues, dataKey));
+            work.Add(factory.CreateLoad(attributeValues, dataKey));
             return work;
         }
 
@@ -86,6 +112,8 @@ namespace DataDictionary.BusinessLayer.Scripting
             List<WorkItem> work = new List<WorkItem>();
             work.Add(factory.CreateSave(this, dataKey));
             work.Add(factory.CreateSave(pathValues, dataKey));
+            work.Add(factory.CreateSave(nodeValues, dataKey));
+            work.Add(factory.CreateSave(attributeValues, dataKey));
             return work;
         }
 
@@ -96,6 +124,8 @@ namespace DataDictionary.BusinessLayer.Scripting
             List<WorkItem> work = new List<WorkItem>();
             work.Add(factory.CreateSave(this, dataKey));
             work.Add(factory.CreateSave(pathValues, dataKey));
+            work.Add(factory.CreateSave(nodeValues, dataKey));
+            work.Add(factory.CreateSave(attributeValues, dataKey));
             return work;
         }
 
@@ -129,6 +159,8 @@ namespace DataDictionary.BusinessLayer.Scripting
             List<WorkItem> work = new List<WorkItem>();
             work.Add(new WorkItem() { WorkName = "Remove Template", DoWork = () => { this.Clear(); } });
             work.AddRange(pathValues.Delete());
+            work.AddRange(nodeValues.Delete());
+            work.AddRange(attributeValues.Delete());
             return work;
         }
 
@@ -143,6 +175,14 @@ namespace DataDictionary.BusinessLayer.Scripting
             if (source.Tables.Contains(pathValues.BindingName)
                 && source.Tables[pathValues.BindingName] is DataTable pathTable)
             { pathValues.Load(pathTable.CreateDataReader()); }
+
+            if (source.Tables.Contains(nodeValues.BindingName)
+                && source.Tables[nodeValues.BindingName] is DataTable nodeTable)
+            { pathValues.Load(nodeTable.CreateDataReader()); }
+
+            if (source.Tables.Contains(attributeValues.BindingName)
+                && source.Tables[attributeValues.BindingName] is DataTable attributeTable)
+            { pathValues.Load(attributeTable.CreateDataReader()); }
         }
 
         /// <inheritdoc/>
@@ -152,6 +192,8 @@ namespace DataDictionary.BusinessLayer.Scripting
             List<System.Data.DataTable> result = new List<System.Data.DataTable>();
             result.Add(this.ToDataTable());
             result.Add(pathValues.ToDataTable());
+            result.Add(nodeValues.ToDataTable());
+            result.Add(attributeValues.ToDataTable());
             return result;
         }
 
