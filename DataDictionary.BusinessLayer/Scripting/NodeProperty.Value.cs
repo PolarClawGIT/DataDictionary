@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <summary>
-    /// Interface for the Scripting Schema Column data.
+    /// Interface for the Scripting Node Property data.
     /// </summary>
-    public interface IColumnIValue : IColumnIndex
+    public interface INodePropertyValue : INodePropertyIndex
     {
         /// <inheritdoc cref="DataColumn.AllowDBNull"/>
         Boolean AllowDBNull { get; }
@@ -21,16 +21,16 @@ namespace DataDictionary.BusinessLayer.Scripting
     }
 
     /// <summary>
-    /// Implementation for the Scripting Schema Column data.
+    /// Implementation for the Scripting Node Property data.
     /// </summary>
     /// <remarks>The items are expected to be static.</remarks>
-    public class ColumnValue : IColumnIValue
+    public class NodePropertyValue : INodePropertyValue
     {
         /// <inheritdoc/>
-        public ScopeType Scope { get; init; } = ScopeType.Null;
+        public ScopeType PropertyScope { get; init; } = ScopeType.Null;
 
         /// <inheritdoc/>
-        public String ColumnName { get; init; } = String.Empty;
+        public String PropertyName { get; init; } = String.Empty;
 
         /// <inheritdoc/>
         public Boolean AllowDBNull { get; init; } = false;
@@ -41,22 +41,22 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <summary>
         /// Constructor for Schema Scripting Schema Column Items
         /// </summary>
-        public ColumnValue() : base()
+        public NodePropertyValue() : base()
         { }
 
         /// <summary>
         /// Constructor for Schema Scripting Schema Column Items
         /// </summary>
-        public ColumnValue(ScopeType scope, DataColumn source) : this()
+        public NodePropertyValue(ScopeType scope, DataColumn source) : this()
         {
-            Scope = scope;
-            ColumnName = source.ColumnName;
+            PropertyScope = scope;
+            PropertyName = source.ColumnName;
             AllowDBNull = source.AllowDBNull;
             DataType = source.DataType;
         }
 
         /// <inheritdoc/>
         public override string ToString()
-        { return String.Format("{0} {1}", Scope.ToName(), ColumnName); }
+        { return String.Format("{0} {1}", PropertyScope.ToName(), PropertyName); }
     }
 }

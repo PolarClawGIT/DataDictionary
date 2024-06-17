@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface ITemplateNodeValue : IScriptingNodeItem, ITemplateIndex, ITemplateNodeIndex
+    public interface ITemplateNodeValue : IScriptingNodeItem, ITemplateIndex, ITemplateNodeIndex, ITemplateNodeIndexName
     { }
 
     /// <inheritdoc/>

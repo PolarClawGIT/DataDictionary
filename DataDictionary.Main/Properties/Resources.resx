@@ -391,6 +391,9 @@
   <data name="Icon_View" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\View.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Icon_XMLAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icon\XMLAttribute.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Icon_XMLElement" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icon\XMLElement.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -642,6 +645,9 @@
   </data>
   <data name="View" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\View.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="XMLAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\XMLAttribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="XMLElement" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\XMLElement.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

@@ -30,16 +30,16 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         internal AttributeAliasValue(IDomainAttributeKey key) : base(key) { }
 
-        internal static IReadOnlyList<ColumnValue> GetXColumns()
+        internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelAttributeAlias;
             IAttributeAliasValue alaisNames;
 
-            List<ColumnValue> result = new List<ColumnValue>()
+            List<NodePropertyValue> result = new List<NodePropertyValue>()
             {
-                new ColumnValue() {ColumnName = nameof(alaisNames.Scope),      DataType = typeof(String), AllowDBNull = false, Scope = scope},
-                new ColumnValue() {ColumnName = nameof(alaisNames.AliasName),  DataType = typeof(String), AllowDBNull = false, Scope = scope},
-                new ColumnValue() {ColumnName = nameof(alaisNames.AliasParts), DataType = typeof(String), AllowDBNull = false, Scope = scope},
+                new NodePropertyValue() {PropertyName = nameof(alaisNames.Scope),      DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
+                new NodePropertyValue() {PropertyName = nameof(alaisNames.AliasName),  DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
+                new NodePropertyValue() {PropertyName = nameof(alaisNames.AliasParts), DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
             };
             return result;
         }

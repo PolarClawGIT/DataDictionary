@@ -15,18 +15,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
     /// <summary>
     /// Interface for the Scripting Template Node data.
     /// </summary>
-    public interface IScriptingNodeItem : IScriptingNodeKeyComposite, IScopeKey
+    public interface IScriptingNodeItem : IScriptingNodeKeyComposite, IScriptingNodeKeyName, IScopeKey
     {
-        /// <summary>
-        /// Scope of the Property (column) of the Node (used to select the item to render).
-        /// </summary>
-        ScopeType PropertyScope { get; }
-
-        /// <summary>
-        ///Name of the Property (column) of the Node (used to select the item to render).
-        /// </summary>
-        String? PropertyName { get; }
-
         /// <summary>
         /// Name to apply to the Node (default is PropertyName)
         /// </summary>

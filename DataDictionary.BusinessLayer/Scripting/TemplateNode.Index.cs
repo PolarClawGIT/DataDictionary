@@ -1,9 +1,4 @@
 ﻿using DataDictionary.DataLayer.ScriptingData.Template;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
@@ -16,6 +11,18 @@ namespace DataDictionary.BusinessLayer.Scripting
     {
         /// <inheritdoc cref="ScriptingNodeKeyComposite(IScriptingNodeKeyComposite)"/>
         public TemplateNodeIndex(ITemplateNodeIndex source) : base(source)
+        { }
+    }
+
+    /// <inheritdoc/>
+    public interface ITemplateNodeIndexName : IScriptingNodeKeyName
+    { }
+
+    /// <inheritdoc/>
+    public class TemplateNodeIndexName : ScriptingNodeKeyName
+    {
+        /// <inheritdoc cref="ScriptingNodeKeyName(IScriptingNodeKeyName)"/>
+        public TemplateNodeIndexName(ITemplateNodeIndexName source) : base(source)
         { }
     }
 }

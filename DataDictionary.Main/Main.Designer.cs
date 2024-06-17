@@ -126,6 +126,8 @@
             menuScriptingDocument = new ToolStripMenuItem();
             toolStripSeparator7 = new ToolStripSeparator();
             refreshCommand = new ToolStripButton();
+            menuScriptingNode = new ToolStripMenuItem();
+            menuScriptingAttribute = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
@@ -846,9 +848,10 @@
             // 
             // scriptingContextMenu
             // 
-            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingPath, menuScriptingDocument });
+            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingPath, menuScriptingDocument, menuScriptingNode, menuScriptingAttribute });
             scriptingContextMenu.Name = "scriptingContextMenu";
-            scriptingContextMenu.Size = new Size(228, 92);
+            scriptingContextMenu.OwnerItem = manageScriptingCommand;
+            scriptingContextMenu.Size = new Size(228, 136);
             // 
             // menuScriptingTemplate
             // 
@@ -888,6 +891,22 @@
             refreshCommand.Size = new Size(23, 22);
             refreshCommand.Text = "Refresh navigation tree";
             refreshCommand.Click += RefreshCommand_Click;
+            // 
+            // menuScriptingNode
+            // 
+            menuScriptingNode.Image = Properties.Resources.XMLElement;
+            menuScriptingNode.Name = "menuScriptingNode";
+            menuScriptingNode.Size = new Size(227, 22);
+            menuScriptingNode.Text = "browse Template Nodes";
+            menuScriptingNode.Click += menuScriptingNode_Click;
+            // 
+            // menuScriptingAttribute
+            // 
+            menuScriptingAttribute.Image = Properties.Resources.XMLAttribute;
+            menuScriptingAttribute.Name = "menuScriptingAttribute";
+            menuScriptingAttribute.Size = new Size(227, 22);
+            menuScriptingAttribute.Text = "browse Template Attributes";
+            menuScriptingAttribute.Click += menuScriptingAttribute_Click;
             // 
             // Main
             // 
@@ -1023,5 +1042,7 @@
         private ToolStripMenuItem menuScriptingTemplate;
         private ToolStripMenuItem menuScriptingPath;
         private ToolStripMenuItem menuScriptingDocument;
+        private ToolStripMenuItem menuScriptingNode;
+        private ToolStripMenuItem menuScriptingAttribute;
     }
 }

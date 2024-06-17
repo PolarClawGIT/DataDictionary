@@ -11,9 +11,9 @@ using Toolbox.BindingTable;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <summary>
-    /// Interface component for the Scripting Engine Column
+    /// Interface component for the Scripting Engine Node Property
     /// </summary>
-    public interface IColumnData : IEnumerable<ColumnValue>
+    public interface INodePropertyData : IEnumerable<NodePropertyValue>
     {
         /// <summary>
         /// Default Load of the class.
@@ -22,24 +22,17 @@ namespace DataDictionary.BusinessLayer.Scripting
     }
 
     /// <summary>
-    /// Implementation component for the Scripting Engine Column
+    /// Implementation component for the Scripting Engine Node Property
     /// </summary>
-    public class ColumnData : Collection<ColumnValue>, IColumnData
+    public class NodePropertyData : Collection<NodePropertyValue>, INodePropertyData
     {
-        /// <summary>
-        /// Returns a list of Scopes that have column lists.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<ScopeType> GetScopes()
-        { return this.GroupBy(g => new ScopeKey(g).Scope).Select(s => s.Key); }
-
         /// <summary>
         /// Returns a list of Columns for a given scope.
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
-        public IEnumerable<IColumnIValue> GetColumns(ScopeType scope)
-        { return this.Where(w => scope.Equals(w) && w is IColumnIValue).Select(s => s as IColumnIValue); }
+        public IEnumerable<INodePropertyValue> GetColumns(ScopeType scope)
+        { return this.Where(w => scope.Equals(w) && w is INodePropertyValue).Select(s => s as INodePropertyValue); }
 
         /// <summary>
         /// Default Load of the class.
@@ -61,10 +54,10 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             foreach (DataColumn item in source.ColumnDefinitions())
             {
-                ColumnValue newItem = new()
+                NodePropertyValue newItem = new()
                 {
-                    Scope = source.Scope,
-                    ColumnName = item.ColumnName,
+                    PropertyScope = source.Scope,
+                    PropertyName = item.ColumnName,
                     AllowDBNull = item.AllowDBNull,
                     DataType = item.DataType,
                 };
@@ -78,7 +71,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// </summary>
         /// <param name="source"></param>
         /// <remarks>Because a Collection does not have AddRange</remarks>
-        public void Load(IEnumerable<ColumnValue> source)
+        public void Load(IEnumerable<NodePropertyValue> source)
         { source.ToList().ForEach(i => Add(i)); }
 
     }

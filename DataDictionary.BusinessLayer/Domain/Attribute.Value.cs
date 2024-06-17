@@ -95,29 +95,29 @@ namespace DataDictionary.BusinessLayer.Domain
             return result;
         }*/
 
-        internal static IReadOnlyList<ColumnValue> GetXColumns()
+        internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelAttribute;
             IAttributeValue attributeNames;
-            List<ColumnValue> result = new List<ColumnValue>()
+            List<NodePropertyValue> result = new List<NodePropertyValue>()
             {
-                new ColumnValue() {ColumnName = nameof(attributeNames.AttributeId),          DataType = typeof(Guid),    AllowDBNull = false, Scope = scope},
-                new ColumnValue() {ColumnName = nameof(attributeNames.AttributeTitle),       DataType = typeof(String),  AllowDBNull = false, Scope = scope},
-                new ColumnValue() {ColumnName = nameof(attributeNames.AttributeDescription), DataType = typeof(String),  AllowDBNull = true,  Scope = scope},
+                new NodePropertyValue() {PropertyName = nameof(attributeNames.AttributeId),          DataType = typeof(Guid),    AllowDBNull = false, PropertyScope = scope},
+                new NodePropertyValue() {PropertyName = nameof(attributeNames.AttributeTitle),       DataType = typeof(String),  AllowDBNull = false, PropertyScope = scope},
+                new NodePropertyValue() {PropertyName = nameof(attributeNames.AttributeDescription), DataType = typeof(String),  AllowDBNull = true,  PropertyScope = scope},
 
               //new ColumnItem() {ColumnName = nameof(attributeNames.IsCompositeType),      DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
-                new ColumnValue() {ColumnName = nameof(attributeNames.IsSimpleType),         DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
+                new NodePropertyValue() {PropertyName = nameof(attributeNames.IsSimpleType),         DataType = typeof(Boolean), AllowDBNull = true,  PropertyScope = scope},
 
-                new ColumnValue() {ColumnName = nameof(attributeNames.IsDerived),            DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
+                new NodePropertyValue() {PropertyName = nameof(attributeNames.IsDerived),            DataType = typeof(Boolean), AllowDBNull = true,  PropertyScope = scope},
               //new ColumnItem() {ColumnName = nameof(attributeNames.IsIntegral),           DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
 
-                new ColumnValue() {ColumnName = nameof(attributeNames.IsKey),                DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
+                new NodePropertyValue() {PropertyName = nameof(attributeNames.IsKey),                DataType = typeof(Boolean), AllowDBNull = true,  PropertyScope = scope},
                 //new ColumnItem() {ColumnName = nameof(attributeNames.IsNonKey),             DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
 
               //new ColumnItem() {ColumnName = nameof(attributeNames.IsMultiValue),         DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
-                new ColumnValue() {ColumnName = nameof(attributeNames.IsSingleValue),        DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
+                new NodePropertyValue() {PropertyName = nameof(attributeNames.IsSingleValue),        DataType = typeof(Boolean), AllowDBNull = true,  PropertyScope = scope},
 
-                new ColumnValue() {ColumnName = nameof(attributeNames.IsNullable),           DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
+                new NodePropertyValue() {PropertyName = nameof(attributeNames.IsNullable),           DataType = typeof(Boolean), AllowDBNull = true,  PropertyScope = scope},
               //new ColumnItem() {ColumnName = nameof(attributeNames.IsValued),             DataType = typeof(Boolean), AllowDBNull = true,  Scope = scope},
             };
 

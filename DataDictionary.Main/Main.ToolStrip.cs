@@ -118,5 +118,11 @@ namespace DataDictionary.Main
 
         private void menuScriptingDocument_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XmlFile), BusinessData.ScriptingEngine.Templates.Documents); }
+
+        private void menuScriptingNode_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XMLElement), BusinessData.ScriptingEngine.Templates.Nodes); }
+
+        private void menuScriptingAttribute_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XMLAttribute), BusinessData.ScriptingEngine.Templates.Attributes); }
     }
 }

@@ -115,12 +115,9 @@ namespace DataDictionary.Main.Controls
 
         private void comboBoxLayout_EnabledChanged(object sender, EventArgs e)
         {
-            var x = this.HeaderText;
-
             if (this.Enabled && !readOnly)
             { controlLayout.BackColor = SystemColors.ControlDarkDark; }
-            else { controlLayout.BackColor = SystemColors.Control; }
-            
+            else { controlLayout.BackColor = SystemColors.Control; }            
         }
     }
 }

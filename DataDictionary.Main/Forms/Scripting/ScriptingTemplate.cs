@@ -1,7 +1,9 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ScriptingData.Template;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Forms.Scripting.ComboBoxList;
 using System;
 using System.Collections.Generic;
@@ -9,6 +11,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -53,12 +56,15 @@ namespace DataDictionary.Main.Forms.Scripting
             if (bindingTemplate.Current is ITemplateValue current)
             {
                 bindingPath.DataSource = new BindingView<TemplatePathValue>(BusinessData.ScriptingEngine.Templates.Paths, w => key.Equals(w));
+                bindingNode.DataSource = new BindingView<TemplateNodeValue>(BusinessData.ScriptingEngine.Templates.Nodes, w => key.Equals(w));
+                bindingAttribute.DataSource = new BindingView<TemplateAttributeValue>(BusinessData.ScriptingEngine.Templates.Attributes, w => key.Equals(w));
             }
         }
 
         private void ScriptingTemplate_Load(object sender, EventArgs e)
         {
             ITemplateValue nameOfValues;
+            ITemplateNodeValue nameOfNode;
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingTemplate, nameof(nameOfValues.TemplateTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             templateTitleData.DataBindings.Add(new Binding(nameof(templateTitleData.Text), bindingTemplate, nameof(nameOfValues.TemplateTitle), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -85,8 +91,22 @@ namespace DataDictionary.Main.Forms.Scripting
             transformScriptData.DataBindings.Add(new Binding(nameof(transformScriptData.Text), bindingTemplate, nameof(nameOfValues.TransformScript), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
             transformExceptionData.DataBindings.Add(new Binding(nameof(transformExceptionData.Text), bindingTemplate, nameof(nameOfValues.TransformException), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
 
+            ScopeNameList.Load(propertyScopeData);
+            propertyScopeData.DataBindings.Add(new Binding(nameof(propertyScopeData.SelectedValue), bindingNode, nameof(nameOfNode.PropertyScope), false, DataSourceUpdateMode.OnPropertyChanged, ScopeNameList.NullValue));
+            propertyNameData.DataBindings.Add(new Binding(nameof(propertyNameData.Text), bindingNode, nameof(nameOfNode.PropertyName), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+            nodeNameData.DataBindings.Add(new Binding(nameof(nodeNameData.Text), bindingNode, nameof(nameOfNode.NodeName), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+
+            NodeValueAsList.Load(nodeValueAsData);
+            nodeValueAsData.DataBindings.Add(new Binding(nameof(nodeValueAsData.SelectedValue), bindingNode, nameof(nameOfNode.NodeValueAs), false, DataSourceUpdateMode.OnPropertyChanged, NodeValueAsList.NullValue));
+
             templatePathData.AutoGenerateColumns = false;
             templatePathData.DataSource = bindingPath;
+
+            PropertyNameList.Load(attributePropertyColumn);
+
+            ElementSelection_Load();
+
+            IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingTemplate.Current is not ITemplateValue);
         }
 
         private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
@@ -251,5 +271,180 @@ namespace DataDictionary.Main.Forms.Scripting
                 templatePathSelect.Scope = current.PathScope;
             }
         }
+
+
+        Dictionary<ListViewItem, NodePropertyValue> nodeProperties = new Dictionary<ListViewItem, NodePropertyValue>();
+        private void ElementSelection_Load()
+        {
+            elementSelection.Groups.Clear();
+            elementSelection.Items.Clear();
+            nodeProperties.Clear();
+            schemaNodeLayout.Enabled = false;
+
+            foreach (var groups in BusinessData.ScriptingEngine.Columns.GroupBy(g => g.PropertyScope))
+            {
+                ListViewGroup newGroup = new ListViewGroup(groups.Key.ToName());
+                elementSelection.Groups.Add(newGroup);
+
+                foreach (NodePropertyValue item in groups)
+                {
+                    ListViewItem newItem = new ListViewItem(item.PropertyName, newGroup);
+
+
+                    if (bindingNode.DataSource is IList<TemplateNodeValue> nodes)
+                    {
+                        NodePropertyIndex nodeKey = new NodePropertyIndex(item);
+                        TemplateNodeValue? node = nodes.FirstOrDefault(w => nodeKey.Equals(new NodePropertyIndex(w)));
+
+                        if (node is TemplateNodeValue)
+                        { newItem.Checked = true; }
+                        else { newItem.Checked = false; }
+                    }
+
+                    elementSelection.Items.Add(newItem);
+                    nodeProperties.Add(newItem, item);
+                }
+            }
+        }
+
+
+        private void ElementSelection_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            //TODO: Item Checked is firing as soon as the control becomes visible.
+            // This is incorrectly removing all Nodes.
+
+
+        }
+
+
+        private void elementSelection_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void ElementSelection_ItemCheck(object sender, ItemCheckEventArgs e)
+        {   //Item_Checked and Item_Check occurs when user checks an item
+            //The ItemChecked occurs when the control becomes visible for each item that is checked. 
+            //Item_Checked DOES NOT fire when the control becomes visible.
+
+            ListViewItem item = elementSelection.Items[e.Index];
+
+            if (nodeProperties.ContainsKey(item))
+            {
+                NodePropertyValue element = nodeProperties[item];
+                if (e.NewValue == CheckState.Checked)
+                {
+                    if (bindingNode.AddNew() is TemplateNodeValue newNode)
+                    {
+                        bindingNode.ResumeBinding();
+
+                        newNode.PropertyScope = element.PropertyScope;
+                        newNode.PropertyName = element.PropertyName;
+                        newNode.NodeName = element.PropertyName;
+
+                        TemplateNodeIndex key = new TemplateNodeIndex(newNode);
+
+                        if (bindingNode.DataSource is IList<TemplateNodeValue> nodes
+                        && nodes.FirstOrDefault(w => key.Equals(w)) is TemplateNodeValue node)
+                        { bindingNode.Position = nodes.IndexOf(node); }
+
+                        schemaNodeLayout.Enabled = true;
+
+                    }
+                }
+                else if (e.NewValue == CheckState.Unchecked)
+                {
+                    if (bindingNode.DataSource is IList<TemplateNodeValue> nodes
+                        && nodes.FirstOrDefault(w => new NodePropertyIndex(nodeProperties[item]).Equals(new NodePropertyIndex(w))) is TemplateNodeValue node)
+                    {
+                        TemplateNodeIndex key = new TemplateNodeIndex(node);
+                        bindingNode.RemoveAt(nodes.IndexOf(node));
+
+                        schemaNodeLayout.Enabled = false;
+                        bindingNode.SuspendBinding();
+
+                        bindingAttribute.DataSource = null;
+
+                        while (BusinessData.ScriptingEngine.Templates.Attributes.FirstOrDefault(w => key.Equals(w)) is TemplateAttributeValue attribute)
+                        { BusinessData.ScriptingEngine.Templates.Attributes.Remove(attribute); }
+                    }
+                }
+            }
+        }
+
+        private void ElementSelection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (elementSelection.SelectedItems.Count > 0 && nodeProperties.ContainsKey(elementSelection.SelectedItems[0]))
+            {
+                NodePropertyIndex columnKey = new NodePropertyIndex(nodeProperties[elementSelection.SelectedItems[0]]);
+
+                if (bindingNode.DataSource is IList<TemplateNodeValue> nodes && nodes.FirstOrDefault(w => columnKey.Equals(w)) is TemplateNodeValue node)
+                {
+                    schemaNodeLayout.Enabled = true;
+                    bindingNode.ResumeBinding();
+                    bindingNode.Position = nodes.IndexOf(node);
+                }
+                else
+                {
+                    schemaNodeLayout.Enabled = false;
+                    bindingNode.SuspendBinding();
+                    //bindingNode.Position = -1;
+                }
+
+            }
+
+
+
+
+
+            /*
+            if (bindingNode.DataSource is IList<ITemplateNodeValue> nodes
+                && bindingTemplate.Current is ITemplateValue template)
+            {
+                if (elementSelection.SelectedItems.Count > 0 && nodeProperties.ContainsKey(elementSelection.SelectedItems[0]))
+                {
+                    NodePropertyIndex columnKey = new NodePropertyIndex(nodeProperties[elementSelection.SelectedItems[0]]);
+
+                    attributeData.AutoGenerateColumns = false;
+                    attributeData.DataSource = null;
+                    bindingAttribute.DataSource = null;
+
+                    TemplateIndex templateKey = new TemplateIndex(template);
+
+                    if (nodes.FirstOrDefault(w => columnKey.Equals(new NodePropertyIndex(w))) is ITemplateNodeValue node)
+                    {
+                        TemplateNodeIndex nodeKey = new TemplateNodeIndex(node);
+                        if (nodes.IndexOf(node) >= 0)
+                        {
+                            bindingNode.Position = nodes.IndexOf(node);
+                            bindingNode.ResumeBinding();
+                        }
+                        else { bindingNode.SuspendBinding(); }
+
+                        bindingAttribute.DataSource = new BindingView<TemplateAttributeValue>(BusinessData.ScriptingEngine.Templates.Attributes, w => nodeKey.Equals(w));
+                    }
+                    else
+                    {
+                        bindingAttribute.DataSource = new BindingView<TemplateAttributeValue>(BusinessData.ScriptingEngine.Templates.Attributes, w => 1 == 2);
+                        bindingNode.SuspendBinding();
+                    }
+
+                    attributeData.DataSource = bindingAttribute;
+                }
+            }*/
+        }
+
+        private void BindingNode_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (bindingTemplate.Current is ITemplateValue template)
+            { e.NewObject = new TemplateNodeValue(template); }
+        }
+
+        private void BindingAttribute_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (bindingNode.Current is ITemplateNodeValue node)
+            { e.NewObject = new TemplateAttributeValue(node); }
+        }
+
     }
 }
