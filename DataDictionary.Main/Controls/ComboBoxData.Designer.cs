@@ -86,6 +86,7 @@
             comboBoxLayout.RowStyles.Add(new RowStyle());
             comboBoxLayout.Size = new Size(129, 46);
             comboBoxLayout.TabIndex = 0;
+            comboBoxLayout.EnabledChanged += comboBoxLayout_EnabledChanged;
             // 
             // label
             // 

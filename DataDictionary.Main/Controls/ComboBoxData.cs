@@ -29,14 +29,16 @@ namespace DataDictionary.Main.Controls
         // Expose Control Properties
         public Boolean ReadOnly
         {
-            get { return !comboBox.Enabled; }
+            get { return readOnly; }
             set
             {
+                readOnly = value;
                 comboBox.Enabled = !value;
-                if (value) { controlLayout.BackColor = SystemColors.Control; }
-                else { controlLayout.BackColor = SystemColors.ControlDarkDark; }
             }
         }
+        Boolean readOnly;
+
+
         public ComboBoxStyle DropDownStyle { get { return comboBox.DropDownStyle; } set { comboBox.DropDownStyle = value; } }
 
         [Browsable(false)]
@@ -110,5 +112,15 @@ namespace DataDictionary.Main.Controls
         public new event CancelEventHandler? Validating;
         private void comboBox_Validating(object sender, CancelEventArgs e)
         { if (Validating is CancelEventHandler handler) { handler(sender, e); } }
+
+        private void comboBoxLayout_EnabledChanged(object sender, EventArgs e)
+        {
+            var x = this.HeaderText;
+
+            if (this.Enabled && !readOnly)
+            { controlLayout.BackColor = SystemColors.ControlDarkDark; }
+            else { controlLayout.BackColor = SystemColors.Control; }
+            
+        }
     }
 }
