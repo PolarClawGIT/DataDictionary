@@ -5,5 +5,6 @@
 	[AttributeId]			UniqueIdentifier NULL,
 	[AttributeName]			NVarChar(50) NULL,
 	[AttributeValue]		NVarChar(250) NULL,
-	[PropertyId]			UniqueIdentifier NULL
+	[PropertyId]			UniqueIdentifier NULL,
+	[AsCData]				Bit Null
 )
