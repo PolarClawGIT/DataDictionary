@@ -11,7 +11,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Interface for the Scripting Node Property data.
     /// </summary>
-    public interface INodePropertyValue : INodePropertyIndex
+    public interface INodePropertyValue : INodePropertyIndex, ITemplateNodeIndexName
     {
         /// <inheritdoc cref="DataColumn.AllowDBNull"/>
         Boolean AllowDBNull { get; }

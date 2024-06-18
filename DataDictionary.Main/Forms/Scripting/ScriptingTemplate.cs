@@ -309,31 +309,54 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-
-        private void ElementSelection_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
-            //TODO: Item Checked is firing as soon as the control becomes visible.
-            // This is incorrectly removing all Nodes.
-
-
+        Boolean nodesSelectReady = false; // Used to prevent ItemCheck from triggering an add or remove when not issued by the user.
+        private void ElementSelection_VisibleChanged(object sender, EventArgs e)
+        {   //VisibleChange does not fire when the control becomes hidden.
+            // The event will fire again when the control next becomes visible.
+            // The event fires AFTER the first calls to ItemChecked & ItemCheck.
+            nodesSelectReady = elementSelection.Visible;
         }
 
-
-        private void elementSelection_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-        { }
+        private void ElementSelection_ItemChecked(object sender, ItemCheckedEventArgs e)
+        { } // Not used but here for debugging event order. 
 
         private void ElementSelection_ItemCheck(object sender, ItemCheckEventArgs e)
-        {   //Item_Checked and Item_Check occurs when user checks an item
-            //The ItemChecked occurs when the control becomes visible for each item that is checked. 
-            //Item_Checked DOES NOT fire when the control becomes visible.
+        {   // The order of events is not what is expected.
+            // No interaction by the user has occurred except to make the control visible.
+            //
+            // When the form is loaded and the control is not visible, nothing happens.
+            // When the control becomes visible:
+            //   ItemChecked fires for every item in the list (all items start as unchecked).
+            //     This will set the Check-box to the setting specified. In this form, during ElementSelection_Load.
+            //   ItemCheck fires for every item that the check state changes (this case to Checked).
+            //     During this process, the control is "Visible" but the VisibleChanged event has not occurred.
+            //   VisibleChange event fires.
+            // The order changes once the control is visible and ready for use.
+            //   ItemCheck fires when the check-box is clicked (selection does not fire)
+            //   ItemChecked fires (selection does not fire)
 
             ListViewItem item = elementSelection.Items[e.Index];
 
-            if (nodeProperties.ContainsKey(item))
+            if (nodesSelectReady
+                && nodeProperties.ContainsKey(item)
+                && bindingTemplate.Current is TemplateValue template)
             {
                 NodePropertyValue element = nodeProperties[item];
                 if (e.NewValue == CheckState.Checked)
                 {
+                    // Duplicate check. Here just in case something unexpected happens.
+                    TemplateNodeIndexName dupKey = new TemplateNodeIndexName(element);
+                    TemplateIndex dupTemplate = new TemplateIndex(template);
+                    if (bindingNode.DataSource is IList<TemplateNodeValue> nodesDupCheck
+                        && nodesDupCheck.FirstOrDefault(w => dupTemplate.Equals(w) && dupKey.Equals(w)) is TemplateNodeValue nodeDupCheck)
+                    {
+                        Exception ex = new InvalidOperationException("Duplicate");
+                        ex.Data.Add(nameof(template.TemplateTitle), template.TemplateTitle);
+                        ex.Data.Add(nameof(element.PropertyName), element.PropertyName);
+                        ex.Data.Add(nameof(element.PropertyScope), element.PropertyScope.ToName());
+                        throw ex;
+                    }
+
                     if (bindingNode.AddNew() is TemplateNodeValue newNode)
                     {
                         TemplateNodeIndex key = new TemplateNodeIndex(newNode);
@@ -377,6 +400,9 @@ namespace DataDictionary.Main.Forms.Scripting
                 }
             }
         }
+
+        private void elementSelection_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        { } // Not used but here to debug event order. This occurs before SelectedIndexChanged.
 
         private void ElementSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
