@@ -57,7 +57,7 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 bindingPath.DataSource = new BindingView<TemplatePathValue>(BusinessData.ScriptingEngine.Templates.Paths, w => key.Equals(w));
                 bindingNode.DataSource = new BindingView<TemplateNodeValue>(BusinessData.ScriptingEngine.Templates.Nodes, w => key.Equals(w));
-                bindingAttribute.DataSource = new BindingView<TemplateAttributeValue>(BusinessData.ScriptingEngine.Templates.Attributes, w => key.Equals(w));
+                bindingAttribute.DataSource = null;
             }
         }
 
@@ -103,6 +103,8 @@ namespace DataDictionary.Main.Forms.Scripting
             templatePathData.DataSource = bindingPath;
 
             PropertyNameList.Load(attributePropertyColumn);
+            attributeData.AutoGenerateColumns = false;
+            attributeData.DataSource = bindingAttribute;
 
             ElementSelection_Load();
 
@@ -318,9 +320,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
 
         private void elementSelection_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-        {
-
-        }
+        { }
 
         private void ElementSelection_ItemCheck(object sender, ItemCheckEventArgs e)
         {   //Item_Checked and Item_Check occurs when user checks an item
@@ -336,20 +336,24 @@ namespace DataDictionary.Main.Forms.Scripting
                 {
                     if (bindingNode.AddNew() is TemplateNodeValue newNode)
                     {
-                        bindingNode.ResumeBinding();
+                        TemplateNodeIndex key = new TemplateNodeIndex(newNode);
 
                         newNode.PropertyScope = element.PropertyScope;
                         newNode.PropertyName = element.PropertyName;
                         newNode.NodeName = element.PropertyName;
-
-                        TemplateNodeIndex key = new TemplateNodeIndex(newNode);
+                        newNode.NodeValueAs = NodeValueAsType.ElementText;
+                        bindingNode.ResumeBinding();
 
                         if (bindingNode.DataSource is IList<TemplateNodeValue> nodes
                         && nodes.FirstOrDefault(w => key.Equals(w)) is TemplateNodeValue node)
                         { bindingNode.Position = nodes.IndexOf(node); }
 
-                        schemaNodeLayout.Enabled = true;
+                        attributeData.DataSource = null;
+                        bindingAttribute.DataSource = null;
+                        bindingAttribute.DataSource = new BindingView<TemplateAttributeValue>(BusinessData.ScriptingEngine.Templates.Attributes, w => key.Equals(w));
+                        attributeData.DataSource = bindingAttribute;
 
+                        schemaNodeLayout.Enabled = true;
                     }
                 }
                 else if (e.NewValue == CheckState.Unchecked)
@@ -360,13 +364,15 @@ namespace DataDictionary.Main.Forms.Scripting
                         TemplateNodeIndex key = new TemplateNodeIndex(node);
                         bindingNode.RemoveAt(nodes.IndexOf(node));
 
-                        schemaNodeLayout.Enabled = false;
                         bindingNode.SuspendBinding();
 
+                        attributeData.DataSource = null;
                         bindingAttribute.DataSource = null;
 
                         while (BusinessData.ScriptingEngine.Templates.Attributes.FirstOrDefault(w => key.Equals(w)) is TemplateAttributeValue attribute)
                         { BusinessData.ScriptingEngine.Templates.Attributes.Remove(attribute); }
+
+                        schemaNodeLayout.Enabled = false;
                     }
                 }
             }
@@ -380,58 +386,24 @@ namespace DataDictionary.Main.Forms.Scripting
 
                 if (bindingNode.DataSource is IList<TemplateNodeValue> nodes && nodes.FirstOrDefault(w => columnKey.Equals(w)) is TemplateNodeValue node)
                 {
+                    TemplateNodeIndex key = new TemplateNodeIndex(node);
                     schemaNodeLayout.Enabled = true;
                     bindingNode.ResumeBinding();
                     bindingNode.Position = nodes.IndexOf(node);
+
+                    attributeData.DataSource = null;
+                    bindingAttribute.DataSource = null;
+                    bindingAttribute.DataSource = new BindingView<TemplateAttributeValue>(BusinessData.ScriptingEngine.Templates.Attributes, w => key.Equals(w));
+                    attributeData.DataSource = bindingAttribute;
                 }
                 else
                 {
                     schemaNodeLayout.Enabled = false;
-                    bindingNode.SuspendBinding();
-                    //bindingNode.Position = -1;
-                }
-
-            }
-
-
-
-
-
-            /*
-            if (bindingNode.DataSource is IList<ITemplateNodeValue> nodes
-                && bindingTemplate.Current is ITemplateValue template)
-            {
-                if (elementSelection.SelectedItems.Count > 0 && nodeProperties.ContainsKey(elementSelection.SelectedItems[0]))
-                {
-                    NodePropertyIndex columnKey = new NodePropertyIndex(nodeProperties[elementSelection.SelectedItems[0]]);
-
-                    attributeData.AutoGenerateColumns = false;
                     attributeData.DataSource = null;
                     bindingAttribute.DataSource = null;
-
-                    TemplateIndex templateKey = new TemplateIndex(template);
-
-                    if (nodes.FirstOrDefault(w => columnKey.Equals(new NodePropertyIndex(w))) is ITemplateNodeValue node)
-                    {
-                        TemplateNodeIndex nodeKey = new TemplateNodeIndex(node);
-                        if (nodes.IndexOf(node) >= 0)
-                        {
-                            bindingNode.Position = nodes.IndexOf(node);
-                            bindingNode.ResumeBinding();
-                        }
-                        else { bindingNode.SuspendBinding(); }
-
-                        bindingAttribute.DataSource = new BindingView<TemplateAttributeValue>(BusinessData.ScriptingEngine.Templates.Attributes, w => nodeKey.Equals(w));
-                    }
-                    else
-                    {
-                        bindingAttribute.DataSource = new BindingView<TemplateAttributeValue>(BusinessData.ScriptingEngine.Templates.Attributes, w => 1 == 2);
-                        bindingNode.SuspendBinding();
-                    }
-
-                    attributeData.DataSource = bindingAttribute;
+                    bindingNode.SuspendBinding();
                 }
-            }*/
+            }
         }
 
         private void BindingNode_AddingNew(object sender, AddingNewEventArgs e)

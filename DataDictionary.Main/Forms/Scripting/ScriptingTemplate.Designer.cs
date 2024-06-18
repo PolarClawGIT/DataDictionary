@@ -32,11 +32,11 @@
             TableLayoutPanel templateLayoutPanel;
             TableLayoutPanel documentLayout;
             TableLayoutPanel documentGroupLayout;
-            ListViewGroup listViewGroup1 = new ListViewGroup("Scope Name 1", HorizontalAlignment.Left);
-            ListViewItem listViewItem1 = new ListViewItem(new string[] { "Property Name 1", "Column 1" }, -1);
+            ListViewGroup listViewGroup2 = new ListViewGroup("Scope Name 1", HorizontalAlignment.Left);
+            ListViewItem listViewItem2 = new ListViewItem(new string[] { "Property Name 1", "Column 1" }, -1);
             GroupBox attributeGroup;
             TableLayoutPanel elementPathLayout;
-            BusinessLayer.NamedScope.NamedScopePath namedScopePath1 = new BusinessLayer.NamedScope.NamedScopePath();
+            BusinessLayer.NamedScope.NamedScopePath namedScopePath2 = new BusinessLayer.NamedScope.NamedScopePath();
             TableLayoutPanel transformLayout;
             templateTitleData = new Controls.TextBoxData();
             templateDescriptionData = new Controls.TextBoxData();
@@ -68,9 +68,6 @@
             nodeNameData = new Controls.TextBoxData();
             nodeValueAsData = new Controls.ComboBoxData();
             attributeData = new DataGridView();
-            attributeNameColumn = new DataGridViewTextBoxColumn();
-            attributePropertyColumn = new DataGridViewComboBoxColumn();
-            attributeValueColumn = new DataGridViewTextBoxColumn();
             propertyScopeData = new Controls.ComboBoxData();
             dataSelectionTab = new TabPage();
             templatePathData = new DataGridView();
@@ -96,6 +93,10 @@
             bindingPath = new BindingSource(components);
             bindingNode = new BindingSource(components);
             bindingAttribute = new BindingSource(components);
+            attributeNameColumn = new DataGridViewTextBoxColumn();
+            attributeValueColumn = new DataGridViewTextBoxColumn();
+            attributePropertyColumn = new DataGridViewComboBoxColumn();
+            AsCDataColumn = new DataGridViewCheckBoxColumn();
             templateLayoutPanel = new TableLayoutPanel();
             documentLayout = new TableLayoutPanel();
             documentGroupLayout = new TableLayoutPanel();
@@ -491,7 +492,7 @@
             // 
             schemaDefinitionLayout.Panel2.Controls.Add(schemaNodeLayout);
             schemaDefinitionLayout.Size = new Size(849, 414);
-            schemaDefinitionLayout.SplitterDistance = 283;
+            schemaDefinitionLayout.SplitterDistance = 229;
             schemaDefinitionLayout.TabIndex = 1;
             // 
             // elementSelection
@@ -499,16 +500,16 @@
             elementSelection.CheckBoxes = true;
             elementSelection.Columns.AddRange(new ColumnHeader[] { columnName });
             elementSelection.Dock = DockStyle.Fill;
-            listViewGroup1.Header = "Scope Name 1";
-            listViewGroup1.Name = "sampleScope";
-            elementSelection.Groups.AddRange(new ListViewGroup[] { listViewGroup1 });
-            listViewItem1.Group = listViewGroup1;
-            listViewItem1.StateImageIndex = 0;
-            elementSelection.Items.AddRange(new ListViewItem[] { listViewItem1 });
+            listViewGroup2.Header = "Scope Name 1";
+            listViewGroup2.Name = "sampleScope";
+            elementSelection.Groups.AddRange(new ListViewGroup[] { listViewGroup2 });
+            listViewItem2.Group = listViewGroup2;
+            listViewItem2.StateImageIndex = 0;
+            elementSelection.Items.AddRange(new ListViewItem[] { listViewItem2 });
             elementSelection.Location = new Point(0, 0);
             elementSelection.MultiSelect = false;
             elementSelection.Name = "elementSelection";
-            elementSelection.Size = new Size(281, 412);
+            elementSelection.Size = new Size(227, 412);
             elementSelection.TabIndex = 2;
             elementSelection.UseCompatibleStateImageBehavior = false;
             elementSelection.View = View.Details;
@@ -541,7 +542,7 @@
             schemaNodeLayout.RowStyles.Add(new RowStyle());
             schemaNodeLayout.RowStyles.Add(new RowStyle());
             schemaNodeLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            schemaNodeLayout.Size = new Size(560, 412);
+            schemaNodeLayout.Size = new Size(614, 412);
             schemaNodeLayout.TabIndex = 0;
             // 
             // propertyNameData
@@ -554,7 +555,7 @@
             propertyNameData.Multiline = false;
             propertyNameData.Name = "propertyNameData";
             propertyNameData.ReadOnly = true;
-            propertyNameData.Size = new Size(554, 44);
+            propertyNameData.Size = new Size(608, 44);
             propertyNameData.TabIndex = 1;
             // 
             // nodeNameData
@@ -566,7 +567,7 @@
             nodeNameData.Multiline = false;
             nodeNameData.Name = "nodeNameData";
             nodeNameData.ReadOnly = false;
-            nodeNameData.Size = new Size(330, 46);
+            nodeNameData.Size = new Size(362, 46);
             nodeNameData.TabIndex = 2;
             // 
             // nodeValueAsData
@@ -576,10 +577,10 @@
             nodeValueAsData.Dock = DockStyle.Fill;
             nodeValueAsData.DropDownStyle = ComboBoxStyle.DropDownList;
             nodeValueAsData.HeaderText = "render Data as";
-            nodeValueAsData.Location = new Point(339, 105);
+            nodeValueAsData.Location = new Point(371, 105);
             nodeValueAsData.Name = "nodeValueAsData";
             nodeValueAsData.ReadOnly = false;
-            nodeValueAsData.Size = new Size(218, 46);
+            nodeValueAsData.Size = new Size(240, 46);
             nodeValueAsData.TabIndex = 5;
             // 
             // attributeGroup
@@ -589,43 +590,19 @@
             attributeGroup.Dock = DockStyle.Fill;
             attributeGroup.Location = new Point(3, 157);
             attributeGroup.Name = "attributeGroup";
-            attributeGroup.Size = new Size(554, 252);
+            attributeGroup.Size = new Size(608, 252);
             attributeGroup.TabIndex = 6;
             attributeGroup.TabStop = false;
             attributeGroup.Text = "Attributes";
             // 
             // attributeData
             // 
-            attributeData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            attributeData.Columns.AddRange(new DataGridViewColumn[] { attributeNameColumn, attributePropertyColumn, attributeValueColumn });
+            attributeData.Columns.AddRange(new DataGridViewColumn[] { attributeNameColumn, attributeValueColumn, attributePropertyColumn, AsCDataColumn });
             attributeData.Dock = DockStyle.Fill;
             attributeData.Location = new Point(3, 19);
             attributeData.Name = "attributeData";
-            attributeData.Size = new Size(548, 230);
+            attributeData.Size = new Size(602, 230);
             attributeData.TabIndex = 0;
-            // 
-            // attributeNameColumn
-            // 
-            attributeNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            attributeNameColumn.DataPropertyName = "AttributeName";
-            attributeNameColumn.FillWeight = 50F;
-            attributeNameColumn.HeaderText = "Attribute Name";
-            attributeNameColumn.Name = "attributeNameColumn";
-            // 
-            // attributePropertyColumn
-            // 
-            attributePropertyColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            attributePropertyColumn.DataPropertyName = "PropertyId";
-            attributePropertyColumn.FillWeight = 50F;
-            attributePropertyColumn.HeaderText = "use Property Value";
-            attributePropertyColumn.Name = "attributePropertyColumn";
-            // 
-            // attributeValueColumn
-            // 
-            attributeValueColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            attributeValueColumn.DataPropertyName = "AttributeValue";
-            attributeValueColumn.HeaderText = "use Fixed Value";
-            attributeValueColumn.Name = "attributeValueColumn";
             // 
             // propertyScopeData
             // 
@@ -637,7 +614,7 @@
             propertyScopeData.Location = new Point(3, 3);
             propertyScopeData.Name = "propertyScopeData";
             propertyScopeData.ReadOnly = true;
-            propertyScopeData.Size = new Size(330, 46);
+            propertyScopeData.Size = new Size(362, 46);
             propertyScopeData.TabIndex = 7;
             // 
             // dataSelectionTab
@@ -701,7 +678,7 @@
             templatePathSelect.Name = "templatePathSelect";
             templatePathSelect.ReadOnly = false;
             templatePathSelect.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
-            templatePathSelect.ScopePath = namedScopePath1;
+            templatePathSelect.ScopePath = namedScopePath2;
             templatePathSelect.Size = new Size(90, 66);
             templatePathSelect.TabIndex = 6;
             templatePathSelect.OnApply += NamedScopeData_OnApply;
@@ -851,6 +828,37 @@
             // 
             bindingAttribute.AddingNew += BindingAttribute_AddingNew;
             // 
+            // attributeNameColumn
+            // 
+            attributeNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            attributeNameColumn.DataPropertyName = "AttributeName";
+            attributeNameColumn.FillWeight = 50F;
+            attributeNameColumn.HeaderText = "Attribute Name";
+            attributeNameColumn.Name = "attributeNameColumn";
+            // 
+            // attributeValueColumn
+            // 
+            attributeValueColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            attributeValueColumn.DataPropertyName = "AttributeValue";
+            attributeValueColumn.HeaderText = "Default Value";
+            attributeValueColumn.Name = "attributeValueColumn";
+            // 
+            // attributePropertyColumn
+            // 
+            attributePropertyColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            attributePropertyColumn.DataPropertyName = "PropertyId";
+            attributePropertyColumn.FillWeight = 50F;
+            attributePropertyColumn.HeaderText = "use Property Value";
+            attributePropertyColumn.Name = "attributePropertyColumn";
+            // 
+            // AsCDataColumn
+            // 
+            AsCDataColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            AsCDataColumn.DataPropertyName = "AsCData";
+            AsCDataColumn.HeaderText = "as CData";
+            AsCDataColumn.Name = "AsCDataColumn";
+            AsCDataColumn.Width = 59;
+            // 
             // ScriptingTemplate
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -958,10 +966,11 @@
         private Controls.ComboBoxData nodeValueAsData;
         private BindingSource bindingNode;
         private DataGridView attributeData;
-        private DataGridViewTextBoxColumn attributeNameColumn;
-        private DataGridViewComboBoxColumn attributePropertyColumn;
-        private DataGridViewTextBoxColumn attributeValueColumn;
         private BindingSource bindingAttribute;
         private Controls.ComboBoxData propertyScopeData;
+        private DataGridViewTextBoxColumn attributeNameColumn;
+        private DataGridViewTextBoxColumn attributeValueColumn;
+        private DataGridViewComboBoxColumn attributePropertyColumn;
+        private DataGridViewCheckBoxColumn AsCDataColumn;
     }
 }

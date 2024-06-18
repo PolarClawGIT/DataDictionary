@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         public TemplateAttributeValue() : base() { }
 
         /// <inheritdoc cref="ScriptingAttributeItem(IScriptingNodeKeyComposite)"/>
-        public TemplateAttributeValue(ITemplateNodeIndex source) : base(source)
+        public TemplateAttributeValue(IScriptingNodeKeyComposite source) : base(source)
         { }
     }
 }

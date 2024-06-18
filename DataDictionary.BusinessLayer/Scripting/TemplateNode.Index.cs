@@ -3,13 +3,13 @@
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface ITemplateNodeIndex : IScriptingNodeKeyComposite
+    public interface ITemplateNodeIndex : IScriptingNodeKey
     { }
 
     /// <inheritdoc/>
-    public class TemplateNodeIndex : ScriptingNodeKeyComposite
+    public class TemplateNodeIndex : ScriptingNodeKey
     {
-        /// <inheritdoc cref="ScriptingNodeKeyComposite(IScriptingNodeKeyComposite)"/>
+        /// <inheritdoc cref="ScriptingNodeKey(IScriptingNodeKey)"/>
         public TemplateNodeIndex(ITemplateNodeIndex source) : base(source)
         { }
     }
