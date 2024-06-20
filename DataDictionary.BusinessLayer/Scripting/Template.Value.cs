@@ -25,9 +25,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     {
         /// <inheritdoc/>
         public TemplateValue() : base()
-        {
-            PropertyChanged += TemplateValue_PropertyChanged;
-        }
+        { PropertyChanged += TemplateValue_PropertyChanged; }
 
         /// <inheritdoc/>
         public DataLayerIndex GetIndex()

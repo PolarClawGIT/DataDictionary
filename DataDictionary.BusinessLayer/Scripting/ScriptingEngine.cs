@@ -22,7 +22,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <summary>
         /// List of Scripting Engine Column definitions
         /// </summary>
-        INodePropertyData Columns { get; }
+        INodePropertyData Properties { get; }
     }
 
     /// <summary>
@@ -38,13 +38,13 @@ namespace DataDictionary.BusinessLayer.Scripting
         public ITemplateData Templates { get { return templateValues; } }
         private readonly TemplateData templateValues;
 
-        public INodePropertyData Columns { get { return columnValues; } }
-        private readonly NodePropertyData columnValues;
+        public INodePropertyData Properties { get { return propertyValues; } }
+        private readonly NodePropertyData propertyValues;
 
         public ScriptingEngine() : base()
         {
             templateValues = new TemplateData() { Scripting = this };
-            columnValues = new NodePropertyData();
+            propertyValues = new NodePropertyData();
         }
 
         /// <inheritdoc/>
@@ -93,5 +93,6 @@ namespace DataDictionary.BusinessLayer.Scripting
             work.AddRange(templateValues.Load(factory, dataKey));
             return work;
         }
+
     }
 }

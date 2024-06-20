@@ -5,13 +5,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
     /// <summary>
     /// Interface for the Unique Key on Property for the Scripting Template Node.
     /// </summary>
-    public interface IScriptingNodeKeyName :IKey
+    public interface IScriptingNodeKeyName : IScriptingNodeKeyScope
     {
-        /// <summary>
-        /// Scope of the Property (column) of the Node (used to select the item to render).
-        /// </summary>
-        ScopeType PropertyScope { get; }
-
         /// <summary>
         ///Name of the Property (column) of the Node (used to select the item to render).
         /// </summary>
@@ -47,7 +42,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         {
             return
                 other is IScriptingNodeKeyName &&
-                PropertyScope.Equals(other.PropertyScope) &&
+                new ScriptingNodeKeyScope(this).Equals(new ScriptingNodeKeyScope(other)) &&
                 !string.IsNullOrEmpty(PropertyName) &&
                 !string.IsNullOrEmpty(other.PropertyName) &&
                 PropertyName.Equals(other.PropertyName, KeyExtension.CompareString);
@@ -61,7 +56,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         public virtual int CompareTo(IScriptingNodeKeyName? other)
         {
             if (other is null) { return 1; }
-            else if (PropertyScope.CompareTo(other.PropertyScope) is int value && value != 0) { return value; }
+            else if (new ScriptingNodeKeyScope(this).CompareTo(new ScriptingNodeKeyScope(other)) is int value && value != 0) { return value; }
             else { return String.Compare(PropertyName, other.PropertyName, true);  }
         }
 

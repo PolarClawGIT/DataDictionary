@@ -283,7 +283,7 @@ namespace DataDictionary.Main.Forms.Scripting
             nodeProperties.Clear();
             schemaNodeLayout.Enabled = false;
 
-            foreach (var groups in BusinessData.ScriptingEngine.Columns.GroupBy(g => g.PropertyScope))
+            foreach (var groups in BusinessData.ScriptingEngine.Properties.GroupBy(g => g.PropertyScope))
             {
                 ListViewGroup newGroup = new ListViewGroup(groups.Key.ToName());
                 elementSelection.Groups.Add(newGroup);

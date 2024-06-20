@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ScriptingData.Template;
+using DataDictionary.BusinessLayer.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <inheritdoc/>
-    public interface ITemplateAttributeValue : IScriptingAttributeItem, ITemplateIndex
+    public interface ITemplateAttributeValue : IScriptingAttributeItem, ITemplateIndex, ITemplateNodeIndex, IPropertyIndex
     { }
 
     /// <inheritdoc/>
