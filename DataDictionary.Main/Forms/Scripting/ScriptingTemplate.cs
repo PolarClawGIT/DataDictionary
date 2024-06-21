@@ -55,8 +55,8 @@ namespace DataDictionary.Main.Forms.Scripting
 
             if (bindingTemplate.Current is ITemplateValue current)
             {
-                bindingPath.DataSource = new BindingView<TemplatePathValue>(BusinessData.ScriptingEngine.Templates.Paths, w => key.Equals(w));
-                bindingNode.DataSource = new BindingView<TemplateNodeValue>(BusinessData.ScriptingEngine.Templates.Nodes, w => key.Equals(w));
+                bindingPath.DataSource = new BindingView<TemplatePathValue>(BusinessData.ScriptingEngine.TemplatePaths, w => key.Equals(w));
+                bindingNode.DataSource = new BindingView<TemplateNodeValue>(BusinessData.ScriptingEngine.TemplateNodes, w => key.Equals(w));
                 bindingAttribute.DataSource = null;
             }
         }
@@ -135,7 +135,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void DeleteTemplateCommand_Click(object sender, EventArgs e)
         {
             if (bindingTemplate.Current is TemplateValue current)
-            { BusinessData.ScriptingEngine.Templates.Delete(current); }
+            { BusinessData.ScriptingEngine.Delete(current); }
         }
 
         private void DocumentDirectoryPicker_Click(object sender, EventArgs e)
@@ -373,7 +373,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                         attributeData.DataSource = null;
                         bindingAttribute.DataSource = null;
-                        bindingAttribute.DataSource = new BindingView<TemplateAttributeValue>(BusinessData.ScriptingEngine.Templates.Attributes, w => key.Equals(w));
+                        bindingAttribute.DataSource = new BindingView<TemplateAttributeValue>(BusinessData.ScriptingEngine.TemplateAttributes, w => key.Equals(w));
                         attributeData.DataSource = bindingAttribute;
 
                         schemaNodeLayout.Enabled = true;
@@ -392,8 +392,8 @@ namespace DataDictionary.Main.Forms.Scripting
                         attributeData.DataSource = null;
                         bindingAttribute.DataSource = null;
 
-                        while (BusinessData.ScriptingEngine.Templates.Attributes.FirstOrDefault(w => key.Equals(w)) is TemplateAttributeValue attribute)
-                        { BusinessData.ScriptingEngine.Templates.Attributes.Remove(attribute); }
+                        while (BusinessData.ScriptingEngine.TemplateAttributes.FirstOrDefault(w => key.Equals(w)) is TemplateAttributeValue attribute)
+                        { BusinessData.ScriptingEngine.TemplateAttributes.Remove(attribute); }
 
                         schemaNodeLayout.Enabled = false;
                     }
@@ -419,7 +419,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
                     attributeData.DataSource = null;
                     bindingAttribute.DataSource = null;
-                    bindingAttribute.DataSource = new BindingView<TemplateAttributeValue>(BusinessData.ScriptingEngine.Templates.Attributes, w => key.Equals(w));
+                    bindingAttribute.DataSource = new BindingView<TemplateAttributeValue>(BusinessData.ScriptingEngine.TemplateAttributes, w => key.Equals(w));
                     attributeData.DataSource = bindingAttribute;
                 }
                 else

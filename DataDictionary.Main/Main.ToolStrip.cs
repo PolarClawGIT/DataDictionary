@@ -114,15 +114,15 @@ namespace DataDictionary.Main
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XSLTransform), BusinessData.ScriptingEngine.Templates); }
 
         private void menuScriptingPath_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XPath), BusinessData.ScriptingEngine.Templates.Paths); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XPath), BusinessData.ScriptingEngine.TemplatePaths); }
 
         private void menuScriptingDocument_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XmlFile), BusinessData.ScriptingEngine.Templates.Documents); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XmlFile), BusinessData.ScriptingEngine.TemplateDocuments); }
 
         private void menuScriptingNode_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XMLElement), BusinessData.ScriptingEngine.Templates.Nodes); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XMLElement), BusinessData.ScriptingEngine.TemplateNodes); }
 
         private void menuScriptingAttribute_Click(object sender, EventArgs e)
-        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XMLAttribute), BusinessData.ScriptingEngine.Templates.Attributes); }
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XMLAttribute), BusinessData.ScriptingEngine.TemplateAttributes); }
     }
 }
