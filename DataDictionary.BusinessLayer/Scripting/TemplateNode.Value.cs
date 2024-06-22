@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
@@ -20,5 +21,44 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <inheritdoc cref="ScriptingNodeItem(IScriptingTemplateKey)"/>
         public TemplateNodeValue(ITemplateIndex source) : base(source)
         { }
+
+        internal XObject? BuildXObject(Object? value)
+        {
+            String? nodeName = NodeName ?? PropertyName;
+            if (nodeName is null) { return null; }
+
+            if (value is null) { return null; }
+            String? nodeValue = value.ToString();
+            if (String.IsNullOrWhiteSpace(nodeValue))
+            { return null; }
+
+            switch (NodeValueAs)
+            {
+                case NodeValueAsType.none:
+                    return null;
+                case NodeValueAsType.ElementText:
+                    return new XElement(nodeName, value);
+                case NodeValueAsType.ElementCData:
+                    return new XElement(nodeName, new XCData(nodeValue));
+                case NodeValueAsType.ElementXML:
+                    try
+                    {
+                        if (String.IsNullOrWhiteSpace(nodeValue))
+                        { return new XElement(nodeName, XElement.Parse(nodeValue)); }
+                        else { return null; }
+                    }
+                    catch (Exception fragmentEx)
+                    { return new XElement(nodeName, new XAttribute("Exception", fragmentEx.Message)); }
+                case NodeValueAsType.AttributeCData:
+                    return new XAttribute(nodeName, new XCData(nodeValue));
+                case NodeValueAsType.AttributeText:
+                    return new XAttribute(nodeName, nodeValue);
+                default:
+                    Exception ex = new InvalidOperationException("Unknown NodeValueAsType");
+                    ex.Data.Add(nameof(NodeValueAs), NodeValueAs.ToString());
+                    ex.Data.Add(nameof(PropertyName), PropertyName);
+                    throw ex;
+            }
+        }
     }
 }

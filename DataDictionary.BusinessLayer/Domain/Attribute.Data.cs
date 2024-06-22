@@ -69,6 +69,9 @@ namespace DataDictionary.BusinessLayer.Domain
         public IAttributeSubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly AttributeSubjectAreaData subjectAreaValues;
 
+        public required IPropertyData DomainProperties { get; init; }
+        public required IDefinitionData DomainDefinitions { get; init; }
+
         public AttributeData() : base()
         {
             aliasValues = new AttributeAliasData();
@@ -77,6 +80,19 @@ namespace DataDictionary.BusinessLayer.Domain
             subjectAreaValues = new AttributeSubjectAreaData();
         }
 
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public override void Remove(IDomainAttributeKey attributeItem)
+        {
+            base.Remove(attributeItem);
+            DomainAttributeKey key = new DomainAttributeKey(attributeItem);
+            aliasValues.Remove(key);
+            propertyValues.Remove(key);
+            definitionValues.Remove(key);
+            subjectAreaValues.Remove(key);
+        }
+
+        #region ILoadData, ISaveData
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDomainAttributeKey dataKey)
@@ -141,18 +157,6 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
-        public override void Remove(IDomainAttributeKey attributeItem)
-        {
-            base.Remove(attributeItem);
-            DomainAttributeKey key = new DomainAttributeKey(attributeItem);
-            aliasValues.Remove(key);
-            propertyValues.Remove(key);
-            definitionValues.Remove(key);
-            subjectAreaValues.Remove(key);
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
         public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -175,6 +179,9 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <remarks>Attribute</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
         { return Delete(); }
+        #endregion
+
+        #region IDataTableFile
 
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
@@ -288,7 +295,9 @@ namespace DataDictionary.BusinessLayer.Domain
                 }
             }
         }
+        #endregion
 
+        #region INamedScopeSource
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
@@ -366,7 +375,25 @@ namespace DataDictionary.BusinessLayer.Domain
                 }
             }
         }
+        #endregion
 
+        internal XElement? GetXElement(IAttributeIndex attribute, TemplateBinding template)
+        {
+            XElement? result = null;
+            AttributeIndex key = new AttributeIndex(attribute);
 
+            if (this.FirstOrDefault(w => key.Equals(w)) is AttributeValue value)
+            {
+                result = value.GetXElement(template.GetNodes(value.Scope));
+
+                if(result is XElement)
+                {
+                    IEnumerable<XAttribute> attributes = template.BuildXAttributes(value.Scope, DomainProperties, Properties);
+                    result.Add(attributes.ToArray());
+                }
+            }
+
+            return result;
+        }
     }
 }

@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.ScriptingData.Template;
 using System.ComponentModel;
 using System.Xml.Linq;
 
@@ -32,68 +33,41 @@ namespace DataDictionary.BusinessLayer.Domain
         public NamedScopePath GetPath()
         { return new NamedScopePath(AttributeTitle); }
 
-        /// <inheritdoc/>
-        /*public XElement? GetXElement(IDomainData data, IEnumerable<TemplateElementValue>? options)
+        internal XElement? GetXElement(IEnumerable<TemplateNodeValue> templates)
         {
-            throw new NotImplementedException();
-            
             XElement? result = null;
 
-            if (options is not null && options.Count() > 0)
+            foreach (TemplateNodeValue node in templates)
             {
-                AttributeIndex key = new AttributeIndex(this);
+                XObject? value = null;
 
-                foreach (TemplateElementValue option in options)
+                switch (node.PropertyName)
                 {
-                    Object? value = null;
-
-                    switch (option.PropertyName)
-                    {
-                        case nameof(AttributeId): value = AttributeId.ToString(); break;
-                        case nameof(AttributeTitle): value = AttributeTitle; break;
-                        case nameof(AttributeDescription): value = AttributeDescription; break;
-                        case nameof(IsCompositeType): value = IsCompositeType; break;
-                        case nameof(IsDerived): value = IsDerived; break;
-                        case nameof(IsIntegral): value = IsIntegral; break;
-                        case nameof(IsKey): value = IsKey; break;
-                        case nameof(IsMultiValue): value = IsMultiValue; break;
-                        case nameof(IsNonKey): value = IsNonKey; break;
-                        case nameof(IsNullable): value = IsNullable; break;
-                        case nameof(IsSimpleType): value = IsSimpleType; break;
-                        case nameof(IsSingleValue): value = IsSingleValue; break;
-                        case nameof(IsValued): value = IsValued; break;
-                        default:
-                            break;
-                    }
-
-                    if (value is not null)
-                    {
-                        if (result is null) { result = new XElement(this.Scope.ToName()); }
-                        result.Add(option.GetXElement(value));
-                    }
+                    case nameof(AttributeTitle): value = node.BuildXObject(AttributeTitle); break;
+                    case nameof(AttributeDescription): value = node.BuildXObject(AttributeDescription); break;
+                    case nameof(IsCompositeType): value = node.BuildXObject(IsCompositeType); break;
+                    case nameof(IsDerived): value = node.BuildXObject(IsDerived); break; ;
+                    case nameof(IsIntegral): value = node.BuildXObject(IsIntegral); break; ;
+                    case nameof(IsKey): value = node.BuildXObject(IsKey); break; ;
+                    case nameof(IsMultiValue): value = node.BuildXObject(IsMultiValue); break; ;
+                    case nameof(IsNonKey): value = node.BuildXObject(IsNonKey); break; ;
+                    case nameof(IsNullable): value = node.BuildXObject(IsNullable); break; ;
+                    case nameof(IsSimpleType): value = node.BuildXObject(IsSimpleType); break; ;
+                    case nameof(IsSingleValue): value = node.BuildXObject(IsSingleValue); break; ;
+                    case nameof(IsValued): value = node.BuildXObject(IsValued); break; ;
+                    default:
+                        break;
                 }
 
-                foreach (AttributePropertyValue item in data.DomainModel.Attributes.Properties.Where(w => key.Equals(w)))
+                if (value is XObject)
                 {
-                    if(item.GetXElement(data.DomainModel.Properties, options) is XElement value)
-                    {
-                        if (result is null) { result = new XElement(this.Scope.ToName()); }
-                        result.Add(value);
-                    }
-                }
-
-                foreach (AttributeAliasValue item in data.DomainModel.Attributes.Aliases.Where(w => key.Equals(w)))
-                {
-                    if (item.GetXElement(this, options) is XElement value)
-                    {
-                        if (result is null) { result = new XElement(this.Scope.ToName()); }
-                        result.Add(value);
-                    }
+                    if (result is null) { result = new XElement(Scope.ToName()); }
+                    result.Add(value);
                 }
             }
 
             return result;
-        }*/
+        }
 
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {

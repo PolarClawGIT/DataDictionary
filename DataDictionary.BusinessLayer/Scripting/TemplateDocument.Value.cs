@@ -1,4 +1,6 @@
-﻿using DataDictionary.DataLayer.ScriptingData.Template;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.DataLayer.ScriptingData.Template;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,13 +10,15 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
+using Toolbox.BindingTable;
+using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <summary>
     /// Scripting Engine Template Document
     /// </summary>
-    public class TemplateDocumentValue : ITemplateIndex, INotifyPropertyChanged
+    public class TemplateDocumentValue : ITemplateIndex, INotifyPropertyChanged, IBindingPropertyChanged
     {
         /// <inheritdoc/>
         public Guid? TemplateId { get { return templateValue.TemplateId; } }
@@ -31,7 +35,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             get
             {
-                if(templateValue.RootDirectory is DirectoryType root &&
+                if (templateValue.RootDirectory is DirectoryType root &&
                     new DirectoryTypeKey(root).ToDirectoryInfo() is DirectoryInfo folder)
                 {
                     String directoryName =
@@ -42,7 +46,7 @@ namespace DataDictionary.BusinessLayer.Scripting
                         templateValue.DocumentPrefix ?? String.Empty,
                         ElementName,
                         templateValue.DocumentSuffix ?? String.Empty,
-                        templateValue.DocumentExtension??"xml");
+                        templateValue.DocumentExtension ?? "xml");
 
                     return new FileInfo(Path.Combine(directoryName, fileName));
                 }
@@ -79,7 +83,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <summary>
         /// The XML Document that was used as the Source
         /// </summary>
-        public XDocument? Source { get; protected set; }
+        public XDocument Source { get; } = new XDocument();
 
         /// <summary>
         /// The XSL Document used for the Transform
@@ -111,14 +115,12 @@ namespace DataDictionary.BusinessLayer.Scripting
         { templateValue = template; }
 
         /// <summary>
-        /// Applies the XSL Transform to the source to complete the Document
+        /// Applies the XSL Transform to the Source to complete the Document
         /// </summary>
-        /// <param name="source"></param>
         /// <returns></returns>
-        public Boolean ApplyTransform(XElement source)
+        public Boolean ApplyTransform()
         { // TODO: Refine to meet the needs. 
             Boolean result = false;
-            Source = new XDocument(source);
             Exception = null;
 
             try
@@ -128,7 +130,7 @@ namespace DataDictionary.BusinessLayer.Scripting
 
                 if (Transform is not null)
                 {
-                    using (XmlReader sourceReader = source.CreateReader())
+                    using (XmlReader sourceReader = Source.CreateReader())
                     using (XmlReader transformReader = Transform.CreateReader())
                     {
                         XslCompiledTransform transformer = new XslCompiledTransform();
@@ -161,7 +163,7 @@ namespace DataDictionary.BusinessLayer.Scripting
             catch (Exception ex)
             {
                 ex.Data.Add("XSLT", templateValue.TransformScript);
-                ex.Data.Add("XML", source);
+                ex.Data.Add("XML", Source);
                 Exception = ex;
             }
 

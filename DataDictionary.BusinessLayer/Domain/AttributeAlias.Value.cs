@@ -44,6 +44,35 @@ namespace DataDictionary.BusinessLayer.Domain
             return result;
         }
 
+        internal XElement? GetXElement()
+        {
+            Func<ScopeType, IEnumerable<TemplateNodeValue>> getNodes = (s) => { throw new NotImplementedException(); };
+
+            XElement? result = null;
+
+            foreach (TemplateNodeValue node in getNodes(Scope))
+            {
+                XObject? value = null;
+
+                switch (node.PropertyName)
+                {
+                    case nameof(this.AliasName): value = node.BuildXObject(AliasName); break;
+                    case nameof(this.AliasScope): value = node.BuildXObject(AliasScope); break;
+                    default:
+                        break;
+                }
+
+                if (value is XObject)
+                {
+                    if (result is null) { result = new XElement(Scope.ToName()); }
+                    result.Add(value);
+                }
+            }
+
+            return null;
+        }
+
+
         /// <inheritdoc/>
 /*        public XElement? GetXElement(IAttributeValue data, IEnumerable<TemplateElementValue>? options)
         {

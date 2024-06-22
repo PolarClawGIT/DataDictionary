@@ -2,7 +2,9 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ModelData;
+using System.Xml.Linq;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -65,7 +67,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         public DomainModel() : base()
         {
-            attributeValues = new AttributeData() { Model = this };
+            attributeValues = new AttributeData() { Model = this, DomainDefinitions = Definitions, DomainProperties = Properties };
             entityValues = new EntityData() { Model = this };
         }
 
@@ -83,6 +85,7 @@ namespace DataDictionary.BusinessLayer.Domain
             return work;
         }
 
+        #region ILoadData, ISaveData
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
@@ -144,7 +147,9 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
-        {   return Delete(); }
+        { return Delete(); }
+
+        #endregion
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
@@ -156,5 +161,35 @@ namespace DataDictionary.BusinessLayer.Domain
             return result;
         }
 
+        internal IReadOnlyList<WorkItem> BuildDocuments(TemplateBinding template, IEnumerable<INamedScopeSourceValue> values)
+        {
+            //TODO: Think it all works. Need to hook up to UI.
+
+            List<WorkItem> work = new List<WorkItem>();
+            foreach (INamedScopeSourceValue item in values)
+            {
+                if (item is IAttributeIndex attribute)
+                {
+                    WorkItem newWork = new WorkItem()
+                    {
+                        WorkName = "Build Attribute Document",
+                        DoWork = () =>
+                        {
+                            TemplateDocumentValue doc = new TemplateDocumentValue(template.Template) { ElementName = item.Title };
+
+                            if (attributeValues.GetXElement(attribute, template) is XElement data)
+                            {
+                                doc.Source.Add(data);
+                                template.Documents.Add(doc);
+                            }
+                        }
+                    };
+                }
+
+
+            }
+
+            return work;
+        }
     }
 }

@@ -57,6 +57,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// </summary>
         public required IModelData Models { get; init; }
 
+        /// <inheritdoc/>
         public ITemplateData Templates { get { return templateValues; } }
         private readonly TemplateData templateValues;
 
