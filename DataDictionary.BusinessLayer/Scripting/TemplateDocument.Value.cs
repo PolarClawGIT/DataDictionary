@@ -157,8 +157,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         public XDocument Source { get; } = new XDocument() { Declaration = new XDeclaration("1.0", null, null) };
 
         /// <inheritdoc/>
-        public String SourceAsText { get { return String.Concat(Source.Declaration, Source); } }
-
+        public String SourceAsText { get { return String.Concat(Source.Declaration, Environment.NewLine, Source); } }
 
         /// <inheritdoc/>
         public XDocument? Transform { get; protected set; }
@@ -239,7 +238,6 @@ namespace DataDictionary.BusinessLayer.Scripting
                             using (XmlWriter resultAsXml = ResultsAsXml.CreateWriter())
                             { transformer.Transform(sourceReader, resultAsXml); }
                         }
-
 
                         result = true;
                     }

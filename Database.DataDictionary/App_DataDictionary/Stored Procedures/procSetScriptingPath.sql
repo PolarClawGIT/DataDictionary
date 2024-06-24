@@ -42,12 +42,19 @@ Begin Try
 		From	[App_DataDictionary].[ModelNameSpace] M
 				Cross Apply [App_DataDictionary].[funcGetNameSpace](M.[NameSpaceId]) N
 		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
+
+	;With [NameSpace] As (
+		Select	M.[NameSpaceId],
+				N.[NameSpace]
+		From	[App_DataDictionary].[ModelNameSpace] M
+				Cross Apply [App_DataDictionary].[funcGetNameSpace](M.[NameSpaceId]) N
+		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
 	Select	Coalesce(D.[TemplateId], @TemplateId, NewId()) As [TemplateId],
 			N.[NameSpaceId],
 			D.[PathScope]
 	From	@Data D
-			Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[PathScope]) C
+			Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[PathName]) C
 			Inner Join [NameSpace] N
 			On	C.[NameSpace] = N.[NameSpace] And
 				C.[IsBase] = 1
