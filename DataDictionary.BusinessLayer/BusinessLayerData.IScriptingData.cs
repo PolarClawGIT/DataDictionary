@@ -18,7 +18,11 @@ namespace DataDictionary.BusinessLayer
         public IScriptingEngine ScriptingEngine { get { return scriptingValue; } }
         private readonly ScriptingEngine scriptingValue;
 
-
+        /// <summary>
+        /// Builds the XML and Script documents for the Template.
+        /// </summary>
+        /// <param name="templateKey"></param>
+        /// <returns></returns>
         public IReadOnlyList<WorkItem> BuildDocuments (ITemplateIndex templateKey)
         {
             List<WorkItem> work = new List<WorkItem>();
@@ -27,9 +31,9 @@ namespace DataDictionary.BusinessLayer
             foreach (TemplatePathValue item in template.Paths)
             {
                 NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(item.PathName).ToArray());
-                ScopeKey scope = new ScopeKey(item);
+                ScopeKey scope = new ScopeKey(item.PathScope);
 
-                IEnumerable<INamedScopeSourceValue> values = namedScopeValue.PathKeys(path).Where(w => scope.Equals(w)).Select(s => namedScopeValue.GetData(s));
+                IEnumerable<INamedScopeSourceValue> values = namedScopeValue.PathKeys(path).Select(s => namedScopeValue.GetData(s)).Where(w => scope.Equals(w));
 
                 work.AddRange(domainValue.BuildDocuments(template, values));
 

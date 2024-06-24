@@ -54,11 +54,8 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
-        public IEnumerable<TemplateNodeValue> GetNodes (ScopeType scope)
-        {
-            ScopeKey key = new ScopeKey(scope);
-            return Nodes.Where(w => key.Equals(w));
-        }
+        public IEnumerable<TemplateNodeValue> GetNodes(ScopeType scope)
+        { return Nodes.Where(w => w.PropertyScope == scope); }
 
         /// <summary>
         /// Given the Scope, Return the Attributes
@@ -113,6 +110,6 @@ namespace DataDictionary.BusinessLayer.Scripting
             return result;
         }
 
-       
+
     }
 }

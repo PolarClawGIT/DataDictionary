@@ -38,6 +38,7 @@
             TableLayoutPanel elementPathLayout;
             BusinessLayer.NamedScope.NamedScopePath namedScopePath1 = new BusinessLayer.NamedScope.NamedScopePath();
             TableLayoutPanel transformLayout;
+            TableLayoutPanel documentTemplateLayout;
             templateTitleData = new Controls.TextBoxData();
             templateDescriptionData = new Controls.TextBoxData();
             templateTabs = new TabControl();
@@ -87,7 +88,18 @@
             transformExceptionData = new Controls.TextBoxData();
             transformScriptData = new TextBox();
             documentsTab = new TabPage();
-            scriptsTab = new TabPage();
+            documentToolStrip = new ToolStrip();
+            documentBuildComand = new ToolStripButton();
+            documentSaveXMLCommand = new ToolStripButton();
+            documentSaveScriptCommand = new ToolStripButton();
+            documentSaveAllCommand = new ToolStripButton();
+            documentData = new DataGridView();
+            documentElementColumn = new DataGridViewTextBoxColumn();
+            documentNameColumn = new DataGridViewTextBoxColumn();
+            documentScriptName = new DataGridViewTextBoxColumn();
+            documentException = new Controls.TextBoxData();
+            documentXMLData = new Controls.TextBoxData();
+            documentScriptData = new Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
             templateToolStrip = new ContextMenuStrip(components);
             deleteTemplateCommand = new ToolStripMenuItem();
@@ -97,12 +109,14 @@
             bindingPath = new BindingSource(components);
             bindingNode = new BindingSource(components);
             bindingAttribute = new BindingSource(components);
+            bindingDocument = new BindingSource(components);
             templateLayoutPanel = new TableLayoutPanel();
             documentLayout = new TableLayoutPanel();
             documentGroupLayout = new TableLayoutPanel();
             attributeGroup = new GroupBox();
             elementPathLayout = new TableLayoutPanel();
             transformLayout = new TableLayoutPanel();
+            documentTemplateLayout = new TableLayoutPanel();
             templateLayoutPanel.SuspendLayout();
             templateTabs.SuspendLayout();
             documentSettingTab.SuspendLayout();
@@ -125,11 +139,16 @@
             transformTab.SuspendLayout();
             transformLayout.SuspendLayout();
             transformToolStrip.SuspendLayout();
+            documentsTab.SuspendLayout();
+            documentTemplateLayout.SuspendLayout();
+            documentToolStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)documentData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
             templateToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingPath).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingNode).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDocument).BeginInit();
             SuspendLayout();
             // 
             // templateLayoutPanel
@@ -180,7 +199,6 @@
             templateTabs.Controls.Add(dataSelectionTab);
             templateTabs.Controls.Add(transformTab);
             templateTabs.Controls.Add(documentsTab);
-            templateTabs.Controls.Add(scriptsTab);
             templateTabs.Dock = DockStyle.Fill;
             templateTabs.Location = new Point(3, 244);
             templateTabs.Name = "templateTabs";
@@ -473,7 +491,7 @@
             nodeDefinitionTab.Controls.Add(schemaDefinitionLayout);
             nodeDefinitionTab.Location = new Point(4, 24);
             nodeDefinitionTab.Name = "nodeDefinitionTab";
-            nodeDefinitionTab.Size = new Size(849, 414);
+            nodeDefinitionTab.Size = new Size(192, 72);
             nodeDefinitionTab.TabIndex = 2;
             nodeDefinitionTab.Text = "Node Definition (XSD)";
             // 
@@ -491,8 +509,8 @@
             // schemaDefinitionLayout.Panel2
             // 
             schemaDefinitionLayout.Panel2.Controls.Add(schemaNodeLayout);
-            schemaDefinitionLayout.Size = new Size(849, 414);
-            schemaDefinitionLayout.SplitterDistance = 229;
+            schemaDefinitionLayout.Size = new Size(192, 72);
+            schemaDefinitionLayout.SplitterDistance = 51;
             schemaDefinitionLayout.TabIndex = 1;
             // 
             // elementSelection
@@ -509,7 +527,7 @@
             elementSelection.Location = new Point(0, 0);
             elementSelection.MultiSelect = false;
             elementSelection.Name = "elementSelection";
-            elementSelection.Size = new Size(227, 412);
+            elementSelection.Size = new Size(49, 70);
             elementSelection.TabIndex = 2;
             elementSelection.UseCompatibleStateImageBehavior = false;
             elementSelection.View = View.Details;
@@ -543,7 +561,7 @@
             schemaNodeLayout.RowStyles.Add(new RowStyle());
             schemaNodeLayout.RowStyles.Add(new RowStyle());
             schemaNodeLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            schemaNodeLayout.Size = new Size(614, 412);
+            schemaNodeLayout.Size = new Size(135, 70);
             schemaNodeLayout.TabIndex = 0;
             // 
             // propertyNameData
@@ -556,7 +574,7 @@
             propertyNameData.Multiline = false;
             propertyNameData.Name = "propertyNameData";
             propertyNameData.ReadOnly = true;
-            propertyNameData.Size = new Size(608, 44);
+            propertyNameData.Size = new Size(129, 44);
             propertyNameData.TabIndex = 1;
             // 
             // nodeNameData
@@ -568,7 +586,7 @@
             nodeNameData.Multiline = false;
             nodeNameData.Name = "nodeNameData";
             nodeNameData.ReadOnly = false;
-            nodeNameData.Size = new Size(362, 46);
+            nodeNameData.Size = new Size(75, 46);
             nodeNameData.TabIndex = 2;
             // 
             // nodeValueAsData
@@ -578,10 +596,10 @@
             nodeValueAsData.Dock = DockStyle.Fill;
             nodeValueAsData.DropDownStyle = ComboBoxStyle.DropDownList;
             nodeValueAsData.HeaderText = "render Data as";
-            nodeValueAsData.Location = new Point(371, 105);
+            nodeValueAsData.Location = new Point(84, 105);
             nodeValueAsData.Name = "nodeValueAsData";
             nodeValueAsData.ReadOnly = false;
-            nodeValueAsData.Size = new Size(240, 46);
+            nodeValueAsData.Size = new Size(48, 46);
             nodeValueAsData.TabIndex = 5;
             // 
             // attributeGroup
@@ -591,7 +609,7 @@
             attributeGroup.Dock = DockStyle.Fill;
             attributeGroup.Location = new Point(3, 157);
             attributeGroup.Name = "attributeGroup";
-            attributeGroup.Size = new Size(608, 252);
+            attributeGroup.Size = new Size(129, 14);
             attributeGroup.TabIndex = 6;
             attributeGroup.TabStop = false;
             attributeGroup.Text = "Attributes";
@@ -602,7 +620,7 @@
             attributeData.Dock = DockStyle.Fill;
             attributeData.Location = new Point(3, 19);
             attributeData.Name = "attributeData";
-            attributeData.Size = new Size(602, 230);
+            attributeData.Size = new Size(123, 0);
             attributeData.TabIndex = 0;
             // 
             // attributeNameColumn
@@ -646,7 +664,7 @@
             propertyScopeData.Location = new Point(3, 3);
             propertyScopeData.Name = "propertyScopeData";
             propertyScopeData.ReadOnly = true;
-            propertyScopeData.Size = new Size(362, 46);
+            propertyScopeData.Size = new Size(75, 46);
             propertyScopeData.TabIndex = 7;
             // 
             // dataSelectionTab
@@ -818,20 +836,156 @@
             // documentsTab
             // 
             documentsTab.BackColor = SystemColors.Control;
+            documentsTab.Controls.Add(documentTemplateLayout);
             documentsTab.Location = new Point(4, 24);
             documentsTab.Name = "documentsTab";
-            documentsTab.Size = new Size(192, 72);
+            documentsTab.Size = new Size(849, 414);
             documentsTab.TabIndex = 4;
-            documentsTab.Text = "Documents (XML)";
+            documentsTab.Text = "Documents (XML & Script)";
             // 
-            // scriptsTab
+            // documentTemplateLayout
             // 
-            scriptsTab.BackColor = SystemColors.Control;
-            scriptsTab.Location = new Point(4, 24);
-            scriptsTab.Name = "scriptsTab";
-            scriptsTab.Size = new Size(192, 72);
-            scriptsTab.TabIndex = 5;
-            scriptsTab.Text = "Scripts (txt ...)";
+            documentTemplateLayout.ColumnCount = 2;
+            documentTemplateLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            documentTemplateLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            documentTemplateLayout.Controls.Add(documentToolStrip, 0, 0);
+            documentTemplateLayout.Controls.Add(documentData, 0, 1);
+            documentTemplateLayout.Controls.Add(documentException, 0, 3);
+            documentTemplateLayout.Controls.Add(documentXMLData, 0, 2);
+            documentTemplateLayout.Controls.Add(documentScriptData, 1, 2);
+            documentTemplateLayout.Dock = DockStyle.Fill;
+            documentTemplateLayout.Location = new Point(0, 0);
+            documentTemplateLayout.Name = "documentTemplateLayout";
+            documentTemplateLayout.RowCount = 4;
+            documentTemplateLayout.RowStyles.Add(new RowStyle());
+            documentTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+            documentTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            documentTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            documentTemplateLayout.Size = new Size(849, 414);
+            documentTemplateLayout.TabIndex = 0;
+            // 
+            // documentToolStrip
+            // 
+            documentTemplateLayout.SetColumnSpan(documentToolStrip, 2);
+            documentToolStrip.Items.AddRange(new ToolStripItem[] { documentBuildComand, documentSaveXMLCommand, documentSaveScriptCommand, documentSaveAllCommand });
+            documentToolStrip.Location = new Point(0, 0);
+            documentToolStrip.Name = "documentToolStrip";
+            documentToolStrip.Size = new Size(849, 25);
+            documentToolStrip.TabIndex = 0;
+            documentToolStrip.Text = "toolStrip1";
+            // 
+            // documentBuildComand
+            // 
+            documentBuildComand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentBuildComand.Image = Properties.Resources.NewXmlFile;
+            documentBuildComand.ImageTransparentColor = Color.Magenta;
+            documentBuildComand.Name = "documentBuildComand";
+            documentBuildComand.Size = new Size(23, 22);
+            documentBuildComand.Text = "build Documents";
+            documentBuildComand.Click += documentBuildComand_Click;
+            // 
+            // documentSaveXMLCommand
+            // 
+            documentSaveXMLCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentSaveXMLCommand.Image = Properties.Resources.SaveXmlFile;
+            documentSaveXMLCommand.ImageTransparentColor = Color.Magenta;
+            documentSaveXMLCommand.Name = "documentSaveXMLCommand";
+            documentSaveXMLCommand.Size = new Size(23, 22);
+            documentSaveXMLCommand.Text = "Save XML";
+            // 
+            // documentSaveScriptCommand
+            // 
+            documentSaveScriptCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentSaveScriptCommand.Image = Properties.Resources.SaveScript;
+            documentSaveScriptCommand.ImageTransparentColor = Color.Magenta;
+            documentSaveScriptCommand.Name = "documentSaveScriptCommand";
+            documentSaveScriptCommand.Size = new Size(23, 22);
+            documentSaveScriptCommand.Text = "Save Script";
+            // 
+            // documentSaveAllCommand
+            // 
+            documentSaveAllCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            documentSaveAllCommand.Image = Properties.Resources.SaveAll;
+            documentSaveAllCommand.ImageTransparentColor = Color.Magenta;
+            documentSaveAllCommand.Name = "documentSaveAllCommand";
+            documentSaveAllCommand.Size = new Size(23, 22);
+            documentSaveAllCommand.Text = "Save All";
+            // 
+            // documentData
+            // 
+            documentData.AllowUserToAddRows = false;
+            documentData.AllowUserToDeleteRows = false;
+            documentData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            documentData.Columns.AddRange(new DataGridViewColumn[] { documentElementColumn, documentNameColumn, documentScriptName });
+            documentTemplateLayout.SetColumnSpan(documentData, 2);
+            documentData.Dock = DockStyle.Fill;
+            documentData.Location = new Point(3, 28);
+            documentData.Name = "documentData";
+            documentData.ReadOnly = true;
+            documentData.Size = new Size(843, 110);
+            documentData.TabIndex = 1;
+            // 
+            // documentElementColumn
+            // 
+            documentElementColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            documentElementColumn.DataPropertyName = "ElementName";
+            documentElementColumn.FillWeight = 50F;
+            documentElementColumn.HeaderText = "Element Name";
+            documentElementColumn.Name = "documentElementColumn";
+            documentElementColumn.ReadOnly = true;
+            // 
+            // documentNameColumn
+            // 
+            documentNameColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            documentNameColumn.DataPropertyName = "DocumentName";
+            documentNameColumn.HeaderText = "Document Name";
+            documentNameColumn.Name = "documentNameColumn";
+            documentNameColumn.ReadOnly = true;
+            // 
+            // documentScriptName
+            // 
+            documentScriptName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            documentScriptName.DataPropertyName = "ScriptName";
+            documentScriptName.HeaderText = "Script Name";
+            documentScriptName.Name = "documentScriptName";
+            documentScriptName.ReadOnly = true;
+            // 
+            // documentException
+            // 
+            documentException.AutoSize = true;
+            documentTemplateLayout.SetColumnSpan(documentException, 2);
+            documentException.Dock = DockStyle.Fill;
+            documentException.HeaderText = "Exception";
+            documentException.Location = new Point(3, 338);
+            documentException.Multiline = true;
+            documentException.Name = "documentException";
+            documentException.ReadOnly = true;
+            documentException.Size = new Size(843, 73);
+            documentException.TabIndex = 3;
+            // 
+            // documentXMLData
+            // 
+            documentXMLData.AutoSize = true;
+            documentXMLData.Dock = DockStyle.Fill;
+            documentXMLData.HeaderText = "XML";
+            documentXMLData.Location = new Point(3, 144);
+            documentXMLData.Multiline = true;
+            documentXMLData.Name = "documentXMLData";
+            documentXMLData.ReadOnly = true;
+            documentXMLData.Size = new Size(418, 188);
+            documentXMLData.TabIndex = 4;
+            // 
+            // documentScriptData
+            // 
+            documentScriptData.AutoSize = true;
+            documentScriptData.Dock = DockStyle.Fill;
+            documentScriptData.HeaderText = "Script";
+            documentScriptData.Location = new Point(427, 144);
+            documentScriptData.Multiline = true;
+            documentScriptData.Name = "documentScriptData";
+            documentScriptData.ReadOnly = true;
+            documentScriptData.Size = new Size(419, 188);
+            documentScriptData.TabIndex = 5;
             // 
             // templateToolStrip
             // 
@@ -899,11 +1053,18 @@
             transformLayout.PerformLayout();
             transformToolStrip.ResumeLayout(false);
             transformToolStrip.PerformLayout();
+            documentsTab.ResumeLayout(false);
+            documentTemplateLayout.ResumeLayout(false);
+            documentTemplateLayout.PerformLayout();
+            documentToolStrip.ResumeLayout(false);
+            documentToolStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)documentData).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
             templateToolStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingPath).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingNode).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDocument).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -948,7 +1109,6 @@
         private TabPage nodeDefinitionTab;
         private TabPage dataSelectionTab;
         private TabPage documentsTab;
-        private TabPage scriptsTab;
         private ToolStripMenuItem deleteTemplateCommand;
         private FolderBrowserDialog folderBrowserDialog;
         private OpenFileDialog openFileDialog;
@@ -973,5 +1133,18 @@
         private DataGridViewTextBoxColumn attributeValueColumn;
         private DataGridViewComboBoxColumn attributePropertyColumn;
         private DataGridViewCheckBoxColumn AsCDataColumn;
+        private ToolStrip documentToolStrip;
+        private DataGridView documentData;
+        private Controls.TextBoxData documentException;
+        private ToolStripButton documentBuildComand;
+        private ToolStripButton documentSaveXMLCommand;
+        private ToolStripButton documentSaveAllCommand;
+        private ToolStripButton documentSaveScriptCommand;
+        private Controls.TextBoxData documentXMLData;
+        private Controls.TextBoxData documentScriptData;
+        private BindingSource bindingDocument;
+        private DataGridViewTextBoxColumn documentElementColumn;
+        private DataGridViewTextBoxColumn documentNameColumn;
+        private DataGridViewTextBoxColumn documentScriptName;
     }
 }

@@ -16,22 +16,93 @@ using Toolbox.Threading;
 namespace DataDictionary.BusinessLayer.Scripting
 {
     /// <summary>
-    /// Scripting Engine Template Document
+    /// Interface for Scripting Engine Template Document
     /// </summary>
-    public class TemplateDocumentValue : ITemplateIndex, INotifyPropertyChanged, IBindingPropertyChanged
+    public interface ITemplateDocumentValue : ITemplateIndex, INotifyPropertyChanged, IBindingPropertyChanged
     {
-        /// <inheritdoc/>
-        public Guid? TemplateId { get { return templateValue.TemplateId; } }
-
         /// <summary>
         /// The Name of the Element for this Document
         /// </summary>
-        public required String ElementName { get; init; }
+        String? ElementName { get; init; }
+
+        /// <summary>
+        /// The Document Name
+        /// </summary>
+        String DocumentName { get; }
 
         /// <summary>
         /// The Document file Name
         /// </summary>
-        public FileInfo? DocumentName
+        FileInfo? DocumentFile { get; }
+
+        /// <summary>
+        /// The Script Name
+        /// </summary>
+        String ScriptName { get; }
+
+        /// <summary>
+        /// The Script file Name
+        /// </summary>
+        FileInfo? ScriptFile { get; }
+
+        /// <summary>
+        /// The XML Document that was used as the Source
+        /// </summary>
+        XDocument Source { get; }
+
+        /// <summary>
+        /// Text version of Source. For Data Binding.
+        /// </summary>
+        String SourceAsText { get; }
+
+        /// <summary>
+        /// The XSL Document used for the Transform
+        /// </summary>
+        XDocument? Transform { get; }
+
+        /// <summary>
+        /// Exceptions generated applying the Transform
+        /// </summary>
+        Exception? Exception { get; }
+
+        /// <summary>
+        /// The Results of the Transform as plain text (may contain formated XML).
+        /// </summary>
+        String? ResultsAsText { get; }
+
+        /// <summary>
+        /// The Result of the Transform as XML (null if Text transform only)
+        /// </summary>
+        XDocument? ResultsAsXml { get; }
+    }
+
+
+    /// <summary>
+    /// Scripting Engine Template Document
+    /// </summary>
+    public class TemplateDocumentValue : ITemplateDocumentValue
+    {
+        /// <inheritdoc/>
+        public Guid? TemplateId { get { return templateValue.TemplateId; } }
+
+        /// <inheritdoc/>
+        public String? ElementName { get; init; }
+
+        /// <inheritdoc/>
+        public String DocumentName
+        {
+            get
+            {
+                return String.Format("{0}{1}{2}.{3}",
+                    templateValue.DocumentPrefix ?? String.Empty,
+                    ElementName ?? templateValue.TemplateTitle,
+                    templateValue.DocumentSuffix ?? String.Empty,
+                    templateValue.DocumentExtension ?? "xml");
+            }
+        }
+
+        /// <inheritdoc/>
+        public FileInfo? DocumentFile
         {
             get
             {
@@ -42,68 +113,86 @@ namespace DataDictionary.BusinessLayer.Scripting
                         Path.Combine(
                             folder.FullName,
                             templateValue.DocumentDirectory ?? String.Empty);
-                    String fileName = String.Format("{0}{1}{2}.{3}",
-                        templateValue.DocumentPrefix ?? String.Empty,
-                        ElementName,
-                        templateValue.DocumentSuffix ?? String.Empty,
-                        templateValue.DocumentExtension ?? "xml");
 
-                    return new FileInfo(Path.Combine(directoryName, fileName));
+                    return new FileInfo(Path.Combine(directoryName, DocumentName));
                 }
                 else { return null; }
             }
         }
 
-        /// <summary>
-        /// The Script file Name
-        /// </summary>
-        public FileInfo? ScriptName
+        /// <inheritdoc/>
+        public String ScriptName
+        {
+            get
+            {
+                return String.Format("{0}{1}{2}.{3}",
+                    templateValue.ScriptPrefix ?? String.Empty,
+                    ElementName ?? templateValue.TemplateTitle,
+                    templateValue.ScriptSuffix ?? String.Empty,
+                    templateValue.ScriptExtension ?? "txt");
+            }
+
+        }
+
+        /// <inheritdoc/>
+        public FileInfo? ScriptFile
         {
             get
             {
                 if (templateValue.RootDirectory is DirectoryType root &&
                     new DirectoryTypeKey(root).ToDirectoryInfo() is DirectoryInfo folder)
                 {
-                    var directoryName =
+                    String directoryName =
                         Path.Combine(
                             folder.FullName,
                             templateValue.ScriptDirectory ?? String.Empty);
-                    var fileName = String.Format("{0}{1}{2}.{3}",
-                        templateValue.ScriptPrefix ?? String.Empty,
-                        ElementName,
-                        templateValue.ScriptSuffix ?? String.Empty,
-                        templateValue.ScriptExtension ?? "txt");
 
-                    return new FileInfo(Path.Combine(directoryName, fileName));
+                    return new FileInfo(Path.Combine(directoryName, ScriptName));
                 }
                 else { return null; }
             }
         }
 
-        /// <summary>
-        /// The XML Document that was used as the Source
-        /// </summary>
-        public XDocument Source { get; } = new XDocument();
+        /// <inheritdoc/>
+        public XDocument Source { get; } = new XDocument() { Declaration = new XDeclaration("1.0", null, null) };
 
-        /// <summary>
-        /// The XSL Document used for the Transform
-        /// </summary>
+        /// <inheritdoc/>
+        public String SourceAsText { get { return String.Concat(Source.Declaration, Source); } }
+
+
+        /// <inheritdoc/>
         public XDocument? Transform { get; protected set; }
 
-        /// <summary>
-        /// Exceptions generated applying the Transform
-        /// </summary>
+        /// <inheritdoc/>
         public Exception? Exception { get; protected set; }
 
         /// <summary>
         /// The Results of the Transform as plain text (may contain formated XML).
         /// </summary>
-        public String? ResultsAsText { get; protected set; }
+        public String ResultsAsText
+        {
+            get { return resultsAsText; }
+            protected set
+            {
+                if (String.IsNullOrWhiteSpace(value)) { resultsAsText = String.Empty; resultsAsXml = null; }
+                else { resultsAsText = value; resultsAsXml = null; }
+            }
+        }
+        String resultsAsText = String.Empty;
 
         /// <summary>
         /// The Result of the Transform as XML (null if Text transform only)
         /// </summary>
-        public XDocument? ResultsAsXml { get; protected set; }
+        public XDocument? ResultsAsXml
+        {
+            get { return resultsAsXml; }
+            protected set
+            {
+                if (value is null) { resultsAsText = String.Empty; resultsAsXml = null; }
+                else { resultsAsText = String.Concat(value.Declaration, value); resultsAsXml = value; }
+            }
+        }
+        XDocument? resultsAsXml = null;
 
         ITemplateValue templateValue { get; set; }
 
@@ -142,17 +231,13 @@ namespace DataDictionary.BusinessLayer.Scripting
                             {
                                 transformer.Transform(sourceReader, null, resultText);
                                 ResultsAsText = resultText.ToString();
-                                ResultsAsXml = null;
                             }
                         }
                         else if (templateValue.ScriptAs is ScriptAsType.XML)
                         {
-                            ResultsAsXml = new XDocument();
+                            ResultsAsXml = new XDocument() { Declaration = new XDeclaration("1.0", null, null) };
                             using (XmlWriter resultAsXml = ResultsAsXml.CreateWriter())
-                            {
-                                transformer.Transform(sourceReader, resultAsXml);
-                                ResultsAsText = ResultsAsXml.ToString();
-                            }
+                            { transformer.Transform(sourceReader, resultAsXml); }
                         }
 
 

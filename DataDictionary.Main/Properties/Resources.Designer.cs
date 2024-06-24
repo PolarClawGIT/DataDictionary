@@ -433,6 +433,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Document {
+            get {
+                object obj = ResourceManager.GetObject("Document", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DomainType {
             get {
                 object obj = ResourceManager.GetObject("DomainType", resourceCulture);
@@ -1543,6 +1553,26 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SaveDocument {
+            get {
+                object obj = ResourceManager.GetObject("SaveDocument", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SaveScript {
+            get {
+                object obj = ResourceManager.GetObject("SaveScript", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SaveSoftwareDefinitionModel {
             get {
                 object obj = ResourceManager.GetObject("SaveSoftwareDefinitionModel", resourceCulture);
@@ -1596,6 +1626,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap Scope {
             get {
                 object obj = ResourceManager.GetObject("Scope", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Script {
+            get {
+                object obj = ResourceManager.GetObject("Script", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ModelData;
 using System.Xml.Linq;
 using Toolbox.Threading;
@@ -163,9 +164,9 @@ namespace DataDictionary.BusinessLayer.Domain
 
         internal IReadOnlyList<WorkItem> BuildDocuments(TemplateBinding template, IEnumerable<INamedScopeSourceValue> values)
         {
-            //TODO: Think it all works. Need to hook up to UI.
-
             List<WorkItem> work = new List<WorkItem>();
+            TemplateDocumentValue? doc = null;
+
             foreach (INamedScopeSourceValue item in values)
             {
                 if (item is IAttributeIndex attribute)
@@ -175,15 +176,20 @@ namespace DataDictionary.BusinessLayer.Domain
                         WorkName = "Build Attribute Document",
                         DoWork = () =>
                         {
-                            TemplateDocumentValue doc = new TemplateDocumentValue(template.Template) { ElementName = item.Title };
+                            if (template.Template.BreakOnScope == ScopeType.Null)
+                            { if (doc is null) { doc = new TemplateDocumentValue(template.Template); } }
+                            else { doc = new TemplateDocumentValue(template.Template) { ElementName = item.Title }; }
 
                             if (attributeValues.GetXElement(attribute, template) is XElement data)
                             {
                                 doc.Source.Add(data);
+                                doc.ApplyTransform();
                                 template.Documents.Add(doc);
                             }
                         }
                     };
+
+                    work.Add(newWork);
                 }
 
 

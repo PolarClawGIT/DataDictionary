@@ -57,6 +57,8 @@ namespace DataDictionary.Main.Forms.Scripting
             {
                 bindingPath.DataSource = new BindingView<TemplatePathValue>(BusinessData.ScriptingEngine.TemplatePaths, w => key.Equals(w));
                 bindingNode.DataSource = new BindingView<TemplateNodeValue>(BusinessData.ScriptingEngine.TemplateNodes, w => key.Equals(w));
+                bindingDocument.DataSource = new BindingView<TemplateDocumentValue>(BusinessData.ScriptingEngine.TemplateDocuments, w => key.Equals(w));
+
                 bindingAttribute.DataSource = null;
             }
         }
@@ -65,6 +67,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             ITemplateValue nameOfValues;
             ITemplateNodeValue nameOfNode;
+            ITemplateDocumentValue nameOfDocument;
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingTemplate, nameof(nameOfValues.TemplateTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             templateTitleData.DataBindings.Add(new Binding(nameof(templateTitleData.Text), bindingTemplate, nameof(nameOfValues.TemplateTitle), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -105,6 +108,13 @@ namespace DataDictionary.Main.Forms.Scripting
             PropertyNameList.Load(attributePropertyColumn);
             attributeData.AutoGenerateColumns = false;
             attributeData.DataSource = bindingAttribute;
+
+            documentData.AutoGenerateColumns = false;
+            documentData.DataSource = bindingDocument;
+
+            documentXMLData.DataBindings.Add(new Binding(nameof(documentXMLData.Text), bindingDocument, nameof(nameOfDocument.SourceAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+            documentScriptData.DataBindings.Add(new Binding(nameof(documentScriptData.Text), bindingDocument, nameof(nameOfDocument.ResultsAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+            documentException.DataBindings.Add(new Binding(nameof(documentException.Text), bindingDocument, nameof(nameOfDocument.Exception), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
 
             ElementSelection_Load();
 
@@ -444,5 +454,29 @@ namespace DataDictionary.Main.Forms.Scripting
             { e.NewObject = new TemplateAttributeValue(node); }
         }
 
+        private void documentBuildComand_Click(object sender, EventArgs e)
+        {
+            if (bindingTemplate.Current is TemplateValue current)
+            {
+                TemplateIndex key = new TemplateIndex(current);
+                bindingDocument.SuspendBinding();
+                documentData.DataSource = null;
+                //bindingDocument.DataSource = null;
+                BusinessData.ScriptingEngine.TemplateDocuments.Remove(current);
+
+                DoWork(BusinessData.BuildDocuments(current), onComplete);
+
+                void onComplete(RunWorkerCompletedEventArgs args)
+                {
+                    if (args.Error is null)
+                    {
+                        bindingDocument.DataSource = new BindingView<TemplateDocumentValue>(BusinessData.ScriptingEngine.TemplateDocuments, w => key.Equals(w));
+                        documentData.DataSource = bindingDocument;
+                        bindingDocument.ResumeBinding();
+                    }
+
+                }
+            }
+        }
     }
 }
