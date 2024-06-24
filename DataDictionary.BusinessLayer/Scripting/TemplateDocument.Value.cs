@@ -157,7 +157,21 @@ namespace DataDictionary.BusinessLayer.Scripting
         public XDocument Source { get; } = new XDocument() { Declaration = new XDeclaration("1.0", null, null) };
 
         /// <inheritdoc/>
-        public String SourceAsText { get { return String.Concat(Source.Declaration, Environment.NewLine, Source); } }
+        public String SourceAsText
+        {
+            get
+            {
+                //TODO: Trying to get a nice indented/formated XML.
+                // This works for a single item but multiple returns one long string. 
+                StringBuilder builder = new StringBuilder();
+                XmlWriterSettings settings = new XmlWriterSettings() { Indent = true,  };
+
+                using (XmlWriter writer = XmlWriter.Create(builder, settings))
+                { Source.WriteTo(writer); }
+
+                return builder.ToString();
+            }
+        }
 
         /// <inheritdoc/>
         public XDocument? Transform { get; protected set; }

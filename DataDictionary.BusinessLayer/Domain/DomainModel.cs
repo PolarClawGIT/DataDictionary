@@ -185,7 +185,8 @@ namespace DataDictionary.BusinessLayer.Domain
                                 {
                                     if (doc is null || target.Template.BreakOnScope == scopeGroup.Key)
                                     {
-                                        doc = new TemplateDocumentValue(target.Template) { ElementName = item.AttributeTitle };
+                                        doc = new TemplateDocumentValue(target.Template)
+                                        { ElementName = item.AttributeTitle };
                                         target.Documents.Add(doc);
                                         doc.Source.Add(data);
                                     }

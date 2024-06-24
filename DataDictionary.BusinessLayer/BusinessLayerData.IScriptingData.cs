@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer
             if (target.Template.BreakOnScope is ScopeType.Null or ScopeType.Model)
             {
                 TemplateDocumentValue doc = new TemplateDocumentValue(target.Template) { ElementName = Model.ModelTitle };
-                doc.Source.Add(new XElement(Model.Scope.ToName(),Model.ModelTitle));
+                doc.Source.Add(new XElement(Model.Scope.ToName()));
                 target.Documents.Add(doc);
             }
 

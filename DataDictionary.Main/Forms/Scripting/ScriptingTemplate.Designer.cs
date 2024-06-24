@@ -32,11 +32,11 @@
             TableLayoutPanel templateLayoutPanel;
             TableLayoutPanel documentLayout;
             TableLayoutPanel documentGroupLayout;
-            ListViewGroup listViewGroup1 = new ListViewGroup("Scope Name 1", HorizontalAlignment.Left);
-            ListViewItem listViewItem1 = new ListViewItem(new string[] { "Property Name 1", "Column 1" }, -1);
+            ListViewGroup listViewGroup2 = new ListViewGroup("Scope Name 1", HorizontalAlignment.Left);
+            ListViewItem listViewItem2 = new ListViewItem(new string[] { "Property Name 1", "Column 1" }, -1);
             GroupBox attributeGroup;
             TableLayoutPanel elementPathLayout;
-            BusinessLayer.NamedScope.NamedScopePath namedScopePath1 = new BusinessLayer.NamedScope.NamedScopePath();
+            BusinessLayer.NamedScope.NamedScopePath namedScopePath2 = new BusinessLayer.NamedScope.NamedScopePath();
             TableLayoutPanel transformLayout;
             TableLayoutPanel documentTemplateLayout;
             templateTitleData = new Controls.TextBoxData();
@@ -179,6 +179,7 @@
             templateTitleData.ReadOnly = false;
             templateTitleData.Size = new Size(857, 44);
             templateTitleData.TabIndex = 0;
+            templateTitleData.WordWrap = true;
             // 
             // templateDescriptionData
             // 
@@ -191,6 +192,7 @@
             templateDescriptionData.ReadOnly = false;
             templateDescriptionData.Size = new Size(857, 185);
             templateDescriptionData.TabIndex = 1;
+            templateDescriptionData.WordWrap = true;
             // 
             // templateTabs
             // 
@@ -283,6 +285,7 @@
             documentDirectoryData.ReadOnly = false;
             documentDirectoryData.Size = new Size(320, 44);
             documentDirectoryData.TabIndex = 0;
+            documentDirectoryData.WordWrap = true;
             // 
             // documentPrefixData
             // 
@@ -295,6 +298,7 @@
             documentPrefixData.ReadOnly = false;
             documentPrefixData.Size = new Size(141, 222);
             documentPrefixData.TabIndex = 2;
+            documentPrefixData.WordWrap = true;
             // 
             // documentSuffixData
             // 
@@ -307,6 +311,7 @@
             documentSuffixData.ReadOnly = false;
             documentSuffixData.Size = new Size(141, 222);
             documentSuffixData.TabIndex = 3;
+            documentSuffixData.WordWrap = true;
             // 
             // documentExtensionData
             // 
@@ -320,6 +325,7 @@
             documentExtensionData.ReadOnly = false;
             documentExtensionData.Size = new Size(109, 222);
             documentExtensionData.TabIndex = 4;
+            documentExtensionData.WordWrap = true;
             // 
             // documentDirectoryPicker
             // 
@@ -372,6 +378,7 @@
             rootDirectoryExpanded.ReadOnly = true;
             rootDirectoryExpanded.Size = new Size(415, 44);
             rootDirectoryExpanded.TabIndex = 2;
+            rootDirectoryExpanded.WordWrap = true;
             // 
             // scriptingGroup
             // 
@@ -421,6 +428,7 @@
             scriptingExtensionData.ReadOnly = false;
             scriptingExtensionData.Size = new Size(108, 220);
             scriptingExtensionData.TabIndex = 5;
+            scriptingExtensionData.WordWrap = true;
             // 
             // scriptingSuffixData
             // 
@@ -433,6 +441,7 @@
             scriptingSuffixData.ReadOnly = false;
             scriptingSuffixData.Size = new Size(142, 220);
             scriptingSuffixData.TabIndex = 4;
+            scriptingSuffixData.WordWrap = true;
             // 
             // scriptingPrefixData
             // 
@@ -445,6 +454,7 @@
             scriptingPrefixData.ReadOnly = false;
             scriptingPrefixData.Size = new Size(142, 220);
             scriptingPrefixData.TabIndex = 3;
+            scriptingPrefixData.WordWrap = true;
             // 
             // scriptingDirectoryData
             // 
@@ -458,6 +468,7 @@
             scriptingDirectoryData.ReadOnly = false;
             scriptingDirectoryData.Size = new Size(322, 44);
             scriptingDirectoryData.TabIndex = 0;
+            scriptingDirectoryData.WordWrap = true;
             // 
             // scriptAsData
             // 
@@ -518,12 +529,12 @@
             elementSelection.CheckBoxes = true;
             elementSelection.Columns.AddRange(new ColumnHeader[] { columnName });
             elementSelection.Dock = DockStyle.Fill;
-            listViewGroup1.Header = "Scope Name 1";
-            listViewGroup1.Name = "sampleScope";
-            elementSelection.Groups.AddRange(new ListViewGroup[] { listViewGroup1 });
-            listViewItem1.Group = listViewGroup1;
-            listViewItem1.StateImageIndex = 0;
-            elementSelection.Items.AddRange(new ListViewItem[] { listViewItem1 });
+            listViewGroup2.Header = "Scope Name 1";
+            listViewGroup2.Name = "sampleScope";
+            elementSelection.Groups.AddRange(new ListViewGroup[] { listViewGroup2 });
+            listViewItem2.Group = listViewGroup2;
+            listViewItem2.StateImageIndex = 0;
+            elementSelection.Items.AddRange(new ListViewItem[] { listViewItem2 });
             elementSelection.Location = new Point(0, 0);
             elementSelection.MultiSelect = false;
             elementSelection.Name = "elementSelection";
@@ -576,6 +587,7 @@
             propertyNameData.ReadOnly = true;
             propertyNameData.Size = new Size(129, 44);
             propertyNameData.TabIndex = 1;
+            propertyNameData.WordWrap = true;
             // 
             // nodeNameData
             // 
@@ -588,6 +600,7 @@
             nodeNameData.ReadOnly = false;
             nodeNameData.Size = new Size(75, 46);
             nodeNameData.TabIndex = 2;
+            nodeNameData.WordWrap = true;
             // 
             // nodeValueAsData
             // 
@@ -728,7 +741,7 @@
             templatePathSelect.Name = "templatePathSelect";
             templatePathSelect.ReadOnly = false;
             templatePathSelect.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
-            templatePathSelect.ScopePath = namedScopePath1;
+            templatePathSelect.ScopePath = namedScopePath2;
             templatePathSelect.Size = new Size(90, 66);
             templatePathSelect.TabIndex = 6;
             templatePathSelect.OnApply += NamedScopeData_OnApply;
@@ -740,7 +753,7 @@
             transformTab.Location = new Point(4, 24);
             transformTab.Name = "transformTab";
             transformTab.Padding = new Padding(3);
-            transformTab.Size = new Size(192, 72);
+            transformTab.Size = new Size(849, 414);
             transformTab.TabIndex = 1;
             transformTab.Text = "Transform (XSLT)";
             // 
@@ -756,9 +769,9 @@
             transformLayout.Name = "transformLayout";
             transformLayout.RowCount = 3;
             transformLayout.RowStyles.Add(new RowStyle());
-            transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
-            transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            transformLayout.Size = new Size(186, 66);
+            transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 75F));
+            transformLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            transformLayout.Size = new Size(843, 408);
             transformLayout.TabIndex = 0;
             // 
             // transformToolStrip
@@ -767,7 +780,7 @@
             transformToolStrip.Items.AddRange(new ToolStripItem[] { transformParseCommand, transformImportCommand, transformExportCommand, transformFilePath });
             transformToolStrip.Location = new Point(0, 0);
             transformToolStrip.Name = "transformToolStrip";
-            transformToolStrip.Size = new Size(186, 27);
+            transformToolStrip.Size = new Size(843, 25);
             transformToolStrip.Stretch = true;
             transformToolStrip.TabIndex = 0;
             transformToolStrip.Text = "Transform Tool Strip";
@@ -779,7 +792,7 @@
             transformParseCommand.Image = Properties.Resources.XSLTransform;
             transformParseCommand.ImageTransparentColor = Color.Magenta;
             transformParseCommand.Name = "transformParseCommand";
-            transformParseCommand.Size = new Size(23, 24);
+            transformParseCommand.Size = new Size(23, 22);
             transformParseCommand.Text = "Parse Transform";
             transformParseCommand.Click += TransformParseCommand_Click;
             // 
@@ -789,7 +802,7 @@
             transformImportCommand.Image = Properties.Resources.OpenFile;
             transformImportCommand.ImageTransparentColor = Color.Magenta;
             transformImportCommand.Name = "transformImportCommand";
-            transformImportCommand.Size = new Size(23, 24);
+            transformImportCommand.Size = new Size(23, 22);
             transformImportCommand.Text = "Import File";
             transformImportCommand.Click += TransformImportCommand_Click;
             // 
@@ -799,7 +812,7 @@
             transformExportCommand.Image = Properties.Resources.Save;
             transformExportCommand.ImageTransparentColor = Color.Magenta;
             transformExportCommand.Name = "transformExportCommand";
-            transformExportCommand.Size = new Size(23, 24);
+            transformExportCommand.Size = new Size(23, 22);
             transformExportCommand.Text = "Export File";
             transformExportCommand.Click += TransformExportCommand_Click;
             // 
@@ -816,22 +829,24 @@
             transformExceptionData.AutoSize = true;
             transformExceptionData.Dock = DockStyle.Fill;
             transformExceptionData.HeaderText = "Exception";
-            transformExceptionData.Location = new Point(3, 61);
+            transformExceptionData.Location = new Point(3, 315);
             transformExceptionData.Multiline = true;
             transformExceptionData.Name = "transformExceptionData";
             transformExceptionData.ReadOnly = true;
-            transformExceptionData.Size = new Size(180, 2);
+            transformExceptionData.Size = new Size(837, 90);
             transformExceptionData.TabIndex = 2;
+            transformExceptionData.WordWrap = false;
             // 
             // transformScriptData
             // 
             transformScriptData.Dock = DockStyle.Fill;
-            transformScriptData.Location = new Point(3, 30);
+            transformScriptData.Location = new Point(3, 28);
             transformScriptData.Multiline = true;
             transformScriptData.Name = "transformScriptData";
             transformScriptData.ScrollBars = ScrollBars.Both;
-            transformScriptData.Size = new Size(180, 25);
+            transformScriptData.Size = new Size(837, 281);
             transformScriptData.TabIndex = 3;
+            transformScriptData.WordWrap = false;
             // 
             // documentsTab
             // 
@@ -858,9 +873,9 @@
             documentTemplateLayout.Name = "documentTemplateLayout";
             documentTemplateLayout.RowCount = 4;
             documentTemplateLayout.RowStyles.Add(new RowStyle());
-            documentTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+            documentTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
             documentTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            documentTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            documentTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
             documentTemplateLayout.Size = new Size(849, 414);
             documentTemplateLayout.TabIndex = 0;
             // 
@@ -922,7 +937,7 @@
             documentData.Location = new Point(3, 28);
             documentData.Name = "documentData";
             documentData.ReadOnly = true;
-            documentData.Size = new Size(843, 110);
+            documentData.Size = new Size(843, 91);
             documentData.TabIndex = 1;
             // 
             // documentElementColumn
@@ -956,36 +971,39 @@
             documentTemplateLayout.SetColumnSpan(documentException, 2);
             documentException.Dock = DockStyle.Fill;
             documentException.HeaderText = "Exception";
-            documentException.Location = new Point(3, 338);
+            documentException.Location = new Point(3, 319);
             documentException.Multiline = true;
             documentException.Name = "documentException";
             documentException.ReadOnly = true;
-            documentException.Size = new Size(843, 73);
+            documentException.Size = new Size(843, 92);
             documentException.TabIndex = 3;
+            documentException.WordWrap = false;
             // 
             // documentXMLData
             // 
             documentXMLData.AutoSize = true;
             documentXMLData.Dock = DockStyle.Fill;
             documentXMLData.HeaderText = "XML";
-            documentXMLData.Location = new Point(3, 144);
+            documentXMLData.Location = new Point(3, 125);
             documentXMLData.Multiline = true;
             documentXMLData.Name = "documentXMLData";
             documentXMLData.ReadOnly = true;
             documentXMLData.Size = new Size(418, 188);
             documentXMLData.TabIndex = 4;
+            documentXMLData.WordWrap = false;
             // 
             // documentScriptData
             // 
             documentScriptData.AutoSize = true;
             documentScriptData.Dock = DockStyle.Fill;
             documentScriptData.HeaderText = "Script";
-            documentScriptData.Location = new Point(427, 144);
+            documentScriptData.Location = new Point(427, 125);
             documentScriptData.Multiline = true;
             documentScriptData.Name = "documentScriptData";
             documentScriptData.ReadOnly = true;
             documentScriptData.Size = new Size(419, 188);
             documentScriptData.TabIndex = 5;
+            documentScriptData.WordWrap = false;
             // 
             // templateToolStrip
             // 
