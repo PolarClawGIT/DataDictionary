@@ -5,7 +5,7 @@
     xmlns:msxsl="urn:schemas-microsoft-com:xslt"
     exclude-result-prefixes="msxsl" >
   <xsl:output method="text"/>
-  <xsl:template match="/DomainAttributeItem">
-    <xsl:value-of select="AttributeTitle" />: <xsl:value-of select="AttributeDescription" />
+  <xsl:template match="/Model.Attribute">
+    <xsl:value-of select="AttributeTitle" /><xsl:text>: </xsl:text><xsl:value-of select="AttributeDescription" />
   </xsl:template>
 </xsl:stylesheet>

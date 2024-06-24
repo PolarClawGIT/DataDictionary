@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer
@@ -23,23 +24,29 @@ namespace DataDictionary.BusinessLayer
         /// </summary>
         /// <param name="templateKey"></param>
         /// <returns></returns>
-        public IReadOnlyList<WorkItem> BuildDocuments (ITemplateIndex templateKey)
+        public IReadOnlyList<WorkItem> BuildDocuments(ITemplateIndex templateKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-            TemplateBinding template = new TemplateBinding(templateKey, scriptingValue);
+            TemplateBinding target = new TemplateBinding(templateKey, scriptingValue);
 
-            foreach (TemplatePathValue item in template.Paths)
+            if (target.Template.BreakOnScope is ScopeType.Null or ScopeType.Model)
+            {
+                TemplateDocumentValue doc = new TemplateDocumentValue(target.Template) { ElementName = Model.ModelTitle };
+                doc.Source.Add(new XElement(Model.Scope.ToName(),Model.ModelTitle));
+                target.Documents.Add(doc);
+            }
+
+            foreach (TemplatePathValue item in target.Paths)
             {
                 NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(item.PathName).ToArray());
                 ScopeKey scope = new ScopeKey(item.PathScope);
 
                 IEnumerable<INamedScopeSourceValue> values = namedScopeValue.PathKeys(path).Select(s => namedScopeValue.GetData(s)).Where(w => scope.Equals(w));
 
-                work.AddRange(domainValue.BuildDocuments(template, values));
-
+                work.AddRange(domainValue.BuildDocuments(target, values));
             }
 
-            
+
             return work;
         }
 

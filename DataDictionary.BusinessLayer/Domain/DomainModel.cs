@@ -162,38 +162,52 @@ namespace DataDictionary.BusinessLayer.Domain
             return result;
         }
 
-        internal IReadOnlyList<WorkItem> BuildDocuments(TemplateBinding template, IEnumerable<INamedScopeSourceValue> values)
+        internal IReadOnlyList<WorkItem> BuildDocuments(TemplateBinding target, IEnumerable<INamedScopeSourceValue> values)
         {
             List<WorkItem> work = new List<WorkItem>();
             TemplateDocumentValue? doc = null;
 
-            foreach (INamedScopeSourceValue item in values)
+            if (target.Template.BreakOnScope is ScopeType.Null or ScopeType.Model)
+            { doc = target.Documents[0]; }
+
+            foreach (var scopeGroup in values.OrderBy(o => o.Scope.ToName()).GroupBy(g => g.Scope))
             {
-                if (item is IAttributeIndex attribute)
+                if (scopeGroup.Key is ScopeType.ModelAttribute)
                 {
-                    WorkItem newWork = new WorkItem()
+                    work.Add(new WorkItem()
                     {
                         WorkName = "Build Attribute Document",
                         DoWork = () =>
                         {
-                            if (template.Template.BreakOnScope == ScopeType.Null)
-                            { if (doc is null) { doc = new TemplateDocumentValue(template.Template); } }
-                            else { doc = new TemplateDocumentValue(template.Template) { ElementName = item.Title }; }
-
-                            if (attributeValues.GetXElement(attribute, template) is XElement data)
+                            foreach (var item in scopeGroup.Cast<IAttributeValue>())
                             {
-                                doc.Source.Add(data);
-                                doc.ApplyTransform();
-                                template.Documents.Add(doc);
+                                if (attributeValues.GetXElement(item, target) is XElement data)
+                                {
+                                    if (doc is null || target.Template.BreakOnScope == scopeGroup.Key)
+                                    {
+                                        doc = new TemplateDocumentValue(target.Template) { ElementName = item.AttributeTitle };
+                                        target.Documents.Add(doc);
+                                        doc.Source.Add(data);
+                                    }
+                                    else if (doc.Source.Root is not null)
+                                    { doc.Source.Root.Add(data); }
+                                }
                             }
                         }
-                    };
-
-                    work.Add(newWork);
+                    });
                 }
-
-
             }
+
+            work.Add(new WorkItem()
+            {
+                WorkName = "Transform",
+                DoWork = () =>
+                {
+                    foreach (TemplateDocumentValue item in target.Documents)
+                    { item.ApplyTransform(); }
+                }
+            });
+
 
             return work;
         }
