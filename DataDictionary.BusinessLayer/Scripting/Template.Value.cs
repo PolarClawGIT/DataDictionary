@@ -15,9 +15,14 @@ namespace DataDictionary.BusinessLayer.Scripting
         XElement? TransformXml { get; }
 
         /// <summary>
-        /// Transform Script Exception when converted to XElement
+        /// Template Script Exception
         /// </summary>
         Exception? TransformException { get; }
+
+        /// <summary>
+        /// Exception encountered while Scripting.
+        /// </summary>
+        IEnumerable<Exception> TemplateException { get; }
     }
 
     /// <inheritdoc/>
@@ -44,6 +49,13 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         public Exception? TransformException { get; private set; } = null;
+
+        /// <inheritdoc/>
+        public IEnumerable<Exception> TemplateException { get { return templateException; } }
+        List<Exception> templateException = new List<Exception>();
+
+        internal void AddException(Exception ex)
+        { templateException.Add(ex); }
 
         private void TemplateValue_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
         {

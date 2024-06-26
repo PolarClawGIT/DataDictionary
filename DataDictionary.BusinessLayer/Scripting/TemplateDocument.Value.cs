@@ -161,13 +161,15 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             get
             {
-                //TODO: Trying to get a nice indented/formated XML.
-                // This works for a single item but multiple returns one long string. 
                 StringBuilder builder = new StringBuilder();
-                XmlWriterSettings settings = new XmlWriterSettings() { Indent = true,  };
+                XmlWriterSettings settings = new XmlWriterSettings() { Indent = true, };
 
-                using (XmlWriter writer = XmlWriter.Create(builder, settings))
-                { Source.WriteTo(writer); }
+                try
+                { // Because there is no way to check if the XDocument is empty except using a try/catch.
+                    using (XmlWriter writer = XmlWriter.Create(builder, settings))
+                    { Source.WriteTo(writer); }
+                }
+                catch (Exception) { }
 
                 return builder.ToString();
             }
@@ -177,7 +179,16 @@ namespace DataDictionary.BusinessLayer.Scripting
         public XDocument? Transform { get; protected set; }
 
         /// <inheritdoc/>
-        public Exception? Exception { get; protected set; }
+        public Exception? Exception
+        {
+            get { return documentException; }
+            set
+            {
+                documentException = value;
+                IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(Exception));
+            }
+        }
+        Exception? documentException = null;
 
         /// <summary>
         /// The Results of the Transform as plain text (may contain formated XML).
@@ -189,6 +200,8 @@ namespace DataDictionary.BusinessLayer.Scripting
             {
                 if (String.IsNullOrWhiteSpace(value)) { resultsAsText = String.Empty; resultsAsXml = null; }
                 else { resultsAsText = value; resultsAsXml = null; }
+                IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(ResultsAsText));
+                IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(ResultsAsXml));
             }
         }
         String resultsAsText = String.Empty;
@@ -203,6 +216,8 @@ namespace DataDictionary.BusinessLayer.Scripting
             {
                 if (value is null) { resultsAsText = String.Empty; resultsAsXml = null; }
                 else { resultsAsText = String.Concat(value.Declaration, value); resultsAsXml = value; }
+                IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(ResultsAsText));
+                IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(ResultsAsXml));
             }
         }
         XDocument? resultsAsXml = null;
@@ -221,7 +236,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// </summary>
         /// <returns></returns>
         public Boolean ApplyTransform()
-        { // TODO: Refine to meet the needs. 
+        { 
             Boolean result = false;
             Exception = null;
 

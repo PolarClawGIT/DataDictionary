@@ -33,42 +33,6 @@ namespace DataDictionary.BusinessLayer.Domain
         public NamedScopePath GetPath()
         { return new NamedScopePath(AttributeTitle); }
 
-        internal XElement? GetXElement(IEnumerable<TemplateNodeValue> templates)
-        {
-            XElement? result = null;
-
-            foreach (TemplateNodeValue node in templates)
-            {
-                XObject? value = null;
-
-                switch (node.PropertyName)
-                {
-                    case nameof(AttributeTitle): value = node.BuildXObject(AttributeTitle); break;
-                    case nameof(AttributeDescription): value = node.BuildXObject(AttributeDescription); break;
-                    case nameof(IsCompositeType): value = node.BuildXObject(IsCompositeType); break;
-                    case nameof(IsDerived): value = node.BuildXObject(IsDerived); break; ;
-                    case nameof(IsIntegral): value = node.BuildXObject(IsIntegral); break; ;
-                    case nameof(IsKey): value = node.BuildXObject(IsKey); break; ;
-                    case nameof(IsMultiValue): value = node.BuildXObject(IsMultiValue); break; ;
-                    case nameof(IsNonKey): value = node.BuildXObject(IsNonKey); break; ;
-                    case nameof(IsNullable): value = node.BuildXObject(IsNullable); break; ;
-                    case nameof(IsSimpleType): value = node.BuildXObject(IsSimpleType); break; ;
-                    case nameof(IsSingleValue): value = node.BuildXObject(IsSingleValue); break; ;
-                    case nameof(IsValued): value = node.BuildXObject(IsValued); break; ;
-                    default:
-                        break;
-                }
-
-                if (value is XObject)
-                {
-                    if (result is null) { result = new XElement(Scope.ToName()); }
-                    result.Add(value);
-                }
-            }
-
-            return result;
-        }
-
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelAttribute;

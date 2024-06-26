@@ -161,56 +161,5 @@ namespace DataDictionary.BusinessLayer.Domain
             result.AddRange(entityValues.GetNamedScopes());
             return result;
         }
-
-        internal IReadOnlyList<WorkItem> BuildDocuments(TemplateBinding target, IEnumerable<INamedScopeSourceValue> values)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-            TemplateDocumentValue? doc = null;
-
-            if (target.Template.BreakOnScope is ScopeType.Null or ScopeType.Model)
-            { doc = target.Documents[0]; }
-
-            foreach (var scopeGroup in values.OrderBy(o => o.Scope.ToName()).GroupBy(g => g.Scope))
-            {
-                if (scopeGroup.Key is ScopeType.ModelAttribute)
-                {
-                    work.Add(new WorkItem()
-                    {
-                        WorkName = "Build Attribute Document",
-                        DoWork = () =>
-                        {
-                            foreach (var item in scopeGroup.Cast<IAttributeValue>())
-                            {
-                                if (attributeValues.GetXElement(item, target) is XElement data)
-                                {
-                                    if (doc is null || target.Template.BreakOnScope == scopeGroup.Key)
-                                    {
-                                        doc = new TemplateDocumentValue(target.Template)
-                                        { ElementName = item.AttributeTitle };
-                                        target.Documents.Add(doc);
-                                        doc.Source.Add(data);
-                                    }
-                                    else if (doc.Source.Root is not null)
-                                    { doc.Source.Root.Add(data); }
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-
-            work.Add(new WorkItem()
-            {
-                WorkName = "Transform",
-                DoWork = () =>
-                {
-                    foreach (TemplateDocumentValue item in target.Documents)
-                    { item.ApplyTransform(); }
-                }
-            });
-
-
-            return work;
-        }
     }
 }

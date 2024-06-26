@@ -5,6 +5,7 @@ using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Property;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Alias;
@@ -45,6 +46,15 @@ namespace DataDictionary.BusinessLayer.Domain
         /// List of Subject Areas for the Attributes within the Model.
         /// </summary>
         IAttributeSubjectAreaData SubjectArea { get; }
+
+        /// <summary>
+        /// Generates the XElement using the ScriptingData
+        /// </summary>
+        /// <param name="scripting"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        /// <remarks>Not for use outside of BusinessLayer</remarks>
+        XElement? GetXElement(ScriptingWork scripting, IAttributeIndex index);
     }
 
     class AttributeData : DomainAttributeCollection<AttributeValue>, IAttributeData,
@@ -377,23 +387,78 @@ namespace DataDictionary.BusinessLayer.Domain
         }
         #endregion
 
-        internal XElement? GetXElement(IAttributeIndex attribute, TemplateBinding template)
+        #region XML Scripting
+
+        /// <inheritdoc/>
+        public XElement? GetXElement(ScriptingWork scripting, IAttributeIndex index)
         {
             XElement? result = null;
-            AttributeIndex key = new AttributeIndex(attribute);
-
-            if (this.FirstOrDefault(w => key.Equals(w)) is AttributeValue value)
+            AttributeIndex key = new AttributeIndex(index);
+            if (this.FirstOrDefault(w => key.Equals(w)) is AttributeValue attribute)
             {
-                result = value.GetXElement(template.GetNodes(value.Scope));
-
-                if(result is XElement)
+                foreach (TemplateNodeValue node in scripting.Nodes.Where(w => w.PropertyScope == attribute.Scope))
                 {
-                    IEnumerable<XAttribute> attributes = template.BuildXAttributes(value.Scope, DomainProperties, Properties);
-                    result.Add(attributes.ToArray());
+                    TemplateNodeIndex nodeKey = new TemplateNodeIndex(node);
+                    XObject? value = null;
+
+                    switch (node.PropertyName)
+                    {
+                        case nameof(attribute.AttributeTitle): value = node.BuildXObject(attribute.AttributeTitle); break;
+                        case nameof(attribute.AttributeDescription): value = node.BuildXObject(attribute.AttributeDescription); break;
+                        case nameof(attribute.IsCompositeType): value = node.BuildXObject(attribute.IsCompositeType); break;
+                        case nameof(attribute.IsDerived): value = node.BuildXObject(attribute.IsDerived); break; ;
+                        case nameof(attribute.IsIntegral): value = node.BuildXObject(attribute.IsIntegral); break; ;
+                        case nameof(attribute.IsKey): value = node.BuildXObject(attribute.IsKey); break; ;
+                        case nameof(attribute.IsMultiValue): value = node.BuildXObject(attribute.IsMultiValue); break; ;
+                        case nameof(attribute.IsNonKey): value = node.BuildXObject(attribute.IsNonKey); break; ;
+                        case nameof(attribute.IsNullable): value = node.BuildXObject(attribute.IsNullable); break; ;
+                        case nameof(attribute.IsSimpleType): value = node.BuildXObject(attribute.IsSimpleType); break; ;
+                        case nameof(attribute.IsSingleValue): value = node.BuildXObject(attribute.IsSingleValue); break; ;
+                        case nameof(attribute.IsValued): value = node.BuildXObject(attribute.IsValued); break; ;
+                        default:
+                            break;
+                    }
+
+                    if (value is XObject)
+                    {
+                        if (result is null) { result = new XElement(attribute.Scope.ToName()); }
+                        result.Add(value);
+
+                        foreach (TemplateAttributeValue templateAttrib in scripting.Attributes.Where(w => nodeKey.Equals(w)))
+                        {
+                            XAttribute? attrib = null;
+                            PropertyIndex propertyKey = new PropertyIndex(templateAttrib);
+                            PropertyValue? propertyValue = DomainProperties.FirstOrDefault(w => propertyKey.Equals(w));
+                            IDomainProperty? property = Properties.FirstOrDefault(w => propertyKey.Equals(w));
+
+                            String newTitle = String.Empty;
+                            String newValue = String.Empty;
+
+                            if (!String.IsNullOrWhiteSpace(templateAttrib.AttributeName))
+                            { newTitle = templateAttrib.AttributeName; }
+                            else if (propertyValue is PropertyValue && !String.IsNullOrWhiteSpace(propertyValue.PropertyTitle))
+                            { { newTitle = propertyValue.PropertyTitle; } }
+
+                            if (property is IDomainProperty && !String.IsNullOrWhiteSpace(property.PropertyValue))
+                            { newValue = property.PropertyValue; }
+                            else if (!String.IsNullOrWhiteSpace(templateAttrib.AttributeValue))
+                            { newValue = templateAttrib.AttributeValue; }
+
+                            attrib = templateAttrib.BuildXAttribute(newTitle, newValue);
+
+                            if (attrib is XAttribute)
+                            {
+                                if (value is XElement element) { element.Add(attrib); }
+                                else if (value.Parent is XElement) { value.Parent.Add(attrib); }
+                            }
+                        }
+                    }
                 }
             }
 
             return result;
         }
+
+        #endregion
     }
 }
