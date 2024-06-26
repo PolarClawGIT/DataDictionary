@@ -43,6 +43,7 @@ namespace DataDictionary.BusinessLayer
                     Int32 totlaWork = scripting.Paths.Count();
                     Int32 completeWork = 0;
                     TemplateDocumentValue? doc = null;
+                    XElement? rootElement = null;
 
                     foreach (TemplatePathValue item in scripting.Paths)
                     {
@@ -57,26 +58,39 @@ namespace DataDictionary.BusinessLayer
 
                             if (scripting.Template.BreakOnScope == namedScope.Scope)
                             {
-                                doc = new TemplateDocumentValue(scripting.Template) { ElementName = elementName };
+                                rootElement = BuildElement(scripting, data);
+
+                                doc = new TemplateDocumentValue(scripting.Template, rootElement) { ElementName = elementName };
                                 scripting.Documents.Add(doc);
                             }
                             else if (doc is null)
                             {
-                                doc = new TemplateDocumentValue(scripting.Template) { ElementName = Model.ModelTitle };
+                                rootElement = new XElement(Model.Scope.ToName());
+                                doc = new TemplateDocumentValue(scripting.Template, rootElement) { ElementName = Model.ModelTitle };
+
+                                try
+                                { rootElement.Add(BuildElement(scripting, data)); }
+                                catch (Exception ex)
+                                {
+                                    ex.Data.Add(nameof(namedScope.Title), namedScope.Title);
+                                    ex.Data.Add(nameof(namedScope.Scope), namedScope.Scope);
+                                    ex.Data.Add(nameof(namedScope.Path), namedScope.Path.MemberFullPath);
+                                    doc.Exception = ex;
+                                }
+
                                 scripting.Documents.Add(doc);
                             }
-
-                            try
+                            else if(rootElement is XElement)
                             {
-                                if (BuildElement(scripting, data) is XElement docValue)
-                                { doc.Source.Add(docValue); }
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Data.Add(nameof(namedScope.Title), namedScope.Title);
-                                ex.Data.Add(nameof(namedScope.Scope), namedScope.Scope);
-                                ex.Data.Add(nameof(namedScope.Path), namedScope.Path.MemberFullPath);
-                                doc.Exception = ex;
+                                try
+                                { rootElement.Add(BuildElement(scripting, data)); }
+                                catch (Exception ex)
+                                {
+                                    ex.Data.Add(nameof(namedScope.Title), namedScope.Title);
+                                    ex.Data.Add(nameof(namedScope.Scope), namedScope.Scope);
+                                    ex.Data.Add(nameof(namedScope.Path), namedScope.Path.MemberFullPath);
+                                    doc.Exception = ex;
+                                }
                             }
 
                             completeWork = completeWork + 1;
@@ -104,7 +118,6 @@ namespace DataDictionary.BusinessLayer
                         completeWork = completeWork + 1;
                         onBuildProgress(completeWork, totlaWork);
                     }
-
                 }
             };
             onTransformProgress = docTransform.OnProgressChanged;
@@ -138,6 +151,12 @@ namespace DataDictionary.BusinessLayer
             throw ex;
         }
 
+        /// <summary>
+        /// Build XML Element for Domain Attributes
+        /// </summary>
+        /// <param name="scripting"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         XElement? BuildElement(ScriptingWork scripting, IAttributeIndex data)
         { return domainValue.Attributes.GetXElement(scripting, data); }
 

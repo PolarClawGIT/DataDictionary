@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// <summary>
     /// Interface for Scripting Engine Template Document
     /// </summary>
-    public interface ITemplateDocumentValue : ITemplateIndex, INotifyPropertyChanged, IBindingPropertyChanged
+    public interface ITemplateDocumentValue : ITemplateIndex, IBindingPropertyChanged
     {
         /// <summary>
         /// The Name of the Element for this Document
@@ -48,7 +48,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <summary>
         /// The XML Document that was used as the Source
         /// </summary>
-        XDocument Source { get; }
+        //XDocument Source { get; }
 
         /// <summary>
         /// Text version of Source. For Data Binding.
@@ -56,14 +56,14 @@ namespace DataDictionary.BusinessLayer.Scripting
         String SourceAsText { get; }
 
         /// <summary>
-        /// The XSL Document used for the Transform
-        /// </summary>
-        XDocument? Transform { get; }
-
-        /// <summary>
-        /// Exceptions generated applying the Transform
+        /// Exceptions while building or transforming the document
         /// </summary>
         Exception? Exception { get; }
+
+        /// <summary>
+        /// Text version of Exception. For Data Binding.
+        /// </summary>
+        String ExceptionAsText { get; }
 
         /// <summary>
         /// The Results of the Transform as plain text (may contain formated XML).
@@ -154,9 +154,6 @@ namespace DataDictionary.BusinessLayer.Scripting
         }
 
         /// <inheritdoc/>
-        public XDocument Source { get; } = new XDocument() { Declaration = new XDeclaration("1.0", null, null) };
-
-        /// <inheritdoc/>
         public String SourceAsText
         {
             get
@@ -167,16 +164,13 @@ namespace DataDictionary.BusinessLayer.Scripting
                 try
                 { // Because there is no way to check if the XDocument is empty except using a try/catch.
                     using (XmlWriter writer = XmlWriter.Create(builder, settings))
-                    { Source.WriteTo(writer); }
+                    { source.WriteTo(writer); }
                 }
                 catch (Exception) { }
 
                 return builder.ToString();
             }
         }
-
-        /// <inheritdoc/>
-        public XDocument? Transform { get; protected set; }
 
         /// <inheritdoc/>
         public Exception? Exception
@@ -186,9 +180,34 @@ namespace DataDictionary.BusinessLayer.Scripting
             {
                 documentException = value;
                 IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(Exception));
+                IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(ExceptionAsText));
             }
         }
         Exception? documentException = null;
+
+        /// <inheritdoc/>
+        public String ExceptionAsText
+        {
+            get
+            {
+                StringBuilder builder = new StringBuilder();
+
+                if (documentException is Exception ex)
+                {
+                    builder.AppendLine(ex.Message);
+                    foreach (var item in ex.Data.Keys)
+                    {
+                        if (item.ToString() is String stringKey
+                            && ex.Data[item] is Object value
+                            && value.ToString() is String stringValue)
+                        { builder.AppendLine(String.Format("\t{0}: {1}", stringKey, stringValue)); }
+                    }
+                }
+
+                return builder.ToString();
+            }
+
+        }
 
         /// <summary>
         /// The Results of the Transform as plain text (may contain formated XML).
@@ -222,33 +241,48 @@ namespace DataDictionary.BusinessLayer.Scripting
         }
         XDocument? resultsAsXml = null;
 
-        ITemplateValue templateValue { get; set; }
+        ITemplateValue templateValue;
+        XDocument source = new XDocument() { Declaration = new XDeclaration("1.0", null, null) };
 
         /// <summary>
         /// Constructor for Scripting Document Template.
         /// </summary>
         /// <param name="template"></param>
-        public TemplateDocumentValue(ITemplateValue template)
-        { templateValue = template; }
+        /// <param name="root"></param>
+        public TemplateDocumentValue(ITemplateValue template, XElement root) : base()
+        {
+            templateValue = template;
+
+            try
+            { source.Add(root); }
+            catch (Exception ex)
+            { documentException = ex; }
+
+            source.Changed += Source_Changed;
+        }
+
+        private void Source_Changed(Object? sender, XObjectChangeEventArgs e)
+        { IBindingPropertyChanged.OnPropertyChanged(this, PropertyChanged, nameof(SourceAsText)); }
 
         /// <summary>
         /// Applies the XSL Transform to the Source to complete the Document
         /// </summary>
         /// <returns></returns>
         public Boolean ApplyTransform()
-        { 
+        {
             Boolean result = false;
-            Exception = null;
+            if (Exception is not null) { return false; }
+            XDocument? transform = null;
 
             try
             {
                 if (templateValue.TransformScript is String)
-                { Transform = XDocument.Parse(templateValue.TransformScript); }
+                { transform = XDocument.Parse(templateValue.TransformScript); }
 
-                if (Transform is not null)
+                if (transform is not null)
                 {
-                    using (XmlReader sourceReader = Source.CreateReader())
-                    using (XmlReader transformReader = Transform.CreateReader())
+                    using (XmlReader sourceReader = source.CreateReader())
+                    using (XmlReader transformReader = transform.CreateReader())
                     {
                         XslCompiledTransform transformer = new XslCompiledTransform();
                         transformer.Load(transformReader);
@@ -275,23 +309,14 @@ namespace DataDictionary.BusinessLayer.Scripting
             catch (Exception ex)
             {
                 ex.Data.Add("XSLT", templateValue.TransformScript);
-                ex.Data.Add("XML", Source);
+                ex.Data.Add("XML", source);
                 Exception = ex;
             }
 
-            OnPropertyChanged(nameof(Source));
-            OnPropertyChanged(nameof(Exception));
-            OnPropertyChanged(nameof(ResultsAsText));
-            OnPropertyChanged(nameof(ResultsAsXml));
             return result;
         }
 
         /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;
-        void OnPropertyChanged(String propertyName)
-        {
-            if (PropertyChanged is PropertyChangedEventHandler handler)
-            { handler(this, new PropertyChangedEventArgs(propertyName)); }
-        }
     }
 }

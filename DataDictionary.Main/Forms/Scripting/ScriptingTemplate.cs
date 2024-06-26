@@ -114,7 +114,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             documentXMLData.DataBindings.Add(new Binding(nameof(documentXMLData.Text), bindingDocument, nameof(nameOfDocument.SourceAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
             documentScriptData.DataBindings.Add(new Binding(nameof(documentScriptData.Text), bindingDocument, nameof(nameOfDocument.ResultsAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
-            documentException.DataBindings.Add(new Binding(nameof(documentException.Text), bindingDocument, nameof(nameOfDocument.Exception), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+            documentException.DataBindings.Add(new Binding(nameof(documentException.Text), bindingDocument, nameof(nameOfDocument.ExceptionAsText), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
 
             ElementSelection_Load();
 
