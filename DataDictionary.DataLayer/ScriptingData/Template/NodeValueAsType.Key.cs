@@ -111,8 +111,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
             { NodeValueAsType.ElementText,    "Element.Text"},
             { NodeValueAsType.ElementCData,   "Element.CData"},
             { NodeValueAsType.ElementXML,     "Element.XML"},
-            { NodeValueAsType.AttributeCData, "Attribute.CData"},
-            { NodeValueAsType.AttributeText,  "AttributeText"},
+            { NodeValueAsType.Attribute,      "Attribute"},
         };
 
         /// <inheritdoc/>

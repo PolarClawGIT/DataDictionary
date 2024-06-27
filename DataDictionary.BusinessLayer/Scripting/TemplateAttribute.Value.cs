@@ -38,8 +38,8 @@ namespace DataDictionary.BusinessLayer.Scripting
             if (value is null) { return null; }
             String valueString = (value.ToString()??String.Empty).Trim();
 
-            if(this.AsCData == true) { return new XAttribute(name, new XCData(valueString)); }
-            else { return new XAttribute(name, valueString); }
+            if(String.IsNullOrWhiteSpace(valueString)) { return null; }
+            return new XAttribute(name, valueString);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace DataDictionary.BusinessLayer.Domain
             return result;
         }
 
-        internal XElement? GetXElement(ScriptingWork scripting)
+        internal XElement? GetXElement(ScriptingWork scripting, Func<TemplateNodeValue,IReadOnlyList<XAttribute>> getAttributes)
         { 
             XElement? result = null;
 
@@ -75,27 +75,32 @@ namespace DataDictionary.BusinessLayer.Domain
                             else if (ScopeLevel > 0 && scopeParts.Count > ScopeLevel) // Remaining level match
                             { levelValue = scopeParts[ScopeLevel]; }
 
+                            XElement newElement;
+                            XAttribute newAttribute;
+
                             switch (node.NodeValueAs)
                             {
                                 case NodeValueAsType.none: break;
-                                case NodeValueAsType.ElementText:
-                                    aliasObject = new XElement(nameof(AliasParts), item, new XAttribute("Level", i), new XAttribute("Name", levelValue));
+                                case NodeValueAsType.ElementText or NodeValueAsType.ElementXML:
+                                    newElement = new XElement(nameof(AliasParts), item);
+                                    newElement.Add(new XAttribute("Level", i));
+                                    newElement.Add(new XAttribute("Name", levelValue));
+                                    aliasObject = newElement;
                                     break;
                                 case NodeValueAsType.ElementCData:
-                                    aliasObject = new XElement(nameof(AliasParts), new XCData(item), new XAttribute("Level", i), new XAttribute("Name", levelValue));
+                                    newElement = new XElement(nameof(AliasParts), new XCData(item));
+                                    newElement.Add(new XAttribute("Level", i));
+                                    newElement.Add(new XAttribute("Name", levelValue));
+                                    aliasObject = newElement;
                                     break;
-                                case NodeValueAsType.ElementXML: // Alias cannot be XML, use same setting as Element Text.
-                                    aliasObject = new XElement(nameof(AliasParts), item, new XAttribute("Level", i), new XAttribute("Name", levelValue));
-                                    break;
-                                case NodeValueAsType.AttributeCData:
-                                    aliasObject = new XAttribute(String.Format("Level.{0}.{1}", i, levelValue), new XCData(item));
-                                    break;
-                                case NodeValueAsType.AttributeText:
-                                    aliasObject = new XAttribute(String.Format("Level.{0}.{1}", i, levelValue), item);
+                                case NodeValueAsType.Attribute:
+                                    newAttribute = new XAttribute(String.Format("Level.{0}.{1}", i, levelValue), item);
+                                    aliasObject = newAttribute;
                                     break;
                                 default:
                                     break;
                             }
+
 
                             AddValue(aliasObject);
                         }
@@ -108,6 +113,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 {
                     if (result is null) { result = new XElement(Scope.ToName()); }
                     result.Add(values.ToArray());
+                    result.Add(getAttributes(node).ToArray());
                 }
 
                 void AddValue(XObject? value)

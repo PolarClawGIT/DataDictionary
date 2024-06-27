@@ -11,8 +11,7 @@ Select	P.[TemplateId],
 		D.[AttributeId],
 		D.[AttributeName],
 		D.[AttributeValue],
-		D.[PropertyId],
-		D.[AsCData]
+		D.[PropertyId]
 From	[App_DataDictionary].[ScriptingAttribute] D
 		Inner Join [App_DataDictionary].[ScriptingNode] P
 		On	D.[NodeId] = P.[NodeId]

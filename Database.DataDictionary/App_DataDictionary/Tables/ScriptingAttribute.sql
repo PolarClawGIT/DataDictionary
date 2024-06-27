@@ -5,7 +5,6 @@
 	[AttributeName]			NVarChar(50) NOT NULL, -- Name of the XML Attribute
 	[AttributeValue]		NVarChar(250) NULL, -- Value of the XML Attribute (Null = use Property Value)
 	[PropertyId]			UniqueIdentifier NULL, -- Use the Property Value for the XML Attribute value, if it exists.
-	[AsCData]				Bit Null, -- Script as CData instead plain Text
 	-- TODO: Add System Version later once the schema is locked down
 	[ModfiedBy] SysName Not Null CONSTRAINT [DF_ScriptingNodeAttribute_ModfiedBy] DEFAULT (original_login()),
 	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_ScriptingNodeAttribute_SysStart] DEFAULT (sysdatetime()),

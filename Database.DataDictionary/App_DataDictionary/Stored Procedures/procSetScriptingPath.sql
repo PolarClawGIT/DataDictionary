@@ -42,13 +42,6 @@ Begin Try
 		From	[App_DataDictionary].[ModelNameSpace] M
 				Cross Apply [App_DataDictionary].[funcGetNameSpace](M.[NameSpaceId]) N
 		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
-
-	;With [NameSpace] As (
-		Select	M.[NameSpaceId],
-				N.[NameSpace]
-		From	[App_DataDictionary].[ModelNameSpace] M
-				Cross Apply [App_DataDictionary].[funcGetNameSpace](M.[NameSpaceId]) N
-		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
 	Select	Coalesce(D.[TemplateId], @TemplateId, NewId()) As [TemplateId],
 			N.[NameSpaceId],

@@ -423,41 +423,16 @@ namespace DataDictionary.BusinessLayer.Domain
                         if (result is null) { result = new XElement(attribute.Scope.ToName()); }
                         result.Add(value);
 
-                        TemplateNodeIndex nodeKey = new TemplateNodeIndex(node);
-                        foreach (TemplateAttributeValue templateAttrib in scripting.Attributes.Where(w => nodeKey.Equals(w)))
-                        {
-                            XAttribute? attrib = null;
-                            PropertyIndex propertyKey = new PropertyIndex(templateAttrib);
-                            PropertyValue? propertyValue = DomainProperties.FirstOrDefault(w => propertyKey.Equals(w));
-                            IDomainProperty? property = Properties.FirstOrDefault(w => propertyKey.Equals(w));
+                        IReadOnlyList<XAttribute> attributes = DomainProperties.GetXAttributes(scripting, node, Properties);
 
-                            String newTitle = String.Empty;
-                            String newValue = String.Empty;
-
-                            if (!String.IsNullOrWhiteSpace(templateAttrib.AttributeName))
-                            { newTitle = templateAttrib.AttributeName; }
-                            else if (propertyValue is PropertyValue && !String.IsNullOrWhiteSpace(propertyValue.PropertyTitle))
-                            { { newTitle = propertyValue.PropertyTitle; } }
-
-                            if (property is IDomainProperty && !String.IsNullOrWhiteSpace(property.PropertyValue))
-                            { newValue = property.PropertyValue; }
-                            else if (!String.IsNullOrWhiteSpace(templateAttrib.AttributeValue))
-                            { newValue = templateAttrib.AttributeValue; }
-
-                            attrib = templateAttrib.BuildXAttribute(newTitle, newValue);
-
-                            if (attrib is XAttribute)
-                            {
-                                if (value is XElement element) { element.Add(attrib); }
-                                else if (value.Parent is XElement) { value.Parent.Add(attrib); }
-                            }
-                        }
+                        if (value is XElement element) { element.Add(attributes.ToArray()); }
+                        else if (value.Parent is XElement) { value.Parent.Add(attributes.ToArray()); }
                     }
                 }
 
                 foreach (AttributeAliasValue alias in Aliases.Where(w => key.Equals(w)))
                 {
-                    XElement? aliasNode = alias.GetXElement(scripting);
+                    XElement? aliasNode = alias.GetXElement(scripting, (node) => DomainProperties.GetXAttributes(scripting, node, Properties));
                     if (aliasNode is not null && result is null)
                     {
                         result = new XElement(attribute.Scope.ToName());

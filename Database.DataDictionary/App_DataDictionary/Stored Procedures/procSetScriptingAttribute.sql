@@ -25,7 +25,6 @@ Begin Try
 		[AttributeName]			NVarChar(50) NOT NULL,
 		[AttributeValue]		NVarChar(250) NULL,
 		[PropertyId]			UniqueIdentifier NULL,
-		[AsCData]				Bit Not Null,
 		Primary Key ([AttributeId]))
 
 	Insert Into @Values
@@ -33,8 +32,7 @@ Begin Try
 			[NodeId],
 			NullIf(Trim([AttributeName]),'') As [AttributeName],
 			NullIf(Trim([AttributeValue]),'') As [AttributeValue],
-			[PropertyId],
-			IsNull(D.[AsCData],0) As [AsCData]
+			[PropertyId]
 	From	@Data D
 			Cross apply (Select	Coalesce(D.[AttributeId], NewId()) As [AttributeId]) X
 
@@ -60,16 +58,14 @@ Begin Try
 				[NodeId],
 				[AttributeName],
 				[AttributeValue],
-				[PropertyId],
-				[AsCData]
+				[PropertyId]
 		From	@Values
 		Except
 		Select	[AttributeId],
 				[NodeId],
 				[AttributeName],
 				[AttributeValue],
-				[PropertyId],
-				[AsCData]
+				[PropertyId]
 		From	[App_DataDictionary].[ScriptingAttribute])
 	Update [App_DataDictionary].[ScriptingAttribute]
 	Set		[AttributeName] = S.[AttributeName],
@@ -85,14 +81,12 @@ Begin Try
 			[NodeId],
 			[AttributeName],
 			[AttributeValue],
-			[PropertyId],
-			[AsCData])
+			[PropertyId])
 	Select	S.[AttributeId],
 			S.[NodeId],
 			S.[AttributeName],
 			S.[AttributeValue],
-			S.[PropertyId],
-			S.[AsCData]
+			S.[PropertyId]
 	From	@Values S
 			Left Join [App_DataDictionary].[ScriptingAttribute] T
 			On	S.[AttributeId] = T.[AttributeId]

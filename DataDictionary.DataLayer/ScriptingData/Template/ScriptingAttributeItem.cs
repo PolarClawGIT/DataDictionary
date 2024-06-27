@@ -25,11 +25,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// Value to appear for the XML Attribute
         /// </summary>
         String? AttributeValue { get; }
-
-        /// <summary>
-        /// Script the Value as CData instead of Text.
-        /// </summary>
-        Boolean? AsCData { get; }
     }
 
     /// <summary>
@@ -81,12 +76,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         }
 
         /// <inheritdoc/>
-        public Boolean? AsCData { 
-            get { return GetValue<bool>(nameof(AsCData), BindingItemParsers.BooleanTryParse) == true; }
-            set { SetValue<Boolean>(nameof(AsCData), value); }
-        }
-
-        /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.ScriptingTemplateAttribute;
 
         /// <summary>
@@ -113,7 +102,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
             new DataColumn(nameof(AttributeName), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(AttributeValue), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(PropertyId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(AsCData), typeof(Boolean)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

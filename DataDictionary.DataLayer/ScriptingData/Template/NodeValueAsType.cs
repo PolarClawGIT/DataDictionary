@@ -32,14 +32,9 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         ElementXML,
 
         /// <summary>
-        /// Render value as an Attribute CData. Attribute Name = Data
-        /// </summary>
-        AttributeCData,
-
-        /// <summary>
         /// Render value as an Attribute Text. Attribute Name = Data
         /// </summary>
-        AttributeText
+        Attribute
     }
 
     /// <summary>
