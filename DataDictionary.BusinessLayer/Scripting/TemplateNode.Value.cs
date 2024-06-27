@@ -48,8 +48,12 @@ namespace DataDictionary.BusinessLayer.Scripting
                         { return new XElement(nodeName, XElement.Parse(nodeValue)); }
                         else { return null; }
                     }
-                    catch (Exception fragmentEx)
-                    { return new XElement(nodeName, new XAttribute("Exception", fragmentEx.Message)); }
+                    catch (Exception fragementEx)
+                    {
+                        fragementEx.Data.Add(nameof(NodeValueAs), NodeValueAs.ToString());
+                        fragementEx.Data.Add(nameof(PropertyName), PropertyName);
+                        throw;
+                    }
                 case NodeValueAsType.AttributeCData:
                     return new XAttribute(nodeName, new XCData(nodeValue));
                 case NodeValueAsType.AttributeText:

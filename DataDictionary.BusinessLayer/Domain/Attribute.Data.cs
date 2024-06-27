@@ -398,7 +398,6 @@ namespace DataDictionary.BusinessLayer.Domain
             {
                 foreach (TemplateNodeValue node in scripting.Nodes.Where(w => w.PropertyScope == attribute.Scope))
                 {
-                    TemplateNodeIndex nodeKey = new TemplateNodeIndex(node);
                     XObject? value = null;
 
                     switch (node.PropertyName)
@@ -424,6 +423,7 @@ namespace DataDictionary.BusinessLayer.Domain
                         if (result is null) { result = new XElement(attribute.Scope.ToName()); }
                         result.Add(value);
 
+                        TemplateNodeIndex nodeKey = new TemplateNodeIndex(node);
                         foreach (TemplateAttributeValue templateAttrib in scripting.Attributes.Where(w => nodeKey.Equals(w)))
                         {
                             XAttribute? attrib = null;
@@ -453,6 +453,18 @@ namespace DataDictionary.BusinessLayer.Domain
                             }
                         }
                     }
+                }
+
+                foreach (AttributeAliasValue alias in Aliases.Where(w => key.Equals(w)))
+                {
+                    XElement? aliasNode = alias.GetXElement(scripting);
+                    if (aliasNode is not null && result is null)
+                    {
+                        result = new XElement(attribute.Scope.ToName());
+                        result.Add(aliasNode);
+                    }
+                    else if (aliasNode is not null && result is XElement)
+                    { result.Add(aliasNode); }
                 }
             }
 
