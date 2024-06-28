@@ -272,14 +272,10 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             Boolean result = false;
             if (Exception is not null) { return false; }
-            XDocument? transform = null;
 
             try
             {
-                if (templateValue.TransformScript is String)
-                { transform = XDocument.Parse(templateValue.TransformScript); }
-
-                if (transform is not null)
+                if (templateValue.TransformXml is XDocument transform)
                 {
                     using (XmlReader sourceReader = source.CreateReader())
                     using (XmlReader transformReader = transform.CreateReader())

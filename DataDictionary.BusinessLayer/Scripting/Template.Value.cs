@@ -10,9 +10,9 @@ namespace DataDictionary.BusinessLayer.Scripting
     public interface ITemplateValue : IScriptingTemplateItem, ITemplateIndex, ITemplateIndexName
     {
         /// <summary>
-        /// Transform Script as XElement
+        /// Transform Script as XDocument
         /// </summary>
-        XElement? TransformXml { get; }
+        XDocument? TransformXml { get; }
 
         /// <summary>
         /// Template Script Exception
@@ -45,7 +45,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         { return this.TemplateTitle ?? Scope.ToName(); }
 
         /// <inheritdoc/>
-        public XElement? TransformXml { get; private set; } = null;
+        public XDocument? TransformXml { get; private set; } = null;
 
         /// <inheritdoc/>
         public Exception? TransformException { get; private set; } = null;
@@ -63,7 +63,7 @@ namespace DataDictionary.BusinessLayer.Scripting
             {
                 try
                 {
-                    TransformXml = XElement.Parse(TransformScript ?? String.Empty);
+                    TransformXml = XDocument.Parse(TransformScript ?? String.Empty, LoadOptions.PreserveWhitespace);
                     TransformException = null;
                     OnPropertyChanged(nameof(TransformXml));
                     OnPropertyChanged(nameof(TransformException));
