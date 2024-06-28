@@ -101,14 +101,18 @@ namespace DataDictionary.Main.Controls
 
         public void Undo() { }
 
+        /// <inheritdoc cref="ComboBox.SelectedIndexChanged"/>
+        /// <remarks>Triggered by Binding</remarks>
         public event EventHandler? SelectedIndexChanged;
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         { if (SelectedIndexChanged is EventHandler handler) { handler(sender, e); } }
 
+        /// <inheritdoc cref="Control.Validated"/>
         public new event EventHandler? Validated;
         private void comboBox_Validated(object sender, EventArgs e)
         { if (Validated is EventHandler handler) { handler(sender, e); } }
 
+        /// <inheritdoc cref="Control.Validating"/>
         public new event CancelEventHandler? Validating;
         private void comboBox_Validating(object sender, CancelEventArgs e)
         { if (Validating is CancelEventHandler handler) { handler(sender, e); } }
@@ -117,7 +121,12 @@ namespace DataDictionary.Main.Controls
         {
             if (this.Enabled && !readOnly)
             { controlLayout.BackColor = SystemColors.ControlDarkDark; }
-            else { controlLayout.BackColor = SystemColors.Control; }            
+            else { controlLayout.BackColor = SystemColors.Control; }
         }
+
+        /// <inheritdoc cref="ComboBox.SelectionChangeCommitted"/>
+        public event EventHandler? SelectionChangeCommitted;
+        private void comboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        { if (SelectionChangeCommitted is EventHandler handler) { handler(sender, e); } }
     }
 }

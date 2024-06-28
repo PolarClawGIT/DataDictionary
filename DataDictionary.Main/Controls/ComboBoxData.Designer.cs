@@ -64,6 +64,7 @@
             comboBox.Size = new Size(121, 23);
             comboBox.TabIndex = 1;
             comboBox.SelectedIndexChanged += comboBox_SelectedIndexChanged;
+            comboBox.SelectionChangeCommitted += comboBox_SelectionChangeCommitted;
             comboBox.Validating += comboBox_Validating;
             comboBox.Validated += comboBox_Validated;
             // 

@@ -316,6 +316,57 @@ namespace DataDictionary.BusinessLayer.Scripting
             return result;
         }
 
+        /// <summary>
+        /// Returns the work items needed to Save the Source (XML) to the File.
+        /// </summary>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> SaveSource()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            if (DocumentFile is FileInfo && source.Root is XElement)
+            {
+                work.Add(new WorkItem()
+                {
+                    WorkName = String.Format("Save: {0}", DocumentFile.FullName),
+                    DoWork = () => source.Save(DocumentFile.FullName)
+                });
+            }
+
+            return work;
+        }
+
+        /// <summary>
+        /// Returns the work items needed to Save the Result (Script) to the File.
+        /// </summary>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> SaveResult()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+
+            if (ScriptFile is FileInfo)
+            {
+                if (resultsAsXml is XDocument && source.Root is XElement)
+                {
+                    work.Add(new WorkItem()
+                    {
+                        WorkName = String.Format("Save: {0}", ScriptFile.FullName),
+                        DoWork = () => resultsAsXml.Save(ScriptFile.FullName)
+                    });
+                }
+                else if (!String.IsNullOrWhiteSpace(ResultsAsText))
+                {
+                    work.Add(new WorkItem()
+                    {
+                        WorkName = String.Format("Save: {0}", ScriptFile.FullName),
+                        DoWork = () => File.WriteAllText(ScriptFile.FullName, ResultsAsText)
+                    });
+                }
+            }
+
+            return work;
+        }
+
         /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;
     }

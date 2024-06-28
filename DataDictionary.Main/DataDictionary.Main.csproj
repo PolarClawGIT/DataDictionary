@@ -87,4 +87,9 @@ Allows entry of MS Description and custom properties for Entities and Attributes
     </Using>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Forms\Scripting\Test\Document\" />
+    <Folder Include="Forms\Scripting\Test\Script\" />
+  </ItemGroup>
+
 </Project>

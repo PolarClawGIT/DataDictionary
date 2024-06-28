@@ -18,6 +18,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
+using Toolbox.Threading;
 
 namespace DataDictionary.Main.Forms.Scripting
 {
@@ -32,11 +33,8 @@ namespace DataDictionary.Main.Forms.Scripting
             InitializeComponent();
             toolStrip.TransferItems(templateToolStrip, 0);
 
-            transformFilePath.Width = transformToolStrip.Width -
-                transformToolStrip.Items.
-                Cast<ToolStripItem>().
-                Where(w => w != transformFilePath).
-                Sum(s => s.Width) - 3;
+            transformFilePath.Text = String.Empty;
+            documentStatus.Text = String.Empty;
         }
 
         public ScriptingTemplate(ITemplateValue? templateItem) : this()
@@ -86,7 +84,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             ScriptAsList.Load(scriptAsData);
             scriptAsData.DataBindings.Add(new Binding(nameof(scriptAsData.SelectedValue), bindingTemplate, nameof(nameOfValues.ScriptAs), false, DataSourceUpdateMode.OnPropertyChanged, ScriptAsList.NullValue));
-            scriptingDirectoryData.DataBindings.Add(new Binding(nameof(documentDirectoryData.Text), bindingTemplate, nameof(nameOfValues.ScriptDirectory), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
+            scriptingDirectoryData.DataBindings.Add(new Binding(nameof(scriptingDirectoryData.Text), bindingTemplate, nameof(nameOfValues.ScriptDirectory), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
             scriptingPrefixData.DataBindings.Add(new Binding(nameof(scriptingPrefixData.Text), bindingTemplate, nameof(nameOfValues.ScriptPrefix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
             scriptingSuffixData.DataBindings.Add(new Binding(nameof(scriptingSuffixData.Text), bindingTemplate, nameof(nameOfValues.ScriptSuffix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
             scriptingExtensionData.DataBindings.Add(new Binding(nameof(scriptingExtensionData.Text), bindingTemplate, nameof(nameOfValues.ScriptExtension), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
@@ -123,18 +121,23 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (rootDirectoryData.SelectedItem is DirectoryNameList value && value.Directory is DirectoryInfo)
+            { rootDirectoryExpanded.Text = value.Directory.FullName; }
+            else { rootDirectoryExpanded.Text = String.Empty; }
+        }
+
+        private void RootDirectoryData_SelectionChangeCommitted(object sender, EventArgs e)
+        {
             if (rootDirectoryData.SelectedItem is DirectoryNameList value
                 && bindingTemplate.Current is TemplateValue current)
             {
                 if (value.Directory is null)
                 {
-                    rootDirectoryExpanded.Text = String.Empty;
                     current.DocumentDirectory = null;
                     current.ScriptDirectory = null;
                 }
                 else
                 {
-                    rootDirectoryExpanded.Text = value.Directory.FullName;
                     current.DocumentDirectory = null;
                     current.ScriptDirectory = null;
                 }
@@ -179,6 +182,9 @@ namespace DataDictionary.Main.Forms.Scripting
         }
 
         private void ScriptAsData_SelectedIndexChanged(object sender, EventArgs e)
+        { }
+
+        private void ScriptAsData_SelectionChangeCommitted(object sender, EventArgs e)
         {
             if (bindingTemplate.Current is TemplateValue current)
             { current.ScriptExtension = new ScriptAsTypeKey(current).ToExtension(); }
@@ -411,7 +417,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
         }
 
-        private void elementSelection_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        private void ElementSelection_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         { } // Not used but here to debug event order. This occurs before SelectedIndexChanged.
 
         private void ElementSelection_SelectedIndexChanged(object sender, EventArgs e)
@@ -454,7 +460,7 @@ namespace DataDictionary.Main.Forms.Scripting
             { e.NewObject = new TemplateAttributeValue(node); }
         }
 
-        private void documentBuildComand_Click(object sender, EventArgs e)
+        private void DocumentBuildComand_Click(object sender, EventArgs e)
         {
             if (bindingTemplate.Current is TemplateValue current)
             {
@@ -463,6 +469,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 documentData.DataSource = null;
                 //bindingDocument.DataSource = null;
                 BusinessData.ScriptingEngine.TemplateDocuments.Remove(current);
+                documentStatus.Text = "working";
 
                 DoWork(BusinessData.BuildDocuments(current), onComplete);
 
@@ -475,8 +482,65 @@ namespace DataDictionary.Main.Forms.Scripting
                         bindingDocument.ResumeBinding();
                     }
 
+                    if (args.Error is null) { documentStatus.Text = "Build Complete"; }
+                    else { documentStatus.Text = args.Error.Message; }
                 }
             }
+        }
+
+        private void DocumentSaveXMLCommand_Click(object sender, EventArgs e)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            documentStatus.Text = "working";
+
+            foreach (DataGridViewRow item in documentData.SelectedRows)
+            {
+                if (item.DataBoundItem is TemplateDocumentValue doc)
+                { work.AddRange(doc.SaveSource()); }
+
+            }
+            this.DoWork(work, OnSaveComplete);
+        }
+
+        private void DocumentSaveScriptCommand_Click(object sender, EventArgs e)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            documentStatus.Text = "working";
+
+            foreach (DataGridViewRow item in documentData.SelectedRows)
+            {
+                if (item.DataBoundItem is TemplateDocumentValue doc)
+                { work.AddRange(doc.SaveResult()); }
+
+            }
+            this.DoWork(work, OnSaveComplete);
+        }
+
+        private void DocumentSaveAllCommand_Click(object sender, EventArgs e)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            if (bindingDocument.DataSource is IEnumerable<TemplateDocumentValue> items)
+            {
+                documentStatus.Text = "working";
+
+                foreach (var doc in items)
+                {
+                    work.AddRange(doc.SaveSource());
+                    work.AddRange(doc.SaveResult());
+                }
+            }
+            this.DoWork(work, OnSaveComplete);
+        }
+
+        private void OnSaveComplete(RunWorkerCompletedEventArgs args)
+        {
+            if (args.Error is null) { documentStatus.Text = "Save Complete"; }
+            else { documentStatus.Text = args.Error.Message; }
+        }
+
+        private void DocumentData_SelectionChanged(object sender, EventArgs e)
+        {
+            documentStatus.Text = String.Format("{0} selected", documentData.SelectedRows.Count);   
         }
     }
 }
