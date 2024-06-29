@@ -1,15 +1,14 @@
-﻿using DataDictionary.BusinessLayer.Application;
-using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.ApplicationData.Property;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.DomainData.Property;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
     /// <inheritdoc/>
-    public interface IAttributePropertyValue : IDomainAttributePropertyItem, IPropertyIndex, IPropertyValue
+    public interface IAttributePropertyValue : IDomainAttributePropertyItem, IPropertyIndex
     { }
 
     /// <inheritdoc/>
@@ -29,7 +28,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
 
         /// <inheritdoc/>
-        public XElement? GetXElement(IPropertyData data, IEnumerable<SchemaElementValue>? options)
+        /*public XElement? GetXElement(IPropertyData data, IEnumerable<TemplateElementValue>? options)
         {
             XElement? result = null;
 
@@ -39,16 +38,16 @@ namespace DataDictionary.BusinessLayer.Domain
 
                 if (data.FirstOrDefault(w => key.Equals(w)) is PropertyValue property)
                 {
-                    foreach (SchemaElementValue option in options)
+                    foreach (TemplateElementValue option in options)
                     {
                         Object? value = null;
 
-                        switch (option.ColumnName)
+                        switch (option.PropertyName)
                         {
                             case nameof(property.PropertyTitle): value = property.PropertyTitle; break;
-                            case nameof(property.ExtendedProperty): value = property.ExtendedProperty; break;
+                            case nameof(property.PropertyType): value = property.PropertyType.ToName(); break;
+                            case nameof(property.PropertyData): value = property.PropertyData; break;
                             case nameof(PropertyValue): value = PropertyValue; break;
-                            case nameof(DefinitionText): value = DefinitionText; break;
                             default:
                                 break;
                         }
@@ -64,18 +63,18 @@ namespace DataDictionary.BusinessLayer.Domain
 
             return result;
         }
-
-        internal static IReadOnlyList<ColumnValue> GetXColumns()
+        */
+        internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelAttributeProperty;
             IAttributePropertyValue attributeNames;
-            IPropertyItem propertyNames;
-            List<ColumnValue> result = new List<ColumnValue>()
+            IPropertyValue propertyNames;
+            List<NodePropertyValue> result = new List<NodePropertyValue>()
             {
-                new ColumnValue() {ColumnName = nameof(propertyNames.PropertyTitle),    DataType = typeof(String), AllowDBNull = false, Scope = scope},
-                new ColumnValue() {ColumnName = nameof(propertyNames.ExtendedProperty), DataType = typeof(String), AllowDBNull = true,  Scope = scope},
-                new ColumnValue() {ColumnName = nameof(attributeNames.PropertyValue),   DataType = typeof(String), AllowDBNull = true,  Scope = scope},
-                new ColumnValue() {ColumnName = nameof(attributeNames.DefinitionText),  DataType = typeof(String), AllowDBNull = true,  Scope = scope},
+                new NodePropertyValue() {PropertyName = nameof(propertyNames.PropertyTitle),  DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
+                new NodePropertyValue() {PropertyName = nameof(propertyNames.PropertyType),   DataType = typeof(String), AllowDBNull = true,  PropertyScope = scope},
+                new NodePropertyValue() {PropertyName = nameof(propertyNames.PropertyData),   DataType = typeof(String), AllowDBNull = true,  PropertyScope = scope},
+                new NodePropertyValue() {PropertyName = nameof(attributeNames.PropertyValue), DataType = typeof(String), AllowDBNull = true,  PropertyScope = scope},
             };
 
             return result;

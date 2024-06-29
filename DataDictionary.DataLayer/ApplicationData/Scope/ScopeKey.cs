@@ -154,12 +154,16 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.DatabaseFunctionParameter, "Database.Schema.Function.Parameter" },
 
             {ScopeType.Model,                     "Model" },
+            {ScopeType.ModelProperty,             "Model.Property" },
+            {ScopeType.ModelDefinition,           "Model.Definition" },
             {ScopeType.ModelAttribute,            "Model.Attribute" },
             {ScopeType.ModelAttributeAlias,       "Model.Attribute.Alias" },
             {ScopeType.ModelAttributeProperty,    "Model.Attribute.Property" },
+            {ScopeType.ModelAttributeDefinition,  "Model.Attribute.Definition" },
             {ScopeType.ModelEntity,               "Model.Entity" },
             {ScopeType.ModelEntityAlias,          "Model.Entity.Alias" },
             {ScopeType.ModelEntityProperty,       "Model.Entity.Property" },
+            {ScopeType.ModelEntityDefinition,     "Model.Entity.Definition," },
             {ScopeType.ModelEntityAttribute,      "Model.Entity.Attribute" },
 
             {ScopeType.ModelSubjectArea,          "Model.SubjectArea" },
@@ -171,14 +175,15 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             {ScopeType.ScriptingTransform,        "Scripting.Transform" },
             {ScopeType.ScriptingSelection,        "Scripting.Selection" },
             {ScopeType.ScriptingSelectionPath,    "Scripting.Selection.Path" },
+
+            {ScopeType.ScriptingTemplate,         "Scripting.Template" },
+            {ScopeType.ScriptingTemplatePath,     "Scripting.Template.Path" },
+            {ScopeType.ScriptingTemplateNode,  "Scripting.Template.Element" },
         };
 
         /// <inheritdoc/>
         public static ScopeKey Parse(String source, IFormatProvider? provider = null)
         {
-            if (String.IsNullOrEmpty(source))
-            { throw new ArgumentNullException(nameof(source)); }
-
             if (ScopeKey.TryParse(source, provider, out ScopeKey? result))
             { return result; }
             else

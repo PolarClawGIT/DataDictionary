@@ -9,6 +9,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// <summary>
     /// Interface for the Primary Key for the Property.
     /// </summary>
+    [Obsolete("Replace Domain Property", true)]
     public interface IPropertyKey : IKey
     {
         /// <summary>
@@ -20,6 +21,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// <summary>
     /// Implementation of the Primary Key of the Property.
     /// </summary>
+    [Obsolete("Replace Domain Property", true)]
     public class PropertyKey : IPropertyKey, IKeyEquality<IPropertyKey>
     {
         /// <inheritdoc/>

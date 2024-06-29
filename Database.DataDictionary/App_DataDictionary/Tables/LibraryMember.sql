@@ -5,6 +5,11 @@
 	[MemberName]            [App_DataDictionary].[typeNameSpaceMember] Not Null,
 	[MemberType]            [App_DataDictionary].[typeObjectSubType] Null, -- .Net Documents produce a letter that is converted to a Member type. There may not be one.
 	[MemberData]            XML Null, -- Raw data as XML
+	-- TODO: Add System Version later once the schema is locked down. Not needed for Db Schema?
+	[ModfiedBy] SysName Not Null CONSTRAINT [DF_LibraryMember_ModfiedBy] DEFAULT (original_login()),
+	[SysStart] DATETIME2 (7) GENERATED ALWAYS AS ROW START HIDDEN NOT NULL CONSTRAINT [DF_LibraryMember_SysStart] DEFAULT (sysdatetime()),
+	[SysEnd] DATETIME2 (7) GENERATED ALWAYS AS ROW END HIDDEN NOT NULL CONSTRAINT [DF_LibraryMember_SysEnd] DEFAULT ('9999-12-31 23:59:59.9999999'),
+   	PERIOD FOR SYSTEM_TIME ([SysStart], [SysEnd]),
 	-- Keys
 	CONSTRAINT [PK_LibraryMember] PRIMARY KEY CLUSTERED ([MemberId] ASC),
 	CONSTRAINT [FK_LibraryMemberSource] FOREIGN KEY ([LibraryId]) REFERENCES [App_DataDictionary].[LibrarySource] ([LibraryId]),

@@ -18,7 +18,7 @@ namespace DataDictionary.BusinessLayer
     /// Main Data Container for all Business Data.
     /// </summary>
     public partial class BusinessLayerData :
-        ILoadData<IModelKey>, ISaveData<IModelKey>, IRemoveData,
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
         IBusinessLayerData
     {
         /// <summary>
@@ -74,10 +74,9 @@ namespace DataDictionary.BusinessLayer
             subjectAreaValues = new Model.SubjectAreaData() { Models = modelValue };
             namedScopeValue = new NamedScopeData();
 
-            modelValue.Add(new ModelValue());
             applicationValue = new Application.ApplicationData();
 
-            domainValue = new Domain.DomainModel() { Models = modelValue, ModelProperty = applicationValue.Properties, SubjectAreas = subjectAreaValues };
+            domainValue = new Domain.DomainModel() { Models = modelValue, SubjectAreas = subjectAreaValues };
             databaseValue = new Database.DatabaseModel();
             libraryValue = new Library.LibraryModel();
 
@@ -95,7 +94,7 @@ namespace DataDictionary.BusinessLayer
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValue.Remove());
+            work.AddRange(modelValue.Delete());
             work.AddRange(modelValue.Load(factory, key));
             work.AddRange(subjectAreaValues.Load(factory, key));
 
@@ -126,23 +125,27 @@ namespace DataDictionary.BusinessLayer
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.AddRange(modelValue.Remove());
-            work.AddRange(subjectAreaValues.Remove());
+            work.AddRange(modelValue.Delete());
+            work.AddRange(subjectAreaValues.Delete());
 
-            work.AddRange(DomainModel.Remove());
-            work.AddRange(DatabaseModel.Remove());
-            work.AddRange(LibraryModel.Remove());
+            work.AddRange(DomainModel.Delete());
+            work.AddRange(DatabaseModel.Delete());
+            work.AddRange(LibraryModel.Delete());
 
-            work.AddRange(ScriptingEngine.Remove());
+            work.AddRange(ScriptingEngine.Delete());
 
             work.Add(new WorkItem() { DoWork = namedScopeValue.Clear });
 
             return work;
         }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
 
         /// <summary>
         /// Creates a new empty Model (old model is removed).
@@ -151,9 +154,9 @@ namespace DataDictionary.BusinessLayer
         public IReadOnlyList<WorkItem> Create()
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(Remove());
-
+            work.AddRange(Delete());
             work.AddRange(modelValue.Create());
+            work.AddRange(domainValue.Create(applicationValue));
             return work;
         }
 
@@ -165,7 +168,7 @@ namespace DataDictionary.BusinessLayer
         public IReadOnlyList<WorkItem> ImportModel(FileInfo file)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(Remove());
+            work.AddRange(Delete());
             work.Add(new WorkItem() { WorkName = "Load Model Data", DoWork = DoWork });
             return work;
 
@@ -239,7 +242,6 @@ namespace DataDictionary.BusinessLayer
                 {
                     workSet.ReadXml(file.FullName, System.Data.XmlReadMode.ReadSchema);
                     applicationValue.Import(workSet);
-                    scriptingValue.Import(workSet);
                 }
             }
         }
@@ -262,11 +264,12 @@ namespace DataDictionary.BusinessLayer
                 using (System.Data.DataSet workSet = new System.Data.DataSet())
                 {
                     workSet.Tables.AddRange(applicationValue.Export().ToArray());
-                    workSet.Tables.AddRange(scriptingValue.Export().ToArray());
 
                     workSet.WriteXml(file.FullName, System.Data.XmlWriteMode.WriteSchema);
                 }
             }
         }
+
+
     }
 }

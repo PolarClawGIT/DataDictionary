@@ -49,6 +49,11 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         ModelAttributeProperty,
 
         /// <summary>
+        /// Application Model Attribute Definition
+        /// </summary>
+        ModelAttributeDefinition,
+
+        /// <summary>
         /// Application Model Entity
         /// </summary>
         ModelEntity,
@@ -64,6 +69,11 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         ModelEntityProperty,
 
         /// <summary>
+        /// Application Model Entity Definition
+        /// </summary>
+        ModelEntityDefinition,
+
+        /// <summary>
         /// Application Model Attribute of an Entity
         /// </summary>
         ModelEntityAttribute,
@@ -72,6 +82,16 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// NameSpace item for the Model
         /// </summary>
         ModelNameSpace,
+
+        /// <summary>
+        /// Property for the Model
+        /// </summary>
+        ModelProperty,
+
+        /// <summary>
+        /// Definition for the Model
+        /// </summary>
+        ModelDefinition,
 
         /// <summary>
         /// .Net Library
@@ -119,7 +139,6 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// .Net Library Property Parameter, Indexer
         /// </summary>
         LibraryPropertyParameter,
-
 
         /// <summary>
         /// SQL Database
@@ -214,6 +233,32 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
         /// Scripting Selection Path
         /// </summary>
         ScriptingSelectionPath,
+
+        /// <summary>
+        /// Scripting Template
+        /// </summary>
+        ScriptingTemplate,
+
+        /// <summary>
+        /// Scripting Template Path
+        /// </summary>
+        ScriptingTemplatePath,
+
+        /// <summary>
+        /// Scripting Template Node
+        /// </summary>
+        ScriptingTemplateNode,
+
+        /// <summary>
+        /// Scripting Template Node Attribute
+        /// </summary>
+        ScriptingTemplateAttribute,
+
+        /// <summary>
+        /// Scripting Template Document
+        /// </summary>
+        ScriptingTemplateDocument,
+
     }
 
     /// <summary>

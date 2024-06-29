@@ -35,13 +35,15 @@
             contextNameNavigation = new TreeView();
             attributeContextMenu = new ContextMenuStrip(components);
             menuAttributes = new ToolStripMenuItem();
-            menuAttributeProperties = new ToolStripMenuItem();
             menuAttributeAlaises = new ToolStripMenuItem();
+            menuAttributeProperties = new ToolStripMenuItem();
+            menuAttributeDefinitions = new ToolStripMenuItem();
             newAttributeCommand = new ToolStripSplitButton();
             entityContextMenu = new ContextMenuStrip(components);
-            entitiesToolStripMenuItem = new ToolStripMenuItem();
-            entityPropertiesToolStripMenuItem = new ToolStripMenuItem();
-            entityAliasToolStripMenuItem = new ToolStripMenuItem();
+            menuEntities = new ToolStripMenuItem();
+            menuEntityAlias = new ToolStripMenuItem();
+            menuEntityProperties = new ToolStripMenuItem();
+            menuEntityDefinitions = new ToolStripMenuItem();
             newEntityCommand = new ToolStripSplitButton();
             subjectAreaContextMenu = new ContextMenuStrip(components);
             subjectAreaToolStripMenuItem = new ToolStripMenuItem();
@@ -110,17 +112,22 @@
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
             toolStrip = new ToolStrip();
-            manageModelCommand = new ToolStripButton();
+            manageModelCommand = new ToolStripSplitButton();
+            modelContextMenu = new ContextMenuStrip(components);
+            menuModelProperty = new ToolStripMenuItem();
+            menuModelDefinition = new ToolStripMenuItem();
             newRelationshipCommand = new ToolStripSplitButton();
             newProcessCommand = new ToolStripSplitButton();
             toolStripSeparator6 = new ToolStripSeparator();
             manageScriptingCommand = new ToolStripSplitButton();
             scriptingContextMenu = new ContextMenuStrip(components);
-            schemaManagerCommand = new ToolStripMenuItem();
-            selectionPathCommand = new ToolStripMenuItem();
-            transformManagerCommand = new ToolStripMenuItem();
+            menuScriptingTemplate = new ToolStripMenuItem();
+            menuScriptingPath = new ToolStripMenuItem();
+            menuScriptingDocument = new ToolStripMenuItem();
             toolStripSeparator7 = new ToolStripSeparator();
             refreshCommand = new ToolStripButton();
+            menuScriptingNode = new ToolStripMenuItem();
+            menuScriptingAttribute = new ToolStripMenuItem();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
@@ -132,6 +139,7 @@
             statusStrip.SuspendLayout();
             menuStrip.SuspendLayout();
             toolStrip.SuspendLayout();
+            modelContextMenu.SuspendLayout();
             scriptingContextMenu.SuspendLayout();
             SuspendLayout();
             // 
@@ -168,34 +176,42 @@
             // 
             // attributeContextMenu
             // 
-            attributeContextMenu.Items.AddRange(new ToolStripItem[] { menuAttributes, menuAttributeProperties, menuAttributeAlaises });
+            attributeContextMenu.Items.AddRange(new ToolStripItem[] { menuAttributes, menuAttributeAlaises, menuAttributeProperties, menuAttributeDefinitions });
             attributeContextMenu.Name = "attributeContextMenu";
             attributeContextMenu.OwnerItem = newAttributeCommand;
-            attributeContextMenu.Size = new Size(219, 70);
+            attributeContextMenu.Size = new Size(223, 92);
             // 
             // menuAttributes
             // 
             menuAttributes.Image = Properties.Resources.Attribute;
             menuAttributes.Name = "menuAttributes";
-            menuAttributes.Size = new Size(218, 22);
+            menuAttributes.Size = new Size(222, 22);
             menuAttributes.Text = "browse &Attributes";
             menuAttributes.Click += menuAttributes_Click;
-            // 
-            // menuAttributeProperties
-            // 
-            menuAttributeProperties.Image = Properties.Resources.Property;
-            menuAttributeProperties.Name = "menuAttributeProperties";
-            menuAttributeProperties.Size = new Size(218, 22);
-            menuAttributeProperties.Text = "browse Attribute &Properties";
-            menuAttributeProperties.Click += menuAttributeProperties_Click;
             // 
             // menuAttributeAlaises
             // 
             menuAttributeAlaises.Image = Properties.Resources.Synonym;
             menuAttributeAlaises.Name = "menuAttributeAlaises";
-            menuAttributeAlaises.Size = new Size(218, 22);
+            menuAttributeAlaises.Size = new Size(222, 22);
             menuAttributeAlaises.Text = "browse Attribute A&laises";
             menuAttributeAlaises.Click += menuAttributeAlaises_Click;
+            // 
+            // menuAttributeProperties
+            // 
+            menuAttributeProperties.Image = Properties.Resources.Property;
+            menuAttributeProperties.Name = "menuAttributeProperties";
+            menuAttributeProperties.Size = new Size(222, 22);
+            menuAttributeProperties.Text = "browse Attribute &Properties";
+            menuAttributeProperties.Click += menuAttributeProperties_Click;
+            // 
+            // menuAttributeDefinitions
+            // 
+            menuAttributeDefinitions.Image = Properties.Resources.RichTextBox;
+            menuAttributeDefinitions.Name = "menuAttributeDefinitions";
+            menuAttributeDefinitions.Size = new Size(222, 22);
+            menuAttributeDefinitions.Text = "browse Attribute &Definitions";
+            menuAttributeDefinitions.Click += menuAttributeDefinitions_Click;
             // 
             // newAttributeCommand
             // 
@@ -210,34 +226,42 @@
             // 
             // entityContextMenu
             // 
-            entityContextMenu.Items.AddRange(new ToolStripItem[] { entitiesToolStripMenuItem, entityPropertiesToolStripMenuItem, entityAliasToolStripMenuItem });
+            entityContextMenu.Items.AddRange(new ToolStripItem[] { menuEntities, menuEntityAlias, menuEntityProperties, menuEntityDefinitions });
             entityContextMenu.Name = "entityContextMenu";
             entityContextMenu.OwnerItem = newEntityCommand;
-            entityContextMenu.Size = new Size(202, 70);
+            entityContextMenu.Size = new Size(206, 92);
             // 
-            // entitiesToolStripMenuItem
+            // menuEntities
             // 
-            entitiesToolStripMenuItem.Image = Properties.Resources.Entity;
-            entitiesToolStripMenuItem.Name = "entitiesToolStripMenuItem";
-            entitiesToolStripMenuItem.Size = new Size(201, 22);
-            entitiesToolStripMenuItem.Text = "browse &Entities";
-            entitiesToolStripMenuItem.Click += entitiesToolStripMenuItem_Click;
+            menuEntities.Image = Properties.Resources.Entity;
+            menuEntities.Name = "menuEntities";
+            menuEntities.Size = new Size(205, 22);
+            menuEntities.Text = "browse &Entities";
+            menuEntities.Click += menuEntities_Click;
             // 
-            // entityPropertiesToolStripMenuItem
+            // menuEntityAlias
             // 
-            entityPropertiesToolStripMenuItem.Image = Properties.Resources.Property;
-            entityPropertiesToolStripMenuItem.Name = "entityPropertiesToolStripMenuItem";
-            entityPropertiesToolStripMenuItem.Size = new Size(201, 22);
-            entityPropertiesToolStripMenuItem.Text = "browse Entity &Properties";
-            entityPropertiesToolStripMenuItem.Click += entityPropertiesToolStripMenuItem_Click;
+            menuEntityAlias.Image = Properties.Resources.Synonym;
+            menuEntityAlias.Name = "menuEntityAlias";
+            menuEntityAlias.Size = new Size(205, 22);
+            menuEntityAlias.Text = "browse Entity A&lias";
+            menuEntityAlias.Click += menuEntityAlias_Click;
             // 
-            // entityAliasToolStripMenuItem
+            // menuEntityProperties
             // 
-            entityAliasToolStripMenuItem.Image = Properties.Resources.Synonym;
-            entityAliasToolStripMenuItem.Name = "entityAliasToolStripMenuItem";
-            entityAliasToolStripMenuItem.Size = new Size(201, 22);
-            entityAliasToolStripMenuItem.Text = "browse Entity A&lias";
-            entityAliasToolStripMenuItem.Click += entityAliasToolStripMenuItem_Click;
+            menuEntityProperties.Image = Properties.Resources.Property;
+            menuEntityProperties.Name = "menuEntityProperties";
+            menuEntityProperties.Size = new Size(205, 22);
+            menuEntityProperties.Text = "browse Entity &Properties";
+            menuEntityProperties.Click += menuEntityProperties_Click;
+            // 
+            // menuEntityDefinitions
+            // 
+            menuEntityDefinitions.Image = Properties.Resources.RichTextBox;
+            menuEntityDefinitions.Name = "menuEntityDefinitions";
+            menuEntityDefinitions.Size = new Size(205, 22);
+            menuEntityDefinitions.Text = "browse Entity &Definitions";
+            menuEntityDefinitions.Click += menuEntityDefinitions_Click;
             // 
             // newEntityCommand
             // 
@@ -757,12 +781,36 @@
             // manageModelCommand
             // 
             manageModelCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            manageModelCommand.DropDown = modelContextMenu;
             manageModelCommand.Image = Properties.Resources.SoftwareDefinitionModel;
             manageModelCommand.ImageTransparentColor = Color.Magenta;
             manageModelCommand.Name = "manageModelCommand";
-            manageModelCommand.Size = new Size(23, 22);
+            manageModelCommand.Size = new Size(32, 22);
             manageModelCommand.Text = "Model Manager";
-            manageModelCommand.Click += ManageModelCommand_ButtonClick;
+            manageModelCommand.ButtonClick += ManageModelCommand_ButtonClick;
+            // 
+            // modelContextMenu
+            // 
+            modelContextMenu.Items.AddRange(new ToolStripItem[] { menuModelProperty, menuModelDefinition });
+            modelContextMenu.Name = "modelContextMenu";
+            modelContextMenu.OwnerItem = manageModelCommand;
+            modelContextMenu.Size = new Size(173, 48);
+            // 
+            // menuModelProperty
+            // 
+            menuModelProperty.Image = Properties.Resources.Property;
+            menuModelProperty.Name = "menuModelProperty";
+            menuModelProperty.Size = new Size(172, 22);
+            menuModelProperty.Text = "browse Properties";
+            menuModelProperty.Click += menuModelProperty_Click;
+            // 
+            // menuModelDefinition
+            // 
+            menuModelDefinition.Image = Properties.Resources.RichTextBox;
+            menuModelDefinition.Name = "menuModelDefinition";
+            menuModelDefinition.Size = new Size(172, 22);
+            menuModelDefinition.Text = "browse Definitions";
+            menuModelDefinition.Click += menuModelDefinition_Click;
             // 
             // newRelationshipCommand
             // 
@@ -791,7 +839,7 @@
             // 
             manageScriptingCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageScriptingCommand.DropDown = scriptingContextMenu;
-            manageScriptingCommand.Image = Properties.Resources.XmlFile;
+            manageScriptingCommand.Image = Properties.Resources.NewXSLTransform;
             manageScriptingCommand.ImageTransparentColor = Color.Magenta;
             manageScriptingCommand.Name = "manageScriptingCommand";
             manageScriptingCommand.Size = new Size(32, 22);
@@ -800,34 +848,34 @@
             // 
             // scriptingContextMenu
             // 
-            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { schemaManagerCommand, selectionPathCommand, transformManagerCommand });
+            scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingPath, menuScriptingDocument, menuScriptingNode, menuScriptingAttribute });
             scriptingContextMenu.Name = "scriptingContextMenu";
             scriptingContextMenu.OwnerItem = manageScriptingCommand;
-            scriptingContextMenu.Size = new Size(181, 92);
+            scriptingContextMenu.Size = new Size(228, 136);
             // 
-            // schemaManagerCommand
+            // menuScriptingTemplate
             // 
-            schemaManagerCommand.Image = Properties.Resources.NewXMLSchema;
-            schemaManagerCommand.Name = "schemaManagerCommand";
-            schemaManagerCommand.Size = new Size(180, 22);
-            schemaManagerCommand.Text = "Schema (XSD)";
-            schemaManagerCommand.Click += schemaManagerCommand_Click;
+            menuScriptingTemplate.Image = Properties.Resources.XSLTransform;
+            menuScriptingTemplate.Name = "menuScriptingTemplate";
+            menuScriptingTemplate.Size = new Size(227, 22);
+            menuScriptingTemplate.Text = "browse Templates";
+            menuScriptingTemplate.Click += menuScriptingTemplates_Click;
             // 
-            // selectionPathCommand
+            // menuScriptingPath
             // 
-            selectionPathCommand.Image = Properties.Resources.NewXPath;
-            selectionPathCommand.Name = "selectionPathCommand";
-            selectionPathCommand.Size = new Size(180, 22);
-            selectionPathCommand.Text = "Selection (XPath)";
-            selectionPathCommand.Click += selectionPathCommand_Click;
+            menuScriptingPath.Image = Properties.Resources.XPath;
+            menuScriptingPath.Name = "menuScriptingPath";
+            menuScriptingPath.Size = new Size(227, 22);
+            menuScriptingPath.Text = "browse Template Paths";
+            menuScriptingPath.Click += menuScriptingPath_Click;
             // 
-            // transformManagerCommand
+            // menuScriptingDocument
             // 
-            transformManagerCommand.Image = Properties.Resources.NewXSLTransform;
-            transformManagerCommand.Name = "transformManagerCommand";
-            transformManagerCommand.Size = new Size(180, 22);
-            transformManagerCommand.Text = "Transform (XSLT)";
-            transformManagerCommand.Click += transformManagerCommand_Click;
+            menuScriptingDocument.Image = Properties.Resources.XmlFile;
+            menuScriptingDocument.Name = "menuScriptingDocument";
+            menuScriptingDocument.Size = new Size(227, 22);
+            menuScriptingDocument.Text = "browse Template Documents";
+            menuScriptingDocument.Click += menuScriptingDocument_Click;
             // 
             // toolStripSeparator7
             // 
@@ -843,6 +891,22 @@
             refreshCommand.Size = new Size(23, 22);
             refreshCommand.Text = "Refresh navigation tree";
             refreshCommand.Click += RefreshCommand_Click;
+            // 
+            // menuScriptingNode
+            // 
+            menuScriptingNode.Image = Properties.Resources.XMLElement;
+            menuScriptingNode.Name = "menuScriptingNode";
+            menuScriptingNode.Size = new Size(227, 22);
+            menuScriptingNode.Text = "browse Template Nodes";
+            menuScriptingNode.Click += menuScriptingNode_Click;
+            // 
+            // menuScriptingAttribute
+            // 
+            menuScriptingAttribute.Image = Properties.Resources.XMLAttribute;
+            menuScriptingAttribute.Name = "menuScriptingAttribute";
+            menuScriptingAttribute.Size = new Size(227, 22);
+            menuScriptingAttribute.Text = "browse Template Attributes";
+            menuScriptingAttribute.Click += menuScriptingAttribute_Click;
             // 
             // Main
             // 
@@ -876,6 +940,7 @@
             menuStrip.PerformLayout();
             toolStrip.ResumeLayout(false);
             toolStrip.PerformLayout();
+            modelContextMenu.ResumeLayout(false);
             scriptingContextMenu.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -946,9 +1011,9 @@
         private ToolStripMenuItem menuAttributeProperties;
         private ToolStripMenuItem menuAttributeAlaises;
         private ContextMenuStrip entityContextMenu;
-        private ToolStripMenuItem entitiesToolStripMenuItem;
-        private ToolStripMenuItem entityPropertiesToolStripMenuItem;
-        private ToolStripMenuItem entityAliasToolStripMenuItem;
+        private ToolStripMenuItem menuEntities;
+        private ToolStripMenuItem menuEntityProperties;
+        private ToolStripMenuItem menuEntityAlias;
         private ContextMenuStrip subjectAreaContextMenu;
         private ToolStripMenuItem subjectAreaToolStripMenuItem;
         private ContextMenuStrip libraryContextMenu;
@@ -956,7 +1021,6 @@
         private ToolStripMenuItem viewLibraryMemberCommand;
         private ToolStripMenuItem menuManageCatalog;
         private ToolStrip toolStrip;
-        private ToolStripButton manageModelCommand;
         private ToolStripSplitButton newAttributeCommand;
         private ToolStripSplitButton newEntityCommand;
         private ToolStripSplitButton newSubjectAreaCommand;
@@ -967,10 +1031,18 @@
         private ToolStripButton refreshCommand;
         private ToolStripSplitButton manageScriptingCommand;
         private ContextMenuStrip scriptingContextMenu;
-        private ToolStripMenuItem schemaManagerCommand;
-        private ToolStripMenuItem transformManagerCommand;
         private ToolStripSplitButton newRelationshipCommand;
         private ToolStripSplitButton newProcessCommand;
-        private ToolStripMenuItem selectionPathCommand;
+        private ToolStripSplitButton manageModelCommand;
+        private ToolStripMenuItem menuAttributeDefinitions;
+        private ToolStripMenuItem menuEntityDefinitions;
+        private ContextMenuStrip modelContextMenu;
+        private ToolStripMenuItem menuModelProperty;
+        private ToolStripMenuItem menuModelDefinition;
+        private ToolStripMenuItem menuScriptingTemplate;
+        private ToolStripMenuItem menuScriptingPath;
+        private ToolStripMenuItem menuScriptingDocument;
+        private ToolStripMenuItem menuScriptingNode;
+        private ToolStripMenuItem menuScriptingAttribute;
     }
 }

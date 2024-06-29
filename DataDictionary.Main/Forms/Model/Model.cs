@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Model;
 using DataDictionary.Main.Controls;
 using System.ComponentModel;
+using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Model
 {
@@ -15,10 +16,16 @@ namespace DataDictionary.Main.Forms.Model
             toolStrip.TransferItems(modelToolStrip,0);
         }
 
-        public Model(IModelValue data) : this()
+        public Model(IModelValue? model) : this()
         {
-            bindingModel.AllowNew = false;
-            bindingModel.DataSource = new BindingList<IModelValue>() { data };
+            if (model is null)
+            { // Should never occur
+                model = new ModelValue();
+                BusinessData.Models.Add(model);
+            }
+
+            ModelIndex key = new ModelIndex(model);
+            bindingModel.DataSource = new BindingView<ModelValue>(BusinessData.Models, w => key.Equals(w));
             bindingModel.Position = 0;
 
             Setup(bindingModel);

@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Property;
+﻿using DataDictionary.DataLayer.DomainData.Property;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using System.Data;
@@ -29,9 +29,6 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         public string? PropertyValue { get { return GetValue(nameof(PropertyValue)); } set { SetValue(nameof(PropertyValue), value); } }
 
         /// <inheritdoc/>
-        public string? DefinitionText { get { return GetValue(nameof(DefinitionText)); } set { SetValue(nameof(DefinitionText), value); } }
-
-        /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.ModelEntityProperty;
 
         /// <summary>
@@ -52,7 +49,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// <param name="EntityKey"></param>
         /// <param name="propertyKey"></param>
         /// <param name="value"></param>
-        public DomainEntityPropertyItem(IDomainEntityKey EntityKey, IPropertyKey propertyKey, IDbExtendedPropertyItem value) : this()
+        public DomainEntityPropertyItem(IDomainEntityKey EntityKey, IDomainPropertyKey propertyKey, IDbExtendedPropertyItem value) : this()
         {
             EntityId = EntityKey.EntityId;
             PropertyId = propertyKey.PropertyId;
@@ -64,7 +61,6 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             new DataColumn(nameof(EntityId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(PropertyId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(PropertyValue), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(DefinitionText), typeof(string)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

@@ -25,7 +25,7 @@ namespace DataDictionary.BusinessLayer.Model
         IReadOnlyList<WorkItem> Create();
     }
 
-    class ModelData : ModelCollection<ModelValue>, IModelData,
+    class ModelData : ModelCollection<ModelValue>, IModelData, 
         ILoadData<IModelKey>, ISaveData<IModelKey>, IDataTableFile,
         INamedScopeSource
     {
@@ -49,9 +49,18 @@ namespace DataDictionary.BusinessLayer.Model
         public void Import(System.Data.DataSet source)
         { Load(source); }
 
-        public IReadOnlyList<WorkItem> Remove()
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<WorkItem> Delete()
         { return new WorkItem() { WorkName = "Remove Model", DoWork = () => { Clear(); } }.ToList(); }
 
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return new WorkItem() { WorkName = "Remove Model", DoWork = () => { Remove(dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Model</remarks>
         public IReadOnlyList<WorkItem> Create()
         { return new WorkItem() { WorkName = "Create Model", DoWork = () => { Add(new ModelValue()); } }.ToList(); }
 
@@ -76,6 +85,7 @@ namespace DataDictionary.BusinessLayer.Model
                 }
             }
         }
+
 
     }
 }

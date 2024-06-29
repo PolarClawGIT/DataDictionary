@@ -136,7 +136,7 @@ namespace DataDictionary.Main.Forms.Database
             {
                 IsLocked(true);
                 CatalogIndex catalogKey = new CatalogIndex(item);
-                work.AddRange(BusinessData.DatabaseModel.Remove(catalogKey));
+                work.AddRange(BusinessData.DatabaseModel.Delete(catalogKey));
 
                 DoWork(work, onCompleting);
             }

@@ -2,6 +2,8 @@ Begin Try;
 	Begin Transaction;
 	Set NoCount On;
 
+Throw 50000, 'Scope is now Application Only',255;
+
 	--Delete From [App_DataDictionary].[ApplicationScope]
 
 	Declare @Scope [App_DataDictionary].[typeApplicationScope] 

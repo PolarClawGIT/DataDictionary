@@ -15,6 +15,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// <summary>
     /// Interface for the Property data.
     /// </summary>
+    [Obsolete("Replace Domain Property", true)]
     public interface IPropertyItem : IPropertyKey, IPropertyKeyExtended, IPropertyKeyName
     {
         /// <summary>
@@ -53,6 +54,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// Implementation of the Property data.
     /// </summary>
     [Serializable]
+    [Obsolete("Replace Domain Property", true)]
     public class PropertyItem : BindingTableRow, IPropertyItem, ISerializable, IValidateItem<PropertyItem>
     {
         /// <inheritdoc/>

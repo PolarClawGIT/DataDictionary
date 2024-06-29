@@ -27,20 +27,24 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         public String? AliasName { get { return GetValue(nameof(AliasName)); } set { SetValue(nameof(AliasName), value); } }
 
         /// <inheritdoc/>
-        public ScopeType Scope
+        public ScopeType AliasScope
         {
-            get { return ScopeKey.Parse(ScopeName ?? String.Empty).Scope; }
-            set { ScopeName = value.ToName(); OnPropertyChanged(nameof(Scope)); }
+            get { return ScopeKey.Parse(GetValue(nameof(AliasScope)) ?? String.Empty).Scope; }
+            set
+            {
+                if (value is ScopeType.Null) { SetValue(nameof(AliasScope), null); }
+                else { SetValue(nameof(AliasScope), value.ToName()); }
+            }
         }
 
-        /// <inheritdoc cref="IScopeKey.Scope"/>
-        protected String? ScopeName { get { return GetValue(nameof(ScopeName)); } set { SetValue(nameof(ScopeName), value); } }
+        /// <inheritdoc/>
+        public ScopeType Scope { get; } = ScopeType.ModelEntityAlias;
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(EntityId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(AliasName), typeof(String)){ AllowDBNull = true},
-            new DataColumn(nameof(ScopeName), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(AliasScope), typeof(String)){ AllowDBNull = true},
         };
 
         /// <summary>

@@ -108,7 +108,7 @@ namespace DataDictionary.Main
                 IDatabaseWork factory = BusinessData.GetDbFactory();
                 work.Add(factory.OpenConnection());
                 work.AddRange(BusinessData.ApplicationData.Load(factory));
-                work.AddRange(BusinessData.ScriptingEngine.Load(factory));
+                work.AddRange(BusinessData.Create());
 
                 if (!appDataFile.Exists)
                 { work.AddRange(BusinessData.ExportApplication(appDataFile)); }
@@ -166,7 +166,7 @@ namespace DataDictionary.Main
         }
 
         private void browsePropertiesCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.ApplicationWide.Property()); }
+        { throw new NotImplementedException(); }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -312,6 +312,7 @@ namespace DataDictionary.Main
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         { Application.Exit(); }
+
 
     }
 }

@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.ScriptingData.Template;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -30,81 +31,99 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         internal AttributeAliasValue(IDomainAttributeKey key) : base(key) { }
 
-        internal static IReadOnlyList<ColumnValue> GetXColumns()
+        internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {
             ScopeType scope = ScopeType.ModelAttributeAlias;
             IAttributeAliasValue alaisNames;
 
-            List<ColumnValue> result = new List<ColumnValue>()
+            List<NodePropertyValue> result = new List<NodePropertyValue>()
             {
-                new ColumnValue() {ColumnName = nameof(alaisNames.Scope),      DataType = typeof(String), AllowDBNull = false, Scope = scope},
-                new ColumnValue() {ColumnName = nameof(alaisNames.AliasName),  DataType = typeof(String), AllowDBNull = false, Scope = scope},
-                new ColumnValue() {ColumnName = nameof(alaisNames.AliasParts), DataType = typeof(String), AllowDBNull = false, Scope = scope},
+                new NodePropertyValue() {PropertyName = nameof(alaisNames.AliasScope), DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
+                new NodePropertyValue() {PropertyName = nameof(alaisNames.AliasName),  DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
+                new NodePropertyValue() {PropertyName = nameof(alaisNames.AliasParts), DataType = typeof(String), AllowDBNull = false, PropertyScope = scope},
             };
             return result;
         }
 
-        /// <inheritdoc/>
-        public XElement? GetXElement(IAttributeValue data, IEnumerable<SchemaElementValue>? options)
-        {
+        internal XElement? GetXElement(ScriptingWork scripting, Func<TemplateNodeValue,IReadOnlyList<XAttribute>> getAttributes)
+        { 
             XElement? result = null;
 
-            if (options is not null && options.Count() > 0)
+            foreach (TemplateNodeValue node in scripting.Nodes.Where(w => w.PropertyScope == Scope))
             {
+                List<XObject> values = new List<XObject>();
 
-                foreach (SchemaElementValue option in options)
+                switch (node.PropertyName)
                 {
-                    Object? value = null;
-
-                    switch (option.ColumnName)
-                    {
-                        case nameof(Scope): value = Scope.ToName(); break;
-                        case nameof(AliasName): value = AliasName; break;
-                        default:
-                            break;
-                    }
-
-                    if (value is not null)
-                    {
-                        if (result is null) { result = new XElement(ScopeType.ModelAttributeAlias.ToName()); }
-                        result.Add(option.GetXElement(value));
-                    }
-
-                    // Special Handling needed for AliasParts
-                    if (option.ColumnName is nameof(AliasParts))
-                    {
-                        XElement? aliasElement = null;
-                        List<String> scopeParts = NamedScopePath.Parse(Scope.ToName());
+                    case nameof(AliasScope): AddValue(node.BuildXObject(AliasScope.ToName())); break;
+                    case nameof(AliasName): AddValue(node.BuildXObject(AliasName)); break;
+                    case nameof(AliasParts):
+                        List<String> scopeParts = NamedScopePath.Parse(AliasScope.ToName());
+                        String levelValue = String.Empty;
 
                         for (Int32 i = 0; i < AliasParts.Count; i++)
                         {
                             String item = AliasParts[i];
+                            XObject? aliasObject = null;
                             Int32 ScopeLevel = scopeParts.Count - AliasParts.Count + i;
-
-                            if (aliasElement is null)
-                            { aliasElement = new XElement(String.Format("{0}.{1}", ScopeType.ModelAttributeAlias.ToName(), nameof(AliasParts))); }
-
-                            XElement newItem = option.GetXElement(item);
 
                             // Added a Scope Level. Repeat the Second Scope level, if needed.
                             if (AliasParts.Count == scopeParts.Count) // Scope matches Alias count
-                            { newItem.Add(new XAttribute("Level", scopeParts[i])); }
-                            else if(i == 0 && scopeParts.Count > 0) // First Level
-                            { newItem.Add(new XAttribute("Level", scopeParts[i])); }
-                            else if(ScopeLevel > 0 && scopeParts.Count > ScopeLevel) // Remaining level match
-                            { newItem.Add(new XAttribute("Level", scopeParts[ScopeLevel])); }
-                            // Do not know what the other levels might be, so don't assign a level.
+                            { levelValue = scopeParts[i]; }
+                            else if (i <= 1 && scopeParts.Count > 0) // First Level
+                            { levelValue = scopeParts[i]; }
+                            else if (ScopeLevel > 0 && scopeParts.Count > ScopeLevel) // Remaining level match
+                            { levelValue = scopeParts[ScopeLevel]; }
 
-                            aliasElement.Add(newItem);
+                            XElement newElement;
+                            XAttribute newAttribute;
+
+                            switch (node.NodeValueAs)
+                            {
+                                case NodeValueAsType.none: break;
+                                case NodeValueAsType.ElementText or NodeValueAsType.ElementXML:
+                                    newElement = new XElement(nameof(AliasParts), item);
+                                    newElement.Add(new XAttribute("Level", i));
+                                    newElement.Add(new XAttribute("Name", levelValue));
+                                    aliasObject = newElement;
+                                    break;
+                                case NodeValueAsType.ElementCData:
+                                    newElement = new XElement(nameof(AliasParts), new XCData(item));
+                                    newElement.Add(new XAttribute("Level", i));
+                                    newElement.Add(new XAttribute("Name", levelValue));
+                                    aliasObject = newElement;
+                                    break;
+                                case NodeValueAsType.Attribute:
+                                    newAttribute = new XAttribute(String.Format("Level.{0}.{1}", i, levelValue), item);
+                                    aliasObject = newAttribute;
+                                    break;
+                                default:
+                                    break;
+                            }
+
+
+                            AddValue(aliasObject);
                         }
-
-                        if (result is null) { result = new XElement(ScopeType.ModelAttributeAlias.ToName()); }
-                        result.Add(aliasElement);
-                    }
+                        break;
+                    default:
+                        break;
                 }
+
+                if (values.Count > 0)
+                {
+                    if (result is null) { result = new XElement(Scope.ToName()); }
+                    result.Add(values.ToArray());
+                    result.Add(getAttributes(node).ToArray());
+                }
+
+                void AddValue(XObject? value)
+                { if (value is XObject) { values.Add(value); } }
+
             }
 
             return result;
         }
+
+
     }
 }

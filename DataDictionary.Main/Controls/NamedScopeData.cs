@@ -53,7 +53,7 @@ namespace DataDictionary.Main.Controls
             browser.SmallImageList = aliasImages;
             browser.Columns.Add("Path", browser.Width);
 
-            ScopeNameMember.Load(scopeData);
+            ScopeNameList.Load(scopeData);
             SetNamedScope();
         }
 

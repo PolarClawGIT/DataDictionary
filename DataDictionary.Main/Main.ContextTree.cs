@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.Library;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using Toolbox.Threading;
@@ -125,13 +126,8 @@ namespace DataDictionary.Main
         void Activate(ModelValue modelItem)
         { Activate((data) => new Forms.Model.Model(modelItem), modelItem); }
 
-        void Activate(BusinessLayer.Scripting.SchemaValue schemaItem)
-        { Activate((data) => new Forms.Scripting.SchemaManager(schemaItem), schemaItem); }
+        void Activate(TemplateValue templateValue)
+        { Activate((data) => new Forms.Scripting.ScriptingTemplate(templateValue), templateValue); }
 
-        void Activate(BusinessLayer.Scripting.SelectionValue selectionItem)
-        { Activate((data) => new Forms.Scripting.SelectionManager(selectionItem), selectionItem); }
-
-        void Activate(BusinessLayer.Scripting.TransformValue transformItem)
-        { Activate((data) => new Forms.Scripting.TransformManager(transformItem), transformItem); }
     }
 }

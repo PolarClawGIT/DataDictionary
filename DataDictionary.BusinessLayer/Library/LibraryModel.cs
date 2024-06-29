@@ -12,7 +12,7 @@ namespace DataDictionary.BusinessLayer.Library
     /// Interface representing .Net Library Data
     /// </summary>
     public interface ILibraryModel :
-        ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>, IRemoveData<ILibrarySourceIndex>,
+        ILoadData<ILibrarySourceIndex>, ISaveData<ILibrarySourceIndex>, IDeleteData<ILibrarySourceIndex>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
         /// <summary>
@@ -113,27 +113,28 @@ namespace DataDictionary.BusinessLayer.Library
 
         /// <inheritdoc />
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Remove(ILibrarySourceIndex key)
+        public IReadOnlyList<WorkItem> Delete(ILibrarySourceIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem() { WorkName = "Remove Library Source", DoWork = () => { sources.Remove(key); } });
-            work.Add(new WorkItem() { WorkName = "Remove Library Members", DoWork = () => { members.Remove(key); } });
-
+            work.AddRange(sources.Delete(key));
+            work.AddRange(members.Delete(key));
             return work;
         }
 
         /// <inheritdoc />
         /// <remarks>Library</remarks>
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem() { WorkName = "Remove Library Source", DoWork = () => { sources.Clear(); } });
-            work.Add(new WorkItem() { WorkName = "Remove Library Members", DoWork = () => { members.Clear(); } });
-
+            work.AddRange(sources.Delete());
+            work.AddRange(members.Delete());
             return work;
         }
+
+        /// <inheritdoc />
+        /// <remarks>Library</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
 
         /// <inheritdoc />
         /// <remarks>Library</remarks>
@@ -172,6 +173,7 @@ namespace DataDictionary.BusinessLayer.Library
             result.AddRange(members.GetNamedScopes());
             return result;
         }
+
     }
 }
 

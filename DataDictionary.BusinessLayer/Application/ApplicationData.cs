@@ -8,7 +8,7 @@ namespace DataDictionary.BusinessLayer.Application
     /// <summary>
     /// Interface representing Application data
     /// </summary>
-    public interface IApplicationData:
+    public interface IApplicationData :
         ILoadData, ISaveData
     {
         /// <summary>
@@ -17,9 +17,14 @@ namespace DataDictionary.BusinessLayer.Application
         IHelpSubjectData HelpSubjects { get; }
 
         /// <summary>
-        /// Wrapper for Application Properties.
+        /// Wrapper for Application (Common) Properties.
         /// </summary>
-        IPropertyData Properties { get; }
+        Domain.IPropertyData Properties  { get;}
+
+        /// <summary>
+        /// Wrapper for Application (Common) Definitions.
+        /// </summary>
+        Domain.IDefinitionData Definitions { get; } 
     }
 
     /// <summary>
@@ -33,8 +38,12 @@ namespace DataDictionary.BusinessLayer.Application
         private readonly HelpSubjectData helpSubjectValues = new HelpSubjectData();
 
         /// <inheritdoc/>
-        public IPropertyData Properties { get { return propertyValues; } }
-        private readonly PropertyData propertyValues = new PropertyData();
+        public Domain.IPropertyData Properties { get { return propertyValues; } }
+        private readonly Domain.PropertyData propertyValues = new Domain.PropertyData();
+
+        /// <inheritdoc/>
+        public Domain.IDefinitionData Definitions { get { return definitionValues; } }
+        private readonly Domain.DefinitionData definitionValues = new Domain.DefinitionData();
 
         /// <inheritdoc/>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
@@ -42,6 +51,7 @@ namespace DataDictionary.BusinessLayer.Application
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(HelpSubjects.Load(factory));
             work.AddRange(Properties.Load(factory));
+            work.AddRange(Definitions.Load(factory));
             return work;
         }
 
@@ -50,17 +60,17 @@ namespace DataDictionary.BusinessLayer.Application
         {
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(HelpSubjects.Save(factory));
-            work.AddRange(Properties.Save(factory));
             return work;
         }
 
         /// <inheritdoc/>
         public IReadOnlyList<DataTable> Export()
         {
-            List<System.Data.DataTable> result = new List<System.Data.DataTable>();
-            result.Add(helpSubjectValues.ToDataTable());
-            result.Add(propertyValues.ToDataTable());;
-            return result;
+            List<System.Data.DataTable> work = new List<System.Data.DataTable>();
+            work.Add(helpSubjectValues.ToDataTable());
+            work.Add(propertyValues.ToDataTable());
+            work.Add(definitionValues.ToDataTable());
+            return work;
         }
 
         /// <inheritdoc/>
@@ -68,6 +78,17 @@ namespace DataDictionary.BusinessLayer.Application
         {
             helpSubjectValues.Load(source);
             propertyValues.Load(source);
+            definitionValues.Load(source);
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<WorkItem> Delete()
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(HelpSubjects.Delete());
+            work.AddRange(Properties.Delete());
+            work.AddRange(Definitions.Delete());
+            return work;
         }
     }
 }

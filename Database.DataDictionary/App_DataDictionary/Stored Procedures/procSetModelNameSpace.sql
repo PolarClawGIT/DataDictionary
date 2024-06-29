@@ -22,10 +22,10 @@ Begin Try
 
 	-- Clean the Data
 	Declare @Values Table (
-		[NameSpaceId]            UniqueIdentifier NOT NULL,
-		[MemberName]		 [App_DataDictionary].[typeNameSpaceMember] Not Null,
-		[NameSpace]              [App_DataDictionary].[typeNameSpacePath] Null,
-		[ParentNameSpace]        [App_DataDictionary].[typeNameSpacePath] Null,
+		[NameSpaceId]		UniqueIdentifier NOT NULL,
+		[MemberName]		[App_DataDictionary].[typeNameSpaceMember] Not Null,
+		[NameSpace]			[App_DataDictionary].[typeNameSpacePath] Null,
+		[ParentNameSpace]	[App_DataDictionary].[typeNameSpacePath] Null,
 		Primary Key ([NameSpaceId]))
 
 	;With [NameSpace] As (
@@ -34,7 +34,7 @@ Begin Try
 				N.[NameSpace]
 		From	[App_DataDictionary].[ModelNameSpace] S
 				Cross Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) N
-		Where	@ModelId is Null Or S.[ModelId] = @ModelId),
+		Where	S.[ModelId] = @ModelId),
 		[Data] As (
 			Select	X.[NameSpaceId],
 					S.[MemberName],
@@ -49,8 +49,7 @@ Begin Try
 					Left Join [NameSpace] N
 					On	S.[NameSpace] = N.[NameSpace]
 					Cross apply (
-						Select	Coalesce(N.[NameSpaceId], D.[NameSpaceId], NewId()) As [NameSpaceId]) X
-					)
+						Select	Coalesce(N.[NameSpaceId], D.[NameSpaceId], NewId()) As [NameSpaceId]) X)
 		Insert Into @Values
 		Select	[NameSpaceId],
 				[MemberName],
@@ -60,6 +59,51 @@ Begin Try
 		Where	[RankIndex] = 1
 
 	-- Apply Changes
+	;With [InUse] As (
+		Select	[NameSpaceId]
+		From	[App_DataDictionary].[ModelSubjectArea]
+		Union
+		Select	[NameSpaceId]
+		From	[App_DataDictionary].[DomainAttributeAlias]
+		Union
+		Select	[NameSpaceId]
+		From	[App_DataDictionary].[DomainEntityAlias]
+		Union
+		Select	[NameSpaceId]
+		From	[App_DataDictionary].[DomainProcessAlias]
+		Union
+		Select	[NameSpaceId]
+		From	[App_DataDictionary].[DomainRelationshipAlias]
+		Union
+		Select	[NameSpaceId]
+		From	[App_DataDictionary].[ScriptingPath]
+		Union
+		Select	[NameSpaceId]
+		From	@Values),
+	[Parents] As (
+		Select	U.[NameSpaceId],
+				P.[ParentNameSpaceId]
+		From	[InUse] U
+				Inner Join [App_DataDictionary].[ModelNameSpace] P
+				On	U.[NameSpaceId] = P.[NameSpaceId]
+		Union All
+		Select	P.[NameSpaceId],
+				P.[ParentNameSpaceId]
+		From	[Parents] U
+				Inner Join [App_DataDictionary].[ModelNameSpace] P
+				On	U.[ParentNameSpaceId] = P.[NameSpaceId]),
+	[Data] As (
+		Select	[NameSpaceId]
+		From	[App_DataDictionary].[ModelNameSpace]
+		Except
+		Select	[NameSpaceId]
+		From	[Parents])
+	Delete From [App_DataDictionary].[ModelNameSpace]
+	From	[App_DataDictionary].[ModelNameSpace] T
+			Inner Join [Data] S
+			On	T.[NameSpaceId] = S.[NameSpaceId]
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelNameSpace]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	Insert Into [App_DataDictionary].[ModelNameSpace] (
 			[NameSpaceId],
 			[ModelId],
@@ -73,7 +117,8 @@ Begin Try
 			Left Join @Values P
 			On	V.[ParentNameSpace] = P.[NameSpace]
 			Left Join [App_DataDictionary].[ModelNameSpace] M
-			On	V.[NameSpaceId] = M.[NameSpaceId]
+			On	@ModelId = M.[ModelId] And
+				V.[NameSpaceId] = M.[NameSpaceId]
 	Where	M.[NameSpaceId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[ModelNameSpace]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
@@ -132,11 +177,12 @@ Begin Try;
 
 	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @Data
 
-	Select	S.[NameSpaceId],
-				S.[MemberName],
-				N.[NameSpace]
-		From	[App_DataDictionary].[ModelNameSpace] S
-				Cross Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) N
+	Select	S.[ModelId],
+			S.[NameSpaceId],
+			S.[MemberName],
+			N.[NameSpace]
+	From	[App_DataDictionary].[ModelNameSpace] S
+			Cross Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) N
 
 	Insert Into @Data Values
 		(Null, '[Test]'),
@@ -145,16 +191,22 @@ Begin Try;
 
 	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @Data
 
-	Select	S.[NameSpaceId],
-				S.[MemberName],
-				N.[NameSpace]
-		From	[App_DataDictionary].[ModelNameSpace] S
-				Cross Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) N
+	Delete From @Data
+
+	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @Data
+
+
+	Select	S.[ModelId],
+			S.[NameSpaceId],
+			S.[MemberName],
+			N.[NameSpace]
+	From	[App_DataDictionary].[ModelNameSpace] S
+			Cross Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) N
 
 	-- By default, throw and error and exit without committing
 ;	Throw 50000, 'Abort process, comment out this line when ready to actual Commit the transaction',255;
 	
-	Commit Transaction;
+	--Commit Transaction;
 	Print 'Commit Issued';
 End Try
 Begin Catch

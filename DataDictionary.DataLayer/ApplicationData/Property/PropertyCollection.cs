@@ -14,6 +14,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
+    [Obsolete("Replace Domain Property", true)]
     public abstract class PropertyCollection<TItem> : BindingTable<TItem>, IReadData, IWriteData, IValidateList<PropertyItem>
         where TItem : PropertyItem, new()
     {
@@ -75,6 +76,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Property
     /// <summary>
     /// Default List/Collection of Property Items.
     /// </summary>
+    [Obsolete("Replace Domain Property", true)]
     public class PropertyCollection : PropertyCollection<PropertyItem>
     { }
 }

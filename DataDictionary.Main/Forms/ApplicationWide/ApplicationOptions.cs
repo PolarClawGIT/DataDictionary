@@ -58,13 +58,38 @@ namespace DataDictionary.Main.ApplicationWide
             this.DoWork(work, OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
-            { SendMessage(new DbApplicationBatchCompleted()); } 
+            { SendMessage(new DbApplicationBatchCompleted()); }
         }
 
         private void commandSaveToFile_Click(object sender, EventArgs e)
         {
             FileInfo appDataFile = new FileInfo(Path.Combine(Application.UserAppDataPath, Settings.Default.AppDataFile));
-            this.DoWork(BusinessData.ExportApplication(appDataFile), OnComplete);
+
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(BusinessData.ExportApplication(appDataFile));
+
+#if DEBUG
+            if(!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("VisualStudioEdition")))
+            { // Running in Visual Studio & the build is a DEBUG, save to the executable & project folder as well.
+                DirectoryInfo path = new DirectoryInfo(Application.StartupPath);
+
+                while (path.Parent is not null)
+                {
+                    foreach (var item in path.GetFiles(Settings.Default.AppDataFile))
+                    {
+                        if(item.DirectoryName is String directory)
+                        {
+                            FileInfo otherFile = new FileInfo(Path.Combine(directory, Settings.Default.AppDataFile));
+                            work.AddRange(BusinessData.ExportApplication(otherFile));
+                        }
+                    }
+
+                    path = path.Parent;
+                }
+            }
+#endif
+
+            this.DoWork(work, OnComplete);
 
             void OnComplete(RunWorkerCompletedEventArgs args)
             { } // Nothing to do at this point

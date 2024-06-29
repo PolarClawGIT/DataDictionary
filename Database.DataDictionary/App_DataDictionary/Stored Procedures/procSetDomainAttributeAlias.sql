@@ -23,7 +23,7 @@ Begin Try
 	Declare @Values Table (
 		[AttributeId]       UniqueIdentifier Not Null,
 		[NameSpaceId]		UniqueIdentifier Not Null,
-		[ScopeName]         [App_DataDictionary].[typeScopeName] Null,
+		[AliasScope]        [App_DataDictionary].[typeScopeName] Null,
 		Primary Key ([AttributeId], [NameSpaceId]))
 
 	Declare @NameSpace [App_DataDictionary].[typeNameSpace]
@@ -46,7 +46,7 @@ Begin Try
 	Insert Into @Values
 	Select	Coalesce(D.[AttributeId], @AttributeId, NewId()) As [AttributeId],
 			N.[NameSpaceId],
-			D.[ScopeName]
+			D.[AliasScope]
 	From	@Data D
 			Cross Apply [App_DataDictionary].[funcSplitNameSpace](D.[AliasName]) C
 			Inner Join [NameSpace] N
@@ -72,25 +72,25 @@ Begin Try
 	;With [Delta] As (
 		Select	[AttributeId],
 				[NameSpaceId],
-				[ScopeName]
+				[AliasScope]
 		From	@Values S
 		Except
 		Select	[AttributeId],
 				[NameSpaceId],
-				[ScopeName]
+				[AliasScope]
 		From	[App_DataDictionary].[DomainAttributeAlias])
 	Update	[App_DataDictionary].[DomainAttributeAlias]
-	Set		[ScopeName] = S.[ScopeName]
+	Set		[AliasScope] = S.[AliasScope]
 	From	[Delta] S
 			Inner Join [App_DataDictionary].[DomainAttributeAlias] T
 			On	S.[AttributeId] = T.[AttributeId] And
 				S.[NameSpaceId] = T.[NameSpaceId]
 	Print FormatMessage ('Update [App_DataDictionary].[DomainAttributeAlias]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Insert Into [App_DataDictionary].[DomainAttributeAlias] ([AttributeId], [NameSpaceId], [ScopeName])
+	Insert Into [App_DataDictionary].[DomainAttributeAlias] ([AttributeId], [NameSpaceId], [AliasScope])
 	Select	V.[AttributeId],
 			V.[NameSpaceId],
-			V.[ScopeName]
+			V.[AliasScope]
 	From	@Values V
 			Left Join [App_DataDictionary].[DomainAttributeAlias] T
 			On	V.[AttributeId] = T.[AttributeId] And

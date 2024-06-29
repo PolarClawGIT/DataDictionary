@@ -78,7 +78,7 @@ namespace Toolbox.Threading
         /// <param name="work"></param>
         public virtual void Enqueue(IEnumerable<WorkItem> work, Action<RunWorkerCompletedEventArgs>? onCompleting = null)
         {
-            WorkItem lastWork = work.Last();
+            WorkItem? lastWork = work.LastOrDefault();
             Exception? firstException = null;
             WorkItem? firstExceptionItem = null;
 

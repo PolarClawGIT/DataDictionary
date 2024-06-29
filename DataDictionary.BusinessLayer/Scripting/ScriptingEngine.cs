@@ -5,6 +5,7 @@ using Toolbox.BindingTable;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.BusinessLayer.Model;
+using DataDictionary.DataLayer.ScriptingData.Template;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
@@ -12,38 +13,38 @@ namespace DataDictionary.BusinessLayer.Scripting
     /// Interface representing Scripting Engine data
     /// </summary>
     public interface IScriptingEngine :
-        ISaveData, ILoadData, IRemoveData,
-        ILoadData<IModelKey>, ISaveData<IModelKey>
+        ILoadData<IModelKey>, ISaveData<IModelKey>,
+        ILoadData<IScriptingTemplateKey>, ISaveData<IScriptingTemplateKey>
     {
         /// <summary>
-        /// List of Scripting Engine Schemta.
+        /// List of Scripting Engine Templates.
         /// </summary>
-        ISchemaData Schemta { get; }
+        ITemplateData Templates { get; }
 
         /// <summary>
-        /// List of Scripting Engine Scheme Elements.
+        /// List of Scripting Nodes for the Template
         /// </summary>
-        ISchemaElementData SchemeElements { get; }
+        ITemplateNodeData TemplateNodes { get; }
 
         /// <summary>
-        /// List of Scripting Engine Transforms.
+        /// List of Scripting Attributes for the Template
         /// </summary>
-        ITransformData Transforms { get; }
+        ITemplateAttributeData TemplateAttributes { get; }
 
         /// <summary>
-        /// List of Scripting Engine Selections.
+        /// List of Scripting Paths for the Template
         /// </summary>
-        ISelectionData Selections { get; }
+        ITemplatePathData TemplatePaths { get; }
 
         /// <summary>
-        /// List of Scripting Engine Selection Paths.
+        /// List of Scripting Documents (output) for the Template
         /// </summary>
-        ISelectionPathData SelectionPaths { get; }
+        ITemplateDocumentData TemplateDocuments { get; }
 
         /// <summary>
         /// List of Scripting Engine Column definitions
         /// </summary>
-        IColumnData Columns { get; }
+        INodePropertyData Properties { get; }
     }
 
     /// <summary>
@@ -56,64 +57,38 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// </summary>
         public required IModelData Models { get; init; }
 
-        public ISchemaData Schemta { get { return schemtaValues; } }
-        private readonly SchemaData schemtaValues;
+        /// <inheritdoc/>
+        public ITemplateData Templates { get { return templateValues; } }
+        private readonly TemplateData templateValues;
 
-        public ISchemaElementData SchemeElements { get { return elementValues; } }
-        private readonly SchemaElementData elementValues;
+        /// <inheritdoc/>
+        public ITemplateNodeData TemplateNodes { get { return nodeValues; } }
+        private readonly TemplateNodeData nodeValues;
 
-        public ITransformData Transforms { get { return transformValues; } }
-        private readonly TransformData transformValues;
+        /// <inheritdoc/>
+        public ITemplateAttributeData TemplateAttributes { get { return attributeValues; } }
+        private readonly TemplateAttributeData attributeValues;
 
-        public ISelectionData Selections { get { return selectionValues; } }
-        private readonly SelectionData selectionValues;
+        /// <inheritdoc/>
+        public ITemplatePathData TemplatePaths { get { return pathValues; } }
+        private readonly TemplatePathData pathValues;
 
-        public ISelectionPathData SelectionPaths { get { return selectionPathValues; } }
-        private readonly SelectionPathData selectionPathValues;
+        /// <inheritdoc/>
+        public ITemplateDocumentData TemplateDocuments { get { return documentValues; } }
+        private readonly TemplateDocumentData documentValues;
 
-        public IColumnData Columns { get { return columnValues; } }
-        private readonly ColumnData columnValues;
+        /// <inheritdoc/>
+        public INodePropertyData Properties { get { return propertyValues; } }
+        private readonly NodePropertyData propertyValues;
 
         public ScriptingEngine() : base()
         {
-            schemtaValues = new SchemaData() { Scripting = this };
-            elementValues = new SchemaElementData();
-            transformValues = new TransformData() { Scripting = this };
-            columnValues = new ColumnData();
-            selectionValues = new SelectionData() { Scripting = this };
-            selectionPathValues = new SelectionPathData();
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(schemtaValues.Load(factory));
-            work.AddRange(elementValues.Load(factory));
-            work.AddRange(transformValues.Load(factory));
-
-            //work.AddRange(selectionValues.Load(factory));
-            //work.AddRange(instanceValues.Load(factory));
-
-            return work;
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>Scripting</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory)
-        {
-            List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(schemtaValues.Save(factory));
-            work.AddRange(elementValues.Save(factory));
-            work.AddRange(transformValues.Save(factory));
-
-            //work.AddRange(selectionValues.Save(factory));
-            //work.AddRange(instanceValues.Save(factory));
-
-            return work;
+            templateValues = new TemplateData() { Scripting = this };
+            pathValues = new TemplatePathData();
+            documentValues = new TemplateDocumentData();
+            nodeValues = new TemplateNodeData();
+            attributeValues = new TemplateAttributeData();
+            propertyValues = new NodePropertyData();
         }
 
         /// <inheritdoc/>
@@ -121,12 +96,10 @@ namespace DataDictionary.BusinessLayer.Scripting
         public IReadOnlyList<DataTable> Export()
         {
             List<System.Data.DataTable> result = new List<System.Data.DataTable>();
-            result.Add(schemtaValues.ToDataTable());
-            result.Add(elementValues.ToDataTable());
-            result.Add(transformValues.ToDataTable());
-
-            //result.Add(selectionValues.ToDataTable());
-            //result.Add(instanceValues.ToDataTable());
+            result.Add(templateValues.ToDataTable());
+            result.Add(pathValues.ToDataTable());
+            result.Add(nodeValues.ToDataTable());
+            result.Add(attributeValues.ToDataTable());
             return result;
         }
 
@@ -134,74 +107,113 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <remarks>Scripting</remarks>
         public void Import(DataSet source)
         {
-            if (source.Tables.Contains(schemtaValues.BindingName)
-                && source.Tables[schemtaValues.BindingName] is DataTable schemeTable)
-            { schemtaValues.Load(schemeTable.CreateDataReader()); }
 
-            if (source.Tables.Contains(elementValues.BindingName)
-                && source.Tables[elementValues.BindingName] is DataTable elementTable)
-            { elementValues.Load(elementTable.CreateDataReader()); }
+            if (source.Tables.Contains(templateValues.BindingName)
+                && source.Tables[templateValues.BindingName] is DataTable transformTable)
+            { templateValues.Load(transformTable.CreateDataReader()); }
 
-            if (source.Tables.Contains(transformValues.BindingName)
-                && source.Tables[transformValues.BindingName] is DataTable transformTable)
-            { transformValues.Load(transformTable.CreateDataReader()); }
+            if (source.Tables.Contains(pathValues.BindingName)
+                && source.Tables[pathValues.BindingName] is DataTable pathTable)
+            { pathValues.Load(pathTable.CreateDataReader()); }
+
+            if (source.Tables.Contains(nodeValues.BindingName)
+                && source.Tables[nodeValues.BindingName] is DataTable nodeTable)
+            { pathValues.Load(nodeTable.CreateDataReader()); }
+
+            if (source.Tables.Contains(attributeValues.BindingName)
+                && source.Tables[attributeValues.BindingName] is DataTable attributeTable)
+            { pathValues.Load(attributeTable.CreateDataReader()); }
         }
 
-
         /// <inheritdoc/>
-        /// <remarks>Scripting (Currently load all)</remarks>
-        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
+        /// <remarks>Scripting</remarks>
+        public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(schemtaValues.Load(factory));
-            work.AddRange(elementValues.Load(factory));
-            work.AddRange(transformValues.Load(factory));
-
-            work.AddRange(selectionValues.Load(factory));
-            work.AddRange(selectionPathValues.Load(factory));
-
+            work.AddRange(templateValues.Delete());
+            work.AddRange(pathValues.Delete());
+            work.AddRange(nodeValues.Delete());
+            work.AddRange(attributeValues.Delete());
             return work;
         }
 
         /// <inheritdoc/>
-        /// <remarks>Scripting (Currently saves all)</remarks>
-        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
+        /// <remarks>Scripting</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-
-            work.AddRange(schemtaValues.Save(factory));
-            work.AddRange(elementValues.Save(factory));
-            work.AddRange(transformValues.Save(factory));
-
-            work.AddRange(selectionValues.Save(factory));
-            work.AddRange(selectionPathValues.Save(factory));
-
+            work.AddRange(templateValues.Delete(dataKey));
+            work.AddRange(pathValues.Delete(dataKey));
+            work.AddRange(nodeValues.Delete(dataKey));
+            work.AddRange(attributeValues.Delete(dataKey));
             return work;
         }
 
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete(IScriptingTemplateKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-
-            work.Add(new WorkItem() { WorkName = "Remove Scripting Schemta", DoWork = () => { schemtaValues.Clear(); } });
-            work.Add(new WorkItem() { WorkName = "Remove Scripting Elements", DoWork = () => { elementValues.Clear(); } });
-            work.Add(new WorkItem() { WorkName = "Remove Scripting Transforms", DoWork = () => { transformValues.Clear(); } });
-
-            work.Add(new WorkItem() { WorkName = "Remove Scripting Selection", DoWork = () => { selectionValues.Clear(); } });
-            work.Add(new WorkItem() { WorkName = "Remove Scripting Instance", DoWork = () => { selectionPathValues.Clear(); } });
-
+            work.AddRange(templateValues.Delete(dataKey));
+            work.AddRange(pathValues.Delete(dataKey));
+            work.AddRange(nodeValues.Delete(dataKey));
+            work.AddRange(attributeValues.Delete(dataKey));
             return work;
         }
 
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
-            result.AddRange(schemtaValues.GetNamedScopes());
-            result.AddRange(transformValues.GetNamedScopes());
-            result.AddRange(selectionValues.GetNamedScopes());
-
+            result.AddRange(templateValues.GetNamedScopes());
             return result;
         }
+
+        /// <inheritdoc/>
+        /// <remarks>Scripting</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValues.Save(factory, dataKey));
+            work.AddRange(pathValues.Save(factory, dataKey));
+            work.AddRange(nodeValues.Save(factory, dataKey));
+            work.AddRange(attributeValues.Save(factory, dataKey));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Scripting</remarks>
+        public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IScriptingTemplateKey dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValues.Save(factory, dataKey));
+            work.AddRange(pathValues.Save(factory, dataKey));
+            work.AddRange(nodeValues.Save(factory, dataKey));
+            work.AddRange(attributeValues.Save(factory, dataKey));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Scripting</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValues.Load(factory, dataKey));
+            work.AddRange(pathValues.Load(factory, dataKey));
+            work.AddRange(nodeValues.Load(factory, dataKey));
+            work.AddRange(attributeValues.Load(factory, dataKey));
+            return work;
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Scripting</remarks>
+        public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IScriptingTemplateKey dataKey)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.AddRange(templateValues.Load(factory, dataKey));
+            work.AddRange(pathValues.Load(factory, dataKey));
+            work.AddRange(nodeValues.Load(factory, dataKey));
+            work.AddRange(attributeValues.Load(factory, dataKey));
+            return work;
+        }
+
+
     }
 }

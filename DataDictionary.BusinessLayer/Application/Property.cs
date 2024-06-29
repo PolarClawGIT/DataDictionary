@@ -6,7 +6,4 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.Application
 {
-    static class Property
-    {
-    }
 }

@@ -33,6 +33,7 @@
             TableLayoutPanel detailsLayout;
             TableLayoutPanel propertyLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DomainEntity));
+            TableLayoutPanel definitionLayout;
             BusinessLayer.NamedScope.NamedScopePath namedScopePath1 = new BusinessLayer.NamedScope.NamedScopePath();
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
@@ -44,6 +45,11 @@
             propertyIdColumn = new DataGridViewComboBoxColumn();
             propertyValueColumn = new DataGridViewTextBoxColumn();
             domainProperty = new Controls.DomainProperty();
+            definitionTab = new TabPage();
+            definitionData = new DataGridView();
+            definitionColumn = new DataGridViewComboBoxColumn();
+            definitionSummaryColumn = new DataGridViewTextBoxColumn();
+            domainDefinition = new Controls.DomainDefinition();
             aliasTab = new TabPage();
             aliaseLayout = new TableLayoutPanel();
             aliasesData = new DataGridView();
@@ -58,9 +64,11 @@
             entityToolStrip = new ContextMenuStrip(components);
             removeEntityComand = new ToolStripMenuItem();
             bindingSubjectArea = new BindingSource(components);
+            bindingDefinition = new BindingSource(components);
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
+            definitionLayout = new TableLayoutPanel();
             mainLayout.SuspendLayout();
             detailTabLayout.SuspendLayout();
             detailTab.SuspendLayout();
@@ -68,6 +76,9 @@
             propertyTab.SuspendLayout();
             propertyLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)propertiesData).BeginInit();
+            definitionTab.SuspendLayout();
+            definitionLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)definitionData).BeginInit();
             aliasTab.SuspendLayout();
             aliaseLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)aliasesData).BeginInit();
@@ -77,6 +88,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingEntity).BeginInit();
             entityToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDefinition).BeginInit();
             SuspendLayout();
             // 
             // mainLayout
@@ -124,6 +136,7 @@
             // 
             detailTabLayout.Controls.Add(detailTab);
             detailTabLayout.Controls.Add(propertyTab);
+            detailTabLayout.Controls.Add(definitionTab);
             detailTabLayout.Controls.Add(aliasTab);
             detailTabLayout.Controls.Add(subjectAreaTab);
             detailTabLayout.Dock = DockStyle.Fill;
@@ -179,7 +192,7 @@
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(192, 72);
+            propertyTab.Size = new Size(412, 343);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -195,7 +208,7 @@
             propertyLayout.RowCount = 2;
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            propertyLayout.Size = new Size(186, 66);
+            propertyLayout.Size = new Size(406, 337);
             propertyLayout.TabIndex = 0;
             // 
             // propertiesData
@@ -207,7 +220,7 @@
             propertiesData.Location = new Point(3, 3);
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
-            propertiesData.Size = new Size(180, 20);
+            propertiesData.Size = new Size(400, 128);
             propertiesData.TabIndex = 1;
             // 
             // propertyIdColumn
@@ -232,16 +245,86 @@
             // 
             domainProperty.ApplyImage = (Image)resources.GetObject("domainProperty.ApplyImage");
             domainProperty.ApplyText = "apply";
-            domainProperty.DefinitionText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
             domainProperty.Dock = DockStyle.Fill;
-            domainProperty.Location = new Point(3, 29);
+            domainProperty.Location = new Point(3, 137);
             domainProperty.Name = "domainProperty";
             domainProperty.PropertyId = new Guid("00000000-0000-0000-0000-000000000000");
             domainProperty.PropertyValue = "";
             domainProperty.ReadOnly = false;
-            domainProperty.Size = new Size(180, 34);
+            domainProperty.Size = new Size(400, 197);
             domainProperty.TabIndex = 2;
             domainProperty.OnApply += DomainProperty_OnApply;
+            // 
+            // definitionTab
+            // 
+            definitionTab.BackColor = SystemColors.Control;
+            definitionTab.Controls.Add(definitionLayout);
+            definitionTab.Location = new Point(4, 24);
+            definitionTab.Name = "definitionTab";
+            definitionTab.Padding = new Padding(3);
+            definitionTab.Size = new Size(412, 343);
+            definitionTab.TabIndex = 4;
+            definitionTab.Text = "Definitions";
+            // 
+            // definitionLayout
+            // 
+            definitionLayout.ColumnCount = 1;
+            definitionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            definitionLayout.Controls.Add(definitionData, 0, 0);
+            definitionLayout.Controls.Add(domainDefinition, 0, 1);
+            definitionLayout.Dock = DockStyle.Fill;
+            definitionLayout.Location = new Point(3, 3);
+            definitionLayout.Name = "definitionLayout";
+            definitionLayout.Padding = new Padding(3);
+            definitionLayout.RowCount = 2;
+            definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+            definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+            definitionLayout.Size = new Size(406, 337);
+            definitionLayout.TabIndex = 1;
+            // 
+            // definitionData
+            // 
+            definitionData.AllowUserToAddRows = false;
+            definitionData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            definitionData.Columns.AddRange(new DataGridViewColumn[] { definitionColumn, definitionSummaryColumn });
+            definitionData.Dock = DockStyle.Fill;
+            definitionData.Location = new Point(6, 6);
+            definitionData.Name = "definitionData";
+            definitionData.ReadOnly = true;
+            definitionData.Size = new Size(394, 93);
+            definitionData.TabIndex = 0;
+            // 
+            // definitionColumn
+            // 
+            definitionColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            definitionColumn.DataPropertyName = "DefinitionId";
+            definitionColumn.FillWeight = 50F;
+            definitionColumn.HeaderText = "Definition";
+            definitionColumn.Name = "definitionColumn";
+            definitionColumn.ReadOnly = true;
+            // 
+            // definitionSummaryColumn
+            // 
+            definitionSummaryColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            definitionSummaryColumn.DataPropertyName = "DefinitionSummary";
+            definitionSummaryColumn.HeaderText = "Definition Summary";
+            definitionSummaryColumn.Name = "definitionSummaryColumn";
+            definitionSummaryColumn.ReadOnly = true;
+            // 
+            // domainDefinition
+            // 
+            domainDefinition.ApplyImage = Properties.Resources.NewRichTextBox;
+            domainDefinition.ApplyText = "apply";
+            domainDefinition.DefinitionId = new Guid("00000000-0000-0000-0000-000000000000");
+            domainDefinition.DefinitionSummary = "";
+            domainDefinition.DefinitionText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
+            domainDefinition.Dock = DockStyle.Fill;
+            domainDefinition.Location = new Point(6, 105);
+            domainDefinition.Name = "domainDefinition";
+            domainDefinition.ReadOnly = false;
+            domainDefinition.Size = new Size(394, 226);
+            domainDefinition.TabIndex = 1;
+            domainDefinition.OnApply += DomainDefinition_OnApply;
             // 
             // aliasTab
             // 
@@ -284,7 +367,7 @@
             // aliaseScopeColumn
             // 
             aliaseScopeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            aliaseScopeColumn.DataPropertyName = "Scope";
+            aliaseScopeColumn.DataPropertyName = "AliasScope";
             aliaseScopeColumn.FillWeight = 50F;
             aliaseScopeColumn.HeaderText = "Scope";
             aliaseScopeColumn.Name = "aliaseScopeColumn";
@@ -319,7 +402,7 @@
             subjectAreaTab.Controls.Add(subjectArea);
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
-            subjectAreaTab.Size = new Size(412, 343);
+            subjectAreaTab.Size = new Size(192, 72);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -328,7 +411,7 @@
             subjectArea.Dock = DockStyle.Fill;
             subjectArea.Location = new Point(0, 0);
             subjectArea.Name = "subjectArea";
-            subjectArea.Size = new Size(412, 343);
+            subjectArea.Size = new Size(192, 72);
             subjectArea.TabIndex = 0;
             subjectArea.OnSubjectAdd += SubjectArea_OnSubjectAdd;
             subjectArea.OnSubjectRemove += SubjectArea_OnSubjectRemove;
@@ -361,6 +444,11 @@
             // 
             bindingSubjectArea.AddingNew += BindingSubjectArea_AddingNew;
             // 
+            // bindingDefinition
+            // 
+            bindingDefinition.AddingNew += BindingDefinition_AddingNew;
+            bindingDefinition.CurrentChanged += BindingDefinition_CurrentChanged;
+            // 
             // DomainEntity
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -380,6 +468,9 @@
             propertyTab.ResumeLayout(false);
             propertyLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)propertiesData).EndInit();
+            definitionTab.ResumeLayout(false);
+            definitionLayout.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)definitionData).EndInit();
             aliasTab.ResumeLayout(false);
             aliaseLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)aliasesData).EndInit();
@@ -389,6 +480,7 @@
             ((System.ComponentModel.ISupportInitialize)bindingEntity).EndInit();
             entityToolStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingDefinition).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -407,8 +499,6 @@
         private TabPage aliasTab;
         private TableLayoutPanel aliaseLayout;
         private DataGridView aliasesData;
-        private DataGridViewComboBoxColumn aliaseScopeColumn;
-        private DataGridViewTextBoxColumn aliasNameColumn;
         private TabPage subjectAreaTab;
         private BindingSource bindingAlias;
         private BindingSource bindingProperty;
@@ -419,5 +509,13 @@
         private DataDictionary.Main.Controls.NamedScopeData namedScopeData;
         private BindingSource bindingSubjectArea;
         private Controls.SubjectArea subjectArea;
+        private DataGridViewComboBoxColumn aliaseScopeColumn;
+        private DataGridViewTextBoxColumn aliasNameColumn;
+        private TabPage definitionTab;
+        private BindingSource bindingDefinition;
+        private DataGridView definitionData;
+        private DataGridViewComboBoxColumn definitionColumn;
+        private DataGridViewTextBoxColumn definitionSummaryColumn;
+        private Controls.DomainDefinition domainDefinition;
     }
 }

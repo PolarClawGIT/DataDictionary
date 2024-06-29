@@ -5,10 +5,12 @@ using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Property;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.DataLayer.DomainData.Property;
 using DataDictionary.DataLayer.ModelData;
 using System.ComponentModel;
 using System.Xml.Linq;
@@ -36,9 +38,23 @@ namespace DataDictionary.BusinessLayer.Domain
         IAttributePropertyData Properties { get; }
 
         /// <summary>
+        /// List of Domain Definitions for the Attributes within the Model.
+        /// </summary>
+        IAttributeDefinitionData Definitions { get; }
+
+        /// <summary>
         /// List of Subject Areas for the Attributes within the Model.
         /// </summary>
         IAttributeSubjectAreaData SubjectArea { get; }
+
+        /// <summary>
+        /// Generates the XElement using the ScriptingData
+        /// </summary>
+        /// <param name="scripting"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        /// <remarks>Not for use outside of BusinessLayer</remarks>
+        XElement? GetXElement(ScriptingWork scripting, IAttributeIndex index);
     }
 
     class AttributeData : DomainAttributeCollection<AttributeValue>, IAttributeData,
@@ -56,16 +72,37 @@ namespace DataDictionary.BusinessLayer.Domain
         private readonly AttributePropertyData propertyValues;
 
         /// <inheritdoc/>
+        public IAttributeDefinitionData Definitions { get { return definitionValues; } }
+        private readonly AttributeDefinitionData definitionValues;
+
+        /// <inheritdoc/>
         public IAttributeSubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly AttributeSubjectAreaData subjectAreaValues;
+
+        public required IPropertyData DomainProperties { get; init; }
+        public required IDefinitionData DomainDefinitions { get; init; }
 
         public AttributeData() : base()
         {
             aliasValues = new AttributeAliasData();
             propertyValues = new AttributePropertyData() { Attributes = this };
+            definitionValues = new AttributeDefinitionData();
             subjectAreaValues = new AttributeSubjectAreaData();
         }
 
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public override void Remove(IDomainAttributeKey attributeItem)
+        {
+            base.Remove(attributeItem);
+            DomainAttributeKey key = new DomainAttributeKey(attributeItem);
+            aliasValues.Remove(key);
+            propertyValues.Remove(key);
+            definitionValues.Remove(key);
+            subjectAreaValues.Remove(key);
+        }
+
+        #region ILoadData, ISaveData
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IDomainAttributeKey dataKey)
@@ -74,6 +111,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateLoad(this, dataKey));
             work.Add(factory.CreateLoad(aliasValues, dataKey));
             work.Add(factory.CreateLoad(propertyValues, dataKey));
+            work.Add(factory.CreateLoad(definitionValues, dataKey));
             work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
             return work;
         }
@@ -91,6 +129,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateLoad(this, dataKey));
             work.Add(factory.CreateLoad(aliasValues, dataKey));
             work.Add(factory.CreateLoad(propertyValues, dataKey));
+            work.Add(factory.CreateLoad(definitionValues, dataKey));
             work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
             return work;
         }
@@ -103,6 +142,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateSave(this, dataKey));
             work.Add(factory.CreateSave(aliasValues, dataKey));
             work.Add(factory.CreateSave(propertyValues, dataKey));
+            work.Add(factory.CreateSave(definitionValues, dataKey));
             work.Add(factory.CreateSave(subjectAreaValues, dataKey));
             return work;
         }
@@ -120,39 +160,38 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateSave(this, dataKey));
             work.Add(factory.CreateSave(aliasValues, dataKey));
             work.Add(factory.CreateSave(propertyValues, dataKey));
+            work.Add(factory.CreateSave(definitionValues, dataKey));
             work.Add(factory.CreateSave(subjectAreaValues, dataKey));
             return work;
         }
 
         /// <inheritdoc/>
-        public override void Remove(IDomainAttributeKey attributeItem)
-        {
-            base.Remove(attributeItem);
-            DomainAttributeKey key = new DomainAttributeKey(attributeItem);
-            aliasValues.Remove(key);
-            propertyValues.Remove(key);
-            subjectAreaValues.Remove(key);
-        }
-
-        /// <inheritdoc/>
-        public IReadOnlyList<WorkItem> Remove()
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
 
-            work.Add(new WorkItem()
-            {
-                WorkName = "Remove Attributes",
-                DoWork = () =>
-                {
-                    aliasValues.Clear();
-                    propertyValues.Clear();
-                    subjectAreaValues.Clear();
-                    this.Clear();
-                }
-            });
+            work.Add(new WorkItem() { WorkName = "Remove Attribute", DoWork = () => { this.Clear(); } });
+            work.AddRange(aliasValues.Delete());
+            work.AddRange(propertyValues.Delete());
+            work.AddRange(definitionValues.Delete());
+            work.AddRange(subjectAreaValues.Delete());
 
             return work;
         }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Delete(IAttributeIndex dataKey)
+        { return new WorkItem() { WorkName = "Remove Attribute", DoWork = () => { Remove((IDomainAttributeKey)dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
+        #endregion
+
+        #region IDataTableFile
 
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
@@ -162,6 +201,7 @@ namespace DataDictionary.BusinessLayer.Domain
             result.Add(this.ToDataTable());
             result.Add(aliasValues.ToDataTable());
             result.Add(propertyValues.ToDataTable());
+            result.Add(definitionValues.ToDataTable());
             result.Add(subjectAreaValues.ToDataTable());
             return result;
         }
@@ -173,6 +213,7 @@ namespace DataDictionary.BusinessLayer.Domain
             this.Load(source);
             aliasValues.Load(source);
             propertyValues.Load(source);
+            definitionValues.Load(source);
             subjectAreaValues.Load(source);
         }
 
@@ -245,7 +286,7 @@ namespace DataDictionary.BusinessLayer.Domain
                     aliasValues.Add(new AttributeAliasValue(attributeKey)
                     {
                         AliasName = item.ToAliasName(),
-                        Scope = item.Scope
+                        AliasScope = item.Scope
                     });
                 }
 
@@ -253,18 +294,20 @@ namespace DataDictionary.BusinessLayer.Domain
                 ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(item);
                 foreach (ExtendedPropertyValue property in source.DbExtendedProperties.Where(w => propertyKey.Equals(w)))
                 {
-                    PropertyKeyExtended appKey = new PropertyKeyExtended(property);
+                    PropertyIndexValue appKey = new PropertyIndexValue(property);
 
                     if (propertyDefinition.FirstOrDefault(w =>
-                        appKey.Equals(w)) is Application.IPropertyValue appProperty
+                        appKey.Equals(w)) is IPropertyValue appProperty
                         && propertyValues.Count(w =>
                             attributeKey.Equals(w)
-                            && new Application.PropertyIndex(appProperty).Equals(w)) == 0)
+                            && new PropertyIndexValue(appProperty).Equals(w)) == 0)
                     { propertyValues.Add(new AttributePropertyValue(attributeKey, appProperty, property)); }
                 }
             }
         }
+        #endregion
 
+        #region INamedScopeSource
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
@@ -342,6 +385,67 @@ namespace DataDictionary.BusinessLayer.Domain
                 }
             }
         }
+        #endregion
 
+        #region XML Scripting
+
+        /// <inheritdoc/>
+        public XElement? GetXElement(ScriptingWork scripting, IAttributeIndex index)
+        {
+            XElement? result = null;
+            AttributeIndex key = new AttributeIndex(index);
+            if (this.FirstOrDefault(w => key.Equals(w)) is AttributeValue attribute)
+            {
+                foreach (TemplateNodeValue node in scripting.Nodes.Where(w => w.PropertyScope == attribute.Scope))
+                {
+                    XObject? value = null;
+
+                    switch (node.PropertyName)
+                    {
+                        case nameof(attribute.AttributeTitle): value = node.BuildXObject(attribute.AttributeTitle); break;
+                        case nameof(attribute.AttributeDescription): value = node.BuildXObject(attribute.AttributeDescription); break;
+                        case nameof(attribute.IsCompositeType): value = node.BuildXObject(attribute.IsCompositeType); break;
+                        case nameof(attribute.IsDerived): value = node.BuildXObject(attribute.IsDerived); break; ;
+                        case nameof(attribute.IsIntegral): value = node.BuildXObject(attribute.IsIntegral); break; ;
+                        case nameof(attribute.IsKey): value = node.BuildXObject(attribute.IsKey); break; ;
+                        case nameof(attribute.IsMultiValue): value = node.BuildXObject(attribute.IsMultiValue); break; ;
+                        case nameof(attribute.IsNonKey): value = node.BuildXObject(attribute.IsNonKey); break; ;
+                        case nameof(attribute.IsNullable): value = node.BuildXObject(attribute.IsNullable); break; ;
+                        case nameof(attribute.IsSimpleType): value = node.BuildXObject(attribute.IsSimpleType); break; ;
+                        case nameof(attribute.IsSingleValue): value = node.BuildXObject(attribute.IsSingleValue); break; ;
+                        case nameof(attribute.IsValued): value = node.BuildXObject(attribute.IsValued); break; ;
+                        default:
+                            break;
+                    }
+
+                    if (value is XObject)
+                    {
+                        if (result is null) { result = new XElement(attribute.Scope.ToName()); }
+                        result.Add(value);
+
+                        IReadOnlyList<XAttribute> attributes = DomainProperties.GetXAttributes(scripting, node, Properties);
+
+                        if (value is XElement element) { element.Add(attributes.ToArray()); }
+                        else if (value.Parent is XElement) { value.Parent.Add(attributes.ToArray()); }
+                    }
+                }
+
+                foreach (AttributeAliasValue alias in Aliases.Where(w => key.Equals(w)))
+                {
+                    XElement? aliasNode = alias.GetXElement(scripting, (node) => DomainProperties.GetXAttributes(scripting, node, Properties));
+                    if (aliasNode is not null && result is null)
+                    {
+                        result = new XElement(attribute.Scope.ToName());
+                        result.Add(aliasNode);
+                    }
+                    else if (aliasNode is not null && result is XElement)
+                    { result.Add(aliasNode); }
+                }
+            }
+
+            return result;
+        }
+
+        #endregion
     }
 }

@@ -163,7 +163,7 @@ namespace DataDictionary.Main.Forms.Model
         private void newModelCommand_Click(object sender, EventArgs e)
         {
             IsLocked(true);
-            DoWork(BusinessData.Remove(), onCompleting);
+            DoWork(BusinessData.Delete(), onCompleting);
 
             void onCompleting(RunWorkerCompletedEventArgs args)
             {

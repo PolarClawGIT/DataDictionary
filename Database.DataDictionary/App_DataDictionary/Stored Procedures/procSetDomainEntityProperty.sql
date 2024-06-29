@@ -28,19 +28,16 @@ Begin Try
 		[EntityId]		UniqueIdentifier Not Null,
 		[PropertyId]		UniqueIdentifier NOT Null,
 		[PropertyValue]		NVarChar(4000) Null,
-		[DefinitionText]    NVarChar(Max) Null,
 		Primary Key ([EntityId],[PropertyId]))
 
 	Insert Into @Values
 	Select	[EntityId],
 			[PropertyId],
-			[PropertyValue],
-			[DefinitionText]
+			[PropertyValue]
 	From	@Values
 	Select	D.[EntityId],
 			D.[PropertyId],
-			NullIf(Trim(D.[PropertyValue]),'') As [PropertyValue],
-			NullIf(Trim(D.[DefinitionText]),'') As [DefinitionText]
+			NullIf(Trim(D.[PropertyValue]),'') As [PropertyValue]
 	From	@Data D
 
 	-- Apply Changes
@@ -62,18 +59,15 @@ Begin Try
 	;With [Delta] As (
 		Select	[EntityId],
 				[PropertyId],
-				[PropertyValue],
-				[DefinitionText]
+				[PropertyValue]
 		From	@Values
 		Except 
 		Select	[EntityId],
 				[PropertyId],
-				[PropertyValue],
-				[DefinitionText]
+				[PropertyValue]
 		From	[App_DataDictionary].[DomainEntityProperty])
 	Update [App_DataDictionary].[DomainEntityProperty]
-	Set		[PropertyValue] = S.[PropertyValue],
-			[DefinitionText] = S.[DefinitionText]
+	Set		[PropertyValue] = S.[PropertyValue]
 	From	[App_DataDictionary].[DomainEntityProperty] T
 			Inner Join [Delta] S
 			On	T.[EntityId] = S.[EntityId] And
@@ -83,12 +77,10 @@ Begin Try
 	Insert Into  [App_DataDictionary].[DomainEntityProperty] (
 			[EntityId],
 			[PropertyId],
-			[PropertyValue],
-			[DefinitionText])
+			[PropertyValue])
 	Select	S.[EntityId],
 			S.[PropertyId],
-			S.[PropertyValue],
-			S.[DefinitionText]
+			S.[PropertyValue]
 	From	@Values S
 			Left Join [App_DataDictionary].[DomainEntityProperty] T
 			On	S.[EntityId] = T.[EntityId] And

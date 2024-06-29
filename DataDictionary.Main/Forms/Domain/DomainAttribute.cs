@@ -38,6 +38,7 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingAttribute.Current is IAttributeValue current)
             {
                 bindingProperty.DataSource = new BindingView<AttributePropertyValue>(BusinessData.DomainModel.Attributes.Properties, w => key.Equals(w));
+                bindingDefinition.DataSource = new BindingView<AttributeDefinitionValue>(BusinessData.DomainModel.Attributes.Definitions, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<AttributeAliasValue>(BusinessData.DomainModel.Attributes.Aliases, w => key.Equals(w));
                 bindingSubjectArea.DataSource = new BindingView<AttributeSubjectAreaValue>(BusinessData.DomainModel.Attributes.SubjectArea, w => key.Equals(w));
             }
@@ -46,14 +47,15 @@ namespace DataDictionary.Main.Forms.Domain
         private void Form_Load(object sender, EventArgs e)
         {
             IAttributeValue nameOfValues;
-            PropertyNameMember.Load(propertyIdColumn);
-            ScopeNameMember.Load(aliaseScopeColumn);
+            PropertyNameList.Load(propertyIdColumn);
+            DefinitionNameList.Load(definitionColumn);
+            ScopeNameList.Load(aliaseScopeColumn);
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingAttribute, nameof(nameOfValues.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingAttribute, nameof(nameOfValues.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingAttribute, nameof(nameOfValues.AttributeDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 
-            AttributeNameMember.Load(typeOfAttributeData, BusinessData.DomainModel.Attributes);
+            AttributeNameList.Load(typeOfAttributeData, BusinessData.DomainModel.Attributes);
             typeOfAttributeData.DataBindings.Add(new Binding(nameof(typeOfAttributeData.SelectedValue), bindingAttribute, nameof(nameOfValues.TypeOfAttributeId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
 
             isSingleValueData.DataBindings.Add(new Binding(nameof(isSingleValueData.Checked), bindingAttribute, nameof(nameOfValues.IsSingleValue), false, DataSourceUpdateMode.OnPropertyChanged));
@@ -70,6 +72,9 @@ namespace DataDictionary.Main.Forms.Domain
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
 
+            definitionData.AutoGenerateColumns = false;
+            definitionData.DataSource = bindingDefinition;
+
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
 
@@ -82,7 +87,7 @@ namespace DataDictionary.Main.Forms.Domain
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
             if (bindingAttribute.Current is IAttributeValue current)
-            { BusinessData.DomainModel.Attributes.Remove(current); }
+            { BusinessData.DomainModel.Attributes.Delete(current); }
         }
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
@@ -92,7 +97,6 @@ namespace DataDictionary.Main.Forms.Domain
                 AttributePropertyValue newItem = new AttributePropertyValue(current);
                 newItem.PropertyId = domainProperty.PropertyId;
                 newItem.PropertyValue = domainProperty.PropertyValue;
-                newItem.DefinitionText = domainProperty.DefinitionText;
                 e.NewObject = newItem;
             }
         }
@@ -103,7 +107,7 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 AttributeAliasValue newItem = new AttributeAliasValue(current);
                 newItem.AliasName = namedScopeData.ScopePath.MemberFullPath;
-                newItem.Scope = namedScopeData.Scope;
+                newItem.AliasScope = namedScopeData.Scope;
                 e.NewObject = newItem;
             }
         }
@@ -115,7 +119,7 @@ namespace DataDictionary.Main.Forms.Domain
                 NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(current.AliasName).ToArray());
 
                 namedScopeData.ScopePath = path;
-                namedScopeData.Scope = current.Scope;
+                namedScopeData.Scope = current.AliasScope;
             }
         }
 
@@ -123,7 +127,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingAlias.DataSource is IList<IAliasValue> aliases
                 && aliases.FirstOrDefault(
-                    w => w.Scope == namedScopeData.Scope
+                    w => w.AliasScope == namedScopeData.Scope
                     && new NamedScopePath(NamedScopePath.Parse(w.AliasName).ToArray()) == namedScopeData.ScopePath)
                 is IAliasValue value)
             { bindingAlias.Position = aliases.IndexOf(value); }
@@ -132,28 +136,63 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingProperty_CurrentChanged(object sender, EventArgs e)
         {
-            if (bindingProperty.Current is IPropertyValue current)
+            if (bindingProperty.Current is AttributePropertyValue current)
             {
                 domainProperty.PropertyId = current.PropertyId ?? Guid.Empty;
-                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty; ;
-                domainProperty.DefinitionText = current.DefinitionText ?? String.Empty;
+                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty;
             }
         }
 
         private void DomainProperty_OnApply(object sender, EventArgs e)
         {
-            if (bindingProperty.DataSource is IList<IPropertyValue> properties
+            if (bindingProperty.DataSource is IList<AttributePropertyValue> properties
                 && properties.FirstOrDefault(
                     w => w.PropertyId == domainProperty.PropertyId)
-                is IPropertyValue value)
+                is AttributePropertyValue value)
             {
                 value.PropertyValue = domainProperty.PropertyValue;
-                value.DefinitionText = domainProperty.DefinitionText;
                 bindingProperty.Position = properties.IndexOf(value);
             }
             else { bindingProperty.AddNew(); }
         }
 
+
+        private void DomainDefinition_OnApply(object sender, EventArgs e)
+        {
+            if (bindingDefinition.DataSource is IList<AttributeDefinitionValue> definition
+                    && definition.FirstOrDefault(
+                        w => domainDefinition.Definition is IDefinitionIndex
+                        && domainDefinition.Definition.Equals(w))
+                    is AttributeDefinitionValue value)
+            {
+                value.DefinitionSummary = domainDefinition.DefinitionSummary;
+                value.DefinitionText = domainDefinition.DefinitionText;
+                bindingDefinition.Position = definition.IndexOf(value);
+            }
+            else { bindingDefinition.AddNew(); }
+        }
+
+        private void BindingDefinition_CurrentChanged(object sender, EventArgs e)
+        {
+            if (bindingDefinition.Current is AttributeDefinitionValue current)
+            {
+                domainDefinition.DefinitionId = current.DefinitionId ?? Guid.Empty;
+                domainDefinition.DefinitionText = current.DefinitionText;
+                domainDefinition.DefinitionSummary = current.DefinitionSummary ?? String.Empty;
+            }
+        }
+
+        private void BindingDefinition_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (bindingAttribute.Current is AttributeValue current)
+            {
+                AttributeDefinitionValue newItem = new AttributeDefinitionValue(current);
+                newItem.DefinitionId = domainDefinition.DefinitionId;
+                newItem.DefinitionSummary = domainDefinition.DefinitionSummary;
+                newItem.DefinitionText = domainDefinition.DefinitionText;
+                e.NewObject = newItem;
+            }
+        }
 
         private void BindingSubjectArea_AddingNew(object sender, AddingNewEventArgs e)
         {
@@ -180,5 +219,7 @@ namespace DataDictionary.Main.Forms.Domain
                 && data.FirstOrDefault(w => key.Equals(w)) is AttributeSubjectAreaValue target)
             { bindingSubjectArea.Remove(target); }
         }
+
+
     }
 }

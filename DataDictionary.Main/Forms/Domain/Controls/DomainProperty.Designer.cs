@@ -33,15 +33,12 @@
             propertyValueData = new DataDictionary.Main.Controls.TextBoxData();
             propertyChoiceTab = new TabPage();
             propertyChoiceData = new DataDictionary.Main.Controls.CheckedListBoxData();
-            propertyDefinitionTab = new TabPage();
-            propertyDefinitionData = new DataDictionary.Main.Controls.RichTextBoxData();
             propertyTypeData = new DataDictionary.Main.Controls.ComboBoxData();
             propertyLayout = new TableLayoutPanel();
             applyCommand = new Button();
             propertyTabs.SuspendLayout();
             propertyValueTab.SuspendLayout();
             propertyChoiceTab.SuspendLayout();
-            propertyDefinitionTab.SuspendLayout();
             propertyLayout.SuspendLayout();
             SuspendLayout();
             // 
@@ -50,7 +47,6 @@
             propertyLayout.SetColumnSpan(propertyTabs, 2);
             propertyTabs.Controls.Add(propertyValueTab);
             propertyTabs.Controls.Add(propertyChoiceTab);
-            propertyTabs.Controls.Add(propertyDefinitionTab);
             propertyTabs.Dock = DockStyle.Fill;
             propertyTabs.Location = new Point(3, 53);
             propertyTabs.Name = "propertyTabs";
@@ -88,7 +84,7 @@
             propertyChoiceTab.Location = new Point(4, 24);
             propertyChoiceTab.Name = "propertyChoiceTab";
             propertyChoiceTab.Padding = new Padding(3);
-            propertyChoiceTab.Size = new Size(192, 72);
+            propertyChoiceTab.Size = new Size(301, 184);
             propertyChoiceTab.TabIndex = 2;
             propertyChoiceTab.Text = "Choice";
             // 
@@ -103,34 +99,10 @@
             propertyChoiceData.HeaderText = "Property Choice";
             propertyChoiceData.Location = new Point(3, 3);
             propertyChoiceData.Name = "propertyChoiceData";
-            propertyChoiceData.Size = new Size(186, 66);
+            propertyChoiceData.Size = new Size(295, 178);
             propertyChoiceData.TabIndex = 2;
             propertyChoiceData.ItemCheck += PropertyChoiceData_ItemCheck;
             propertyChoiceData.EnabledChanged += PropertyChoiceData_EnabledChanged;
-            // 
-            // propertyDefinitionTab
-            // 
-            propertyDefinitionTab.BackColor = SystemColors.Control;
-            propertyDefinitionTab.Controls.Add(propertyDefinitionData);
-            propertyDefinitionTab.Location = new Point(4, 24);
-            propertyDefinitionTab.Name = "propertyDefinitionTab";
-            propertyDefinitionTab.Padding = new Padding(3);
-            propertyDefinitionTab.Size = new Size(192, 72);
-            propertyDefinitionTab.TabIndex = 1;
-            propertyDefinitionTab.Text = "Definition";
-            // 
-            // propertyDefinitionData
-            // 
-            propertyDefinitionData.AutoSize = true;
-            propertyDefinitionData.Dock = DockStyle.Fill;
-            propertyDefinitionData.HeaderText = "Definition";
-            propertyDefinitionData.Location = new Point(3, 3);
-            propertyDefinitionData.Name = "propertyDefinitionData";
-            propertyDefinitionData.ReadOnly = false;
-            propertyDefinitionData.Rtf = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
-            propertyDefinitionData.Size = new Size(186, 66);
-            propertyDefinitionData.TabIndex = 0;
-            propertyDefinitionData.Validated += PropertyDefinitionData_Validated;
             // 
             // propertyTypeData
             // 
@@ -190,8 +162,6 @@
             propertyValueTab.PerformLayout();
             propertyChoiceTab.ResumeLayout(false);
             propertyChoiceTab.PerformLayout();
-            propertyDefinitionTab.ResumeLayout(false);
-            propertyDefinitionTab.PerformLayout();
             propertyLayout.ResumeLayout(false);
             propertyLayout.PerformLayout();
             ResumeLayout(false);
@@ -203,8 +173,6 @@
         private DataDictionary.Main.Controls.ComboBoxData propertyTypeData;
         private DataDictionary.Main.Controls.TextBoxData propertyValueData;
         private DataDictionary.Main.Controls.CheckedListBoxData propertyChoiceData;
-        private TabPage propertyDefinitionTab;
-        private DataDictionary.Main.Controls.RichTextBoxData propertyDefinitionData;
         private TabControl propertyTabs;
         private TabPage propertyChoiceTab;
         private TableLayoutPanel propertyLayout;

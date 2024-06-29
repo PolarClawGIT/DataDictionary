@@ -115,7 +115,7 @@ namespace DataDictionary.BusinessLayer.Library
         public IReadOnlyList<WorkItem> OpenFromDb(IDatabaseWork factory, ILibrarySourceIndex key)
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(libraryModel.Remove(key));
+            work.AddRange(libraryModel.Delete(key));
             work.AddRange(libraryModel.Load(factory, key));
             return work;
         }

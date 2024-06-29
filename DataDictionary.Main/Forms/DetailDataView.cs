@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.Main.Properties;
+using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -17,7 +18,11 @@ namespace DataDictionary.Main.Forms
         public DetailDataView(IBindingTable data, Icon? icon = null) : this()
         {
             bindingSource.DataSource = data;
-            this.Text = String.Format("{0}: {1}", this.Text, data.BindingName);
+
+            if (data is IBindingName dataName)
+            { this.Text = String.Format("{0}: {1}", this.Text, dataName.BindingName); }
+            else { this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name); }
+
             if (icon is Icon value) { this.Icon = value; }
             else { this.Icon = Resources.Icon_Application; }
         }
@@ -25,7 +30,20 @@ namespace DataDictionary.Main.Forms
         public DetailDataView(IBindingData data, Icon? icon = null) : this()
         {
             bindingSource.DataSource = data;
-            this.Text = String.Format("{0}: {1}", this.Text, data.BindingName);
+
+            if (data is IBindingName dataName)
+            { this.Text = String.Format("{0}: {1}", this.Text, dataName.BindingName); }
+            else { this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name); }
+
+            if (icon is Icon value) { this.Icon = value; }
+            else { this.Icon = Resources.Icon_Application; }
+        }
+
+        public DetailDataView(IBindingList data, Icon? icon = null) : this()
+        {
+            bindingSource.DataSource = data;
+            this.Text = String.Format("{0}: {1}", this.Text, data.GetType().Name);
+
             if (icon is Icon value) { this.Icon = value; }
             else { this.Icon = Resources.Icon_Application; }
         }

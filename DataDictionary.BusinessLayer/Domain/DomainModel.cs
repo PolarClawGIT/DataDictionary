@@ -2,7 +2,10 @@
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.BusinessLayer.Scripting;
+using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ModelData;
+using System.Xml.Linq;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -12,15 +15,9 @@ namespace DataDictionary.BusinessLayer.Domain
     /// </summary>
     public interface IDomainModel :
         ILoadData<IModelKey>, ISaveData<IModelKey>,
-        IRemoveData
+        IDeleteData
 
     {
-        /// <summary>
-        /// The Properties of the Model
-        /// </summary>
-        /// <remarks>Reference to IApplicationData.Properties</remarks>
-        IPropertyData ModelProperty { get; }
-
         /// <summary>
         /// List of Domain Attributes within the Model.
         /// </summary>
@@ -30,13 +27,20 @@ namespace DataDictionary.BusinessLayer.Domain
         /// List of Domain Entities within the Model.
         /// </summary>
         IEntityData Entities { get; }
+
+        /// <summary>
+        /// The Properties for the Model (includes common)
+        /// </summary>
+        public IPropertyData Properties { get; }
+
+        /// <summary>
+        /// The Definitions for the Model (includes common)
+        /// </summary>
+        public IDefinitionData Definitions { get; }
     }
 
     class DomainModel : IDomainModel, IDataTableFile
     {
-        /// <inheritdoc/>
-        public required IPropertyData ModelProperty { get; init; }
-
         /// <inheritdoc/>
         public required ISubjectAreaData SubjectAreas { get; init; }
 
@@ -53,21 +57,45 @@ namespace DataDictionary.BusinessLayer.Domain
         public IEntityData Entities { get { return entityValues; } }
         private readonly EntityData entityValues;
 
+        /// <inheritdoc/>
+        public IPropertyData Properties { get { return propertyValues; } }
+        private readonly PropertyData propertyValues = new PropertyData();
+
+        /// <inheritdoc/>
+        public IDefinitionData Definitions { get { return definitionValues; } }
+        private readonly DefinitionData definitionValues = new DefinitionData();
+
+
         public DomainModel() : base()
         {
-            attributeValues = new AttributeData() { Model = this };
+            attributeValues = new AttributeData() { Model = this, DomainDefinitions = Definitions, DomainProperties = Properties };
             entityValues = new EntityData() { Model = this };
         }
 
+        /// <summary>
+        /// Sets up the Domain Model by importing application common data.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public IReadOnlyList<WorkItem> Create(IApplicationData source)
+        {
+            List<WorkItem> work = new List<WorkItem>();
+            work.Add(new WorkItem() { DoWork = () => propertyValues.Load(source.Properties.CreateDataReader()) });
+            work.Add(new WorkItem() { DoWork = () => definitionValues.Load(source.Definitions.CreateDataReader()) });
+
+            return work;
+        }
+
+        #region ILoadData, ISaveData
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         {
             List<WorkItem> work = new List<WorkItem>();
-
             work.AddRange(attributeValues.Load(factory, dataKey));
             work.AddRange(entityValues.Load(factory, dataKey));
-
+            work.AddRange(propertyValues.Load(factory, dataKey));
+            work.AddRange(definitionValues.Load(factory, dataKey));
             return work;
         }
 
@@ -78,7 +106,8 @@ namespace DataDictionary.BusinessLayer.Domain
             List<WorkItem> work = new List<WorkItem>();
             work.AddRange(attributeValues.Save(factory, dataKey));
             work.AddRange(entityValues.Save(factory, dataKey));
-
+            work.AddRange(propertyValues.Save(factory, dataKey));
+            work.AddRange(definitionValues.Save(factory, dataKey));
             return work;
         }
 
@@ -89,6 +118,8 @@ namespace DataDictionary.BusinessLayer.Domain
             List<System.Data.DataTable> result = new List<System.Data.DataTable>();
             result.AddRange(attributeValues.Export());
             result.AddRange(entityValues.Export());
+            result.AddRange(propertyValues.Export());
+            result.AddRange(definitionValues.Export());
             return result;
         }
 
@@ -98,17 +129,28 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             attributeValues.Import(source);
             entityValues.Import(source);
+            propertyValues.Import(source);
+            definitionValues.Import(source);
         }
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>
-        public IReadOnlyList<WorkItem> Remove()
+        public IReadOnlyList<WorkItem> Delete()
         {
             List<WorkItem> work = new List<WorkItem>();
-            work.AddRange(attributeValues.Remove());
-            work.AddRange(entityValues.Remove());
+            work.AddRange(attributeValues.Delete());
+            work.AddRange(entityValues.Delete());
+            work.AddRange(propertyValues.Delete());
+            work.AddRange(definitionValues.Delete());
             return work;
         }
+
+        /// <inheritdoc/>
+        /// <remarks>Domain</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
+
+        #endregion
 
         /// <inheritdoc/>
         /// <remarks>Domain</remarks>

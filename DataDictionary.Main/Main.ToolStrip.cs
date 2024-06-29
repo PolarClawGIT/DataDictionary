@@ -86,26 +86,43 @@ namespace DataDictionary.Main
         private void menuAttributeAlaises_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.Attributes.Aliases); }
 
-        private void entitiesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void menuAttributeDefinitions_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_RichTextBox), BusinessData.DomainModel.Attributes.Definitions); }
+
+        private void menuEntities_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Entities), BusinessData.DomainModel.Entities); }
 
-        private void entityPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void menuEntityProperties_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainModel.Entities.Properties); }
 
-        private void entityAliasToolStripMenuItem_Click(object sender, EventArgs e)
+        private void menuEntityDefinitions_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_RichTextBox), BusinessData.DomainModel.Entities.Definitions); }
+
+        private void menuEntityAlias_Click(object sender, EventArgs e)
         { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Synonym), BusinessData.DomainModel.Entities.Aliases); }
 
+        private void menuModelProperty_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_Property), BusinessData.DomainModel.Properties); }
+
+        private void menuModelDefinition_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_RichTextBox), BusinessData.DomainModel.Definitions); }
+
         private void manageScriptingCommand_ButtonClick(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.Document()); }
+        { Activate(() => new Forms.Scripting.ScriptingTemplate(null)); }
 
-        private void transformManagerCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.TransformManager(null)); }
+        private void menuScriptingTemplates_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XSLTransform), BusinessData.ScriptingEngine.Templates); }
 
-        private void schemaManagerCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.SchemaManager(null)); }
+        private void menuScriptingPath_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XPath), BusinessData.ScriptingEngine.TemplatePaths); }
 
-        private void selectionPathCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Scripting.SelectionManager(null)); }
+        private void menuScriptingDocument_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XmlFile), BusinessData.ScriptingEngine.TemplateDocuments); }
 
+        private void menuScriptingNode_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XMLElement), BusinessData.ScriptingEngine.TemplateNodes); }
+
+        private void menuScriptingAttribute_Click(object sender, EventArgs e)
+        { Activate((data) => new Forms.DetailDataView(data, Resources.Icon_XMLAttribute), BusinessData.ScriptingEngine.TemplateAttributes); }
     }
 }

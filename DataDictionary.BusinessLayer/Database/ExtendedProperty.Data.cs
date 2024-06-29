@@ -89,6 +89,21 @@ namespace DataDictionary.BusinessLayer.Database
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
 
+        /// <inheritdoc/>
+        /// <remarks>ExtendedProperty</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
+
+        /// <inheritdoc/>
+        /// <remarks>ExtendedProperty</remarks>
+        public IReadOnlyList<WorkItem> Delete()
+        { return new WorkItem() { WorkName = "Remove ExtendedProperty", DoWork = () => { this.Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>DoExtendedPropertymain</remarks>
+        public IReadOnlyList<WorkItem> Delete(IDbCatalogKey dataKey)
+        { return new WorkItem() { WorkName = "Remove ExtendedProperty", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+
         /// <summary>
         /// Gets a list of Extended Properties given a Key.
         /// </summary>
@@ -145,6 +160,7 @@ namespace DataDictionary.BusinessLayer.Database
             DbExtendedPropertyKeyName key = new DbExtendedPropertyKeyName(source);
             return this.Where(w => key.Equals(w));
         }
+
 
     }
 }

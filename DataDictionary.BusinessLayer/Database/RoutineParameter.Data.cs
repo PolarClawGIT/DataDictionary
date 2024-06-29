@@ -74,5 +74,21 @@ namespace DataDictionary.BusinessLayer.Database
                 }
             }
         }
+
+        /// <inheritdoc/>
+        /// <remarks>RoutineParameter</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
+
+        /// <inheritdoc/>
+        /// <remarks>RoutineParameter</remarks>
+        public IReadOnlyList<WorkItem> Delete()
+        { return new WorkItem() { WorkName = "Remove RoutineParameter", DoWork = () => { this.Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>RoutineParameter</remarks>
+        public IReadOnlyList<WorkItem> Delete(IDbCatalogKey dataKey)
+        { return new WorkItem() { WorkName = "Remove RoutineParameter", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+
     }
 }

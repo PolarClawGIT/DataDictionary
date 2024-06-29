@@ -31,6 +31,7 @@ namespace DataDictionary.Main.Controls
         // Expose Control Properties
         public Boolean ReadOnly { get { return textBox.ReadOnly; } set { textBox.ReadOnly = value; } }
         public Boolean Multiline { get { return textBox.Multiline; } set { textBox.Multiline = value; } }
+        public Boolean WordWrap { get { return textBox.WordWrap; } set { textBox.WordWrap = value; } }
 
         /// <summary>
         /// Control used to position the Error Provider Icon.

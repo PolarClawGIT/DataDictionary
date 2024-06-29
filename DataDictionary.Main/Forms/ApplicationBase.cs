@@ -198,6 +198,28 @@ namespace DataDictionary.Main.Forms
                 return newForm;
             }
         }
+
+        protected virtual TForm Activate<TForm>(Func<IBindingList, TForm> constructor, IBindingList data)
+            where TForm : ApplicationBase
+        {
+            Form parent = MdiParent ?? this;
+
+            if (parent.MdiChildren.FirstOrDefault(w =>
+                w is TForm targetForm &&
+                targetForm is IApplicationDataForm dataForm &&
+                dataForm.IsOpenItem(data)) is ApplicationBase existingForm)
+            {
+                existingForm.Activate();
+                return (TForm)existingForm;
+            }
+            else
+            {
+                TForm newForm = constructor(data);
+                newForm.MdiParent = parent;
+                newForm.Show();
+                return newForm;
+            }
+        }
         #endregion
 
 

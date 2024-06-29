@@ -8,11 +8,11 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface component for the Model Entity Alias
     /// </summary>
-    public interface IEntityAliasData:
+    public interface IEntityAliasData :
         IBindingData<EntityAliasValue>
     { }
 
-    internal class EntityAliasData: DomainEntityAliasCollection<EntityAliasValue>, IEntityAliasData,
+    class EntityAliasData : DomainEntityAliasCollection<EntityAliasValue>, IEntityAliasData,
         ILoadData<IDomainEntityKey>, ISaveData<IDomainEntityKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {
@@ -26,6 +26,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public IReadOnlyList<WorkItem> Load(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateLoad(this, dataKey).ToList(); }
 
+
         /// <inheritdoc/>
         /// <remarks>EntityAlias</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IDomainEntityKey dataKey)
@@ -35,5 +36,20 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <remarks>EntityAlias</remarks>
         public IReadOnlyList<WorkItem> Save(IDatabaseWork factory, IModelKey dataKey)
         { return factory.CreateSave(this, dataKey).ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>EntityAlias</remarks>
+        public IReadOnlyList<WorkItem> Delete()
+        { return new WorkItem() { WorkName = "Remove EntityAlias", DoWork = () => { this.Clear(); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>EntityAlias</remarks>
+        public IReadOnlyList<WorkItem> Delete(IDomainEntityKey dataKey)
+        { return new WorkItem() { WorkName = "Remove EntityAlias", DoWork = () => { this.Remove(dataKey); } }.ToList(); }
+
+        /// <inheritdoc/>
+        /// <remarks>EntityAlias</remarks>
+        public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
+        { return Delete(); }
     }
 }

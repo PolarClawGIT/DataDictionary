@@ -37,6 +37,7 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingEntity.Current is IEntityValue current)
             {
                 bindingProperty.DataSource = new BindingView<EntityPropertyValue>(BusinessData.DomainModel.Entities.Properties, w => key.Equals(w));
+                bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.DomainModel.Entities.Definitions, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.DomainModel.Entities.Aliases, w => key.Equals(w));
                 bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.DomainModel.Entities.SubjectArea, w => key.Equals(w));
             }
@@ -45,18 +46,22 @@ namespace DataDictionary.Main.Forms.Domain
         private void Form_Load(object sender, EventArgs e)
         {
             IEntityValue nameOfValues;
-            PropertyNameMember.Load(propertyIdColumn);
-            ScopeNameMember.Load(aliaseScopeColumn);
+            PropertyNameList.Load(propertyIdColumn);
+            DefinitionNameList.Load(definitionColumn);
+            ScopeNameList.Load(aliaseScopeColumn);
 
             this.DataBindings.Add(new Binding(nameof(this.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));
             descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingEntity, nameof(nameOfValues.EntityDescription)));
 
-            EntityNameMember.Load(typeOfEntityData, BusinessData.DomainModel.Entities);
+            EntityNameList.Load(typeOfEntityData, BusinessData.DomainModel.Entities);
             typeOfEntityData.DataBindings.Add(new Binding(nameof(typeOfEntityData.SelectedValue), bindingEntity, nameof(nameOfValues.TypeOfEntityId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
 
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
+
+            definitionData.AutoGenerateColumns = false;
+            definitionData.DataSource = bindingDefinition;
 
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
@@ -69,7 +74,7 @@ namespace DataDictionary.Main.Forms.Domain
         private void DeleteItemCommand_Click(object? sender, EventArgs e)
         {
             if (bindingEntity.Current is IEntityValue current)
-            { BusinessData.DomainModel.Entities.Remove(current); }
+            { BusinessData.DomainModel.Entities.Delete(current); }
         }
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)
@@ -77,6 +82,8 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingEntity.Current is IEntityValue current)
             {
                 EntityPropertyValue newItem = new EntityPropertyValue(current);
+                newItem.PropertyId = domainProperty.PropertyId;
+                newItem.PropertyValue = domainProperty.PropertyValue;
                 e.NewObject = newItem;
             }
         }
@@ -87,19 +94,19 @@ namespace DataDictionary.Main.Forms.Domain
             {
                 EntityAliasValue newItem = new EntityAliasValue(current);
                 newItem.AliasName = namedScopeData.ScopePath.MemberFullPath;
-                newItem.Scope = namedScopeData.Scope;
+                newItem.AliasScope = namedScopeData.Scope;
                 e.NewObject = newItem;
             }
         }
 
         private void BindingAlias_CurrentChanged(object sender, EventArgs e)
         {
-            if (bindingAlias.Current is AttributeAliasValue current)
+            if (bindingAlias.Current is IAliasValue current)
             {
                 NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(current.AliasName).ToArray());
 
                 namedScopeData.ScopePath = path;
-                namedScopeData.Scope = current.Scope;
+                namedScopeData.Scope = current.AliasScope;
             }
         }
 
@@ -107,7 +114,7 @@ namespace DataDictionary.Main.Forms.Domain
         {
             if (bindingAlias.DataSource is IList<IAliasValue> aliases
                 && aliases.FirstOrDefault(
-                    w => w.Scope == namedScopeData.Scope
+                    w => w.AliasScope == namedScopeData.Scope
                     && new NamedScopePath(NamedScopePath.Parse(w.AliasName).ToArray()) == namedScopeData.ScopePath)
                 is IAliasValue value)
             { bindingAlias.Position = aliases.IndexOf(value); }
@@ -116,23 +123,21 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingProperty_CurrentChanged(object sender, EventArgs e)
         {
-            if (bindingProperty.Current is IPropertyValue current)
+            if (bindingProperty.Current is EntityPropertyValue current)
             {
                 domainProperty.PropertyId = current.PropertyId ?? Guid.Empty;
-                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty; ;
-                domainProperty.DefinitionText = current.DefinitionText ?? String.Empty;
+                domainProperty.PropertyValue = current.PropertyValue ?? String.Empty;
             }
         }
 
         private void DomainProperty_OnApply(object sender, EventArgs e)
         {
-            if (bindingProperty.DataSource is IList<IPropertyValue> properties
+            if (bindingProperty.DataSource is IList<EntityPropertyValue> properties
                 && properties.FirstOrDefault(
                     w => w.PropertyId == domainProperty.PropertyId)
-                is IPropertyValue value)
+                is EntityPropertyValue value)
             {
                 value.PropertyValue = domainProperty.PropertyValue;
-                value.DefinitionText = domainProperty.DefinitionText;
                 bindingProperty.Position = properties.IndexOf(value);
             }
             else { bindingProperty.AddNew(); }
@@ -162,6 +167,45 @@ namespace DataDictionary.Main.Forms.Domain
             if (bindingSubjectArea.DataSource is IEnumerable<ISubjectAreaIndex> data
                 && data.FirstOrDefault(w => key.Equals(w)) is EntitySubjectAreaValue target)
             { bindingSubjectArea.Remove(target); }
+        }
+
+        private void BindingDefinition_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (bindingEntity.Current is EntityValue current)
+            {
+                EntityDefinitionValue newItem = new EntityDefinitionValue(current);
+                newItem.DefinitionId = domainDefinition.DefinitionId;
+                newItem.DefinitionSummary = domainDefinition.DefinitionSummary;
+                newItem.DefinitionText = domainDefinition.DefinitionText;
+                e.NewObject = newItem;
+            }
+        }
+
+        private void BindingDefinition_CurrentChanged(object sender, EventArgs e)
+        {
+            var x = bindingDefinition.DataSource;
+
+            if (bindingDefinition.Current is EntityDefinitionValue current)
+            {
+                domainDefinition.DefinitionId = current.DefinitionId ?? Guid.Empty;
+                domainDefinition.DefinitionText = current.DefinitionText;
+                domainDefinition.DefinitionSummary = current.DefinitionSummary ?? String.Empty;
+            }
+        }
+
+        private void DomainDefinition_OnApply(object sender, EventArgs e)
+        {
+            if (bindingDefinition.DataSource is IList<EntityDefinitionValue> definition
+                && definition.FirstOrDefault(
+                    w => domainDefinition.Definition is IDefinitionIndex
+                    && domainDefinition.Definition.Equals(w))
+                is EntityDefinitionValue value)
+            {
+                value.DefinitionSummary = domainDefinition.DefinitionSummary;
+                value.DefinitionText = domainDefinition.DefinitionText;
+                bindingDefinition.Position = definition.IndexOf(value);
+            }
+            else { bindingDefinition.AddNew(); }
         }
     }
 }

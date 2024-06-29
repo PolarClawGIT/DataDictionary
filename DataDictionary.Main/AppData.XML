@@ -4,29 +4,34 @@
     <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
       <xs:complexType>
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-          <xs:element name="HelpItem">
+          <xs:element name="HelpSubjectValue" msdata:Locale="en-US">
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="HelpId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" />
-                <xs:element name="HelpSubject" type="xs:string" />
+                <xs:element name="HelpId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" minOccurs="0" />
+                <xs:element name="HelpSubject" type="xs:string" minOccurs="0" />
                 <xs:element name="HelpToolTip" type="xs:string" minOccurs="0" />
                 <xs:element name="HelpText" type="xs:string" minOccurs="0" />
                 <xs:element name="NameSpace" type="xs:string" minOccurs="0" />
               </xs:sequence>
             </xs:complexType>
           </xs:element>
-          <xs:element name="PropertyItem">
+          <xs:element name="PropertyValue" msdata:Locale="en-US">
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="PropertyId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" />
+                <xs:element name="PropertyId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" minOccurs="0" />
                 <xs:element name="PropertyTitle" type="xs:string" minOccurs="0" />
                 <xs:element name="PropertyDescription" type="xs:string" minOccurs="0" />
-                <xs:element name="IsDefinition" type="xs:boolean" minOccurs="0" />
-                <xs:element name="IsExtendedProperty" type="xs:boolean" minOccurs="0" />
-                <xs:element name="IsFrameworkSummary" type="xs:boolean" minOccurs="0" />
-                <xs:element name="IsChoice" type="xs:boolean" minOccurs="0" />
-                <xs:element name="ExtendedProperty" type="xs:string" minOccurs="0" />
-                <xs:element name="ChoiceList" type="xs:string" minOccurs="0" />
+                <xs:element name="DataType" type="xs:string" minOccurs="0" />
+                <xs:element name="PropertyData" type="xs:string" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="DefinitionValue" msdata:Locale="en-US">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="DefinitionId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" type="xs:string" minOccurs="0" />
+                <xs:element name="DefinitionTitle" type="xs:string" minOccurs="0" />
+                <xs:element name="DefinitionDescription" type="xs:string" minOccurs="0" />
               </xs:sequence>
             </xs:complexType>
           </xs:element>
@@ -34,7 +39,7 @@
       </xs:complexType>
     </xs:element>
   </xs:schema>
-  <HelpItem>
+  <HelpSubjectValue>
     <HelpId>7581bfb8-d99b-4cde-92ab-01cb1b77a3dc</HelpId>
     <HelpSubject>Attribute- Key</HelpSubject>
     <HelpToolTip>Is the Attribute is used as a Key (part of a PK, FK, or AK)</HelpToolTip>
@@ -43,9 +48,9 @@
 \pard\f0\fs18 Is the Attribute is used as a Key (part of a PK, FK, or AK)\par
 }
 </HelpText>
-    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isKeyData</NameSpace>
-  </HelpItem>
-  <HelpItem>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isKeyData]</NameSpace>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
     <HelpId>00000000-0000-0000-0010-100000000000</HelpId>
     <HelpSubject>Setup</HelpSubject>
     <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fswiss\fprq2\fcharset0 Segoe UI;}{\f2\fnil Segoe UI;}{\f3\fnil\fcharset2 Symbol;}}
@@ -99,8 +104,8 @@ If the database is empty, this can be addressed by using the application. Under 
 }
 </HelpText>
     <NameSpace>Setup</NameSpace>
-  </HelpItem>
-  <HelpItem>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
     <HelpId>00000000-0000-0000-0020-100000000000</HelpId>
     <HelpSubject>About Application</HelpSubject>
     <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil Segoe UI;}}
@@ -116,9 +121,19 @@ This tool is intended to fill the gap. Something easy enough for Business to use
 \f1\par
 }
 </HelpText>
-    <NameSpace>DataDictionary.Main.Forms</NameSpace>
-  </HelpItem>
-  <HelpItem>
+    <NameSpace>About</NameSpace>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
+    <HelpId>4d5765d1-cfd8-46fd-bcc7-2a1841ad2cd4</HelpId>
+    <HelpSubject>Application Forms</HelpSubject>
+    <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}{\f1\fnil Segoe UI;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\f0\fs18 Application Forms\f1\par
+}
+</HelpText>
+    <NameSpace>[DataDictionary].[Main].[Forms]</NameSpace>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
     <HelpId>30abbe4f-3056-4e7f-87eb-521025f5ec26</HelpId>
     <HelpSubject>Attribute- Composite</HelpSubject>
     <HelpToolTip>Is Attribute a Composite Type (composed of multiple Simple Types, not Simple)</HelpToolTip>
@@ -129,9 +144,9 @@ This tool is intended to fill the gap. Something easy enough for Business to use
 \f1 Not a Simple Type.\f0\par
 }
 </HelpText>
-    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isCompositeTypeData</NameSpace>
-  </HelpItem>
-  <HelpItem>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isCompositeTypeData]</NameSpace>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
     <HelpId>d09b5d65-5e53-4960-ad14-5a901cff6958</HelpId>
     <HelpSubject>Attribute- Derived</HelpSubject>
     <HelpToolTip>Is Attribute a Derived Value (computed value, not Integral)</HelpToolTip>
@@ -143,9 +158,9 @@ AKA: Calcualted Value\par
 Not an Integral value\par
 }
 </HelpText>
-    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isDerivedData</NameSpace>
-  </HelpItem>
-  <HelpItem>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isDerivedData]</NameSpace>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
     <HelpId>79abc1c2-7c20-4431-b761-6442f736f8bd</HelpId>
     <HelpSubject>Attribute- Valued</HelpSubject>
     <HelpToolTip>Is the Attribute a valued (not null) attribute.</HelpToolTip>
@@ -154,9 +169,9 @@ Not an Integral value\par
 \pard\f0\fs18 Is the Attribute a valued (not null) attribute.\par
 }
 </HelpText>
-    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isValuedData</NameSpace>
-  </HelpItem>
-  <HelpItem>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isValuedData]</NameSpace>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
     <HelpId>177b29f2-f449-4045-a43b-8f3cf07355ad</HelpId>
     <HelpSubject>Error: File Not Found on Save to My Documents</HelpSubject>
     <HelpText>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fswiss\fprq2\fcharset0 Segoe UI;}{\f1\fnil\fcharset0 Segoe UI;}{\f2\fswiss\fprq2\fcharset0 Calibri;}{\f3\fnil Segoe UI;}}
@@ -172,8 +187,8 @@ The application can also save data to its own installation folder (AppData.XML).
 }
 </HelpText>
     <NameSpace>Errors</NameSpace>
-  </HelpItem>
-  <HelpItem>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
     <HelpId>b469fbb3-08bc-4500-8549-9cb877ad6fdc</HelpId>
     <HelpSubject>Attribute- Multivalued</HelpSubject>
     <HelpToolTip>Is Attribute Multi Valued (has multiple values, not single)</HelpToolTip>
@@ -182,9 +197,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is Attribute Multi Valued (has multiple values, not single)\par
 }
 </HelpText>
-    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isMultiValuedData</NameSpace>
-  </HelpItem>
-  <HelpItem>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isMultiValuedData]</NameSpace>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
     <HelpId>70b892dc-4844-4886-b09d-9dede899fd44</HelpId>
     <HelpSubject>Attribute- Single</HelpSubject>
     <HelpToolTip>Is Attribute Single Valued (has only one value, not multi-valued)</HelpToolTip>
@@ -193,9 +208,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is Attribute Single Valued (has only one value, not multi-valued)\par
 }
 </HelpText>
-    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isSingleValueData</NameSpace>
-  </HelpItem>
-  <HelpItem>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isSingleValueData]</NameSpace>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
     <HelpId>f97525ae-bb77-4724-9397-a7a9293cbcde</HelpId>
     <HelpSubject>Domain Attribute</HelpSubject>
     <HelpToolTip>Attribute management</HelpToolTip>
@@ -204,9 +219,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Attributes are the data elements (fields/columns/properties) of an Entity Relationship Model.\f1\par
 }
 </HelpText>
-    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute</NameSpace>
-  </HelpItem>
-  <HelpItem>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute]</NameSpace>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
     <HelpId>aadd18a8-af8f-4ecb-b7cc-ae8d101cef66</HelpId>
     <HelpSubject>Attribute- Integral</HelpSubject>
     <HelpToolTip>Is Attribute an Integral value (distinct or basic value, not Derived)</HelpToolTip>
@@ -215,9 +230,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is Attribute an Integral value (distinct or basic value, not Derived)\par
 }
 </HelpText>
-    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isIntegralData</NameSpace>
-  </HelpItem>
-  <HelpItem>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isIntegralData]</NameSpace>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
     <HelpId>2ae83017-c0a5-42ec-acb6-c240d4db23dc</HelpId>
     <HelpSubject>Attribute- Simple</HelpSubject>
     <HelpToolTip>Is Attribute a Simple Type (cannot be decomposed, not composite)</HelpToolTip>
@@ -226,9 +241,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is Attribute a Simple Type (cannot be decomposed, not composite)\par
 }
 </HelpText>
-    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isSimpleTypeData</NameSpace>
-  </HelpItem>
-  <HelpItem>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isSimpleTypeData]</NameSpace>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
     <HelpId>a6e95ad7-edf4-45cf-b28a-d636374b39f1</HelpId>
     <HelpSubject>Attribute- NonKey</HelpSubject>
     <HelpToolTip>Is the Attribute a Non-Key item (not part of a PK, FK or AK)</HelpToolTip>
@@ -237,9 +252,9 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is the Attribute a Non-Key item (not part of a PK, FK or AK)\par
 }
 </HelpText>
-    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isNonKeyData</NameSpace>
-  </HelpItem>
-  <HelpItem>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isNonKeyData]</NameSpace>
+  </HelpSubjectValue>
+  <HelpSubjectValue>
     <HelpId>82237476-b610-4695-bccd-d878a68c65ed</HelpId>
     <HelpSubject>Attribute- Nullable</HelpSubject>
     <HelpToolTip>Is the Attribute a Null-able value (allows Null value)</HelpToolTip>
@@ -248,53 +263,49 @@ The application can also save data to its own installation folder (AppData.XML).
 \pard\f0\fs18 Is the Attribute a Null-able value (allows Null value)\par
 }
 </HelpText>
-    <NameSpace>DataDictionary.Main.Forms.Domain.DomainAttribute.isNullableData</NameSpace>
-  </HelpItem>
-  <PropertyItem>
+    <NameSpace>[DataDictionary].[Main].[Forms].[Domain].[DomainAttribute].[isNullableData]</NameSpace>
+  </HelpSubjectValue>
+  <PropertyValue>
     <PropertyId>00000000-0000-0000-0010-000000000010</PropertyId>
-    <PropertyTitle>Business Definition</PropertyTitle>
-    <PropertyDescription>Definition of the item in Business Terms.</PropertyDescription>
-    <IsDefinition>true</IsDefinition>
-    <IsExtendedProperty>false</IsExtendedProperty>
-    <IsFrameworkSummary>false</IsFrameworkSummary>
-    <IsChoice>false</IsChoice>
-  </PropertyItem>
-  <PropertyItem>
-    <PropertyId>00000000-0000-0000-0020-000000000010</PropertyId>
-    <PropertyTitle>Technical Definition</PropertyTitle>
-    <PropertyDescription>Definition of the item in Technical Terms.</PropertyDescription>
-    <IsDefinition>true</IsDefinition>
-    <IsExtendedProperty>false</IsExtendedProperty>
-    <IsFrameworkSummary>false</IsFrameworkSummary>
-    <IsChoice>false</IsChoice>
-  </PropertyItem>
-  <PropertyItem>
-    <PropertyId>00000000-0000-0000-0010-000000000020</PropertyId>
-    <PropertyTitle>MS Description</PropertyTitle>
+    <PropertyTitle>MS SQL Description</PropertyTitle>
     <PropertyDescription>Commonly used by Microsoft tools to store the user defined Description of the element.</PropertyDescription>
-    <IsDefinition>false</IsDefinition>
-    <IsExtendedProperty>true</IsExtendedProperty>
-    <IsFrameworkSummary>false</IsFrameworkSummary>
-    <IsChoice>false</IsChoice>
-    <ExtendedProperty>MS_Description</ExtendedProperty>
-  </PropertyItem>
-  <PropertyItem>
-    <PropertyId>00000000-0000-0000-0010-000000000030</PropertyId>
+    <DataType>MS_ExtendedProperty</DataType>
+    <PropertyData>MS_Description</PropertyData>
+  </PropertyValue>
+  <PropertyValue>
+    <PropertyId>00000000-0000-0000-0020-000000000010</PropertyId>
     <PropertyTitle>.Net Summary</PropertyTitle>
     <PropertyDescription>Summary Documentation block for .Net Framework Code</PropertyDescription>
-    <IsDefinition>false</IsDefinition>
-    <IsExtendedProperty>false</IsExtendedProperty>
-    <IsFrameworkSummary>true</IsFrameworkSummary>
-    <IsChoice>false</IsChoice>
-  </PropertyItem>
-  <PropertyItem>
-    <PropertyId>00000000-0000-0000-0020-000000000030</PropertyId>
+    <DataType>String</DataType>
+  </PropertyValue>
+  <PropertyValue>
+    <PropertyId>00000000-0000-0000-0030-000000000010</PropertyId>
     <PropertyTitle>.Net System Type</PropertyTitle>
-    <PropertyDescription>The types for .Net Framework Code. (SQL Supported types only, https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/sql-server-data-type-mappings)</PropertyDescription>
-    <IsDefinition>false</IsDefinition>
-    <IsExtendedProperty>false</IsExtendedProperty>
-    <IsFrameworkSummary>false</IsFrameworkSummary>
-    <IsChoice>true</IsChoice>
-    <ChoiceList>Boolean, Byte , Byte[], Char[], DateTime, DateTimeOffset, Decimal, Double, Guid, Int16, Int32, Int64, Single, String, TimeSpan, Xml, Object</ChoiceList>
-  </PropertyItem>
+    <PropertyDescription>The types for .Net Framework Code. (This is an incomplete sub-set of the most commonly used types based on the list compatible with TSQL)</PropertyDescription>
+    <DataType>List</DataType>
+    <PropertyData>Byte, Byte[], Char[], DateTime, DateTimeOffset, Decimal, Double, Guid, Int16, Int32, Int64, Single, String, TimeSpan, Boolean</PropertyData>
+  </PropertyValue>
+  <PropertyValue>
+    <PropertyId>00000000-0000-0000-0040-000000000010</PropertyId>
+    <PropertyTitle>MS SQL Type</PropertyTitle>
+    <PropertyDescription>The types for MS SQL</PropertyDescription>
+    <DataType>List</DataType>
+    <PropertyData>binary, bit, char, date, datetime, datetime2, datetimeoffset, decimal, float, geography, geometry, hierarchyid, image, int, money, nchar, ntext, numeric, nvarchar, real, smalldatetime, smallint, smallmoney, sql_variant, sysname, text, time, timestamp, tinyint, uniqueidentifier, varbinary, varchar, xml, bigint</PropertyData>
+  </PropertyValue>
+  <PropertyValue>
+    <PropertyId>00000000-0000-0000-0050-000000000010</PropertyId>
+    <PropertyTitle>Length</PropertyTitle>
+    <PropertyDescription>The Maxium Length of the value. Used with varaible length types.</PropertyDescription>
+    <DataType>Integer</DataType>
+  </PropertyValue>
+  <DefinitionValue>
+    <DefinitionId>00000000-0000-0000-0010-000000000020</DefinitionId>
+    <DefinitionTitle>Business Definition</DefinitionTitle>
+    <DefinitionDescription>Definition of the item in Business Terms.</DefinitionDescription>
+  </DefinitionValue>
+  <DefinitionValue>
+    <DefinitionId>00000000-0000-0000-0020-000000000020</DefinitionId>
+    <DefinitionTitle>Technical Definition</DefinitionTitle>
+    <DefinitionDescription>Definition of the item in Technical Terms.</DefinitionDescription>
+  </DefinitionValue>
 </NewDataSet>
