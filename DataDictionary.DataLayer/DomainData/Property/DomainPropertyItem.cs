@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -53,7 +54,7 @@ namespace DataDictionary.DataLayer.DomainData.Property
         public DomainPropertyType PropertyType
         {
             get { return DomainPropertyTypeKey.Parse(DataType ?? String.Empty).PropertyType; }
-            set { DataType = value.ToName(); OnPropertyChanged(nameof(PropertyType)); }
+            set { DataType = new DomainPropertyTypeKey(value).ToString(); OnPropertyChanged(nameof(PropertyType)); }
         }
 
         /// <summary>

@@ -1,11 +1,23 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using DataDictionary.Resource.Enumerations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DataDictionary.DataLayer.DatabaseData.Table
 {
     /// <summary>
+    /// Interface for Database TableType Key.
+    /// </summary>
+    public interface IDbTableTypeKey : IKey
+    {
+        /// <summary>
+        /// Type of Table (Table, Temporal Table, Historic Table, View)
+        /// </summary>
+        DbTableType TableType { get; }
+    }
+
+    /// <summary>
     /// Implementation for Database TableType Key.
     /// </summary>
-    public class DbTableTypeKey : IDbTableType, IKeyComparable<IDbTableType>, IParsable<DbTableTypeKey>
+    public class DbTableTypeKey : IDbTableTypeKey, IKeyComparable<IDbTableTypeKey>, IParsable<DbTableTypeKey>
     {
         /// <inheritdoc/>
         public DbTableType TableType { get; init; } = DbTableType.Null;
@@ -26,8 +38,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// Constructor for the TableType Key.
         /// </summary>
         /// <param name="source"></param>
-        public DbTableTypeKey(IDbTableType source) : this()
-        { if (source is IDbTableType) { TableType = source.TableType; } }
+        public DbTableTypeKey(IDbTableTypeKey source) : this()
+        { if (source is IDbTableTypeKey) { TableType = source.TableType; } }
 
         /// <summary>
         /// Converts a DbTableType into a DbTableTypeKey.
@@ -43,29 +55,29 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual Boolean Equals(IDbTableType? other)
+        public virtual Boolean Equals(IDbTableTypeKey? other)
         {
-            return other is IDbTableType
+            return other is IDbTableTypeKey
                 && this.TableType != DbTableType.Null
                 && other.TableType != DbTableType.Null
                 && this.TableType.Equals(other.TableType);
         }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(IDbTableType? other)
+        public virtual int CompareTo(IDbTableTypeKey? other)
         {
-            if (other is IDbTableType value)
+            if (other is IDbTableTypeKey value)
             { return string.Compare(this.ToString(), value.ToString(), true); }
             else { return 1; }
         }
 
         /// <inheritdoc/>
         public virtual int CompareTo(object? obj)
-        { if (obj is IDbTableType value) { return CompareTo(new DbTableTypeKey(value)); } else { return 1; } }
+        { if (obj is IDbTableTypeKey value) { return CompareTo(new DbTableTypeKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IDbTableType value && this.Equals(new DbTableTypeKey(value)); }
+        { return obj is IDbTableTypeKey value && this.Equals(new DbTableTypeKey(value)); }
 
         /// <inheritdoc/>
         public static bool operator ==(DbTableTypeKey left, DbTableTypeKey right)

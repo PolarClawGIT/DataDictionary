@@ -2,7 +2,7 @@
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.ScriptingData.Template;
+using DataDictionary.Resource.Enumerations;
 using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.Domain
@@ -80,20 +80,20 @@ namespace DataDictionary.BusinessLayer.Domain
 
                             switch (node.NodeValueAs)
                             {
-                                case NodeValueAsType.none: break;
-                                case NodeValueAsType.ElementText or NodeValueAsType.ElementXML:
+                                case TemplateNodeValueAsType.none: break;
+                                case TemplateNodeValueAsType.ElementText or TemplateNodeValueAsType.ElementXML:
                                     newElement = new XElement(nameof(AliasParts), item);
                                     newElement.Add(new XAttribute("Level", i));
                                     newElement.Add(new XAttribute("Name", levelValue));
                                     aliasObject = newElement;
                                     break;
-                                case NodeValueAsType.ElementCData:
+                                case TemplateNodeValueAsType.ElementCData:
                                     newElement = new XElement(nameof(AliasParts), new XCData(item));
                                     newElement.Add(new XAttribute("Level", i));
                                     newElement.Add(new XAttribute("Name", levelValue));
                                     aliasObject = newElement;
                                     break;
-                                case NodeValueAsType.Attribute:
+                                case TemplateNodeValueAsType.Attribute:
                                     newAttribute = new XAttribute(String.Format("Level.{0}.{1}", i, levelValue), item);
                                     aliasObject = newAttribute;
                                     break;

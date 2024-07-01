@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Property;
+using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.Domain
 {

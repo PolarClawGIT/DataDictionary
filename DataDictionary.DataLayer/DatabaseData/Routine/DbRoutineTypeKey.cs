@@ -1,18 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DatabaseData.Routine
 {
-
+    /// <summary>
+    /// Interface for Database RoutineType Key.
+    /// </summary>
+    public interface IDbRoutineTypeKey : IKey
+    {
+        /// <summary>
+        /// Type of Routine (such as procedure or function)
+        /// </summary>
+        DbRoutineType RoutineType { get; }
+    }
 
     /// <summary>
     /// Implementation for Database RoutineType Key.
     /// </summary>
-    public class DbRoutineTypeKey : IDbRoutineType, IKeyComparable<IDbRoutineType>, IParsable<DbRoutineTypeKey>
+    public class DbRoutineTypeKey : IDbRoutineTypeKey, IKeyComparable<IDbRoutineTypeKey>, IParsable<DbRoutineTypeKey>
     {
         /// <inheritdoc/>
         public DbRoutineType RoutineType { get; init; } = DbRoutineType.Null;
@@ -33,8 +38,8 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// Constructor for the RoutineType Key.
         /// </summary>
         /// <param name="source"></param>
-        public DbRoutineTypeKey(IDbRoutineType source) : this()
-        { if (source is IDbRoutineType) { RoutineType = source.RoutineType; } }
+        public DbRoutineTypeKey(IDbRoutineTypeKey source) : this()
+        { if (source is IDbRoutineTypeKey) { RoutineType = source.RoutineType; } }
 
         /// <summary>
         /// Converts a DbRoutineType into a DbRoutineTypeKey.
@@ -50,29 +55,29 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         #region IEquaRoutine
         /// <inheritdoc/>
-        public Boolean Equals(IDbRoutineType? other)
+        public Boolean Equals(IDbRoutineTypeKey? other)
         {
-            return other is IDbRoutineType
+            return other is IDbRoutineTypeKey
                 && this.RoutineType != DbRoutineType.Null
                 && other.RoutineType != DbRoutineType.Null
                 && this.RoutineType.Equals(other.RoutineType);
         }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(IDbRoutineType? other)
+        public virtual int CompareTo(IDbRoutineTypeKey? other)
         {
-            if (other is IDbRoutineType value)
+            if (other is IDbRoutineTypeKey value)
             { return string.Compare(this.ToString(), value.ToString(), true); }
             else { return 1; }
         }
 
         /// <inheritdoc/>
         public virtual int CompareTo(object? obj)
-        { if (obj is IDbRoutineType value) { return CompareTo(new DbRoutineTypeKey(value)); } else { return 1; } }
+        { if (obj is IDbRoutineTypeKey value) { return CompareTo(new DbRoutineTypeKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IDbRoutineType value && this.Equals(new DbRoutineTypeKey(value)); }
+        { return obj is IDbRoutineTypeKey value && this.Equals(new DbRoutineTypeKey(value)); }
 
         /// <inheritdoc/>
         public static bool operator ==(DbRoutineTypeKey left, DbRoutineTypeKey right)

@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ScriptingData.Template;
 using DataDictionary.Main.Controls;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
 {
-    record ScriptAsList: IScriptAsType
+    record ScriptAsList: IScriptAsTypeKey
     {
-        public ScriptAsType ScriptAs { get; protected set; } = ScriptAsType.none;
-        public static ScriptAsType NullValue { get; } = ScriptAsType.none;
+        public TemplateScriptAsType ScriptAs { get; protected set; } = TemplateScriptAsType.none;
+        public static TemplateScriptAsType NullValue { get; } = TemplateScriptAsType.none;
 
         protected ScriptAsList() : base() { }
 
@@ -20,8 +21,8 @@ namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
             List<ScriptAsList> values = new List<ScriptAsList>();
 
             values.AddRange(
-                Enum.GetValues(typeof(ScriptAsType))
-                    .Cast<ScriptAsType>()
+                Enum.GetValues(typeof(TemplateScriptAsType))
+                    .Cast<TemplateScriptAsType>()
                     .Select(s => new ScriptAsList() { ScriptAs = s }));
 
             ScriptAsList names;

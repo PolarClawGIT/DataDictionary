@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.Resource.Enumerations;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -8,12 +9,23 @@ using System.Threading.Tasks;
 namespace DataDictionary.DataLayer.ScriptingData.Template
 {
     /// <summary>
+    /// Interface for Scripting ScriptAs Key.
+    /// </summary>
+    public interface IDirectoryTypeKey : IKey
+    {
+        /// <summary>
+        /// Root Directory to place documents in (must be a supported Special Folder).
+        /// </summary>
+        TemplateDirectoryType RootDirectory { get; }
+    }
+
+    /// <summary>
     /// Implementation of the Directory Type Key.
     /// </summary>
-    public class DirectoryTypeKey : IDirectoryType, IKeyComparable<IDirectoryType>, IParsable<DirectoryTypeKey>
+    public class DirectoryTypeKey : IDirectoryTypeKey, IKeyComparable<IDirectoryTypeKey>, IParsable<DirectoryTypeKey>
     {
         /// <inheritdoc/>
-        public DirectoryType RootDirectory { get; init; } = DirectoryType.Null;
+        public TemplateDirectoryType RootDirectory { get; init; } = TemplateDirectoryType.Null;
 
         /// <summary>
         /// Basic Constructor for the Element Data As Key.
@@ -24,28 +36,28 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// Constructor for the Element Data As Key.
         /// </summary>
         /// <param name="source"></param>
-        public DirectoryTypeKey(DirectoryType source) : this()
+        public DirectoryTypeKey(TemplateDirectoryType source) : this()
         { RootDirectory = source; }
 
         /// <summary>
         /// Constructor for the  Element Data As Key.
         /// </summary>
         /// <param name="source"></param>
-        public DirectoryTypeKey(IDirectoryType source) : this()
-        { if (source is IDirectoryType) { RootDirectory = source.RootDirectory; } }
+        public DirectoryTypeKey(IDirectoryTypeKey source) : this()
+        { if (source is IDirectoryTypeKey) { RootDirectory = source.RootDirectory; } }
 
         /// <summary>
         /// Converts a DirectoryType into a DirectoryTypeKey.
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator DirectoryTypeKey(DirectoryType source)
+        public static implicit operator DirectoryTypeKey(TemplateDirectoryType source)
         { return new DirectoryTypeKey(source); }
 
         /// <summary>
         /// Converts a DirectoryTypeKey into a DirectoryType.
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator DirectoryType(DirectoryTypeKey source)
+        public static implicit operator TemplateDirectoryType(DirectoryTypeKey source)
         { return source.RootDirectory; }
 
         /// <summary>
@@ -61,29 +73,29 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual Boolean Equals(IDirectoryType? other)
+        public virtual Boolean Equals(IDirectoryTypeKey? other)
         {
-            return other is IDirectoryType
-                && this.RootDirectory != DirectoryType.Null
-                && other.RootDirectory != DirectoryType.Null
+            return other is IDirectoryTypeKey
+                && this.RootDirectory != TemplateDirectoryType.Null
+                && other.RootDirectory != TemplateDirectoryType.Null
                 && this.RootDirectory.Equals(other.RootDirectory);
         }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(IDirectoryType? other)
+        public virtual int CompareTo(IDirectoryTypeKey? other)
         {
-            if (other is IDirectoryType value)
+            if (other is IDirectoryTypeKey value)
             { return string.Compare(this.ToString(), value.ToString(), true); }
             else { return 1; }
         }
 
         /// <inheritdoc/>
         public virtual int CompareTo(object? obj)
-        { if (obj is IDirectoryType value) { return CompareTo(new DirectoryTypeKey(value)); } else { return 1; } }
+        { if (obj is IDirectoryTypeKey value) { return CompareTo(new DirectoryTypeKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IDirectoryType value && this.Equals(new DirectoryTypeKey(value)); }
+        { return obj is IDirectoryTypeKey value && this.Equals(new DirectoryTypeKey(value)); }
 
         /// <inheritdoc/>
         public static bool operator ==(DirectoryTypeKey left, DirectoryTypeKey right)
@@ -118,11 +130,11 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <summary>
         /// This is the list that translates the DirectoryType Enum to what the Database uses as TableType Name.
         /// </summary>
-        static Dictionary<DirectoryType, DirectoryInfo> parseName = new Dictionary<DirectoryType, DirectoryInfo>()
+        static Dictionary<TemplateDirectoryType, DirectoryInfo> parseName = new Dictionary<TemplateDirectoryType, DirectoryInfo>()
         {
-            { DirectoryType.MySources,    new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "source","repos")) },
-            { DirectoryType.MyDocuments,  new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)) },
-            { DirectoryType.MyDownloads,  new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads")) },
+            { TemplateDirectoryType.MySources,    new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "source","repos")) },
+            { TemplateDirectoryType.MyDocuments,  new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)) },
+            { TemplateDirectoryType.MyDownloads,  new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads")) },
 
         };
 
@@ -135,7 +147,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
             if (DirectoryTypeKey.TryParse(source, provider, out DirectoryTypeKey? result))
             { return result; }
             else
-            { return DirectoryType.Null; }
+            { return TemplateDirectoryType.Null; }
         }
 
         /// <inheritdoc/>
@@ -151,8 +163,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         public static bool TryParse([NotNullWhen(true)] String? source, [MaybeNullWhen(false)] out DirectoryTypeKey result)
         {
             if (parseName.FirstOrDefault(w => String.Equals(w.Value.ToString(), source, KeyExtension.CompareString))
-                is KeyValuePair<DirectoryType, DirectoryInfo> dbItem
-                && dbItem.Key != DirectoryType.Null)
+                is KeyValuePair<TemplateDirectoryType, DirectoryInfo> dbItem
+                && dbItem.Key != TemplateDirectoryType.Null)
             { result = new DirectoryTypeKey() { RootDirectory = dbItem.Key }; return true; }
             else { result = null; return false; }
         }
@@ -163,7 +175,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<DirectoryTypeKey> Items()
-        { return Enum.GetValues(typeof(DirectoryType)).Cast<DirectoryType>().Select(s => new DirectoryTypeKey() { RootDirectory = s }); }
+        { return Enum.GetValues(typeof(TemplateDirectoryType)).Cast<TemplateDirectoryType>().Select(s => new DirectoryTypeKey() { RootDirectory = s }); }
 
         /// <summary>
         /// Returns the TableType Name.

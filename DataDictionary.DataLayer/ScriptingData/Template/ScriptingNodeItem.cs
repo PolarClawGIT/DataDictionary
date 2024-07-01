@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +11,7 @@ using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.ScriptingData.Template
 {
-    
+
 
     /// <summary>
     /// Interface for the Scripting Template Node data.
@@ -25,7 +26,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <summary>
         /// How should the Value for the Node be rendered.
         /// </summary>
-        NodeValueAsType NodeValueAs { get; }
+        TemplateNodeValueAsType NodeValueAs { get; }
     }
 
     /// <summary>
@@ -70,7 +71,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         }
 
         /// <inheritdoc/>
-        public NodeValueAsType NodeValueAs
+        public TemplateNodeValueAsType NodeValueAs
         {
             get { return NodeValueAsTypeKey.Parse(GetValue(nameof(NodeValueAs)) ?? String.Empty).NodeValueAs; }
             set { SetValue(nameof(NodeValueAs), new NodeValueAsTypeKey(value).ToString()); }

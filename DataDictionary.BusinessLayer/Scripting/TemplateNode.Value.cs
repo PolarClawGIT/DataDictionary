@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ScriptingData.Template;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,13 +36,13 @@ namespace DataDictionary.BusinessLayer.Scripting
 
             switch (NodeValueAs)
             {
-                case NodeValueAsType.none:
+                case TemplateNodeValueAsType.none:
                     return null;
-                case NodeValueAsType.ElementText:
+                case TemplateNodeValueAsType.ElementText:
                     return new XElement(nodeName, value);
-                case NodeValueAsType.ElementCData:
+                case TemplateNodeValueAsType.ElementCData:
                     return new XElement(nodeName, new XCData(nodeValue));
-                case NodeValueAsType.ElementXML:
+                case TemplateNodeValueAsType.ElementXML:
                     try
                     {
                         if (String.IsNullOrWhiteSpace(nodeValue))
@@ -54,7 +55,7 @@ namespace DataDictionary.BusinessLayer.Scripting
                         fragementEx.Data.Add(nameof(PropertyName), PropertyName);
                         throw;
                     }
-                case NodeValueAsType.Attribute:
+                case TemplateNodeValueAsType.Attribute:
                     return new XAttribute(nodeName, nodeValue);
                 default:
                     Exception ex = new InvalidOperationException("Unknown NodeValueAsType");

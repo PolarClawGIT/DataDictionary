@@ -1,4 +1,4 @@
-﻿namespace DataDictionary.DataLayer.DatabaseData.Routine
+﻿namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
     /// List of supported Routine Types.
@@ -19,17 +19,6 @@
         /// SQL Procedure
         /// </summary>
         Procedure,
-    }
-
-    /// <summary>
-    /// Interface for Database RoutineType Key.
-    /// </summary>
-    public interface IDbRoutineType : IKey
-    {
-        /// <summary>
-        /// Type of Routine (such as procedure or function)
-        /// </summary>
-        DbRoutineType RoutineType { get; }
     }
 }
 

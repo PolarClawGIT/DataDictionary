@@ -2,6 +2,7 @@
 using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData.Property;
+using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -92,7 +93,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         public override string ToString()
         {
-            String result = PropertyType.ToName();
+            String result = new DomainPropertyTypeKey(PropertyType).ToString();
             if (!String.IsNullOrWhiteSpace(PropertyName))
             { result = String.Format("{0}.{1}", result, PropertyName); }
 

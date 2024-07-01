@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ScriptingData.Template;
 using DataDictionary.Main.Controls;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
 {
-    record DirectoryNameList : IDirectoryType
+    record DirectoryNameList : IDirectoryTypeKey
     {
-        public DirectoryType RootDirectory { get; protected set; }
-        public static DirectoryType NullValue { get; } = DirectoryType.Null;
+        public TemplateDirectoryType RootDirectory { get; protected set; }
+        public static TemplateDirectoryType NullValue { get; } = TemplateDirectoryType.Null;
 
         protected DirectoryNameList() : base() { }
 
@@ -23,8 +24,8 @@ namespace DataDictionary.Main.Forms.Scripting.ComboBoxList
             List<DirectoryNameList> values = new List<DirectoryNameList>();
 
             values.AddRange(
-                Enum.GetValues(typeof(DirectoryType))
-                    .Cast<DirectoryType>()
+                Enum.GetValues(typeof(TemplateDirectoryType))
+                    .Cast<TemplateDirectoryType>()
                     .Select(s => new DirectoryNameList() { RootDirectory = s }));
 
             DirectoryNameList names;

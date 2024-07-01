@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Domain;
-using DataDictionary.DataLayer.DomainData.Property;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 
 namespace DataDictionary.Main.Forms.Domain.Controls

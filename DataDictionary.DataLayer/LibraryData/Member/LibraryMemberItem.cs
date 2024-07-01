@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.LibraryData.Source;
+using DataDictionary.Resource.Enumerations;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.LibraryData.Member
@@ -16,7 +17,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     /// <summary>
     /// Interface for the Library Member Item
     /// </summary>
-    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, ILibraryMemberType, IScopeKey
+    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, ILibraryMemberTypeKey, IScopeKey
     {
 
         /// <summary>

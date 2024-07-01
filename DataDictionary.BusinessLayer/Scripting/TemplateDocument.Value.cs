@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ScriptingData.Template;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -106,7 +107,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             get
             {
-                if (templateValue.RootDirectory is DirectoryType root &&
+                if (templateValue.RootDirectory is TemplateDirectoryType root &&
                     new DirectoryTypeKey(root).ToDirectoryInfo() is DirectoryInfo folder)
                 {
                     String directoryName =
@@ -139,7 +140,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             get
             {
-                if (templateValue.RootDirectory is DirectoryType root &&
+                if (templateValue.RootDirectory is TemplateDirectoryType root &&
                     new DirectoryTypeKey(root).ToDirectoryInfo() is DirectoryInfo folder)
                 {
                     String directoryName =
@@ -283,7 +284,7 @@ namespace DataDictionary.BusinessLayer.Scripting
                         XslCompiledTransform transformer = new XslCompiledTransform();
                         transformer.Load(transformReader);
 
-                        if (templateValue.ScriptAs is ScriptAsType.Text)
+                        if (templateValue.ScriptAs is TemplateScriptAsType.Text)
                         {
                             using (StringWriter resultText = new StringWriter())
                             {
@@ -291,7 +292,7 @@ namespace DataDictionary.BusinessLayer.Scripting
                                 ResultsAsText = resultText.ToString();
                             }
                         }
-                        else if (templateValue.ScriptAs is ScriptAsType.XML)
+                        else if (templateValue.ScriptAs is TemplateScriptAsType.XML)
                         {
                             ResultsAsXml = new XDocument() { Declaration = new XDeclaration("1.0", null, null) };
                             using (XmlWriter resultAsXml = ResultsAsXml.CreateWriter())

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataDictionary.DataLayer.ScriptingData.Template
+﻿namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
     /// List of supported rendering methods for Node Values
     /// </summary>
-    public enum NodeValueAsType
+    public enum TemplateNodeValueAsType
     {
         /// <summary>
         /// Not Defined or do not render
@@ -37,14 +31,4 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         Attribute
     }
 
-    /// <summary>
-    /// Interface for Scripting NodeValueAs Key.
-    /// </summary>
-    public interface INodeValueAsType : IKey
-    {
-        /// <summary>
-        /// How the Value of the Node is to be rendered.
-        /// </summary>
-        NodeValueAsType NodeValueAs { get; }
-    }
 }

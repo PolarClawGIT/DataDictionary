@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.Resource.Enumerations;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -7,10 +8,22 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.LibraryData.Member
 {
+
+    /// <summary>
+    /// Interface for Database MemberType Key.
+    /// </summary>
+    public interface ILibraryMemberTypeKey : IKey
+    {
+        /// <summary>
+        /// Type of Member (NameSpace, Type, Property, Field, ...)
+        /// </summary>
+        LibraryMemberType MemberType { get; }
+    }
+
     /// <summary>
     /// Implementation for Database MemberType Key.
     /// </summary>
-    public class LibraryMemberTypeKey : ILibraryMemberType, IKeyComparable<ILibraryMemberType>, IParsable<LibraryMemberTypeKey>
+    public class LibraryMemberTypeKey : ILibraryMemberTypeKey, IKeyComparable<ILibraryMemberTypeKey>, IParsable<LibraryMemberTypeKey>
     {
         /// <inheritdoc/>
         public LibraryMemberType MemberType { get; init; } = LibraryMemberType.Null;
@@ -55,8 +68,8 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// Constructor for the MemberType Key.
         /// </summary>
         /// <param name="source"></param>
-        public LibraryMemberTypeKey(ILibraryMemberType source) : this()
-        { if (source is ILibraryMemberType) { MemberType = source.MemberType; } }
+        public LibraryMemberTypeKey(ILibraryMemberTypeKey source) : this()
+        { if (source is ILibraryMemberTypeKey) { MemberType = source.MemberType; } }
 
         /// <summary>
         /// Converts a LibraryMemberType into a LibraryMemberTypeKey.
@@ -72,29 +85,29 @@ namespace DataDictionary.DataLayer.LibraryData.Member
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual Boolean Equals(ILibraryMemberType? other)
+        public virtual Boolean Equals(ILibraryMemberTypeKey? other)
         {
-            return other is ILibraryMemberType
+            return other is ILibraryMemberTypeKey
                 && this.MemberType != LibraryMemberType.Null
                 && other.MemberType != LibraryMemberType.Null
                 && this.MemberType.Equals(other.MemberType);
         }
 
         /// <inheritdoc/>
-        public virtual Int32 CompareTo(ILibraryMemberType? other)
+        public virtual Int32 CompareTo(ILibraryMemberTypeKey? other)
         {
-            if (other is ILibraryMemberType value)
+            if (other is ILibraryMemberTypeKey value)
             { return string.Compare(this.ToString(), value.ToString(), true); }
             else { return 1; }
         }
 
         /// <inheritdoc/>
         public virtual Int32 CompareTo(object? obj)
-        { if (obj is ILibraryMemberType value) { return CompareTo(new LibraryMemberTypeKey(value)); } else { return 1; } }
+        { if (obj is ILibraryMemberTypeKey value) { return CompareTo(new LibraryMemberTypeKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
-        { return obj is ILibraryMemberType value && this.Equals(new LibraryMemberTypeKey(value)); }
+        { return obj is ILibraryMemberTypeKey value && this.Equals(new LibraryMemberTypeKey(value)); }
 
         /// <inheritdoc/>
         public static Boolean operator ==(LibraryMemberTypeKey left, LibraryMemberTypeKey right)
@@ -194,5 +207,30 @@ namespace DataDictionary.DataLayer.LibraryData.Member
             if (parseName.ContainsKey(MemberType)) { return parseName[MemberType].Name; }
             else { return MemberType.ToString(); }
         }
+    }
+
+
+    /// <summary>
+    /// Support for LibraryMemberType
+    /// </summary>
+    public static class LibraryMemberTypeExtension
+    {
+        /// <summary>
+        /// Returns the Library Member Type Name
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        /// <see href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/"/>
+        public static String? ToName(this LibraryMemberType source)
+        { return new LibraryMemberTypeKey(source).Name; }
+
+        /// <summary>
+        /// Returns the Library Member Type Code.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        /// <see href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/"/>
+        public static Char? ToCode(this LibraryMemberType source)
+        { return new LibraryMemberTypeKey(source).Code; }
     }
 }

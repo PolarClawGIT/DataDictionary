@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.Resource.Enumerations;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -8,12 +9,23 @@ using System.Threading.Tasks;
 namespace DataDictionary.DataLayer.ScriptingData.Template
 {
     /// <summary>
+    /// Interface for Scripting ScriptAs Key.
+    /// </summary>
+    public interface IScriptAsTypeKey : IKey
+    {
+        /// <summary>
+        /// Type of Script that is Generated
+        /// </summary>
+        TemplateScriptAsType ScriptAs { get; }
+    }
+
+    /// <summary>
     /// Implementation for Script As Key.
     /// </summary>
-    public class ScriptAsTypeKey : IScriptAsType, IKeyComparable<IScriptAsType>, IParsable<ScriptAsTypeKey>
+    public class ScriptAsTypeKey : IScriptAsTypeKey, IKeyComparable<IScriptAsTypeKey>, IParsable<ScriptAsTypeKey>
     {
         /// <inheritdoc/>
-        public ScriptAsType ScriptAs { get; init; } = ScriptAsType.none;
+        public TemplateScriptAsType ScriptAs { get; init; } = TemplateScriptAsType.none;
 
         /// <summary>
         /// Basic Constructor for the Script As Key.
@@ -24,27 +36,27 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// Constructor for the Script As Key.
         /// </summary>
         /// <param name="source"></param>
-        public ScriptAsTypeKey(ScriptAsType source) : this()
+        public ScriptAsTypeKey(TemplateScriptAsType source) : this()
         { ScriptAs = source; }
 
         /// <summary>
         /// Constructor for the Script As Key.
         /// </summary>
         /// <param name="source"></param>
-        public ScriptAsTypeKey(IScriptAsType source) : this()
-        { if (source is IScriptAsType) { ScriptAs = source.ScriptAs; } }
+        public ScriptAsTypeKey(IScriptAsTypeKey source) : this()
+        { if (source is IScriptAsTypeKey) { ScriptAs = source.ScriptAs; } }
 
         /// <summary>
         /// Converts a ScriptAsType into a ScriptAsTypeKey.
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator ScriptAsTypeKey(ScriptAsType source) { return new ScriptAsTypeKey(source); }
+        public static implicit operator ScriptAsTypeKey(TemplateScriptAsType source) { return new ScriptAsTypeKey(source); }
 
         /// <summary>
         /// Converts a ScriptAsTypeKey into a ScriptAsType.
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator ScriptAsType(ScriptAsTypeKey source) { return source.ScriptAs; }
+        public static implicit operator TemplateScriptAsType(ScriptAsTypeKey source) { return source.ScriptAs; }
 
         /// <summary>
         /// Returns the extension used by the Script type.
@@ -59,29 +71,29 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual Boolean Equals(IScriptAsType? other)
+        public virtual Boolean Equals(IScriptAsTypeKey? other)
         {
-            return other is IScriptAsType
-                && this.ScriptAs != ScriptAsType.none
-                && other.ScriptAs != ScriptAsType.none
+            return other is IScriptAsTypeKey
+                && this.ScriptAs != TemplateScriptAsType.none
+                && other.ScriptAs != TemplateScriptAsType.none
                 && this.ScriptAs.Equals(other.ScriptAs);
         }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(IScriptAsType? other)
+        public virtual int CompareTo(IScriptAsTypeKey? other)
         {
-            if (other is IScriptAsType value)
+            if (other is IScriptAsTypeKey value)
             { return string.Compare(this.ToString(), value.ToString(), true); }
             else { return 1; }
         }
 
         /// <inheritdoc/>
         public virtual int CompareTo(object? obj)
-        { if (obj is IScriptAsType value) { return CompareTo(new ScriptAsTypeKey(value)); } else { return 1; } }
+        { if (obj is IScriptAsTypeKey value) { return CompareTo(new ScriptAsTypeKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IScriptAsType value && this.Equals(new ScriptAsTypeKey(value)); }
+        { return obj is IScriptAsTypeKey value && this.Equals(new ScriptAsTypeKey(value)); }
 
         /// <inheritdoc/>
         public static bool operator ==(ScriptAsTypeKey left, ScriptAsTypeKey right)
@@ -116,13 +128,13 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <summary>
         /// This is the list that translates the ScriptAsType Enum to what the Database uses as TableType Name.
         /// </summary>
-        static Dictionary<ScriptAsType, (String Display, String Extension)> parseName = new Dictionary<ScriptAsType, (String Display, String Extension)>()
+        static Dictionary<TemplateScriptAsType, (String Display, String Extension)> parseName = new Dictionary<TemplateScriptAsType, (String Display, String Extension)>()
         {
-            { ScriptAsType.CSharp, ("C#",     "cs")},
-            { ScriptAsType.VBNet,  ("VB.Net", "vb")},
-            { ScriptAsType.MsSql,  ("Ms SQL", "sql")},
-            { ScriptAsType.Text,   ("Text",   "txt")},
-            { ScriptAsType.XML,    ("XML",    "xml")},
+            { TemplateScriptAsType.CSharp, ("C#",     "cs")},
+            { TemplateScriptAsType.VBNet,  ("VB.Net", "vb")},
+            { TemplateScriptAsType.MsSql,  ("Ms SQL", "sql")},
+            { TemplateScriptAsType.Text,   ("Text",   "txt")},
+            { TemplateScriptAsType.XML,    ("XML",    "xml")},
         };
 
         /// <inheritdoc/>
@@ -131,7 +143,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
             if (ScriptAsTypeKey.TryParse(source, provider, out ScriptAsTypeKey? result))
             { return result; }
             else
-            { return ScriptAsType.none; }
+            { return TemplateScriptAsType.none; }
         }
 
         /// <inheritdoc/>
@@ -147,8 +159,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         public static bool TryParse([NotNullWhen(true)] String? source, [MaybeNullWhen(false)] out ScriptAsTypeKey result)
         {
             if (parseName.FirstOrDefault(w => w.Value.Display.Equals(source, KeyExtension.CompareString))
-                is KeyValuePair<ScriptAsType, (String Display, String Extension)> dbItem
-                && dbItem.Key != ScriptAsType.none)
+                is KeyValuePair<TemplateScriptAsType, (String Display, String Extension)> dbItem
+                && dbItem.Key != TemplateScriptAsType.none)
             { result = new ScriptAsTypeKey() { ScriptAs = dbItem.Key }; return true; }
             else { result = null; return false; }
         }
@@ -159,7 +171,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<ScriptAsTypeKey> Items()
-        { return Enum.GetValues(typeof(ScriptAsType)).Cast<ScriptAsType>().Select(s => new ScriptAsTypeKey() { ScriptAs = s }); }
+        { return Enum.GetValues(typeof(TemplateScriptAsType)).Cast<TemplateScriptAsType>().Select(s => new ScriptAsTypeKey() { ScriptAs = s }); }
 
         /// <summary>
         /// Returns the TableType Name.

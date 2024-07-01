@@ -5,6 +5,7 @@ using DataDictionary.DataLayer.ScriptingData.Template;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
 using DataDictionary.Main.Forms.Scripting.ComboBoxList;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -380,7 +381,7 @@ namespace DataDictionary.Main.Forms.Scripting
                         newNode.PropertyScope = element.PropertyScope;
                         newNode.PropertyName = element.PropertyName;
                         newNode.NodeName = element.PropertyName;
-                        newNode.NodeValueAs = NodeValueAsType.ElementText;
+                        newNode.NodeValueAs = TemplateNodeValueAsType.ElementText;
                         bindingNode.ResumeBinding();
 
                         if (bindingNode.DataSource is IList<TemplateNodeValue> nodes

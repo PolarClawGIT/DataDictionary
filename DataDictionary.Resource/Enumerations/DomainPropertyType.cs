@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataDictionary.DataLayer.DomainData.Property
+﻿namespace DataDictionary.Resource.Enumerations
 {
-
     /// <summary>
     /// List of supported Table Types.
     /// </summary>
@@ -44,19 +37,4 @@ namespace DataDictionary.DataLayer.DomainData.Property
         /// <remarks>This needs special handling. Data Element contains the Extended Property Name.</remarks>
         MS_ExtendedProperty
     }
-
-    /// <summary>
-    /// Support Extension for the Scope Type
-    /// </summary>
-    public static class DomainPropertyTypeExtension
-    {
-        /// <summary>
-        /// Translates the PropertyType to a Property DataType (String).
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static String ToName(this DomainPropertyType value)
-        { return new DomainPropertyTypeKey(value).ToString(); }
-    }
-
 }

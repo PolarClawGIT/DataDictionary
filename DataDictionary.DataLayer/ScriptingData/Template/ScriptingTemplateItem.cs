@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -8,7 +9,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
     /// <summary>
     /// Interface for the Scripting Template data.
     /// </summary>
-    public interface IScriptingTemplateItem : IScriptingTemplateKey, IScriptingTemplateKeyName, IScriptAsType, IScopeKey
+    public interface IScriptingTemplateItem : IScriptingTemplateKey, IScriptingTemplateKeyName, IScriptAsTypeKey, IScopeKey
     {
         /// <summary>
         /// Description for the Template
@@ -28,7 +29,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <summary>
         /// Root Directory to place documents in (must be a Special Folder).
         /// </summary>
-        DirectoryType RootDirectory { get; }
+        TemplateDirectoryType RootDirectory { get; }
 
         /// <summary>
         /// From the RootDirectory, the location where the XML Document(s) are to be placed.  
@@ -117,18 +118,18 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         }
 
         /// <inheritdoc/>
-        public DirectoryType RootDirectory
+        public TemplateDirectoryType RootDirectory
         {
             get
             {
                 String? value = GetValue(nameof(RootDirectory));
-                if (Enum.TryParse(value, true, out DirectoryType folder))
+                if (Enum.TryParse(value, true, out TemplateDirectoryType folder))
                 { return folder; }
-                else { return DirectoryType.Null; }
+                else { return TemplateDirectoryType.Null; }
             }
             set
             {
-                if (value is DirectoryType.Null)
+                if (value is TemplateDirectoryType.Null)
                 { SetValue(nameof(RootDirectory), null); }
                 else { SetValue(nameof(RootDirectory), value.ToString()); }
             }
@@ -163,7 +164,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         }
 
         /// <inheritdoc/>
-        public ScriptAsType ScriptAs
+        public TemplateScriptAsType ScriptAs
         {
             get { return ScriptAsTypeKey.Parse(GetValue(nameof(ScriptAs)) ?? String.Empty).ScriptAs; }
             set { SetValue(nameof(ScriptAs), new ScriptAsTypeKey(value).ToString()); }
@@ -208,7 +209,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
             if (TemplateId is null) { TemplateId = Guid.NewGuid(); }
             if (String.IsNullOrWhiteSpace(TemplateTitle)) { TemplateTitle = "(new Template)"; }
             if (String.IsNullOrWhiteSpace(DocumentExtension)) { DocumentExtension = "xml"; }
-            if (RootDirectory is DirectoryType.Null) { RootDirectory = DirectoryType.MySources; }
+            if (RootDirectory is TemplateDirectoryType.Null) { RootDirectory = TemplateDirectoryType.MySources; }
         }
 
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()

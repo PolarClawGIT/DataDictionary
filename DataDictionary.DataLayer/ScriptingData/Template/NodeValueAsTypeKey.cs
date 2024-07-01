@@ -1,20 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.ScriptingData.Template
 {
+    /// <summary>
+    /// Interface for Scripting NodeValueAs Key.
+    /// </summary>
+    public interface INodeValueAsTypeKey : IKey
+    {
+        /// <summary>
+        /// How the Value of the Node is to be rendered.
+        /// </summary>
+        TemplateNodeValueAsType NodeValueAs { get; }
+    }
 
     /// <summary>
     /// Implementation for Node Value As Key.
     /// </summary>
-    public class NodeValueAsTypeKey : INodeValueAsType, IKeyComparable<INodeValueAsType>, IParsable<NodeValueAsTypeKey>
+    public class NodeValueAsTypeKey : INodeValueAsTypeKey, IKeyComparable<INodeValueAsTypeKey>, IParsable<NodeValueAsTypeKey>
     {
         /// <inheritdoc/>
-        public NodeValueAsType NodeValueAs { get; init; } = NodeValueAsType.none;
+        public TemplateNodeValueAsType NodeValueAs { get; init; } = TemplateNodeValueAsType.none;
 
         /// <summary>
         /// Basic Constructor for the Script As Key.
@@ -25,53 +31,53 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// Constructor for the Script As Key.
         /// </summary>
         /// <param name="source"></param>
-        public NodeValueAsTypeKey(NodeValueAsType source) : this()
+        public NodeValueAsTypeKey(TemplateNodeValueAsType source) : this()
         { NodeValueAs = source; }
 
         /// <summary>
         /// Constructor for the Script As Key.
         /// </summary>
         /// <param name="source"></param>
-        public NodeValueAsTypeKey(INodeValueAsType source) : this()
-        { if (source is INodeValueAsType) { NodeValueAs = source.NodeValueAs; } }
+        public NodeValueAsTypeKey(INodeValueAsTypeKey source) : this()
+        { if (source is INodeValueAsTypeKey) { NodeValueAs = source.NodeValueAs; } }
 
         /// <summary>
         /// Converts a NodeValueAsType into a NodeValueAsTypeKey.
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator NodeValueAsTypeKey(NodeValueAsType source) { return new NodeValueAsTypeKey(source); }
+        public static implicit operator NodeValueAsTypeKey(TemplateNodeValueAsType source) { return new NodeValueAsTypeKey(source); }
 
         /// <summary>
         /// Converts a NodeValueAsTypeKey into a NodeValueAsType.
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator NodeValueAsType(NodeValueAsTypeKey source) { return source.NodeValueAs; }
+        public static implicit operator TemplateNodeValueAsType(NodeValueAsTypeKey source) { return source.NodeValueAs; }
 
         #region IEquatable
         /// <inheritdoc/>
-        public virtual Boolean Equals(INodeValueAsType? other)
+        public virtual Boolean Equals(INodeValueAsTypeKey? other)
         {
-            return other is INodeValueAsType
-                && this.NodeValueAs != NodeValueAsType.none
-                && other.NodeValueAs != NodeValueAsType.none
+            return other is INodeValueAsTypeKey
+                && this.NodeValueAs != TemplateNodeValueAsType.none
+                && other.NodeValueAs != TemplateNodeValueAsType.none
                 && this.NodeValueAs.Equals(other.NodeValueAs);
         }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(INodeValueAsType? other)
+        public virtual int CompareTo(INodeValueAsTypeKey? other)
         {
-            if (other is INodeValueAsType value)
+            if (other is INodeValueAsTypeKey value)
             { return string.Compare(this.ToString(), value.ToString(), true); }
             else { return 1; }
         }
 
         /// <inheritdoc/>
         public virtual int CompareTo(object? obj)
-        { if (obj is INodeValueAsType value) { return CompareTo(new NodeValueAsTypeKey(value)); } else { return 1; } }
+        { if (obj is INodeValueAsTypeKey value) { return CompareTo(new NodeValueAsTypeKey(value)); } else { return 1; } }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is INodeValueAsType value && this.Equals(new NodeValueAsTypeKey(value)); }
+        { return obj is INodeValueAsTypeKey value && this.Equals(new NodeValueAsTypeKey(value)); }
 
         /// <inheritdoc/>
         public static bool operator ==(NodeValueAsTypeKey left, NodeValueAsTypeKey right)
@@ -106,12 +112,12 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <summary>
         /// This is the list that translates the NodeValueAsType Enum to what the Database uses as TableType Name.
         /// </summary>
-        static Dictionary<NodeValueAsType, String> parseName = new Dictionary<NodeValueAsType, String>()
+        static Dictionary<TemplateNodeValueAsType, String> parseName = new Dictionary<TemplateNodeValueAsType, String>()
         {
-            { NodeValueAsType.ElementText,    "Element.Text"},
-            { NodeValueAsType.ElementCData,   "Element.CData"},
-            { NodeValueAsType.ElementXML,     "Element.XML"},
-            { NodeValueAsType.Attribute,      "Attribute"},
+            { TemplateNodeValueAsType.ElementText,    "Element.Text"},
+            { TemplateNodeValueAsType.ElementCData,   "Element.CData"},
+            { TemplateNodeValueAsType.ElementXML,     "Element.XML"},
+            { TemplateNodeValueAsType.Attribute,      "Attribute"},
         };
 
         /// <inheritdoc/>
@@ -120,7 +126,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
             if (NodeValueAsTypeKey.TryParse(source, provider, out NodeValueAsTypeKey? result))
             { return result; }
             else
-            { return NodeValueAsType.none; }
+            { return TemplateNodeValueAsType.none; }
         }
 
         /// <inheritdoc/>
@@ -136,8 +142,8 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         public static bool TryParse([NotNullWhen(true)] String? source, [MaybeNullWhen(false)] out NodeValueAsTypeKey result)
         {
             if (parseName.FirstOrDefault(w => w.Value.Equals(source, KeyExtension.CompareString))
-                is KeyValuePair<NodeValueAsType, String> dbItem
-                && dbItem.Key != NodeValueAsType.none)
+                is KeyValuePair<TemplateNodeValueAsType, String> dbItem
+                && dbItem.Key != TemplateNodeValueAsType.none)
             { result = new NodeValueAsTypeKey() { NodeValueAs = dbItem.Key }; return true; }
             else { result = null; return false; }
         }
@@ -148,7 +154,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<NodeValueAsTypeKey> Items()
-        { return Enum.GetValues(typeof(NodeValueAsType)).Cast<NodeValueAsType>().Select(s => new NodeValueAsTypeKey() { NodeValueAs = s }); }
+        { return Enum.GetValues(typeof(TemplateNodeValueAsType)).Cast<TemplateNodeValueAsType>().Select(s => new NodeValueAsTypeKey() { NodeValueAs = s }); }
 
         /// <summary>
         /// Returns the TableType Name.
