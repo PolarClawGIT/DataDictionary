@@ -1,8 +1,8 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;

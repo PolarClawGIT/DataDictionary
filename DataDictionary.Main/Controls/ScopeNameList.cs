@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.Main.Controls;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 
 namespace DataDictionary.Main.Controls

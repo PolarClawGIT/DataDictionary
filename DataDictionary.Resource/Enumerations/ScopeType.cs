@@ -1,13 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData;
-using DataDictionary.DataLayer.LibraryData;
-using DataDictionary.DataLayer.LibraryData.Member;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataDictionary.DataLayer.ApplicationData.Scope
+﻿namespace DataDictionary.Resource.Enumerations
 {
     /// <summary>
     /// List of Scope Types that are supported by the application.
@@ -261,17 +252,4 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
 
     }
 
-    /// <summary>
-    /// Support Extension for the Scope Type
-    /// </summary>
-    public static class ScopeTypeExtension
-    {
-        /// <summary>
-        /// Translates the ScopeType to a ScopeName (String).
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static String ToName(this ScopeType value)
-        { return new ScopeKey(value).ToString(); }
-    }
 }

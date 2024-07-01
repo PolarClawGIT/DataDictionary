@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 using System.Data;
+using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.DataLayer.ScriptingData.Template
 {

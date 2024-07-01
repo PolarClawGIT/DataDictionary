@@ -1,6 +1,7 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData.Property;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;

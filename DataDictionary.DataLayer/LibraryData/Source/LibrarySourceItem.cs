@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

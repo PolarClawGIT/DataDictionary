@@ -2,6 +2,7 @@
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Entity;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Xml.Linq;
 

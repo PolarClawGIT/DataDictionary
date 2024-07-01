@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+﻿using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.DataLayer.ScriptingData.Template
 {

@@ -4,6 +4,7 @@ using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
+using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.DataLayer.DomainData.Entity
 {

@@ -2,6 +2,7 @@
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;

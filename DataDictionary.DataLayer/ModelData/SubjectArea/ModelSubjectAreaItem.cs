@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Data;

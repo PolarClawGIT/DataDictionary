@@ -1,4 +1,6 @@
-﻿namespace DataDictionary.Main.Forms.Domain
+﻿using DataDictionary.Resource.Enumerations;
+
+namespace DataDictionary.Main.Forms.Domain
 {
     partial class DomainAttribute
     {
@@ -516,7 +518,7 @@
             namedScopeData.Location = new Point(3, 29);
             namedScopeData.Name = "namedScopeData";
             namedScopeData.ReadOnly = false;
-            namedScopeData.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
+            namedScopeData.Scope = ScopeType.Null;
             namedScopeData.ScopePath = namedScopePath1;
             namedScopeData.Size = new Size(180, 34);
             namedScopeData.TabIndex = 1;

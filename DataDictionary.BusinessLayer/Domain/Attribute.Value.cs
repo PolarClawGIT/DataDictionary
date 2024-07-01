@@ -4,6 +4,7 @@ using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.DataLayer.ScriptingData.Template;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Xml.Linq;
 

@@ -2,6 +2,7 @@
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Entity;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;

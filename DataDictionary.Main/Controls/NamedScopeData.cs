@@ -1,5 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 

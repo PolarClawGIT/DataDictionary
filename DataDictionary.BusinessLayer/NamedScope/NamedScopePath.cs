@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {

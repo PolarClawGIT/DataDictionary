@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DomainData.Alias;
+using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.DataLayer.DatabaseData.Routine
 {

@@ -4,6 +4,7 @@ using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

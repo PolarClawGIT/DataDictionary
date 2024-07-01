@@ -1,4 +1,6 @@
-﻿namespace DataDictionary.Main.Forms.Scripting
+﻿using DataDictionary.Resource.Enumerations;
+
+namespace DataDictionary.Main.Forms.Scripting
 {
     partial class ScriptingTemplate
     {
@@ -734,7 +736,7 @@
             templatePathSelect.Location = new Point(99, 3);
             templatePathSelect.Name = "templatePathSelect";
             templatePathSelect.ReadOnly = false;
-            templatePathSelect.Scope = DataLayer.ApplicationData.Scope.ScopeType.Null;
+            templatePathSelect.Scope = ScopeType.Null;
             templatePathSelect.ScopePath = namedScopePath1;
             templatePathSelect.Size = new Size(90, 66);
             templatePathSelect.TabIndex = 6;

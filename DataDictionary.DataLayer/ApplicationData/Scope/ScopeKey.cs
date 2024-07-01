@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataDictionary.Resource.Enumerations;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -229,5 +230,19 @@ namespace DataDictionary.DataLayer.ApplicationData.Scope
             else { return Scope.ToString(); }
         }
 
+    }
+
+    /// <summary>
+    /// Support Extension for the Scope Type
+    /// </summary>
+    public static class ScopeTypeExtension
+    {
+        /// <summary>
+        /// Translates the ScopeType to a ScopeName (String).
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static String ToName(this ScopeType value)
+        { return new ScopeKey(value).ToString(); }
     }
 }

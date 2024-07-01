@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
 using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;

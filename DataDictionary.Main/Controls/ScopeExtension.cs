@@ -1,5 +1,6 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.Main.Properties;
+using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace DataDictionary.Main.Controls
         /// <summary>
         /// This associates a Image to a Model Scope. ScopeType must be defined. ScopeKey defines the text.
         /// </summary>
-        /// <see cref="DataDictionary.DataLayer.ApplicationData.Scope.ScopeType"/>
+        /// <see cref="Resource.Enumerations.ScopeType"/>
         /// <see cref="DataDictionary.DataLayer.ApplicationData.Scope.ScopeKey"/>
         static Dictionary<ScopeType, ScopeSetting> images = new Dictionary<ScopeType, ScopeSetting>()
         {

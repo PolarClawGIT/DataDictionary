@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
