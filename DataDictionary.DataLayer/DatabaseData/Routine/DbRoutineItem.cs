@@ -12,7 +12,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
     /// <summary>
     /// Interface for Database Routine (procedures and functions).
     /// </summary>
-    public interface IDbRoutineItem : IDbRoutineKeyName, IDbRoutineKey, IDbCatalogKey, IDbIsSystem, IDbRoutineTypeKey, IScopeKey
+    public interface IDbRoutineItem : IDbRoutineKeyName, IDbRoutineKey, IDbCatalogKey, IDbIsSystem, IDbRoutineType, IScopeKey
     { }
 
     /// <summary>
@@ -55,7 +55,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         /// <inheritdoc/>
         public DbRoutineType RoutineType
-        { get { return DbRoutineTypeKey.Parse(GetValue(nameof(RoutineType)) ?? String.Empty).RoutineType; } }
+        { get { return DbRoutineEnumeration.Parse(GetValue(nameof(RoutineType)) ?? String.Empty, null).Value; } }
 
         /// <inheritdoc/>
         public ScopeType Scope
