@@ -16,7 +16,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for the Database Table Column
     /// </summary>
-    public interface IDbTableColumnItem : IDbTableColumnKeyName, IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbColumn, IDbTableTypeKey, IScopeKey
+    public interface IDbTableColumnItem : IDbTableColumnKeyName, IDbTableColumnKey, IDbCatalogKey, IDbDomainReferenceKey, IDbColumn, IDbTableType, IScopeKey
     {
         /// <summary>
         /// Is the Column Nullable
@@ -152,7 +152,15 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public DbTableType TableType
-        { get { return DbTableTypeKey.Parse(GetValue(nameof(TableType)) ?? String.Empty).TableType; } }
+        {
+            get
+            {
+                String? value = GetValue(nameof(TableType));
+                if (DbTableEnumeration.TryParse(value, null, out DbTableEnumeration? result))
+                { return result.Value; }
+                else { return DbTableType.Null; }
+            }
+        }
 
         /// <inheritdoc/>
         public ScopeType Scope

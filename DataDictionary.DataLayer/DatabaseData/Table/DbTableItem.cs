@@ -13,7 +13,7 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
     /// <summary>
     /// Interface for Database Column Item
     /// </summary>
-    public interface IDbTableItem : IDbTableKeyName, IDbTableKey, IDbCatalogKey, IDbIsSystem, IDbTableTypeKey, IScopeKey
+    public interface IDbTableItem : IDbTableKeyName, IDbTableKey, IDbCatalogKey, IDbIsSystem, IDbTableType, IScopeKey
     { }
 
     /// <summary>
@@ -42,7 +42,15 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
 
         /// <inheritdoc/>
         public DbTableType TableType
-        { get { return DbTableTypeKey.Parse(GetValue(nameof(TableType)) ?? String.Empty).TableType; } }
+        {
+            get
+            {
+                String? value = GetValue(nameof(TableType));
+                if (DbTableEnumeration.TryParse(value, null, out DbTableEnumeration? result))
+                { return result.Value; }
+                else { return DbTableType.Null; }
+            }
+        }
 
         /// <inheritdoc/>
         public ScopeType Scope
