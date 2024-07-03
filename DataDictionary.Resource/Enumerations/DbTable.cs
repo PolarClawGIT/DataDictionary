@@ -11,3 +11,14 @@ public interface IDbTableType
     /// </summary>
     DbTableType TableType { get; }
 }
+
+public static class DbTableExtension
+{
+    /// <summary>
+    /// Gets the Data from DomainPropertyEnumeration
+    /// </summary>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    public static DbTableEnumeration Data(this DbTableType source)
+    { return DbTableEnumeration.AsDictionary[source]; }
+}

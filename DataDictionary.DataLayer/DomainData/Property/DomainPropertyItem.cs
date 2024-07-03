@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.DomainData.Property
     /// <summary>
     /// Interface for Domain Property Item
     /// </summary>
-    public interface IDomainPropertyItem : IDomainPropertyKey, IDomainPropertyKeyName, IDomainPropertyTypeKey, IScopeKey
+    public interface IDomainPropertyItem : IDomainPropertyKey, IDomainPropertyKeyName, IDomainPropertyType, IScopeKey
     {
         /// <summary>
         /// Description of the Domain Property
@@ -53,8 +53,15 @@ namespace DataDictionary.DataLayer.DomainData.Property
         /// <inheritdoc/>
         public DomainPropertyType PropertyType
         {
-            get { return DomainPropertyTypeKey.Parse(DataType ?? String.Empty).PropertyType; }
-            set { DataType = new DomainPropertyTypeKey(value).ToString(); OnPropertyChanged(nameof(PropertyType)); }
+            get
+            {
+                String? value = GetValue(nameof(PropertyType));
+                if (DomainPropertyEnumeration.TryParse(value, null, out DomainPropertyEnumeration? result))
+                { return result.Value; }
+                else { return DomainPropertyType.Null; }
+            }
+            set
+            { SetValue(nameof(PropertyType), value.Data().Name); }
         }
 
         /// <summary>

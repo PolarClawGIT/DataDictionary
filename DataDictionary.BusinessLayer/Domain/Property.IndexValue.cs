@@ -10,7 +10,7 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface for the Domain Property Index by Value.
     /// </summary>
-    public interface IPropertyIndexValue : IKey, IDomainPropertyTypeKey, IDbExtendedPropertyName
+    public interface IPropertyIndexValue : IKey, IDomainPropertyType, IDbExtendedPropertyName
     { }
 
     /// <summary>
@@ -93,7 +93,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         public override string ToString()
         {
-            String result = new DomainPropertyTypeKey(PropertyType).ToString();
+            String result = PropertyType.Data().Name;
             if (!String.IsNullOrWhiteSpace(PropertyName))
             { result = String.Format("{0}.{1}", result, PropertyName); }
 
