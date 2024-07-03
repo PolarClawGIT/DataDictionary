@@ -72,8 +72,14 @@ namespace DataDictionary.Main.Forms.Scripting
             templateTitleData.DataBindings.Add(new Binding(nameof(templateTitleData.Text), bindingTemplate, nameof(nameOfValues.TemplateTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             templateDescriptionData.DataBindings.Add(new Binding(nameof(templateDescriptionData.Text), bindingTemplate, nameof(nameOfValues.TemplateDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 
-            DirectoryNameList.Load(rootDirectoryData);
-            rootDirectoryData.DataBindings.Add(new Binding(nameof(rootDirectoryData.SelectedValue), bindingTemplate, nameof(nameOfValues.RootDirectory), false, DataSourceUpdateMode.OnPropertyChanged, DirectoryNameList.NullValue));
+            rootDirectoryData.ValueMember = nameof(TemplateDirectoryEnumeration.Value);
+            rootDirectoryData.DisplayMember = nameof(TemplateDirectoryEnumeration.DisplayName);
+            rootDirectoryData.DataSource = TemplateDirectoryEnumeration.AsDictionary.Values.ToList();
+            rootDirectoryData.DataBindings.Add(new Binding(
+                nameof(rootDirectoryData.SelectedValue),
+                bindingTemplate, nameof(nameOfValues.RootDirectory),
+                false, DataSourceUpdateMode.OnPropertyChanged)
+            { DataSourceNullValue = TemplateDirectoryType.Null });
 
             ScopeNameList.Load(breakOnScopeData);
             breakOnScopeData.DataBindings.Add(new Binding(nameof(breakOnScopeData.SelectedValue), bindingTemplate, nameof(nameOfValues.BreakOnScope), false, DataSourceUpdateMode.OnPropertyChanged, ScopeNameList.NullValue));
@@ -122,26 +128,20 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (rootDirectoryData.SelectedItem is DirectoryNameList value && value.Directory is DirectoryInfo)
-            { rootDirectoryExpanded.Text = value.Directory.FullName; }
+            if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
+                && value.Data().Directory is DirectoryInfo directory)
+            { rootDirectoryExpanded.Text = directory.FullName; }
             else { rootDirectoryExpanded.Text = String.Empty; }
         }
 
         private void RootDirectoryData_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (rootDirectoryData.SelectedItem is DirectoryNameList value
+            if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
                 && bindingTemplate.Current is TemplateValue current)
             {
-                if (value.Directory is null)
-                {
-                    current.DocumentDirectory = null;
-                    current.ScriptDirectory = null;
-                }
-                else
-                {
-                    current.DocumentDirectory = null;
-                    current.ScriptDirectory = null;
-                }
+                current.RootDirectory = value; // TODO: Some reason Binding is not setting the value correctly.
+                current.DocumentDirectory = null;
+                current.ScriptDirectory = null;
             }
             else { rootDirectoryExpanded.Text = String.Empty; }
         }
@@ -155,7 +155,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void DocumentDirectoryPicker_Click(object sender, EventArgs e)
         {
             if (bindingTemplate.Current is TemplateValue current
-                && new DirectoryTypeKey(current.RootDirectory).ToDirectoryInfo() is DirectoryInfo directory)
+                && current.RootDirectory.Data().Directory is DirectoryInfo directory)
             {
                 folderBrowserDialog.InitialDirectory = Path.Combine(directory.FullName, current.DocumentDirectory ?? String.Empty);
                 if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
@@ -170,7 +170,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void ScriptingDirectoryPicker_Click(object sender, EventArgs e)
         {
             if (bindingTemplate.Current is TemplateValue current
-                && new DirectoryTypeKey(current.RootDirectory).ToDirectoryInfo() is DirectoryInfo directory)
+                && current.RootDirectory.Data().Directory is DirectoryInfo directory)
             {
                 folderBrowserDialog.InitialDirectory = Path.Combine(directory.FullName, current.ScriptDirectory ?? String.Empty);
                 if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
@@ -210,7 +210,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (bindingTemplate.Current is TemplateValue current)
             {
-                if (new DirectoryTypeKey(current.RootDirectory).ToDirectoryInfo() is DirectoryInfo directory)
+                if (current.RootDirectory.Data().Directory is DirectoryInfo directory)
                 { openFileDialog.InitialDirectory = directory.FullName; }
 
                 openFileDialog.DefaultExt = "xslt";
@@ -230,7 +230,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (bindingTemplate.Current is TemplateValue current)
             {
-                if (new DirectoryTypeKey(current.RootDirectory).ToDirectoryInfo() is DirectoryInfo directory)
+                if (current.RootDirectory.Data().Directory is DirectoryInfo directory)
                 { saveFileDialog.InitialDirectory = directory.FullName; }
 
                 if (String.IsNullOrWhiteSpace(transformFilePath.Text))
@@ -541,7 +541,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void DocumentData_SelectionChanged(object sender, EventArgs e)
         {
-            documentStatus.Text = String.Format("{0} selected", documentData.SelectedRows.Count);   
+            documentStatus.Text = String.Format("{0} selected", documentData.SelectedRows.Count);
         }
     }
 }

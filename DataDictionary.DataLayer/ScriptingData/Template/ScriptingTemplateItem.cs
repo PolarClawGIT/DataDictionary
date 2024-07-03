@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
     /// <summary>
     /// Interface for the Scripting Template data.
     /// </summary>
-    public interface IScriptingTemplateItem : IScriptingTemplateKey, IScriptingTemplateKeyName, IScriptAsTypeKey, IScopeKey
+    public interface IScriptingTemplateItem : IScriptingTemplateKey, IScriptingTemplateKeyName, IScriptAsTypeKey, ITemplateDirectory, IScopeKey
     {
         /// <summary>
         /// Description for the Template
@@ -25,11 +25,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// The Scope to do a Document Break on.
         /// </summary>
         ScopeType BreakOnScope { get; }
-
-        /// <summary>
-        /// Root Directory to place documents in (must be a Special Folder).
-        /// </summary>
-        TemplateDirectoryType RootDirectory { get; }
 
         /// <summary>
         /// From the RootDirectory, the location where the XML Document(s) are to be placed.  
@@ -123,15 +118,15 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
             get
             {
                 String? value = GetValue(nameof(RootDirectory));
-                if (Enum.TryParse(value, true, out TemplateDirectoryType folder))
-                { return folder; }
+                if (TemplateDirectoryEnumeration.TryParse(value, null, out TemplateDirectoryEnumeration? result))
+                { return result.Value; }
                 else { return TemplateDirectoryType.Null; }
             }
             set
             {
                 if (value is TemplateDirectoryType.Null)
                 { SetValue(nameof(RootDirectory), null); }
-                else { SetValue(nameof(RootDirectory), value.ToString()); }
+                else { SetValue(nameof(RootDirectory), TemplateDirectoryEnumeration.AsDictionary[value].Name); }
             }
         }
 

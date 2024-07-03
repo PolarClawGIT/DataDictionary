@@ -1,5 +1,5 @@
-﻿namespace DataDictionary.Resource.Enumerations;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+namespace DataDictionary.Resource.Enumerations;
 
 /// <summary>
 /// Enumeration support class for Database Routine type.
@@ -22,17 +22,17 @@ public class DbRoutineEnumeration : IEnumeration<DbRoutineType, DbRoutineEnumera
     DbRoutineEnumeration() : base() { }
 
     /// <summary>
-    /// Internal Dictionary that contains all the values.
+    /// Internal list that contains all the values.
     /// </summary>
-    static readonly Dictionary<DbRoutineType, DbRoutineEnumeration> values = new Dictionary<DbRoutineType, DbRoutineEnumeration>()
-        {
-            { DbRoutineType.Null, new DbRoutineEnumeration() { Value = DbRoutineType.Null, Name = String.Empty, DisplayName = "not defined" } },
-            { DbRoutineType.Function, new DbRoutineEnumeration() { Value = DbRoutineType.Function, Name = "Function", DisplayName = "Function" } },
-            { DbRoutineType.Procedure, new DbRoutineEnumeration() { Value = DbRoutineType.Procedure, Name = "Procedure", DisplayName = "Procedure" } },
-        };
+    static readonly List<DbRoutineEnumeration> values = new List<DbRoutineEnumeration>() 
+    {
+        new DbRoutineEnumeration() { Value = DbRoutineType.Null, Name = String.Empty, DisplayName = "not defined" },
+        new DbRoutineEnumeration() { Value = DbRoutineType.Function, Name = "Function", DisplayName = "Function" },
+        new DbRoutineEnumeration() { Value = DbRoutineType.Procedure, Name = "Procedure", DisplayName = "Procedure" },
+    };
 
     /// <inheritdoc />
-    public static IReadOnlyDictionary<DbRoutineType, DbRoutineEnumeration> AsDictionary { get { return values; } }
+    public static IReadOnlyDictionary<DbRoutineType, DbRoutineEnumeration> AsDictionary { get { return values.ToDictionary(d => d.Value); } }
 
     /// <inheritdoc />
     public static implicit operator DbRoutineEnumeration(DbRoutineType source)

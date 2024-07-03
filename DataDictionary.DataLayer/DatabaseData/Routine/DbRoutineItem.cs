@@ -55,7 +55,15 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
 
         /// <inheritdoc/>
         public DbRoutineType RoutineType
-        { get { return DbRoutineEnumeration.Parse(GetValue(nameof(RoutineType)) ?? String.Empty, null).Value; } }
+        {
+            get
+            {
+                String? value = GetValue(nameof(RoutineType));
+                if (DbRoutineEnumeration.TryParse(value, null, out DbRoutineEnumeration? result))
+                { return result.Value; }
+                else { return DbRoutineType.Null; }
+            }
+        }
 
         /// <inheritdoc/>
         public ScopeType Scope

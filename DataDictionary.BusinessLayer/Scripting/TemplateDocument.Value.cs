@@ -108,7 +108,7 @@ namespace DataDictionary.BusinessLayer.Scripting
             get
             {
                 if (templateValue.RootDirectory is TemplateDirectoryType root &&
-                    new DirectoryTypeKey(root).ToDirectoryInfo() is DirectoryInfo folder)
+                    root.Data().Directory is DirectoryInfo folder)
                 {
                     String directoryName =
                         Path.Combine(
@@ -141,7 +141,7 @@ namespace DataDictionary.BusinessLayer.Scripting
             get
             {
                 if (templateValue.RootDirectory is TemplateDirectoryType root &&
-                    new DirectoryTypeKey(root).ToDirectoryInfo() is DirectoryInfo folder)
+                    root.Data().Directory is DirectoryInfo folder)
                 {
                     String directoryName =
                         Path.Combine(
