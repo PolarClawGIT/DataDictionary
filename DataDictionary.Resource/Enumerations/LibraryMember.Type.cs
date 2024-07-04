@@ -1,7 +1,5 @@
 ﻿namespace DataDictionary.Resource.Enumerations
 {
-    // This is all in one file because they are so closely related and was easer to find.
-
     /// <summary>
     /// List of supported .Net Library Types.
     /// </summary>

@@ -17,7 +17,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     /// <summary>
     /// Interface for the Library Member Item
     /// </summary>
-    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, ILibraryMemberTypeKey, IScopeKey
+    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, ILibraryMemberType, IScopeKey
     {
 
         /// <summary>
@@ -58,8 +58,19 @@ namespace DataDictionary.DataLayer.LibraryData.Member
         /// <inheritdoc/>
         public LibraryMemberType MemberType
         {
-            get { return LibraryMemberTypeKey.Parse(GetValue(nameof(MemberType)) ?? String.Empty).MemberType; }
-            set { SetValue(nameof(MemberType), value.ToName()); }
+            get
+            {
+                String? value = GetValue(nameof(MemberType));
+                if (LibraryMemberEnumeration.TryParse(value, null, out LibraryMemberEnumeration? result))
+                { return result.Value; }
+                else { return LibraryMemberType.Null; }
+            }
+            set
+            {
+                if (value is LibraryMemberType.Null)
+                { SetValue(nameof(MemberType), null); }
+                else { SetValue(nameof(MemberType), LibraryMemberEnumeration.AsDictionary[value].Name); }
+            }
         }
 
         /// <inheritdoc/>

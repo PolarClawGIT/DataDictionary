@@ -81,9 +81,11 @@ namespace DataDictionary.BusinessLayer.Library
                             // Parse the Member Type
                             LibraryMemberType memberType = LibraryMemberType.Null;
                             //String memberType = String.Empty;
-                            if (parseString.Split(':') is String[] types && types.Length > 0)
+                            if (parseString.Split(':') is String[] types
+                                && types.Length > 0
+                                && LibraryMemberEnumeration.TryParse(types[0], null, out LibraryMemberEnumeration? libType))
                             {
-                                memberType = LibraryMemberTypeKey.Parse(types[0]);
+                                memberType = libType.Value;
                                 parseString = parseString.Substring(2);
                             }
 
