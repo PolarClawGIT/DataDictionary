@@ -50,16 +50,12 @@ public class TemplateDirectoryEnumeration : IEnumeration<TemplateDirectoryType, 
         },
     };
 
+    /// <inheritdoc cref="IEnumeration{TEnum, TSelf}.Cast(TEnum)" />
+    public static TemplateDirectoryEnumeration Cast(TemplateDirectoryType source)
+    { return IEnumeration<TemplateDirectoryType, TemplateDirectoryEnumeration>.Cast(source); }
+
     /// <inheritdoc />
     public static IReadOnlyDictionary<TemplateDirectoryType, TemplateDirectoryEnumeration> AsDictionary { get { return values.ToDictionary(d => d.Value); } }
-
-    /// <inheritdoc />
-    public static implicit operator TemplateDirectoryEnumeration(TemplateDirectoryType source)
-    { return IEnumeration<TemplateDirectoryType, TemplateDirectoryEnumeration>.Cast(source); }
-
-    /// <inheritdoc />
-    public static implicit operator TemplateDirectoryType(TemplateDirectoryEnumeration source)
-    { return IEnumeration<TemplateDirectoryType, TemplateDirectoryEnumeration>.Cast(source); }
 
     /// <inheritdoc />
     public static TemplateDirectoryEnumeration Parse(String s, IFormatProvider? provider)

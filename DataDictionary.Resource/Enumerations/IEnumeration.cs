@@ -42,18 +42,6 @@ namespace DataDictionary.Resource.Enumerations
         /// <inheritdoc cref="IParsable{TSelf}.TryParse(string?, IFormatProvider?, out TSelf)"/>
         static abstract Boolean TryParse([NotNullWhen(true)] String? s, IFormatProvider? provider, [MaybeNullWhen(false)] out TSelf result);
 
-        /// <summary>
-        /// Convert the Enum to the Enumeration
-        /// </summary>
-        /// <param name="source"></param>
-        static abstract implicit operator TSelf(TEnum source);
-
-        /// <summary>
-        /// Convert the Enumeration to the Enum
-        /// </summary>
-        /// <param name="source"></param>
-        static abstract implicit operator TEnum(TSelf source);
-
         #region IParsable<TSelf> Helpers
         /// <inheritdoc cref="IParsable{TSelf}.Parse(string, IFormatProvider?)"/>
         /// <remarks>Used by IParsable</remarks>
@@ -80,11 +68,19 @@ namespace DataDictionary.Resource.Enumerations
         #endregion
 
         #region Cast Helpers
+        // TODO: What is desired is a: static virtual.
+        // That always results in a CS8926 with no way to call the interface method.
+        // Ideally, the method would be available to all classes that implement this
+        // interface without coding the exact same code in every class.
+        //
+        // This case a static indexer would have worked but do not exist in C#.
+        // This is the best option I could find.
+        // These methods can be used with implicit operators, as written.
+
         /// <summary>
         /// Convert the Enum to the Enumeration
         /// </summary>
         /// <param name="source"></param>
-        /// <remarks>Used for implicit operator</remarks>
         static TSelf Cast(TEnum source)
         {
             if (TSelf.AsDictionary.ContainsKey(source)) { return TSelf.AsDictionary[source]; }
@@ -95,15 +91,6 @@ namespace DataDictionary.Resource.Enumerations
                 throw ex;
             }
         }
-
-        /// <summary>
-        /// Convert the Enumeration to the Enum
-        /// </summary>
-        /// <param name="source"></param>
-        /// <remarks>Used for implicit operator</remarks>
-        static TEnum Cast(TSelf source)
-        { return source.Value; }
         #endregion
-
     }
 }

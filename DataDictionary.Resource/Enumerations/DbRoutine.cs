@@ -11,14 +11,3 @@ public interface IDbRoutineType
     /// </summary>
     DbRoutineType RoutineType { get; }
 }
-
-public static class DbRoutineExtension
-{
-    /// <summary>
-    /// Gets the Data from DbRoutineEnumeration
-    /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
-    public static DbRoutineEnumeration Data(this DbRoutineType source)
-    { return DbRoutineEnumeration.AsDictionary[source]; }
-}

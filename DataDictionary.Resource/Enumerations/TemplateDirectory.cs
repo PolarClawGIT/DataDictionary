@@ -11,14 +11,3 @@ public interface ITemplateDirectory
     /// </summary>
     TemplateDirectoryType RootDirectory { get; }
 }
-
-public static class TemplateDirectoryExtension
-{
-    /// <summary>
-    /// Gets the Data from TemplateDirectoryEnumeration
-    /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
-    public static TemplateDirectoryEnumeration Data(this TemplateDirectoryType source)
-    { return TemplateDirectoryEnumeration.AsDictionary[source]; }
-}

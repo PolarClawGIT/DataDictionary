@@ -37,12 +37,8 @@ public class DomainPropertyEnumeration : IEnumeration<DomainPropertyType, Domain
     /// <inheritdoc />
     public static IReadOnlyDictionary<DomainPropertyType, DomainPropertyEnumeration> AsDictionary { get { return values.ToDictionary(d => d.Value); } }
 
-    /// <inheritdoc />
-    public static implicit operator DomainPropertyEnumeration(DomainPropertyType source)
-    { return IEnumeration<DomainPropertyType, DomainPropertyEnumeration>.Cast(source); }
-
-    /// <inheritdoc />
-    public static implicit operator DomainPropertyType(DomainPropertyEnumeration source)
+    /// <inheritdoc cref="IEnumeration{TEnum, TSelf}.Cast(TEnum)" />
+    public static DomainPropertyEnumeration Cast(DomainPropertyType source)
     { return IEnumeration<DomainPropertyType, DomainPropertyEnumeration>.Cast(source); }
 
     /// <inheritdoc />

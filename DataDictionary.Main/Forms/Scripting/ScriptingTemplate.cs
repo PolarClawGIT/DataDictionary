@@ -129,7 +129,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void RootDirectoryData_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
-                && value.Data().Directory is DirectoryInfo directory)
+                && TemplateDirectoryEnumeration.Cast(value).Directory is DirectoryInfo directory)
             { rootDirectoryExpanded.Text = directory.FullName; }
             else { rootDirectoryExpanded.Text = String.Empty; }
         }
@@ -155,7 +155,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void DocumentDirectoryPicker_Click(object sender, EventArgs e)
         {
             if (bindingTemplate.Current is TemplateValue current
-                && current.RootDirectory.Data().Directory is DirectoryInfo directory)
+                && TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
             {
                 folderBrowserDialog.InitialDirectory = Path.Combine(directory.FullName, current.DocumentDirectory ?? String.Empty);
                 if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
@@ -170,7 +170,7 @@ namespace DataDictionary.Main.Forms.Scripting
         private void ScriptingDirectoryPicker_Click(object sender, EventArgs e)
         {
             if (bindingTemplate.Current is TemplateValue current
-                && current.RootDirectory.Data().Directory is DirectoryInfo directory)
+                && TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
             {
                 folderBrowserDialog.InitialDirectory = Path.Combine(directory.FullName, current.ScriptDirectory ?? String.Empty);
                 if (folderBrowserDialog.ShowDialog() is DialogResult.OK)
@@ -210,7 +210,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (bindingTemplate.Current is TemplateValue current)
             {
-                if (current.RootDirectory.Data().Directory is DirectoryInfo directory)
+                if (TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
                 { openFileDialog.InitialDirectory = directory.FullName; }
 
                 openFileDialog.DefaultExt = "xslt";
@@ -230,7 +230,7 @@ namespace DataDictionary.Main.Forms.Scripting
         {
             if (bindingTemplate.Current is TemplateValue current)
             {
-                if (current.RootDirectory.Data().Directory is DirectoryInfo directory)
+                if (TemplateDirectoryEnumeration.Cast(current.RootDirectory).Directory is DirectoryInfo directory)
                 { saveFileDialog.InitialDirectory = directory.FullName; }
 
                 if (String.IsNullOrWhiteSpace(transformFilePath.Text))

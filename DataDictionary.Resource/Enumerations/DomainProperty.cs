@@ -11,14 +11,3 @@ public interface IDomainPropertyType
     /// </summary>
     DomainPropertyType PropertyType { get; }
 }
-
-public static class DomainPropertyExtension
-{
-    /// <summary>
-    /// Gets the Data from DomainPropertyEnumeration
-    /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
-    public static DomainPropertyEnumeration Data(this DomainPropertyType source)
-    { return DomainPropertyEnumeration.AsDictionary[source]; }
-}

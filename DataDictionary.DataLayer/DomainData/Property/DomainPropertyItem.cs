@@ -61,7 +61,7 @@ namespace DataDictionary.DataLayer.DomainData.Property
                 else { return DomainPropertyType.Null; }
             }
             set
-            { SetValue(nameof(PropertyType), value.Data().Name); }
+            { SetValue(nameof(PropertyType), DomainPropertyEnumeration.Cast(value).Name); }
         }
 
         /// <summary>

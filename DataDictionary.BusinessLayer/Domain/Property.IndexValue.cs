@@ -93,7 +93,7 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         public override string ToString()
         {
-            String result = PropertyType.Data().Name;
+            String result = DomainPropertyEnumeration.Cast(PropertyType).Name;
             if (!String.IsNullOrWhiteSpace(PropertyName))
             { result = String.Format("{0}.{1}", result, PropertyName); }
 
