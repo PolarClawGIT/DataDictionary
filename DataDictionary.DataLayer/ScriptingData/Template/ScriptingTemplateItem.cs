@@ -9,7 +9,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
     /// <summary>
     /// Interface for the Scripting Template data.
     /// </summary>
-    public interface IScriptingTemplateItem : IScriptingTemplateKey, IScriptingTemplateKeyName, IScriptAsTypeKey, ITemplateDirectory, IScopeKey
+    public interface IScriptingTemplateItem : IScriptingTemplateKey, IScriptingTemplateKeyName, IScriptAsType, ITemplateDirectory, IScopeKey
     {
         /// <summary>
         /// Description for the Template
@@ -161,8 +161,19 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <inheritdoc/>
         public TemplateScriptAsType ScriptAs
         {
-            get { return ScriptAsTypeKey.Parse(GetValue(nameof(ScriptAs)) ?? String.Empty).ScriptAs; }
-            set { SetValue(nameof(ScriptAs), new ScriptAsTypeKey(value).ToString()); }
+            get
+            {
+                String? value = GetValue(nameof(ScriptAs));
+                if (TemplateScriptAsEnumeration.TryParse(value, null, out TemplateScriptAsEnumeration? result))
+                { return result.Value; }
+                else { return TemplateScriptAsType.none; }
+            }
+            set
+            {
+                if (value is TemplateScriptAsType.none)
+                { SetValue(nameof(ScriptAs), null); }
+                else { SetValue(nameof(ScriptAs), TemplateScriptAsEnumeration.AsDictionary[value].Name); }
+            }
         }
 
         /// <inheritdoc/>

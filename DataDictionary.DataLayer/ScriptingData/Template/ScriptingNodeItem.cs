@@ -16,17 +16,12 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
     /// <summary>
     /// Interface for the Scripting Template Node data.
     /// </summary>
-    public interface IScriptingNodeItem : IScriptingNodeKeyComposite, IScriptingNodeKeyName, IScopeKey
+    public interface IScriptingNodeItem : IScriptingNodeKeyComposite, IScriptingNodeKeyName, INodeValueAsType, IScopeKey
     {
         /// <summary>
         /// Name to apply to the Node (default is PropertyName)
         /// </summary>
         String? NodeName { get; }
-
-        /// <summary>
-        /// How should the Value for the Node be rendered.
-        /// </summary>
-        TemplateNodeValueAsType NodeValueAs { get; }
     }
 
     /// <summary>
@@ -73,8 +68,19 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <inheritdoc/>
         public TemplateNodeValueAsType NodeValueAs
         {
-            get { return NodeValueAsTypeKey.Parse(GetValue(nameof(NodeValueAs)) ?? String.Empty).NodeValueAs; }
-            set { SetValue(nameof(NodeValueAs), new NodeValueAsTypeKey(value).ToString()); }
+            get
+            {
+                String? value = GetValue(nameof(NodeValueAs));
+                if (TemplateNodeValueAsEnumeration.TryParse(value, null, out TemplateNodeValueAsEnumeration? result))
+                { return result.Value; }
+                else { return TemplateNodeValueAsType.none; }
+            }
+            set
+            {
+                if (value is TemplateNodeValueAsType.none)
+                { SetValue(nameof(NodeValueAs), null); }
+                else { SetValue(nameof(NodeValueAs), TemplateNodeValueAsEnumeration.AsDictionary[value].Name); }
+            }
         }
 
         /// <inheritdoc/>

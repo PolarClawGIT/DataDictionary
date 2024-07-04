@@ -1,10 +1,9 @@
 ﻿namespace DataDictionary.Resource.Enumerations
 {
-
     /// <summary>
     /// List of supported Script types.
     /// </summary>
-    public enum TemplateScriptAsType
+    public enum TemplateScriptAsType // TemplateScriptAsEnumeration
     {
         /// <summary>
         /// Not Scripted

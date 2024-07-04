@@ -89,8 +89,15 @@ namespace DataDictionary.Main.Forms.Scripting
             documentSuffixData.DataBindings.Add(new Binding(nameof(documentSuffixData.Text), bindingTemplate, nameof(nameOfValues.DocumentSuffix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
             documentExtensionData.DataBindings.Add(new Binding(nameof(documentExtensionData.Text), bindingTemplate, nameof(nameOfValues.DocumentExtension), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
 
-            ScriptAsList.Load(scriptAsData);
-            scriptAsData.DataBindings.Add(new Binding(nameof(scriptAsData.SelectedValue), bindingTemplate, nameof(nameOfValues.ScriptAs), false, DataSourceUpdateMode.OnPropertyChanged, ScriptAsList.NullValue));
+            scriptAsData.ValueMember = nameof(TemplateScriptAsEnumeration.Value);
+            scriptAsData.DisplayMember = nameof(TemplateScriptAsEnumeration.DisplayName);
+            scriptAsData.DataSource = TemplateScriptAsEnumeration.AsDictionary.Values.ToList();
+            scriptAsData.DataBindings.Add(new Binding(
+                nameof(scriptAsData.SelectedValue),
+                bindingTemplate, nameof(nameOfValues.ScriptAs),
+                false, DataSourceUpdateMode.OnPropertyChanged)
+            { DataSourceNullValue = TemplateScriptAsType.none });
+
             scriptingDirectoryData.DataBindings.Add(new Binding(nameof(scriptingDirectoryData.Text), bindingTemplate, nameof(nameOfValues.ScriptDirectory), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
             scriptingPrefixData.DataBindings.Add(new Binding(nameof(scriptingPrefixData.Text), bindingTemplate, nameof(nameOfValues.ScriptPrefix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
             scriptingSuffixData.DataBindings.Add(new Binding(nameof(scriptingSuffixData.Text), bindingTemplate, nameof(nameOfValues.ScriptSuffix), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
@@ -104,8 +111,14 @@ namespace DataDictionary.Main.Forms.Scripting
             propertyNameData.DataBindings.Add(new Binding(nameof(propertyNameData.Text), bindingNode, nameof(nameOfNode.PropertyName), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
             nodeNameData.DataBindings.Add(new Binding(nameof(nodeNameData.Text), bindingNode, nameof(nameOfNode.NodeName), false, DataSourceUpdateMode.OnPropertyChanged, String.Empty));
 
-            NodeValueAsList.Load(nodeValueAsData);
-            nodeValueAsData.DataBindings.Add(new Binding(nameof(nodeValueAsData.SelectedValue), bindingNode, nameof(nameOfNode.NodeValueAs), false, DataSourceUpdateMode.OnPropertyChanged, NodeValueAsList.NullValue));
+            nodeValueAsData.ValueMember = nameof(TemplateNodeValueAsEnumeration.Value);
+            nodeValueAsData.DisplayMember = nameof(TemplateNodeValueAsEnumeration.DisplayName);
+            nodeValueAsData.DataSource = TemplateNodeValueAsEnumeration.AsDictionary.Values.ToList();
+            nodeValueAsData.DataBindings.Add(new Binding(
+                nameof(nodeValueAsData.SelectedValue),
+                bindingNode, nameof(nameOfNode.NodeValueAs),
+                false, DataSourceUpdateMode.OnPropertyChanged)
+            { DataSourceNullValue = TemplateNodeValueAsType.none });
 
             templatePathData.AutoGenerateColumns = false;
             templatePathData.DataSource = bindingPath;
@@ -139,7 +152,7 @@ namespace DataDictionary.Main.Forms.Scripting
             if (rootDirectoryData.SelectedValue is TemplateDirectoryType value
                 && bindingTemplate.Current is TemplateValue current)
             {
-                current.RootDirectory = value; // TODO: Some reason Binding is not setting the value correctly.
+                current.RootDirectory = value; // TODO: Some reason Binding is not setting the value.
                 current.DocumentDirectory = null;
                 current.ScriptDirectory = null;
             }
@@ -187,8 +200,12 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private void ScriptAsData_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (bindingTemplate.Current is TemplateValue current)
-            { current.ScriptExtension = new ScriptAsTypeKey(current).ToExtension(); }
+            if (bindingTemplate.Current is TemplateValue current
+                && scriptAsData.SelectedValue is TemplateScriptAsType value)
+            {
+                current.ScriptAs = value;// TODO: Some reason Binding is not setting the value.
+                current.ScriptExtension = TemplateScriptAsEnumeration.AsDictionary[value].Extension;
+            }
         }
 
         private void TransformParseCommand_Click(object sender, EventArgs e)
