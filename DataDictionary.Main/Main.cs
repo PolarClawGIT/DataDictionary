@@ -1,14 +1,11 @@
-using DataDictionary.BusinessLayer;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ModelData;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Dialogs;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using System.ComponentModel;
-using Toolbox.BindingTable;
 using Toolbox.Threading;
 
 namespace DataDictionary.Main
@@ -24,9 +21,9 @@ namespace DataDictionary.Main
             Icon = Resources.Icon_Application;
 
             IsLocked(true);
-
+            
             // Setup Images for Tree Control
-            contextNameNavigation.ImageList = ScopeExtension.ToImageList();
+            contextNameNavigation.ImageList = ScopeWinFormEnumeration.AsImageList();
 
 
             //Hook the WorkerQueue up to this forms UI thread for events.

@@ -7,19 +7,19 @@ using System.Diagnostics.CodeAnalysis;
 public class ScopeEnumeration : IEnumeration<ScopeType, ScopeEnumeration>
 {
     /// <inheritdoc />
-    public required ScopeType Value { get; init; }
+    public ScopeType Value { get; init; } = ScopeType.Null;
 
     /// <inheritdoc />
-    public required String Name { get; init; }
+    public String Name { get; init; } = ScopeType.Null.ToString();
 
     /// <inheritdoc />
-    public required String DisplayName { get; init; }
+    public String DisplayName { get; init; } = ScopeType.Null.ToString();
 
     /// <summary>
     /// Internal Constructor for Scope Type Enumeration
     /// </summary>
     /// <remarks>Prevents automatic construction of parameterless constructor.</remarks>
-    ScopeEnumeration() : base() { }
+    protected ScopeEnumeration() : base() { }
 
     /// <summary>
     /// Internal list that contains all the values.
@@ -73,8 +73,21 @@ public class ScopeEnumeration : IEnumeration<ScopeType, ScopeEnumeration>
         new ScopeEnumeration() { Value = ScopeType.ScriptingTemplateNode,      Name = "Scripting.Template.Element"              , DisplayName = "Scripting.Template.Element" },
     };
 
+
+    static Dictionary<ScopeType, ScopeEnumeration> createDictionary() 
+    {
+        Dictionary<ScopeType, ScopeEnumeration> result = new Dictionary<ScopeType, ScopeEnumeration>();
+        foreach (ScopeType item in Enum.GetValues<ScopeType>())
+        {
+            if (values.FirstOrDefault(w => w.Value == item) is ScopeEnumeration value)
+            { result.Add(item, value); }
+            else { result.Add(item, new ScopeEnumeration()); }
+        }
+        return result;
+    }
+
     /// <inheritdoc />
-    public static IReadOnlyDictionary<ScopeType, ScopeEnumeration> AsDictionary { get { return values.ToDictionary(d => d.Value); } }
+    public static IReadOnlyDictionary<ScopeType, ScopeEnumeration> AsDictionary { get; } = createDictionary();
 
     /// <inheritdoc cref="IEnumeration{TEnum, TSelf}.Cast(TEnum)" />
     public static ScopeEnumeration Cast(ScopeType source)

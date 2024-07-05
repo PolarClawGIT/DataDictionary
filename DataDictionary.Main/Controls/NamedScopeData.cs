@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
@@ -47,9 +47,7 @@ namespace DataDictionary.Main.Controls
         {
             InitializeComponent();
 
-            ImageList aliasImages = new ImageList();
-            foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
-            { aliasImages.Images.Add(item.ToName(), item.ToImage()); }
+            ImageList aliasImages = ScopeWinFormEnumeration.AsImageList();
 
             browser.SmallImageList = aliasImages;
             browser.Columns.Add("Path", browser.Width);
@@ -68,7 +66,7 @@ namespace DataDictionary.Main.Controls
             {
                 INamedScopeValue value = namedScope.GetValue(item);
 
-                ListViewItem browserItem = new ListViewItem(value.Title, value.Scope.ToName());
+                ListViewItem browserItem = new ListViewItem(value.Title, ScopeWinFormEnumeration.Cast(value.Scope).Name);
                 browserItem.ToolTipText = value.NamedPath.MemberFullPath;
 
                 if (ScopeKey is null) { ScopeKey = value.Index; }
@@ -88,7 +86,7 @@ namespace DataDictionary.Main.Controls
                 OrderBy(o => o.OrdinalPosition).
                 ThenBy(o => o.Title))
             {
-                ListViewItem browserItem = new ListViewItem(value.Title, value.Scope.ToName());
+                ListViewItem browserItem = new ListViewItem(value.Title, ScopeWinFormEnumeration.Cast(value.Scope).Name);
                 browserItem.ToolTipText = value.NamedPath.MemberFullPath;
 
                 browser.Items.Add(browserItem);
@@ -104,7 +102,7 @@ namespace DataDictionary.Main.Controls
                     OrderBy(o => o.OrdinalPosition).
                     ThenBy(o => o.Title))
                 {
-                    ListViewItem browserItem = new ListViewItem(value.Title, value.Scope.ToName());
+                    ListViewItem browserItem = new ListViewItem(value.Title, ScopeWinFormEnumeration.Cast(value.Scope).Name);
                     browserItem.ToolTipText = value.NamedPath.MemberFullPath;
 
                     if (ScopeKey is null) { ScopeKey = value.Index; }
@@ -115,7 +113,7 @@ namespace DataDictionary.Main.Controls
 
             // Current Node
             INamedScopeValue currentValue = namedScope.GetValue(key);
-            ListViewItem currentItem = new ListViewItem(currentValue.Title, currentValue.Scope.ToName());
+            ListViewItem currentItem = new ListViewItem(currentValue.Title, ScopeWinFormEnumeration.Cast(currentValue.Scope).Name);
             currentItem.ToolTipText = currentValue.NamedPath.MemberFullPath;
             currentItem.Font = new Font(currentItem.Font, FontStyle.Underline);
             currentItem.ForeColor = Color.Blue;
@@ -131,7 +129,7 @@ namespace DataDictionary.Main.Controls
                 ThenBy(o => o.OrdinalPosition).
                 ThenBy(o => o.Title))
             {
-                ListViewItem browserItem = new ListViewItem(value.Title, value.Scope.ToName());
+                ListViewItem browserItem = new ListViewItem(value.Title, ScopeWinFormEnumeration.Cast(value.Scope).Name);
                 browserItem.ToolTipText = value.NamedPath.MemberFullPath;
                 browserItem.IndentCount = 1;
 

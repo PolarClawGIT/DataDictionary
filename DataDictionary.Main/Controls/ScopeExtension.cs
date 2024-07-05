@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Main.Properties;
+﻿using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataDictionary.Main.Controls
 {
+    [Obsolete("Use new ScopeEnumeration", true)]
     static class ScopeExtension
     {
         /// <summary>
@@ -73,6 +73,7 @@ namespace DataDictionary.Main.Controls
             {ScopeType.ScriptingTemplateDocument,        new ScopeSetting(Resources.XmlFile, Resources.Icon_XSLTransform) },
         };
 
+        [Obsolete("Use new ScopeEnumeration", true)]
         public static Image ToImage(this ScopeType scope)
         {
             if (images.ContainsKey(scope))
@@ -81,6 +82,7 @@ namespace DataDictionary.Main.Controls
             { return images[ScopeType.Null].NavigationImage; }
         }
 
+        [Obsolete("Use new ScopeEnumeration", true)]
         public static ScopeSetting Setting(this ScopeType scope)
         {
             if (images.ContainsKey(scope))
@@ -89,6 +91,7 @@ namespace DataDictionary.Main.Controls
             { return images[ScopeType.Null]; }
         }
 
+        [Obsolete("Use new ScopeEnumeration", true)]
         public static Icon ToIcon(this ScopeType scope)
         {
             if (images.ContainsKey(scope))
@@ -97,12 +100,13 @@ namespace DataDictionary.Main.Controls
             { return images[ScopeType.Null].WindowIcon; }
         }
 
+        [Obsolete("Use new ScopeEnumeration", true)]
         public static ImageList ToImageList()
         {
             ImageList result = new ImageList();
 
             foreach (KeyValuePair<ScopeType, ScopeSetting> item in images)
-            { result.Images.Add(item.Key.ToName(), item.Value.NavigationImage); }
+            { result.Images.Add(ScopeEnumeration.Cast(item.Key).Name, item.Value.NavigationImage); }
 
             return result;
         }
@@ -111,6 +115,7 @@ namespace DataDictionary.Main.Controls
     /// <summary>
     /// Represents the setting (icon, images, ...) for a Scope 
     /// </summary>
+    [Obsolete("Use new ScopeEnumeration", true)]
     struct ScopeSetting
     {
         public Image NavigationImage { get; init; }

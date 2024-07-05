@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Main.Controls;
+﻿using DataDictionary.Main.Enumerations;
 using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 
@@ -22,7 +21,7 @@ namespace DataDictionary.Main.Controls
 
             foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
             {
-                String name = item.ToName();
+                String name = ScopeWinFormEnumeration.Cast(item).DisplayName;
                 if (!String.IsNullOrEmpty(name))
                 { list.Add(new ScopeNameList() { ScopeType = item, ScopeName = name }); }
             }
@@ -39,7 +38,7 @@ namespace DataDictionary.Main.Controls
 
             foreach (ScopeType item in Enum.GetValues(typeof(ScopeType)))
             {
-                String name = item.ToName();
+                String name = ScopeWinFormEnumeration.Cast(item).DisplayName;
                 if (!String.IsNullOrEmpty(name))
                 { list.Add(new ScopeNameList() { ScopeType = item, ScopeName = name }); }
             }

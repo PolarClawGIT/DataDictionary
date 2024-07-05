@@ -1,19 +1,9 @@
-﻿using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Help;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Main.Controls;
+﻿using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms
@@ -129,9 +119,11 @@ namespace DataDictionary.Main.Forms
         /// <param name="scope"></param>
         protected void Setup(BindingSource data, ScopeType scope = ScopeType.Null)
         {
-            if (data.Current is IScopeKey scopeKey)
-            { this.Icon = new ScopeKey(scopeKey).Scope.ToIcon(); }
-            else { this.Icon = scope.ToIcon(); }
+            ScopeType scopeValue = scope;
+            if (data.Current is IScopeType item)
+            { scopeValue = item.Scope; }
+
+            this.Icon = ScopeWinFormEnumeration.Cast(scopeValue).WindowIcon;
 
             if (data.Current is IBindingRowState binding)
             {
@@ -177,7 +169,7 @@ namespace DataDictionary.Main.Forms
         protected Boolean IsDeleteDatabase
         {
             get { return deleteFromDatabaseCommand.Enabled; }
-            set { deleteFromDatabaseCommand.Enabled = value && Settings.Default.IsOnLineMode; isDeleteDatabase = value;  }
+            set { deleteFromDatabaseCommand.Enabled = value && Settings.Default.IsOnLineMode; isDeleteDatabase = value; }
         }
         Boolean isDeleteDatabase = false; // Intended State
 
