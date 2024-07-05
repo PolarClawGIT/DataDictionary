@@ -6,7 +6,6 @@
     /// Database NameSpaces are represented by the fully qualified object name.
     /// Library NameSpaces are defined by the namespace or type and the element of the namespace or type.
     /// </summary>
-    /// <see cref="ScopeKey"/>
     public enum ScopeType
     {
         /// <summary>

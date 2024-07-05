@@ -1,17 +1,14 @@
-﻿using DataDictionary.BusinessLayer.Application;
-using DataDictionary.BusinessLayer.Database;
+﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.ApplicationData.Property;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.DataLayer.DomainData.Attribute;
-using DataDictionary.DataLayer.DomainData.Property;
 using DataDictionary.DataLayer.ModelData;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Xml.Linq;
 using Toolbox.BindingTable;
@@ -420,7 +417,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
                     if (value is XObject)
                     {
-                        if (result is null) { result = new XElement(attribute.Scope.ToName()); }
+                        if (result is null) { result = new XElement(ScopeEnumeration.Cast(attribute.Scope).Name); }
                         result.Add(value);
 
                         IReadOnlyList<XAttribute> attributes = DomainProperties.GetXAttributes(scripting, node, Properties);
@@ -435,7 +432,7 @@ namespace DataDictionary.BusinessLayer.Domain
                     XElement? aliasNode = alias.GetXElement(scripting, (node) => DomainProperties.GetXAttributes(scripting, node, Properties));
                     if (aliasNode is not null && result is null)
                     {
-                        result = new XElement(attribute.Scope.ToName());
+                        result = new XElement(ScopeEnumeration.Cast(attribute.Scope).Name);
                         result.Add(aliasNode);
                     }
                     else if (aliasNode is not null && result is XElement)

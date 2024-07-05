@@ -1,12 +1,11 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
     /// <summary>
     /// Interface for the NamedScope Value.
     /// </summary>
-    public interface INamedScopeValue : IScopeKey, IOnTitleChanged
+    public interface INamedScopeValue : IScopeType, IOnTitleChanged
     {
         /// <summary>
         /// The Index for the NamedScopeValue.

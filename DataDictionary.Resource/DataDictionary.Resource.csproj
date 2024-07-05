@@ -23,32 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Icons\IconList.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>IconList.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Images\ImageList.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ImageList.resx</DependentUpon>
-    </Compile>
     <Compile Update="VersionNumber.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>VersionNumber.tt</DependentUpon>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Icons\IconList.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>IconList.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Images\ImageList.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ImageList.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

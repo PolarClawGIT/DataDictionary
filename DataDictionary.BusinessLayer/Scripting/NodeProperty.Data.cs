@@ -1,12 +1,6 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Collections.ObjectModel;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.BusinessLayer.Scripting
@@ -51,7 +45,7 @@ namespace DataDictionary.BusinessLayer.Scripting
         /// <typeparam name="TRow"></typeparam>
         /// <param name="source"></param>
         public void Load<TRow>(TRow source)
-            where TRow : IBindingTableRow, IScopeKey
+            where TRow : IBindingTableRow, IScopeType
         {
             foreach (DataColumn item in source.ColumnDefinitions())
             {

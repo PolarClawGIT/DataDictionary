@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.Resource.Enumerations;
 
@@ -64,14 +58,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Routine
         /// <param name="source">A four part Alias name with a Scope of a Function or Procedure.</param>
         /// <returns>A Table Key or Null if a key could not be constructed.</returns>
         public static DbRoutineKeyName? TryCreate<T>(T source)
-            where T : IAliasKeyName, IScopeKey
+            where T : IAliasKeyName, IScopeType
         {
             if (source.AliasName is null) { return null; }
 
             List<String> parsed = AliasExtension.NameParts(source.AliasName);
             if (parsed.Count != 3) { return null; }
 
-            if (new ScopeKey(source).Scope is ScopeType.DatabaseFunction or ScopeType.DatabaseProcedure)
+            if (source.Scope is ScopeType.DatabaseFunction or ScopeType.DatabaseProcedure)
             {
                 return new DbRoutineKeyName()
                 {

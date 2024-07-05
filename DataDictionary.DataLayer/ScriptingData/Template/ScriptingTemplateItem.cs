@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -9,7 +8,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
     /// <summary>
     /// Interface for the Scripting Template data.
     /// </summary>
-    public interface IScriptingTemplateItem : IScriptingTemplateKey, IScriptingTemplateKeyName, IScriptAsType, ITemplateDirectory, IScopeKey
+    public interface IScriptingTemplateItem : IScriptingTemplateKey, IScriptingTemplateKeyName, IScriptAsType, ITemplateDirectory, IScopeType
     {
         /// <summary>
         /// Description for the Template
@@ -97,11 +96,17 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <inheritdoc/>
         public ScopeType BreakOnScope
         {
-            get { return ScopeKey.Parse(GetValue(nameof(BreakOnScope)) ?? String.Empty).Scope; }
+            get
+            {
+                String value = GetValue(nameof(BreakOnScope)) ?? String.Empty;
+                if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
+                { return result.Value; }
+                else { return ScopeType.Null; }
+            }
             set
             {
                 if (value is ScopeType.Null) { SetValue(nameof(BreakOnScope), null); }
-                else { SetValue(nameof(BreakOnScope), value.ToName()); }
+                else { SetValue(nameof(BreakOnScope), ScopeEnumeration.Cast(value).Name); }
             }
         }
 

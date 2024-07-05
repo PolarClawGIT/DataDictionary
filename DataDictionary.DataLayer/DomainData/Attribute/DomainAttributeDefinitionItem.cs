@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DomainData.Definition;
+﻿using DataDictionary.DataLayer.DomainData.Definition;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
@@ -10,7 +9,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Definition Items
     /// </summary>
-    public interface IDomainAttributeDefinitionItem : IDomainAttributeKey, IDomainDefinition, IScopeKey
+    public interface IDomainAttributeDefinitionItem : IDomainAttributeKey, IDomainDefinition, IScopeType
     { }
 
     /// <summary>

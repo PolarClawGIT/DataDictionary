@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -9,7 +8,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for Domain Entity Item
     /// </summary>
-    public interface IDomainEntityItem : IDomainEntityKey, IDomainEntityKeyName, IScopeKey
+    public interface IDomainEntityItem : IDomainEntityKey, IDomainEntityKeyName, IScopeType
     {
         /// <summary>
         /// Description of the Domain Entity

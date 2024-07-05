@@ -1,13 +1,6 @@
-﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.ScriptingData.Template;
-using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
+﻿using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;

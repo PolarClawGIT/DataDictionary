@@ -1,10 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.DataLayer.ScriptingData.Template
 {
@@ -98,6 +92,6 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
 
         /// <inheritdoc/>
         public override string ToString()
-        { return PropertyScope.ToName(); }
+        { return ScopeEnumeration.Cast(PropertyScope).Name; }
     }
 }

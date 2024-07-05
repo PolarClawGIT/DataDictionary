@@ -1,22 +1,14 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Resource.Enumerations;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
-using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.ModelData
 {
     /// <summary>
     /// Interface for the Model.
     /// </summary>
-    public interface IModelItem : IModelKey, IScopeKey
+    public interface IModelItem : IModelKey, IScopeType
     {
         /// <summary>
         /// Title for the Model.

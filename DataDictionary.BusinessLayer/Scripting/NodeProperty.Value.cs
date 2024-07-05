@@ -1,11 +1,5 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {
@@ -58,6 +52,6 @@ namespace DataDictionary.BusinessLayer.Scripting
 
         /// <inheritdoc/>
         public override string ToString()
-        { return String.Format("{0} {1}", PropertyScope.ToName(), PropertyName); }
+        { return String.Format("{0} {1}", ScopeEnumeration.Cast(PropertyScope).Name, PropertyName); }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace DataDictionary.Resource.Enumerations
 {
@@ -34,6 +29,7 @@ namespace DataDictionary.Resource.Enumerations
         /// <summary>
         /// Dictionary of the Enumeration (the List)
         /// </summary>
+        /// <remarks>For a Single value, use Cast method instead.</remarks>
         static abstract IReadOnlyDictionary<TEnum, TSelf> AsDictionary { get; }
 
         /// <inheritdoc cref="IParsable{TSelf}.Parse(string, IFormatProvider?)"/>
@@ -41,6 +37,7 @@ namespace DataDictionary.Resource.Enumerations
 
         /// <inheritdoc cref="IParsable{TSelf}.TryParse(string?, IFormatProvider?, out TSelf)"/>
         static abstract Boolean TryParse([NotNullWhen(true)] String? s, IFormatProvider? provider, [MaybeNullWhen(false)] out TSelf result);
+
 
         #region IParsable<TSelf> Helpers
         /// <inheritdoc cref="IParsable{TSelf}.Parse(string, IFormatProvider?)"/>

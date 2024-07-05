@@ -1,13 +1,6 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DatabaseData.Schema;
+﻿using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DomainData.Alias;
-using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataDictionary.DataLayer.DatabaseData.Table
 {
@@ -62,14 +55,14 @@ namespace DataDictionary.DataLayer.DatabaseData.Table
         /// <param name="source">A four part Alias name with a Scope of a Table/View Column.</param>
         /// <returns>A Column Key or Null if a key could not be constructed.</returns>
         public static new DbTableColumnKeyName? TryCreate<T>(T source)
-            where T : IAliasKeyName, IScopeKey
+            where T : IAliasKeyName, IScopeType
         {
             if (source.AliasName is null) { return null; }
 
             List<String> parsed = AliasExtension.NameParts(source.AliasName);
             if (parsed.Count != 4) { return null; }
 
-            if (new ScopeKey(source).Scope is ScopeType.DatabaseTableColumn or ScopeType.DatabaseViewColumn)
+            if (source.Scope is ScopeType.DatabaseTableColumn or ScopeType.DatabaseViewColumn)
             {
                 return new DbTableColumnKeyName()
                 {

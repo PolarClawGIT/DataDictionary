@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.NamedScope
@@ -118,7 +117,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// </summary>
         /// <param name="source"></param>
         internal NamedScopePath(ScopeType source) : this()
-        { pathParts.AddRange(Parse(source.ToName())); }
+        { pathParts.AddRange(Parse(ScopeEnumeration.Cast(source).Name)); }
 
         /// <summary>
         /// Parses a String into Name Parts per the rules of a NamedScope Key.

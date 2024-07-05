@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Linq;
+﻿using System.Data;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DatabaseData;
 using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.Resource.Enumerations;
 using Toolbox.BindingTable;
@@ -17,7 +9,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
     /// <summary>
     /// Interface for the Library Member Item
     /// </summary>
-    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, ILibraryMemberType, IScopeKey
+    public interface ILibraryMemberItem : ILibraryMemberKey, ILibraryMemberKeyParent, ILibraryMemberKeyName, ILibrarySourceKeyName, ILibraryMemberType, IScopeType
     {
 
         /// <summary>

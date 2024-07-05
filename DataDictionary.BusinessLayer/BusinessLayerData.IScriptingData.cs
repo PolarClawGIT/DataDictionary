@@ -1,14 +1,7 @@
-﻿using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer.Domain;
+﻿using DataDictionary.BusinessLayer.Domain;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Toolbox.Threading;
 
@@ -66,7 +59,7 @@ namespace DataDictionary.BusinessLayer
                             }
                             else if (doc is null)
                             {
-                                rootElement = new XElement(Model.Scope.ToName());
+                                rootElement = new XElement(ScopeEnumeration.Cast(Model.Scope).Name);
                                 doc = new TemplateDocumentValue(scripting.Template, rootElement) { ElementName = Model.ModelTitle };
 
                                 try

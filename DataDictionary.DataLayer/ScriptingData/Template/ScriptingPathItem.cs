@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -9,7 +8,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
     /// <summary>
     /// Interface for the Scripting Template Path data.
     /// </summary>
-    public interface IScriptingPathItem : IScriptingTemplateKey, IScriptingPathKeyName, IScopeKey
+    public interface IScriptingPathItem : IScriptingTemplateKey, IScriptingPathKeyName, IScopeType
     {
         /// <summary>
         /// Application Scope of the item to Script.
@@ -40,8 +39,13 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <inheritdoc/>
         public ScopeType PathScope
         {
-            get { return ScopeKey.Parse(GetValue(nameof(PathScope)) ?? String.Empty).Scope; }
-            set { SetValue(nameof(PathScope), new ScopeKey(value).ToString()); }
+            get {
+                String value = GetValue(nameof(PathScope)) ?? String.Empty;
+                if(ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
+                { return result.Value; }
+                else { return ScopeType.Null; }
+            }
+            set { SetValue(nameof(PathScope), ScopeEnumeration.Cast(value).Name); }
         }
 
         /// <inheritdoc/>

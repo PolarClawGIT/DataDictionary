@@ -1,6 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Attribute;
 using DataDictionary.Resource.Enumerations;
 using System.Xml.Linq;
@@ -55,10 +54,10 @@ namespace DataDictionary.BusinessLayer.Domain
 
                 switch (node.PropertyName)
                 {
-                    case nameof(AliasScope): AddValue(node.BuildXObject(AliasScope.ToName())); break;
+                    case nameof(AliasScope): AddValue(node.BuildXObject(ScopeEnumeration.Cast(AliasScope).Name)); break;
                     case nameof(AliasName): AddValue(node.BuildXObject(AliasName)); break;
                     case nameof(AliasParts):
-                        List<String> scopeParts = NamedScopePath.Parse(AliasScope.ToName());
+                        List<String> scopeParts = NamedScopePath.Parse(ScopeEnumeration.Cast(AliasScope).Name);
                         String levelValue = String.Empty;
 
                         for (Int32 i = 0; i < AliasParts.Count; i++)
@@ -111,7 +110,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
                 if (values.Count > 0)
                 {
-                    if (result is null) { result = new XElement(Scope.ToName()); }
+                    if (result is null) { result = new XElement(ScopeEnumeration.Cast(Scope).Name); }
                     result.Add(values.ToArray());
                     result.Add(getAttributes(node).ToArray());
                 }

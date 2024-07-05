@@ -1,10 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.Scripting;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Entity;
 using DataDictionary.Resource.Enumerations;
-using System.ComponentModel;
-using System.Xml.Linq;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -30,7 +27,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         public virtual String GetTitle()
-        { return EntityTitle ?? Scope.ToName(); }
+        { return EntityTitle ?? ScopeEnumeration.Cast(Scope).Name; }
 
         /*internal XElement? GetXElement(IEnumerable<TemplateElementValue>? options = null)
         {

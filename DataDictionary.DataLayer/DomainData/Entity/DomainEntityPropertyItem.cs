@@ -1,5 +1,4 @@
 ﻿using DataDictionary.DataLayer.DomainData.Property;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using System.Data;
 using System.Runtime.Serialization;
@@ -11,7 +10,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for Domain Entity Properties
     /// </summary>
-    public interface IDomainEntityPropertyItem : IDomainEntityPropertyKey, IDomainProperty, IScopeKey
+    public interface IDomainEntityPropertyItem : IDomainEntityPropertyKey, IDomainProperty, IScopeType
     { }
 
     /// <summary>

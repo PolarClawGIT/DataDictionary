@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Scope;
 using DataDictionary.DataLayer.DomainData.Definition;
+using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.Domain
 {
@@ -21,7 +21,7 @@ namespace DataDictionary.BusinessLayer.Domain
 
         /// <inheritdoc/>
         public String GetTitle()
-        { return DefinitionTitle ?? Scope.ToName(); }
+        { return DefinitionTitle ?? ScopeEnumeration.Cast(Scope).Name; }
 
         /// <inheritdoc/>
         /// <remarks>Partial Path</remarks>

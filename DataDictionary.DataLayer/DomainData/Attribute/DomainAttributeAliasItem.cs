@@ -1,6 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DomainData.Alias;
-using DataDictionary.DataLayer.LibraryData.Member;
+﻿using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
@@ -11,7 +9,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Interface for Domain Attribute Alias Items
     /// </summary>
-    public interface IDomainAttributeAliasItem : IDomainAttributeKey, IAliasItem, IScopeKey
+    public interface IDomainAttributeAliasItem : IDomainAttributeKey, IAliasItem, IScopeType
     { }
 
     /// <summary>
@@ -31,11 +29,17 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// <inheritdoc/>
         public ScopeType AliasScope
         {
-            get { return ScopeKey.Parse(GetValue(nameof(AliasScope)) ?? String.Empty).Scope; }
+            get
+            {
+                String value = GetValue(nameof(AliasScope)) ?? String.Empty;
+                if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
+                { return result.Value; }
+                else { return ScopeType.Null; }
+            }
             set
             {
                 if (value is ScopeType.Null) { SetValue(nameof(AliasScope), null); }
-                else { SetValue(nameof(AliasScope), value.ToName()); }
+                else { SetValue(nameof(AliasScope), ScopeEnumeration.Cast(value).Name); }
             }
         }
 

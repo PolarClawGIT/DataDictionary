@@ -1,6 +1,6 @@
 ﻿// Ignore Spelling: indices
 
-using DataDictionary.DataLayer.ApplicationData.Scope;
+using DataDictionary.Resource.Enumerations;
 using System.Collections;
 
 namespace DataDictionary.BusinessLayer.NamedScope
@@ -165,7 +165,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             {
                 Exception ex = new ArgumentException("An element with the same key already exists.");
                 ex.Data.Add(nameof(value.Title), value.Title);
-                ex.Data.Add(nameof(value.Scope), value.Scope.ToName());
+                ex.Data.Add(nameof(value.Scope), ScopeEnumeration.Cast(value.Scope).Name);
                 ex.Data.Add(nameof(value.NamedPath), value.NamedPath.MemberFullPath);
                 throw ex;
             }
@@ -221,7 +221,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             {
                 Exception ex = new InvalidOperationException("Could not find parent for value passed");
                 ex.Data.Add(nameof(value.Title), value.Title);
-                ex.Data.Add(nameof(value.Scope), value.Scope.ToName());
+                ex.Data.Add(nameof(value.Scope), ScopeEnumeration.Cast(value.Scope).Name);
                 ex.Data.Add(nameof(value.NamedPath), value.NamedPath.MemberFullPath);
                 throw ex;
             }

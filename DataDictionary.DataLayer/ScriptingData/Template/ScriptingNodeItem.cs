@@ -1,22 +1,14 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.ScriptingData.Template
 {
-
-
     /// <summary>
     /// Interface for the Scripting Template Node data.
     /// </summary>
-    public interface IScriptingNodeItem : IScriptingNodeKeyComposite, IScriptingNodeKeyName, INodeValueAsType, IScopeKey
+    public interface IScriptingNodeItem : IScriptingNodeKeyComposite, IScriptingNodeKeyName, INodeValueAsType, IScopeType
     {
         /// <summary>
         /// Name to apply to the Node (default is PropertyName)
@@ -47,8 +39,14 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <inheritdoc/>
         public ScopeType PropertyScope
         {
-            get { return ScopeKey.Parse(GetValue(nameof(PropertyScope)) ?? String.Empty).Scope; }
-            set { SetValue(nameof(PropertyScope), new ScopeKey(value).ToString()); }
+            get
+            {
+                String value = GetValue(nameof(PropertyScope)) ?? String.Empty;
+                if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
+                { return result.Value; }
+                else { return ScopeType.Null; }
+            }
+            set { SetValue(nameof(PropertyScope), ScopeEnumeration.Cast(value).Name); }
         }
 
         /// <inheritdoc/>

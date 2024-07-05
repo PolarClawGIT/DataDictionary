@@ -1,11 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
+﻿namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 {
     /// <summary>
     /// Level0 MS Extended Property Types. These are Database Level.

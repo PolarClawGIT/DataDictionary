@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Resource.Enumerations;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -9,7 +8,7 @@ namespace DataDictionary.DataLayer.DomainData.Property
     /// <summary>
     /// Interface for Domain Property Item
     /// </summary>
-    public interface IDomainPropertyItem : IDomainPropertyKey, IDomainPropertyKeyName, IDomainPropertyType, IScopeKey
+    public interface IDomainPropertyItem : IDomainPropertyKey, IDomainPropertyKeyName, IDomainPropertyType, IScopeType
     {
         /// <summary>
         /// Description of the Domain Property

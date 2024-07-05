@@ -1,12 +1,6 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.ModelData.SubjectArea
@@ -14,7 +8,7 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
     /// <summary>
     /// Interface for Model Subject Area Item
     /// </summary>
-    public interface IModelSubjectAreaItem : IModelSubjectAreaKey, IModelSubjectAreaUniqueKey, IScopeKey
+    public interface IModelSubjectAreaItem : IModelSubjectAreaKey, IModelSubjectAreaUniqueKey, IScopeType
     {
         /// <summary>
         /// Description of the Subject Area

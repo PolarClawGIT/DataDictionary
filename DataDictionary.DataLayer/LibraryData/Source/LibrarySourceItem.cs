@@ -1,14 +1,6 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using DataDictionary.DataLayer.DatabaseData;
-using DataDictionary.Resource.Enumerations;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using DataDictionary.Resource.Enumerations;
 using System.Data;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.DataLayer.LibraryData.Source
@@ -16,7 +8,7 @@ namespace DataDictionary.DataLayer.LibraryData.Source
     /// <summary>
     /// Interface for the Library Source Item
     /// </summary>
-    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyName, IScopeKey
+    public interface ILibrarySourceItem : ILibrarySourceKey, ILibrarySourceKeyName, IScopeType
     {
         /// <summary>
         /// Title for the Library

@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.ApplicationData.Scope;
-using Toolbox.BindingTable;
+﻿using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.NamedScope
 {
@@ -32,7 +31,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <remarks>
     /// Returned to the UI layer.
     /// </remarks>
-    public interface INamedScopeSourceValue : IScopeKey
+    public interface INamedScopeSourceValue : IScopeType
     {
         // Properties and Methods with default implementation are "hidden" in classes that inherit the interface.
 
