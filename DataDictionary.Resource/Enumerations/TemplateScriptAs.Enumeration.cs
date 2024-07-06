@@ -41,7 +41,7 @@ public class TemplateScriptAsEnumeration : IEnumeration<TemplateScriptAsType, Te
     };
 
     /// <inheritdoc />
-    public static IReadOnlyDictionary<TemplateScriptAsType, TemplateScriptAsEnumeration> AsDictionary { get { return values.ToDictionary(d => d.Value); } }
+    public static IReadOnlyDictionary<TemplateScriptAsType, TemplateScriptAsEnumeration> Values { get { return values.ToDictionary(d => d.Value); } }
 
     /// <inheritdoc cref="IEnumeration{TEnum, TSelf}.Cast(TEnum)" />
     public static TemplateScriptAsEnumeration Cast(TemplateScriptAsType source)

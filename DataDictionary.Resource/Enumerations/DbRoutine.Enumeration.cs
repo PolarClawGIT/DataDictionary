@@ -32,7 +32,7 @@ public class DbRoutineEnumeration : IEnumeration<DbRoutineType, DbRoutineEnumera
     };
 
     /// <inheritdoc />
-    public static IReadOnlyDictionary<DbRoutineType, DbRoutineEnumeration> AsDictionary { get { return values.ToDictionary(d => d.Value); } }
+    public static IReadOnlyDictionary<DbRoutineType, DbRoutineEnumeration> Values { get { return values.ToDictionary(d => d.Value); } }
 
     /// <inheritdoc cref="IEnumeration{TEnum, TSelf}.Cast(TEnum)" />
     public static DbRoutineEnumeration Cast(DbRoutineType source)

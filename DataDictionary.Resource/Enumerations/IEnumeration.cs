@@ -30,7 +30,7 @@ namespace DataDictionary.Resource.Enumerations
         /// Dictionary of the Enumeration (the List)
         /// </summary>
         /// <remarks>For a Single value, use Cast method instead.</remarks>
-        static abstract IReadOnlyDictionary<TEnum, TSelf> AsDictionary { get; }
+        static abstract IReadOnlyDictionary<TEnum, TSelf> Values { get; }
 
         /// <inheritdoc cref="IParsable{TSelf}.Parse(string, IFormatProvider?)"/>
         static abstract TSelf Parse(String s, IFormatProvider? provider);
@@ -58,7 +58,7 @@ namespace DataDictionary.Resource.Enumerations
         /// <remarks>Used by IParsable</remarks>
         static Boolean TryParse([NotNullWhen(true)] String? source, [MaybeNullWhen(false)] out TSelf? result)
         {
-            if (TSelf.AsDictionary.Values.FirstOrDefault(w => String.Equals(source, w.Name, StringComparison.OrdinalIgnoreCase)) is TSelf item)
+            if (TSelf.Values.Values.FirstOrDefault(w => String.Equals(source, w.Name, StringComparison.OrdinalIgnoreCase)) is TSelf item)
             { result = item; return true; }
             else { result = null; return false; }
         }
@@ -80,7 +80,7 @@ namespace DataDictionary.Resource.Enumerations
         /// <param name="source"></param>
         static TSelf Cast(TEnum source)
         {
-            if (TSelf.AsDictionary.ContainsKey(source)) { return TSelf.AsDictionary[source]; }
+            if (TSelf.Values.ContainsKey(source)) { return TSelf.Values[source]; }
             else
             {
                 Exception ex = new ArgumentException("Not Defined", nameof(source));

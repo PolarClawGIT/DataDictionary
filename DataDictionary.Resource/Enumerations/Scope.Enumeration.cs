@@ -87,7 +87,7 @@ public class ScopeEnumeration : IEnumeration<ScopeType, ScopeEnumeration>
     }
 
     /// <inheritdoc />
-    public static IReadOnlyDictionary<ScopeType, ScopeEnumeration> AsDictionary { get; } = createDictionary();
+    public static IReadOnlyDictionary<ScopeType, ScopeEnumeration> Values { get; } = createDictionary();
 
     /// <inheritdoc cref="IEnumeration{TEnum, TSelf}.Cast(TEnum)" />
     public static ScopeEnumeration Cast(ScopeType source)

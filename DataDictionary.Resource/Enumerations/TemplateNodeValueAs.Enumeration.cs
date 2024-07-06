@@ -34,7 +34,7 @@ public class TemplateNodeValueAsEnumeration : IEnumeration<TemplateNodeValueAsTy
     };
 
     /// <inheritdoc />
-    public static IReadOnlyDictionary<TemplateNodeValueAsType, TemplateNodeValueAsEnumeration> AsDictionary { get { return values.ToDictionary(d => d.Value); } }
+    public static IReadOnlyDictionary<TemplateNodeValueAsType, TemplateNodeValueAsEnumeration> Values { get { return values.ToDictionary(d => d.Value); } }
 
     /// <inheritdoc cref="IEnumeration{TEnum, TSelf}.Cast(TEnum)" />
     public static TemplateNodeValueAsEnumeration Cast(TemplateNodeValueAsType source)

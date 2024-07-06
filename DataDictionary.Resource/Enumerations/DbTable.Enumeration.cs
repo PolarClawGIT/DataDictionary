@@ -34,7 +34,7 @@ public class DbTableEnumeration : IEnumeration<DbTableType, DbTableEnumeration>
     };
 
     /// <inheritdoc />
-    public static IReadOnlyDictionary<DbTableType, DbTableEnumeration> AsDictionary { get { return values.ToDictionary(d => d.Value); } }
+    public static IReadOnlyDictionary<DbTableType, DbTableEnumeration> Values { get { return values.ToDictionary(d => d.Value); } }
 
     /// <inheritdoc cref="IEnumeration{TEnum, TSelf}.Cast(TEnum)" />
     public static DbTableEnumeration Cast(DbTableType source)

@@ -55,7 +55,7 @@ public class TemplateDirectoryEnumeration : IEnumeration<TemplateDirectoryType, 
     { return IEnumeration<TemplateDirectoryType, TemplateDirectoryEnumeration>.Cast(source); }
 
     /// <inheritdoc />
-    public static IReadOnlyDictionary<TemplateDirectoryType, TemplateDirectoryEnumeration> AsDictionary { get { return values.ToDictionary(d => d.Value); } }
+    public static IReadOnlyDictionary<TemplateDirectoryType, TemplateDirectoryEnumeration> Values { get { return values.ToDictionary(d => d.Value); } }
 
     /// <inheritdoc />
     public static TemplateDirectoryEnumeration Parse(String s, IFormatProvider? provider)

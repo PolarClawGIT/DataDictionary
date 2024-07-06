@@ -131,7 +131,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
             {
                 if (value is TemplateDirectoryType.Null)
                 { SetValue(nameof(RootDirectory), null); }
-                else { SetValue(nameof(RootDirectory), TemplateDirectoryEnumeration.AsDictionary[value].Name); }
+                else { SetValue(nameof(RootDirectory), TemplateDirectoryEnumeration.Values[value].Name); }
             }
         }
 
@@ -177,7 +177,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
             {
                 if (value is TemplateScriptAsType.none)
                 { SetValue(nameof(ScriptAs), null); }
-                else { SetValue(nameof(ScriptAs), TemplateScriptAsEnumeration.AsDictionary[value].Name); }
+                else { SetValue(nameof(ScriptAs), TemplateScriptAsEnumeration.Values[value].Name); }
             }
         }
 

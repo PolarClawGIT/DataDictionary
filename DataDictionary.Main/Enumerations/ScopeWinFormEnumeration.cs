@@ -158,7 +158,7 @@ namespace DataDictionary.Main.Enumerations
         }
 
         /// <inheritdoc />
-        public static new IReadOnlyDictionary<ScopeType, ScopeWinFormEnumeration> AsDictionary { get; } = createDictionary();
+        public static new IReadOnlyDictionary<ScopeType, ScopeWinFormEnumeration> Values { get; } = createDictionary();
 
         /// <inheritdoc cref="IEnumeration{TEnum, TSelf}.Cast(TEnum)" />
         public static new ScopeWinFormEnumeration Cast(ScopeType source)

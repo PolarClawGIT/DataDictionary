@@ -61,7 +61,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
             {
                 if (value is LibraryMemberType.Null)
                 { SetValue(nameof(MemberType), null); }
-                else { SetValue(nameof(MemberType), LibraryMemberEnumeration.AsDictionary[value].Name); }
+                else { SetValue(nameof(MemberType), LibraryMemberEnumeration.Values[value].Name); }
             }
         }
 

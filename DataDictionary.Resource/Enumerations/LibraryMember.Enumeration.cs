@@ -41,7 +41,7 @@ public class LibraryMemberEnumeration : IEnumeration<LibraryMemberType, LibraryM
     };
 
     /// <inheritdoc />
-    public static IReadOnlyDictionary<LibraryMemberType, LibraryMemberEnumeration> AsDictionary { get { return values.ToDictionary(d => d.Value); } }
+    public static IReadOnlyDictionary<LibraryMemberType, LibraryMemberEnumeration> Values { get { return values.ToDictionary(d => d.Value); } }
 
     /// <inheritdoc cref="IEnumeration{TEnum, TSelf}.Cast(TEnum)" />
     public static LibraryMemberEnumeration Cast(LibraryMemberType source)
