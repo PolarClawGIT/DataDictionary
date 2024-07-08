@@ -12,16 +12,17 @@ public class DbTableEnumeration : Enumeration<DbTableType, DbTableEnumeration>
     /// <remarks>Prevents automatic construction of parameterless constructor.</remarks>
     DbTableEnumeration() : base() { }
 
-    /// <summary>
-    /// Internal list that contains all the values.
-    /// </summary>
-    static readonly new List<DbTableEnumeration> Data = new List<DbTableEnumeration>()
+    static DbTableEnumeration ()
     {
-        new DbTableEnumeration() { Value = DbTableType.Null, Name = String.Empty, DisplayName = "not defined" },
-        new DbTableEnumeration() { Value = DbTableType.Table, Name = "Table", DisplayName = "Table" },
-        new DbTableEnumeration() { Value = DbTableType.TemporalTable, Name = "Temporal Table", DisplayName = "Temporal Table" },
-        new DbTableEnumeration() { Value = DbTableType.HistoryTable, Name = "History Table", DisplayName = "History Table" },
-        new DbTableEnumeration() { Value = DbTableType.View, Name = "View", DisplayName = "View" },
-    };
+        List<DbTableEnumeration> data = new List<DbTableEnumeration>()
+        {
+            new DbTableEnumeration() { Value = DbTableType.Null, Name = String.Empty, DisplayName = "not defined" },
+            new DbTableEnumeration() { Value = DbTableType.Table, Name = "Table", DisplayName = "Table" },
+            new DbTableEnumeration() { Value = DbTableType.TemporalTable, Name = "Temporal Table", DisplayName = "Temporal Table" },
+            new DbTableEnumeration() { Value = DbTableType.HistoryTable, Name = "History Table", DisplayName = "History Table" },
+            new DbTableEnumeration() { Value = DbTableType.View, Name = "View", DisplayName = "View" },
+        };
 
+        BuildDictionary(data);
+    }
 }

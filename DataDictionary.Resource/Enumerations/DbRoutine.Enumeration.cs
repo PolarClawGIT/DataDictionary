@@ -10,15 +10,17 @@ public class DbRoutineEnumeration : Enumeration<DbRoutineType, DbRoutineEnumerat
     /// Internal Constructor for Database Routine Enumeration
     /// </summary>
     /// <remarks>Prevents automatic construction of parameterless constructor.</remarks>
-    DbRoutineEnumeration() : base() { }
+    DbRoutineEnumeration(DbRoutineType source) : base(source) { }
 
-    /// <summary>
-    /// Internal list that contains all the values.
-    /// </summary>
-    static readonly new List<DbRoutineEnumeration> Data = new List<DbRoutineEnumeration>() 
+    static DbRoutineEnumeration()
     {
-        new DbRoutineEnumeration() { Value = DbRoutineType.Null, Name = String.Empty, DisplayName = "not defined" },
-        new DbRoutineEnumeration() { Value = DbRoutineType.Function, Name = "Function", DisplayName = "Function" },
-        new DbRoutineEnumeration() { Value = DbRoutineType.Procedure, Name = "Procedure", DisplayName = "Procedure" },
-    };
+        List<DbRoutineEnumeration> data = new List<DbRoutineEnumeration>()
+        {
+            new DbRoutineEnumeration(DbRoutineType.Null) { Name = String.Empty, DisplayName = "not defined" },
+            new DbRoutineEnumeration(DbRoutineType.Function),
+            new DbRoutineEnumeration(DbRoutineType.Procedure),
+        };
+
+        BuildDictionary(data);
+    }
 }

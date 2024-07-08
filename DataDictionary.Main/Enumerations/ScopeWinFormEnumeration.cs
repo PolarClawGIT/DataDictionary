@@ -57,55 +57,61 @@ namespace DataDictionary.Main.Enumerations
         /// </summary>
         public Boolean GroupBy { get; init; } = false;
 
-        static readonly new List<ScopeWinFormEnumeration> Data = new List<ScopeWinFormEnumeration>()
+        static ScopeWinFormEnumeration()
         {
-            new ScopeWinFormEnumeration(ScopeType.Null,                       Resources.Icon_UnknownMember, Resources.UnknownMember),
-            new ScopeWinFormEnumeration(ScopeType.Library,                    Resources.Icon_Library, Resources.Library) {GroupBy = false},
-            new ScopeWinFormEnumeration(ScopeType.LibraryTypeEvent,           Resources.Icon_Event, Resources.Event) {GroupBy = false},
-            new ScopeWinFormEnumeration(ScopeType.LibraryTypeField,           Resources.Icon_Field, Resources.Field) {GroupBy = false},
-            new ScopeWinFormEnumeration(ScopeType.LibraryTypeMethod,          Resources.Icon_Method, Resources.Method) {GroupBy = false},
-            new ScopeWinFormEnumeration(ScopeType.LibraryNameSpace,           Resources.Icon_Namespace, Resources.Namespace) {GroupBy = false},
-            new ScopeWinFormEnumeration(ScopeType.LibraryTypeProperty,        Resources.Icon_Property, Resources.Property) {GroupBy = false},
-            new ScopeWinFormEnumeration(ScopeType.LibraryMethodParameter,     Resources.Icon_Parameter, Resources.Parameter) { GroupBy = false},
-            new ScopeWinFormEnumeration(ScopeType.LibraryType,                Resources.Icon_Class, Resources.Class) {GroupBy = false},
-            new ScopeWinFormEnumeration(ScopeType.Database,                   Resources.Icon_Database, Resources.Database) {GroupBy = false} ,
-            new ScopeWinFormEnumeration(ScopeType.DatabaseSchema,             Resources.Icon_Schema, Resources.Schema) {GroupBy = false} ,
-            new ScopeWinFormEnumeration(ScopeType.DatabaseFunction,           Resources.Icon_ScalarFunction, Resources.ScalarFunction) ,
-            new ScopeWinFormEnumeration(ScopeType.DatabaseProcedure,          Resources.Icon_Procedure, Resources.Procedure) ,
-            new ScopeWinFormEnumeration(ScopeType.DatabaseTable,              Resources.Icon_Table, Resources.Table) ,
-            new ScopeWinFormEnumeration(ScopeType.DatabaseDomain,             Resources.Icon_DomainType, Resources.DomainType) ,
-            new ScopeWinFormEnumeration(ScopeType.DatabaseView,               Resources.Icon_View, Resources.View) ,
-            new ScopeWinFormEnumeration(ScopeType.DatabaseViewColumn,         Resources.Icon_Column, Resources.Column) ,
-            new ScopeWinFormEnumeration(ScopeType.DatabaseTableColumn,        Resources.Icon_Column, Resources.Column) ,
-            new ScopeWinFormEnumeration(ScopeType.DatabaseTableConstraint,    Resources.Icon_Key, Resources.Key) ,
-            new ScopeWinFormEnumeration(ScopeType.DatabaseProcedureParameter, Resources.Icon_Parameter, Resources.Parameter) ,
-            new ScopeWinFormEnumeration(ScopeType.DatabaseFunctionParameter,  Resources.Icon_Parameter, Resources.Parameter) ,
-            new ScopeWinFormEnumeration(ScopeType.Model,                      Resources.Icon_SoftwareDefinitionModel, Resources.SoftwareDefinitionModel) { GroupBy = false},
-            new ScopeWinFormEnumeration(ScopeType.ModelNameSpace,             Resources.Icon_Namespace, Resources.Namespace) { GroupBy = false},
-            new ScopeWinFormEnumeration(ScopeType.ModelSubjectArea,           Resources.Icon_Diagram, Resources.Diagram) { GroupBy = false},
-            new ScopeWinFormEnumeration(ScopeType.ModelDefinition,            Resources.Icon_RichTextBox, Resources.RichTextBox) ,
-            new ScopeWinFormEnumeration(ScopeType.ModelProperty,              Resources.Icon_Property, Resources.Property) ,
-            new ScopeWinFormEnumeration(ScopeType.ModelAttribute,             Resources.Icon_Attribute, Resources.Attribute) ,
-            new ScopeWinFormEnumeration(ScopeType.ModelAttributeAlias,        Resources.Icon_Synonym, Resources.Synonym) ,
-            new ScopeWinFormEnumeration(ScopeType.ModelAttributeProperty,     Resources.Icon_Property, Resources.Property) ,
-            new ScopeWinFormEnumeration(ScopeType.ModelAttributeDefinition,   Resources.Icon_RichTextBox, Resources.RichTextBox) ,
-            new ScopeWinFormEnumeration(ScopeType.ModelEntity,                Resources.Icon_Entities, Resources.Entity) ,
-            new ScopeWinFormEnumeration(ScopeType.ModelEntityAlias,           Resources.Icon_Synonym, Resources.Synonym) ,
-            new ScopeWinFormEnumeration(ScopeType.ModelEntityProperty,        Resources.Icon_Property, Resources.Property) ,
-            new ScopeWinFormEnumeration(ScopeType.ModelEntityAttribute,       Resources.Icon_Attribute, Resources.Attribute) ,
-            new ScopeWinFormEnumeration(ScopeType.ModelEntityDefinition,      Resources.Icon_RichTextBox, Resources.RichTextBox) ,
-            new ScopeWinFormEnumeration(ScopeType.Scripting,                  Resources.Icon_XmlFile, Resources.XmlFile) ,
-            new ScopeWinFormEnumeration(ScopeType.ScriptingSchema,            Resources.Icon_XMLSchema, Resources.XMLSchema) ,
-            new ScopeWinFormEnumeration(ScopeType.ScriptingSchemaElement,     Resources.Icon_XMLElement, Resources.XMLElement) ,
-            new ScopeWinFormEnumeration(ScopeType.ScriptingTransform,         Resources.Icon_XSLTransform, Resources.XSLTransform) ,
-            new ScopeWinFormEnumeration(ScopeType.ScriptingSelection,         Resources.Icon_XPath, Resources.XPath) ,
-            new ScopeWinFormEnumeration(ScopeType.ScriptingSelectionPath,     Resources.Icon_XPath, Resources.XPath) ,
-            new ScopeWinFormEnumeration(ScopeType.ScriptingTemplate,          Resources.Icon_XSLTransform, Resources.XSLTransform) ,
-            new ScopeWinFormEnumeration(ScopeType.ScriptingTemplateNode,      Resources.Icon_XMLSchema, Resources.XMLSchema) ,
-            new ScopeWinFormEnumeration(ScopeType.ScriptingTemplateAttribute, Resources.Icon_XMLElement, Resources.XMLElement) ,
-            new ScopeWinFormEnumeration(ScopeType.ScriptingTemplatePath,      Resources.Icon_XPath, Resources.XPath) ,
-            new ScopeWinFormEnumeration(ScopeType.ScriptingTemplateDocument,  Resources.Icon_XSLTransform, Resources.XmlFile) ,
-        };
+            List<ScopeWinFormEnumeration> data = new List<ScopeWinFormEnumeration>()
+            {
+                new ScopeWinFormEnumeration(ScopeType.Null,                       Resources.Icon_UnknownMember, Resources.UnknownMember),
+                new ScopeWinFormEnumeration(ScopeType.Library,                    Resources.Icon_Library, Resources.Library) {GroupBy = false},
+                new ScopeWinFormEnumeration(ScopeType.LibraryTypeEvent,           Resources.Icon_Event, Resources.Event) {GroupBy = false},
+                new ScopeWinFormEnumeration(ScopeType.LibraryTypeField,           Resources.Icon_Field, Resources.Field) {GroupBy = false},
+                new ScopeWinFormEnumeration(ScopeType.LibraryTypeMethod,          Resources.Icon_Method, Resources.Method) {GroupBy = false},
+                new ScopeWinFormEnumeration(ScopeType.LibraryNameSpace,           Resources.Icon_Namespace, Resources.Namespace) {GroupBy = false},
+                new ScopeWinFormEnumeration(ScopeType.LibraryTypeProperty,        Resources.Icon_Property, Resources.Property) {GroupBy = false},
+                new ScopeWinFormEnumeration(ScopeType.LibraryMethodParameter,     Resources.Icon_Parameter, Resources.Parameter) { GroupBy = false},
+                new ScopeWinFormEnumeration(ScopeType.LibraryPropertyParameter,   Resources.Icon_Parameter, Resources.Parameter) { GroupBy = false},
+                new ScopeWinFormEnumeration(ScopeType.LibraryType,                Resources.Icon_Class, Resources.Class) {GroupBy = false},
+                new ScopeWinFormEnumeration(ScopeType.Database,                   Resources.Icon_Database, Resources.Database) {GroupBy = false} ,
+                new ScopeWinFormEnumeration(ScopeType.DatabaseSchema,             Resources.Icon_Schema, Resources.Schema) {GroupBy = false} ,
+                new ScopeWinFormEnumeration(ScopeType.DatabaseFunction,           Resources.Icon_ScalarFunction, Resources.ScalarFunction) ,
+                new ScopeWinFormEnumeration(ScopeType.DatabaseProcedure,          Resources.Icon_Procedure, Resources.Procedure) ,
+                new ScopeWinFormEnumeration(ScopeType.DatabaseTable,              Resources.Icon_Table, Resources.Table) ,
+                new ScopeWinFormEnumeration(ScopeType.DatabaseDomain,             Resources.Icon_DomainType, Resources.DomainType) ,
+                new ScopeWinFormEnumeration(ScopeType.DatabaseView,               Resources.Icon_View, Resources.View) ,
+                new ScopeWinFormEnumeration(ScopeType.DatabaseViewColumn,         Resources.Icon_Column, Resources.Column) ,
+                new ScopeWinFormEnumeration(ScopeType.DatabaseTableColumn,        Resources.Icon_Column, Resources.Column) ,
+                new ScopeWinFormEnumeration(ScopeType.DatabaseTableConstraint,    Resources.Icon_Key, Resources.Key) ,
+                new ScopeWinFormEnumeration(ScopeType.DatabaseProcedureParameter, Resources.Icon_Parameter, Resources.Parameter) ,
+                new ScopeWinFormEnumeration(ScopeType.DatabaseFunctionParameter,  Resources.Icon_Parameter, Resources.Parameter) ,
+                new ScopeWinFormEnumeration(ScopeType.Model,                      Resources.Icon_SoftwareDefinitionModel, Resources.SoftwareDefinitionModel) { GroupBy = false},
+                new ScopeWinFormEnumeration(ScopeType.ModelNameSpace,             Resources.Icon_Namespace, Resources.Namespace) { GroupBy = false},
+                new ScopeWinFormEnumeration(ScopeType.ModelSubjectArea,           Resources.Icon_Diagram, Resources.Diagram) { GroupBy = false},
+                new ScopeWinFormEnumeration(ScopeType.ModelDefinition,            Resources.Icon_RichTextBox, Resources.RichTextBox) ,
+                new ScopeWinFormEnumeration(ScopeType.ModelProperty,              Resources.Icon_Property, Resources.Property) ,
+                new ScopeWinFormEnumeration(ScopeType.ModelAttribute,             Resources.Icon_Attribute, Resources.Attribute) ,
+                new ScopeWinFormEnumeration(ScopeType.ModelAttributeAlias,        Resources.Icon_Synonym, Resources.Synonym) ,
+                new ScopeWinFormEnumeration(ScopeType.ModelAttributeProperty,     Resources.Icon_Property, Resources.Property) ,
+                new ScopeWinFormEnumeration(ScopeType.ModelAttributeDefinition,   Resources.Icon_RichTextBox, Resources.RichTextBox) ,
+                new ScopeWinFormEnumeration(ScopeType.ModelEntity,                Resources.Icon_Entities, Resources.Entity) ,
+                new ScopeWinFormEnumeration(ScopeType.ModelEntityAlias,           Resources.Icon_Synonym, Resources.Synonym) ,
+                new ScopeWinFormEnumeration(ScopeType.ModelEntityProperty,        Resources.Icon_Property, Resources.Property) ,
+                new ScopeWinFormEnumeration(ScopeType.ModelEntityAttribute,       Resources.Icon_Attribute, Resources.Attribute) ,
+                new ScopeWinFormEnumeration(ScopeType.ModelEntityDefinition,      Resources.Icon_RichTextBox, Resources.RichTextBox) ,
+                new ScopeWinFormEnumeration(ScopeType.Scripting,                  Resources.Icon_XmlFile, Resources.XmlFile) ,
+                new ScopeWinFormEnumeration(ScopeType.ScriptingSchema,            Resources.Icon_XMLSchema, Resources.XMLSchema) ,
+                new ScopeWinFormEnumeration(ScopeType.ScriptingSchemaElement,     Resources.Icon_XMLElement, Resources.XMLElement) ,
+                new ScopeWinFormEnumeration(ScopeType.ScriptingTransform,         Resources.Icon_XSLTransform, Resources.XSLTransform) ,
+                new ScopeWinFormEnumeration(ScopeType.ScriptingSelection,         Resources.Icon_XPath, Resources.XPath) ,
+                new ScopeWinFormEnumeration(ScopeType.ScriptingSelectionPath,     Resources.Icon_XPath, Resources.XPath) ,
+                new ScopeWinFormEnumeration(ScopeType.ScriptingTemplate,          Resources.Icon_XSLTransform, Resources.XSLTransform) ,
+                new ScopeWinFormEnumeration(ScopeType.ScriptingTemplateNode,      Resources.Icon_XMLSchema, Resources.XMLSchema) ,
+                new ScopeWinFormEnumeration(ScopeType.ScriptingTemplateAttribute, Resources.Icon_XMLElement, Resources.XMLElement) ,
+                new ScopeWinFormEnumeration(ScopeType.ScriptingTemplatePath,      Resources.Icon_XPath, Resources.XPath) ,
+                new ScopeWinFormEnumeration(ScopeType.ScriptingTemplateDocument,  Resources.Icon_XSLTransform, Resources.XmlFile) ,
+            };
+
+            BuildDictionary(data);
+        }
 
         ScopeWinFormEnumeration(ScopeType scope) : base()
         {
@@ -130,6 +136,7 @@ namespace DataDictionary.Main.Enumerations
             }
         }
 
+
         /// <summary>
         /// Returns the Image list for all items using the default/Normal image.
         /// </summary>
@@ -138,7 +145,7 @@ namespace DataDictionary.Main.Enumerations
         {
             ImageList result = new ImageList();
 
-            foreach (ScopeWinFormEnumeration item in Data)
+            foreach (ScopeWinFormEnumeration item in Values.Values)
             { result.Images.Add(item.Name, item.Images[ScopeImage.Normal]); }
 
             return result;

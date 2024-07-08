@@ -1,12 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 namespace DataDictionary.Resource.Enumerations;
-
-//TODO: This is a prototype that appears to work. Try to implement using Scope.
-
 /// <summary>
 /// Base Interface used by Enumerations.
 /// </summary>
-public interface IEnumeration<TEnum , TSelf> //: IParsable<TSelf>
+public interface IEnumeration<TEnum, TSelf> //: IParsable<TSelf>
     where TSelf : class, IEnumeration<TEnum, TSelf> // The self referencing appears to need to be first.
     where TEnum : System.Enum
 {
@@ -31,10 +28,11 @@ public interface IEnumeration<TEnum , TSelf> //: IParsable<TSelf>
     static abstract IReadOnlyDictionary<TEnum, TSelf> Values { get; }
 
     /// <summary>
-    /// Given the Enum, return the Enumeration. xx
+    /// Given the Enum, return the Enumeration.
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
+    /// <exception cref="IndexOutOfRangeException"/>
     static abstract TSelf Cast(TEnum source);
 }
 
@@ -43,8 +41,8 @@ public interface IEnumeration<TEnum , TSelf> //: IParsable<TSelf>
 /// </summary>
 /// <typeparam name="TEnum"></typeparam>
 /// <typeparam name="TSelf"></typeparam>
-public abstract class Enumeration<TEnum , TSelf> : IEnumeration<TEnum , TSelf>, IEquatable<TSelf>
-        where TSelf : class, IEnumeration<TEnum , TSelf>
+public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IEquatable<TSelf>
+        where TSelf : class, IEnumeration<TEnum, TSelf>
         where TEnum : System.Enum
 {
     /// <inheritdoc />
@@ -83,68 +81,77 @@ public abstract class Enumeration<TEnum , TSelf> : IEnumeration<TEnum , TSelf>, 
     protected Enumeration() : base() { }
 
     /// <summary>
+    /// Static base constructor of the Enumeration classes.
+    /// </summary>
+    /// <remarks>
+    /// C# does not support "Curiously recurring template pattern".
+    /// The code forces derived classes static constructor to be executed.
+    /// Each of the derived classes static constructor load the Enumeration specific data into the Values list.
+    /// This is done using the BuildDictionary method.
+    /// * Search term: Derived Class Static Constructor Not Invoked
+    /// </remarks>
+    /// <see href="https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern"/>
+    /// <see href="https://chrisoldwood.blogspot.com/2014/11/derived-class-static-constructor-not.html"/>
+    static Enumeration()
+    {
+
+        //This forces the derived class execute the static constructor at run time.
+        System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TSelf).TypeHandle);
+    }
+
+
+    /// <summary>
     /// Base constructor for Enumeration
     /// </summary>
     /// <param name="value"></param>
     protected Enumeration(TEnum source) : this()
     {
-        Value = source;
         Name = source.ToString();
         DisplayName = source.ToString();
     }
 
     /// <summary>
-    /// This is the container of the data for the Enumeration.
+    /// Helper Method to build the Enumeration Dictionary. 
     /// </summary>
-    /// <remarks>This MUST be overridden (using New) in child classes to load the data.</remarks>
-    /// <example>
-    /// class Example : Enumeration<ScopeType, Example>
-    /// {
-    ///    protected static new List<Example> Data = new List<Example>()
-    ///    { new Example(), };
-    /// }
-    /// </example>
-    protected static List<TSelf> Data = new List<TSelf>();
-
-    /// <summary>
-    /// Used to combine the Data with the Enum and produce a static dictionary.
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="ArgumentOutOfRangeException">The Data field is missing an entry found in the Enum</exception>
-    protected static Dictionary<TEnum, TSelf> BuildDictionary()
+    /// <param name="data"></param>
+    /// <remarks>
+    /// This does not detect missing entires in the incoming data.
+    /// Use Missing Values method to get a list of any values that are missing.
+    /// Only distinct Values (by the enum) are loaded.
+    /// </remarks>
+    protected static void BuildDictionary(IEnumerable<TSelf> data)
     {
         Dictionary<TEnum, TSelf> result = new Dictionary<TEnum, TSelf>();
 
-        //TODO: Issue, Data is not the child types data. It is this data.
-        var x = Data; // Not the object I expected.
-
-        foreach (TEnum item in Enum.GetValues(typeof(TEnum)))
-        {
-            if (Data.FirstOrDefault(w => w.Value.Equals(item)) is TSelf value)
-            { result.Add(item, value); }
-            else
-            {
-                Exception ex = new ArgumentOutOfRangeException("Entry for Enum is missing");
-                ex.Data.Add(typeof(TEnum).Name, item.ToString());
-                throw ex;
-            }
-        }
-
-        return result;
+        foreach (TSelf item in data.DistinctBy(d => d.Value))
+        { enumerationValues.Add(item.Value, item); }
     }
+
+    /// <summary>
+    /// The list in the Values is cross referenced against the Enum. Any missing Enum's are returned.
+    /// </summary>
+    /// <returns></returns>
+    /// <remarks>
+    /// This is mostly for debugging.
+    /// </remarks>
+    public static IEnumerable<TEnum> MissingValues()
+    { return Enum.GetValues(typeof(TEnum)).Cast<TEnum>().Except(Values.Values.Select(s => s.Value)); }
 
     /// <summary>
     /// List of all values for the Enumeration
     /// </summary>
-    public static IReadOnlyDictionary<TEnum, TSelf> Values { get; } = BuildDictionary();
+    /// <remarks>Use BuildDictionary to add values to the list.</remarks>
+    public static IReadOnlyDictionary<TEnum, TSelf> Values
+    { get { return enumerationValues; } }
+    private static Dictionary<TEnum, TSelf> enumerationValues = new Dictionary<TEnum, TSelf>();
 
     /// <inheritdoc />
     public static TSelf Cast(TEnum source)
-    { return Values[source]; }
+    { return TSelf.Values[source]; }
 
     #region IParsable
     // This implements a IParsable<TSelf>.
-    // CA2260 prevent this from being declared.
+    // CA2260 prevent IParsable from being declared.
 
     /// <inheritdoc cref="IParsable{TSelf}.Parse(string, IFormatProvider?)" />
     public static TSelf Parse(String source, IFormatProvider? format)
@@ -162,6 +169,8 @@ public abstract class Enumeration<TEnum , TSelf> : IEnumeration<TEnum , TSelf>, 
     /// <inheritdoc cref="IParsable{TSelf}.TryParse(string?, IFormatProvider?, out TSelf)" />
     public static Boolean TryParse([NotNullWhen(true)] String? source, IFormatProvider? format, [MaybeNullWhen(false)] out TSelf result)
     {
+        if (Values is null) { result = null; return false; }
+
         if (TSelf.Values.Values.FirstOrDefault(w => String.Equals(source, w.Name, StringComparison.OrdinalIgnoreCase)) is TSelf item)
         { result = item; return true; }
         else { result = null; return false; }
@@ -181,11 +190,11 @@ public abstract class Enumeration<TEnum , TSelf> : IEnumeration<TEnum , TSelf>, 
     { return obj is TSelf other && this.Value.Equals(other.Value); }
 
     /// <inheritdoc/>
-    public static Boolean operator ==(Enumeration<TEnum , TSelf> left, Enumeration<TEnum , TSelf> right)
+    public static Boolean operator ==(Enumeration<TEnum, TSelf> left, Enumeration<TEnum, TSelf> right)
     { return left.Equals(right); }
 
     /// <inheritdoc/>
-    public static Boolean operator !=(Enumeration<TEnum , TSelf> left, Enumeration<TEnum , TSelf> right)
+    public static Boolean operator !=(Enumeration<TEnum, TSelf> left, Enumeration<TEnum, TSelf> right)
     { return !left.Equals(right); }
 
     /// <inheritdoc/>
