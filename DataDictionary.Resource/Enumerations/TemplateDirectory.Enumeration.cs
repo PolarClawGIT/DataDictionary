@@ -4,16 +4,8 @@ namespace DataDictionary.Resource.Enumerations;
 /// <summary>
 /// Enumeration support class for Database Routine type.
 /// </summary>
-public class TemplateDirectoryEnumeration : IEnumeration<TemplateDirectoryType, TemplateDirectoryEnumeration>
+public class TemplateDirectoryEnumeration : Enumeration<TemplateDirectoryType, TemplateDirectoryEnumeration>
 {
-    /// <inheritdoc />
-    public required TemplateDirectoryType Value { get; init; }
-
-    /// <inheritdoc />
-    public required String Name { get; init; }
-
-    /// <inheritdoc />
-    public required String DisplayName { get; init; }
 
     public required DirectoryInfo? Directory { get; init; }
 
@@ -26,7 +18,7 @@ public class TemplateDirectoryEnumeration : IEnumeration<TemplateDirectoryType, 
     /// <summary>
     /// Internal list that contains all the values.
     /// </summary>
-    static readonly List<TemplateDirectoryEnumeration> values = new List<TemplateDirectoryEnumeration>()
+    static readonly new List<TemplateDirectoryEnumeration> Data = new List<TemplateDirectoryEnumeration>()
     {
         new TemplateDirectoryEnumeration()
         {
@@ -50,41 +42,4 @@ public class TemplateDirectoryEnumeration : IEnumeration<TemplateDirectoryType, 
         },
     };
 
-    /// <inheritdoc cref="IEnumeration{TEnum, TSelf}.Cast(TEnum)" />
-    public static TemplateDirectoryEnumeration Cast(TemplateDirectoryType source)
-    { return IEnumeration<TemplateDirectoryType, TemplateDirectoryEnumeration>.Cast(source); }
-
-    /// <inheritdoc />
-    public static IReadOnlyDictionary<TemplateDirectoryType, TemplateDirectoryEnumeration> Values { get { return values.ToDictionary(d => d.Value); } }
-
-    /// <inheritdoc />
-    public static TemplateDirectoryEnumeration Parse(String s, IFormatProvider? provider)
-    { return IEnumeration<TemplateDirectoryType, TemplateDirectoryEnumeration>.Parse(s); }
-
-    /// <inheritdoc />
-    public static Boolean TryParse([NotNullWhen(true)] String? s, IFormatProvider? provider, [MaybeNullWhen(false)] out TemplateDirectoryEnumeration result)
-    { return IEnumeration<TemplateDirectoryType, TemplateDirectoryEnumeration>.TryParse(s, out result); }
-
-    /// <inheritdoc />
-    public Boolean Equals(TemplateDirectoryEnumeration? other)
-    { return other is TemplateDirectoryEnumeration && Value.Equals(other.Value); }
-
-    /// <inheritdoc/>
-    public override Boolean Equals(object? other)
-    { return other is TemplateDirectoryEnumeration value && Equals(other); }
-
-    /// <inheritdoc/>
-    public static Boolean operator ==(TemplateDirectoryEnumeration left, TemplateDirectoryEnumeration right)
-    { return left.Equals(right); }
-
-    /// <inheritdoc/>
-    public static Boolean operator !=(TemplateDirectoryEnumeration left, TemplateDirectoryEnumeration right)
-    { return !left.Equals(right); }
-
-    /// <inheritdoc/>
-    public override int GetHashCode()
-    { return HashCode.Combine(Value); }
-
-    public override String ToString()
-    { return Name; }
 }

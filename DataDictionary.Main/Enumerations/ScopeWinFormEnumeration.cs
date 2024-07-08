@@ -16,7 +16,7 @@ namespace DataDictionary.Main.Enumerations
     /// <summary>
     /// ScopeEnumeration with Images and Icons
     /// </summary>
-    class ScopeWinFormEnumeration : ScopeEnumeration, IEnumeration<ScopeType, ScopeWinFormEnumeration>
+    class ScopeWinFormEnumeration : Enumeration<ScopeType, ScopeWinFormEnumeration>
     {
         // This class could not be placed in base ScopeEnumeration because framework agnostic.
         // This version is Windows WinForms specific.
@@ -57,7 +57,7 @@ namespace DataDictionary.Main.Enumerations
         /// </summary>
         public Boolean GroupBy { get; init; } = false;
 
-        static readonly List<ScopeWinFormEnumeration> windowValues = new List<ScopeWinFormEnumeration>()
+        static readonly new List<ScopeWinFormEnumeration> Data = new List<ScopeWinFormEnumeration>()
         {
             new ScopeWinFormEnumeration(ScopeType.Null,                       Resources.Icon_UnknownMember, Resources.UnknownMember),
             new ScopeWinFormEnumeration(ScopeType.Library,                    Resources.Icon_Library, Resources.Library) {GroupBy = false},
@@ -130,66 +130,18 @@ namespace DataDictionary.Main.Enumerations
             }
         }
 
-        //TODO: Need to initialize the dictionary once. Need to apply same approach to all other Enumerations.
-        static Dictionary<ScopeType, ScopeWinFormEnumeration> createDictionary()
-        { // Order of methods matters. Statics are created top-down.
-            Dictionary<ScopeType, ScopeWinFormEnumeration> result = new Dictionary<ScopeType, ScopeWinFormEnumeration>();
-            foreach (ScopeType item in Enum.GetValues<ScopeType>())
-            {
-                if (windowValues.FirstOrDefault(w => w.Value == item) is ScopeWinFormEnumeration value)
-                { result.Add(item, value); }
-                else { result.Add(item, new ScopeWinFormEnumeration(item)); }
-            }
-            return result;
-        }
-
         /// <summary>
-        /// Returns the Image list for all items.
+        /// Returns the Image list for all items using the default/Normal image.
         /// </summary>
         /// <returns></returns>
         public static ImageList AsImageList()
         {
             ImageList result = new ImageList();
 
-            foreach (ScopeWinFormEnumeration item in windowValues)
+            foreach (ScopeWinFormEnumeration item in Data)
             { result.Images.Add(item.Name, item.Images[ScopeImage.Normal]); }
 
             return result;
         }
-
-        /// <inheritdoc />
-        public static new IReadOnlyDictionary<ScopeType, ScopeWinFormEnumeration> Values { get; } = createDictionary();
-
-        /// <inheritdoc cref="IEnumeration{TEnum, TSelf}.Cast(TEnum)" />
-        public static new ScopeWinFormEnumeration Cast(ScopeType source)
-        { return IEnumeration<ScopeType, ScopeWinFormEnumeration>.Cast(source); }
-
-        static ScopeWinFormEnumeration IEnumeration<ScopeType, ScopeWinFormEnumeration>.Parse(String s, IFormatProvider? provider)
-        { return IEnumeration<ScopeType, ScopeWinFormEnumeration>.Parse(s); }
-
-        public static Boolean TryParse([NotNullWhen(true)] String? s, IFormatProvider? provider, [MaybeNullWhen(false)] out ScopeWinFormEnumeration result)
-        { return IEnumeration<ScopeType, ScopeWinFormEnumeration>.TryParse(s, out result); }
-
-        public Boolean Equals(ScopeWinFormEnumeration? other)
-        { return other is ScopeWinFormEnumeration && Value.Equals(other.Value); }
-
-        /// <inheritdoc/>
-        public override Boolean Equals(object? other)
-        { return other is ScopeWinFormEnumeration value && Equals(other); }
-
-        /// <inheritdoc/>
-        public static Boolean operator ==(ScopeWinFormEnumeration left, ScopeWinFormEnumeration right)
-        { return left.Equals(right); }
-
-        /// <inheritdoc/>
-        public static Boolean operator !=(ScopeWinFormEnumeration left, ScopeWinFormEnumeration right)
-        { return !left.Equals(right); }
-
-        /// <inheritdoc/>
-        public override int GetHashCode()
-        { return HashCode.Combine(Value); }
-
-        public override String ToString()
-        { return Name; }
     }
 }

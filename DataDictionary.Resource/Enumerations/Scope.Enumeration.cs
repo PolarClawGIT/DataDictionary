@@ -4,17 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 /// <summary>
 /// Enumeration support class for Scope Type.
 /// </summary>
-public class ScopeEnumeration : IEnumeration<ScopeType, ScopeEnumeration>
+public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
 {
-    /// <inheritdoc />
-    public ScopeType Value { get; init; } = ScopeType.Null;
-
-    /// <inheritdoc />
-    public String Name { get; init; } = ScopeType.Null.ToString();
-
-    /// <inheritdoc />
-    public String DisplayName { get; init; } = ScopeType.Null.ToString();
-
     /// <summary>
     /// Internal Constructor for Scope Type Enumeration
     /// </summary>
@@ -24,7 +15,7 @@ public class ScopeEnumeration : IEnumeration<ScopeType, ScopeEnumeration>
     /// <summary>
     /// Internal list that contains all the values.
     /// </summary>
-    static readonly List<ScopeEnumeration> values = new List<ScopeEnumeration>()
+    static readonly new List<ScopeEnumeration> Data = new List<ScopeEnumeration>()
     {
         new ScopeEnumeration() { Value = ScopeType.Null, Name = String.Empty, DisplayName = "not defined" },
 
@@ -73,54 +64,4 @@ public class ScopeEnumeration : IEnumeration<ScopeType, ScopeEnumeration>
         new ScopeEnumeration() { Value = ScopeType.ScriptingTemplateNode,      Name = "Scripting.Template.Element"              , DisplayName = "Scripting.Template.Element" },
     };
 
-
-    static Dictionary<ScopeType, ScopeEnumeration> createDictionary() 
-    {
-        Dictionary<ScopeType, ScopeEnumeration> result = new Dictionary<ScopeType, ScopeEnumeration>();
-        foreach (ScopeType item in Enum.GetValues<ScopeType>())
-        {
-            if (values.FirstOrDefault(w => w.Value == item) is ScopeEnumeration value)
-            { result.Add(item, value); }
-            else { result.Add(item, new ScopeEnumeration()); }
-        }
-        return result;
-    }
-
-    /// <inheritdoc />
-    public static IReadOnlyDictionary<ScopeType, ScopeEnumeration> Values { get; } = createDictionary();
-
-    /// <inheritdoc cref="IEnumeration{TEnum, TSelf}.Cast(TEnum)" />
-    public static ScopeEnumeration Cast(ScopeType source)
-    { return IEnumeration<ScopeType, ScopeEnumeration>.Cast(source); }
-
-    /// <inheritdoc />
-    public static ScopeEnumeration Parse(String s, IFormatProvider? provider)
-    { return IEnumeration<ScopeType, ScopeEnumeration>.Parse(s); }
-
-    /// <inheritdoc />
-    public static Boolean TryParse([NotNullWhen(true)] String? s, IFormatProvider? provider, [MaybeNullWhen(false)] out ScopeEnumeration result)
-    { return IEnumeration<ScopeType, ScopeEnumeration>.TryParse(s, out result); }
-
-    /// <inheritdoc />
-    public Boolean Equals(ScopeEnumeration? other)
-    { return other is ScopeEnumeration && Value.Equals(other.Value); }
-
-    /// <inheritdoc/>
-    public override Boolean Equals(object? other)
-    { return other is ScopeEnumeration value && Equals(other); }
-
-    /// <inheritdoc/>
-    public static Boolean operator ==(ScopeEnumeration left, ScopeEnumeration right)
-    { return left.Equals(right); }
-
-    /// <inheritdoc/>
-    public static Boolean operator !=(ScopeEnumeration left, ScopeEnumeration right)
-    { return !left.Equals(right); }
-
-    /// <inheritdoc/>
-    public override int GetHashCode()
-    { return HashCode.Combine(Value); }
-
-    public override String ToString()
-    { return Name; }
 }
