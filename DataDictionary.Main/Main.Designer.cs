@@ -97,7 +97,6 @@
             customizeToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
             applicationToolStripMenuItem = new ToolStripMenuItem();
-            browsePropertiesCommand = new ToolStripMenuItem();
             browseHelpCommand = new ToolStripMenuItem();
             unitTestingToolStripMenuItem = new ToolStripMenuItem();
             gridViewToolStripMenuItem = new ToolStripMenuItem();
@@ -124,10 +123,10 @@
             menuScriptingTemplate = new ToolStripMenuItem();
             menuScriptingPath = new ToolStripMenuItem();
             menuScriptingDocument = new ToolStripMenuItem();
-            toolStripSeparator7 = new ToolStripSeparator();
-            refreshCommand = new ToolStripButton();
             menuScriptingNode = new ToolStripMenuItem();
             menuScriptingAttribute = new ToolStripMenuItem();
+            toolStripSeparator7 = new ToolStripSeparator();
+            refreshCommand = new ToolStripButton();
             navigationPanel = new Panel();
             navigationSpliter = new Splitter();
             navigationPanel.SuspendLayout();
@@ -441,7 +440,7 @@
             manageLibrariesCommand.DropDown = libraryContextMenu;
             manageLibrariesCommand.ImageTransparentColor = Color.Magenta;
             manageLibrariesCommand.Name = "manageLibrariesCommand";
-            manageLibrariesCommand.Size = new Size(32, 22);
+            manageLibrariesCommand.Size = new Size(16, 22);
             manageLibrariesCommand.Text = "Library Manager";
             manageLibrariesCommand.ButtonClick += manageLibrariesCommand_ButtonClick;
             // 
@@ -663,30 +662,22 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(135, 22);
+            customizeToolStripMenuItem.Size = new Size(180, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(135, 22);
+            optionsToolStripMenuItem.Size = new Size(180, 22);
             optionsToolStripMenuItem.Text = "&Options";
             optionsToolStripMenuItem.Click += optionsToolStripMenuItem_Click;
             // 
             // applicationToolStripMenuItem
             // 
-            applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { browsePropertiesCommand, browseHelpCommand });
+            applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { browseHelpCommand });
             applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
-            applicationToolStripMenuItem.Size = new Size(135, 22);
+            applicationToolStripMenuItem.Size = new Size(180, 22);
             applicationToolStripMenuItem.Text = "Application";
-            // 
-            // browsePropertiesCommand
-            // 
-            browsePropertiesCommand.Image = Properties.Resources.Property;
-            browsePropertiesCommand.Name = "browsePropertiesCommand";
-            browsePropertiesCommand.Size = new Size(187, 22);
-            browsePropertiesCommand.Text = "browse Properties";
-            browsePropertiesCommand.Click += browsePropertiesCommand_Click;
             // 
             // browseHelpCommand
             // 
@@ -700,7 +691,7 @@
             // 
             unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem, testFormToolStripMenuItem, textEditorToolStripMenuItem });
             unitTestingToolStripMenuItem.Name = "unitTestingToolStripMenuItem";
-            unitTestingToolStripMenuItem.Size = new Size(135, 22);
+            unitTestingToolStripMenuItem.Size = new Size(180, 22);
             unitTestingToolStripMenuItem.Text = "Testing";
             // 
             // gridViewToolStripMenuItem
@@ -849,7 +840,7 @@
             scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingPath, menuScriptingDocument, menuScriptingNode, menuScriptingAttribute });
             scriptingContextMenu.Name = "scriptingContextMenu";
             scriptingContextMenu.OwnerItem = manageScriptingCommand;
-            scriptingContextMenu.Size = new Size(228, 136);
+            scriptingContextMenu.Size = new Size(228, 114);
             // 
             // menuScriptingTemplate
             // 
@@ -875,21 +866,6 @@
             menuScriptingDocument.Text = "browse Template Documents";
             menuScriptingDocument.Click += menuScriptingDocument_Click;
             // 
-            // toolStripSeparator7
-            // 
-            toolStripSeparator7.Name = "toolStripSeparator7";
-            toolStripSeparator7.Size = new Size(6, 25);
-            // 
-            // refreshCommand
-            // 
-            refreshCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            refreshCommand.Image = Properties.Resources.Refresh;
-            refreshCommand.ImageTransparentColor = Color.Magenta;
-            refreshCommand.Name = "refreshCommand";
-            refreshCommand.Size = new Size(23, 22);
-            refreshCommand.Text = "Refresh navigation tree";
-            refreshCommand.Click += RefreshCommand_Click;
-            // 
             // menuScriptingNode
             // 
             menuScriptingNode.Image = Properties.Resources.XMLElement;
@@ -905,6 +881,21 @@
             menuScriptingAttribute.Size = new Size(227, 22);
             menuScriptingAttribute.Text = "browse Template Attributes";
             menuScriptingAttribute.Click += menuScriptingAttribute_Click;
+            // 
+            // toolStripSeparator7
+            // 
+            toolStripSeparator7.Name = "toolStripSeparator7";
+            toolStripSeparator7.Size = new Size(6, 25);
+            // 
+            // refreshCommand
+            // 
+            refreshCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            refreshCommand.Image = Properties.Resources.Refresh;
+            refreshCommand.ImageTransparentColor = Color.Magenta;
+            refreshCommand.Name = "refreshCommand";
+            refreshCommand.Size = new Size(23, 22);
+            refreshCommand.Text = "Refresh navigation tree";
+            refreshCommand.Click += RefreshCommand_Click;
             // 
             // Main
             // 
@@ -996,7 +987,6 @@
         private ToolStripMenuItem menuRoutineParameterItem;
         private ToolStripMenuItem menuRoutineDependencyItem;
         private ToolStripMenuItem applicationToolStripMenuItem;
-        private ToolStripMenuItem browsePropertiesCommand;
         private ToolStripMenuItem testFormToolStripMenuItem;
         private ToolStripMenuItem peekAtClipboardToolStripMenuItem;
         private ToolStripMenuItem textEditorToolStripMenuItem;

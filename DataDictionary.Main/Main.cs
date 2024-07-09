@@ -166,9 +166,6 @@ namespace DataDictionary.Main
             { Activate(() => new Forms.ApplicationWide.HelpSubject(currentForm)); }
         }
 
-        private void browsePropertiesCommand_Click(object sender, EventArgs e)
-        { throw new NotImplementedException(); }
-
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             List<WorkItem> work = new List<WorkItem>();

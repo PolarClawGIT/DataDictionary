@@ -54,13 +54,13 @@ namespace DataDictionary.DataLayer.DomainData.Property
         {
             get
             {
-                String? value = GetValue(nameof(PropertyType));
+                String? value = GetValue(nameof(DataType));
                 if (DomainPropertyEnumeration.TryParse(value, null, out DomainPropertyEnumeration? result))
                 { return result.Value; }
                 else { return DomainPropertyType.Null; }
             }
             set
-            { SetValue(nameof(PropertyType), DomainPropertyEnumeration.Cast(value).Name); }
+            { SetValue(nameof(DataType), DomainPropertyEnumeration.Cast(value).Name); }
         }
 
         /// <summary>
