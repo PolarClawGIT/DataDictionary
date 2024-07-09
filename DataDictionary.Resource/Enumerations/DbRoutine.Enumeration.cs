@@ -10,8 +10,11 @@ public class DbRoutineEnumeration : Enumeration<DbRoutineType, DbRoutineEnumerat
     /// Internal Constructor for Database Routine Enumeration
     /// </summary>
     /// <remarks>Prevents automatic construction of parameterless constructor.</remarks>
-    DbRoutineEnumeration(DbRoutineType source) : base(source) { }
+    DbRoutineEnumeration(DbRoutineType value) : base(value) { }
 
+    /// <summary>
+    /// Static constructor, loads data.
+    /// </summary>
     static DbRoutineEnumeration()
     {
         List<DbRoutineEnumeration> data = new List<DbRoutineEnumeration>()

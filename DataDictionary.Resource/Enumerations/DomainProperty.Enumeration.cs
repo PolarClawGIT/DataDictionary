@@ -10,18 +10,21 @@ public class DomainPropertyEnumeration : Enumeration<DomainPropertyType, DomainP
     /// Internal Constructor for DomainProperty Enumeration
     /// </summary>
     /// <remarks>Prevents automatic construction of parameterless constructor.</remarks>
-    DomainPropertyEnumeration() : base() { }
+    DomainPropertyEnumeration(DomainPropertyType value, String name) : base(value, name) { }
 
+    /// <summary>
+    /// Static constructor, loads data.
+    /// </summary>
     static DomainPropertyEnumeration()
     {
         List<DomainPropertyEnumeration> data = new List<DomainPropertyEnumeration>()
         {
-            new DomainPropertyEnumeration() { Value = DomainPropertyType.Null, Name = String.Empty, DisplayName = "not defined" },
-            new DomainPropertyEnumeration() { Value = DomainPropertyType.String, Name = "String", DisplayName = "String" },
-            new DomainPropertyEnumeration() { Value = DomainPropertyType.Integer, Name = "Integer", DisplayName = "Integer" },
-            new DomainPropertyEnumeration() { Value = DomainPropertyType.List, Name = "List", DisplayName = "List" },
-            new DomainPropertyEnumeration() { Value = DomainPropertyType.Xml, Name = "Xml", DisplayName = "Xml" },
-            new DomainPropertyEnumeration() { Value = DomainPropertyType.MS_ExtendedProperty, Name = "MS_ExtendedProperty", DisplayName = "MS Extended Property" },
+            new DomainPropertyEnumeration(DomainPropertyType.Null, String.Empty){ DisplayName = "not defined" },
+            new DomainPropertyEnumeration(DomainPropertyType.String,              "String"),
+            new DomainPropertyEnumeration(DomainPropertyType.Integer,             "Integer"),
+            new DomainPropertyEnumeration(DomainPropertyType.List,                "List"),
+            new DomainPropertyEnumeration(DomainPropertyType.Xml,                 "Xml"),
+            new DomainPropertyEnumeration(DomainPropertyType.MS_ExtendedProperty, "MS_ExtendedProperty"){ DisplayName = "MS Extended Property" },
         };
 
         BuildDictionary(data);

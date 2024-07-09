@@ -7,64 +7,73 @@ using System.Diagnostics.CodeAnalysis;
 public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
 {
     /// <summary>
+    /// Parent Scope
+    /// </summary>
+    public ScopeType? Parent { get; init; } = null;
+
+    /// <summary>
     /// Internal Constructor for Scope Type Enumeration
     /// </summary>
     /// <remarks>Prevents automatic construction of parameterless constructor.</remarks>
-    protected ScopeEnumeration() : base()
-    { }
+    protected ScopeEnumeration(ScopeType value, String name) : base(value, name) { }
 
+    /// <summary>
+    /// Internal Constructor for Scope Type Enumeration
+    /// </summary>
+    /// <remarks>Prevents automatic construction of parameterless constructor.</remarks>
+    protected ScopeEnumeration(ScopeType value, ScopeType parent, String name) : this(value, name)
+    { Parent = parent; }
+
+    /// <summary>
+    /// Static constructor, loads data.
+    /// </summary>
     static ScopeEnumeration()
     {
         List<ScopeEnumeration> data = new List<ScopeEnumeration>()
         {
-            new ScopeEnumeration() { Value = ScopeType.Null, Name = String.Empty, DisplayName = "not defined" },
+            new ScopeEnumeration(ScopeType.Null, String.Empty) { DisplayName = "not defined" },
 
-            new ScopeEnumeration() { Value = ScopeType.Library,                    Name = "Library"                                 , DisplayName = "Library" },
-            new ScopeEnumeration() { Value = ScopeType.LibraryNameSpace,           Name = "Library.NameSpace"                       , DisplayName = "Library.NameSpace" },
-            new ScopeEnumeration() { Value = ScopeType.LibraryType,                Name = "Library.NameSpace.Type"                  , DisplayName = "Library.NameSpace.Type" },
-            new ScopeEnumeration() { Value = ScopeType.LibraryTypeEvent,           Name = "Library.NameSpace.Type.Event"            , DisplayName = "Library.NameSpace.Type.Event" },
-            new ScopeEnumeration() { Value = ScopeType.LibraryTypeField,           Name = "Library.NameSpace.Type.Field"            , DisplayName = "Library.NameSpace.Type.Field" },
-            new ScopeEnumeration() { Value = ScopeType.LibraryTypeMethod,          Name = "Library.NameSpace.Type.Method"           , DisplayName = "Library.NameSpace.Type.Method" },
-            new ScopeEnumeration() { Value = ScopeType.LibraryTypeProperty,        Name = "Library.NameSpace.Type.Property"         , DisplayName = "Library.NameSpace.Type.Property" },
-            new ScopeEnumeration() { Value = ScopeType.LibraryMethodParameter,     Name = "Library.NameSpace.Type.Method.Parameter" , DisplayName = "Library.NameSpace.Type.Method.Parameter" },
-            new ScopeEnumeration() { Value = ScopeType.LibraryPropertyParameter,   Name = "Library.NameSpace.Type.Property.Parameter", DisplayName = "Library.NameSpace.Type.Method.Parameter" },
-            new ScopeEnumeration() { Value = ScopeType.Database,                   Name = "Database"                                , DisplayName = "Database" },
-            new ScopeEnumeration() { Value = ScopeType.DatabaseSchema,             Name = "Database.Schema"                         , DisplayName = "Database.Schema" },
-            new ScopeEnumeration() { Value = ScopeType.DatabaseFunction,           Name = "Database.Schema.Function"                , DisplayName = "Database.Schema.Function" },
-            new ScopeEnumeration() { Value = ScopeType.DatabaseProcedure,          Name = "Database.Schema.Procedure"               , DisplayName = "Database.Schema.Procedure" },
-            new ScopeEnumeration() { Value = ScopeType.DatabaseTable,              Name = "Database.Schema.Table"                   , DisplayName = "Database.Schema.Table"},
-            new ScopeEnumeration() { Value = ScopeType.DatabaseDomain,             Name = "Database.Schema.Type"                    , DisplayName = "Database.Schema.Type" },
-            new ScopeEnumeration() { Value = ScopeType.DatabaseView,               Name = "Database.Schema.View"                    , DisplayName = "Database.Schema.View" },
-            new ScopeEnumeration() { Value = ScopeType.DatabaseViewColumn,         Name = "Database.Schema.View.Column"             , DisplayName = "Database.Schema.View.Column" },
-            new ScopeEnumeration() { Value = ScopeType.DatabaseTableColumn,        Name = "Database.Schema.Table.Column"            , DisplayName = "Database.Schema.Table.Column" },
-            new ScopeEnumeration() { Value = ScopeType.DatabaseTableConstraint,    Name = "Database.Schema.Table.Constraint"        , DisplayName = "Database.Schema.Table.Constraint" },
-            new ScopeEnumeration() { Value = ScopeType.DatabaseProcedureParameter, Name = "Database.Schema.Procedure.Parameter"     , DisplayName = "Database.Schema.Procedure.Parameter" },
-            new ScopeEnumeration() { Value = ScopeType.DatabaseFunctionParameter,  Name = "Database.Schema.Function.Parameter"      , DisplayName = "Database.Schema.Function.Parameter" },
-            new ScopeEnumeration() { Value = ScopeType.Model,                      Name = "Model"                                   , DisplayName = "Model" },
-            new ScopeEnumeration() { Value = ScopeType.ModelProperty,              Name = "Model.Property"                          , DisplayName = "Model.Property" },
-            new ScopeEnumeration() { Value = ScopeType.ModelDefinition,            Name = "Model.Definition"                        , DisplayName = "Model.Definition" },
-            new ScopeEnumeration() { Value = ScopeType.ModelAttribute,             Name = "Model.Attribute"                         , DisplayName = "Model.Attribute" },
-            new ScopeEnumeration() { Value = ScopeType.ModelAttributeAlias,        Name = "Model.Attribute.Alias"                   , DisplayName = "Model.Attribute.Alias" },
-            new ScopeEnumeration() { Value = ScopeType.ModelAttributeProperty,     Name = "Model.Attribute.Property"                , DisplayName = "Model.Attribute.Property" },
-            new ScopeEnumeration() { Value = ScopeType.ModelAttributeDefinition,   Name = "Model.Attribute.Definition"              , DisplayName = "Model.Attribute.Definition" },
-            new ScopeEnumeration() { Value = ScopeType.ModelEntity,                Name = "Model.Entity"                            , DisplayName = "Model.Entity" },
-            new ScopeEnumeration() { Value = ScopeType.ModelEntityAlias,           Name = "Model.Entity.Alias"                      , DisplayName = "Model.Entity.Alias" },
-            new ScopeEnumeration() { Value = ScopeType.ModelEntityProperty,        Name = "Model.Entity.Property"                   , DisplayName = "Model.Entity.Property" },
-            new ScopeEnumeration() { Value = ScopeType.ModelEntityDefinition,      Name = "Model.Entity.Definition"                 , DisplayName = "Model.Entity.Definition" },
-            new ScopeEnumeration() { Value = ScopeType.ModelEntityAttribute,       Name = "Model.Entity.Attribute"                  , DisplayName = "Model.Entity.Attribute" },
-            new ScopeEnumeration() { Value = ScopeType.ModelSubjectArea,           Name = "Model.SubjectArea"                       , DisplayName = "Model.SubjectArea" },
-            new ScopeEnumeration() { Value = ScopeType.ModelNameSpace,             Name = "Model.NameSpace"                         , DisplayName = "Model.NameSpace" },
-            new ScopeEnumeration() { Value = ScopeType.Scripting,                  Name = "Scripting"                               , DisplayName = "Scripting" },
-            new ScopeEnumeration() { Value = ScopeType.ScriptingSchema,            Name = "Scripting.Schema"                        , DisplayName = "Scripting.Schema" },
-            new ScopeEnumeration() { Value = ScopeType.ScriptingSchemaElement,     Name = "Scripting.Schema.Element"                , DisplayName = "Scripting.Schema.Element" },
-            new ScopeEnumeration() { Value = ScopeType.ScriptingTransform,         Name = "Scripting.Transform"                     , DisplayName = "Scripting.Transform" },
-            new ScopeEnumeration() { Value = ScopeType.ScriptingSelection,         Name = "Scripting.Selection"                     , DisplayName = "Scripting.Selection" },
-            new ScopeEnumeration() { Value = ScopeType.ScriptingSelectionPath,     Name = "Scripting.Selection.Path"                , DisplayName = "Scripting.Selection.Path" },
-            new ScopeEnumeration() { Value = ScopeType.ScriptingTemplate,          Name = "Scripting.Template"                      , DisplayName = "Scripting.Template" },
-            new ScopeEnumeration() { Value = ScopeType.ScriptingTemplatePath,      Name = "Scripting.Template.Path"                 , DisplayName = "Scripting.Template.Path" },
-            new ScopeEnumeration() { Value = ScopeType.ScriptingTemplateNode,      Name = "Scripting.Template.Node"                 , DisplayName = "Scripting.Template.Node" },
-            new ScopeEnumeration() { Value = ScopeType.ScriptingTemplateAttribute, Name = "Scripting.Template.Attribute"            , DisplayName = "Scripting.Template.Attribute" },
-            new ScopeEnumeration() { Value = ScopeType.ScriptingTemplateDocument,  Name = "Scripting.Template.Document"             , DisplayName = "Scripting.Template.Document" },
+            new ScopeEnumeration(ScopeType.Library,                    "Library"),
+            new ScopeEnumeration(ScopeType.LibraryNameSpace,           ScopeType.Library,     "Library.NameSpace"),
+            new ScopeEnumeration(ScopeType.LibraryType,                ScopeType.Library,     "Library.NameSpace.Type"),
+            new ScopeEnumeration(ScopeType.LibraryTypeEvent,           ScopeType.LibraryType, "Library.NameSpace.Type.Event"),
+            new ScopeEnumeration(ScopeType.LibraryTypeField,           ScopeType.LibraryType, "Library.NameSpace.Type.Field"),
+            new ScopeEnumeration(ScopeType.LibraryTypeMethod,          ScopeType.LibraryType, "Library.NameSpace.Type.Method"),
+            new ScopeEnumeration(ScopeType.LibraryTypeProperty,        ScopeType.LibraryType, "Library.NameSpace.Type.Property"),
+            new ScopeEnumeration(ScopeType.LibraryMethodParameter,     ScopeType.LibraryType, "Library.NameSpace.Type.Method.Parameter"),
+            new ScopeEnumeration(ScopeType.LibraryPropertyParameter,   ScopeType.LibraryType, "Library.NameSpace.Type.Property.Parameter"),
+            new ScopeEnumeration(ScopeType.Database,                   "Database"),
+            new ScopeEnumeration(ScopeType.DatabaseSchema,             ScopeType.Database,          "Database.Schema"),
+            new ScopeEnumeration(ScopeType.DatabaseFunction,           ScopeType.DatabaseSchema,    "Database.Schema.Function"),
+            new ScopeEnumeration(ScopeType.DatabaseProcedure,          ScopeType.DatabaseSchema,    "Database.Schema.Procedure"),
+            new ScopeEnumeration(ScopeType.DatabaseTable,              ScopeType.DatabaseSchema,    "Database.Schema.Table"),
+            new ScopeEnumeration(ScopeType.DatabaseDomain,             ScopeType.DatabaseSchema,    "Database.Schema.Type"),
+            new ScopeEnumeration(ScopeType.DatabaseView,               ScopeType.DatabaseSchema,    "Database.Schema.View"),
+            new ScopeEnumeration(ScopeType.DatabaseViewColumn,         ScopeType.DatabaseSchema,    "Database.Schema.View.Column"),
+            new ScopeEnumeration(ScopeType.DatabaseTableColumn,        ScopeType.DatabaseSchema,    "Database.Schema.Table.Column"),
+            new ScopeEnumeration(ScopeType.DatabaseTableConstraint,    ScopeType.DatabaseSchema,    "Database.Schema.Table.Constraint"),
+            new ScopeEnumeration(ScopeType.DatabaseProcedureParameter, ScopeType.DatabaseProcedure, "Database.Schema.Procedure.Parameter"),
+            new ScopeEnumeration(ScopeType.DatabaseFunctionParameter,  ScopeType.DatabaseFunction,  "Database.Schema.Function.Parameter"),
+            new ScopeEnumeration(ScopeType.Model,                      "Model"),
+            new ScopeEnumeration(ScopeType.ModelProperty,              ScopeType.Model,          "Model.Property"),
+            new ScopeEnumeration(ScopeType.ModelDefinition,            ScopeType.Model,          "Model.Definition"),
+            new ScopeEnumeration(ScopeType.ModelAttribute,             ScopeType.Model,          "Model.Attribute"),
+            new ScopeEnumeration(ScopeType.ModelAttributeAlias,        ScopeType.ModelAttribute, "Model.Attribute.Alias"),
+            new ScopeEnumeration(ScopeType.ModelAttributeProperty,     ScopeType.ModelAttribute, "Model.Attribute.Property"),
+            new ScopeEnumeration(ScopeType.ModelAttributeDefinition,   ScopeType.ModelAttribute, "Model.Attribute.Definition"),
+            new ScopeEnumeration(ScopeType.ModelEntity,                ScopeType.Model,          "Model.Entity"),
+            new ScopeEnumeration(ScopeType.ModelEntityAlias,           ScopeType.ModelEntity,    "Model.Entity.Alias"),
+            new ScopeEnumeration(ScopeType.ModelEntityProperty,        ScopeType.ModelEntity,    "Model.Entity.Property"),
+            new ScopeEnumeration(ScopeType.ModelEntityDefinition,      ScopeType.ModelEntity,    "Model.Entity.Definition"),
+            new ScopeEnumeration(ScopeType.ModelEntityAttribute,       ScopeType.ModelEntity,    "Model.Entity.Attribute"),
+            new ScopeEnumeration(ScopeType.ModelSubjectArea,           ScopeType.Model,          "Model.SubjectArea"),
+            new ScopeEnumeration(ScopeType.ModelNameSpace,             ScopeType.Model,          "Model.NameSpace"),
+            new ScopeEnumeration(ScopeType.Scripting,                  "Scripting"),
+            new ScopeEnumeration(ScopeType.ScriptingTemplate,          ScopeType.Scripting,         "Scripting.Template"),
+            new ScopeEnumeration(ScopeType.ScriptingTemplatePath,      ScopeType.ScriptingTemplate, "Scripting.Template.Path"),
+            new ScopeEnumeration(ScopeType.ScriptingTemplateNode,      ScopeType.ScriptingTemplate, "Scripting.Template.Node"),
+            new ScopeEnumeration(ScopeType.ScriptingTemplateAttribute, ScopeType.ScriptingTemplate, "Scripting.Template.Attribute"),
+            new ScopeEnumeration(ScopeType.ScriptingTemplateDocument,  ScopeType.ScriptingTemplate, "Scripting.Template.Document"),
 
         };
 

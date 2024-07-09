@@ -7,38 +7,32 @@ namespace DataDictionary.Resource.Enumerations;
 public class TemplateDirectoryEnumeration : Enumeration<TemplateDirectoryType, TemplateDirectoryEnumeration>
 {
 
-    public required DirectoryInfo? Directory { get; init; }
+    public DirectoryInfo? Directory { get; init; } = null;
 
     /// <summary>
     /// Internal Constructor for Database Routine Enumeration
     /// </summary>
     /// <remarks>Prevents automatic construction of parameterless constructor.</remarks>
-    TemplateDirectoryEnumeration() : base() { }
+    TemplateDirectoryEnumeration(TemplateDirectoryType value, String name) : base(value, name) { }
+
+    /// <summary>
+    /// Internal Constructor for Database Routine Enumeration
+    /// </summary>
+    /// <remarks>Prevents automatic construction of parameterless constructor.</remarks>
+    TemplateDirectoryEnumeration(TemplateDirectoryType value, String name, DirectoryInfo directory) : this(value, name)
+    { Directory = directory; }
 
     static TemplateDirectoryEnumeration()
     {
         List<TemplateDirectoryEnumeration> data = new List<TemplateDirectoryEnumeration>()
         {
-            new TemplateDirectoryEnumeration()
-            {
-                Value = TemplateDirectoryType.Null, Name = String.Empty, DisplayName = "not defined",
-                Directory = null
-            },
-            new TemplateDirectoryEnumeration()
-            {
-                Value = TemplateDirectoryType.MySources, Name = "MySources", DisplayName = "My Sources",
-                Directory = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "source","repos"))
-            },
-            new TemplateDirectoryEnumeration()
-            {
-                Value = TemplateDirectoryType.MyDocuments, Name = "MyDocuments", DisplayName = "My Documents",
-                Directory =new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
-            },
-            new TemplateDirectoryEnumeration()
-            {
-                Value = TemplateDirectoryType.MyDownloads, Name = "MyDownloads", DisplayName = "My Downloads",
-                Directory = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads"))
-            },
+            new TemplateDirectoryEnumeration(TemplateDirectoryType.Null,       String.Empty) { DisplayName = "not defined" },
+            new TemplateDirectoryEnumeration(TemplateDirectoryType.MySources,   "My Sources",
+                new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "source","repos"))),
+            new TemplateDirectoryEnumeration(TemplateDirectoryType.MyDocuments, "My Documents",
+                new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))),
+            new TemplateDirectoryEnumeration(TemplateDirectoryType.MyDownloads, "My Downloads",
+                new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads"))),
         };
         BuildDictionary(data);
     }

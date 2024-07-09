@@ -10,17 +10,17 @@ public class TemplateNodeValueAsEnumeration : Enumeration<TemplateNodeValueAsTyp
     /// Internal Constructor for Database Routine Enumeration
     /// </summary>
     /// <remarks>Prevents automatic construction of parameterless constructor.</remarks>
-    TemplateNodeValueAsEnumeration() : base() { }
+    TemplateNodeValueAsEnumeration(TemplateNodeValueAsType value, String name) : base(value, name) { }
 
     static TemplateNodeValueAsEnumeration()
     {
         List<TemplateNodeValueAsEnumeration> data = new List<TemplateNodeValueAsEnumeration>()
         {
-            new TemplateNodeValueAsEnumeration() { Value = TemplateNodeValueAsType.none, Name = String.Empty, DisplayName = "not defined" },
-            new TemplateNodeValueAsEnumeration() { Value = TemplateNodeValueAsType.ElementText,  Name = "Element.Text",  DisplayName = "Element.Text"},
-            new TemplateNodeValueAsEnumeration() { Value = TemplateNodeValueAsType.ElementCData, Name = "Element.CData", DisplayName = "Element.CData"},
-            new TemplateNodeValueAsEnumeration() { Value = TemplateNodeValueAsType.ElementXML,   Name = "Element.XML",   DisplayName = "Element.XML"},
-            new TemplateNodeValueAsEnumeration() { Value = TemplateNodeValueAsType.Attribute,    Name = "Attribute",     DisplayName = "Attribute"},
+            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.none,         String.Empty){ DisplayName = "not defined" },
+            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.ElementText,  "Element.Text"),
+            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.ElementCData, "Element.CData"),
+            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.ElementXML,   "Element.XML"),
+            new TemplateNodeValueAsEnumeration(TemplateNodeValueAsType.Attribute,    "Attribute"),
         };
 
         BuildDictionary(data);

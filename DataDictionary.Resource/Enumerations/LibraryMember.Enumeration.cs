@@ -9,26 +9,30 @@ public class LibraryMemberEnumeration : Enumeration<LibraryMemberType, LibraryMe
     /// <summary>
     /// Code use by XML Document for the Type
     /// </summary>
-    public required Char Code { get; init; }
+    public Char Code { get; init; }
 
     /// <summary>
     /// Internal Constructor for Database Routine Enumeration
     /// </summary>
     /// <remarks>Prevents automatic construction of parameterless constructor.</remarks>
-    LibraryMemberEnumeration() : base() { }
+    LibraryMemberEnumeration(LibraryMemberType value, Char code, String name) : base(value, name)
+    { Code = code; }
 
+    /// <summary>
+    /// Static constructor, loads data.
+    /// </summary>
     static LibraryMemberEnumeration()
     {
         List<LibraryMemberEnumeration> data = new List<LibraryMemberEnumeration>()
         {
-            new LibraryMemberEnumeration() { Value = LibraryMemberType.Null,       Code = ' ', Name = String.Empty, DisplayName = "not defined" },
-            new LibraryMemberEnumeration() { Value = LibraryMemberType.NameSpace,  Code = 'N', Name = "NameSpace", DisplayName = "NameSpace"},
-            new LibraryMemberEnumeration() { Value = LibraryMemberType.Type,       Code = 'T', Name = "Type", DisplayName = "Type"},
-            new LibraryMemberEnumeration() { Value = LibraryMemberType.Field,      Code = 'F', Name = "Field", DisplayName = "Field"},
-            new LibraryMemberEnumeration() { Value = LibraryMemberType.Property,   Code = 'P', Name = "Property", DisplayName = "Property"},
-            new LibraryMemberEnumeration() { Value = LibraryMemberType.Method,     Code = 'M', Name = "Method", DisplayName = "Method"},
-            new LibraryMemberEnumeration() { Value = LibraryMemberType.Event,      Code = 'E', Name = "Event", DisplayName = "Event"},
-            new LibraryMemberEnumeration() { Value = LibraryMemberType.Parameter,  Code = '@', Name = "Parameter", DisplayName = "Parameter"},
+            new LibraryMemberEnumeration(LibraryMemberType.Null,       ' ', String.Empty) { DisplayName = "not defined" },
+            new LibraryMemberEnumeration(LibraryMemberType.NameSpace,  'N', "NameSpace"),
+            new LibraryMemberEnumeration(LibraryMemberType.Type,       'T', "Type"),
+            new LibraryMemberEnumeration(LibraryMemberType.Field,      'F', "Field"),
+            new LibraryMemberEnumeration(LibraryMemberType.Property,   'P', "Property"),
+            new LibraryMemberEnumeration(LibraryMemberType.Method,     'M', "Method"),
+            new LibraryMemberEnumeration(LibraryMemberType.Event,      'E', "Event"),
+            new LibraryMemberEnumeration(LibraryMemberType.Parameter,  '@', "Parameter"),
         };
 
         BuildDictionary(data);

@@ -4,6 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DataDictionary.Main.Enumerations
 {
+    /// <summary>
+    /// Images used for Scope ImageList
+    /// </summary>
     enum ScopeImage
     {
         Normal,
@@ -21,6 +24,11 @@ namespace DataDictionary.Main.Enumerations
         // This class could not be placed in base ScopeEnumeration because framework agnostic.
         // This version is Windows WinForms specific.
         // The System.Drawing.Icon and System.Drawing.Image does not exist in all frameworks.
+
+        /// <summary>
+        /// Parent Scope
+        /// </summary>
+        public ScopeType? Parent { get; init; } = null;
 
         /// <summary>
         /// Icon used for the ScopeType
@@ -57,6 +65,54 @@ namespace DataDictionary.Main.Enumerations
         /// </summary>
         public Boolean GroupBy { get; init; } = false;
 
+        /// <summary>
+        /// Constructor for the Window Form Scope Enumeration.
+        /// </summary>
+        /// <param name="scope"></param>
+        ScopeWinFormEnumeration(ScopeType scope) : base()
+        {
+            Resource.Enumerations.ScopeEnumeration source = Resource.Enumerations.ScopeEnumeration.Cast(scope);
+            DisplayName = source.DisplayName;
+            Name = source.Name;
+            Value = source.Value;
+            Parent = source.Parent;
+        }
+
+        /// <summary>
+        /// Constructor for the Window Form Scope Enumeration.
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="windowIcon"></param>
+        ScopeWinFormEnumeration(ScopeType scope, Icon windowIcon) : this(scope)
+        { this.WindowIcon = windowIcon; }
+
+        /// <summary>
+        /// Constructor for the Window Form Scope Enumeration.
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="windowIcon"></param>
+        /// <param name="defaultImage"></param>
+        ScopeWinFormEnumeration(ScopeType scope, Icon windowIcon, Image defaultImage) : this(scope, windowIcon)
+        { this.images = new Dictionary<ScopeImage, Image>() { { ScopeImage.Normal, defaultImage } }; }
+
+        /// <summary>
+        /// Constructor for the Window Form Scope Enumeration.
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="windowIcon"></param>
+        /// <param name="images"></param>
+        ScopeWinFormEnumeration(ScopeType scope, Icon windowIcon, params (ScopeImage scope, Image image)[] images) : this(scope, windowIcon)
+        {
+            this.images = new Dictionary<ScopeImage, Image>();
+            foreach ((ScopeImage scope, Image image) item in images)
+            {
+                this.images.Add(item.scope, item.image);
+            }
+        }
+
+        /// <summary>
+        /// Constructor for the Window Form Scope Enumeration static data.
+        /// </summary>
         static ScopeWinFormEnumeration()
         {
             List<ScopeWinFormEnumeration> data = new List<ScopeWinFormEnumeration>()
@@ -98,11 +154,6 @@ namespace DataDictionary.Main.Enumerations
                 new ScopeWinFormEnumeration(ScopeType.ModelEntityAttribute,       Resources.Icon_Attribute, Resources.Attribute) ,
                 new ScopeWinFormEnumeration(ScopeType.ModelEntityDefinition,      Resources.Icon_RichTextBox, Resources.RichTextBox) ,
                 new ScopeWinFormEnumeration(ScopeType.Scripting,                  Resources.Icon_XmlFile, Resources.XmlFile) ,
-                new ScopeWinFormEnumeration(ScopeType.ScriptingSchema,            Resources.Icon_XMLSchema, Resources.XMLSchema) ,
-                new ScopeWinFormEnumeration(ScopeType.ScriptingSchemaElement,     Resources.Icon_XMLElement, Resources.XMLElement) ,
-                new ScopeWinFormEnumeration(ScopeType.ScriptingTransform,         Resources.Icon_XSLTransform, Resources.XSLTransform) ,
-                new ScopeWinFormEnumeration(ScopeType.ScriptingSelection,         Resources.Icon_XPath, Resources.XPath) ,
-                new ScopeWinFormEnumeration(ScopeType.ScriptingSelectionPath,     Resources.Icon_XPath, Resources.XPath) ,
                 new ScopeWinFormEnumeration(ScopeType.ScriptingTemplate,          Resources.Icon_XSLTransform, Resources.XSLTransform) ,
                 new ScopeWinFormEnumeration(ScopeType.ScriptingTemplateNode,      Resources.Icon_XMLSchema, Resources.XMLSchema) ,
                 new ScopeWinFormEnumeration(ScopeType.ScriptingTemplateAttribute, Resources.Icon_XMLElement, Resources.XMLElement) ,
@@ -112,30 +163,6 @@ namespace DataDictionary.Main.Enumerations
 
             BuildDictionary(data);
         }
-
-        ScopeWinFormEnumeration(ScopeType scope) : base()
-        {
-            Resource.Enumerations.ScopeEnumeration source = Resource.Enumerations.ScopeEnumeration.Cast(scope);
-            this.DisplayName = source.DisplayName;
-            this.Name = source.Name;
-            this.Value = source.Value;
-        }
-
-        ScopeWinFormEnumeration(ScopeType scope, Icon windowIcon) : this(scope)
-        { this.WindowIcon = windowIcon; }
-
-        ScopeWinFormEnumeration(ScopeType scope, Icon windowIcon, Image defaultImage) : this(scope, windowIcon)
-        { this.images = new Dictionary<ScopeImage, Image>() { { ScopeImage.Normal, defaultImage } }; }
-
-        ScopeWinFormEnumeration(ScopeType scope, Icon windowIcon, params (ScopeImage scope, Image image)[] images) : this(scope, windowIcon)
-        {
-            this.images = new Dictionary<ScopeImage, Image>();
-            foreach ((ScopeImage scope, Image image) item in images)
-            {
-                this.images.Add(item.scope, item.image);
-            }
-        }
-
 
         /// <summary>
         /// Returns the Image list for all items using the default/Normal image.

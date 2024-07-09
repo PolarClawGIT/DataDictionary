@@ -200,31 +200,6 @@
         Scripting,
 
         /// <summary>
-        /// Scripting Schema
-        /// </summary>
-        ScriptingSchema,
-
-        /// <summary>
-        /// Scripting Schema Element
-        /// </summary>
-        ScriptingSchemaElement,
-
-        /// <summary>
-        /// Scripting Transform
-        /// </summary>
-        ScriptingTransform,
-
-        /// <summary>
-        /// Scripting Selection
-        /// </summary>
-        ScriptingSelection,
-
-        /// <summary>
-        /// Scripting Selection Path
-        /// </summary>
-        ScriptingSelectionPath,
-
-        /// <summary>
         /// Scripting Template
         /// </summary>
         ScriptingTemplate,
@@ -248,7 +223,6 @@
         /// Scripting Template Document
         /// </summary>
         ScriptingTemplateDocument,
-
     }
 
 }

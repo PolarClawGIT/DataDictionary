@@ -10,17 +10,20 @@ public class DbTableEnumeration : Enumeration<DbTableType, DbTableEnumeration>
     /// Internal Constructor for Database Table Enumeration
     /// </summary>
     /// <remarks>Prevents automatic construction of parameterless constructor.</remarks>
-    DbTableEnumeration() : base() { }
+    DbTableEnumeration(DbTableType value, String name) : base(value, name) { }
 
-    static DbTableEnumeration ()
+    /// <summary>
+    /// Static constructor, loads data.
+    /// </summary>
+    static DbTableEnumeration()
     {
         List<DbTableEnumeration> data = new List<DbTableEnumeration>()
         {
-            new DbTableEnumeration() { Value = DbTableType.Null, Name = String.Empty, DisplayName = "not defined" },
-            new DbTableEnumeration() { Value = DbTableType.Table, Name = "Table", DisplayName = "Table" },
-            new DbTableEnumeration() { Value = DbTableType.TemporalTable, Name = "Temporal Table", DisplayName = "Temporal Table" },
-            new DbTableEnumeration() { Value = DbTableType.HistoryTable, Name = "History Table", DisplayName = "History Table" },
-            new DbTableEnumeration() { Value = DbTableType.View, Name = "View", DisplayName = "View" },
+            new DbTableEnumeration(DbTableType.Null, String.Empty) { DisplayName = "not defined" },
+            new DbTableEnumeration(DbTableType.Table,         "Table"),
+            new DbTableEnumeration(DbTableType.TemporalTable, "Temporal Table"),
+            new DbTableEnumeration(DbTableType.HistoryTable,  "History Table"),
+            new DbTableEnumeration(DbTableType.View,          "View"),
         };
 
         BuildDictionary(data);

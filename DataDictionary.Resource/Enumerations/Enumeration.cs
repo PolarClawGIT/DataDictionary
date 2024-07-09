@@ -111,6 +111,17 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IE
     }
 
     /// <summary>
+    /// Base constructor for Enumeration
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="name"></param>
+    protected Enumeration(TEnum source, String name) : this(source)
+    {
+        Name = name;
+        DisplayName = name;
+    }
+
+    /// <summary>
     /// Helper Method to build the Enumeration Dictionary. 
     /// </summary>
     /// <param name="data"></param>
