@@ -227,10 +227,22 @@ namespace DataDictionary.Main.Enumerations
         /// <returns></returns>
         public static Image GetImage(ScopeType scope, ScopeImage image)
         {
-            if (Values.ContainsKey(scope) && Values[scope].Images.ContainsKey(image))
-            { return Values[scope].Images[image]; }
-            else if (Values.ContainsKey(scope) && Values[scope].Images.ContainsKey(ScopeImage.Normal))
-            { return Values[scope].Images[ScopeImage.Normal]; }
+            if (Values.ContainsKey(scope))
+            { return Values[scope].GetImage(image); }
+            else { return defaultImage; }
+        }
+
+        /// <summary>
+        /// Image, return the Image object or default Image.
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        public Image GetImage(ScopeImage image)
+        {
+            if (Images.ContainsKey(image))
+            { return Images[image]; }
+            else if (Images.ContainsKey(ScopeImage.Normal))
+            { return Images[ScopeImage.Normal]; }
             else { return defaultImage; }
         }
     }

@@ -1,11 +1,10 @@
-﻿using DataDictionary.BusinessLayer;
-using DataDictionary.BusinessLayer.Application;
+﻿using DataDictionary.BusinessLayer.Application;
 using DataDictionary.BusinessLayer.DbWorkItem;
-//using DataDictionary.DataLayer;
-//using DataDictionary.DataLayer.ApplicationData.Help;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.Threading;
@@ -53,7 +52,10 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         public HelpSubject() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.Icon_HelpTableOfContent;
+            this.Icon = WinFormEnumeration.GetIcon(ScopeType.ApplicationHelp);
+            newHelpCommand.Image = WinFormEnumeration.GetImage(ScopeType.ApplicationHelp, ScopeImage.New);
+            deleteHelpCommand.Image = WinFormEnumeration.GetImage(ScopeType.ApplicationHelp, ScopeImage.Delete);
+
             controlData.Columns[0].Width = (Int32)(controlData.ClientSize.Width * 0.7);
             controlData.Columns[1].Width = (Int32)(controlData.ClientSize.Width * 0.3);
 
@@ -69,7 +71,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             { helpBinding.Position = subjects.IndexOf(subject); }
 
             // Setup Images for Tree Control
-            SetImages(helpContentNavigation, helpContentImageItems.Values);
+            SetImages(helpContentNavigation);
 
             IsOpenDatabase = true;
             IsSaveDatabase = true;
@@ -173,10 +175,10 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             HelpGroup
         }
 
-        static Dictionary<helpContentImageIndex, (String imageKey, Image image)> helpContentImageItems = new Dictionary<helpContentImageIndex, (String imageKey, Image image)>()
+        static Dictionary<helpContentImageIndex, WinFormEnumeration> helpContentImageItems  = new Dictionary<helpContentImageIndex, WinFormEnumeration>()
         {
-            {helpContentImageIndex.HelpPage,    ("HelpPage",   Resources.StatusHelp) },
-            {helpContentImageIndex.HelpGroup,   ("HelpGroup",  Resources.HelpIndexFile) },
+            {helpContentImageIndex.HelpPage, WinFormEnumeration.Cast(ScopeType.ApplicationHelpPage) },
+            {helpContentImageIndex.HelpGroup, WinFormEnumeration.Cast(ScopeType.ApplicationHelpGroup) },
         };
 
         void BuildHelpTree()
@@ -244,8 +246,8 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         private TreeNode CreateNode(HelpSubjectValue source, helpContentImageIndex imageIndex, TreeNodeCollection? parentNode = null)
         {
             TreeNode result = new TreeNode(source.HelpSubject);
-            result.ImageKey = helpContentImageItems[imageIndex].imageKey;
-            result.SelectedImageKey = helpContentImageItems[imageIndex].imageKey;
+            result.ImageKey = helpContentImageItems[imageIndex].Name;
+            result.SelectedImageKey = helpContentImageItems[imageIndex].Name;
 
             if (parentNode is null)
             { helpContentNavigation.Nodes.Add(result); }
@@ -264,8 +266,8 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         private TreeNode CreateNode(String nodeText, helpContentImageIndex imageIndex, TreeNodeCollection? parentNode = null)
         {
             TreeNode result = new TreeNode(nodeText);
-            result.ImageKey = helpContentImageItems[imageIndex].imageKey;
-            result.SelectedImageKey = helpContentImageItems[imageIndex].imageKey;
+            result.ImageKey = helpContentImageItems[imageIndex].Name;
+            result.SelectedImageKey = helpContentImageItems[imageIndex].Name;
 
             if (parentNode is null)
             { helpContentNavigation.Nodes.Add(result); }
@@ -321,13 +323,13 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             }
         }
 
-        void SetImages(TreeView tree, IEnumerable<(String imageKey, Image image)> images)
+        void SetImages(TreeView tree)
         {
             if (tree.ImageList is null)
             { tree.ImageList = new ImageList(); }
 
-            foreach ((string imageKey, Image image) image in images.Where(w => !tree.ImageList.Images.ContainsKey(w.imageKey)))
-            { tree.ImageList.Images.Add(image.imageKey, image.image); }
+            foreach (var image in helpContentImageItems.Values)
+            { tree.ImageList.Images.Add(image.Name, image.GetImage(ScopeImage.Normal)); }
         }
 
         private void HelpContentNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)

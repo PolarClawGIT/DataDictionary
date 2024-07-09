@@ -121,6 +121,7 @@
             helpSubjectData.ReadOnly = false;
             helpSubjectData.Size = new Size(571, 44);
             helpSubjectData.TabIndex = 0;
+            helpSubjectData.WordWrap = true;
             helpSubjectData.Validated += helpSubjectData_Validated;
             helpSubjectData.Validating += helpSubjectData_Validating;
             // 
@@ -151,6 +152,7 @@
             helpTextData.AutoSize = true;
             helpTextData.Dock = DockStyle.Fill;
             helpTextData.HeaderText = "Text";
+            helpTextData.HeaderVisible = true;
             helpTextData.Location = new Point(3, 3);
             helpTextData.Name = "helpTextData";
             helpTextData.ReadOnly = false;
@@ -200,6 +202,7 @@
             helpNameSpaceData.ReadOnly = false;
             helpNameSpaceData.Size = new Size(180, 44);
             helpNameSpaceData.TabIndex = 1;
+            helpNameSpaceData.WordWrap = true;
             // 
             // helpToolTipData
             // 
@@ -212,6 +215,7 @@
             helpToolTipData.ReadOnly = false;
             helpToolTipData.Size = new Size(180, 1);
             helpToolTipData.TabIndex = 4;
+            helpToolTipData.WordWrap = true;
             // 
             // controlsGroup
             // 
@@ -262,21 +266,19 @@
             // 
             helpContextMenu.Items.AddRange(new ToolStripItem[] { newHelpCommand, deleteHelpCommand });
             helpContextMenu.Name = "helpContextMenu";
-            helpContextMenu.Size = new Size(169, 48);
+            helpContextMenu.Size = new Size(181, 70);
             // 
             // newHelpCommand
             // 
-            newHelpCommand.Image = Properties.Resources.NewStatusHelp;
             newHelpCommand.Name = "newHelpCommand";
-            newHelpCommand.Size = new Size(168, 22);
+            newHelpCommand.Size = new Size(180, 22);
             newHelpCommand.Text = "New Help Subject";
             newHelpCommand.Click += newHelpCommand_Click;
             // 
             // deleteHelpCommand
             // 
-            deleteHelpCommand.Image = Properties.Resources.DeleteStatusHelp;
             deleteHelpCommand.Name = "deleteHelpCommand";
-            deleteHelpCommand.Size = new Size(168, 22);
+            deleteHelpCommand.Size = new Size(180, 22);
             deleteHelpCommand.Text = "Delete Help";
             deleteHelpCommand.Click += deleteHelpCommand_Click;
             // 
