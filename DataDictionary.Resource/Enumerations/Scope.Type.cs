@@ -14,6 +14,26 @@
         Null,
 
         /// <summary>
+        /// Overall Application
+        /// </summary>
+        Application,
+
+        /// <summary>
+        /// Application Help
+        /// </summary>
+        ApplicationHelp,
+
+        /// <summary>
+        /// Application Help Page
+        /// </summary>
+        ApplicationHelpPage,
+
+        /// <summary>
+        /// Application Help Group
+        /// </summary>
+        ApplicationHelpGroup,
+
+        /// <summary>
         /// Application Model
         /// </summary>
         Model,

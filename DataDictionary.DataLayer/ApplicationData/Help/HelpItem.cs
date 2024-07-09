@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DataDictionary.Resource.Enumerations;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
     /// <summary>
     /// Interface for a Help Item used for Help Text.
     /// </summary>
-    public interface IHelpItem : IHelpKey, IHelpKeyNameSpace
+    public interface IHelpItem : IHelpKey, IHelpKeyNameSpace, IScopeType
     {
         /// <summary>
         /// Title/Subject of the Help Document.
@@ -66,6 +67,10 @@ namespace DataDictionary.DataLayer.ApplicationData.Help
 
         /// <inheritdoc/>
         public string? NameSpace { get { return GetValue(nameof(NameSpace)); } set { SetValue(nameof(NameSpace), value); } }
+
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get; } = ScopeType.ApplicationHelp;
 
         /// <summary>
         /// Creates an Instance of a Help Document Item.

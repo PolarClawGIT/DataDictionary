@@ -1122,7 +1122,6 @@ namespace DataDictionary.Main.Forms.Scripting
         private Controls.TextBoxData scriptingPrefixData;
         private Controls.TextBoxData scriptingSuffixData;
         private Controls.TextBoxData scriptingExtensionData;
-        private TableLayoutPanel transformLayout;
         private ToolStrip transformToolStrip;
         private Controls.TextBoxData transformExceptionData;
         private TextBox transformScriptData;

@@ -35,9 +35,6 @@ namespace DataDictionary.Main.Enumerations
         public Icon WindowIcon { get; init; } = Resources.Icon_UnknownMember;
         static readonly Icon defaultIcon = Resources.Icon_UnknownMember;
 
-        Dictionary<ScopeImage, Image> images { get; init; } = new Dictionary<ScopeImage, Image>();
-        static readonly Image defaultImage = Resources.UnknownMember;
-
         /// <summary>
         /// List of Images for the Scope Type
         /// </summary>
@@ -56,6 +53,8 @@ namespace DataDictionary.Main.Enumerations
                 return result;
             }
         }
+        Dictionary<ScopeImage, Image> images { get; init; } = new Dictionary<ScopeImage, Image>();
+        static readonly Image defaultImage = Resources.UnknownMember;
 
         /// <summary>
         /// Grouping behavior.
@@ -90,10 +89,29 @@ namespace DataDictionary.Main.Enumerations
         /// Constructor for the Window Form Scope Enumeration.
         /// </summary>
         /// <param name="scope"></param>
+        /// <param name="defaultImage"></param>
+        WinFormEnumeration(ScopeType scope, Image defaultImage) : this(scope)
+        { this.images.Add(ScopeImage.Normal, defaultImage); }
+
+        /// <summary>
+        /// Constructor for the Window Form Scope Enumeration.
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="images"></param>
+        WinFormEnumeration(ScopeType scope, params (ScopeImage scope, Image image)[] images) : this(scope)
+        {
+            foreach ((ScopeImage scope, Image image) item in images)
+            { this.images.Add(item.scope, item.image); }
+        }
+
+        /// <summary>
+        /// Constructor for the Window Form Scope Enumeration.
+        /// </summary>
+        /// <param name="scope"></param>
         /// <param name="windowIcon"></param>
         /// <param name="defaultImage"></param>
         WinFormEnumeration(ScopeType scope, Icon windowIcon, Image defaultImage) : this(scope, windowIcon)
-        { this.images = new Dictionary<ScopeImage, Image>() { { ScopeImage.Normal, defaultImage } }; }
+        { this.images.Add(ScopeImage.Normal, defaultImage); }
 
         /// <summary>
         /// Constructor for the Window Form Scope Enumeration.
@@ -103,11 +121,8 @@ namespace DataDictionary.Main.Enumerations
         /// <param name="images"></param>
         WinFormEnumeration(ScopeType scope, Icon windowIcon, params (ScopeImage scope, Image image)[] images) : this(scope, windowIcon)
         {
-            this.images = new Dictionary<ScopeImage, Image>();
             foreach ((ScopeImage scope, Image image) item in images)
-            {
-                this.images.Add(item.scope, item.image);
-            }
+            { this.images.Add(item.scope, item.image); }
         }
 
         /// <summary>
@@ -117,7 +132,16 @@ namespace DataDictionary.Main.Enumerations
         {
             List<WinFormEnumeration> data = new List<WinFormEnumeration>()
             {
-                new WinFormEnumeration(ScopeType.Null,                       Resources.Icon_UnknownMember, Resources.UnknownMember),
+                new WinFormEnumeration(ScopeType.Null),
+
+                new WinFormEnumeration(ScopeType.Application,                Resources.Icon_SoftwareDefinitionModel, Resources.SoftwareDefinitionModel),
+                new WinFormEnumeration(ScopeType.ApplicationHelp,            Resources.Icon_HelpTableOfContent,
+                    new(ScopeImage.Normal, Resources.StatusHelp),
+                    new(ScopeImage.New, Resources.NewStatusHelp),
+                    new(ScopeImage.Delete, Resources.DeleteStatusHelp)),
+                new WinFormEnumeration(ScopeType.ApplicationHelpPage,        Resources.StatusHelp),
+                new WinFormEnumeration(ScopeType.ApplicationHelpGroup,       Resources.HelpIndexFile),
+
                 new WinFormEnumeration(ScopeType.Library,                    Resources.Icon_Library,
                     new(ScopeImage.Normal, Resources.Library),
                     new(ScopeImage.New, Resources.NewLibrary),
@@ -205,7 +229,7 @@ namespace DataDictionary.Main.Enumerations
         {
             if (Values.ContainsKey(scope) && Values[scope].Images.ContainsKey(image))
             { return Values[scope].Images[image]; }
-            else if(Values.ContainsKey(scope) && Values[scope].Images.ContainsKey(ScopeImage.Normal))
+            else if (Values.ContainsKey(scope) && Values[scope].Images.ContainsKey(ScopeImage.Normal))
             { return Values[scope].Images[ScopeImage.Normal]; }
             else { return defaultImage; }
         }
