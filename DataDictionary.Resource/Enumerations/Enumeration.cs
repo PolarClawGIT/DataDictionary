@@ -106,6 +106,7 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IE
     /// <param name="value"></param>
     protected Enumeration(TEnum source) : this()
     {
+        Value = source;
         Name = source.ToString();
         DisplayName = source.ToString();
     }
@@ -158,7 +159,10 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IE
 
     /// <inheritdoc />
     public static TSelf Cast(TEnum source)
-    { return TSelf.Values[source]; }
+    {
+        var x = Values;
+        return Values[source];
+    }
 
     #region IParsable
     // This implements a IParsable<TSelf>.

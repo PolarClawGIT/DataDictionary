@@ -131,7 +131,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
             {
                 if (value is TemplateDirectoryType.Null)
                 { SetValue(nameof(RootDirectory), null); }
-                else { SetValue(nameof(RootDirectory), TemplateDirectoryEnumeration.Values[value].Name); }
+                else { SetValue(nameof(RootDirectory), TemplateDirectoryEnumeration.Cast(value).Name); }
             }
         }
 

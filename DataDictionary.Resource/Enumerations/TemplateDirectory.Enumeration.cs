@@ -26,7 +26,7 @@ public class TemplateDirectoryEnumeration : Enumeration<TemplateDirectoryType, T
     {
         List<TemplateDirectoryEnumeration> data = new List<TemplateDirectoryEnumeration>()
         {
-            new TemplateDirectoryEnumeration(TemplateDirectoryType.Null,       String.Empty) { DisplayName = "not defined" },
+            new TemplateDirectoryEnumeration(TemplateDirectoryType.Null,        String.Empty) { DisplayName = "not defined" },
             new TemplateDirectoryEnumeration(TemplateDirectoryType.MySources,   "My Sources",
                 new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "source","repos"))),
             new TemplateDirectoryEnumeration(TemplateDirectoryType.MyDocuments, "My Documents",
