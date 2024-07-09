@@ -1097,20 +1097,17 @@ namespace DataDictionary.Main.Forms.Scripting
 
         private BindingSource bindingTemplate;
         private ContextMenuStrip templateToolStrip;
-        private TableLayoutPanel templateLayoutPanel;
         private Controls.TextBoxData templateTitleData;
         private Controls.TextBoxData templateDescriptionData;
         private TabControl templateTabs;
         private TabPage documentSettingTab;
         private TabPage transformTab;
-        private TableLayoutPanel documentLayout;
         private Controls.ComboBoxData breakOnScopeData;
         private Controls.ComboBoxData rootDirectoryData;
         private Controls.TextBoxData rootDirectoryExpanded;
         private Controls.ComboBoxData scriptAsData;
         private GroupBox documentGroup;
         private GroupBox scriptingGroup;
-        private TableLayoutPanel documentGroupLayout;
         private Controls.TextBoxData documentDirectoryData;
         private Button documentDirectoryPicker;
         private Controls.TextBoxData documentPrefixData;
