@@ -34,6 +34,11 @@
         ApplicationHelpGroup,
 
         /// <summary>
+        /// Application Options
+        /// </summary>
+        ApplicationOption,
+
+        /// <summary>
         /// Application Model
         /// </summary>
         Model,

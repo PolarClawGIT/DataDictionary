@@ -37,7 +37,8 @@ public class ScopeEnumeration : Enumeration<ScopeType, ScopeEnumeration>
             new ScopeEnumeration(ScopeType.ApplicationHelp,            ScopeType.Application,    "Application.Help"),
             new ScopeEnumeration(ScopeType.ApplicationHelpPage,        ScopeType.ApplicationHelp,"Application.Help.Page"),
             new ScopeEnumeration(ScopeType.ApplicationHelpGroup,       ScopeType.ApplicationHelp,"Application.Help.Group"),
-
+            new ScopeEnumeration(ScopeType.ApplicationOption,          ScopeType.Application,    "Application.Option"),
+            
             new ScopeEnumeration(ScopeType.Library,                    "Library"),
             new ScopeEnumeration(ScopeType.LibraryNameSpace,           ScopeType.Library,     "Library.NameSpace"),
             new ScopeEnumeration(ScopeType.LibraryType,                ScopeType.Library,     "Library.NameSpace.Type"),

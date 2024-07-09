@@ -329,7 +329,7 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             { tree.ImageList = new ImageList(); }
 
             foreach (var image in helpContentImageItems.Values)
-            { tree.ImageList.Images.Add(image.Name, image.GetImage(ScopeImage.Normal)); }
+            { tree.ImageList.Images.Add(image.Name, image.GetImage()); }
         }
 
         private void HelpContentNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)

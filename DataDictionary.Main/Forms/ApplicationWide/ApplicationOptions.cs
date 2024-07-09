@@ -1,19 +1,11 @@
-﻿using DataDictionary.BusinessLayer.WorkFlows;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.ComponentModel;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Properties;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Forms;
+using DataDictionary.Resource.Enumerations;
 using Toolbox.Threading;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.BusinessLayer;
 
 namespace DataDictionary.Main.ApplicationWide
 {
@@ -22,6 +14,8 @@ namespace DataDictionary.Main.ApplicationWide
         public ApplicationOptions() : base()
         {
             InitializeComponent();
+
+            this.Icon = WinFormEnumeration.GetIcon(ScopeType.ApplicationOption);
         }
 
         private void ApplicationOptions_Load(object sender, EventArgs e)

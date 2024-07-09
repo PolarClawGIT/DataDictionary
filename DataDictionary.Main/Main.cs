@@ -19,7 +19,7 @@ namespace DataDictionary.Main
         public Main() : base()
         {
             InitializeComponent();
-            Icon = Resources.Icon_Application;
+            Icon = WinFormEnumeration.GetIcon(ScopeType.Application);
 
             IsLocked(true);
             
@@ -30,8 +30,16 @@ namespace DataDictionary.Main
             Worker.InvokeUsing = this.Invoke;
 
             // Set the other images
-            manageLibrariesCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library, ScopeImage.Normal);
-            viewLibrarySourceCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library, ScopeImage.Normal);
+            // TODO: The designer does not execute this stuff.
+            // Image in design view may not match what is in the WinFormEnumeration.
+            // Result, there are two places that the image needs to be maintained.
+            // The Form (every form) and the WinFormEnumeration. 
+            // The desire is to have only one places of "truth"
+            optionsToolStripMenuItem.Image = WinFormEnumeration.GetImage(ScopeType.ApplicationOption);
+            manageLibrariesCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library);
+            viewLibrarySourceCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library);
+
+            menuAttributes.Image = WinFormEnumeration.GetImage(ScopeType.ModelAttribute);
         }
 
         #region Form

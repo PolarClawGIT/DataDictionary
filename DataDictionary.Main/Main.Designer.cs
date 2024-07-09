@@ -436,6 +436,7 @@
             // 
             // manageLibrariesCommand
             // 
+            manageLibrariesCommand.Image = Properties.Resources.Library;
             manageLibrariesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageLibrariesCommand.DropDown = libraryContextMenu;
             manageLibrariesCommand.ImageTransparentColor = Color.Magenta;

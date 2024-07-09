@@ -141,6 +141,7 @@ namespace DataDictionary.Main.Enumerations
                     new(ScopeImage.Delete, Resources.DeleteStatusHelp)),
                 new WinFormEnumeration(ScopeType.ApplicationHelpPage,        Resources.StatusHelp),
                 new WinFormEnumeration(ScopeType.ApplicationHelpGroup,       Resources.HelpIndexFile),
+                new WinFormEnumeration(ScopeType.ApplicationOption,          Resources.Icon_Settings, Resources.Settings),
 
                 new WinFormEnumeration(ScopeType.Library,                    Resources.Icon_Library,
                     new(ScopeImage.Normal, Resources.Library),
@@ -233,6 +234,18 @@ namespace DataDictionary.Main.Enumerations
         }
 
         /// <summary>
+        /// Given the Scope and Image, return the default Image.
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <returns></returns>
+        public static Image GetImage(ScopeType scope)
+        {
+            if (Values.ContainsKey(scope))
+            { return Values[scope].GetImage(); }
+            else { return defaultImage; }
+        }
+
+        /// <summary>
         /// Image, return the Image object or default Image.
         /// </summary>
         /// <param name="image"></param>
@@ -241,7 +254,16 @@ namespace DataDictionary.Main.Enumerations
         {
             if (Images.ContainsKey(image))
             { return Images[image]; }
-            else if (Images.ContainsKey(ScopeImage.Normal))
+            else { return GetImage(); }
+        }
+
+        /// <summary>
+        /// Image, return the default Image.
+        /// </summary>
+        /// <returns></returns>
+        public Image GetImage()
+        {
+            if (Images.ContainsKey(ScopeImage.Normal))
             { return Images[ScopeImage.Normal]; }
             else { return defaultImage; }
         }
