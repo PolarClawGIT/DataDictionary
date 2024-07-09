@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -12,6 +14,8 @@ namespace DataDictionary.Main.Forms.Database
         public DbSchema() : base()
         {
             InitializeComponent();
+
+            this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseSchema);
         }
 
         public DbSchema(ISchemaValue schemaItem) : this()

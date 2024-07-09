@@ -161,7 +161,6 @@
             // 
             // addDatabaseCommand
             // 
-            addDatabaseCommand.Image = Properties.Resources.NewDatabase;
             addDatabaseCommand.Name = "addDatabaseCommand";
             addDatabaseCommand.Size = new Size(168, 22);
             addDatabaseCommand.Text = "Add Database";
@@ -170,7 +169,6 @@
             // 
             // removeDatabaseCommand
             // 
-            removeDatabaseCommand.Image = Properties.Resources.DeleteDatabase;
             removeDatabaseCommand.Name = "removeDatabaseCommand";
             removeDatabaseCommand.Size = new Size(168, 22);
             removeDatabaseCommand.Text = "Remove Database";

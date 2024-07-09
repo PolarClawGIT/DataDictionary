@@ -1,5 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -15,6 +17,8 @@ namespace DataDictionary.Main.Forms.Database
         {
             InitializeComponent();
             toolStrip.TransferItems(catalogToolStrip, 0);
+
+            this.Icon = WinFormEnumeration.GetIcon(ScopeType.Database);
         }
 
         public DbCatalog(ICatalogValue catalogItem) : this()

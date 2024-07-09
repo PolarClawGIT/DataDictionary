@@ -116,15 +116,8 @@ namespace DataDictionary.Main.Forms
         /// Sets Title, Icon and RowState based on the BindingSource data.
         /// </summary>
         /// <param name="data"></param>
-        /// <param name="scope"></param>
-        protected void Setup(BindingSource data, ScopeType scope = ScopeType.Null)
+        protected void Setup(BindingSource data)
         {
-            ScopeType scopeValue = scope;
-            if (data.Current is IScopeType item)
-            { scopeValue = item.Scope; }
-
-            this.Icon = WinFormEnumeration.Cast(scopeValue).WindowIcon;
-
             if (data.Current is IBindingRowState binding)
             {
                 RowState = binding.RowState();

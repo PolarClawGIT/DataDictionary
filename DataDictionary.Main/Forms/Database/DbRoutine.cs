@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -14,7 +16,7 @@ namespace DataDictionary.Main.Forms.Database
             InitializeComponent();
         }
 
-        public DbRoutine(IRoutineValue routineItem): this()
+        public DbRoutine(IRoutineValue routineItem) : this()
         {
             RoutineIndexName key = new RoutineIndexName(routineItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
@@ -26,6 +28,11 @@ namespace DataDictionary.Main.Forms.Database
 
             if (bindingRoutine.Current is IRoutineValue current)
             {
+                if (current.RoutineType is DbRoutineType.Function)
+                { this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseFunction); }
+                else if (current.RoutineType is DbRoutineType.Procedure)
+                { this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseProcedure); }
+
                 bindingParameters.DataSource = new BindingView<RoutineParameterValue>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
                 bindingDependencies.DataSource = new BindingView<RoutineDependencyValue>(BusinessData.DatabaseModel.DbRoutineDependencies, w => key.Equals(w));
                 bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));

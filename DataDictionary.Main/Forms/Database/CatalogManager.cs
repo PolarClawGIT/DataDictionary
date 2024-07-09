@@ -2,8 +2,10 @@
 using DataDictionary.BusinessLayer.Database;
 using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.Threading;
 
@@ -21,7 +23,9 @@ namespace DataDictionary.Main.Forms.Database
             addDatabaseCommand.Enabled = true;
             removeDatabaseCommand.Enabled = false;
 
-            this.Icon = Resources.Icon_Database;
+            this.Icon = WinFormEnumeration.GetIcon(ScopeType.Database);
+            addDatabaseCommand.Image = WinFormEnumeration.GetImage(ScopeType.Database, ScopeImage.New);
+            removeDatabaseCommand.Image = WinFormEnumeration.GetImage(ScopeType.Database, ScopeImage.Delete);
         }
 
         private void CatalogManager_Load(object sender, EventArgs e)

@@ -1,5 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -28,6 +30,11 @@ namespace DataDictionary.Main.Forms.Database
 
             if (bindingColumn.Current is ITableColumnValue current)
             {
+                if (current.TableType is DbTableType.Table or DbTableType.TemporalTable or DbTableType.HistoryTable)
+                { this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseTableColumn); }
+                else if (current.TableType is DbTableType.View)
+                { this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseViewColumn); }
+
                 bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
 

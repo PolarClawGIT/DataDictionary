@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Database;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -27,6 +29,11 @@ namespace DataDictionary.Main.Forms.Database
 
             if (bindingParameter.Current is IRoutineParameterValue current)
             {
+                if (current.RoutineType is DbRoutineType.Function)
+                { this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseFunctionParameter); }
+                else if (current.RoutineType is DbRoutineType.Procedure)
+                { this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseProcedureParameter); }
+
                 bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }
