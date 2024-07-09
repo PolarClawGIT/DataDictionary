@@ -422,7 +422,6 @@
             // 
             // viewLibrarySourceCommand
             // 
-            viewLibrarySourceCommand.Image = Properties.Resources.Library;
             viewLibrarySourceCommand.Name = "viewLibrarySourceCommand";
             viewLibrarySourceCommand.Size = new Size(204, 22);
             viewLibrarySourceCommand.Text = "browse Library Sources";
@@ -440,7 +439,6 @@
             // 
             manageLibrariesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageLibrariesCommand.DropDown = libraryContextMenu;
-            manageLibrariesCommand.Image = Properties.Resources.Library;
             manageLibrariesCommand.ImageTransparentColor = Color.Magenta;
             manageLibrariesCommand.Name = "manageLibrariesCommand";
             manageLibrariesCommand.Size = new Size(32, 22);

@@ -174,7 +174,6 @@
             // 
             // addLibraryCommand
             // 
-            addLibraryCommand.Image = Properties.Resources.NewLibrary;
             addLibraryCommand.Name = "addLibraryCommand";
             addLibraryCommand.Size = new Size(153, 22);
             addLibraryCommand.Text = "add Library";
@@ -182,7 +181,6 @@
             // 
             // removeLibraryComand
             // 
-            removeLibraryComand.Image = Properties.Resources.DeleteLibrary;
             removeLibraryComand.Name = "removeLibraryComand";
             removeLibraryComand.Size = new Size(153, 22);
             removeLibraryComand.Text = "remove Library";

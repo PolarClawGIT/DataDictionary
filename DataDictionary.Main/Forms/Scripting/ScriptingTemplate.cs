@@ -308,7 +308,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             foreach (var groups in BusinessData.ScriptingEngine.Properties.GroupBy(g => g.PropertyScope))
             {
-                ListViewGroup newGroup = new ListViewGroup(ScopeWinFormEnumeration.Cast(groups.Key).Name);
+                ListViewGroup newGroup = new ListViewGroup(WinFormEnumeration.Cast(groups.Key).Name);
                 elementSelection.Groups.Add(newGroup);
 
                 foreach (NodePropertyValue item in groups)
@@ -376,7 +376,7 @@ namespace DataDictionary.Main.Forms.Scripting
                         Exception ex = new InvalidOperationException("Duplicate");
                         ex.Data.Add(nameof(template.TemplateTitle), template.TemplateTitle);
                         ex.Data.Add(nameof(element.PropertyName), element.PropertyName);
-                        ex.Data.Add(nameof(element.PropertyScope), ScopeWinFormEnumeration.Cast(element.PropertyScope).Name);
+                        ex.Data.Add(nameof(element.PropertyScope), WinFormEnumeration.Cast(element.PropertyScope).Name);
                         throw ex;
                     }
 

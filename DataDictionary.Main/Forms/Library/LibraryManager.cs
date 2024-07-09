@@ -1,8 +1,10 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.Library;
 using DataDictionary.Main.Controls;
+using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.Threading;
 
@@ -17,7 +19,9 @@ namespace DataDictionary.Main.Forms.Library
             InitializeComponent();
             toolStrip.TransferItems(libararyToolStrip, 0);
 
-            this.Icon = Resources.Icon_Library;
+            this.Icon = WinFormEnumeration.GetIcon(ScopeType.Library);
+            addLibraryCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library, ScopeImage.New);
+            removeLibraryComand.Image = WinFormEnumeration.GetImage(ScopeType.Library, ScopeImage.Delete);
         }
 
         private void LibraryManager_Load(object sender, EventArgs e)

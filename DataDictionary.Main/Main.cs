@@ -5,6 +5,7 @@ using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Forms;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.Threading;
 
@@ -23,11 +24,14 @@ namespace DataDictionary.Main
             IsLocked(true);
             
             // Setup Images for Tree Control
-            contextNameNavigation.ImageList = ScopeWinFormEnumeration.AsImageList();
-
+            contextNameNavigation.ImageList = WinFormEnumeration.AsImageList();
 
             //Hook the WorkerQueue up to this forms UI thread for events.
             Worker.InvokeUsing = this.Invoke;
+
+            // Set the other images
+            manageLibrariesCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library, ScopeImage.Normal);
+            viewLibrarySourceCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library, ScopeImage.Normal);
         }
 
         #region Form

@@ -123,7 +123,7 @@ namespace DataDictionary.Main.Forms
             if (data.Current is IScopeType item)
             { scopeValue = item.Scope; }
 
-            this.Icon = ScopeWinFormEnumeration.Cast(scopeValue).WindowIcon;
+            this.Icon = WinFormEnumeration.Cast(scopeValue).WindowIcon;
 
             if (data.Current is IBindingRowState binding)
             {
