@@ -1,5 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Library;
 using DataDictionary.Main.Properties;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
@@ -14,12 +16,12 @@ namespace DataDictionary.Main.Forms.Library
         public LibrarySource() : base()
         {
             InitializeComponent();
-            this.Icon = Resources.Icon_Library;
         }
 
         public LibrarySource(ILibrarySourceValue librarySource) : this ()
         {
             LibrarySourceIndex key = new LibrarySourceIndex(librarySource);
+            this.Icon = WinFormEnumeration.GetIcon(librarySource.Scope);
 
             bindingSource.DataSource = new BindingView<LibrarySourceValue>(BusinessData.LibraryModel.LibrarySources, w => key.Equals(w));
             bindingSource.Position = 0;

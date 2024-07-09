@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
+using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
@@ -18,7 +19,6 @@ namespace DataDictionary.Main.Forms.Domain
         {
             InitializeComponent();
             toolStrip.TransferItems(attributeToolStrip, 0);
-
         }
 
         public DomainAttribute(IAttributeValue? attributeItem) : this()
@@ -30,6 +30,8 @@ namespace DataDictionary.Main.Forms.Domain
             }
 
             AttributeIndex key = new AttributeIndex(attributeItem);
+            this.Icon = WinFormEnumeration.GetIcon(attributeItem.Scope);
+
             bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => key.Equals(w));
             bindingAttribute.Position = 0;
 

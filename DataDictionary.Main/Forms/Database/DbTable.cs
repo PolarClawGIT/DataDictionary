@@ -22,6 +22,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             TableIndexName key = new TableIndexName(tableItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
+            this.Icon = WinFormEnumeration.GetIcon(tableItem.Scope);
 
             bindingTable.DataSource = new BindingView<TableValue>(BusinessData.DatabaseModel.DbTables, w => key.Equals(w));
             bindingTable.Position = 0;
@@ -30,11 +31,6 @@ namespace DataDictionary.Main.Forms.Database
 
             if (bindingTable.Current is ITableValue current)
             {
-                if (current.TableType is DbTableType.Table or DbTableType.TemporalTable or DbTableType.HistoryTable)
-                { this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseTable); }
-                else if (current.TableType is DbTableType.View)
-                { this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseView); }
-
                 bindingColumns.DataSource = new BindingView<TableColumnValue>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
                 bindingConstraints.DataSource = new BindingView<ConstraintValue>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
                 bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));

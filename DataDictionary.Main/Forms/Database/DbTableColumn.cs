@@ -22,19 +22,15 @@ namespace DataDictionary.Main.Forms.Database
         {
             TableColumnIndexName key = new TableColumnIndexName(columnItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
+            this.Icon = WinFormEnumeration.GetIcon(columnItem.Scope);
 
             bindingColumn.DataSource = new BindingView<TableColumnValue>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
             bindingColumn.Position = 0;
-
+            
             Setup(bindingColumn);
 
             if (bindingColumn.Current is ITableColumnValue current)
             {
-                if (current.TableType is DbTableType.Table or DbTableType.TemporalTable or DbTableType.HistoryTable)
-                { this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseTableColumn); }
-                else if (current.TableType is DbTableType.View)
-                { this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseViewColumn); }
-
                 bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
 

@@ -1,4 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Library;
+using DataDictionary.Main.Enumerations;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -17,6 +19,7 @@ namespace DataDictionary.Main.Forms.Library
         public LibraryMember(ILibraryMemberValue libraryMember) : this()
         {
             LibraryMemberIndex key = new LibraryMemberIndex(libraryMember);
+            this.Icon = WinFormEnumeration.GetIcon(libraryMember.Scope);
 
             bindingMember.DataSource = new BindingView<LibraryMemberValue>(BusinessData.LibraryModel.LibraryMembers, w => key.Equals(new LibraryMemberIndex(w)));
             bindingMember.Position = 0;
@@ -24,7 +27,9 @@ namespace DataDictionary.Main.Forms.Library
             Setup(bindingMember);
 
             if (bindingMember.Current is ILibraryMemberValue current)
-            { bindingChild.DataSource = new BindingView<LibraryMemberValue>(BusinessData.LibraryModel.LibraryMembers, w => new LibraryMemberIndexParent(w).Equals(key)); }
+            {
+                bindingChild.DataSource = new BindingView<LibraryMemberValue>(BusinessData.LibraryModel.LibraryMembers, w => new LibraryMemberIndexParent(w).Equals(key)); 
+            }
         }
 
         private void LibraryMember_Load(object sender, EventArgs e)

@@ -17,13 +17,12 @@ namespace DataDictionary.Main.Forms.Database
         {
             InitializeComponent();
             toolStrip.TransferItems(catalogToolStrip, 0);
-
-            this.Icon = WinFormEnumeration.GetIcon(ScopeType.Database);
         }
 
         public DbCatalog(ICatalogValue catalogItem) : this()
         {
             CatalogIndex key = new CatalogIndex(catalogItem);
+            this.Icon = WinFormEnumeration.GetIcon(catalogItem.Scope);
 
             bindingSource.DataSource = new BindingView<CatalogValue>(BusinessData.DatabaseModel.DbCatalogs, w => key.Equals(w));
             bindingSource.Position = 0;

@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.Model;
 using DataDictionary.Main.Controls;
-using System.ComponentModel;
+using DataDictionary.Main.Enumerations;
 using Toolbox.BindingTable;
 
 namespace DataDictionary.Main.Forms.Model
@@ -25,6 +25,8 @@ namespace DataDictionary.Main.Forms.Model
             }
 
             ModelIndex key = new ModelIndex(model);
+            this.Icon = WinFormEnumeration.GetIcon(model.Scope);
+
             bindingModel.DataSource = new BindingView<ModelValue>(BusinessData.Models, w => key.Equals(w));
             bindingModel.Position = 0;
 

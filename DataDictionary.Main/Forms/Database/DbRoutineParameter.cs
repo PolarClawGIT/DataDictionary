@@ -21,6 +21,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             RoutineParameterKeyName key = new RoutineParameterKeyName(parameterItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
+            this.Icon = WinFormEnumeration.GetIcon(parameterItem.Scope);
 
             bindingParameter.DataSource = new BindingView<RoutineParameterValue>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
             bindingParameter.Position = 0;
@@ -29,11 +30,6 @@ namespace DataDictionary.Main.Forms.Database
 
             if (bindingParameter.Current is IRoutineParameterValue current)
             {
-                if (current.RoutineType is DbRoutineType.Function)
-                { this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseFunctionParameter); }
-                else if (current.RoutineType is DbRoutineType.Procedure)
-                { this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseProcedureParameter); }
-
                 bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
         }

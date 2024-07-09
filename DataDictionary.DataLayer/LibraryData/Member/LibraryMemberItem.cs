@@ -78,7 +78,7 @@ namespace DataDictionary.DataLayer.LibraryData.Member
                     case LibraryMemberType.Property: return ScopeType.LibraryTypeProperty;
                     case LibraryMemberType.Method: return ScopeType.LibraryTypeMethod;
                     case LibraryMemberType.Event: return ScopeType.LibraryTypeEvent;
-                    case LibraryMemberType.Parameter: return ScopeType.LibraryMethodParameter;
+                    case LibraryMemberType.Parameter: return ScopeType.LibraryTypeParameter;
                     default: return ScopeType.Null;
                 }
             }

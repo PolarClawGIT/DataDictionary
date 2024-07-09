@@ -3,6 +3,7 @@ using DataDictionary.BusinessLayer.Model;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Forms.Domain.ComboBoxList;
+using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
@@ -29,6 +30,8 @@ namespace DataDictionary.Main.Forms.Domain
             }
 
             EntityIndex key = new EntityIndex(entityItem);
+            this.Icon = WinFormEnumeration.GetIcon(entityItem.Scope);
+
             bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.DomainModel.Entities, w => key.Equals(w));
             bindingEntity.Position = 0;
 

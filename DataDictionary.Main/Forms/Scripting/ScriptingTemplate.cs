@@ -36,6 +36,8 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
             TemplateIndex key = new TemplateIndex(templateItem);
+            this.Icon = WinFormEnumeration.GetIcon(templateItem.Scope);
+
             bindingTemplate.DataSource = new BindingView<TemplateValue>(BusinessData.ScriptingEngine.Templates, w => key.Equals(w));
             bindingTemplate.Position = 0;
 

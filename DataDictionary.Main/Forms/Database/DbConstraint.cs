@@ -22,6 +22,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             ConstraintIndexName key = new ConstraintIndexName(constraintItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
+            this.Icon = WinFormEnumeration.GetIcon(constraintItem.Scope);
 
             bindingConstraint.DataSource = new BindingView<ConstraintValue>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
             bindingConstraint.Position = 0;

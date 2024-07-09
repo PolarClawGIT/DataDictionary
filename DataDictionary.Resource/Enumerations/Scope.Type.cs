@@ -121,14 +121,9 @@
         LibraryTypeProperty,
 
         /// <summary>
-        /// .Net Library Method Parameter
+        /// .Net Library Method/Property Parameter
         /// </summary>
-        LibraryMethodParameter,
-
-        /// <summary>
-        /// .Net Library Property Parameter, Indexer
-        /// </summary>
-        LibraryPropertyParameter,
+        LibraryTypeParameter,
 
         /// <summary>
         /// SQL Database

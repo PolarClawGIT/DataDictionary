@@ -1,6 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.Main.Enumerations;
-using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
 
@@ -15,14 +14,13 @@ namespace DataDictionary.Main.Forms.Database
         public DbDomain() : base()
         {
             InitializeComponent();
-
-            this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseDomain);
         }
 
         public DbDomain(IDomainValue domainItem) : this()
         {
             DomainIndexName key = new DomainIndexName(domainItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
+            this.Icon = WinFormEnumeration.GetIcon(domainItem.Scope);
 
             bindingDomain.DataSource = new BindingView<DomainValue>(BusinessData.DatabaseModel.DbDomains, w => key.Equals(w));
             bindingDomain.Position = 0;
