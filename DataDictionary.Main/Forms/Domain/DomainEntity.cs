@@ -30,7 +30,7 @@ namespace DataDictionary.Main.Forms.Domain
             }
 
             EntityIndex key = new EntityIndex(entityItem);
-            this.Icon = WinFormEnumeration.GetIcon(entityItem.Scope);
+            this.Icon = ImageEnumeration.GetIcon(entityItem.Scope);
 
             bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.DomainModel.Entities, w => key.Equals(w));
             bindingEntity.Position = 0;

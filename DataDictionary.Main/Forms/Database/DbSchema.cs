@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             SchemaIndexName key = new SchemaIndexName(schemaItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
-            this.Icon = WinFormEnumeration.GetIcon(schemaItem.Scope);
+            this.Icon = ImageEnumeration.GetIcon(schemaItem.Scope);
 
             bindingSchema.DataSource = new BindingView<SchemaValue>(BusinessData.DatabaseModel.DbSchemta, w => key.Equals(w));
             bindingSchema.Position = 0;

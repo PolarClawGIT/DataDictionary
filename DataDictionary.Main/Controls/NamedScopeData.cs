@@ -47,7 +47,7 @@ namespace DataDictionary.Main.Controls
         {
             InitializeComponent();
 
-            ImageList aliasImages = WinFormEnumeration.AsImageList();
+            ImageList aliasImages = ImageEnumeration.AsImageList();
 
             browser.SmallImageList = aliasImages;
             browser.Columns.Add("Path", browser.Width);
@@ -66,7 +66,7 @@ namespace DataDictionary.Main.Controls
             {
                 INamedScopeValue value = namedScope.GetValue(item);
 
-                ListViewItem browserItem = new ListViewItem(value.Title, WinFormEnumeration.Cast(value.Scope).Name);
+                ListViewItem browserItem = new ListViewItem(value.Title, ImageEnumeration.Cast(value.Scope).Name);
                 browserItem.ToolTipText = value.NamedPath.MemberFullPath;
 
                 if (ScopeKey is null) { ScopeKey = value.Index; }
@@ -86,7 +86,7 @@ namespace DataDictionary.Main.Controls
                 OrderBy(o => o.OrdinalPosition).
                 ThenBy(o => o.Title))
             {
-                ListViewItem browserItem = new ListViewItem(value.Title, WinFormEnumeration.Cast(value.Scope).Name);
+                ListViewItem browserItem = new ListViewItem(value.Title, ImageEnumeration.Cast(value.Scope).Name);
                 browserItem.ToolTipText = value.NamedPath.MemberFullPath;
 
                 browser.Items.Add(browserItem);
@@ -102,7 +102,7 @@ namespace DataDictionary.Main.Controls
                     OrderBy(o => o.OrdinalPosition).
                     ThenBy(o => o.Title))
                 {
-                    ListViewItem browserItem = new ListViewItem(value.Title, WinFormEnumeration.Cast(value.Scope).Name);
+                    ListViewItem browserItem = new ListViewItem(value.Title, ImageEnumeration.Cast(value.Scope).Name);
                     browserItem.ToolTipText = value.NamedPath.MemberFullPath;
 
                     if (ScopeKey is null) { ScopeKey = value.Index; }
@@ -113,7 +113,7 @@ namespace DataDictionary.Main.Controls
 
             // Current Node
             INamedScopeValue currentValue = namedScope.GetValue(key);
-            ListViewItem currentItem = new ListViewItem(currentValue.Title, WinFormEnumeration.Cast(currentValue.Scope).Name);
+            ListViewItem currentItem = new ListViewItem(currentValue.Title, ImageEnumeration.Cast(currentValue.Scope).Name);
             currentItem.ToolTipText = currentValue.NamedPath.MemberFullPath;
             currentItem.Font = new Font(currentItem.Font, FontStyle.Underline);
             currentItem.ForeColor = Color.Blue;
@@ -129,7 +129,7 @@ namespace DataDictionary.Main.Controls
                 ThenBy(o => o.OrdinalPosition).
                 ThenBy(o => o.Title))
             {
-                ListViewItem browserItem = new ListViewItem(value.Title, WinFormEnumeration.Cast(value.Scope).Name);
+                ListViewItem browserItem = new ListViewItem(value.Title, ImageEnumeration.Cast(value.Scope).Name);
                 browserItem.ToolTipText = value.NamedPath.MemberFullPath;
                 browserItem.IndentCount = 1;
 

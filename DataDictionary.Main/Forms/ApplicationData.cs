@@ -19,6 +19,56 @@ namespace DataDictionary.Main.Forms
             { DataRowState.Unchanged, new (Resources.Row, "Unchanged")},
         };
 
+        protected class CommandState
+        {
+            readonly ToolStripItem Control;
+
+            /// <summary>
+            /// Is the Command Button Enabled
+            /// </summary>
+            public Boolean IsEnabled
+            {
+                get { return Control.Enabled; }
+                set
+                {
+                    Control.Enabled = value && AllowEnabled();
+                    isEnabled = value;
+                }
+            }
+            Boolean isEnabled = false; // Intended State
+            public Func<Boolean> AllowEnabled { get; init; } = () => { return true; };
+
+            public void Refresh()
+            { Control.Enabled = isEnabled && AllowEnabled(); }
+
+            /// <summary>
+            /// Is the Command Button Visible
+            /// </summary>
+            public Boolean IsVisible
+            {
+                get { return Control.Visible; }
+                set { Control.Visible = value; }
+            }
+
+            /// <summary>
+            /// Image for the Command Button
+            /// </summary>
+            public Image? Image
+            {
+                get { return Control.Image; }
+                set { Control.Image = value; }
+            }
+
+            public CommandState(ToolStripItem control)
+            { Control = control; }
+
+        }
+
+        /// <summary>
+        /// The set of Command Buttons
+        /// </summary>
+        protected IReadOnlyDictionary<CommandImageType, CommandState> CommandButtons { get { return commandButtons; } }
+        Dictionary<CommandImageType, CommandState> commandButtons = new Dictionary<CommandImageType, CommandState>();
 
         private DataRowState? rowState;
         public DataRowState? RowState
@@ -57,6 +107,16 @@ namespace DataDictionary.Main.Forms
         {
             InitializeComponent();
 
+            commandButtons.Add(CommandImageType.Browse, new CommandState(browseCommand) { IsVisible = false });
+            commandButtons.Add(CommandImageType.New, new CommandState(newCommand) { IsVisible = false });
+            commandButtons.Add(CommandImageType.Delete, new CommandState(deleteCommand) { IsVisible = false });
+            commandButtons.Add(CommandImageType.Save, new CommandState(saveCommand) { IsVisible = false });
+            commandButtons.Add(CommandImageType.Open, new CommandState(openCommand) { IsVisible = false });
+            commandButtons.Add(CommandImageType.Import, new CommandState(importCommand) { IsVisible = false });
+            commandButtons.Add(CommandImageType.Export, new CommandState(exportCommand) { IsVisible = false });
+            commandButtons.Add(CommandImageType.OpenDatabase, new CommandState(openFromDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
+            commandButtons.Add(CommandImageType.SaveDatabase, new CommandState(saveToDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
+            commandButtons.Add(CommandImageType.DeleteDatabase, new CommandState(deleteFromDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
         }
 
         /// <summary>
@@ -113,7 +173,7 @@ namespace DataDictionary.Main.Forms
 
         /// <summary>
         /// Common Setup method.
-        /// Sets Title, Icon and RowState based on the BindingSource data.
+        /// Sets RowState based on the BindingSource data.
         /// </summary>
         /// <param name="data"></param>
         protected void Setup(BindingSource data)
@@ -126,45 +186,21 @@ namespace DataDictionary.Main.Forms
         }
 
         /// <summary>
-        /// Exposes the Enabled/Disabled state of the OpenFromDatabase button.
+        /// Common Setup method.
+        /// Sets the Icon and Command Button Images
         /// </summary>
-        /// <remarks>Set verifies that the application is in an OnLine State and handles change to OnLine State</remarks>
-        protected Boolean IsOpenDatabase
+        /// <param name="scope"></param>
+        protected void Setup(ScopeType scope)
         {
-            get { return openFromDatabaseCommand.Enabled; }
-            set
+            Icon = ImageEnumeration.GetIcon(scope);
+
+            foreach (KeyValuePair<CommandImageType, CommandState> item in commandButtons)
             {
-                openFromDatabaseCommand.Enabled = value && Settings.Default.IsOnLineMode;
-                isOpenDatabase = value;
+                if (ImageEnumeration.Values.ContainsKey(scope) && ImageEnumeration.Values[scope].Images.ContainsKey(item.Key))
+                { item.Value.Image = ImageEnumeration.GetImage(scope, item.Key); }
+                // Else leave the image as is
             }
         }
-        Boolean isOpenDatabase = false; // Intended State
-
-        /// <summary>
-        /// Exposes the Enabled/Disabled state of the SaveToDatabase button
-        /// </summary>
-        /// <remarks>Set verifies that the application is in an OnLine State and handles change to OnLine State</remarks>
-        protected Boolean IsSaveDatabase
-        {
-            get { return saveToDatabaseCommand.Enabled; }
-            set
-            {
-                saveToDatabaseCommand.Enabled = value && Settings.Default.IsOnLineMode;
-                isSaveDatabase = value;
-            }
-        }
-        Boolean isSaveDatabase = false; // Intended State
-
-        /// <summary>
-        /// Exposes the Enabled/Disabled state of the DeleteFromDatabase button
-        /// </summary>
-        /// <remarks>Set verifies that the application is in an OnLine State and handles change to OnLine State</remarks>
-        protected Boolean IsDeleteDatabase
-        {
-            get { return deleteFromDatabaseCommand.Enabled; }
-            set { deleteFromDatabaseCommand.Enabled = value && Settings.Default.IsOnLineMode; isDeleteDatabase = value; }
-        }
-        Boolean isDeleteDatabase = false; // Intended State
 
         protected virtual void helpToolStripButton_Click(object sender, EventArgs e)
         { Activate(() => new ApplicationWide.HelpSubject(this)); }
@@ -178,12 +214,35 @@ namespace DataDictionary.Main.Forms
         protected virtual void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
         { }
 
+        protected virtual void BrowseCommand_Click(object? sender, EventArgs e)
+        { }
+
+        protected virtual void NewCommand_Click(object? sender, EventArgs e)
+        { }
+
+        protected virtual void DeleteCommand_Click(object? sender, EventArgs e)
+        { }
+
+        protected virtual void ImportCommand_Click(object? sender, EventArgs e)
+        { }
+
+        protected virtual void ExportCommand_Click(object? sender, EventArgs e)
+        { }
+
+        protected virtual void OpenCommand_Click(object? sender, EventArgs e)
+        { }
+
+        protected virtual void SaveCommand_Click(object? sender, EventArgs e)
+        { }
+
         protected override void HandleMessage(OnlineStatusChanged message)
         {
             base.HandleMessage(message);
-            IsOpenDatabase = isOpenDatabase;
-            IsSaveDatabase = isSaveDatabase;
-            IsDeleteDatabase = isDeleteDatabase;
+            commandButtons[CommandImageType.OpenDatabase].Refresh();
+            commandButtons[CommandImageType.SaveDatabase].Refresh();
+            commandButtons[CommandImageType.DeleteDatabase].Refresh();
         }
+
+
     }
 }

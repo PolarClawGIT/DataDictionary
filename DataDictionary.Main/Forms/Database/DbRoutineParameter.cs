@@ -21,7 +21,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             RoutineParameterKeyName key = new RoutineParameterKeyName(parameterItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
-            this.Icon = WinFormEnumeration.GetIcon(parameterItem.Scope);
+            this.Icon = ImageEnumeration.GetIcon(parameterItem.Scope);
 
             bindingParameter.DataSource = new BindingView<RoutineParameterValue>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
             bindingParameter.Position = 0;

@@ -21,7 +21,7 @@ namespace DataDictionary.Main.Forms.Library
         public LibrarySource(ILibrarySourceValue librarySource) : this ()
         {
             LibrarySourceIndex key = new LibrarySourceIndex(librarySource);
-            this.Icon = WinFormEnumeration.GetIcon(librarySource.Scope);
+            this.Icon = ImageEnumeration.GetIcon(librarySource.Scope);
 
             bindingSource.DataSource = new BindingView<LibrarySourceValue>(BusinessData.LibraryModel.LibrarySources, w => key.Equals(w));
             bindingSource.Position = 0;

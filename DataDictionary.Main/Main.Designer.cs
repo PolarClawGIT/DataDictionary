@@ -177,7 +177,6 @@
             // 
             attributeContextMenu.Items.AddRange(new ToolStripItem[] { menuAttributes, menuAttributeAlaises, menuAttributeProperties, menuAttributeDefinitions });
             attributeContextMenu.Name = "attributeContextMenu";
-            attributeContextMenu.OwnerItem = newAttributeCommand;
             attributeContextMenu.Size = new Size(223, 92);
             // 
             // menuAttributes
@@ -227,7 +226,6 @@
             // 
             entityContextMenu.Items.AddRange(new ToolStripItem[] { menuEntities, menuEntityAlias, menuEntityProperties, menuEntityDefinitions });
             entityContextMenu.Name = "entityContextMenu";
-            entityContextMenu.OwnerItem = newEntityCommand;
             entityContextMenu.Size = new Size(206, 92);
             // 
             // menuEntities
@@ -277,7 +275,6 @@
             // 
             subjectAreaContextMenu.Items.AddRange(new ToolStripItem[] { subjectAreaToolStripMenuItem });
             subjectAreaContextMenu.Name = "subjectAreaContextMenu";
-            subjectAreaContextMenu.OwnerItem = newSubjectAreaCommand;
             subjectAreaContextMenu.Size = new Size(187, 26);
             // 
             // subjectAreaToolStripMenuItem
@@ -303,7 +300,6 @@
             // 
             catalogContextMenu.Items.AddRange(new ToolStripItem[] { menuManageCatalog, menuCatalogItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineDependencyItem });
             catalogContextMenu.Name = "dbSchemacontextMenu";
-            catalogContextMenu.OwnerItem = manageDatabasesCommand;
             catalogContextMenu.Size = new Size(234, 268);
             // 
             // menuManageCatalog
@@ -416,11 +412,11 @@
             // 
             libraryContextMenu.Items.AddRange(new ToolStripItem[] { viewLibrarySourceCommand, viewLibraryMemberCommand });
             libraryContextMenu.Name = "libraryContextMenu";
-            libraryContextMenu.OwnerItem = manageLibrariesCommand;
             libraryContextMenu.Size = new Size(205, 48);
             // 
             // viewLibrarySourceCommand
             // 
+            viewLibrarySourceCommand.Image = Properties.Resources.Library;
             viewLibrarySourceCommand.Name = "viewLibrarySourceCommand";
             viewLibrarySourceCommand.Size = new Size(204, 22);
             viewLibrarySourceCommand.Text = "browse Library Sources";
@@ -436,12 +432,12 @@
             // 
             // manageLibrariesCommand
             // 
-            manageLibrariesCommand.Image = Properties.Resources.Library;
             manageLibrariesCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
             manageLibrariesCommand.DropDown = libraryContextMenu;
+            manageLibrariesCommand.Image = Properties.Resources.Library;
             manageLibrariesCommand.ImageTransparentColor = Color.Magenta;
             manageLibrariesCommand.Name = "manageLibrariesCommand";
-            manageLibrariesCommand.Size = new Size(16, 22);
+            manageLibrariesCommand.Size = new Size(32, 22);
             manageLibrariesCommand.Text = "Library Manager";
             manageLibrariesCommand.ButtonClick += manageLibrariesCommand_ButtonClick;
             // 
@@ -663,13 +659,13 @@
             // 
             customizeToolStripMenuItem.Enabled = false;
             customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            customizeToolStripMenuItem.Size = new Size(180, 22);
+            customizeToolStripMenuItem.Size = new Size(135, 22);
             customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new Size(180, 22);
+            optionsToolStripMenuItem.Size = new Size(135, 22);
             optionsToolStripMenuItem.Text = "&Options";
             optionsToolStripMenuItem.Click += optionsToolStripMenuItem_Click;
             // 
@@ -677,7 +673,7 @@
             // 
             applicationToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { browseHelpCommand });
             applicationToolStripMenuItem.Name = "applicationToolStripMenuItem";
-            applicationToolStripMenuItem.Size = new Size(180, 22);
+            applicationToolStripMenuItem.Size = new Size(135, 22);
             applicationToolStripMenuItem.Text = "Application";
             // 
             // browseHelpCommand
@@ -692,7 +688,7 @@
             // 
             unitTestingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gridViewToolStripMenuItem, testFormToolStripMenuItem, textEditorToolStripMenuItem });
             unitTestingToolStripMenuItem.Name = "unitTestingToolStripMenuItem";
-            unitTestingToolStripMenuItem.Size = new Size(180, 22);
+            unitTestingToolStripMenuItem.Size = new Size(135, 22);
             unitTestingToolStripMenuItem.Text = "Testing";
             // 
             // gridViewToolStripMenuItem
@@ -840,8 +836,7 @@
             // 
             scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingPath, menuScriptingDocument, menuScriptingNode, menuScriptingAttribute });
             scriptingContextMenu.Name = "scriptingContextMenu";
-            scriptingContextMenu.OwnerItem = manageScriptingCommand;
-            scriptingContextMenu.Size = new Size(228, 114);
+            scriptingContextMenu.Size = new Size(228, 136);
             // 
             // menuScriptingTemplate
             // 

@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             RoutineIndexName key = new RoutineIndexName(routineItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
-            this.Icon = WinFormEnumeration.GetIcon(routineItem.Scope);
+            this.Icon = ImageEnumeration.GetIcon(routineItem.Scope);
 
             bindingRoutine.DataSource = new BindingView<RoutineValue>(BusinessData.DatabaseModel.DbRoutines, w => key.Equals(w));
             bindingRoutine.Position = 0;

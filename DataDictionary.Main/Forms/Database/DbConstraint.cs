@@ -15,14 +15,14 @@ namespace DataDictionary.Main.Forms.Database
         {
             InitializeComponent();
 
-            this.Icon = WinFormEnumeration.GetIcon(ScopeType.DatabaseSchema);
+            this.Icon = ImageEnumeration.GetIcon(ScopeType.DatabaseSchema);
         }
 
         public DbConstraint(IConstraintValue constraintItem) : this()
         {
             ConstraintIndexName key = new ConstraintIndexName(constraintItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
-            this.Icon = WinFormEnumeration.GetIcon(constraintItem.Scope);
+            this.Icon = ImageEnumeration.GetIcon(constraintItem.Scope);
 
             bindingConstraint.DataSource = new BindingView<ConstraintValue>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
             bindingConstraint.Position = 0;

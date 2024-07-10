@@ -20,7 +20,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             DomainIndexName key = new DomainIndexName(domainItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
-            this.Icon = WinFormEnumeration.GetIcon(domainItem.Scope);
+            this.Icon = ImageEnumeration.GetIcon(domainItem.Scope);
 
             bindingDomain.DataSource = new BindingView<DomainValue>(BusinessData.DatabaseModel.DbDomains, w => key.Equals(w));
             bindingDomain.Position = 0;

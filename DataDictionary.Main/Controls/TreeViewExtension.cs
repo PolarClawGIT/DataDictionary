@@ -164,7 +164,7 @@ namespace DataDictionary.Main.Controls
                 foreach (IGrouping<ScopeType, NamedScopeIndex> scopeGroup in children.GroupBy(g => data.GetValue(g).Scope).OrderBy(o => o.Key))
                 {
                     TreeNodeCollection nodes = targetNodes;
-                    WinFormEnumeration scopeValue = WinFormEnumeration.Cast(scopeGroup.Key);
+                    ImageEnumeration scopeValue = ImageEnumeration.Cast(scopeGroup.Key);
 
                     // Build Scope Groups
                     if (scopeGroup.Count() > 1 && scopeValue.GroupBy)
@@ -182,7 +182,7 @@ namespace DataDictionary.Main.Controls
                     foreach (NamedScopeIndex item in scopeGroup.OrderBy(o => data.GetValue(o).OrdinalPosition).ThenBy(o => data.GetValue(o).Title))
                     {
                         INamedScopeValue value = data.GetValue(item);
-                        WinFormEnumeration valueScope = WinFormEnumeration.Cast(value.Scope);
+                        ImageEnumeration valueScope = ImageEnumeration.Cast(value.Scope);
 
                         TreeNode newNode = nodes.Add(value.Title);
                         newNode.ImageKey = valueScope.Name;

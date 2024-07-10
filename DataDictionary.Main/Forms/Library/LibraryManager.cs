@@ -19,9 +19,10 @@ namespace DataDictionary.Main.Forms.Library
             InitializeComponent();
             toolStrip.TransferItems(libararyToolStrip, 0);
 
-            this.Icon = WinFormEnumeration.GetIcon(ScopeType.Library);
-            addLibraryCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library, ScopeImage.New);
-            removeLibraryComand.Image = WinFormEnumeration.GetImage(ScopeType.Library, ScopeImage.Delete);
+            Setup(ScopeType.Library);
+            CommandButtons[CommandImageType.OpenDatabase].IsVisible = true;
+            CommandButtons[CommandImageType.SaveDatabase].IsVisible = true;
+            CommandButtons[CommandImageType.DeleteDatabase].IsVisible = true;
         }
 
         private void LibraryManager_Load(object sender, EventArgs e)
@@ -256,9 +257,10 @@ namespace DataDictionary.Main.Forms.Library
         private void LibraryBinding_CurrentChanged(object sender, EventArgs e)
         {
             removeLibraryComand.Enabled = GetInModel();
-            IsOpenDatabase = GetInDatabase() && !GetInModel();
-            IsSaveDatabase = GetInModel();
-            IsDeleteDatabase = GetInDatabase();
+
+            CommandButtons[CommandImageType.OpenDatabase].IsEnabled = GetInDatabase() && !GetInModel();
+            CommandButtons[CommandImageType.SaveDatabase].IsEnabled = GetInModel();
+            CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = GetInDatabase();
         }
     }
 }

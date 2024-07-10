@@ -22,7 +22,7 @@ namespace DataDictionary.Main.Forms.Database
         public DbCatalog(ICatalogValue catalogItem) : this()
         {
             CatalogIndex key = new CatalogIndex(catalogItem);
-            this.Icon = WinFormEnumeration.GetIcon(catalogItem.Scope);
+            this.Icon = ImageEnumeration.GetIcon(catalogItem.Scope);
 
             bindingSource.DataSource = new BindingView<CatalogValue>(BusinessData.DatabaseModel.DbCatalogs, w => key.Equals(w));
             bindingSource.Position = 0;

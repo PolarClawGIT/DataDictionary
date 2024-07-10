@@ -22,7 +22,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             TableIndexName key = new TableIndexName(tableItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
-            this.Icon = WinFormEnumeration.GetIcon(tableItem.Scope);
+            this.Icon = ImageEnumeration.GetIcon(tableItem.Scope);
 
             bindingTable.DataSource = new BindingView<TableValue>(BusinessData.DatabaseModel.DbTables, w => key.Equals(w));
             bindingTable.Position = 0;

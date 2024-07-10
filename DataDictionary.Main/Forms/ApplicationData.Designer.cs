@@ -28,16 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
+            ToolStripSeparator toolStripSeparatorDb;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationData));
             openFromDatabaseCommand = new ToolStripButton();
             saveToDatabaseCommand = new ToolStripButton();
             deleteFromDatabaseCommand = new ToolStripButton();
             toolStrip = new ToolStrip();
+            browseCommand = new ToolStripButton();
+            newCommand = new ToolStripButton();
+            deleteCommand = new ToolStripButton();
+            openCommand = new ToolStripButton();
+            saveCommand = new ToolStripButton();
+            importCommand = new ToolStripButton();
+            exportCommand = new ToolStripButton();
             helpCommand = new ToolStripButton();
             rowStateCommand = new ToolStripLabel();
             helpToolStripButton = new ToolStripButton();
+            toolStripSeparatorDb = new ToolStripSeparator();
             toolStrip.SuspendLayout();
             SuspendLayout();
+            // 
+            // toolStripSeparatorDb
+            // 
+            toolStripSeparatorDb.Name = "toolStripSeparatorDb";
+            toolStripSeparatorDb.Size = new Size(6, 25);
             // 
             // openFromDatabaseCommand
             // 
@@ -74,12 +88,89 @@
             // 
             // toolStrip
             // 
-            toolStrip.Items.AddRange(new ToolStripItem[] { openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, helpCommand, rowStateCommand });
+            toolStrip.Items.AddRange(new ToolStripItem[] { browseCommand, newCommand, deleteCommand, openCommand, saveCommand, importCommand, exportCommand, toolStripSeparatorDb, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, helpCommand, rowStateCommand });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(649, 25);
             toolStrip.TabIndex = 2;
             toolStrip.VisibleChanged += toolStrip_VisibleChanged;
+            // 
+            // browseCommand
+            // 
+            browseCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            browseCommand.Enabled = false;
+            browseCommand.Image = Properties.Resources.Document;
+            browseCommand.ImageTransparentColor = Color.Magenta;
+            browseCommand.Name = "browseCommand";
+            browseCommand.Size = new Size(23, 22);
+            browseCommand.Text = "Browse";
+            browseCommand.Click += BrowseCommand_Click;
+            // 
+            // newCommand
+            // 
+            newCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            newCommand.Enabled = false;
+            newCommand.Image = Properties.Resources.NewDocument;
+            newCommand.ImageTransparentColor = Color.Magenta;
+            newCommand.Name = "newCommand";
+            newCommand.Size = new Size(23, 22);
+            newCommand.Text = "New";
+            newCommand.Click += NewCommand_Click;
+            // 
+            // deleteCommand
+            // 
+            deleteCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            deleteCommand.Enabled = false;
+            deleteCommand.Image = Properties.Resources.DeleteDocument;
+            deleteCommand.ImageTransparentColor = Color.Magenta;
+            deleteCommand.Name = "deleteCommand";
+            deleteCommand.Size = new Size(23, 22);
+            deleteCommand.Text = "Delete";
+            deleteCommand.Click += DeleteCommand_Click;
+            // 
+            // openCommand
+            // 
+            openCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            openCommand.Enabled = false;
+            openCommand.Image = Properties.Resources.OpenDocument;
+            openCommand.ImageTransparentColor = Color.Magenta;
+            openCommand.Name = "openCommand";
+            openCommand.Size = new Size(23, 22);
+            openCommand.Text = "Open";
+            openCommand.Click += OpenCommand_Click;
+            // 
+            // saveCommand
+            // 
+            saveCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            saveCommand.Enabled = false;
+            saveCommand.Image = Properties.Resources.SaveDocument;
+            saveCommand.ImageTransparentColor = Color.Magenta;
+            saveCommand.Name = "saveCommand";
+            saveCommand.Size = new Size(23, 22);
+            saveCommand.Text = "Save";
+            saveCommand.Click += SaveCommand_Click;
+            // 
+            // importCommand
+            // 
+            importCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            importCommand.Enabled = false;
+            importCommand.Image = Properties.Resources.ImportDocument;
+            importCommand.ImageTransparentColor = Color.Magenta;
+            importCommand.Name = "importCommand";
+            importCommand.Size = new Size(23, 22);
+            importCommand.Text = "Import";
+            importCommand.Click += ImportCommand_Click;
+            // 
+            // exportCommand
+            // 
+            exportCommand.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            exportCommand.Enabled = false;
+            exportCommand.Image = Properties.Resources.ExportDocument;
+            exportCommand.ImageTransparentColor = Color.Magenta;
+            exportCommand.Name = "exportCommand";
+            exportCommand.Size = new Size(23, 22);
+            exportCommand.Text = "Export";
+            exportCommand.Click += ExportCommand_Click;
             // 
             // helpCommand
             // 
@@ -127,12 +218,19 @@
         }
 
         #endregion
-        protected ToolStrip toolStrip;
         protected ToolStripButton helpToolStripButton;
         private ToolStripLabel rowStateCommand;
         private ToolStripButton helpCommand;
         private ToolStripButton openFromDatabaseCommand;
         private ToolStripButton saveToDatabaseCommand;
         private ToolStripButton deleteFromDatabaseCommand;
+        private ToolStripButton browseCommand;
+        private ToolStripButton newCommand;
+        private ToolStripButton deleteCommand;
+        private ToolStripButton importCommand;
+        private ToolStripButton exportCommand;
+        private ToolStripButton saveCommand;
+        private ToolStripButton openCommand;
+        protected ToolStrip toolStrip;
     }
 }

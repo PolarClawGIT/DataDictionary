@@ -19,7 +19,7 @@ namespace DataDictionary.Main.Forms.Library
         public LibraryMember(ILibraryMemberValue libraryMember) : this()
         {
             LibraryMemberIndex key = new LibraryMemberIndex(libraryMember);
-            this.Icon = WinFormEnumeration.GetIcon(libraryMember.Scope);
+            this.Icon = ImageEnumeration.GetIcon(libraryMember.Scope);
 
             bindingMember.DataSource = new BindingView<LibraryMemberValue>(BusinessData.LibraryModel.LibraryMembers, w => key.Equals(new LibraryMemberIndex(w)));
             bindingMember.Position = 0;

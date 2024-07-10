@@ -22,7 +22,7 @@ namespace DataDictionary.Main.Forms.Database
         {
             TableColumnIndexName key = new TableColumnIndexName(columnItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
-            this.Icon = WinFormEnumeration.GetIcon(columnItem.Scope);
+            this.Icon = ImageEnumeration.GetIcon(columnItem.Scope);
 
             bindingColumn.DataSource = new BindingView<TableColumnValue>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
             bindingColumn.Position = 0;

@@ -15,7 +15,7 @@ namespace DataDictionary.Main.ApplicationWide
         {
             InitializeComponent();
 
-            this.Icon = WinFormEnumeration.GetIcon(ScopeType.ApplicationOption);
+            this.Icon = ImageEnumeration.GetIcon(ScopeType.ApplicationOption);
         }
 
         private void ApplicationOptions_Load(object sender, EventArgs e)

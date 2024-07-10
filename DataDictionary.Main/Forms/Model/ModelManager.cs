@@ -17,7 +17,11 @@ namespace DataDictionary.Main.Forms.Model
         public ModelManager()
         {
             InitializeComponent();
-            this.Icon = WinFormEnumeration.GetIcon(ScopeType.Model);
+
+            Setup(ScopeType.Model);
+            CommandButtons[CommandImageType.OpenDatabase].IsVisible = true;
+            CommandButtons[CommandImageType.SaveDatabase].IsVisible = true;
+            CommandButtons[CommandImageType.DeleteDatabase].IsVisible = true;
         }
 
         private void ModelManager_Load(object sender, EventArgs e)
@@ -154,9 +158,9 @@ namespace DataDictionary.Main.Forms.Model
 
         private void modelBinding_CurrentChanged(object sender, EventArgs e)
         {
-            IsOpenDatabase = GetInDatabase() && !GetInModel();
-            IsSaveDatabase = GetInModel();
-            IsDeleteDatabase = GetInDatabase();
+            CommandButtons[CommandImageType.OpenDatabase].IsEnabled = GetInDatabase() && !GetInModel();
+            CommandButtons[CommandImageType.SaveDatabase].IsEnabled = GetInModel();
+            CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = GetInDatabase();
         }
 
         private void BindingComplete(object sender, BindingCompleteEventArgs e)

@@ -23,9 +23,13 @@ namespace DataDictionary.Main.Forms.Database
             addDatabaseCommand.Enabled = true;
             removeDatabaseCommand.Enabled = false;
 
-            this.Icon = WinFormEnumeration.GetIcon(ScopeType.Database);
-            addDatabaseCommand.Image = WinFormEnumeration.GetImage(ScopeType.Database, ScopeImage.New);
-            removeDatabaseCommand.Image = WinFormEnumeration.GetImage(ScopeType.Database, ScopeImage.Delete);
+            Setup(ScopeType.Database);
+            CommandButtons[CommandImageType.OpenDatabase].IsVisible = true;
+            CommandButtons[CommandImageType.SaveDatabase].IsVisible = true;
+            CommandButtons[CommandImageType.DeleteDatabase].IsVisible = true;
+
+            addDatabaseCommand.Image = ImageEnumeration.GetImage(ScopeType.Database, CommandImageType.New);
+            removeDatabaseCommand.Image = ImageEnumeration.GetImage(ScopeType.Database, CommandImageType.Delete);
         }
 
         private void CatalogManager_Load(object sender, EventArgs e)
@@ -250,9 +254,10 @@ namespace DataDictionary.Main.Forms.Database
         private void CatalogBinding_CurrentChanged(object sender, EventArgs e)
         {
             removeDatabaseCommand.Enabled = GetInModel();
-            IsOpenDatabase = GetInDatabase() && !GetInModel();
-            IsSaveDatabase = GetInModel();
-            IsDeleteDatabase = GetInDatabase();
+            
+            CommandButtons[CommandImageType.OpenDatabase].IsEnabled = GetInDatabase() && !GetInModel();
+            CommandButtons[CommandImageType.SaveDatabase].IsEnabled = GetInModel();
+            CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = GetInDatabase();
         }
     }
 }

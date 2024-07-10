@@ -36,7 +36,7 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
             TemplateIndex key = new TemplateIndex(templateItem);
-            this.Icon = WinFormEnumeration.GetIcon(templateItem.Scope);
+            this.Icon = ImageEnumeration.GetIcon(templateItem.Scope);
 
             bindingTemplate.DataSource = new BindingView<TemplateValue>(BusinessData.ScriptingEngine.Templates, w => key.Equals(w));
             bindingTemplate.Position = 0;
@@ -310,7 +310,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             foreach (var groups in BusinessData.ScriptingEngine.Properties.GroupBy(g => g.PropertyScope))
             {
-                ListViewGroup newGroup = new ListViewGroup(WinFormEnumeration.Cast(groups.Key).Name);
+                ListViewGroup newGroup = new ListViewGroup(ImageEnumeration.Cast(groups.Key).Name);
                 elementSelection.Groups.Add(newGroup);
 
                 foreach (NodePropertyValue item in groups)
@@ -378,7 +378,7 @@ namespace DataDictionary.Main.Forms.Scripting
                         Exception ex = new InvalidOperationException("Duplicate");
                         ex.Data.Add(nameof(template.TemplateTitle), template.TemplateTitle);
                         ex.Data.Add(nameof(element.PropertyName), element.PropertyName);
-                        ex.Data.Add(nameof(element.PropertyScope), WinFormEnumeration.Cast(element.PropertyScope).Name);
+                        ex.Data.Add(nameof(element.PropertyScope), ImageEnumeration.Cast(element.PropertyScope).Name);
                         throw ex;
                     }
 

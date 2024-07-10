@@ -19,12 +19,12 @@ namespace DataDictionary.Main
         public Main() : base()
         {
             InitializeComponent();
-            Icon = WinFormEnumeration.GetIcon(ScopeType.Application);
+            Icon = ImageEnumeration.GetIcon(ScopeType.Application);
 
             IsLocked(true);
             
             // Setup Images for Tree Control
-            contextNameNavigation.ImageList = WinFormEnumeration.AsImageList();
+            contextNameNavigation.ImageList = ImageEnumeration.AsImageList();
 
             //Hook the WorkerQueue up to this forms UI thread for events.
             Worker.InvokeUsing = this.Invoke;
@@ -35,11 +35,11 @@ namespace DataDictionary.Main
             // Result, there are two places that the image needs to be maintained.
             // The Form (every form) and the WinFormEnumeration. 
             // The desire is to have only one places of "truth"
-            optionsToolStripMenuItem.Image = WinFormEnumeration.GetImage(ScopeType.ApplicationOption);
-            manageLibrariesCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library);
-            viewLibrarySourceCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library);
+            //optionsToolStripMenuItem.Image = WinFormEnumeration.GetImage(ScopeType.ApplicationOption);
+            //manageLibrariesCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library);
+            //viewLibrarySourceCommand.Image = WinFormEnumeration.GetImage(ScopeType.Library);
 
-            menuAttributes.Image = WinFormEnumeration.GetImage(ScopeType.ModelAttribute);
+            //menuAttributes.Image = WinFormEnumeration.GetImage(ScopeType.ModelAttribute);
         }
 
         #region Form

@@ -1073,6 +1073,16 @@ namespace DataDictionary.Main.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ImportDocument {
+            get {
+                object obj = ResourceManager.GetObject("ImportDocument", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Italic {
             get {
                 object obj = ResourceManager.GetObject("Italic", resourceCulture);
@@ -1346,6 +1356,16 @@ namespace DataDictionary.Main.Properties {
         internal static System.Drawing.Bitmap NewXSLTransform {
             get {
                 object obj = ResourceManager.GetObject("NewXSLTransform", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap OpenDocument {
+            get {
+                object obj = ResourceManager.GetObject("OpenDocument", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

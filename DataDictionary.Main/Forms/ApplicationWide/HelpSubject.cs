@@ -52,9 +52,9 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         public HelpSubject() : base()
         {
             InitializeComponent();
-            this.Icon = WinFormEnumeration.GetIcon(ScopeType.ApplicationHelp);
-            newHelpCommand.Image = WinFormEnumeration.GetImage(ScopeType.ApplicationHelp, ScopeImage.New);
-            deleteHelpCommand.Image = WinFormEnumeration.GetImage(ScopeType.ApplicationHelp, ScopeImage.Delete);
+            this.Icon = ImageEnumeration.GetIcon(ScopeType.ApplicationHelp);
+            newHelpCommand.Image = ImageEnumeration.GetImage(ScopeType.ApplicationHelp, Enumerations.CommandImageType.New);
+            deleteHelpCommand.Image = ImageEnumeration.GetImage(ScopeType.ApplicationHelp, Enumerations.CommandImageType.Delete);
 
             controlData.Columns[0].Width = (Int32)(controlData.ClientSize.Width * 0.7);
             controlData.Columns[1].Width = (Int32)(controlData.ClientSize.Width * 0.3);
@@ -72,10 +72,11 @@ namespace DataDictionary.Main.Forms.ApplicationWide
 
             // Setup Images for Tree Control
             SetImages(helpContentNavigation);
-
-            IsOpenDatabase = true;
-            IsSaveDatabase = true;
-            IsDeleteDatabase = true;
+            Setup(helpBinding);
+            Setup(ScopeType.ApplicationHelp);
+            CommandButtons[CommandImageType.OpenDatabase].IsVisible = true;
+            CommandButtons[CommandImageType.SaveDatabase].IsVisible = true;
+            CommandButtons[CommandImageType.DeleteDatabase].IsVisible = true;
         }
 
 
@@ -175,10 +176,10 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             HelpGroup
         }
 
-        static Dictionary<helpContentImageIndex, WinFormEnumeration> helpContentImageItems  = new Dictionary<helpContentImageIndex, WinFormEnumeration>()
+        static Dictionary<helpContentImageIndex, ImageEnumeration> helpContentImageItems  = new Dictionary<helpContentImageIndex, ImageEnumeration>()
         {
-            {helpContentImageIndex.HelpPage, WinFormEnumeration.Cast(ScopeType.ApplicationHelpPage) },
-            {helpContentImageIndex.HelpGroup, WinFormEnumeration.Cast(ScopeType.ApplicationHelpGroup) },
+            {helpContentImageIndex.HelpPage, ImageEnumeration.Cast(ScopeType.ApplicationHelpPage) },
+            {helpContentImageIndex.HelpGroup, ImageEnumeration.Cast(ScopeType.ApplicationHelpGroup) },
         };
 
         void BuildHelpTree()
