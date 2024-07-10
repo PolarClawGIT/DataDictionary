@@ -74,8 +74,6 @@ namespace DataDictionary.Main.Forms.Domain
             bindingAttribute = new BindingSource(components);
             bindingProperty = new BindingSource(components);
             bindingAlias = new BindingSource(components);
-            attributeToolStrip = new ContextMenuStrip(components);
-            removeAttributeCommand = new ToolStripMenuItem();
             bindingSubjectArea = new BindingSource(components);
             bindingDefinition = new BindingSource(components);
             mainLayout = new TableLayoutPanel();
@@ -99,7 +97,6 @@ namespace DataDictionary.Main.Forms.Domain
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
-            attributeToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDefinition).BeginInit();
             SuspendLayout();
@@ -132,6 +129,7 @@ namespace DataDictionary.Main.Forms.Domain
             titleData.ReadOnly = false;
             titleData.Size = new Size(420, 44);
             titleData.TabIndex = 0;
+            titleData.WordWrap = true;
             // 
             // descriptionData
             // 
@@ -144,6 +142,7 @@ namespace DataDictionary.Main.Forms.Domain
             descriptionData.ReadOnly = false;
             descriptionData.Size = new Size(420, 88);
             descriptionData.TabIndex = 1;
+            descriptionData.WordWrap = true;
             // 
             // detailTabLayout
             // 
@@ -203,7 +202,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isMultiValuedData
             // 
             isMultiValuedData.AutoSize = true;
-            isMultiValuedData.Location = new Point(107, 53);
+            isMultiValuedData.Location = new Point(107, 55);
             isMultiValuedData.Name = "isMultiValuedData";
             isMultiValuedData.Size = new Size(94, 19);
             isMultiValuedData.TabIndex = 1;
@@ -213,7 +212,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isSingleValueData
             // 
             isSingleValueData.AutoSize = true;
-            isSingleValueData.Location = new Point(3, 53);
+            isSingleValueData.Location = new Point(3, 55);
             isSingleValueData.Name = "isSingleValueData";
             isSingleValueData.Size = new Size(98, 19);
             isSingleValueData.TabIndex = 0;
@@ -231,13 +230,13 @@ namespace DataDictionary.Main.Forms.Domain
             typeOfAttributeData.Location = new Point(3, 3);
             typeOfAttributeData.Name = "typeOfAttributeData";
             typeOfAttributeData.ReadOnly = false;
-            typeOfAttributeData.Size = new Size(400, 44);
+            typeOfAttributeData.Size = new Size(400, 46);
             typeOfAttributeData.TabIndex = 0;
             // 
             // isSimpleTypeData
             // 
             isSimpleTypeData.AutoSize = true;
-            isSimpleTypeData.Location = new Point(3, 78);
+            isSimpleTypeData.Location = new Point(3, 80);
             isSimpleTypeData.Name = "isSimpleTypeData";
             isSimpleTypeData.Size = new Size(89, 19);
             isSimpleTypeData.TabIndex = 2;
@@ -247,7 +246,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isCompositeTypeData
             // 
             isCompositeTypeData.AutoSize = true;
-            isCompositeTypeData.Location = new Point(107, 78);
+            isCompositeTypeData.Location = new Point(107, 80);
             isCompositeTypeData.Name = "isCompositeTypeData";
             isCompositeTypeData.Size = new Size(111, 19);
             isCompositeTypeData.TabIndex = 3;
@@ -257,7 +256,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isIntegralData
             // 
             isIntegralData.AutoSize = true;
-            isIntegralData.Location = new Point(3, 103);
+            isIntegralData.Location = new Point(3, 105);
             isIntegralData.Name = "isIntegralData";
             isIntegralData.Size = new Size(77, 19);
             isIntegralData.TabIndex = 4;
@@ -267,7 +266,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isDerivedData
             // 
             isDerivedData.AutoSize = true;
-            isDerivedData.Location = new Point(107, 103);
+            isDerivedData.Location = new Point(107, 105);
             isDerivedData.Name = "isDerivedData";
             isDerivedData.Size = new Size(77, 19);
             isDerivedData.TabIndex = 5;
@@ -277,7 +276,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isValuedData
             // 
             isValuedData.AutoSize = true;
-            isValuedData.Location = new Point(3, 128);
+            isValuedData.Location = new Point(3, 130);
             isValuedData.Name = "isValuedData";
             isValuedData.Size = new Size(72, 19);
             isValuedData.TabIndex = 6;
@@ -287,7 +286,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isNullableData
             // 
             isNullableData.AutoSize = true;
-            isNullableData.Location = new Point(107, 128);
+            isNullableData.Location = new Point(107, 130);
             isNullableData.Name = "isNullableData";
             isNullableData.Size = new Size(81, 19);
             isNullableData.TabIndex = 7;
@@ -297,7 +296,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isNonKeyData
             // 
             isNonKeyData.AutoSize = true;
-            isNonKeyData.Location = new Point(3, 153);
+            isNonKeyData.Location = new Point(3, 155);
             isNonKeyData.Name = "isNonKeyData";
             isNonKeyData.Size = new Size(84, 19);
             isNonKeyData.TabIndex = 8;
@@ -307,7 +306,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isKeyData
             // 
             isKeyData.AutoSize = true;
-            isKeyData.Location = new Point(107, 153);
+            isKeyData.Location = new Point(107, 155);
             isKeyData.Name = "isKeyData";
             isKeyData.Size = new Size(56, 19);
             isKeyData.TabIndex = 9;
@@ -321,7 +320,7 @@ namespace DataDictionary.Main.Forms.Domain
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(412, 343);
+            propertyTab.Size = new Size(192, 72);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -337,7 +336,7 @@ namespace DataDictionary.Main.Forms.Domain
             propertyLayout.RowCount = 2;
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            propertyLayout.Size = new Size(406, 337);
+            propertyLayout.Size = new Size(186, 66);
             propertyLayout.TabIndex = 0;
             // 
             // propertiesData
@@ -349,7 +348,7 @@ namespace DataDictionary.Main.Forms.Domain
             propertiesData.Location = new Point(3, 3);
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
-            propertiesData.Size = new Size(400, 95);
+            propertiesData.Size = new Size(180, 13);
             propertiesData.TabIndex = 1;
             // 
             // propertyIdColumn
@@ -375,12 +374,12 @@ namespace DataDictionary.Main.Forms.Domain
             domainProperty.ApplyImage = (Image)resources.GetObject("domainProperty.ApplyImage");
             domainProperty.ApplyText = "apply";
             domainProperty.Dock = DockStyle.Fill;
-            domainProperty.Location = new Point(3, 104);
+            domainProperty.Location = new Point(3, 22);
             domainProperty.Name = "domainProperty";
             domainProperty.PropertyId = new Guid("00000000-0000-0000-0000-000000000000");
             domainProperty.PropertyValue = "";
             domainProperty.ReadOnly = false;
-            domainProperty.Size = new Size(400, 230);
+            domainProperty.Size = new Size(180, 41);
             domainProperty.TabIndex = 2;
             domainProperty.OnApply += DomainProperty_OnApply;
             // 
@@ -390,7 +389,7 @@ namespace DataDictionary.Main.Forms.Domain
             definitionTab.Controls.Add(definitionLayout);
             definitionTab.Location = new Point(4, 24);
             definitionTab.Name = "definitionTab";
-            definitionTab.Size = new Size(412, 343);
+            definitionTab.Size = new Size(192, 72);
             definitionTab.TabIndex = 5;
             definitionTab.Text = "Definition";
             // 
@@ -407,7 +406,7 @@ namespace DataDictionary.Main.Forms.Domain
             definitionLayout.RowCount = 2;
             definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            definitionLayout.Size = new Size(412, 343);
+            definitionLayout.Size = new Size(192, 72);
             definitionLayout.TabIndex = 0;
             // 
             // definitionData
@@ -419,7 +418,7 @@ namespace DataDictionary.Main.Forms.Domain
             definitionData.Location = new Point(6, 6);
             definitionData.Name = "definitionData";
             definitionData.ReadOnly = true;
-            definitionData.Size = new Size(400, 95);
+            definitionData.Size = new Size(180, 13);
             definitionData.TabIndex = 0;
             // 
             // definitionColumn
@@ -447,10 +446,10 @@ namespace DataDictionary.Main.Forms.Domain
             domainDefinition.DefinitionSummary = "";
             domainDefinition.DefinitionText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
             domainDefinition.Dock = DockStyle.Fill;
-            domainDefinition.Location = new Point(6, 107);
+            domainDefinition.Location = new Point(6, 25);
             domainDefinition.Name = "domainDefinition";
             domainDefinition.ReadOnly = false;
-            domainDefinition.Size = new Size(400, 230);
+            domainDefinition.Size = new Size(180, 41);
             domainDefinition.TabIndex = 1;
             domainDefinition.OnApply += DomainDefinition_OnApply;
             // 
@@ -563,20 +562,6 @@ namespace DataDictionary.Main.Forms.Domain
             bindingAlias.AddingNew += BindingAlias_AddingNew;
             bindingAlias.CurrentChanged += BindingAlias_CurrentChanged;
             // 
-            // attributeToolStrip
-            // 
-            attributeToolStrip.Items.AddRange(new ToolStripItem[] { removeAttributeCommand });
-            attributeToolStrip.Name = "attributeContextMenu";
-            attributeToolStrip.Size = new Size(165, 26);
-            // 
-            // removeAttributeCommand
-            // 
-            removeAttributeCommand.Image = Properties.Resources.DeleteAttribute;
-            removeAttributeCommand.Name = "removeAttributeCommand";
-            removeAttributeCommand.Size = new Size(164, 22);
-            removeAttributeCommand.Text = "remove Attribute";
-            removeAttributeCommand.Click += DeleteItemCommand_Click;
-            // 
             // bindingSubjectArea
             // 
             bindingSubjectArea.AddingNew += BindingSubjectArea_AddingNew;
@@ -615,7 +600,6 @@ namespace DataDictionary.Main.Forms.Domain
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
-            attributeToolStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDefinition).EndInit();
             ResumeLayout(false);
@@ -652,8 +636,6 @@ namespace DataDictionary.Main.Forms.Domain
         private DataGridViewTextBoxColumn propertyValueColumn;
         private Controls.DomainProperty domainProperty;
         private TableLayoutPanel aliaseLayout;
-        private ContextMenuStrip attributeToolStrip;
-        private ToolStripMenuItem removeAttributeCommand;
         private DataDictionary.Main.Controls.NamedScopeData namedScopeData;
         private BindingSource bindingSubjectArea;
         private Controls.SubjectArea subjectArea;

@@ -18,9 +18,10 @@ namespace DataDictionary.Main.Forms.Domain
         public DomainAttribute() : base()
         {
             InitializeComponent();
-            toolStrip.TransferItems(attributeToolStrip, 0);
+            CommandButtons[CommandImageType.Delete].IsVisible = true;
+            CommandButtons[CommandImageType.Delete].IsEnabled = true;
         }
-
+        
         public DomainAttribute(IAttributeValue? attributeItem) : this()
         {
             if (attributeItem is null)
@@ -30,11 +31,10 @@ namespace DataDictionary.Main.Forms.Domain
             }
 
             AttributeIndex key = new AttributeIndex(attributeItem);
-            this.Icon = ImageEnumeration.GetIcon(attributeItem.Scope);
 
             bindingAttribute.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => key.Equals(w));
             bindingAttribute.Position = 0;
-
+            Setup(attributeItem.Scope);
             Setup(bindingAttribute);
 
             if (bindingAttribute.Current is IAttributeValue current)
@@ -85,11 +85,12 @@ namespace DataDictionary.Main.Forms.Domain
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingAttribute.Current is not IAttributeValue);
         }
 
-
-        private void DeleteItemCommand_Click(object? sender, EventArgs e)
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
+            base.DeleteCommand_Click(sender, e);
+
             if (bindingAttribute.Current is IAttributeValue current)
-            { BusinessData.DomainModel.Attributes.Delete(current); }
+            { DoWork(BusinessData.DomainModel.Attributes.Delete(current)); }
         }
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)

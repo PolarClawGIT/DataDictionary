@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            ToolStripSeparator toolStripSeparatorDb;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationData));
+            toolStripSeparator = new ToolStripSeparator();
             openFromDatabaseCommand = new ToolStripButton();
             saveToDatabaseCommand = new ToolStripButton();
             deleteFromDatabaseCommand = new ToolStripButton();
@@ -44,14 +44,13 @@
             helpCommand = new ToolStripButton();
             rowStateCommand = new ToolStripLabel();
             helpToolStripButton = new ToolStripButton();
-            toolStripSeparatorDb = new ToolStripSeparator();
             toolStrip.SuspendLayout();
             SuspendLayout();
             // 
-            // toolStripSeparatorDb
+            // toolStripSeparator
             // 
-            toolStripSeparatorDb.Name = "toolStripSeparatorDb";
-            toolStripSeparatorDb.Size = new Size(6, 25);
+            toolStripSeparator.Name = "toolStripSeparator";
+            toolStripSeparator.Size = new Size(6, 25);
             // 
             // openFromDatabaseCommand
             // 
@@ -88,12 +87,12 @@
             // 
             // toolStrip
             // 
-            toolStrip.Items.AddRange(new ToolStripItem[] { browseCommand, newCommand, deleteCommand, openCommand, saveCommand, importCommand, exportCommand, toolStripSeparatorDb, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, helpCommand, rowStateCommand });
+            toolStrip.Items.AddRange(new ToolStripItem[] { browseCommand, newCommand, deleteCommand, openCommand, saveCommand, importCommand, exportCommand, toolStripSeparator, openFromDatabaseCommand, saveToDatabaseCommand, deleteFromDatabaseCommand, helpCommand, rowStateCommand });
             toolStrip.Location = new Point(0, 0);
             toolStrip.Name = "toolStrip";
             toolStrip.Size = new Size(649, 25);
             toolStrip.TabIndex = 2;
-            toolStrip.VisibleChanged += toolStrip_VisibleChanged;
+            toolStrip.VisibleChanged += ToolStrip_VisibleChanged;
             // 
             // browseCommand
             // 
@@ -232,5 +231,6 @@
         private ToolStripButton saveCommand;
         private ToolStripButton openCommand;
         protected ToolStrip toolStrip;
+        private ToolStripSeparator toolStripSeparator;
     }
 }

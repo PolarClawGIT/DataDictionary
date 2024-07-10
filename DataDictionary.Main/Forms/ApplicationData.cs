@@ -60,8 +60,32 @@ namespace DataDictionary.Main.Forms
             }
 
             public CommandState(ToolStripItem control)
-            { Control = control; }
+            {
+                Control = control;
+                control.VisibleChanged += Control_VisibleChanged;
+            }
 
+            private void Control_VisibleChanged(Object? sender, EventArgs e)
+            {
+                // Detects if there is anything before the separator and if not, do not show the separator.
+                if (sender is ToolStripItem caller && caller.Owner is ToolStrip tools)
+                {
+                    Int32 before = 0;
+
+                    foreach (ToolStripItem item in tools.Items)
+                    {
+                        if (item is ToolStripSeparator)
+                        {
+                            if (before > 0) { item.Visible = true; }
+                            else { item.Visible = false; }
+                            before = 0;
+                        } // Caller has not yet set the Visible flag
+                        else if (item.Visible || (item == caller && !item.Visible))
+                        { before++; }
+                    }
+
+                }
+            }
         }
 
         /// <summary>
@@ -114,53 +138,10 @@ namespace DataDictionary.Main.Forms
             commandButtons.Add(CommandImageType.Open, new CommandState(openCommand) { IsVisible = false });
             commandButtons.Add(CommandImageType.Import, new CommandState(importCommand) { IsVisible = false });
             commandButtons.Add(CommandImageType.Export, new CommandState(exportCommand) { IsVisible = false });
+            toolStripSeparator.Visible = false; 
             commandButtons.Add(CommandImageType.OpenDatabase, new CommandState(openFromDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
             commandButtons.Add(CommandImageType.SaveDatabase, new CommandState(saveToDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
             commandButtons.Add(CommandImageType.DeleteDatabase, new CommandState(deleteFromDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
-        }
-
-        /// <summary>
-        /// Delegate for the Event to handle the RowState of the data.
-        /// </summary>
-        /// <param name="sender">IBindingRowState</param>
-        /// <param name="e"></param>
-        /// <remarks>This will lock the form is the data is Detached or Deleted.</remarks>
-        protected virtual void RowStateChanged(object? sender, EventArgs e)
-        {
-            if (sender is IBindingRowState data)
-            {
-                RowState = data.RowState();
-                if (IsHandleCreated)
-                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
-                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
-            }
-        }
-
-        private void toolStrip_VisibleChanged(object? sender, EventArgs e)
-        {
-            // Visibility can be set in code.
-            // More often it changes based on other controls on the Form and any over lapping controls or form not the top most form.
-            if (toolStrip.Visible)
-            {
-                // Assumes that a TableLayout Control or similar is the only other control on the page.
-                // Condition and order is an attempt to prevent issues when multiple controls on the same form.
-                if (this.Controls.Cast<Control>().
-                    OrderBy(o => o.Top).
-                    FirstOrDefault(w => w.HasChildren &&
-                        w != toolStrip && // Not the ToolStrip
-                        w.Top < toolStrip.Height // Top control does not overlap with ToolStrip
-                        ) is Control topControl)
-                {
-                    topControl.Padding = new Padding(
-                       topControl.Padding.Left,
-                       toolStrip.Height + topControl.Padding.Top,
-                       topControl.Padding.Right,
-                       topControl.Padding.Bottom);
-                }
-
-                // Don't respond to further changes to Visibility (change only on first time visible only).
-                toolStrip.VisibleChanged -= toolStrip_VisibleChanged;
-            }
         }
 
         private void ApplicationData_Load(object sender, EventArgs e)
@@ -199,6 +180,51 @@ namespace DataDictionary.Main.Forms
                 if (ImageEnumeration.Values.ContainsKey(scope) && ImageEnumeration.Values[scope].Images.ContainsKey(item.Key))
                 { item.Value.Image = ImageEnumeration.GetImage(scope, item.Key); }
                 // Else leave the image as is
+            }
+        }
+
+
+        /// <summary>
+        /// Delegate for the Event to handle the RowState of the data.
+        /// </summary>
+        /// <param name="sender">IBindingRowState</param>
+        /// <param name="e"></param>
+        /// <remarks>This will lock the form is the data is Detached or Deleted.</remarks>
+        protected virtual void RowStateChanged(object? sender, EventArgs e)
+        {
+            if (sender is IBindingRowState data)
+            {
+                RowState = data.RowState();
+                if (IsHandleCreated)
+                { this.Invoke(() => { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }); }
+                else { this.IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted); }
+            }
+        }
+
+        private void ToolStrip_VisibleChanged(object? sender, EventArgs e)
+        {
+            // Visibility can be set in code.
+            // More often it changes based on other controls on the Form and any over lapping controls or form not the top most form.
+            if (toolStrip.Visible)
+            {
+                // Assumes that a TableLayout Control or similar is the only other control on the page.
+                // Condition and order is an attempt to prevent issues when multiple controls on the same form.
+                if (this.Controls.Cast<Control>().
+                    OrderBy(o => o.Top).
+                    FirstOrDefault(w => w.HasChildren &&
+                        w != toolStrip && // Not the ToolStrip
+                        w.Top < toolStrip.Height // Top control does not overlap with ToolStrip
+                        ) is Control topControl)
+                {
+                    topControl.Padding = new Padding(
+                       topControl.Padding.Left,
+                       toolStrip.Height + topControl.Padding.Top,
+                       topControl.Padding.Right,
+                       topControl.Padding.Bottom);
+                }
+
+                // Don't respond to further changes to Visibility (change only on first time visible only).
+                toolStrip.VisibleChanged -= ToolStrip_VisibleChanged;
             }
         }
 
