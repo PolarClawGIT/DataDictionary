@@ -11,16 +11,13 @@ namespace DataDictionary.Main.Forms.Database
         public Boolean IsOpenItem(object? item)
         { return bindingSchema.Current is ISchemaValue current && ReferenceEquals(current, item); }
 
-        public DbSchema() : base()
-        {
-            InitializeComponent();
-        }
+        protected DbSchema() : base()
+        { InitializeComponent(); }
 
         public DbSchema(ISchemaValue schemaItem) : this()
         {
             SchemaIndexName key = new SchemaIndexName(schemaItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
-            this.Icon = ImageEnumeration.GetIcon(schemaItem.Scope);
 
             bindingSchema.DataSource = new BindingView<SchemaValue>(BusinessData.DatabaseModel.DbSchemta, w => key.Equals(w));
             bindingSchema.Position = 0;

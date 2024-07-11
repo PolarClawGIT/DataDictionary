@@ -203,7 +203,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ICatalogIndex key)
         {
             CatalogIndex catalogKey = new CatalogIndex(key);
-            if (source.DbCatalogs.Where(w => catalogKey.Equals(w)) is CatalogValue catalog)
+            if (source.DbCatalogs.FirstOrDefault(w => catalogKey.Equals(w)) is CatalogValue catalog)
             {
                 CatalogIndexName catalogName = new CatalogIndexName(catalog);
 

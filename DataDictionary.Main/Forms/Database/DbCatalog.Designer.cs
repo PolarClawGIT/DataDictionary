@@ -35,18 +35,16 @@
             sourceServerNameData = new Controls.TextBoxData();
             sourceDatabaseNameData = new Controls.TextBoxData();
             sourceDateData = new Controls.TextBoxData();
-            importOptions = new ContextMenuStrip(components);
-            importOptionEntity = new ToolStripMenuItem();
-            importOptionAttribute = new ToolStripMenuItem();
-            importOptionProcesses = new ToolStripMenuItem();
+            exportOptions = new ContextMenuStrip(components);
+            exportAll = new ToolStripMenuItem();
+            exportEntites = new ToolStripMenuItem();
+            exportProcesses = new ToolStripMenuItem();
+            exportAttributes = new ToolStripMenuItem();
             bindingSource = new BindingSource(components);
-            catalogToolStrip = new ContextMenuStrip(components);
-            exportCommand = new ToolStripMenuItem();
             catalogManagerLayout = new TableLayoutPanel();
             catalogManagerLayout.SuspendLayout();
-            importOptions.SuspendLayout();
+            exportOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSource).BeginInit();
-            catalogToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // catalogManagerLayout
@@ -82,6 +80,7 @@
             catalogTitleData.ReadOnly = false;
             catalogTitleData.Size = new Size(447, 44);
             catalogTitleData.TabIndex = 1;
+            catalogTitleData.WordWrap = true;
             // 
             // catalogDescriptionData
             // 
@@ -95,6 +94,7 @@
             catalogDescriptionData.ReadOnly = false;
             catalogDescriptionData.Size = new Size(447, 182);
             catalogDescriptionData.TabIndex = 2;
+            catalogDescriptionData.WordWrap = true;
             // 
             // sourceServerNameData
             // 
@@ -107,6 +107,7 @@
             sourceServerNameData.ReadOnly = true;
             sourceServerNameData.Size = new Size(295, 44);
             sourceServerNameData.TabIndex = 11;
+            sourceServerNameData.WordWrap = true;
             // 
             // sourceDatabaseNameData
             // 
@@ -119,6 +120,7 @@
             sourceDatabaseNameData.ReadOnly = true;
             sourceDatabaseNameData.Size = new Size(295, 44);
             sourceDatabaseNameData.TabIndex = 12;
+            sourceDatabaseNameData.WordWrap = true;
             // 
             // sourceDateData
             // 
@@ -131,52 +133,45 @@
             sourceDateData.ReadOnly = true;
             sourceDateData.Size = new Size(146, 44);
             sourceDateData.TabIndex = 10;
+            sourceDateData.WordWrap = true;
             // 
-            // importOptions
+            // exportOptions
             // 
-            importOptions.Items.AddRange(new ToolStripItem[] { importOptionEntity, importOptionAttribute, importOptionProcesses });
-            importOptions.Name = "contextMenuStrip1";
-            importOptions.Size = new Size(166, 70);
+            exportOptions.Items.AddRange(new ToolStripItem[] { exportAll, exportEntites, exportProcesses, exportAttributes });
+            exportOptions.Name = "contextMenuStrip1";
+            exportOptions.Size = new Size(181, 114);
             // 
-            // importOptionEntity
+            // exportAll
             // 
-            importOptionEntity.Checked = true;
-            importOptionEntity.CheckOnClick = true;
-            importOptionEntity.CheckState = CheckState.Checked;
-            importOptionEntity.Name = "importOptionEntity";
-            importOptionEntity.Size = new Size(165, 22);
-            importOptionEntity.Text = "Import Entities";
+            exportAll.Name = "exportAll";
+            exportAll.Size = new Size(180, 22);
+            exportAll.Text = "All items";
+            exportAll.ToolTipText = "Create all domain model items from database model";
+            exportAll.Click += ExportOptionAll_Click;
             // 
-            // importOptionAttribute
+            // exportEntites
             // 
-            importOptionAttribute.Checked = true;
-            importOptionAttribute.CheckOnClick = true;
-            importOptionAttribute.CheckState = CheckState.Checked;
-            importOptionAttribute.Name = "importOptionAttribute";
-            importOptionAttribute.Size = new Size(165, 22);
-            importOptionAttribute.Text = "Import Attributes";
+            exportEntites.Name = "exportEntites";
+            exportEntites.Size = new Size(180, 22);
+            exportEntites.Text = "Entities only";
+            exportEntites.ToolTipText = "Create domain Entites from database Tables and Views";
+            exportEntites.Click += ExportEntites_Click;
             // 
-            // importOptionProcesses
+            // exportProcesses
             // 
-            importOptionProcesses.CheckOnClick = true;
-            importOptionProcesses.Enabled = false;
-            importOptionProcesses.Name = "importOptionProcesses";
-            importOptionProcesses.Size = new Size(165, 22);
-            importOptionProcesses.Text = "Import Processes";
+            exportProcesses.Name = "exportProcesses";
+            exportProcesses.Size = new Size(180, 22);
+            exportProcesses.Text = "Processes only";
+            exportProcesses.ToolTipText = "Create domain Processes from database Procedures and Functions";
+            exportProcesses.Click += ExportProcesses_Click;
             // 
-            // catalogToolStrip
+            // exportAttributes
             // 
-            catalogToolStrip.Items.AddRange(new ToolStripItem[] { exportCommand });
-            catalogToolStrip.Name = "databaseToolStrip";
-            catalogToolStrip.Size = new Size(222, 48);
-            // 
-            // exportCommand
-            // 
-            exportCommand.Image = Properties.Resources.ExportSoftwareDefinitionModel;
-            exportCommand.Name = "exportCommand";
-            exportCommand.Size = new Size(221, 22);
-            exportCommand.Text = "Export to Entities & Attributes";
-            exportCommand.Click += exportCommand_Click;
+            exportAttributes.Name = "exportAttributes";
+            exportAttributes.Size = new Size(180, 22);
+            exportAttributes.Text = "Attributes only";
+            exportAttributes.ToolTipText = "Create domain Attributes from database Columns";
+            exportAttributes.Click += ExportAttributes_Click;
             // 
             // DbCatalog
             // 
@@ -190,9 +185,8 @@
             Controls.SetChildIndex(catalogManagerLayout, 0);
             catalogManagerLayout.ResumeLayout(false);
             catalogManagerLayout.PerformLayout();
-            importOptions.ResumeLayout(false);
+            exportOptions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingSource).EndInit();
-            catalogToolStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -204,12 +198,11 @@
         private Controls.TextBoxData sourceServerNameData;
         private Controls.TextBoxData sourceDatabaseNameData;
         private Controls.TextBoxData sourceDateData;
-        private ContextMenuStrip importOptions;
-        private ToolStripMenuItem importOptionEntity;
-        private ToolStripMenuItem importOptionAttribute;
-        private ToolStripMenuItem importOptionProcesses;
+        private ContextMenuStrip exportOptions;
         private BindingSource bindingSource;
-        private ContextMenuStrip catalogToolStrip;
-        private ToolStripMenuItem exportCommand;
+        private ToolStripMenuItem exportAll;
+        private ToolStripMenuItem exportEntites;
+        private ToolStripMenuItem exportAttributes;
+        private ToolStripMenuItem exportProcesses;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
@@ -12,22 +13,23 @@ namespace DataDictionary.Main.Forms.Database
         public Boolean IsOpenItem(object? item)
         { return bindingTable.Current is ITableValue current && ReferenceEquals(current, item); }
 
-        public DbTable() : base()
-        {
-            InitializeComponent();
-            toolStrip.TransferItems(tableToolStrip, 0);
-        }
+        protected DbTable() : base()
+        { InitializeComponent(); }
 
         public DbTable(ITableValue tableItem) : this()
         {
             TableIndexName key = new TableIndexName(tableItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
-            this.Icon = ImageEnumeration.GetIcon(tableItem.Scope);
 
             bindingTable.DataSource = new BindingView<TableValue>(BusinessData.DatabaseModel.DbTables, w => key.Equals(w));
             bindingTable.Position = 0;
 
-            Setup(bindingTable);
+            Setup(bindingTable, CommandImageType.Export);
+            CommandButtons[CommandImageType.Export].Text = "to Model";
+            CommandButtons[CommandImageType.Export].DropDown = exportOptions;
+            exportAll.Image = ImageEnumeration.GetImage(ScopeType.Model, CommandImageType.Add);
+            exportAttributes.Image = ImageEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Add);
+            exportEntites.Image = ImageEnumeration.GetImage(ScopeType.ModelEntity, CommandImageType.Add);
 
             if (bindingTable.Current is ITableValue current)
             {
@@ -58,12 +60,31 @@ namespace DataDictionary.Main.Forms.Database
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingTable.Current is not ITableValue);
         }
 
-        private void exportCommand_Click(object sender, EventArgs e)
+        private void ExportAll_Click(object sender, EventArgs e)
         {
             if (bindingTable.Current is ITableValue current)
             {
                 BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
                 BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+                SendMessage(new RefreshNavigation());
+            }
+        }
+
+        private void ExportEntites_Click(object sender, EventArgs e)
+        {
+            if (bindingTable.Current is ITableValue current)
+            {
+                BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+                SendMessage(new RefreshNavigation());
+            }
+        }
+
+        private void ExportAttributes_Click(object sender, EventArgs e)
+        {
+            if (bindingTable.Current is ITableValue current)
+            {
+                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+                SendMessage(new RefreshNavigation());
             }
         }
     }

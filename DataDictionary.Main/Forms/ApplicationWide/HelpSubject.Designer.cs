@@ -47,9 +47,6 @@
             errorProvider = new ErrorProvider(components);
             helpBinding = new BindingSource(components);
             nameSpaceBinding = new BindingSource(components);
-            helpContextMenu = new ContextMenuStrip(components);
-            newHelpCommand = new ToolStripMenuItem();
-            deleteHelpCommand = new ToolStripMenuItem();
             helpSplitLayout = new SplitContainer();
             helpTabs = new TabControl();
             ((System.ComponentModel.ISupportInitialize)helpSplitLayout).BeginInit();
@@ -65,7 +62,6 @@
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             ((System.ComponentModel.ISupportInitialize)helpBinding).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nameSpaceBinding).BeginInit();
-            helpContextMenu.SuspendLayout();
             SuspendLayout();
             // 
             // helpSplitLayout
@@ -262,26 +258,6 @@
             helpBinding.DataError += helpBinding_DataError;
             helpBinding.CurrentChanged += helpBinding_CurrentChanged;
             // 
-            // helpContextMenu
-            // 
-            helpContextMenu.Items.AddRange(new ToolStripItem[] { newHelpCommand, deleteHelpCommand });
-            helpContextMenu.Name = "helpContextMenu";
-            helpContextMenu.Size = new Size(181, 70);
-            // 
-            // newHelpCommand
-            // 
-            newHelpCommand.Name = "newHelpCommand";
-            newHelpCommand.Size = new Size(180, 22);
-            newHelpCommand.Text = "New Help Subject";
-            newHelpCommand.Click += newHelpCommand_Click;
-            // 
-            // deleteHelpCommand
-            // 
-            deleteHelpCommand.Name = "deleteHelpCommand";
-            deleteHelpCommand.Size = new Size(180, 22);
-            deleteHelpCommand.Text = "Delete Help";
-            deleteHelpCommand.Click += deleteHelpCommand_Click;
-            // 
             // HelpSubject
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -309,7 +285,6 @@
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ((System.ComponentModel.ISupportInitialize)helpBinding).EndInit();
             ((System.ComponentModel.ISupportInitialize)nameSpaceBinding).EndInit();
-            helpContextMenu.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -332,8 +307,5 @@
         private ColumnHeader controlNameColumn;
         private ColumnHeader controlTypeColumn;
         private GroupBox controlsGroup;
-        private ContextMenuStrip helpContextMenu;
-        private ToolStripMenuItem newHelpCommand;
-        private ToolStripMenuItem deleteHelpCommand;
     }
 }

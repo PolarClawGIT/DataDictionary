@@ -320,7 +320,7 @@ namespace DataDictionary.Main.Forms.Domain
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(192, 72);
+            propertyTab.Size = new Size(412, 343);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -336,7 +336,7 @@ namespace DataDictionary.Main.Forms.Domain
             propertyLayout.RowCount = 2;
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            propertyLayout.Size = new Size(186, 66);
+            propertyLayout.Size = new Size(406, 337);
             propertyLayout.TabIndex = 0;
             // 
             // propertiesData
@@ -348,7 +348,7 @@ namespace DataDictionary.Main.Forms.Domain
             propertiesData.Location = new Point(3, 3);
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
-            propertiesData.Size = new Size(180, 13);
+            propertiesData.Size = new Size(400, 95);
             propertiesData.TabIndex = 1;
             // 
             // propertyIdColumn
@@ -374,12 +374,12 @@ namespace DataDictionary.Main.Forms.Domain
             domainProperty.ApplyImage = (Image)resources.GetObject("domainProperty.ApplyImage");
             domainProperty.ApplyText = "apply";
             domainProperty.Dock = DockStyle.Fill;
-            domainProperty.Location = new Point(3, 22);
+            domainProperty.Location = new Point(3, 104);
             domainProperty.Name = "domainProperty";
             domainProperty.PropertyId = new Guid("00000000-0000-0000-0000-000000000000");
             domainProperty.PropertyValue = "";
             domainProperty.ReadOnly = false;
-            domainProperty.Size = new Size(180, 41);
+            domainProperty.Size = new Size(400, 230);
             domainProperty.TabIndex = 2;
             domainProperty.OnApply += DomainProperty_OnApply;
             // 
@@ -389,7 +389,7 @@ namespace DataDictionary.Main.Forms.Domain
             definitionTab.Controls.Add(definitionLayout);
             definitionTab.Location = new Point(4, 24);
             definitionTab.Name = "definitionTab";
-            definitionTab.Size = new Size(192, 72);
+            definitionTab.Size = new Size(412, 343);
             definitionTab.TabIndex = 5;
             definitionTab.Text = "Definition";
             // 
@@ -406,7 +406,7 @@ namespace DataDictionary.Main.Forms.Domain
             definitionLayout.RowCount = 2;
             definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            definitionLayout.Size = new Size(192, 72);
+            definitionLayout.Size = new Size(412, 343);
             definitionLayout.TabIndex = 0;
             // 
             // definitionData
@@ -418,7 +418,7 @@ namespace DataDictionary.Main.Forms.Domain
             definitionData.Location = new Point(6, 6);
             definitionData.Name = "definitionData";
             definitionData.ReadOnly = true;
-            definitionData.Size = new Size(180, 13);
+            definitionData.Size = new Size(400, 95);
             definitionData.TabIndex = 0;
             // 
             // definitionColumn
@@ -446,10 +446,10 @@ namespace DataDictionary.Main.Forms.Domain
             domainDefinition.DefinitionSummary = "";
             domainDefinition.DefinitionText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
             domainDefinition.Dock = DockStyle.Fill;
-            domainDefinition.Location = new Point(6, 25);
+            domainDefinition.Location = new Point(6, 107);
             domainDefinition.Name = "domainDefinition";
             domainDefinition.ReadOnly = false;
-            domainDefinition.Size = new Size(180, 41);
+            domainDefinition.Size = new Size(400, 230);
             domainDefinition.TabIndex = 1;
             domainDefinition.OnApply += DomainDefinition_OnApply;
             // 
@@ -460,7 +460,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasTab.Location = new Point(4, 24);
             aliasTab.Name = "aliasTab";
             aliasTab.Padding = new Padding(3);
-            aliasTab.Size = new Size(192, 72);
+            aliasTab.Size = new Size(412, 343);
             aliasTab.TabIndex = 2;
             aliasTab.Text = "Aliases";
             // 
@@ -476,7 +476,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliaseLayout.RowCount = 2;
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             aliaseLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            aliaseLayout.Size = new Size(186, 66);
+            aliaseLayout.Size = new Size(406, 337);
             aliaseLayout.TabIndex = 1;
             // 
             // aliasesData
@@ -488,7 +488,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliasesData.Location = new Point(3, 3);
             aliasesData.Name = "aliasesData";
             aliasesData.ReadOnly = true;
-            aliasesData.Size = new Size(180, 20);
+            aliasesData.Size = new Size(400, 128);
             aliasesData.TabIndex = 0;
             // 
             // aliaseScopeColumn
@@ -514,12 +514,12 @@ namespace DataDictionary.Main.Forms.Domain
             namedScopeData.ApplyText = "apply";
             namedScopeData.Dock = DockStyle.Fill;
             namedScopeData.HeaderText = "Alias";
-            namedScopeData.Location = new Point(3, 29);
+            namedScopeData.Location = new Point(3, 137);
             namedScopeData.Name = "namedScopeData";
             namedScopeData.ReadOnly = false;
             namedScopeData.Scope = ScopeType.Null;
             namedScopeData.ScopePath = namedScopePath1;
-            namedScopeData.Size = new Size(180, 34);
+            namedScopeData.Size = new Size(400, 197);
             namedScopeData.TabIndex = 1;
             namedScopeData.OnApply += NamedScopeData_OnApply;
             // 
@@ -529,7 +529,7 @@ namespace DataDictionary.Main.Forms.Domain
             subjectAreaTab.Controls.Add(subjectArea);
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
-            subjectAreaTab.Size = new Size(192, 72);
+            subjectAreaTab.Size = new Size(412, 343);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -538,17 +538,17 @@ namespace DataDictionary.Main.Forms.Domain
             subjectArea.Dock = DockStyle.Fill;
             subjectArea.Location = new Point(0, 0);
             subjectArea.Name = "subjectArea";
-            subjectArea.Size = new Size(192, 72);
+            subjectArea.Size = new Size(412, 343);
             subjectArea.TabIndex = 0;
-            subjectArea.OnSubjectAdd += subjectArea_OnSubjectAdd;
-            subjectArea.OnSubjectRemove += subjectArea_OnSubjectRemove;
+            subjectArea.OnSubjectAdd += SubjectArea_OnSubjectAdd;
+            subjectArea.OnSubjectRemove += SubjectArea_OnSubjectRemove;
             // 
             // entityTab
             // 
             entityTab.BackColor = SystemColors.Control;
             entityTab.Location = new Point(4, 24);
             entityTab.Name = "entityTab";
-            entityTab.Size = new Size(192, 72);
+            entityTab.Size = new Size(412, 343);
             entityTab.TabIndex = 4;
             entityTab.Text = "Entities";
             // 

@@ -63,8 +63,6 @@ namespace DataDictionary.Main.Forms.Domain
             bindingAlias = new BindingSource(components);
             bindingProperty = new BindingSource(components);
             bindingEntity = new BindingSource(components);
-            entityToolStrip = new ContextMenuStrip(components);
-            removeEntityComand = new ToolStripMenuItem();
             bindingSubjectArea = new BindingSource(components);
             bindingDefinition = new BindingSource(components);
             mainLayout = new TableLayoutPanel();
@@ -88,7 +86,6 @@ namespace DataDictionary.Main.Forms.Domain
             ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).BeginInit();
-            entityToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDefinition).BeginInit();
             SuspendLayout();
@@ -121,6 +118,7 @@ namespace DataDictionary.Main.Forms.Domain
             titleData.ReadOnly = false;
             titleData.Size = new Size(420, 44);
             titleData.TabIndex = 0;
+            titleData.WordWrap = true;
             // 
             // descriptionData
             // 
@@ -133,6 +131,7 @@ namespace DataDictionary.Main.Forms.Domain
             descriptionData.ReadOnly = false;
             descriptionData.Size = new Size(420, 88);
             descriptionData.TabIndex = 1;
+            descriptionData.WordWrap = true;
             // 
             // detailTabLayout
             // 
@@ -184,7 +183,7 @@ namespace DataDictionary.Main.Forms.Domain
             typeOfEntityData.Location = new Point(3, 3);
             typeOfEntityData.Name = "typeOfEntityData";
             typeOfEntityData.ReadOnly = false;
-            typeOfEntityData.Size = new Size(400, 44);
+            typeOfEntityData.Size = new Size(400, 46);
             typeOfEntityData.TabIndex = 1;
             // 
             // propertyTab
@@ -194,7 +193,7 @@ namespace DataDictionary.Main.Forms.Domain
             propertyTab.Location = new Point(4, 24);
             propertyTab.Name = "propertyTab";
             propertyTab.Padding = new Padding(3);
-            propertyTab.Size = new Size(412, 343);
+            propertyTab.Size = new Size(192, 72);
             propertyTab.TabIndex = 1;
             propertyTab.Text = "Properties";
             // 
@@ -210,7 +209,7 @@ namespace DataDictionary.Main.Forms.Domain
             propertyLayout.RowCount = 2;
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             propertyLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            propertyLayout.Size = new Size(406, 337);
+            propertyLayout.Size = new Size(186, 66);
             propertyLayout.TabIndex = 0;
             // 
             // propertiesData
@@ -222,7 +221,7 @@ namespace DataDictionary.Main.Forms.Domain
             propertiesData.Location = new Point(3, 3);
             propertiesData.Name = "propertiesData";
             propertiesData.ReadOnly = true;
-            propertiesData.Size = new Size(400, 128);
+            propertiesData.Size = new Size(180, 20);
             propertiesData.TabIndex = 1;
             // 
             // propertyIdColumn
@@ -248,12 +247,12 @@ namespace DataDictionary.Main.Forms.Domain
             domainProperty.ApplyImage = (Image)resources.GetObject("domainProperty.ApplyImage");
             domainProperty.ApplyText = "apply";
             domainProperty.Dock = DockStyle.Fill;
-            domainProperty.Location = new Point(3, 137);
+            domainProperty.Location = new Point(3, 29);
             domainProperty.Name = "domainProperty";
             domainProperty.PropertyId = new Guid("00000000-0000-0000-0000-000000000000");
             domainProperty.PropertyValue = "";
             domainProperty.ReadOnly = false;
-            domainProperty.Size = new Size(400, 197);
+            domainProperty.Size = new Size(180, 34);
             domainProperty.TabIndex = 2;
             domainProperty.OnApply += DomainProperty_OnApply;
             // 
@@ -264,7 +263,7 @@ namespace DataDictionary.Main.Forms.Domain
             definitionTab.Location = new Point(4, 24);
             definitionTab.Name = "definitionTab";
             definitionTab.Padding = new Padding(3);
-            definitionTab.Size = new Size(412, 343);
+            definitionTab.Size = new Size(192, 72);
             definitionTab.TabIndex = 4;
             definitionTab.Text = "Definitions";
             // 
@@ -281,7 +280,7 @@ namespace DataDictionary.Main.Forms.Domain
             definitionLayout.RowCount = 2;
             definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             definitionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            definitionLayout.Size = new Size(406, 337);
+            definitionLayout.Size = new Size(186, 66);
             definitionLayout.TabIndex = 1;
             // 
             // definitionData
@@ -293,7 +292,7 @@ namespace DataDictionary.Main.Forms.Domain
             definitionData.Location = new Point(6, 6);
             definitionData.Name = "definitionData";
             definitionData.ReadOnly = true;
-            definitionData.Size = new Size(394, 93);
+            definitionData.Size = new Size(174, 12);
             definitionData.TabIndex = 0;
             // 
             // definitionColumn
@@ -321,10 +320,10 @@ namespace DataDictionary.Main.Forms.Domain
             domainDefinition.DefinitionSummary = "";
             domainDefinition.DefinitionText = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033{\\fonttbl{\\f0\\fnil Segoe UI;}}\r\n{\\*\\generator Riched20 10.0.19041}\\viewkind4\\uc1 \r\n\\pard\\f0\\fs18\\par\r\n}\r\n";
             domainDefinition.Dock = DockStyle.Fill;
-            domainDefinition.Location = new Point(6, 105);
+            domainDefinition.Location = new Point(6, 24);
             domainDefinition.Name = "domainDefinition";
             domainDefinition.ReadOnly = false;
-            domainDefinition.Size = new Size(394, 226);
+            domainDefinition.Size = new Size(174, 36);
             domainDefinition.TabIndex = 1;
             domainDefinition.OnApply += DomainDefinition_OnApply;
             // 
@@ -428,20 +427,6 @@ namespace DataDictionary.Main.Forms.Domain
             bindingProperty.AddingNew += BindingProperty_AddingNew;
             bindingProperty.CurrentChanged += BindingProperty_CurrentChanged;
             // 
-            // entityToolStrip
-            // 
-            entityToolStrip.Items.AddRange(new ToolStripItem[] { removeEntityComand });
-            entityToolStrip.Name = "attributeContextMenu";
-            entityToolStrip.Size = new Size(148, 26);
-            // 
-            // removeEntityComand
-            // 
-            removeEntityComand.Image = Properties.Resources.DeleteEntity;
-            removeEntityComand.Name = "removeEntityComand";
-            removeEntityComand.Size = new Size(147, 22);
-            removeEntityComand.Text = "remove Entity";
-            removeEntityComand.Click += DeleteItemCommand_Click;
-            // 
             // bindingSubjectArea
             // 
             bindingSubjectArea.AddingNew += BindingSubjectArea_AddingNew;
@@ -480,7 +465,6 @@ namespace DataDictionary.Main.Forms.Domain
             ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).EndInit();
-            entityToolStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDefinition).EndInit();
             ResumeLayout(false);
@@ -506,8 +490,6 @@ namespace DataDictionary.Main.Forms.Domain
         private BindingSource bindingProperty;
         private BindingSource bindingEntity;
         private DataDictionary.Main.Controls.ComboBoxData typeOfEntityData;
-        private ContextMenuStrip entityToolStrip;
-        private ToolStripMenuItem removeEntityComand;
         private DataDictionary.Main.Controls.NamedScopeData namedScopeData;
         private BindingSource bindingSubjectArea;
         private Controls.SubjectArea subjectArea;

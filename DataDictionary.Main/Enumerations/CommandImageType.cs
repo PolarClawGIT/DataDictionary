@@ -22,12 +22,12 @@ namespace DataDictionary.Main.Enumerations
         Browse,
         
         /// <summary>
-        /// New: Adding items to the Model.
+        /// Add: Adding/New items to the Model.
         /// </summary>
-        New,
+        Add,
 
         /// <summary>
-        /// Delete: Remove/Delete items from the Model
+        /// Delete: Delete/Remove items from the Model
         /// </summary>
         Delete,
 

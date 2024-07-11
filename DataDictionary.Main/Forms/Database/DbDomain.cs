@@ -11,16 +11,13 @@ namespace DataDictionary.Main.Forms.Database
         public Boolean IsOpenItem(object? item)
         { return bindingDomain.Current is IDomainValue current && ReferenceEquals(current, item); }
 
-        public DbDomain() : base()
-        {
-            InitializeComponent();
-        }
+        protected DbDomain() : base()
+        { InitializeComponent(); }
 
         public DbDomain(IDomainValue domainItem) : this()
         {
             DomainIndexName key = new DomainIndexName(domainItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
-            this.Icon = ImageEnumeration.GetIcon(domainItem.Scope);
 
             bindingDomain.DataSource = new BindingView<DomainValue>(BusinessData.DatabaseModel.DbDomains, w => key.Equals(w));
             bindingDomain.Position = 0;

@@ -11,16 +11,13 @@ namespace DataDictionary.Main.Forms.Database
         public Boolean IsOpenItem(object? item)
         { return bindingRoutine.Current is IRoutineValue current && ReferenceEquals(current, item); }
 
-        public DbRoutine() : base()
-        {
-            InitializeComponent();
-        }
+        protected DbRoutine() : base()
+        { InitializeComponent(); }
 
         public DbRoutine(IRoutineValue routineItem) : this()
         {
             RoutineIndexName key = new RoutineIndexName(routineItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
-            this.Icon = ImageEnumeration.GetIcon(routineItem.Scope);
 
             bindingRoutine.DataSource = new BindingView<RoutineValue>(BusinessData.DatabaseModel.DbRoutines, w => key.Equals(w));
             bindingRoutine.Position = 0;

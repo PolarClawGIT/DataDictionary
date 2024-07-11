@@ -57,11 +57,11 @@
             serverConnectionButtonLayout.Controls.Add(validateCommand, 1, 0);
             serverConnectionButtonLayout.Controls.Add(cancelCommand, 3, 0);
             serverConnectionButtonLayout.Dock = DockStyle.Fill;
-            serverConnectionButtonLayout.Location = new Point(3, 153);
+            serverConnectionButtonLayout.Location = new Point(3, 157);
             serverConnectionButtonLayout.Name = "serverConnectionButtonLayout";
             serverConnectionButtonLayout.RowCount = 1;
             serverConnectionButtonLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            serverConnectionButtonLayout.Size = new Size(351, 30);
+            serverConnectionButtonLayout.Size = new Size(351, 31);
             serverConnectionButtonLayout.TabIndex = 4;
             // 
             // commandOk
@@ -114,39 +114,35 @@
             serverConnectionLayout.RowStyles.Add(new RowStyle());
             serverConnectionLayout.RowStyles.Add(new RowStyle());
             serverConnectionLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            serverConnectionLayout.Size = new Size(357, 186);
+            serverConnectionLayout.Size = new Size(357, 191);
             serverConnectionLayout.TabIndex = 0;
             // 
             // databaseNameData
             // 
             databaseNameData.AutoSize = true;
             databaseNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            databaseNameData.DataSource = null;
-            databaseNameData.DisplayMember = "";
             databaseNameData.Dock = DockStyle.Fill;
+            databaseNameData.DropDownStyle = ComboBoxStyle.DropDown;
             databaseNameData.HeaderText = "Database Name";
-            databaseNameData.Location = new Point(3, 103);
+            databaseNameData.Location = new Point(3, 105);
             databaseNameData.Name = "databaseNameData";
             databaseNameData.ReadOnly = false;
-            databaseNameData.Size = new Size(323, 44);
+            databaseNameData.Size = new Size(323, 46);
             databaseNameData.TabIndex = 1;
-            databaseNameData.ValueMember = "";
             // 
             // serverNameData
             // 
             serverNameData.AutoSize = true;
             serverNameData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             serverConnectionLayout.SetColumnSpan(serverNameData, 2);
-            serverNameData.DataSource = null;
-            serverNameData.DisplayMember = "";
             serverNameData.Dock = DockStyle.Fill;
+            serverNameData.DropDownStyle = ComboBoxStyle.DropDown;
             serverNameData.HeaderText = "Server Name";
             serverNameData.Location = new Point(3, 53);
             serverNameData.Name = "serverNameData";
             serverNameData.ReadOnly = false;
-            serverNameData.Size = new Size(351, 44);
+            serverNameData.Size = new Size(351, 46);
             serverNameData.TabIndex = 0;
-            serverNameData.ValueMember = "";
             serverNameData.SelectedIndexChanged += serverNameData_SelectedIndexChanged;
             // 
             // refreshDatabaseCommand
@@ -155,7 +151,7 @@
             refreshDatabaseCommand.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             refreshDatabaseCommand.Dock = DockStyle.Bottom;
             refreshDatabaseCommand.Image = Properties.Resources.Refresh;
-            refreshDatabaseCommand.Location = new Point(332, 125);
+            refreshDatabaseCommand.Location = new Point(332, 129);
             refreshDatabaseCommand.Name = "refreshDatabaseCommand";
             refreshDatabaseCommand.Size = new Size(22, 22);
             refreshDatabaseCommand.TabIndex = 2;
@@ -175,6 +171,7 @@
             accountNameData.ReadOnly = true;
             accountNameData.Size = new Size(351, 44);
             accountNameData.TabIndex = 3;
+            accountNameData.WordWrap = true;
             // 
             // errorProvider
             // 
@@ -185,7 +182,8 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
-            ClientSize = new Size(357, 186);
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            ClientSize = new Size(357, 191);
             Controls.Add(serverConnectionLayout);
             HelpButton = true;
             MaximizeBox = false;

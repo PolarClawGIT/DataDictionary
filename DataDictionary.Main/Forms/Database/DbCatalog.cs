@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
@@ -13,21 +14,25 @@ namespace DataDictionary.Main.Forms.Database
         public Boolean IsOpenItem(object? item)
         { return bindingSource.Current is ICatalogValue current && ReferenceEquals(current, item); }
 
-        public DbCatalog() : base()
-        {
-            InitializeComponent();
-            toolStrip.TransferItems(catalogToolStrip, 0);
-        }
+        protected DbCatalog() : base()
+        { InitializeComponent(); }
 
         public DbCatalog(ICatalogValue catalogItem) : this()
         {
             CatalogIndex key = new CatalogIndex(catalogItem);
-            this.Icon = ImageEnumeration.GetIcon(catalogItem.Scope);
 
             bindingSource.DataSource = new BindingView<CatalogValue>(BusinessData.DatabaseModel.DbCatalogs, w => key.Equals(w));
             bindingSource.Position = 0;
 
-            Setup(bindingSource);
+            Setup(bindingSource, CommandImageType.Export);
+            CommandButtons[CommandImageType.Export].Text = "to Model";
+            CommandButtons[CommandImageType.Export].DropDown = exportOptions;
+            exportAll.Image = ImageEnumeration.GetImage(ScopeType.Model, CommandImageType.Add);
+            exportAttributes.Image = ImageEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Add);
+            exportEntites.Image = ImageEnumeration.GetImage(ScopeType.ModelEntity, CommandImageType.Add);
+
+            exportProcesses.Visible = false; // Disabled until processes are supported
+            //exportProcesses.Image = ImageEnumeration.GetImage(ScopeType.ModelProcess, CommandImageType.Add);
         }
 
         private void DbCatalog_Load(object sender, EventArgs e)
@@ -42,13 +47,38 @@ namespace DataDictionary.Main.Forms.Database
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingSource.Current is not ICatalogValue);
         }
 
-        private void exportCommand_Click(object sender, EventArgs e)
+        private void ExportOptionAll_Click(object sender, EventArgs e)
         {
             if (bindingSource.Current is ICatalogValue current)
             {
                 BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
                 BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+                SendMessage(new RefreshNavigation());
             }
+        }
+
+        private void ExportEntites_Click(object sender, EventArgs e)
+        {
+            if (bindingSource.Current is ICatalogValue current)
+            {
+                BusinessData.DomainModel.Entities.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+                SendMessage(new RefreshNavigation());
+            }
+        }
+
+        private void ExportAttributes_Click(object sender, EventArgs e)
+        {
+            if (bindingSource.Current is ICatalogValue current)
+            {
+                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+                SendMessage(new RefreshNavigation());
+            }
+        }
+
+        private void ExportProcesses_Click(object sender, EventArgs e)
+        {
+            //TODO: Add processes
+            throw new NotImplementedException();
         }
     }
 }

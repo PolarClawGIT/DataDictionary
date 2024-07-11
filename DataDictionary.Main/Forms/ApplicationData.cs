@@ -1,4 +1,5 @@
-﻿using DataDictionary.Main.Controls;
+﻿using DataDictionary.BusinessLayer.NamedScope;
+using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
 using DataDictionary.Main.Messages;
 using DataDictionary.Main.Properties;
@@ -63,6 +64,46 @@ namespace DataDictionary.Main.Forms
             {
                 Control = control;
                 control.VisibleChanged += Control_VisibleChanged;
+            }
+
+            /// <summary>
+            /// Text for the Control
+            /// </summary>
+            public String Text
+            {
+                get { return Control.Text ?? String.Empty; }
+                set { Control.Text = value; }
+            }
+
+            public ToolStripDropDown? DropDown
+            {
+                get
+                {
+                    if (Control is ToolStripDropDownButton dropButton)
+                    { return dropButton.DropDown; }
+                    else if (Control is ToolStripSplitButton splitButton)
+                    { return splitButton.DropDown; }
+                    else { return null; }
+                }
+                set
+                {
+                    if (Control is ToolStripDropDownButton dropButton)
+                    {
+                        if (value is null)
+                        { dropButton.ShowDropDownArrow = false; }
+                        else { dropButton.ShowDropDownArrow = true; }
+
+                        dropButton.DropDown = value;
+                    }
+                    else if (Control is ToolStripSplitButton splitButton)
+                    { splitButton.DropDown = value; }
+                }
+            }
+
+            void Test()
+            {
+                if (Control is ToolStripDropDownButton x) { x.DropDown = null; }
+                if (Control is ToolStripSplitButton y) { y.DropDown = null; }
             }
 
             private void Control_VisibleChanged(Object? sender, EventArgs e)
@@ -132,13 +173,13 @@ namespace DataDictionary.Main.Forms
             InitializeComponent();
 
             commandButtons.Add(CommandImageType.Browse, new CommandState(browseCommand) { IsVisible = false });
-            commandButtons.Add(CommandImageType.New, new CommandState(newCommand) { IsVisible = false });
+            commandButtons.Add(CommandImageType.Add, new CommandState(newCommand) { IsVisible = false });
             commandButtons.Add(CommandImageType.Delete, new CommandState(deleteCommand) { IsVisible = false });
             commandButtons.Add(CommandImageType.Save, new CommandState(saveCommand) { IsVisible = false });
             commandButtons.Add(CommandImageType.Open, new CommandState(openCommand) { IsVisible = false });
             commandButtons.Add(CommandImageType.Import, new CommandState(importCommand) { IsVisible = false });
             commandButtons.Add(CommandImageType.Export, new CommandState(exportCommand) { IsVisible = false });
-            toolStripSeparator.Visible = false; 
+            toolStripSeparator.Visible = false;
             commandButtons.Add(CommandImageType.OpenDatabase, new CommandState(openFromDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
             commandButtons.Add(CommandImageType.SaveDatabase, new CommandState(saveToDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
             commandButtons.Add(CommandImageType.DeleteDatabase, new CommandState(deleteFromDatabaseCommand) { AllowEnabled = () => Settings.Default.IsOnLineMode });
@@ -153,25 +194,32 @@ namespace DataDictionary.Main.Forms
         }
 
         /// <summary>
-        /// Common Setup method.
-        /// Sets RowState based on the BindingSource data.
+        /// Sets RowState, default Window Text, Icon and Command Buttons based on the BindingSource data.
         /// </summary>
         /// <param name="data"></param>
-        protected void Setup(BindingSource data)
+        /// <param name="commands"></param>
+        /// <remarks>Calls Setup by Scope, if possible.</remarks>
+        protected void Setup(BindingSource data, params CommandImageType[] commands)
         {
             if (data.Current is IBindingRowState binding)
             {
                 RowState = binding.RowState();
                 binding.RowStateChanged += RowStateChanged;
             }
+
+            if (data.Current is INamedScopeSourceValue namedScope)
+            {
+                Text = namedScope.GetTitle();
+                Setup(namedScope.Scope, commands); 
+            }
         }
 
         /// <summary>
-        /// Common Setup method.
         /// Sets the Icon and Command Button Images
         /// </summary>
         /// <param name="scope"></param>
-        protected void Setup(ScopeType scope)
+        /// <param name="commands"></param>
+        protected void Setup(ScopeType scope, params CommandImageType[]? commands)
         {
             Icon = ImageEnumeration.GetIcon(scope);
 
@@ -181,8 +229,16 @@ namespace DataDictionary.Main.Forms
                 { item.Value.Image = ImageEnumeration.GetImage(scope, item.Key); }
                 // Else leave the image as is
             }
-        }
 
+            if (commands is not null)
+            {
+                foreach (CommandImageType item in commands)
+                {
+                    CommandButtons[item].IsVisible = true;
+                    CommandButtons[item].IsEnabled = true;
+                }
+            }
+        }
 
         /// <summary>
         /// Delegate for the Event to handle the RowState of the data.
@@ -243,7 +299,7 @@ namespace DataDictionary.Main.Forms
         protected virtual void BrowseCommand_Click(object? sender, EventArgs e)
         { }
 
-        protected virtual void NewCommand_Click(object? sender, EventArgs e)
+        protected virtual void AddCommand_Click(object? sender, EventArgs e)
         { }
 
         protected virtual void DeleteCommand_Click(object? sender, EventArgs e)

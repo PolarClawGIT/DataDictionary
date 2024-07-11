@@ -15,11 +15,8 @@ namespace DataDictionary.Main.Forms.Domain
         public Boolean IsOpenItem(object? item)
         { return bindingEntity.Current is IEntityValue current && ReferenceEquals(current, item); }
 
-        public DomainEntity() : base()
-        {
-            InitializeComponent();
-            toolStrip.TransferItems(entityToolStrip, 0);
-        }
+        protected DomainEntity() : base()
+        { InitializeComponent(); }
 
         public DomainEntity(IEntityValue? entityItem) : this()
         {
@@ -30,15 +27,14 @@ namespace DataDictionary.Main.Forms.Domain
             }
 
             EntityIndex key = new EntityIndex(entityItem);
-            this.Icon = ImageEnumeration.GetIcon(entityItem.Scope);
 
             bindingEntity.DataSource = new BindingView<EntityValue>(BusinessData.DomainModel.Entities, w => key.Equals(w));
             bindingEntity.Position = 0;
 
-            Setup(bindingEntity);
-
             if (bindingEntity.Current is IEntityValue current)
             {
+                Setup(bindingEntity, CommandImageType.Delete);
+
                 bindingProperty.DataSource = new BindingView<EntityPropertyValue>(BusinessData.DomainModel.Entities.Properties, w => key.Equals(w));
                 bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.DomainModel.Entities.Definitions, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.DomainModel.Entities.Aliases, w => key.Equals(w));
@@ -48,17 +44,17 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void Form_Load(object sender, EventArgs e)
         {
-            IEntityValue nameOfValues;
             PropertyNameList.Load(propertyIdColumn);
             DefinitionNameList.Load(definitionColumn);
             ScopeNameList.Load(aliaseScopeColumn);
 
-            this.DataBindings.Add(new Binding(nameof(this.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));
-            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingEntity, nameof(nameOfValues.EntityTitle)));
-            descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingEntity, nameof(nameOfValues.EntityDescription)));
+            this.DataBindings.Add(new Binding(nameof(this.Text), bindingEntity, nameof(IEntityValue.EntityTitle), false, DataSourceUpdateMode.OnPropertyChanged));
+
+            titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingEntity, nameof(IEntityValue.EntityTitle)));
+            descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingEntity, nameof(IEntityValue.EntityDescription)));
 
             EntityNameList.Load(typeOfEntityData, BusinessData.DomainModel.Entities);
-            typeOfEntityData.DataBindings.Add(new Binding(nameof(typeOfEntityData.SelectedValue), bindingEntity, nameof(nameOfValues.TypeOfEntityId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
+            typeOfEntityData.DataBindings.Add(new Binding(nameof(typeOfEntityData.SelectedValue), bindingEntity, nameof(IEntityValue.TypeOfEntityId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
 
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
@@ -74,10 +70,12 @@ namespace DataDictionary.Main.Forms.Domain
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingEntity.Current is not IEntityValue);
         }
 
-        private void DeleteItemCommand_Click(object? sender, EventArgs e)
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
+            base.DeleteCommand_Click(sender, e);
+
             if (bindingEntity.Current is IEntityValue current)
-            { BusinessData.DomainModel.Entities.Delete(current); }
+            { DoWork(BusinessData.DomainModel.Entities.Delete(current)); }
         }
 
         private void BindingProperty_AddingNew(object sender, AddingNewEventArgs e)

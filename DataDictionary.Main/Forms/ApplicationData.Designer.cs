@@ -39,8 +39,8 @@
             deleteCommand = new ToolStripButton();
             openCommand = new ToolStripButton();
             saveCommand = new ToolStripButton();
-            importCommand = new ToolStripButton();
-            exportCommand = new ToolStripButton();
+            importCommand = new ToolStripDropDownButton();
+            exportCommand = new ToolStripDropDownButton();
             helpCommand = new ToolStripButton();
             rowStateCommand = new ToolStripLabel();
             helpToolStripButton = new ToolStripButton();
@@ -114,7 +114,7 @@
             newCommand.Name = "newCommand";
             newCommand.Size = new Size(23, 22);
             newCommand.Text = "New";
-            newCommand.Click += NewCommand_Click;
+            newCommand.Click += AddCommand_Click;
             // 
             // deleteCommand
             // 
@@ -156,7 +156,8 @@
             importCommand.Image = Properties.Resources.ImportDocument;
             importCommand.ImageTransparentColor = Color.Magenta;
             importCommand.Name = "importCommand";
-            importCommand.Size = new Size(23, 22);
+            importCommand.ShowDropDownArrow = false;
+            importCommand.Size = new Size(20, 22);
             importCommand.Text = "Import";
             importCommand.Click += ImportCommand_Click;
             // 
@@ -167,7 +168,8 @@
             exportCommand.Image = Properties.Resources.ExportDocument;
             exportCommand.ImageTransparentColor = Color.Magenta;
             exportCommand.Name = "exportCommand";
-            exportCommand.Size = new Size(23, 22);
+            exportCommand.ShowDropDownArrow = false;
+            exportCommand.Size = new Size(20, 22);
             exportCommand.Text = "Export";
             exportCommand.Click += ExportCommand_Click;
             // 
@@ -226,11 +228,11 @@
         private ToolStripButton browseCommand;
         private ToolStripButton newCommand;
         private ToolStripButton deleteCommand;
-        private ToolStripButton importCommand;
-        private ToolStripButton exportCommand;
         private ToolStripButton saveCommand;
         private ToolStripButton openCommand;
         protected ToolStrip toolStrip;
         private ToolStripSeparator toolStripSeparator;
+        private ToolStripDropDownButton importCommand;
+        private ToolStripDropDownButton exportCommand;
     }
 }

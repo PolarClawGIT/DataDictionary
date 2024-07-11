@@ -51,15 +51,14 @@
             tableNameData = new Controls.TextBoxData();
             tableTypeData = new Controls.TextBoxData();
             errorProvider = new ErrorProvider(components);
-            importOptions = new ContextMenuStrip(components);
-            importOptionEntity = new ToolStripMenuItem();
-            importOptionAttribute = new ToolStripMenuItem();
             bindingTable = new BindingSource(components);
             bindingProperties = new BindingSource(components);
             bindingColumns = new BindingSource(components);
             bindingConstraints = new BindingSource(components);
-            tableToolStrip = new ContextMenuStrip(components);
-            exportCommand = new ToolStripMenuItem();
+            exportOptions = new ContextMenuStrip(components);
+            exportAll = new ToolStripMenuItem();
+            exportEntites = new ToolStripMenuItem();
+            exportAttributes = new ToolStripMenuItem();
             dbTableLayout = new TableLayoutPanel();
             tableDetailLayout = new TabControl();
             extendedPropertiesTab = new TabPage();
@@ -75,12 +74,11 @@
             constraintLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)tableConstraintData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
-            importOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingTable).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingColumns).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingConstraints).BeginInit();
-            tableToolStrip.SuspendLayout();
+            exportOptions.SuspendLayout();
             SuspendLayout();
             // 
             // dbTableLayout
@@ -285,6 +283,7 @@
             catalogNameData.ReadOnly = true;
             catalogNameData.Size = new Size(427, 44);
             catalogNameData.TabIndex = 8;
+            catalogNameData.WordWrap = true;
             // 
             // schemaNameData
             // 
@@ -298,6 +297,7 @@
             schemaNameData.ReadOnly = true;
             schemaNameData.Size = new Size(427, 44);
             schemaNameData.TabIndex = 9;
+            schemaNameData.WordWrap = true;
             // 
             // tableNameData
             // 
@@ -311,6 +311,7 @@
             tableNameData.ReadOnly = true;
             tableNameData.Size = new Size(427, 44);
             tableNameData.TabIndex = 10;
+            tableNameData.WordWrap = true;
             // 
             // tableTypeData
             // 
@@ -323,48 +324,41 @@
             tableTypeData.ReadOnly = true;
             tableTypeData.Size = new Size(346, 44);
             tableTypeData.TabIndex = 11;
+            tableTypeData.WordWrap = true;
             // 
             // errorProvider
             // 
             errorProvider.ContainerControl = this;
             // 
-            // importOptions
+            // exportOptions
             // 
-            importOptions.Items.AddRange(new ToolStripItem[] { importOptionEntity, importOptionAttribute });
-            importOptions.Name = "ImportOptions";
-            importOptions.Size = new Size(166, 48);
+            exportOptions.Items.AddRange(new ToolStripItem[] { exportAll, exportEntites, exportAttributes });
+            exportOptions.Name = "contextMenuStrip1";
+            exportOptions.Size = new Size(181, 92);
             // 
-            // importOptionEntity
+            // exportAll
             // 
-            importOptionEntity.Checked = true;
-            importOptionEntity.CheckOnClick = true;
-            importOptionEntity.CheckState = CheckState.Checked;
-            importOptionEntity.Name = "importOptionEntity";
-            importOptionEntity.Size = new Size(165, 22);
-            importOptionEntity.Text = "Import Entity";
+            exportAll.Name = "exportAll";
+            exportAll.Size = new Size(180, 22);
+            exportAll.Text = "All items";
+            exportAll.ToolTipText = "Create all domain model items from database model";
+            exportAll.Click += ExportAll_Click;
             // 
-            // importOptionAttribute
+            // exportEntites
             // 
-            importOptionAttribute.Checked = true;
-            importOptionAttribute.CheckOnClick = true;
-            importOptionAttribute.CheckState = CheckState.Checked;
-            importOptionAttribute.Name = "importOptionAttribute";
-            importOptionAttribute.Size = new Size(165, 22);
-            importOptionAttribute.Text = "Import Attributes";
+            exportEntites.Name = "exportEntites";
+            exportEntites.Size = new Size(180, 22);
+            exportEntites.Text = "Entity only";
+            exportEntites.ToolTipText = "Create domain Entity from database Tables or View";
+            exportEntites.Click += ExportEntites_Click;
             // 
-            // tableToolStrip
+            // exportAttributes
             // 
-            tableToolStrip.Items.AddRange(new ToolStripItem[] { exportCommand });
-            tableToolStrip.Name = "tableToolStrip";
-            tableToolStrip.Size = new Size(234, 48);
-            // 
-            // exportCommand
-            // 
-            exportCommand.Image = Properties.Resources.ExportEntity;
-            exportCommand.Name = "exportCommand";
-            exportCommand.Size = new Size(233, 22);
-            exportCommand.Text = "Export to Entity and Attributes";
-            exportCommand.Click += exportCommand_Click;
+            exportAttributes.Name = "exportAttributes";
+            exportAttributes.Size = new Size(180, 22);
+            exportAttributes.Text = "Attributes only";
+            exportAttributes.ToolTipText = "Create domain Attributes from database Columns";
+            exportAttributes.Click += ExportAttributes_Click;
             // 
             // DbTable
             // 
@@ -387,12 +381,11 @@
             constraintLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)tableConstraintData).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
-            importOptions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingTable).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperties).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingColumns).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingConstraints).EndInit();
-            tableToolStrip.ResumeLayout(false);
+            exportOptions.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -416,14 +409,13 @@
         private DataGridView tableConstraintData;
         private DataGridViewTextBoxColumn ConstraintNameValue;
         private DataGridViewTextBoxColumn ConstraintTypeValue;
-        private ContextMenuStrip importOptions;
-        private ToolStripMenuItem importOptionEntity;
-        private ToolStripMenuItem importOptionAttribute;
         private BindingSource bindingTable;
         private BindingSource bindingProperties;
         private BindingSource bindingColumns;
         private BindingSource bindingConstraints;
-        private ContextMenuStrip tableToolStrip;
-        private ToolStripMenuItem exportCommand;
+        private ContextMenuStrip exportOptions;
+        private ToolStripMenuItem exportAll;
+        private ToolStripMenuItem exportEntites;
+        private ToolStripMenuItem exportAttributes;
     }
 }

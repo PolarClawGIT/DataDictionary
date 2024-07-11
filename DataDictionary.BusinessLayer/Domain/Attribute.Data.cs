@@ -219,7 +219,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ICatalogIndex key)
         {
             CatalogIndex catalogKey = new CatalogIndex(key);
-            if (source.DbCatalogs.Where(w => catalogKey.Equals(w)) is CatalogValue catalog)
+            if (source.DbCatalogs.FirstOrDefault(w => catalogKey.Equals(w)) is CatalogValue catalog)
             {
                 CatalogIndexName catalogName = new CatalogIndexName(catalog);
 
@@ -236,7 +236,7 @@ namespace DataDictionary.BusinessLayer.Domain
         public void Import(IDatabaseModel source, IPropertyData propertyDefinition, ITableIndex key)
         {
             TableIndex tableKey = new TableIndex(key);
-            if (source.DbTables.Where(w => tableKey.Equals(w)) is TableValue table)
+            if (source.DbTables.FirstOrDefault(w => tableKey.Equals(w)) is TableValue table)
             {
                 TableIndexName tableName = new TableIndexName(table);
                 foreach (TableColumnValue item in source.DbTableColumns.Where(w => tableName.Equals(w)))

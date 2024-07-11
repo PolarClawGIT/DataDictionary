@@ -11,18 +11,13 @@ namespace DataDictionary.Main.Forms.Database
         public Boolean IsOpenItem(object? item)
         { return bindingConstraint.Current is IConstraintValue current && ReferenceEquals(current, item); }
 
-        public DbConstraint() : base()
-        {
-            InitializeComponent();
-
-            this.Icon = ImageEnumeration.GetIcon(ScopeType.DatabaseSchema);
-        }
+        protected DbConstraint() : base()
+        { InitializeComponent(); }
 
         public DbConstraint(IConstraintValue constraintItem) : this()
         {
             ConstraintIndexName key = new ConstraintIndexName(constraintItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
-            this.Icon = ImageEnumeration.GetIcon(constraintItem.Scope);
 
             bindingConstraint.DataSource = new BindingView<ConstraintValue>(BusinessData.DatabaseModel.DbConstraints, w => key.Equals(w));
             bindingConstraint.Position = 0;

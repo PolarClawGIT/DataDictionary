@@ -1,6 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Database;
 using DataDictionary.Main.Controls;
 using DataDictionary.Main.Enumerations;
+using DataDictionary.Main.Messages;
 using DataDictionary.Resource.Enumerations;
 using System.Data;
 using Toolbox.BindingTable;
@@ -13,27 +14,25 @@ namespace DataDictionary.Main.Forms.Database
         { return bindingColumn.Current is ITableColumnValue current && ReferenceEquals(current, item); }
 
         public DbTableColumn() : base()
-        {
-            InitializeComponent();
-            toolStrip.TransferItems(tableColumnToolStrip, 0);
-        }
+        { InitializeComponent(); }
 
         public DbTableColumn(ITableColumnValue columnItem) : this()
         {
             TableColumnIndexName key = new TableColumnIndexName(columnItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
-            this.Icon = ImageEnumeration.GetIcon(columnItem.Scope);
 
             bindingColumn.DataSource = new BindingView<TableColumnValue>(BusinessData.DatabaseModel.DbTableColumns, w => key.Equals(w));
             bindingColumn.Position = 0;
-            
-            Setup(bindingColumn);
+
+            Setup(bindingColumn, CommandImageType.Export);
+            CommandButtons[CommandImageType.Export].Text = "to Model";
+            CommandButtons[CommandImageType.Export].DropDown = exportOptions;
+            exportAttributes.Image = ImageEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Add);
 
             if (bindingColumn.Current is ITableColumnValue current)
             {
                 bindingProperties.DataSource = new BindingView<ExtendedPropertyValue>(BusinessData.DatabaseModel.DbExtendedProperties, w => propertyKey.Equals(w));
             }
-
         }
 
         private void DbColumn_Load(object sender, EventArgs e)
@@ -79,10 +78,14 @@ namespace DataDictionary.Main.Forms.Database
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingColumn.Current is not ITableColumnValue);
         }
 
-        private void exportCommand_Click(object sender, EventArgs e)
+        private void ExportAttributes_Click(object sender, EventArgs e)
         {
             if (bindingColumn.Current is ITableColumnValue current)
-            {   BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current); }
+            {
+                BusinessData.DomainModel.Attributes.Import(BusinessData.DatabaseModel, BusinessData.ApplicationData.Properties, current);
+                SendMessage(new RefreshNavigation());
+            }
+
         }
     }
 }

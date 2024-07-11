@@ -12,16 +12,13 @@ namespace DataDictionary.Main.Forms.Database
         public Boolean IsOpenItem(object? item)
         { return bindingParameter.Current is IRoutineParameterValue current && ReferenceEquals(current, item); }
 
-        public DbRoutineParameter() : base()
-        {
-            InitializeComponent();
-        }
+        protected DbRoutineParameter() : base()
+        {   InitializeComponent(); }
 
         public DbRoutineParameter(IRoutineParameterValue parameterItem) : this()
         {
             RoutineParameterKeyName key = new RoutineParameterKeyName(parameterItem);
             ExtendedPropertyIndexName propertyKey = new ExtendedPropertyIndexName(key);
-            this.Icon = ImageEnumeration.GetIcon(parameterItem.Scope);
 
             bindingParameter.DataSource = new BindingView<RoutineParameterValue>(BusinessData.DatabaseModel.DbRoutineParameters, w => key.Equals(w));
             bindingParameter.Position = 0;

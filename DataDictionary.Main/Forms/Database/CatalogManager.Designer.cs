@@ -31,24 +31,20 @@
             components = new System.ComponentModel.Container();
             TableLayoutPanel catalogManagerLayout;
             catalogNavigation = new DataGridView();
+            catalogTitleColumn = new DataGridViewTextBoxColumn();
+            databaseNameColumn = new DataGridViewTextBoxColumn();
+            inModelColumn = new DataGridViewCheckBoxColumn();
+            inDatabase = new DataGridViewCheckBoxColumn();
             catalogTitleData = new Controls.TextBoxData();
             catalogDescriptionData = new Controls.TextBoxData();
             sourceDateData = new Controls.TextBoxData();
             sourceServerNameData = new Controls.TextBoxData();
             sourceDatabaseNameData = new Controls.TextBoxData();
             catalogBinding = new BindingSource(components);
-            catalogContextMenu = new ContextMenuStrip(components);
-            addDatabaseCommand = new ToolStripMenuItem();
-            removeDatabaseCommand = new ToolStripMenuItem();
-            catalogTitleColumn = new DataGridViewTextBoxColumn();
-            databaseNameColumn = new DataGridViewTextBoxColumn();
-            inModelColumn = new DataGridViewCheckBoxColumn();
-            inDatabase = new DataGridViewCheckBoxColumn();
             catalogManagerLayout = new TableLayoutPanel();
             catalogManagerLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)catalogNavigation).BeginInit();
             ((System.ComponentModel.ISupportInitialize)catalogBinding).BeginInit();
-            catalogContextMenu.SuspendLayout();
             SuspendLayout();
             // 
             // catalogManagerLayout
@@ -87,94 +83,6 @@
             catalogNavigation.Size = new Size(605, 232);
             catalogNavigation.TabIndex = 0;
             // 
-            // catalogTitleData
-            // 
-            catalogTitleData.AutoSize = true;
-            catalogManagerLayout.SetColumnSpan(catalogTitleData, 2);
-            catalogTitleData.Dock = DockStyle.Fill;
-            catalogTitleData.HeaderText = "Catalog Title";
-            catalogTitleData.Location = new Point(3, 241);
-            catalogTitleData.Multiline = false;
-            catalogTitleData.Name = "catalogTitleData";
-            catalogTitleData.ReadOnly = false;
-            catalogTitleData.Size = new Size(605, 44);
-            catalogTitleData.TabIndex = 1;
-            // 
-            // catalogDescriptionData
-            // 
-            catalogDescriptionData.AutoSize = true;
-            catalogManagerLayout.SetColumnSpan(catalogDescriptionData, 2);
-            catalogDescriptionData.Dock = DockStyle.Fill;
-            catalogDescriptionData.HeaderText = "Catalog Description";
-            catalogDescriptionData.Location = new Point(3, 291);
-            catalogDescriptionData.Multiline = true;
-            catalogDescriptionData.Name = "catalogDescriptionData";
-            catalogDescriptionData.ReadOnly = false;
-            catalogDescriptionData.Size = new Size(605, 96);
-            catalogDescriptionData.TabIndex = 2;
-            // 
-            // sourceDateData
-            // 
-            sourceDateData.AutoSize = true;
-            sourceDateData.Dock = DockStyle.Fill;
-            sourceDateData.HeaderText = "Source Date";
-            sourceDateData.Location = new Point(410, 443);
-            sourceDateData.Multiline = false;
-            sourceDateData.Name = "sourceDateData";
-            sourceDateData.ReadOnly = true;
-            sourceDateData.Size = new Size(198, 44);
-            sourceDateData.TabIndex = 10;
-            // 
-            // sourceServerNameData
-            // 
-            sourceServerNameData.AutoSize = true;
-            sourceServerNameData.Dock = DockStyle.Fill;
-            sourceServerNameData.HeaderText = "Source Server Name";
-            sourceServerNameData.Location = new Point(3, 393);
-            sourceServerNameData.Multiline = false;
-            sourceServerNameData.Name = "sourceServerNameData";
-            sourceServerNameData.ReadOnly = true;
-            sourceServerNameData.Size = new Size(401, 44);
-            sourceServerNameData.TabIndex = 11;
-            // 
-            // sourceDatabaseNameData
-            // 
-            sourceDatabaseNameData.AutoSize = true;
-            sourceDatabaseNameData.Dock = DockStyle.Fill;
-            sourceDatabaseNameData.HeaderText = "Source Database Name";
-            sourceDatabaseNameData.Location = new Point(3, 443);
-            sourceDatabaseNameData.Multiline = false;
-            sourceDatabaseNameData.Name = "sourceDatabaseNameData";
-            sourceDatabaseNameData.ReadOnly = true;
-            sourceDatabaseNameData.Size = new Size(401, 44);
-            sourceDatabaseNameData.TabIndex = 12;
-            // 
-            // catalogBinding
-            // 
-            catalogBinding.CurrentChanged += CatalogBinding_CurrentChanged;
-            // 
-            // catalogContextMenu
-            // 
-            catalogContextMenu.Items.AddRange(new ToolStripItem[] { addDatabaseCommand, removeDatabaseCommand });
-            catalogContextMenu.Name = "catalogContextMenu";
-            catalogContextMenu.Size = new Size(169, 48);
-            // 
-            // addDatabaseCommand
-            // 
-            addDatabaseCommand.Name = "addDatabaseCommand";
-            addDatabaseCommand.Size = new Size(168, 22);
-            addDatabaseCommand.Text = "Add Database";
-            addDatabaseCommand.ToolTipText = "Import a Catalog (Database Schema) into the Model";
-            addDatabaseCommand.Click += AddDatabaseCommand_Click;
-            // 
-            // removeDatabaseCommand
-            // 
-            removeDatabaseCommand.Name = "removeDatabaseCommand";
-            removeDatabaseCommand.Size = new Size(168, 22);
-            removeDatabaseCommand.Text = "Remove Database";
-            removeDatabaseCommand.ToolTipText = "Removes the Catalog from the Model";
-            removeDatabaseCommand.Click += RemoveDatabaseCommand_Click;
-            // 
             // catalogTitleColumn
             // 
             catalogTitleColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -206,6 +114,77 @@
             inDatabase.Name = "inDatabase";
             inDatabase.ReadOnly = true;
             // 
+            // catalogTitleData
+            // 
+            catalogTitleData.AutoSize = true;
+            catalogManagerLayout.SetColumnSpan(catalogTitleData, 2);
+            catalogTitleData.Dock = DockStyle.Fill;
+            catalogTitleData.HeaderText = "Catalog Title";
+            catalogTitleData.Location = new Point(3, 241);
+            catalogTitleData.Multiline = false;
+            catalogTitleData.Name = "catalogTitleData";
+            catalogTitleData.ReadOnly = false;
+            catalogTitleData.Size = new Size(605, 44);
+            catalogTitleData.TabIndex = 1;
+            catalogTitleData.WordWrap = true;
+            // 
+            // catalogDescriptionData
+            // 
+            catalogDescriptionData.AutoSize = true;
+            catalogManagerLayout.SetColumnSpan(catalogDescriptionData, 2);
+            catalogDescriptionData.Dock = DockStyle.Fill;
+            catalogDescriptionData.HeaderText = "Catalog Description";
+            catalogDescriptionData.Location = new Point(3, 291);
+            catalogDescriptionData.Multiline = true;
+            catalogDescriptionData.Name = "catalogDescriptionData";
+            catalogDescriptionData.ReadOnly = false;
+            catalogDescriptionData.Size = new Size(605, 96);
+            catalogDescriptionData.TabIndex = 2;
+            catalogDescriptionData.WordWrap = true;
+            // 
+            // sourceDateData
+            // 
+            sourceDateData.AutoSize = true;
+            sourceDateData.Dock = DockStyle.Fill;
+            sourceDateData.HeaderText = "Source Date";
+            sourceDateData.Location = new Point(410, 443);
+            sourceDateData.Multiline = false;
+            sourceDateData.Name = "sourceDateData";
+            sourceDateData.ReadOnly = true;
+            sourceDateData.Size = new Size(198, 44);
+            sourceDateData.TabIndex = 10;
+            sourceDateData.WordWrap = true;
+            // 
+            // sourceServerNameData
+            // 
+            sourceServerNameData.AutoSize = true;
+            sourceServerNameData.Dock = DockStyle.Fill;
+            sourceServerNameData.HeaderText = "Source Server Name";
+            sourceServerNameData.Location = new Point(3, 393);
+            sourceServerNameData.Multiline = false;
+            sourceServerNameData.Name = "sourceServerNameData";
+            sourceServerNameData.ReadOnly = true;
+            sourceServerNameData.Size = new Size(401, 44);
+            sourceServerNameData.TabIndex = 11;
+            sourceServerNameData.WordWrap = true;
+            // 
+            // sourceDatabaseNameData
+            // 
+            sourceDatabaseNameData.AutoSize = true;
+            sourceDatabaseNameData.Dock = DockStyle.Fill;
+            sourceDatabaseNameData.HeaderText = "Source Database Name";
+            sourceDatabaseNameData.Location = new Point(3, 443);
+            sourceDatabaseNameData.Multiline = false;
+            sourceDatabaseNameData.Name = "sourceDatabaseNameData";
+            sourceDatabaseNameData.ReadOnly = true;
+            sourceDatabaseNameData.Size = new Size(401, 44);
+            sourceDatabaseNameData.TabIndex = 12;
+            sourceDatabaseNameData.WordWrap = true;
+            // 
+            // catalogBinding
+            // 
+            catalogBinding.CurrentChanged += CatalogBinding_CurrentChanged;
+            // 
             // CatalogManager
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -220,7 +199,6 @@
             catalogManagerLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)catalogNavigation).EndInit();
             ((System.ComponentModel.ISupportInitialize)catalogBinding).EndInit();
-            catalogContextMenu.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -234,9 +212,6 @@
         private Controls.TextBoxData sourceDateData;
         private Controls.TextBoxData sourceServerNameData;
         private Controls.TextBoxData sourceDatabaseNameData;
-        private ContextMenuStrip catalogContextMenu;
-        private ToolStripMenuItem addDatabaseCommand;
-        private ToolStripMenuItem removeDatabaseCommand;
         private DataGridViewTextBoxColumn catalogTitleColumn;
         private DataGridViewTextBoxColumn databaseNameColumn;
         private DataGridViewCheckBoxColumn inModelColumn;

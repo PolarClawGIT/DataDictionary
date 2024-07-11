@@ -52,17 +52,11 @@ namespace DataDictionary.Main.Forms.ApplicationWide
         public HelpSubject() : base()
         {
             InitializeComponent();
-            this.Icon = ImageEnumeration.GetIcon(ScopeType.ApplicationHelp);
-            newHelpCommand.Image = ImageEnumeration.GetImage(ScopeType.ApplicationHelp, Enumerations.CommandImageType.New);
-            deleteHelpCommand.Image = ImageEnumeration.GetImage(ScopeType.ApplicationHelp, Enumerations.CommandImageType.Delete);
 
             controlData.Columns[0].Width = (Int32)(controlData.ClientSize.Width * 0.7);
             controlData.Columns[1].Width = (Int32)(controlData.ClientSize.Width * 0.3);
 
-            toolStrip.TransferItems(helpContextMenu,0);
             helpToolStripButton.Enabled = false;
-            newHelpCommand.Enabled = true;
-            deleteHelpCommand.Enabled = true;
 
             helpBinding.DataSource = BusinessData.ApplicationData.HelpSubjects;
 
@@ -70,15 +64,15 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 && subjects.FirstOrDefault(w => w.NameSpace == Settings.Default.DefaultSubject) is HelpSubjectValue subject)
             { helpBinding.Position = subjects.IndexOf(subject); }
 
-            // Setup Images for Tree Control
+            Setup(
+                helpBinding,
+                CommandImageType.Add,
+                CommandImageType.Delete,
+                CommandImageType.OpenDatabase,
+                CommandImageType.SaveDatabase,
+                CommandImageType.DeleteDatabase);
             SetImages(helpContentNavigation);
-            Setup(helpBinding);
-            Setup(ScopeType.ApplicationHelp);
-            CommandButtons[CommandImageType.OpenDatabase].IsVisible = true;
-            CommandButtons[CommandImageType.SaveDatabase].IsVisible = true;
-            CommandButtons[CommandImageType.DeleteDatabase].IsVisible = true;
         }
-
 
         public HelpSubject(Form targetForm) : this()
         {
@@ -144,27 +138,6 @@ namespace DataDictionary.Main.Forms.ApplicationWide
             helpTextData.DataBindings.Add(new Binding(nameof(helpTextData.Rtf), helpBinding, nameof(nameOfValues.HelpText), false, DataSourceUpdateMode.OnPropertyChanged));
 
             BuildHelpTree();
-        }
-
-
-        private void newHelpCommand_Click(object? sender, EventArgs e)
-        {
-            if (helpBinding.AddNew() is HelpSubjectValue newItem)
-            {
-                //TODO: Always added at end of list. Can it be added based on Name Space?
-
-                TreeNode newNode = CreateNode(newItem, helpContentImageIndex.HelpPage);
-                helpContentNavigation.SelectedNode = newNode;
-            }
-        }
-
-        private void deleteHelpCommand_Click(object? sender, EventArgs e)
-        {
-            if (helpBinding.Current is HelpSubjectValue current)
-            {
-                RemoveNode(current);
-                helpBinding.RemoveCurrent();
-            }
         }
 
 
@@ -484,6 +457,26 @@ namespace DataDictionary.Main.Forms.ApplicationWide
                 }
 
                 currentItem = null;
+            }
+        }
+
+        protected override void AddCommand_Click(Object? sender, EventArgs e)
+        {
+            if (helpBinding.AddNew() is HelpSubjectValue newItem)
+            {
+                //TODO: Always added at end of list. Can it be added based on Name Space?
+
+                TreeNode newNode = CreateNode(newItem, helpContentImageIndex.HelpPage);
+                helpContentNavigation.SelectedNode = newNode;
+            }
+        }
+
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
+        {
+            if (helpBinding.Current is HelpSubjectValue current)
+            {
+                RemoveNode(current);
+                helpBinding.RemoveCurrent();
             }
         }
 
