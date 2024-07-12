@@ -45,8 +45,6 @@
             bindingSubject = new BindingSource(components);
             bindingEntity = new BindingSource(components);
             bindingAttribute = new BindingSource(components);
-            subjectAreaToolStrip = new ContextMenuStrip(components);
-            removeSubjectAreaCommand = new ToolStripMenuItem();
             subjectAreaLayout = new TableLayoutPanel();
             subjectAreaTab = new TabControl();
             subjectAreaLayout.SuspendLayout();
@@ -58,7 +56,6 @@
             ((System.ComponentModel.ISupportInitialize)bindingSubject).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
-            subjectAreaToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // subjectAreaLayout
@@ -91,6 +88,7 @@
             subjectAreaTitleData.ReadOnly = false;
             subjectAreaTitleData.Size = new Size(373, 44);
             subjectAreaTitleData.TabIndex = 0;
+            subjectAreaTitleData.WordWrap = true;
             // 
             // subjectAreaDescriptionData
             // 
@@ -103,6 +101,7 @@
             subjectAreaDescriptionData.ReadOnly = false;
             subjectAreaDescriptionData.Size = new Size(373, 129);
             subjectAreaDescriptionData.TabIndex = 1;
+            subjectAreaDescriptionData.WordWrap = true;
             // 
             // subjectAreaTab
             // 
@@ -204,21 +203,8 @@
             subjectAreaNameSpaceData.ReadOnly = false;
             subjectAreaNameSpaceData.Size = new Size(373, 44);
             subjectAreaNameSpaceData.TabIndex = 3;
+            subjectAreaNameSpaceData.WordWrap = true;
             subjectAreaNameSpaceData.Validating += SubjectAreaNameSpaceData_Validating;
-            // 
-            // subjectAreaToolStrip
-            // 
-            subjectAreaToolStrip.Items.AddRange(new ToolStripItem[] { removeSubjectAreaCommand });
-            subjectAreaToolStrip.Name = "subjectAreaToolStrip";
-            subjectAreaToolStrip.Size = new Size(184, 26);
-            // 
-            // removeSubjectAreaCommand
-            // 
-            removeSubjectAreaCommand.Image = Properties.Resources.DeleteDiagram;
-            removeSubjectAreaCommand.Name = "removeSubjectAreaCommand";
-            removeSubjectAreaCommand.Size = new Size(183, 22);
-            removeSubjectAreaCommand.Text = "remove Subject Area";
-            removeSubjectAreaCommand.Click += RemoveSubjectAreaCommand_Click;
             // 
             // ModelSubjectArea
             // 
@@ -240,7 +226,6 @@
             ((System.ComponentModel.ISupportInitialize)bindingSubject).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
-            subjectAreaToolStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -261,7 +246,5 @@
         private DataDictionary.Main.Controls.TextBoxData subjectAreaNameSpaceData;
         private BindingSource bindingEntity;
         private BindingSource bindingAttribute;
-        private ContextMenuStrip subjectAreaToolStrip;
-        private ToolStripMenuItem removeSubjectAreaCommand;
     }
 }

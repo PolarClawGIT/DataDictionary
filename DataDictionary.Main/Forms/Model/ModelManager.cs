@@ -18,10 +18,10 @@ namespace DataDictionary.Main.Forms.Model
         {
             InitializeComponent();
 
-            Setup(ScopeType.Model);
-            CommandButtons[CommandImageType.OpenDatabase].IsVisible = true;
-            CommandButtons[CommandImageType.SaveDatabase].IsVisible = true;
-            CommandButtons[CommandImageType.DeleteDatabase].IsVisible = true;
+            Setup(ScopeType.Model,
+                CommandImageType.OpenDatabase,
+                CommandImageType.SaveDatabase,
+                CommandImageType.DeleteDatabase);
         }
 
         private void ModelManager_Load(object sender, EventArgs e)

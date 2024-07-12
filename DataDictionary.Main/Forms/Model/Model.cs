@@ -13,7 +13,6 @@ namespace DataDictionary.Main.Forms.Model
         public Model() : base()
         {
             InitializeComponent();
-            toolStrip.TransferItems(modelToolStrip,0);
         }
 
         public Model(IModelValue? model) : this()
@@ -25,7 +24,6 @@ namespace DataDictionary.Main.Forms.Model
             }
 
             ModelIndex key = new ModelIndex(model);
-            this.Icon = ImageEnumeration.GetIcon(model.Scope);
 
             bindingModel.DataSource = new BindingView<ModelValue>(BusinessData.Models, w => key.Equals(w));
             bindingModel.Position = 0;
@@ -40,8 +38,5 @@ namespace DataDictionary.Main.Forms.Model
             modelTitleData.DataBindings.Add(new Binding(nameof(modelTitleData.Text), bindingModel, nameof(nameBinding.ModelTitle)));
             modelDescriptionData.DataBindings.Add(new Binding(nameof(modelDescriptionData.Text), bindingModel, nameof(nameBinding.ModelDescription)));
         }
-
-        private void openModelManagerCommand_Click(object sender, EventArgs e)
-        { Activate(() => new Forms.Model.ModelManager()); }
     }
 }

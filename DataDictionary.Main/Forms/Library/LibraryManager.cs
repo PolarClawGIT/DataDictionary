@@ -17,12 +17,13 @@ namespace DataDictionary.Main.Forms.Library
         public LibraryManager()
         {
             InitializeComponent();
-            toolStrip.TransferItems(libararyToolStrip, 0);
-
-            Setup(ScopeType.Library);
-            CommandButtons[CommandImageType.OpenDatabase].IsVisible = true;
-            CommandButtons[CommandImageType.SaveDatabase].IsVisible = true;
-            CommandButtons[CommandImageType.DeleteDatabase].IsVisible = true;
+            
+            Setup(ScopeType.Library,
+                CommandImageType.Add,
+                CommandImageType.Delete,
+                CommandImageType.OpenDatabase,
+                CommandImageType.SaveDatabase,
+                CommandImageType.DeleteDatabase);
         }
 
         private void LibraryManager_Load(object sender, EventArgs e)
@@ -60,6 +61,34 @@ namespace DataDictionary.Main.Forms.Library
                 sourceFileNameData.DataBindings.Add(new Binding(nameof(sourceFileNameData.Text), libraryBinding, FormatName(nameof(libraryNames.Source.SourceFile))));
                 sourceFileDate.DataBindings.Add(new Binding(nameof(sourceFileDate.Text), libraryBinding, FormatName(nameof(libraryNames.Source.SourceDate))));
             }
+        }
+
+        private void LibraryTitleData_Validating(object sender, CancelEventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(libraryTitleData.Text))
+            { errorProvider.SetError(libraryTitleData.ErrorControl, "Library Title is required"); }
+            else { errorProvider.SetError(libraryTitleData.ErrorControl, String.Empty); }
+        }
+
+        private void AsseblyNameData_Validating(object sender, CancelEventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(asseblyNameData.Text))
+            { errorProvider.SetError(asseblyNameData.ErrorControl, "Assembly Name is required"); }
+            else { errorProvider.SetError(asseblyNameData.ErrorControl, String.Empty); }
+        }
+
+        private Boolean GetInModel()
+        {
+            if (libraryBinding.Current is LibrarySynchronizeValue item)
+            { return item.InModel == true; }
+            else { return false; }
+        }
+
+        private Boolean GetInDatabase()
+        {
+            if (libraryBinding.Current is LibrarySynchronizeValue item)
+            { return item.InDatabase == true; }
+            else { return false; }
         }
 
         protected override void DeleteFromDatabaseCommand_Click(object? sender, EventArgs e)
@@ -143,36 +172,10 @@ namespace DataDictionary.Main.Forms.Library
         }
 
 
-        private void libraryTitleData_Validating(object sender, CancelEventArgs e)
+        protected override void AddCommand_Click(Object? sender, EventArgs e)
         {
-            if (String.IsNullOrWhiteSpace(libraryTitleData.Text))
-            { errorProvider.SetError(libraryTitleData.ErrorControl, "Library Title is required"); }
-            else { errorProvider.SetError(libraryTitleData.ErrorControl, String.Empty); }
-        }
-
-        private void asseblyNameData_Validating(object sender, CancelEventArgs e)
-        {
-            if (String.IsNullOrWhiteSpace(asseblyNameData.Text))
-            { errorProvider.SetError(asseblyNameData.ErrorControl, "Assembly Name is required"); }
-            else { errorProvider.SetError(asseblyNameData.ErrorControl, String.Empty); }
-        }
-
-        private Boolean GetInModel()
-        {
-            if (libraryBinding.Current is LibrarySynchronizeValue item)
-            { return item.InModel == true; }
-            else { return false; }
-        }
-
-        private Boolean GetInDatabase()
-        {
-            if (libraryBinding.Current is LibrarySynchronizeValue item)
-            { return item.InDatabase == true; }
-            else { return false; }
-        }
-
-        private void AddLibraryCommand_Click(object sender, EventArgs e)
-        {
+            base.AddCommand_Click(sender, e);
+        
             openFileDialog.Filter = "XML VS Documentation|*.XML";
             openFileDialog.Multiselect = true;
 
@@ -232,8 +235,10 @@ namespace DataDictionary.Main.Forms.Library
             }
         }
 
-        private void RemoveLibraryComand_Click(object sender, EventArgs e)
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
         {
+            base.DeleteCommand_Click(sender, e);
+
             libraryNavigation.EndEdit();
             List<WorkItem> work = new List<WorkItem>();
 
@@ -256,8 +261,7 @@ namespace DataDictionary.Main.Forms.Library
 
         private void LibraryBinding_CurrentChanged(object sender, EventArgs e)
         {
-            removeLibraryComand.Enabled = GetInModel();
-
+            CommandButtons[CommandImageType.Delete].IsEnabled = GetInModel();
             CommandButtons[CommandImageType.OpenDatabase].IsEnabled = GetInDatabase() && !GetInModel();
             CommandButtons[CommandImageType.SaveDatabase].IsEnabled = GetInModel();
             CommandButtons[CommandImageType.DeleteDatabase].IsEnabled = GetInDatabase();

@@ -18,10 +18,9 @@ namespace DataDictionary.Main.Forms.Scripting
         { return bindingTemplate.Current is ITemplateValue current && ReferenceEquals(current, item); }
 
 
-        public ScriptingTemplate() : base()
+        protected ScriptingTemplate() : base()
         {
             InitializeComponent();
-            toolStrip.TransferItems(templateToolStrip, 0);
 
             transformFilePath.Text = String.Empty;
             documentStatus.Text = String.Empty;
@@ -36,21 +35,29 @@ namespace DataDictionary.Main.Forms.Scripting
             }
 
             TemplateIndex key = new TemplateIndex(templateItem);
-            this.Icon = ImageEnumeration.GetIcon(templateItem.Scope);
 
             bindingTemplate.DataSource = new BindingView<TemplateValue>(BusinessData.ScriptingEngine.Templates, w => key.Equals(w));
             bindingTemplate.Position = 0;
 
-            Setup(bindingTemplate);
 
             if (bindingTemplate.Current is ITemplateValue current)
             {
+                Setup(bindingTemplate, CommandImageType.Delete);
+
                 bindingPath.DataSource = new BindingView<TemplatePathValue>(BusinessData.ScriptingEngine.TemplatePaths, w => key.Equals(w));
                 bindingNode.DataSource = new BindingView<TemplateNodeValue>(BusinessData.ScriptingEngine.TemplateNodes, w => key.Equals(w));
                 bindingDocument.DataSource = new BindingView<TemplateDocumentValue>(BusinessData.ScriptingEngine.TemplateDocuments, w => key.Equals(w));
 
                 bindingAttribute.DataSource = null;
             }
+        }
+
+        protected override void DeleteCommand_Click(Object? sender, EventArgs e)
+        {
+            base.DeleteCommand_Click(sender, e);
+
+            if (bindingTemplate.Current is TemplateValue current)
+            { DoWork(BusinessData.ScriptingEngine.Delete(current)); }
         }
 
         private void ScriptingTemplate_Load(object sender, EventArgs e)
@@ -150,11 +157,6 @@ namespace DataDictionary.Main.Forms.Scripting
             else { rootDirectoryExpanded.Text = String.Empty; }
         }
 
-        private void DeleteTemplateCommand_Click(object sender, EventArgs e)
-        {
-            if (bindingTemplate.Current is TemplateValue current)
-            { BusinessData.ScriptingEngine.Delete(current); }
-        }
 
         private void DocumentDirectoryPicker_Click(object sender, EventArgs e)
         {

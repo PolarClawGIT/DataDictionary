@@ -11,24 +11,20 @@ namespace DataDictionary.Main.Forms.Library
         public Boolean IsOpenItem(object? item)
         { return bindingMember.Current is ILibraryMemberValue current && ReferenceEquals(current, item); }
 
-        public LibraryMember() : base()
-        {
-            InitializeComponent();
-        }
+        protected LibraryMember() : base()
+        { InitializeComponent(); }
 
         public LibraryMember(ILibraryMemberValue libraryMember) : this()
         {
             LibraryMemberIndex key = new LibraryMemberIndex(libraryMember);
-            this.Icon = ImageEnumeration.GetIcon(libraryMember.Scope);
 
             bindingMember.DataSource = new BindingView<LibraryMemberValue>(BusinessData.LibraryModel.LibraryMembers, w => key.Equals(new LibraryMemberIndex(w)));
             bindingMember.Position = 0;
 
-            Setup(bindingMember);
-
             if (bindingMember.Current is ILibraryMemberValue current)
             {
-                bindingChild.DataSource = new BindingView<LibraryMemberValue>(BusinessData.LibraryModel.LibraryMembers, w => new LibraryMemberIndexParent(w).Equals(key)); 
+                Setup(bindingMember);
+                bindingChild.DataSource = new BindingView<LibraryMemberValue>(BusinessData.LibraryModel.LibraryMembers, w => new LibraryMemberIndexParent(w).Equals(key));
             }
         }
 

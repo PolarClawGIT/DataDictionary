@@ -103,8 +103,6 @@ namespace DataDictionary.Main.Forms.Scripting
             documentXMLData = new Controls.TextBoxData();
             documentScriptData = new Controls.TextBoxData();
             bindingTemplate = new BindingSource(components);
-            templateToolStrip = new ContextMenuStrip(components);
-            deleteTemplateCommand = new ToolStripMenuItem();
             folderBrowserDialog = new FolderBrowserDialog();
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
@@ -146,7 +144,6 @@ namespace DataDictionary.Main.Forms.Scripting
             documentToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)documentData).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).BeginInit();
-            templateToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingPath).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingNode).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
@@ -849,7 +846,7 @@ namespace DataDictionary.Main.Forms.Scripting
             documentsTab.Controls.Add(documentTemplateLayout);
             documentsTab.Location = new Point(4, 24);
             documentsTab.Name = "documentsTab";
-            documentsTab.Size = new Size(849, 478);
+            documentsTab.Size = new Size(192, 72);
             documentsTab.TabIndex = 4;
             documentsTab.Text = "Documents (XML & Script)";
             // 
@@ -871,7 +868,7 @@ namespace DataDictionary.Main.Forms.Scripting
             documentTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
             documentTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             documentTemplateLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            documentTemplateLayout.Size = new Size(849, 478);
+            documentTemplateLayout.Size = new Size(192, 72);
             documentTemplateLayout.TabIndex = 0;
             // 
             // documentToolStrip
@@ -880,7 +877,7 @@ namespace DataDictionary.Main.Forms.Scripting
             documentToolStrip.Items.AddRange(new ToolStripItem[] { documentBuildComand, documentSaveXMLCommand, documentSaveScriptCommand, documentSaveAllCommand, documentStatus });
             documentToolStrip.Location = new Point(0, 0);
             documentToolStrip.Name = "documentToolStrip";
-            documentToolStrip.Size = new Size(849, 25);
+            documentToolStrip.Size = new Size(192, 25);
             documentToolStrip.TabIndex = 0;
             documentToolStrip.Text = "toolStrip1";
             // 
@@ -942,7 +939,7 @@ namespace DataDictionary.Main.Forms.Scripting
             documentData.Location = new Point(3, 28);
             documentData.Name = "documentData";
             documentData.ReadOnly = true;
-            documentData.Size = new Size(843, 107);
+            documentData.Size = new Size(186, 5);
             documentData.TabIndex = 1;
             documentData.SelectionChanged += DocumentData_SelectionChanged;
             // 
@@ -977,11 +974,11 @@ namespace DataDictionary.Main.Forms.Scripting
             documentTemplateLayout.SetColumnSpan(documentException, 2);
             documentException.Dock = DockStyle.Fill;
             documentException.HeaderText = "Exception";
-            documentException.Location = new Point(3, 367);
+            documentException.Location = new Point(3, 62);
             documentException.Multiline = true;
             documentException.Name = "documentException";
             documentException.ReadOnly = true;
-            documentException.Size = new Size(843, 108);
+            documentException.Size = new Size(186, 7);
             documentException.TabIndex = 3;
             documentException.WordWrap = false;
             // 
@@ -990,11 +987,11 @@ namespace DataDictionary.Main.Forms.Scripting
             documentXMLData.AutoSize = true;
             documentXMLData.Dock = DockStyle.Fill;
             documentXMLData.HeaderText = "XML";
-            documentXMLData.Location = new Point(3, 141);
+            documentXMLData.Location = new Point(3, 39);
             documentXMLData.Multiline = true;
             documentXMLData.Name = "documentXMLData";
             documentXMLData.ReadOnly = true;
-            documentXMLData.Size = new Size(418, 220);
+            documentXMLData.Size = new Size(90, 17);
             documentXMLData.TabIndex = 4;
             documentXMLData.WordWrap = false;
             // 
@@ -1003,27 +1000,13 @@ namespace DataDictionary.Main.Forms.Scripting
             documentScriptData.AutoSize = true;
             documentScriptData.Dock = DockStyle.Fill;
             documentScriptData.HeaderText = "Script";
-            documentScriptData.Location = new Point(427, 141);
+            documentScriptData.Location = new Point(99, 39);
             documentScriptData.Multiline = true;
             documentScriptData.Name = "documentScriptData";
             documentScriptData.ReadOnly = true;
-            documentScriptData.Size = new Size(419, 220);
+            documentScriptData.Size = new Size(90, 17);
             documentScriptData.TabIndex = 5;
             documentScriptData.WordWrap = false;
-            // 
-            // templateToolStrip
-            // 
-            templateToolStrip.Items.AddRange(new ToolStripItem[] { deleteTemplateCommand });
-            templateToolStrip.Name = "templateToolStrip";
-            templateToolStrip.Size = new Size(159, 26);
-            // 
-            // deleteTemplateCommand
-            // 
-            deleteTemplateCommand.Image = Properties.Resources.DeleteXSLTransform;
-            deleteTemplateCommand.Name = "deleteTemplateCommand";
-            deleteTemplateCommand.Size = new Size(158, 22);
-            deleteTemplateCommand.Text = "Delete Template";
-            deleteTemplateCommand.Click += DeleteTemplateCommand_Click;
             // 
             // bindingPath
             // 
@@ -1084,7 +1067,6 @@ namespace DataDictionary.Main.Forms.Scripting
             documentToolStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)documentData).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingTemplate).EndInit();
-            templateToolStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)bindingPath).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingNode).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
@@ -1096,7 +1078,6 @@ namespace DataDictionary.Main.Forms.Scripting
         #endregion
 
         private BindingSource bindingTemplate;
-        private ContextMenuStrip templateToolStrip;
         private Controls.TextBoxData templateTitleData;
         private Controls.TextBoxData templateDescriptionData;
         private TabControl templateTabs;
@@ -1128,7 +1109,6 @@ namespace DataDictionary.Main.Forms.Scripting
         private TabPage nodeDefinitionTab;
         private TabPage dataSelectionTab;
         private TabPage documentsTab;
-        private ToolStripMenuItem deleteTemplateCommand;
         private FolderBrowserDialog folderBrowserDialog;
         private OpenFileDialog openFileDialog;
         private SaveFileDialog saveFileDialog;

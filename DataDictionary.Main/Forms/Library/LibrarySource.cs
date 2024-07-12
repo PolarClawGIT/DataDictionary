@@ -13,15 +13,12 @@ namespace DataDictionary.Main.Forms.Library
         public Boolean IsOpenItem(object? item)
         { return bindingSource.Current is ILibrarySourceValue current && ReferenceEquals(current, item); }
 
-        public LibrarySource() : base()
-        {
-            InitializeComponent();
-        }
+        protected LibrarySource() : base()
+        { InitializeComponent(); }
 
-        public LibrarySource(ILibrarySourceValue librarySource) : this ()
+        public LibrarySource(ILibrarySourceValue librarySource) : this()
         {
             LibrarySourceIndex key = new LibrarySourceIndex(librarySource);
-            this.Icon = ImageEnumeration.GetIcon(librarySource.Scope);
 
             bindingSource.DataSource = new BindingView<LibrarySourceValue>(BusinessData.LibraryModel.LibrarySources, w => key.Equals(w));
             bindingSource.Position = 0;
