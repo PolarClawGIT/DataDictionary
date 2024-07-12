@@ -225,7 +225,7 @@ namespace DataDictionary.Main.Forms
 
             foreach (KeyValuePair<CommandImageType, CommandState> item in commandButtons)
             {
-                if (ImageEnumeration.Values.ContainsKey(scope) && ImageEnumeration.Values[scope].Images.ContainsKey(item.Key))
+                if (ImageEnumeration.Members.ContainsKey(scope) && ImageEnumeration.Members[scope].Images.ContainsKey(item.Key))
                 { item.Value.Image = ImageEnumeration.GetImage(scope, item.Key); }
                 // Else leave the image as is
             }

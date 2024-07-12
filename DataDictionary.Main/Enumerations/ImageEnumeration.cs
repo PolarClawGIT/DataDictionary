@@ -192,7 +192,7 @@ namespace DataDictionary.Main.Enumerations
         {
             ImageList result = new ImageList();
 
-            foreach (ImageEnumeration item in Values.Values)
+            foreach (ImageEnumeration item in Members.Values)
             { result.Images.Add(item.Name, item.GetImage(CommandImageType.Default)); }
 
             return result;
@@ -205,8 +205,8 @@ namespace DataDictionary.Main.Enumerations
         /// <returns></returns>
         public static Icon GetIcon(ScopeType scope)
         {
-            if (Values.ContainsKey(scope))
-            { return Values[scope].WindowIcon; }
+            if (Members.ContainsKey(scope))
+            { return Members[scope].WindowIcon; }
             else { return defaultIcon; }
         }
 
@@ -218,8 +218,8 @@ namespace DataDictionary.Main.Enumerations
         /// <returns></returns>
         public static Image GetImage(ScopeType scope, CommandImageType image)
         {
-            if (Values.ContainsKey(scope))
-            { return Values[scope].GetImage(image); }
+            if (Members.ContainsKey(scope))
+            { return Members[scope].GetImage(image); }
             else { return defaultImage; }
         }
 
@@ -230,8 +230,8 @@ namespace DataDictionary.Main.Enumerations
         /// <returns></returns>
         public static Image GetImage(ScopeType scope)
         {
-            if (Values.ContainsKey(scope))
-            { return Values[scope].GetImage(); }
+            if (Members.ContainsKey(scope))
+            { return Members[scope].GetImage(); }
             else { return defaultImage; }
         }
 

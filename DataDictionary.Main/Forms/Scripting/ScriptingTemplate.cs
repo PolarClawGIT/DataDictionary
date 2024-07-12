@@ -72,7 +72,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             rootDirectoryData.ValueMember = nameof(TemplateDirectoryEnumeration.Value);
             rootDirectoryData.DisplayMember = nameof(TemplateDirectoryEnumeration.DisplayName);
-            rootDirectoryData.DataSource = TemplateDirectoryEnumeration.Values.Values.ToList();
+            rootDirectoryData.DataSource = TemplateDirectoryEnumeration.Members.Values.ToList();
             rootDirectoryData.DataBindings.Add(new Binding(
                 nameof(rootDirectoryData.SelectedValue),
                 bindingTemplate, nameof(nameOfValues.RootDirectory),
@@ -89,7 +89,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             scriptAsData.ValueMember = nameof(TemplateScriptAsEnumeration.Value);
             scriptAsData.DisplayMember = nameof(TemplateScriptAsEnumeration.DisplayName);
-            scriptAsData.DataSource = TemplateScriptAsEnumeration.Values.Values.ToList();
+            scriptAsData.DataSource = TemplateScriptAsEnumeration.Members.Values.ToList();
             scriptAsData.DataBindings.Add(new Binding(
                 nameof(scriptAsData.SelectedValue),
                 bindingTemplate, nameof(nameOfValues.ScriptAs),
@@ -111,7 +111,7 @@ namespace DataDictionary.Main.Forms.Scripting
 
             nodeValueAsData.ValueMember = nameof(TemplateNodeValueAsEnumeration.Value);
             nodeValueAsData.DisplayMember = nameof(TemplateNodeValueAsEnumeration.DisplayName);
-            nodeValueAsData.DataSource = TemplateNodeValueAsEnumeration.Values.Values.ToList();
+            nodeValueAsData.DataSource = TemplateNodeValueAsEnumeration.Members.Values.ToList();
             nodeValueAsData.DataBindings.Add(new Binding(
                 nameof(nodeValueAsData.SelectedValue),
                 bindingNode, nameof(nameOfNode.NodeValueAs),
@@ -197,7 +197,7 @@ namespace DataDictionary.Main.Forms.Scripting
                 && scriptAsData.SelectedValue is TemplateScriptAsType value)
             {
                 current.ScriptAs = value;// TODO: Some reason Binding is not setting the value.
-                current.ScriptExtension = TemplateScriptAsEnumeration.Values[value].Extension;
+                current.ScriptExtension = TemplateScriptAsEnumeration.Members[value].Extension;
             }
         }
 

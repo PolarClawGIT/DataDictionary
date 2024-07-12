@@ -77,7 +77,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
             {
                 if (value is TemplateNodeValueAsType.none)
                 { SetValue(nameof(NodeValueAs), null); }
-                else { SetValue(nameof(NodeValueAs), TemplateNodeValueAsEnumeration.Values[value].Name); }
+                else { SetValue(nameof(NodeValueAs),  TemplateNodeValueAsEnumeration.Cast(value).Name); }
             }
         }
 

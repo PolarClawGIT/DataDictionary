@@ -177,7 +177,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
             {
                 if (value is TemplateScriptAsType.none)
                 { SetValue(nameof(ScriptAs), null); }
-                else { SetValue(nameof(ScriptAs), TemplateScriptAsEnumeration.Values[value].Name); }
+                else { SetValue(nameof(ScriptAs), TemplateScriptAsEnumeration.Cast(value).Name); }
             }
         }
 
