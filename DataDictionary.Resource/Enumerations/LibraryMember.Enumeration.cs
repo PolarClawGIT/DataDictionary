@@ -37,4 +37,21 @@ public class LibraryMemberEnumeration : Enumeration<LibraryMemberType, LibraryMe
 
         BuildDictionary(data);
     }
+
+    /// <summary>
+    /// Tries to parse the Code into a value.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="format"></param>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public static Boolean TryParse([NotNullWhen(true)] Char? source, IFormatProvider? format, [MaybeNullWhen(false)] out LibraryMemberEnumeration? result)
+    {
+        if (Members is null) { result = null; return false; }
+
+        if (LibraryMemberEnumeration.Members.Values.FirstOrDefault(w => w.Code == source) is LibraryMemberEnumeration item)
+        { result = item; return true; }
+        else { result = null; return false; }
+
+    }
 }
