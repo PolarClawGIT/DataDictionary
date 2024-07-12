@@ -55,10 +55,10 @@ namespace DataDictionary.BusinessLayer.Library
                 DataLayerIndex libraryKey = new LibrarySourceIndex(item);
                 DataLayerIndex parentKey = new LibraryMemberIndexParent(item);
 
-                if (libraryKey.HasValue)
-                { result.Add(new NamedScopePair(libraryKey, GetValue(item))); }
-                else if (parentKey.HasValue)
+                if (parentKey.HasValue)
                 { result.Add(new NamedScopePair(parentKey, GetValue(item))); }
+                else if (libraryKey.HasValue)
+                { result.Add(new NamedScopePair(libraryKey, GetValue(item))); }
                 else { throw new InvalidOperationException("Could not determine Parent"); }
             }
 
