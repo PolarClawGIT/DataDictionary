@@ -215,6 +215,16 @@
         DatabaseFunctionParameter,
 
         /// <summary>
+        /// SQL Dependency between Objects
+        /// </summary>
+        DatabaseDependency,
+
+        /// <summary>
+        /// SQL Database Extended Properties
+        /// </summary>
+        DatabaseExtendedProperties,
+
+        /// <summary>
         /// Scripting Engine
         /// </summary>
         Scripting,

@@ -153,6 +153,9 @@ namespace DataDictionary.Main.Enumerations
                 new ImageEnumeration(ScopeType.DatabaseTableConstraint,    Resources.Icon_Key, Resources.Key) ,
                 new ImageEnumeration(ScopeType.DatabaseProcedureParameter, Resources.Icon_Parameter, Resources.Parameter) ,
                 new ImageEnumeration(ScopeType.DatabaseFunctionParameter,  Resources.Icon_Parameter, Resources.Parameter) ,
+                new ImageEnumeration(ScopeType.DatabaseDependency,         Resources.Icon_Dependancy, Resources.Dependancy) ,
+                new ImageEnumeration(ScopeType.DatabaseExtendedProperties, Resources.Icon_ExtendedProperty, Resources.ExtendedProperty) ,
+
                 new ImageEnumeration(ScopeType.Model,                      Resources.Icon_SoftwareDefinitionModel, Resources.SoftwareDefinitionModel) { GroupBy = false},
                 new ImageEnumeration(ScopeType.ModelNameSpace,             Resources.Icon_Namespace, Resources.Namespace) { GroupBy = false},
                 new ImageEnumeration(ScopeType.ModelSubjectArea,           Resources.Icon_Diagram, Resources.Diagram) { GroupBy = false},

@@ -49,7 +49,6 @@
             subjectAreaToolStripMenuItem = new ToolStripMenuItem();
             newSubjectAreaCommand = new ToolStripSplitButton();
             catalogContextMenu = new ContextMenuStrip(components);
-            menuManageCatalog = new ToolStripMenuItem();
             menuCatalogItem = new ToolStripMenuItem();
             menuSchemaItem = new ToolStripMenuItem();
             menuTableItem = new ToolStripMenuItem();
@@ -177,6 +176,7 @@
             // 
             attributeContextMenu.Items.AddRange(new ToolStripItem[] { menuAttributes, menuAttributeAlaises, menuAttributeProperties, menuAttributeDefinitions });
             attributeContextMenu.Name = "attributeContextMenu";
+            attributeContextMenu.OwnerItem = newAttributeCommand;
             attributeContextMenu.Size = new Size(223, 92);
             // 
             // menuAttributes
@@ -226,6 +226,7 @@
             // 
             entityContextMenu.Items.AddRange(new ToolStripItem[] { menuEntities, menuEntityAlias, menuEntityProperties, menuEntityDefinitions });
             entityContextMenu.Name = "entityContextMenu";
+            entityContextMenu.OwnerItem = newEntityCommand;
             entityContextMenu.Size = new Size(206, 92);
             // 
             // menuEntities
@@ -275,6 +276,7 @@
             // 
             subjectAreaContextMenu.Items.AddRange(new ToolStripItem[] { subjectAreaToolStripMenuItem });
             subjectAreaContextMenu.Name = "subjectAreaContextMenu";
+            subjectAreaContextMenu.OwnerItem = newSubjectAreaCommand;
             subjectAreaContextMenu.Size = new Size(187, 26);
             // 
             // subjectAreaToolStripMenuItem
@@ -298,16 +300,9 @@
             // 
             // catalogContextMenu
             // 
-            catalogContextMenu.Items.AddRange(new ToolStripItem[] { menuManageCatalog, menuCatalogItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineDependencyItem });
+            catalogContextMenu.Items.AddRange(new ToolStripItem[] { menuCatalogItem, menuSchemaItem, menuTableItem, menuTableColumnItem, menuPropertyItem, menuConstraintItem, menuConstraintColumnItem, menuDataTypeItem, menuRoutineItem, menuRoutineParameterItem, menuRoutineDependencyItem });
             catalogContextMenu.Name = "dbSchemacontextMenu";
             catalogContextMenu.Size = new Size(234, 268);
-            // 
-            // menuManageCatalog
-            // 
-            menuManageCatalog.Image = Properties.Resources.ExportData;
-            menuManageCatalog.Name = "menuManageCatalog";
-            menuManageCatalog.Size = new Size(233, 22);
-            menuManageCatalog.Text = "Manage Model Catalogs";
             // 
             // menuCatalogItem
             // 
@@ -412,6 +407,7 @@
             // 
             libraryContextMenu.Items.AddRange(new ToolStripItem[] { viewLibrarySourceCommand, viewLibraryMemberCommand });
             libraryContextMenu.Name = "libraryContextMenu";
+            libraryContextMenu.OwnerItem = manageLibrariesCommand;
             libraryContextMenu.Size = new Size(205, 48);
             // 
             // viewLibrarySourceCommand
@@ -836,7 +832,8 @@
             // 
             scriptingContextMenu.Items.AddRange(new ToolStripItem[] { menuScriptingTemplate, menuScriptingPath, menuScriptingDocument, menuScriptingNode, menuScriptingAttribute });
             scriptingContextMenu.Name = "scriptingContextMenu";
-            scriptingContextMenu.Size = new Size(228, 136);
+            scriptingContextMenu.OwnerItem = manageScriptingCommand;
+            scriptingContextMenu.Size = new Size(228, 114);
             // 
             // menuScriptingTemplate
             // 
@@ -1003,7 +1000,6 @@
         private ContextMenuStrip libraryContextMenu;
         private ToolStripMenuItem viewLibrarySourceCommand;
         private ToolStripMenuItem viewLibraryMemberCommand;
-        private ToolStripMenuItem menuManageCatalog;
         private ToolStrip toolStrip;
         private ToolStripSplitButton newAttributeCommand;
         private ToolStripSplitButton newEntityCommand;
