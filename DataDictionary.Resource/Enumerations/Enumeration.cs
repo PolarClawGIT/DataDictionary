@@ -85,17 +85,16 @@ public abstract class Enumeration<TEnum, TSelf> : IEnumeration<TEnum, TSelf>, IE
     /// </summary>
     /// <remarks>
     /// C# does not support "Curiously recurring template pattern".
-    /// The code forces derived classes static constructor to be executed.
     /// Each of the derived classes static constructor load the Enumeration specific data into the Values list.
-    /// This is done using the BuildDictionary method.
     /// * Search term: Derived Class Static Constructor Not Invoked
     /// </remarks>
     /// <see href="https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern"/>
     /// <see href="https://chrisoldwood.blogspot.com/2014/11/derived-class-static-constructor-not.html"/>
     static Enumeration()
     {
-
-        //This forces the derived class execute the static constructor at run time.
+        //This is called by each child class, when the child class is first referenced.
+        //The child's static constructor is not called automatically and may never be called.
+        //The next line causes child classes static constructor to be called.
         System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TSelf).TypeHandle);
     }
 
