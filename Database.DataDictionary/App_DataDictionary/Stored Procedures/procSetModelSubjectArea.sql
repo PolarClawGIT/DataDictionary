@@ -24,44 +24,21 @@ Begin Try
 		[SubjectAreaId]          UniqueIdentifier NOT NULL,
 		[SubjectAreaTitle]       [App_DataDictionary].[typeTitle] Not NULL,
 		[SubjectAreaDescription] [App_DataDictionary].[typeDescription] NULL,
-		[NameSpaceId]            UniqueIdentifier NULL,
+		[MemberName]             [App_DataDictionary].[typeNameSpaceMember]
 		Primary Key ([SubjectAreaId]))
-
-	Declare @NameSpace [App_DataDictionary].[typeNameSpace]
 
 	Declare @Delete Table (
 		[SubjectAreaId] UniqueIdentifier Not Null,
 		Primary Key ([SubjectAreaId]))
 
-	Insert Into @NameSpace
-	Select	Null As [NameSpaceId],
-			[SubjectAreaNameSpace] As [NameSpace]
-	From	@Data
-	Group By [SubjectAreaNameSpace]
-
-	-- Need to create & assign the NameSpaceID's
-	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @NameSpace
-
-	;With [NameSpace] As (
-		Select	M.[NameSpaceId],
-				N.[NameSpace]
-		From	[App_DataDictionary].[ModelNameSpace] M
-				Cross Apply [App_DataDictionary].[funcGetNameSpace](M.[NameSpaceId]) N
-		Where	(@ModelId is Null Or M.[ModelId] = @ModelId))
 	Insert Into @Values
 	Select	S.[SubjectAreaId],
 			D.[SubjectAreaTitle],
 			D.[SubjectAreaDescription],
-			N.[NameSpaceId]
+			M.[MemberName]
 	From	@Data D
-			Outer Apply [App_DataDictionary].[funcSplitNameSpace](D.[SubjectAreaNameSpace]) C
-			Left Join [NameSpace] N
-			On	C.[NameSpace] = N.[NameSpace] And
-				C.[IsBase] = 1
-			Left Join [App_DataDictionary].[ModelSubjectArea] T
-			On	T.[ModelId] = @ModelId And
-				N.[NameSpaceId] = T.[NameSpaceId]
-			Cross Apply (Select	Coalesce(T.[SubjectAreaId], D.[SubjectAreaId], @SubjectAreaId, NewId()) As [SubjectAreaId]) S
+			Outer Apply [App_DataDictionary].[funcSplitNameSpace](IsNull(D.[MemberName], D.[SubjectAreaTitle])) M
+			Cross Apply (Select	Coalesce(D.[SubjectAreaId], @SubjectAreaId, NewId()) As [SubjectAreaId]) S
 
 	Insert Into @Delete
 	Select	T.[SubjectAreaId]
@@ -76,52 +53,46 @@ Begin Try
 					(@ModelId is Null Or @ModelId = A.[ModelId]))
 
 	-- Apply Changes
-	Delete From [App_DataDictionary].[ModelAttribute]
+	Delete From [App_DataDictionary].[ModelSubjectAttribute]
 	Where	[SubjectAreaId] In (
 				Select	[SubjectAreaId]
 				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelEntity]
+	Delete From [App_DataDictionary].[ModelSubjectEntity]
 	Where	[SubjectAreaId] In (
 				Select	[SubjectAreaId]
 				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelProcess]
+	Delete From [App_DataDictionary].[ModelSubjectProcess]
 	Where	[SubjectAreaId] In (
 				Select	[SubjectAreaId]
 				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelProcess]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectProcess]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	Delete From [App_DataDictionary].[ModelRelationship]
+	Delete From [App_DataDictionary].[ModelSubjectRelationship]
 	Where	[SubjectAreaId] In (
 				Select	[SubjectAreaId]
 				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelRelationship]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Delete From [App_DataDictionary].[ModelSubjectArea]
-	Where	[SubjectAreaId] In (
-				Select	[SubjectAreaId]
-				From	@Delete)
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectArea]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectRelationship]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	;With [Delta] As (
 		Select	[SubjectAreaId],
 				[SubjectAreaTitle],
 				[SubjectAreaDescription],
-				[NameSpaceId]
+				[MemberName]
 		From	@Values S
 		Except
 		Select	[SubjectAreaId],
 				[SubjectAreaTitle],
 				[SubjectAreaDescription],
-				[NameSpaceId]
+				[MemberName]
 		From	[App_DataDictionary].[ModelSubjectArea])
 	Update [App_DataDictionary].[ModelSubjectArea]
 	Set		[SubjectAreaTitle] = S.[SubjectAreaTitle],
 			[SubjectAreaDescription] = S.[SubjectAreaDescription],
-			[NameSpaceId] = S.[NameSpaceId]
+			[MemberName] = S.[MemberName]
 	From	[Delta] S
 			Inner Join [App_DataDictionary].[ModelSubjectArea] T
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]
@@ -132,12 +103,12 @@ Begin Try
 			[SubjectAreaTitle],
 			[SubjectAreaDescription],
 			[ModelId],
-			[NameSpaceId])
+			[MemberName])
 	Select	S.[SubjectAreaId],
 			S.[SubjectAreaTitle],
 			S.[SubjectAreaDescription],
 			@ModelId As [ModelId],
-			S.[NameSpaceId]
+			S.[MemberName]
 	From	@Values S
 			Left Join [App_DataDictionary].[ModelSubjectArea] T
 			On	S.[SubjectAreaId] = T.[SubjectAreaId]

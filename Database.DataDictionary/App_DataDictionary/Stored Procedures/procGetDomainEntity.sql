@@ -11,6 +11,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 Select	D.[EntityId],
 		D.[EntityTitle],
 		D.[EntityDescription],
+		A.[MemberName],
 		D.[TypeOfEntityId],
 		P.[EntityTitle] As [TypeOfEntityTitle]
 From	[App_DataDictionary].[DomainEntity] D

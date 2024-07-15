@@ -11,6 +11,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 Select	D.[AttributeId],
 		D.[AttributeTitle],
 		D.[AttributeDescription],
+		A.[MemberName],
 		D.[TypeOfAttributeId],
 		P.[AttributeTitle] As [TypeOfAttributeTitle],
 		Convert(Bit,IIF(D.[IsSingleValue] = 1,1,0)) As [IsSingleValue],

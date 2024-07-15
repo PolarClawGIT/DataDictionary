@@ -28,6 +28,7 @@ Begin Try
 		[EntityId] UniqueIdentifier Not Null,
 		[EntityTitle] [App_DataDictionary].[typeTitle] Not Null,
 		[EntityDescription] [App_DataDictionary].[typeDescription] Null,
+		[MemberName] [App_DataDictionary].[typeNameSpaceMember] NULL,
 		[TypeOfEntityId] UniqueIdentifier Null,
 		Primary Key ([EntityId]))
 
@@ -39,10 +40,12 @@ Begin Try
 	Select	Coalesce(T.[EntityId], D.[EntityId], NewId()) As [EntityId],
 			NullIf(Trim(D.[EntityTitle]),'') As [EntityTitle],
 			NullIf(Trim(D.[EntityDescription]),'') As [EntityDescription],
+			M.[NameSpace] As [MemberName],
 			D.[TypeOfEntityId]
 	From	@Data D
 			Left Join [App_DataDictionary].[DomainEntity] T
 			On	Coalesce(D.[EntityId], @EntityId) = T.[EntityId]
+			Outer Apply [App_DataDictionary].[funcSplitNameSpace](IsNull(D.[MemberName], D.[EntityTitle])) M
 
 	Insert Into @Delete
 	Select	T.[EntityId]
@@ -104,6 +107,24 @@ Begin Try
 			On	T.[EntityId] = S.[EntityId]
 	Print FormatMessage ('Update [App_DataDictionary].[DomainEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
+	;With [Delta] As (
+		Select	@ModelId [ModelId],
+				[EntityId],
+				[MemberName]
+		From	@Values
+		Except
+		Select	[ModelId],
+				[EntityId],
+				[MemberName]
+		From	[App_DataDictionary].[ModelEntity])
+	Update [App_DataDictionary].[ModelEntity]
+	Set		[MemberName] = S.[MemberName]
+	From	[App_DataDictionary].[ModelEntity] T
+			Inner Join [Delta] S
+			On	T.[ModelId] = S.[ModelId] And
+				T.[EntityId] = S.[EntityId]
+	Print FormatMessage ('Update [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	Insert Into [App_DataDictionary].[DomainEntity] (
 			[EntityId],
 			[EntityTitle],
@@ -118,6 +139,20 @@ Begin Try
 			On	S.[EntityId] = T.[EntityId]
 	Where	T.[EntityId] is Null
 	Print FormatMessage ('Insert [App_DataDictionary].[DomainEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
+	Insert Into [App_DataDictionary].[ModelEntity] (
+			[ModelId],
+			[EntityId],
+			[MemberName])
+	Select	@ModelId As [ModelId],
+			S.[EntityId],
+			S.[MemberName]
+	From	@Values S
+			Left Join [App_DataDictionary].[ModelEntity] T
+			On	S.[EntityId] = T.[EntityId] And
+				@ModelId = T.[ModelId]
+	Where	T.[EntityId] Is Null
+	Print FormatMessage ('Insert [App_DataDictionary].[ModelEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1

@@ -1,11 +1,10 @@
-﻿CREATE PROCEDURE [App_DataDictionary].[procSetModelAttribute]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetModelSubjectEntity]
 		@ModelId UniqueIdentifier = Null,
-		@AttributeId UniqueIdentifier = Null,
-		@Data [App_DataDictionary].[typeModelAttribute] ReadOnly
-As
+		@Data [App_DataDictionary].[typeModelSubjectEntity] ReadOnly
+AS
 Set NoCount On -- Do not show record counts
 Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and a rollback must be issued
-/* Description: Performs Set on ApplicationModelAttribute.
+/* Description: Performs <Action,SysName,> on <Object,SysName,>.
 */
 
 -- Transaction Handling
@@ -19,66 +18,29 @@ Begin Try
 		Select	@TRN_IsNewTran = 1
 	  End; -- Begin Transaction
 
-	-- Clean the Data
-	Declare	@Values Table (
-		[ModelId]               UniqueIdentifier NOT NULL,
-		[AttributeId]           UniqueIdentifier NOT NULL,
-		[SubjectAreaId]         UniqueIdentifier NULL,
-		Primary Key ([AttributeId]))
-
-	Insert Into @Values
-	Select	M.[ModelId],
-			A.[AttributeId],
-			S.[SubjectAreaId]
-	From	@Data D
-			Inner Join [App_DataDictionary].[DomainAttribute] A
-			On	IsNull(D.[AttributeId], @AttributeId)  = A.[AttributeId]
-			Inner Join [App_DataDictionary].[Model] M
-			On	@ModelId = M.[ModelId]
-			Left Join [App_DataDictionary].[ModelSubjectArea] S
-			On	D.[SubjectAreaId] = S.[SubjectAreaId]
-
 	-- Apply Changes
-	Delete From [App_DataDictionary].[ModelAttribute]
-	From	[App_DataDictionary].[ModelAttribute] T
-			Left Join @Values S
-			On	T.[ModelId] = S.[ModelId] And
-				T.[AttributeId] = S.[AttributeId]
+	Delete From [App_DataDictionary].[ModelSubjectEntity]
+	From	[App_DataDictionary].[ModelSubjectEntity] T
+			Left Join @Data S
+			On	T.[SubjectAreaId] = S.[SubjectAreaId] And
+				T.[EntityId] = S.[EntityId] 
 	Where	T.[ModelId] = @ModelId And
-			S.[AttributeId] is Null
-	Print FormatMessage ('Delete [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			S.[SubjectAreaId] is Null
+	Print FormatMessage ('Delete [App_DataDictionary].[ModelSubjectEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
-	;With [Delta] As (
-		Select	[ModelId],
-				[AttributeId],
-				[SubjectAreaId]
-		From	@Values
-		Except
-		Select	[ModelId],
-				[AttributeId],
-				[SubjectAreaId]
-		From	[App_DataDictionary].[ModelAttribute])
-	Update [App_DataDictionary].[ModelAttribute]
-	Set		[SubjectAreaId] = S.[SubjectAreaId]
-	From	[Delta] S
-			Inner Join [App_DataDictionary].[ModelAttribute] T
-			On	S.[ModelId] = T.[ModelId] And
-				S.[AttributeId] = T.[AttributeId]
-	Print FormatMessage ('Update [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
-
-	Insert Into [App_DataDictionary].[ModelAttribute] (
+	Insert Into [App_DataDictionary].[ModelSubjectEntity] (
 			[ModelId],
-			[AttributeId],
-			[SubjectAreaId])
-	Select	S.[ModelId],
-			S.[AttributeId],
-			S.[SubjectAreaId]
-	From	@Values S
-			Left Join [App_DataDictionary].[ModelAttribute] T
-			On	S.[ModelId] = T.[ModelId] And
-				S.[AttributeId] = T.[AttributeId]
-	Where	T.[AttributeId] is Null
-	Print FormatMessage ('Insert [App_DataDictionary].[ModelAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+			[SubjectAreaId],
+			[EntityId])
+	Select	@ModelId As [ModelId],
+			S.[SubjectAreaId],
+			S.[EntityId]
+	From	@Data S
+			Left Join [App_DataDictionary].[ModelSubjectEntity] T
+			On	T.[ModelId] = @ModelId And
+				S.[SubjectAreaId] = T.[SubjectAreaId] And
+				S.[EntityId] = T.[EntityId]
+	Print FormatMessage ('Insert [App_DataDictionary].[ModelSubjectEntity]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
 
 	-- Commit Transaction
 	If @TRN_IsNewTran = 1
@@ -119,4 +81,3 @@ Begin Catch
 
 	If ERROR_SEVERITY() Not In (0, 11) Throw -- Re-throw the Error
 End Catch
-GO
