@@ -111,7 +111,7 @@ namespace DataDictionary.BusinessLayer.Model
 
                 void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
                 {
-                    if (e.PropertyName is nameof(source.SubjectAreaTitle) or nameof(source.SubjectAreaNameSpace))
+                    if (e.PropertyName is nameof(source.SubjectAreaTitle) or nameof(source.MemberName))
                     { result.TitleChanged(); }
                 }
             }

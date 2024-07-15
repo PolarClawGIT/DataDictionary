@@ -16,6 +16,11 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         String? EntityDescription { get; set; }
 
         /// <summary>
+        /// Member Name within the Subject Area.
+        /// </summary>
+        String? MemberName { get; set; }
+
+        /// <summary>
         /// The Entity that this is a Sub Type Of. Aka, the parent Entity.
         /// </summary>
         Guid? TypeOfEntityId { get; set; }
@@ -54,6 +59,13 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         }
 
         /// <inheritdoc/>
+        public string? MemberName
+        {
+            get { return GetValue(nameof(MemberName)); }
+            set { SetValue(nameof(MemberName), value); }
+        }
+
+        /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelEntity; } }
 
         /// <inheritdoc/>
@@ -84,6 +96,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             new DataColumn(nameof(EntityId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(EntityTitle), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(EntityDescription), typeof(String)){ AllowDBNull = true},
+            new DataColumn(nameof(MemberName), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(TypeOfEntityId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(TypeOfEntityTitle), typeof(String)){ AllowDBNull = true},
         };

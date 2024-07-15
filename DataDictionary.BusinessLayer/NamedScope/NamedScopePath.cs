@@ -129,6 +129,18 @@ namespace DataDictionary.BusinessLayer.NamedScope
             List<String> elements = new List<String>();
             String? parse = source;
 
+            //Remove noise characters
+            if (!String.IsNullOrWhiteSpace(parse))
+            {
+                parse = parse.Trim();
+
+                foreach (Char item in parse.ToCharArray().Where(s => !(
+                    Char.IsWhiteSpace(s) ||
+                    Char.IsLetterOrDigit(s) ||
+                    s is '[' or ']' or '.')))
+                { parse = parse.Replace(item.ToString(), String.Empty); }
+            }
+
             while (!String.IsNullOrWhiteSpace(parse))
             {
                 if (String.IsNullOrWhiteSpace(parse))

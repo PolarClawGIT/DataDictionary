@@ -263,12 +263,8 @@
     <Build Include="App_DataDictionary\Tables\ModelSubjectProcess.sql" />
     <Build Include="App_DataDictionary\Tables\ModelSubjectEntity.sql" />
     <Build Include="App_DataDictionary\Tables\ModelSubjectAttribute.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetModelSubjectEntity.sql" />
-    <Build Include="App_DataDictionary\Stored Procedures\procSetModelSubjectAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetModelSubjectEntity.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetModelSubjectAttribute.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeModelSubjectEntity.sql" />
-    <Build Include="App_DataDictionary\User Defined Types\typeModelSubjectAttribute.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />

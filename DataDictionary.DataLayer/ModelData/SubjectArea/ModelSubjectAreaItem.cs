@@ -18,7 +18,7 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
         /// <summary>
         /// NameSpace used for the Subject Area
         /// </summary>
-        String? SubjectAreaNameSpace { get; }
+        String? MemberName { get; }
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
         public String? SubjectAreaDescription { get { return GetValue(nameof(SubjectAreaDescription)); } set { SetValue(nameof(SubjectAreaDescription), value); } }
 
         /// <inheritdoc/>
-        public String? SubjectAreaNameSpace { get { return GetValue(nameof(SubjectAreaNameSpace)); } set { SetValue(nameof(SubjectAreaNameSpace), value); } }
+        public String? MemberName { get { return GetValue(nameof(MemberName)); } set { SetValue(nameof(MemberName), value); } }
 
         /// <inheritdoc/>
         public ScopeType Scope { get; } = ScopeType.ModelSubjectArea;
@@ -56,7 +56,7 @@ namespace DataDictionary.DataLayer.ModelData.SubjectArea
             new DataColumn(nameof(SubjectAreaId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(SubjectAreaTitle), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(SubjectAreaDescription), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(SubjectAreaNameSpace), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(MemberName), typeof(string)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

@@ -59,7 +59,9 @@ namespace DataDictionary.Main.Forms.Domain
             aliasNameColumn = new DataGridViewTextBoxColumn();
             namedScopeData = new DataDictionary.Main.Controls.NamedScopeData();
             subjectAreaTab = new TabPage();
+            subjectAreaLayout = new TableLayoutPanel();
             subjectArea = new Controls.SubjectArea();
+            memberNameData = new DataDictionary.Main.Controls.TextBoxData();
             bindingAlias = new BindingSource(components);
             bindingProperty = new BindingSource(components);
             bindingEntity = new BindingSource(components);
@@ -83,6 +85,7 @@ namespace DataDictionary.Main.Forms.Domain
             aliaseLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)aliasesData).BeginInit();
             subjectAreaTab.SuspendLayout();
+            subjectAreaLayout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).BeginInit();
@@ -400,22 +403,51 @@ namespace DataDictionary.Main.Forms.Domain
             // subjectAreaTab
             // 
             subjectAreaTab.BackColor = SystemColors.Control;
-            subjectAreaTab.Controls.Add(subjectArea);
+            subjectAreaTab.Controls.Add(subjectAreaLayout);
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
-            subjectAreaTab.Size = new Size(192, 72);
+            subjectAreaTab.Size = new Size(412, 343);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
+            // 
+            // subjectAreaLayout
+            // 
+            subjectAreaLayout.ColumnCount = 1;
+            subjectAreaLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            subjectAreaLayout.Controls.Add(subjectArea, 0, 1);
+            subjectAreaLayout.Controls.Add(memberNameData, 0, 0);
+            subjectAreaLayout.Dock = DockStyle.Fill;
+            subjectAreaLayout.Location = new Point(0, 0);
+            subjectAreaLayout.Name = "subjectAreaLayout";
+            subjectAreaLayout.RowCount = 2;
+            subjectAreaLayout.RowStyles.Add(new RowStyle());
+            subjectAreaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            subjectAreaLayout.Size = new Size(412, 343);
+            subjectAreaLayout.TabIndex = 1;
             // 
             // subjectArea
             // 
             subjectArea.Dock = DockStyle.Fill;
-            subjectArea.Location = new Point(0, 0);
+            subjectArea.Location = new Point(3, 53);
             subjectArea.Name = "subjectArea";
-            subjectArea.Size = new Size(192, 72);
+            subjectArea.Size = new Size(406, 287);
             subjectArea.TabIndex = 0;
             subjectArea.OnSubjectAdd += SubjectArea_OnSubjectAdd;
             subjectArea.OnSubjectRemove += SubjectArea_OnSubjectRemove;
+            // 
+            // memberNameData
+            // 
+            memberNameData.AutoSize = true;
+            memberNameData.Dock = DockStyle.Fill;
+            memberNameData.HeaderText = "Subject Member Name";
+            memberNameData.Location = new Point(3, 3);
+            memberNameData.Multiline = false;
+            memberNameData.Name = "memberNameData";
+            memberNameData.ReadOnly = false;
+            memberNameData.Size = new Size(406, 44);
+            memberNameData.TabIndex = 1;
+            memberNameData.WordWrap = true;
+            memberNameData.Validating += memberNameData_Validating;
             // 
             // bindingAlias
             // 
@@ -462,6 +494,8 @@ namespace DataDictionary.Main.Forms.Domain
             aliaseLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)aliasesData).EndInit();
             subjectAreaTab.ResumeLayout(false);
+            subjectAreaLayout.ResumeLayout(false);
+            subjectAreaLayout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)bindingAlias).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingProperty).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingEntity).EndInit();
@@ -501,5 +535,7 @@ namespace DataDictionary.Main.Forms.Domain
         private DataGridViewComboBoxColumn definitionColumn;
         private DataGridViewTextBoxColumn definitionSummaryColumn;
         private Controls.DomainDefinition domainDefinition;
+        private TableLayoutPanel subjectAreaLayout;
+        private DataDictionary.Main.Controls.TextBoxData memberNameData;
     }
 }

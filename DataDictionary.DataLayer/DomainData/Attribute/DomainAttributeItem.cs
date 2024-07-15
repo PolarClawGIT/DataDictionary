@@ -18,6 +18,11 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         String? AttributeDescription { get; set; }
 
         /// <summary>
+        /// Member Name within the Subject Area.
+        /// </summary>
+        String? MemberName { get; set; }
+
+        /// <summary>
         /// Type of Attribute in terms of a parent Attribute.
         /// </summary>
         /// <remarks>
@@ -106,6 +111,13 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         {
             get { return GetValue(nameof(AttributeDescription)); }
             set { SetValue(nameof(AttributeDescription), value); }
+        }
+
+        /// <inheritdoc/>
+        public string? MemberName
+        {
+            get { return GetValue(nameof(MemberName)); }
+            set { SetValue(nameof(MemberName), value); }
         }
 
         /// <inheritdoc/>
@@ -291,6 +303,7 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = false},
             new DataColumn(nameof(AttributeTitle), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(AttributeDescription), typeof(string)){ AllowDBNull = true},
+            new DataColumn(nameof(MemberName), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(TypeOfAttributeId), typeof(Guid)){ AllowDBNull = true},
             new DataColumn(nameof(TypeOfAttributeTitle), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(IsSingleValue), typeof(bool)){ AllowDBNull = true},

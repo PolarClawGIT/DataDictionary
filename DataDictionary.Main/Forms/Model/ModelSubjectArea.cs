@@ -46,7 +46,7 @@ namespace DataDictionary.Main.Forms.Model
             ISubjectAreaValue bindingNames;
             subjectAreaTitleData.DataBindings.Add(new Binding(nameof(subjectAreaTitleData.Text), bindingSubject, nameof(bindingNames.SubjectAreaTitle)));
             subjectAreaDescriptionData.DataBindings.Add(new Binding(nameof(subjectAreaDescriptionData.Text), bindingSubject, nameof(bindingNames.SubjectAreaDescription)));
-            subjectAreaNameSpaceData.DataBindings.Add(new Binding(nameof(subjectAreaNameSpaceData.Text), bindingSubject, nameof(bindingNames.SubjectAreaNameSpace)));
+            memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingSubject, nameof(bindingNames.MemberName)));
 
             attributeData.AutoGenerateColumns = false;
             attributeData.DataSource = bindingAttribute;
@@ -74,10 +74,10 @@ namespace DataDictionary.Main.Forms.Model
             }
         }
 
-        private void SubjectAreaNameSpaceData_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void MemberNameData_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(subjectAreaNameSpaceData.Text).ToArray());
-            subjectAreaNameSpaceData.Text = path.MemberFullPath;
+            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(memberNameData.Text).ToArray());
+            memberNameData.Text = path.MemberFullPath;
         }
     }
 }

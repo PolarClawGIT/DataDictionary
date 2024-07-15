@@ -41,7 +41,7 @@
             entityData = new DataGridView();
             entityTitleColumn = new DataGridViewTextBoxColumn();
             entityDescriptionColumn = new DataGridViewTextBoxColumn();
-            subjectAreaNameSpaceData = new Controls.TextBoxData();
+            memberNameData = new Controls.TextBoxData();
             bindingSubject = new BindingSource(components);
             bindingEntity = new BindingSource(components);
             bindingAttribute = new BindingSource(components);
@@ -65,7 +65,7 @@
             subjectAreaLayout.Controls.Add(subjectAreaTitleData, 0, 0);
             subjectAreaLayout.Controls.Add(subjectAreaDescriptionData, 0, 1);
             subjectAreaLayout.Controls.Add(subjectAreaTab, 0, 3);
-            subjectAreaLayout.Controls.Add(subjectAreaNameSpaceData, 0, 2);
+            subjectAreaLayout.Controls.Add(memberNameData, 0, 2);
             subjectAreaLayout.Dock = DockStyle.Fill;
             subjectAreaLayout.Location = new Point(0, 25);
             subjectAreaLayout.Name = "subjectAreaLayout";
@@ -192,19 +192,19 @@
             entityDescriptionColumn.HeaderText = "Entity Description";
             entityDescriptionColumn.Name = "entityDescriptionColumn";
             // 
-            // subjectAreaNameSpaceData
+            // memberNameData
             // 
-            subjectAreaNameSpaceData.AutoSize = true;
-            subjectAreaNameSpaceData.Dock = DockStyle.Fill;
-            subjectAreaNameSpaceData.HeaderText = "Subject Area NameSpace";
-            subjectAreaNameSpaceData.Location = new Point(3, 188);
-            subjectAreaNameSpaceData.Multiline = false;
-            subjectAreaNameSpaceData.Name = "subjectAreaNameSpaceData";
-            subjectAreaNameSpaceData.ReadOnly = false;
-            subjectAreaNameSpaceData.Size = new Size(373, 44);
-            subjectAreaNameSpaceData.TabIndex = 3;
-            subjectAreaNameSpaceData.WordWrap = true;
-            subjectAreaNameSpaceData.Validating += SubjectAreaNameSpaceData_Validating;
+            memberNameData.AutoSize = true;
+            memberNameData.Dock = DockStyle.Fill;
+            memberNameData.HeaderText = "Subject Member Name";
+            memberNameData.Location = new Point(3, 188);
+            memberNameData.Multiline = false;
+            memberNameData.Name = "memberNameData";
+            memberNameData.ReadOnly = false;
+            memberNameData.Size = new Size(373, 44);
+            memberNameData.TabIndex = 3;
+            memberNameData.WordWrap = true;
+            memberNameData.Validating += MemberNameData_Validating;
             // 
             // ModelSubjectArea
             // 
@@ -243,7 +243,7 @@
         private DataGridViewTextBoxColumn entityTitleColumn;
         private DataGridViewTextBoxColumn entityDescriptionColumn;
         private BindingSource bindingSubject;
-        private DataDictionary.Main.Controls.TextBoxData subjectAreaNameSpaceData;
+        private DataDictionary.Main.Controls.TextBoxData memberNameData;
         private BindingSource bindingEntity;
         private BindingSource bindingAttribute;
     }

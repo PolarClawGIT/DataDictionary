@@ -9,10 +9,7 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 */
 Select	D.[AttributeId],
 		D.[SubjectAreaId]
-From	[App_DataDictionary].[ModelAttribute] D
-		Inner Join [App_DataDictionary].[ModelSubjectArea] S
-		On	D.[SubjectAreaId] = S.[SubjectAreaId]
-		Cross Apply [App_DataDictionary].[funcGetNameSpace](S.[NameSpaceId]) N
+From	[App_DataDictionary].[ModelSubjectAttribute] D
 Where	D.[SubjectAreaId] is Not Null And
 		(@ModelId is Null or @ModelId = D.[ModelId]) And
 		(@AttributeId is Null or @AttributeId = D.[AttributeId]) And

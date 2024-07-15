@@ -53,6 +53,8 @@ namespace DataDictionary.Main.Forms.Domain
             titleData.DataBindings.Add(new Binding(nameof(titleData.Text), bindingAttribute, nameof(IAttributeValue.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             descriptionData.DataBindings.Add(new Binding(nameof(descriptionData.Text), bindingAttribute, nameof(IAttributeValue.AttributeDescription), false, DataSourceUpdateMode.OnPropertyChanged));
 
+            memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingAttribute, nameof(IAttributeValue.MemberName), false, DataSourceUpdateMode.OnPropertyChanged));
+
             AttributeNameList.Load(typeOfAttributeData, BusinessData.DomainModel.Attributes);
             typeOfAttributeData.DataBindings.Add(new Binding(nameof(typeOfAttributeData.SelectedValue), bindingAttribute, nameof(IAttributeValue.TypeOfAttributeId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
 
@@ -218,6 +220,10 @@ namespace DataDictionary.Main.Forms.Domain
             { bindingSubjectArea.Remove(target); }
         }
 
-
+        private void MemberNameData_Validating(object sender, CancelEventArgs e)
+        {
+            NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(memberNameData.Text).ToArray());
+            memberNameData.Text = path.MemberFullPath;
+        }
     }
 }
