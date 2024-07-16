@@ -71,7 +71,7 @@ namespace DataDictionary.BusinessLayer.Model
             List<NamedScopePair> result = new List<NamedScopePair>();
 
             ModelValue? model = Models.FirstOrDefault();
-            List<ModelNameSpace> nodes = NamedScopePath.Group(this.Select(s => s.GetPath())).Select(s => new ModelNameSpace(s)).ToList();
+            List<ModelNameSpace> nodes = NamedScopePath.Group(this.Select(s => s.GetPath())).OrderBy(o => o.MemberFullPath.Length).Select(s => new ModelNameSpace(s)).ToList();
 
             foreach (ModelNameSpace item in nodes)
             {
