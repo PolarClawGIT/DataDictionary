@@ -35,10 +35,11 @@ Begin Try
 	Select	S.[SubjectAreaId],
 			D.[SubjectAreaTitle],
 			D.[SubjectAreaDescription],
-			M.[MemberName]
+			M.[NameSpace] As [MemberName]
 	From	@Data D
 			Outer Apply [App_DataDictionary].[funcSplitNameSpace](IsNull(D.[MemberName], D.[SubjectAreaTitle])) M
 			Cross Apply (Select	Coalesce(D.[SubjectAreaId], @SubjectAreaId, NewId()) As [SubjectAreaId]) S
+	Where	M.[IsBase] = 1
 
 	Insert Into @Delete
 	Select	T.[SubjectAreaId]

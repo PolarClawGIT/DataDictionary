@@ -46,6 +46,7 @@ Begin Try
 			Left Join [App_DataDictionary].[DomainEntity] T
 			On	Coalesce(D.[EntityId], @EntityId) = T.[EntityId]
 			Outer Apply [App_DataDictionary].[funcSplitNameSpace](IsNull(D.[MemberName], D.[EntityTitle])) M
+	Where	M.[IsBase] = 1
 
 	Insert Into @Delete
 	Select	T.[EntityId]

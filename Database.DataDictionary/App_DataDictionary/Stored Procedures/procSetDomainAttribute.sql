@@ -45,7 +45,7 @@ Begin Try
 	Select	X.[AttributeId],
 			NullIf(Trim(D.[AttributeTitle]),'') As [AttributeTitle],
 			NullIf(Trim(D.[AttributeDescription]),'') As [AttributeDescription],
-			M.[MemberName],
+			M.[NameSpace] As [MemberName],
 			D.[TypeOfAttributeId],
 			Case
 				When D.[IsSingleValue] = 1 Then 1
@@ -71,6 +71,7 @@ Begin Try
 			Outer Apply [App_DataDictionary].[funcSplitNameSpace](IsNull(D.[MemberName], D.[AttributeTitle])) M
 			Cross apply (
 				Select	Coalesce(D.[AttributeId], @AttributeId, NewId()) As [AttributeId]) X
+	Where	M.[IsBase] = 1
 
 	Insert Into @Delete
 	Select	T.[AttributeId]
