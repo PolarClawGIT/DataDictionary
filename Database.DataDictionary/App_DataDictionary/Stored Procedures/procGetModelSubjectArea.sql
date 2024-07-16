@@ -10,8 +10,10 @@ Set XACT_ABORT On -- Error severity of 11 and above causes XAct_State() = -1 and
 Select	M.[SubjectAreaId],
 		M.[SubjectAreaTitle],
 		M.[SubjectAreaDescription],
-		M.[MemberName]
+		--M.[NameSpaceId],
+		N.[NameSpace]
 From	[App_DataDictionary].[ModelSubjectArea] M
+		Cross Apply [App_DataDictionary].[funcGetNameSpace](M.[NameSpaceId]) N
 Where	(@ModelId is Null or @ModelId = M.[ModelId]) And
 		(@SubjectAreaId is Null or @SubjectAreaId = M.[SubjectAreaId]) And
 		(@SubjectAreaTitle is Null or @SubjectAreaTitle = M.[SubjectAreaTitle])

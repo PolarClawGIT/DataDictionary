@@ -61,9 +61,6 @@ Begin Try
 	-- Apply Changes
 	;With [InUse] As (
 		Select	[NameSpaceId]
-		From	[App_DataDictionary].[ModelSubjectArea]
-		Union
-		Select	[NameSpaceId]
 		From	[App_DataDictionary].[DomainAttributeAlias]
 		Union
 		Select	[NameSpaceId]
