@@ -129,15 +129,15 @@ namespace DataDictionary.BusinessLayer.NamedScope
             List<String> elements = new List<String>();
             String? parse = source;
 
-            //Remove noise characters
+            // Names must be Letter or Digit or a narrow list of separators
             if (!String.IsNullOrWhiteSpace(parse))
             {
                 parse = parse.Trim();
 
-                foreach (Char item in parse.ToCharArray().Where(s => !(
-                    Char.IsWhiteSpace(s) ||
-                    Char.IsLetterOrDigit(s) ||
-                    s is '[' or ']' or '.')))
+                foreach (Char item in parse.ToCharArray().Where(w => !(
+                    Char.IsLetterOrDigit(w) ||
+                    w is '[' or ']' or '.' || // Characters used for formating
+                    w is ' ' or '_' or '-' or ':' or '/' or '\\'))) // allowed separators & delimiter characters
                 { parse = parse.Replace(item.ToString(), String.Empty); }
             }
 
