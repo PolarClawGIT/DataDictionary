@@ -2,6 +2,6 @@
     [SubjectAreaId]          UNIQUEIDENTIFIER                           NULL,
     [SubjectAreaTitle]       [App_DataDictionary].[typeTitle]           NULL,
     [SubjectAreaDescription] [App_DataDictionary].[typeDescription]     NULL,
-    [NameSpace]              [App_DataDictionary].[typeNameSpacePath]   NULL);
+    [SubjectName]            [App_DataDictionary].[typeNameSpacePath]   NULL);
 
 

@@ -35,9 +35,9 @@ Begin Try
 
 	Insert Into @NameSpace
 	Select	Null As [NameSpaceId],
-			[NameSpace]
+			[SubjectName]
 	From	@Data
-	Group By [NameSpace]
+	Group By [SubjectName]
 
 	-- Need to create & assign the NameSpaceID's
 	Exec [App_DataDictionary].[procSetModelNameSpace] @ModelId, @NameSpace
@@ -54,7 +54,7 @@ Begin Try
 			D.[SubjectAreaDescription],
 			N.[NameSpaceId]
 	From	@Data D
-			Outer Apply [App_DataDictionary].[funcSplitNameSpace](D.[NameSpace]) C
+			Outer Apply [App_DataDictionary].[funcSplitNameSpace](D.[SubjectName]) C
 			Left Join [NameSpace] N
 			On	C.[NameSpace] = N.[NameSpace] And
 				C.[IsBase] = 1
