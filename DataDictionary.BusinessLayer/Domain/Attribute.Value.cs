@@ -31,7 +31,11 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>Partial Path</remarks>
         public NamedScopePath GetPath()
-        { return new NamedScopePath(AttributeTitle); }
+        {
+            if (String.IsNullOrWhiteSpace(MemberName))
+            { return new NamedScopePath(AttributeTitle); }
+            else { return new NamedScopePath(new NamedScopePath(NamedScopePath.Parse(MemberName).ToArray())); }
+        }
 
         internal static IReadOnlyList<NodePropertyValue> GetXColumns()
         {

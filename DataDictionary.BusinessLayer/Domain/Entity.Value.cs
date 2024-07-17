@@ -23,7 +23,11 @@ namespace DataDictionary.BusinessLayer.Domain
         /// <inheritdoc/>
         /// <remarks>Partial Path</remarks>
         public virtual NamedScopePath GetPath()
-        { return new NamedScopePath(EntityTitle); }
+        {
+            if (String.IsNullOrWhiteSpace(MemberName))
+            { return new NamedScopePath(EntityTitle); }
+            else { return new NamedScopePath(new NamedScopePath(NamedScopePath.Parse(MemberName).ToArray())); }
+        }
 
         /// <inheritdoc/>
         public virtual String GetTitle()

@@ -2,7 +2,6 @@
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.DataLayer.ModelData.SubjectArea;
-using DataDictionary.Resource.Enumerations;
 using System.ComponentModel;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
@@ -71,13 +70,13 @@ namespace DataDictionary.BusinessLayer.Model
             List<NamedScopePair> result = new List<NamedScopePair>();
 
             ModelValue? model = Models.FirstOrDefault();
-            List<ModelNameSpace> nodes = NamedScopePath.Group(this.Select(s => s.GetPath())).OrderBy(o => o.MemberFullPath.Length).Select(s => new ModelNameSpace(s)).ToList();
+            List<NameSpaceSource> nodes = NamedScopePath.Group(this.Select(s => s.GetPath())).OrderBy(o => o.MemberFullPath.Length).Select(s => new NameSpaceSource(s)).ToList();
 
-            foreach (ModelNameSpace item in nodes)
+            foreach (NameSpaceSource item in nodes)
             {
                 SubjectAreaValue? subject = this.FirstOrDefault(w => item.GetPath().Equals(w.GetPath()));
                 SubjectAreaValue? parentSubject = this.FirstOrDefault(w => item.GetPath().ParentPath is NamedScopePath subjectPath && subjectPath.Equals(w.GetPath()));
-                ModelNameSpace? parentNode = nodes.FirstOrDefault(w => item.GetPath().ParentPath is NamedScopePath nodePath && nodePath.Equals(w.GetPath()));
+                NameSpaceSource? parentNode = nodes.FirstOrDefault(w => item.GetPath().ParentPath is NamedScopePath nodePath && nodePath.Equals(w.GetPath()));
 
                 if (parentSubject is not null && subject is not null)
                 { result.Add(new NamedScopePair(parentSubject.GetIndex(), GetValue(subject))); }
@@ -117,34 +116,5 @@ namespace DataDictionary.BusinessLayer.Model
             }
         }
 
-
-
-        /// <summary>
-        /// Represents NameSpace items within the Subject that do not have Subject associated with them.
-        /// </summary>
-        class ModelNameSpace : INamedScopeSourceValue
-        {
-            protected Guid SystemId;
-            protected NamedScopePath SystemPath;
-            public ScopeType Scope { get; } = ScopeType.ModelNameSpace;
-
-            public DataLayerIndex GetIndex()
-            { return new DataLayerIndex() { BusinessLayerId = SystemId }; }
-
-            public NamedScopePath GetPath()
-            { return SystemPath; }
-
-            public String GetTitle()
-            { return SystemPath.Member; }
-
-            public ModelNameSpace(NamedScopePath path)
-            {
-                SystemId = Guid.NewGuid();
-                SystemPath = path;
-            }
-
-            public override String ToString()
-            { return SystemPath.MemberFullPath; }
-        }
     }
 }

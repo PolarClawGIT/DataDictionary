@@ -85,4 +85,32 @@ namespace DataDictionary.BusinessLayer.NamedScope
         public NamedScopePair(DataLayerIndex parent, NamedScopeValueCore value) : this(value)
         { this.ParentKey = parent; }
     }
+
+    /// <summary>
+    /// Represents NameSpace items that does not have a specific Scope for the node.
+    /// </summary>
+    class NameSpaceSource : INamedScopeSourceValue
+    {
+        protected Guid SystemId;
+        protected NamedScopePath SystemPath;
+        public ScopeType Scope { get; } = ScopeType.ModelNameSpace;
+
+        public DataLayerIndex GetIndex()
+        { return new DataLayerIndex() { BusinessLayerId = SystemId }; }
+
+        public NamedScopePath GetPath()
+        { return SystemPath; }
+
+        public String GetTitle()
+        { return SystemPath.Member; }
+
+        public NameSpaceSource(NamedScopePath path)
+        {
+            SystemId = Guid.NewGuid();
+            SystemPath = path;
+        }
+
+        public override String ToString()
+        { return SystemPath.MemberFullPath; }
+    }
 }

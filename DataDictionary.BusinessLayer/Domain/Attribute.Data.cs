@@ -311,79 +311,86 @@ namespace DataDictionary.BusinessLayer.Domain
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
 
-            ModelValue? model = Model.Models.FirstOrDefault();
-
             foreach (AttributeValue attribute in this)
             {
                 AttributeIndex attributeKey = new AttributeIndex(attribute);
-                Boolean hasSubjectArea = false;
 
-                foreach (AttributeSubjectAreaValue subjectArea in subjectAreaValues.Where(w => attributeKey.Equals(w)))
+                List<AttributeSubjectAreaValue> subjects = subjectAreaValues.Where(w => attributeKey.Equals(w)).ToList();
+                List<NameSpaceSource> nodes = NamedScopePath.Group(attribute.GetPath()).OrderBy(o => o.MemberFullPath.Length).Select(s => new NameSpaceSource(s)).ToList();
+
+                if (nodes.Count == 0)
+                { throw new ArgumentNullException(nameof(attribute.GetPath)); }
+
+                DataLayerIndex parentIndex;
+                NamedScopePath parentPath;
+
+                if (Model.Models.FirstOrDefault() is ModelValue model)
                 {
-                    hasSubjectArea = true;
-                    SubjectAreaIndex subjectKey = new SubjectAreaIndex(subjectArea);
+                    parentIndex = model.GetIndex();
+                    parentPath = model.GetPath();
+                }
+                else { throw new InvalidOperationException("Could not find the Model"); }
 
-                    if (Model.SubjectAreas.FirstOrDefault(w => subjectKey.Equals(w)) is SubjectAreaValue subject)
-                    { result.Add(new NamedScopePair(subject.GetIndex(), GetSubjectValue(attribute, subject))); }
+                if (subjects.Count == 0)
+                {
+                    foreach (NameSpaceSource node in nodes)
+                    {
+                        if (node == nodes.Last())
+                        {
+                            result.Add(new NamedScopePair(
+                                parentIndex, new NamedScopeValueCore(attribute)
+                                { GetPath = () => new NamedScopePath(parentPath, attribute.GetPath().Member) }));
+                        }
+                        else
+                        {
+                            result.Add(new NamedScopePair(
+                                parentIndex, new NamedScopeValueCore(node)
+                                { GetPath = () => new NamedScopePath(parentPath, node.GetPath().Member) }));
+
+                            parentIndex = node.GetIndex();
+                            parentPath = new NamedScopePath(parentPath, node.GetPath().Member);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (AttributeSubjectAreaValue subject in subjects)
+                    {
+                        SubjectAreaIndex subjectIndex = new SubjectAreaIndex(subject);
+
+                        if(Model.SubjectAreas.FirstOrDefault(w => subjectIndex.Equals(w)) is SubjectAreaValue subjectArea)
+                        {
+                            parentIndex = subjectArea.GetIndex();
+                            parentPath = subjectArea.GetPath();
+                        }
+                        else { throw new InvalidOperationException("Subject Area not found"); }
+
+                        foreach (NameSpaceSource node in nodes)
+                        {
+                            if (node == nodes.Last())
+                            {
+                                result.Add(new NamedScopePair(
+                                    parentIndex, new NamedScopeValueCore(attribute)
+                                    { GetPath = () => new NamedScopePath(parentPath, attribute.GetPath().Member) }));
+                            }
+                            else
+                            {
+                                result.Add(new NamedScopePair(
+                                    parentIndex, new NamedScopeValueCore(node)
+                                    { GetPath = () => new NamedScopePath(parentPath, node.GetPath().Member) }));
+
+                                parentIndex = node.GetIndex();
+                                parentPath = new NamedScopePath(parentPath, node.GetPath().Member);
+                            }
+                        }
+                    }
                 }
 
-                if (!hasSubjectArea && model is not null)
-                { result.Add(new NamedScopePair(model.GetIndex(), GetModelValue(attribute, model))); }
-                else if (!hasSubjectArea && model is null)
-                { result.Add(new NamedScopePair(GetValue(attribute))); } // Should not occur.
-
             }
-
             return result;
 
-            NamedScopeValueCore GetValue(AttributeValue source)
-            {
-                NamedScopeValueCore result = new NamedScopeValueCore(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is nameof(source.AttributeTitle))
-                    { result.TitleChanged(); }
-                }
-            }
-
-            NamedScopeValueCore GetSubjectValue(AttributeValue source, SubjectAreaValue subject)
-            {
-                NamedScopeValueCore result = new NamedScopeValueCore(source)
-                { GetPath = () => new NamedScopePath(subject.GetPath(), source.GetPath()) };
-                source.PropertyChanged += Source_PropertyChanged;
-                subject.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is nameof(source.AttributeTitle) or nameof(subject.SubjectName))
-                    { result.TitleChanged(); }
-                }
-            }
-
-            NamedScopeValueCore GetModelValue(AttributeValue source, ModelValue model)
-            {
-                NamedScopeValueCore result = new NamedScopeValueCore(source)
-                { GetPath = () => new NamedScopePath(model.GetPath(), source.GetPath()) };
-                source.PropertyChanged += Source_PropertyChanged;
-                model.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is nameof(source.AttributeTitle) or nameof(model.ModelTitle))
-                    { result.TitleChanged(); }
-                }
-            }
         }
         #endregion
-
         #region XML Scripting
 
         /// <inheritdoc/>

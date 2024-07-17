@@ -34,7 +34,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <summary>
         /// List of Parts of the NameScope Path.
         /// </summary>
-        protected List<string> pathParts = new List<string>();
+        protected List<String> pathParts = new List<String>();
 
         /// <inheritdoc/>
         public String Member
@@ -102,7 +102,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <summary>
-        /// Constructor for a NamedScope Path
+        /// Constructor for a NamedScope Path (Combine)
         /// </summary>
         /// <param name="source"></param>
         /// <remarks>This version allows multiple paths to be combined.</remarks>
@@ -111,6 +111,14 @@ namespace DataDictionary.BusinessLayer.NamedScope
             foreach (NamedScopePath item in source)
             { this.pathParts.AddRange(item.pathParts); }
         }
+
+        /// <summary>
+        /// Constructor for a NamedScope Path (Append)
+        /// </summary>
+        /// <param name="basePath"></param>
+        /// <param name="member"></param>
+        public NamedScopePath(INamedScopePath basePath, String member) : this(basePath)
+        { pathParts.AddRange(Parse(member)); }
 
         /// <summary>
         /// Constructor for a NamedScope Path
@@ -356,7 +364,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Delimiter placed between names.
         /// Default is "."</param>
         /// <returns></returns>
-        public virtual string Format(string pattern = "[{0}]", string delimiter = ".")
+        public virtual String Format(string pattern = "[{0}]", string delimiter = ".")
         { return string.Join(delimiter, pathParts.Select(s => string.Format(pattern, s))); }
 
         /// <summary>
@@ -371,20 +379,33 @@ namespace DataDictionary.BusinessLayer.NamedScope
             List<NamedScopePath> group = source.GroupBy(g => g).Select(s => s.Key).ToList();
 
             foreach (NamedScopePath item in group)
+            { result.AddRange(Group(item)); }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Groups the NameSpaces based on Hierarchy.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IEnumerable<NamedScopePath> Group(NamedScopePath source)
+        {
+            List<NamedScopePath> result = new List<NamedScopePath>();
+
+            if (!result.Contains(source))
+            { result.Add(source); }
+
+            NamedScopePath? key = source.ParentPath;
+
+            while (key is not null)
             {
-                if (!result.Contains(item))
-                { result.Add(item); }
+                if (!result.Contains(key))
+                { result.Add(key); }
 
-                NamedScopePath? key = item.ParentPath;
-
-                while (key is not null)
-                {
-                    if (!result.Contains(key))
-                    { result.Add(key); }
-
-                    key = key.ParentPath;
-                }
+                key = key.ParentPath;
             }
+
             return result;
         }
 
