@@ -387,16 +387,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <summary>
         /// Groups the NameSpaces based on Hierarchy.
         /// </summary>
-        /// <param name="source"></param>
         /// <returns></returns>
-        public static IEnumerable<NamedScopePath> Group(NamedScopePath source)
+        public IEnumerable<NamedScopePath> Group()
         {
-            List<NamedScopePath> result = new List<NamedScopePath>();
+            List<NamedScopePath> result = new List<NamedScopePath>() { this };
 
-            if (!result.Contains(source))
-            { result.Add(source); }
-
-            NamedScopePath? key = source.ParentPath;
+            NamedScopePath? key = this.ParentPath;
 
             while (key is not null)
             {

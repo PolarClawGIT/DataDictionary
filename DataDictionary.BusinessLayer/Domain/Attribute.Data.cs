@@ -305,6 +305,46 @@ namespace DataDictionary.BusinessLayer.Domain
         #endregion
 
         #region INamedScopeSource
+
+        public IEnumerable<ParentPath> GetPaths()
+        {
+
+            List<ParentPath> result = new List<ParentPath>();
+
+            DataLayerIndex parentIndex;
+            if (Model.Models.FirstOrDefault() is ModelValue model)
+            { parentIndex = model.GetIndex(); }
+            else { throw new InvalidOperationException("Could not find the Model"); }
+
+            // Attributes without Subject Areas
+            result.AddRange(this.GroupJoin(
+                SubjectArea,
+                attribute => new AttributeIndex(attribute),
+                subject => new AttributeIndex(subject),
+                (attribute, subjects) => new { attribute, subjects }).
+                Where(w => w.subjects.Count() == 0).
+                Select(s => new ParentPath(parentIndex, s.attribute.GetPath())));
+
+            // Attributes with Subject Areas
+            result.AddRange(Model.SubjectAreas.Join(
+                    SubjectArea,
+                    subject => new SubjectAreaIndex(subject),
+                    attribute => new SubjectAreaIndex(attribute),
+                    (subject, attribute) => new
+                    {
+                        parentIndex = subject.GetIndex(),
+                        attributeIndex = new AttributeIndex(attribute)
+                    }).
+                    Join(this,
+                    subject => subject.attributeIndex,
+                    attribute => new AttributeIndex(attribute),
+                    (subject, attribute) => new ParentPath(subject.parentIndex, attribute.GetPath())));
+
+
+            return result;
+        }
+
+
         /// <inheritdoc/>
         /// <remarks>Attribute</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
@@ -316,7 +356,7 @@ namespace DataDictionary.BusinessLayer.Domain
                 AttributeIndex attributeKey = new AttributeIndex(attribute);
 
                 List<AttributeSubjectAreaValue> subjects = subjectAreaValues.Where(w => attributeKey.Equals(w)).ToList();
-                List<NameSpaceSource> nodes = NamedScopePath.Group(attribute.GetPath()).OrderBy(o => o.MemberFullPath.Length).Select(s => new NameSpaceSource(s)).ToList();
+                List<NameSpaceSource> nodes = attribute.GetPath().Group().OrderBy(o => o.MemberFullPath.Length).Select(s => new NameSpaceSource(s)).ToList();
 
                 if (nodes.Count == 0)
                 { throw new ArgumentNullException(nameof(attribute.GetPath)); }
@@ -358,7 +398,7 @@ namespace DataDictionary.BusinessLayer.Domain
                     {
                         SubjectAreaIndex subjectIndex = new SubjectAreaIndex(subject);
 
-                        if(Model.SubjectAreas.FirstOrDefault(w => subjectIndex.Equals(w)) is SubjectAreaValue subjectArea)
+                        if (Model.SubjectAreas.FirstOrDefault(w => subjectIndex.Equals(w)) is SubjectAreaValue subjectArea)
                         {
                             parentIndex = subjectArea.GetIndex();
                             parentPath = subjectArea.GetPath();

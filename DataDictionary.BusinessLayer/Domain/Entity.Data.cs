@@ -169,7 +169,7 @@ namespace DataDictionary.BusinessLayer.Domain
         { return new WorkItem() { WorkName = "Remove Entity", DoWork = () => { this.Remove((IDomainEntityKey)dataKey); } }.ToList(); }
 
         /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
+        /// <remarks>Entity</remarks>
         public IReadOnlyList<WorkItem> Delete(IModelKey dataKey)
         { return Delete(); }
 
@@ -343,6 +343,43 @@ namespace DataDictionary.BusinessLayer.Domain
                     { result.TitleChanged(); }
                 }
             }
+        }
+
+        public IEnumerable<ParentPath> GetPaths()
+        {
+            List<ParentPath> result = new List<ParentPath>();
+
+            DataLayerIndex parentIndex;
+            if (Model.Models.FirstOrDefault() is ModelValue model)
+            { parentIndex = model.GetIndex(); }
+            else { throw new InvalidOperationException("Could not find the Model"); }
+
+            // Entity without Subject Areas
+            result.AddRange(this.GroupJoin(
+                SubjectArea,
+                entity => new EntityIndex(entity),
+                subject => new EntityIndex(subject),
+                (entity, subjects) => new { entity, subjects }).
+                Where(w => w.subjects.Count() == 0).
+                Select(s => new ParentPath(parentIndex, s.entity.GetPath())));
+
+            // Entity with Subject Areas
+            result.AddRange(Model.SubjectAreas.Join(
+                    SubjectArea,
+                    subject => new SubjectAreaIndex(subject),
+                    entity => new SubjectAreaIndex(entity),
+                    (subject, entity) => new
+                    {
+                        parentIndex = subject.GetIndex(),
+                        entityIndex = new EntityIndex(entity)
+                    }).
+                    Join(this,
+                    subject => subject.entityIndex,
+                    entity => new EntityIndex(entity),
+                    (subject, entity) => new ParentPath(subject.parentIndex, entity.GetPath())));
+
+
+            return result;
         }
     }
 }

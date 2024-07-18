@@ -155,6 +155,22 @@ namespace DataDictionary.BusinessLayer.Domain
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
+
+            List<ParentPath> paths = 
+                attributeValues.GetPaths().
+                Union(entityValues.GetPaths()).
+                OrderBy(o => o.Path.MemberFullPath.Length).
+                ToList();
+
+            foreach (ParentPath path in paths)
+            {
+                foreach (NamedScopePath node in path.Path.Group().OrderBy(o => o.MemberFullPath))
+                {
+
+                }
+            }
+
+
             result.AddRange(attributeValues.GetNamedScopes());
             result.AddRange(entityValues.GetNamedScopes());
             return result;
