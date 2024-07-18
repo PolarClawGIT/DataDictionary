@@ -68,9 +68,9 @@ namespace DataDictionary.BusinessLayer.Scripting
         {
             return this.Select(s => new NamedScopePair(GetValue(s)));
 
-            NamedScopeValueCore GetValue(TemplateValue source)
+            NamedScopeValue GetValue(TemplateValue source)
             {
-                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                NamedScopeValue result = new NamedScopeValue(source);
                 source.PropertyChanged += Source_PropertyChanged;
 
                 return result;

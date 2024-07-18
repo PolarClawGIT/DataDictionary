@@ -72,7 +72,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     class NamedScopeData : INamedScopeData
     {
         // Primary Data
-        SortedDictionary<NamedScopeIndex, NamedScopeValueCore> data = new SortedDictionary<NamedScopeIndex, NamedScopeValueCore>();
+        SortedDictionary<NamedScopeIndex, NamedScopeValue> data = new SortedDictionary<NamedScopeIndex, NamedScopeValue>();
 
         // Alternate Keys (not sure if Sorted Dictionary or normal Dictionary is better here). Because of the wrapper, it can be changed easy.
         SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>> children = new SortedDictionary<NamedScopeIndex, List<NamedScopeIndex>>();
@@ -159,7 +159,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             return result;
         }
 
-        internal virtual void Add(NamedScopeValueCore value)
+        internal virtual void Add(NamedScopeValue value)
         {
             if (data.ContainsKey(value.Index))
             {
@@ -185,7 +185,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             }
         }
 
-        internal virtual void Add(DataLayerIndex parent, NamedScopeValueCore value)
+        internal virtual void Add(DataLayerIndex parent, NamedScopeValue value)
         {
             //TODO: Need a trap for infinite loop.
             //      It is when the parent (or child) directly or indirectly points to itself.

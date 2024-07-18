@@ -28,10 +28,11 @@ namespace DataDictionary.BusinessLayer.NamedScope
         Int32 OrdinalPosition { get; }
     }
 
+
     /// <summary>
-    /// Value for a NamedScope
+    /// Internal structure of a NamedScopeValue
     /// </summary>
-    public abstract class NamedScopeValue : INamedScopeValue
+    class NamedScopeValue : INamedScopeValue
     {
         /// <inheritdoc/>
         public NamedScopeIndex Index { get; } = new NamedScopeIndex(Guid.NewGuid());
@@ -48,24 +49,6 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <inheritdoc/>
         public virtual Int32 OrdinalPosition { get; init; } = 0;
 
-        /// <inheritdoc/>
-        public event EventHandler? OnTitleChanged;
-
-        /// <summary>
-        /// Trigger the OnTitleChanged event.
-        /// </summary>
-        public virtual void TitleChanged()
-        {
-            if (OnTitleChanged is EventHandler handler)
-            { handler(this, EventArgs.Empty); }
-        }
-    }
-
-    /// <summary>
-    /// Internal structure of a NamedScopeValue
-    /// </summary>
-    class NamedScopeValueCore : NamedScopeValue
-    {
         /// <summary>
         /// Get the current Path of the Value
         /// </summary>
@@ -89,7 +72,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// Constructor for NamedScope Value.
         /// </summary>
         /// <param name="source"></param>
-        public NamedScopeValueCore(INamedScopeSourceValue source) : base()
+        public NamedScopeValue(INamedScopeSourceValue source) : base()
         {
             Scope = source.Scope;
             Source = source;
@@ -98,16 +81,15 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        /// <remarks>
-        /// Title and NamedPath are updated.
-        /// May be called by Source of the Value.
-        /// </remarks>
-        public override void TitleChanged()
-        {
-            base.TitleChanged();
+        public event EventHandler? OnTitleChanged;
 
-            Title = Source.Title;
-            NamedPath = GetPath();
+        /// <summary>
+        /// Trigger the OnTitleChanged event.
+        /// </summary>
+        public virtual void TitleChanged()
+        {
+            if (OnTitleChanged is EventHandler handler)
+            { handler(this, EventArgs.Empty); }
         }
     }
 }

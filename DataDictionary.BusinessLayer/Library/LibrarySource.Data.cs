@@ -47,9 +47,9 @@ namespace DataDictionary.BusinessLayer.Library
         {
             return this.Select(s => new NamedScopePair(GetValue(s)));
 
-            NamedScopeValueCore GetValue(LibrarySourceValue source)
+            NamedScopeValue GetValue(LibrarySourceValue source)
             {
-                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                NamedScopeValue result = new NamedScopeValue(source);
                 source.PropertyChanged += Source_PropertyChanged;
 
                 return result;

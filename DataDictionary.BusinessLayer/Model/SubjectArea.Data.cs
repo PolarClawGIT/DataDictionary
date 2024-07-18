@@ -88,22 +88,22 @@ namespace DataDictionary.BusinessLayer.Model
                 { result.Add(new NamedScopePair(model.GetIndex(), GetValue(subject))); }
 
                 else if (parentSubject is not null && subject is null)
-                { result.Add(new NamedScopePair(parentSubject.GetIndex(), new NamedScopeValueCore(item))); }
+                { result.Add(new NamedScopePair(parentSubject.GetIndex(), new NamedScopeValue(item))); }
 
                 else if (parentNode is not null && subject is null)
-                { result.Add(new NamedScopePair(parentNode.GetIndex(), new NamedScopeValueCore(item))); }
+                { result.Add(new NamedScopePair(parentNode.GetIndex(), new NamedScopeValue(item))); }
 
                 else if (model is not null && subject is null)
-                { result.Add(new NamedScopePair(model.GetIndex(), new NamedScopeValueCore(item))); }
+                { result.Add(new NamedScopePair(model.GetIndex(), new NamedScopeValue(item))); }
 
-                else { result.Add(new NamedScopePair(new NamedScopeValueCore(item))); }
+                else { result.Add(new NamedScopePair(new NamedScopeValue(item))); }
             }
 
             return result;
 
-            NamedScopeValueCore GetValue(SubjectAreaValue source)
+            NamedScopeValue GetValue(SubjectAreaValue source)
             {
-                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                NamedScopeValue result = new NamedScopeValue(source);
                 source.PropertyChanged += Source_PropertyChanged;
 
                 return result;

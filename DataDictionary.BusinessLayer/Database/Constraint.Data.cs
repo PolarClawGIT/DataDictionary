@@ -61,9 +61,9 @@ namespace DataDictionary.BusinessLayer.Database
 
             return result;
 
-            NamedScopeValueCore GetValue(ConstraintValue source)
+            NamedScopeValue GetValue(ConstraintValue source)
             {
-                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                NamedScopeValue result = new NamedScopeValue(source);
                 source.PropertyChanged += Source_PropertyChanged;
 
                 return result;

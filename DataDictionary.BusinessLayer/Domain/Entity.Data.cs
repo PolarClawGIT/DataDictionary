@@ -298,9 +298,9 @@ namespace DataDictionary.BusinessLayer.Domain
 
             return result;
 
-            NamedScopeValueCore GetValue(EntityValue source)
+            NamedScopeValue GetValue(EntityValue source)
             {
-                NamedScopeValueCore result = new NamedScopeValueCore(source);
+                NamedScopeValue result = new NamedScopeValue(source);
                 source.PropertyChanged += Source_PropertyChanged;
 
                 return result;
@@ -312,9 +312,9 @@ namespace DataDictionary.BusinessLayer.Domain
                 }
             }
 
-            NamedScopeValueCore GetSubjectValue(EntityValue source, SubjectAreaValue subject)
+            NamedScopeValue GetSubjectValue(EntityValue source, SubjectAreaValue subject)
             {
-                NamedScopeValueCore result = new NamedScopeValueCore(source)
+                NamedScopeValue result = new NamedScopeValue(source)
                 { GetPath = () => new NamedScopePath(subject.GetPath(), source.GetPath()) };
                 source.PropertyChanged += Source_PropertyChanged;
                 subject.PropertyChanged += Source_PropertyChanged;
@@ -328,9 +328,9 @@ namespace DataDictionary.BusinessLayer.Domain
                 }
             }
 
-            NamedScopeValueCore GetModelValue(EntityValue source, ModelValue model)
+            NamedScopeValue GetModelValue(EntityValue source, ModelValue model)
             {
-                NamedScopeValueCore result = new NamedScopeValueCore(source)
+                NamedScopeValue result = new NamedScopeValue(source)
                 { GetPath = () => new NamedScopePath(model.GetPath(), source.GetPath()) };
                 source.PropertyChanged += Source_PropertyChanged;
                 model.PropertyChanged += Source_PropertyChanged;

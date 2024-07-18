@@ -77,12 +77,12 @@ namespace DataDictionary.BusinessLayer.NamedScope
     struct NamedScopePair
     {
         public DataLayerIndex? ParentKey { get; } = null;
-        public NamedScopeValueCore Value { get; }
+        public NamedScopeValue Value { get; }
 
-        public NamedScopePair(NamedScopeValueCore value)
+        public NamedScopePair(NamedScopeValue value)
         { this.Value = value; }
 
-        public NamedScopePair(DataLayerIndex parent, NamedScopeValueCore value) : this(value)
+        public NamedScopePair(DataLayerIndex parent, NamedScopeValue value) : this(value)
         { this.ParentKey = parent; }
     }
 

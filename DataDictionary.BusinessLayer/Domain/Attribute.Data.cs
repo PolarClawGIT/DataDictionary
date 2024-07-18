@@ -378,13 +378,13 @@ namespace DataDictionary.BusinessLayer.Domain
                         if (node == nodes.Last())
                         {
                             result.Add(new NamedScopePair(
-                                parentIndex, new NamedScopeValueCore(attribute)
+                                parentIndex, new NamedScopeValue(attribute)
                                 { GetPath = () => new NamedScopePath(parentPath, attribute.GetPath().Member) }));
                         }
                         else
                         {
                             result.Add(new NamedScopePair(
-                                parentIndex, new NamedScopeValueCore(node)
+                                parentIndex, new NamedScopeValue(node)
                                 { GetPath = () => new NamedScopePath(parentPath, node.GetPath().Member) }));
 
                             parentIndex = node.GetIndex();
@@ -410,13 +410,13 @@ namespace DataDictionary.BusinessLayer.Domain
                             if (node == nodes.Last())
                             {
                                 result.Add(new NamedScopePair(
-                                    parentIndex, new NamedScopeValueCore(attribute)
+                                    parentIndex, new NamedScopeValue(attribute)
                                     { GetPath = () => new NamedScopePath(parentPath, attribute.GetPath().Member) }));
                             }
                             else
                             {
                                 result.Add(new NamedScopePair(
-                                    parentIndex, new NamedScopeValueCore(node)
+                                    parentIndex, new NamedScopeValue(node)
                                     { GetPath = () => new NamedScopePath(parentPath, node.GetPath().Member) }));
 
                                 parentIndex = node.GetIndex();

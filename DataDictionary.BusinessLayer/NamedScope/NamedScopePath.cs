@@ -379,7 +379,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
             List<NamedScopePath> group = source.GroupBy(g => g).Select(s => s.Key).ToList();
 
             foreach (NamedScopePath item in group)
-            { result.AddRange(Group(item)); }
+            { result.AddRange(item.Group()); }
 
             return result;
         }
