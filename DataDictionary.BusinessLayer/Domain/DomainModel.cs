@@ -156,37 +156,14 @@ namespace DataDictionary.BusinessLayer.Domain
         public IEnumerable<NamedScopePair> GetNamedScopes()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
-            //TODO: still have not gotten this to work.
-/*
-            List<ParentPath> paths =
-                attributeValues.GetPaths().
-                Union(entityValues.GetPaths()).
-                ToList();
 
-            foreach (IGrouping<DataLayerIndex, ParentPath> item in paths.GroupBy(g => g.ParentKey))
-            {
-                DataLayerIndex parentKey = item.Key;
+            IEnumerable<NamedScopePair> values = 
+                attributeValues.GetNamedScopes().
+                Union(entityValues.GetNamedScopes());
 
-                foreach (var path in item.
-                    SelectMany(s => s.Path.Group()).
-                    OrderBy(o => o.MemberFullPath.Length).
-                    GroupBy(g => g))
-                {
-                    NamedScopeValue newNode = new NamedScopeValue(ScopeType.ModelNameSpace, path.Key);
+            //result.AddRange(values);
+            result.AddRange(SubjectNameSpace.GetNamedScopes(values));
 
-                    if (result.FirstOrDefault(w => path.Key.Equals(w.Value.GetPath())) is NamedScopePair parent)
-                    { result.Add(new NamedScopePair(parent.Value.GetIndex(), newNode)); }
-                    else { result.Add(new NamedScopePair(parentKey, newNode)); }
-                }
-
-
-            }
-*/
-
-
-
-            result.AddRange(attributeValues.GetNamedScopes());
-            result.AddRange(entityValues.GetNamedScopes());
             return result;
         }
     }
