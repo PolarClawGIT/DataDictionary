@@ -408,7 +408,8 @@ namespace DataDictionary.BusinessLayer.Domain
                 (attribute, subject) => new
                 {
                     attributeIndex = new AttributeIndex(attribute),
-                    subjectIndex = subject.GetIndex()
+                    subjectIndex = subject.GetIndex(),
+                    subjectPath = subject.GetPath()
                 }),
                 attribute => new AttributeIndex(attribute),
                 subject => subject.attributeIndex,
@@ -418,16 +419,22 @@ namespace DataDictionary.BusinessLayer.Domain
 
             foreach (var item in values)
             {
-                NamedScopeValue value = new NamedScopeValue(item.attribute);
-
                 if (item.subjects.Count() == 0)
-                { result.Add(new NamedScopePair(parentIndex, value)); }
+                { result.Add(new NamedScopePair(parentIndex, new NamedScopeValue(item.attribute))); }
                 else
                 {
                     foreach (var subject in item.subjects)
-                    { result.Add(new NamedScopePair(subject.subjectIndex, value)); }
+                    {
+                        result.Add(new NamedScopePair(
+                            subject.subjectIndex,
+                            new NamedScopeValue(item.attribute)
+                            { // Create Full Path, including subject
+                                GetPath = () => new NamedScopePath(
+                                    subject.subjectPath,
+                                    item.attribute.GetPath())
+                            }));
+                    }
                 }
-
             }
 
             return result;
