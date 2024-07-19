@@ -69,6 +69,25 @@ namespace DataDictionary.BusinessLayer.Model
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
 
+            DataLayerIndex parentIndex;
+            if (Models.FirstOrDefault() is ModelValue model)
+            { parentIndex = model.GetIndex(); }
+            else { throw new InvalidOperationException("Could not find the Model"); }
+
+            foreach (SubjectAreaValue item in this)
+            {
+                NamedScopeValue value = new NamedScopeValue(item);
+                result.Add(new NamedScopePair(parentIndex, value));
+            }
+
+            return result;
+        }
+
+        [Obsolete]
+        public IEnumerable<NamedScopePair> GetNamedScopes_Old()
+        {
+            List<NamedScopePair> result = new List<NamedScopePair>();
+
             ModelValue? model = Models.FirstOrDefault();
             List<NameSpaceSource> nodes = NamedScopePath.Group(this.Select(s => s.GetPath())).OrderBy(o => o.MemberFullPath.Length).Select(s => new NameSpaceSource(s)).ToList();
 

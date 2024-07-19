@@ -306,48 +306,8 @@ namespace DataDictionary.BusinessLayer.Domain
 
         #region INamedScopeSource
 
-        public IEnumerable<ParentPath> GetPaths()
-        {
-
-            List<ParentPath> result = new List<ParentPath>();
-
-            DataLayerIndex parentIndex;
-            if (Model.Models.FirstOrDefault() is ModelValue model)
-            { parentIndex = model.GetIndex(); }
-            else { throw new InvalidOperationException("Could not find the Model"); }
-
-            // Attributes without Subject Areas
-            result.AddRange(this.GroupJoin(
-                SubjectArea,
-                attribute => new AttributeIndex(attribute),
-                subject => new AttributeIndex(subject),
-                (attribute, subjects) => new { attribute, subjects }).
-                Where(w => w.subjects.Count() == 0).
-                Select(s => new ParentPath(parentIndex, s.attribute.GetPath())));
-
-            // Attributes with Subject Areas
-            result.AddRange(Model.SubjectAreas.Join(
-                    SubjectArea,
-                    subject => new SubjectAreaIndex(subject),
-                    attribute => new SubjectAreaIndex(attribute),
-                    (subject, attribute) => new
-                    {
-                        parentIndex = subject.GetIndex(),
-                        attributeIndex = new AttributeIndex(attribute)
-                    }).
-                    Join(this,
-                    subject => subject.attributeIndex,
-                    attribute => new AttributeIndex(attribute),
-                    (subject, attribute) => new ParentPath(subject.parentIndex, attribute.GetPath())));
-
-
-            return result;
-        }
-
-
-        /// <inheritdoc/>
-        /// <remarks>Attribute</remarks>
-        public IEnumerable<NamedScopePair> GetNamedScopes()
+        [Obsolete]
+        IEnumerable<NamedScopePair> GetNamedScopes_old()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
 
@@ -429,6 +389,48 @@ namespace DataDictionary.BusinessLayer.Domain
             }
             return result;
 
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>Attribute</remarks>
+        public IEnumerable<NamedScopePair> GetNamedScopes()
+        {
+            List<NamedScopePair> result = new List<NamedScopePair>();
+
+            DataLayerIndex parentIndex;
+            if (Model.Models.FirstOrDefault() is ModelValue model)
+            { parentIndex = model.GetIndex(); }
+            else { throw new InvalidOperationException("Could not find the Model"); }
+
+            var values = this.GroupJoin(SubjectArea.Join(Model.SubjectAreas,
+                attribute => new SubjectAreaIndex(attribute),
+                subject => new SubjectAreaIndex(subject),
+                (attribute, subject) => new
+                {
+                    attributeIndex = new AttributeIndex(attribute),
+                    subjectIndex = subject.GetIndex()
+                }),
+                attribute => new AttributeIndex(attribute),
+                subject => subject.attributeIndex,
+                (attribute, subjects) => new { attribute, subjects }).
+                ToList();
+
+
+            foreach (var item in values)
+            {
+                NamedScopeValue value = new NamedScopeValue(item.attribute);
+
+                if (item.subjects.Count() == 0)
+                { result.Add(new NamedScopePair(parentIndex, value)); }
+                else
+                {
+                    foreach (var subject in item.subjects)
+                    { result.Add(new NamedScopePair(subject.subjectIndex, value)); }
+                }
+
+            }
+
+            return result;
         }
         #endregion
         #region XML Scripting

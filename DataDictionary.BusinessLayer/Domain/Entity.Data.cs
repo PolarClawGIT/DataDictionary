@@ -266,10 +266,52 @@ namespace DataDictionary.BusinessLayer.Domain
             }
         }
 
-
         /// <inheritdoc/>
         /// <remarks>Entity</remarks>
         public IEnumerable<NamedScopePair> GetNamedScopes()
+        {
+            List<NamedScopePair> result = new List<NamedScopePair>();
+
+            DataLayerIndex parentIndex;
+            if (Model.Models.FirstOrDefault() is ModelValue model)
+            { parentIndex = model.GetIndex(); }
+            else { throw new InvalidOperationException("Could not find the Model"); }
+
+            var values = this.GroupJoin(SubjectArea.Join(Model.SubjectAreas,
+                entity => new SubjectAreaIndex(entity),
+                subject => new SubjectAreaIndex(subject),
+                (entity, subject) => new
+                {
+                    entityIndex = new EntityIndex(entity),
+                    subjectIndex = subject.GetIndex()
+                }),
+                entity => new EntityIndex(entity),
+                subject => subject.entityIndex,
+                (entity, subjects) => new { entity, subjects }).
+                ToList();
+
+
+            foreach (var item in values)
+            {
+                NamedScopeValue value = new NamedScopeValue(item.entity);
+
+                if (item.subjects.Count() == 0)
+                { result.Add(new NamedScopePair(parentIndex, value)); }
+                else
+                {
+                    foreach (var subject in item.subjects)
+                    { result.Add(new NamedScopePair(subject.subjectIndex, value)); }
+                }
+
+            }
+
+            return result;
+        }
+
+
+        /// <inheritdoc/>
+        /// <remarks>Entity</remarks>
+        IEnumerable<NamedScopePair> GetNamedScopes_Old()
         {
             List<NamedScopePair> result = new List<NamedScopePair>();
 
@@ -343,43 +385,6 @@ namespace DataDictionary.BusinessLayer.Domain
                     { result.TitleChanged(); }
                 }
             }
-        }
-
-        public IEnumerable<ParentPath> GetPaths()
-        {
-            List<ParentPath> result = new List<ParentPath>();
-
-            DataLayerIndex parentIndex;
-            if (Model.Models.FirstOrDefault() is ModelValue model)
-            { parentIndex = model.GetIndex(); }
-            else { throw new InvalidOperationException("Could not find the Model"); }
-
-            // Entity without Subject Areas
-            result.AddRange(this.GroupJoin(
-                SubjectArea,
-                entity => new EntityIndex(entity),
-                subject => new EntityIndex(subject),
-                (entity, subjects) => new { entity, subjects }).
-                Where(w => w.subjects.Count() == 0).
-                Select(s => new ParentPath(parentIndex, s.entity.GetPath())));
-
-            // Entity with Subject Areas
-            result.AddRange(Model.SubjectAreas.Join(
-                    SubjectArea,
-                    subject => new SubjectAreaIndex(subject),
-                    entity => new SubjectAreaIndex(entity),
-                    (subject, entity) => new
-                    {
-                        parentIndex = subject.GetIndex(),
-                        entityIndex = new EntityIndex(entity)
-                    }).
-                    Join(this,
-                    subject => subject.entityIndex,
-                    entity => new EntityIndex(entity),
-                    (subject, entity) => new ParentPath(subject.parentIndex, entity.GetPath())));
-
-
-            return result;
         }
     }
 }

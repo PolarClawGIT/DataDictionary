@@ -32,7 +32,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// <summary>
     /// Internal structure of a NamedScopeValue
     /// </summary>
-    class NamedScopeValue : INamedScopeValue
+    class NamedScopeValue : INamedScopeValue, INamedScopeSourceValue
     {
         /// <inheritdoc/>
         public NamedScopeIndex Index { get; } = new NamedScopeIndex(Guid.NewGuid());
@@ -57,7 +57,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// NamedPath is updated when GetPath is set or on TitleChanged is called.
         /// </remarks>
         public Func<NamedScopePath> GetPath
-        { 
+        {
             get { return getPath; }
             init { getPath = value; NamedPath = value(); }
         }
@@ -91,5 +91,15 @@ namespace DataDictionary.BusinessLayer.NamedScope
             if (OnTitleChanged is EventHandler handler)
             { handler(this, EventArgs.Empty); }
         }
+
+        public DataLayerIndex GetIndex()
+        { return new DataLayerIndex() { BusinessLayerId = Index.NamedScopeId }; }
+
+        public String GetTitle()
+        { return Title; }
+
+        /// <inheritdoc/>
+        NamedScopePath INamedScopeSourceValue.GetPath()
+        { return this.GetPath(); }
     }
 }

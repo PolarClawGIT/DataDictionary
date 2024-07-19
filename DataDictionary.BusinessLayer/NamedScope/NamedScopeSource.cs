@@ -74,7 +74,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
     /// Class to build NamedScope Pairs (Parent Key and Value).
     /// </summary>
     /// <remarks>This is just for constructing a list of parameters needed to load the NamedScopeData.</remarks>
-    struct NamedScopePair
+    class NamedScopePair
     {
         public DataLayerIndex? ParentKey { get; } = null;
         public NamedScopeValue Value { get; }
