@@ -145,7 +145,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
                 foreach (Char item in parse.ToCharArray().Where(w => !(
                     Char.IsLetterOrDigit(w) ||
                     w is '[' or ']' or '.' || // Characters used for formating
-                    w is ' ' or '_' or '-' or ':' or '/' or '\\'))) // allowed separators & delimiter characters
+                    w is ' ' or '_' or '-' or ':' or ';' or '/' or '\\'))) // allowed separators & delimiter characters
                 { parse = parse.Replace(item.ToString(), String.Empty); }
             }
 
