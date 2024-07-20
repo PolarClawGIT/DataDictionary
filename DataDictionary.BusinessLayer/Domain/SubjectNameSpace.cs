@@ -14,11 +14,11 @@ static class SubjectNameSpace
 
 
         var values = source.SelectMany(
-            paths => paths.Value.GetPath().Group(),
+            paths => paths.Value.Source.GetPath().Group(), // Original Path, without Subject Area
             (source, paths) => new { 
                 source.ParentKey,
                 source.Value,
-                paths = source.Value.Source.GetPath() // Original Path, without Subject Area
+                paths 
             }).
             Distinct().
             OrderBy(o => o.paths.MemberFullPath.Length).
@@ -30,11 +30,12 @@ static class SubjectNameSpace
             if (group.Key is DataLayerIndex parentKey)
             {
                 Dictionary<NamedScopePath, DataLayerIndex> items = new Dictionary<NamedScopePath, DataLayerIndex>();
-                DataLayerIndex proposedKey = parentKey;
                 INamedScopeSourceValue? nameSpace;
 
                 foreach (NamedScopePath item in group.Select(s => s.paths).Distinct())
                 {
+                    DataLayerIndex proposedKey = parentKey;
+
                     if (item.ParentPath is NamedScopePath && items.ContainsKey(item.ParentPath))
                     { proposedKey = items[item.ParentPath]; }
 
@@ -42,6 +43,7 @@ static class SubjectNameSpace
                         item.Equals(w.Value.Source.GetPath())
                         && w.Value.Source is not SubjectNameSpaceValue).
                         Select(s => s.Value).
+                        Distinct().
                         ToList();
 
                     if (nodes.Count == 1)
