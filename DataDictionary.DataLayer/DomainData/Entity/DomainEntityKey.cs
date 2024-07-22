@@ -1,4 +1,6 @@
-﻿namespace DataDictionary.DataLayer.DomainData.Entity
+﻿using DataDictionary.Resource;
+
+namespace DataDictionary.DataLayer.DomainData.Entity
 {
     /// <summary>
     /// Interface for the Domain Entity Key

@@ -1,4 +1,6 @@
-﻿namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
+﻿using DataDictionary.Resource;
+
+namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 {
     /// <summary>
     /// Level0 MS Extended Property Types. These are Database Level.

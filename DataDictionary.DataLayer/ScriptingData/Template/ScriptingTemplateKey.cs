@@ -1,4 +1,6 @@
-﻿namespace DataDictionary.DataLayer.ScriptingData.Template
+﻿using DataDictionary.Resource;
+
+namespace DataDictionary.DataLayer.ScriptingData.Template
 {
     /// <summary>
     /// Interface for the Primary Key for the Scripting Template.

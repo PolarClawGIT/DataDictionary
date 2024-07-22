@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Toolbox.BindingTable;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
+using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DatabaseData.ExtendedProperty
 {

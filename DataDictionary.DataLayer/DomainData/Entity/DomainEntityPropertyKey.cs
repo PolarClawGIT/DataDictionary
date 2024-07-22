@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DomainData.Property;
+using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DomainData.Entity
 {

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DatabaseData;
+using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
 using System.Linq;

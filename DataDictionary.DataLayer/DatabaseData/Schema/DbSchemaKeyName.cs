@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DomainData.Alias;
+using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DatabaseData.Schema
 {

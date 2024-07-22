@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataDictionary.DataLayer.LibraryData.Source;
+using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.LibraryData.Member
 {

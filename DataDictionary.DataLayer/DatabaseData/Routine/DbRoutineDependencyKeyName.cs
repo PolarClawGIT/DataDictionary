@@ -1,6 +1,7 @@
 ﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Reference;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
 using System.Linq;

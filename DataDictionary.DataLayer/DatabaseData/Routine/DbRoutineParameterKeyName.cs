@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DomainData.Alias;
+using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.DataLayer.DatabaseData.Routine

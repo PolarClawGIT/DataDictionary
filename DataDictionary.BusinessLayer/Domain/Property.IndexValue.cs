@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.Database;
-using DataDictionary.DataLayer;
 using DataDictionary.DataLayer.DatabaseData.ExtendedProperty;
 using DataDictionary.DataLayer.DomainData.Property;
+using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 
 namespace DataDictionary.BusinessLayer.Domain

@@ -1,4 +1,6 @@
-﻿namespace DataDictionary.DataLayer.DomainData.Definition
+﻿using DataDictionary.Resource;
+
+namespace DataDictionary.DataLayer.DomainData.Definition
 {
     /// <summary>
     /// Interface for the unique Name of a Definition.

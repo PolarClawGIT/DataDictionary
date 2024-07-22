@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataDictionary.DataLayer
+﻿namespace DataDictionary.Resource
 {
     /// <summary>
     /// Interface common to all Keys.
@@ -26,7 +20,7 @@ namespace DataDictionary.DataLayer
     /// Use this in the implementation of the Key.
     /// </remarks>
     public interface IKeyEquality<T> : IEquatable<T>
-        where T: IKey
+        where T : IKey
     { }
 
     /// <summary>
@@ -39,7 +33,7 @@ namespace DataDictionary.DataLayer
     public interface IKeyComparable<T> : IKeyEquality<T>, IComparable<T>, IComparable
         where T : IKey
     { }
-        
+
     /// <summary>
     /// Extensions for IKey.
     /// </summary>

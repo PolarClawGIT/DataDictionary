@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DataDictionary.DataLayer.DatabaseData.Catalog;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DatabaseData.Reference
 {

@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DomainData.Alias;
+using DataDictionary.Resource;
 
 namespace DataDictionary.DataLayer.DatabaseData.Catalog
 {

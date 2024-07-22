@@ -4,6 +4,7 @@ using DataDictionary.DataLayer.DatabaseData.Domain;
 using DataDictionary.DataLayer.DatabaseData.Routine;
 using DataDictionary.DataLayer.DatabaseData.Schema;
 using DataDictionary.DataLayer.DatabaseData.Table;
+using DataDictionary.Resource;
 using System;
 using System.Collections.Generic;
 using System.Linq;
