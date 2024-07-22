@@ -36,12 +36,11 @@ namespace DataDictionary.Main.Forms.Domain
             TableLayoutPanel propertyLayout;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DomainEntity));
             TableLayoutPanel definitionLayout;
-            BusinessLayer.NamedScope.NamedScopePath namedScopePath1 = new BusinessLayer.NamedScope.NamedScopePath();
+            BusinessLayer.NamedScope.NamedScopePath namedScopePath2 = new BusinessLayer.NamedScope.NamedScopePath();
             titleData = new DataDictionary.Main.Controls.TextBoxData();
             descriptionData = new DataDictionary.Main.Controls.TextBoxData();
             detailTabLayout = new TabControl();
             detailTab = new TabPage();
-            typeOfEntityData = new DataDictionary.Main.Controls.ComboBoxData();
             propertyTab = new TabPage();
             propertiesData = new DataGridView();
             propertyIdColumn = new DataGridViewComboBoxColumn();
@@ -67,6 +66,8 @@ namespace DataDictionary.Main.Forms.Domain
             bindingEntity = new BindingSource(components);
             bindingSubjectArea = new BindingSource(components);
             bindingDefinition = new BindingSource(components);
+            attributeData = new DataGridView();
+            bindingAttribute = new BindingSource(components);
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             propertyLayout = new TableLayoutPanel();
@@ -91,6 +92,8 @@ namespace DataDictionary.Main.Forms.Domain
             ((System.ComponentModel.ISupportInitialize)bindingEntity).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingDefinition).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)attributeData).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)bindingAttribute).BeginInit();
             SuspendLayout();
             // 
             // mainLayout
@@ -165,29 +168,15 @@ namespace DataDictionary.Main.Forms.Domain
             // 
             detailsLayout.ColumnCount = 1;
             detailsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            detailsLayout.Controls.Add(typeOfEntityData, 0, 0);
+            detailsLayout.Controls.Add(attributeData, 0, 0);
             detailsLayout.Dock = DockStyle.Fill;
             detailsLayout.Location = new Point(3, 3);
             detailsLayout.Name = "detailsLayout";
             detailsLayout.RowCount = 2;
-            detailsLayout.RowStyles.Add(new RowStyle());
-            detailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            detailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+            detailsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             detailsLayout.Size = new Size(406, 337);
             detailsLayout.TabIndex = 0;
-            // 
-            // typeOfEntityData
-            // 
-            typeOfEntityData.AutoSize = true;
-            typeOfEntityData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            detailsLayout.SetColumnSpan(typeOfEntityData, 2);
-            typeOfEntityData.Dock = DockStyle.Fill;
-            typeOfEntityData.DropDownStyle = ComboBoxStyle.DropDown;
-            typeOfEntityData.HeaderText = "Type of Entity";
-            typeOfEntityData.Location = new Point(3, 3);
-            typeOfEntityData.Name = "typeOfEntityData";
-            typeOfEntityData.ReadOnly = false;
-            typeOfEntityData.Size = new Size(400, 46);
-            typeOfEntityData.TabIndex = 1;
             // 
             // propertyTab
             // 
@@ -395,7 +384,7 @@ namespace DataDictionary.Main.Forms.Domain
             namedScopeData.Name = "namedScopeData";
             namedScopeData.ReadOnly = false;
             namedScopeData.Scope = ScopeType.Null;
-            namedScopeData.ScopePath = namedScopePath1;
+            namedScopeData.ScopePath = namedScopePath2;
             namedScopeData.Size = new Size(180, 34);
             namedScopeData.TabIndex = 1;
             namedScopeData.OnApply += NamedScopeData_OnApply;
@@ -406,7 +395,7 @@ namespace DataDictionary.Main.Forms.Domain
             subjectAreaTab.Controls.Add(subjectAreaLayout);
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
-            subjectAreaTab.Size = new Size(412, 343);
+            subjectAreaTab.Size = new Size(192, 72);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -422,7 +411,7 @@ namespace DataDictionary.Main.Forms.Domain
             subjectAreaLayout.RowCount = 2;
             subjectAreaLayout.RowStyles.Add(new RowStyle());
             subjectAreaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            subjectAreaLayout.Size = new Size(412, 343);
+            subjectAreaLayout.Size = new Size(192, 72);
             subjectAreaLayout.TabIndex = 1;
             // 
             // subjectArea
@@ -430,7 +419,7 @@ namespace DataDictionary.Main.Forms.Domain
             subjectArea.Dock = DockStyle.Fill;
             subjectArea.Location = new Point(3, 53);
             subjectArea.Name = "subjectArea";
-            subjectArea.Size = new Size(406, 287);
+            subjectArea.Size = new Size(186, 16);
             subjectArea.TabIndex = 0;
             subjectArea.OnSubjectAdd += SubjectArea_OnSubjectAdd;
             subjectArea.OnSubjectRemove += SubjectArea_OnSubjectRemove;
@@ -444,7 +433,7 @@ namespace DataDictionary.Main.Forms.Domain
             memberNameData.Multiline = false;
             memberNameData.Name = "memberNameData";
             memberNameData.ReadOnly = false;
-            memberNameData.Size = new Size(406, 44);
+            memberNameData.Size = new Size(186, 44);
             memberNameData.TabIndex = 1;
             memberNameData.WordWrap = true;
             memberNameData.Validating += memberNameData_Validating;
@@ -468,6 +457,15 @@ namespace DataDictionary.Main.Forms.Domain
             bindingDefinition.AddingNew += BindingDefinition_AddingNew;
             bindingDefinition.CurrentChanged += BindingDefinition_CurrentChanged;
             // 
+            // attributeData
+            // 
+            attributeData.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            attributeData.Dock = DockStyle.Fill;
+            attributeData.Location = new Point(3, 3);
+            attributeData.Name = "attributeData";
+            attributeData.Size = new Size(400, 229);
+            attributeData.TabIndex = 0;
+            // 
             // DomainEntity
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -483,7 +481,6 @@ namespace DataDictionary.Main.Forms.Domain
             detailTabLayout.ResumeLayout(false);
             detailTab.ResumeLayout(false);
             detailsLayout.ResumeLayout(false);
-            detailsLayout.PerformLayout();
             propertyTab.ResumeLayout(false);
             propertyLayout.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)propertiesData).EndInit();
@@ -501,6 +498,8 @@ namespace DataDictionary.Main.Forms.Domain
             ((System.ComponentModel.ISupportInitialize)bindingEntity).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingSubjectArea).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingDefinition).EndInit();
+            ((System.ComponentModel.ISupportInitialize)attributeData).EndInit();
+            ((System.ComponentModel.ISupportInitialize)bindingAttribute).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -523,7 +522,6 @@ namespace DataDictionary.Main.Forms.Domain
         private BindingSource bindingAlias;
         private BindingSource bindingProperty;
         private BindingSource bindingEntity;
-        private DataDictionary.Main.Controls.ComboBoxData typeOfEntityData;
         private DataDictionary.Main.Controls.NamedScopeData namedScopeData;
         private BindingSource bindingSubjectArea;
         private Controls.SubjectArea subjectArea;
@@ -537,5 +535,7 @@ namespace DataDictionary.Main.Forms.Domain
         private Controls.DomainDefinition domainDefinition;
         private TableLayoutPanel subjectAreaLayout;
         private DataDictionary.Main.Controls.TextBoxData memberNameData;
+        private DataGridView attributeData;
+        private BindingSource bindingAttribute;
     }
 }

@@ -38,6 +38,11 @@ namespace DataDictionary.BusinessLayer.Domain
         IEntityDefinitionData Definitions { get; }
 
         /// <summary>
+        /// List of Attributes for the Entities within the Model.
+        /// </summary>
+        IEntityAttributeData Attributes { get; }
+
+        /// <summary>
         /// List of Subject Areas for the Entities within the Model.
         /// </summary>
         IEntitySubjectAreaData SubjectArea { get; }
@@ -63,6 +68,10 @@ namespace DataDictionary.BusinessLayer.Domain
         private readonly EntityPropertyData propertyValues;
 
         /// <inheritdoc/>
+        public IEntityAttributeData Attributes { get { return attributeValues; } }
+        private readonly EntityAttributeData attributeValues;
+
+        /// <inheritdoc/>
         public IEntitySubjectAreaData SubjectArea { get { return subjectAreaValues; } }
         private readonly EntitySubjectAreaData subjectAreaValues;
 
@@ -71,6 +80,7 @@ namespace DataDictionary.BusinessLayer.Domain
             aliasValues = new EntityAliasData();
             propertyValues = new EntityPropertyData();
             definitionValues = new EntityDefinitionData();
+            attributeValues = new EntityAttributeData();
             subjectAreaValues = new EntitySubjectAreaData();
         }
 
@@ -83,6 +93,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateLoad(aliasValues, dataKey));
             work.Add(factory.CreateLoad(propertyValues, dataKey));
             work.Add(factory.CreateLoad(definitionValues, dataKey));
+            work.Add(factory.CreateLoad(attributeValues, dataKey));
             work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
             return work;
         }
@@ -96,6 +107,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateLoad(aliasValues, dataKey));
             work.Add(factory.CreateLoad(propertyValues, dataKey));
             work.Add(factory.CreateLoad(definitionValues, dataKey));
+            work.Add(factory.CreateLoad(attributeValues, dataKey));
             work.Add(factory.CreateLoad(subjectAreaValues, dataKey));
             return work;
         }
@@ -114,6 +126,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateSave(aliasValues, dataKey));
             work.Add(factory.CreateSave(propertyValues, dataKey));
             work.Add(factory.CreateSave(definitionValues, dataKey));
+            work.Add(factory.CreateSave(attributeValues, dataKey));
             work.Add(factory.CreateSave(subjectAreaValues, dataKey));
             return work;
         }
@@ -127,6 +140,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.Add(factory.CreateSave(aliasValues, dataKey));
             work.Add(factory.CreateSave(propertyValues, dataKey));
             work.Add(factory.CreateSave(definitionValues, dataKey));
+            work.Add(factory.CreateSave(attributeValues, dataKey));
             work.Add(factory.CreateSave(subjectAreaValues, dataKey));
             return work;
         }
@@ -146,6 +160,7 @@ namespace DataDictionary.BusinessLayer.Domain
             work.AddRange(aliasValues.Delete());
             work.AddRange(propertyValues.Delete());
             work.AddRange(definitionValues.Delete());
+            work.AddRange(attributeValues.Delete());
             work.AddRange(subjectAreaValues.Delete());
 
             return work;
@@ -160,6 +175,7 @@ namespace DataDictionary.BusinessLayer.Domain
             aliasValues.Remove(key);
             propertyValues.Remove(key);
             definitionValues.Remove(key);
+            attributeValues.Remove(key);
             subjectAreaValues.Remove(key);
         }
 
@@ -182,6 +198,7 @@ namespace DataDictionary.BusinessLayer.Domain
             result.Add(aliasValues.ToDataTable());
             result.Add(propertyValues.ToDataTable());
             result.Add(definitionValues.ToDataTable());
+            result.Add(attributeValues.ToDataTable());
             result.Add(subjectAreaValues.ToDataTable());
             return result;
         }
@@ -194,6 +211,7 @@ namespace DataDictionary.BusinessLayer.Domain
             aliasValues.Load(source);
             propertyValues.Load(source);
             definitionValues.Load(source);
+            attributeValues.Load(source);
             subjectAreaValues.Load(source);
         }
 
@@ -315,85 +333,6 @@ namespace DataDictionary.BusinessLayer.Domain
             }
 
             return result;
-        }
-
-
-        /// <inheritdoc/>
-        /// <remarks>Entity</remarks>
-        IEnumerable<NamedScopePair> GetNamedScopes_Old()
-        {
-            List<NamedScopePair> result = new List<NamedScopePair>();
-
-            ModelValue? model = Model.Models.FirstOrDefault();
-
-            foreach (EntityValue entity in this)
-            {
-                EntityIndex EntityKey = new EntityIndex(entity);
-                Boolean hasSubjectArea = false;
-
-                foreach (EntitySubjectAreaValue subjectArea in subjectAreaValues.Where(w => EntityKey.Equals(w)))
-                {
-                    hasSubjectArea = true;
-                    SubjectAreaIndex subjectKey = new SubjectAreaIndex(subjectArea);
-
-                    if (Model.SubjectAreas.FirstOrDefault(w => subjectKey.Equals(w)) is SubjectAreaValue subject)
-                    { result.Add(new NamedScopePair(subject.GetIndex(), GetSubjectValue(entity, subject))); }
-                }
-
-                if (!hasSubjectArea && model is not null)
-                { result.Add(new NamedScopePair(model.GetIndex(), GetModelValue(entity, model))); }
-                else if (!hasSubjectArea && model is null)
-                { result.Add(new NamedScopePair(GetValue(entity))); } // Should not occur.
-
-            }
-
-            return result;
-
-            NamedScopeValue GetValue(EntityValue source)
-            {
-                NamedScopeValue result = new NamedScopeValue(source);
-                source.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is nameof(source.EntityTitle))
-                    { result.TitleChanged(); }
-                }
-            }
-
-            NamedScopeValue GetSubjectValue(EntityValue source, SubjectAreaValue subject)
-            {
-                NamedScopeValue result = new NamedScopeValue(source)
-                { GetPath = () => new NamedScopePath(subject.GetPath(), source.GetPath()) };
-                source.PropertyChanged += Source_PropertyChanged;
-                subject.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is nameof(source.EntityTitle) or nameof(subject.SubjectName))
-                    { result.TitleChanged(); }
-                }
-            }
-
-            NamedScopeValue GetModelValue(EntityValue source, ModelValue model)
-            {
-                NamedScopeValue result = new NamedScopeValue(source)
-                { GetPath = () => new NamedScopePath(model.GetPath(), source.GetPath()) };
-                source.PropertyChanged += Source_PropertyChanged;
-                model.PropertyChanged += Source_PropertyChanged;
-
-                return result;
-
-                void Source_PropertyChanged(Object? sender, PropertyChangedEventArgs e)
-                {
-                    if (e.PropertyName is nameof(source.EntityTitle) or nameof(model.ModelTitle))
-                    { result.TitleChanged(); }
-                }
-            }
         }
     }
 }

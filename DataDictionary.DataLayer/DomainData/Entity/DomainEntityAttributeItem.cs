@@ -1,4 +1,5 @@
 ﻿using DataDictionary.DataLayer.DomainData.Attribute;
+using DataDictionary.Resource.Enumerations;
 using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
@@ -8,7 +9,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
     /// <summary>
     /// Interface for DomainEntityAttribute Item
     /// </summary>
-    public interface IDomainEntityAttributeItem : IDomainEntityAttributeKey
+    public interface IDomainEntityAttributeItem : IDomainEntityAttributeKey, IScopeType
     {
         /// <summary>
         /// The Position/Order of the Attribute
@@ -41,6 +42,9 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             get { return GetValue<Int32>(nameof(OrdinalPosition)); }
             set { SetValue(nameof(OrdinalPosition), value); }
         }
+
+        /// <inheritdoc/>
+        public ScopeType Scope { get; } = ScopeType.ModelEntityAttribute;
 
         /// <summary>
         /// Constructor for DomainEntityAttribute Item

@@ -39,6 +39,7 @@ namespace DataDictionary.Main.Forms.Domain
                 bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.DomainModel.Entities.Definitions, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.DomainModel.Entities.Aliases, w => key.Equals(w));
                 bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.DomainModel.Entities.SubjectArea, w => key.Equals(w));
+                bindingAttribute.DataSource = new BindingView<EntityAttributeValue>(BusinessData.DomainModel.Entities.Attributes, w => key.Equals(w));
             }
         }
 
@@ -55,9 +56,6 @@ namespace DataDictionary.Main.Forms.Domain
 
             memberNameData.DataBindings.Add(new Binding(nameof(memberNameData.Text), bindingEntity, nameof(IAttributeValue.MemberName), false, DataSourceUpdateMode.OnPropertyChanged));
 
-            EntityNameList.Load(typeOfEntityData, BusinessData.DomainModel.Entities);
-            typeOfEntityData.DataBindings.Add(new Binding(nameof(typeOfEntityData.SelectedValue), bindingEntity, nameof(IEntityValue.TypeOfEntityId), true, DataSourceUpdateMode.OnPropertyChanged, Guid.Empty));
-
             propertiesData.AutoGenerateColumns = false;
             propertiesData.DataSource = bindingProperty;
 
@@ -66,6 +64,13 @@ namespace DataDictionary.Main.Forms.Domain
 
             aliasesData.AutoGenerateColumns = false;
             aliasesData.DataSource = bindingAlias;
+
+            // TODO: Add fill of attribute data.
+            // Can this add the AttributeValue?
+            // What to display of the attribute?
+            // Navigation directly to the attribute?
+            attributeData.AutoGenerateColumns = false;
+            attributeData.DataSource = bindingAttribute;
 
             subjectArea.BindTo(bindingSubjectArea);
 

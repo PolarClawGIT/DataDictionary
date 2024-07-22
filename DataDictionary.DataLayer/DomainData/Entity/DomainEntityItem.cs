@@ -19,16 +19,6 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// Member Name within the Subject Area.
         /// </summary>
         String? MemberName { get; set; }
-
-        /// <summary>
-        /// The Entity that this is a Sub Type Of. Aka, the parent Entity.
-        /// </summary>
-        Guid? TypeOfEntityId { get; set; }
-
-        /// <summary>
-        /// The Title for Entity that this is a Sub Type Of. Aka, the parent Entity.
-        /// </summary>
-        String? TypeOfEntityTitle { get; }
     }
 
     /// <summary>
@@ -68,20 +58,6 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelEntity; } }
 
-        /// <inheritdoc/>
-        public Guid? TypeOfEntityId
-        {
-            get { return GetValue<Guid>(nameof(TypeOfEntityId)); }
-            set { SetValue(nameof(TypeOfEntityId), value); }
-        }
-
-        /// <inheritdoc/>
-        public String? TypeOfEntityTitle
-        {
-            get { return GetValue(nameof(TypeOfEntityTitle)); }
-            set { SetValue(nameof(TypeOfEntityTitle), value); }
-        }
-
         /// <summary>
         /// Constructor for Domain Entity Item
         /// </summary>
@@ -97,8 +73,6 @@ namespace DataDictionary.DataLayer.DomainData.Entity
             new DataColumn(nameof(EntityTitle), typeof(String)){ AllowDBNull = false},
             new DataColumn(nameof(EntityDescription), typeof(String)){ AllowDBNull = true},
             new DataColumn(nameof(MemberName), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(TypeOfEntityId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(TypeOfEntityTitle), typeof(String)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

@@ -8,13 +8,13 @@ namespace DataDictionary.BusinessLayer.Domain
     /// <summary>
     /// Interface for the Model Entity Attribute
     /// </summary>
-    public interface IDomainEntityAttributeData : IBindingData<DomainEntityAttributeValue> 
+    public interface IEntityAttributeData : IBindingData<EntityAttributeValue> 
     { }
 
     /// <summary>
     /// Implementation for the Model Entity Attribute
     /// </summary>
-    public class DomainEntityAttributeData : DomainEntityAttributeCollection<DomainEntityAttributeValue>, IDomainEntityAttributeData,
+    public class EntityAttributeData : DomainEntityAttributeCollection<EntityAttributeValue>, IEntityAttributeData,
         ILoadData<IDomainEntityKey>, ISaveData<IDomainEntityKey>,
         ILoadData<IModelKey>, ISaveData<IModelKey>
     {

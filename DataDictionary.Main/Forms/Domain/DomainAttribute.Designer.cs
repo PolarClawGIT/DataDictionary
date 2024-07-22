@@ -44,7 +44,6 @@ namespace DataDictionary.Main.Forms.Domain
             detailTab = new TabPage();
             isMultiValuedData = new CheckBox();
             isSingleValueData = new CheckBox();
-            typeOfAttributeData = new DataDictionary.Main.Controls.ComboBoxData();
             isSimpleTypeData = new CheckBox();
             isCompositeTypeData = new CheckBox();
             isIntegralData = new CheckBox();
@@ -179,22 +178,20 @@ namespace DataDictionary.Main.Forms.Domain
             detailsLayout.ColumnCount = 2;
             detailsLayout.ColumnStyles.Add(new ColumnStyle());
             detailsLayout.ColumnStyles.Add(new ColumnStyle());
-            detailsLayout.Controls.Add(isMultiValuedData, 1, 1);
-            detailsLayout.Controls.Add(isSingleValueData, 0, 1);
-            detailsLayout.Controls.Add(typeOfAttributeData, 0, 0);
-            detailsLayout.Controls.Add(isSimpleTypeData, 0, 2);
-            detailsLayout.Controls.Add(isCompositeTypeData, 1, 2);
-            detailsLayout.Controls.Add(isIntegralData, 0, 3);
-            detailsLayout.Controls.Add(isDerivedData, 1, 3);
-            detailsLayout.Controls.Add(isValuedData, 0, 4);
-            detailsLayout.Controls.Add(isNullableData, 1, 4);
-            detailsLayout.Controls.Add(isNonKeyData, 0, 5);
-            detailsLayout.Controls.Add(isKeyData, 1, 5);
+            detailsLayout.Controls.Add(isSingleValueData, 0, 0);
+            detailsLayout.Controls.Add(isMultiValuedData, 1, 0);
+            detailsLayout.Controls.Add(isSimpleTypeData, 0, 1);
+            detailsLayout.Controls.Add(isCompositeTypeData, 1, 1);
+            detailsLayout.Controls.Add(isIntegralData, 0, 2);
+            detailsLayout.Controls.Add(isDerivedData, 1, 2);
+            detailsLayout.Controls.Add(isValuedData, 0, 3);
+            detailsLayout.Controls.Add(isNullableData, 1, 3);
+            detailsLayout.Controls.Add(isNonKeyData, 0, 4);
+            detailsLayout.Controls.Add(isKeyData, 1, 4);
             detailsLayout.Dock = DockStyle.Fill;
             detailsLayout.Location = new Point(3, 3);
             detailsLayout.Name = "detailsLayout";
-            detailsLayout.RowCount = 6;
-            detailsLayout.RowStyles.Add(new RowStyle());
+            detailsLayout.RowCount = 5;
             detailsLayout.RowStyles.Add(new RowStyle());
             detailsLayout.RowStyles.Add(new RowStyle());
             detailsLayout.RowStyles.Add(new RowStyle());
@@ -206,7 +203,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isMultiValuedData
             // 
             isMultiValuedData.AutoSize = true;
-            isMultiValuedData.Location = new Point(107, 55);
+            isMultiValuedData.Location = new Point(107, 3);
             isMultiValuedData.Name = "isMultiValuedData";
             isMultiValuedData.Size = new Size(94, 19);
             isMultiValuedData.TabIndex = 1;
@@ -216,31 +213,17 @@ namespace DataDictionary.Main.Forms.Domain
             // isSingleValueData
             // 
             isSingleValueData.AutoSize = true;
-            isSingleValueData.Location = new Point(3, 55);
+            isSingleValueData.Location = new Point(3, 3);
             isSingleValueData.Name = "isSingleValueData";
             isSingleValueData.Size = new Size(98, 19);
             isSingleValueData.TabIndex = 0;
             isSingleValueData.Text = "Single-Valued";
             isSingleValueData.UseVisualStyleBackColor = true;
             // 
-            // typeOfAttributeData
-            // 
-            typeOfAttributeData.AutoSize = true;
-            typeOfAttributeData.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            detailsLayout.SetColumnSpan(typeOfAttributeData, 2);
-            typeOfAttributeData.Dock = DockStyle.Fill;
-            typeOfAttributeData.DropDownStyle = ComboBoxStyle.DropDown;
-            typeOfAttributeData.HeaderText = "Type of Attribute";
-            typeOfAttributeData.Location = new Point(3, 3);
-            typeOfAttributeData.Name = "typeOfAttributeData";
-            typeOfAttributeData.ReadOnly = false;
-            typeOfAttributeData.Size = new Size(400, 46);
-            typeOfAttributeData.TabIndex = 0;
-            // 
             // isSimpleTypeData
             // 
             isSimpleTypeData.AutoSize = true;
-            isSimpleTypeData.Location = new Point(3, 80);
+            isSimpleTypeData.Location = new Point(3, 28);
             isSimpleTypeData.Name = "isSimpleTypeData";
             isSimpleTypeData.Size = new Size(89, 19);
             isSimpleTypeData.TabIndex = 2;
@@ -250,7 +233,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isCompositeTypeData
             // 
             isCompositeTypeData.AutoSize = true;
-            isCompositeTypeData.Location = new Point(107, 80);
+            isCompositeTypeData.Location = new Point(107, 28);
             isCompositeTypeData.Name = "isCompositeTypeData";
             isCompositeTypeData.Size = new Size(111, 19);
             isCompositeTypeData.TabIndex = 3;
@@ -260,7 +243,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isIntegralData
             // 
             isIntegralData.AutoSize = true;
-            isIntegralData.Location = new Point(3, 105);
+            isIntegralData.Location = new Point(3, 53);
             isIntegralData.Name = "isIntegralData";
             isIntegralData.Size = new Size(77, 19);
             isIntegralData.TabIndex = 4;
@@ -270,7 +253,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isDerivedData
             // 
             isDerivedData.AutoSize = true;
-            isDerivedData.Location = new Point(107, 105);
+            isDerivedData.Location = new Point(107, 53);
             isDerivedData.Name = "isDerivedData";
             isDerivedData.Size = new Size(77, 19);
             isDerivedData.TabIndex = 5;
@@ -280,7 +263,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isValuedData
             // 
             isValuedData.AutoSize = true;
-            isValuedData.Location = new Point(3, 130);
+            isValuedData.Location = new Point(3, 78);
             isValuedData.Name = "isValuedData";
             isValuedData.Size = new Size(72, 19);
             isValuedData.TabIndex = 6;
@@ -290,7 +273,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isNullableData
             // 
             isNullableData.AutoSize = true;
-            isNullableData.Location = new Point(107, 130);
+            isNullableData.Location = new Point(107, 78);
             isNullableData.Name = "isNullableData";
             isNullableData.Size = new Size(81, 19);
             isNullableData.TabIndex = 7;
@@ -300,7 +283,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isNonKeyData
             // 
             isNonKeyData.AutoSize = true;
-            isNonKeyData.Location = new Point(3, 155);
+            isNonKeyData.Location = new Point(3, 103);
             isNonKeyData.Name = "isNonKeyData";
             isNonKeyData.Size = new Size(84, 19);
             isNonKeyData.TabIndex = 8;
@@ -310,7 +293,7 @@ namespace DataDictionary.Main.Forms.Domain
             // isKeyData
             // 
             isKeyData.AutoSize = true;
-            isKeyData.Location = new Point(107, 155);
+            isKeyData.Location = new Point(107, 103);
             isKeyData.Name = "isKeyData";
             isKeyData.Size = new Size(56, 19);
             isKeyData.TabIndex = 9;
@@ -533,7 +516,7 @@ namespace DataDictionary.Main.Forms.Domain
             subjectAreaTab.Controls.Add(subjectAreaLayout);
             subjectAreaTab.Location = new Point(4, 24);
             subjectAreaTab.Name = "subjectAreaTab";
-            subjectAreaTab.Size = new Size(412, 343);
+            subjectAreaTab.Size = new Size(192, 72);
             subjectAreaTab.TabIndex = 3;
             subjectAreaTab.Text = "Subject Area";
             // 
@@ -549,7 +532,7 @@ namespace DataDictionary.Main.Forms.Domain
             subjectAreaLayout.RowCount = 2;
             subjectAreaLayout.RowStyles.Add(new RowStyle());
             subjectAreaLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            subjectAreaLayout.Size = new Size(412, 343);
+            subjectAreaLayout.Size = new Size(192, 72);
             subjectAreaLayout.TabIndex = 1;
             // 
             // subjectArea
@@ -557,7 +540,7 @@ namespace DataDictionary.Main.Forms.Domain
             subjectArea.Dock = DockStyle.Fill;
             subjectArea.Location = new Point(3, 53);
             subjectArea.Name = "subjectArea";
-            subjectArea.Size = new Size(406, 287);
+            subjectArea.Size = new Size(186, 16);
             subjectArea.TabIndex = 0;
             subjectArea.OnSubjectAdd += SubjectArea_OnSubjectAdd;
             subjectArea.OnSubjectRemove += SubjectArea_OnSubjectRemove;
@@ -571,7 +554,7 @@ namespace DataDictionary.Main.Forms.Domain
             memberNameData.Multiline = false;
             memberNameData.Name = "memberNameData";
             memberNameData.ReadOnly = false;
-            memberNameData.Size = new Size(406, 44);
+            memberNameData.Size = new Size(186, 44);
             memberNameData.TabIndex = 1;
             memberNameData.WordWrap = true;
             memberNameData.Validating += MemberNameData_Validating;
@@ -650,7 +633,6 @@ namespace DataDictionary.Main.Forms.Domain
         private TabPage propertyTab;
         private BindingSource bindingAttribute;
         private TabPage aliasTab;
-        private DataDictionary.Main.Controls.ComboBoxData typeOfAttributeData;
         private CheckBox isSingleValueData;
         private CheckBox isMultiValuedData;
         private CheckBox isSimpleTypeData;

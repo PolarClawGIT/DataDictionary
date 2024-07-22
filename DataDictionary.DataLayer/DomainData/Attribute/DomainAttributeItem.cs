@@ -23,19 +23,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         String? MemberName { get; set; }
 
         /// <summary>
-        /// Type of Attribute in terms of a parent Attribute.
-        /// </summary>
-        /// <remarks>
-        /// Not required to be in the same Model.
-        /// </remarks>
-        Guid? TypeOfAttributeId { get; set; }
-
-        /// <summary>
-        /// Title of the Type of Attribute
-        /// </summary>
-        String? TypeOfAttributeTitle { get; set; }
-
-        /// <summary>
         /// Is Attribute Single Valued (has only one value, not multi-valued)
         /// </summary>
         Boolean IsSingleValue { get; set; }
@@ -122,20 +109,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
 
         /// <inheritdoc/>
         public ScopeType Scope { get { return ScopeType.ModelAttribute; } }
-
-        /// <inheritdoc/>
-        public Guid? TypeOfAttributeId
-        {
-            get { return GetValue<Guid>(nameof(TypeOfAttributeId)); }
-            set { SetValue(nameof(TypeOfAttributeId), value); }
-        }
-
-        /// <inheritdoc/>
-        public String? TypeOfAttributeTitle
-        {
-            get { return GetValue(nameof(TypeOfAttributeTitle)); }
-            set { SetValue(nameof(TypeOfAttributeTitle), value); }
-        }
 
         /// <inheritdoc/>
         public Boolean IsSingleValue
@@ -304,8 +277,6 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
             new DataColumn(nameof(AttributeTitle), typeof(string)){ AllowDBNull = false},
             new DataColumn(nameof(AttributeDescription), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(MemberName), typeof(string)){ AllowDBNull = true},
-            new DataColumn(nameof(TypeOfAttributeId), typeof(Guid)){ AllowDBNull = true},
-            new DataColumn(nameof(TypeOfAttributeTitle), typeof(string)){ AllowDBNull = true},
             new DataColumn(nameof(IsSingleValue), typeof(bool)){ AllowDBNull = true},
             new DataColumn(nameof(IsMultiValue), typeof(bool)){ AllowDBNull = true},
             new DataColumn(nameof(IsSimpleType), typeof(bool)){ AllowDBNull = true},
