@@ -28,8 +28,7 @@ Begin Try
 		    [AttributeId]          UniqueIdentifier Not Null,
 			[AttributeTitle]       [App_DataDictionary].[typeTitle] Not Null,
 			[AttributeDescription] [App_DataDictionary].[typeDescription] Null,
-			[MemberName] [App_DataDictionary].[typeNameSpaceMember] NULL,
-			[TypeOfAttributeId]    UniqueIdentifier Null,
+			[MemberName]           [App_DataDictionary].[typeNameSpaceMember] NULL,
 			[IsSingleValue]        Bit Null,
 			[IsSimpleType]         Bit Null,
 			[IsDerived]            Bit Null,
@@ -46,7 +45,6 @@ Begin Try
 			NullIf(Trim(D.[AttributeTitle]),'') As [AttributeTitle],
 			NullIf(Trim(D.[AttributeDescription]),'') As [AttributeDescription],
 			M.[NameSpace] As [MemberName],
-			D.[TypeOfAttributeId],
 			Case
 				When D.[IsSingleValue] = 1 Then 1
 				When D.[IsMultiValue] = 1 Then 0
@@ -88,6 +86,12 @@ Begin Try
 					(@ModelId is Null Or @ModelId = C.[ModelId]))
 
 	-- Apply Changes
+	Delete From [App_DataDictionary].[DomainEntityAttribute]
+	From	[App_DataDictionary].[DomainEntityAttribute] T
+			Inner Join @Delete S
+			On	T.[AttributeId] = S.[AttributeId]
+	Print FormatMessage ('Delete [App_DataDictionary].[DomainEntityAttribute]: %i, %s',@@RowCount, Convert(VarChar,GetDate()));
+
 	Delete From [App_DataDictionary].[DomainAttributeProperty]
 	From	[App_DataDictionary].[DomainAttributeProperty] T
 			Inner Join @Delete S
@@ -116,7 +120,6 @@ Begin Try
 		Select	[AttributeId],
 				[AttributeTitle],
 				[AttributeDescription],
-				[TypeOfAttributeId],
 				[IsSingleValue],
 				[IsSimpleType],
 				[IsDerived],
@@ -127,7 +130,6 @@ Begin Try
 		Select	[AttributeId],
 				[AttributeTitle],
 				[AttributeDescription],
-				[TypeOfAttributeId],
 				[IsSingleValue],
 				[IsSimpleType],
 				[IsDerived],
@@ -164,7 +166,6 @@ Begin Try
 			[AttributeId],
 			[AttributeTitle],
 			[AttributeDescription],
-			[TypeOfAttributeId],
 			[IsSingleValue],
 			[IsSimpleType],
 			[IsDerived],
@@ -173,7 +174,6 @@ Begin Try
 	Select	S.[AttributeId],
 			S.[AttributeTitle],
 			S.[AttributeDescription],
-			S.[TypeOfAttributeId],
 			S.[IsSingleValue],
 			S.[IsSimpleType],
 			S.[IsDerived],

@@ -5,16 +5,16 @@ using Toolbox.DbContext;
 
 namespace DataDictionary.DataLayer.DomainData.Entity
 {
+
     /// <summary>
-    /// Generic Base class for Domain Entity Aliases
+    /// Generic Base class for Domain Entity Attribute
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
-    /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class DomainEntityAliasCollection<TItem> : BindingTable<TItem>,
+    public abstract class DomainEntityAttributeCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IDomainEntityKey>,
         IWriteData<IModelKey>, IWriteData<IDomainEntityKey>,
         IRemoveItem<IDomainEntityKey>
-        where TItem : BindingTableRow, IDomainEntityAliasItem, new()
+        where TItem : BindingTableRow, IDomainEntityAttributeItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelId)
@@ -28,7 +28,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetDomainEntityAlias]";
+            command.CommandText = "[App_DataDictionary].[procGetDomainEntityAttribute]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@EntityId", parameters.EntityId);
             return command;
@@ -46,12 +46,12 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetDomainEntityAlias]";
+            command.CommandText = "[App_DataDictionary].[procSetDomainEntityAttribute]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@EntityId", parameters.EntityId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.EntityId is null || w.EntityId == parameters.EntityId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainEntityAlias]", data);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeDomainEntityAttribute]", data);
             return command;
         }
 

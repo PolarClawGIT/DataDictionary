@@ -1,6 +1,4 @@
-﻿DROP PROCEDURE If Exists [App_DataDictionary].[procSetModelNameSpace]
-GO
-CREATE PROCEDURE [App_DataDictionary].[procSetModelNameSpace]
+﻿CREATE PROCEDURE [App_DataDictionary].[procSetModelNameSpace]
 		@ModelId UniqueIdentifier = Null,
 		@Data [App_DataDictionary].[typeNameSpace] ReadOnly
 As

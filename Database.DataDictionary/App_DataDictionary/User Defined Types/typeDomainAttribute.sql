@@ -3,8 +3,6 @@
     [AttributeTitle]       [App_DataDictionary].[typeTitle]           NULL,
     [AttributeDescription] [App_DataDictionary].[typeDescription]     NULL,
     [MemberName]           [App_DataDictionary].[typeNameSpaceMember] NULL,
-    [TypeOfAttributeId]    UNIQUEIDENTIFIER                           NULL,
-    [TypeOfAttributeTitle] [App_DataDictionary].[typeTitle]           NULL,
     [IsSingleValue]        BIT                                        NULL,
     [IsMultiValue]         BIT                                        NULL,
     [IsSimpleType]         BIT                                        NULL,

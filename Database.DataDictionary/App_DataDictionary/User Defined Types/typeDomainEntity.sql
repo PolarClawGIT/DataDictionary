@@ -2,7 +2,5 @@
     [EntityId]          UNIQUEIDENTIFIER                           NULL,
     [EntityTitle]       [App_DataDictionary].[typeTitle]           NULL,
     [EntityDescription] [App_DataDictionary].[typeDescription]     NULL,
-    [MemberName]        [App_DataDictionary].[typeNameSpaceMember] NULL,
-    [TypeOfEntityId]    UNIQUEIDENTIFIER                           NULL,
-    [TypeOfEntityTitle] [App_DataDictionary].[typeTitle]           NULL);
+    [MemberName]        [App_DataDictionary].[typeNameSpaceMember] NULL);
 

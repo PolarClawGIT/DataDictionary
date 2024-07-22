@@ -265,6 +265,9 @@
     <Build Include="App_DataDictionary\Tables\ModelSubjectAttribute.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetModelSubjectEntity.sql" />
     <Build Include="App_DataDictionary\Stored Procedures\procGetModelSubjectAttribute.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procGetDomainEntityAttribute.sql" />
+    <Build Include="App_DataDictionary\User Defined Types\typeDomainEntityAttribute.sql" />
+    <Build Include="App_DataDictionary\Stored Procedures\procSetDomainEntityAttribute.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DataDictionary.Database.refactorlog" />
