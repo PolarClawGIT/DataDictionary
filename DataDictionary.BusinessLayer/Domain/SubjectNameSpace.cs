@@ -12,7 +12,6 @@ static class SubjectNameSpace
     {
         List<NamedScopePair> result = new List<NamedScopePair>();
 
-
         var values = source.SelectMany(
             paths => paths.Value.Source.GetPath().Group(), // Original Path, without Subject Area
             (source, paths) => new { 
@@ -29,15 +28,15 @@ static class SubjectNameSpace
         {
             if (group.Key is DataLayerIndex parentKey)
             {
-                Dictionary<NamedScopePath, DataLayerIndex> items = new Dictionary<NamedScopePath, DataLayerIndex>();
+                Dictionary<NamedScopePath, DataLayerIndex> nameSpaceNodes = new Dictionary<NamedScopePath, DataLayerIndex>();
                 INamedScopeSourceValue? nameSpace;
 
                 foreach (NamedScopePath item in group.Select(s => s.paths).Distinct())
                 {
                     DataLayerIndex proposedKey = parentKey;
 
-                    if (item.ParentPath is NamedScopePath && items.ContainsKey(item.ParentPath))
-                    { proposedKey = items[item.ParentPath]; }
+                    if (item.ParentPath is NamedScopePath && nameSpaceNodes.ContainsKey(item.ParentPath))
+                    { proposedKey = nameSpaceNodes[item.ParentPath]; }
 
                     List<NamedScopeValue> nodes = group.Where(w =>
                         item.Equals(w.Value.Source.GetPath())
@@ -47,16 +46,16 @@ static class SubjectNameSpace
                         ToList();
 
                     if (nodes.Count == 1)
-                    {
+                    { // If there is only one node for the namespace, use the node itself instead of creating a separate node.
                         NamedScopeValue node = nodes.First();
-                        items.Add(item, node.Source.GetIndex());
+                        nameSpaceNodes.Add(item, node.Source.GetIndex());
                         result.Add(new NamedScopePair(proposedKey, node));
                         proposedKey = node.Source.GetIndex();
                     }
                     else
                     {
                         nameSpace = new SubjectNameSpaceValue(item);
-                        items.Add(item, nameSpace.GetIndex());
+                        nameSpaceNodes.Add(item, nameSpace.GetIndex());
                         result.Add(new NamedScopePair(proposedKey, new NamedScopeValue(nameSpace)));
 
                         foreach (var node in nodes)
