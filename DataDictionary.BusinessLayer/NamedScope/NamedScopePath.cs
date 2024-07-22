@@ -263,15 +263,22 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
-        public bool Equals(NamedScopePath? other)
+        public Boolean Equals(NamedScopePath? other)
         {
             if (other is NamedScopePath otherKey)
-            { return pathParts.SequenceEqual(otherKey.pathParts); }
+            {
+                return pathParts.SequenceEqual(
+                    otherKey.pathParts,
+                    EqualityComparer<String>.Create(
+                        (first, second) => String.Equals(first, second, KeyExtension.CompareString),
+                        (hash) => String.GetHashCode(hash, KeyExtension.CompareString)
+                    ));
+            }
             else { return false; }
         }
 
         /// <inheritdoc/>
-        public int CompareTo(NamedScopePath? other)
+        public Int32 CompareTo(NamedScopePath? other)
         {
             if (other is NamedScopePath otherKey)
             {
@@ -279,7 +286,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
 
                 while (pathParts.Count > index
                     && otherKey.pathParts.Count > index
-                    && pathParts[index].CompareTo(otherKey.pathParts[index]) == 0)
+                    && String.Compare(pathParts[index], otherKey.pathParts[index], KeyExtension.CompareString) == 0)
                 { index = index + 1; }
 
                 if (pathParts.Count == index && otherKey.pathParts.Count == index) { return 0; }
@@ -291,7 +298,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public virtual bool Equals(INamedScopePath? other)
+        public virtual Boolean Equals(INamedScopePath? other)
         {
             if (other is INamedScopePath)
             {
@@ -302,11 +309,11 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj)
+        public override Boolean Equals(object? obj)
         { return obj is INamedScopePath value && Equals(new NamedScopePath(value)); }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(INamedScopePath? other)
+        public virtual Int32 CompareTo(INamedScopePath? other)
         {
             if (other is null) { return 1; }
             else
@@ -317,7 +324,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public virtual int CompareTo(object? obj)
+        public virtual Int32 CompareTo(object? obj)
         {
             if (obj is INamedScopePath value)
             { return CompareTo(new NamedScopePath(value)); }
@@ -325,32 +332,32 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public static bool operator ==(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator ==(NamedScopePath left, NamedScopePath right)
         { return left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator !=(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator !=(NamedScopePath left, NamedScopePath right)
         { return !left.Equals(right); }
 
         /// <inheritdoc/>
-        public static bool operator <(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator <(NamedScopePath left, NamedScopePath right)
         { return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0; }
 
         /// <inheritdoc/>
-        public static bool operator <=(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator <=(NamedScopePath left, NamedScopePath right)
         { return ReferenceEquals(left, null) || left.CompareTo(right) <= 0; }
 
         /// <inheritdoc/>
-        public static bool operator >(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator >(NamedScopePath left, NamedScopePath right)
         { return !ReferenceEquals(left, null) && left.CompareTo(right) > 0; }
 
         /// <inheritdoc/>
-        public static bool operator >=(NamedScopePath left, NamedScopePath right)
+        public static Boolean operator >=(NamedScopePath left, NamedScopePath right)
         { return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0; }
 
         /// <inheritdoc/>
-        public override int GetHashCode()
-        { return MemberFullPath.GetHashCode(); }
+        public override Int32 GetHashCode()
+        { return MemberFullPath.GetHashCode(KeyExtension.CompareString); }
         #endregion
 
         /// <summary>
@@ -406,7 +413,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         }
 
         /// <inheritdoc/>
-        public override string ToString()
+        public override String ToString()
         { return this.MemberFullPath; }
     }
 }
