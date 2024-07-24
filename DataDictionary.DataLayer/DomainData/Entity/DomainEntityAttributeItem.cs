@@ -33,7 +33,7 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         public Nullable<Guid> AttributeId
         {
             get { return GetValue<Guid>(nameof(AttributeId)); }
-            protected set { SetValue(nameof(AttributeId), value); }
+            set { SetValue(nameof(AttributeId), value); }
         }
 
         /// <inheritdoc/>
@@ -51,22 +51,34 @@ namespace DataDictionary.DataLayer.DomainData.Entity
         /// </summary>
         public DomainEntityAttributeItem() : base() { }
 
+
+        /// <summary>
+        /// Constructor for DomainEntityAttribute Item
+        /// </summary>
+        /// <param name="entity"></param>
+        public DomainEntityAttributeItem(IDomainEntityKey entity) : this()
+        {
+            EntityId = entity.EntityId;
+        }
+
+
         /// <summary>
         /// Constructor for DomainEntityAttribute Item
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="attribute"></param>
-        public DomainEntityAttributeItem(IDomainEntityKey entity, IDomainAttributeKey attribute) : this()
+        public DomainEntityAttributeItem(IDomainEntityKey entity, IDomainAttributeKey attribute) : this(entity)
         {
             EntityId = entity.EntityId;
             AttributeId = attribute.AttributeId;
         }
 
+
         static readonly IReadOnlyList<DataColumn> columnDefinitions = new List<DataColumn>()
         {
             new DataColumn(nameof(EntityId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = false},
-            new DataColumn(nameof(OrdinalPosition), typeof(Int32)){ AllowDBNull = false},
+            new DataColumn(nameof(AttributeId), typeof(Guid)){ AllowDBNull = true},
+            new DataColumn(nameof(OrdinalPosition), typeof(Int32)){ AllowDBNull = true},
         };
 
         /// <inheritdoc/>

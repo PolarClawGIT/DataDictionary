@@ -12,27 +12,41 @@ namespace DataDictionary.Main.Forms.Domain.ComboBoxList
         /// <inheritdoc/>
         public String AttributeTitle { get; private set; } = String.Empty;
 
-        public static void Load<T>(ComboBoxData control, IEnumerable<T> source, Guid? defaultAttributeId = null, String? defaultAttributeTitle = null)
-            where T : IAttributeIndex, IAttributeIndexName
+        public static void Load(DataGridViewComboBoxColumn control)
         {
-
-            AttributeNameList memberItem = new AttributeNameList();
             BindingList<AttributeNameList> list = new BindingList<AttributeNameList>();
-            list.Add(new AttributeNameList() { AttributeId = Guid.Empty, AttributeTitle = "(not specified)" });
 
-            if (defaultAttributeId is Guid defaultId && defaultId != Guid.Empty && !String.IsNullOrWhiteSpace(defaultAttributeTitle) && source.Count(w => defaultId.Equals(w.AttributeId)) == 0)
-            { list.Add(new AttributeNameList() { AttributeId = defaultId, AttributeTitle = defaultAttributeTitle }); }
+            foreach (AttributeNameList item in BusinessData.DomainModel.Attributes.
+                Select(s => new AttributeNameList()
+                {
+                    AttributeId = s.AttributeId,
+                    AttributeTitle = s.AttributeTitle ?? String.Empty
+                }))
+            { list.Add(item); }
+            //control.DefaultCellStyle.NullValue = Guid.Empty; // This does not work
+            //control.DefaultCellStyle.DataSourceNullValue = Guid.Empty; // This does not work
 
-            foreach (T item in source.OrderBy(o => o.AttributeTitle))
-            {
-                if (item.AttributeId is Guid attributeId && attributeId != Guid.Empty && item.AttributeTitle is String attributeTitle)
-                { list.Add(new AttributeNameList() { AttributeId = attributeId, AttributeTitle = attributeTitle }); }
-
-            }
-
+            control.ValueMember = nameof(AttributeNameList.AttributeId);
+            control.DisplayMember = nameof(AttributeNameList.AttributeTitle);
             control.DataSource = list;
-            control.ValueMember = nameof(memberItem.AttributeId);
-            control.DisplayMember = nameof(memberItem.AttributeTitle);
         }
+
+        public static void Load(ComboBoxData control)
+        {
+            BindingList<AttributeNameList> list = new BindingList<AttributeNameList>();
+
+            foreach (AttributeNameList item in BusinessData.DomainModel.Attributes.
+                Select(s => new AttributeNameList()
+                {
+                    AttributeId = s.AttributeId,
+                    AttributeTitle = s.AttributeTitle ?? String.Empty
+                }))
+            { list.Add(item); }
+
+            control.ValueMember = nameof(AttributeNameList.AttributeId);
+            control.DisplayMember = nameof(AttributeNameList.AttributeTitle);
+            control.DataSource = list;
+        }
+
     }
 }

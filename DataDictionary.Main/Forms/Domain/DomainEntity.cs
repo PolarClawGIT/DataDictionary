@@ -7,6 +7,9 @@ using DataDictionary.Main.Enumerations;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;
+using DataDictionary.Resource.Enumerations;
+using DataDictionary.Main.Dialogs;
+using System.Linq;
 
 namespace DataDictionary.Main.Forms.Domain
 {
@@ -16,7 +19,9 @@ namespace DataDictionary.Main.Forms.Domain
         { return bindingEntity.Current is IEntityValue current && ReferenceEquals(current, item); }
 
         protected DomainEntity() : base()
-        { InitializeComponent(); }
+        {
+            InitializeComponent();
+        }
 
         public DomainEntity(IEntityValue? entityItem) : this()
         {
@@ -39,6 +44,7 @@ namespace DataDictionary.Main.Forms.Domain
                 bindingDefinition.DataSource = new BindingView<EntityDefinitionValue>(BusinessData.DomainModel.Entities.Definitions, w => key.Equals(w));
                 bindingAlias.DataSource = new BindingView<EntityAliasValue>(BusinessData.DomainModel.Entities.Aliases, w => key.Equals(w));
                 bindingSubjectArea.DataSource = new BindingView<EntitySubjectAreaValue>(BusinessData.DomainModel.Entities.SubjectArea, w => key.Equals(w));
+                bindingAttributeDetail.DataSource = new BindingView<AttributeValue>(BusinessData.DomainModel.Attributes, w => true);
                 bindingAttribute.DataSource = new BindingView<EntityAttributeValue>(BusinessData.DomainModel.Entities.Attributes, w => key.Equals(w));
             }
         }
@@ -69,8 +75,15 @@ namespace DataDictionary.Main.Forms.Domain
             // Can this add the AttributeValue?
             // What to display of the attribute?
             // Navigation directly to the attribute?
+            AttributeNameList.Load(attributeColumn);
+
+
+
             attributeData.AutoGenerateColumns = false;
             attributeData.DataSource = bindingAttribute;
+
+            attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttributeDetail, nameof(IAttributeValue.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
+            attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), false, DataSourceUpdateMode.OnPropertyChanged));
 
             subjectArea.BindTo(bindingSubjectArea);
 
@@ -191,8 +204,6 @@ namespace DataDictionary.Main.Forms.Domain
 
         private void BindingDefinition_CurrentChanged(object sender, EventArgs e)
         {
-            var x = bindingDefinition.DataSource;
-
             if (bindingDefinition.Current is EntityDefinitionValue current)
             {
                 domainDefinition.DefinitionId = current.DefinitionId ?? Guid.Empty;
@@ -216,10 +227,93 @@ namespace DataDictionary.Main.Forms.Domain
             else { bindingDefinition.AddNew(); }
         }
 
-        private void memberNameData_Validating(object sender, CancelEventArgs e)
+        private void MemberNameData_Validating(object sender, CancelEventArgs e)
         {
             NamedScopePath path = new NamedScopePath(NamedScopePath.Parse(memberNameData.Text).ToArray());
             memberNameData.Text = path.MemberFullPath;
+        }
+
+        private void BindingAttribute_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            if (bindingEntity.Current is EntityValue current)
+            {
+                e.NewObject = new EntityAttributeValue(current)
+                {
+                    OrdinalPosition = bindingAttribute.Count + 1
+                };
+            }
+        }
+
+        private void BindingAttribute_CurrentChanged(object sender, EventArgs e)
+        {
+            if (bindingAttribute.Current is EntityAttributeValue current)
+            {
+                AttributeIndex key = new AttributeIndex(current);
+
+                if (bindingAttributeDetail.DataSource is IList<AttributeValue> attributes
+                    && attributes.FirstOrDefault(w => key.Equals(w)) is AttributeValue attribute)
+                { bindingAttributeDetail.Position = attributes.IndexOf(attribute); }
+            }
+        }
+
+
+        private void BindingAttributeDetail_AddingNew(object sender, AddingNewEventArgs e)
+        {
+            AttributeValue newValue = new AttributeValue();
+
+            if (bindingAttribute.Current is EntityAttributeValue attribute)
+            { attribute.AttributeId = newValue.AttributeId; }
+
+
+            e.NewObject = newValue;
+        }
+
+        private void BindingAttribute_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (bindingAttribute.Current is EntityAttributeValue current)
+            {
+                if (current.AttributeId == Guid.Empty)
+                {
+                    bindingAttributeDetail.AddNew();
+                    AttributeNameList.Load(attributeColumn);
+                }
+            }
+        }
+
+        private void AttributeData_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            //TODO: Order of items creation and refresh of attributeColumn is not working.
+            //Null values are causing an error but unable to determine how to address them.
+        }
+
+        private void AttributeTitleData_Validated(object sender, EventArgs e)
+        { AttributeNameList.Load(attributeColumn); }
+
+        private void attributeSelect_Click(object sender, EventArgs e)
+        {
+            if (bindingAttribute.DataSource is IList<EntityAttributeValue> attributes)
+            {
+                List<AttributeIndex> keys = attributes.Select(s => new AttributeIndex(s)).ToList();
+
+                using (var dialog = new SelectionDialog<AttributeValue, AttributeIndex>
+                {
+                    Icon = ImageEnumeration.Cast(ScopeType.ModelAttribute).WindowIcon,
+                    Text = ImageEnumeration.Cast(ScopeType.ModelAttribute).Name,
+                    DataSource = BusinessData.DomainModel.Attributes,
+                    Selected = keys,
+                    GetDescription = (value) => { return value.AttributeDescription??String.Empty; },
+                    AsIndex = (value) => { return new AttributeIndex(value); }
+                })
+                {
+                    if(dialog.ShowDialog() is DialogResult.OK)
+                    {
+                        //TODO: add and remove items from bindingAttribute
+                        var toRemove = attributes.Select(s => new AttributeIndex(s)).Except(dialog.Selected);
+                        var toAdd = dialog.Selected.Except(attributes.Select(s => new AttributeIndex(s)));
+                    }
+
+                }
+            }
         }
     }
 }

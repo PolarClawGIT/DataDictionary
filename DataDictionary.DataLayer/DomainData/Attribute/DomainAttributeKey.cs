@@ -22,7 +22,9 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
     /// <summary>
     /// Implementation for the Domain Attribute Key
     /// </summary>
-    public class DomainAttributeKey : IDomainAttributeKey, IKeyEquality<IDomainAttributeKey>
+    public class DomainAttributeKey : IDomainAttributeKey,
+        IKeyEquality<DomainAttributeKey>,
+        IKeyEquality<IDomainAttributeKey> 
     {
         /// <inheritdoc/>
         public Guid? AttributeId { get; init; } = Guid.Empty;
@@ -39,12 +41,16 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
 
         #region IEquatable, IComparable
         /// <inheritdoc/>
+        public Boolean Equals(DomainAttributeKey? other)
+        { return other is DomainAttributeKey key && EqualityComparer<Guid?>.Default.Equals(AttributeId, key.AttributeId); }
+
+        /// <inheritdoc/>
         public bool Equals(IDomainAttributeKey? other)
-        { return other is IDomainAttributeKey key && EqualityComparer<Guid?>.Default.Equals(AttributeId, key.AttributeId); }
+        { return other is IDomainAttributeKey key && Equals(new DomainAttributeKey(key)); }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
-        { return obj is IDomainAttributeKey value && Equals(new DomainAttributeKey(value)); }
+        { return obj is IDomainAttributeKey key && Equals(new DomainAttributeKey(key)); }
 
         /// <inheritdoc/>
         public static bool operator ==(DomainAttributeKey left, DomainAttributeKey right)
@@ -57,6 +63,8 @@ namespace DataDictionary.DataLayer.DomainData.Attribute
         /// <inheritdoc/>
         public override int GetHashCode()
         { return HashCode.Combine(AttributeId); }
+
+
         #endregion
     }
 }

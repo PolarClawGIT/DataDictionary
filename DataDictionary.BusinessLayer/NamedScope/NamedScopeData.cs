@@ -62,6 +62,13 @@ namespace DataDictionary.BusinessLayer.NamedScope
         /// <returns></returns>
         IReadOnlyList<INamedScopeSourceValue> Values(IEnumerable<NamedScopeIndex> keys);
 
+        /// <summary>
+        /// Return the list of Values for the Given Scopes specified.
+        /// </summary>
+        /// <param name="scopes"></param>
+        /// <returns></returns>
+        IReadOnlyList<INamedScopeSourceValue> Values(params ScopeType[] scopes);
+
         /// <inheritdoc cref="IDictionary{TKey, TValue}.ContainsKey(TKey)"/>
         Boolean ContainsKey(NamedScopeIndex key);
     }
@@ -91,7 +98,7 @@ namespace DataDictionary.BusinessLayer.NamedScope
         public virtual INamedScopeSourceValue GetData(NamedScopeIndex index)
         {
             if (!data.ContainsKey(index))
-            { 
+            {
                 Exception ex = new IndexOutOfRangeException();
                 ex.Data.Add(nameof(index), index);
                 throw ex;
@@ -154,7 +161,24 @@ namespace DataDictionary.BusinessLayer.NamedScope
             List<INamedScopeSourceValue> result = new List<INamedScopeSourceValue>();
 
             foreach (NamedScopeIndex item in indices)
-            { if (data.ContainsKey(item)) { result.Add(data[item].Source); } }
+            {
+                if (data.ContainsKey(item))
+                { result.Add(data[item].Source); }
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public virtual IReadOnlyList<INamedScopeSourceValue> Values(params ScopeType[] scopes)
+        {
+            List<INamedScopeSourceValue> result = new List<INamedScopeSourceValue>();
+
+            foreach (KeyValuePair<NamedScopeIndex, NamedScopeValue> item in data)
+            {
+                if (scopes.Length == 0 || scopes.Contains(ScopeType.Null) || scopes.Contains(item.Value.Scope))
+                { result.Add(item.Value.Source); }
+            }
 
             return result;
         }
