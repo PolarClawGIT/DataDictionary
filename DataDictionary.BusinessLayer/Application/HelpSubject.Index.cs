@@ -1,5 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
-using DataDictionary.DataLayer.ApplicationData.Help;
+using DataDictionary.DataLayer.ApplicationData;
 
 namespace DataDictionary.BusinessLayer.Application
 {

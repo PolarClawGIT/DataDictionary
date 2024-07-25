@@ -1,0 +1,1 @@
+﻿namespace DataDictionary.DataLayer.DomainData.Attribute;
