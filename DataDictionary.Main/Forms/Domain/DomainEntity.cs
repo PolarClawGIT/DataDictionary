@@ -21,6 +21,8 @@ namespace DataDictionary.Main.Forms.Domain
         protected DomainEntity() : base()
         {
             InitializeComponent();
+
+            attributeSelect.Image = ImageEnumeration.GetImage(ScopeType.ModelAttribute, CommandImageType.Default);
         }
 
         public DomainEntity(IEntityValue? entityItem) : this()
@@ -84,7 +86,7 @@ namespace DataDictionary.Main.Forms.Domain
 
             attributeTitleData.DataBindings.Add(new Binding(nameof(attributeTitleData.Text), bindingAttributeDetail, nameof(IAttributeValue.AttributeTitle), false, DataSourceUpdateMode.OnPropertyChanged));
             attributeOrderData.DataBindings.Add(new Binding(nameof(attributeOrderData.Text), bindingAttribute, nameof(IEntityAttributeValue.OrdinalPosition), false, DataSourceUpdateMode.OnPropertyChanged));
-
+            attributeMemberData.DataBindings.Add(new Binding(nameof(attributeMemberData.Text), bindingAttributeDetail, nameof(IAttributeValue.MemberName), false, DataSourceUpdateMode.OnPropertyChanged));
             subjectArea.BindTo(bindingSubjectArea);
 
             IsLocked(RowState is DataRowState.Detached or DataRowState.Deleted || bindingEntity.Current is not IEntityValue);
@@ -245,6 +247,9 @@ namespace DataDictionary.Main.Forms.Domain
         }
 
         private void BindingAttribute_CurrentChanged(object sender, EventArgs e)
+        { SetAttributeDetail(); }
+
+        private void SetAttributeDetail()
         {
             if (bindingAttribute.Current is EntityAttributeValue current)
             {
@@ -254,8 +259,8 @@ namespace DataDictionary.Main.Forms.Domain
                     && attributes.FirstOrDefault(w => key.Equals(w)) is AttributeValue attribute)
                 { bindingAttributeDetail.Position = attributes.IndexOf(attribute); }
             }
-        }
 
+        }
 
         private void BindingAttributeDetail_AddingNew(object sender, AddingNewEventArgs e)
         {
@@ -268,28 +273,11 @@ namespace DataDictionary.Main.Forms.Domain
             e.NewObject = newValue;
         }
 
-        private void BindingAttribute_CurrentItemChanged(object sender, EventArgs e)
-        {
-            if (bindingAttribute.Current is EntityAttributeValue current)
-            {
-                if (current.AttributeId == Guid.Empty)
-                {
-                    bindingAttributeDetail.AddNew();
-                    AttributeNameList.Load(attributeColumn);
-                }
-            }
-        }
-
-        private void AttributeData_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            //TODO: Order of items creation and refresh of attributeColumn is not working.
-            //Null values are causing an error but unable to determine how to address them.
-        }
 
         private void AttributeTitleData_Validated(object sender, EventArgs e)
         { AttributeNameList.Load(attributeColumn); }
 
-        private void attributeSelect_Click(object sender, EventArgs e)
+        private void AttributeSelect_Click(object sender, EventArgs e)
         {
             if (bindingAttribute.DataSource is IList<EntityAttributeValue> attributes)
             {
@@ -301,19 +289,30 @@ namespace DataDictionary.Main.Forms.Domain
                     Text = ImageEnumeration.Cast(ScopeType.ModelAttribute).Name,
                     DataSource = BusinessData.DomainModel.Attributes,
                     Selected = keys,
-                    GetDescription = (value) => { return value.AttributeDescription??String.Empty; },
+                    GetDescription = (value) => { return value.AttributeDescription ?? String.Empty; },
                     AsIndex = (value) => { return new AttributeIndex(value); }
                 })
                 {
-                    if(dialog.ShowDialog() is DialogResult.OK)
+                    if (dialog.ShowDialog() is DialogResult.OK)
                     {
-                        //TODO: add and remove items from bindingAttribute
-                        var toRemove = attributes.Select(s => new AttributeIndex(s)).Except(dialog.Selected);
-                        var toAdd = dialog.Selected.Except(attributes.Select(s => new AttributeIndex(s)));
-                    }
+                        foreach (AttributeIndex item in attributes.Select(s => new AttributeIndex(s)).Except(dialog.Selected).ToList())
+                        { // Remove
+                            if (attributes.FirstOrDefault(w => item.Equals(w)) is EntityAttributeValue removeItem)
+                            { bindingAttribute.Remove(removeItem); }
+                        }
 
+                        foreach (AttributeIndex item in dialog.Selected.Except(attributes.Select(s => new AttributeIndex(s))).ToList())
+                        { // Add
+                            bindingAttribute.AddNew();
+                            if (bindingAttribute.Current is EntityAttributeValue newItem)
+                            { newItem.AttributeId = item.AttributeId; }
+
+                            SetAttributeDetail();
+                        }
+                    }
                 }
             }
+
         }
     }
 }

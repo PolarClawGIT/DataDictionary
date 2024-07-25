@@ -47,6 +47,8 @@ namespace DataDictionary.Main.Forms.Domain
             attributeOrderColumn = new DataGridViewTextBoxColumn();
             attributeOrderData = new DataDictionary.Main.Controls.TextBoxData();
             attributeTitleData = new DataDictionary.Main.Controls.TextBoxData();
+            attributeSelect = new Button();
+            attributeMemberData = new DataDictionary.Main.Controls.TextBoxData();
             propertyTab = new TabPage();
             propertiesData = new DataGridView();
             propertyIdColumn = new DataGridViewComboBoxColumn();
@@ -74,7 +76,6 @@ namespace DataDictionary.Main.Forms.Domain
             bindingDefinition = new BindingSource(components);
             bindingAttribute = new BindingSource(components);
             bindingAttributeDetail = new BindingSource(components);
-            attributeSelect = new Button();
             mainLayout = new TableLayoutPanel();
             detailsLayout = new TableLayoutPanel();
             attributeDetailLayout = new TableLayoutPanel();
@@ -198,14 +199,15 @@ namespace DataDictionary.Main.Forms.Domain
             attributeData.Name = "attributeData";
             attributeData.Size = new Size(400, 229);
             attributeData.TabIndex = 0;
-            attributeData.DataError += AttributeData_DataError;
             // 
             // attributeColumn
             // 
             attributeColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             attributeColumn.DataPropertyName = "AttributeId";
+            attributeColumn.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
             attributeColumn.HeaderText = "Attribute";
             attributeColumn.Name = "attributeColumn";
+            attributeColumn.ReadOnly = true;
             // 
             // attributeOrderColumn
             // 
@@ -223,6 +225,7 @@ namespace DataDictionary.Main.Forms.Domain
             attributeDetailLayout.Controls.Add(attributeOrderData, 1, 1);
             attributeDetailLayout.Controls.Add(attributeTitleData, 0, 0);
             attributeDetailLayout.Controls.Add(attributeSelect, 1, 0);
+            attributeDetailLayout.Controls.Add(attributeMemberData, 0, 1);
             attributeDetailLayout.Dock = DockStyle.Fill;
             attributeDetailLayout.Location = new Point(3, 238);
             attributeDetailLayout.Name = "attributeDetailLayout";
@@ -253,11 +256,36 @@ namespace DataDictionary.Main.Forms.Domain
             attributeTitleData.Location = new Point(3, 3);
             attributeTitleData.Multiline = false;
             attributeTitleData.Name = "attributeTitleData";
-            attributeTitleData.ReadOnly = false;
+            attributeTitleData.ReadOnly = true;
             attributeTitleData.Size = new Size(268, 44);
             attributeTitleData.TabIndex = 3;
             attributeTitleData.WordWrap = true;
             attributeTitleData.Validated += AttributeTitleData_Validated;
+            // 
+            // attributeSelect
+            // 
+            attributeSelect.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            attributeSelect.Location = new Point(322, 24);
+            attributeSelect.Name = "attributeSelect";
+            attributeSelect.Size = new Size(75, 23);
+            attributeSelect.TabIndex = 4;
+            attributeSelect.Text = "Select";
+            attributeSelect.TextImageRelation = TextImageRelation.ImageBeforeText;
+            attributeSelect.UseVisualStyleBackColor = true;
+            attributeSelect.Click += AttributeSelect_Click;
+            // 
+            // attributeMemberData
+            // 
+            attributeMemberData.AutoSize = true;
+            attributeMemberData.Dock = DockStyle.Fill;
+            attributeMemberData.HeaderText = "Subject Member";
+            attributeMemberData.Location = new Point(3, 53);
+            attributeMemberData.Multiline = false;
+            attributeMemberData.Name = "attributeMemberData";
+            attributeMemberData.ReadOnly = true;
+            attributeMemberData.Size = new Size(268, 44);
+            attributeMemberData.TabIndex = 5;
+            attributeMemberData.WordWrap = true;
             // 
             // propertyTab
             // 
@@ -542,22 +570,10 @@ namespace DataDictionary.Main.Forms.Domain
             // 
             bindingAttribute.AddingNew += BindingAttribute_AddingNew;
             bindingAttribute.CurrentChanged += BindingAttribute_CurrentChanged;
-            bindingAttribute.CurrentItemChanged += BindingAttribute_CurrentItemChanged;
             // 
             // bindingAttributeDetail
             // 
             bindingAttributeDetail.AddingNew += BindingAttributeDetail_AddingNew;
-            // 
-            // attributeSelect
-            // 
-            attributeSelect.Location = new Point(277, 3);
-            attributeSelect.Name = "attributeSelect";
-            attributeSelect.Size = new Size(75, 23);
-            attributeSelect.TabIndex = 4;
-            attributeSelect.Text = "Select";
-            attributeSelect.TextImageRelation = TextImageRelation.ImageBeforeText;
-            attributeSelect.UseVisualStyleBackColor = true;
-            attributeSelect.Click += attributeSelect_Click;
             // 
             // DomainEntity
             // 
@@ -633,11 +649,12 @@ namespace DataDictionary.Main.Forms.Domain
         private DataDictionary.Main.Controls.TextBoxData memberNameData;
         private DataGridView attributeData;
         private BindingSource bindingAttribute;
-        private DataGridViewComboBoxColumn attributeColumn;
-        private DataGridViewTextBoxColumn attributeOrderColumn;
         private BindingSource bindingAttributeDetail;
         private DataDictionary.Main.Controls.TextBoxData attributeOrderData;
         private DataDictionary.Main.Controls.TextBoxData attributeTitleData;
         private Button attributeSelect;
+        private DataDictionary.Main.Controls.TextBoxData attributeMemberData;
+        private DataGridViewComboBoxColumn attributeColumn;
+        private DataGridViewTextBoxColumn attributeOrderColumn;
     }
 }

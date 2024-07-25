@@ -104,6 +104,7 @@ namespace DataDictionary.Main.Dialogs
                 && listViewItems.ContainsKey(selectionData.SelectedItems[0]))
             {
                 titleData.Text = listViewItems[selectionData.SelectedItems[0]].Title;
+                descriptionData.Text = GetDescription(listViewItems[selectionData.SelectedItems[0]]);
                 pathData.Text = listViewItems[selectionData.SelectedItems[0]].Path.MemberFullPath;
             }
             
