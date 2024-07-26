@@ -1,12 +1,7 @@
 ﻿using DataDictionary.DataLayer.DomainData.Alias;
 using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.LibraryData.Source
+namespace DataDictionary.DataLayer.LibraryData
 {
     /// <summary>
     /// Interface for the Library Source Unique Key

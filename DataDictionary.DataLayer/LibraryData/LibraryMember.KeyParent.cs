@@ -1,12 +1,6 @@
-﻿using DataDictionary.DataLayer.LibraryData.Source;
-using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.LibraryData.Member
+namespace DataDictionary.DataLayer.LibraryData
 {
     /// <summary>
     /// Interface for the Library Parent Member Key

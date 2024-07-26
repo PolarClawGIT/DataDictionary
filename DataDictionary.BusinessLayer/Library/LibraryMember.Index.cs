@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.LibraryData.Member;
+﻿using DataDictionary.DataLayer.LibraryData;
 
 namespace DataDictionary.BusinessLayer.Library
 {

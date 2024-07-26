@@ -1,15 +1,4 @@
-﻿using DataDictionary.DataLayer.DatabaseData.Catalog;
-using DataDictionary.DataLayer.DatabaseData.Schema;
-using DataDictionary.DataLayer.DatabaseData.Table;
-using DataDictionary.DataLayer.LibraryData.Member;
-using DataDictionary.DataLayer.LibraryData.Source;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataDictionary.DataLayer.DomainData.Alias
+﻿namespace DataDictionary.DataLayer.DomainData.Alias
 {
     /// <summary>
     /// Extension Class used with Domain Aliases

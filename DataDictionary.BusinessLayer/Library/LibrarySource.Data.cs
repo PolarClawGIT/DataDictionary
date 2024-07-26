@@ -3,7 +3,7 @@ using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.Threading;
 using System.ComponentModel;
-using DataDictionary.DataLayer.LibraryData.Source;
+using DataDictionary.DataLayer.LibraryData;
 
 namespace DataDictionary.BusinessLayer.Library
 {

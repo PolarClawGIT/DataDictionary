@@ -1,14 +1,9 @@
 ﻿using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.LibraryData.Source
+namespace DataDictionary.DataLayer.LibraryData
 {
     /// <summary>
     /// Generic List/Collection of the Library Source Items
@@ -16,10 +11,10 @@ namespace DataDictionary.DataLayer.LibraryData.Source
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
     public class LibrarySourceCollection<TItem> : BindingTable<TItem>,
-        IReadData, IReadData<IModelKey>, IReadData<ILibrarySourceKey>, 
+        IReadData, IReadData<IModelKey>, IReadData<ILibrarySourceKey>,
         IWriteData<IModelKey>, IWriteData<ILibrarySourceKey>,
         IRemoveItem<ILibrarySourceKey>, IRemoveItem<ILibrarySourceKeyName>
-        where TItem : BindingTableRow, ILibrarySourceItem, ILibrarySourceKey, ILibrarySourceKeyName,  new()
+        where TItem : BindingTableRow, ILibrarySourceItem, ILibrarySourceKey, ILibrarySourceKeyName, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection)
@@ -83,9 +78,4 @@ namespace DataDictionary.DataLayer.LibraryData.Source
             { base.Remove(item); }
         }
     }
-
-    /// <summary>
-    /// Default List/Collection of the Library Source Items
-    /// </summary>
-    public class LibrarySourceCollection : LibrarySourceCollection<LibrarySourceItem> { }
 }

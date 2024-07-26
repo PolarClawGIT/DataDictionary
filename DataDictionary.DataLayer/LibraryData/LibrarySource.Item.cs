@@ -3,7 +3,7 @@ using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.LibraryData.Source
+namespace DataDictionary.DataLayer.LibraryData
 {
     /// <summary>
     /// Interface for the Library Source Item

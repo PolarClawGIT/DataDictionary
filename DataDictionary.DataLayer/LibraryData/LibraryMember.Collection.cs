@@ -1,15 +1,9 @@
-﻿using DataDictionary.DataLayer.LibraryData.Source;
-using DataDictionary.DataLayer.ModelData;
-using System;
-using System.Collections.Generic;
+﻿using DataDictionary.DataLayer.ModelData;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.LibraryData.Member
+namespace DataDictionary.DataLayer.LibraryData
 {
     /// <summary>
     /// Generic Base class for Library Member Items
@@ -75,9 +69,4 @@ namespace DataDictionary.DataLayer.LibraryData.Member
             { base.Remove(item); }
         }
     }
-
-    /// <summary>
-    /// Default List/Collection of the Library Member Items
-    /// </summary>
-    public class LibraryMemberCollection : LibraryMemberCollection<LibraryMemberItem> { }
 }

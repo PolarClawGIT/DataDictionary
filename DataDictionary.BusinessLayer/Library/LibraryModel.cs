@@ -1,7 +1,5 @@
 ﻿using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.BusinessLayer.DbWorkItem;
-using DataDictionary.DataLayer.LibraryData.Member;
-using DataDictionary.DataLayer.LibraryData.Source;
 using DataDictionary.DataLayer.ModelData;
 using Toolbox.BindingTable;
 using Toolbox.Threading;
