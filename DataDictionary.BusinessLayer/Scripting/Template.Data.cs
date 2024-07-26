@@ -1,7 +1,7 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
-using DataDictionary.DataLayer.ScriptingData.Template;
+using DataDictionary.DataLayer.ScriptingData;
 using System.ComponentModel;
 using System.Data;
 using Toolbox.BindingTable;

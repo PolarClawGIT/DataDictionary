@@ -4,7 +4,7 @@ using Toolbox.BindingTable;
 using System.Data;
 using DataDictionary.Resource.Enumerations;
 
-namespace DataDictionary.DataLayer.ScriptingData.Template
+namespace DataDictionary.DataLayer.ScriptingData
 {
     /// <summary>
     /// Interface for the Scripting Template Node Attribute data.

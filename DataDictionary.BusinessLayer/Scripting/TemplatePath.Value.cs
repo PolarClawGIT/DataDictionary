@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ScriptingData.Template;
+﻿using DataDictionary.DataLayer.ScriptingData;
 using System;
 using System.Collections.Generic;
 using System.Linq;

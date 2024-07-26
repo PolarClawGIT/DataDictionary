@@ -1,11 +1,6 @@
 ﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ScriptingData.Template
+namespace DataDictionary.DataLayer.ScriptingData
 {
     /// <summary>
     /// Interface for the Scripting Template Path Key

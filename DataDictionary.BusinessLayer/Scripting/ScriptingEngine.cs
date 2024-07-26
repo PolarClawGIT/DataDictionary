@@ -5,7 +5,7 @@ using Toolbox.BindingTable;
 using DataDictionary.BusinessLayer.NamedScope;
 using DataDictionary.DataLayer.ModelData;
 using DataDictionary.BusinessLayer.Model;
-using DataDictionary.DataLayer.ScriptingData.Template;
+using DataDictionary.DataLayer.ScriptingData;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {

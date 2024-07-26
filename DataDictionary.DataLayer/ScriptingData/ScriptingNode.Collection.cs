@@ -3,19 +3,19 @@ using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.ScriptingData.Template
+namespace DataDictionary.DataLayer.ScriptingData
 {
     /// <summary>
-    /// Generic Base class for Scripting Template Path
+    /// Generic Base class for Scripting Template
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
     /// <remarks>Base class, implements the Read and Write.</remarks>
-    public abstract class ScriptingPathCollection<TItem> : BindingTable<TItem>,
+    public abstract class ScriptingNodeCollection<TItem> : BindingTable<TItem>,
         IReadData<IModelKey>, IReadData<IScriptingTemplateKey>,
         IWriteData<IModelKey>, IWriteData<IScriptingTemplateKey>,
         IDeleteData<IModelKey>, IDeleteData<IScriptingTemplateKey>,
         IRemoveItem<IScriptingTemplateKey>
-        where TItem : BindingTableRow, IScriptingPathItem, new()
+        where TItem : BindingTableRow, IScriptingNodeItem, new()
     {
         /// <inheritdoc/>
         public Command LoadCommand(IConnection connection, IModelKey modelKey)
@@ -29,7 +29,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procGetScriptingPath]";
+            command.CommandText = "[App_DataDictionary].[procGetScriptingNode]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@TemplateId", parameters.templateId);
             return command;
@@ -47,12 +47,12 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetScriptingPath]";
+            command.CommandText = "[App_DataDictionary].[procSetScriptingNode]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@TemplateId", parameters.templateId);
 
             IEnumerable<TItem> data = this.Where(w => parameters.templateId is null || w.TemplateId == parameters.templateId);
-            command.AddParameter("@Data", "[App_DataDictionary].[typeScriptingPath]", data);
+            command.AddParameter("@Data", "[App_DataDictionary].[typeScriptingNode]", data);
 
             return command;
         }
@@ -69,7 +69,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         {
             Command command = connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[App_DataDictionary].[procSetScriptingPath]";
+            command.CommandText = "[App_DataDictionary].[procSetScriptingNode]";
             command.AddParameter("@ModelId", parameters.modelId);
             command.AddParameter("@TemplateId", parameters.templateId);
             return command;

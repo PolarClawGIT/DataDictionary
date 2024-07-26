@@ -3,7 +3,7 @@ using System.Data;
 using Toolbox.BindingTable;
 using Toolbox.DbContext;
 
-namespace DataDictionary.DataLayer.ScriptingData.Template
+namespace DataDictionary.DataLayer.ScriptingData
 {
     /// <summary>
     /// Generic Base class for Scripting Template

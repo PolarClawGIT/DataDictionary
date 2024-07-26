@@ -1,7 +1,7 @@
 ﻿using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 
-namespace DataDictionary.DataLayer.ScriptingData.Template
+namespace DataDictionary.DataLayer.ScriptingData
 {
     /// <summary>
     /// Interface for the Key on Property Scope for the Scripting Template Node.
@@ -36,7 +36,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// Cast from ScriptingNodeKeyName to ScriptingNodeKeyScope
         /// </summary>
         /// <param name="source"></param>
-        public static implicit operator ScriptingNodeKeyScope(ScriptingNodeKeyName source) 
+        public static implicit operator ScriptingNodeKeyScope(ScriptingNodeKeyName source)
         { return new ScriptingNodeKeyScope(source); }
 
         #region IEquatable, IComparable

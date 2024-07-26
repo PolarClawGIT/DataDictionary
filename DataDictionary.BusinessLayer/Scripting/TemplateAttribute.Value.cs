@@ -1,5 +1,4 @@
-﻿using DataDictionary.DataLayer.ScriptingData.Template;
-using DataDictionary.BusinessLayer.Domain;
+﻿using DataDictionary.BusinessLayer.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using DataDictionary.DataLayer.ScriptingData;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {

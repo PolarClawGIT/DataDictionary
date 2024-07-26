@@ -1,6 +1,6 @@
 ﻿using DataDictionary.Resource;
 
-namespace DataDictionary.DataLayer.ScriptingData.Template
+namespace DataDictionary.DataLayer.ScriptingData
 {
     /// <summary>
     /// Interface for the Primary Key for the Scripting Template.
@@ -35,15 +35,15 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         #region IEquatable
         /// <inheritdoc/>
         public Boolean Equals(ScriptingTemplateKey? other)
-        { return other is ScriptingTemplateKey && EqualityComparer<Guid?>.Default.Equals(this.TemplateId, other.TemplateId); }
+        { return other is ScriptingTemplateKey && EqualityComparer<Guid?>.Default.Equals(TemplateId, other.TemplateId); }
 
         /// <inheritdoc/>
         public Boolean Equals(IScriptingTemplateKey? other)
-        { return other is IScriptingTemplateKey value && this.Equals(new ScriptingTemplateKey(value)); }
+        { return other is IScriptingTemplateKey value && Equals(new ScriptingTemplateKey(value)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(object? obj)
-        { return obj is IScriptingTemplateKey value && this.Equals(new ScriptingTemplateKey(value)); }
+        { return obj is IScriptingTemplateKey value && Equals(new ScriptingTemplateKey(value)); }
 
         /// <inheritdoc/>
         public static Boolean operator ==(ScriptingTemplateKey left, ScriptingTemplateKey right)
@@ -56,7 +56,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <inheritdoc/>
         public override Int32 GetHashCode()
         {
-            if (TemplateId is Guid) { return (TemplateId).GetHashCode(); }
+            if (TemplateId is Guid) { return TemplateId.GetHashCode(); }
             else { return Guid.Empty.GetHashCode(); }
         }
 

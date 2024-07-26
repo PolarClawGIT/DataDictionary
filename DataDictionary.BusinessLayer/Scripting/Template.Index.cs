@@ -1,4 +1,4 @@
-﻿using DataDictionary.DataLayer.ScriptingData.Template;
+﻿using DataDictionary.DataLayer.ScriptingData;
 
 namespace DataDictionary.BusinessLayer.Scripting
 {

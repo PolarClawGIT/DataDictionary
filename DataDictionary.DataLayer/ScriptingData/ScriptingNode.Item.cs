@@ -3,7 +3,7 @@ using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.ScriptingData.Template
+namespace DataDictionary.DataLayer.ScriptingData
 {
     /// <summary>
     /// Interface for the Scripting Template Node data.
@@ -77,7 +77,7 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
             {
                 if (value is TemplateNodeValueAsType.none)
                 { SetValue(nameof(NodeValueAs), null); }
-                else { SetValue(nameof(NodeValueAs),  TemplateNodeValueAsEnumeration.Cast(value).Name); }
+                else { SetValue(nameof(NodeValueAs), TemplateNodeValueAsEnumeration.Cast(value).Name); }
             }
         }
 

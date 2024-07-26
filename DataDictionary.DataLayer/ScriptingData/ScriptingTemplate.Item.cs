@@ -3,7 +3,7 @@ using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.ScriptingData.Template
+namespace DataDictionary.DataLayer.ScriptingData
 {
     /// <summary>
     /// Interface for the Scripting Template data.

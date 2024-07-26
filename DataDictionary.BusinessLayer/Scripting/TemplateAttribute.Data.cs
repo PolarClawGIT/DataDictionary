@@ -1,6 +1,6 @@
 ﻿using DataDictionary.BusinessLayer.DbWorkItem;
 using DataDictionary.DataLayer.ModelData;
-using DataDictionary.DataLayer.ScriptingData.Template;
+using DataDictionary.DataLayer.ScriptingData;
 using Toolbox.Threading;
 
 namespace DataDictionary.BusinessLayer.Scripting

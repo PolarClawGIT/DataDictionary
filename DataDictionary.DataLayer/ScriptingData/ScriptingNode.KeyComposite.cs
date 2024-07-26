@@ -1,11 +1,6 @@
 ﻿using DataDictionary.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataDictionary.DataLayer.ScriptingData.Template
+namespace DataDictionary.DataLayer.ScriptingData
 {
     /// <summary>
     /// Interface for the Composite Key for the Scripting Template Node.
@@ -45,11 +40,11 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
 
         /// <inheritdoc/>
         public Boolean Equals(IScriptingNodeKeyComposite? other)
-        { return other is IScriptingNodeKeyComposite value && this.Equals(new ScriptingNodeKeyComposite(value)); }
+        { return other is IScriptingNodeKeyComposite value && Equals(new ScriptingNodeKeyComposite(value)); }
 
         /// <inheritdoc/>
         public override Boolean Equals(Object? obj)
-        { return obj is IScriptingNodeKeyComposite value && this.Equals(new ScriptingNodeKeyComposite(value)); }
+        { return obj is IScriptingNodeKeyComposite value && Equals(new ScriptingNodeKeyComposite(value)); }
 
         /// <inheritdoc/>
         public static Boolean operator ==(ScriptingNodeKeyComposite left, ScriptingNodeKeyComposite right)

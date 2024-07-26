@@ -1,7 +1,7 @@
 ﻿using DataDictionary.Resource;
 using DataDictionary.Resource.Enumerations;
 
-namespace DataDictionary.DataLayer.ScriptingData.Template
+namespace DataDictionary.DataLayer.ScriptingData
 {
     /// <summary>
     /// Interface for the Unique Key on Property for the Scripting Template Node.

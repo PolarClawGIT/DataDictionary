@@ -3,7 +3,7 @@ using System.Data;
 using System.Runtime.Serialization;
 using Toolbox.BindingTable;
 
-namespace DataDictionary.DataLayer.ScriptingData.Template
+namespace DataDictionary.DataLayer.ScriptingData
 {
     /// <summary>
     /// Interface for the Scripting Template Path data.
@@ -39,9 +39,10 @@ namespace DataDictionary.DataLayer.ScriptingData.Template
         /// <inheritdoc/>
         public ScopeType PathScope
         {
-            get {
+            get
+            {
                 String value = GetValue(nameof(PathScope)) ?? String.Empty;
-                if(ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
+                if (ScopeEnumeration.TryParse(value, null, out ScopeEnumeration? result))
                 { return result.Value; }
                 else { return ScopeType.Null; }
             }
